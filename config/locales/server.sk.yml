@@ -1,0 +1,1128 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sk:
+  dates:
+    short_date_no_year: "MMM D"
+    short_date: "YYYY MMM D"
+    long_date: "YYYY MMM D h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%Y-%m-%d"
+      short_no_year: "%B %-d"
+      date_only: "%Y,  %B %-d"
+  date:
+    month_names: [null, Január, Február, Marec, Apríl, Máj, Jún, Júl, August, September, Október, November, December]
+    <<: *datetime_formats
+  title: "DIscourse"
+  topics: "Témy"
+  posts: "príspevky"
+  loading: "Načítava sa"
+  powered_by_html: 'Systém beží na <a href="http://www.discourse.org">Discourse</a>, najlepšie funguje so zapnutým JavaScriptom'
+  log_in: "Prihlásenie"
+  purge_reason: "Automaticky vymazaný ako opustený, neaktivovaný účet"
+  disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."
+  anonymous: "Anonymný"
+  errors: &errors
+    format: '%{attribute} %{message}'
+    messages:
+      too_long_validation: "je obmedzený na %{max} znakov, zadali ste %{length}."
+      invalid_boolean: "Neplatná logická hodnota."
+      taken: "je už použité"
+      accepted: sa musí akceptovať
+      blank: nesmie byť prázdne
+      present: musí byť prázdne
+      confirmation: "sa nerovná %{attribute}"
+      empty: nesmie byť prázdne
+      equal_to: sa musí rovnať %{count}
+      even: musí byť párne
+      exclusion: je rezervované
+      greater_than: musí byť viac ako %{count}
+      greater_than_or_equal_to: musí byť väčšie alebo rovné %{count}
+      has_already_been_used: "je už použité"
+      inclusion: nie je v zozname
+      invalid: je nesprávne
+      is_invalid: "je nesprávne; skúste opísať lepšie"
+      less_than: musí byť menej ako %{count}
+      less_than_or_equal_to: musí byť menej alebo rovné %{count}
+      not_a_number: nie je číslo
+      not_an_integer: musí byť číslo
+      odd: musí byť nepárne
+      record_invalid: 'Validácia zlyhala s chybami: %{errors}'
+      restrict_dependent_destroy:
+        one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
+        many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
+      too_long:
+        one: príliš dlhé (maximálne 1 znak)
+        few: príliiš dlhé (maximum je %{count} znaky)
+        other: príliiš dlhé (maximum je %{count} znakov)
+      too_short:
+        one: príliiš krátke (minimum je 1 znak)
+        few: príliiš krátke (minimum je %{count} znaky)
+        other: príliiš krátke (minimum je %{count} znakov)
+      wrong_length:
+        one: nesprávna dĺžka (musí byť 1 znak)
+        few: nesprávna dĺžka (musí byť %{count} znaky)
+        other: nesprávna dĺžka (musí byť %{count} znakov)
+      other_than: "musí byť iný než %{count}"
+    template:
+      body: 'Nastal problém s nasledujúcimi položkami:'
+      header:
+        one: Uloženie  %{model} zlyhalo kôli chybe
+        few: Uloženie  %{model} zlyhalo kôli %{count} chybám
+        other: 'Uloženie  %{model} zlyhalo kôli %{count} chybám '
+    embed:
+      load_from_remote: "Nastala chyba pri načítaní príspevku"
+    site_settings:
+      min_username_length_exists: "Nemôžete nastaviť minimálnu dĺžku používateľského mena viac ako najkratšie používateľské meno."
+      min_username_length_range: "Nemôžete nastaviť minimum viac ako maximum."
+      max_username_length_exists: "Nemôžete nastaviť maximálnu dĺžku používateľského mena kratšiu ako najdlhšie používateľské meno."
+      max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
+      default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
+      s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
+  bulk_invite:
+    file_should_be_csv: "Nahrávaný súbor by mal byť vo formáte csv alebo txt."
+  backup:
+    operation_already_running: "Prebieha spracovanie inej operácie. Momentálne sa nová úloha nedá spustiť. "
+    backup_file_should_be_tar_gz: "Záložný súbor musí byť archív .tar.gz"
+    not_enough_space_on_disk: "Na disku nie je dosť miesta na uloženie zálohy"
+  not_logged_in: "K tejto akcii musíte byť prihlásený."
+  not_found: "Požadovaná URL alebo zdroj sa nenašiel"
+  invalid_access: "Nemáte oprávnenie na zobrazenie požadovaných údajov!"
+  read_only_mode_enabled: "Táto stránka je v móde na čítanie. Zapisovanie je vypnuté"
+  too_many_replies:
+    one: "Lutujeme, noví užívatelia majú dočasne obmedzený počet príspevkov na jeden v rámci jednej témy."
+    few: "Lutujeme, noví užívatelia majú dočasne obmedzený počet príspevkov na %{count} v rámci jednej témy."
+    other: "Lutujeme, noví užívatelia majú dočasne obmedzený počet príspevkov na %{count} v rámci jednej témy."
+  embed:
+    start_discussion: "Začať diskusiu"
+    continue: "Pokračovať v diskusii"
+    more_replies:
+      one: "1 ďalšia odpoveď"
+      few: "%{count} ďalšie odpovede"
+      other: "%{count} ďalších odpovedí"
+    loading: "Nahrávanie Diskusie ..."
+    permalink: "Trvalý odkaz"
+    imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "1 odpoveď"
+      few: "%{count} odpovede"
+      other: "%{count} odpovedí"
+  no_mentions_allowed: "Ľutujeme, nesmiete menovať iných užívateľov"
+  too_many_mentions:
+    one: "Ľutujeme, v príspevku môžte menovat maximálne jedného užívateľa."
+    few: "Ľutujeme, v príspevku môžte menovat maximálne %{count} užívatelov."
+    other: "Ľutujeme, v príspevku môžte menovat maximálne %{count} užívatelov."
+  no_mentions_allowed_newuser: "Ľutujeme, noví užívatelia nesmú zmieňovať iných uživateľov"
+  too_many_mentions_newuser:
+    one: "Ľutujeme, noví užívatelia môžu menovat v príspevku maximálne jedného užívateľa."
+    few: "Ľutujeme, noví užívatelia môžu menovat v príspevku maximálne %{count} užívatelov."
+    other: "Ľutujeme, noví užívatelia môžu menovat v príspevku maximálne %{count} užívatelov."
+  no_images_allowed: "Ľutujeme, noví užívatelia nemôžu vkladať obrázky do príspevkov."
+  too_many_images:
+    one: "Ľutujeme, noví užívatelia môžu vložiť maximálne jeden obrázok do príspevku."
+    few: "Ľutujeme, noví užívatelia môžu vložiť maximálne %{count}  obrázky do príspevku."
+    other: "Ľutujeme, noví užívatelia môžu vložiť maximálne %{count}  obrázkov do príspevku."
+  no_attachments_allowed: "Ľutujeme, noví užívatelia nemôžu vkladať prílohy do príspevkov."
+  too_many_attachments:
+    one: "Ľutujeme, noví užívatelia môžu vložiť maximálne jednu prílohu do príspevku."
+    few: "Ľutujeme, noví užívatelia môžu vložiť maximálne %{count}  prílohy do príspevku."
+    other: "Ľutujeme, noví užívatelia môžu vložiť maximálne %{count}  príloh do príspevku."
+  no_links_allowed: "Ľutujeme, noví užívatelia nemôžu vkladať odkazy do príspevkov."
+  too_many_links:
+    one: "Ľutujeme, noví užívatelia môžu vložiť maximálne jeden odkaz do príspevku."
+    few: "Ľutujeme, noví užívatelia môžu vložiť maximálne %{count} odkazy do príspevku."
+    other: "Ľutujeme, noví užívatelia môžu vložiť maximálne %{count} odkazov do príspevku."
+  spamming_host: "Prepáčte, nemôžte publikovať odkazy na tento zdroj"
+  user_is_suspended: "Suspendovaní užívatelia nemôžu vkladať príspevky"
+  topic_not_found: "Niečo sa pokazilo. Téma mohla byť napríklad uzavretá, alebo zmazaná kým ste ju prezerali."
+  just_posted_that: "je to príliš podobné Vášmu predchádzajúcemu príspevku"
+  has_already_been_used: "je už použité"
+  invalid_characters: "obsahuje neplatné znaky"
+  is_invalid: "je nesprávne; skúste opísať lepšie"
+  next_page: "nasledujúca stránka →"
+  prev_page: "← predchádzajúca stránka"
+  page_num: "Stránka %{num}"
+  home_title: "Domov"
+  topics_in_category: " '%{category}' tém v tejto kategórii"
+  rss_posts_in_topic: "RSS čítačka na %{topic}'"
+  rss_topics_in_category: "RSS čítačka na tému v kategórii:  '%{category}'"
+  author_wrote: "%{author} napísal:"
+  num_posts: "Príspevky:"
+  num_participants: "Prispievatelia:"
+  read_full_topic: "Čítať celý príspevok"
+  private_message_abbrev: "Správa"
+  rss_description:
+    latest: "Najnovšie témy"
+    hot: "Horúce témy"
+    posts: "Najnovšie príspevky"
+  too_late_to_edit: "Tento príspevok bol vytvorený príliš dávno. Už nemôže byť upravovaný či zmazaný"
+  excerpt_image: "Obrázok"
+  queue:
+    delete_reason: "Zmazané moderátorom"
+  groups:
+    errors:
+      can_not_modify_automatic: "Nemôžte upravovať automatickú skupinu"
+      member_already_exist: "'%{username}' už je členom tejto skupiny."
+      invalid_domain: "'%{domain}' nie je platnou doménou."
+      invalid_incoming_email: "'%{incoming_email}' je neplatná emailová addresa."
+    default_names:
+      everyone: "všetci"
+      admins: "administrátori"
+      moderators: "moderátori"
+      staff: "zamestnanci"
+      trust_level_0: "stupen_dovery_0"
+      trust_level_1: "stupen_dovery_1"
+      trust_level_2: "stupen_dovery_2"
+      trust_level_3: "stupen_dovery_3"
+      trust_level_4: "stupen_dovery_4"
+  education:
+    until_posts:
+      one: "jeden príspevok"
+      few: "%{count} príspevky"
+      other: "%{count} príspevkov"
+    new-topic: |
+      Víitajte na %{site_name} &mdash; **Ďakujeme za založenie novej konverzácie!**
+
+      - Znie titulok zaujímavo ak ho čítate nahlas ? Zodpovedá obsahu ?
+
+      - Koho by to mohlo zaujímať ? Prečo je to dôležité ? Akú reakciu očakávate ?
+
+      - Vložte často používane slová vo vašej téme aby ju ostatní vedeli "nájsť". Pre zlúčenie vašej témy so súvisiacimi témami vyberte kategóriu .
+
+      Pre viac informácií, [pozri návody](/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
+    new-reply: |
+      Vitajte na %{site_name} &mdash; **Ďakujeme za príspevok!**
+
+      - Vylepší vaša odpoveď nejakým spôsobom diskusiu ?
+
+      - Buďte ohľaduplní k ostatným členom komunity.
+
+      - Konštruktívna kritika je vítana, avšak kritizujte "nápady", nie ľudí.
+
+      Pre viac informácií, [pozri návody](/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
+    avatar: |
+      ### Čo tak pridať fotku k svojmu účtu?
+
+      Už ste pridali zopár tém a odpovedi, ale Váš profil nie je taký jedinečný ako Vy -- Je to len písmeno.
+
+      Zvážili ste  **[pozrieť váš profil](%{profile_path})** a pridať obrázok , ktorý Vás vystihuje?
+
+      Je jednoduchšie sledovať diskusie a nájsť zaujímave osoby v konverzácii pokiaľ ma každý z nich v profile jedinečný obrázok !
+    sequential_replies: |
+      ### Zvážte možnosť odpovedať na viacero príspevkov naraz
+
+      Namiesto množstva postupných odpovedí na tému prosím zvážte použitie jednej odpovede, ktorá bude obsahovať citácie z predchádzajúcich príspevkov, alebo odkazy na @meno
+
+      Ak chcete dať časť svojho vloženého príspevku do úvodzoviek, stačí označiť text a stlačiť  tlačidlo <b>quote reply</b> , ktoré sa následne objaví.
+
+      Pre všetkých je jednoduchšie čítať témy, ktoré majú menšiu hĺbku vnorených odpovedi v porovnaní s množstvom malých individuálnych odpovedí.
+    dominating_topic: |
+      ### Umožnite ostatným nech sa zapoja do debaty
+
+      Táto téma je pre Vás zjavne dôležitá &ndash; prispeli ste do nej viac než %{percent}% odpovedí.
+
+      Ste si istí, že posktujete dostatok času aj ostatným aby prezentovali svoj názor ?
+    too_many_replies: |
+      ### Dosiahli ste limit počtu odpovedí na túto tému
+
+      Ľutujeme, noví užívatelia môžu dočasne vložiť len %{newuser_max_replies_per_topic}  odpovedí na jednu tému.
+
+      Namiesto nového príspevku zvážte možnosť úpravy predchádzajúcich odpovedí, alebo skúste inú tému.
+    reviving_old_topic: |
+      ### Oživiť túto tému ?
+
+      Posledná odpoveď k tejto téme je staršia ako  %{days} dní. Vaša odpoveď posunie tému na vrchol tém a upozorní všetkých, ktorí sa zapojili do diskusie.
+
+      Ste si istí, že chcete pokračovať v tejto starej diskusii?
+  activerecord:
+    attributes:
+      category:
+        name: "Názov kategórie"
+      post:
+        raw: "Telo"
+      user_profile:
+        bio_raw: "O mne"
+    errors:
+      models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: "Výstraha môže byť pripojená len k súkromným spravam"
+              too_many_users: "Výstraha môže byť zaslaná len jednej osobe"
+              cant_send_pm: "Ľutujeme, nemôžte zaslať súkromnú správu tomuto užívateľovi"
+              no_user_selected: "Musíte zadať existujúceho užívateľa"
+        user:
+          attributes:
+            password:
+              common: "Toto je jedno z 10000 najbežnejších hesiel. Prosím použite bezpečnejšie heslo"
+              same_as_username: "je také isté ako vaše užívateľské meno. Prosím použite bezpečnejšie heslo"
+              same_as_email: "je také isté ako Váš email. Prosím použite bezpečnejšie heslo"
+            ip_address:
+              signup_not_allowed: "Registrácia z tohto účtu nie je povolená-"
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "nesprávna farba"
+      <<: *errors
+  user_profile:
+    no_info_me: "<div class='missing-profile'>Položka \"O mne\" vo Vašom profile je prázdna, <a href='/users/%{username_lower}/preferences/about-me'>želáte si ju doplníť?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} nevložil zatiaľ nič do profilu \"O mne\"</div>"
+  vip_category_name: "Salón"
+  vip_category_description: "Kategória výhradne pre členov s dôveryhodnosťou 3 a vyššou"
+  meta_category_name: "Podnety pre tvorcov stránky"
+  meta_category_description: "Diskusia o stránke, organizácii, ako funguje a ako ju môžme vylepšit"
+  staff_category_name: "Zamestnanci"
+  staff_category_description: "Súkromna kategória pre zamestnaneckú diskusiu. Témy su viditeľné len pre správcov a moderátorov diskusie"
+  assets_topic_body: "Toto je permanentná téma, viditeľná len pre redaktorov, na uchovávanie obrázkov a súborov použitých v dizajne tohto webu. Nezmazávajte ju!\n\n\nTu je návod:\n\n\n1. Odpovedzte na túto tému.\n2. Nahrajte sem všetky obrázky, ktoré si prajete použit pre logá, favikony a pod. (Použite ikonku „nahrať“ v paneli nástrojov editora, alebo obrázky potiahnite alebo „vložte“)\n3. Odošlite svoju odpoveď.\n4. Pre získanie adresy k nahratým obrázkom kliknite pravým tlačítkom na obrázky vo svojom novom príspevku, alebo kliknite na ikonku úpravy príspevku a následne si adresu skopírujte. \n5. Cesty k obrázkom vložte do [základného nastavenia](/admin/site_settings/category/required).\n\n\nAk potrebujete povoliť nahratie pre iné typy súborov, upravte `authorized_extensions` v [nastavení súborov](/admin/site_settings/category/files)."
+  lounge_welcome:
+    title: "Vítajte v Salóne"
+  category:
+    topic_prefix: "O kategórii: %{category} "
+    errors:
+      uncategorized_parent: "Nekategorizovaná nemôže mať nadradenú kategóriu"
+      self_parent: "Podkategória si nemôže byť zároveň kategóriou "
+      depth: "Nemôžte umiestniť podkategóriu pod inú podkategóriu"
+      email_in_already_exist: "Prichádzajúca emailová adresa '%{email_in}' sa už používa pre kategóriu '%{category_name}'."
+    cannot_delete:
+      uncategorized: "Nemôžte vymazať nekategorizované"
+      has_subcategories: "Nemôžte vymazať kategóriu pretože obsahuje podkategórie"
+      topic_exists:
+        one: "Nemôžte vymazať kategóriu pretože obsahuje tému %{topic_link}."
+        few: "Nemôžte vymazať kategóriu pretože obsahuje %{count}  témy. Najstaršia téma je %{topic_link}."
+        other: "Nemôžte vymazať kategóriu pretože obsahuje %{count}  tém. Najstaršia téma je %{topic_link}."
+      topic_exists_no_oldest: "Nemôžte vymazať túto kategóriu pretože obsahuje %{count} tém."
+  trust_levels:
+    newuser:
+      title: "nový používateľ"
+    basic:
+      title: "základný používateľ"
+    member:
+      title: "člen"
+    regular:
+      title: "bežný"
+    leader:
+      title: "vodca"
+    change_failed_explanation: "Pokúsili  ste sa znížiť úroveň %{user_name} na '%{new_trust_level}'. Ale jeho/jej aktuálna úroveň už je '%{current_trust_level}'. %{user_name} zostane na úrovni '%{current_trust_level}' - Ak chcete znížiť úroveň používateľa, najskôr uzamknite úroveň"
+  rate_limiter:
+    slow_down: "Vykonali ste túto akciu príliš veľa krát, skúste neskôr"
+    too_many_requests: "Na vykonávanie tejto akcie máme nastavený denný limit. Prosím počkajte %{time_left} než skúsite znovu."
+    by_type:
+      first_day_replies_per_day: "Dosiahli ste maximálny počet odpovedí stanovený pre nového používateľa v jeho prvý deň. Prosím čakajte %{time_left} , než skúsite znova"
+      first_day_topics_per_day: "Dosiahli ste maximálny počet tém stanovený pre nového používateľa v jeho prvý deň. Prosím čakajte %{time_left} , než skúsite znova"
+      create_topic: "Výtvárate témy príliš rýchlo. Prosím čakajte %{time_left} , než skúsite znova"
+      create_post: "Odpovedáte príliš rýchlo. Prosím čakajte %{time_left} , než skúsite znova"
+      topics_per_day: "Dosiahli ste maximálny počet nových tém na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
+      pms_per_day: "Dosiahli ste maximálny počet správ na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
+      create_like: "Dosiahli ste maximálny počet  \"Páči sa\" na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
+      create_bookmark: "Dosiahli ste maximálny počet záložiek na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
+      edit_post: "Dosiahli ste maximálny počet  úprav na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
+    hours:
+      one: "1 hodina"
+      few: "%{count} hodiny"
+      other: "%{count} hodín"
+    minutes:
+      one: "1 minútu"
+      few: "%{count} minúty"
+      other: "%{count} minút"
+    seconds:
+      one: " 1 sekundu"
+      few: "%{count} sekundy"
+      other: "%{count} sekúnd"
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1m"
+      less_than_x_seconds:
+        one: "< 1s"
+        few: "< %{count}s"
+        other: "< %{count}s"
+      x_seconds:
+        one: "1s"
+        few: "%{count}s"
+        other: "%{count}s"
+      less_than_x_minutes:
+        one: "< 1m"
+        few: "< %{count}m"
+        other: "< %{count}m"
+      x_minutes:
+        one: "1m"
+        few: "%{count}m"
+        other: "%{count}m"
+      about_x_hours:
+        one: "1h"
+        few: "%{count}h"
+        other: "%{count}h"
+      x_days:
+        one: "1d"
+        few: "%{count}d"
+        other: "%{count}d"
+      about_x_months:
+        one: " 1mes"
+        few: "%{count}mes"
+        other: "%{count}mes"
+      x_months:
+        one: "1mes"
+        few: "%{count}mes"
+        other: "%{count}mes"
+      about_x_years:
+        one: "1r"
+        few: "%{count}r"
+        other: "%{count}r"
+      over_x_years:
+        one: "> 1r"
+        few: "> %{count}r"
+        other: "> %{count}r"
+      almost_x_years:
+        one: "1r"
+        few: "%{count}r"
+        other: "%{count}r"
+    distance_in_words_verbose:
+      half_a_minute: "práve teraz"
+      less_than_x_seconds:
+        one: "práve teraz"
+        few: "práve teraz"
+        other: "práve teraz"
+      x_seconds:
+        one: "pred sekundou"
+        few: "pred %{count} sekundami"
+        other: "pred %{count} sekundami"
+      less_than_x_minutes:
+        one: "menej ako pred minútou"
+        few: "menej ako pred %{count} minútami"
+        other: "menej ako pred %{count} minútami"
+      x_minutes:
+        one: "pred minútou"
+        few: "pred %{count} minútami"
+        other: "pred %{count} minútami"
+      about_x_hours:
+        one: "pred hodinou"
+        few: "pred %{count} hodinami"
+        other: "pred %{count} hodinami"
+      x_days:
+        one: "včera"
+        few: "pred %{count} dňami"
+        other: "pred %{count} dňami"
+      about_x_months:
+        one: "približne pred mesiacom"
+        few: "približne pred %{count} mesiacmi"
+        other: "približne pred %{count} mesiacmi"
+      x_months:
+        one: "pred mesiacom"
+        few: "pred %{count} mesiacmi"
+        other: "pred %{count} mesiacmi"
+      about_x_years:
+        one: "približne pred rokom"
+        few: "približne pred %{count} rokmi"
+        other: "približne pred %{count} rokmi"
+      over_x_years:
+        one: "pred vyše rokom"
+        few: "pred vyše %{count} rokmi"
+        other: "pred vyše %{count} rokmi"
+      almost_x_years:
+        one: "pred takmer rokom"
+        few: "pred takmer %{count} rokmi"
+        other: "pred takmer %{count} rokmi"
+  password_reset:
+    no_token: "Prepáčte, táto linka na zmenu hesla je už príliš stará. Stlačte tlačitlo Prihlásiť a použite \"Zabudol som heslo\" pre vytvorenie novej linky"
+    choose_new: "Prosim zadajte nové heslo"
+    choose: "Prosím zadajte heslo"
+    update: 'Aktualizujte heslo'
+    save: 'Nastavte heslo'
+    title: 'Obnoviť heslo'
+    success: "Heslo bolo úspešne zmenené a ste prihlasený do systému. "
+    success_unapproved: "Heslo bolo úspešne zmenené."
+    continue: "Pokračujte na %{site_name}"
+  change_email:
+    confirmed: "Vaša emailova adresa bola aktualizovaná"
+    please_continue: "Pokračujte na %{site_name}"
+    error: "Nastala chyba pri aktualizácii emailu. Nieje už náhodou použitý?"
+  activation:
+    action: "Pre aktiváciu účtu kliknite sem"
+    already_done: "Prepáčte, táto potvrdzovacia linka je už neplatná. Nie je už účet aktivny ?"
+    please_continue: "Váš nový účet je potvrdený. Budete presmerovaní na domovskú stránku."
+    continue_button: "Pokračujte na %{site_name}"
+    welcome_to: "Vitajte na %{site_name}!"
+    approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum.  O schválení prístupu budete upovedomení emailom."
+    missing_session: "Nevieme zistiť či Váš účet bol vytvorený, prosím uistite sa že máte v prehliadači povolené cookies."
+  post_action_types:
+    off_topic:
+      title: 'Mimo témy'
+      description: 'Tento príspevok nesúvisí s danou témou popísanou v názve a prvom príspevku a pravdepodobne by mal byť presunutý niekam inam'
+      long_form: 'toto je označené ako "Mimo témy"'
+    spam:
+      title: 'Spam'
+      description: 'Tento príspevok je reklama. Nijako nesúvisí s danou témou, má propagačný charakter.'
+      long_form: 'označiť toto ako spam'
+      email_title: '"%{title}"  bol označený ako spam'
+      email_body: "%{link}\n\n%{message}"
+    inappropriate:
+      title: 'Nevhodné'
+      description: 'Obsah tohto príspevku môže byť nektorými osobami považovaný za urážlivý, hanlivý, alebo  porušujúci  <a href="/guidelines">pravidlá slušného správania</a>.'
+      long_form: 'toto označ ako nevhodné'
+    notify_user:
+      title: 'Poslať @{{username}} správu'
+      description: 'Chcem sa s touto osobou rozprávať o jeho príspevku priamo a súkromne.'
+      long_form: 'úživateľovi bola zaslaná správa'
+      email_title: 'Váš príspevok v "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: "Niečo iné"
+      description: 'Tento príspevok vyžaduje pozornosť obsluhy z iného dôvodu ako je uvedené vyššie.'
+      long_form: 'označené do pozornosti obsluhy'
+      email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
+      email_body: "%{link}\n\n%{message}"
+    bookmark:
+      title: 'Záložka'
+      description: 'Vytvor záložku na tento príspevok'
+      long_form: 'záložka na tento príspevok bola vytvorená '
+    like:
+      title: 'Páči sa mi'
+      description: 'Páči sa  mi tento príspevok'
+      long_form: 'páčilo sa'
+    vote:
+      title: 'Hlasovať'
+      description: 'Hlasovať pre tento príspevok'
+      long_form: 'hlasoval pre tento príspevok'
+  topic_flag_types:
+    spam:
+      title: 'Spam'
+      description: 'Tento príspevok je reklama. Nijako nesúvisí s danou stránkou, má propagačný charakter.'
+      long_form: 'označiť toto ako spam'
+    inappropriate:
+      title: 'Nevhodné'
+      description: 'Táto téma môže byť nektorými osobami považovaná za urážlivú, hanlivú, alebo  porušujúcu  <a href="/guidelines">pravidlá slušného správania</a>.'
+      long_form: 'toto označ ako nevhodné'
+    notify_moderators:
+      title: "Niečo iné"
+      description: 'Táto téma vyžaduje pozornosť obsluhy na základe <a href="/guidelines">pravidiel</a>, <a href="%{tos_url}">TOS</a>, alebo z iného dôvodu ako je uvedené vyššie.'
+      long_form: 'označené do pozornosti moderátora'
+      email_title: 'Téma "%{title}" vyžaduje pozornosť moderátora'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>Váš príspevok bol označený komunitou. Prosim <a href="/my/messages">pozrite si Vaše správy</a>.</p>'
+    user_must_edit: '<p>Tento príspevok bol označený komunitou a je dočasne skrytý</p>'
+  archetypes:
+    regular:
+      title: "Bežná téma"
+    banner:
+      title: "Banerová téma"
+      message:
+        make: "Téma je odteraz baner. Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie."
+        remove: "Téma odteraz nie je baner. Už sa nebude viac zobrazovat navrchu každej stránky."
+  unsubscribed:
+    title: 'Odhlásiť'
+    description: "Boli ste odhlásený. Už vás znovu nebudeme kontaktovať."
+    oops: "V prípade že ste to tak nemysleli, kliknite nižšie"
+    error: "Chyba pri odhlasovaní"
+    preferences_link: "Zo súhrnných emailov sa môžete odhlásiť na <a href='/my/preferences'>stránke nastavení</a>"
+    different_user_description: "Aktuálne ste prihlásený ako iný používateľ než ten, komu bol zaslaný súhrnný email. Prosíme odhláste sa a skúste znovu."
+    not_found_description: "Prepáčte, nedokázali sme Vás odhlásiť. Je možné, že platnosť odkazu vo Vašom emaile vypršala."
+  resubscribe:
+    action: "Znovu-prihlásiť"
+    title: "Znovu-prihlásený!"
+    description: "Boli ste znovu prihlásený."
+  reports:
+    visits:
+      title: "Používateľské návštevy"
+      xaxis: "Deň"
+      yaxis: "Počet návštev"
+    signups:
+      title: "Noví používatelia"
+      xaxis: "Deň"
+      yaxis: "Počet nových používateľov"
+    profile_views:
+      title: "Prezreté používateľské profily"
+      xaxis: "Deň"
+      yaxis: "Počet prezretých používateľských profilov"
+    topics:
+      title: "Témy"
+      xaxis: "Deň"
+      yaxis: "Počet nových tém"
+    posts:
+      title: "Príspevky"
+      xaxis: "Deň"
+      yaxis: "Počet nových príspevkov"
+    likes:
+      title: "Páči sa mi"
+      xaxis: "Deň"
+      yaxis: "Počet nových páči sa mi"
+    flags:
+      title: "Označenia"
+      xaxis: "Deň"
+      yaxis: "Počet označení"
+    bookmarks:
+      title: "Záložky"
+      xaxis: "Deň"
+      yaxis: "Počet nových záložiek"
+    starred:
+      title: "Obľúbené"
+      xaxis: "Deň"
+      yaxis: "Počet nových ohviezdičkovaných tém"
+    users_by_trust_level:
+      title: "Užívatelia podľa stupňa dôvery"
+      xaxis: "Stupeň dôvery"
+      yaxis: "Počet použivateľov"
+    emails:
+      title: "Emaily odoslané"
+      xaxis: "Deň"
+      yaxis: "Počet emailov"
+    user_to_user_private_messages:
+      title: "Užívateľ užívateľovi"
+      xaxis: "Deň"
+      yaxis: "Počet správ"
+    system_private_messages:
+      title: "Systém"
+      xaxis: "Deň"
+      yaxis: "Počet správ"
+    moderator_warning_private_messages:
+      title: "Upozornenie od moderátora"
+      xaxis: "Deň"
+      yaxis: "Počet správ"
+    notify_moderators_private_messages:
+      title: "Upozorniť moderátora"
+      xaxis: "Deň"
+      yaxis: "Počet správ"
+    notify_user_private_messages:
+      title: "Upozorniť užívateľa"
+      xaxis: "Deň"
+      yaxis: "Počet správ"
+    top_referrers:
+      title: "Najlepší referenti"
+      xaxis: "Používateľ"
+      num_clicks: "Klinutia"
+      num_topics: "Témy"
+    top_traffic_sources:
+      title: "Najlepšie zdroje"
+      xaxis: "Doména"
+      num_clicks: "Klinutia"
+      num_topics: "Témy"
+      num_users: "Používatelia"
+    top_referred_topics:
+      title: "Najlepšie témy"
+      xaxis: "Témy"
+      num_clicks: "Klinutia"
+    page_view_anon_reqs:
+      title: "Anonymný"
+      xaxis: "Deň"
+      yaxis: "Anonymné  požiadavky API"
+    page_view_logged_in_reqs:
+      title: "Prihlásený"
+      xaxis: "Deň"
+      yaxis: "Zaznamenané API požiadavky"
+    page_view_crawler_reqs:
+      title: "Webové prehľadávače"
+      xaxis: "Deň"
+      yaxis: "API dotazy web robota"
+    page_view_total_reqs:
+      title: "Celkovo"
+      xaxis: "Deň"
+      yaxis: "Všetky API požiadavky"
+    page_view_logged_in_mobile_reqs:
+      title: "Zaznamenané API požiadavky"
+      xaxis: "Deň"
+      yaxis: "Zaznamenané API požiadavky cez mobil"
+    page_view_anon_mobile_reqs:
+      title: "Anonymné  požiadavky API"
+      xaxis: "Deň"
+      yaxis: "Zaznamenané API požiadavky cez mobil"
+    http_background_reqs:
+      title: "Pozadie"
+      xaxis: "Deň"
+      yaxis: "Požiadavky použité na aktívne aktualizácie a sledovanie"
+    http_2xx_reqs:
+      title: "Status 2xx (OK)"
+      xaxis: "Deň"
+      yaxis: "Úspešné požiadavky (Status 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Presmerovanie)"
+      xaxis: "Deň"
+      yaxis: "Presmerované požiadavky (Status 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Chyba na strane klienta)"
+      xaxis: "Deň"
+      yaxis: "Chyby na strane klienta (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Chyba na strane servera)"
+      xaxis: "Deň"
+      yaxis: "Chyby na strane servera (Status 5xx)"
+    http_total_reqs:
+      title: "Celkovo"
+      xaxis: "Deň"
+      yaxis: "celkový počet žiadostí"
+    time_to_first_response:
+      title: "Čas do prvej odpovede"
+      xaxis: "Deň"
+      yaxis: "Priemerný čas (hodiny)"
+    topics_with_no_response:
+      title: "Témy bez odozvy"
+      xaxis: "Deň"
+      yaxis: "Celkovo"
+    mobile_visits:
+      title: "Používateľské návštevy"
+      xaxis: "Deň"
+      yaxis: "Počet návštev"
+  dashboard:
+    rails_env_warning: "Váš server beží v %{env} móde"
+    ruby_version_warning: "Používate Ruby 2.0.0,  ktorá má známe problémy. Aktualizujte prosím na záplatu 247, alebo novšiu."
+    host_names_warning: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
+    gc_warning: 'Váš server používa východzie nastavenia ruby garbage collectora, ktorý neposktytuje najlepší výkon. Prečítajte si tento príspevok ohľadom ladenia výkonu <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Ladenie Ruby and Rails pre Discourse</a>.'
+    sidekiq_warning: 'Sidekiq neni spustený. Množstvo úloh, ako napríklad posielanie emailov, je vykonávaných asynchrónne prostrednictvom sidekiq. Prosim zabezpečte aby bol spustený aspoň jeden proces sidekiq <a href="https://github.com/mperham/sidekiq" target="_blank">Viac o Sidekiq</a>.'
+    queue_size_warning: 'Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov.'
+    memory_warning: 'Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. '
+    google_oauth2_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Google OAuth2 (enable_google_oauth2_logins), ale identifikačné údaje klienta a jeho tajné hodnoty nie sú nastavené. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
+    facebook_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Facebooku (enable_facebook_logins), ale údaje "app Id" a tajné hodnoty nie sú nastavené. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
+    twitter_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Twitteru (enable_twitter_logins), ale kľúč a tajné hodnoty nie sú nastavené. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
+    github_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou GitHub (enable_github_logins), ale identifikačné údaje klienta a jeho tajné hodnoty nie sú nastavené.. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
+    s3_config_warning: 'Server má nakonfigurované nahrávanie súborov na S3, ale minimálne jedna z nasledujúcich hodnôt nie je nastavená: s3_access_key_id, s3_secret_access_key, alebo s3_upload_bucket. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Chcete vedieť viac? Pozrite si návod ako nastaviť nahrávanie súborov na S3</a>.'
+    s3_backup_config_warning: 'Server má nakonfigurované nahrávanie záloh na S3, ale minimálne jedna z nasledujúcich hodnôt nie je nastavená: s3_access_key_id, s3_secret_access_key, alebo  s3_backup_bucket. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Chcete vedieť viac? Pozrite si návod ako nastaviť nahrávanie súborov na S3</a>.'
+    image_magick_warning: 'Server je nakonfigurovaný na vytváranie náhľadov z veľkých obrázkov, ale ImageMagick  nie je nainštalovaný. Nainštalujte ImageMagick pomocou Vášho správcu balíčkov, alebo <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">Stiahnite najnovšiu verziu</a>.'
+    failing_emails_warning: 'Existuje %{num_failed_jobs} neuspešných emailých pokusov. Skontrolujte Váš app.yml a uistite sa, že nastavenia email serveru máte správne. <a href="/sidekiq/retries" target="_blank">Pozrieť neúspešné pokusy v Sidekiq</a>.'
+    default_logo_warning: "Nastavte grafické logo Vašej stránky. Aktualizujte  logo_url, logo_small_url, a favicon_url na <a href='/admin/site_settings'>Ňastaveniach stránky</a>."
+    contact_email_missing: "Vložte kontaktnú email adresu aby ste mohli byť kontaktovaný v urgentných prípadov týkajúcich sa stránok. Vložte na <a href='/admin/site_settings'>Stránke nastavení</a>."
+    contact_email_invalid: "Kontaktný email na stránke je neplatný. Aktualizujte ho v <a href='/admin/site_settings'>Nastavenia stránky</a>."
+    title_nag: "Zadajte meno stránky. Aktualizujte ho v <a href='/admin/site_settings'>Nastavenia stránky</a>."
+    site_description_missing: "Vložte jednovetný popis Vašej stránky, ktorý sa zobrazí vo výsledkoch vyhľadávania. Aktualizujte ho v <a href='/admin/site_settings'>Nastavenia stránky</a>."
+    consumer_email_warning: "Vaše stránky sú nastavené tak aby na posielanie emailov používali Gmail (alebo iné služby pre spotrebiteľov). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail obmedzuje počet odoslaných emailov</a>. Na zaistenie doručiteľonosti emailov zvážte použitie emailového poskytovateľa ako napríklad mandrill.com."
+    site_contact_username_warning: "Vložte názov účtu kolegu z personálu pre zasielanie dôležitých automatických správ. Aktualizujte kontakt v <a href='/admin/site_settings'>Nastavenia stránky</a>."
+    notification_email_warning: "Notifikačné emaily sú posielané z neplatnej emailovej adresy vo Vašej doméne. Doručovanie emailov môže byť chybné a nespoľahlivé. Prosím nastavte platnú lokálnu emailovú adresu \"notification_email\" v <a href='/admin/site_settings'>Nastavenia stránky</a>."
+    subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
+  site_settings:
+    censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
+    delete_old_hidden_posts: "Automatické zmazanie príspevkov, ktoré ostali skryté viac ako 30 dní"
+    default_locale: "Predvolený jazyk tejto inštancie Discourse je (ISO 639-1 Code)"
+    allow_user_locale: "Povoliť užívateľom zvoliť si vlastný jazyk"
+    min_post_length: "Minimálny povolený počet znakov v príspevkoch"
+    min_first_post_length: "Minimálny povolený počet znakov pre prvý príspevok (obsah témy)"
+    min_private_message_post_length: "Minimálny povolený počet znakov v správe"
+    max_post_length: "Maximálny povolený počet znakov v príspevkoch"
+    min_topic_title_length: "Minimálny povolený počet znakov v názve témy"
+    max_topic_title_length: "Maximálny povolený počet znakov v názve témy"
+    min_private_message_title_length: "Minimálny povolený počet znakov v správe"
+    min_search_term_length: "Minimálny povolený počet znakov vo vyhľadávaní"
+    allow_uncategorized_topics: "Pvoliť vytváranie tém bez kategórií. UPOZORNENIE: Pokiaľ existujú nekategorizované témy, musíte ich zaradiť do kategórii skôr než túto možnosť vypnete."
+    uncategorized_description: "Popis nekategorizovanej kategórie. Nechajte prázdne pre žiadny popis.."
+    allow_duplicate_topic_titles: "Povoliť témy s rovnakými, duplikovanými názvami"
+    unique_posts_mins: "Koľko minút musí byť medzi dvomi rovnakými príspevkami od jedného užívateľa."
+    educate_until_posts: "Ked užívateľ začne písať svojich prvých (n) príspevkov, zobraz sprievodcu vzdelávania pre nového užívateľa. "
+    title: "Meno stránok, tak ako je použité v značke title."
+    site_description: "Popíšte stránky v jednej vete, tak ako sa popisujú v tagu meta."
+    contact_email: "Emailová adresa kľúčovej kontaktnej osoby zodpovednej za túto stránku. Používa sa pri kritických situáciach, ako napríklad neošetrené návestia a tiež pri kontaktnom formulári pre dôležité prípady."
+    contact_url: "Kontaktná URL adresa pre túto stránku. Použitá tiež pri kontaktnom formulári pre dôležité prípady."
+    queue_jobs: "IBA VÝVOJÁRI VAROVANIE! Štandardne, požiadavky fronty v sidekiq. Ak je vypnuté, vaše stránky budú rozbité."
+    crawl_images: "Načítať obrázky z URL pre vloženie správnej výšky a šírky."
+    download_remote_images_to_local: "Stiahnuť obrázky zo vzdialených zdrojov na lokálne. Zabráni poškodeniu obrázkov. "
+    download_remote_images_threshold: "Minimálne miesto na lokálnom disku potrebné na stiahnutie obrázkov zo vzdialených zdrojov (v percentách)"
+    disabled_image_download_domains: "Nikdy nesťahovať obrázky z týchto domén. Zoznam oddeleny pipou \"|\"."
+    editing_grace_period: "Nevytvárať nové verzie editovaných príspevkov do (n) sekúnd po odoslaní príspevku."
+    post_edit_time_limit: "Autor môže upravovať alebo mazať svoje príspevky do (n) minút po ich odoslaní. Nastavte 0 pre nekonečno"
+    edit_history_visible_to_public: "Povoliť všetkým zobrazenie predchádzajúcich verzií upraveného príspevku. Pokiaľ je to vypnuté, verzie vidí iba obslužný personál"
+    delete_removed_posts_after: "Príspevky zmazané autorom budú automaticky zmazané po (n) hodinách. Pokiaľ je nastavená 0, príspevky budú zmazané okamžite."
+    max_image_width: "Maximálna šírka náhľadu obrázkov v príspevku"
+    max_image_height: "Maximálna výška náhľadu obrázkov v príspevku"
+    category_featured_topics: "Počet zobrazených tém na jednu kategóriu na stránke /katgórie. Zmena hodnoty sa na stránkach prejaví do 15 minút."
+    show_subcategory_list: "Zobraz zoznam podkategórií namiesto zoznamu tém po vstupe do menu kategórií"
+    fixed_category_positions: "Ak je to označené, budete môcť zoraďovať kategórie v pevnom poradí. Ak je neoznačené, kategórie budu zoradené podlľa aktivity."
+    fixed_category_positions_on_create: "Ak je označené, triedenie kategórií bude spravované v dialógu na vytváranie témy (vyžaduje fixed_category_positions)."
+    add_rel_nofollow_to_user_content: "Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "Zoznam domén, na ktorých odkazy nebude pridávaný nofollow . tld.com automaticky umožní sub.tld.com. Aby ste umožnili internetovým vyhľadávačom nájsť kompletný obsah mali by ste pridať minimálne doménu najvyššej úrovne týchto stránok. Ak je nejaká časť stránok na iných doménach, pridajte ich tiež."
+    post_excerpt_maxlength: "Maximálna dĺžka príspevku okrem zhrnutia."
+    post_onebox_maxlength: "Maximálna dĺžka vloženého Discourse príspevku v znakoch."
+    onebox_domains_whitelist: "Zoznam domén, pre ktoré je umožnené vkladanie. Tieto domény by mali podporovať OpenGraph alebo oEmbed. Overte ich pomocou http://iframely.com/debug"
+    logo_url: "Obrázok loga na ľavej hornej časti stránky, mal by byť tvaru širokého obdĺžnika. Ak nebude uvedený, zobrazí sa nadpis stránok."
+    digest_logo_url: "Obrázok loga na začiatku sumarizačného emailu stránok. Mal by byť tvaru širokého obdĺžnika. Ak nebude uvedený, použije sa logo_url."
+    logo_small_url: "Malý obrázok loga na ľavej hornej strane stránok, mal by mať tvar štvorca a bude zobrazený pri skrolovaní nadol. Ak nebude uvedený, zobrazí sa piktogram domu."
+    favicon_url: "Favicon pre Vaše stránky, pozrite http://en.wikipedia.org/wiki/Favicon. Aby fungoval správne s CDN, musí byť vo formáte png"
+    mobile_logo_url: "Obrázok loga zobrazený na fixnej pozícií v ľavom hornom rohu mobilnej verzie. Mal byť mať tvar štvorca. Ak nie je uvedené, použije sa `logo_url`. Napríklad: http://example.com/uploads/default/logo.png"
+    apple_touch_icon_url: "Ikona použitá na zariadeniach Apple touch. Doporučovaná veľkosť je 144px na 144px."
+    notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
+    email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
+    email_subject: "Voliteľný formát predmetu emailu pre štandardné emaily. Pozrite https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
+    use_https: "Má byť url stránok  (Discourse.base_url) http alebo https? NEZAPÍNAJTE MOŽNOSŤ AK HTTPS NIE JE NASTAVENÉ A FUNKČNÉ!"
+    summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
+    summary_posts_required: "Minimálny počet príspevkou predtým ako je zapnuté 'Sumarizuj túto tému'"
+    summary_likes_required: "Minimálny počet páči sa mi predtým ako je zapnuté 'Sumarizuj túto tému'"
+    summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
+    summary_max_results: "Maximálny počet príspevkov vrátených pomocou 'Sumarizuj túto tému'"
+    enable_private_messages: "Umožni používateľom s úrovňou dôvery 1 (nastaviteľné pomocou min úroveň dôvery na posielanie správ)  vytvárať správy a odpovedať na ne"
+    enable_long_polling: "Zbernica správ pre upozornenia môže používať techniku long-polling"
+    long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
+    long_polling_interval: "Ako dlho má server čakať pred odpovedaním klientom ak nie sú na zaslanie žiadne dáta  (iba pre prihlásených používateľov)"
+    polling_interval: "Ak sa nepoužíva technika long-polling, ako často majú byť klienti dotazovaný v milisekundách"
+    anon_polling_interval: "Ako často majú byť dotazovaný anonymný klienti v milisekundách"
+    background_polling_interval: "Ako často majú byť dotazovaný klienti v milisekundách (ak je okno v pozadí)"
+    flags_required_to_hide_post: "Počet značiek ktoré automaticky príspevok skryjú a používateľovi bude zaslaná správa (0 pre nikdy)"
+    cooldown_minutes_after_hiding_posts: "Počet minút koľko musí používateľ počkať pred tým než môže upraviť príspevok skytý pomocou komunitných značiek"
+    max_topics_in_first_day: "Maximálny počet tém, ktoré používateľ môže vytvoriť v jeho prvý deň ."
+    max_replies_in_first_day: "Maximálny povolený počet odpovedí, ktoré môže používateľa vytvoriť v jeho prvý deň."
+    tl2_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 2 (člen) vynásobením týmto číslom"
+    tl3_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 3 (bežný) vynásobením týmto číslom"
+    tl4_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 4 (vedúci) vynásobením týmto číslom"
+    num_flags_to_block_new_user: "Ak príspevky nového používateľa dostanú takéto množstvo spamových vlajok od num_users_to_block_new_user rôznych používateľov, skry všetky jeho príspevky a zabráň vytváraniu príspevkov v budúcnosti. 0 na vypnutie."
+    num_users_to_block_new_user: "Ak príspevky nového používateľa dostanú num_flags_to_block_new_user spamových vlajok od takéhoto množstva rôznych používateľov, skry všetky jeho príspevky a zabráň vytváraniu príspevkov v budúcnosti. 0 na vypnutie."
+    notify_mods_when_user_blocked: "Ak je používateľ automaticky zablokovaný, pošli správu všetkým moderátorom."
+    flag_sockpuppets: "Ak nový používateľ odpovedá na tému z rovnakej IP adresy, ako nový používateľ, ktorý danú tému vytvoril, označ oba ich príspevky ako potencionálny spam."
+    post_undo_action_window_mins: "Počet minút počas ktorých môžu užívatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
+    must_approve_users: "Obsluha musí povoliť účty všetkým novým užívateľom skôr než im bude povolený prístup na stránku. UPOZORNENIE: zapnutie na živej stránke spôsobí zrušenie prístupu pre existujúcich používateľov, okrem obsluhy!"
+    pending_users_reminder_delay: "Upozorni moderátora ak nový užívateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
+    allow_moderators_to_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
+    use_admin_ip_whitelist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
+    post_menu_hidden_items: "Položky vo východzích nastaveniach menu schované pri príspevkovom menu, dokiaľ neni kliknuté na rozbaľovaciu elipsu."
+    share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
+    track_external_right_clicks: "Sledovať externé odkazy na ktore sa klkne pravým tlačidlom (npar. otvorenie v novej záložke) Vypnuté vo východzích nastaveniach, pretože to prepisuje URL adresy"
+    site_contact_username: "Platné uťívateľské meno obsluhy, ktorá bude posielať automatizované správy. Pokiaľ je vynechané, použije sa východzí systémový účet. "
+    send_welcome_message: "Poslač všetkým novým užívateľom uvítaciu správu s príručkou ako začať. "
+    suppress_reply_directly_below: "Nezobrazovať rozbaľovacie tlačidlo s počtom odpovedí ak je k príspevku len jedna odpoveď priamo pod ním."
+    suppress_reply_directly_above: "Nezobrazovať rozbaľovacie tlačidlo v-odpovedi-na ak je len jedna odpoveď priamo nad príspevkom."
+    suppress_reply_when_quoting: "Nezobrazovať rozbaľovacie tlačidlo v-odpovedi-na ak príspevok cituje odpoveď."
+    max_reply_history: "Maximálny počet odpovedí ktoré sa zobrazia po rozbalení v-odpovedi-na"
+    topics_per_period_in_top_summary: "Zobrazovaný počet najlepších tém vo východzom zozname najlepších tém."
+    topics_per_period_in_top_page: "Zobrazovaný počet najlepších tém vzozname po rozbalení 'Ukáž viac' najlepších tém."
+    redirect_users_to_top_page: "Automaticky presmeruj nových a dlho neprihlásených užívateľov na hlavnú stránku. "
+    top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
+    show_email_on_profile: "Zobraziť užívateľov email na ich profile (viditeľné len nimi samotnými a obsluhou)"
+    email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
+    email_token_grace_period_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách po ich uplatnení."
+    enable_badges: "Povoliť systém odznakov"
+    enable_whispers: "Povoliť súkromnú konverzáciu pre redakciu vrámci témy. (experimantálne)"
+    log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
+    port: "POZOR! LEN PRE VÝVOJÁROV! Použiť tento HTTP port namiesto predvoleného portu 80. Nechajte prázdne pre port 80."
+    force_hostname: "POZOR! LEN PRE VÝVOJÁROV! V URL zadajte hostname. Ak chcete použiť predvolené, nechajte políčko prázdne."
+    min_username_length: "Minimálna dĺžka používateľského mena v znakoch."
+    max_username_length: "Maximálna dĺžka používateľského mena v znakoch."
+    reserved_usernames: "Používateľské mená, ktorých registrácia nie je povolená."
+    min_password_length: "Minimálna dĺžka hesla."
+    block_common_passwords: "Nepovoliť heslá, ktoré sú v zozname 10 000 najbežnejších hesiel."
+    sso_url: "URL pre single sign on."
+    enable_local_logins: "Povoliť pouťívanie lokálnych účtov a hesiel. (Poznámka: musí to byť zapnuté pre fungovanie pozvánok)"
+    allow_new_registrations: "Povoliť registráciu nových užívateľov. Odznačte to ak chcete zabrániť vytváraniu nových účtov. "
+    enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných užívateľov s výzvou na registráciu účtu. "
+    enable_yahoo_logins: "Povoliť autentifikáciu pomocou Yahoo."
+    enable_google_oauth2_logins: "Povoliť Google Oauth2 autentifikáciu. Táto métoda je podporovaná Googlom. Vyžaduje kľúč a šifru."
+    google_oauth2_client_id: "Client ID Vašej Google aplikácie."
+    google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
+    enable_twitter_logins: "Povoliť autentifikáciu cez Twitter, vyžaduje twitter_consmer_key a twiiter_consumer_secret"
+    twitter_consumer_key: "Consumer key pre Twitter autentifikáciu, registrovaný na http://dev.twitter.com"
+    twitter_consumer_secret: "Consumer secret pre Twitter autentifikáciu, registrované na http://dev.twitter.com"
+    enable_facebook_logins: "Povoliť autentifikáciu pomocou Facebook, vyžaduje facebook_app_id a facebook_app_secret."
+    facebook_app_id: "App id pre Facebook autentifikáciu, registrované na https://developers.facebook.com/apps"
+    facebook_app_secret: "App secret pre Facebook autentifikáciu, registrované na https://developers.facebook.com/apps"
+    enable_github_logins: "Povoliť autentifikáciu cez Github, vyžaduje github_client_id a github_client_secret"
+    github_client_id: "Client id pre Github autentifikáciu, registrované na https://github.com/settings/applications"
+    github_client_secret: "Client secret pre Github autentifikáciu, registrované na https://github.com/settings/applications"
+    allow_restore: "Umožniť obnovu, ktorá nahradí VŠETKY data na stránkach! Ponechajte prázdne okrem prípadu ak chcete obnoviť zo zálohy."
+    maximum_backups: "Maximálny počet záloh udržiavaných na disku. Staršie zálohy budu automaticky vymazané"
+    automatic_backups_enabled: "Spustiť automatické zálohy podľa nastavenia intervalu záloh"
+    backup_frequency: "Ako často máme vytvárať zálohu stránok, v dňoch."
+    enable_s3_backups: "Po dokončení nahrať zálohy na S3. DÔLEŽITÉ: požaduje správne nastavenie prístupových údajov na S3 v menu Súbory."
+    s3_backup_bucket: "Vzdialený S3 bucket na uloženie záloh. VAROVANIE: Uistite sa, že ide o súkromný S3 bucket."
+    backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."
+    backup_with_uploads: "Do pravidelných záloh ulož i nahrané súbory. Pri vypnutej voľbe sa uloží iba záloha databázy."
+    active_user_rate_limit_secs: "Ako často máme aktualizovať pole 'naposledy videný o', v sekundách"
+    verbose_localization: "Zobraziť rozšírené lokalizačné tipy v rozhraní"
+    previous_visit_timeout_hours: "Ako dlho trvá návšteva predtým, ako ju pokladáme za 'predchádzajúcu' návštevu, v hodinách"
+    rate_limit_create_topic: "Po vytvorení témy musí používateľ počkať (n) sekúnd pred vytvorením ďalšej témy."
+    rate_limit_create_post: "Po odoslaní prísprevku používateľ počkať (n) sekúnd pred vytvorením ďalšieho príspevku."
+    rate_limit_new_user_create_topic: "Po vytvorení témy musí používateľ počkať (n) sekúnd pred vytvorením ďalšej témy."
+    rate_limit_new_user_create_post: "Po odoslaní príspevku používateľ počkať (n) sekúnd pred vytvorením ďalšieho príspevku."
+    max_likes_per_day: "Maximálny počet páči sa mi používateľa denne."
+    max_flags_per_day: "Maximálny počet príznakov používateľa denne."
+    max_bookmarks_per_day: "Maximálny počet záložiek na jedného používateľa denne."
+    max_edits_per_day: "Maximálny počet úprav používateľa denne."
+    max_topics_per_day: "Maximálny počet tém používateľa denne."
+    max_private_messages_per_day: "Maximálny počet správ ktoré môže používateľ denne vytvoriť."
+    max_invites_per_day: "Maximálny počet pozvánok ktoré môže používateľ denne zaslať."
+    max_topic_invitations_per_day: "Maximálny počet pozvánok do tém ktoré môže používateľ denne zaslať."
+    suggested_topics: "Zobrazovaný počet navrhovaných tém na konci témy."
+    limit_suggested_to_category: "V navrhovaných témach zobraziť iba témy z aktuálnej kategórie."
+    clean_up_uploads: "Na zamedzenie nezákonného uloženia odstrániť opustené nahrané súbory na ktoré nevedie žiadny odkaz. VAROVANIE: pred zapnutím tohoto nastavenie možno chcete zálohovať Váš adresár s nahranými súbormi."
+    clean_orphan_uploads_grace_period_hours: "Doba (v hodinách) pred odstránením opustených nahraných súborov."
+    purge_deleted_uploads_grace_period_days: "Doba (v dňoch) pred úplným vymazaním odstráneného nahraného súboru."
+    purge_unactivated_users_grace_period_days: "Doba (v dňoch) pred tým, než je užívateľ, ktorý si neaktivoval svoj účet vymazaný."
+    enable_s3_uploads: "Ukladať nahrávané súbory na úložište S3. DÔLEŽITÉ: vyžaduje platné prístupové údaje S3 (id prístupového kľúča (access key id) a tajný prístupový kľúč (secret access key))."
+    s3_use_iam_profile: 'Použiť rolu AWS EC2 IAM na načítanie kľúčov. POZNÁMKA: zapnutie prepíše nastavený "s3 prístupový kľúč id (s3 access key id)" a "s3 tajný prístupový kľúč (s3 secret access key)".'
+    s3_upload_bucket: "Amazon S3 bucket name, do ktorého budú nahraté súbory. POZOR: musí byť malými písmenami, žiadne bodky a žiadne podtržítka."
+    s3_access_key_id: "Amazon S3 access key id, ktoré bude použité pre nahrávanie obrázkov."
+    s3_secret_access_key: "Amazon S3 secret access key, ktorý bude použitý pre nahrávanie obrázkov."
+    s3_region: "Amazon S3 region name, ktorý bude použitý pre nahrávanie súborov."
+    s3_cdn_url: "CDN URL ktoré sa použije na všetky dáta v s3 (napríklad https://cdn.niekde.com). VAROVANIE: po zmene tohoto nastavenia musíte použiť príkaz rebake na všetky staré príspevky."
+    avatar_sizes: "Zoznam automaticky generovaných veľkostí avatarov."
+    external_system_avatars_enabled: "Použiť externú avatar službu."
+    external_system_avatars_url: "URL externej avatar služby.  Dostupné náhrady sú {username} {first_letter} {color} {size}"
+    default_opengraph_image_url: "URL štandardného opengraph obrázku."
+    enable_flash_video_onebox: "Povolenia vkladania odkazov na swf a flv (Adobe Flash) v onebox. VAROVANIE: môže vniesť bezpečnostné riziká."
+    default_invitee_trust_level: "Predvolená úroveň dôvery (0-4) pre pozvaných používateľov."
+    default_trust_level: "Východzí stupeň dôvery (0-4) pre všekých nových užívateľov. UPOZORNENIE: Zmena nastavenia Vás môže vystaviť riziku spamovania. "
+    tl1_requires_topics_entered: "Koľko tém musí nový užívateľ zadať pred povýšením na stupeň dôvery 1."
+    tl1_requires_read_posts: "Koľko príspevkov musí nový užívateľ prečítať pred povýšením na stupeň dôvery 1."
+    tl1_requires_time_spent_mins: "Koľko minút musí nový užívateľ čítať príspevky pred povýšením na stupeň dôvery 1."
+    tl2_requires_topics_entered: "Koľko tém musí nový užívateľ zadať pred povýšením na stupeň dôvery 2."
+    tl2_requires_read_posts: "Koľko príspevkov musí nový užívateľ prečítať pred povýšením na stupeň dôvery 2."
+    tl2_requires_time_spent_mins: "Koľko minút musí nový užívateľ čítať príspevky pred povýšením na stupeň dôvery 2."
+    tl2_requires_days_visited: "Koľko dní musí nový užívateľ navštevovať stránku pred povýšením na stupeň dôvery 2."
+    tl2_requires_likes_received: "Koľko \"Páči sa\" musí nový užívateľ dostať pred povýšením na stupeň dôvery 2."
+    tl2_requires_likes_given: "Koľko \"Páči sa\" musí nový užívateľ rozdať pred povýšením na stupeň dôvery 2."
+    tl2_requires_topic_reply_count: "Na koľko tém musí nový užívateľ odpovedať pred povýšením na stupeň dôvery 2."
+    tl3_requires_days_visited: "Minimálny počet navštevných dní,  ktoré musí mať užívateľ za posledných 100 dní potrebných pre kvalifikáciu na dosiahnute 3 levelu dôvery. (0 až 100)"
+    tl3_requires_topics_replied_to: "Minimálny počet tém,  na ktoré musí mať užívateľ odpovedať za posledných 100 dní potrebných pre kvalifikáciu na dosiahnute 3 levelu dôvery. (0 a viac)"
+    tl3_requires_topics_viewed: "Percento tém ktoré musí mať užívateľ pozreté, za posledných 100 dní pre kvalifikáciu na dosiahnute 3 levelu dôvery. (0 až 100)"
+    tl3_requires_posts_read: "Percento príspevkov, ktoré musí mať užívateľ pozreté za posledných 100 dní pre kvalifikáciu na dosiahnute 3 levelu dôvery. (0 až 100)"
+    tl3_requires_topics_viewed_all_time: "Minimálny počet všetkých tém,  ktoré musí mať užívateľ pozreté pre kvalifikáciu na dosiahnute 3 levelu dôvery. "
+    tl3_requires_posts_read_all_time: "Minimálny počet všetkých príspevkov,  ktoré musí mať užívateľ prečítané pre kvalifikáciu na 3 level dôvery. "
+    tl3_promotion_min_duration: "MInimálny počet dní po pridelení 3 levelu dôvery než môže byť užívateľ degradovaný späť na 3 level dôvery."
+    tl3_requires_likes_given: "Minimálny počet \"Páči sa\", ktoré musia byť udelené za posledných 100 dní pre kvalifikáciu na dosiahnutie 3 levelu dôvery. "
+    tl3_requires_likes_received: "Minimálny počet \"Páči sa\", ktoré musia byť prijaté za posledných 100 dní pre kvalifikáciu na dosiahnutie 3 levelu dôvery. "
+    tl3_links_no_follow: "Neodstraňujte rel = nofollow z odkazov pridaných užívateľmi s úrovňou dôveryhodnosti 3 ."
+    min_trust_to_create_topic: "MInimálna úroveň dôvery na vytvorenie novej témy."
+    min_trust_to_edit_wiki_post: "MInimálna úroveň dôvery na úpravu wiki príspevku."
+    min_trust_to_send_messages: "MInimálna úroveň dôvery na vytvorenie novej osobnej správy."
+    newuser_max_links: "Koľko odkazov môže nový používateľ pridať do príspevku."
+    newuser_max_images: "Koľko obrázkov môže nový používateľ pridať do príspevku."
+    newuser_max_attachments: "Koľko príloh môže nový používateľ pridať do príspevku."
+    newuser_max_mentions_per_post: "Maximálny počet notifikácií typu @meno môže nový užívateľ použiť v príspevku."
+    newuser_max_replies_per_topic: "Maximálny počet odpovedí ktoré môže nový používateľ pridať  do jednej témy pokiaľ na ne niekto neodpovie."
+    max_mentions_per_post: "Maximálný počet notifikácií typu @meno, ktoré môže ktokoľvek použiť v rámci jedného príspevku."
+    max_users_notified_per_group_mention: "Maximálny počet používateľov, ktorý môžu dostať notifikácie, v prípade notifikovania celej skupiny (ak sa dosiahne maximum, žiadne ďalšie notifikácie nebudú zaslané)"
+    create_thumbnails: "Vytvor náhľad a okraje pre obrázoky, ktoré sú príliš veľké aby sa zmestili do príspevku."
+    title_max_word_length: "Maximálna povolená dĺžka slov v názve témy, v znakoch."
+    allow_uppercase_posts: "Povoliť kapitálky v názve témy, alebo tele príspevku."
+  search:
+    types:
+      category: 'Kategórie'
+      user: 'Používatelia'
+  login:
+    admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
+  system_messages:
+    welcome_user:
+      subject_template: "Vitajte na %{site_name}!"
+    welcome_invite:
+      subject_template: "Vitajte na %{site_name}!"
+  subject_re: "Re:"
+  subject_pm: "[PM]"
+  user_notifications:
+    previous_discussion: "Prechádzajúce odpovede"
+    unsubscribe:
+      title: "Odhlásiť"
+    user_replied:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_quoted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    digest:
+      top_topics: "Populárne príspevky"
+      other_new_topics: "Populárne témy"
+      click_here: "kliknite tu"
+    set_password:
+      subject_template: "[%{site_name}] Nastaviť heslo"
+    admin_login:
+      subject_template: "[%{site_name}] Prihlásenie"
+    account_created:
+      subject_template: "[%{site_name}] Váš nový účet"
+    authorize_email:
+      subject_template: "[%{site_name}] Potvrďte Vašu novú email adresu"
+    signup_after_approval:
+      subject_template: "Váš účet bol schválený na %{site_name}!"
+    signup:
+      subject_template: "[%{site_name}] Potvrďte Váš nový účet"
+  page_not_found:
+    title: "Stránka ktorú požadujete neexistuje alebo je súkromná."
+    popular_topics: "Populárne"
+    recent_topics: "Nedávne"
+    see_more: "Viac"
+    search_title: "Prehľadať tieto stránky"
+    search_google: "Google"
+  terms_of_service:
+    title: "Podmienky používania"
+    signup_form_message: 'Prečítal som si <a href="/tos" target="_blank">Podmienky používania</a> a súhlasím s nimi.'
+  upload:
+    pasted_image_filename: "Vložený obrázok"
+    file_missing: "Ľutujeme, ale musíte poskytnúť súbor na nahranie."
+  email_log:
+    anonymous_user: "Používateľ je anonymný"
+    seen_recently: "Používateľ bol nedávno online"
+    already_read: "používateľ si už prečítal tento príspevok"
+    message_blank: "správa je prázdna"
+    body_blank: "telo je prázdne"
+  color_schemes:
+    base_theme_name: "Základ"
+  about: "O stránke"
+  guidelines: "Pravidlá"
+  privacy: "Súkromie"
+  edit_this_page: "Upraviť túto stránku"
+  csv_export:
+    boolean_yes: "Áno"
+    boolean_no: "Nie"
+  guidelines_topic:
+    title: "FAQ/Pravidlá"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Toto je miesto pre civilizovanú diskusiu](#civilized)
+
+      Prosíme majte k tejto diskusii rešpekt podobný ako k verejnému parku. My, sme tiež zdieľaný zdroj &mdash; miesto na zdieľanie znalostí, vedomostí a záujmov pomocou nepretržitej diskusie.
+
+      Toto nie sú jednoznačné pravidlá, skôr návod ľudskému úsudku naše komunity. Použite tieto pravidlá na udržanie prehľadnú a svetlého miesta pre civilizovanú verejnú diskusiu.
+
+      <a name="improve"></a>
+
+      ## [Vylepšujte diskusiu](#improve)
+
+      Pomôžte nám tvoriť toto skvelé miesto akýmkoľvek snahou o zlepšenie diskuzie, stačí drobnosť. Ak nie ste si istý že Váš príspevok posúva diskuziu, premyslite si čo chcete povedať a skúste neskôr.
+
+      Diskutované témy sú nám blízke a chceme, aby ste sa správali tak, akoby Vám boli blízke tiež. Rešpektujte témy a diskutujúcich dokonca i v prípade, ak nesúhlasíte s tým, čo bolo povedané.
+
+      Jedným zo spôsobov ako vylepšiť diskusiu je objavenie tej ktoré už prebieha. Prosíme, venujte trochu času zoznámeniu sa s témami predtým, ako začnete odpovedať alebo začínať svoje vlastné a budete mať vačšiu šancu stretnúť tých, ktorý s Vami zdieľajú záujmy.
+
+      <a name="agreeable"></a>
+
+      ## [Buďte príjemný i keď nesúhlasíte](#agreeable)
+
+      Môžete mať túžbu odpovedať na niečo s čím nesúhlasíte. To je v poriadku. Ale pamätajte _kritizujte myšienky a nie ľudí_. Prosíme, vyvarujte sa:
+
+      * Posmeškom.
+      * Útokom na konkrétnu osobu.
+      * Odpovediam na tón príspevku miesto skutočného obsahu.
+      * Impulzívnym reakciám.
+
+      Namiesto toho poskytnite logické proti argumenty, ktoré zlepšia konverzáciu.
+
+      <a name="participate"></a>
+
+      ## [Vaša účasť sa počíta](#participate)
+
+      Konverzácie, ktoré tu máme nastavujú tón pre všetkých. Pomôžte nám ovplyvniť budúcnosť tejto komunity zapojením sa do diskusií ktoré z tohoto fóra robia zaujímavé miesto a vyhýbaním sa tým ktoré to nerobia.
+
+      Discourse poskytuje nástroje, ktoré komunite spoločne umožňujú identifikovať najlepšie (a najhoršie) príspevky, záložky, páči sa mi, značky, odpovede, úpravy a podobne. Použite ich na vylepšenie Vašej skúsenosti i skúsenosti kohokoľvek iného.
+
+      Poďme náš park zanechať v lepšom stave než v akom sme ho našli.
+
+      <a name="flag-problems"></a>
+
+      ## [Ak vidíte problém označte ho](#flag-problems)
+
+      Moderátori majú špeciálnu autoritu, sú zodpovedný za fórum. Ale Vy tiež. S Vašou pomocou sa moderátori môžu stať sprostredkovateľmi a nie iba školníkmi alebo políciou.
+
+      Ak vidíte nevhodné chovanie, neodpovedajte. Reakciou naň ho posiľujete, míňate svoju energiu a strácate čas nás všetkých. _Oba ho označte_. Ak sa zíde viačej značiek, budú prijaté opatrenia, či už automatické alebo zásahom moderátora.
+
+      Na správu komunity majú moderátori vyhradené práva na odstránenie akéhokoľvek obsahu a používateľského účtu kedukoľvek z akéhokoľvek dôvodu. Moderátori žiadnym spôsobom nekontrolujú príspevky, moderátori a vlastníci stránky nepreberajú žiadku zodpovednosť za obsah publikovaný komunitou.
+
+      <a name="be-civil"></a>
+
+      ## [Buďte civilizovaný](#be-civil)
+
+      Nič nesabotuje zdravú diskusiu tak ako hrubosť:
+
+      * Buďte zdvorilí, Neuverejňujte nič, čo by múdra osoba považovala za urážlivé, znevažujúce alebo nenávistné.
+      * Udržujte poriadok. Neuverejnujte nič nemravné alebo explicitne sexuálne.
+      * Rešpektujte iných. Neprenasledujte alebo nezarmucujte ostatných, nenapodobnujte ľudí, alebo nezverejňujte ich súkromné informácie.
+      * Rešpektujte naše fórum. Neuverejňujte spam alebo iným spôsobom nevandalizujte fórum.
+
+      Toto nie sú jednoznačné pravidlá s presnými definiciami &mdash; vyhnite sa čo i len _náznaku_ akejkoľvek z týchto vecí. Ak nie ste si istý, spýtajte sa, či by Váš príspevok bol zverejnený na hlavnej strane New York Times.
+
+      Toto je verejné fórum a diskusie sú indexované vyhľadávačmi. Udržujte jazyk, odkazy a obrázky bezpečné pre rodinu a priateĺov.
+
+      <a name="keep-tidy"></a>
+
+      ## [Udržujte poriadok](#keep-tidy)
+
+      Vynaložte snahu dať veci na správne miesto, tak môžeme stráviť viac času diskusiou a menej udržiavaním poriadku. Takže:
+
+      * Nezačínajte tému v nesprávnej kategórií.
+      * Neuverejňujte rovnaké veci vo viacetých témach.
+      * Nepublikujte príspevky bez obsahu.
+      * Nepresmerujte tému zmenou uprostred.
+      * Nepodpisujte sa &mdash; každý príspevok má pripojený odkaz na Váš profil.
+
+      Namiesto poslania “+1” or “Súhlasím”, radšej použite tlačítko Páči sa mi. Namiesto radikálnej zmeny témy v priebehu diskusie radšej odpovedzte spojenou témou.
+
+      <a name="stealing"></a>
+
+      ## [Uverejňujte iba svoj obsah](#stealing)
+
+      Bez dovolenia nemôžete publikovať nič digitálne, čo patrí niekomu inému. Nemôžete publikovať popis, odkazy alebo metódy na kradnutie niekoho intelektuálneho vlastníctva (softvéru, videa, audia, obrázkov), alebo porušovať akýkoľvek iný zákon.
+
+      <a name="power"></a>
+
+      ## [Založené na Vás](#power)
+
+      Táto stránka je prevádzkovaná [miestnym priateľským personálom](/about) a *Vami*, komunitou. Ak máte akékoľvek ďalšie otázky ako by tu veci mali fungovať, založte novú tému v [kategórií spätná väzba](/c/site-feedback) a poďme diskutovať! Ak ste narazili na kritický alebo urgentný problém ktorý nemôže byť riešený pomocou tém v meta alebo príznakom, kontaktujte nás pomocou [stránky personálu](/about).
+
+      <a name="tos"></a>
+
+      ## [Podmienky](#tos)
+
+      Áno, právnický žargón je nudný, ale musíme chrániť seba &ndash; tým následne i Vás a vaše dáta &ndash; voči nepriateľským ľuďom. Máme  [Podmienky](/tos) popisujúce Vaše (a naše ) správanie a práva súvisiace s obsahom, súkromým a legislatívou. K používaniu tejto služby musíte dodžiavať naše [Pravidlá](/tos).
+  tos_topic:
+    title: "Podmienky používania"
+  badges:
+    long_descriptions:
+      basic: |
+        Tento odznak je udelený ak dosiahnete stupeň dóvery 1. Ďakujeme za Váš čas , prečítanie niekoľkých tém a zoznámenie sa s tým o čom je naša komunita. Odstránili sme obmedzenia pre nového používateľa a odteraz máte všetky základné práva, ako je zasielanie osobných správ, značkovanie, wiki úpravy a možnosť publikovať obrázky a viaceré odkazy.
+  admin_login:
+    success: "Email odoslaný"
+    error: "Chyba !"
+    email_input: "Email administrátora"
+    submit_button: "Poslať email"
+  discourse_hub:
+    access_token_problem: "Povedzte administrátorovi: Prosím aktualizujte nastavenia stránky, aby obsahovali správny discourse_org_access_key."
+  performance_report:
+    initial_post_raw: Táto téma obsahuje denné reporty rýchlosti Vašich stránok.
+    initial_topic_title: Reporty rýchlosti stránok
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors
