@@ -236,6 +236,26 @@ describe Email::Receiver do
       expect(emails).to include("someone@else.com", "discourse@bar.com", "team@bar.com", "wat@bar.com")
     end
 
+    it "associates email replies using both 'In-Reply-To' and 'References' headers" do
+      expect { process(:email_reply_1) }.to change(Topic, :count)
+
+      topic = Topic.last
+
+      expect { process(:email_reply_2) }.to change { topic.posts.count }
+      expect { process(:email_reply_3) }.to change { topic.posts.count }
+
+      # Why 6 when we only processed 3 emails?
+      #   - 3 of them are indeed "regular" posts generated from the emails
+      #   - The 3 others are "small action" posts automatically added because
+      #     we invited 3 users (team@bar.com, two@foo.com and three@foo.com)
+      expect(topic.posts.count).to eq(6)
+
+      # trash all but the 1st post
+      topic.ordered_posts[1..-1].each(&:trash!)
+
+      expect { process(:email_reply_4) }.to change { topic.posts.count }
+    end
+
   end
 
   context "new topic in a category" do
