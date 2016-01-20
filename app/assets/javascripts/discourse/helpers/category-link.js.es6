@@ -9,6 +9,17 @@ function categoryStripe(color, classes) {
   return "<span class='" + classes + "' " + style + "></span>";
 }
 
+/**
+  Generates category badge HTML
+
+  @param {Object} category The category to generate the badge for.
+  @param {Object} opts
+    @param {String}  [opts.url] The url that we want the category badge to link to.
+    @param {Boolean} [opts.allowUncategorized] If false, returns an empty string for the uncategorized category.
+    @param {Boolean} [opts.link] If false, the category badge will not be a link.
+    @param {Boolean} [opts.hideParaent] If true, parent category will be hidden in the badge.
+    @param {String}  [opts.prefix] Prefix the string onto the category name.
+**/
 export function categoryBadgeHTML(category, opts) {
   opts = opts || {};
 
@@ -50,6 +61,8 @@ export function categoryBadgeHTML(category, opts) {
           ">";
 
   var name = escapeExpression(get(category, 'name'));
+  if (opts.prefix) name = `${opts.prefix}${name}`;
+
   if (restricted) {
     html += iconHTML('lock') + " " + name;
   } else {
