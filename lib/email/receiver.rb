@@ -204,6 +204,14 @@ module Email
                                                          .gsub(Regexp.escape("%{reply_key}"), "([[:xdigit:]]{32})")
     end
 
+    def group_incoming_emails_regex
+      @group_incoming_emails_regex ||= Regexp.union Group.pluck(:incoming_email).select(&:present?).uniq
+    end
+
+    def category_email_in_regex
+      @category_email_in_regex ||= Regexp.union Category.pluck(:email_in).select(&:present?).uniq
+    end
+
     def find_related_post
       message_ids = [@mail.in_reply_to, extract_references]
       message_ids.flatten!
@@ -329,7 +337,7 @@ module Email
           @mail[d].address_list.addresses.each do |address_field|
             begin
               email = address_field.address.downcase
-              if email !~ reply_by_email_address_regex
+              if should_invite?(email)
                 user = find_or_create_user(address_field)
                 if can_invite?(topic, user)
                   topic.topic_allowed_users.create!(user_id: user.id)
@@ -342,6 +350,12 @@ module Email
           end
         end
       end
+    end
+
+    def should_invite?(email)
+      email !~ reply_by_email_address_regex &&
+      email !~ group_incoming_emails_regex &&
+      email !~ category_email_in_regex
     end
 
     def can_invite?(topic, user)
