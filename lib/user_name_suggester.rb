@@ -34,11 +34,17 @@ module UserNameSuggester
   end
 
   def self.sanitize_username(name)
-    ActiveSupport::Inflector.transliterate(name)
-                            .gsub(/^[^[:alnum:]]+|\W+$/, "")
-                            .gsub(/\W+/, "_")
-                            .gsub(/^\_+/, '')
-                            .gsub(/[\-_\.]{2,}/, "_")
+    name = ActiveSupport::Inflector.transliterate(name)
+    # 1. replace characters that aren't allowed with '_'
+    name.gsub!(UsernameValidator::CONFUSING_EXTENSIONS, "_")
+    name.gsub!(/[^\w.-]/, "_")
+    # 2. removes unallowed leading characters
+    name.gsub!(/^\W+/, "")
+    # 3. removes unallowed trailing characters
+    name.gsub!(/[^A-Za-z0-9]+$/, "")
+    # 4. unify special characters
+    name.gsub!(/[-_.]{2,}/, "_")
+    name
   end
 
   def self.rightsize_username(name)
