@@ -211,30 +211,19 @@ module Discourse
   end
 
   def self.enable_readonly_mode
-    $redis.set(readonly_mode_key, 1)
+    SiteSetting.readonly_mode = true
     MessageBus.publish(readonly_channel, true)
-    keep_readonly_mode
     true
   end
 
-  def self.keep_readonly_mode
-    # extend the expiry by 1 minute every 30 seconds
-    Thread.new do
-      while readonly_mode?
-        $redis.expire(readonly_mode_key, 1.minute)
-        sleep 30.seconds
-      end
-    end
-  end
-
   def self.disable_readonly_mode
-    $redis.del(readonly_mode_key)
+    SiteSetting.readonly_mode = false
     MessageBus.publish(readonly_channel, false)
     true
   end
 
   def self.readonly_mode?
-    recently_readonly? || !!$redis.get(readonly_mode_key)
+    recently_readonly? || SiteSetting.readonly_mode
   end
 
   def self.request_refresh!
@@ -301,10 +290,6 @@ module Discourse
 
   def self.asset_host
     Rails.configuration.action_controller.asset_host
-  end
-
-  def self.readonly_mode_key
-    "readonly_mode"
   end
 
   def self.readonly_channel
