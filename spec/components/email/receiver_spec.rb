@@ -130,6 +130,46 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. Anf if\nyou can mix it up with some anise, then I'm in heaven ;)")
     end
 
+    describe 'Unsubscribing via email' do
+      let(:last_email) { ActionMailer::Base.deliveries.last }
+
+      describe 'unsubscribe_subject.eml' do
+        it 'sends an email asking the user to confirm the unsubscription' do
+          expect { process("unsubscribe_subject") }.to change { ActionMailer::Base.deliveries.count }.by(1)
+          expect(last_email.to.length).to eq 1
+          expect(last_email.from.length).to eq 1
+          expect(last_email.from).to include "noreply@#{Discourse.current_hostname}"
+          expect(last_email.to).to include "discourse@bar.com"
+          expect(last_email.subject).to eq I18n.t(:"unsubscribe_mailer.subject_template").gsub("%{site_title}", SiteSetting.title)
+        end
+
+        it 'does nothing unless unsubscribe_via_email is turned on' do
+          SiteSetting.stubs("unsubscribe_via_email").returns(false)
+          before_deliveries = ActionMailer::Base.deliveries.count
+          expect { process("unsubscribe_subject") }.to raise_error { Email::Receiver::BadDestinationAddress }
+          expect(before_deliveries).to eq ActionMailer::Base.deliveries.count
+        end
+      end
+
+      describe 'unsubscribe_body.eml' do
+        it 'sends an email asking the user to confirm the unsubscription' do
+          expect { process("unsubscribe_body") }.to change { ActionMailer::Base.deliveries.count }.by(1)
+          expect(last_email.to.length).to eq 1
+          expect(last_email.from.length).to eq 1
+          expect(last_email.from).to include "noreply@#{Discourse.current_hostname}"
+          expect(last_email.to).to include "discourse@bar.com"
+          expect(last_email.subject).to eq I18n.t(:"unsubscribe_mailer.subject_template").gsub("%{site_title}", SiteSetting.title)
+        end
+
+        it 'does nothing unless unsubscribe_via_email is turned on' do
+          SiteSetting.stubs(:unsubscribe_via_email).returns(false)
+          before_deliveries = ActionMailer::Base.deliveries.count
+          expect { process("unsubscribe_body") }.to raise_error { Email::Receiver::InvalidPost }
+          expect(before_deliveries).to eq ActionMailer::Base.deliveries.count
+        end
+      end
+    end
+
     it "handles inline reply" do
       expect { process(:inline_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("On Tue, Jan 15, 2016 at 11:12 AM, Bar Foo <info@unconfigured.discourse.org> wrote:\n\n> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:")
