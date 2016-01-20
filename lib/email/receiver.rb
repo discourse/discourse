@@ -211,10 +211,9 @@ module Email
       message_ids.uniq!
       return if message_ids.empty?
 
-      IncomingEmail.where.not(post_id: nil)
-                   .where(message_id: message_ids)
-                   .first
-                   .try(:post)
+      Post.where(id: IncomingEmail.where(message_id: message_ids).select(:post_id))
+          .order(created_at: :desc)
+          .first
     end
 
     def extract_references
