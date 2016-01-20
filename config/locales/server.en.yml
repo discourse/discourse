@@ -1104,6 +1104,9 @@ en:
     short_email_length: "Short email length in Bytes"
     display_name_on_email_from: "Display full names on email from fields"
 
+    unsubscribe_via_email: "Allow users to unsubscribe from emails by sending an email with 'unsubscribe' in the subject or body"
+    unsubscribe_via_email_footer: "Attach an unsubscribe link to the footer of sent emails"
+
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
@@ -1378,6 +1381,17 @@ en:
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+
+  unsubscribe_mailer:
+    subject_template: "Confirm you no longer want to receive email updates from %{site_title}"
+    text_body_template: |
+      Someone (possibly you?) requested to no longer send email updates from %{site_domain_name} to this address.
+      If you with to confirm this, please click this link:
+
+      %{confirm_unsubscribe_link}
+
+
+      I you want to continue receiving email updates, you may ignore this email.
 
   invite_mailer:
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
@@ -1940,7 +1954,10 @@ en:
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
 
   unsubscribe_link: |
-    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}).
+    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url})
+
+  unsubscribe_via_email_link: |
+    or, [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "

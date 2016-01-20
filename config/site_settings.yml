@@ -535,6 +535,10 @@ email:
   short_email_length: 2800
   display_name_on_email_from:
     default: true
+  unsubscribe_via_email:
+    default: true
+  unsubscribe_via_email_footer:
+    default: false
 
 files:
   max_image_size_kb: 3072
