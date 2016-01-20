@@ -36,6 +36,8 @@ class UsernameValidator
     errors.empty?
   end
 
+  CONFUSING_EXTENSIONS ||= /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)$/i
+
   private
 
   def username_exist?
@@ -68,29 +70,29 @@ class UsernameValidator
 
   def username_first_char_valid?
     return unless errors.empty?
-    if username[0] =~ /[^\w]/
+    if username[0] =~ /\W/
       self.errors << I18n.t(:'user.username.must_begin_with_alphanumeric')
     end
   end
 
   def username_last_char_valid?
     return unless errors.empty?
-    if username[-1] =~ /[^\w]/
+    if username[-1] =~ /[^A-Za-z0-9]/
       self.errors << I18n.t(:'user.username.must_end_with_alphanumeric')
     end
   end
 
   def username_no_double_special?
     return unless errors.empty?
-    if username =~ /[\-_\.]{2,}/
+    if username =~ /[-_.]{2,}/
       self.errors << I18n.t(:'user.username.must_not_contain_two_special_chars_in_seq')
     end
   end
 
   def username_does_not_end_with_confusing_suffix?
     return unless errors.empty?
-    if username =~ /\.(json|gif|jpeg|png|htm|js|json|xml|woff|tif|html|ico)/i
-      self.errors << I18n.t(:'user.username.must_not_contain_confusing_suffix')
+    if username =~ CONFUSING_EXTENSIONS
+      self.errors << I18n.t(:'user.username.must_not_end_with_confusing_suffix')
     end
   end
 end
