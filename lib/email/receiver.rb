@@ -59,7 +59,10 @@ module Email
 
       raise InactiveUserError if !user.active && !user.staged
 
-      if post = find_related_post
+      if action = subscription_action_for(body, @mail.subject)
+        message = SubscriptionMailer.send(action, user)
+        Email::Sender.new(message, :subscription).send
+      elsif post = find_related_post
         create_reply(user: user, raw: body, post: post, topic: post.topic)
       else
         destination = destinations.first
@@ -224,6 +227,13 @@ module Email
 
     def likes
       @likes ||= Set.new ["+1", I18n.t('post_action_types.like.title').downcase]
+    end
+
+    def subscription_action_for(body, subject)
+      return unless SiteSetting.unsubscribe_via_email
+      if ([subject, body].compact.map(&:to_s).map(&:downcase) & ['unsubscribe']).any?
+        :confirm_unsubscribe
+      end
     end
 
     def post_action_for(body)
