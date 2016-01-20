@@ -3,17 +3,17 @@ import loadScript from "discourse/lib/load-script";
 import { on } from "ember-addons/ember-computed-decorators";
 
 export default Em.Component.extend({
-  tagName: "input",
-  classNames: ["date-picker"],
+  classNames: ["date-picker-wrapper"],
   _picker: null,
 
   @on("didInsertElement")
   _loadDatePicker() {
-    const input = this.$()[0];
+    const input = this.$(".date-picker")[0];
 
     loadScript("/javascripts/pikaday.js").then(() => {
-      const default_opts = {
+      let default_opts = {
         field: input,
+        container: this.$()[0],
         format: "YYYY-MM-DD",
         defaultDate: moment().add(1, "day").toDate(),
         minDate: new Date(),
@@ -29,7 +29,7 @@ export default Em.Component.extend({
     this._picker = null;
   },
 
-  _opts: function() {
+  _opts() {
     return null;
   }
 
