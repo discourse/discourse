@@ -1,5 +1,6 @@
 import { exportEntity } from 'discourse/lib/export-csv';
 import { outputExportResult } from 'discourse/lib/export-result';
+import Report from 'admin/models/report';
 
 export default Ember.Controller.extend({
   viewMode: 'table',
@@ -20,9 +21,9 @@ export default Ember.Controller.extend({
       var q;
       this.set("refreshing", true);
       if (this.get('categoryId') === "all") {
-        q = Discourse.Report.find(this.get("model.type"), this.get("startDate"), this.get("endDate"));
+        q = Report.find(this.get("model.type"), this.get("startDate"), this.get("endDate"));
       } else {
-        q = Discourse.Report.find(this.get("model.type"), this.get("startDate"), this.get("endDate"), this.get("categoryId"));
+        q = Report.find(this.get("model.type"), this.get("startDate"), this.get("endDate"), this.get("categoryId"));
       }
       q.then(m => this.set("model", m)).finally(() => this.set("refreshing", false));
     },
