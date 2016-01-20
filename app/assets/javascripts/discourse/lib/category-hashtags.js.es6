@@ -15,7 +15,7 @@ export function replaceSpan($elem, categorySlug, categoryLink) {
     $elem.replaceWith(categorySlug);
   } else {
     $elem.replaceWith(categoryBadgeHTML(
-      category, { url: categoryLink, allowUncategorized: true }
+      category, { url: categoryLink, allowUncategorized: true, prefix: '#' }
     ));
   }
 };
