@@ -3,7 +3,7 @@ import DiscourseURL from 'discourse/lib/url';
 export function isValidLink($link) {
   return ($link.hasClass("track-link") ||
           ($link.closest('.onebox-result,.onebox-body').length === 0 &&
-           $link.has('.badge-category').length === 0))
+           $link.has('.badge-category').length === 0));
 };
 
 export default {
