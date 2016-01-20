@@ -58,6 +58,7 @@ export default function() {
   // User routes
   this.resource('users');
   this.resource('user', { path: '/users/:username' }, function() {
+    this.route('summary');
     this.resource('userActivity', { path: '/activity' }, function() {
       this.route('topics');
       this.route('replies');
