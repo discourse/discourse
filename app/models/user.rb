@@ -619,7 +619,7 @@ class User < ActiveRecord::Base
     user_badges.select('distinct badge_id').count
   end
 
-  def featured_user_badges
+  def featured_user_badges(limit=3)
     user_badges
         .joins(:badge)
         .order("CASE WHEN badges.id = (SELECT MAX(ub2.badge_id) FROM user_badges ub2
@@ -629,7 +629,7 @@ class User < ActiveRecord::Base
         .includes(:user, :granted_by, badge: :badge_type)
         .where("user_badges.id in (select min(u2.id)
                   from user_badges u2 where u2.user_id = ? group by u2.badge_id)", id)
-        .limit(3)
+        .limit(limit)
   end
 
   def self.count_by_signup_date(start_date, end_date)

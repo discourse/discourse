@@ -703,6 +703,23 @@ en:
         ok: "Your password looks good."
         instructions: "At least %{count} characters."
 
+      summary:
+        title: "Summary"
+        stats: "Stats"
+        topic_count: "Topics Created"
+        post_count: "Posts Created"
+        likes_given: "Likes Given"
+        likes_received: "Likes Received"
+        days_visited: "Days Visited"
+        posts_read_count: "Posts Read"
+        top_replies: "Top Replies"
+        top_topics: "Top Topics"
+        top_badges: "Top Badges"
+        more_topics: "More Topics"
+        more_replies: "More Replies"
+        more_badges: "More Badges"
+
+
       associated_accounts: "Logins"
       ip_address:
         title: "Last IP Address"

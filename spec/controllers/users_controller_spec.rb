@@ -1607,4 +1607,19 @@ describe UsersController do
 
   end
 
+  context '#summary' do
+
+    it "generates summary info" do
+      user = Fabricate(:user)
+      create_post(user: user)
+
+      xhr :get, :summary, username: user.username_lower
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+
+      expect(json["user_summary"]["topic_count"]).to eq(1)
+      expect(json["user_summary"]["post_count"]).to eq(1)
+    end
+  end
+
 end

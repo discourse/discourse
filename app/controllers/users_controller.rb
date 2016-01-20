@@ -176,6 +176,13 @@ class UsersController < ApplicationController
     end
   end
 
+  def summary
+    user = fetch_user_from_params
+    summary = UserSummary.new(user, guardian)
+    serializer = UserSummarySerializer.new(summary, scope: guardian)
+    render_json_dump(serializer)
+  end
+
   def invited
     inviter = fetch_user_from_params
     offset = params[:offset].to_i || 0
