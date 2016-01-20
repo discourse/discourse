@@ -63,6 +63,13 @@ module Email
       if @opts[:add_unsubscribe_link]
         unsubscribe_link = PrettyText.cook(I18n.t('unsubscribe_link', template_args), sanitize: false).html_safe
         html_override.gsub!("%{unsubscribe_link}", unsubscribe_link)
+
+        if SiteSetting.unsubscribe_via_email_footer && @opts[:add_unsubscribe_via_email_link]
+          unsubscribe_via_email_link = PrettyText.cook(I18n.t('unsubscribe_via_email_link', hostname: Discourse.current_hostname), sanitize: false).html_safe
+          html_override.gsub!("%{unsubscribe_via_email_link}", unsubscribe_via_email_link)
+        else
+          html_override.gsub!("%{unsubscribe_via_email_link}", "")
+        end
       else
         html_override.gsub!("%{unsubscribe_link}", "")
       end
@@ -103,6 +110,9 @@ module Email
       if @opts[:add_unsubscribe_link]
         body << "\n"
         body << I18n.t('unsubscribe_link', template_args)
+        if SiteSetting.unsubscribe_via_email_footer && @opts[:add_unsubscribe_via_email_link]
+          body << I18n.t('unsubscribe_via_email_link', hostname: Discourse.current_hostname)
+        end
       end
 
       body
