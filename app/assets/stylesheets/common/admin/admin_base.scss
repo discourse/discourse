@@ -1606,10 +1606,9 @@ and (max-width : 500px) {
     border-bottom: 1px solid #dfdfdf;
   }
   .actions {
-    font-size: 1.214em;
     float: right;
-    a {
-      margin-left: 5px;
+    .btn {
+      padding: 3px 6px;
     }
   }
 }
