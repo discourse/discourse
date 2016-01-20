@@ -945,6 +945,10 @@ en:
     verbose_localization: "Show extended localization tips in the UI"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
+    top_topics_formula_log_views_multiplier: "value of log views multiplier (n) in top topics formula: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "value of first post likes multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
     rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."

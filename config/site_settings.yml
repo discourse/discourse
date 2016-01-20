@@ -803,6 +803,15 @@ developer:
   verbose_localization:
     default: false
     client: true
+  top_topics_formula_log_views_multiplier:
+    default: 2
+    min: 0
+  top_topics_formula_first_post_likes_multiplier:
+    default: 0.5
+    min: 0
+  top_topics_formula_least_likes_per_post_multiplier:
+    default: 3
+    min: 0
   migrate_to_new_scheme:
     hidden: true
     default: false
