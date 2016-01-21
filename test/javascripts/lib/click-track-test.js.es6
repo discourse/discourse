@@ -29,10 +29,7 @@ module("lib:click-track", {
           </div>
           <a id="same-site" href="http://discuss.domain.com">forum</a>
           <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
-          <a class="badge-wrapper bullet" href="http://discuss.domain.com">
-            <span class="badge-category-bg"></span>
-            <span class="badge-category"></span>
-          </a>
+          <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
         </article>
       </div>`);
   }
@@ -69,7 +66,7 @@ test("does not track clicks on quote buttons", function() {
 });
 
 test("does not track clicks on category badges", () => {
-  ok(!track(generateClickEventOn('.badge-wrapper')));
+  ok(!track(generateClickEventOn('.hashtag')));
 });
 
 test("removes the href and put it as a data attribute", function() {
