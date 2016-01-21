@@ -293,7 +293,7 @@ test("Category hashtags", () => {
   var alwaysTrue = { categoryHashtagLookup: (function() { return ["category", "http://test.discourse.org/category-hashtag"]; }) };
 
   cookedOptions("Check out #category-hashtag", alwaysTrue,
-         "<p>Check out <a class=\"hashtag\" href=\"http://test.discourse.org/category-hashtag\">#category-hashtag</a></p>",
+         "<p>Check out <a class=\"hashtag\" href=\"http://test.discourse.org/category-hashtag\">#<span>category-hashtag</span></a></p>",
          "it translates category hashtag into links");
 
   cooked("Check out #category-hashtag",
