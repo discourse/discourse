@@ -147,6 +147,15 @@ class TopTopic < ActiveRecord::Base
 
   def self.compute_top_score_for(period)
 
+    log_views_multiplier = SiteSetting.top_topics_formula_log_views_multiplier.to_f
+    log_views_multiplier = 2 if log_views_multiplier == 0
+
+    first_post_likes_multiplier = SiteSetting.top_topics_formula_first_post_likes_multiplier.to_f
+    first_post_likes_multiplier = 0.5 if first_post_likes_multiplier == 0
+
+    least_likes_per_post_multiplier = SiteSetting.top_topics_formula_least_likes_per_post_multiplier.to_f
+    least_likes_per_post_multiplier = 3 if least_likes_per_post_multiplier == 0
+
     if period == :all
       top_topics = "(
         SELECT t.like_count all_likes_count,
@@ -167,11 +176,11 @@ class TopTopic < ActiveRecord::Base
         WITH top AS (
           SELECT CASE
                    WHEN #{time_filter} THEN 0
-                   ELSE log(GREATEST(#{period}_views_count, 1)) * 2 +
-                        #{period}_op_likes_count * 0.5 +
+                   ELSE log(GREATEST(#{period}_views_count, 1)) * #{log_views_multiplier} +
+                        #{period}_op_likes_count * #{first_post_likes_multiplier} +
                         CASE WHEN #{period}_likes_count > 0 AND #{period}_posts_count > 0
                            THEN
-                            LEAST(#{period}_likes_count / #{period}_posts_count, 3)
+                            LEAST(#{period}_likes_count / #{period}_posts_count, #{least_likes_per_post_multiplier})
                            ELSE 0
                         END +
                         CASE WHEN topics.posts_count < 10 THEN
