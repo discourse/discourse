@@ -154,35 +154,6 @@
   }
 }
 
-.cooked, .d-editor-preview {
-  .badge-wrapper {
-    margin: 0px 2.5px;
-  }
-
-  h1 { @include cooked-badge-bullet(22px) }
-  h2 { @include cooked-badge-bullet(17px) }
-  h3 { @include cooked-badge-bullet(14px) }
-  h4 { @include cooked-badge-bullet(12px) }
-  h5 { @include cooked-badge-bullet(10px, -1.1px) }
-  h6 { @include cooked-badge-bullet(9px, -1.5px) }
-
-  .badge-wrapper.box {
-    span {
-      display: inline;
-    }
-
-    .badge-notification.clicks {
-      display: inline-block;
-      overflow: visible;
-      top: 0px;
-    }
-
-    .badge-category-bg {
-      padding-right: 5px;
-    }
-  }
-}
-
 // Category badge dropdown
 // --------------------------------------------------
 
