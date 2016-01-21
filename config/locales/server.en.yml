@@ -1395,7 +1395,7 @@ en:
       %{confirm_unsubscribe_link}
 
 
-      I you want to continue receiving email updates, you may ignore this email.
+      If you want to continue receiving email updates, you may ignore this email.
 
   invite_mailer:
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
