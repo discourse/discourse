@@ -72,6 +72,7 @@ module Email
         end
       else
         html_override.gsub!("%{unsubscribe_link}", "")
+        html_override.gsub!("%{unsubscribe_via_email_link}", "")
       end
 
       header_instructions = @template_args[:header_instructions]
