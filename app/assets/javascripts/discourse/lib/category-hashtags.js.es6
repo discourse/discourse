@@ -1,5 +1,3 @@
-import Category from 'discourse/models/category';
-
 export const SEPARATOR = ":";
 
 export function replaceSpan($elem, categorySlug, categoryLink) {
