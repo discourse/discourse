@@ -256,7 +256,9 @@ class Guardian
       @user.username == SiteSetting.site_contact_username ||
       @user == Discourse.system_user) &&
     # Can't send PMs to suspended users
-    (is_staff? || target.is_a?(Group) || !target.suspended?)
+    (is_staff? || target.is_a?(Group) || !target.suspended?) &&
+    # Blocked users can only send PM to staff
+    (!@user.blocked? || target.staff?)
   end
 
   def can_see_emails?
