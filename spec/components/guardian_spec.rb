@@ -187,6 +187,22 @@ describe Guardian do
         expect(Guardian.new(user).can_send_private_message?(suspended_user)).to be_falsey
       end
     end
+
+    context "author is blocked" do
+      before do
+        user.blocked = true
+        user.save
+      end
+
+      it "returns true if target is staff" do
+        expect(Guardian.new(user).can_send_private_message?(admin)).to be_truthy
+        expect(Guardian.new(user).can_send_private_message?(moderator)).to be_truthy
+      end
+
+      it "returns false if target is not staff" do
+        expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
+      end
+    end
   end
 
   describe 'can_reply_as_new_topic' do
@@ -661,11 +677,34 @@ describe Guardian do
         it "doesn't allow new posts from admins" do
           expect(Guardian.new(admin).can_create?(Post, topic)).to be_falsey
         end
-
       end
 
+      context "private message" do
+        let(:private_message) { Fabricate(:topic, archetype: Archetype.private_message, category_id: nil) }
 
-    end
+        before { user.save! }
+
+        it "allows new posts by people included in the pm" do
+          private_message.topic_allowed_users.create!(user_id: user.id)
+          expect(Guardian.new(user).can_create?(Post, private_message)).to be_truthy
+        end
+
+        it "doesn't allow new posts by people not invited to the pm" do
+          expect(Guardian.new(user).can_create?(Post, private_message)).to be_falsey
+        end
+
+        it "allows new posts from blocked users included in the pm" do
+          user.update_attribute(:blocked, true)
+          private_message.topic_allowed_users.create!(user_id: user.id)
+          expect(Guardian.new(user).can_create?(Post, private_message)).to be_truthy
+        end
+
+        it "doesn't allow new posts from blocked users not invited to the pm" do
+          user.update_attribute(:blocked, true)
+          expect(Guardian.new(user).can_create?(Post, private_message)).to be_falsey
+        end
+      end
+    end # can_create? a Post
 
   end
 

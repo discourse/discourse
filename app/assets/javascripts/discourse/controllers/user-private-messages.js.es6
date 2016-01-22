@@ -10,6 +10,7 @@ export default Ember.Controller.extend({
 
   selected: Em.computed.alias('controllers.user-topics-list.selected'),
   bulkSelectEnabled: Em.computed.alias('controllers.user-topics-list.bulkSelectEnabled'),
+  showNewPM: Em.computed.alias('controllers.user-topics-list.showNewPM'),
 
   @computed('selected.@each', 'bulkSelectEnabled')
   hasSelection(selected, bulkSelectEnabled){
