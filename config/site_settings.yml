@@ -331,7 +331,7 @@ users:
     default: 24
     min: 1
   email_token_grace_period_hours: 0
-  purge_unactivated_users_grace_period_days: 7
+  purge_unactivated_users_grace_period_days: 14
   public_user_custom_fields:
     type: list
     default: ''
