@@ -1,4 +1,4 @@
-vi_VN:
+vi:
   site_settings:
     poll_enabled: "Cho phép người dùng tạo các cuộc thăm dò?"
     poll_maximum_options: "Số lượng tối đa tùy chọn trong một cuộc thăm dò."

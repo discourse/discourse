@@ -1,4 +1,4 @@
-vi_VN:
+vi:
   site_settings:
     enable_imgur: "Kích hoạt imgur api để tải file lên, không lưu trữ file tại máy chủ."
     imgur_client_id: "Client ID imgur.com của bạn, cần cho chức năng tải ảnh lên. "
