@@ -9,10 +9,10 @@ export default Ember.Controller.extend({
 
   newEmailEmpty: Em.computed.empty('newEmail'),
   saveDisabled: Em.computed.or('saving', 'newEmailEmpty', 'taken', 'unchanged'),
-  unchanged: propertyEqual('newEmailLower', 'email'),
+  unchanged: propertyEqual('newEmailLower', 'currentUser.email'),
 
   newEmailLower: function() {
-    return this.get('newEmail').toLowerCase();
+    return this.get('newEmail').toLowerCase().trim();
   }.property('newEmail'),
 
   saveButtonText: function() {

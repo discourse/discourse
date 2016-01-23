@@ -483,9 +483,7 @@ class UsersController < ApplicationController
     return render_json_error(user.errors.full_messages) if user.errors[:email].present?
 
     # Raise an error if the email is already in use
-    if User.find_by_email(lower_email)
-      raise Discourse::InvalidParameters.new(:email)
-    end
+    return render_json_error(I18n.t('change_email.error')) if User.find_by_email(lower_email)
 
     email_token = user.email_tokens.create(email: lower_email)
     Jobs.enqueue(
