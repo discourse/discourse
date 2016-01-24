@@ -354,8 +354,10 @@ class PostCreator
       @user.user_stat.first_post_created_at = @post.created_at
     end
 
-    @user.user_stat.post_count += 1
-    @user.user_stat.topic_count += 1 if @post.is_first_post?
+    unless @post.topic.private_message?
+      @user.user_stat.post_count += 1
+      @user.user_stat.topic_count += 1 if @post.is_first_post?
+    end
 
     # We don't count replies to your own topics
     if !@opts[:import_mode] && @user.id != @topic.user_id

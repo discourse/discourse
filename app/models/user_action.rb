@@ -242,9 +242,12 @@ SQL
         action.save!
 
         user_id = hash[:user_id]
-        update_like_count(user_id, hash[:action_type], 1)
 
         topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
+
+        if topic && !topic.private_message?
+          update_like_count(user_id, hash[:action_type], 1)
+        end
 
         # move into Topic perhaps
         group_ids = nil

@@ -478,6 +478,10 @@ describe PostCreator do
       expect(unrelated.notifications.count).to eq(0)
       expect(post.topic.subtype).to eq(TopicSubtype.user_to_user)
 
+      # PMs do not increase post count or topic count
+      expect(post.user.user_stat.post_count).to eq(0)
+      expect(post.user.user_stat.topic_count).to eq(0)
+
       # archive this message and ensure archive is cleared for all users on reply
       UserArchivedMessage.create(user_id: target_user2.id, topic_id: post.topic_id)
 
