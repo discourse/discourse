@@ -30,8 +30,11 @@ class UserStat < ActiveRecord::Base
               (SELECT pt.user_id,
                       COUNT(*) AS c
                FROM users AS u
-               INNER JOIN post_timings AS pt ON pt.user_id = u.id
-               WHERE u.last_seen_at > :seen_at
+               JOIN post_timings AS pt ON pt.user_id = u.id
+               JOIN topics t ON t.id = pt.topic_id
+               WHERE u.last_seen_at > :seen_at AND
+                     t.archetype = 'regular' AND
+                     t.deleted_at IS NULL
                GROUP BY pt.user_id) AS X
                WHERE X.user_id = user_stats.user_id AND
                      X.c <> posts_read_count
