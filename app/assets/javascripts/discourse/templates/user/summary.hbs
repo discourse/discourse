@@ -52,7 +52,7 @@
 <div class='top-section badges-section'>
 <h3>{{i18n "user.summary.top_badges"}}</h3>
 {{#each badge in model.badges}}
-  {{user-badge badge=badge count=badge.count}}
+  {{user-badge badge=badge count=badge.count user=user}}
 {{/each}}
 {{#if moreBadges}}
 {{#link-to "user.badges" user class="more"}}{{i18n "user.summary.more_badges"}}{{/link-to}}

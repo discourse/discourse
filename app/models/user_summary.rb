@@ -2,7 +2,7 @@
 
 class UserSummary
 
-  MAX_FEATURED_BADGES = 7
+  MAX_FEATURED_BADGES = 10
   MAX_TOPICS = 6
 
   alias :read_attribute_for_serialization :send
@@ -35,14 +35,7 @@ class UserSummary
   end
 
   def badges
-    user_badges = @user.user_badges
-    user_badges = user_badges.group(:badge_id)
-                      .select(UserBadge.attribute_names.map {|x|
-                        "MAX(#{x}) as #{x}" }, 'COUNT(*) as count')
-                        .includes(badge: [:badge_grouping, :badge_type])
-                        .includes(post: :topic)
-                        .includes(:granted_by)
-                        .limit(MAX_FEATURED_BADGES)
+    @user.featured_user_badges(MAX_FEATURED_BADGES)
   end
 
   def user_stat
