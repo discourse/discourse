@@ -99,7 +99,7 @@
   display: table-cell;
   vertical-align: top;
   width: 170px;
-  padding-right: 50px;
+  padding-right: 30px;
 
   h3 {
     color: $primary;
@@ -693,6 +693,10 @@
   }
   li > a.active:after {
     display: none;
+  }
+
+  li.archive {
+    padding-left: 15px;
   }
 }
 
