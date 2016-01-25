@@ -2,15 +2,13 @@ export default Ember.Controller.extend({
   needs: ['modal'],
 
   modelChanged: function(){
-
-    var grouping = Em.Object.extend({});
-
-    var model = this.get('model');
-    var copy = Em.A();
+    const model = this.get('model');
+    const copy = Em.A();
+    const store = this.store;
 
     if(model){
       model.forEach(function(o){
-        copy.pushObject(grouping.create(o));
+        copy.pushObject(store.createRecord('badge-grouping', o));
       });
     }
 
@@ -18,8 +16,8 @@ export default Ember.Controller.extend({
   }.observes('model'),
 
   moveItem: function(item, delta){
-    var copy = this.get('workingCopy');
-    var index = copy.indexOf(item);
+    const copy = this.get('workingCopy');
+    const index = copy.indexOf(item);
     if (index + delta < 0 || index + delta >= copy.length){
       return;
     }
@@ -50,14 +48,14 @@ export default Ember.Controller.extend({
       item.set("editing", false);
     },
     add: function(){
-      var obj = Em.Object.create({editing: true, name: "Enter Name"});
+      const obj = this.store.createRecord('badge-grouping', {editing: true, name: I18n.t('admin.badges.badge_grouping')});
       this.get('workingCopy').pushObject(obj);
     },
     saveAll: function(){
-      var self = this;
+      const self = this;
       var items = this.get('workingCopy');
-      var groupIds = items.map(function(i){return i.get("id") || -1;});
-      var names = items.map(function(i){return i.get("name");});
+      const groupIds = items.map(function(i){return i.get("id") || -1;});
+      const names = items.map(function(i){return i.get("name");});
 
       Discourse.ajax('/admin/badges/badge_groupings',{
         data: {ids: groupIds, names: names},
@@ -66,14 +64,13 @@ export default Ember.Controller.extend({
         items = self.get("model");
         items.clear();
         data.badge_groupings.forEach(function(g){
-          items.pushObject(Em.Object.create(g));
+          items.pushObject(self.store.createRecord('badge-grouping', g));
         });
         self.set('model', null);
         self.set('workingCopy', null);
         self.send('closeModal');
       },function(){
-        // TODO we can do better
-        bootbox.alert("Something went wrong");
+        bootbox.alert(I18n.t('generic_error'));
       });
     }
   }

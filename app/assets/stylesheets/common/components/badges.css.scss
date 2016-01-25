@@ -30,7 +30,7 @@
       color: $primary !important;
       padding: 3px;
       vertical-align: text-top;
-      margin-top: -3px; //vertical alignment fix
+      margin-top: -2px; //vertical alignment fix
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -38,20 +38,17 @@
       .extra-info-wrapper & {
         color: $header-primary !important;
       }
-   }
+    }
 
-   .badge-category-parent-bg, .badge-category-bg {
-     display: inline-block;
-     padding: 1px;
+    .badge-category-parent-bg, .badge-category-bg {
+      display: inline-block;
+      padding: 1px;
 
-     &:before {
-       content: "\a0";
-     }
-
-   }
-
+      &:before {
+        content: "\a0";
+      }
+    }
   }
-
 
   &.bullet { //bullet category style
     display: inline-flex;
@@ -71,31 +68,30 @@
       .extra-info-wrapper & {
         color: $header-primary !important;
       }
-   }
+    }
 
    .badge-category-parent-bg, .badge-category-bg {
-     width: 10px;
-     height: 10px;
-     margin-right: 5px;
-     display: inline-block;
-     line-height: 1;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    display: inline-block;
+    line-height: 1;
 
-     &:before {
-       content: "\a0";
-     }
-   }
+    &:before {
+      content: "\a0";
+    }
+  }
 
-   span {
-     &.badge-category-parent-bg { //subcategory style
-       width: 5px;
-       margin-right: 0;
-       & + .badge-category-bg {
-         width: 5px;
-       }
-     }
-   }
-
- }
+  span {
+      &.badge-category-parent-bg { //subcategory style
+        width: 5px;
+        margin-right: 0;
+        & + .badge-category-bg {
+          width: 5px;
+        }
+      }
+    }
+  }
 
 
   &.box {  //box category style (apply custom widths to the wrapper, not the children)
@@ -129,6 +125,30 @@
         position: relative;
         padding: 0 5px;
         margin-top: 2px;
+      }
+    }
+  }
+}
+
+@mixin cooked-badge-bullet($length, $offset:0px) {
+  .badge-wrapper.bullet {
+    span {
+      position: relative;
+
+      &.badge-category-bg {
+        width: $length;
+        height: $length;
+        top: $offset;
+      }
+
+      &.badge-category-parent-bg {
+        width: $length / 2;
+        height: $length;
+        top: $offset;
+
+        & + .badge-category-bg {
+          width: $length / 2;
+        }
       }
     }
   }
@@ -190,6 +210,8 @@
         line-height: 1;
       }
     .badge-wrapper {
+      box-sizing: border-box;
+
       &.bar {
         padding: 5px 0;
         width: 100%;

@@ -96,14 +96,6 @@ class PostsController < ApplicationController
 
   def create
 
-    if !is_api? && current_user.blocked?
-
-      # error has parity with what user would get if they posted when blocked
-      # and it went through post creator
-      render json: {errors: [I18n.t("topic_not_found")]}, status: 422
-      return
-    end
-
     @manager_params = create_params
     @manager_params[:first_post_checks] = !is_api?
 
@@ -305,9 +297,9 @@ class PostsController < ApplicationController
   end
 
   def wiki
-    guardian.ensure_can_wiki!
-
     post = find_post_from_params
+    guardian.ensure_can_wiki!(post)
+
     post.revise(current_user, { wiki: params[:wiki] })
 
     render nothing: true

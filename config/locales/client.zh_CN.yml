@@ -956,6 +956,12 @@ zh_CN:
       create: '新主题'
       create_long: '创建一个新主题'
       private_message: '发送消息'
+      archive_message:
+        help: '移动消息到存档'
+        title: '存档'
+      move_to_inbox:
+        title: '移动到收件箱'
+        help: '移动消息到收件箱'
       list: '主题'
       new: '新主题'
       unread: '未读'
@@ -1225,7 +1231,7 @@ zh_CN:
       via_email: "通过电子邮件发送的帖子"
       whisper: "这个帖子是只对版主可见的密语"
       wiki:
-        about: "这个帖子是维基；基础用户能编辑它"
+        about: "这个帖子是维基"
       archetypes:
         save: '保存选项'
       controls:
@@ -2337,7 +2343,7 @@ zh_CN:
         title: "Emoji"
         help: "增加所有人可用的 emoji。（高端技巧：一次性拖进多个文件）"
         add: "增加新的 Emoji"
-        name: "姓名"
+        name: "名称"
         image: "图片"
         delete_confirm: "你确定要删除 :%{name}: emoji 么？"
       embedding:

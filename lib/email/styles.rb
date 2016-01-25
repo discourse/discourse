@@ -89,6 +89,7 @@ module Email
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('.rtl', 'direction: rtl;')
       style('td.body', 'padding-top:5px;', colspan: "2")
+      style('.whisper td.body', 'font-style: italic; color: #9c9c9c;')
       correct_first_body_margin
       correct_footer_style
       reset_tables
@@ -213,7 +214,7 @@ module Email
         element.css('a').each do |inner|
           # we want the first footer link to be specially highlighted as IMPORTANT
           if footernum == 0 and linknum == 0
-            inner['style'] = "background-color:#006699;color:#fff;padding:4px 6px;"
+            inner['style'] = "background-color: #006699; color:#ffffff; border-top: 4px solid #006699; border-right: 6px solid #006699; border-bottom: 4px solid #006699; border-left: 6px solid #006699; display: inline-block;"
           else
             inner['style'] = "color:#666;"
           end

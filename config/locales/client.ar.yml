@@ -462,6 +462,7 @@ ar:
       all_subcategories: "جميع"
       no_subcategory: "لا شيء"
       category: "تصنيف"
+      category_list: "أعرض قائمة الأقسام."
       reorder:
         title: "إعادة ترتيب الفئات"
         title_long: "إعادة تنظيم قائمة الفئة"
@@ -526,6 +527,7 @@ ar:
       invited_by: "مدعو بواسطة"
       trust_level: "مستوى الثقة"
       notifications: "الاشعارات"
+      statistics: "احصائيات"
       desktop_notifications:
         label: "إشعارات سطح المكتب"
         not_supported: "عذراً , الإشعارات غير مدعومة على هذا المتصفح "
@@ -579,7 +581,9 @@ ar:
         warnings_received: "تحذيرات"
       messages:
         all: "الكل"
+        inbox: "البريد الوارد"
         sent: "مرسلة"
+        archive: "الارشيف"
         groups: "مجموعاتي"
         bulk_select: "إختيار رسائل"
         move_to_inbox: "الذهاب إلى الرسائل الواردة"
@@ -1130,6 +1134,12 @@ ar:
       create: 'موضوع جديد'
       create_long: 'كتابة موضوع جديد'
       private_message: 'أرسل رسالة خاصة'
+      archive_message:
+        help: 'انقل الرسالة لارشيفك.'
+        title: 'الارشيف'
+      move_to_inbox:
+        title: 'انقل للبريد الوارد.'
+        help: 'انقل الرسالة مرة آخرى للبريد الوارد.'
       list: 'المواضيع'
       new: 'موضوع جديد'
       unread: 'غير مقروء'
@@ -1493,7 +1503,7 @@ ar:
       via_email: "وصلت هذه المشاركة من خلال الإيميل"
       whisper: "هذه المشاركة همسة خاصة للمشرفين"
       wiki:
-        about: "هذه المشاركة عبارة عن ويكي بمعنى أنها متاحة للمستخدمين العاديين لتحريرها ، "
+        about: "هذه المشاركة تعتبر ويكي."
       archetypes:
         save: 'حفظ الخيارات'
       controls:
@@ -2292,6 +2302,7 @@ ar:
         email_templates:
           title: "قالب البريد الالكتروني "
           subject: "الموضوع"
+          multiple_subjects: "قالب البريد الإلكتروني هذا لديه موضوعات متعددة."
           body: "المحتوى"
           none_selected: "اختر قالب بريد الكتروني لتبدا بتعديله "
           revert: "اعاده التغيرات "
@@ -2419,6 +2430,7 @@ ar:
             change_site_setting: "تغيير اعدادات الموقع"
             change_site_customization: "تخصيص الموقع"
             delete_site_customization: "حذف هذا التخصيص؟"
+            change_site_text: "تغيير نص الموقع."
             suspend_user: "حظر المستخدم"
             unsuspend_user: "رفع الحظر "
             grant_badge: "منح شارة"
@@ -2638,6 +2650,7 @@ ar:
         unlock_trust_level: "فتح مستوى الثقة "
         tl3_requirements:
           title: "المتطلبات لمستوى الثقة 3."
+          table_title: "في أخر %{time_period} أيام:"
           value_heading: "تصويت"
           requirement_heading: "متطلبات"
           visits: "الزيارات"
@@ -2704,6 +2717,7 @@ ar:
         revert: "حفظ التعديلات"
         revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "
         go_back: "العودة إلى البحث"
+        recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: 'اظهر التجاوزات فقط'
       site_settings:
         show_overriden: 'تظهر فقط تجاوز'

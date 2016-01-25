@@ -7,6 +7,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
   VANILLA_DB = "vanilla_mysql"
   TABLE_PREFIX = "GDN_"
   BATCH_SIZE = 1000
+  CONVERT_HTML = true
 
   def initialize
     super
@@ -29,6 +30,10 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
   def import_users
     puts '', "creating users"
 
+    @user_is_deleted = false
+    @last_deleted_username = nil
+    username = nil
+
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}User;").first['count']
 
     batches(BATCH_SIZE) do |offset|
@@ -42,21 +47,37 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :users, users.map {|u| u['UserID'].to_i}
+      next if all_records_exist? :users, results.map {|u| u['UserID'].to_i}
 
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['Email'].blank?
         next if user['Name'].blank?
+
+        if user['Name'] == '[Deleted User]'
+          # EVERY deleted user record in Vanilla has the same username: [Deleted User]
+          # Save our UserNameSuggester some pain:
+          @user_is_deleted = true
+          username = @last_deleted_username || user['Name']
+        else
+          @user_is_deleted = false
+          username = user['Name']
+        end
+
         { id: user['UserID'],
           email: user['Email'],
-          username: user['Name'],
+          username: username,
           name: user['Name'],
           created_at: user['DateInserted'] == nil ? 0 : Time.zone.at(user['DateInserted']),
           bio_raw: user['About'],
           registration_ip_address: user['InsertIPAddress'],
           last_seen_at: user['DateLastActive'] == nil ? 0 : Time.zone.at(user['DateLastActive']),
           location: user['Location'],
-          admin: user['Admin'] == 1 }
+          admin: user['Admin'] == 1,
+          post_create_action: proc do |newuser|
+            if @user_is_deleted
+              @last_deleted_username = newuser.username
+            end
+          end }
       end
     end
   end
@@ -169,17 +190,19 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     # [SAMP]...[/SAMP]
     raw.gsub!(/\[\/?samp\]/i, "`")
 
-    # replace all chevrons with HTML entities
-    # NOTE: must be done
-    #  - AFTER all the "code" processing
-    #  - BEFORE the "quote" processing
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-             .gsub("<", "&lt;")
-             .gsub("\u2603", "<")
+    unless CONVERT_HTML
+      # replace all chevrons with HTML entities
+      # NOTE: must be done
+      #  - AFTER all the "code" processing
+      #  - BEFORE the "quote" processing
+      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
+               .gsub("<", "&lt;")
+               .gsub("\u2603", "<")
 
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-             .gsub(">", "&gt;")
-             .gsub("\u2603", ">")
+      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
+               .gsub(">", "&gt;")
+               .gsub("\u2603", ">")
+    end
 
     # [URL=...]...[/URL]
     raw.gsub!(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
@@ -224,7 +247,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
   end
 
   def mysql_query(sql)
-    @client.query(sql, cache_rows: false)
+    @client.query(sql)
+    # @client.query(sql, cache_rows: false) #segfault: cache_rows: false causes segmentation fault
   end
 
 end

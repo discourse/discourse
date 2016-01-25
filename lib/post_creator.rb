@@ -172,7 +172,7 @@ class PostCreator
   def self.before_create_tasks(post)
     set_reply_info(post)
 
-    post.word_count = post.raw.scan(/\w+/).size
+    post.word_count = post.raw.scan(/[[:word:]]+/).size
     post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?)
 
     cooking_options = post.cooking_options || {}
@@ -262,10 +262,14 @@ class PostCreator
   end
 
   def ensure_in_allowed_users
-    return unless @topic.private_message?
+    return unless @topic.private_message? && @topic.id
 
     unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
-      @topic.topic_allowed_users.create!(user_id: @user.id)
+      unless @topic.topic_allowed_groups.where('group_id IN (
+                                              SELECT group_id FROM group_users where user_id = ?
+                                           )',@user.id).exists?
+        @topic.topic_allowed_users.create!(user_id: @user.id)
+      end
     end
   end
 
@@ -350,8 +354,10 @@ class PostCreator
       @user.user_stat.first_post_created_at = @post.created_at
     end
 
-    @user.user_stat.post_count += 1
-    @user.user_stat.topic_count += 1 if @post.is_first_post?
+    unless @post.topic.private_message?
+      @user.user_stat.post_count += 1
+      @user.user_stat.topic_count += 1 if @post.is_first_post?
+    end
 
     # We don't count replies to your own topics
     if !@opts[:import_mode] && @user.id != @topic.user_id

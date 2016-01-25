@@ -39,8 +39,22 @@ describe EmailController do
 
   context '.unsubscribe' do
 
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, email_digests: true, email_direct: true, email_private_messages: true, email_always: true) }
     let(:key) { DigestUnsubscribeKey.create_key_for(user) }
+
+    context 'from confirm unsubscribe email' do
+      before do
+        get :unsubscribe, key: key, from_all: true
+        user.reload
+      end
+
+      it 'unsubscribes from all emails' do
+        expect(user.email_digests).to eq false
+        expect(user.email_direct).to eq false
+        expect(user.email_private_messages).to eq false
+        expect(user.email_always).to eq false
+      end
+    end
 
     context 'with a valid key' do
       before do

@@ -134,10 +134,8 @@ class StaffActionLogger
     }))
   end
 
-  def log_site_text_change(subject, new_text, old_text, opts={})
+  def log_site_text_change(subject, new_text=nil, old_text=nil, opts={})
     raise Discourse::InvalidParameters.new(:subject) unless subject.present?
-    raise Discourse::InvalidParameters.new(:new_text) unless new_text.present?
-    raise Discourse::InvalidParameters.new(:old_text) unless old_text.present?
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:change_site_text],
       subject: subject,
@@ -277,6 +275,22 @@ class StaffActionLogger
       details: details.join("\n"),
       category_id: category.id,
       context: category.url
+    }))
+  end
+
+  def log_block_user(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:block_user],
+      target_user_id: user.id
+    }))
+  end
+
+  def log_unblock_user(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:unblock_user],
+      target_user_id: user.id
     }))
   end
 

@@ -6,9 +6,9 @@ import PermissionType from 'discourse/models/permission-type';
 
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
-  overrideWidths: true,
   dataAttributes: ['id', 'description_text'],
   valueBinding: Ember.Binding.oneWay('source'),
+  overrideWidths: true,
   castInteger: true,
 
   @computed("scopedCategoryId", "categories")
@@ -22,7 +22,6 @@ export default ComboboxView.extend({
     return categories.filter(c => {
       if (scopedCategoryId && c.get('id') !== scopedCategoryId && c.get('parent_category_id') !== scopedCategoryId) { return false; }
       if (c.get('isUncategorizedCategory')) { return false; }
-      if (c.get('contains_messages')) { return false; }
       return c.get('permission') === PermissionType.FULL;
     });
   },

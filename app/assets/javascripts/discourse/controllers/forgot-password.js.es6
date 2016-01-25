@@ -7,6 +7,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return Ember.isEmpty((this.get('accountEmailOrUsername') || '').trim()) || this.get('disabled');
   }.property('accountEmailOrUsername', 'disabled'),
 
+  onShow: function() {
+    if ($.cookie('email')) {
+      this.set('accountEmailOrUsername', $.cookie('email'));
+    }
+  },
+
   actions: {
     submit: function() {
       var self = this;

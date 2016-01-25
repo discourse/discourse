@@ -1,0 +1,53 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sk:
+  js:
+    poll:
+      voters:
+        one: "volič"
+        few: "voliči"
+        other: "voliči"
+      total_votes:
+        one: "hlas celkom"
+        few: "hlasy celkom"
+        other: "hlasov celkom"
+      average_rating: "Priemerné hodnotenie: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Musíte si vybrať minimálne <strong>%{count}</strong> možnosť."
+            few: "Musíte si vybrať minimálne <strong>%{count}</strong> možnosti."
+            other: "Musíte si vybrať minimálne <strong>%{count}</strong> možností."
+          up_to_max_options:
+            one: "Môžete si vybrať maximálne <strong>%{count}</strong> možnosť."
+            few: "Môžete si vybrať maximálne <strong>%{count}</strong> možnosti."
+            other: "Môžete si vybrať maximálne <strong>%{count}</strong> možností."
+          x_options:
+            one: "Musíte si vybrať <strong>%{count}</strong> možnosť."
+            few: "Musíte si vybrať <strong>%{count}</strong> možnosti."
+            other: "Musíte si vybrať <strong>%{count}</strong> možností."
+          between_min_and_max_options: "Môžete si vybrať medzi možnosťami <strong>%{min}</strong> až <strong>%{max}</strong>."
+      cast-votes:
+        title: "Hlasovať"
+        label: "Hlasuj teraz!"
+      show-results:
+        title: "Zobraz výsledky hlasovania"
+        label: "Zobraz výsledky"
+      hide-results:
+        title: "Návrat na odovzdané hlasy"
+        label: "Skyť výsledky"
+      open:
+        title: "Zahájiť hlasovanie"
+        label: "Zahájiť"
+        confirm: "Ste si istý, že chcete zahájiť toto hlasovanie?"
+      close:
+        title: "Zatvoriť hlasovanie"
+        label: "Zatvoriť"
+        confirm: "Ste si istý, že chcete zatvoriť toto hlasovanie?"
+      error_while_toggling_status: "Pri zmene stavu hlasovania sa vyskytla chyba."
+      error_while_casting_votes: "Pri hlasovaní sa vyskytla chyba."

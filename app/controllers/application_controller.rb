@@ -251,8 +251,8 @@ class ApplicationController < ActionController::Base
     user = if params[:username]
       username_lower = params[:username].downcase
       username_lower.gsub!(/\.json$/, '')
-      find_opts = {username_lower: username_lower}
-      find_opts[:active] = true unless opts[:include_inactive]
+      find_opts = { username_lower: username_lower }
+      find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
       User.find_by(find_opts)
     elsif params[:external_id]
       external_id = params[:external_id].gsub(/\.json$/, '')

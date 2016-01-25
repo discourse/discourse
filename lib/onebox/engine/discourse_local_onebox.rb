@@ -63,7 +63,7 @@ module Onebox
             topic = post.topic
             slug = Slug.for(topic.title)
 
-            excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
+            excerpt = post.excerpt(SiteSetting.post_onebox_maxlength, { keep_emoji_codes: true })
             excerpt.gsub!("\n"," ")
             # hack to make it render for now
             excerpt.gsub!("[/quote]", "[quote]")

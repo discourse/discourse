@@ -242,11 +242,13 @@ describe UsersController do
       context 'when the new email address is taken' do
         let!(:other_user) { Fabricate(:coding_horror) }
         it 'raises an error' do
-          expect { xhr :put, :change_email, username: user.username, email: other_user.email }.to raise_error(Discourse::InvalidParameters)
+          xhr :put, :change_email, username: user.username, email: other_user.email
+          expect(response).to_not be_success
         end
 
         it 'raises an error if there is whitespace too' do
-          expect { xhr :put, :change_email, username: user.username, email: other_user.email + ' ' }.to raise_error(Discourse::InvalidParameters)
+          xhr :put, :change_email, username: user.username, email: other_user.email + ' '
+          expect(response).to_not be_success
         end
       end
 
@@ -254,8 +256,21 @@ describe UsersController do
         let!(:other_user) { Fabricate(:user, email: 'case.insensitive@gmail.com')}
 
         it 'raises an error' do
-          expect { xhr :put, :change_email, username: user.username, email: other_user.email.upcase }.to raise_error(Discourse::InvalidParameters)
+          xhr :put, :change_email, username: user.username, email: other_user.email.upcase
+          expect(response).to_not be_success
         end
+      end
+
+      it 'raises an error when new email domain is present in email_domains_blacklist site setting' do
+        SiteSetting.email_domains_blacklist = "mailinator.com"
+        xhr :put, :change_email, username: user.username, email: "not_good@mailinator.com"
+        expect(response).to_not be_success
+      end
+
+      it 'raises an error when new email domain is not present in email_domains_whitelist site setting' do
+        SiteSetting.email_domains_whitelist = "discourse.org"
+        xhr :put, :change_email, username: user.username, email: new_email
+        expect(response).to_not be_success
       end
 
       context 'success' do
@@ -1593,6 +1608,21 @@ describe UsersController do
       expect(json["valid"].size).to eq(0)
     end
 
+  end
+
+  context '#summary' do
+
+    it "generates summary info" do
+      user = Fabricate(:user)
+      create_post(user: user)
+
+      xhr :get, :summary, username: user.username_lower
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+
+      expect(json["user_summary"]["topic_count"]).to eq(1)
+      expect(json["user_summary"]["post_count"]).to eq(1)
+    end
   end
 
 end

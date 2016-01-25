@@ -90,6 +90,10 @@ class Post < ActiveRecord::Base
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
 
+  def whisper?
+    post_type == Post.types[:whisper]
+  end
+
   def add_detail(key, value, extra = nil)
     post_details.build(key: key, value: value, extra: extra)
   end
@@ -353,6 +357,10 @@ class Post < ActiveRecord::Base
     self.topic.update_attributes(visible: true) if is_first_post?
     save(validate: false)
     publish_change_to_clients!(:acted)
+  end
+
+  def full_url
+    "#{Discourse.base_url}#{url}"
   end
 
   def url

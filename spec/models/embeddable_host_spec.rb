@@ -20,6 +20,12 @@ describe EmbeddableHost do
     expect(eh.host).to eq('example.com')
   end
 
+  it "supports ip addresses" do
+    eh = EmbeddableHost.new(host: '192.168.0.1')
+    expect(eh).to be_valid
+    expect(eh.host).to eq('192.168.0.1')
+  end
+
   describe "allows_embeddable_host" do
     let!(:host) { Fabricate(:embeddable_host) }
 

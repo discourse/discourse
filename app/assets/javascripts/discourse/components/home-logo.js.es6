@@ -4,9 +4,14 @@ import { setting } from 'discourse/lib/computed';
 export default Ember.Component.extend({
   classNames: ["title"],
 
-  linkUrl: function() {
-    return Discourse.getURL('/');
+  targetUrl: function() {
+    // For overriding by customizations
+    return '/';
   }.property(),
+
+  linkUrl: function() {
+    return Discourse.getURL(this.get('targetUrl'));
+  }.property('targetUrl'),
 
   showSmallLogo: function() {
     return !Discourse.Mobile.mobileView && this.get("minimized");
@@ -27,7 +32,7 @@ export default Ember.Component.extend({
 
     e.preventDefault();
 
-    DiscourseURL.routeTo('/');
+    DiscourseURL.routeTo(this.get('targetUrl'));
     return false;
   }
 });

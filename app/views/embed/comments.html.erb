@@ -10,17 +10,17 @@
 <%- if @topic_view.posts.present? %>
   <%- @topic_view.posts.each do |post| %>
     <article class='post<%- if post.trashed? %> deleted<% end %>' id='post-<%= post.id.to_s %>'>
-      <%= link_to embed_post_date(post.created_at), post.url, title: post.created_at.strftime("%B %e, %Y %l:%M%P"), class: 'post-date', target: "_blank" %>
+      <%= link_to embed_post_date(post.created_at), post.full_url, title: post.created_at.strftime("%B %e, %Y %l:%M%P"), class: 'post-date', target: "_blank" %>
       <%- if post.reply_to_post.present? && !post.cooked.index('aside') %>
-        <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.url, 'data-link-to-post' => post.reply_to_post.id.to_s, :class => 'in-reply-to' %>
+        <%= link_to I18n.t('embed.in_reply_to', username: post.reply_to_post.username), post.reply_to_post.full_url, 'data-link-to-post' => post.reply_to_post.id.to_s, :class => 'in-reply-to' %>
       <%- end %>
 
       <div class='author'>
-        <a href='/users/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>' alt=''></a>
+        <a href='<%= Discourse.base_url %>/users/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>' alt=''></a>
       </div>
       <div class='cooked'>
         <h3 class='username'>
-          <a href='/users/<%= post.username %>' target="_blank" class='<% if post.user.staff? %>staff<% end %><% if post.user.new_user? %>new-user<% end %>'><%= post.user.username %></a>
+          <a href='<%= Discourse.base_url %>/users/<%= post.username %>' target="_blank" class='<% if post.user.staff? %>staff<% end %><% if post.user.new_user? %>new-user<% end %>'><%= post.user.username %></a>
           <%- if post.user.title.present? %>
             <span class='title'><%= post.user.title %></span>
           <%- end %>
@@ -29,9 +29,9 @@
 
         <%- if post.reply_count > 0 %>
           <%- if post.reply_count == 1 %>
-            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies button' %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.full_url, 'data-link-to-post' => post.replies.first.id.to_s, :class => 'post-replies button' %>
           <% else %>
-            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.url, class: 'post-replies button', target: "_blank" %>
+            <%= link_to I18n.t('embed.replies', count: post.reply_count), post.full_url, class: 'post-replies button', target: "_blank" %>
           <%- end %>
         <%- end %>
       </div>
@@ -41,7 +41,7 @@
   <% if @topic_view.topic.posts_count > 0 %>
     <footer class="clearfix">
       <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url, target: '_blank') %>
-      <%= link_to(I18n.t('embed.continue'), @topic_view.posts.last.url, class: 'button', target: '_blank') %>
+      <%= link_to(I18n.t('embed.continue'), @topic_view.posts.last.full_url, class: 'button', target: '_blank') %>
       <%- if @posts_left > 0 %>
         <span class='replies'><%= I18n.t('embed.more_replies', count: @posts_left) %></span>
       <%- end %>

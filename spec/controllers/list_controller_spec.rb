@@ -248,4 +248,30 @@ describe ListController do
 
   end
 
+  describe "categories suppression" do
+    let(:category_one) { Fabricate(:category) }
+    let(:sub_category) { Fabricate(:category, parent_category: category_one, suppress_from_homepage: true) }
+    let!(:topic_in_sub_category) { Fabricate(:topic, category: sub_category) }
+
+    let(:category_two) { Fabricate(:category, suppress_from_homepage: true) }
+    let!(:topic_in_category_two) { Fabricate(:topic, category: category_two) }
+
+    it "suppresses categories from the homepage" do
+      get SiteSetting.homepage, format: :json
+      expect(response).to be_success
+
+      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
+      expect(topic_titles).not_to include(topic_in_sub_category.title, topic_in_category_two.title)
+    end
+
+    it "does not suppress" do
+      get SiteSetting.homepage, category: category_one.id, format: :json
+      expect(response).to be_success
+
+      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
+      expect(topic_titles).to include(topic_in_sub_category.title)
+    end
+
+  end
+
 end

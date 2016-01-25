@@ -241,13 +241,15 @@ ol.category-breadcrumb {
   h2 {
     float: left;
     margin: 5px 0 10px;
-
     .top-date-string {
-      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
-      font-weight: normal;
       font-size: 0.7em;
-      text-transform: uppercase;
     }
+  }
+
+  .top-date-string {
+    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+    font-weight: normal;
+    text-transform: uppercase;
   }
 
   button {
@@ -262,6 +264,7 @@ ol.category-breadcrumb {
 
     @include unselectable;
 
+    font-size: 1.2em;
     border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     padding: 5px;
     background: $secondary;
@@ -277,9 +280,15 @@ ol.category-breadcrumb {
       li {
         margin: 0;
         padding: 0;
-        a {
+        font-weight: bold;
+        a, a:visited {
           display: block;
           padding: 5px;
+          color: $primary;
+        }
+        .top-date-string {
+          font-weight: normal;
+          font-size: 0.8em;
         }
         &:hover {
           background-color: dark-light-diff($highlight, $secondary, 50%, -70%);

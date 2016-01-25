@@ -408,7 +408,7 @@ describe PostsController do
       let(:post) {Fabricate(:post, user: user)}
 
       it "raises an error if the user doesn't have permission to wiki the post" do
-        Guardian.any_instance.expects(:can_wiki?).returns(false)
+        Guardian.any_instance.expects(:can_wiki?).with(post).returns(false)
 
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
 
@@ -416,7 +416,7 @@ describe PostsController do
       end
 
       it "can wiki a post" do
-        Guardian.any_instance.expects(:can_wiki?).returns(true)
+        Guardian.any_instance.expects(:can_wiki?).with(post).returns(true)
 
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
 
@@ -426,7 +426,7 @@ describe PostsController do
 
       it "can unwiki a post" do
         wikied_post = Fabricate(:post, user: user, wiki: true)
-        Guardian.any_instance.expects(:can_wiki?).returns(true)
+        Guardian.any_instance.expects(:can_wiki?).with(wikied_post).returns(true)
 
         xhr :put, :wiki, post_id: wikied_post.id, wiki: 'false'
 

@@ -124,8 +124,7 @@ Commands:
     stop:       Stop a running container
     restart:    Restart a container
     destroy:    Stop and remove a container
-    enter:      Use nsenter to enter a container
-    ssh:        Start a bash shell in a running container
+    enter:      Enter a container using docker exec
     logs:       Docker logs for container
     bootstrap:  Bootstrap a container for the config based on a template
     rebuild:    Rebuild a container (destroy old, bootstrap, start new)

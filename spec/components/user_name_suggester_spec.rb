@@ -56,15 +56,19 @@ describe UserNameSuggester do
     end
 
     it "removes leading character if it is not alphanumeric" do
-      expect(UserNameSuggester.suggest("_myname")).to eq('myname')
+      expect(UserNameSuggester.suggest(".myname")).to eq('myname')
+    end
+
+    it "allows leading _" do
+      expect(UserNameSuggester.suggest("_myname")).to eq('_myname')
     end
 
     it "removes trailing characters if they are invalid" do
       expect(UserNameSuggester.suggest("myname!^$=")).to eq('myname')
     end
 
-    it "replace dots" do
-      expect(UserNameSuggester.suggest("my.name")).to eq('my_name')
+    it "allows dots in the middle" do
+      expect(UserNameSuggester.suggest("my.name")).to eq('my.name')
     end
 
     it "remove leading dots" do
@@ -81,7 +85,7 @@ describe UserNameSuggester do
     end
 
     it 'should handle typical facebook usernames' do
-      expect(UserNameSuggester.suggest('roger.nelson.3344913')).to eq('roger_nelson_33')
+      expect(UserNameSuggester.suggest('roger.nelson.3344913')).to eq('roger.nelson.33')
     end
   end
 

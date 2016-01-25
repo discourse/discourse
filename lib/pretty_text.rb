@@ -49,9 +49,8 @@ module PrettyText
     end
 
     def category_hashtag_lookup(category_slug)
-      if category_slug
-        category = Category.find_by_slug(category_slug)
-        return ['category', category.url_with_id] if category
+      if category = Category.query_from_hashtag_slug(category_slug)
+        ['category', category.url_with_id]
       else
         nil
       end
@@ -74,7 +73,7 @@ module PrettyText
   @ctx_init = Mutex.new
 
   def self.mention_matcher
-    Regexp.new("(\@[a-zA-Z0-9_]{#{User.username_length.begin},#{User.username_length.end}})")
+    Regexp.new("\\W@(\\w{#{SiteSetting.min_username_length},#{SiteSetting.max_username_length}})\\b")
   end
 
   def self.app_root

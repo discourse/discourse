@@ -1532,7 +1532,7 @@ button.ru {
 
 @media all
 and (max-width : 850px) {
-  html:not(.mobile-view) .nav-stacked {
+  html:not(.mobile-view) .admin-content .nav-stacked {
     .glyph {width: auto; position: relative;}
     > li > a {padding: 13px}
   }
@@ -1606,10 +1606,9 @@ and (max-width : 500px) {
     border-bottom: 1px solid #dfdfdf;
   }
   .actions {
-    font-size: 1.214em;
     float: right;
-    a {
-      margin-left: 5px;
+    .btn {
+      padding: 3px 6px;
     }
   }
 }
@@ -1766,6 +1765,30 @@ table#user-badges {
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     margin-bottom: 1em;
     max-width: 700px;
+  }
+}
+
+// Emails
+
+.email-list {
+  .filters input {
+    width: 100%;
+  }
+  .time {
+    width: 50px;
+  }
+  .username div {
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .addresses p {
+    margin: 2px 0;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

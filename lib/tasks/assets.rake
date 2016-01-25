@@ -122,7 +122,7 @@ def compress_ruby(from,to)
   data = File.read("#{assets_path}/#{from}")
 
   uglified, map = Uglifier.new(comments: :none,
-                               screw_ie8: false,
+                               screw_ie8: true,
                                source_filename: File.basename(from),
                                output_filename: File.basename(to)
                               )
@@ -135,7 +135,7 @@ end
 
 def gzip(path)
   STDERR.puts "gzip #{path}"
-  STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`
+  STDERR.puts `gzip -f -c -7 #{path} > #{path}.gz`
 end
 
 def compress(from,to)

@@ -58,11 +58,13 @@ export default function() {
   // User routes
   this.resource('users');
   this.resource('user', { path: '/users/:username' }, function() {
+    this.route('summary');
     this.resource('userActivity', { path: '/activity' }, function() {
       this.route('topics');
       this.route('replies');
       this.route('likesGiven', {path: 'likes-given'});
       this.route('bookmarks');
+      this.route('pending');
     });
 
     this.resource('userNotifications', {path: '/notifications'}, function(){

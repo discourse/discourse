@@ -11,16 +11,15 @@ class BasicCategorySerializer < ApplicationSerializer
              :description,
              :description_text,
              :topic_url,
+             :logo_url,
+             :background_url,
              :read_restricted,
              :permission,
              :parent_category_id,
              :notification_level,
-             :logo_url,
-             :background_url,
              :can_edit,
              :topic_template,
-             :has_children,
-             :contains_messages
+             :has_children
 
   def include_parent_category_id?
     parent_category_id

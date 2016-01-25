@@ -86,8 +86,7 @@ const Category = RestModel.extend({
         allow_badges: this.get('allow_badges'),
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
-        suppress_from_homepage: this.get('suppress_from_homepage'),
-        contains_messages: this.get("contains_messages"),
+        suppress_from_homepage: this.get('suppress_from_homepage')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });
@@ -205,14 +204,14 @@ Category.reopenClass({
     return _uncategorized;
   },
 
-  slugFor(category) {
+  slugFor(category, separator = "/") {
     if (!category) return "";
 
     const parentCategory = Em.get(category, 'parentCategory');
     let result = "";
 
     if (parentCategory) {
-      result = Category.slugFor(parentCategory) + "/";
+      result = Category.slugFor(parentCategory) + separator;
     }
 
     const id = Em.get(category, 'id'),
@@ -299,11 +298,18 @@ Category.reopenClass({
     }
 
     const emptyTerm = (term === "");
+    let slugTerm = term;
+
+    if (!emptyTerm) {
+      term = term.toLowerCase();
+      slugTerm = term;
+      term = term.replace(/-/g, " ");
+    }
+
     const categories = Category.listByActivity();
     const length = categories.length;
     var i;
     var data = [];
-    term = term.toLowerCase();
 
     const done = () => {
       return data.length === limit;
@@ -312,7 +318,10 @@ Category.reopenClass({
     for (i = 0; i < length && !done(); i++) {
       const category = categories[i];
       if ((emptyTerm && !category.get('parent_category_id')) ||
-          (!emptyTerm && category.get('name').toLowerCase().indexOf(term) === 0)) {
+          (!emptyTerm &&
+           (category.get('name').toLowerCase().indexOf(term) === 0 ||
+            category.get('slug').toLowerCase().indexOf(slugTerm) === 0))) {
+
         data.push(category);
       }
     }
@@ -321,7 +330,10 @@ Category.reopenClass({
       for (i = 0; i < length && !done(); i++) {
         const category = categories[i];
 
-        if ((!emptyTerm && category.get('name').toLowerCase().indexOf(term) > 0)) {
+        if (!emptyTerm &&
+            (category.get('name').toLowerCase().indexOf(term) > 0 ||
+             category.get('slug').toLowerCase().indexOf(slugTerm) > 0)) {
+
           if (data.indexOf(category) === -1) data.push(category);
         }
       }

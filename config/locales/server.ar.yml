@@ -1034,7 +1034,7 @@ ar:
     tl2_requires_likes_received: "كمية الإعجابات التي يجب على العضو إرسالها قبل ترقيته لمستوى الثقة 2."
     tl2_requires_likes_given: "كمية الإعجابات التي يجب على العضو جمعها قبل ترقيته لمستوى الثقة 2."
     tl2_requires_topic_reply_count: "كمية مواضيع العضو التي يجب الرد عليها قبل الترقية لمستوى الثقة 2."
-    tl3_requires_days_visited: "أقل عدد من الأيام التي يجب على المستخدم زيارة الموقع في آخر مئةيوم للتأهل لمستوى الثقة 3. (0 حتى 100)"
+    tl3_time_period: "الفترة الزمنية لمتطلبات مستور الثقة 3."
     tl3_requires_topics_replied_to: "أقل عدد من المواضيع التي يجب على المستخدم الرد عليها في آخر 100 يوم للتأهل لمستوى الثقة 3. (0 أو أكثر)"
     tl3_requires_topics_viewed: "نسبة الموضوعات التي تم إنشاؤها في آخر 100 يوم، تجعل المستخدم مؤهلًا لعرضه للترقية إلى مستوى الثقة الثالث3 . (من 0 الى 100)"
     tl3_requires_posts_read: "النسبه المئويه للمنشورات التي تم انشاءها في اخر 100 يوم ,التي يحتاج المستخدم لمعينتها تؤهله للترقيه للمستوي الثقه 3. (0 الي 100)"
@@ -1109,6 +1109,7 @@ ar:
     disable_emails: "منع Discourse من إرسال أي نوع من رسائل البريد الإلكتروني"
     strip_images_from_short_emails: "شريط الصور من البريد الإلكتروني لها حجم أقل من 2800 بايت"
     short_email_length: "طول أقصر بريد الكتروني بـ Bytes."
+    display_name_on_email_from: "أعرض الاسماء كاملة في البريد الالكتروني من المجال."
     pop3_polling_enabled: "تصويت عبرPOP3 لردود البريد الإلكتروني."
     pop3_polling_ssl: "أستخدم SSL عند الأتصال بمخدم POP3.(مُستحسن)"
     pop3_polling_period_mins: "الفترة دقائق بين التحقق من حساب POP3 للبريد الإلكتروني. ملاحظة : تتطلب إعادة تشغيل."
@@ -1149,6 +1150,7 @@ ar:
     allow_profile_backgrounds: "اسمح للأعضاء برفع خلفيات ملف التعريف."
     enable_mobile_theme: "اجهزه الموبايل تستخدم ثيم مناسب للجوال,امكانيه التحويل للموقع الكامل .الغي هذا اذا اردت استخدام انماط سريعه الاستجابه"
     dominating_topic_minimum_percent: "ما هي النسبه المئويه للمشاركات التي يجب علي المستخدم عملها في الموضوع قبل تلقيه لتنبيه عن خروجه لنطاق الموضوع"
+    disable_avatar_education_message: "عطل الرسالة التعليمية لتغيير الصورة الرمزية."
     daily_performance_report: "تحليل سجلات NGINX يومي ونشر موضوع \"قاقم فقط\" مع التفاصيل"
     suppress_uncategorized_badge: "لا تظهر الوسام  للمواضيع غير المصنفة في قائمة الموضوع."
     permalink_normalizations: "يتم تطبيق التعابير القياسية قبل مطابقة صور الروابط الثابتة، على سبيل المثال: /(\\/topic.*)\\?.*/\\1 سوف تقطع الاستعلامات من الموضوع. التنسيق هو : التعبير القياسي+النص المستخدم \\ إلخ.. للوصول للقطع"
@@ -1217,6 +1219,7 @@ ar:
       invalid_string_max: "يجب ان لا تكون الاحرف اكثر من %{max} "
       invalid_reply_by_email_address: "القيمة يجب أن تحتوي '%{reply_key}' وتختلف عن إشعار البريد الإلكتروني."
   notification_types:
+    group_mentioned: "%{group_name} ذكرت في %{link}"
     mentioned: "%{display_username} ذكرك في %{link}"
     liked: "%{display_username} أعجب بمشاركتك في %{link}"
     replied: "%{display_username} رد على مشاركتك في %{link}"
@@ -1809,6 +1812,8 @@ ar:
     unsubscribe:
       title: "غير مشترك "
       description: "لست مهتما في تلقي هذه الرسائل الالكترونيه؟ لا مشكله! اضغط تحت ليتم الغاء اشتركك فورا:"
+    reply_by_email: "للرد, قم بالرد لهذا البريد الالكتروني أو [زُرَ الموضوع](%{base_url}%{url})."
+    visit_link_to_respond: "للرد, [زُرَ الموضوع](%{base_url}%{url})."
     posted_by: "مشاركة بواسطة %{username} على %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} دعاك لرسالة '%{topic_title}'"
@@ -1821,6 +1826,21 @@ ar:
         > %{topic_excerpt}
 
         at
+
+        > %{site_title} -- %{site_description}
+
+        يرجى زيارة هذا الرابط لعرض الرسالة: %{base_url}%{url}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} دعاك للرسالة '%{topic_title}'"
+      text_body_template: |2
+
+        %{username} دعاك لرسالة
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        في
 
         > %{site_title} -- %{site_description}
 
@@ -1842,16 +1862,78 @@ ar:
         الرجاء زيارة هذا الرابط لعرض الرسالة: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [مساءً] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
       subject_template: "[%{site_name}] الخلاصة"

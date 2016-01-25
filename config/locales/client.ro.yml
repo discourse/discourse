@@ -98,6 +98,15 @@ ro:
           one: "acum o zi"
           few: "acum %{count} zile"
           other: "acum %{count} zile"
+      later:
+        x_days:
+          one: "După 1 zi"
+          few: "După %{count} zile"
+          other: "După %{count} zile"
+        x_years:
+          one: "După 1 an"
+          few: "După %{count} ani"
+          other: "După %{count} ani"
     share:
       topic: 'distribuie adresă către această discuție'
       post: 'distribuie o adresă către postarea #%{postNumber}'
@@ -113,11 +122,19 @@ ro:
         disabled: 'deschis %{when}'
       closed:
         enabled: 'inchis %{when}'
+        disabled: 'deschis %{when}'
       archived:
         enabled: 'arhivat %{when}'
         disabled: 'dezarhivat %{when}'
       pinned:
         enabled: 'Prins %{when}'
+        disabled: 'desprinse %{when}'
+      pinned_globally:
+        enabled: 'fixat global %{when}'
+        disabled: 'desprins %{when}'
+      visible:
+        enabled: 'listat %{when}'
+        disabled: 'retras %{when}'
     topic_admin_menu: "acțiuni subiect administrator"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
     edit: 'editează titlul și categoria acestui subiect'
@@ -215,15 +232,18 @@ ro:
     saved: "Salvat!"
     upload: "Încarcă"
     uploading: "Încărcare..."
+    uploading_filename: "Se încarcă {{filename}}..."
     uploaded: "Încărcat!"
     enable: "Activează"
     disable: "Dezactivează"
     undo: "Anulează acțiunea precedentă"
-    revert: "Rescrie acțiunea precedentă"
+    revert: "Refacere"
     failed: "Eșuat"
     switch_to_anon: "Mod anonim"
+    switch_from_anon: "Ieșire din mod anonim"
     banner:
       close: "Ignoră acest banner."
+      edit: "Editează acest banner >>"
     choose_topic:
       none_found: "Nu au fost găsite discuții."
       title:
@@ -239,6 +259,10 @@ ro:
       edit: "Editează"
       cancel: "Anulează"
       view_pending: "vezi postările în aşteptare"
+      has_pending_posts:
+        one: "Această discuție are <b>1</b> postare în așteptare"
+        few: "Această discuție are <b>1</b> postare în așteptare"
+        other: "Această discuţie are <b>{{count}}</b> postări în aşteptare."
       confirm: "Salvează Schimbările"
       delete_prompt: "Sunteţi sigur că vreţi să ştergeţi  <b>%{username}</b>? Această operaţiune va şterge toate postările, va bloca adresa de email şi adresa de IP."
       approval:
@@ -285,6 +309,7 @@ ro:
         few: "%{count} utilizatori"
         other: "%{count} utilizatori"
     groups:
+      add: "Adăugați"
       visible: "Grupul este vizibil tuturor utilizatorilor"
       title:
         one: "grup"
@@ -1139,8 +1164,6 @@ ro:
         no_value: "Nu, pastrează"
         yes_value: "Da, abandonează"
       via_email: "acest post a sosit via email"
-      wiki:
-        about: "Acest post este un wiki; oricine poate edita"
       archetypes:
         save: 'Opțiuni de salvare'
       controls:
@@ -1848,6 +1871,7 @@ ro:
         ip_address: "Adresa IP"
         topic_id: "ID Discuție"
         post_id: "ID Mesaj"
+        category_id: "ID categorie"
         delete: 'Șterge'
         edit: 'Editează'
         save: 'Salvează'
@@ -2221,6 +2245,23 @@ ro:
         name: "Nume"
         image: "Imagine"
         delete_confirm: "Sunteţi sigur că doriţi să ștergeți :%{name}: emoji?"
+      embedding:
+        save: "Salvați setările pentru embeding"
+      permalink:
+        title: "Link-uri"
+        url: "URL"
+        topic_id: "ID discuție"
+        topic_title: "Discuție"
+        post_id: "ID postare"
+        post_title: "Postare"
+        category_id: "ID categorie"
+        category_title: "Categorie"
+        external_url: "URL extern"
+        delete_confirm: Sigur doriți să ștergeți acest link ?
+        form:
+          label: "Nou:"
+          add: "Adăugați"
+          filter: "Căutare (URL sau URL extern)"
     lightbox:
       download: "descarcă"
     search_help:
@@ -2236,6 +2277,7 @@ ro:
         categories: '<b>g</b> apoi <b>c</b> Categorii'
         top: '<b>g</b>, <b>t</b> Top'
         bookmarks: '<b>g</b>, <b>b</b> Semne de carte'
+        messages: '<b>g</b>, <b>m</b> Mesaje'
       navigation:
         title: 'Navigare'
         jump: '<b>#</b> Mergi la mesajul #'
@@ -2247,31 +2289,33 @@ ro:
         title: 'Applicația'
         create: '<b>c</b> Crează discuție nouă'
         notifications: '<b>n</b> Deschide notificare'
+        hamburger_menu: '<b>=</b> Deschide meniul hamburger'
         user_profile_menu: '<b>p</b> Deschide meniu utilizator'
         show_incoming_updated_topics: '<b>.</b> Arată discuţiile actualizate'
         search: '<b>/</b> Caută'
-        help: '<b>?</b> Deschide ajutorul de scurtături de tastatură'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Respinge Nou/Mesaj'
-        dismiss_topics: '<b>x</b>, <b>t</b> Respinge Discuţia'
+        help: '<b>?</b> Vezi comenzi rapide disponibile'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Respinge Nou/Mesaje'
+        dismiss_topics: '<b>x</b>, <b>t</b> Respinge discuţiile'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Ieșire din cont'
       actions:
         title: 'Acțiuni'
         bookmark_topic: '<b>f</b> Comută semnul de carte pentru discuţie'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Fixează/Desprinde discuția'
         share_topic: '<b>shift s</b> distribuie discuție'
         share_post: '<b>s</b> Distribuie mesajul'
-        reply_as_new_topic: '<b>t</b> Răspunde că discuţie legată'
+        reply_as_new_topic: '<b>t</b> Răspunde că discuţie conexă'
         reply_topic: '<b>shift r</b> Raspunde la discuție'
         reply_post: '<b>r</b> Răspunde la postare'
         quote_post: '<b>q</b> Citează mesajul'
         like: '<b>l</b> Apreciează mesajul'
-        flag: '<b>!</b> Marchează mesajul'
-        bookmark: '<b>b</b> Marchează cu semn de carte postarea'
+        flag: '<b>!</b> Reclamă mesajul'
+        bookmark: '<b>b</b> Salvează postarea'
         edit: '<b>e</b> Editează mesaj'
         delete: '<b>d</b> Șterge mesaj'
-        mark_muted: '<b>m</b> apoi <b>m</b> Marchează discuția ca silențios'
-        mark_regular: '<b>m</b> apoi <b>r</b> Marchează discuția ca normală'
-        mark_tracking: '<b>m</b> apoi <b>t</b> Marchează discuția ca urmărită'
-        mark_watching: '<b>m</b> apoi <b>w</b> Marchează discuția ca privită'
+        mark_muted: '<b>m</b> apoi <b>m</b> Treceți discuția în mod silențios'
+        mark_regular: '<b>m</b>, <b>r</b> Discuție normală (implicită)'
+        mark_tracking: '<b>m</b>, <b>t</b> Urmăriți discuția'
+        mark_watching: '<b>m</b>, <b>w</b> Urmăriți discuția îndeaproape'
     badges:
       title: Insigne
       allow_title: "poate fi folosit ca titlu"
@@ -2292,7 +2336,7 @@ ro:
       none: "<none>"
       badge_grouping:
         getting_started:
-          name: Să începem
+          name: Cum începem
         community:
           name: Communitate
         trust_level:
@@ -2300,22 +2344,23 @@ ro:
         other:
           name: Altele
         posting:
-          name: Scrie mesaj
+          name: Postând
       badge:
         editor:
           name: Editor
-          description: Primul mesaj editat
+          description: Prima postare editată
         basic_user:
           name: De baza
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Acordată</a> toate funcțiile esențiale
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Vi se permite acces</a> la toate funcțiile esențiale ale comunității
         member:
           name: Membru
-          description: Invitaţii <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Acordate</a>
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Permisiuni</a> invitații
         regular:
-          name: Normal
+          name: Obișnuit
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Vi se permit</a> recategorisirea, redenumirea, link-urile urmărite și acces lounge
         leader:
           name: Lider
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Acrodată</a> recategorisește , redenumește, adrese urmărite și lounge
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Vi se permit</a> editarea globală, fixarea, arhivarea, despărțirea și combinarea
         welcome:
           name: Bine ai venit
           description: A primit o apreceiere
@@ -2344,39 +2389,59 @@ ro:
           name: Discuţie Foarte Bună
           description: A primit 50 de aprecieri pentru o discuţie. Această insignă poate fi acordată de mai multe ori
         nice_share:
-          name: Drăguţ
+          name: Distribuire drăguță
           description: A împărţit un mesaj cu 25 utilizatori unici
         good_share:
-          name: Bun
-          description: A împărţit un mesaj cu 300 utilizatori unici
+          name: Distribuire bună
+          description: A distribuit un mesaj către 300 utilizatori unici
         great_share:
-          name: Perfect
-          description: A împărţit un mesaj cu 1000 utilizatori unici
+          name: Super distribuire
+          description: A distribuit un mesaj către 1000 utilizatori unici
         first_like:
           name: Prima apreciere
           description: A apreciat un mesaj
         first_flag:
-          name: Primul marcaj
-          description: A marcat un mesaj
+          name: Prima reclamație
+          description: A reclamat un mesaj
         promoter:
           name: Promotor
           description: A invitat un utilizator
         campaigner:
           name: Combatant
+          description: A invitat 3 membri simpli (nivel de incredere 1)
         champion:
           name: Campion
+          description: A invitat 5 membri (nivel de incredere 2)
         first_share:
           name: Primul
           description: A distribuit un mesaj
         first_link:
-          name: Prima adresă
+          name: Primul link
           description: A adăugat o adresă internă catre altă discuție
         first_quote:
           name: Primul citat
           description: A citat un alt utilizator
         read_guidelines:
-          name: Citește reguli de ajutor
-          description: Citește <a href="/regulile de ajutor"> comune</a>
+          name: Citește ghidul comunității
+          description: Citește <a href="/guidelines">ghidul comunității</a>
         reader:
-          name: Cititorul
-          description: Citeşte fiecare mesaj dintr-o discuție cu mai mult de 100 de mesaje
+          name: Cititor
+          description: A citit fiecare mesaj dintr-o discuție cu mai mult de 100 de mesaje
+        popular_link:
+          name: Link popular
+          description: A postat un link extern cu cel puțin 50 de accesări
+        hot_link:
+          name: Link interesant
+          description: A postat un link extern cu cel puțin 300 de accesări
+        famous_link:
+          name: Link foarte popular
+          description: A postat un link extern cu cel puțin 1000 de accesări
+    google_search: |
+      <h3>Căutați cu Google</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

@@ -776,9 +776,9 @@ sq:
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
-    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
-    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
-    s3_region: "The Amazon S3 region name that will be used to upload images."
+    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images and/or backups."
+    s3_secret_access_key: "The Amazon S3 secret access key that will be used for uploading."
+    s3_region: "The Amazon S3 region name that will be used for uploading."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
     avatar_sizes: "List of automatically generated avatar sizes."
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."

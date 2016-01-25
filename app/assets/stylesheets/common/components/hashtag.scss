@@ -1,0 +1,14 @@
+a.hashtag {
+  color: black;
+  font-weight: bold;
+
+  &:visited, &:hover {
+    color: black;
+  }
+
+  &:hover {
+    span {
+      text-decoration: underline;
+    }
+  }
+}

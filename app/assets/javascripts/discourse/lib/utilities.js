@@ -262,7 +262,11 @@ Discourse.Utilities = {
       return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
     } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav)$/i).test(upload.original_filename)) {
       // is Audio/Video
-      return "http://" + Discourse.BaseUrl + upload.url;
+      if (Discourse.CDN) {
+        return Discourse.CDN.startsWith('//') ? "http:" + Discourse.getURLWithCDN(upload.url) : Discourse.getURLWithCDN(upload.url);
+      } else {
+        return "http://" + Discourse.BaseUrl + upload.url;
+      }
     } else {
       return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
     }

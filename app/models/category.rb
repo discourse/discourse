@@ -5,6 +5,7 @@ class Category < ActiveRecord::Base
 
   include Positionable
   include HasCustomFields
+  include CategoryHashtag
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
@@ -75,6 +76,7 @@ class Category < ActiveRecord::Base
       scoped_to_permissions(guardian, [:create_post, :full])
     end
   }
+
   delegate :post_template, to: 'self.class'
 
   # permission is just used by serialization
@@ -398,8 +400,8 @@ SQL
     @@url_cache.clear
   end
 
-  def full_slug
-    url[3..-1].gsub("/", "-")
+  def full_slug(separator = "-")
+    url[3..-1].gsub("/", separator)
   end
 
   def url

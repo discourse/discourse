@@ -193,6 +193,6 @@ class TopicCreator
   end
 
   def check_can_send_permission!(topic, obj)
-    rollback_with!(topic, :cant_send_pm) unless @guardian.can_send_private_message?(obj)
+    rollback_with!(topic, :cant_send_pm) unless @opts[:skip_validations] || @guardian.can_send_private_message?(obj)
   end
 end

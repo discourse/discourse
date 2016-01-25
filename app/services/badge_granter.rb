@@ -44,7 +44,7 @@ class BadgeGranter
           I18n.with_locale(@user.effective_locale) do
             notification = @user.notifications.create(
               notification_type: Notification.types[:granted_badge],
-              data: { badge_id: @badge.id, badge_name: @badge.display_name, badge_slug: @badge.slug }.to_json)
+              data: { badge_id: @badge.id, badge_name: @badge.display_name, badge_slug: @badge.slug, username: @user.username}.to_json)
             user_badge.update_attributes notification_id: notification.id
           end
         end

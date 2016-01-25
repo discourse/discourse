@@ -3,6 +3,7 @@ import loadScript from 'discourse/lib/load-script';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
 import Category from 'discourse/models/category';
+import { SEPARATOR as categoryHashtagSeparator } from 'discourse/lib/category-hashtags';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -42,7 +43,7 @@ function Toolbar() {
     id: 'italic',
     group: 'fontStyles',
     shortcut: 'I',
-    perform: e => e.applySurround('*', '*', 'italic_text')
+    perform: e => e.applySurround('_', '_', 'italic_text')
   });
 
   this.addButton({id: 'link', group: 'insertions', shortcut: 'K', action: 'showLinkModal'});
@@ -255,7 +256,7 @@ export default Ember.Component.extend({
       template: template,
       key: '#',
       transformComplete(category) {
-        return category.get('slug');
+        return Category.slugFor(category, categoryHashtagSeparator);
       },
       dataSource(term) {
         return Category.search(term);

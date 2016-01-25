@@ -16,21 +16,22 @@ module("lib:click-track", {
     windowOpen = sandbox.stub(window, "open").returns(win);
     sandbox.stub(win, "focus");
 
-    fixture().html([
-      '<div id="topic" id="1337">',
-      '  <article data-post-id="42" data-user-id="3141">',
-      '    <a href="http://www.google.com">google.com</a>',
-      '    <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>',
-      '    <a id="with-badge" data-user-id="314" href="http://www.google.com">google.com<span class="badge">1</span></a>',
-      '    <a id="with-badge-but-not-mine" href="http://www.google.com">google.com<span class="badge">1</span></a>',
-      '    <div class="onebox-result">',
-      '      <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>',
-      '      <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>',
-      '    </div>',
-      '    <a id="same-site" href="http://discuss.domain.com">forum</a>',
-      '    <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>',
-      '  </article>',
-      '</div>'].join("\n"));
+    fixture().html(
+      `<div id="topic" id="1337">
+        <article data-post-id="42" data-user-id="3141">
+          <a href="http://www.google.com">google.com</a>
+          <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+          <a id="with-badge" data-user-id="314" href="http://www.google.com">google.com<span class="badge">1</span></a>
+          <a id="with-badge-but-not-mine" href="http://www.google.com">google.com<span class="badge">1</span></a>
+          <div class="onebox-result">
+            <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
+            <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
+          </div>
+          <a id="same-site" href="http://discuss.domain.com">forum</a>
+          <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
+          <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
+        </article>
+      </div>`);
   }
 });
 
@@ -62,6 +63,10 @@ test("does not track clicks on back buttons", function() {
 
 test("does not track clicks on quote buttons", function() {
   ok(track(generateClickEventOn('.quote-other-topic')));
+});
+
+test("does not track clicks on category badges", () => {
+  ok(!track(generateClickEventOn('.hashtag')));
 });
 
 test("removes the href and put it as a data attribute", function() {
