@@ -23,7 +23,7 @@ class CategoryUser < ActiveRecord::Base
         # we want to apply default of the new category
         category_id = new_category.id
         # remove defaults from previous category
-        remove_default_from_topic(topic.id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
+        remove_default_from_topic(topic.id, category_id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
       end
 
       apply_default_to_topic(topic.id, category_id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
@@ -76,17 +76,19 @@ class CategoryUser < ActiveRecord::Base
     )
   end
 
-  def self.remove_default_from_topic(topic_id, level, reason)
+  def self.remove_default_from_topic(topic_id, category_id, level, reason)
     sql = <<-SQL
       DELETE FROM topic_users
             WHERE topic_id = :topic_id
               AND notifications_changed_at IS NULL
               AND notification_level = :level
               AND notifications_reason_id = :reason
+              AND NOT EXISTS(SELECT 1 FROM category_users WHERE category_users.category_id = :category_id AND category_users.notification_level = :level AND category_users.user_id = topic_users.user_id)
     SQL
 
     exec_sql(sql,
       topic_id: topic_id,
+      category_id: category_id,
       level: level,
       reason: reason
     )
