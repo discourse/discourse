@@ -1,3 +1,14 @@
+GIT
+  remote: git://github.com/zquestz/omniauth-google-oauth2.git
+  revision: b492c4bb8286d35ae1168d7f2e5c57769bfe45a0
+  ref: b492c4bb8286d35
+  specs:
+    omniauth-google-oauth2 (0.3.0)
+      jwt (~> 1.0)
+      multi_json (~> 1.3)
+      omniauth (>= 1.1.1)
+      omniauth-oauth2 (>= 1.3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -38,7 +49,6 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    addressable (2.4.0)
     annotate (2.7.0)
       activerecord (>= 3.2, < 6.0)
       rake (~> 10.4)
@@ -195,12 +205,6 @@ GEM
     omniauth-github-discourse (1.1.2)
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
-    omniauth-google-oauth2 (0.3.0)
-      addressable (~> 2.3)
-      jwt (~> 1.0)
-      multi_json (~> 1.3)
-      omniauth (>= 1.1.1)
-      omniauth-oauth2 (>= 1.3.1)
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)
@@ -448,7 +452,7 @@ DEPENDENCIES
   omniauth
   omniauth-facebook
   omniauth-github-discourse
-  omniauth-google-oauth2
+  omniauth-google-oauth2!
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
