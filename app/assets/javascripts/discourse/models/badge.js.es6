@@ -163,7 +163,7 @@ Badge.reopenClass({
     let badges = [];
     if ("badge" in json) {
       badges = [json.badge];
-    } else {
+    } else if (json.badges) {
       badges = json.badges;
     }
     badges = badges.map(function(badgeJson) {
@@ -211,4 +211,3 @@ Badge.reopenClass({
 });
 
 export default Badge;
-
