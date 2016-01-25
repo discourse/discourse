@@ -1,5 +1,3 @@
-require "bigdecimal"
-
 class DiskSpace
 
   extend ActionView::Helpers::NumberHelper
@@ -59,13 +57,11 @@ class DiskSpace
   protected
 
   def self.free(path)
-    number = `df -Pk #{path} | awk 'NR==2 {print $4 * 1024;}'`.strip
-    BigDecimal.new(number).to_i
+    `df -Pk #{path} | awk 'NR==2 {print $4 * 1024;}'`.to_i
   end
 
   def self.used(path)
-    number = `du -s #{path}`
-    BigDecimal.new(number).to_i * 1024
+    `du -s #{path}`.to_i * 1024
   end
 
 end
