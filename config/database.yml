@@ -1,7 +1,13 @@
 development:
   prepared_statements: false
-  adapter: postgresql
+  adapter: postgresql_fallback
+  host: 172.17.0.2
+  port: 6432
   database: discourse_development
+  username: tgxworld
+  password: test
+  replica_host: 172.17.0.3
+  replica_port: 6432
   min_messages: warning
   pool: 5
   timeout: 5000
