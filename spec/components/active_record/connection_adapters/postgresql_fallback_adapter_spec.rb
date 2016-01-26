@@ -7,12 +7,12 @@ describe ActiveRecord::ConnectionHandling do
       "adapter" => "postgresql_fallback",
       "replica_host" => "localhost",
       "replica_port" => "6432"
-    })
+    }).symbolize_keys!
   end
 
   after do
-    ActiveRecord::Base.clear_all_connections!
     Discourse.disable_readonly_mode
+    ::PostgreSQLFallbackHandler.instance.master = true
   end
 
   describe "#postgresql_fallback_connection" do
@@ -24,34 +24,43 @@ describe ActiveRecord::ConnectionHandling do
     context 'when master server is down' do
       before do
         @replica_connection = mock('replica_connection')
-
-        ActiveRecord::Base.expects(:postgresql_connection).with(config).raises(PG::ConnectionBad)
-
-        ActiveRecord::Base.expects(:postgresql_connection).with(config.merge({
-          "host" => "localhost", "port" => "6432"
-        })).returns(@replica_connection)
-
-        ActiveRecord::Base.expects(:verify_replica).with(@replica_connection)
-
-        @replica_connection.expects(:disconnect!)
-
-        ActiveRecord::Base.stubs(:interval).returns(0.1)
-
-        Concurrent::TimerTask.any_instance.expects(:shutdown)
       end
 
       it 'should failover to a replica server' do
-        ActiveRecord::Base.postgresql_fallback_connection(config)
+        begin
+          ActiveRecord::Base.expects(:postgresql_connection).with(config).raises(PG::ConnectionBad)
+          ActiveRecord::Base.expects(:verify_replica).with(@replica_connection)
 
-        expect(Discourse.readonly_mode?).to eq(true)
+          ActiveRecord::Base.expects(:postgresql_connection).with(config.merge({
+            host: "localhost", port: "6432"
+          })).returns(@replica_connection)
 
-        ActiveRecord::Base.unstub(:postgresql_connection)
-        sleep 0.15
+          expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
+            .to raise_error(PG::ConnectionBad)
 
-        expect(Discourse.readonly_mode?).to eq(false)
+          expect{ ActiveRecord::Base.postgresql_fallback_connection(config) }
+            .to change{ Discourse.readonly_mode? }.from(false).to(true)
 
-        expect(ActiveRecord::Base.connection)
-          .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+          ActiveRecord::Base.unstub(:postgresql_connection)
+
+          current_threads = Thread.list
+
+          expect{ ActiveRecord::Base.connection_pool.checkout }
+            .to change{ Thread.list.size }.by(1)
+
+          # Wait for the thread to finish execution
+          threads = (Thread.list - current_threads).each(&:join)
+
+          expect(Discourse.readonly_mode?).to eq(false)
+
+          expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
+
+          expect(ActiveRecord::Base.connection)
+            .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+        ensure
+          # threads.each { |t| Thread.kill(t) } if threads
+          ActiveRecord::Base.establish_connection(:test)
+        end
       end
     end
 
@@ -59,8 +68,10 @@ describe ActiveRecord::ConnectionHandling do
       it 'should raise the right error' do
         ActiveRecord::Base.expects(:postgresql_connection).raises(PG::ConnectionBad).twice
 
-        expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
-          .to raise_error(PG::ConnectionBad)
+        2.times do
+          expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
+            .to raise_error(PG::ConnectionBad)
+        end
       end
     end
   end
