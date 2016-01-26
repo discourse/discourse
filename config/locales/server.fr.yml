@@ -860,7 +860,6 @@ fr:
     tl2_requires_likes_received: "Combien de J'aime un utilisateur doit recevoir pour être promu au niveau de confiance 2."
     tl2_requires_likes_given: "Combien de J'aime un utilisateur doit donner pour être promu au niveau de confiance 2."
     tl2_requires_topic_reply_count: "A combien de sujet un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
-    tl3_requires_days_visited: "Nombre minimum de jours qu'un utilisateur doit avoir passer sur le site dans les 100 derniers jours pour être promu au niveau de confiance 3. (0 à 100)"
     tl3_requires_topics_replied_to: "Nombre minimum de sujets auquel un utilisateur doit avoir répondu dans les 100 derniers jours pour être promu au niveau de confiance 3. (0 à 100)"
     tl3_requires_topics_viewed: "Pourcentage de sujets crées dans les 100 derniers jours qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3. (0 à 100)"
     tl3_requires_posts_read: "Pourcentage de message crées dans les 100 derniers jours qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3. (0 à 100)"
@@ -1146,7 +1145,6 @@ fr:
       must_begin_with_alphanumeric: "doit débuter par une lettre ou un nombre ou un underscore"
       must_end_with_alphanumeric: "doit terminer par une lettre, un chiffre ou un caractère souligné (underscore)"
       must_not_contain_two_special_chars_in_seq: "ne doit pas contenir une séquence de 2 caractères spéciaux ou plus (.-_)"
-      must_not_contain_confusing_suffix: "ne doit pas contenir un sufix déroutant comme .json ou .png etc."
     email:
       not_allowed: "n'est pas autorisé pour ce fournisseur de courriels. Merci d'utiliser une autre adresse."
       blocked: "n'est pas autorisé."
@@ -1315,96 +1313,6 @@ fr:
 
         Afin d'être guider, merci de vous référer à notre  [guide de bonne conduite](%{base_url}/guidelines).
 
-    usage_tips:
-      text_body_template: |
-        Vous trouverez ci-dessous quelques astuces pour vous aider à démarrer :
-
-        ##Lire
-
-        Pour en lire plus, **faites défiler vers le bas !**
-
-        Lorsqu'une nouvelle réponse ou un nouvel article sont publiés, ils apparaissent automatiquement - pas besoin de rafraîchir la page.
-
-        ##Navigation
-
-        - Pour effectuer une recherche, sur votre page profil ou le menu <kbd>☰</kbd>, utilisez l'icône en haut à droite.
-
-        - Sélectionner un titre de l'article, vous dirigera toujours vers **la nouvelle réponse non lue** dans celui-ci. Pour entrer au début ou à la fin, sélectionnez le compteur de réponse ou alors la date de la dernière réponse.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Pendant la lecture d'un article, sélectionnez la barre de progression au fond à droite pour utiliser les contrôles de navigation. Revenez directement au début en cliquant sur le titre de l'article. Utilisez '?' pour avoir la liste des raccourcis clavier super rapide.
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        ##Répondre
-
-        - Pour répondre **de manière générale à une conversation**, utilisez <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> tout en bas de celui-ci.
-
-        - Pour répondre à **une personne en particulier**, utilisez <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> sur leur message.
-
-        - Pour répondre à **une nouvelle conversation**, utilisez <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> qui se trouve à la droite du message. L'ancien et le nouveau sujet seront alors automatiquement liés.
-
-        Pour insérer une citation, sélectionnez le texte que vous souhaitez citer, cliquez sur n’importe quel bouton **Répondre**. Répétez autant de fois que nécessaire.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Pour signaler à quelqu'un votre réponse, mentionnez son nom. Mettez un '@' au début de son pseudo pour choisir un utilisateur.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Pour utiliser [standard Emoji](http://www.emoji.codes/) (les émoticones), utilisez le caractère ':' et tapez son nom ou insérez des smileys de manière traditionnelle ;)
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Pour générer l'aperçu d'un lien, collez-le simplement dans la zone de texte :
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        ##Actions
-
-        Il y a des boutons d'actions en bas de chaque commentaire :
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        Pour prévenir quelqu'un que vous appréciez son commentaire, cliquez **sur le coeur**. Partagez votre amour !
-
-        Si le commentaire de quelqu'un vous pose problème, prévenez [l'équipe de modération](%{base_url}/about) ou l'auteur en privé grâce au bouton **drapeau**. Vous pouvez aussi partager un lien vers le post ou le marquer comme **favori*** pour le mentionner plus tard dans votre page utilisateur.
-
-        ##Notifications
-
-        Quand quelqu’un vous répond, vous cite ou vous mentionne '@pseudo', un numéro apparaitra immédiatement en haut à droite de la page. Cliquez dessus pour accéder aux **notifications**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Pas de soucis si vous manquez une réponse, vous serez notifié par email de toutes les notifications pendant que vous n’êtes pas connecté.
-
-        ##Vos préférences
-
-        - Tout article de **moins de 2 jours** est considéré comme nouveau.
-
-        - Toute conversation à laquelle vous avez **participé** (création, réponses ou lecture pendant une période prolongée) sera automatiquement suivie.
-
-        Vous verrez “nouveau” en bleu et l’indicateur de quantité de notifications non lues en face de chaque article :
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Vous pouvez changer les paramètres de notification de chaque article par le système de contrôle de notification accessible en bas de chaque article.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Vous pouvez aussi configure l’état des notifications par catégorie si vous voulez voir chaque nouvel article dans une catégorie spécifique.
-
-        Pour changer n’importe lequel de ces paramètres, allez dans [vos préférences](%{base_url}/my/preferences).
-
-        ##Une communauté basé sur la confiance
-        Par votre participation sur ici, au fur et à mesure vous gagnerez la confiance de la communauté, vous deviendrez un membre à part entière et les limitations fonctionnelles propres à chaque nouvel utilisateur seront levées. A un niveau de confiance [suffisamment élevé](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous aurez accès à de nouvelles fonctionnalités pouvant nous aider à gérer la communauté tous ensemble.
-
-        Nous croyons au comportement communautaire civilisé en tous temps.
-
-        Amusez-vous bien !
-
-        (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un responsable, répondez simplement à ce message.)
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: "Merci d'avoir rejoint %{site_name} et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)\n"
@@ -1461,12 +1369,6 @@ fr:
     csv_export_failed:
       subject_template: "Échec de l'exportation des données "
       text_body_template: "Nous sommes désolés, l'exportation de vos données a échoué. Veuillez consultez les logs ou contactez un modérateur."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] Incident d'email -- Niveau de confiance insuffisant "
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse de courriel. Si vous pouvez que c'est une erreur, contacter un membre de l'équipe du site.
     email_reject_no_account:
       subject_template: "[%{site_name}] Problème de courriel - Compte utilisateur inconnu"
       text_body_template: |
@@ -1493,34 +1395,12 @@ fr:
         Nous sommes désolé, mais votre email à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre compte n'a pas les privilèges pour créer un nouveau sujet dans cette catégorie. Si vous trouvez que c'est une erreur, contacter l’équipe du site.
-    email_reject_post_error:
-      subject_template: "[%{site_name}] Incident d'email -- Erreur d'envoi d'un message"
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Cela peut-être à cause de: format trop complexe, message trop long ou trop court. Veuillez réessayer, ou rédigé votre message directement sur le site si le problème persiste.
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] Incident d'email -- Erreur d'envoi d'un message"
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Raison:
-
-        %{post_error}
-
-        Si vous pouvez corriger les erreurs, veuillez réessayer.
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problème de courriel -- Mauvaise clé de réponse"
       text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         La clé de réponse du fournisseur est invalide ou inconnu, et nous ne pouvons pas savoir à quel sujet s’adresse cette réponse. Contactez un membre de l'équipe du site.
-    email_reject_destination:
-      subject_template: "[%{site_name}] Problème de courriel - Adresse de destinataire inconnue"
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Aucune adresse de destination n'est reconnue. Veuillez vérifier que l'adresse du site est bien renseignée dans le champs To: (et non dans les champs C:: ou Bcc:), et que vous envoyez bien à l'adresse de courriel fournie par l'équipe.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Erreur de courriel -- Le sujet est introuvable"
       text_body_template: |

@@ -298,7 +298,7 @@ de:
     regular:
       title: "Stammgast"
     leader:
-      title: "Leitwolf"
+      title: "Anführer"
     change_failed_explanation: "Du wolltest %{user_name} auf '%{new_trust_level}' zurückstufen. Die Vertrauensstufe ist jedoch bereits '%{current_trust_level}'. %{user_name} verbleibt auf '%{current_trust_level}'. Wenn du den Benutzer zurückstufen möchtest, musst du zuerst seine Vertrauensstufe sperren."
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuche es später wieder."
@@ -941,6 +941,8 @@ de:
     strip_images_from_short_emails: "Entferne Bilder aus E-Mails kleiner als 2800 Bytes."
     short_email_length: "Kurze E-Mail-Länge in Bytes"
     display_name_on_email_from: "Zeige vollständige Namen im Absender-Feld von E-Mails"
+    unsubscribe_via_email: "Erlaube es Benutzern eine E-Mail mit dem Betreff oder Text: \"unsubscribe\" zum abbestellen der E-Mails zu senden."
+    unsubscribe_via_email_footer: "Hänge einen Link zum abbestellen ans Ende der E-Mail."
     pop3_polling_enabled: "E-Mail-Antworten über POP3 abholen."
     pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
     pop3_polling_period_mins: "Intervall in Minuten zum Abholen neuer E-Mails vom POP3-Konto. HINWEIS: benötigt Neustart."
@@ -1159,7 +1161,6 @@ de:
       must_begin_with_alphanumeric: "muss mit einem Buchstaben, einer Zahl oder einem Unterstrich beginnen"
       must_end_with_alphanumeric: "muss mit einem Buchstaben, einer Zahl oder einem Unterstrich enden"
       must_not_contain_two_special_chars_in_seq: "muss keine Reihenfolge von 2 oder mehr Sonderzeichen (.-_) haben"
-      must_not_contain_confusing_suffix: "muss keinen verwirrenden Suffix wie .json oder png. etc. enthalten."
     email:
       not_allowed: "ist für diesen Mailprovider nicht erlaubt. Bitte verwende eine andere Mailadresse."
       blocked: "ist nicht erlaubt."
@@ -1326,91 +1327,6 @@ de:
         Falls Dein Beitrag jedoch ein weiteres Mal von der Gemeinschaft gemeldet und verborgen wird, wird der Beitrag verborgen bleiben, bis ein Mitglied des Teams dies ändert – in diesem Fall können auch weitere Konsequenzen folgen, bis hin zu einer möglichen Sperrung Deines Accounts.
 
         Für weitereOrientierungshilfen wirf bitte einen Blick in unsere [Community-Richtlinien](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Hier sind einige Tipps um dir den Einstieg zu erleichtern.
-
-        ## Lesen
-
-        Um mehr zu lesen **scrolle einfach weiter nach unten!**
-
-        Wenn neue Beiträge eingebracht werden erscheinen diese automatisch - du musst die Seite nicht neu laden.
-
-        ## Wo bin ich?
-
-        - Um die Suche, deine Profilseite oder das Menü <kbd>☰</kbd>aufzurufen benutze die **Schaltflächen oben rechts**.
-
-        - Das Klicken auf den Titel eines Themas bringt dich zum **ersten ungelesenen Beitrag**. Benutze stattdessen die Beitragszahl oder das Datum des letzten Beitrags um ganz oben oder ganz unten einzusteigen.
-
-            <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Während des Lesens eines Themas kannst du mit der Fortschrittsanzeige unten rechts navigieren. Durch Klick auf den Titel kommst du schnell zum Anfang. Drücke <kbd>?</kbd> um eine Liste von praktischen Tastenkürzeln anzuzeigen.
-
-            <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        ## Antworten
-
-        - Um auf das **gesamte Thema** zu antworten benutze <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> ganz unten auf der Seite.
-
-        - Um **einer Person** zu antworten benutze <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> auf ihrem Post.
-
-        - Um mit **einem neuen Thema** zu antworten benutze <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> rechts vom Beitrag. Die alten und neuen Themen werden automatisch verlinkt.
-
-        Um ein Zitat einzufügen wähle den Text aus, den zu zitieren möchtest, und klicke dann auf einen Antworten-Knopf. Den Vorgang kannst du wiederholen, um mehrere Zitate einzufügen!
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Um jemanden in auf deinen Beitrag aufmerksam zu machen erwähne seinen Namen. Gib `@` ein, um einen Benutzernamen auszuwählen.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Um [Standard-Emoji](http://www.emoji.codes/) zu benutzen tippe einfach `:` um nach Namen zu suchen, oder verwende traditionelle Smileys `:)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Um eine Zusammenfassung für einen Link zu generieren, füge ihn einfach in einer eigenen Zeile ein:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        ## Aktionen
-
-        Unter jedem Beitrag befinden sich Aktionsbuttons:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        Um jemandem zu zeigen dass dir sein Beitrag gefallen hat, drücke den **❤**-Knopf. Teile deine Freude!
-
-        Wenn du ein Problem mit einem Beitrag feststellst, mach den Autor oder [die Moderatoren](%{base_url}/about) durch **Melden** darauf aufmerksam. Du kannst außerdem einen Link zu einem Beitrag **teilen**, oder ihn zum Merken mit einem **Lesezeichen** versehen, damit er später auf deiner Profilseite angezeigt wird.
-
-        ## Benachrichtigungen
-
-        Wenn jemand auf deinen Beitrag antwortet, deinen Beitrag zitiert oder deinen `@Benutzernamen` erwähnt, zeigt sich sofort eine Zahl oben rechts auf der Seite. Dort kannst du deine **Benachrichtigungen** abrufen.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Um das Verpassen von Antworten musst du dir keine Sorgen machen – alle Benachrichtigungen werden dir per E-Mail zugeschickt falls du nicht online bist wenn sie ankommen.
-
-        ## Deine Einstellungen
-
-          - Alle Themen die weniger als zwei Tage alt sind gelten als neu.
-
-          - Alle Themen an denen du **aktiv teilgenommen hast** (durch Erstellen, Antworten oder längeres Lesen) werden automatisch verfolgt.
-
-        Neben diesen Themen wirst du blaue Zahlen und Neu-Indikatoren finden:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Du kannst den Informationsmodus eines Themas mit dem Menü am Ende anpassen.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Du kannst den Informationsmodus auch für ganze Kategorien einstellen falls du jedes neue Thema in einer bestimmten Kategorie beobachten willst.
-
-        Um diese Funktion zu konfigurieren, gehe in [deine Einstellungen](%{base_url}/my/preferences).
-
-        ## Vertrauen
-
-        Durch deine Teilnahme wirst du dir im Laufe der Zeit das Vertrauen der Community verdienen, ein vollständiges Mitglied werden und die Einschränkungen für neue Benutzer werden aufgehoben. Wenn du eine ausreichend hohe [Vertrauensstufe](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) erreichst erhältst du neue Fähigkeiten mit denen wir unsere Community gemeinsam verwalten können.
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
@@ -1495,12 +1411,6 @@ de:
     csv_export_failed:
       subject_template: "Datenexport fehlgeschlagen"
       text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere einen Mitarbeiter oder sieh in die Logs."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] E-Mail-Problem -- Ungenügende Vertrauensstufe"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
-
-        Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
     email_reject_no_account:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
       text_body_template: |
@@ -1527,33 +1437,11 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
 
         Dein Nutzerkonto verfügt nicht über die nötigen Rechte, um in dieser Kategorie ein neues Thema anzulegen. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
-    email_reject_post_error:
-      subject_template: "[%{site_name}] E-Mail-Problem -- Fehler beim Posten"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
-
-        Mögliche Gründe sind: komplexe Formatierung, Nachricht zu lang oder zu kurz. Bitte versuche es erneut oder erstelle deinen Beitrag auf der Website, wenn der Fehler weiterhin auftritt.
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] E-Mail-Problem -- Fehler beim Posten"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
-
-        Grund:
-
-        %{post_error}
-
-        Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_reply_key:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekannter Antwort-Schlüssel"
       text_body_template: |
         Es tut uns leid, aber die E-Mail-Nachricht an %{destination} (Titel: „%{former_title}“) hat nicht geklappt.
         Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Kontaktiere einen Mitarbeiter.
-    email_reject_destination:
-      subject_template: "[%{site_name}] E-Mail Problem -- Unbekannte An:-Adresse"
-      text_body_template: |
-        Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (Titel: %{former_title}) gab es ein Problem.
-
-        Keine der Empfänger-Adressen ist uns bekannt. Bitte stelle sicher, dass die Ziel-Adresse in einer "An:" Zeile steht (nicht "Cc:" oder "Bcc:") und dass du die E-Mail an die richtige Adresse schickst, die dir von unseren Mitarbeitern genannt wurde.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-Mail Problem -- Thema nicht gefunden"
       text_body_template: |
@@ -1619,8 +1507,6 @@ de:
     download_remote_images_disabled:
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
-  unsubscribe_link: |
-    Um keine Benachrichtigungen mehr zu diesem Thema zu erhalten, bitte [hier klicken](%{unsubscribe_url}). Du kannst den Empfang von Benachrichtigungen per E-Mail auch in deinen [Profil-Eigenschaften](%{user_preferences_url}) deaktivieren.
   subject_re: "Re: "
   subject_pm: "[PN]"
   user_notifications:
@@ -1860,7 +1746,7 @@ de:
       regular: |
         Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 3 erreicht. Danke dass du über mehrere Monate in unserer Community ein Stammgast, einer unserer aktivsten Leser und ein zuverlässiges Mitglied geworden bist, das diese Community stark macht. Du kannst nun Themen neu kategorisieren und umbenennen, auf eine private Lounge für Stammgäste zugreifen, hast mächtigere Werkzeuge um Spam zu bekämpfen und kannst viel mehr Likes pro Tag vergeben.
       leader: |
-        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 4 erreichst. Du bist ein von den Mitarbeiter ausgezeichneter Leitwolf in dieser Community und hast durch deine Taten und Worte ein positives Beispiel abgegeben. Du kannst alle Beiträge bearbeiten, Moderator-Aktionen wir das Anpinnen, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen und viel mehr Likes pro Tag vergeben.
+        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 4 erreichst. Du bist ein von den Mitarbeitern ausgezeichneter Anführer in dieser Community und hast durch deine Taten und Worte ein positives Beispiel abgegeben. Du kannst alle Beiträge bearbeiten, Moderator-Aktionen wir das Anpinnen, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen und viel mehr Likes pro Tag vergeben.
   admin_login:
     success: "E-Mail gesendet"
     error: "Fehler!"

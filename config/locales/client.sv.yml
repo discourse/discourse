@@ -612,7 +612,6 @@ sv:
     logout: "Du loggades ut."
     refresh: "Uppdatera"
     read_only_mode:
-      enabled: "Skrivskyddat läge är aktiverat. Du kan fortsätta visa sidan men interaktioner kanske inte fungerar."
       login_disabled: "Det går inte att logga in medan siten är i skrivskyddat läge."
     learn_more: "lär dig mer..."
     year: 'år'
@@ -716,7 +715,6 @@ sv:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "mer..."
       add_warning: "Det här är en officiell varning"
       posting_not_on_topic: "Vilket ämne vill du svara på?"
@@ -1152,8 +1150,6 @@ sv:
         no_value: "nej, behåll"
         yes_value: "Ja, överge"
       via_email: "det här inlägget har gjorts via epost"
-      wiki:
-        about: "det här inlägget är en wiki; vanliga användare kan redigera det"
       archetypes:
         save: 'Spara Inställningar'
       controls:
@@ -1806,9 +1802,8 @@ sv:
             name: 'wiki'
             description: "Huvudfärg som används som bakgrund till wikiinlägg."
       email:
-        title: "E-postloggar"
         settings: "Inställningar"
-        all: "alla"
+        preview_digest: "Sammandrag"
         sending_test: "Skickar testmail..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Det uppstod ett problem med att skicka test meddelandet. Dubbelkolla dina e-postinställningar, verifiera att din host inte blockerar e-postkopplingar, och försök igen."
@@ -1823,7 +1818,6 @@ sv:
         send_test: "Skicka Test Mail"
         sent_test: "skickat!"
         delivery_method: "Leveransmetod"
-        preview_digest: "Sammandrag"
         refresh: "Uppdatera"
         format: "Format"
         html: "html"

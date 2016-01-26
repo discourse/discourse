@@ -91,12 +91,14 @@ ko:
       email: '이메일로 공유'
     action_codes:
       split_topic: "이 토픽을 ${when} 분리"
+      invited_user: "%{who}이(가) %{when}에 초대됨"
+      removed_user: "%{who}이(가) %{when}에 삭제됨"
       autoclosed:
-        enabled: '%{when} 닫기'
-        disabled: '%{when} 열기'
+        enabled: '%{when}에 닫힘'
+        disabled: '%{when}에 열림'
       closed:
-        enabled: '%{when} 닫기'
-        disabled: '%{when} 열기'
+        enabled: '%{when}에 닫힘'
+        disabled: '%{when}에 열림'
       archived:
         enabled: '%{when} 보관'
         disabled: '%{when} 보관 취소'
@@ -111,6 +113,18 @@ ko:
         disabled: '%{when} 목록에서 감춤'
     topic_admin_menu: "토픽 관리자 기능"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
+    s3:
+      regions:
+        us_east_1: "미국 동부 (N. 버지니아)"
+        us_west_1: "미국 서부 (N. 캘리포니아)"
+        us_west_2: "미국 서부 (오레곤)"
+        eu_west_1: "유럽연합 (아일랜드)"
+        eu_central_1: "유럽연합 (프랑크푸르트)"
+        ap_southeast_1: "아시아 태평양 (싱가폴)"
+        ap_southeast_2: "아시아 태평양 (시드니)"
+        ap_northeast_1: "아시아 태평양 (토쿄)"
+        ap_northeast_2: "아시아 태평양 (서울)"
+        sa_east_1: "남 아메리카 (상파울로)"
     edit: '이 토픽의 제목과 카테고리 편집'
     not_implemented: "죄송합니다. 아직 사용할 수 없는 기능입니다."
     no_value: "아니오"
@@ -282,13 +296,28 @@ ko:
       members: "멤버"
       posts: "게시글"
       alias_levels:
+        title: "누가 이 그룹에 메시지와 @멘션을 보낼 수 있습니까?"
         nobody: "0명"
         only_admins: "관리자 전용"
         mods_and_admins: "운영자 및 관리자만"
         members_mods_and_admins: "그룹 멤버, 운영자, 관리자만"
         everyone: "모두"
       trust_levels:
+        title: "멤버들이 추가될때 멤버들의 Trust level이 자동으로 획득됩니다."
         none: "없음"
+      notifications:
+        watching:
+          title: "알림 : 주시 중"
+          description: "이 메시지에 새로운 답글이 있을 때 알림을 받게 되며 새로운 답글의 개수는 표시됩니다."
+        tracking:
+          title: "알림 : 새 글 표시 중"
+          description: "누군가 당신의 @아이디 로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
+        regular:
+          title: "알림 : 일반"
+          description: "누군가 당신의 @아이디 로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
+        muted:
+          title: "알림 : 끔"
+          description: "이 메시지에 대해 어떠한 알림도 받지 않지 않습니다."
     user_action_groups:
       '1': "선사한 '좋아요'"
       '2': "받은 '좋아요'"
@@ -307,10 +336,12 @@ ko:
       all_subcategories: "모든 하위 카테고리"
       no_subcategory: "없음"
       category: "카테고리"
+      category_list: "카테고리 목록 표시"
       reorder:
         title: "카테고리 순서변경"
-        title_long: "카테고리 목록 제구성"
+        title_long: "카테고리 목록 재구성"
         fix_order: "위치 고정"
+        fix_order_tooltip: "카데고리에 고유 위치가 표시되지 않은 게 있습니다. 이 경우 예기치 않은 문제를 일으킬 수 있습니다."
         save: "순서 저장"
         apply_all: "적용"
         position: "위치"
@@ -393,6 +424,7 @@ ko:
       tracked_categories: "추적하기"
       tracked_categories_instructions: "이 카테고리 내의 새로운 토픽들을 추적하도록 자동으로 설정됩니다. 토픽 옆에 읽지 않은 게시글의 수가 표시됩니다."
       muted_categories: "알림 끄기"
+      muted_categories_instructions: "이 카테고리 내의 새 토픽에 대해 어떠한 알림도 받을 수 없으며, 최근의 토픽도 나타나지 않습니다."
       delete_account: "내 계정 삭제"
       delete_account_confirm: "정말로 계정을 삭제할까요? 이 작업은 되돌릴 수 없습니다."
       deleted_yourself: "계정이 삭제 되었습니다."
@@ -403,6 +435,7 @@ ko:
       muted_users: "알람 끄기"
       muted_users_instructions: "이 사용자들이 보낸 알림 모두 숨김"
       muted_topics_link: "알림을 끈 토픽 보기"
+      automatically_unpin_topics: "토픽을 끝까지 보면 자동으로 핀이 해제됩니다."
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"
@@ -411,6 +444,14 @@ ko:
         warnings_received: "경고"
       messages:
         all: "전체"
+        inbox: "수신함"
+        sent: "보냄"
+        archive: "저장됨"
+        groups: "내 그룹"
+        bulk_select: "메시지 선택"
+        move_to_inbox: "수신함으로 이동"
+        failed_to_move: "선택한 메시지를 이동할 수 없습니다 (아마도 네트워크가 다운됨)"
+        select_all: "모두 선택"
       change_password:
         success: "(이메일 전송)"
         in_progress: "(이메일 전송 중)"
@@ -455,6 +496,9 @@ ko:
         ok: "내 이메일로 확인 메일이 전송됩니다."
         invalid: "유효한 이메일 주소를 입력해주세요."
         authenticated: "내 이메일이 {{provider}}에 의해 인증되었습니다."
+        frequency_immediately: "만약 전송된 메일을 읽지 않았을 경우, 즉시 메일을 다시 보내드립니다."
+        frequency:
+          other: "최근  {{count}}분 동안접속하지 않을 경우에만 메일이 전송됩니다."
       name:
         title: "이름"
         instructions: "이름을 적어주세요. (선택사항)"
@@ -525,6 +569,9 @@ ko:
         title: "초대"
         user: "사용자 초대"
         sent: "보냄"
+        none: "승인을 기다리는 초대가 더이상 없습니다."
+        truncated:
+          other: "앞 {{count}}개의 초대를 보여줍니다."
         redeemed: "초대를 받았습니다."
         redeemed_tab: "Redeemed"
         redeemed_at: "에 초대되었습니다."
@@ -558,6 +605,18 @@ ko:
         same_as_email: "비밀번호가 이메일과 동일합니다."
         ok: "적절한 암호입니다."
         instructions: "글자 수가 %{count}자 이상이어야 합니다."
+      summary:
+        title: "요약"
+        topic_count: "생성된 토픽"
+        post_count: "생성된 포스트"
+        likes_given: "좋아요 누름"
+        likes_received: "좋아요 받음"
+        days_visited: "접속한 날짜"
+        posts_read_count: "읽은 포스트"
+        top_replies: "최고 인기 댓글"
+        top_topics: "최고 인기 토픽"
+        top_badges: "최고 뱃지"
+        more_topics: "다른이에게 준 좋아요"
       associated_accounts: "로그인"
       ip_address:
         title: "마지막 IP 주소"
@@ -599,7 +658,7 @@ ko:
     logout: "로그아웃 되었습니다."
     refresh: "새로고침"
     read_only_mode:
-      enabled: "읽기 모드가 활성화 되었습니다. 사이트를 열람할 수 있으나 상호작용은 불가능 합니다."
+      enabled: "이 사이트는 현재 읽기전용 모드입니다. 브라우징은 가능하지만, 댓글달기, 좋아요 등 다른 행위들은 현재 비활성화 되어있습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
     learn_more: "더 배우기"
     year: '년'
@@ -618,15 +677,17 @@ ko:
       other: 답글
     signup_cta:
       sign_up: "회원가입"
-      hide_session: "내일 다시 알리기"
-      hide_forever: "사양 하겠습니다"
+      hide_session: "내일 다시 알려주기"
+      hide_forever: "사양합니다."
       hidden_for_session: "알겠습니다. 내일 다시 물어볼께요. 언제든지 '로그인'을 통해서도 계정을 만들 수 있습니다."
+      intro: "안녕하세요! :heart_eyes: 보아하니 토론을 즐기고 계시는군요, 하지만 아직 계정이 없습니다."
+      value_prop: "계정을 생성하면,  읽고있던 곳이 저장되어, 다시 돌아올 때 읽던 곳으로 돌아올 수 있습니다. 또한 언제든지 새 포트팅이 작성될 때, 이메일을 통해 알림을 받을 수 있습니다. 또한 토픽에 좋아요를 누르거나 공유할 수 있습니다. :heartbeat:"
     summary:
-      enabled_description: "현재 토픽에서 가장 인기 있는 몇 개의 글들을 보고 있습니다."
+      enabled_description: "현재 커뮤니티에서 가장 인기있는 토픽의 요약본을 보고 있습니다:"
       description: "<b>{{count}}</b>개의 답글이 있습니다."
       description_time: "총 <b>{{count}}</b>개의 댓글이 있습니다. 예상 소요 시간은 <b>{{readingTime}}분</b>입니다.."
-      enable: '이 토픽을 요약'
-      disable: 'Show All Posts'
+      enable: '이 토픽을 요약Show All Posts'
+      disable: '모든 포스트 보기'
     deleted_filter:
       enabled_description: "이 토픽은 삭제된 글들을 포함하고 있습니다. 삭제된 글을 보이지 않습니다."
       disabled_description: "삭제된 글들을 표시하고 있습니다."
@@ -707,7 +768,6 @@ ko:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "더보기..."
       options: "온셥"
       add_warning: "공식적인 경고입니다."
@@ -819,6 +879,7 @@ ko:
       select_file: "파일 선택"
       image_link: "이 이미지를 누르면 이동할 링크"
     search:
+      select_all: "모두 선택"
       title: "토픽, 글, 사용자, 카테고리 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
@@ -880,6 +941,10 @@ ko:
       create: '새 토픽 만들기'
       create_long: '새로운 토픽 만들기'
       private_message: '메시지 시작'
+      archive_message:
+        title: '저장됨'
+      move_to_inbox:
+        title: '수신함으로 이동'
       list: '토픽 목록'
       new: '새로운 토픽'
       unread: '읽지 않은'
@@ -1130,8 +1195,7 @@ ko:
         no_value: "아니오"
         yes_value: "예"
       via_email: "이 토픽은 이메일을 통해 등록되었습니다."
-      wiki:
-        about: "이 글은 위키입니다. 누구나 수정할 수 있습니다."
+      whisper: "이 포스트는 운영자를 위한 비공개 귓말입니다."
       archetypes:
         save: '옵션 저장'
       controls:
@@ -1311,6 +1375,7 @@ ko:
         tracking:
           title: "새 글 표시 중"
         regular:
+          title: "알림 : 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted:
           title: "알림 꺼짐"
@@ -1773,12 +1838,15 @@ ko:
       email:
         title: "이메일"
         settings: "설정"
-        all: "전체"
+        templates: "템플릿"
+        preview_digest: "요약 미리보기"
         sending_test: "테스트 메일 발송중..."
         error: "<b>에러</b> - %{server_error}"
         test_error: "테스트 메일을 전송하는데 문제가 있습니다. 메일 설정을 다시한번 체크해보고 메일 전송이 정상인지 다시 확인하고 시도해주세요."
-        sent: "보낸 메일"
-        skipped: "생략"
+        sent: "보냄"
+        skipped: "생략됨"
+        received: "전송받음"
+        rejected: "거부됨"
         sent_at: "보냄"
         time: "시간"
         user: "사용자"
@@ -1788,7 +1856,6 @@ ko:
         send_test: "테스트 메일 전송"
         sent_test: "전송됨!"
         delivery_method: "전달 방법"
-        preview_digest: "요약 미리보기"
         preview_digest_desc: "초대 사용자들에게 보낼 요약 메일 내용 미리보기"
         refresh: "새로고침"
         format: "형식"
@@ -1860,6 +1927,8 @@ ko:
             change_category_settings: "카테고리 설정 변경"
             delete_category: "카테고리 지우기"
             create_category: "카테고리 만들기"
+            block_user: "사용자 차단"
+            unblock_user: "사용자 차단 해제"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -1867,12 +1936,12 @@ ko:
           actions:
             allow: "허용"
         screened_urls:
-          title: "블락된 URL들"
+          title: "노출된 URL들"
           description: "이 목록은 사용자에 의해 스팸으로 알려진 URL 목록입니다."
           url: "URL"
           domain: "도메인"
         screened_ips:
-          title: "블락된 IP들"
+          title: "노출된 IP들"
           description: 'IP 주소는 감시됩니다. "허용"으로 Whitelist에 등록해주세요.'
           delete_confirm: "%{ip_address}를 규칙에 의해 삭제할까요?"
           roll_up_confirm: "화면에 표시되는 IP 주소를 subnet으로 바꾸시겠습니까?"
@@ -1912,7 +1981,7 @@ ko:
           staff: '스태프'
           suspended: '접근 금지 사용자'
           blocked: '블락된 사용자'
-          suspect: 'Suspect'
+          suspect: '의심스러운 사용자'
         approved: "승인?"
         approved_selected:
           other: "승인한 사용자 ({{count}}명)"
@@ -1932,7 +2001,7 @@ ko:
           moderators: '운영자'
           blocked: '블락된 사용자들'
           suspended: '접근 금지된 사용자들'
-          suspect: 'Suspect Users'
+          suspect: '의심스러운 사용자들'
         reject_successful:
           other: "성공적으로 ${count}명의 사용자를 거절하였습니다."
         reject_failures:
@@ -1997,7 +2066,7 @@ ko:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "사용자 삭제"
         delete_forbidden_because_staff: "관리자 및 운영자 계정은 삭제할 수 없습니다."
-        delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
+        delete_posts_forbidden_because_staff: "어드민와 운영자들의 포스트는 삭제할 수 없습니다."
         delete_forbidden:
           other: "사용자가 작성한 글이 있으면 사용자를 삭제 할 수 없습니다. 사용자를 삭제 하기 전에 사용자가 작성한 글을 모두 삭제해야 합니다. (%{count}일 이전에 작성한 글은 삭제할 수 없습니다.)"
         cant_delete_all_posts:
@@ -2018,11 +2087,13 @@ ko:
         deactivate_failed: "사용자 비활성에 문제가 있습니다."
         unblock_failed: '사용자 언블락에 문제가 있습니다.'
         block_failed: '사용자 블락에 문제가 있습니다.'
+        block_confirm: '정말로 이 사용자를 차단하겠습니까? 차단된 사용자는 어떠한 토픽이나 포스트도 작성할 수 없습니다.'
+        block_accept: '네, 이 사용자를 차단합니다.'
         deactivate_explanation: "비활성화 사용자는 이메일 인증을 다시 받아야합니다."
         suspended_explanation: "접근 금지된 유저는 로그인 할 수 없습니다."
         block_explanation: "블락 사용자는 글을 작성하거나 토픽을 작성할 수 없습니다."
         trust_level_change_failed: "신뢰도 변경에 문제가 있습니다."
-        suspend_modal_title: "Suspend User"
+        suspend_modal_title: "거부된 사용자"
         trust_level_2_users: "신뢰도 2 사용자들"
         trust_level_3_requirements: "사용자 신뢰도 3 이상이 필요"
         trust_level_locked_tip: "신뢰도 시스템이 잠겼습니다. 시스템이 사용자를 승급이나 강등시키지 않을 것 입니다."

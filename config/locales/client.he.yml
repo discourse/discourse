@@ -631,7 +631,6 @@ he:
     logout: "נותקת מהמערכת"
     refresh: "רענן"
     read_only_mode:
-      enabled: "מופעל מצב קריאה בלבד. אפשר להמשיך לגלוש באתר, אך חלק מהפעולות עלולות לא לעבוד."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
     too_few_topics_and_posts_notice: "בוא <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים ו-<strong>%{currentPosts} / %{requiredPosts}</strong> הודעות. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
     too_few_topics_notice: "בוא <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
@@ -746,7 +745,6 @@ he:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "עוד..."
       options: "אפשרויות"
       whisper: "לחישה"
@@ -1227,8 +1225,6 @@ he:
         yes_value: "כן, נטוש"
       via_email: "פרסום זה הגיע באמצעות דוא\"ל"
       whisper: "פרסום זה הוא לחישה פרטית לצוות האתר"
-      wiki:
-        about: "פרסום זה הינו ויקי; משתמשים בסיסיים יכולים לערוך אותו"
       archetypes:
         save: 'שמור אפשרויות'
       controls:
@@ -1415,7 +1411,6 @@ he:
       email_in_allow_strangers: "קבלת דוא\"ל ממשתמשים אנונימיים ללא חשבונות במערכת הפורומים"
       email_in_disabled: "האפשרות פרסום פוסטים חדשים דרך הדוא\"ל נוטרלה דרך הגדרות האתר. לאפשר פרסום באמצעות  משלוח דוא\"ל."
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
-      contains_messages: "שנו את הקטגוריה כדי להכיל רק הודעות."
       suppress_from_homepage: "הרחק קטגוריה זו מהעמוד הראשי"
       allow_badges_label: "הרשו לתגים (badges) להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
@@ -1924,9 +1919,8 @@ he:
             name: 'ויקי'
             description: "צבעי יסוד משמשים כצבעי רקע בפרסומי ויקי."
       email:
-        title: "דואר אלקטרוני"
         settings: "הגדרות"
-        all: "הכל"
+        preview_digest: "תצוגה מקדימה של סיכום"
         sending_test: "שולח דואר אלקטרוני לבדיקה..."
         error: "<b>שגיאה</b> - %{server_error}"
         test_error: "הייתה בעיה בשליחת הדואר האלקטרוני. בבקשה בדוק את ההגדרות שלך ונסה שנית."
@@ -1941,7 +1935,6 @@ he:
         send_test: "שליחת מייל בדיקה"
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
-        preview_digest: "תצוגה מקדימה של סיכום"
         preview_digest_desc: "תצוגה מקדימה של מייל סיכום שנשלח למשתמשים לא פעילים. "
         refresh: "רענן"
         format: "פורמט"

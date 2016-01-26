@@ -110,6 +110,8 @@ fi:
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
       split_topic: "pilkkoi tämän ketjun %{when}"
+      invited_user: "kutsui käyttäjän %{who} %{when}"
+      removed_user: "poisti käyttäjän %{who} %{when}"
       autoclosed:
         enabled: 'sulki %{when}'
         disabled: 'avasi %{when}'
@@ -130,6 +132,19 @@ fi:
         disabled: 'poisti listauksista %{when}'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
+    s3:
+      regions:
+        us_east_1: "itäinen USA (Pohjois-Virginia)"
+        us_west_1: "Läntinen USA (Pohjois-Kalifornia)"
+        us_west_2: "Läntinen USA (Oregon)"
+        us_gov_west_1: "AWS GovCloud (USA)"
+        eu_west_1: "EU (Irlanti)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
+        ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
+        ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
+        ap_northeast_2: "Aasia ja Tyynimeri (Soul)"
+        sa_east_1: "Etelä-Amerikka (Sao Paulo)"
     edit: 'muokkaa ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -625,6 +640,21 @@ fi:
         same_as_email: "Salasanasi on sama kuin sähköpostisi."
         ok: "Salasana vaikuttaa hyvältä."
         instructions: "Vähintään %{count} merkkiä."
+      summary:
+        title: "Yhteenveto"
+        stats: "Tilastot"
+        topic_count: "Avattuja ketjuja"
+        post_count: "Kirjoitettuja viestejä"
+        likes_given: "Annettuja tykkäyksiä"
+        likes_received: "Saatuja tykkäyksiä"
+        days_visited: "Päiviä vierailtu"
+        posts_read_count: "Luettuja viestejä"
+        top_replies: "Parhaat viestit"
+        top_topics: "Parhaat ketjut"
+        top_badges: "Parhaat arvomerkit"
+        more_topics: "Lisää ketjuja"
+        more_replies: "Lisää viestejä"
+        more_badges: "Lisää arvomerkkejä"
       associated_accounts: "Kirjautumiset"
       ip_address:
         title: "Viimeinen IP-osoite"
@@ -667,7 +697,7 @@ fi:
     logout: "Sinut kirjattiin ulos."
     refresh: "Lataa sivu uudelleen"
     read_only_mode:
-      enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
+      enabled: "Sivusto on vain luku -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on toistaiseksi poissa käytöstä."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
     too_few_topics_and_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
@@ -782,7 +812,7 @@ fi:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
+      emoji: "Emoji :)"
       more_emoji: "lisää..."
       options: "Asetukset"
       whisper: "kuiskaus"
@@ -2006,14 +2036,17 @@ fi:
             name: 'wiki'
             description: "Wiki-viestien taustaväri."
       email:
-        title: "Sähköposti"
+        title: "Sähköpostit"
         settings: "Asetukset"
-        all: "Kaikki"
+        templates: "Viestipohjat"
+        preview_digest: "Esikatsele tiivistelmä"
         sending_test: "Lähetetään testisähköpostia..."
         error: "<b>VIRHE</b> - %{server_error}"
         test_error: "Testisähköpostin lähettäminen ei onnistunut. Tarkista uudelleen sähköpostiasetukset, varmista, että palveluntarjoajasi ei estä sähköpostiyhteyksiä ja kokeile sitten uudestaan."
         sent: "Lähetetty"
         skipped: "Jätetty väliin"
+        received: "Vastaanotetut"
+        rejected: "Hylätyt"
         sent_at: "Lähetetty"
         time: "Aika"
         user: "Käyttäjä"
@@ -2023,7 +2056,6 @@ fi:
         send_test: "Lähetä testisähköposti"
         sent_test: "lähetetty!"
         delivery_method: "Lähetystapa"
-        preview_digest: "Esikatsele tiivistelmä"
         preview_digest_desc: "Esikatsele inaktiivisille käyttäjille lähetettyjen tiivistelmäsähköpostien sisältöä."
         refresh: "Päivitä"
         format: "Muotoilu"
@@ -2032,6 +2064,19 @@ fi:
         last_seen_user: "Käyttäjän edellinen kirjautuminen:"
         reply_key: "Vastausavain"
         skipped_reason: "Syy väliinjättämiselle"
+        incoming_emails:
+          from_address: "Lähettäjä"
+          to_addresses: "Vastaanottaja"
+          cc_addresses: "Kopio"
+          subject: "Otsikko"
+          error: "Virhe"
+          none: "Uusia sähköpostiviestejä ei löydetty."
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Otsikko..."
+            error_placeholder: "Virhe"
         logs:
           none: "Lokeja ei löytynyt."
           filters:

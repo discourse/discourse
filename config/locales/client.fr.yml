@@ -625,6 +625,8 @@ fr:
         same_as_email: "Votre mot de passe est le même que votre adresse mail."
         ok: "Votre mot de passe semble correct."
         instructions: "Au moins %{count} caractères."
+      summary:
+        title: "Résumé"
       associated_accounts: "Connexions"
       ip_address:
         title: "Dernières adresses IP"
@@ -667,7 +669,6 @@ fr:
     logout: "Vous avez été déconnecté"
     refresh: "Rafraîchir"
     read_only_mode:
-      enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
@@ -782,7 +783,6 @@ fr:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "plus..."
       options: "Options"
       whisper: "murmure"
@@ -1285,8 +1285,6 @@ fr:
         yes_value: "Oui, abandonner"
       via_email: "message depuis un courriel"
       whisper: "ce message est un murmure privé pour les modérateurs"
-      wiki:
-        about: "ce message est en mode wiki; les utilisateurs de base peuvent le modifier"
       archetypes:
         save: 'Sauvegarder les options'
       controls:
@@ -1473,7 +1471,6 @@ fr:
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
-      contains_messages: "Modifier cette catégorie pour qu'elle ne contienne que des messages."
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Éditer les permissions"
@@ -2002,9 +1999,8 @@ fr:
             name: 'wiki'
             description: "Couleur de base utilisée pour le fond des messages de type wiki."
       email:
-        title: "Courriel"
         settings: "Paramètrage"
-        all: "Tous"
+        preview_digest: "Prévisualisation du courriel"
         sending_test: "Envoi en cours du courriel de test..."
         error: "<b>ERREUR</b> - %{server_error}"
         test_error: "Il y a eu un problème avec l'envoi du courriel de test. Veuillez vérifier vos paramètres, que votre hébergeur ne bloque pas les connections aux courriels, et réessayer."
@@ -2019,7 +2015,6 @@ fr:
         send_test: "Envoyer un courriel de test"
         sent_test: "Envoyé !"
         delivery_method: "Méthode d'envoi"
-        preview_digest: "Prévisualisation du courriel"
         preview_digest_desc: "Prévisualiser le contenu des courriels hebdomadaires sommaires envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
         format: "Format"

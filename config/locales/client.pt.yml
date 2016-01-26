@@ -667,7 +667,6 @@ pt:
     logout: "A sua sessão estava encerrada."
     refresh: "Atualizar"
     read_only_mode:
-      enabled: "O modo só de leitura está ativo. Pode continuar a navegar no sítio mas as interações podem não funcionar."
       login_disabled: "A função de início de sessão está desativada enquanto o sítio se encontrar no modo só de leitura."
     too_few_topics_and_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de conversações para ler e responder a."
     too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentTopics} / %{requiredTopics}</strong> tópios. Novos visitantes precisam de algumas conversações para ler e responder a."
@@ -782,7 +781,6 @@ pt:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "mais..."
       options: "Opções"
       whisper: "susurro"
@@ -996,6 +994,12 @@ pt:
       create: 'Novo Tópico'
       create_long: 'Criar um novo Tópico'
       private_message: 'Iniciar uma mensagem'
+      archive_message:
+        help: 'Mover mensagem para o seu arquivo'
+        title: 'Arquivo'
+      move_to_inbox:
+        title: 'Mover para Caixa de Entrada'
+        help: 'Mover mensagem de volta para a Caixa de Entrada'
       list: 'Tópicos'
       new: 'novo tópico'
       unread: 'não lido'
@@ -1285,7 +1289,7 @@ pt:
       via_email: "esta mensagem chegou por email"
       whisper: "esta mensagem é um susurro privado para os moderadores"
       wiki:
-        about: "esta mensagem é uma wiki; utilizadores comuns podem editá-la"
+        about: "esta mensagem é uma wiki"
       archetypes:
         save: 'Guardar as Opções'
       controls:
@@ -1472,7 +1476,6 @@ pt:
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
       email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
       email_in_disabled_click: 'ative a definição "email em".'
-      contains_messages: "Modificar esta categoria para conter apenas mensagens."
       suppress_from_homepage: "Suprimir esta categoria da página principal."
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"
@@ -2001,9 +2004,8 @@ pt:
             name: 'wiki'
             description: "Cor base utilizada para o fundo de mensagens wiki"
       email:
-        title: "Email"
         settings: "Configurações"
-        all: "Todos"
+        preview_digest: "Pré-visualizar Resumo"
         sending_test: "A enviar Email de teste..."
         error: "<b>ERRO</b> - %{server_error}"
         test_error: "Occorreu um problema no envio do email de teste. Por favor verifique novamente as suas definições de email, verifique se o seu host não está a bloquear conexões de email, e tente novamente."
@@ -2018,7 +2020,6 @@ pt:
         send_test: "Enviar Email de Teste"
         sent_test: "enviado!"
         delivery_method: "Método de Entrega"
-        preview_digest: "Pré-visualizar Resumo"
         preview_digest_desc: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos."
         refresh: "Atualizar"
         format: "Formato"

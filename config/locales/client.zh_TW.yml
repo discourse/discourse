@@ -581,7 +581,6 @@ zh_TW:
     logout: "已登出"
     refresh: "重新整理"
     read_only_mode:
-      enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
     learn_more: "進一步了解..."
     year: '年'
@@ -684,7 +683,6 @@ zh_TW:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "更多..."
       options: "選項"
       whisper: "密談"
@@ -1069,8 +1067,6 @@ zh_TW:
         yes_value: "是"
       via_email: "本文章透過電子郵件送達"
       whisper: "這文章是版主私人密談"
-      wiki:
-        about: "這篇文章設定為 wiki，一般用戶可以編輯它"
       archetypes:
         save: '儲存選項'
       controls:
@@ -1725,9 +1721,8 @@ zh_TW:
             name: '共筆'
             description: "共筆文章的背景顏色"
       email:
-        title: "電郵"
         settings: "設定"
-        all: "所有"
+        preview_digest: "預覽文摘"
         sending_test: "傳送測試郵件"
         error: "<b>錯誤</b> - %{server_error}"
         test_error: "發送測試電子郵件時遇到錯誤。請檢查你輸入的電子郵件地址，並確認網路提供者沒有封鎖郵件的發送，然後再試一次。"
@@ -1742,7 +1737,6 @@ zh_TW:
         send_test: "送出測試Email"
         sent_test: "已送出!"
         delivery_method: "傳送方式"
-        preview_digest: "預覽文摘"
         refresh: "重新整理"
         format: "格式"
         html: "html"

@@ -684,7 +684,6 @@ pt_BR:
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário para download das imagens ( em % )"
     disabled_image_download_domains: "Imagens hospedadas nestes domínios nunca serão baixadas. \nLista delimitada por |"
-    editing_grace_period: "Pelos próximos (n) segundos após a postagem, as edições não terão histórico."
     post_edit_time_limit: "O autor pode editar ou apagar o seu post para (n) minutos após a postagem. Defina como 0 para sempre."
     edit_history_visible_to_public: "Permitir que todos vejam as versões anteriores de uma postagem editada. Quando desativado, somente membros da equipe podem ver o histórico de alterações."
     delete_removed_posts_after: "Postagens removidas pelo autor serão automaticamente deletadas depois de (n) horas. Se o valor definido for 0, as postagens serão deletadas imediatamente."
@@ -843,7 +842,6 @@ pt_BR:
     tl2_requires_likes_received: "Quantos likes um usuário deve receber antes de ser promovido a nível de confiança 2."
     tl2_requires_likes_given: "Quantos likes um usuário deve dar antes de ser promovido a nível de confiança 2."
     tl2_requires_topic_reply_count: "Quantos tópicos um usuário deve responder antes de ser promovido a nível de confiança 2."
-    tl3_requires_days_visited: "Número mínimo de dias que um usuário precisa ter visitado o site nos últimos 100 dias para se qualificar a promoção ao nível de confiança 3. (0 até 100)"
     tl3_requires_topics_replied_to: "Número mínimo de tópicos que um usuário precisa ter respondido o site nos últimos 100 dias para se qualificar a promoção ao nível de confiança 3. (0 ou mais)"
     tl3_requires_topics_viewed: "O percentual de tópicos criados nos últimos 100 dias que um usuário precisa ter visto para se qualificar a promoção ao nível de confiança 3. (0 até 100)"
     tl3_requires_posts_read: "O percentual de posts criados nos últimos 100 dias que um usuário precisa ter visto para se qualificar a promoção ao nível de confiança 3. (0 até 100)"
@@ -1100,7 +1098,6 @@ pt_BR:
       must_begin_with_alphanumeric: "deve começar com uma letra, número ou um underline"
       must_end_with_alphanumeric: "deve terminar com uma letra, número ou um underline"
       must_not_contain_two_special_chars_in_seq: "não deve conter uma seqüência de 2 ou mais caracteres especiais (.-_)"
-      must_not_contain_confusing_suffix: "não deve conter um sufixo confuso como .json ou .png etc."
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
@@ -1338,12 +1335,6 @@ pt_BR:
     csv_export_failed:
       subject_template: "A exportação de dados falhou"
       text_body_template: "Nos desculpamos, mas sua exportação de dados falhou. Por favor verifique os logs ou entre em contato com um membro da staff."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] Problema com email -- Nível de Confiabilidade Insuficiente"
-      text_body_template: |
-        Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou.
-
-        Sua conta não tem o nível de confiança necessário para criar novos tópicos para este endereço de e-mail. Se você acredita que isso é um erro, entre em contato com um membro da equipe.
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema com Email -- Conta Desconhecida"
       text_body_template: |
@@ -1358,32 +1349,12 @@ pt_BR:
         Desculpe, mas a mensagem do email %{destination} (titled %{former_title}) não funcionou.
 
         Sua conta não possui privilégios para postar novos topicos nessa categoria. Se acredita que isso esteja errado, entre em contato com um dos membros responsáveis..
-    email_reject_post_error:
-      subject_template: "[%{site_name}] Problema com email -- Erro de postagem"
-      text_body_template: |
-        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
-
-        Algumas possíveis causas são: formatação complexa, mensagem muito grande, mensagem muito pequena. Por favor tente novamente, ou poste através do site se persistir.
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] Problema com email -- Erro de postagem"
-      text_body_template: |
-        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
-
-        Razão:
-
-        %{post_error}
-
-        Se você puder corrigir, por favor tente novamente.
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema com email -- Chave de Resposta Desconhecida"
       text_body_template: |
         Pedimos desculpas, mas seu email para %{destination} (titled %{former_title}) não foi enviado.
 
         O endereço de email do destinatário é desconhecido ou inválido, Contate um dos moderadores para relatar esse problema
-    email_reject_destination:
-      subject_template: "[%{site_name}] Problema com email -- Email destinatário desconhecido"
-      text_body_template: |
-        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nenhum dos endereços de destinatário são reconhecidos pelo fórum. Por favor tenha certeza que o fórum está na linha To: (não CC ou BCC), e que você está enviando para o endereço de e-mail fornecido pelos administradores.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema com email -- Tópico Não Encontrado"
     email_reject_topic_closed:

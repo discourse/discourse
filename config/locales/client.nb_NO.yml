@@ -288,6 +288,10 @@ nb_NO:
         one: "1 bruker"
         other: "%{count} brukere"
     groups:
+      empty:
+        posts: "Det er ingen innlegg av medlemmene i denne gruppen."
+        members: "Det er ingen medlemmer i denne gruppen."
+        messages: "Det er ingen meldinger for denne gruppen."
       add: "Legg til"
       selector_placeholder: "Legg til medlemmer"
       owner: "eier"
@@ -305,6 +309,13 @@ nb_NO:
         everyone: "Alle"
       trust_levels:
         none: "ingen"
+      notifications:
+        watching:
+          title: "Følger"
+        tracking:
+          title: "Sporer"
+        regular:
+          title: "Normal"
     user_action_groups:
       '1': "Liker tildelt"
       '2': "Liker mottatt"
@@ -370,6 +381,7 @@ nb_NO:
       invited_by: "Invitert av"
       trust_level: "Tillitsnivå"
       notifications: "Varsler"
+      statistics: "Statistikk"
       desktop_notifications:
         perm_default: "Slå på varslinger"
         perm_denied_btn: "Tillatelse avslått"
@@ -417,7 +429,10 @@ nb_NO:
         warnings_received: "advarsler"
       messages:
         all: "Alle"
+        inbox: "Innboks"
+        sent: "Sendt"
         groups: "Mine grupper"
+        select_all: "Velg Alle"
       change_password:
         success: "(e-post sendt)"
         in_progress: "(sender e-post)"
@@ -550,6 +565,18 @@ nb_NO:
         same_as_email: "Ditt passord er det samme som din e-post."
         ok: "Passordet ditt ser bra ut"
         instructions: "Minst %{count} tegn."
+      summary:
+        title: "Oppsummering"
+        stats: "Statistikk"
+        topic_count: "Emner Startet"
+        post_count: "Innlegg Opprettet"
+        likes_given: "Likes Gitt"
+        likes_received: "Likes Mottatt"
+        days_visited: "Dager Besøkt"
+        posts_read_count: "Innlegg Lest"
+        top_replies: "Mest Populære Svar"
+        top_topics: "Mest Populære Emner"
+        more_topics: "Flere Emner"
       associated_accounts: "Innloggingsforsøk"
       ip_address:
         title: "Siste IP-adresse"
@@ -575,11 +602,13 @@ nb_NO:
         server: "Serverfeil"
         forbidden: "Tilgang avslått"
         unknown: "Feil"
+        not_found: "Side Ikke funnet"
       desc:
         network: "Vennligst sjekk nettverkstilkoblingen din"
         network_fixed: "Ser ut som om den er tilbake."
         server: "Feilkode: {{status}}"
         forbidden: "Du har ikke tilgang til dette."
+        not_found: "Oops, applikasjonen forsøkte å laste en URL som ikke eksisterer."
         unknown: "Noe gikk galt."
       buttons:
         back: "Gå tilbake"
@@ -590,7 +619,6 @@ nb_NO:
     logout: "Du ble logget ut"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "Skrivebeskyttet modus er aktivert. Du kan fortsette å benytte siden med enkelte funksjoner vil muligens ikke fungere."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
     learn_more: "lær mer..."
     year: 'år'
@@ -672,6 +700,9 @@ nb_NO:
       admin_not_allowed_from_ip_address: "Du kan ikke logge inn som administrator fra den IP-adressen."
       resend_activation_email: "Klikk her for å sende e-posten for aktivering igjen."
       sent_activation_email_again: "Vi sendte deg en ny e-post for aktivering på <b>{{currentEmail}}</b>. Det kan ta noen minutter før den kommer fram; sørg for at du sjekker nettsøppel om du ikke finner den."
+      to_continue: "Vennligst Logg Inn"
+      preferences: "Du må være innlogget for å endre brukerinnstillinger."
+      forgot: "I husker ikke mine kontodetaljer"
       google:
         title: "med Google"
         message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
@@ -694,10 +725,15 @@ nb_NO:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
+      emoji: "Emoji :)"
       more_emoji: "mer..."
       options: "Alternativer"
+      whisper: "hvisker"
       add_warning: "Dette er en offisiell advarsel."
       posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."
       saving_draft_tip: "lagrer..."
@@ -726,6 +762,7 @@ nb_NO:
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
       view_new_post: "Se ditt nye innlegg."
+      saving: "Lagrer"
       saved: "Lagret!"
       saved_draft: "Innleggsutkast. Velg for å fortsette."
       uploading: "Laster opp..."
@@ -754,6 +791,8 @@ nb_NO:
       hr_title: "Horisontalt Skille"
       help: "Hjelp for redigering i Markdown"
       toggler: "gjem eller vis redigeringspanelet"
+      modal_ok: "OK"
+      modal_cancel: "Avbryt"
       admin_options_title: "Valgfrie emne-instillinger for ansatte"
       auto_close:
         label: "Tid for auto-lukking av emnet:"
@@ -782,6 +821,15 @@ nb_NO:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ble tildelt '{{description}}'</p>"
+      alt:
+        mentioned: "Nevnt av"
+        quoted: "Sitert av"
+        replied: "Svart"
+        posted: "Innlegg av"
+        liked: "Likte innlegget ditt"
+        private_message: "Privat melding fra"
+        linked: "Link til innlegget ditt"
+        granted_badge: "Merke innvilget"
       popup:
         mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
         quoted: '{{username}} siterte deg i "{{topic}}" - {{site_title}}'
@@ -801,6 +849,13 @@ nb_NO:
       select_file: "Velg Fil"
       image_link: "lenken som bildet skal peke til"
     search:
+      sort_by: "Sorter etter"
+      relevance: "Relevanse"
+      latest_post: "Nyeste Innlegg"
+      most_viewed: "Mest Lest"
+      most_liked: "Mest Likt"
+      select_all: "Velg Alle"
+      clear_all: "Fjern Alle"
       title: "søk etter emner, innlegg, brukere eller kategorier"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
@@ -812,6 +867,8 @@ nb_NO:
         category: "Søk i kategorien \"{{category}}\""
         topic: "Søk i dette emnet"
         private_messages: "Søk i meldinger"
+    hamburger_menu: "gå til en annen emneliste eller kategori"
+    new_item: "ny"
     go_back: 'gå tilbake'
     not_logged_in_user: 'brukerside med oppsummering av nylig aktivtet og preferanser.'
     current_user: 'go til din brukerside'
@@ -1121,8 +1178,6 @@ nb_NO:
         no_value: "Nei"
         yes_value: "Ja"
       via_email: "Dette innlegget ankom via e-post"
-      wiki:
-        about: "Dette innlegget er en wiki; brukere kan redigere den"
       archetypes:
         save: 'Lagre Alternativene'
       controls:
@@ -1340,6 +1395,7 @@ nb_NO:
       submit_tooltip: "Rapporter privat"
       take_action_tooltip: "Oppnå rapporteringsterskel umiddelbart, i stedet for å vente på flere rapporteringer."
       cant: "Beklager, du kan ikke rapportere dette innlegget nå."
+      notify_staff: 'Varsle Personalet'
       formatted_name:
         off_topic: "Det er off-topic "
         inappropriate: "Det er upassende"
@@ -1812,9 +1868,8 @@ nb_NO:
             name: 'wiki'
             description: "Grunnfarge brukt for bakgrunnen i wiki-poster."
       email:
-        title: "E-post"
         settings: "Instillinger"
-        all: "Alle"
+        preview_digest: "Forhåndsvis Oppsummering"
         sending_test: "Sender e-post for testing"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Det oppsto et problem ved utsendelse av e-post for testing. Sjekk e-postinnstillinger nøye, sjekk at verten ikke blokkerer e-posttilkoblinger, og prøv igjen."
@@ -1829,7 +1884,6 @@ nb_NO:
         send_test: "Send e-post for testing"
         sent_test: "sendt!"
         delivery_method: "Leveringsmetode"
-        preview_digest: "Forhåndsvis Oppsummering"
         refresh: "Refresh"
         format: "Format"
         html: "html"
@@ -1837,6 +1891,12 @@ nb_NO:
         last_seen_user: "Sist Sett Bruker:"
         reply_key: "Svar ID"
         skipped_reason: "Hopp over grunn"
+        incoming_emails:
+          from_address: "Fra"
+          subject: "Emne"
+          error: "Feil"
+          filters:
+            error_placeholder: "Feil"
         logs:
           none: "Ingen logger funnet"
           filters:

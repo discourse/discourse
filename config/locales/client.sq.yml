@@ -108,8 +108,24 @@ sq:
       facebook: 'shpërndaje këtë lidhje ne Facebook'
       google+: 'shpërndaje këtë lidhje në Google+'
       email: 'dërgo këtë lidhje me email'
+    action_codes:
+      autoclosed:
+        enabled: 'mbyllur %{when}'
+        disabled: 'hapur %{when}'
+      closed:
+        enabled: 'mbyllur %{when}'
+        disabled: 'hapur %{when}'
     topic_admin_menu: "topic admin actions"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+    s3:
+      regions:
+        us_east_1: "US East (N. Virginia)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        eu_west_1: "EU (Ireland)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
     edit: 'redakto titullin dhe kategorinë e kësaj teme'
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
@@ -123,6 +139,7 @@ sq:
     admin_title: "Admin"
     flags_title: "Flags"
     show_more: "trego më shumë"
+    show_help: "opsione"
     links: "Lidhjet"
     links_lowercase:
       one: "lidhje"
@@ -578,7 +595,6 @@ sq:
     logout: "Ju jeni shkëputur!"
     refresh: "Rifresko"
     read_only_mode:
-      enabled: "Read-only mode is enabled. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
     learn_more: "mëso më shumë..."
     year: 'vit'
@@ -683,7 +699,6 @@ sq:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "më shumë..."
       options: "Opsione"
       add_warning: "This is an official warning."
@@ -1119,8 +1134,6 @@ sq:
         no_value: "Jo, mbaji"
         yes_value: "Po, braktise"
       via_email: "this post arrived via email"
-      wiki:
-        about: "this post is a wiki; basic users can edit it"
       archetypes:
         save: 'Ruaj Opsionet'
       controls:
@@ -1786,9 +1799,8 @@ sq:
             name: 'wiki'
             description: "Base color used for the background of wiki posts."
       email:
-        title: "Email"
         settings: "Rregullimet"
-        all: "Të gjithë"
+        preview_digest: "Preview Digest"
         sending_test: "Sending test Email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
@@ -1803,7 +1815,6 @@ sq:
         send_test: "Send Test Email"
         sent_test: "u dërgua!"
         delivery_method: "Delivery Method"
-        preview_digest: "Preview Digest"
         refresh: "Rifresko"
         format: "Formati"
         html: "html"
