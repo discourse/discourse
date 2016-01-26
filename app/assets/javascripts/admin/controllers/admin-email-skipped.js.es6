@@ -1,8 +1,9 @@
+import AdminEmailLogsController from 'admin/controllers/admin-email-logs';
 import debounce from 'discourse/lib/debounce';
+import EmailLog from 'admin/models/email-log';
 
-export default Ember.Controller.extend({
+export default AdminEmailLogsController.extend({
   filterEmailLogs: debounce(function() {
-    const EmailLog = require('admin/models/email-log').default;
     EmailLog.findAll(this.get("filter")).then(logs => this.set("model", logs));
-  }, 250).observes("filter.user", "filter.address", "filter.type", "filter.skipped_reason")
+  }, 250).observes("filter.{user,address,type,skipped_reason}")
 });

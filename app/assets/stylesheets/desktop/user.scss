@@ -79,11 +79,27 @@
   margin-top: 18px;
 }
 
+.user-table {
+  margin-top: 30px;
+  width: 100%;
+  display: table;
+  .wrapper {
+    display: table-row;
+  }
+}
+
+.user-navigation .nav-stacked .glyph {
+  display: none;
+  // float: right;
+  // display: block;
+  // position: static;
+}
+
 .user-navigation {
-  width: 21.62%;
-  margin-right: 1.8018%;
-  float: left;
-  margin-top: 20px;
+  display: table-cell;
+  vertical-align: top;
+  width: 170px;
+  padding-right: 30px;
 
   h3 {
     color: $primary;
@@ -161,9 +177,9 @@
   }
 
   .user-right {
-    width: 75%;
-    float: right;
+    max-width: 700px;
     margin-top: 20px;
+    display: table-cell;
   }
 
   .user-content {
@@ -654,13 +670,18 @@
 }
 
 .user-main .nav-stacked {
+  &.notification-list {
+    padding-top: 40px;
+  }
+  &.activity-list {
+    padding-top: 20px;
+  }
   background-color: transparent;
-  margin-top: 20px;
 
   > li {
     border-bottom: none;
     > a {
-      padding: 8px 8px 8px 30px;
+      padding: 8px 13px;
       color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
     }
   }
@@ -671,8 +692,13 @@
     background-color: transparent;
   }
   li > a.active:after {
-    border-left-color: none;
+    display: none;
+  }
+
+  li.archive {
+    padding-left: 15px;
   }
 }
+
 
 

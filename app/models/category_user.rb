@@ -108,3 +108,8 @@ end
 #  user_id            :integer          not null
 #  notification_level :integer          not null
 #
+# Indexes
+#
+#  idx_category_users_u1  (user_id,category_id,notification_level) UNIQUE
+#  idx_category_users_u2  (category_id,user_id,notification_level) UNIQUE
+#

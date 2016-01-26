@@ -27,7 +27,7 @@ class Topic < ActiveRecord::Base
   attr_accessor :allowed_user_ids
 
   def self.max_sort_order
-    2**31 - 1
+    @max_sort_order ||= (2 ** 31) - 1
   end
 
   def featured_users
@@ -208,7 +208,7 @@ class Topic < ActiveRecord::Base
   def cancel_auto_close_job
     if (auto_close_at_changed? && !auto_close_at_was.nil?) || (auto_close_user_id_changed? && auto_close_at)
       self.auto_close_started_at ||= Time.zone.now if auto_close_at
-      Jobs.cancel_scheduled_job(:close_topic, { topic_id: id })
+      Jobs.cancel_scheduled_job(:close_topic, topic_id: id)
     end
   end
 
@@ -514,6 +514,12 @@ class Topic < ActiveRecord::Base
     true
   end
 
+  def add_small_action(user, action_code, who=nil)
+    custom_fields = {}
+    custom_fields["action_code_who"] = who if who.present?
+    add_moderator_post(user, nil, post_type: Post.types[:small_action], action_code: action_code, custom_fields: custom_fields)
+  end
+
   def add_moderator_post(user, text, opts=nil)
     opts ||= {}
     new_post = nil
@@ -524,7 +530,8 @@ class Topic < ActiveRecord::Base
                               no_bump: opts[:bump].blank?,
                               skip_notifications: opts[:skip_notifications],
                               topic_id: self.id,
-                              skip_validations: true)
+                              skip_validations: true,
+                              custom_fields: opts[:custom_fields])
     new_post = creator.create
     increment!(:moderator_posts_count) if new_post.persisted?
 
@@ -543,7 +550,6 @@ class Topic < ActiveRecord::Base
 
   def change_category_to_id(category_id)
     return false if private_message?
-    return false if category.try(:contains_messages)
 
     new_category_id = category_id.to_i
     # if the category name is blank, reset the attribute
@@ -557,11 +563,12 @@ class Topic < ActiveRecord::Base
     changed_to_category(cat)
   end
 
-  def remove_allowed_user(username)
+  def remove_allowed_user(removed_by, username)
     if user = User.find_by(username: username)
       topic_user = topic_allowed_users.find_by(user_id: user.id)
       if topic_user
         topic_user.destroy
+        add_small_action(removed_by, "removed_user", user.username)
         return true
       end
     end
@@ -575,6 +582,8 @@ class Topic < ActiveRecord::Base
       # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
       if user && topic_allowed_users.create!(user_id: user.id)
+        # Create a small action message
+        add_small_action(invited_by, "invited_user", user.username)
 
         # Notify the user they've been invited
         user.notifications.create(notification_type: Notification.types[:invited_to_private_message],
@@ -909,8 +918,10 @@ class Topic < ActiveRecord::Base
 
     sql = <<SQL
 SELECT 1 FROM topic_allowed_groups tg
-JOIN group_archived_messages gm ON gm.topic_id = tg.topic_id AND gm.group_id = tg.group_id
-  WHERE tg.group_id IN (SELECT g.id FROM group_users g WHERE g.user_id = :user_id)
+JOIN group_archived_messages gm
+      ON gm.topic_id = tg.topic_id AND
+         gm.group_id = tg.group_id
+  WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
     AND tg.topic_id = :topic_id
 
 UNION ALL
@@ -921,7 +932,6 @@ WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
 SQL
 
     User.exec_sql(sql, user_id: user.id, topic_id: id).to_a.length > 0
-
   end
 
   TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL

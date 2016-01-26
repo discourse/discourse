@@ -478,6 +478,10 @@ describe PostCreator do
       expect(unrelated.notifications.count).to eq(0)
       expect(post.topic.subtype).to eq(TopicSubtype.user_to_user)
 
+      # PMs do not increase post count or topic count
+      expect(post.user.user_stat.post_count).to eq(0)
+      expect(post.user.user_stat.topic_count).to eq(0)
+
       # archive this message and ensure archive is cleared for all users on reply
       UserArchivedMessage.create(user_id: target_user2.id, topic_id: post.topic_id)
 
@@ -490,6 +494,16 @@ describe PostCreator do
       expect(post.topic.topic_allowed_users.where(user_id: admin.id).count).to eq(1)
 
       expect(UserArchivedMessage.where(user_id: target_user2.id, topic_id: post.topic_id).count).to eq(0)
+
+      # if another admin replies and is already member of the group, don't add them to topic_allowed_users
+      group = Fabricate(:group)
+      post.topic.topic_allowed_groups.create!(group: group)
+      admin2 = Fabricate(:admin)
+      group.add(admin2)
+
+      PostCreator.create(admin2, raw: 'I am also an admin, and a mod', topic_id: post.topic_id)
+
+      expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
     end
   end
 
@@ -595,12 +609,12 @@ describe PostCreator do
 
   describe "word_count" do
     it "has a word count" do
-      creator = PostCreator.new(user, title: 'some inspired poetry for a rainy day', raw: 'mary had a little lamb, little lamb, little lamb. mary had a little lamb')
+      creator = PostCreator.new(user, title: 'some inspired poetry for a rainy day', raw: 'mary had a little lamb, little lamb, little lamb. mary had a little lamb. Здравствуйте')
       post = creator.create
-      expect(post.word_count).to eq(14)
+      expect(post.word_count).to eq(15)
 
       post.topic.reload
-      expect(post.topic.word_count).to eq(14)
+      expect(post.topic.word_count).to eq(15)
     end
   end
 

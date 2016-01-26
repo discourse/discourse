@@ -5,6 +5,10 @@ const Badge = RestModel.extend({
 
   newBadge: Em.computed.none('id'),
 
+  url: function() {
+    return Discourse.getURL(`/badges/${this.get('id')}/${this.get('slug')}`);
+  }.property(),
+
   /**
     @private
 
@@ -159,7 +163,7 @@ Badge.reopenClass({
     let badges = [];
     if ("badge" in json) {
       badges = [json.badge];
-    } else {
+    } else if (json.badges) {
       badges = json.badges;
     }
     badges = badges.map(function(badgeJson) {
@@ -207,4 +211,3 @@ Badge.reopenClass({
 });
 
 export default Badge;
-

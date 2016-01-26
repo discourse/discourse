@@ -54,15 +54,17 @@ class ListController < ApplicationController
       list_opts.merge!(options) if options
       user = list_target_user
 
-      if filter == :latest && params[:category].blank?
-        list_opts[:no_definitions] = true
-      end
-
-      if filter.to_s == current_homepage
-        list_opts.merge!(exclude_category_ids: get_excluded_category_ids(list_opts[:category]))
+      if params[:category].blank?
+        if filter == :latest
+          list_opts[:no_definitions] = true
+        end
+        if filter.to_s == current_homepage
+          list_opts[:exclude_category_ids] = get_excluded_category_ids(list_opts[:category])
+        end
       end
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
+
       list.more_topics_url = construct_url_with(:next, list_opts)
       list.prev_topics_url = construct_url_with(:prev, list_opts)
       if Discourse.anonymous_filters.include?(filter)
@@ -165,7 +167,7 @@ class ListController < ApplicationController
       top_options[:per_page] = SiteSetting.topics_per_period_in_top_page
 
       if "top".freeze == current_homepage
-        top_options.merge!(exclude_category_ids: get_excluded_category_ids(top_options[:category]))
+        top_options[:exclude_category_ids] = get_excluded_category_ids(top_options[:category])
       end
 
       user = list_target_user
@@ -224,14 +226,22 @@ class ListController < ApplicationController
   def set_category
     slug_or_id = params.fetch(:category)
     parent_slug_or_id = params[:parent_category]
+    id = params[:id].to_i
 
     parent_category_id = nil
     if parent_slug_or_id.present?
       parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      redirect_or_not_found and return if parent_category_id.blank?
+      redirect_or_not_found and return if parent_category_id.blank? && !id
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
+
+    # Redirect if we have `/c/:parent_category/:category/:id`
+    if id
+      category = Category.find_by_id(id)
+      (redirect_to category.url, status: 301) && return if category
+    end
+
     redirect_or_not_found and return if !@category
 
     @description_meta = @category.description_text

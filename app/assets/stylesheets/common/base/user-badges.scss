@@ -187,6 +187,58 @@
   }
 }
 
+.show-badge .badge-user-info {
+  margin-left: 2%;
+  .earned {
+    margin-top: 15px;
+    font-size: 1.3em;
+  }
+  .username {
+    margin-top: 5px;
+    display: block;
+    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+  }
+}
+
+.show-badge .single-user {
+  margin-left: 2%;
+  padding-bottom: 20px;
+  .load-more {
+    padding-top: 30px;
+    display: block;
+    font-size: 1.2em;
+  }
+}
+
+.show-badge .single-user .badge-user {
+  padding-left: 0;
+
+  text-align: left;
+  display: block;
+  margin: 20px 0;
+  .badge-info {
+    display: none;
+  }
+  .date {
+    display: inline-block;
+    font-size: 1.1em;
+    margin-left: 10px;
+  }
+  .post-link {
+    font-size: 1.3em;
+    width: 500px;
+    margin: 0;
+    padding: 0;
+  }
+  width: 800px;
+
+  &:after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+}
+
 .long-description.banner {
   width: 88%;
   margin-bottom: 20px;

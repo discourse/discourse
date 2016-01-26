@@ -267,6 +267,12 @@ fa_IR:
       total_rows:
         other: "%{count} کاربران"
     groups:
+      empty:
+        posts: "در این گروه هیچ پستی توسط کاربران "
+        members: "هیچ عضوی در این گروه وجود ندارد."
+        mentions: "هیچ کجا به این گروه اشاره‌ای نشده است."
+        messages: "پیامی در این گروه وجود ندارد."
+        topics: "در این گروه هیچ موضوعی توسط کاربران ارسال نشده."
       add: "افزودن"
       selector_placeholder: "افزودن عضو"
       owner: "مالک"
@@ -285,6 +291,19 @@ fa_IR:
       trust_levels:
         title: "سطح اعتماد به صورت خودکار به اعضاء داده میشود وقتی که آن ها اضافه میشوند:"
         none: "هیچ کدام"
+      notifications:
+        watching:
+          title: "در حال مشاهده"
+          description: "در صورت ارسال شدن پست جدید در هر پیام یک اعلان برای شما ارسال می‌شود و تعداد پاسخ‌های جدید نمایش داده می‌شود."
+        tracking:
+          title: "ردگیری"
+          description: "در صورت اشاره شدن به @نام شما توسط اشخاص دیگر و یا دریافت پاسخ، اعلانی برای شما ارسال می‌شود و تعداد پاسخ‌های جدید نمایش داده می‌شود."
+        regular:
+          title: "معمولی"
+          description: "در صورتی که به @نام شما اشاره شود و یا پاسخی دریافت کنید اعلانی برای شما ارسال می‌شود."
+        muted:
+          title: "بی صدا شد"
+          description: "با ارسال شدن موضوعات جدید در این گروه شما اعلانی دریافت نمی‌کنید."
     user_action_groups:
       '1': "پسندهای داده شده"
       '2': "پسندهای دریافت شده"
@@ -294,7 +313,6 @@ fa_IR:
       '6': "واکنش"
       '7': "اشاره‌ها"
       '9': "نقل‌قول‌ها"
-      '10': "ستاره‌دار"
       '11': "ویرایش‌ها"
       '12': "ارسال موارد"
       '13': "صندوق دریافت"
@@ -304,6 +322,7 @@ fa_IR:
       all_subcategories: "همه"
       no_subcategory: "هیچی"
       category: "دسته بندی"
+      category_list: "نمایش لیست دسته‌بندی"
       reorder:
         title: "دوباره مرتب کردن دسته بندی ها"
         title_long: "سازماندهی مجدد فهرست دسته بندی ها"
@@ -358,6 +377,7 @@ fa_IR:
       invited_by: "فراخوان از سوی"
       trust_level: "سطح اعتماد"
       notifications: "آگاه‌سازی‌ها"
+      statistics: "وضعیت"
       desktop_notifications:
         label: "اعلانات دسکتاپ"
         not_supported: "اعلانات بر روی این مرورگر پشتیبانی نمیشوند. با عرض پوزش."
@@ -411,9 +431,14 @@ fa_IR:
         warnings_received: "هشدارها"
       messages:
         all: "همه"
-        mine: "خودم"
-        unread: "خوانده‌ نشده‌"
+        inbox: "صندوق دریافت"
+        sent: "ارسال شد"
+        archive: "بایگانی"
         groups: "گروه های من"
+        bulk_select: "انتخاب پیام‌ها"
+        move_to_inbox: "انتقال به صندوق دریافت"
+        failed_to_move: "انتقال پیام‌های انتخاب شده با اشکال مواجه شد (شاید اتصال شما در دسترس نیست)"
+        select_all: "انتخاب همه"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
@@ -837,6 +862,7 @@ fa_IR:
         granted_badge: "مدال اعطاء شد"
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} به شما در "{{topic}}" - {{site_title}} اشاره نمود'
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
         replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
@@ -979,6 +1005,7 @@ fa_IR:
       auto_close_title: 'تنضیمات قفل خوکار'
       auto_close_save: "‌ذخیره"
       auto_close_remove: "این موضوع را خوکار قفل نکن"
+      auto_close_immediate: "زمان ارسال آخرین پست در موضوع برای %{hours} ساعت پیش است، بنابر این موضوع بلافاصله بسته می‌شود."
       progress:
         title: نوشته ی در حال اجرا
         go_top: "بالا"
@@ -1097,6 +1124,7 @@ fa_IR:
         success: "ما آن کاربر را برای شرکت در این پیام دعوت کردیم."
         error: "با معذرت٬ یک خطا برای دعوت آن کاربر وجود داشت"
         group_name: "نام گروه"
+      controls: "مدیریت مبحث"
       invite_reply:
         title: 'دعوتنامه '
         username_placeholder: "نام کاربری"
@@ -1960,6 +1988,7 @@ fa_IR:
             change_site_setting: "تغییر تنظیمات سایت"
             change_site_customization: "تغییر سفارشی‌سازی سایت"
             delete_site_customization: "پاک‌کردن سفارشی‌سازی سایت"
+            change_site_text: "تغییر نوشته سایت"
             suspend_user: "کاربر تعلیق شده"
             unsuspend_user: "کابر تعلیق نشده"
             grant_badge: "اعطای مدال"
@@ -2144,7 +2173,7 @@ fa_IR:
         unlock_trust_level: "باز کردن سطح اعتماد"
         tl3_requirements:
           title: "شرایط لازم برای سطح اعتماد 3."
-          table_title: "در ۱۰۰ روز اخیر:"
+          table_title: "در %{time_period} روز گذشته:"
           value_heading: "مقدار"
           requirement_heading: "نیازمندی‌ها"
           visits: "بازدیدها"

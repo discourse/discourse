@@ -5,6 +5,7 @@ class Category < ActiveRecord::Base
 
   include Positionable
   include HasCustomFields
+  include CategoryHashtag
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
@@ -75,6 +76,7 @@ class Category < ActiveRecord::Base
       scoped_to_permissions(guardian, [:create_post, :full])
     end
   }
+
   delegate :post_template, to: 'self.class'
 
   # permission is just used by serialization
@@ -230,7 +232,7 @@ SQL
     end
     # only allow to use category itself id. new_record doesn't have a id.
     unless new_record?
-      match_id = /(\d+)-category/.match(self.slug)
+      match_id = /^(\d+)-category/.match(self.slug)
       errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
     end
   end
@@ -398,8 +400,8 @@ SQL
     @@url_cache.clear
   end
 
-  def full_slug
-    url[3..-1].gsub("/", "-")
+  def full_slug(separator = "-")
+    url[3..-1].gsub("/", separator)
   end
 
   def url
@@ -414,6 +416,10 @@ SQL
     end
 
     url
+  end
+
+  def url_with_id
+    self.parent_category ? "#{url}/#{self.id}" : "#{Discourse.base_uri}/c/#{self.id}-#{self.slug}"
   end
 
   # If the name changes, try and update the category definition topic too if it's

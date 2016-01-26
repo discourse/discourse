@@ -102,6 +102,4 @@ describe UserStat do
     end
 
   end
-
-
 end

@@ -68,19 +68,32 @@
     RawHandlebars.JavaScriptCompiler.prototype.compiler = RawHandlebars.JavaScriptCompiler;
     RawHandlebars.JavaScriptCompiler.prototype.namespace = "Discourse.EmberCompatHandlebars";
 
+    function replaceGet(ast) {
+      var visitor = new Handlebars.Visitor();
+      visitor.mutating = true;
 
-    RawHandlebars.Compiler.prototype.mustache = function(mustache) {
-      if ( !(mustache.params.length || mustache.hash)) {
-
-        var id = new Handlebars.AST.IdNode([{ part: 'get' }]);
-        mustache = new Handlebars.AST.MustacheNode([id].concat([mustache.id]), mustache.hash, mustache.escaped);
-      }
-
-      return Handlebars.Compiler.prototype.mustache.call(this, mustache);
-    };
+      visitor.MustacheStatement = function(mustache) {
+        if (!(mustache.params.length || mustache.hash)) {
+          mustache.params[0] = mustache.path;
+          mustache.path = {
+            type: "PathExpression",
+            data: false,
+            depth: mustache.path.depth,
+            parts: ["get"],
+            original: "get",
+            loc: mustache.path.loc,
+            strict: true,
+            falsy: true
+          };
+        }
+        return Handlebars.Visitor.prototype.MustacheStatement.call(this, mustache);
+      };
+      visitor.accept(ast);
+    }
 
     RawHandlebars.precompile = function(value, asObject) {
       var ast = Handlebars.parse(value);
+      replaceGet(ast);
 
       var options = {
         knownHelpers: {
@@ -96,9 +109,10 @@
       return new RawHandlebars.JavaScriptCompiler().compile(environment, options, undefined, asObject);
     };
 
-
     RawHandlebars.compile = function(string) {
       var ast = Handlebars.parse(string);
+      replaceGet(ast);
+
       // this forces us to rewrite helpers
       var options = {  data: true, stringParams: true };
       var environment = new RawHandlebars.Compiler().compile(ast, options);

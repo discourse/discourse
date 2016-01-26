@@ -5,15 +5,15 @@
       <li>
         {{#if wc.editing}}
           {{input value=wc.name}}
-          <button {{action "save" wc}}><i class="fa fa-check"></i></button>
+          <button {{action "save" wc}} class="btn no-text">{{fa-icon 'check'}}</button>
         {{else}}
-          {{wc.name}}
+          {{wc.displayName}}
         {{/if}}
         <div class='actions'>
-          <button {{action "edit" wc}}><i class="fa fa-pencil"></i></button>
-          <button {{action "up" wc}}><i class="fa fa-toggle-up"></i></button>
-          <button {{action "down" wc}}><i class="fa fa-toggle-down"></i></button>
-          <button {{action "delete" wc}}><i class="fa fa-times"></i></button>
+          <button {{action "edit" wc}} class="btn no-text" {{bind-attr disabled="wc.system"}}>{{fa-icon 'pencil'}}</button>
+          <button {{action "up" wc}} class="btn no-text">{{fa-icon 'toggle-up'}}</button>
+          <button {{action "down" wc}} class="btn no-text">{{fa-icon 'toggle-down'}}</button>
+          <button {{action "delete" wc}} class="btn no-text btn-danger" {{bind-attr disabled="wc.system"}}>{{fa-icon 'times'}}</button>
         </div>
       </li>
     {{/each}}

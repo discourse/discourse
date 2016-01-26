@@ -199,7 +199,6 @@ class TopicQuery
   end
 
   def prioritize_pinned_topics(topics, options)
-
     pinned_clause = options[:category_id] ? "topics.category_id = #{options[:category_id].to_i} AND" : "pinned_globally AND "
     pinned_clause << " pinned_at IS NOT NULL "
     if @user

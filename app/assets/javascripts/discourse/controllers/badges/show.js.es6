@@ -1,9 +1,24 @@
 import UserBadge from 'discourse/models/user-badge';
 
 export default Ember.Controller.extend({
+  queryParams: ['username'],
   noMoreBadges: false,
   userBadges: null,
   needs: ["application"],
+
+  user: function(){
+    if (this.get("username")) {
+      return this.get('userBadges')[0].get('user');
+    }
+  }.property("username"),
+
+  grantCount: function() {
+    if (this.get("username")) {
+      return this.get('userBadges.grant_count');
+    } else {
+      return this.get('model.grant_count');
+    }
+  }.property('username', 'model', 'userBadges'),
 
   actions: {
     loadMore() {
@@ -11,7 +26,8 @@ export default Ember.Controller.extend({
       const userBadges = this.get('userBadges');
 
       UserBadge.findByBadgeId(this.get('model.id'), {
-        offset: userBadges.length
+        offset: userBadges.length,
+        username: this.get('username'),
       }).then(function(result) {
         userBadges.pushObjects(result);
         if(userBadges.length === 0){
@@ -22,11 +38,12 @@ export default Ember.Controller.extend({
   },
 
   layoutClass: function(){
+    var user = this.get("user") ? " single-user" : "";
     var ub = this.get("userBadges");
     if(ub && ub[0] && ub[0].post_id){
-      return "user-badge-with-posts";
+      return "user-badge-with-posts" + user;
     } else {
-      return "user-badge-no-posts";
+      return "user-badge-no-posts" + user;
     }
   }.property("userBadges"),
 
@@ -34,7 +51,7 @@ export default Ember.Controller.extend({
     if (this.get('noMoreBadges')) { return false; }
 
     if (this.get('userBadges')) {
-      return this.get('model.grant_count') > this.get('userBadges.length');
+      return this.get('grantCount') > this.get('userBadges.length');
     } else {
       return false;
     }

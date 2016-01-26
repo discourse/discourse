@@ -68,7 +68,7 @@
   {{#if showBadges}}
     <div class="badge-section">
       {{#each ub in user.featured_user_badges}}
-        {{user-badge badge=ub.badge}}
+        {{user-badge badge=ub.badge user=user}}
       {{/each}}
       {{#if showMoreBadges}}
         {{#link-to 'user.badges' user class="btn more-user-badges"}}

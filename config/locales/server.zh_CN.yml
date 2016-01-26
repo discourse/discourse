@@ -86,6 +86,8 @@ zh_CN:
   not_found: "请求的 URL 或资源未找到。"
   invalid_access: "你没有权限查看请求的资源。"
   read_only_mode_enabled: "这个站点正处于只读模式。交互功能已禁用。"
+  reading_time: "阅读时间"
+  likes: "赞"
   too_many_replies:
     other: "我们非常抱歉，但是新用户被临时限制为在同一个主题只能回复 %{count} 次"
   embed:
@@ -840,7 +842,7 @@ zh_CN:
     tl2_requires_likes_received: "一个初级用户升级到信任等级2所需要获得的赞数。"
     tl2_requires_likes_given: "一个初级用户升级到信任等级2所需要给出的赞数。"
     tl2_requires_topic_reply_count: "一个初级用户升级到信任等级2所需要回复的主题数量。"
-    tl3_requires_days_visited: "在最近 100 天内升至信任等级3所需的访问站点的天数。（0到100）"
+    tl3_time_period: "3级信任等级时间期"
     tl3_requires_topics_replied_to: "在最近 100 天内升至信任等级3所需的回复主题的最小数量。（0或更高）"
     tl3_requires_topics_viewed: "在最近 100 天内升至信任等级3所需的创建主题的百分比。（0到100）"
     tl3_requires_posts_read: "在最近 100 天内升信任等级3所需的创建帖子的百分比。（0到100）"
@@ -915,6 +917,7 @@ zh_CN:
     disable_emails: "禁止 Discourse 发送任何邮件"
     strip_images_from_short_emails: "从邮件中除去小于 2800 比特的图片"
     short_email_length: "短邮件地址长度（以比特作为单位）"
+    display_name_on_email_from: "在Email栏显示全名"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
     pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
     pop3_polling_period_mins: "查询用于邮件的 POP3 账户的间隔（以分钟计）。注意：需要重新启动。"
@@ -953,7 +956,6 @@ zh_CN:
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
     hide_user_profiles_from_public: "对来访用户关闭关闭用户信息卡，用户资料和用户目录。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
-    sequential_replies_threshold: "用户可以在一个主题内多次回复而不被提醒连续发送多个回复的通知。"
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
     daily_performance_report: "每日分析 NGINX 日志并且发布详情主题到职员才能看到的主题"
@@ -1547,24 +1549,8 @@ zh_CN:
         欲查看额外的指导，请查看我们的[社群指引](%{base_url}/guidelines)。
     user_automatically_blocked:
       subject_template: "因标记而被封禁的新用户 %{username}"
-      text_body_template: |
-        这是一封自动发出的邮件。
-
-        新用户 [%{username}](%{base_url}%{user_url}) 已因多位用户标记 %{username} 的帖子而被自动封禁。
-
-        请[审核这些标记](%{base_url}/admin/flags)。如果 %{username} 被不正确地封禁了编辑功能，点击[该用户的管理页面](%{base_url}%{user_url})上的解封按钮。
-
-        该阈值可以通过站点设置中的 `block_new_user` 更改。
     spam_post_blocked:
       subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
-      text_body_template: |
-        这是一封自动发出的邮件。
-
-        新用户 [%{username}](%{base_url}%{user_url}) 已因创建多个链接至 %{domains} 的帖子而被封禁以防止垃圾信息。但是用户仍能够发表不包含到 %{domains} 的帖子。
-
-        请[审核这些用户](%{base_url}%{user_url})。
-
-        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unblocked:
       subject_template: "账户解封 unblocked"
       text_body_template: |
@@ -1590,7 +1576,8 @@ zh_CN:
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
-    visit_link_to_respond: "在浏览器中访问[visit the topic](%{base_url}%{url})，以回复。"
+    reply_by_email: "回复邮件或访问[visit the topic](%{base_url}%{url})，以回复。"
+    visit_link_to_respond: "回复，[visit the topic](%{base_url}%{url})。"
     posted_by: "%{username}发表于%{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
@@ -1607,6 +1594,8 @@ zh_CN:
         > %{site_title} -- %{site_description}
 
         请访问 %{base_url}%{url} 来查看该主题。
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} 邀请你至主题：'%{topic_title}'"
       text_body_template: |2
@@ -1625,6 +1614,8 @@ zh_CN:
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1634,6 +1625,8 @@ zh_CN:
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1643,6 +1636,8 @@ zh_CN:
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1652,6 +1647,8 @@ zh_CN:
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1661,6 +1658,8 @@ zh_CN:
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1670,9 +1669,19 @@ zh_CN:
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
 
         ---
         %{respond_instructions}

@@ -6,6 +6,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   // If this isn't defined, it will proxy to the user model on the preferences
   // page which is wrong.
   emailOrUsername: null,
+  inviteIcon: "envelope",
 
   isAdmin: function(){
     return Discourse.User.currentProp("admin");
@@ -88,8 +89,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (Ember.isEmpty(this.get('emailOrUsername'))) {
           return I18n.t('topic.invite_reply.to_topic_blank');
         } else if (Discourse.Utilities.emailValid(this.get('emailOrUsername'))) {
+          this.set("inviteIcon", "envelope");
           return I18n.t('topic.invite_reply.to_topic_email');
         } else {
+          this.set("inviteIcon", "hand-o-right");
           return I18n.t('topic.invite_reply.to_topic_username');
         }
       }

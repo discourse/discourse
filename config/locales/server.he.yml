@@ -24,8 +24,6 @@ he:
   loading: "טוען"
   powered_by_html: 'מונע ע"י <a href="http://www.discourse.org">Discourse</a>, פועל מיטבית עם Javascript'
   log_in: "התחברות"
-  via: "%{username} עם %{site_name}"
-  is_reserved: "שמור"
   purge_reason: "נמחק באופן אוטומטי כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אכסון פנוי."
   anonymous: "אנונימי"
@@ -415,15 +413,11 @@ he:
       description: 'פרסום זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines"> כללי הקהילה </a>.'
       long_form: 'דוגלל כלא ראוי'
     notify_user:
-      description: 'פרסום זה מכיל משהו שארצה לשוחח עליו עם האדם הזה באופן ישיר ופרטי. אין צורך בסימון.'
       long_form: 'הודעה נשלחה למשתמש/ת'
       email_title: 'הפרסום שלךב"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "משהו אחר"
-      description: 'פרסום זה דורש את תשומת ליבו של מנחה מסיבה שאינה מצויינת למעלה.'
-      long_form: 'זה סומן לתשומת הלב של מנחה'
-      email_title: 'הודעה ב-"%{title}" דורשת תשומת לב של מנהל'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'מועדפים'
@@ -448,7 +442,6 @@ he:
       long_form: 'דוגלל כלא ראוי'
     notify_moderators:
       title: "משהו אחר"
-      description: 'נושא זה דורש התייחסות של מנחה (moderator) כללי, על פי  <a href="/guidelines"> הכללים המנחים </a>, <a href="%{tos_url}">TOS</a>, או סיבה אחרת שאינה מופיעה כאן.'
       long_form: 'זה סומן לתשומת הלב של מנחה'
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנהל'
       email_body: "%{link}\n\n%{message}"
@@ -639,37 +632,6 @@ he:
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
     site_contact_username_warning: "הזינו שם חשבון ידידותי של אי/אשת צות ממנו ישלחו הודעות אוטומטיות חשובות. עדכנו את site_contact_username ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     notification_email_warning: "מיילים ליידוע אינם נשלחים מכתובת תקינה בדומיין שלכם; משלוח דוא\"ל יהיה בעייתי ולא אמין. אנא כוונו את כתובת המייל למשלוח התראות לכתובת מקומית תקינה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
-  content_types:
-    education_new_reply:
-      title: "הדרכת משתמש חדש: תגובות ראשונות"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
-    education_new_topic:
-      title: "הדרכת משתמש חדש: נושאים ראשונים"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
-    usage_tips:
-      title: "הדרכה למשתמש/ת חדשים"
-      description: "הדרכה ומידע חשוב למשתמשים חדשים."
-    welcome_user:
-      title: "Welcome: New User"
-      description: "הודעה שנשלחת באופן אוטומטי לכל המשתמשים החדשים כאשר הם נרשמים."
-    welcome_invite:
-      title: "Welcome: Invited User"
-      description: "הודעה שנשלחת באופן אוטומטי לכל המשתמשים המוזמנים כאשר הם מקבלים את ההזמנה ממשתמש אחר."
-    login_required_welcome_message:
-      title: "Login Required: Welcome Message"
-      description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
-    login_required:
-      title: "Login Required: Homepage"
-      description: "The text displayed for unauthorized users when login is required on the site."
-    head:
-      title: "HTML head"
-      description: "HTML that will be inserted inside the <head></head> tags."
-    top:
-      title: "Top of the pages"
-      description: "HTML that will be added at the top of every page (after the header, before the navigation or the topic title)."
-    bottom:
-      title: "Bottom of the pages"
-      description: "קוד HTML שיתווסף לפני התגית <body/>."
   site_settings:
     censored_words: "מלים שיוחלפו באופן אוטומטי ב- &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "מחיקת אוטומטית של פרסומים מוסתרים שנותרים מוסתרים במשך יותר מ-30 יום."
@@ -977,7 +939,6 @@ he:
     anonymous_posting_min_trust_level: "רמת האמון המינמלית הנדרשת כדי לאפשר פרסום אנונימי"
     anonymous_account_duration_minutes: "בכדי להגן על האנונימות צרו חשבון אנונימי כל N דקות לכ משתמש. לדוגמה: אם מכוון ל-600, כאשר יעברו 600 דקות מהפרסום האחרון והמשתמש/ת יחליפו לזהות אנונימית, חשבון אנונימי חדש יווצר."
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
-    sequential_replies_threshold: "מספר הפרסומים שעל משתמש להכין ברצף בפרסום לפני שיקבל תזכורת בנוגע ליותר מידי תגובות עוקבות."
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "איזה אחוז מהפרסומים משתמש צריך לייצר בנושא לפני שיקבל תזכורת לגבי שליטת/שתלטנות יתר על הנושא."
     daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
@@ -1008,7 +969,6 @@ he:
     enable_cdn_js_debugging: "אפשרו ל-/logs להציג שגיאות בצורה נכונה באמצעות הוספת הרשאות לגישה בין אתרים (crossorigin permissions) בכל ה-js הכלולים."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו הודעה המבקשת מן המנהלים/מנהלות ליצור עוד נושאים."
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
-    vacuum_db_days: "הריצו VACUUM FULL ANALYZE כדי להשיב שטח בסיס הנתונים אחרי העברות (כוונו ל-0 כדי לנטרל)"
     prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "אפשרו emoji"
@@ -1468,16 +1428,8 @@ he:
         להדרכה נוספת, אנא פנו ל[כללי ההתנהגות הקהיליתיים](%{base_url}/guidelines) שלנו.
     user_automatically_blocked:
       subject_template: "המשתמש/ת החדשים %{username} נחסמו בשל התראות מהקהילה."
-      text_body_template: |
-        זהו מסר שנשלח בצורה אוטמטית.
-        המשתמש/ת החדש/ה [%{username}](%{base_url}%{user_url}) נחסמו באופן אוטומטי בשל כמה התראות בנוגע להודעה/הודעות שפרסמ/ה.
-
-        אנא [סרקו את ההתראות] (%{base_url}/admin/flags). אם %{username נחסם בטעות מפרסום הודעות, הקישו על הכפתור "ביטול חסימה" ש[בעמוד האדמין עבור משתמש/ת אלה](%{base_url}%{user_url}).
-
-        ניתן לשנות את המנגנון הזה דרך הגדרות 'חסימת_משתמש_חדש' שבאתר.
     spam_post_blocked:
       subject_template: "הודעות של המשתמש/ת החדש/ה %{username} נחסמו בשל קישורים חוזרים."
-      text_body_template: "זוהי הודעה שנשלחה באופן אוטומטי.\nהמשתמש/ת החדש/ה  [%{username}](%{base_url}%{user_url}) ניסו ליצור כמה הודעות עם קישור ל-%{domains}, אבל הודעות אלו נחסמו כדי למנוע דואר זבל (spam). המשתמש/ת עדיין יכול/ה ליצור הודעות חדשות שלא מקשרות ל-%{domains}.\n\nאנא [סקרו את המשתמש/ת] (%{base_url}%{user_url}). \nהגדרות אלו ניתנו שינוי דרך ההגדרות 'משתמשיםחדשים_ספאם_סף'.\n"
     unblocked:
       subject_template: "Account unblocked"
       text_body_template: |
@@ -1497,10 +1449,6 @@ he:
     download_remote_images_disabled:
       subject_template: "הורדת תמונות מרחוק מנוטרלת"
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
-  unsubscribe_link: |
-    להסרה מרשימת התפוצה, בקר ב  [הגדרות משתמש/ת](%{user_preferences_url}).
-
-    בשביל להפסיק לקבל התראות בנוגע לשיחה הזאת  [לחץ כאן](%{unsubscribe_url}).
   subject_re: "תגובה: "
   subject_pm: "[PM] "
   user_notifications:
@@ -1508,8 +1456,6 @@ he:
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
-    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
-    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Posted by %{username} on %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} הזמין אותך להודעה '%{topic_title}'"
@@ -1519,49 +1465,14 @@ he:
       text_body_template: "\n%{username} הזמינ/ה אותך לשיחה. \n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nב\n\n> %{site_title} -- %{site_description}\n\nתלחץ על הלינק בשביל לראות את ההודעה %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "סיכום קצר של %{site_link} מאז ביקורך האחרון ב-%{last_seen_at}"
       subject_template: "[%{site_name}] תקציר"

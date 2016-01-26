@@ -23,6 +23,7 @@ class UsersController < ApplicationController
                                                             :send_activation_email,
                                                             :authorize_email,
                                                             :password_reset,
+                                                            :confirm_email_token,
                                                             :admin_login]
 
   def index
@@ -173,6 +174,13 @@ class UsersController < ApplicationController
     else
       redirect_to(path("/users/#{current_user.username}/#{params[:path]}"))
     end
+  end
+
+  def summary
+    user = fetch_user_from_params
+    summary = UserSummary.new(user, guardian)
+    serializer = UserSummarySerializer.new(summary, scope: guardian)
+    render_json_dump(serializer)
   end
 
   def invited
@@ -355,7 +363,12 @@ class UsersController < ApplicationController
     expires_now
 
     if EmailToken.valid_token_format?(params[:token])
-      @user = EmailToken.confirm(params[:token])
+      if request.put?
+        @user = EmailToken.confirm(params[:token])
+      else
+        email_token = EmailToken.confirmable(params[:token])
+        @user = email_token.try(:user)
+      end
 
       if @user
         session["password-#{params[:token]}"] = @user.id
@@ -385,6 +398,12 @@ class UsersController < ApplicationController
       end
     end
     render layout: 'no_ember'
+  end
+
+  def confirm_email_token
+    expires_now
+    EmailToken.confirm(params[:token])
+    render json: success_json
   end
 
   def logon_after_password_reset
@@ -460,10 +479,11 @@ class UsersController < ApplicationController
     RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
 
+    EmailValidator.new(attributes: :email).validate_each(user, :email, lower_email)
+    return render_json_error(user.errors.full_messages) if user.errors[:email].present?
+
     # Raise an error if the email is already in use
-    if User.find_by_email(lower_email)
-      raise Discourse::InvalidParameters.new(:email)
-    end
+    return render_json_error(I18n.t('change_email.error')) if User.find_by_email(lower_email)
 
     email_token = user.email_tokens.create(email: lower_email)
     Jobs.enqueue(

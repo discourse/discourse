@@ -424,8 +424,12 @@ const Topic = RestModel.extend({
     this.set("archiving", true);
     var promise = Discourse.ajax(`/t/${this.get('id')}/archive-message`, {type: 'PUT'});
 
-    promise.then(()=>this.set('message_archived', true))
-           .finally(()=>this.set('archiving', false));
+    promise.then((msg)=> {
+      this.set('message_archived', true);
+      if (msg && msg.group_name) {
+        this.set('inboxGroupName', msg.group_name);
+      }
+    }).finally(()=>this.set('archiving', false));
 
     return promise;
   },
@@ -434,8 +438,12 @@ const Topic = RestModel.extend({
     this.set("archiving", true);
     var promise = Discourse.ajax(`/t/${this.get('id')}/move-to-inbox`, {type: 'PUT'});
 
-    promise.then(()=>this.set('message_archived', false))
-           .finally(()=>this.set('archiving', false));
+    promise.then((msg)=> {
+      this.set('message_archived', false);
+      if (msg && msg.group_name) {
+        this.set('inboxGroupName', msg.group_name);
+      }
+    }).finally(()=>this.set('archiving', false));
 
     return promise;
   }

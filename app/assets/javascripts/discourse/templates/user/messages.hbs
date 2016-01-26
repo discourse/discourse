@@ -1,4 +1,9 @@
 <section class='user-navigation'>
+  {{#unless mobileView}}
+  {{#if showNewPM}}
+  {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+  {{/if}}
+  {{/unless}}
   <ul class='action-list nav-stacked'>
     <li class="noGlyph">
       {{#link-to 'userPrivateMessages.index' model}}
@@ -23,7 +28,7 @@
         {{capitalize group.name}}
       {{/link-to}}
     </li>
-    <li>
+    <li class='archive'>
       {{#link-to 'userPrivateMessages.groupArchive' group.name}}
         {{i18n 'user.messages.archive'}}
       {{/link-to}}
@@ -32,7 +37,6 @@
     {{/each}}
   </ul>
 
-  {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
 </section>
 
 <section class='user-right messages'>
@@ -41,6 +45,12 @@
     <button {{action "toggleBulkSelect"}} class="btn bulk-select" title="{{i18n "user.messages.bulk_select"}}">
       <i class="fa fa-list"></i>
     </button>
+
+    {{#if mobileView}}
+    {{#if showNewPM}}
+    {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+    {{/if}}
+    {{/if}}
 
     {{#if canArchive}}
     <button {{action "archive"}} class="btn btn-archive">

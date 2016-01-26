@@ -945,7 +945,9 @@ en:
     verbose_localization: "Show extended localization tips in the UI"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
-    allow_staged_accounts: "[BETA] Automatically create staged accounts for incoming emails."
+    top_topics_formula_log_views_multiplier: "value of log views multiplier (n) in top topics formula: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "value of first post likes multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -1016,6 +1018,8 @@ en:
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
+
+    min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
     min_trust_to_send_messages: "The minimum trust level required to create new private messages."
 
@@ -1103,6 +1107,9 @@ en:
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Short email length in Bytes"
     display_name_on_email_from: "Display full names on email from fields"
+
+    unsubscribe_via_email: "Allow users to unsubscribe from emails by sending an email with 'unsubscribe' in the subject or body"
+    unsubscribe_via_email_footer: "Attach an unsubscribe link to the footer of sent emails"
 
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
@@ -1371,13 +1378,24 @@ en:
       must_begin_with_alphanumeric: "must begin with a letter or number or an underscore"
       must_end_with_alphanumeric: "must end with a letter or number or an underscore"
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
-      must_not_contain_confusing_suffix: "must not contain a confusing suffix like .json or .png etc."
+      must_not_end_with_confusing_suffix: "must not end with a confusing suffix like .json or .png etc."
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+
+  unsubscribe_mailer:
+    subject_template: "Confirm you no longer want to receive email updates from %{site_title}"
+    text_body_template: |
+      Someone (possibly you?) requested to no longer send email updates from %{site_domain_name} to this address.
+      If you with to confirm this, please click this link:
+
+      %{confirm_unsubscribe_link}
+
+
+      If you want to continue receiving email updates, you may ignore this email.
 
   invite_mailer:
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
@@ -1582,7 +1600,15 @@ en:
 
         - To reply with **a new topic**, use <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> to the right of the post. Both old and new topics will be automatically linked together.
 
-        To insert a quote, select the text you wish to quote, then press any Reply button. Repeat for multiple quotes!
+        Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
+
+            This is **bold**.
+            This is <b>bold</b>.
+            This is [b]bold[/b].
+
+        Want to learn Markdown? [Take our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
+
+        To insert a quote, select the text you wish to quote, then press any Reply button. Repeat for multiple quotes.
 
         <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
 
@@ -1734,12 +1760,33 @@ en:
       subject_template: "Data export failed"
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
 
-    email_reject_trust_level:
+    email_reject_insufficient_trust_level:
       subject_template: "[%{site_name}] Email issue -- Insufficient Trust Level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
+
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Email issue -- Inactive User"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your account associated with this email address is not activated. Please activate your account before sending emails in.
+
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] Email issue -- Reply User Not Matching"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The original notification was not sent to this email address. Try sending from a different email address, or contact a staff member.
+
+    email_reject_no_message_id:
+      subject_template: "[%{site_name}] Email issue -- No Message Id"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        There was no Message-Id header in the email. Try sending from a different email address, or contact a staff member.
 
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
@@ -1771,14 +1818,21 @@ en:
 
         Your account does not have the privileges to post new topics in that category. If you believe this is in error, contact a staff member.
 
-    email_reject_post_error:
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] Email issue -- Invalid Access"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The category you sent this email to does not allow emails from unrestricted accounts. If you believe this is in error, contact a staff member.
+
+    email_reject_invalid_post:
       subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
 
-    email_reject_post_error_specified:
+    email_reject_invalid_post_specified:
       subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -1789,6 +1843,14 @@ en:
 
         If you can correct the problem, please try again.
 
+    email_reject_invalid_post_action:
+      subject_template: "[%{site_name}] Email issue -- Invalid Post Action"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The Post Action was not recognized. Please try again, or post via the website if this continues.
+
+
     email_reject_reply_key:
       subject_template: "[%{site_name}] Email issue -- Unknown Reply Key"
       text_body_template: |
@@ -1796,12 +1858,12 @@ en:
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
 
-    email_reject_destination:
+    email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Email issue -- Unknown To: Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        None of the destination addresses are recognized. Please make sure that the site address is in the To: line (not Cc: or Bcc:), and that you are sending to the correct email address provided by staff.
+        None of the destination addresses are recognized. Please make sure that you are sending to the correct email address provided by staff.
 
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Email issue -- Topic Not Found"
@@ -1896,7 +1958,10 @@ en:
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
 
   unsubscribe_link: |
-    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}).
+    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url})
+
+  unsubscribe_via_email_link: |
+    or, [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "
@@ -1908,8 +1973,8 @@ en:
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ''
-    reply_by_email: "To respond, reply to this email or [visit the topic](%{base_url}%{url})."
-    visit_link_to_respond: "To respond, [visit the topic](%{base_url}%{url})."
+    reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
+    visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
 
     posted_by: "Posted by %{username} on %{post_date}"
 
@@ -1963,6 +2028,18 @@ en:
 
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
+    user_replied_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

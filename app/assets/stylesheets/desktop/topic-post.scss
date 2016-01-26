@@ -174,6 +174,10 @@ nav.post-controls {
           box-shadow: none;
         }
 
+        &.wikied {
+          color: green;
+        }
+
         &.bookmark {padding: 8px 11px; }
 
         .read-icon {
@@ -1025,4 +1029,17 @@ and (max-width : 767px) {
     span {display: block;}
   }
 
+}
+
+@media all
+and (max-height: 700px) {
+
+   .post-menu-area {
+      margin-bottom: 0px;
+      margin-top: -18px;
+   }
+
+   .topic-body {
+      padding: 5px 11px 2px;
+   }
 }

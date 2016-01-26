@@ -1,0 +1,62 @@
+{{#if model.replies.length}}
+<div class='top-section'>
+<h3>{{i18n "user.summary.top_replies"}}</h3>
+{{#each reply in model.replies}}
+<ul>
+  <li>
+  <a href="{{reply.url}}">{{reply.topic.title}}</a> {{#if reply.like_count}}<span class='like-count'>{{reply.like_count}}<i class='fa fa-heart'></i></span>{{/if}} {{format-date reply.createdAt format="tiny" noTitle="true"}}
+  </li>
+</ul>
+{{/each}}
+{{#if moreReplies}}
+{{#link-to "userActivity.replies" user class="more"}}{{i18n "user.summary.more_replies"}}{{/link-to}}
+{{/if}}
+</div>
+{{/if}}
+
+{{#if model.topics.length}}
+<div class='top-section'>
+<h3>{{i18n "user.summary.top_topics"}}</h3>
+{{#each topic in model.topics}}
+<ul>
+  <li>
+  <a href="{{topic.url}}">{{topic.title}}</a> {{#if topic.like_count}}<span class='like-count'>{{topic.like_count}}<i class='fa fa-heart'></i></span>{{/if}} {{format-date topic.createdAt format="tiny" noTitle="true"}}
+  </li>
+</ul>
+{{/each}}
+{{#if moreTopics}}
+{{#link-to "userActivity.topics" user class="more"}}{{i18n "user.summary.more_topics"}}{{/link-to}}
+{{/if}}
+</div>
+{{/if}}
+
+<div class='top-section stats-section'>
+<h3>{{i18n "user.summary.stats"}}</h3>
+<dl>
+  <dt>{{i18n "user.summary.topic_count"}}</dt>
+  <dd>{{model.topic_count}}</dd>
+  <dt>{{i18n "user.summary.post_count"}}</dt>
+  <dd>{{model.post_count}}</dd>
+  <dt>{{i18n "user.summary.likes_given"}}</dt>
+  <dd>{{model.likes_given}}</dd>
+  <dt>{{i18n "user.summary.likes_received"}}</dt>
+  <dd>{{model.likes_received}}</dd>
+  <dt>{{i18n "user.summary.days_visited"}}</dt>
+  <dd>{{model.days_visited}}</dd>
+  <dt>{{i18n "user.summary.posts_read_count"}}</dt>
+  <dd>{{model.posts_read_count}}</dd>
+</dl>
+</div>
+
+{{#if model.badges.length}}
+<div class='top-section badges-section'>
+<h3>{{i18n "user.summary.top_badges"}}</h3>
+{{#each badge in model.badges}}
+  {{user-badge badge=badge count=badge.count user=user}}
+{{/each}}
+{{#if moreBadges}}
+{{#link-to "user.badges" user class="more"}}{{i18n "user.summary.more_badges"}}{{/link-to}}
+{{/if}}
+</div>
+{{/if}}
+
