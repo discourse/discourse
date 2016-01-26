@@ -119,9 +119,10 @@ Discourse::Application.routes.draw do
     resources :email, constraints: AdminConstraint.new do
       collection do
         post "test"
-        get "all"
         get "sent"
         get "skipped"
+        get "received"
+        get "rejected"
         get "preview-digest" => "email#preview_digest"
         post "handle_mail"
       end
@@ -254,7 +255,7 @@ Discourse::Application.routes.draw do
   get "guidelines" => "static#show", id: "guidelines", as: 'guidelines'
   get "tos" => "static#show", id: "tos", as: 'tos'
   get "privacy" => "static#show", id: "privacy", as: 'privacy'
-  get "signup" => "list#latest"
+  get "signup" => "static#show", id: "signup"
   get "login-preferences" => "static#show", id: "login"
 
   get "users/admin-login" => "users#admin_login"
@@ -266,6 +267,7 @@ Discourse::Application.routes.draw do
   get "users/search/users" => "users#search_users"
   get "users/account-created/" => "users#account_created"
   get "users/password-reset/:token" => "users#password_reset"
+  get "users/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
   put "users/password-reset/:token" => "users#password_reset"
   get "users/activate-account/:token" => "users#activate_account"
   put "users/activate-account/:token" => "users#perform_account_activation", as: 'perform_activate_account'
@@ -300,16 +302,19 @@ Discourse::Application.routes.draw do
   put "users/:username/preferences/card-badge" => "users#update_card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/staff-info" => "users#staff_info", constraints: {username: USERNAME_ROUTE_FORMAT}
 
+  get "users/:username/summary" => "users#summary", constraints: {username: USERNAME_ROUTE_FORMAT}
+
   get "users/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/invited_count" => "users#invited_count", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/invited/:filter" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/action/send_activation_email" => "users#send_activation_email"
+  get "users/:username/summary" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/notifications" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/notifications/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "users/:username/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/activity/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
   # The external_id constraint is to allow periods to be used in the value without becoming part of the format. ie: foo.bar.json
   get "users/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
@@ -425,11 +430,12 @@ Discourse::Application.routes.draw do
   get "c/:parent_category/:category.rss" => "list#category_feed", format: :rss
   get "c/:category" => "list#category_latest"
   get "c/:category/none" => "list#category_none_latest"
-  get "c/:parent_category/:category" => "list#parent_category_category_latest"
+  get "c/:parent_category/:category/(:id)" => "list#parent_category_category_latest", constraints: { id: /\d+/ }
   get "c/:category/l/top" => "list#category_top", as: "category_top"
   get "c/:category/none/l/top" => "list#category_none_top", as: "category_none_top"
   get "c/:parent_category/:category/l/top" => "list#parent_category_category_top", as: "parent_category_category_top"
 
+  get "category_hashtags/check" => "category_hashtags#check"
 
   TopTopic.periods.each do |period|
     get "top/#{period}" => "list#top_#{period}"

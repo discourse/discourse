@@ -258,7 +258,7 @@ module BackupRestore
       end
 
       log "Gzipping archive..."
-      `gzip #{tar_filename}`
+      `gzip -5 #{tar_filename}`
     end
 
     def after_create_hook

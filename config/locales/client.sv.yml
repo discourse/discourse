@@ -136,6 +136,7 @@ sv:
     admin_title: "Admin"
     flags_title: "Flaggningar"
     show_more: "visa mer"
+    show_help: "alternativ"
     links: "Länkar"
     links_lowercase:
       one: "länk"
@@ -302,6 +303,11 @@ sv:
         everyone: "Alla"
       trust_levels:
         none: "Inga"
+      notifications:
+        regular:
+          title: "Normal"
+        muted:
+          title: "Tystad"
     user_action_groups:
       '1': "Gillningar givna"
       '2': "Gillningar mottagna"
@@ -311,7 +317,6 @@ sv:
       '6': "Svar"
       '7': "Omnämnanden"
       '9': "Citat"
-      '10': "Stjärnmärkt"
       '11': "Redigeringar"
       '12': "Skickade föremål"
       '13': "Inkorg"
@@ -321,6 +326,7 @@ sv:
       all_subcategories: "alla"
       no_subcategory: "ingen"
       category: "Kategori"
+      category_list: "Visa kategori-lista"
       reorder:
         title: "Sortera kategorier"
         title_long: "Sortera litan av katergorier"
@@ -415,9 +421,13 @@ sv:
         warnings_received: "varningar"
       messages:
         all: "Alla"
-        mine: "Mina"
-        unread: "Olästa"
+        inbox: "Inkorg"
+        sent: "Skickat"
+        archive: "Arkiv"
         groups: "Mina Grupper"
+        bulk_select: "Välj meddelanden"
+        move_to_inbox: "Flytta till inkorg"
+        select_all: "Markera alla"
       change_password:
         success: "(e-brev skickat)"
         in_progress: "(skickar e-brev)"
@@ -975,8 +985,10 @@ sv:
           title: "Följer"
           description: "En räknare över antal nya svar visas för detta ämne. Du notifieras om någon nämner ditt @namn eller svarar dig."
         regular:
+          title: "Normal"
           description: "Du kommer att få en notifiering om någon nämner ditt @namn eller svarar dig."
         regular_pm:
+          title: "Normal"
           description: "Du kommer att notifieras om någon nämner ditt @namn eller svarar dig."
         muted_pm:
           title: "tystade"
@@ -1338,6 +1350,7 @@ sv:
         tracking:
           title: "Följer"
         regular:
+          title: "Normal"
           description: "Du notifieras om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
@@ -2049,7 +2062,6 @@ sv:
         unlock_trust_level: "Lås upp förtroendenivå"
         tl3_requirements:
           title: "Krav för Förtroendenivå 3"
-          table_title: "Under de senaste 100 dagarna:"
           value_heading: "värde"
           requirement_heading: "krav"
           visits: "besök"

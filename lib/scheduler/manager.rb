@@ -10,7 +10,6 @@ module Scheduler
   class Manager
     attr_accessor :random_ratio, :redis
 
-
     class Runner
       def initialize(manager)
         @mutex = Mutex.new
@@ -157,7 +156,6 @@ module Scheduler
       lock do
         schedule_info(klass).schedule!
       end
-
     end
 
     def remove(klass)
@@ -203,8 +201,8 @@ module Scheduler
 
     def schedule_next_job(hostname=nil)
       (key, due), _ = redis.zrange Manager.queue_key(hostname), 0, 0, withscores: true
-
       return unless key
+
       if due.to_i <= Time.now.to_i
         klass = get_klass(key)
         unless klass

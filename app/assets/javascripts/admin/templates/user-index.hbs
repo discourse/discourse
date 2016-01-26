@@ -1,11 +1,13 @@
 <section class="details {{unless model.active 'not-activated'}}">
 
   <div class='user-controls'>
-    {{#if model.active}}
+    {{#if model.canViewProfile}}
       {{#link-to 'user' model class="btn"}}
         {{fa-icon "user"}}
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
+    {{/if}}
+    {{#if model.active}}
       {{#if model.can_impersonate}}
         <button class='btn btn-danger' {{action "impersonate" target="content"}} title="{{i18n 'admin.impersonate.help'}}">
           {{fa-icon "crosshairs"}}
@@ -327,14 +329,28 @@
     <div class='field'>{{i18n 'admin.user.blocked'}}</div>
     <div class='value'>{{model.blocked}}</div>
     <div class='controls'>
-      {{#if model.blocked}}
-        <button class='btn' {{action "unblock" target="content"}}>
-          {{fa-icon "thumbs-o-up"}}
-          {{i18n 'admin.user.unblock'}}
-        </button>
-        {{i18n 'admin.user.block_explanation'}}
-      {{/if}}
+      {{#conditional-loading-spinner size="small" condition=model.blockingUser}}
+        {{#if model.blocked}}
+          <button class='btn' {{action "unblock" target="content"}}>
+            {{fa-icon "thumbs-o-up"}}
+            {{i18n 'admin.user.unblock'}}
+          </button>
+          {{i18n 'admin.user.block_explanation'}}
+        {{else}}
+          <button class='btn' {{action "block" target="content"}}>
+            {{fa-icon "ban"}}
+            {{i18n 'admin.user.block'}}
+          </button>
+          {{i18n 'admin.user.block_explanation'}}
+        {{/if}}
+      {{/conditional-loading-spinner}}
     </div>
+  </div>
+
+  <div class="display-row">
+    <div class='field'>{{i18n 'admin.user.staged'}}</div>
+    <div class='value'>{{model.staged}}</div>
+    <div class='controls'>{{i18n 'admin.user.stage_explanation'}}</div>
   </div>
 </section>
 

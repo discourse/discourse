@@ -27,16 +27,34 @@ class Notification < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(
-      :mentioned, :replied, :quoted, :edited, :liked, :private_message,
-      :invited_to_private_message, :invitee_accepted, :posted, :moved_post,
-      :linked, :granted_badge, :invited_to_topic, :custom, :group_mentioned
-    )
+    @types ||= Enum.new(mentioned: 1,
+                        replied: 2,
+                        quoted: 3,
+                        edited: 4,
+                        liked: 5,
+                        private_message: 6,
+                        invited_to_private_message: 7,
+                        invitee_accepted: 8,
+                        posted: 9,
+                        moved_post: 10,
+                        linked: 11,
+                        granted_badge: 12,
+                        invited_to_topic: 13,
+                        custom: 14,
+                        group_mentioned: 15)
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
-    Notification.where(user_id: user.id, topic_id: topic_id, post_number: post_numbers, read: false).update_all "read = 't'"
-    user.publish_notifications_state
+    count = Notification
+      .where(user_id: user.id,
+             topic_id: topic_id,
+             post_number: post_numbers,
+             read: false)
+      .update_all("read = 't'")
+
+    user.publish_notifications_state if count > 0
+
+    count
   end
 
   def self.interesting_after(min_date)

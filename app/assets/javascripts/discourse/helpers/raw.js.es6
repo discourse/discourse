@@ -24,6 +24,5 @@ registerUnbound('raw', function(templateName, params) {
     Ember.warn('Could not find raw template: ' + templateName);
     return;
   }
-
   return renderRaw(this, template, templateName, params);
 });

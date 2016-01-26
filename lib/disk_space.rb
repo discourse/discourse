@@ -57,7 +57,7 @@ class DiskSpace
   protected
 
   def self.free(path)
-    `df -Pk #{path} | awk 'NR==2 {print $4 * 1024;}'`.to_i
+    `df -Pk #{path} | awk 'NR==2 {print $4;}'`.to_i * 1024
   end
 
   def self.used(path)

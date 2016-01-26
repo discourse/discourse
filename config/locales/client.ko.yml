@@ -267,6 +267,12 @@ ko:
       total_rows:
         other: "%{count} 사용자"
     groups:
+      empty:
+        posts: "이 그룹의 구성원에 의해 작성된 게시물은 없습니다."
+        members: "이 그룹에는 구성원이 없습니다."
+        mentions: "이 그룹에 대한 언급이 없습니다."
+        messages: "이 그룹에 대한 메시지는 없습니다."
+        topics: "이 그룹의 구성원에 의해 작성된 주제글이 없습니다."
       add: "추가"
       selector_placeholder: "멤버 추가"
       owner: "소유자"
@@ -276,7 +282,6 @@ ko:
       members: "멤버"
       posts: "게시글"
       alias_levels:
-        title: "누가 이 그룹을 별칭으로 사용할 수 있는가?"
         nobody: "0명"
         only_admins: "관리자 전용"
         mods_and_admins: "운영자 및 관리자만"
@@ -293,7 +298,6 @@ ko:
       '6': "응답"
       '7': "멘션"
       '9': "인용"
-      '10': "즐겨찾기"
       '11': "편집"
       '12': "보낸 편지함"
       '13': "받은 편지함"
@@ -407,8 +411,6 @@ ko:
         warnings_received: "경고"
       messages:
         all: "전체"
-        mine: "내가 보낸 메세지"
-        unread: "읽지 않음"
       change_password:
         success: "(이메일 전송)"
         in_progress: "(이메일 전송 중)"
@@ -1717,6 +1719,10 @@ ko:
         color: "색"
         opacity: "투명도"
         copy: "복사"
+        email_templates:
+          none_selected: "편집하려는 이메일 템플릿을 선택하세요."
+          revert: "변경사항 취소"
+          revert_confirm: "정말로 변경사항을 되돌리시겠습니까?"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS, HTML 사용자 정의"
@@ -1809,6 +1815,7 @@ ko:
         ip_address: "IP"
         topic_id: "토픽 ID"
         post_id: "글 ID"
+        category_id: "카테고리 ID"
         delete: '삭제'
         edit: '편집'
         save: '저장'
@@ -1839,6 +1846,7 @@ ko:
             change_site_setting: "사이트 설정 변경"
             change_site_customization: "사이트 커스텀화 변경"
             delete_site_customization: "사이트 커스텀화 삭제"
+            change_site_text: "site text 변경"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
             grant_badge: "뱃지 부여"
@@ -1849,6 +1857,9 @@ ko:
             impersonate: "대역"
             anonymize_user: "anonymize user"
             roll_up: "roll up IP blocks"
+            change_category_settings: "카테고리 설정 변경"
+            delete_category: "카테고리 지우기"
+            create_category: "카테고리 만들기"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -1913,6 +1924,9 @@ ko:
           pending: '검토가 필요한 사용자'
           newuser: '사용자 신뢰도 0 (새로운 사용자)'
           basic: '사용자 신뢰도 1 (초보 사용자)'
+          member: '사용자 신뢰도 2 (회원)'
+          regular: '사용자 신뢰도 3 (정규)'
+          leader: '사용자 신뢰도 4 (지도자)'
           staff: "스태프"
           admins: '관리자 사용자 목록'
           moderators: '운영자'
@@ -2017,7 +2031,7 @@ ko:
         unlock_trust_level: "신뢰도 시스템 잠금 해제"
         tl3_requirements:
           title: "레벨 3 권한이 필요합니다."
-          table_title: "최근 100일 간:"
+          table_title: "지난 %{time_period} 일간"
           value_heading: "값"
           requirement_heading: "필수"
           visits: "방문수"
@@ -2078,8 +2092,15 @@ ko:
           confirm: '확인'
           dropdown: "드롭다운"
       site_text:
-        none: "편집할 콘텐츠 유형을 선택하세요."
+        description: "포럼에 있는 그 어떤 텍스트도 수정이 가능합니다. 아래의 검색기능을 통해 시작하세요."
+        search: "편집하고 싶은 텍스트를 검색하세요."
         title: '텍스트 콘텐츠'
+        edit: '편집'
+        revert: "변경사항 취소"
+        revert_confirm: "정말로 변경사항을 되돌리시겠습니까?"
+        go_back: "검색으로 돌아가기"
+        recommended: "다음의 텍스트를 요구에 맞게 편집하는 것을 권장:"
+        show_overriden: 'Override 된 설정만 보여주기'
       site_settings:
         show_overriden: '수정된 것만 표시'
         title: '사이트 설정'
@@ -2167,6 +2188,9 @@ ko:
           bad_count_warning:
             header: "주의!"
             text: "사라진 뱃지 샘플이 있습니다. 뱃지 query가 존재하지 않는 user ID나 post ID를 반환할 경우 발생합니다. 예상하지 못한 결과를 일으킬 수 있으니 query를 다시 한번 확인하세요."
+          no_grant_count: "할당된 뱃지가 없습니다."
+          grant_count:
+            other: "<b>%{count}</b>개의 뱃지가 할당됨."
           sample: "샘플:"
           grant:
             with: <span class="username">%{username}</span>
@@ -2191,8 +2215,11 @@ ko:
         settings: "Embedding 설정"
         feed_settings: "Feed 설정"
         crawling_settings: "클롤러 설정"
+        embed_post_limit: "글 개수가 최대치입니다"
+        embed_truncate: "임베드된 글 비우기"
         feed_polling_enabled: "RSS/ATOM으로 글 가져오기"
         feed_polling_url: "RSS/ATOM 피드로 긁을 URL"
+        save: "Embedding 설정 저장하기"
       permalink:
         title: "고유링크"
         url: "URL"

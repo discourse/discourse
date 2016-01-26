@@ -298,7 +298,6 @@ nb_NO:
       members: "Medlemmer"
       posts: "Innlegg"
       alias_levels:
-        title: "Hvem kan benytte denne gruppen som alias?"
         nobody: "Ingen"
         only_admins: "Kun administratorer"
         mods_and_admins: "Kun moderatorer og administratorer"
@@ -315,7 +314,6 @@ nb_NO:
       '6': "Svar"
       '7': "Omtalelser"
       '9': "Sitater"
-      '10': "Favoritter"
       '11': "Redigeringer"
       '12': "Sendte elementer"
       '13': "Innboks"
@@ -419,8 +417,7 @@ nb_NO:
         warnings_received: "advarsler"
       messages:
         all: "Alle"
-        mine: "Mine"
-        unread: "Uleste"
+        groups: "Mine grupper"
       change_password:
         success: "(e-post sendt)"
         in_progress: "(sender e-post)"
@@ -2075,7 +2072,6 @@ nb_NO:
         unlock_trust_level: "Lås opp tillitsnivå"
         tl3_requirements:
           title: "Krav til tillitsnivå 3"
-          table_title: "De siste 100 dagene:"
           value_heading: "Verdi"
           requirement_heading: "Krav"
           visits: "Besøk"
@@ -2136,7 +2132,6 @@ nb_NO:
           confirm: 'Bekreftelse'
           dropdown: "Nedtrekk"
       site_text:
-        none: "Velg en innholdstype for å starte redigering."
         title: 'Tekstinnhold'
       site_settings:
         show_overriden: 'Bare vis overstyrte'

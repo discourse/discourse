@@ -42,6 +42,7 @@ export default function() {
     this.route('parentCategory', { path: '/c/:slug' });
     this.route('categoryNone', { path: '/c/:slug/none' });
     this.route('category', { path: '/c/:parentSlug/:slug' });
+    this.route('categoryWithID', { path: '/c/:parentSlug/:slug/:id' });
 
     // homepage
     this.route(Discourse.Utilities.defaultHomepage(), { path: '/' });
@@ -57,11 +58,13 @@ export default function() {
   // User routes
   this.resource('users');
   this.resource('user', { path: '/users/:username' }, function() {
+    this.route('summary');
     this.resource('userActivity', { path: '/activity' }, function() {
       this.route('topics');
       this.route('replies');
       this.route('likesGiven', {path: 'likes-given'});
       this.route('bookmarks');
+      this.route('pending');
     });
 
     this.resource('userNotifications', {path: '/notifications'}, function(){

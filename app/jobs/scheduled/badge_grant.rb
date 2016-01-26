@@ -10,7 +10,7 @@ module Jobs
     def execute(args)
       return unless SiteSetting.enable_badges
 
-      Badge.all.each do |b|
+      Badge.enabled.find_each do |b|
         begin
           BadgeGranter.backfill(b)
         rescue => ex

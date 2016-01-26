@@ -1,3 +1,4 @@
+require "sidekiq/testing"
 require 'rails_helper'
 require_dependency 'jobs/base'
 
@@ -76,23 +77,27 @@ describe Jobs do
   end
 
   describe 'cancel_scheduled_job' do
+
     it 'deletes the matching job' do
-      job_to_delete = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 42}]])])
-      job_to_delete.expects(:delete)
-      job_to_keep1 = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 43}]])])
-      job_to_keep1.expects(:delete).never
-      job_to_keep2 = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 44}]])])
-      job_to_keep2.expects(:delete).never
-      Sidekiq::ScheduledSet.stubs(:new).returns( [job_to_keep1, job_to_delete, job_to_keep2] )
-      expect(Jobs.cancel_scheduled_job(:drink_beer, {beer_id: 42})).to eq(true)
+      SiteSetting.queue_jobs = true
+
+      Sidekiq::Testing.disable! do
+        scheduled_jobs = Sidekiq::ScheduledSet.new
+        scheduled_jobs.clear
+
+        expect(scheduled_jobs.size).to eq(0)
+
+        Jobs.enqueue_in(1.year, :run_heartbeat, topic_id: 1234)
+        Jobs.enqueue_in(2.years, :run_heartbeat, topic_id: 5678)
+
+        expect(scheduled_jobs.size).to eq(2)
+
+        Jobs.cancel_scheduled_job(:run_heartbeat, topic_id: 1234)
+
+        expect(scheduled_jobs.size).to eq(1)
+      end
     end
 
-    it 'returns false when no matching job is scheduled' do
-      job_to_keep = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 43}]])])
-      job_to_keep.expects(:delete).never
-      Sidekiq::ScheduledSet.stubs(:new).returns( [job_to_keep] )
-      expect(Jobs.cancel_scheduled_job(:drink_beer, {beer_id: 42})).to eq(false)
-    end
   end
 
   describe 'enqueue_at' do

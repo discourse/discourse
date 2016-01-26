@@ -2,25 +2,22 @@
   <form class="form-horizontal">
     <div>
       <label for="name">{{i18n 'admin.badges.name'}}</label>
-      {{input type="text" name="name" value=buffered.name}}
+      {{#if readOnly}}
+        {{input type="text" name="name" value=buffered.displayName disabled=true}}
+      {{else}}
+        {{input type="text" name="name" value=buffered.name}}
+      {{/if}}
     </div>
 
-    {{#if showDisplayName}}
-      <div>
-        <strong>{{i18n 'admin.badges.display_name'}}</strong>
-        {{buffered.displayName}}
-      </div>
-    {{/if}}
-
     <div>
-      <label for="name">{{i18n 'admin.badges.icon'}}</label>
-      {{input type="text" name="name" value=buffered.icon}}
+      <label for="icon">{{i18n 'admin.badges.icon'}}</label>
+      {{input type="text" name="icon" value=buffered.icon}}
       <p class='help'>{{i18n 'admin.badges.icon_help'}}</p>
     </div>
 
     <div>
-      <label for="name">{{i18n 'admin.badges.image'}}</label>
-      {{input type="text" name="name" value=buffered.image}}
+      <label for="image">{{i18n 'admin.badges.image'}}</label>
+      {{input type="text" name="image" value=buffered.image}}
       <p class='help'>{{i18n 'admin.badges.icon_help'}}</p>
     </div>
 
@@ -40,7 +37,7 @@
                       value=buffered.badge_grouping_id
                       content=badgeGroupings
                       optionValuePath="content.id"
-                      optionLabelPath="content.name"}}
+                      optionLabelPath="content.displayName"}}
       &nbsp;<button {{action "editGroupings"}} class='btn'>{{fa-icon 'pencil'}}</button>
     </div>
 

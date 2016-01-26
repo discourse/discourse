@@ -16,8 +16,6 @@ ja:
   loading: "読み込み中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "ログイン"
-  via: "%{username} via %{site_name}"
-  is_reserved: "は予約されています"
   purge_reason: "アクティブでないアカウントは放棄されたとして削除されました"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   anonymous: "匿名"
@@ -318,15 +316,11 @@ ja:
       description: 'この投稿は、誹謗中傷、恫喝、名誉毀損、わいせつ、犯罪行為など他人を不快にさせる内容を含んでいる。'
       long_form: '不適切フラグをたてる'
     notify_user:
-      description: 'この投稿やトピックを書いた人に、直接メッセージを送る。（フラグを付けません）'
       long_form: 'メッセージが送られたユーザ'
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "その他"
-      description: 'このポストは、記載されていない別の理由でモデレータの注意が必要です'
-      long_form: 'モデレータへの注意としてフラグを立てる'
-      email_title: '"%{title}" のポストに関する管理人の確認が必要とする'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'ブックマーク'
@@ -351,7 +345,6 @@ ja:
       long_form: '不適切フラグをたてる'
     notify_moderators:
       title: "その他"
-      description: 'この投稿やトピックは不適切な可能性があるため、管理人による確認を必要とする。'
       long_form: 'モデレータへの注意としてフラグを立てる'
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
@@ -537,37 +530,6 @@ ja:
     consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーの利用を検討してください。"
     site_contact_username_warning: "重要な自動メッセージを送信するフレンドリースタッフユーザーアカウントの名前を入力してください。<a href='/admin/site_settings'>サイト設定</a> のsite_contact_username を更新してください。"
     notification_email_warning: "通知用メールがあなたのドメインで有効なメールアドレスから送信されていません。メール配信が不安定になり、信頼性が低くなります。\n<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
-  content_types:
-    education_new_reply:
-      title: "新規ユーザ支援: 初めての回答"
-      description: "新規ユーザが回答の入力を開始した際に自動的にポップアップするガイダンスの内容 (最初の2回のみ表示)。"
-    education_new_topic:
-      title: "新規ユーザ支援: 初めてのポスト"
-      description: "新規ユーザが新規トピックの作成を行った際に自動的にポップアップするガイダンスに内容 (最初の2回のみ表示)。"
-    usage_tips:
-      title: "新規ユーザガイダンス"
-      description: "新規ユーザのための重要な情報とガイダンス"
-    welcome_user:
-      title: "ウェルカムメッセージ: 新規ユーザ"
-      description: "サインアップ時にすべての新規ユーザに自動送信されるメッセージ。"
-    welcome_invite:
-      title: "ウェルカムメッセージ: 招待ユーザ"
-      description: "他のユーザからの招待を受け入れたときにすべての新しい招待ユーザに自動送信されるメッセージ"
-    login_required_welcome_message:
-      title: "ウェルカムメッセージ: 要ログイン"
-      description: "'login required' 設定有効時に、ユーザに対してログインを促すメッセージの内容。"
-    login_required:
-      title: "ホームページ: 要ログイン"
-      description: "要ログイン設定の際に、未ログインユーザに対して表示されるメッセージの内容。"
-    head:
-      title: "HTML head"
-      description: " <head></head> タグの中に挿入されるHTML"
-    top:
-      title: "ページトップ"
-      description: "全ページのトップに追加される HTML (ヘッダとナビゲーション/トピックタイトルの間に表示されます)"
-    bottom:
-      title: "ページボトム"
-      description: "</body>タグの前に挿入されるHTML"
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっているポストを自動で削除します"
@@ -866,7 +828,6 @@ ja:
     anonymous_posting_min_trust_level: "匿名の投稿を行うための最小のトラストレベル"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に匿名ユーザーを作成しなおします。　例 : 600を設定すると匿名ユーザへの変更と最後の投稿から600分経過していた場合、匿名アカウントが作成されます"
     allow_profile_backgrounds: "プロフィール背景のアップロードを許可"
-    sequential_replies_threshold: "ユーザに連続回答が多すぎることをリマインドする、連続ポスト投稿のしきい値"
     enable_mobile_theme: "モバイル端末にモバイル向けテーマ (通常サイト用テーマにスイッチ可能) を利用する。レスポンシブなスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
     daily_performance_report: "日別のNGINXのログを解析し、Staff Onlyトピックへ詳細を投稿する"
@@ -896,7 +857,6 @@ ja:
     enable_cdn_js_debugging: "全てのJSにcrossorigin権限を追加することで、/logsに適切なエラーを表示することを許可する"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
-    vacuum_db_days: "DB領域を再利用するため、migration後にVACUUM FULL ANALYZEを実行する(0を設定すると無効化)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
     slug_generation_method: "slugを生成するメソッドを選択。 'encode'はパーセントエンコードされた文字列を生成します。 'none'は、slugを無効にします"
     enable_emoji: "絵文字を有効にする"
@@ -1381,25 +1341,8 @@ ja:
         詳細については[コミュニティガイドライン](%{base_url}/guidelines)を参照してください。
     user_automatically_blocked:
       subject_template: "コミュニティフラッグによって新たにブロックされたユーザ%{username}"
-      text_body_template: |+
-        これは自動送信メッセージです。
-
-        複数のユーザが%{username}'のポストにフラグを立てているため、新規ユーザ[%{username}](%{base_url}%{user_url})は自動的にブロックされました。
-
-        フラグを確認してください(%{base_url}/admin/flags)。もし%{username}が間違ってブロックされた場合は、 このユーザの管理ページ(%{base_url}%{user_url})でブロック解除ボタンをクリックしてください。
-
-        この閾値はサイト設定の`block_new_user`で変更できます。
-
     spam_post_blocked:
       subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
-      text_body_template: |
-        これは自動送信メッセージです。
-
-        新規ユーザ[%{username}](%{base_url}%{user_url})は、%{domains}へのリンクを複数投稿しようとしましたが、スパムを避けるために投稿をブロックしました。ユーザは%{domains}のリンクを含まない投稿であれば引き続き作成可能です。
-
-        ユーザを確認してください。(%{base_url}%{user_url})
-
-        この設定はサイト設定の `newuser_spam_host_threshold` と `white_listed_spam_host_domains` で変更できます。
     unblocked:
       subject_template: "アカウントのブロック解除"
       text_body_template: |
@@ -1425,8 +1368,6 @@ ja:
     unsubscribe:
       title: "解除"
       description: "メールに興味がありませんか? 下のリンクをクリックすると、即座にメール解除ができます:"
-    reply_by_email: "回答するにはこのメールに返信するか、ブラウザで %{base_url}%{url} にアクセスしてください。"
-    visit_link_to_respond: "回答するにはブラウザで %{base_url}%{url} にアクセスしてください。"
     posted_by: "%{post_date} に %{username} が投稿"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} がメッセージにあなたを招待しました '%{topic_title}'"
@@ -1435,49 +1376,14 @@ ja:
       subject_template: "[%{site_name}] %{username} がトピックにあなたを招待しました '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}' 内のあなたのポストに新たな回答が投稿されました"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたを引用しました"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたをタグ付けしました"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] '%{topic_title}' に %{subject_prefix}個の新しいポストが投稿されました"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [プライベートメッセージ] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
       subject_template: "[%{site_name}] ダイジェスト"

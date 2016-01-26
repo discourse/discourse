@@ -42,18 +42,24 @@ class UserEmailObserver < ActiveRecord::Observer
 
     private
 
+    EMAILABLE_POST_TYPES ||= Set.new [Post.types[:regular], Post.types[:whisper]]
+
     def enqueue(type, delay=default_delay)
-      return unless notification.user.email_direct? && (notification.user.active? || notification.user.staged?)
+      return unless notification.user.email_direct?
+      return unless notification.user.active? || notification.user.staged?
+      return unless EMAILABLE_POST_TYPES.include? notification.post.try(:post_type)
 
       Jobs.enqueue_in(delay,
-                     :user_email,
-                     type: type,
-                     user_id: notification.user_id,
-                     notification_id: notification.id)
+                      :user_email,
+                      type: type,
+                      user_id: notification.user_id,
+                      notification_id: notification.id)
     end
 
     def enqueue_private(type, delay=default_delay)
-      return unless notification.user.email_private_messages? && (notification.user.active? || notification.user.staged?)
+      return unless notification.user.email_private_messages?
+      return unless notification.user.active? || notification.user.staged?
+      return unless EMAILABLE_POST_TYPES.include? notification.post.try(:post_type)
 
       Jobs.enqueue_in(delay,
                       :user_email,

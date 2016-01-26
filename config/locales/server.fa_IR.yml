@@ -894,7 +894,6 @@ fa_IR:
     anonymous_posting_min_trust_level: "حداقل سطح اعتماد برای فعال سازی نوشته گذاشتن در حالت ناشناس"
     anonymous_account_duration_minutes: "برای محافظت از ناشناس ماندن یک حساب کاربری نانشناس بساز هر N دقیقه. برای مثال: اگر به 600 تنظیم شد٬‌ به محض اینکه 600 دقیقه از نوشته گذشت و کاربر سوئیچ شد به چند لحظه بعد٬‌ حساب کاربری جدید ناشناس ساخته می شود. "
     allow_profile_backgrounds: "به کاربر اجازه بده تا پس زمینه نمایه خود را آپلود کنند."
-    sequential_replies_threshold: "تعداد پست هایی که کاربر باید بسازد در یک ردیف در یک جستار قبل از یاآوری درباره پاسخ های پی در پی. "
     enable_mobile_theme: "دستگاه های موبایلی که از تم دوستانه موبایل استفاده می کنن٬‌ با قابلیت جابجایی به حالت تمام سایت. این را از کار بیانداز اگر می خواهی از شیوه سفارشی استفاده کنی که بطور کامل پاسخگو است."
     dominating_topic_minimum_percent: " پست های  یک کاربر چند درصد  باید درست کنند در یک جستار قبل از اینکه یادآوری بشن درباره بیش از اندازه بودن آن در یک جستار.  "
     daily_performance_report: "تحلیل لاگ‌های NGINX و ارسال یک پست شامل جزئیات ویژه مدیران"
@@ -1241,19 +1240,8 @@ fa_IR:
       text_body_template: "سلام٬ \n\n\nاین یک پیام خودکار است از طرف  %{site_name}  برای اطلاع  در جهت اینکه حساب کاربری شما توسط یکی از مدیران مدیران مسدود شده است.\n\nبرای راهنمایی بیشتر٬ لطفا  مراجعه کنید به  [دستورالعمل انجمن](%{base_url}/guidelines).\n"
     user_automatically_blocked:
       subject_template: "کاربر جدید%{username}  مسدود شد بخاطر پرچم های انجمن"
-      text_body_template: "این یک پیام خودکار است. \n\n\nکاربر جدید [%{username}](%{base_url}%{user_url})  بطور خودکار مسدود شد زیرا چند کاربر متفاوت %{username}'s این نوشته(ها) را پرچم گزاری کرده اند.\n\n\nلطفا [پرچم ها  را بررسی کن](%{base_url}/admin/flags). اگر %{username} به اشتباه مسدود شده بود لطفا به روی کلید رفع مسدود کلیک کنید[مدیرصفحه برای این کاربر](%{base_url}%{user_url}). \n\n\nاین آستانه می تواند تغییر کند از طریق `block_new_user`  تنظیمات سایت.\n"
     spam_post_blocked:
       subject_template: "کاربر جدید%{username} نوشته مسدود شده است بدلیل پیوند های تکراری"
-      text_body_template: |
-        این یک پیام خودکار است.
-
-        کاربرجدید [%{username}](%{base_url}%{user_url})  تلاش کرد برای ساخت چند نوشته با پیوندهایی به %{domains}, ولی آن نوشته ها مسدود شده اند برای جلوگیری از هرزنامه. کاربر هنوز قادر به ساخت نوشته های جدید است که به پیوندی به این %{domains} ندارد.
-
-
-        لطفا  [کاربر را بررسی کنید](%{base_url}%{user_url}).
-
-
-        این می تواند تغییر کند با `newuser_spam_host_threshold` و `white_listed_spam_host_domains` site settings.
     unblocked:
       subject_template: "حساب کاربری رفع انسداد شد "
       text_body_template: "سلام \n\nاین یک پیام خودکار هست از طرف  %{site_name} برای تایید باز شدن حساب کاربری شما بعد از بررسی مدیران. \n\n\nشما می توانید دوباره پاسخ ها و جستارهای جدید را بوجود بیاورید.\n"
@@ -1283,49 +1271,14 @@ fa_IR:
       text_body_template: "\n%{username} به گفتگو دعوت شده است\n\n\n> **%{topic_title}**\n\n>\n\n> %{topic_excerpt}\n\nat \n\n\n> %{site_title} -- %{site_description}\n\n\nلطفا از این پیوند بازدید کنید تا پیام را ببینید: %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        {message}%
-
-        {context}%
-
-        ---
-        {respond_instructions}%
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "یک گزارش کوتاه از %{site_link}  از آخرین باری که بازدید کردید در %{last_seen_at}"
       subject_template: "[%{site_name}] خلاصه"

@@ -48,6 +48,14 @@ module PrettyText
       end
     end
 
+    def category_hashtag_lookup(category_slug)
+      if category = Category.query_from_hashtag_slug(category_slug)
+        ['category', category.url_with_id]
+      else
+        nil
+      end
+    end
+
     def get_topic_info(topic_id)
       return unless Fixnum === topic_id
       # TODO this only handles public topics, secured one do not get this
@@ -65,7 +73,7 @@ module PrettyText
   @ctx_init = Mutex.new
 
   def self.mention_matcher
-    Regexp.new("(\@[a-zA-Z0-9_]{#{User.username_length.begin},#{User.username_length.end}})")
+    Regexp.new("\\W@(\\w{#{SiteSetting.min_username_length},#{SiteSetting.max_username_length}})\\b")
   end
 
   def self.app_root
@@ -207,6 +215,7 @@ module PrettyText
       context.eval("Discourse.Emoji.applyCustomEmojis();")
 
       context.eval('opts["mentionLookup"] = function(u){return helpers.mention_lookup(u);}')
+      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_hashtag_lookup(c);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')

@@ -149,7 +149,7 @@
     </section>
 
     <ul class="nav nav-pills user-nav">
-      <li class='selected'>{{#link-to 'userActivity'}}{{i18n 'user.activity_stream'}}{{/link-to}}</li>
+      <li>{{#link-to 'userActivity'}}{{i18n 'user.activity_stream'}}{{/link-to}}</li>
       {{#if showNotificationsTab}}
         <li>
           {{#link-to 'userNotifications'}}
@@ -167,12 +167,17 @@
       {{#if showBadges}}
         <li>{{#link-to 'user.badges'}}{{fa-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
       {{/if}}
+      <li>{{#link-to 'user.summary'}}{{i18n 'user.summary.title'}}{{/link-to}}</li>
       {{#if model.can_edit}}
         <li>{{#link-to 'preferences'}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
       {{/if}}
     </ul>
 
-    {{outlet}}
+    <div class='user-table'>
+      <div class='wrapper'>
+        {{outlet}}
+      </div>
+    </div>
 
   </section>
 </div>

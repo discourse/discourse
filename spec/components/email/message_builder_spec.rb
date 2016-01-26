@@ -181,6 +181,23 @@ describe Email::MessageBuilder do
 
     end
 
+    context "with unsubscribe_via_email_link true" do
+      let(:message_with_unsubscribe_via_email) { Email::MessageBuilder.new(to_address,
+                                                                           body: 'hello world',
+                                                                           add_unsubscribe_link: true,
+                                                                           add_unsubscribe_via_email_link: true,
+                                                                           unsubscribe_url: "/t/1234/unsubscribe") }
+
+      it "can add an unsubscribe via email link" do
+        SiteSetting.stubs(:unsubscribe_via_email_footer).returns(true)
+        expect(message_with_unsubscribe_via_email.body).to match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
+      end
+
+      it "does not add unsubscribe via email link without site setting set" do
+        expect(message_with_unsubscribe_via_email.body).to_not match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)        
+      end
+    end
+
   end
 
   context "template_args" do

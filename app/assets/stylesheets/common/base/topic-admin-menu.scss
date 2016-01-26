@@ -33,6 +33,15 @@
   }
 }
 
+.date-picker-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.pika-single {
+  position: absolute !important;
+}
+
 .modal-body.feature-topic {
   padding: 5px;
   max-height: 500px;

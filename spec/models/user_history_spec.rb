@@ -2,6 +2,22 @@ require 'rails_helper'
 
 describe UserHistory do
 
+  describe '#actions' do
+    context "verify enum sequence" do
+      before do
+        @actions = UserHistory.actions
+      end
+
+      it "'delete_user' should be at 1st position" do
+        expect(@actions[:delete_user]).to eq(1)
+      end
+
+      it "'change_site_text' should be at 29th position" do
+        expect(@actions[:change_site_text]).to eq(29)
+      end
+    end
+  end
+
   describe '#staff_action_records' do
     context "with some records" do
       before do

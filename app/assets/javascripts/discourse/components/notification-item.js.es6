@@ -29,7 +29,9 @@ export default Ember.Component.extend({
         badgeSlug = badgeName.replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase();
       }
 
-      return Discourse.getURL('/badges/' + badgeId + '/' + badgeSlug);
+      var username = it.get('data.username');
+      username = username ? "?username=" + username.toLowerCase() : "";
+      return Discourse.getURL('/badges/' + badgeId + '/' + badgeSlug + username);
     }
 
     const topicId = it.get('topic_id');

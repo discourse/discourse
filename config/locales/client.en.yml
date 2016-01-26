@@ -1,9 +1,9 @@
 # encoding: utf-8
+#
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 #
-# To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-org/
+# To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
 #
 # This is a "source" file, which is used by Transifex to get translations for other languages.
 # After this file is changed, it needs to be pushed by a maintainer to Transifex:
@@ -12,8 +12,7 @@
 #
 # Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
 #
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
+# To validate this YAML file after you change it, please paste it into http://yamllint.com/
 
 en:
   js:
@@ -121,6 +120,8 @@ en:
 
     action_codes:
       split_topic: "split this topic %{when}"
+      invited_user: "invited %{who} %{when}"
+      removed_user: "removed %{who} %{when}"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
@@ -143,6 +144,20 @@ en:
     topic_admin_menu: "topic admin actions"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+
+    s3:
+      regions:
+        us_east_1: "US East (N. Virginia)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        eu_west_1: "EU (Ireland)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_northeast_1: "Asia Pacific (Tokyo)"
+        ap_northeast_2: "Asia Pacific (Seoul)"
+        sa_east_1: "South America (Sao Paulo)"
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -688,6 +703,23 @@ en:
         ok: "Your password looks good."
         instructions: "At least %{count} characters."
 
+      summary:
+        title: "Summary"
+        stats: "Stats"
+        topic_count: "Topics Created"
+        post_count: "Posts Created"
+        likes_given: "Likes Given"
+        likes_received: "Likes Received"
+        days_visited: "Days Visited"
+        posts_read_count: "Posts Read"
+        top_replies: "Top Replies"
+        top_topics: "Top Topics"
+        top_badges: "Top Badges"
+        more_topics: "More Topics"
+        more_replies: "More Replies"
+        more_badges: "More Badges"
+
+
       associated_accounts: "Logins"
       ip_address:
         title: "Last IP Address"
@@ -733,7 +765,7 @@ en:
     logout: "You were logged out."
     refresh: "Refresh"
     read_only_mode:
-      enabled: "Read-only mode is enabled. You can continue to browse the site but interactions may not work."
+      enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
     too_few_topics_and_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
@@ -862,7 +894,7 @@ en:
       alt: 'Alt'
 
     composer:
-      emoji: "Emoji :smile:"
+      emoji: "Emoji :)"
       more_emoji: "more..."
       options: "Options"
       whisper: "whisper"
@@ -1629,7 +1661,6 @@ en:
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
-      contains_messages: "Change this category to only contain messages."
       suppress_from_homepage: "Suppress this category from the homepage."
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
@@ -2190,14 +2221,17 @@ en:
 
 
       email:
-        title: "Email"
+        title: "Emails"
         settings: "Settings"
-        all: "All"
+        templates: "Templates"
+        preview_digest: "Preview Digest"
         sending_test: "Sending test Email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
+        received: "Received"
+        rejected: "Rejected"
         sent_at: "Sent At"
         time: "Time"
         user: "User"
@@ -2207,7 +2241,6 @@ en:
         send_test: "Send Test Email"
         sent_test: "sent!"
         delivery_method: "Delivery Method"
-        preview_digest: "Preview Digest"
         preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
         refresh: "Refresh"
         format: "Format"
@@ -2216,6 +2249,19 @@ en:
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
         skipped_reason: "Skip Reason"
+        incoming_emails:
+          from_address: "From"
+          to_addresses: "To"
+          cc_addresses: "Cc"
+          subject: "Subject"
+          error: "Error"
+          none: "No incoming emails found."
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Subject..."
+            error_placeholder: "Error"
         logs:
           none: "No logs found."
           filters:
@@ -2280,6 +2326,8 @@ en:
             change_category_settings: "change category settings"
             delete_category: "delete category"
             create_category: "create category"
+            block_user: "block user"
+            unblock_user: "unblock user"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -2384,6 +2432,7 @@ en:
         moderator: "Moderator?"
         admin: "Admin?"
         blocked: "Blocked?"
+        staged: "Staged?"
         show_admin_profile: "Admin"
         edit_title: "Edit Title"
         save_title: "Save Title"
@@ -2448,9 +2497,12 @@ en:
         deactivate_failed: "There was a problem deactivating the user."
         unblock_failed: 'There was a problem unblocking the user.'
         block_failed: 'There was a problem blocking the user.'
+        block_confirm: 'Are you sure you want to block this user? They will not be able to create any new topics or posts.'
+        block_accept: 'Yes, block this user'
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
+        stage_explanation: "A staged user can only post via email in specific topics."
         trust_level_change_failed: "There was a problem changing the user's trust level."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Trust Level 2 Users"
@@ -2742,6 +2794,10 @@ en:
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
 
     badges:
+      earned_n_times:
+        one: "Earned this badge 1 time"
+        other: "Earned this badge %{count} times"
+      more_with_badge: "Others with this badge"
       title: Badges
       allow_title: "can be used as a title"
       multiple_grant: "can be awarded multiple times"

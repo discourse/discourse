@@ -5,22 +5,23 @@
 **/
 Discourse.Dialect.inlineRegexp({
   start: '@',
-  // NOTE: we really should be using SiteSettings here, but it loads later in process
-  // also, if we do, we must ensure serverside version works as well
-  matcher: /^(@[A-Za-z0-9][A-Za-z0-9_\.\-]{0,40}[A-Za-z0-9\_])/,
+  // NOTE: since we can't use SiteSettings here (they loads later in process)
+  // we are being less strict to account for more cases than allowed
+  matcher: /^@(\w[\w.-]{0,59})\b/i,
   wordBoundary: true,
 
   emitter: function(matches) {
-    var username = matches[1],
+    var mention = matches[0].trim(),
+        name = matches[1],
         mentionLookup = this.dialect.options.mentionLookup;
 
-    var type = mentionLookup && mentionLookup(username.substr(1));
+    var type = mentionLookup && mentionLookup(name);
     if (type === "user") {
-      return ['a', {'class': 'mention', href: Discourse.getURL("/users/") + username.substr(1).toLowerCase()}, username];
+      return ['a', {'class': 'mention', href: Discourse.getURL("/users/") + name.toLowerCase()}, mention];
     } else if (type === "group") {
-      return ['a', {'class': 'mention-group', href: Discourse.getURL("/groups/") + username.substr(1)}, username];
+      return ['a', {'class': 'mention-group', href: Discourse.getURL("/groups/") + name}, mention];
     } else {
-      return ['span', {'class': 'mention'}, username];
+      return ['span', {'class': 'mention'}, mention];
     }
   }
 });
@@ -34,10 +35,10 @@ Discourse.Dialect.on("parseNode", function(event) {
     var parent = path[path.length - 1];
     // If the parent is an 'a', remove it
     if (parent && parent[0] === 'a') {
-      var username = node[2];
+      var name = node[2];
       node.length = 0;
       node[0] = "__RAW";
-      node[1] = username;
+      node[1] = name;
     }
   }
 

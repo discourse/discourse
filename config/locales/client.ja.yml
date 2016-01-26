@@ -104,6 +104,7 @@ ja:
     admin_title: "管理者"
     flags_title: "フラグ"
     show_more: "もっと見る"
+    show_help: "オプション"
     links: "リンク"
     links_lowercase:
       other: "リンク集"
@@ -244,13 +245,17 @@ ja:
       total_rows:
         other: "%{count} 人のユーザ"
     groups:
+      empty:
+        posts: "このグループのメンバーによる投稿はありません。"
+      add: "追加"
+      selector_placeholder: "メンバー追加"
+      owner: "所有者"
       visible: "このグループは全てのユーザに表示されています。"
       title:
         other: "グループ"
       members: "メンバー"
       posts: "ポスト"
       alias_levels:
-        title: "このグループを仮名として使えるユーザ"
         nobody: "無し"
         only_admins: "管理者のみ"
         mods_and_admins: "管理者とモデレータのみ"
@@ -265,7 +270,6 @@ ja:
       '6': "レスポンス数"
       '7': "タグ付け"
       '9': "引用"
-      '10': "お気に入り"
       '11': "編集"
       '12': "アイテム送信"
       '13': "インボックス"
@@ -275,6 +279,8 @@ ja:
       all_subcategories: "全てのサブカテゴリ"
       no_subcategory: "サブカテゴリなし"
       category: "カテゴリ"
+      reorder:
+        title: "カテゴリを並び替える"
       posts: "ポスト"
       topics: "トピック"
       latest: "最新ポスト"
@@ -370,8 +376,6 @@ ja:
         warnings_received: "注意"
       messages:
         all: "すべて"
-        mine: "受信トレイ"
-        unread: "未読"
       change_password:
         success: "(メールを送信しました)"
         in_progress: "(メールを送信中)"
@@ -1320,6 +1324,7 @@ ja:
       with_topics: "%{filter} トピック"
       with_category: "%{filter} %{category} トピック"
       latest:
+        title: "最新"
         help: "最新のトピック"
       hot:
         title: "ホット"
@@ -1391,7 +1396,7 @@ ja:
         stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         version_check_pending: "まるでアップデート直後のようです。素晴らしい！"
         installed_version: "Installed"
-        latest_version: "Latest"
+        latest_version: "最新"
         problems_found: "Discourse のインストールにいくつか問題が発見されました:"
         last_checked: "最終チェック"
         refresh_problems: "更新"
@@ -1935,7 +1940,6 @@ ja:
         unlock_trust_level: "トラストレベルをアンロック"
         tl3_requirements:
           title: "トラストレベル3の条件"
-          table_title: "過去100日に："
           value_heading: "値"
           requirement_heading: "条件"
           visits: "訪問"
@@ -1996,7 +2000,6 @@ ja:
           confirm: '確認'
           dropdown: "ドロップダウン"
       site_text:
-        none: "コンテンツの種類を選択してください"
         title: 'テキストコンテンツ'
       site_settings:
         show_overriden: '上書き部分のみ表示'

@@ -32,8 +32,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
   },
 
-  cannotDeleteAccount: Em.computed.not('can_delete_account'),
-  deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
+  cannotDeleteAccount: Em.computed.not('currentUser.can_delete_account'),
+  deleteDisabled: Em.computed.or('model.isSaving', 'deleting', 'cannotDeleteAccount'),
 
   canEditName: setting('enable_names'),
 

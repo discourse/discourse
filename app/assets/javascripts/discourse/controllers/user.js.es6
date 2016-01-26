@@ -1,4 +1,3 @@
-import { exportUserArchive } from 'discourse/lib/export-csv';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import computed from 'ember-addons/ember-computed-decorators';
 import UserAction from 'discourse/models/user-action';
@@ -89,17 +88,5 @@ export default Ember.Controller.extend(CanCheckEmails, {
                          .then(user => user.destroy({deletePosts: true}));
     },
 
-    exportUserArchive() {
-      bootbox.confirm(
-        I18n.t("admin.export_csv.user_archive_confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        function(confirmed) {
-          if (confirmed) {
-            exportUserArchive();
-          }
-        }
-      );
-    }
   }
 });

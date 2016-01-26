@@ -1,4 +1,5 @@
-import { relativeAge } from 'discourse/lib/formatter';
+import { autoUpdatingRelativeAge } from 'discourse/lib/formatter';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const icons = {
   'closed.enabled': 'lock',
@@ -13,16 +14,20 @@ const icons = {
   'pinned_globally.disabled': 'thumb-tack unpinned',
   'visible.enabled': 'eye',
   'visible.disabled': 'eye-slash',
-  'split_topic': 'sign-out'
+  'split_topic': 'sign-out',
+  'invited_user': 'plus-circle',
+  'removed_user': 'minus-circle'
 };
 
-export function actionDescription(actionCode, createdAt) {
+export function actionDescription(actionCode, createdAt, username) {
   return function() {
     const ac = this.get(actionCode);
     if (ac) {
       const dt = new Date(this.get(createdAt));
-      const when =  relativeAge(dt, {format: 'medium-with-ago'});
-      return I18n.t(`action_codes.${ac}`, {when}).htmlSafe();
+      const when = autoUpdatingRelativeAge(dt, { format: 'medium-with-ago' });
+      const u = this.get(username);
+      const who = u ? `<a class="mention" href="/users/${u}">@${u}</a>` : "";
+      return I18n.t(`action_codes.${ac}`, { who, when }).htmlSafe();
     }
   }.property(actionCode, createdAt);
 }
@@ -31,18 +36,19 @@ export default Ember.Component.extend({
   layoutName: 'components/small-action', // needed because `time-gap` inherits from this
   classNames: ['small-action'],
 
-  description: actionDescription('actionCode', 'post.created_at'),
+  description: actionDescription('actionCode', 'post.created_at', 'post.action_code_who'),
 
-  icon: function() {
-    return icons[this.get('actionCode')] || 'exclamation';
-  }.property('actionCode'),
+  @computed("actionCode")
+  icon(actionCode) {
+    return icons[actionCode] || 'exclamation';
+  },
 
   actions: {
-    edit: function() {
+    edit() {
       this.sendAction('editPost', this.get('post'));
     },
 
-    delete: function() {
+    delete() {
       this.sendAction('deletePost', this.get('post'));
     }
   }
