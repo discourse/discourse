@@ -48,7 +48,7 @@ module Onebox
       end
 
       def to_html
-        Helpers.click_to_scroll_div + "<iframe src=\"#{link}\" width=\"690\" height=\"400\" frameborder=\"0\" style=\"border:0\"></iframe>"
+        "<div class='maps-onebox'>#{Helpers.click_to_scroll_div + "<iframe src=\"#{link}\" width=\"690\" height=\"400\" frameborder=\"0\" style=\"border:0\">#{placeholder_html}</iframe>"}</div>"
       end
 
       def placeholder_html
