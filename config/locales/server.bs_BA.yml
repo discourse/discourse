@@ -409,7 +409,6 @@ bs_BA:
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
-    editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
@@ -544,7 +543,6 @@ bs_BA:
     tl2_requires_likes_received: "How many likes a user must receive before promotion to trust level 2."
     tl2_requires_likes_given: "How many likes a user must cast before promotion to trust level 2."
     tl2_requires_topic_reply_count: "How many topics user must reply to before promotion to trust level 2."
-    tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to trust level 3. (0 or higher)"
     tl3_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
@@ -923,12 +921,6 @@ bs_BA:
     csv_export_failed:
       subject_template: "Export failed"
       text_body_template: "The export has failed. Please check the logs."
-    email_reject_trust_level:
-      subject_template: "Email issue -- Insufficient Trust Level"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
     email_reject_no_account:
       subject_template: "Email issue -- No Account"
       text_body_template: |
@@ -939,34 +931,12 @@ bs_BA:
       subject_template: "Email issue -- No Content"
     email_reject_parsing:
       subject_template: "Email issue -- Content unrecognized"
-    email_reject_post_error:
-      subject_template: "Email issue -- Posting error"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
-    email_reject_post_error_specified:
-      subject_template: "Email issue -- Posting error"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Reason:
-
-        %{post_error}
-
-        If you can correct the problem, please try again.
     email_reject_reply_key:
       subject_template: "Email issue -- Bad Reply Key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
-    email_reject_destination:
-      subject_template: "Email issue -- Bad Destination Address(es)"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        None of the destination addresses are recognized by the forum. Please make sure that the forum is in the To: line (not CC or BCC), and that you are sending to the email address provided by the forum administrators.
     email_error_notification:
       subject_template: "Email issue -- POP authentication error"
       text_body_template: |

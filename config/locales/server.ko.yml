@@ -35,8 +35,10 @@ ko:
       exclusion: 예약됨
       greater_than: '%{count}보다 커야 함'
       greater_than_or_equal_to: '%{count}보다 크거나 같아야 함'
+      has_already_been_used: "이미 사용되었음"
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
+      is_invalid: "유효하지 않음; 좀더 자세하게 서술해주세요"
       less_than: '%{count}보다 작아야 함'
       less_than_or_equal_to: '%{count}보다 작거나 같아야 함'
       not_a_number: 숫자가 아님
@@ -69,6 +71,7 @@ ko:
   not_found: "요청한 URL이나 리소스를 찾지 못했습니다."
   invalid_access: "요청한 리소스를 볼 권한이 없습니다."
   read_only_mode_enabled: "현재 읽기 전용 모드입니다."
+  likes: "좋아요"
   too_many_replies:
     other: "죄송합니다. 신규 가입자는 글 하나에 %{count}개까지만 댓글을 달 수 있습니다."
   embed:
@@ -82,6 +85,10 @@ ko:
     in_reply_to: "▶ %{username}"
     replies:
       other: "댓글 %{count}개"
+  no_mentions_allowed: "죄송합니다, 다른 사용자를 언급할 수 없습니다."
+  too_many_mentions:
+    other: "죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다."
+  no_mentions_allowed_newuser: "죄송합니다. 새로운 사용자는 다른 사용자를 언급할 수 없습니다."
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 글 보려는 도중에 글타래가 닫혔거나 지워진 건 아닐까요?"
@@ -100,7 +107,7 @@ ko:
   num_posts: "글 수:"
   num_participants: "참여자:"
   read_full_topic: "전체 글타래 읽기"
-  private_message_abbrev: "MSG"
+  private_message_abbrev: "메시지"
   rss_description:
     latest: "최신 글타래"
     hot: "인기 글타래"
@@ -113,6 +120,8 @@ ko:
     errors:
       can_not_modify_automatic: "자동 그룹은 수정 하실 수 없습니다."
       member_already_exist: "'%{username}'은 이미 이 그룹의 멤버입니다."
+      invalid_domain: "'%{domain}'은 유효한 도메인이 아닙니다."
+      invalid_incoming_email: "'%{incoming_email}'은 유효한 이메일 주소가 아닙니다."
     default_names:
       everyone: "모든 사람"
       admins: "관리자"
@@ -137,7 +146,7 @@ ko:
 
       이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](/guidelines)을 참조하세요.
     new-reply: |
-      %{site_name}에 오신것을 환영합니다!
+      %{site_name}에 오신것을 환영합니다! &mdash; **참여해주셔서 감사합니다!**
 
       - 당신의 댓글이 어떤 식으로든 토론을 발전시키나요?
 
@@ -178,7 +187,7 @@ ko:
       post:
         raw: "본문"
       user_profile:
-        bio_raw: "About Me"
+        bio_raw: "내 소개"
     errors:
       models:
         topic:
@@ -191,7 +200,7 @@ ko:
         user:
           attributes:
             password:
-              common: "가장 자주 사용되는 10000개의 비밀번호 중 하나압니다. 보다 안전한 비밀번호를 사용하세요."
+              common: "가장 자주 사용되는 10000개의 비밀번호 중 하나입니다. 보다 안전한 비밀번호를 사용하세요."
               same_as_username: "는 아이디랑 같음. 제발 좀 더 안전한 비밀번호를 사용해주세요."
               same_as_email: "는 이메일 주소랑 같음. 좀 더 안전한 비밀번호를 사용해주세요."
             ip_address:
@@ -234,9 +243,21 @@ ko:
       title: "새로운 사용자"
     basic:
       title: "기본 사용자"
+    member:
+      title: "멤버"
+    regular:
+      title: "일반"
+    leader:
+      title: "리더"
     change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
   rate_limiter:
+    slow_down: "해당 작업을 너무 많이 수행했습니다. 잠시후 다시 시도해보세요. "
     too_many_requests: "지금 하시려는 행동에는 하루 제한이 있습니다. %{time_left} 동안 기다리시고 다시 시도해 주세요."
+    by_type:
+      first_day_replies_per_day: "새 유저가 가입한 첫 날에 작성할 수 있는 댓글의 최대 갯수에 도달했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
+      first_day_topics_per_day: "새 유저가 가입한 첫 날에 작성할 수 있는 토픽의 최대 갯수에 도달했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
+      create_topic: "너무 빨리 토픽을 작성했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
+      create_post: "너무 빨리 댓글을 작성했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
     hours:
       other: "%{count}시간"
     minutes:
@@ -247,11 +268,11 @@ ko:
     distance_in_words:
       half_a_minute: "<1분"
       less_than_x_seconds:
-        other: "%{count}초 전"
+        other: "< %{count}초"
       x_seconds:
         other: "%{count}초"
       less_than_x_minutes:
-        other: "%{count}분 전"
+        other: "< %{count}분"
       x_minutes:
         other: "%{count}분"
       about_x_hours:
@@ -558,7 +579,6 @@ ko:
     download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경. 이미지가 깨지는 것을 막을 수 있습니다."
     download_remote_images_threshold: "원격의 이미지를 로컬에 다운받기 위한 최소 디스크 공간(%)"
     disabled_image_download_domains: "이 도메인을 통해서 원격 이미지를 다운로드 하지 않는다. ` | `를 구분자로 한 리스트"
-    editing_grace_period: "편집을 결과가 새로운 버전을 생성하지 않는 포스팅 이후에 경과할 시간(초)"
     post_edit_time_limit: "글 작성자가 해당 글을 편집하거나 삭제할 수 있도록 허용되는 시간(분). 0으로 설정하면 언제든지 편집이나 삭제가 허용됨."
     edit_history_visible_to_public: "모든 사용자가 글의 수정 내역을 볼 수 있도록 허용. 비활성화시 스태프 맴버만 수정 내역을 볼 수 있음."
     delete_removed_posts_after: "작성자에 의해 삭제된 글은 (n) 시간 뒤 자동으로 삭제됩니다. 0으로 설정 시, 즉시 삭제됩니다."
@@ -603,6 +623,7 @@ ko:
     traditional_markdown_linebreaks: "Markdown에서 전통적인 linebreak를 사용, linebreak시 두개의 trailing space를 사용하는 것."
     post_undo_action_window_mins: "사용자가 어떤 글에 대해서 수행한 작업(신고 등)을 취소하는 것이 허용되는 시간(초)"
     must_approve_users: "스태프는 반드시 사이트 엑세스권한을 허용하기 전에 모든 신규가입계정을 승인해야 합니다. 경고: 이것을 활성화하면 기존 스태프 아닌 회원들의 엑세스권한이 회수됩니다."
+    pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     ga_tracking_code: "Google analytics (ga.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
@@ -715,7 +736,6 @@ ko:
     tl2_requires_likes_received: "회원등급-2가 되기 위해 받아야 하는 좋아요 횟수"
     tl2_requires_likes_given: "회원등급-2가 되기 위해 눌러야하는 좋아요 횟수"
     tl2_requires_topic_reply_count: "기회원등급-2가 되기 위해 달아야 하는 댓글 갯수"
-    tl3_requires_days_visited: "VIP 사용자-3 이 되기 위해 지난 100일 동안 최소한 사이트에 방문해야 하는 수 (0 ~ 100)"
     tl3_requires_topics_replied_to: "VIP 사용자-3 이 되기 위해 지난 100일 동안 답글을 달아야하는 최소 글타래수(0 ~ )"
     tl3_requires_topics_viewed: "VIP 사용자-3 이 되기 위해 지난 100일 동안 생성된 전체 글타래 중 본 글타래의 비율(%, 0 ~ 100)"
     tl3_requires_posts_read: "VIP 사용자-3 이 되기 위해 지난 100일 동안 생성된 전체 글 중 본 글의 비율(%, 0 ~ 100)"
@@ -1198,12 +1218,6 @@ ko:
     csv_export_failed:
       subject_template: "데이터 추출 실패"
       text_body_template: "죄송합니다. 데이터 추출에 실패하였습니다. 로그를 확인하시거나 관리자에게 문의해주세요."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] 이메일 문제 -- 회원등급 충족 안됨."
-      text_body_template: |
-        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        새 글타래를 작성하는 데 필요한 회원등급이 없습니다. 오류라고 생각되면 스태프에게 연락주세요.
     email_reject_no_account:
       subject_template: "[%{site_name}]  이메일 문제 -- 모르는 계정"
       text_body_template: |
@@ -1224,27 +1238,12 @@ ko:
         죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
 
         이 카테고리에서 새 글타래를 작성하는 데 필요한 회원등급이 없습니다. 오류라고 생각되면 스태프에게 연락주세요.
-    email_reject_post_error:
-      subject_template: "[%{site_name}] 이메일 문제 -- 게시 오류"
-      text_body_template: |
-        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        복잡한 포매팅, 대용량 메세지, 너무 짧은 메세지가 문제일 수 있습니다. 다시 시도 해보고 계속 문제 된다면 웹사이트를 통해 글을 올리세요.
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] 이메일 문제 -- 게시 오류"
-      text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n이유:\n\n%{post_error}\n\n문제를 고치고 다시 시도해 보세요.\n"
     email_reject_reply_key:
       subject_template: "[%{site_name}] 이메일 문제 -- 잘못된 답글 Key"
       text_body_template: |
         죄송합니다 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
 
         받은 답글 key가 올바르지 않거나 모르는 key여서 어디에 답글을 달아야 하는지 모르겠스빈다. 스태프에게 연락주세요.
-    email_reject_destination:
-      subject_template: "[%{site_name}] 이메일 문제 -- 모르는 주소"
-      text_body_template: |
-        죄송합니다 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        목적지 이메일 주소 전부가 식별되지 않습니다. 사이트 주소가 To: 줄(Cc:나 Bcc:는 안됨)에 들어 있는지 스태프에게 받은 올바른 이메일 주소로 보내고 있는지 확인해주세요.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] 이메일 문제 -- 글타래 못 찾음"
       text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n답글하려는 글타래가 더이상 존재하지 않습니다, 아마 지워졌을 수도 있습니다. 오류라고 생각되면 스태프에게 연락주세요.\n"

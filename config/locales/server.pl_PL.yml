@@ -678,7 +678,6 @@ pl_PL:
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
     disabled_image_download_domains: "Zdalne grafiki z tych domen nie będą pobierane."
-    editing_grace_period: "Przez tyle sekund po utworzeniu nowego wpisu jego kolejne edycje nie będą tworzyć nowych wersji w historii wpisu."
     post_edit_time_limit: "Autor może edytować lub usunąć swój wpis przez tyle minut po jego utworzeniu. Ustawienie 0 oznacza 'zawsze'."
     edit_history_visible_to_public: "Pozwól wszystkim przeglądać poprzednie wersje edytowanych wpisów. Gdy wyłączone, jedynie obsługa/staff może."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
@@ -783,7 +782,6 @@ pl_PL:
     tl2_requires_likes_received: "Ile lajków musi otrzymać użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
     tl2_requires_likes_given: "Ile lajków musi dać użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
     tl2_requires_topic_reply_count: "Na ile tematów musi odpowiedzieć użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
-    tl3_requires_days_visited: "Minimalna liczba dni, przez które użytkownik musiał odwiedzać stronę w ciągu ostatnich 100 dni, aby kwalifikować się do promocji na 3 poziom zaufania. (0 do 100)"
     tl3_requires_topics_replied_to: "Minimalna liczba tematów, na które użytkownik musiał odpowiedzieć w ciągu ostatnich 100 dni, aby kwalifikować się do promocji na 3 poziom zaufania. (0 albo więcej)"
     tl3_requires_likes_received: "Minimalna liczba lajków, jakie należało otrzymać w ciągu ostatnich 100 dni, by kwalifikować się do promocji na 3 stopień zaufania."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
@@ -945,7 +943,6 @@ pl_PL:
       must_begin_with_alphanumeric: "musi zaczynać się literą, liczbą lub podkreślnikiem"
       must_end_with_alphanumeric: "musi kończyć się literą, liczbą bądź podkreślnikiem"
       must_not_contain_two_special_chars_in_seq: "nie może zawierać sekwencji 2 lub więcej znaków specjalnych (.-_)"
-      must_not_contain_confusing_suffix: "nie może zawierać wprowadzającego w błąd przyrostka, jak .json lub .png, itd."
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "is not allowed."

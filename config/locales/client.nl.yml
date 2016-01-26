@@ -110,6 +110,8 @@ nl:
       email: 'deel deze link via e-mail'
     action_codes:
       split_topic: "deze topic splitsen %{when}"
+      invited_user: "uitgenodigd %{who} %{when}"
+      removed_user: "verwijderd %{who} %{when}"
       autoclosed:
         enabled: 'gesloten %{when}'
         disabled: 'geopend %{when}'
@@ -220,7 +222,7 @@ nl:
     saved: "Opgeslagen!"
     upload: "Upload"
     uploading: "Uploaden..."
-    uploading_filename: "Uploaden {{filename}}..."
+    uploading_filename: "Uploaden van {{filename}}..."
     uploaded: "Geupload!"
     enable: "Inschakelen"
     disable: "Uitschakelen"
@@ -228,7 +230,7 @@ nl:
     revert: "Zet terug"
     failed: "Mislukt"
     switch_to_anon: "Anonieme modus"
-    switch_from_anon: "Anoniem afsluiten"
+    switch_from_anon: "Niet meer anoniem zijn"
     banner:
       close: "Verberg deze banner."
       edit: "Wijzig deze banner >>"
@@ -331,11 +333,11 @@ nl:
       no_subcategory: "geen"
       category: "Categorie"
       reorder:
-        title: "Categorieën Herschikken "
+        title: "Categorieën herschikken "
         title_long: "Reorganiseer de categorielijst"
-        fix_order: "Posities fixen"
+        fix_order: "Posities vastzetten"
         fix_order_tooltip: "Niet alle categorien hebben een unieke nummer, dit resulteert soms in onverwachte resultaten."
-        save: "Volgorde Opslaan"
+        save: "Volgorde opslaan"
         apply_all: "Toepassen"
         position: "Positie"
       posts: "Berichten"
@@ -387,14 +389,14 @@ nl:
       trust_level: "Trustlevel"
       notifications: "Notificaties"
       desktop_notifications:
-        label: "Desktop Notificaties"
+        label: "Desktopnotificaties"
         not_supported: "Notificaties worden niet ondersteund door deze browser. Sorry."
-        perm_default: "Notificaties Aanzetten"
-        perm_denied_btn: "Toestemming Geweigerd"
+        perm_default: "Notificaties aanzetten"
+        perm_denied_btn: "Toestemming geweigerd"
         perm_denied_expl: "Gebruik van notificaties staat niet ingeschakeld. Gebruik je browser om notificaties toe te staan, klik vervolgens op de knop. (Desktop: Het meest linkse icoon op de adresbalk. Mobiel: 'Site Info' )"
-        disable: "Notificaties Uitschakelen"
+        disable: "Notificaties uitschakelen"
         currently_enabled: "(momenteel ingeschakeld)"
-        enable: "Notificaties Inschakelen"
+        enable: "Notificaties inschakelen"
         currently_disabled: "(momenteel uitgeschakeld)"
         each_browser_note: "Let op: Je moet deze optie instellen voor elke browser die je gebruikt."
       dismiss_notifications: "Markeer alles als gelezen"
@@ -632,7 +634,6 @@ nl:
     logout: "Je bent uitgelogd."
     refresh: "Ververs"
     read_only_mode:
-      enabled: "Alleen-lezen modus is aangezet. Je kan de site bekijken, maar interacties werken mogelijk niet."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
     too_few_topics_and_posts_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     too_few_topics_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
@@ -747,7 +748,6 @@ nl:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "meer..."
       options: "Opties"
       whisper: "Fluister"
@@ -1228,8 +1228,6 @@ nl:
         yes_value: "Ja, verwijderen"
       via_email: "dit bericht kwam binnen via e-mail"
       whisper: "deze posts zijn alleen toegankelijk voor moderators"
-      wiki:
-        about: "deze discussie is een wiki; normale gebruikers kunnen hem aanpassen"
       archetypes:
         save: 'Bewaar instellingen'
       controls:
@@ -1491,7 +1489,7 @@ nl:
         help: "Dit topic is niet langer vastgepind voor je en zal weer in de normale volgorde getoond worden"
       pinned_globally:
         title: "Globaal vastgepind"
-        help: "Dit topic is wereldwijd gebladwijzerd; het zal worden weergegeven bovenaan Nieuwste en bij de betreffende Categorie"
+        help: "Deze topic is globaal vastgepind en zal bovenaan de lijsten top en nieuwste getoond worden."
       pinned:
         title: "Vastgepind"
         help: "Dit topic is vastgepind voor je en zal bovenaan de categorie getoond worden"
@@ -1911,9 +1909,8 @@ nl:
             name: 'wiki'
             description: "Basiskleur die gebruikt wordt voor de achtergrond van wiki berichten."
       email:
-        title: "E-mail"
         settings: "Instellingen"
-        all: "Alle"
+        preview_digest: "Voorbeeld digestmail"
         sending_test: "Testmail wordt verstuurd..."
         error: "<b>FOUT</b> - %{server_error}"
         test_error: "Er ging iets mis bij het versturen van de testmail. Kijk nog eens naar je mailinstellinen, controleer of je host mailconnecties niet blokkeert. Probeer daarna opnieuw."
@@ -1928,7 +1925,6 @@ nl:
         send_test: "verstuur test e-mail"
         sent_test: "verzonden!"
         delivery_method: "Verzendmethode"
-        preview_digest: "Voorbeeld digestmail"
         preview_digest_desc: "Voorbeeld van de digest e-mails die naar inactieve leden worden verzonden."
         refresh: "Verniew"
         format: "Formaat"

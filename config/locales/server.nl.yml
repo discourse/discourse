@@ -675,7 +675,6 @@ nl:
     download_remote_images_to_local: "Download externe afbeeldingen en sla ze lokaal op. Dit voorkomt dat afbeeldingen niet meer beschikbaar zouden kunnen worden."
     download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
     disabled_image_download_domains: "Externe afbeeldingen zullen nooit gedownload worden van deze domeinen. Pipe-gescheiden lijst."
-    editing_grace_period: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in (n) seconden."
     post_edit_time_limit: "Berichten mogen na (n) minuten nog gewijzigd of verwijderd worden door de schrijver. Gebruik 0 voor onbeperkt."
     edit_history_visible_to_public: "Sta toe dat iedereen vorige versies van een gewijzigd bericht kan zien. Als dit uit staat kunnen alleen stafleden dit zien."
     delete_removed_posts_after: "Berichten verwijderd door de auteur zullen automatisch verwijderd worden na (n) uur. Als dit ingesteld is op 0 zullen berichten direct verwijderd worden."
@@ -853,7 +852,6 @@ nl:
     tl2_requires_likes_received: "Hoeveel likes een lid moet ontvangen voordat deze naar trustlevel 2 gepromoveerd wordt."
     tl2_requires_likes_given: "Hoeveel likes een lid moet geven voordat deze naar trustlevel 2 gepromoveerd wordt."
     tl2_requires_topic_reply_count: "Op hoeveel topics een lid moet reageren voordat deze naar trustlevel 2 gepromoveerd wordt."
-    tl3_requires_days_visited: "Minimum aantal dagen dat een lid de site moet hebben bezocht in de laatste 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3 (0 tot 100)"
     tl3_requires_topics_replied_to: "Minimum aantal topics waarop een lid moet hebben gereageerd in de laatste 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3 (0 of hoger)"
     tl3_requires_topics_viewed: "Het percentage van topics gemaakt in de afgelopen 100 dagen dat een lid bekeken moet hebben om in aanmerking te komen voor promotie naar trustlevel 3. (0 to 100)"
     tl3_requires_posts_read: "Het percentage van berichten gemaakt in de afgelopen 100 dagen dat een lid bekeken moet hebben om in aanmerking te komen voor promotie naar trustlevel 3. (0 to 100)"
@@ -1145,7 +1143,6 @@ nl:
       must_begin_with_alphanumeric: "moet beginnen met een letter, cijfer of underscore"
       must_end_with_alphanumeric: "moet eindigen met een letter, cijfer of underscore"
       must_not_contain_two_special_chars_in_seq: "mag niet 2 of meer opvolgende speciale karakters bevatten (.-_)"
-      must_not_contain_confusing_suffix: "mag geen verwarrend achtervoegsel bevatten, zoals b.v.: .json of .png "
     email:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
       blocked: "is niet toegestaan."
@@ -1232,91 +1229,6 @@ nl:
   system_messages:
     post_hidden:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
-    usage_tips:
-      text_body_template: |
-        Hier een paar snelle tips om je op weg te helpen:
-
-        ## Lezen
-
-        Om verder te lezen, **gewoon door blijven scrollen naar beneden!**
-
-        Als er nieuwe reacties zijn op een topic, verschijnen deze automatisch – het is niet nodig de pagina te verversen.
-
-        ## Navigatie
-
-        - Voor zoeken, je profielpagina, of het <kbd>☰</kbd> menu, klik op de **icoontjes rechts boven**.
-
-        - Het selecteren van een titel van een topic  leid je altijd naar het **volgende ongelezen bericht** in de topic. Om naar het begin of eind van de topic te gaan, selecteer dan reacties of activiteit.
-
-            <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Bij het lezen van een topic, selecteer de voortgangsbalk rechts onder voor uitgebreide navigatie. Spring snel terug naar boven door de titel van de topic te selecteren. Druk op <kbd>?</kbd> voor een lijst met supersnelle toets combinaties.
-
-            <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        ## Reageren
-
-        - Om te regageren op het **topic in het algemeen**, gebruik <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">  helemaal onderaan de topic.
-
-        - Om te reageren op een **iemand in het bijzonder**, gebruik <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> op zijn of haar bericht.
-
-        - Om te reageren met  **een nieuwe topic**, gebruik <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> aan de rechterkant van een bericht. De oude en nieuwe topic worden aan elkaar verbonden.
-
-        Om een quote te plaatsen, selecteer de tekst die je wilt quoten en klik op de Reageer knop. Herhalen voor meerdere quotes!
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Om iemand op de hoogte te stellen van je reactie, vermeld zijn of haar naam. Typ'@' en selecteer dan een gebruikersnaam.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Om [standard Emoji](http://www.emoji.codes/) te gebruiken, type gewoon `:` en selecteer er een via de naam, of gebruik traditionele smileys `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Voor een automatische ingekorte vermelding van je link, plaats de link op een losse regel.
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        ## Acties
-
-        Er zijn actieknoppen onder aan elk bericht:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        Om te laten weten dat je een bericht waardeert, gebruik de **leuk** knop. Deel je waardering!
-
-        Als je een probleem ziet met iemands bericht, laat het weten aan iemand privé, of [our staff](%{base_url}/about) met de **markeer** knop. Je kunt ook een link naar een bericht **delen**, of het toevoegen aan de favorieten van je gebruikerspagina om het later gemakkelijk te vinden.
-
-        ## Notificaties
-
-        Als iemand op je reageert op één van je berichten, tekst van je quote, of jou specifiek noemt met '@gebruikersnaam', dan verschijnt er een direct een getal rechts boven op de pagina. Klik er op en je ziet je **notificaties**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Maak je geen zorgen over het missen van een reactie – je ontvangt via e-mail alle notificaties die binnenkomen als je weg bent.
-
-        ## Jouw instellingen
-
-          - Alle topics minder dan **twee dagen oud** worden als nieuw gerekend.
-
-          - Alle topics waarin je **actief in hebt geparticipeerd** (door maken, reageren, of gedurende een langere periode lezen) volg je automatisch.
-
-        Een getal in het blauw staat als nieuw en ongelezen indicatoren naast deze topics:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Je kan je notificaties voor elke topic wijzigen via In de gaten houden onder aan de topic.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Je kan ook je notificaties instellen per categorie, als je elke nieuwe topic in een bepaalde categorie wilt bekijken.
-
-        Om één van deze instellingen te wijzigen, zie: [your user preferences](%{base_url}/my/preferences).
-
-        ## Groeps Vertrouwen
-
-        Als je gaat deelnemen, win je na verloop van tijd het vertrouwen van de gebruikersgemeenschap, wordt je een volwaardig deelnemer, en worden de beperkingen de gelden voor nieuwe gebruikers opgeheven. Als je [vertrouwensniveau] (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) hoog genoeg is, krijg je nieuwe mogelijkheden om ons te helpen de gebruikersgemeenschap de managen.
     welcome_user:
       subject_template: "Welkom bij %{site_name}!"
     welcome_invite:

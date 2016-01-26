@@ -670,7 +670,6 @@ cs:
     logout: "Byli jste odhlášeni."
     refresh: "Obnovit"
     read_only_mode:
-      enabled: "Stranka je nastavena jen pro čtení. Můžete pokračovat v prohlížení ale interakce nemusí fungovat."
       login_disabled: "Přihlášení je zakázáno jelikož fórum je v režimu jen pro čtení."
     learn_more: "více informací..."
     year: 'rok'
@@ -783,7 +782,6 @@ cs:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "více..."
       options: "Možnosti"
       whisper: "šeptat"
@@ -1298,8 +1296,6 @@ cs:
         yes_value: "Ano, zahodit"
       via_email: "tento příspěvek byl přijat přes email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"
-      wiki:
-        about: "tento příspěvek je wiki; běžní uživatelé jej mohou editovat"
       archetypes:
         save: 'Uložit nastavení'
       controls:
@@ -1504,7 +1500,6 @@ cs:
       email_in_allow_strangers: "Přijímat emaily i od neregistrovaných uživatelů"
       email_in_disabled: "Přidávání nových témat před email je zakázáno v Nastavení fóra. K povolení nových témat přes email,"
       email_in_disabled_click: 'povolit nastavení "email in"'
-      contains_messages: "Změn tuto kategorii tak, aby obshovala jenom zprávy."
       suppress_from_homepage: "Potlač tuto kategorii na domovské stránce."
       allow_badges_label: "Povolit používání odznaků v této kategorii"
       edit_permissions: "Upravit oprávnění"
@@ -2047,9 +2042,8 @@ cs:
             name: 'wiki'
             description: "Základní barva použita pro pozadí wiki článků."
       email:
-        title: "Email"
         settings: "Nastavení"
-        all: "Všechny emaily"
+        preview_digest: "Náhled souhrnu"
         sending_test: "Zkušební email se odesílá..."
         error: "<b>CHYBA</b> - %{server_error}"
         test_error: "Nastal problém při odesílání testovacího emailu. Zkontroluj si, prosím, své mailové nastavení, ověř, že hosting neblokuje mailové spojení a zkus to znova."
@@ -2064,7 +2058,6 @@ cs:
         send_test: "Odešli testovací email"
         sent_test: "odesláno!"
         delivery_method: "Způsob doručení"
-        preview_digest: "Náhled souhrnu"
         preview_digest_desc: "Zobraz náhled mailů se souhrnem posílaným neaktivním uživatelúm."
         refresh: "Aktualizovat"
         format: "Formát"

@@ -671,7 +671,6 @@ pl_PL:
     logout: "Nastąpiło wylogowanie."
     refresh: "Odśwież"
     read_only_mode:
-      enabled: "Aktywowani tryb tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje zmieniające stan i treść mogą nie działać."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
     too_few_topics_and_posts_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów i <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
     too_few_topics_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
@@ -787,7 +786,6 @@ pl_PL:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "więcej…"
       options: "Opcje"
       whisper: "szept"
@@ -1308,8 +1306,6 @@ pl_PL:
         yes_value: "Tak, porzuć"
       via_email: "ten wpis został dodany emailem"
       whisper: "ten wpis jest prywatnym szeptem do moderatorów"
-      wiki:
-        about: "to wpis typu Wiki:  zwykli użytkownicy mogą go edytować"
       archetypes:
         save: 'Opcje zapisu'
       controls:
@@ -1515,7 +1511,6 @@ pl_PL:
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
       email_in_disabled: "Tworzenie nowych tematów emailem jest wyłączone w ustawieniach serwisu. "
       email_in_disabled_click: 'Kliknij tu, aby włączyć.'
-      contains_messages: "Ustaw kategorię, aby zawierała wyłącznie prywatne wiadomości."
       suppress_from_homepage: "Nie wyświetlaj tej kategorii na stronie głównej."
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
@@ -2053,9 +2048,8 @@ pl_PL:
             name: 'wiki'
             description: "Kolor tła wpisów typu wiki."
       email:
-        title: "Email"
         settings: "Ustawienia"
-        all: "Wszystkie"
+        preview_digest: "Pokaż zestawienie aktywności"
         sending_test: "Wysyłanie testowego emaila…"
         error: "<b>BŁAD</b> - %{server_error}"
         test_error: "Wystąpił problem podczas wysyłania testowego maila. Sprawdź ustawienia poczty, sprawdź czy Twój serwer nie blokuje połączeń pocztowych i spróbuj ponownie."
@@ -2070,7 +2064,6 @@ pl_PL:
         send_test: "Wyślij email testowy"
         sent_test: "wysłany!"
         delivery_method: "Metoda Dostarczenia"
-        preview_digest: "Pokaż zestawienie aktywności"
         preview_digest_desc: "Podgląd treści zestawienia wysyłanego e-mailem do nieaktywnych użytkowników."
         refresh: "Odśwież"
         format: "Format"

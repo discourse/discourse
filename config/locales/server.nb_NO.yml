@@ -35,8 +35,10 @@ nb_NO:
       exclusion: er reservert
       greater_than: må være større enn %{count}
       greater_than_or_equal_to: må være lik eller større enn %{count}
+      has_already_been_used: "har allerede blitt brukt"
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
+      is_invalid: "er ugyldig; prøv å være litt mer beskrivende"
       less_than: må være mindre enn %{count}
       less_than_or_equal_to: må være lik eller mindre enn %{count}
       not_a_number: er ikke et nummer
@@ -63,6 +65,8 @@ nb_NO:
         other: '%{count} feil forhindret lagring av %{model}'
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
+    site_settings:
+      min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
   bulk_invite:
     file_should_be_csv: "Den opplastede filen må være i .csv eller .txt format."
   backup:
@@ -73,6 +77,7 @@ nb_NO:
   not_found: "Den etterspurte URL eller ressurs ble ikke funnet"
   invalid_access: "Du har ingen tilgang til denne resurssen."
   read_only_mode_enabled: "Siden er i skrivebeskyttet modus. Alle interaksjoner er utilgjengelige."
+  likes: "Likes"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme emnet."
     other: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme emnet."
@@ -134,6 +139,16 @@ nb_NO:
     until_posts:
       one: "1 innlegg"
       other: "%{count} innlegg"
+    new-topic: |
+      Velkommen til %{site_name} &mdash; **takk for at du startet et nytt innlegg!**
+
+      - Høres tittelen på innlegget interessant ut hvis du leser det høyt? Er det en god oppsummering?
+
+      - Hvem vil være interessert i dette? Hvorfor betyr det noe? Hva slags respons er du ute etter?
+
+      - Bruk relevante begreper i emnet så andre kan *finne* det. Venligst velg en kategori for å gruppere emnet ditt med andre liknende emner.
+
+      [Se våre retningslinjer](/guidelines) for mer informasjon. Denne meldingen vises kun for ditt første %{education_posts_text}.
     new-reply: |
       Velkommen til %{site_name} &mdash; **takk for bidraget!**
 
@@ -592,7 +607,6 @@ nb_NO:
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
     disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
-    editing_grace_period: "Endring innen (n) sekunder etter oppretting av innlegg vil ikke lage ny versjon av innlegget."
     post_edit_time_limit: "Forfattere kan redigere eller slette innleggene sine (n) minutter etter opprettelse. Sett 0 for uendelig."
     edit_history_visible_to_public: "Alle kan se tidligere versjoner av et redigert innlegg. Hvis det er slått av kan kun stab se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
@@ -709,7 +723,15 @@ nb_NO:
       click_here: "trykk her"
       read_more: "Les Mer"
       more_topics_category: "Flere nye emner:"
+    account_created:
+      subject_template: "[%{site_name}] Din Nye Konto"
+      text_body_template: |
+        En ny konto ble registrert for deg på %{site_name}
+
+        Trykk på følgende link for å velge et passord for kontoen din:
+        %{base_url}/users/password-reset/%{email_token}
     signup:
+      subject_template: "[%{site_name}] Bekreft din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
 
