@@ -7,6 +7,8 @@
 # This script is tested only on Simplified Chinese Discuz! X instances
 # If you want to import data other than Simplified Chinese, email me.
 
+require 'php_serialize'
+require 'miro'
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
@@ -34,9 +36,23 @@ class ImportScripts::DiscuzX < ImportScripts::Base
       database: DISCUZX_DB
     )
     @first_post_id_by_topic_id = {}
+
+    @internal_url_regexps = [
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=viewthread(?:&|&amp;)tid=(?<tid>\d+)(?:[^\[\]\s]*)(?:pid=?(?<pid>\d+))?(?:[^\[\]\s]*)/,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/viewthread\.php\?tid=(?<tid>\d+)(?:[^\[\]\s]*)(?:pid=?(?<pid>\d+))?(?:[^\[\]\s]*)/,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=redirect(?:&|&amp;)goto=findpost(?:&|&amp;)pid=(?<pid>\d+)(?:&|&amp;)ptid=(?<tid>\d+)(?:[^\[\]\s]*)/,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/redirect\.php\?goto=findpost(?:&|&amp;)pid=(?<pid>\d+)(?:&|&amp;)ptid=(?<tid>\d+)(?:[^\[\]\s]*)/,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forumdisplay\.php\?fid=(?<fid>\d+)(?:[^\[\]\s]*)/,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/forum\.php\?mod=forumdisplay(?:&|&amp;)fid=(?<fid>\d+)(?:[^\[\]\s]*)/,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/(?<action>index)\.php(?:[^\[\]\s]*)/,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/(?<action>stats)\.php(?:[^\[\]\s]*)/,
+      /http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/misc.php\?mod=(?<mod>stat|ranklist)(?:[^\[\]\s]*)/
+    ]
+
   end
 
   def execute
+    get_knowledge_about_duplicated_email
     import_users
     import_categories
     import_posts
@@ -53,19 +69,53 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   def get_knowledge_about_group
     group_table = table_name 'common_usergroup'
     result = mysql_query(
-      "SELECT groupid group_id, radminid role_id, type, grouptitle title
+      "SELECT groupid group_id, radminid role_id
              FROM #{group_table};")
-    @moderator_group_id = -1
-    @admin_group_id = -1
+    @moderator_group_id = []
+    @admin_group_id = []
+    #@banned_group_id = [4,5] # 禁止的用户及其帖子均不导入，如果你想导入这些用户和帖子，请把这个数组清空。
 
     result.each do |group|
-      role_id = group['role_id']
-      group_id = group['group_id']
-      case group['title'].strip
-        when '管理员'
-          @admin_admin_id = role_id
-        when '超级版主'
-          @moderator_admin_id = role_id
+      case group['role_id']
+      when 1 # 管理员
+        @admin_group_id << group['group_id']
+      when 2, 3 # 超级版主、版主。如果你不希望原普通版主成为Discourse版主，把3去掉。
+        @moderator_group_id << group['group_id']
+      end
+    end
+  end
+
+  def get_knowledge_about_category_slug
+    @category_slug = {}
+    results = mysql_query("SELECT svalue value
+      FROM #{table_name 'common_setting'}
+      WHERE skey = 'forumkeys'")
+
+    return if results.size < 1
+    value = results.first['value']
+
+    return if value.blank?
+
+    PHP.unserialize(value).each do |category_import_id, slug|
+      next if slug.blank?
+      @category_slug[category_import_id] = slug
+    end
+  end
+
+  def get_knowledge_about_duplicated_email
+    @duplicated_email = {}
+    results = mysql_query(
+      "select a.uid uid, b.uid import_id from pre_common_member a
+        join (select uid, email from pre_common_member group by email having count(email) > 1 order by uid asc) b USING(email)
+        where a.uid != b.uid")
+
+    users = @lookup.instance_variable_get :@users
+
+    results.each do |row|
+      @duplicated_email[row['uid']] = row['import_id']
+      user_id = users[row['import_id']]
+      if user_id
+        users[row['uid']] = user_id
       end
     end
   end
@@ -79,51 +129,63 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     user_table = table_name 'common_member'
     profile_table = table_name 'common_member_profile'
     status_table = table_name 'common_member_status'
+    forum_table = table_name 'common_member_field_forum'
+    home_table = table_name 'common_member_field_home'
     total_count = mysql_query("SELECT count(*) count FROM #{user_table};").first['count']
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
-        "SELECT u.uid id, u.username username, u.email email, u.adminid admin_id, su.regdate regdate, s.regip regip,
-                    u.emailstatus email_confirmed, u.avatarstatus avatar_exists, p.site website, p.resideprovince	province,
-                    p.residecity city, p.residedist country, p.residecommunity community, p.residesuite apartment,
-                    p.bio bio, s.lastip last_visit_ip, s.lastvisit last_visit_time, s.lastpost last_posted_at,
-                    s.lastsendmail last_emailed_at
+        "SELECT u.uid id, u.username username, u.email email, u.groupid group_id,
+                    su.regdate regdate, su.password password_hash, su.salt salt,
+                    s.regip regip, s.lastip last_visit_ip, s.lastvisit last_visit_time, s.lastpost last_posted_at, s.lastsendmail last_emailed_at,
+                    u.emailstatus email_confirmed, u.avatarstatus avatar_exists,
+                    p.site website, p.address address, p.bio bio, p.realname realname, p.qq qq,
+                    p.resideprovince resideprovince, p.residecity residecity, p.residedist residedist, p.residecommunity residecommunity,
+                    p.resideprovince birthprovince, p.birthcity birthcity, p.birthdist birthdist, p.birthcommunity birthcommunity,
+                    h.spacecss spacecss, h.spacenote spacenote,
+                    f.customstatus customstatus, f.sightml sightml
                FROM #{user_table} u
-               JOIN #{sensitive_user_table} su ON su.uid = u.uid
-               JOIN #{profile_table} p ON p.uid = u.uid
-               JOIN #{status_table} s ON s.uid = u.uid
+               LEFT JOIN #{sensitive_user_table} su USING(uid)
+               LEFT JOIN #{profile_table} p USING(uid)
+               LEFT JOIN #{status_table} s USING(uid)
+               LEFT JOIN #{forum_table} f USING(uid)
+               LEFT JOIN #{home_table} h USING(uid)
               ORDER BY u.uid ASC
               LIMIT #{BATCH_SIZE}
              OFFSET #{offset};")
 
       break if results.size < 1
 
-      next if all_records_exist? :users, users.map {|u| u["id"].to_i}
+      # TODO: breaks the scipt reported by some users
+      # next if all_records_exist? :users, users.map {|u| u["id"].to_i}
 
       create_users(results, total: total_count, offset: offset) do |user|
         { id: user['id'],
           email: user['email'],
           username: user['username'],
-          name: user['username'],
-          created_at: Time.zone.at(user['regdate']),
+          name: first_exists(user['realname'], user['customstatus'], user['username']),
+          import_pass: user['password_hash'],
+          active: true,
+          salt: user['salt'],
+          # TODO: title: user['customstatus'], # move custom title to name since discourse can't let user custom title https://meta.discourse.org/t/let-users-custom-their-title/37626
+          created_at: user['regdate'] ? Time.zone.at(user['regdate']) : nil,
           registration_ip_address: user['regip'],
           ip_address: user['last_visit_ip'],
           last_seen_at: user['last_visit_time'],
           last_emailed_at: user['last_emailed_at'],
           last_posted_at: user['last_posted_at'],
-          moderator: user['admin_id'] == @moderator_admin_id,
-          admin: user['admin_id'] == @admin_admin_id,
-          active: true,
-          website: user['website'],
-          bio_raw: user['bio'],
-          location: "#{user['province']}#{user['city']}#{user['country']}#{user['community']}#{user['apartment']}",
+          moderator: @moderator_group_id.include?(user['group_id']),
+          admin: @admin_group_id.include?(user['group_id']),
+          website: (user['website'] and user['website'].include?('.')) ? user['website'].strip : ( user['qq'] and user['qq'].strip == user['qq'].strip.to_i and user['qq'].strip.to_i > 10000 ) ? 'http://user.qzone.qq.com/' + user['qq'].strip : nil,
+          bio_raw: first_exists((user['bio'] and CGI.unescapeHTML(user['bio'])), user['sightml'], user['spacenote']).strip[0,3000],
+          location: first_exists(user['address'], (!user['resideprovince'].blank? ? [user['resideprovince'],  user['residecity'], user['residedist'], user['residecommunity']] : [user['birthprovince'],  user['birthcity'], user['birthdist'], user['birthcommunity']]).reject{|location|location.blank?}.join(' ')),
           post_create_action: lambda do |newmember|
             if user['avatar_exists'] == 1 and newmember.uploaded_avatar_id.blank?
               path, filename = discuzx_avatar_fullpath(user['id'])
               if path
                 begin
                   upload = create_upload(newmember.id, path, filename)
-                  if upload.persisted?
+                  if !upload.nil? && upload.persisted?
                     newmember.import_mode = false
                     newmember.create_user_avatar
                     newmember.import_mode = true
@@ -137,9 +199,42 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                 end
               end
             end
+            if !user['spacecss'].blank? and newmember.user_profile.profile_background.blank?
+              # profile background
+              if matched = user['spacecss'].match(/body\s*{[^}]*url\('?(.+?)'?\)/i)
+                body_background = matched[1].split(ORIGINAL_SITE_PREFIX, 2).last
+              end
+              if matched = user['spacecss'].match(/#hd\s*{[^}]*url\('?(.+?)'?\)/i)
+                header_background = matched[1].split(ORIGINAL_SITE_PREFIX, 2).last
+              end
+              if matched = user['spacecss'].match(/.blocktitle\s*{[^}]*url\('?(.+?)'?\)/i)
+                blocktitle_background = matched[1].split(ORIGINAL_SITE_PREFIX, 2).last
+              end
+              if matched = user['spacecss'].match(/#ct\s*{[^}]*url\('?(.+?)'?\)/i)
+                content_background = matched[1].split(ORIGINAL_SITE_PREFIX, 2).last
+              end
+
+              if body_background || header_background || blocktitle_background || content_background
+                profile_background = first_exists(header_background, body_background, content_background, blocktitle_background)
+                card_background = first_exists(content_background, body_background, header_background, blocktitle_background)
+                upload = create_upload(newmember.id, File.join(DISCUZX_BASE_DIR, profile_background), File.basename(profile_background))
+                if upload
+                  newmember.user_profile.upload_profile_background upload
+                else
+                  puts "WARNING: #{user['username']} (UID: #{user['id']}) profile_background file did not persist!"
+                end
+                upload = create_upload(newmember.id, File.join(DISCUZX_BASE_DIR, card_background), File.basename(card_background))
+                if upload
+                  newmember.user_profile.upload_card_background upload
+                else
+                  puts "WARNING: #{user['username']} (UID: #{user['id']}) card_background file did not persist!"
+                end
+              end
+            end
 
             # we don't send email to the unconfirmed user
             newmember.update(email_digests: user['email_confirmed'] == 1) if newmember.email_digests
+            newmember.update(name: '') if !newmember.name.blank? and newmember.name == newmember.username
           end
         }
       end
@@ -149,27 +244,57 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   def import_categories
     puts '', "creating categories"
 
+    get_knowledge_about_category_slug
+
     forums_table = table_name 'forum_forum'
     forums_data_table = table_name 'forum_forumfield'
 
     results = mysql_query("
           SELECT f.fid id, f.fup parent_id, f.name, f.type type, f.status status, f.displayorder position,
-                 d.description description
+                 d.description description, d.rules rules, d.icon, d.extra extra
             FROM #{forums_table} f
-            JOIN #{forums_data_table} d ON f.fid = d.fid
+            LEFT JOIN #{forums_data_table} d USING(fid)
            ORDER BY parent_id ASC, id ASC
         ")
 
     max_position = Category.all.max_by(&:position).position
     create_categories(results) do |row|
-      next if row['type'] == 'group' || row['status'].to_i == 3
+      next if row['type'] == 'group' or row['status'] == 2 # or row['status'].to_i == 3 # 如果不想导入群组，取消注释
+      extra = PHP.unserialize(row['extra']) if !row['extra'].blank?
+      if extra and !extra["namecolor"].blank?
+        color = extra["namecolor"][1,6]
+      end
 
       Category.all.max_by(&:position).position
+
       h = {
         id: row['id'],
         name: row['name'],
         description: row['description'],
-        position: row['position'].to_i + max_position
+        position: row['position'].to_i + max_position,
+        color: color,
+        suppress_from_homepage: (row['status'] == 0 or row['status'] == 3),
+        post_create_action: lambda do |category|
+          if slug = @category_slug[row['id']]
+            category.update(slug: slug)
+          end
+
+          raw = process_discuzx_post(row['rules'], nil)
+          if @bbcode_to_md
+            raw = raw.bbcode_to_md(false) rescue raw
+          end
+          category.topic.posts.first.update_attribute(:raw, raw)
+          if !row['icon'].empty?
+            upload = create_upload(Discourse::SYSTEM_USER_ID, File.join(DISCUZX_BASE_DIR, ATTACHMENT_DIR, '../common', row['icon']), File.basename(row['icon']))
+            if upload
+              category.logo_url = upload.url
+              # FIXME: I don't know how to get '/shared' by script. May change to Rails.root
+              category.color = Miro::DominantColors.new(File.join('/shared', category.logo_url)).to_hex.first[1,6] if !color
+              category.save!
+            end
+          end
+          category
+        end
       }
       if row['parent_id'].to_i > 0
         h[:parent_category_id] = category_id_from_imported_category_id(row['parent_id'])
@@ -181,6 +306,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   def import_posts
     puts "", "creating topics and posts"
 
+    users_table = table_name 'common_member'
     posts_table = table_name 'forum_post'
     topics_table = table_name 'forum_thread'
 
@@ -195,16 +321,18 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                    p.authorid user_id,
                    p.message raw,
                    p.dateline post_time,
-                   p.first is_first_post,
-                   p.invisible status
-              FROM #{posts_table} p,
-                   #{topics_table} t
-             WHERE p.tid = t.tid
+                   p2.pid first_id,
+                   p.invisible status,
+                   t.special special
+              FROM #{posts_table} p
+              JOIN #{posts_table} p2 ON p2.first AND p2.tid = p.tid
+              JOIN #{topics_table} t ON t.tid = p.tid
+              where t.tid < 10000
              ORDER BY id ASC, topic_id ASC
              LIMIT #{BATCH_SIZE}
             OFFSET #{offset};
           ")
-
+          # u.status != -1 AND u.groupid != 4 AND u.groupid != 5 用户未被锁定、禁访或禁言。在现实中的 Discuz 论坛，禁止的用户通常是广告机或驱逐的用户，这些不需要导入。
       break if results.size < 1
 
       next if all_records_exist? :posts, results.map {|p| p["id"].to_i}
@@ -218,39 +346,94 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         mapped[:raw] = process_discuzx_post(m['raw'], m['id'])
         mapped[:created_at] = Time.zone.at(m['post_time'])
 
-        if m['is_first_post'] == 1
+        if m['id'] == m['first_id']
           mapped[:category] = category_id_from_imported_category_id(m['category_id'])
           mapped[:title] = CGI.unescapeHTML(m['title'])
-          @first_post_id_by_topic_id[m['topic_id']] = m['id']
+
+          if m['special'] == 1
+            results = mysql_query("
+              SELECT multiple, maxchoices
+              FROM #{table_name 'forum_poll'}
+              WHERE tid = #{m['topic_id']}")
+            poll = results.first || {}
+            results = mysql_query("
+              SELECT polloption
+              FROM #{table_name 'forum_polloption'}
+              WHERE tid = #{m['topic_id']}
+              ORDER BY displayorder")
+            if results.empty?
+              puts "WARNING: can't find poll options for topic #{m['topic_id']}, skip poll"
+            else
+              mapped[:raw].prepend "[poll#{poll['multiple'] ? ' type=multiple' : ''}#{poll['maxchoices'] > 0 ? " max=#{poll['maxchoices']}" : ''}]\n#{results.map{|option|'- ' + option['polloption']}.join("\n")}\n[/poll]\n"
+            end
+          end
         else
-          parent = topic_lookup_from_imported_post_id(@first_post_id_by_topic_id[m['topic_id']])
+          parent = topic_lookup_from_imported_post_id(m['first_id'])
 
           if parent
             mapped[:topic_id] = parent[:topic_id]
-            post_id = post_id_from_imported_post_id(find_post_id_by_quote_number(m['raw']).to_i)
-            if (post = Post.find_by(id: post_id))
-              mapped[:reply_to_post_number] = post.post_number
+            reply_post_import_id = find_post_id_by_quote_number(m['raw'])
+            if reply_post_import_id
+              post_id = post_id_from_imported_post_id(reply_post_import_id.to_i)
+              if (post = Post.find_by(id: post_id))
+                if post.topic_id == mapped[:topic_id]
+                  mapped[:reply_to_post_number] = post.post_number
+                else
+                  puts "post #{m['id']} reply to another topic, skip reply"
+                end
+              else
+                puts "post #{m['id']} reply to not exists post #{reply_post_import_id}, skip reply"
+              end
             end
           else
             puts "Parent topic #{m['topic_id']} doesn't exist. Skipping #{m['id']}: #{m['title'][0..40]}"
             skip = true
           end
+
         end
 
-        if [-5, -3, -1].include? m['status'] || mapped[:raw].blank?
+        if m['status'] & 1 == 1 || mapped[:raw].blank?
           mapped[:post_create_action] = lambda do |post|
             PostDestroyer.new(Discourse.system_user, post).perform_delete
           end
-        elsif m['status'] == -2# waiting for approve
+        elsif (m['status'] & 2) >> 1 == 1 # waiting for approve
           mapped[:post_create_action] = lambda do |post|
             PostAction.act(Discourse.system_user, post, 6, {take_action: false})
           end
         end
-
         skip ? nil : mapped
       end
     end
   end
+
+  def import_bookmarks
+    puts '', 'creating bookmarks'
+    favorites_table = table_name 'home_favorite'
+    posts_table = table_name 'forum_post'
+
+    total_count = mysql_query("SELECT count(*) count FROM #{favorites_table} WHERE idtype = 'tid'").first['count']
+    batches(BATCH_SIZE) do |offset|
+      results = mysql_query("
+        SELECT p.pid post_id, f.uid user_id
+          FROM #{favorites_table} f
+          JOIN #{posts_table} p ON f.id = p.tid
+          WHERE f.idtype = 'tid' AND p.first
+             LIMIT #{BATCH_SIZE}
+            OFFSET #{offset};")
+
+      break if results.size < 1
+
+       # next if all_records_exist?
+
+      create_bookmarks(results, total: total_count, offset: offset) do |row|
+        {
+          user_id: row['user_id'],
+          post_id: row['post_id']
+        }
+      end
+    end
+  end
+
 
   def import_private_messages
     puts '', 'creating private messages'
@@ -285,7 +468,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|m| "pm:#{m['id']}"}
+      # next if all_records_exist? :posts, results.map {|m| "pm:#{m['id']}"}
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
@@ -349,8 +532,9 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     result.first['id'].to_s == pm_id.to_s
   end
 
-  def process_discuzx_post(raw, import_id)
+  def process_and_upload_inline_images(raw)
     inline_image_regex = /\[img\]([\s\S]*?)\[\/img\]/
+
     s = raw.dup
 
     s.gsub!(inline_image_regex) do |d|
@@ -361,14 +545,65 @@ class ImportScripts::DiscuzX < ImportScripts::Base
       upload ? html_for_upload(upload, filename) : nil
     end
 
+  end
+
+  def process_discuzx_post(raw, import_id)
+    # raw = process_and_upload_inline_images(raw)
+    s = raw.dup
+
     # Strip the quote
     # [quote] quotation includes the topic which is the same as reply to in Discourse
     # We get the pid to find the post number the post reply to. So it can be stripped
-    s = s.gsub(/\[quote\][\s\S]*?\[\/quote\]/i, '').strip
     s = s.gsub(/\[b\]回复 \[url=forum.php\?mod=redirect&goto=findpost&pid=\d+&ptid=\d+\].* 的帖子\[\/url\]\[\/b\]/i, '').strip
+    s = s.gsub(/\[b\]回复 \[url=https?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=\d+&ptid=\d+\].*?\[\/url\].*?\[\/b\]/i, '').strip
 
-    # Convert image bbcode
+    s.gsub!(/\[quote\](.*)?\[\/quote\]/im) do |matched|
+      content = $1
+      post_import_id = find_post_id_by_quote_number(content)
+      if post_import_id
+        post_id = post_id_from_imported_post_id(post_import_id.to_i)
+        if (post = Post.find_by(id: post_id))
+          "[quote=\"#{post.user.username}\", post: #{post.post_number}, topic: #{post.topic_id}]\n#{content}\n[/quote]"
+        else
+          puts "post #{import_id} quote to not exists post #{post_import_id}, skip reply"
+          matched[0]
+        end
+      else
+        matched[0]
+      end
+    end
+
+    s.gsub!(/\[size=2\]\[color=#999999\].*? 发表于 [\d\-\: ]*\[\/color\] \[url=forum.php\?mod=redirect&goto=findpost&pid=\d+&ptid=\d+\].*?\[\/url\]\[\/size\]/i, '')
+    s.gsub!(/\[size=2\]\[color=#999999\].*? 发表于 [\d\-\: ]*\[\/color\] \[url=https?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=\d+&ptid=\d+\].*?\[\/url\]\[\/size\]/i, '')
+
+    # convert quote
+    s.gsub!(/\[quote\](.*?)\[\/quote\]/m) { "\n" + ($1.strip).gsub(/^/, '> ') + "\n" }
+
+    # truncate line space, preventing line starting with many blanks to be parsed as code blocks
+    s.gsub!(/^ {4,}/, '   ')
+
+    # TODO: Much better to use bbcode-to-md gem
+    # Convert image bbcode with width and height
+    s.gsub!(/\[img[^\]]*\]https?:\/\/#{ORIGINAL_SITE_PREFIX}\/(.*)\[\/img\]/i, '[x-attach]\1[/x-attach]') # dont convert attachment
+    s.gsub!(/<img[^>]*src="https?:\/\/#{ORIGINAL_SITE_PREFIX}\/(.*)".*?>/i, '[x-attach]\1[/x-attach]') # dont convert attachment
+    s.gsub!(/\[img[^\]]*\]https?:\/\/www\.touhou\.cc\/blog\/(.*)\[\/img\]/i, '[x-attach]../blog/\1[/x-attach]') # 私货
+    s.gsub!(/\[img[^\]]*\]https?:\/\/www\.touhou\.cc\/ucenter\/avatar.php\?uid=(\d+)[^\]]*\[\/img\]/i) { "[x-attach]#{discuzx_avatar_fullpath($1,false)[0]}[/x-attach]" } # 私货
     s.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
+    s.gsub!(/\[img\]([^\]]*)\[\/img\]/i, '<img src="\1">')
+
+    s.gsub!(/\[qq\]([^\]]*)\[\/qq\]/i, '<a href="http://wpa.qq.com/msgrd?V=3&Uin=\1&Site=[Discuz!]&from=discuz&Menu=yes" target="_blank"><!--<img src="static/image/common/qq_big.gif" border="0">-->QQ 交谈</a>')
+
+    s.gsub!(/\[email\]([^\]]*)\[\/email\]/i, '[url=mailto:\1]\1[/url]') # bbcode-to-md can convert it
+    s.gsub!(/\[s\]([^\]]*)\[\/s\]/i, '<s>\1</s>')
+    s.gsub!(/\[sup\]([^\]]*)\[\/sup\]/i, '<sup>\1</sup>')
+    s.gsub!(/\[sub\]([^\]]*)\[\/sub\]/i, '<sub>\1</sub>')
+    s.gsub!(/\[hr\]/i, "\n---\n")
+
+    # remove the media tag
+    s.gsub!(/\[\/?media[^\]]*\]/i, "\n")
+    s.gsub!(/\[\/?flash[^\]]*\]/i, "\n")
+    s.gsub!(/\[\/?audio[^\]]*\]/i, "\n")
+    s.gsub!(/\[\/?video[^\]]*\]/i, "\n")
 
     # Remove the font, p and backcolor tag
     # Discourse doesn't support the font tag
@@ -390,11 +625,14 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
     # Remove the hide tag
     s.gsub!(/\[\/?hide\]/i, '')
+    s.gsub!(/\[\/?free[^\]]*\]/i, "\n")
 
     # Remove the align tag
     # still don't know what it is
-    s.gsub!(/\[align=[^\]]*?\]/i, '')
+    s.gsub!(/\[align=[^\]]*?\]/i, "\n")
     s.gsub!(/\[\/align\]/i, "\n")
+    s.gsub!(/\[float=[^\]]*?\]/i, "\n")
+    s.gsub!(/\[\/float\]/i, "\n")
 
     # Convert code
     s.gsub!(/\[\/?code\]/i, "\n```\n")
@@ -424,39 +662,65 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     # [url][b]text[/b][/url] to **[url]text[/url]**
     s.gsub!(/(\[url=[^\[\]]*?\])\[b\](\S*)\[\/b\](\[\/url\])/, '**\1\2\3**')
 
-    s.gsub!(internal_url_regexp) do |discuzx_link|
-      replace_internal_link(discuzx_link, $1)
+    @internal_url_regexps.each do |internal_url_regexp|
+      s.gsub!(internal_url_regexp) do |discuzx_link|
+        replace_internal_link(discuzx_link, ($~[:tid].to_i rescue nil), ($~[:pid].to_i rescue nil), ($~[:fid].to_i rescue nil), ($~[:action] rescue nil))
+      end
     end
 
     # @someone without the url
     s.gsub!(/@\[url=[^\[\]]*?\](\S*)\[\/url\]/i, '@\1')
 
+    s.scan(/http(?:s)?:\/\/#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}\/[^\[\]\s]*/) {|link|puts "WARNING: post #{import_id} can't replace internal url #{link}"}
+
     s.strip
   end
 
-  def replace_internal_link(discuzx_link, import_topic_id)
-    results = mysql_query("SELECT pid
-                             FROM #{table_name 'forum_post'}
-                            WHERE tid = #{import_topic_id}
-                         ORDER BY pid ASC
-                            LIMIT 1")
-
-    return discuzx_link unless results.size > 0
-
-    linked_topic_id = results.first['pid']
-    lookup = topic_lookup_from_imported_post_id(linked_topic_id)
-
-    return discuzx_link unless lookup
-
-    if (t = Topic.find_by(id: lookup[:topic_id]))
-      "#{NEW_SITE_PREFIX}/t/#{t.slug}/#{t.id}"
-    else
-      discuzx_link
+  def replace_internal_link(discuzx_link, import_topic_id, import_post_id, import_category_id, action)
+    if import_post_id
+      post_id = post_id_from_imported_post_id import_post_id
+      if post_id
+        post = Post.find post_id
+        return post.full_url if post
+      end
     end
-  end
 
-  def internal_url_regexp
-    @internal_url_regexp ||= Regexp.new("http(?:s)?://#{ORIGINAL_SITE_PREFIX.gsub('.', '\.')}/forum\\.php\\?mod=viewthread&tid=(\\d+)(?:[^\\]\\[]*)")
+    if import_topic_id
+
+      results = mysql_query("SELECT pid
+                               FROM #{table_name 'forum_post'}
+                              WHERE tid = #{import_topic_id} AND first
+                              LIMIT 1")
+
+      return discuzx_link unless results.size > 0
+
+      linked_post_id = results.first['pid']
+      lookup = topic_lookup_from_imported_post_id(linked_post_id)
+
+      if lookup
+        return "#{NEW_SITE_PREFIX}#{lookup[:url]}"
+      else
+        return discuzx_link
+      end
+
+    end
+
+    if import_category_id
+      category_id = category_id_from_imported_category_id import_category_id
+      if category_id
+        category = Category.find category_id
+        return category.url if category
+      end
+    end
+
+    case action
+    when 'index'
+      return "#{NEW_SITE_PREFIX}/"
+    when 'stat', 'stats', 'ranklist'
+      return "#{NEW_SITE_PREFIX}/users"
+    end
+
+    discuzx_link
   end
 
   def pm_url_regexp
@@ -470,8 +734,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     SiteSetting.authorized_extensions = setting if setting != SiteSetting.authorized_extensions
 
     attachment_regex = /\[attach\](\d+)\[\/attach\]/
-
-    user = Discourse.system_user
+    attachment_link_regex = /\[x-attach\](.+)\[\/x-attach\]/
 
     current_count = 0
     total_count = mysql_query("SELECT count(*) count FROM #{table_name 'forum_post'};").first['count']
@@ -482,13 +745,20 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     puts '', "Importing attachments...", ''
 
     Post.find_each do |post|
+      next unless post.custom_fields['import_id'] == post.custom_fields['import_id'].to_i.to_s
+
+      user = post.user
+
       current_count += 1
       print_status current_count, total_count
 
       new_raw = post.raw.dup
+
+      inline_attachments = []
+
       new_raw.gsub!(attachment_regex) do |s|
-        matches = attachment_regex.match(s)
-        attachment_id = matches[1]
+        attachment_id = $1.to_i
+        inline_attachments.push attachment_id
 
         upload, filename = find_upload(user, post, attachment_id)
         unless upload
@@ -497,6 +767,41 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         end
 
         html_for_upload(upload, filename)
+      end
+      new_raw.gsub!(attachment_link_regex) do |s|
+        attachment_file = $1
+
+        filename = File.basename(attachment_file)
+        upload = create_upload(user.id, File.join(DISCUZX_BASE_DIR, attachment_file), filename)
+        unless upload
+          fail_count += 1
+          next
+        end
+
+        html_for_upload(upload, filename)
+      end
+
+      sql = "SELECT aid
+          FROM #{table_name 'forum_attachment'}
+          WHERE pid = #{post.custom_fields['import_id']}"
+      if !inline_attachments.empty?
+          sql << " AND aid NOT IN (#{inline_attachments.join(',')})"
+      end
+
+      results = mysql_query(sql)
+
+      results.each do |attachment|
+        attachment_id = attachment['aid']
+        upload, filename = find_upload(user, post, attachment_id)
+        unless upload
+          fail_count += 1
+          next
+        end
+        html = html_for_upload(upload, filename)
+        unless new_raw.include? html
+          new_raw << "\n"
+          new_raw << html
+        end
       end
 
       if new_raw != post.raw
@@ -513,7 +818,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   end
 
   # Create the full path to the discuz avatar specified from user id
-  def discuzx_avatar_fullpath(user_id)
+  def discuzx_avatar_fullpath(user_id, absolute=true)
     padded_id = user_id.to_s.rjust(9, '0')
 
     part_1 = padded_id[0..2]
@@ -522,16 +827,23 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     part_4 = padded_id[-2..-1]
     file_name = "#{part_4}_avatar_big.jpg"
 
-    return File.join(DISCUZX_BASE_DIR, AVATAR_DIR, part_1, part_2, part_3, file_name), file_name
+    if absolute
+      return File.join(DISCUZX_BASE_DIR, AVATAR_DIR, part_1, part_2, part_3, file_name), file_name
+    else
+      return File.join(AVATAR_DIR, part_1, part_2, part_3, file_name), file_name
+    end
   end
 
   # post id is in the quote block
   def find_post_id_by_quote_number(raw)
-    s = raw.dup
-    quote_reply = s.match(/\[quote\][\S\s]*pid=(\d+)[\S\s]*\[\/quote\]/)
-    reply = s.match(/url=forum.php\?mod=redirect&goto=findpost&pid=(\d+)&ptid=\d+/)
-
-    quote_reply ? quote_reply[1] : (reply ? reply[1] : nil)
+    case raw
+    when /\[url=forum.php\?mod=redirect&goto=findpost&pid=(\d+)&ptid=\d+\]/ #standard
+      $1
+    when /\[url=https?:\/\/#{ORIGINAL_SITE_PREFIX}\/redirect.php\?goto=findpost&pid=(\d+)&ptid=\d+\]/ # old discuz 7 format
+      $1
+    when /\[quote\][\S\s]*pid=(\d+)[\S\s]*\[\/quote\]/ # quote
+      $1
+    end
   end
 
   # for some reason, discuz inlined some png file
@@ -630,6 +942,10 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     puts e.message
     puts sql
     return nil
+  end
+
+  def first_exists(*items)
+    items.find{|item|!item.blank?} || ''
   end
 
   def mysql_query(sql)
