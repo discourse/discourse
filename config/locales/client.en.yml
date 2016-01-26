@@ -525,6 +525,7 @@ en:
         groups: "My Groups"
         bulk_select: "Select messages"
         move_to_inbox: "Move to Inbox"
+        move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
 
