@@ -46,7 +46,11 @@ class UserHistory < ActiveRecord::Base
                           create_category: 28,
                           change_site_text: 29,
                           block_user: 30,
-                          unblock_user: 31)
+                          unblock_user: 31,
+                          grant_admin: 32,
+                          revoke_admin: 33,
+                          grant_moderation: 34,
+                          revoke_moderation: 35)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -74,7 +78,11 @@ class UserHistory < ActiveRecord::Base
                         :delete_category,
                         :create_category,
                         :block_user,
-                        :unblock_user]
+                        :unblock_user,
+                        :grant_admin,
+                        :revoke_admin,
+                        :grant_moderation,
+                        :revoke_moderation]
   end
 
   def self.staff_action_ids
