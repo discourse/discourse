@@ -275,8 +275,7 @@ nav.post-controls {
     width: 701px;
   }
   &.top.topic-body {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
   }
 
   .post-date { color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)); }
