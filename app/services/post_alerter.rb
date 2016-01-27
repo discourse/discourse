@@ -172,7 +172,7 @@ class PostAlerter
                    .pluck(:group_id).first
 
     stat = stats.find{|s| s[:group_id] == group_id}
-    return unless stat
+    return unless stat && stat[:inbox_count] > 0
 
     notification_type = Notification.types[:group_message_summary]
 
