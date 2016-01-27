@@ -41,7 +41,9 @@ class Notification < ActiveRecord::Base
                         granted_badge: 12,
                         invited_to_topic: 13,
                         custom: 14,
-                        group_mentioned: 15)
+                        group_mentioned: 15,
+                        group_message_summary: 16
+                       )
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
