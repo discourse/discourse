@@ -1,4 +1,5 @@
 const INVITED_TYPE = 8;
+const GROUP_SUMMARY_TYPE = 16;
 
 export default Ember.Component.extend({
   tagName: 'li',
@@ -69,7 +70,7 @@ export default Ember.Component.extend({
     const description = this.get('description');
     const username = notification.get('data.display_username');
     var text;
-    if (notification.get('data.inbox_count')) {
+    if (notification.get('notification_type') === GROUP_SUMMARY_TYPE) {
       const count = notification.get('data.inbox_count');
       const group_name = notification.get('data.group_name');
       text = I18n.t(this.get('scope'), {count, group_name});
