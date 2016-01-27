@@ -158,6 +158,10 @@ class Notification < ActiveRecord::Base
     Notification.types[:private_message] == self.notification_type && !read
   end
 
+  def post_id
+    Post.where(topic: topic_id, post_number: post_number).pluck(:id).first
+  end
+
   protected
 
   def refresh_notification_count

@@ -580,6 +580,10 @@ class Post < ActiveRecord::Base
     SQL
   end
 
+  def seen?(user)
+    PostTiming.where(topic_id: topic_id, post_number: post_number, user_id: user.id).exists?
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
