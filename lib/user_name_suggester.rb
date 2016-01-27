@@ -11,7 +11,7 @@ module UserNameSuggester
       # When 'walter@white.com' take 'walter'
       name = Regexp.last_match[1]
       # When 'me@eviltrout.com' take 'eviltrout'
-      name = Regexp.last_match[2] if ['i', 'me'].include?(name)
+      name = Regexp.last_match[2] if ['i', 'me', 'info', 'support', 'admin', 'webmaster', 'hello', 'mail', 'office', 'contact', 'team'].include?(name)
     end
     name
   end
