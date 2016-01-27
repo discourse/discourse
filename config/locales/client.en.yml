@@ -2329,6 +2329,10 @@ en:
             create_category: "create category"
             block_user: "block user"
             unblock_user: "unblock user"
+            grant_admin: "grant admin"
+            revoke_admin: "revoke admin"
+            grant_moderation: "grant moderation"
+            revoke_moderation: "revoke moderation"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

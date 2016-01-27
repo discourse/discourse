@@ -294,6 +294,38 @@ class StaffActionLogger
     }))
   end
 
+  def log_grant_admin(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:grant_admin],
+      target_user_id: user.id
+    }))
+  end
+
+  def log_revoke_admin(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:revoke_admin],
+      target_user_id: user.id
+    }))
+  end
+
+  def log_grant_moderation(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:grant_moderation],
+      target_user_id: user.id
+    }))
+  end
+
+  def log_revoke_moderation(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:revoke_moderation],
+      target_user_id: user.id
+    }))
+  end
+
   private
 
     def params(opts=nil)
