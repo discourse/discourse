@@ -16,6 +16,14 @@ describe Email::Styles do
     Nokogiri::HTML(styler.to_html)
   end
 
+  def notification_doc(html)
+    styler = Email::Styles.new(html)
+    styler.format_basic
+    styler.format_notification
+    styler.format_html
+    Nokogiri::HTML(styler.to_html)
+  end
+
   context "basic formatter" do
 
     it "works with an empty string" do
@@ -24,10 +32,14 @@ describe Email::Styles do
       expect(style.to_html).to be_blank
     end
 
-    # Pending due to email effort @coding-horror made in d2fb2bc4c
-    skip "adds a max-width to images" do
-      doc = basic_doc("<img src='gigantic.jpg'>")
+    it "adds a max-width to big images" do
+      doc = basic_doc("<img src='gigantic.jpg' width='1230' height='720'>")
       expect(doc.at("img")["style"]).to match("max-width")
+    end
+
+    it "doesn't add a maz-width to small images" do
+      doc = basic_doc("<img src='gigantic.jpg' width='120' height='80'>")
+      expect(doc.at("img")["style"]).not_to match("max-width")
     end
 
     it "adds a width and height to images with an emoji path" do
@@ -97,6 +109,19 @@ describe Email::Styles do
     end
   end
 
+  context "format notifications" do
+    it "adds both styles and attributes" do
+      doc = notification_doc("<table><tr><td class='body'>hello</td></tr></table>")
+      expect(doc.at('td')['style']).to eq('padding-top:5px;')
+      expect(doc.at('td')['colspan']).to eq('2')
+    end
+
+    it "adds attributes when no styles are present" do
+      doc = notification_doc("<div class='user-avatar'><img src='/some-image.png'></div>")
+      expect(doc.at('img')['width']).to eq('45')
+    end
+  end
+
   context "rewriting protocol relative URLs to the forum" do
     it "doesn't rewrite a url to another site" do
       doc = html_doc('<a href="//youtube.com/discourse">hello</a>')
@@ -162,6 +187,5 @@ describe Email::Styles do
       expect(style.to_html).to match_html("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\"><html><body>cry_cry</body></html>")
     end
   end
-
 
 end
