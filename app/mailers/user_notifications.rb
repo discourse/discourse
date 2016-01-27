@@ -200,32 +200,39 @@ class UserNotifications < ActionMailer::Base
   end
 
   def notification_email(user, opts)
-    return unless @notification = opts[:notification]
-    return unless @post = opts[:post]
+    return unless notification_type = opts[:notification_type]
+    return unless notification_data = opts[:notification_data_hash]
+    return unless post = opts[:post]
 
-    user_name = @notification.data_hash[:original_username]
-    
-    if @post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
-      name = User.where(id: @post.user_id).pluck(:name).first
+    unless String === notification_type
+      if Numeric === notification_type
+        notification_type = Notification.types[notification_type]
+      end
+      notification_type = notification_type.to_s
+    end
+
+    user_name = notification_data[:original_username]
+
+    if post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
+      name = User.where(id: post.user_id).pluck(:name).first
       user_name = name unless name.blank?
     end
 
-    notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
-    return if user.mailing_list_mode && !@post.topic.private_message? &&
+    return if user.mailing_list_mode && !post.topic.private_message? &&
        ["replied", "mentioned", "quoted", "posted", "group_mentioned"].include?(notification_type)
 
-    title = @notification.data_hash[:topic_title]
+    title = notification_data[:topic_title]
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
     use_site_subject = opts[:use_site_subject]
     add_re_to_subject = opts[:add_re_to_subject]
     show_category_in_subject = opts[:show_category_in_subject]
     use_template_html = opts[:use_template_html]
-    original_username = @notification.data_hash[:original_username] || @notification.data_hash[:display_username]
+    original_username = notification_data[:original_username] || notification_data[:display_username]
 
     send_notification_email(
       title: title,
-      post: @post,
+      post: post,
       username: original_username,
       from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
