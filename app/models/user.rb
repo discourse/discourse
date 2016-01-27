@@ -294,8 +294,13 @@ class User < ActiveRecord::Base
     User.where("id = ? and seen_notification_id < ?", id, notification_id)
         .update_all ["seen_notification_id = ?", notification_id]
 
-    # mark all "badge granted" and "invite accepted" notifications read
-    Notification.where('user_id = ? AND NOT read AND notification_type IN (?)', id, [Notification.types[:granted_badge], Notification.types[:invitee_accepted]])
+    # some notifications are considered read once seen
+    Notification.where('user_id = ? AND NOT read AND notification_type IN (?)', id, [
+                       Notification.types[:granted_badge],
+                       Notification.types[:invitee_accepted],
+                       Notification.types[:group_message_summary],
+                       Notification.types[:liked]
+    ])
         .update_all ["read = ?", true]
   end
 

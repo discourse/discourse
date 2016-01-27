@@ -28,7 +28,7 @@ class PostAlerter
     allowed_users(post) - allowed_group_users(post)
   end
 
-  def undirectly_targeted_users(post)
+  def indirectly_targeted_users(post)
     allowed_group_users(post)
   end
 
@@ -77,11 +77,15 @@ class PostAlerter
           end
         end
         # users that are part of all mentionned groups
-        undirectly_targeted_users(post).each do |user|
+        indirectly_targeted_users(post).each do |user|
           if !notified.include?(user)
             # only create a notification when watching the group
-            if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:watching]
+            notification_level = TopicUser.get(post.topic, user).try(:notification_level)
+            if notification_level == TopicUser.notification_levels[:watching]
               create_notification(user, Notification.types[:private_message], post)
+              notified += [user]
+            elsif notification_level == TopicUser.notification_levels[:tracking]
+              notify_group_summary(user, post)
               notified += [user]
             end
           end
@@ -140,6 +144,55 @@ class PostAlerter
   NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned].map{ |t|
     Notification.types[t]
   }
+
+  def group_stats(topic)
+    topic.allowed_groups.map do |g|
+      {
+        group_id: g.id,
+        group_name: g.name.downcase,
+        inbox_count: Topic.exec_sql(
+        "SELECT COUNT(*) FROM topics t
+         JOIN topic_allowed_groups g ON g.id = :group_id AND g.topic_id = t.id
+         LEFT JOIN group_archived_messages a ON a.topic_id = t.id AND a.group_id = g.id
+         WHERE a.id IS NULL AND t.deleted_at is NULL AND t.archetype = 'private_message'", 
+          group_id: g.id).values[0][0].to_i
+      }
+    end
+  end
+
+  def notify_group_summary(user,post)
+
+    @group_stats ||= {}
+    stats = (@group_stats[post.topic_id] ||= group_stats(post.topic))
+    return unless stats
+
+    group_id = post.topic
+                   .topic_allowed_groups
+                   .where(group_id: user.groups.pluck(:id))
+                   .pluck(:group_id).first
+
+    stat = stats.find{|s| s[:group_id] == group_id}
+    return unless stat
+
+    notification_type = Notification.types[:group_message_summary]
+
+    Notification.where(notification_type: notification_type, user_id: user.id).each do |n|
+      n.destroy if n.data_hash[:group_id] == stat[:group_id]
+    end
+
+    Notification.create(
+      notification_type: notification_type,
+      user_id: user.id,
+      data: {
+        group_id: stat[:group_id],
+        group_name: stat[:group_name],
+        inbox_count: stat[:inbox_count],
+        username: user.username_lower
+      }.to_json
+    )
+
+    # TODO decide if it makes sense to also publish a desktop notification
+  end
 
   def create_notification(user, type, post, opts=nil)
     return if user.blank?

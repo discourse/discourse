@@ -1002,6 +1002,10 @@ en:
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
 
+      group_message_summary:
+          one: "<i title='messages in group inbox' class='fa fa-group'></i><p> there is {{count}} message in your {{group_name}} inbox</p>"
+          other: "<i title='messages in group inbox' class='fa fa-group'></i><p> there are {{count}} messages in your {{group_name}} inbox</p>"
+
       alt:
         mentioned: "Mentioned by"
         quoted: "Quoted by"
@@ -1016,6 +1020,7 @@ en:
         moved_post: "Your post was moved by"
         linked: "Link to your post"
         granted_badge: "Badge granted"
+        group_message_summary: "Messages in group inbox"
 
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
