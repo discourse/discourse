@@ -91,6 +91,10 @@ module Email
       style('.rtl', 'direction: rtl;')
       style('td.body', 'padding-top:5px;', colspan: "2")
       style('.whisper td.body', 'font-style: italic; color: #9c9c9c;')
+      style('.wrapper', 'width:100%;table-layout:fixed;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;')
+      style('.webkit', 'max-width:600px;')
+      style('.outer', 'Margin: 0 auto; width: 100%; max-width: 600px;')
+      style('.container', 'padding: 10px;')
       correct_first_body_margin
       correct_footer_style
       reset_tables
@@ -138,6 +142,7 @@ module Email
     end
 
     def format_html
+      style('body', 'Margin: 0;padding:0;min-width:100%;background-color:#ffffff;')
       style('h3', 'margin: 15px 0 20px 0;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('a', 'text-decoration: none; font-weight: bold; color: #006699;')
