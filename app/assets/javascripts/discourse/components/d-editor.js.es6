@@ -3,7 +3,9 @@ import loadScript from 'discourse/lib/load-script';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
 import Category from 'discourse/models/category';
-import { SEPARATOR as categoryHashtagSeparator } from 'discourse/lib/category-hashtags';
+import { SEPARATOR as categoryHashtagSeparator,
+         categoryHashtagTriggerRule
+       } from 'discourse/lib/category-hashtags';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -262,25 +264,7 @@ export default Ember.Component.extend({
         return Category.search(term);
       },
       triggerRule(textarea, opts) {
-        const result = Discourse.Utilities.caretRowCol(textarea);
-        const row = result.rowNum;
-        var col = result.colNum;
-        var line = textarea.value.split("\n")[row - 1];
-
-        if (opts && opts.backSpace) {
-          col = col - 1;
-          line = line.slice(0, line.length - 1);
-
-          // Don't trigger autocomplete when backspacing into a `#category |` => `#category|`
-          if (/^#{1}\w+/.test(line)) return false;
-        }
-
-        if (col < 6) {
-          // Don't trigger autocomplete when ATX-style headers are used
-          return (line.slice(0, col) !== "#".repeat(col));
-        } else {
-          return true;
-        }
+        return categoryHashtagTriggerRule(textarea, opts);
       }
     });
   },
