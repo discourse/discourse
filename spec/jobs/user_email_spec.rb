@@ -64,19 +64,31 @@ describe Jobs::UserEmail do
   context "email_log" do
 
     it "creates an email log when the mail is sent" do
+      last_emailed_at = user.last_emailed_at
+
       expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+
       email_log = EmailLog.last
       expect(email_log.skipped).to eq(false)
       expect(email_log.user_id).to eq(user.id)
+
+      # last_emailed_at should have changed
+      expect(email_log.user.last_emailed_at).to_not eq(last_emailed_at)
     end
 
     it "creates an email log when the mail is skipped" do
+      last_emailed_at = user.last_emailed_at
       user.update_columns(suspended_till: 1.year.from_now)
+
       expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+
       email_log = EmailLog.last
       expect(email_log.skipped).to eq(true)
       expect(email_log.skipped_reason).to be_present
       expect(email_log.user_id).to eq(user.id)
+
+      # last_emailed_at doesn't change
+      expect(email_log.user.last_emailed_at).to eq(last_emailed_at)
     end
 
   end
