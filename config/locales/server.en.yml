@@ -1823,7 +1823,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The category you sent this email to does not allow emails from unrestricted accounts. If you believe this is in error, contact a staff member.
+        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is in error, contact a staff member.
 
     email_reject_invalid_post:
       subject_template: "[%{site_name}] Email issue -- Posting error"
@@ -1889,11 +1889,11 @@ en:
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP authentication error"
       text_body_template: |
-        There has been an authentication error while polling mails from the POP server.
+        Unfortunately, there was an authentication error while polling mails from the POP server.
 
         Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
 
-        If there is a web UI, you may need to log in on the web and check your settings.
+        If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
 
     too_many_spam_flags:
       subject_template: "New account blocked"
