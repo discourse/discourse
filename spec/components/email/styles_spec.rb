@@ -120,6 +120,17 @@ describe Email::Styles do
       doc = notification_doc("<div class='user-avatar'><img src='/some-image.png'></div>")
       expect(doc.at('img')['width']).to eq('45')
     end
+
+    it "adds correct styles to the wrapper" do
+      doc = notification_doc('<center class="wrapper"></center>')
+      expect(doc.at('center')['style']).to eq('width:100%;table-layout:fixed;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;')
+    end
+
+    it "doesn't override inline attributes" do
+      doc = notification_doc('<table width="600" align="center"><tr><td>test</td></tr></table>')
+      expect(doc.at('table')['align']).to eq('center')
+      expect(doc.at('table')['width']).to eq('600')
+    end
   end
 
   context "rewriting protocol relative URLs to the forum" do
