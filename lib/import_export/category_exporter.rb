@@ -8,6 +8,7 @@ module ImportExport
       @subcategories = Category.where(parent_category_id: category_id)
       @export_data = {
         users: [],
+        groups: [],
         category: nil,
         subcategories: [],
         topics: []
@@ -24,14 +25,43 @@ module ImportExport
 
     CATEGORY_ATTRS = [:id, :name, :color, :created_at, :user_id, :slug, :description, :text_color,
                       :auto_close_hours, :logo_url, :background_url, :auto_close_based_on_last_post,
-                      :topic_template, :suppress_from_homepage]
+                      :topic_template, :suppress_from_homepage, :permissions_params]
 
     def export_categories
-      # description
       @export_data[:category] = CATEGORY_ATTRS.inject({}) { |h,a| h[a] = @category.send(a); h }
       @subcategories.find_each do |subcat|
         @export_data[:subcategories] << CATEGORY_ATTRS.inject({}) { |h,a| h[a] = subcat.send(a); h }
       end
+
+      # export groups that are mentioned in category permissions
+      group_names = []
+      auto_group_names = Group::AUTO_GROUPS.keys
+
+      ([@export_data[:category]] + @export_data[:subcategories]).each do |c|
+        c[:permissions_params].each do |group_name, _|
+          group_names << group_name unless auto_group_names.include?(group_name)
+        end
+      end
+
+      group_names.uniq!
+      export_groups(group_names) unless group_names.empty?
+
+      self
+    end
+
+
+    GROUP_ATTRS = [ :id, :name, :created_at, :alias_level, :visible,
+                    :automatic_membership_email_domains, :automatic_membership_retroactive,
+                    :primary_group, :title, :grant_trust_level, :incoming_email]
+
+    def export_groups(group_names)
+      group_names.each do |name|
+        group = Group.find_by_name(name)
+        group_attrs = GROUP_ATTRS.inject({}) { |h,a| h[a] = group.send(a); h }
+        group_attrs[:user_ids] = group.users.pluck(:id)
+        @export_data[:groups] << group_attrs
+      end
+
       self
     end
 
