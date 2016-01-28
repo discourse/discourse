@@ -61,6 +61,26 @@ describe Jobs::UserEmail do
     end
   end
 
+  context "email_log" do
+
+    it "creates an email log when the mail is sent" do
+      expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+      email_log = EmailLog.last
+      expect(email_log.skipped).to eq(false)
+      expect(email_log.user_id).to eq(user.id)
+    end
+
+    it "creates an email log when the mail is skipped" do
+      user.update_columns(suspended_till: 1.year.from_now)
+      expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+      email_log = EmailLog.last
+      expect(email_log.skipped).to eq(true)
+      expect(email_log.skipped_reason).to be_present
+      expect(email_log.user_id).to eq(user.id)
+    end
+
+  end
+
   context 'args' do
 
     it 'passes a token as an argument when a token is present' do

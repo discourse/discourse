@@ -16,12 +16,12 @@ module Jobs
 
       user = User.find_by(id: args[:user_id])
 
-      set_skip_context(type, args[:user_id], args[:to_address] || user.try(:email) || "no_email_found")
-      return skip(I18n.t("email_log.no_user", user_id: args[:user_id])) unless user
+      set_context(type, args[:user_id], args[:to_address] || user.try(:email) || "no_email_found")
+      return create_email_log(I18n.t("email_log.no_user", user_id: args[:user_id])) unless user
 
       if args[:post_id]
         post = Post.find_by(id: args[:post_id])
-        return skip(I18n.t('email_log.post_not_found', post_id: args[:post_id])) unless post.present?
+        return create_email_log(I18n.t('email_log.post_not_found', post_id: args[:post_id])) unless post.present?
       end
 
       if args[:notification_id].present?
@@ -45,8 +45,8 @@ module Jobs
       end
     end
 
-    def set_skip_context(type, user_id, to_address)
-      @skip_context = {type: type, user_id: user_id, to_address: to_address}
+    def set_context(type, user_id, to_address)
+      @context = {type: type, user_id: user_id, to_address: to_address}
     end
 
 
@@ -59,7 +59,7 @@ module Jobs
                             email_token=nil,
                             to_address=nil)
 
-      set_skip_context(type, user.id, to_address || user.email)
+      set_context(type, user.id, to_address || user.email)
 
       return skip_message(I18n.t("email_log.anonymous_user")) if user.anonymous?
       return skip_message(I18n.t("email_log.suspended_not_pm")) if user.suspended? && type != :user_private_message
@@ -108,34 +108,42 @@ module Jobs
         message.to = [to_address]
       end
 
-      [message,nil]
+      create_email_log
 
+      [message,nil]
     end
 
     private
 
     def skip_message(reason)
-      [nil, skip(reason)]
+      [nil, create_email_log(reason)]
     end
 
     # If this email has a related post, don't send an email if it's been deleted or seen recently.
     def skip_email_for_post(post, user)
       if post
-        return I18n.t('email_log.topic_nil') if post.topic.blank?
-        return I18n.t('email_log.post_deleted') if post.user_deleted?
+        return I18n.t('email_log.topic_nil')      if post.topic.blank?
+        return I18n.t('email_log.post_deleted')   if post.user_deleted?
         return I18n.t('email_log.user_suspended') if (user.suspended? && !post.user.try(:staff?))
-        return I18n.t('email_log.already_read') if PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
+        return I18n.t('email_log.already_read')   if PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
       else
         false
       end
     end
 
-    def skip(reason)
-      EmailLog.create( email_type: @skip_context[:type],
-                       to_address: @skip_context[:to_address],
-                       user_id: @skip_context.try(:user_id),
-                       skipped: true,
-                       skipped_reason: reason)
+    def create_email_log(skipped_reason=nil)
+      options = {
+        email_type: @context[:type],
+        to_address: @context[:to_address],
+        user_id: @context[:user_id],
+      }
+
+      if skipped_reason.present?
+        options[:skipped] = true
+        options[:skipped_reason] = skipped_reason
+      end
+
+      EmailLog.create!(options)
     end
 
   end
