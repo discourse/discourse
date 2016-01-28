@@ -26,7 +26,7 @@ class BasicCategorySerializer < ApplicationSerializer
   end
 
   def description
-    object.uncategorized? ? SiteSetting.uncategorized_description : object.description
+    object.uncategorized? ? I18n.t('category.uncategorized_description') : object.description
   end
 
   def can_edit

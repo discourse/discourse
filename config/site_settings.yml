@@ -394,7 +394,6 @@ posting:
     client: true
     default: true
     refresh: true
-  uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
   allow_duplicate_topic_titles: false
   min_title_similar_length:
     client: true
