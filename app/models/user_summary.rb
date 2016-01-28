@@ -16,6 +16,7 @@ class UserSummary
     Topic
       .secured(@guardian)
       .listable_topics
+      .visible
       .where(user: @user)
       .order('like_count desc, created_at asc')
       .includes(:user, :category)
@@ -25,12 +26,13 @@ class UserSummary
   def replies
     Post
       .secured(@guardian)
+      .includes(:user, {topic: :category})
+      .references(:topic)
+      .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .where('post_number > 1')
       .where('topics.archetype <> ?', Archetype.private_message)
       .order('posts.like_count desc, posts.created_at asc')
-      .includes(:user, {topic: :category})
-      .references(:topic)
       .limit(MAX_TOPICS)
   end
 
