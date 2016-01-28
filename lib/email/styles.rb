@@ -9,7 +9,7 @@ module Email
     def initialize(html, opts=nil)
       @html = html
       @opts = opts || {}
-      @fragment = Nokogiri::HTML.fragment(@html)
+      @doc = Nokogiri::HTML(@html)
     end
 
     def self.register_plugin_style(&block)
@@ -30,7 +30,7 @@ module Email
       uri = URI(Discourse.base_url)
 
       # images
-      @fragment.css('img').each do |img|
+      @doc.css('img').each do |img|
         next if img['class'] == 'site-logo'
 
         if img['class'] == "emoji" || img['src'] =~ /plugins\/emoji/
@@ -56,15 +56,16 @@ module Email
       end
 
       # add max-width to big images
-      big_images = @fragment.css('img[width="auto"][height="auto"]') -
-                   @fragment.css('aside.onebox img') -
-                   @fragment.css('img.site-logo, img.emoji')
+      big_images = @doc.css('img[width="auto"][height="auto"]') -
+                   @doc.css('aside.onebox img') -
+                   @doc.css('img.site-logo, img.emoji')
       big_images.each do |img|
-        add_styles(img, 'max-width: 100%;') if img['style'] !~ /max-width/
+        add_styles(img, 'width: 100%; height: auto; max-width: 600px;') if img['style'] !~ /max-width/
+        add_attributes(img, width: '600')
       end
 
       # attachments
-      @fragment.css('a.attachment').each do |a|
+      @doc.css('a.attachment').each do |a|
         # ensure all urls are absolute
         if a['href'] =~ /^\/[^\/]/
           a['href'] = "#{Discourse.base_url}#{a['href']}"
@@ -90,6 +91,10 @@ module Email
       style('.rtl', 'direction: rtl;')
       style('td.body', 'padding-top:5px;', colspan: "2")
       style('.whisper td.body', 'font-style: italic; color: #9c9c9c;')
+      style('.wrapper', 'width:100%;table-layout:fixed;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;')
+      style('.webkit', 'max-width:600px;')
+      style('.outer', 'Margin: 0 auto; width: 100%; max-width: 600px;')
+      style('.container', 'padding: 10px;')
       correct_first_body_margin
       correct_footer_style
       reset_tables
@@ -117,12 +122,12 @@ module Email
       style('aside.clearfix', "clear: both")
 
       # Finally, convert all `aside` tags to `div`s
-      @fragment.css('aside, article, header').each do |n|
+      @doc.css('aside, article, header').each do |n|
         n.name = "div"
       end
 
       # iframes can't go in emails, so replace them with clickable links
-      @fragment.css('iframe').each do |i|
+      @doc.css('iframe').each do |i|
         begin
           src_uri = URI(i['src'])
 
@@ -137,6 +142,7 @@ module Email
     end
 
     def format_html
+      style('body', 'Margin: 0;padding:0;min-width:100%;background-color:#ffffff;')
       style('h3', 'margin: 15px 0 20px 0;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('a', 'text-decoration: none; font-weight: bold; color: #006699;')
@@ -157,20 +163,21 @@ module Email
 
     # this method is reserved for styles specific to plugin
     def plugin_styles
-      @@plugin_callbacks.each { |block| block.call(@fragment, @opts) }
+      @@plugin_callbacks.each { |block| block.call(@doc, @opts) }
     end
 
     def to_html
+      return "" unless has_body?
       strip_classes_and_ids
       replace_relative_urls
-      @fragment.to_html.tap do |result|
+      @doc.to_html.tap do |result|
         result.gsub!(/\[email-indent\]/, "<div style='margin-left: 15px'>")
         result.gsub!(/\[\/email-indent\]/, "</div>")
       end
     end
 
     def strip_avatars_and_emojis
-      @fragment.search('img').each do |img|
+      @doc.search('img').each do |img|
         if img['src'] =~ /_avatar/
           img.parent['style'] = "vertical-align: top;" if img.parent.name == 'td'
           img.remove
@@ -182,7 +189,7 @@ module Email
         end
       end
 
-      @fragment.to_s
+      @doc.to_s
     end
 
     private
@@ -192,7 +199,7 @@ module Email
       host = forum_uri.host
       scheme = forum_uri.scheme
 
-      @fragment.css('[href]').each do |element|
+      @doc.css('[href]').each do |element|
         href = element['href']
         if href =~ /^\/\/#{host}/
           element['href'] = "#{scheme}:#{href}"
@@ -201,14 +208,14 @@ module Email
     end
 
     def correct_first_body_margin
-      @fragment.css('.body p').each do |element|
+      @doc.css('.body p').each do |element|
         element['style'] = "margin-top:0; border: 0;"
       end
     end
 
     def correct_footer_style
       footernum = 0
-      @fragment.css('.footer').each do |element|
+      @doc.css('.footer').each do |element|
         element['style'] = "color:#666;"
         linknum = 0
         element.css('a').each do |inner|
@@ -225,7 +232,7 @@ module Email
     end
 
     def strip_classes_and_ids
-      @fragment.css('*').each do |element|
+      @doc.css('*').each do |element|
         element.delete('class')
         element.delete('id')
       end
@@ -235,12 +242,20 @@ module Email
       style('table', nil, cellspacing: '0', cellpadding: '0', border: '0')
     end
 
+    def add_attributes(element, attribs)
+      attribs.each do |k, v|
+        element[k] = v
+      end
+    end
+
+    def has_body?
+      @doc.at_css('body')
+    end
+
     def style(selector, style, attribs = {})
-      @fragment.css(selector).each do |element|
+      @doc.css(selector).each do |element|
         add_styles(element, style) if style
-        attribs.each do |k,v|
-          element[k] = v
-        end
+        add_attributes(element, attribs)
       end
     end
   end
