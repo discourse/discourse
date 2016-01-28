@@ -567,7 +567,7 @@ video {
 
 a.mention, a.mention-group {
   padding: 2px 4px;
-  color: $primary;
+  color: dark-light-diff($primary, $secondary, 45%, -30%);
   background: dark-light-diff($primary, $secondary, 90%, -60%);
   border-radius: 8px;
 }
