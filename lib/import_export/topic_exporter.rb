@@ -71,7 +71,9 @@ module ImportExport
       topic_data[:posts] = []
 
       topic.ordered_posts.find_each do |post|
-        topic_data[:posts] << POST_ATTRS.inject({}) { |h, a| h[a] = post.send(a); h; }
+        h = POST_ATTRS.inject({}) { |h, a| h[a] = post.send(a); h; }
+        h[:raw] = h[:raw].gsub('src="/uploads', "src=\"#{Discourse.base_url_no_prefix}/uploads")
+        topic_data[:posts] << h
       end
 
       @export_data[:topics] << topic_data
