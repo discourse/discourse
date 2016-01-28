@@ -991,6 +991,11 @@ describe Guardian do
           topic.archetype = 'private_message'
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
         end
+
+        it 'returns false at trust level 4' do
+          topic.archetype = 'private_message'
+          expect(Guardian.new(trust_level_4).can_edit?(topic)).to eq(false)
+        end
       end
 
       context 'archived' do
@@ -1004,8 +1009,12 @@ describe Guardian do
           expect(Guardian.new(admin).can_edit?(archived_topic)).to be_truthy
         end
 
-        it 'returns true at trust level 3' do
-          expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to be_truthy
+        it 'returns true at trust level 4' do
+          expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to be_truthy
+        end
+
+        it 'returns false at trust level 3' do
+          expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to be_falsey
         end
 
         it 'returns false as a topic creator' do
