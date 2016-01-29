@@ -6,22 +6,21 @@ module Jobs
   class UserEmail < Jobs::Base
 
     def execute(args)
-
-      notification,post = nil
+      notification, post = nil
 
       raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
-      raise Discourse::InvalidParameters.new(:type) unless args[:type].present?
+      raise Discourse::InvalidParameters.new(:type)    unless args[:type].present?
 
       type = args[:type]
 
       user = User.find_by(id: args[:user_id])
 
-      set_context(type, args[:user_id], args[:to_address] || user.try(:email) || "no_email_found")
-      return create_email_log(I18n.t("email_log.no_user", user_id: args[:user_id])) unless user
+      set_skip_context(type, args[:user_id], args[:to_address] || user.try(:email) || "no_email_found")
+      return skip(I18n.t("email_log.no_user", user_id: args[:user_id])) unless user
 
       if args[:post_id]
         post = Post.find_by(id: args[:post_id])
-        return create_email_log(I18n.t('email_log.post_not_found', post_id: args[:post_id])) unless post.present?
+        return skip(I18n.t('email_log.post_not_found', post_id: args[:post_id])) unless post.present?
       end
 
       if args[:notification_id].present?
@@ -39,29 +38,24 @@ module Jobs
 
 
       if message
-        Email::Sender.new(message, args[:type], @user).send
+        Email::Sender.new(message, args[:type], user).send
       else
         skip_reason
       end
     end
 
-    def set_context(type, user_id, to_address)
-      @context = {type: type, user_id: user_id, to_address: to_address}
+    def set_skip_context(type, user_id, to_address)
+      @skip_context = {type: type, user_id: user_id, to_address: to_address}
     end
 
 
-    def message_for_email(  user,
-                            post,
-                            type,
-                            notification,
-                            notification_type=nil,
-                            notification_data_hash=nil,
-                            email_token=nil,
-                            to_address=nil)
+    def message_for_email(user, post, type, notification,
+                          notification_type=nil, notification_data_hash=nil,
+                          email_token=nil, to_address=nil)
 
-      set_context(type, user.id, to_address || user.email)
+      set_skip_context(type, user.id, to_address || user.email)
 
-      return skip_message(I18n.t("email_log.anonymous_user")) if user.anonymous?
+      return skip_message(I18n.t("email_log.anonymous_user"))   if user.anonymous?
       return skip_message(I18n.t("email_log.suspended_not_pm")) if user.suspended? && type != :user_private_message
 
       return if user.staged && type == :digest
@@ -80,7 +74,6 @@ module Jobs
       end
 
       if notification || notification_type
-
         email_args[:notification_type] ||= notification_type || notification.try(:notification_type)
         email_args[:notification_data_hash] ||= notification_data_hash || notification.try(:data_hash)
 
@@ -108,15 +101,13 @@ module Jobs
         message.to = [to_address]
       end
 
-      create_email_log
-
-      [message,nil]
+      [message, nil]
     end
 
     private
 
     def skip_message(reason)
-      [nil, create_email_log(reason)]
+      [nil, skip(reason)]
     end
 
     # If this email has a related post, don't send an email if it's been deleted or seen recently.
@@ -131,19 +122,14 @@ module Jobs
       end
     end
 
-    def create_email_log(skipped_reason=nil)
-      options = {
-        email_type: @context[:type],
-        to_address: @context[:to_address],
-        user_id: @context[:user_id],
-      }
-
-      if skipped_reason.present?
-        options[:skipped] = true
-        options[:skipped_reason] = skipped_reason
-      end
-
-      EmailLog.create!(options)
+    def skip(reason)
+      EmailLog.create!(
+        email_type: @skip_context[:type],
+        to_address: @skip_context[:to_address],
+        user_id: @skip_context[:user_id],
+        skipped: true,
+        skipped_reason: reason,
+      )
     end
 
   end
