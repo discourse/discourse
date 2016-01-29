@@ -63,7 +63,9 @@ describe Jobs::UserEmail do
 
   context "email_log" do
 
-    it "creates an email log when the mail is sent" do
+    before { Fabricate(:post) }
+
+    it "creates an email log when the mail is sent (via Email::Sender)" do
       last_emailed_at = user.last_emailed_at
 
       expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
