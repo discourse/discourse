@@ -84,8 +84,7 @@ gem 'omniauth-github-discourse', require: 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
-# this removes the dependency on 'addressable'
-gem 'omniauth-google-oauth2', git: 'git://github.com/zquestz/omniauth-google-oauth2.git', ref: 'b492c4bb8286d35'
+gem 'omniauth-google-oauth2'
 gem 'oj'
 gem 'pg'
 gem 'pry-rails', require: false
