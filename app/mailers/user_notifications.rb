@@ -5,7 +5,6 @@ require_dependency 'age_words'
 class UserNotifications < ActionMailer::Base
   helper :application
   default charset: 'UTF-8'
-  layout 'user_notifications'
 
   include Email::BuildEmailHelper
 
@@ -291,7 +290,6 @@ class UserNotifications < ActionMailer::Base
     else
       html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
         template: 'email/notification',
-        layout: 'layouts/user_notifications',
         format: :html,
         locals: { context_posts: context_posts,
                   post: post,
