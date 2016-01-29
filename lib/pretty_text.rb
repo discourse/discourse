@@ -218,8 +218,7 @@ module PrettyText
       context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_hashtag_lookup(c);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
-      # TODO: @tgxworld this broke the build
-      # DiscourseEvent.trigger(:markdown_context, context)
+      DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
