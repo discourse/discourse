@@ -15,10 +15,11 @@ describe DistributedCache do
     c1 = DistributedCache.new("test1")
     c2 = DistributedCache.new("test1")
 
-    set = {a: 1, b: 1}
     set = Set.new
     set << 1
     set << "b"
+    set << 92803984
+    set << 93739739873973
 
     c1["cats"] = set
 
