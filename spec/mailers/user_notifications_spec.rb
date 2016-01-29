@@ -35,10 +35,6 @@ describe UserNotifications do
       expect(subject.body).to be_present
     end
 
-    it "does not use the layout" do
-      expect(subject.html_part.to_s.scan(/<meta name="viewport" content="width=device-width, initial-scale=1.0">/).count).to eq(0)
-    end
-
   end
 
   describe ".forgot_password" do
@@ -50,10 +46,6 @@ describe UserNotifications do
       expect(subject.subject).to be_present
       expect(subject.from).to eq([SiteSetting.notification_email])
       expect(subject.body).to be_present
-    end
-
-    it "does not use the layout" do
-      expect(subject.html_part.to_s.scan(/<meta name="viewport" content="width=device-width, initial-scale=1.0">/).count).to eq(0)
     end
 
   end
@@ -85,10 +77,6 @@ describe UserNotifications do
         expect(subject.text_part.body.to_s).to be_present
       end
 
-      it "uses the layout" do
-        expect(subject.html_part.to_s.scan(/<meta name="viewport" content="width=device-width, initial-scale=1.0">/).count).to eq(1)
-      end
-
       it "includes email_prefix in email subject instead of site title" do
         SiteSetting.email_prefix = "Try Discourse"
         SiteSetting.title = "Discourse Meta"
@@ -116,8 +104,6 @@ describe UserNotifications do
                                              notification_type: notification.notification_type,
                                              notification_data_hash: notification.data_hash
                                            )
-      # meta tag should be present from the layout
-      expect(mail.html_part.to_s.scan(/<meta name="viewport" content="width=device-width, initial-scale=1.0">/).count).to eq(1)
 
       # from should include full user name
       expect(mail[:from].display_names).to eql(['John Doe'])
@@ -170,9 +156,6 @@ describe UserNotifications do
                                            notification_data_hash: notification.data_hash
                                           )
 
-      # meta tag should be present from the layout
-      expect(mail.html_part.to_s.scan(/<meta name="viewport" content="width=device-width, initial-scale=1.0">/).count).to eq(1)
-
       # from should not include full user name if "show user full names" is disabled
       expect(mail[:from].display_names).to_not eql(['John Doe'])
 
@@ -209,9 +192,6 @@ describe UserNotifications do
         notification_type: notification.notification_type,
         notification_data_hash: notification.data_hash
       )
-
-      # meta tag should be present from the layout
-      expect(mail.html_part.to_s.scan(/<meta name="viewport" content="width=device-width, initial-scale=1.0">/).count).to eq(1)
 
       # from should include username if full user name is not provided
       expect(mail[:from].display_names).to eql(['john'])
