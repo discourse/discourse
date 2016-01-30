@@ -22,7 +22,8 @@ class Onebox::Engine::YoutubeOnebox
       video_height = (params['height'] && params['height'].to_i <= 500) ? params['height'] : 270 # embed height
 
       # Put in the LazyYT div instead of the iframe
-      "<div class=\"lazyYT\" data-youtube-id=\"#{video_id}\" data-youtube-title=\"#{video_title}\" data-width=\"#{video_width}\" data-height=\"#{video_height}\" data-parameters=\"#{embed_params}\"></div>"
+      escaped_title = ERB::Util.html_escape(video_title)
+      "<div class=\"lazyYT\" data-youtube-id=\"#{video_id}\" data-youtube-title=\"#{escaped_title}\" data-width=\"#{video_width}\" data-height=\"#{video_height}\" data-parameters=\"#{embed_params}\"></div>"
     else
       yt_onebox_to_html
     end
