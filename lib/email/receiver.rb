@@ -5,6 +5,7 @@ require_dependency "email/html_cleaner"
 module Email
 
   class Receiver
+    include ActionView::Helpers::NumberHelper
 
     class ProcessingError             < StandardError; end
     class EmptyEmailError             < ProcessingError; end
@@ -110,29 +111,23 @@ module Email
       end
 
       # prefer text over html
-      if text.present?
-        text_encoding = text.encoding
-        text = DiscourseEmailParser.parse_reply(text)
-        text = try_to_encode(text, text_encoding)
-        return text if text.present?
-      end
+      text = trim_discourse_markers(text) if text.present?
+      text = EmailReplyTrimmer.trim(text) if text.present?
+      return text if text.present?
 
       # clean the html if that's all we've got
-      if html.present?
-        html_encoding = html.encoding
-        html = Email::HtmlCleaner.new(html).output_html
-        html = DiscourseEmailParser.parse_reply(html)
-        html = try_to_encode(html, html_encoding)
-        return html if html.present?
-      end
+      html = Email::HtmlCleaner.new(html).output_html if html.present?
+      html = trim_discourse_markers(html) if html.present?
+      html = EmailReplyTrimmer.trim(html) if html.present?
+      return html if html.present?
     end
 
     def fix_charset(mail_part)
       return nil if mail_part.blank? || mail_part.body.blank?
 
-      string = mail_part.body.to_s
+      string = mail_part.body.decoded rescue nil
 
-      # TODO (use charlock_holmes to properly detect encoding)
+      return nil if string.blank?
 
       # 1) use the charset provided
       if mail_part.charset.present?
@@ -148,6 +143,14 @@ module Email
       string.encode("UTF-8", encoding)
     rescue Encoding::InvalidByteSequenceError, Encoding::UndefinedConversionError
       nil
+    end
+
+    def previous_replies_regex
+      @previous_replies_regex ||= /^---\n\*#{I18n.t("user_notifications.previous_discussion")}\*\n/im
+    end
+
+    def trim_discourse_markers(reply)
+      reply.split(previous_replies_regex)[0]
     end
 
     def from

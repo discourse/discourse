@@ -172,20 +172,17 @@ describe Email::Receiver do
 
     it "handles inline reply" do
       expect { process(:inline_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("On Tue, Jan 15, 2016 at 11:12 AM, Bar Foo <info@unconfigured.discourse.org> wrote:\n\n> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:")
+      expect(topic.posts.last.raw).to eq("> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:")
     end
 
     it "retrieves the first part of multiple replies" do
       expect { process(:inline_mixed_replies) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("On Tue, Jan 15, 2016 at 11:12 AM, Bar Foo <info@unconfigured.discourse.org> wrote:\n\n> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:\n\n> This is another post.\n\nAnd this is **another** reply.")
+      expect(topic.posts.last.raw).to eq("> WAT <https://bar.com/users/wat> November 28\n>\n> This is the previous post.\n\nAnd this is *my* reply :+1:\n\n> This is another post.\n\nAnd this is **another** reply.")
     end
 
-    it "strips signatures" do
+    it "strips mobile/webmail signatures" do
       expect { process(:iphone_signature) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is not the signature you're looking for.")
-
-      expect { process(:signature) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("You shall not sign!")
     end
 
     it "strips 'original message' context" do
@@ -193,12 +190,18 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is a reply :)")
     end
 
-    it "supports attachments" do
-      expect { process(:no_body_with_attachments) }.to change { topic.posts.count }
+    it "supports attached images" do
+      expect { process(:no_body_with_image) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/<img/)
 
-      expect { process(:inline_attachment) }.to change { topic.posts.count }
+      expect { process(:inline_image) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/Before\s+<img.+\s+After/m)
+    end
+
+    it "supports attachments" do
+      SiteSetting.authorized_extensions = "txt"
+      expect { process(:attached_txt_file) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to match(/text\.txt/)
     end
 
     it "supports liking via email" do
