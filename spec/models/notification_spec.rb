@@ -85,6 +85,7 @@ describe Notification do
     end
 
   end
+
   describe 'unread counts' do
 
     let(:user) { Fabricate(:user) }
@@ -171,7 +172,6 @@ describe Notification do
       Fabricate(:post, topic: @topic, user: @topic.user)
       @target.reload
       expect(@target.unread_private_messages).to eq(1)
-
     end
 
   end

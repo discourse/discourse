@@ -234,8 +234,8 @@ class PostAlerter
     collapsed = false
 
     if type == Notification.types[:replied] || type == Notification.types[:posted]
-      destroy_notifications(user, Notification.types[:replied] , post.topic)
-      destroy_notifications(user, Notification.types[:posted] , post.topic)
+      destroy_notifications(user, Notification.types[:replied], post.topic)
+      destroy_notifications(user, Notification.types[:posted], post.topic)
       collapsed = true
     end
 
@@ -248,10 +248,12 @@ class PostAlerter
     original_username = opts[:display_username] || post.username
 
     if collapsed
-      post = first_unread_post(user,post.topic) || post
+      post = first_unread_post(user, post.topic) || post
       count = unread_count(user, post.topic)
-      I18n.with_locale(user.effective_locale) do
-        opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
+      if count > 1
+        I18n.with_locale(user.effective_locale) do
+          opts[:display_username] = I18n.t('embed.replies', count: count)
+        end
       end
     end
 
@@ -260,6 +262,7 @@ class PostAlerter
     notification_data = {
       topic_title: post.topic.title,
       original_post_id: original_post.id,
+      original_post_type: original_post.post_type,
       original_username: original_username,
       display_username: opts[:display_username] || post.user.username
     }
@@ -276,8 +279,7 @@ class PostAlerter
                               post_action_id: opts[:post_action_id],
                               data: notification_data.to_json)
 
-   if (!existing_notification) && NOTIFIABLE_TYPES.include?(type)
-
+   if !existing_notification && NOTIFIABLE_TYPES.include?(type)
      # we may have an invalid post somehow, dont blow up
      post_url = original_post.url rescue nil
      if post_url
