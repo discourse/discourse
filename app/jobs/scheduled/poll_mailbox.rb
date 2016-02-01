@@ -12,7 +12,12 @@ module Jobs
 
     def execute(args)
       @args = args
-      poll_pop3 if SiteSetting.pop3_polling_enabled?
+      poll_pop3 if should_poll?
+    end
+
+    def should_poll?
+      return false if Rails.env.development? && ENV["POLL_MAILBOX"].nil?
+      SiteSetting.pop3_polling_enabled?
     end
 
     def process_popmail(popmail)
