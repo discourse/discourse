@@ -47,6 +47,10 @@ en:
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
 
+  emails:
+    incoming:
+      default_subject: "Incoming email from %{email}"
+
   errors: &errors
     format: ! '%{attribute} %{message}'
     messages:
