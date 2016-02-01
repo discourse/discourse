@@ -41,7 +41,9 @@
         {{/each}}
       </td>
       <td>{{email.subject}}</td>
-      <td class="error">{{email.error}}</td>
+      <td class="error">
+        <a {{action "showRawEmail" email.id}}>{{email.error}}</a>
+      </td>
     </tr>
   {{else}}
     <tr><td colspan="5">{{i18n 'admin.email.incoming_emails.none'}}</td></tr>

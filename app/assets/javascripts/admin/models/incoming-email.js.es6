@@ -23,6 +23,10 @@ IncomingEmail.reopenClass({
 
     return Discourse.ajax(`/admin/email/${status}.json?offset=${offset}`, { data: filter })
                     .then(incomings => _.map(incomings, incoming => IncomingEmail.create(incoming)));
+  },
+
+  loadRawEmail(id) {
+    return Discourse.ajax(`/admin/email/incoming/${id}/raw.json`);
   }
 });
 
