@@ -40,7 +40,7 @@ module Email
     def find_or_create_incoming_email
       IncomingEmail.find_or_create_by(message_id: @mail.message_id) do |incoming_email|
         incoming_email.raw = @raw_email
-        incoming_email.subject = @mail.subject
+        incoming_email.subject = subject
         incoming_email.from_address = @mail.from.first.downcase
         incoming_email.to_addresses = @mail.to.map(&:downcase).join(";") if @mail.to.present?
         incoming_email.cc_addresses = @mail.cc.map(&:downcase).join(";") if @mail.cc.present?
@@ -60,7 +60,7 @@ module Email
 
       raise InactiveUserError if !user.active && !user.staged
 
-      if action = subscription_action_for(body, @mail.subject)
+      if action = subscription_action_for(body, subject)
         message = SubscriptionMailer.send(action, user)
         Email::Sender.new(message, :subscription).send
       elsif post = find_related_post
@@ -73,14 +73,14 @@ module Email
         case destination[:type]
         when :group
           group = destination[:obj]
-          create_topic(user: user, raw: body, title: @mail.subject, archetype: Archetype.private_message, target_group_names: [group.name], skip_validations: true)
+          create_topic(user: user, raw: body, title: subject, archetype: Archetype.private_message, target_group_names: [group.name], skip_validations: true)
         when :category
           category = destination[:obj]
 
           raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
           raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
-          create_topic(user: user, raw: body, title: @mail.subject, category: category.id)
+          create_topic(user: user, raw: body, title: subject, category: category.id)
         when :reply
           email_log = destination[:obj]
 
@@ -154,6 +154,10 @@ module Email
 
     def from
       @from ||= @mail[:from].address_list.addresses.first
+    end
+
+    def subject
+      @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @mail.from.first.downcase)
     end
 
     def find_or_create_user(address_field)

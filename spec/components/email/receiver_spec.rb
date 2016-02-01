@@ -219,6 +219,7 @@ describe Email::Receiver do
       expect { process(:encoded_display_name) }.to change(Topic, :count)
 
       topic = Topic.last
+      expect(topic.title).to eq("I need help")
       expect(topic.private_message?).to eq(true)
       expect(topic.allowed_groups).to include(group)
 
@@ -226,6 +227,11 @@ describe Email::Receiver do
       expect(user.staged).to eq(true)
       expect(user.username).to eq("random.name")
       expect(user.name).to eq("Случайная Имя")
+    end
+
+    it "handles email with no subject" do
+      expect { process(:no_subject) }.to change(Topic, :count)
+      expect(Topic.last.title).to eq("Incoming email from some@one.com")
     end
 
     it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
