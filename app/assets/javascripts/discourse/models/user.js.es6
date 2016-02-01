@@ -188,6 +188,7 @@ const User = RestModel.extend({
         if ((this.get('stream.filter') || ua.action_type) !== ua.action_type) return;
         if (!this.get('stream.filter') && !this.inAllStream(ua)) return;
 
+        ua.title = Discourse.Emoji.unescape(Handlebars.Utils.escapeExpression(ua.title));
         const action = UserAction.collapseStream([UserAction.create(ua)]);
         stream.set('itemsLoaded', stream.get('itemsLoaded') + 1);
         stream.get('content').insertAt(0, action[0]);
