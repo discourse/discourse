@@ -40,6 +40,55 @@ describe Validators::PostValidator do
     end
   end
 
+  context "too_many_mentions" do
+    before do
+      SiteSetting.newuser_max_mentions_per_post = 2
+      SiteSetting.max_mentions_per_post = 3
+    end
+
+    it "should be invalid when new user exceeds max mentions limit" do
+      post.acting_user = build(:newuser)
+      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be invalid when elder user exceeds max mentions limit" do
+      post.acting_user = build(:trust_level_4)
+      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old', 'jake_new'])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be valid when new user does not exceed max mentions limit" do
+      post.acting_user = build(:newuser)
+      post.expects(:raw_mentions).returns(['jake', 'finn'])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid when elder user does not exceed max mentions limit" do
+      post.acting_user = build(:trust_level_4)
+      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid for moderator in all cases" do
+      post.acting_user = build(:moderator)
+      post.expects(:raw_mentions).never
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid for admin in all cases" do
+      post.acting_user = build(:admin)
+      post.expects(:raw_mentions).never
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+  end
+
   context "invalid post" do
     it "should be invalid" do
       validator.validate(post)
