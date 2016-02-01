@@ -29,15 +29,15 @@ class UserEmailObserver < ActiveRecord::Observer
     end
 
     def private_message
-      enqueue_private(:user_private_message, 0)
+      enqueue_private(:user_private_message)
     end
 
     def invited_to_private_message
-      enqueue(:user_invited_to_private_message, 0)
+      enqueue(:user_invited_to_private_message, private_delay)
     end
 
     def invited_to_topic
-      enqueue(:user_invited_to_topic, 0)
+      enqueue(:user_invited_to_topic, private_delay)
     end
 
     def self.notification_params(notification, type)
@@ -64,7 +64,7 @@ class UserEmailObserver < ActiveRecord::Observer
       perform_enqueue(type,delay)
     end
 
-    def enqueue_private(type, delay=default_delay)
+    def enqueue_private(type, delay=private_delay)
       return unless notification.user.email_private_messages?
       perform_enqueue(type,delay)
     end
@@ -76,9 +76,12 @@ class UserEmailObserver < ActiveRecord::Observer
       Jobs.enqueue_in(delay, :user_email, self.class.notification_params(notification, type))
     end
 
-
     def default_delay
       SiteSetting.email_time_window_mins.minutes
+    end
+
+    def private_delay
+      20.seconds
     end
 
   end

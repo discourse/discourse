@@ -109,7 +109,7 @@ describe UserEmailObserver do
 
   context 'user_private_message' do
     let(:type) { :user_private_message }
-    let(:delay) { 0 }
+    let(:delay) { 20.seconds }
     let!(:notification) { create_notification(6) }
 
     include_examples "enqueue_private"
@@ -117,7 +117,7 @@ describe UserEmailObserver do
 
   context 'user_invited_to_private_message' do
     let(:type) { :user_invited_to_private_message }
-    let(:delay) { 0 }
+    let(:delay) { 20.seconds }
     let!(:notification) { create_notification(7) }
 
     include_examples "enqueue_public"
@@ -125,7 +125,7 @@ describe UserEmailObserver do
 
   context 'user_invited_to_topic' do
     let(:type) { :user_invited_to_topic }
-    let(:delay) { 0 }
+    let(:delay) { 20.seconds }
     let!(:notification) { create_notification(13) }
 
     include_examples "enqueue_public"
