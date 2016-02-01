@@ -427,8 +427,7 @@ Post.reopenClass({
   },
 
   loadRawEmail(postId) {
-    return Discourse.ajax("/posts/" + postId + "/raw-email")
-                    .then(result => result.raw_email);
+    return Discourse.ajax(`/posts/${postId}/raw-email.json`);
   }
 
 });
