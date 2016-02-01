@@ -92,7 +92,6 @@ module Email
     end
 
     def is_auto_generated?
-      @mail.return_path.blank? ||
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/] ||
       @mail.header.to_s[/auto-(submitted|replied|generated)/]
     end
