@@ -61,17 +61,17 @@ class UserEmailObserver < ActiveRecord::Observer
 
     def enqueue(type, delay=default_delay)
       return unless notification.user.email_direct?
-      perform_enqueue(type,delay)
+      perform_enqueue(type, delay)
     end
 
     def enqueue_private(type, delay=private_delay)
       return unless notification.user.email_private_messages?
-      perform_enqueue(type,delay)
+      perform_enqueue(type, delay)
     end
 
     def perform_enqueue(type, delay)
       return unless notification.user.active? || notification.user.staged?
-      return unless EMAILABLE_POST_TYPES.include? notification.post.try(:post_type)
+      return unless EMAILABLE_POST_TYPES.include?(post_type)
 
       Jobs.enqueue_in(delay, :user_email, self.class.notification_params(notification, type))
     end
@@ -84,6 +84,14 @@ class UserEmailObserver < ActiveRecord::Observer
       20.seconds
     end
 
+    def post_type
+      @post_type ||= begin
+        type = notification.data_hash["original_post_type"] if notification.data_hash
+        type ||= notification.post.try(:post_type)
+        type
+      end
+    end
+
   end
 
   def after_commit(notification)
@@ -94,6 +102,7 @@ class UserEmailObserver < ActiveRecord::Observer
   def self.process_notification(notification)
     email_user   = EmailUser.new(notification)
     email_method = Notification.types[notification.notification_type]
+
     email_user.send(email_method) if email_user.respond_to? email_method
   end
 

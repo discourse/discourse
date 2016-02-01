@@ -185,7 +185,6 @@ describe Jobs::UserEmail do
         expect(err.skipped_reason).to match(/notification.*already/)
       end
 
-
       it "does send the email if the notification has been seen but the user is set for email_always" do
         Email::Sender.any_instance.expects(:send)
         notification.update_column(:read, true)
@@ -275,6 +274,4 @@ describe Jobs::UserEmail do
 
   end
 
-
 end
-

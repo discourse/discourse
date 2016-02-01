@@ -113,14 +113,11 @@ class Notification < ActiveRecord::Base
   end
 
   def url
-    if topic.present?
-      return topic.relative_url(post_number)
-    end
+    topic.relative_url(post_number) if topic.present?
   end
 
   def post
     return if topic_id.blank? || post_number.blank?
-
     Post.find_by(topic_id: topic_id, post_number: post_number)
   end
 

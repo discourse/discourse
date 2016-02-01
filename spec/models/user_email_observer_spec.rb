@@ -13,7 +13,6 @@ describe UserEmailObserver do
 
   shared_examples "enqueue" do
 
-
     it "enqueues a job for the email" do
       Jobs.expects(:enqueue_in).with(delay, :user_email, UserEmailObserver::EmailUser.notification_params(notification,type))
       UserEmailObserver.process_notification(notification)
@@ -66,6 +65,7 @@ describe UserEmailObserver do
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
       UserEmailObserver.process_notification(notification)
     end
+
   end
 
   context 'user_mentioned' do
@@ -113,6 +113,13 @@ describe UserEmailObserver do
     let!(:notification) { create_notification(6) }
 
     include_examples "enqueue_private"
+
+    it "doesn't enqueue a job for a small action" do
+      notification.data_hash["original_post_type"] = Post.types[:small_action]
+      Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
+      UserEmailObserver.process_notification(notification)
+    end
+
   end
 
   context 'user_invited_to_private_message' do
