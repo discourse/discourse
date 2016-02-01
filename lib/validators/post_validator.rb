@@ -54,6 +54,8 @@ class Validators::PostValidator < ActiveModel::Validator
 
   # Ensure maximum amount of mentions in a post
   def max_mention_validator(post)
+    return if post.acting_user.try(:staff?)
+
     if acting_user_is_trusted?(post)
       add_error_if_count_exceeded(post, :no_mentions_allowed, :too_many_mentions, post.raw_mentions.size, SiteSetting.max_mentions_per_post)
     else
