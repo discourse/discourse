@@ -841,6 +841,9 @@ fi:
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
     verbose_localization: "Näytä laajennetut lokalisointitiedot käyttöliittymässä"
     previous_visit_timeout_hours: "Kuinka kauan vierailun on täytynyt kestää, jotta se lasketaan 'edelliseksi' vierailuksi, tunneissa"
+    top_topics_formula_log_views_multiplier: "katselukertojen logaritmin kerroin (n) Huiput-listauksen kaavassa: `log(katselut) * (n) + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
+    top_topics_formula_first_post_likes_multiplier: "avausviestin tykkäysmäärän kerroin (n) Huiput-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * (n) + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
+    top_topics_formula_least_likes_per_post_multiplier: "tykkäykset/viestit -suhteen enimmäisarvo (n) Huiput-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, (n)) + 10 + log(viestien määrä)`"
     rate_limit_create_topic: "Ketjun luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden ketjun."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
     rate_limit_new_user_create_topic: "Ketjun luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden ketjun."
@@ -1198,14 +1201,6 @@ fi:
       max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
   unsubscribe_mailer:
     subject_template: "Vahvista, ettet enää halua, että %{site_title} lähettää sinulle sähköpostimuistutuksia."
-    text_body_template: |
-      Joku (kenties sinä?) pyysi, ettei %{site_domain_name} enää lähettäisi sähköposti-ilmoituksia tähän osoitteeseen.
-      Vahvista pyyntö klikkaamalla linkkiä:
-
-       %{confirm_unsubscribe_link}
-
-
-      Jos haluat yhä saada sähköposti-ilmoituksia, voit jättää tämän viestin huomiotta.
   invite_mailer:
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |

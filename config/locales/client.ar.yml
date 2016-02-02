@@ -795,7 +795,6 @@ ar:
     logout: "تم تسجيل خروجك"
     refresh: "تحديث"
     read_only_mode:
-      enabled: "وضع القراءة فقط مفعل. يمكنك إكمال تصفح الموقع لكن التفاعلات قد لا تعمل."
       login_disabled: "تسجيل الدخول معطل لأن الموقع في خالة القراءة  فقط"
     too_few_topics_and_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة بدأت!</a> يوجد حاليا<strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> المشاركات. الزوار الجدد بحاجة إلى بعض الأحاديث لقراءة والرد على."
     too_few_topics_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي!</a> وهناك حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
@@ -914,7 +913,6 @@ ar:
       ctrl: 'التحكم'
       alt: 'Alt'
     composer:
-      emoji: "تعبيرات: ابتسامة"
       more_emoji: "أكثر..."
       options: "خيارات"
       whisper: "همس"
@@ -1766,7 +1764,6 @@ ar:
       email_in_allow_strangers: "قبول بريد إلكتروني من مستخدمين لا يملكون حسابات"
       email_in_disabled: "إضافة مواضيع جديدة من خلال البريد الإلكتروني موقف في الوقت الحالي من خلال إعدادات الموقع. لتفعيل إضافة مواضيع جديدة من خلال البريد الإلكتروني,"
       email_in_disabled_click: 'قم بتفعيل خيار "email in" في الإعدادات'
-      contains_messages: "غير هذه الفئة لتحوي الرسائل فقط."
       suppress_from_homepage: "كتم هذه الفئة من الصفحة الرئيسية"
       allow_badges_label: "السماح بالحصول على الأوسمة في هذا التصنيف"
       edit_permissions: "تعديل الصلاحيات"
@@ -2355,9 +2352,8 @@ ar:
             name: 'ويكي'
             description: "اللون الأساسي المستخدم كخلفية لمشاركات الويكي."
       email:
-        title: "بريد الكتروني"
         settings: "اعدادات"
-        all: "الكل"
+        preview_digest: "ملخص المعاينة."
         sending_test: "إرسال بريد إلكتروني للتجربة..."
         error: "<b>خطأ</b> - %{server_error}"
         test_error: "حدث خطأ أثناء إرسال رسالة تجريبية. الرجاء فحص إعدادات البريد الإلكتروني و التأكد من أن الاستضافة لا تمنع مرور البريد الإلكتروني والمحاولة مرة أخرى."
@@ -2372,7 +2368,6 @@ ar:
         send_test: "ارسل رسالة تجربة"
         sent_test: "اٌرسلت!"
         delivery_method: "طريقة التسليم"
-        preview_digest: "ملخص المعاينة."
         preview_digest_desc: "معاينة محتوى رسائل البريد الإلكتروني الملخص المرسلة للأعضاء الغير متاحين."
         refresh: "تحديث"
         format: "التنسيق"

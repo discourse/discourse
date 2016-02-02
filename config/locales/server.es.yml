@@ -833,7 +833,6 @@ es:
     active_user_rate_limit_secs: "Con qué frecuencia actualizaremos el campo 'last_seen_at', en segundos"
     verbose_localization: "Mostrar sugerencias de localización extendida en la interface de usuario "
     previous_visit_timeout_hours: "Cuanto tiempo debe pasar antes de que una visita sea considerada la 'visita previa', en horas"
-    allow_staged_accounts: "[BETA] Crear cuentas provisionales para los emails entrantes."
     rate_limit_create_topic: "Después de crear un tema, los usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_create_post: "Después de publicar un post, los usuarios deben esperar (n) segundos antes de crear otro post."
     rate_limit_new_user_create_topic: "Después de crear un tema, los nuevos usuarios deben esperar (n) segundos antes de crear otro tema."
@@ -890,6 +889,7 @@ es:
     tl3_links_no_follow: "No remover rel=nofollow de los enlaces publicados por usuarios con nivel de confianza 3."
     min_trust_to_create_topic: "El mínimo nivel de confianza requerido para crear un nuevo tema."
     min_trust_to_edit_wiki_post: "El mínimo nivel de confianza requerido para editar un post marcado como wiki."
+    min_trust_to_allow_self_wiki: "El mínimo nivel de confianza requerido para que un usuario convierta sus propios posts a wiki."
     min_trust_to_send_messages: "Mínimo nivel de confianza requerido para crear nuevos mensajes directos."
     newuser_max_links: "Cuántos enlaces puede un nuevo usuario añadir a un post."
     newuser_max_images: "Cuántas imágenes puede un nuevo usuario añadir a un post."
@@ -954,6 +954,8 @@ es:
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de emails"
+    unsubscribe_via_email: "Permitir a los usuarios darse de baja de los emails respondiendo con el texto 'unsubscribe' en el asunto o el cuerpo del mensaje"
+    unsubscribe_via_email_footer: "Adjuntar un enlace para darse de baja al pie de los emails enviados"
     pop3_polling_enabled: "Poll vía POP3 para respuestas de e-mail."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
     pop3_polling_period_mins: "El período en minutos entre revisiones de correo de la cuenta POP3. NOTA: requiere reiniciar."
@@ -1180,13 +1182,15 @@ es:
       must_begin_with_alphanumeric: "debe empezar con una letra, número o guión bajo"
       must_end_with_alphanumeric: "debe terminar con una letra, número o guión bajo"
       must_not_contain_two_special_chars_in_seq: "no debe contener una secuencia de 2 o más caracteres especiales (.-_)"
-      must_not_contain_confusing_suffix: "no debe contener un sufijo confuso como .json, .png, etc."
+      must_not_end_with_confusing_suffix: "no debe terminar con un sufijo que lleve a confusión como .json o .png etc."
     email:
       not_allowed: "este proveedor de email no está permitido. Por favor, utiliza otra dirección de email."
       blocked: "no está permitido."
     ip_address:
       blocked: "No se permiten nuevos registros desde tu dirección IP."
       max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (alcanzado el límite máximo). Contacta un miembro del staff."
+  unsubscribe_mailer:
+    subject_template: "Confirma que no quieres recibir más emails de %{site_title}"
   invite_mailer:
     subject_template: "%{invitee_name} te invitó a '%{topic_title}' en %{site_domain_name}"
     text_body_template: |
@@ -1337,8 +1341,6 @@ es:
         Sin embargo, si el post fuera ocultado por la comunidad una segunda vez, permanecerá oculto hasta que sea revisado por un moderador – y en ese caso puede que se tomen medidas, incluyendo la posible suspesión de tu cuenta.
 
         Para más información, por favor consulta nuestras [directrices](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "Aquí tienes unos breves consejos para empezar:\n\n## Lectura\n\nPara leer más, **¡tan solo tienes que hacer scroll!** \n\nTan pronto como se publiquen nuevas respuestas o temas, aparecerán automáticamente – sin necesidad de actualizar la página.\n\n## Navegación\n\n- Para la búsqueda, tu perfil de usuario, o el menú <kbd>☰</kbd>;, usa los **botones con iconos de la esquina superior derecha**. \n\n- Entrar a un tema desde su título te llevará a la **última respuesta sin leer** del hilo. Para ir al primer o al último post, haz clic en el contador de respuestas o en la fecha de última respuesta.\n\n    <img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Mientras lees un tema, selecciona la barra de progreso en la esquina inferior derecha para ver los controles de navegación. Podrás ir al inicio del hilo seleccionando su título. Teclea <kbd>?</kbd> para ver una lista de rápidos atajos de teclado.\n\n    <img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Participando\n\n- Para responder al **tema en general**, utiliza <img src=\";%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> al final del hilo. \n\n- Para responder a **una persona en específico**, utiliza <img src=\";%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> en su post. \n\n- Para responder **creando un nuevo tema**, utiliza <img src=\";%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> a la derecha del post. Tanto el tema original como el nuevo serán enlazados entre sí automáticamente. \n\nPara escribir una cita, selecciona el texto que quieres citar, después haz clic en el botón citar. ¡Puedes repetir para realizar múltiples citas! \n\n<img src=\";%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar a alguien en tu respuesta, menciónale. Empieza a escribir `@` para elegir su nombre de usuario. \n\n<img src=\";%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\"> \n\nPara usar [Emojis](http://www.emoji.codes/), teclea `:` para elegir por nombre, o usa los tradicionales smileys `;)` \n\n<img src=\";%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\"> \n\n## Acciones\n\nHay algunos botones de acción al final de cada post: \n\n<img src=\";%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\"> \n\nPara hacerle saber a alguien que has disfrutado o que aprecias su post, utiliza el botón de **Me gusta**. ¡Compartir es amor! \n\nSi ves algún problema en la publicación de alguien, escríbele un privado, o házselo saber [a nuestros moderadores](%{base_url}/about), con el botón **reporte**. También puedes **compartir** un enlace a un post, o guardarlo en **marcadores** para tenerlo de referencia en tu página de perfil. \n\n## Notificaciones\n\nCuando alguien te responde, cita tu post, o bien menciona tu `@usuario`, inmediatamente aparecerá un número en la esquina superior derecha de la página. Usa ese botón para acceder a tus **notificaciones**. \n\n<img src=\";%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\"> \n\nNo te preocupes si te pierdes alguna respuesta – te enviaremos un email con las notificaciones que lleguen cuando estés fuera.\n\n## Tus preferencias\n\n- Todos los temas creados hace menos de **dos días** se consideran nuevos. \n\n- Aquellos temas en los que hayas **participado activamente** (porque lo hayas creado, o respondido o leído durante un período razonable) serán seguidos por tu usuario automáticamente. Verás los indicadores azules de temas nuevos o número de respuestas no leídas al lado de estos temas: \n\n<img src=\";%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\"> \n\nPuedes cambiar tus notificaciones para cualquier tema mediante el control de notificaciones al final del tema. \n\n<img src=\";%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\"> \n\nTambién puedes establecer el estado de notificación de una categoría entera, si quieres vigilar cualquier nuevo tema en una categoría específica. Para cambiar cualquiera de estas opciones, puedes ver [tus preferencias](%{base_url}/my/preferences). \n\n## Confianza \n\nAl participar aquí, con el tiempo te ganarás la confianza de la comunidad, te convertirás en usuario de pleno derecho y te serán retiradas las limitaciones de nuevo usuario. Llegado a un punto de un alto [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), obtendrás además nuevas habilidades para ayudarnos a gestionar la comunidad juntos.\n"
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1423,12 +1425,20 @@ es:
     csv_export_failed:
       subject_template: "La exportación de datos falló"
       text_body_template: "Lo sentimos, pero la exportación de datos falló. Por favor, verifica los registros o contacta a un miembro del staff."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Nivel de Confianza Insuficiente"
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] Problema relacionado con el email -- Insuficiente nivel de confianza"
       text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no fue entregado.
 
-        Tu cuenta no tiene el nivel de confianza suficiente para publicar nuevos temas a esta dirección de correo electrónico. Si crees que esto es un error, contacta con algún miembro del Staff.
+        Tu cuenta no tiene el suficiente nivel de confianza requerido para publicar nuevos temas a esta dirección de email. Si crees que esto es un error, contacta a un administrador.
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Problema relacionado con el email -- Usuario inactivo"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se entregó.
+
+        La cuenta asociada a esta dirección de email no ha sido activada. Por favor activa tu cuenta antes de enviar emails.
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] Problema relacionado con el email -- No coincide el usuario de la respuesta"
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Cuenta Desconocida"
       text_body_template: |
@@ -1455,34 +1465,12 @@ es:
         Lo sentimos, pero tu mensaje por email a %{destination} (titled %{former_title}) no funcionó.
 
         Tu cuenta no tiene los privilegios para publicar nuevos temas en esa categoría. Si crees que esto es un error, contacta a un moderador o administrador.
-    email_reject_post_error:
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de publicación"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
-
-        Posibles causas: formato complejo, mensaje demasiado extenso o demasiado breve. Por favor, inténtalo de nuevo.
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de publicación"
-      text_body_template: |
-        Lo sentimos, pero tu mensaje e-mail para %{destination} (titulado %{former_title}) no funciono.
-
-        Razón:
-
-        %{post_error}
-
-        Si puedes corregir el problema, por favor intenta de nuevo.
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Clave de Respuesta Desconocida"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
 
         La clave de respuesta proporcionada no es válida o es desconocida, por lo que no sabemos a qué responde este email. Contacta con algún miembro del staff.
-    email_reject_destination:
-      subject_template: "[%{site_name}] Problema con el correo electrónico -- Desconocido Para: Dirección"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
-
-        No se ha podido reconocer ninguna de las direcciones destino. Por favor, asegúrate de que la dirección del sitio está en Para: (no CC ni BCC), y que lo estás enviando a la dirección de e-mail proporcionada por los administradores.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Tema no encontrado"
       text_body_template: |
@@ -1565,7 +1553,9 @@ es:
       subject_template: "Inhabilitar la descarga de imágenes remotas"
       text_body_template: "La opción `download_remote_images_to_local` ha sido inhabilitada porque se ha llegado al límite de espacio en disco configurado en `download_remote_images_threshold`."
   unsubscribe_link: |
-    Para no recibir más notificaciones de este tema en particular, [haz clic aquí](%{unsubscribe_url}). Para desuscribirte , cambia tus [preferencias de usuario](%{user_preferences_url}).
+    Para no recibir más notificaciones de este tema en particular, [haz clic aquí](%{unsubscribe_url}). Para darte de baja de estos emails, cambia tus [preferencias](%{user_preferences_url})
+  unsubscribe_via_email_link: |
+    o, [haz clic aquí](mailto:reply@%{hostname}?subject=unsubscribe) para darte de baja por email.
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1573,8 +1563,8 @@ es:
     unsubscribe:
       title: "Darse de baja"
       description: "¿No estás interesado en recibir estos emails? ¡No hay problema! Haz clic abajo para darte de baja de forma instantánea:"
-    reply_by_email: "Para responder, responde a este mensaje o [visita el tema](%{base_url}%{url})."
-    visit_link_to_respond: "Para responder, [visita el tema](%{base_url}%{url})."
+    reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este email para publicar."
+    visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
@@ -1623,6 +1613,17 @@ es:
         Por favor, visita este enlace para verlo: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

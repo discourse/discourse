@@ -110,6 +110,8 @@ he:
       email: 'שלח קישור בדוא"ל'
     action_codes:
       split_topic: "פצל את הפוסט %{when}"
+      invited_user: "%{who} הוזמנ/ה ב-%{when}"
+      removed_user: "%{who} הוסר/ה ב-%{when}"
       autoclosed:
         enabled: 'סגר  %{when}'
         disabled: 'פתח %{when}'
@@ -130,6 +132,18 @@ he:
         disabled: 'הוצא מהרשימה %{when}'
     topic_admin_menu: "פעולות ניהול לפוסט"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
+    s3:
+      regions:
+        us_east_1: "מזרח ארה\"ב (צפון וירג'יניה)"
+        us_west_1: "מערב ארה\"ב (צפון קליפורניה)"
+        us_west_2: "מערב ארה\"ב (ארגון)"
+        eu_west_1: "האיחוד האירופי (אירלנד)"
+        eu_central_1: "האיחוד האירופי (פרנקפורט)"
+        ap_southeast_1: "אסיה הפסיפית (סינגפור)"
+        ap_southeast_2: "אסיה הפסיפית (סידני)"
+        ap_northeast_1: "אסיה הפסיפית (טוקיו)"
+        ap_northeast_2: "אסיה הפסיפית (סיאול)"
+        sa_east_1: "דרום אמריקה (סאו פאולו)"
     edit: 'ערוך את הכותרת והקטגוריה של הפוסט'
     not_implemented: "סליחה, תכונה זו עדיין לא מומשה!"
     no_value: "לא"
@@ -294,6 +308,12 @@ he:
         one: "משתמש/ת 1"
         other: "%{count} משתמשים"
     groups:
+      empty:
+        posts: "אין פרסום של חברים בקבוצה זו"
+        members: "אין חברים בקבוצה זו."
+        mentions: "אין אזכורים של קבוצה זו."
+        messages: "אין מסרים לקבוצה זו."
+        topics: "אין נושא מטעם חברים בקבוצה זו."
       add: "הוספה"
       selector_placeholder: "הוספת חברים וחברות"
       owner: "מנהל"
@@ -304,6 +324,7 @@ he:
       members: "חברים"
       posts: "הודעות"
       alias_levels:
+        title: "מי יכול/ה לשלוח מסרים ו@לאזכר בקבוצה זו?"
         nobody: "אף אחד"
         only_admins: "רק מנהלים"
         mods_and_admins: "רק מנחים ומנהלים"
@@ -312,6 +333,12 @@ he:
       trust_levels:
         title: "רמת אמון הניתנת אוטומטית למשתמשים כשהם נוספים:"
         none: "ללא"
+      notifications:
+        watching:
+          title: "במעקב"
+          description: "תקבל/י הודעה על כל פרסום במסגרת כל מסר, וסך התשובות יוצג."
+        tracking:
+          title: "במעקב"
     user_action_groups:
       '1': "לייקים שניתנו"
       '2': "לייקים שהתקבלו"

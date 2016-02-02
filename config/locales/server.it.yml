@@ -1013,7 +1013,7 @@ it:
     omniauth_error_unknown: "Qualcosa è andato storto durante il collegamento, per favore riprova."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
     password_too_long: "Le password sono limitate a 200 caratteri."
-    reserved_username: "Quel nome utente non è permesso."
+    reserved_username: "Questo utente non ha il permesso."
     missing_user_field: "Non hai inserito tutti i campi utente"
     close_window: "L'autenticazione è completa. Chiudi questa finestra per continuare."
   user:
@@ -1104,12 +1104,6 @@ it:
       subject_template: "Esportazione dati completa"
     csv_export_failed:
       subject_template: "Esportazione dati fallita"
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Livello di Esperienza insufficente"
-      text_body_template: |
-        Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
-
-        Il tuo utente non ha il livello di esperienza richiesto per inviare nuovi argomenti a questo indirizzo email. Se credi che ciò sia un errore, contatta un membro dello staff.
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema relativo all'email -- Account Sconosciuto"
     email_reject_empty:
@@ -1118,14 +1112,8 @@ it:
       subject_template: "[%{site_name}] Problema relativo all'email -- Contenuto non riconosciuto"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Problema relativo all'email -- Accesso non valido"
-    email_reject_post_error:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Errore di pubblicazione"
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Errore di pubblicazione"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema relativo all'email -- Chiave di risposta sconosciuta"
-    email_reject_destination:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Indirizzo di destinazione sconosciuto"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Non Trovato"
     email_reject_topic_closed:

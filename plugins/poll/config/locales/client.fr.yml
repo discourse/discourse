@@ -9,8 +9,8 @@ fr:
   js:
     poll:
       voters:
-        one: "votant"
-        other: "votants"
+        one: "voteur"
+        other: "voteurs"
       total_votes:
         one: "vote au total"
         other: "votes au total"
@@ -18,13 +18,13 @@ fr:
       multiple:
         help:
           at_least_min_options:
-            one: "Vous devez choisir au moins une option."
+            one: "Vous devez choisir au moins <strong>une</strong> option."
             other: "Vous devez choisir au moins <strong>%{count}</strong> options."
           up_to_max_options:
-            one: "Vous pouvez choisir une option."
+            one: "Vous pouvez choisir <strong>une</strong> option."
             other: "Vous pouvez choisir jusqu’à <strong>%{count}</strong> options."
           x_options:
-            one: "Vous devez choisir une option."
+            one: "Vous devez choisir <strong>une</strong> option."
             other: "Vous devez choisir <strong>%{count}</strong> options."
           between_min_and_max_options: "Vous devez choisir entre <strong>%{min}</strong> et <strong>%{max}</strong> options."
       cast-votes:

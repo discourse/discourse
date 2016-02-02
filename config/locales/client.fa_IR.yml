@@ -635,7 +635,6 @@ fa_IR:
     logout: "شما از سایت خارج شده اید"
     refresh: "تازه کردن"
     read_only_mode:
-      enabled: "حالت فقط خواندن را فعال است. می توانید به جستجو در وب سایت ادامه دهید ولی ممکن است تعاملات کار نکند."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
     too_few_topics_and_posts_notice: "بیا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> این بحث را شروع کنیم!</a> در حال حاضر این <strong>%{currentTopics} / %{requiredTopics}</strong> مبحث ها و <strong>%{currentPosts} / %{requiredPosts}</strong> ارسال ها وجود دارد. بازدید کنندگان تازه وارد نیاز دارند به گفتگو هایی برای خواندن و پاسخ دادن."
     too_few_topics_notice: "بیا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'> این بحث را شروع کنیم!</a> در حال حاضر این <strong>%{currentTopics} / %{requiredTopics}</strong> مباحث وجود دارد. بازدیدکنندگان تازه وارد نیاز دارند به گفتگوهایی برای خواندن و پاسخ دادن."
@@ -749,7 +748,6 @@ fa_IR:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "شکلک :smile:"
       more_emoji: "بیشتر..."
       options: "گزینه ها"
       whisper: "نجوا"
@@ -1230,8 +1228,6 @@ fa_IR:
         yes_value: "بله، رها کن"
       via_email: "این نوشته از طریق ایمیل ارسال شده است"
       whisper: "این ارسال نجوای خصوصی برای مدیران است"
-      wiki:
-        about: "این یک نوشته ویکی است;کاربران عادی می توانند آن را ویرایش نماییند"
       archetypes:
         save: ' ذخیره تنظیمات'
       controls:
@@ -1399,7 +1395,6 @@ fa_IR:
       email_in_allow_strangers: "تایید ایمیل ها از کاربران ناشناس  بدون حساب کاربری"
       email_in_disabled: "ارسال پست با ایمیل در تنظیمات سایت غیر فعال است. برای فعال سازی  موضوعات جدید را با ایمیل ارسال کنید, "
       email_in_disabled_click: 'فعال کردن تنظیمات "email in".'
-      contains_messages: "تغییر این دسته بندی به صورتی که فقط شامل پیام ها شود."
       suppress_from_homepage: "برداشتن این دسته بندی از صفحه اصلی."
       allow_badges_label: "امکان  اهداء مدال در این دسته بندی را بده"
       edit_permissions: "ویرایش پروانه‌ها"
@@ -1913,9 +1908,8 @@ fa_IR:
             name: 'ویکی'
             description: "رنگ پایه  استفاده شده برای پس زمینه نوشته ها ی ویکی ."
       email:
-        title: "ایمیل "
         settings: "تنظیمات"
-        all: "همه"
+        preview_digest: "پیشنمایش خلاصه"
         sending_test: "فرستادن ایمیل آزمایشی..."
         error: "<b>خطا</b> - %{server_error}"
         test_error: "در ارسال ایمیل آزمایشی مشکلی وجود داشته است. لطفاً مجدداً تنظیمات ایمیل خود را بررسی کنید، از این که هاستتان اتصالات ایمیل را مسدود نکرده اطمینان حاصل کرده و مجدداً تلاش کنید."
@@ -1930,7 +1924,6 @@ fa_IR:
         send_test: "ارسال ایمیل آزمایشی"
         sent_test: "فرستاده شد!"
         delivery_method: "روش تحویل"
-        preview_digest: "پیشنمایش خلاصه"
         preview_digest_desc: "پیش نمایش محتوای خلاصه ایمیل های ارسال شده به کاربران غیر فعال."
         refresh: "تازه‌سازی"
         format: "قالب"
