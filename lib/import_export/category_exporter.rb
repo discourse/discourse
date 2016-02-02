@@ -35,11 +35,11 @@ module ImportExport
 
       # export groups that are mentioned in category permissions
       group_names = []
-      auto_group_names = Group::AUTO_GROUPS.keys
+      auto_group_names = Group::AUTO_GROUPS.keys.map(&:to_s)
 
       ([@export_data[:category]] + @export_data[:subcategories]).each do |c|
         c[:permissions_params].each do |group_name, _|
-          group_names << group_name unless auto_group_names.include?(group_name)
+          group_names << group_name unless auto_group_names.include?(group_name.to_s)
         end
       end
 

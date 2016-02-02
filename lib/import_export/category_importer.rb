@@ -28,7 +28,7 @@ module ImportExport
         external_id = g.delete(:id)
         new_group = Group.find_by_name(g[:name]) || Group.create!(g)
         user_ids.each do |external_user_id|
-          new_group.add( User.find(@topic_importer.new_user_id(external_user_id)) )
+          new_group.add( User.find(@topic_importer.new_user_id(external_user_id)) ) rescue ActiveRecord::RecordNotUnique
         end
       end
     end
