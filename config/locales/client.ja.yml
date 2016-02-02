@@ -176,6 +176,7 @@ ja:
     saved: "保存しました"
     upload: "アップロード"
     uploading: "アップロード中..."
+    uploading_filename: "アップロード中 {{filename}}..."
     uploaded: "アップロードしました"
     enable: "有効にする"
     disable: "無効にする"
@@ -548,7 +549,6 @@ ja:
     logout: "ログアウトしました"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "読み取り専用モードが有効になっています。サイトをブラウズすることは引き続き出来ますが、機能は動作しません。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
     learn_more: "より詳しく..."
     year: '年'
@@ -565,6 +565,8 @@ ja:
     last_reply_lowercase: 最新の回答
     replies_lowercase:
       other: 回答
+    signup_cta:
+      sign_up: "新しいアカウントを作成"
     summary:
       enabled_description: "トピックのまとめを表示されています。"
       description: "<b>{{count}}</b> 返信があります。"
@@ -645,7 +647,6 @@ ja:
     twitter: "Twitter"
     emoji_one: "Emoji One"
     composer:
-      emoji: "Emoji :smile:"
       add_warning: "これは公式の警告です。"
       posting_not_on_topic: "回答したいトピックはどれですか?"
       saving_draft_tip: "保存中..."
@@ -1052,8 +1053,6 @@ ja:
         no_value: "いいえ"
         yes_value: "はい"
       via_email: "メールで投稿されました。"
-      wiki:
-        about: "この投稿は「Wiki」である。ベーシックユーザが編集できます。"
       archetypes:
         save: '保存オプション'
       controls:
@@ -1340,9 +1339,19 @@ ja:
         title_in: "カテゴリ - {{categoryName}}"
         help: "カテゴリ毎に整理されたトピックを表示"
       unread:
+        title: "未読"
+        title_with_count:
+          other: "未読 ({{count}})"
         help: "未読ポストのあるトピック"
+        lower_title_with_count:
+          other: "{{count}} 未読"
       new:
+        lower_title_with_count:
+          other: "{{count}}件"
         lower_title: "新着"
+        title: "新規"
+        title_with_count:
+          other: "最新 ({{count}})"
         help: "最近投稿されたトピック"
       posted:
         title: "あなたのポスト"
@@ -1351,6 +1360,9 @@ ja:
         title: "ブックマーク"
         help: "ブックマークしたトピック"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} カテゴリの最新トピック"
       top:
         title: "トップ"
@@ -1689,9 +1701,8 @@ ja:
             name: 'wiki'
             description: "Wiki投稿の背景に使用する基本色"
       email:
-        title: "メール"
         settings: "設定"
-        all: "全て"
+        preview_digest: "ダイジェストのプレビュー"
         sending_test: "テストメールを送信中..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "テストメールを送れませんでした。メール設定、またはホストをメールコネクションをブロックされていないようを確認してください。"
@@ -1706,7 +1717,6 @@ ja:
         send_test: "テストメールを送る"
         sent_test: "送信完了!"
         delivery_method: "送信方法"
-        preview_digest: "ダイジェストのプレビュー"
         refresh: "更新"
         format: "フォーマット"
         html: "html"
@@ -1772,6 +1782,7 @@ ja:
             impersonate: "なりすまし"
             anonymize_user: "匿名ユーザ"
             roll_up: "IPブロックをロールアップ"
+            delete_category: "カテゴリを削除する"
         screened_emails:
           title: "ブロック対象アドレス"
           description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"
@@ -1940,6 +1951,7 @@ ja:
         unlock_trust_level: "トラストレベルをアンロック"
         tl3_requirements:
           title: "トラストレベル3の条件"
+          table_title: "過去%{time_period} 日間に"
           value_heading: "値"
           requirement_heading: "条件"
           visits: "訪問"
@@ -2001,6 +2013,7 @@ ja:
           dropdown: "ドロップダウン"
       site_text:
         title: 'テキストコンテンツ'
+        edit: '編集'
       site_settings:
         show_overriden: '上書き部分のみ表示'
         title: '設定'
@@ -2100,6 +2113,8 @@ ja:
         name: "名前"
         image: "画像"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+      embedding:
+        edit: "編集"
       permalink:
         title: "パーマリンク"
         url: "URL"

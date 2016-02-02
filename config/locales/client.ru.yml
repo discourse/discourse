@@ -367,6 +367,9 @@ ru:
       trust_levels:
         title: "Уровень доверия участника при создании:"
         none: "(Нет)"
+      notifications:
+        tracking:
+          title: "Следить"
     user_action_groups:
       '1': "Выразил симпатий"
       '2': "Получил симпатий"
@@ -385,6 +388,7 @@ ru:
       all_subcategories: "Все подкатегории"
       no_subcategory: "Вне подкатегорий"
       category: "Раздел"
+      category_list: "Показать список разделов"
       reorder:
         title: "Упорядочивание разделов"
         title_long: "Реорганизация списка разделов"
@@ -445,6 +449,7 @@ ru:
       invited_by: "Пригласил"
       trust_level: "Уровень"
       notifications: "Уведомления"
+      statistics: "Статистика"
       desktop_notifications:
         label: "Оповещения"
         not_supported: "К сожалению, оповещения не поддерживаются этим браузером."
@@ -501,6 +506,9 @@ ru:
         inbox: "Входящие"
         sent: "Отправленные"
         archive: "Архив"
+        groups: "Мои группы"
+        bulk_select: "Выберите сообщения"
+        move_to_inbox: "Переместить во входящие"
         select_all: "Выбрать все"
       change_password:
         success: "(письмо отправлено)"
@@ -703,7 +711,6 @@ ru:
     logout: "Вы вышли."
     refresh: "Обновить"
     read_only_mode:
-      enabled: "Администратор включил режим сайта ТОЛЬКО ДЛЯ ЧТЕНИЯ. Вы можете продолжать просматривать сайт. В данном режиме Ваши посты не будут сохранятся и публиковаться на сайте."
       login_disabled: "Вход отключён, пока сайт в режиме «только для чтения»"
     learn_more: "подробнее..."
     year: 'год'
@@ -816,7 +823,6 @@ ru:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "подробнее..."
       options: "Опции"
       whisper: "внутреннее сообщение"
@@ -912,13 +918,16 @@ ru:
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Вы награждены: {{description}}</p>"
       alt:
+        mentioned: "Упомянуто"
         quoted: "Процитировано пользователем"
         replied: "Ответил"
+        posted: "Опубликовано"
         edited: "Изменил ваше сообщение"
         liked: "Понравилось ваше сообщение"
         private_message: "Личное сообщение от"
         invitee_accepted: "Приглашение принято"
         linked: "Ссылка на ваше сообщение"
+        granted_badge: "Награда получена от"
       popup:
         mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'
         quoted: '{{username}} процитировал Вас в "{{topic}}" - {{site_title}}'
@@ -1024,7 +1033,9 @@ ru:
       private_message: 'Написать сообщение'
       archive_message:
         help: 'Переместить сообщение в архив'
+        title: 'Архив'
       move_to_inbox:
+        title: 'Переместить во входящие'
         help: 'Переместить сообщение во входящие'
       list: 'Темы'
       new: 'новая тема'
@@ -2032,6 +2043,9 @@ ru:
         opacity: "Прозрачность"
         copy: "Копировать"
         email_templates:
+          subject: "Тема"
+          body: "Текст сообщения"
+          none_selected: "Выберите шаблон письма, чтобы начать редактирование."
           revert: "Отменить изменения"
         css_html:
           title: "CSS/HTML"
@@ -2081,9 +2095,8 @@ ru:
             name: 'вики'
             description: "Базовый цвет, используемый для фона вики-сообщений."
       email:
-        title: "Email"
         settings: "Настройки"
-        all: "Все"
+        preview_digest: "Просмотр сводки"
         sending_test: "Отправка тестового письма..."
         error: "<b>ОШИБКА</b> - %{server_error}"
         test_error: "При отправке тестового письма произошла ошибка. Пожалуйста, внимательно проверьте ваши почтовые настройки, проверьте, что ваш сервер не блокирует почтовые соединения, и попытайтесь снова."
@@ -2098,7 +2111,6 @@ ru:
         send_test: "Отправить тестовое письмо"
         sent_test: "отправлено!"
         delivery_method: "Метод отправки"
-        preview_digest: "Просмотр сводки"
         refresh: "Обновить"
         format: "Формат"
         html: "html"
@@ -2124,6 +2136,7 @@ ru:
         ip_address: "IP"
         topic_id: "ID темы"
         post_id: "ID сообщения"
+        category_id: "ID раздела"
         delete: 'Удалить'
         edit: 'Изменить'
         save: 'Сохранить'
@@ -2167,6 +2180,8 @@ ru:
             change_category_settings: "изменение настроек раздела"
             delete_category: "удаление раздела"
             create_category: "создание раздела"
+            block_user: "заблокировать пользователя"
+            unblock_user: "Разблокировать пользователя"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создает новую учетную запись, проверяется данный почтовый адрес и регистрация блокируется или производятся другие дополнительные действия."
@@ -2237,6 +2252,9 @@ ru:
           pending: 'Пользователи, ожидающие одобрения'
           newuser: 'Пользователи с уровнем доверия 0 (Новые пользователи)'
           basic: 'Пользователи с уровнем доверия 1 (Базовые пользователи)'
+          member: 'Пользователи с уровнем доверия 2 (активные)'
+          regular: 'Пользователи с уровнем доверия 3 (лидеры сообщества)'
+          leader: 'Пользователи с уровнем доверия 4 (старейшины)'
           staff: "Персонал"
           admins: 'Администраторы'
           moderators: 'Модераторы'
@@ -2343,6 +2361,8 @@ ru:
         deactivate_failed: "Во время деактивации пользователя произошла ошибка."
         unblock_failed: 'Не удалось разблокировать пользователя.'
         block_failed: 'Не удалось заблокировать пользователя.'
+        block_confirm: 'Вы уверены что хотите заблокировать этого пользователя? Он больше не сможет создавать темы и отправлять сообщения.'
+        block_accept: 'Подтвердить блокировку'
         deactivate_explanation: "Дезактивированные пользователи должны заново подтвердить свой e-mail."
         suspended_explanation: "Замороженный пользователь не может войти."
         block_explanation: "Заблокированный не может отвечать и создавать новые темы."
@@ -2417,6 +2437,10 @@ ru:
           dropdown: "Выпадающий список"
       site_text:
         title: 'Текстовое содержание'
+        edit: 'изменить'
+        revert: "Отменить изменения"
+        go_back: "Вернуться к поиску"
+        show_overriden: 'Показывать только измененные'
       site_settings:
         show_overriden: 'Показывать только измененные'
         title: 'Настройки'
@@ -2447,6 +2471,7 @@ ru:
           backups: "Резервные копии"
           login: "Учетные записи"
           plugins: "Плагины"
+          user_preferences: "Пользовательские настройки"
       badges:
         title: Награды
         new_badge: Новая награда
@@ -2503,6 +2528,7 @@ ru:
           bad_count_warning:
             header: "ВНИМАНИЕ!"
             text: "Обнаружены несуществующие примеры выдачи наград. Это может произойти, когда запрос возвращает несуществующие идентификаторы ID пользователей или сообщений. Это может привести к неожиданным проблемам со временем, поэтому внимательно проверьте ваш запрос."
+          no_grant_count: "Нет наград для выдачи."
           sample: "Пример:"
           grant:
             with: <span class="username">%{username}</span>
@@ -2516,7 +2542,27 @@ ru:
         name: "Название"
         image: "Изображение"
         delete_confirm: "Вы уверены, что хотите удалить иконку :%{name}:?"
+      embedding:
+        title: "Встраивание"
+        edit: "изменить"
+        add_host: "Добавить хост"
+        settings: "Настройки встраивания"
+        embed_post_limit: "Максимальное количество вложенных сообщений"
+        embed_username_key_from_feed: "Ключ для извлечения пользователя из ленты"
+        embed_truncate: "Обрезать встроенные сообщения."
+        embed_whitelist_selector: "Селекторы CSS которые разрешены для использования."
+        embed_blacklist_selector: "Селекторы CSS которые запрещены для использования."
+        save: "Сохранить настройки встраивания"
       permalink:
+        title: "Постоянные ссылки"
+        url: "URL"
+        topic_id: "ID темы"
+        topic_title: "Тема"
+        post_id: "ID сообщения"
+        post_title: "Сообщение"
+        category_id: "ID раздела"
+        category_title: "Раздел"
+        external_url: "Внешняя ссылка"
         form:
           add: "Добавить"
     lightbox:
@@ -2534,8 +2580,8 @@ ru:
         categories: '<b>g</b>, <b>c</b> Разделы'
         top: '<b>g</b>, <b>t</b> Вверх'
         bookmarks: '<b>g</b>, <b>b</b> Закладки'
-        profile: 'Профиль'
-        messages: 'Сообщения'
+        profile: '<b>g</b>, <b>p</b> Профиль'
+        messages: '<b>g</b>, <b>m</b> Сообщения'
       navigation:
         title: 'Навигация'
         jump: '<b>#</b> Перейти к сообщение №'
@@ -2547,14 +2593,14 @@ ru:
         title: 'Приложение'
         create: '<b>c</b> Создать новую тему'
         notifications: '<b>n</b> Открыть уведомления'
-        hamburger_menu: 'Открыть меню'
+        hamburger_menu: '<b>=</b> Открыть меню'
         user_profile_menu: '<b>p</b> Открыть меню моего профиля'
         show_incoming_updated_topics: '<b>.</b> Показать обновленные темы'
         search: '<b>/</b> Поиск'
         help: '<b>?</b> Открыть помощь по горячим клавишам'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Отложить новые сообщения'
         dismiss_topics: '<b>x</b>, <b>t</b> Отложить темы'
-        log_out: 'Выйти'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Выйти'
       actions:
         title: 'Действия'
         bookmark_topic: '<b>f</b> Добавить в Избранное'

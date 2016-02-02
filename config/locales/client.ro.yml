@@ -634,7 +634,6 @@ ro:
     logout: "Aţi fost deconectat."
     refresh: "Reîmprospătează"
     read_only_mode:
-      enabled: "Modul doar citire a fost activat. Puteţi continuă să vizitaţi acest site dar anumite acţiuni vor fi limitate."
       login_disabled: "Autentificarea este dezactivată când siteul este în modul doar pentru citit."
     learn_more: "află mai multe..."
     year: 'an'
@@ -746,7 +745,6 @@ ro:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "mai multe..."
       options: "Optiuni"
       add_warning: "Această este o avertizare oficială."
@@ -1828,9 +1826,8 @@ ro:
             name: 'wiki'
             description: "Culoarea de bază folosită pentru fundalul postărilor pe wiki."
       email:
-        title: "Email"
         settings: "Opțiuni"
-        all: "Toate"
+        preview_digest: "Previzualizează rezumat"
         sending_test: "Trimite email de test..."
         error: "<b>EROARE</b> - %{server_error}"
         test_error: "S-a semnalat o problemă la trimtirerea email-ului. Vă rugăm verificați setările mailului, Verificați ca gazda sa nu bocheze conexiunile de email și reâncercați."
@@ -1845,7 +1842,6 @@ ro:
         send_test: "Trimite Email de test"
         sent_test: "trimis!"
         delivery_method: "Metoda de livrare"
-        preview_digest: "Previzualizează rezumat"
         refresh: "Reîmprospătează"
         format: "Format"
         html: "html"

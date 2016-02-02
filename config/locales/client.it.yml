@@ -110,6 +110,8 @@ it:
       email: 'invia questo collegamento via email'
     action_codes:
       split_topic: "suddividi questo argomento %{when}"
+      invited_user: "Invitato %{who} %{when}"
+      removed_user: "rimosso %{who} %{when}"
       autoclosed:
         enabled: 'chiuso %{when}'
         disabled: 'aperto %{when}'
@@ -625,6 +627,21 @@ it:
         same_as_email: "La password coincide con l'email."
         ok: "La password è adeguata"
         instructions: "Minimo %{count} caratteri."
+      summary:
+        title: "Riepilogo"
+        stats: "Statistiche"
+        topic_count: "Argomenti Creati"
+        post_count: "Messaggi Creati"
+        likes_given: "\"Mi piace\" Assegnati"
+        likes_received: "\"Mi piace\" Ricevuti"
+        days_visited: "Giorni Visitati"
+        posts_read_count: "Messaggi Letti"
+        top_replies: "Migliori Risposte"
+        top_topics: "Migliori Argomenti"
+        top_badges: "Migliori Targhette"
+        more_topics: "Altri Argomenti"
+        more_replies: "Altre Risposte"
+        more_badges: "Altre Targhette"
       associated_accounts: "Login"
       ip_address:
         title: "Ultimo indirizzo IP"
@@ -667,7 +684,6 @@ it:
     logout: "Ti sei disconnesso."
     refresh: "Ricarica"
     read_only_mode:
-      enabled: "La modalità di sola lettura è attiva. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
@@ -782,7 +798,6 @@ it:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "altro..."
       options: "Opzioni"
       whisper: "sussurra"
@@ -1052,7 +1067,7 @@ it:
       auto_close_title: 'Impostazioni di auto-chiusura'
       auto_close_save: "Salva"
       auto_close_remove: "Non chiudere automaticamente questo argomento"
-      auto_close_immediate: "Il topic verrà chiuso immediatamente perché l'ultimo post risale a %{hours} ore fa."
+      auto_close_immediate: "L'ultimo messaggio in questo argomento ha già %{hours}, pertanto l'argomento verrà chiuso immediatamente."
       progress:
         title: Avanzamento dell'argomento
         go_top: "alto"
@@ -1173,7 +1188,7 @@ it:
         success: "Abbiamo invitato l'utente a partecipare a questo messaggio."
         error: "Spiacenti, si è verificato un errore durante l'invito dell'utente."
         group_name: "nome gruppo"
-      controls: "Opzioni Argomento"
+      controls: "Impostazioni Argomento"
       invite_reply:
         title: 'Invita'
         username_placeholder: "nome utente"
@@ -1291,7 +1306,7 @@ it:
       via_email: "questo messaggio è arrivato via email"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
       wiki:
-        about: "questo post è una wiki"
+        about: "questo messaggio è una guida"
       archetypes:
         save: 'Opzioni di salvataggio'
       controls:
@@ -1478,7 +1493,6 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
-      contains_messages: "Cambia questa categoria in modo che contenga solo messaggi."
       suppress_from_homepage: "Elimina questa categoria dalla homepage."
       allow_badges_label: "Permetti che le targhette vengano assegnate in questa categoria"
       edit_permissions: "Modifica Permessi"
@@ -1495,7 +1509,7 @@ it:
           description: "Osserverai automaticamente tutti i nuovi argomenti presenti in queste categorie. Riceverai notifiche per ogni nuovo messaggio inserito in ogni argomento e apparirà il conteggio delle nuove risposte."
         tracking:
           title: "Seguendo"
-          description: "In automatico tracceremo i nuovi argomenti in queste categorie. Verrai notificato se qualcuno menzionerá il tuo @nome o ti risponderá e ti mostreremo il numero di nuove risposte."
+          description: "Seguirai automaticamente tutti i nuovi argomenti in tali categorie. Ti verrà inviata una notifica se qualcuno menziona il tuo @nome o ti risponde, e apparirà un conteggio delle nuove risposte."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
@@ -1950,7 +1964,7 @@ it:
         email_templates:
           title: "Modelli e-mail"
           subject: "Oggetto"
-          multiple_subjects: "Questo template email ha più di un campo oggetto."
+          multiple_subjects: "Questo modello email ha più di un campo oggetto."
           body: "Corpo"
           none_selected: "Scegli un modello di e-mail per iniziare la modifica."
           revert: "Annulla Cambiamenti"
@@ -2003,9 +2017,8 @@ it:
             name: 'wiki'
             description: "Colore base usato per lo sfondo dei messaggi wiki."
       email:
-        title: "Email"
         settings: "Impostazioni"
-        all: "Tutto"
+        preview_digest: "Anteprima Riassunto"
         sending_test: "Invio email di prova in corso..."
         error: "<b>ERRORE</b> - %{server_error}"
         test_error: "C'è stato un problema nell'invio dell'email di test. Controlla nuovamente le impostazioni email, verifica che il tuo host non blocchi le connessioni email e riprova."
@@ -2020,7 +2033,6 @@ it:
         send_test: "Invia una email di prova"
         sent_test: "inviata!"
         delivery_method: "Metodo di consegna"
-        preview_digest: "Anteprima Riassunto"
         preview_digest_desc: "Vedi in anteprima il contenuto delle email di riassunto inviate agli utenti inattivi."
         refresh: "Aggiorna"
         format: "Formato"
@@ -2331,14 +2343,14 @@ it:
           confirm: 'Conferma'
           dropdown: "A tendina"
       site_text:
-        description: "Puoi personalizzare qualsiasi testo del forum. Comincia effettuando una ricerca qui sotto:"
+        description: "Puoi personalizzare qualsiasi testo del tuo forum. Comincia effettuando una ricerca qui sotto:"
         search: "Trova il testo che vorresti modificare"
         title: 'Contenuto Testuale'
         edit: 'modifica'
-        revert: "Annulla i cambiamenti"
-        revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
-        go_back: "Torna alla ricerca"
-        recommended: "Consigliamo di personalizzare il testo seguente in modo da adattarlo alle necessità:"
+        revert: "Annulla Modifiche"
+        revert_confirm: "Sei sicuro di voler annullare le modifiche?"
+        go_back: "Torna alla Ricerca"
+        recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: 'Mostra solo le opzioni sovrascritte'
       site_settings:
         show_overriden: 'Mostra solo le opzioni sovrascritte'
@@ -2538,6 +2550,7 @@ it:
         mark_tracking: '<b>m</b>, <b>t</b> Segui argomento'
         mark_watching: '<b>m</b>, <b>w</b> Osserva argomento'
     badges:
+      more_with_badge: "Altri con questa targhetta"
       title: Targhette
       allow_title: "può essere usata come titolo"
       multiple_grant: "può essere assegnata più volte"

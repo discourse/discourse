@@ -631,7 +631,6 @@ sq:
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
-    editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
@@ -776,9 +775,9 @@ sq:
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
-    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images and/or backups."
-    s3_secret_access_key: "The Amazon S3 secret access key that will be used for uploading."
-    s3_region: "The Amazon S3 region name that will be used for uploading."
+    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
+    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
+    s3_region: "The Amazon S3 region name that will be used to upload images."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
     avatar_sizes: "List of automatically generated avatar sizes."
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
@@ -794,7 +793,6 @@ sq:
     tl2_requires_likes_received: "How many likes a user must receive before promotion to trust level 2."
     tl2_requires_likes_given: "How many likes a user must cast before promotion to trust level 2."
     tl2_requires_topic_reply_count: "How many topics user must reply to before promotion to trust level 2."
-    tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to trust level 3. (0 or higher)"
     tl3_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
@@ -1227,91 +1225,6 @@ sq:
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Here are a few quick tips to get you started:
-
-        ## Reading
-
-        To read more, **just keep scrolling down!**
-
-        As new replies or new topics arrive, they will appear automatically – no need to refresh the page.
-
-        ## Navigation
-
-        - For search, your user page, or the <kbd>☰</kbd> menu, use the **icon buttons at upper right**.
-
-        - Selecting a topic title will always take you to the **next unread reply** in the topic. To enter at the top or bottom, select the reply count or last reply date instead.
-
-            <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - While reading a topic, select the progress bar at the bottom right for full navigation controls. Quickly jump back to the top by selecting the topic title. Press <kbd>?</kbd> for a list of super-speedy keyboard shortcuts.
-
-            <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        ## Replying
-
-        - To reply to the **topic in general**, use <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">  at the very bottom of the topic.
-
-        - To reply to a **specific person**, use <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> on their post.
-
-        - To reply with **a new topic**, use <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> to the right of the post. Both old and new topics will be automatically linked together.
-
-        To insert a quote, select the text you wish to quote, then press any Reply button. Repeat for multiple quotes!
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        To notify someone about your reply, mention their name. Type `@` to begin selecting a username.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        To use [standard Emoji](http://www.emoji.codes/), just type `:` to match by name, or use the traditional smileys `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        To generate a summary for a link, paste it on a line by itself:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        ## Actions
-
-        There are action buttons at the bottom of each post:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
-
-        If you see a problem with someone's post, privately let them, or [our staff](%{base_url}/about), know about it with the **flag** button. You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
-
-        ## Notifications
-
-        When someone replies to you, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it to access your **notifications**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Don't worry about missing a reply – you'll be emailed any notifications that arrive when you are away.
-
-        ## Your Preferences
-
-          - All topics less than **two days old** are considered new.
-
-          - Any topic you've **actively participated in** (by creating, replying, or reading for an extended period) will be automatically tracked.
-
-        You will see the blue new and unread number indicators next to these topics:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        You can change your notifications for any topic via the notification control at the bottom of the topic.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        You can also set notification state per category, if you want to watch every new topic in a specific category.
-
-        To change any of these settings, see [your user preferences](%{base_url}/my/preferences).
-
-        ## Community Trust
-
-        As you participate here, over time you'll gain the trust of the community, become a full citizen, and new user limitations will be lifted. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain new abilities to help us manage our community together.
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
@@ -1396,12 +1309,6 @@ sq:
     csv_export_failed:
       subject_template: "Data export failed"
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] Email issue -- Insufficient Trust Level"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
       text_body_template: |
@@ -1422,34 +1329,12 @@ sq:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your account does not have the privileges to post new topics in that category. If you believe this is in error, contact a staff member.
-    email_reject_post_error:
-      subject_template: "[%{site_name}] Email issue -- Posting error"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] Email issue -- Posting error"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Reason:
-
-        %{post_error}
-
-        If you can correct the problem, please try again.
     email_reject_reply_key:
       subject_template: "[%{site_name}] Email issue -- Unknown Reply Key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
-    email_reject_destination:
-      subject_template: "[%{site_name}] Email issue -- Unknown To: Address"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        None of the destination addresses are recognized. Please make sure that the site address is in the To: line (not Cc: or Bcc:), and that you are sending to the correct email address provided by staff.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Email issue -- Topic Not Found"
       text_body_template: |

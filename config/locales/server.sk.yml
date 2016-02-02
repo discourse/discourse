@@ -881,6 +881,9 @@ sk:
     active_user_rate_limit_secs: "Ako často máme aktualizovať pole 'naposledy videný o', v sekundách"
     verbose_localization: "Zobraziť rozšírené lokalizačné tipy v rozhraní"
     previous_visit_timeout_hours: "Ako dlho trvá návšteva predtým, ako ju pokladáme za 'predchádzajúcu' návštevu, v hodinách"
+    top_topics_formula_log_views_multiplier: "hodnota násobku (n) pre počet zobrazení v najznámejších témach: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "hodnota násobku (n) pre počet páči sa mi na prvom príspevku v najznámejších témach: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "hodnota násobku (n) pre najmenej páči sa mi pre prísprvok v najznámejších témach: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Po vytvorení témy musí používateľ počkať (n) sekúnd pred vytvorením ďalšej témy."
     rate_limit_create_post: "Po odoslaní prísprevku používateľ počkať (n) sekúnd pred vytvorením ďalšieho príspevku."
     rate_limit_new_user_create_topic: "Po vytvorení témy musí používateľ počkať (n) sekúnd pred vytvorením ďalšej témy."
@@ -1210,6 +1213,7 @@ sk:
     incorrect_username_email_or_password: "Nesprávne meno, email, alebo heslo"
     wait_approval: "Ďakujeme za registráciu. O schválení účtu Vás budeme informovať."
     active: "Váš účet je aktivovaný a pripravený na používanie."
+    activate_email: "<p>Skoro hotovo! Poslali sme Vám aktivačný email na <b>%{email}</b>. Pre aktiváciu účtu prosíme splňte inštrukcie v emaile.</p><p>Ak nedorazí, skontrolujte si zložku s nevyžiadanou poštou, alebo sa prihláste znovu, aby ste si zaslali ďalší aktivačný email.</p>"
     not_activated: "Systém vás nemôže prihlásiť. Poslali sme vám aktivačný email. Prosím, postupujte podľa inštrukcií na aktiváciu účtu, ktoré sú uvedené v tomto emaile."
     not_allowed_from_ip_address: "Nie je možné prihlásenie ako %{username} z tejto IP adresy."
     admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
@@ -1244,6 +1248,16 @@ sk:
     ip_address:
       blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
       max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
+  unsubscribe_mailer:
+    subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
+    text_body_template: |
+      Niekto (pravdepodobne vy?) požiadal aby ďalej na túto adresu neboli zasielané emailové aktualizácie z %{site_domain_name}.
+      Ak si prajete potvrdiť, prosíme kliknite na odkaz:
+
+      %{confirm_unsubscribe_link}
+
+
+      Ak chcete pokračovať v prijímaní emailových aktualizácií, môžete tento email ignorovať.
   invite_mailer:
     subject_template: "%{invitee_name} Vás pozval '%{topic_title}' na %{site_domain_name}"
     text_body_template: |
@@ -1264,8 +1278,27 @@ sk:
       Táto pozvánka je od dôveryhodného užívateľa, takže môžete okamžite odpovedať na diskusiu .
   invite_forum_mailer:
     subject_template: "%{invitee_name} Vás pozval na %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} Vás pozval, aly ste sa pripojili na
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Ak Vás to zaujíma, kliknite na nižšie uvedený odkaz:
+
+      %{invite_link}
+
+      Toto pozvanie je od dôveryhodného používateľa, takze sa nebudete musieť prihlasovať.
   invite_password_instructions:
     subject_template: "Nastavte heslo pre účet na  %{site_name}"
+    text_body_template: |
+      Ďakujeme za akceptovanie Vašej pozvánky na %{site_name} -- vitajte!
+
+      Kliknite na odkaz aby ste si vybrali heslo:
+      %{base_url}/users/password-reset/%{email_token}
+
+      (Ak vyššie uvedený odkaz vyexpiroval, vyberte "Zabudol som heslo" keď sa prihlasujete pomocou svojej emailovej adresy.)
   test_mailer:
     subject_template: "[%{site_name}] Overenie doručiteľnosti emailu"
     text_body_template: |
@@ -1346,7 +1379,28 @@ sk:
       other: "Tieto príznaky boli odoslané pred viac ako %{count} hodinami."
     please_review: "Prosím o ich preverenie."
     post_number: "príspevok"
+    how_to_disable: 'Interval zasielania upozornení emailom možete vypnúť alebo zmeniť v Nastaveniach pomocou možnosti "upozorniť o značke po".'
+    subject_template:
+      one: "1 značká čaká na zpracovanie"
+      few: "%{count} značky čakajú na zpracovanie"
+      other: "%{count} značiek čaká na zpracovanie"
+  queued_posts_reminder:
+    subject_template:
+      one: "%{site_name}] 1 príspevok čaká na revíziu"
+      few: "[%{site_name}] %{count} príspevky čakajú na revíziu"
+      other: "[%{site_name}] %{count} príspevkov čaká na revíziu"
+    text_body_template: |
+      Ahoj,
+
+      Existujú príspevky nových používateľov, ktoré čakajú na revíziu. [Schválené alebo zamietnuté môžu byť tu](%{base_url}/queued-posts).
+  flag_reasons:
+    off_topic: "Váš príspevok bol označený ako \"mimo-témy\": komunita cíti, že nie je vhodný do témy tak, ako je definovaná nadpisom a prvým príspevkom"
+    inappropriate: "Váš príspevok bol označený ako **nevhodný**: komunita cíti, že je úrážlivý, nemiestny alebo porušuje [naše pravidlá komunity](/guidelines)."
+    spam: "Váš príspevok bol označený ako **spam**: komunita cíti, že je to reklama, niečo čo je vo spojej podstate príliš propagačné, miesto toho, aby bolo užitočné alebo relevantné k danej téme, tak ako je očakávané."
+    notify_moderators: "Váš príspevok bol označený **na kontrolu pre moderátora**: komunita cíti, že nečo v príspevku vyžaduje manuálny zásah niektorým zo zamestnancov."
   flags_dispositions:
+    agreed: "Ďakujeme za upozornenie. Súhlasíme s tým, že je tam problém a pracujeme na ňom."
+    agreed_and_deleted: "Ďakujeme za upozornenie. Súhlasíme s tým, že je tam problém a príspevok sme odstránili."
     disagreed: "Ďakujeme za upozornenie. Práve to riešime."
     deferred: "Ďakujeme za upozornenie. Práve to riešime."
     deferred_and_deleted: "Ďakujeme za upozornenie. Daný príspevok sme odstránili."
@@ -1451,6 +1505,47 @@ sk:
       subject_template: "Vitajte na %{site_name}!"
     welcome_invite:
       subject_template: "Vitajte na %{site_name}!"
+    backup_succeeded:
+      subject_template: "Záloha skončila úspešne"
+      text_body_template: "Záloha bola úspešná.\nNavštívte [admin > sekcia záloha](%{base_url}/admin/backups) na stiahnutie Vašej novej zálohy."
+    backup_failed:
+      subject_template: "Záloha sa nepodarila"
+      text_body_template: |
+        Zaloha sa nepodarila.
+
+        Tu je zápis:
+
+        ```
+        %{logs}
+        ```
+    restore_succeeded:
+      subject_template: "Obnova skončila úspešne"
+      text_body_template: "Obnova bola úspešná."
+    restore_failed:
+      subject_template: "Obnova zlyhala"
+      text_body_template: |
+        Obnova zlyhala.
+
+        Tu je zápis:
+
+        ```
+        %{logs}
+        ```
+    bulk_invite_succeeded:
+      subject_template: "Zpracovanie pozvania viacerých používateľov bolo úspešné"
+      text_body_template: "Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok."
+    bulk_invite_failed:
+      subject_template: "Zpracovanie pozvania viacerých používateľov dopadlo s chybami"
+      text_body_template: |
+        Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok s %{failed} chybou(chybami).
+
+        Tu je záznam:
+
+        ```
+        %{logs}
+        ```
+    csv_export_succeeded:
+      subject_template: "Export dát kompletný"
     email_reject_no_account:
       subject_template: "[%{site_name}] Problém s emailom -- Neznámy účet"
       text_body_template: |

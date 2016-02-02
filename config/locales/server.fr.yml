@@ -13,6 +13,8 @@ fr:
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
   date:
     month_names: [null, Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre]
     <<: *datetime_formats
@@ -88,6 +90,8 @@ fr:
   not_found: "L'URL ou ressource demandée n'a pas été retrouvé."
   invalid_access: "Vous n'avez pas la permission de voir cette ressource."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
+  reading_time: "Temps de lecture"
+  likes: "J'aime"
   too_many_replies:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à 1 réponse par sujet."
     other: "Nous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à %{count} réponses par sujet."
@@ -180,7 +184,7 @@ fr:
 
       - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie.
 
-      Pour plus d'info, [jettez un œil au règlement de la communauté](/guidelines). Ce message apparaîtra uniquement pour vos premiers messages.
+      Pour plus d'info, [jettez un œil sur la charte de la communauté](/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     new-reply: |
       Bienvenue sur %{site_name} &mdash; **Merci de contribuer !**
 
@@ -190,7 +194,7 @@ fr:
 
       - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les gens.
 
-      Pour plus d'informations, [consulter le règlement de la communauté](/guidelines). Cet encart apparaîtra pour votre premier %{education_posts_text}.
+      Pour plus d'informations, [consulter la charte de la communauté](/guidelines). Cet encart apparaîtra pour votre premier %{education_posts_text}.
     avatar: |
       ### Avez-vous pensé à une photo de profil ?
 
@@ -286,6 +290,7 @@ fr:
   category:
     topic_prefix: "A propos de la catégorie %{category}"
     replace_paragraph: "(Remplacez ce premier paragraphe par une brève description de votre nouvelle catégorie. Ce guide apparaîtra dans la zone de sélection de la catégorie, alors essayez de rester en dessous de 200 caractères. **Cette catégorie n'apparaîtra pas sur la page des catégories jusqu'à ce que vous ayez modifié cette description ou créé des sujets.**"
+    post_template: "%{replace_paragraph}\n\nUtilisez les paragraphes suivants pour une plus longue description, voire pour établir des règles.:\n\n- A quoi sert cette catégorie ? Pourquoi les utilisateurs choisiraient-ils cette catégorie pour leur discussion ?\n\n- En quoi elle est différente des autres catégories que nous avons déjà ?\n\n- Quels sujets devraient figurer dans cette catégorie ?\n\n- Avons-nous besoin de cette catégorie ? Devrions-nous fusionner celle-ci avec une autre catégorie ?\n"
     errors:
       uncategorized_parent: "Sans catégorie ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
@@ -438,7 +443,7 @@ fr:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapproprié'
-      description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
+      description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation de la <a href="/guidelines">charte de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_user:
       title: 'Envoyer à @{{username}} un message'
@@ -449,6 +454,7 @@ fr:
     notify_moderators:
       title: "Autre chose"
       description: 'Ce sujet nécessite l''attention de l''équipe pour une autre raison non mentionnée ci-dessous'
+      long_form: 'signalé aux responsables'
       email_title: 'Un sujet dans "%{title}" nécessite l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -470,10 +476,11 @@ fr:
       long_form: 'signalé comme spam'
     inappropriate:
       title: 'Inapproprié'
-      description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
+      description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation de la <a href="/guidelines">charte de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_moderators:
       title: "Autre chose"
+      description: 'Ce message requiert l''attention d''un responsable d''après la <a href=''/fguidelines''>charte de la communauté</a>, <a href=''%{tos_url}''>conditions générales de service</a>, ou pour une autre raison indéterminée.'
       long_form: 'signalé pour modération'
       email_title: 'Ce sujet "%{title}" requière l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
@@ -1285,7 +1292,7 @@ fr:
       Des messages de nouveaux utilisateurs sont en attente de modération. [Ils peuvent être approuvés ou rejetés ici](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet**: la communauté considère qu'il ne correspond au sujet en discussion, qui est fixé par son titre et son premier message."
-    inappropriate: "Votre message a été signalé comme étant **inapproprié**: la communauté considère que son contenu est offensif, abusif ou enfreint notre [règlement interne](/guidelines)."
+    inappropriate: "Votre message a été signalé comme étant **inapproprié**: la communauté considère que son contenu est offensif, abusif ou enfreint notre [charte](/guidelines)."
     spam: "Votre message a été signalé comme étant du **spam**: la communauté considère qu'il s'agit d'une publicité, ou du contenu trop promotionnel au lieu d'être utile et à propos du sujet en discussion."
     notify_moderators: "Votre message a été **signalé aux modérateurs**: la communauté considère que quelque chose requiert une intervention d'un des responsables."
   flags_dispositions:
@@ -1311,7 +1318,7 @@ fr:
 
         Cependant, si votre message est masqué par la communauté une seconde fois, il restera masqué jusqu'à ce qu'un membre de l'équipe s'en occupe – et il est possible que des actions supplémentaires soient entreprises, ceci pouvant mener à la suspension de votre compte.
 
-        Afin d'être guider, merci de vous référer à notre  [guide de bonne conduite](%{base_url}/guidelines).
+        Afin d'être guider, merci de vous référer à notre  [charte](%{base_url}/guidelines).
 
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
@@ -1434,7 +1441,7 @@ fr:
 
         Par mesure de précaution, votre compte a été bloqué, vous ne pourrez par créer de nouvelles réponses ou sujets tant qu'un membre de l'équipe n'aura pas étudié votre compte.
 
-        Pour plus d'informations, merci de vous en référer au [règlement de la communauté](%{base_url}/guidelines).
+        Pour plus d'informations, merci de vous en référer à la [charte de la communauté](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Compte bloqué"
       text_body_template: |
@@ -1442,7 +1449,7 @@ fr:
 
         Ceci est un message automatique de %{site_name} pour vous informer que vos messages ont été bloqués par un membre de l'équipe.
 
-        Pour plus d'informations, merci de vous en référer au [règlement de la communauté](%{base_url}/guidelines).
+        Pour plus d'informations, merci de vous en référer à la [charte de la communauté](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Nouvel utilisateur %{username} bloqué à cause de signalements de la communauté"
     spam_post_blocked:
@@ -1612,7 +1619,7 @@ fr:
   color_schemes:
     base_theme_name: "Base"
   about: "A propos"
-  guidelines: "Règlement"
+  guidelines: "Charte"
   privacy: "Protection des données"
   edit_this_page: "Modifier cette page"
   csv_export:
@@ -1621,7 +1628,7 @@ fr:
   static_topic_first_reply: |
     Modifier le premier message de ce sujet pour changer le contenu de la page  %{page_name}.
   guidelines_topic:
-    title: "FAQ/Règlement"
+    title: "FAQ/Charte"
     body: "<a name=\"civilized\"></a>\n\n## [Ceci est un endroit civilisé, merci de le respecter](#civilized)\n\nMerci de traiter ce forum de discussion avec le même respect que vous pourriez avoir dans un parc public. Nous, aussi, sommes une ressource partagée par la communauté &mdash; un endroit pour partager des compétences, savoirs et intérêts au travers de conversations.\n\nIl ne s'agit pas de règles absolues, uniquement d'aide au bon sens de notre communauté. Suivez ces instructions pour garder cet endroit propre et bien éclairé pour un débat public civilisé.\n\n<a name=\"improve\"></a>\n\n## [Améliorez la discussion](#improve)\n\nAidez nous à faire de cet endroit un lieu idéal pour la discussion en améliorant constamment le débat d'une certaine façon, même minime. Si vous n'êtes pas sûr que votre message soit utile à la discussion ou pourrait nuire à son utilité, pensez à ce que vous voulez dire et essayer de nouveau plus tard.\n\nLes sujets abordés ici sont importants pour nous et nous voulons que vous agissiez comme s'ils comptaient également pour vous. Soyez respectueux des sujets et des autres utilisateurs, même si vous êtes en désaccord avec une partie de ce qui est dit.\n\nUne façon d'améliorer la discussion est de découvrir celles qui sont déjà en cours. Essayez de passez un peu de temps à parcourir les sujets avant de répondre ou démarrer votre propre discussion. De fait, vous aurez de plus grandes chances de rencontrer d'autres personnes qui partagent vos intérêts.\n\n<a name=\"agreeable\"></a>\n\n## [Soyez agréable, même si vous n'êtes pas d'accord](#agreeable)\n\nLa critique peut être constructive. Vous pouvez répondre à une personne en étant en désaccord avec elle. C'est très bien. Mais n'oubliez pas de *critiquer les idées, pas les gens*. Merci d'éviter :\n\n* les injures,\n* les attaques ad hominem,\n* de répondre à la tonalité d'un sujet plutôt qu'à son contenu réel,\n* les contradictions primaires.\n \nAu lieu de cela, fournissez des contre-arguments motivés qui améliorent la conversation.\n\n<a name=\"participate\"></a>\n\n## [Votre participation compte](#participate)\n\nLes conversations que nous avons ici donnent le ton pour tout le monde. Aidez-nous à influencer l'avenir de cette communauté en choisissant de vous engager dans des discussions qui font de ce forum un lieu intéressant &mdash; et en évitant celles qui n'y participent pas.\n\nDiscourse fournit des outils qui permettent à la communauté d'identifier collectivement le meilleur (et le pire) des contributions : favoris, signets, des *J'aime*, des signalements, des réponses, des vérifications et ainsi de suite. Utilisez ces outils pour améliorer votre propre expérience et celle de tous les autres aussi.\n\nEssayons de laisser notre parc mieux que nous l'avons trouvé.\n\n<a name=\"flag-problems\"></a>\n\n## [Si vous voyez un problème, signaler le](#flag-problems)\n\nLes modérateurs ont un rôle spécial ; ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs de la vie de la communauté et pas seulement des concierges ou des policiers.\n\nQuand vous voyez un mauvais comportement, ne répondez pas. Votre reconnaissance encourage le mauvais comportement, il consomme votre énergie et fait perdre du temps à chacun. *Signalez-le*. Si suffisamment de signalements s'accumulent, des mesures seront prises, automatiquement ou par l'intervention d'un modérateur.\n\nAfin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et n'importe quel compte utilisateur pour une raison quelconque, et ce à n'importe quel moment. Les modérateurs ne disposent pas d'un aperçu des nouveaux messages avant leur publication, les modérateurs et opérateurs du site n'assument aucune responsabilité pour tout contenu affiché par la communauté.\n\n<a name=\"be-civil\"></a>\n\n## [Soyez toujours civilisé](#be-civil)\n\nRien ne sabote une conversation saine mieux que la grossièreté :\n\n* Soyez civilisé. Ne postez pas ce qu'une personne raisonnable jugerait offensif, ni de discours violent ou haineux.\n* Gardez-le forum propre. Ne publiez rien d'obscène ou sexuellement explicite.\n* Se respecter mutuellement est primordial. Ne pas harceler ou chagriner quelqu'un, ni usurper l'identité de quelqu'un ou exposer des informations privées le concernant.\n* Respecter notre forum. Ne postez pas de spam ou tout autre forme de vandalisme.\n \nIl ne s'agit pas ici de choses concrètes avec des définitions précises - évitez *même d'avoir l'air* d'agir de la sorte. Si vous avez un doute, demandez-vous comment vous vous sentiriez si votre sujet était publié sur la première page du Monde.\n\nIl s'agit d'un forum public et les moteurs de recherche indexent ces discussions. Utilisez un langage, des liens et des images sans danger pour votre famille et vos amis.\n\n<a name=\"keep-tidy\"></a>\n\n## [Gardez cet endroit propre](#keep-tidy)\n\nFaites l'effort de mettre les choses au bon endroit, afin que nous puissions passer plus de temps à discuter et moins à ranger. Ainsi :\n\n* Ne commencez pas un sujet dans la mauvaise catégorie.\n* Ne postez pas le même contenu dans plusieurs discussions.\n* Ne postez pas de message sans contenu.\n* Ne pas détourner un sujet en le changeant en cours de route.\n* Ne signez pas vos messages &mdash; chaque message dispose d'informations sur le profil qui s'y rattache.\n\nPlutôt que de poster \"+1\", \"lol\", \"mdr\" ou \"d'accord\", utilisez le bouton 'J'aime'. Plutôt que de faire prendre à une discussion existante une direction radicalement différente, utilisez \"Répondre en créant un sujet lié\". \n\n<a name=\"stealing\"></a>\n\n## [Postez seulement vos propres trucs](#stealing)\n\nVous ne pouvez pas poster n'importe quel contenu numérique s'il appartient à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas poster des descriptions, des liens ou des méthodes pour voler la propriété intellectuelle de quelqu'un (logiciels, vidéo, audio, images), ou pour transgresser toute autre loi.\n\n<a name=\"power\"></a>\n\n## [Powered by You](#power)\n\nCe site est géré par votre [équipe de responsables](/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](/c/meta) et discutons-en ! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](/about). \n\n<a name=\"tos\"></a>\n\n## [Lisez les conditions générales d'utilisation](#tos)\n\nOui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).\n"
   tos_topic:
     title: "Conditions générales d'utilisation"
