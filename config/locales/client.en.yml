@@ -1929,6 +1929,7 @@ en:
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"
+          groups: "All groups"
 
       commits:
         latest_changes: "Latest changes: please update often!"
