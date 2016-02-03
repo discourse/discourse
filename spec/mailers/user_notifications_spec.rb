@@ -120,24 +120,6 @@ describe UserNotifications do
       # side effect, topic user is updated with post number
       tu = TopicUser.get(post.topic_id, response.user)
       expect(tu.last_emailed_post_number).to eq(response.post_number)
-
-      # in mailing list mode user_replies is not sent through
-      response.user.mailing_list_mode = true
-      mail = UserNotifications.user_replied(response.user, post: response,
-                                              notification_type: notification.notification_type,
-                                              notification_data_hash: notification.data_hash
-                                           )
-
-      expect(mail.message.class).to eq(ActionMailer::Base::NullMail)
-
-      response.user.mailing_list_mode = nil
-      mail = UserNotifications.user_replied(response.user,
-                                              post: response,
-                                              notification_type: notification.notification_type,
-                                              notification_data_hash: notification.data_hash
-                                           )
-
-      expect(mail.message.class).not_to eq(ActionMailer::Base::NullMail)
     end
   end
 

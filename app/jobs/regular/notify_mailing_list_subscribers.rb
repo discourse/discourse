@@ -11,7 +11,7 @@ module Jobs
 
       users =
           User.activated.not_blocked.not_suspended.real
-          .where(mailing_list_mode:  true)
+          .where(mailing_list_mode: true)
           .where('NOT EXISTS(
                       SELECT 1
                       FROM topic_users tu
@@ -29,22 +29,13 @@ module Jobs
                        cu.notification_level = ?
                   )', post.topic.category_id, CategoryUser.notification_levels[:muted])
 
-      error_count = 0
       users.each do |user|
         if Guardian.new(user).can_see?(post)
           begin
             message = UserNotifications.mailing_list_notify(user, post)
-            Email::Sender.new(message, :mailing_list, user).send
+            Email::Sender.new(message, :mailing_list, user).send if message
           rescue => e
-            Discourse.handle_job_exception(e, error_context(
-                args,
-                "Sending post to mailing list subscribers", {
-                user_id: user.id,
-                user_email: user.email
-            }))
-            if (++error_count) >= 4
-              raise RuntimeError, "ABORTING NotifyMailingListSubscribers due to repeated failures"
-            end
+            Discourse.handle_job_exception(e, error_context(args, "Sending post to mailing list subscribers", { user_id: user.id, user_email: user.email }))
           end
         end
       end

@@ -22,23 +22,27 @@ class UserNotifications < ActionMailer::Base
   end
 
   def authorize_email(user, opts={})
-    build_email(user.email, template: "user_notifications.authorize_email", email_token: opts[:email_token])
+    build_email(user.email,
+                template: "user_notifications.authorize_email",
+                email_token: opts[:email_token])
   end
 
   def forgot_password(user, opts={})
-    build_email( user.email,
-                 template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
-                 email_token: opts[:email_token])
+    build_email(user.email,
+                template: user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
+                email_token: opts[:email_token])
   end
 
   def admin_login(user, opts={})
-    build_email( user.email,
-                 template: "user_notifications.admin_login",
-                 email_token: opts[:email_token])
+    build_email(user.email,
+                template: "user_notifications.admin_login",
+                email_token: opts[:email_token])
   end
 
   def account_created(user, opts={})
-    build_email( user.email, template: "user_notifications.account_created", email_token: opts[:email_token])
+    build_email(user.email,
+                template: "user_notifications.account_created",
+                email_token: opts[:email_token])
   end
 
   def short_date(dt)
@@ -152,20 +156,19 @@ class UserNotifications < ActionMailer::Base
   end
 
   def mailing_list_notify(user, post)
-    send_notification_email(
-      title: post.topic.title,
+    opts = {
       post: post,
-      username: post.user.username,
-      from_alias: (SiteSetting.enable_names &&
-                   SiteSetting.display_name_on_email_from &&
-                   post.user.name.present?) ? post.user.name : post.user.username,
       allow_reply_by_email: true,
       use_site_subject: true,
       add_re_to_subject: true,
       show_category_in_subject: true,
       notification_type: "posted",
-      user: user
-    )
+      notification_data_hash: {
+        original_username: post.user.username,
+        topic_title: post.topic.title,
+      },
+    }
+    notification_email(user, opts)
   end
 
   protected
@@ -183,7 +186,6 @@ class UserNotifications < ActionMailer::Base
   end
 
   def self.get_context_posts(post, topic_user)
-
     context_posts = Post.where(topic_id: post.topic_id)
                         .where("post_number < ?", post.post_number)
                         .where(user_deleted: false)
@@ -200,9 +202,9 @@ class UserNotifications < ActionMailer::Base
   end
 
   def notification_email(user, opts)
-    return unless notification_type = opts[:notification_type]
-    return unless notification_data = opts[:notification_data_hash]
-    return unless post = opts[:post]
+    notification_type = opts[:notification_type]
+    notification_data = opts[:notification_data_hash]
+    post = opts[:post]
 
     unless String === notification_type
       if Numeric === notification_type
@@ -217,10 +219,6 @@ class UserNotifications < ActionMailer::Base
       name = User.where(id: post.user_id).pluck(:name).first
       user_name = name unless name.blank?
     end
-
-
-    return if user.mailing_list_mode && !post.topic.private_message? &&
-       ["replied", "mentioned", "quoted", "posted", "group_mentioned"].include?(notification_type)
 
     title = notification_data[:topic_title]
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
@@ -243,7 +241,6 @@ class UserNotifications < ActionMailer::Base
       use_template_html: use_template_html,
       user: user
     )
-
   end
 
   def send_notification_email(opts)
