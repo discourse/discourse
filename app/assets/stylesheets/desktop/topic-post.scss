@@ -397,7 +397,15 @@ a.star {
   }
 
   .participants { // PMs //
-    .user {float: left; margin: 7px 20px 7px 0;}
+    .user { float: left; margin: 7px 20px 7px 0; }
+    .user a {
+      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      font-weight: bold;
+      font-size: 0.929em;
+    }
+    i.fa-times {
+        color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
+    }
   }
 
   .topic-links {
