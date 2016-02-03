@@ -119,7 +119,8 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
   },
 
   pmPath: function() {
-    return this.get('controller.currentUser').pmPath(this.get('topic'));
+    var currentUser = this.get('controller.currentUser');
+    return currentUser && currentUser.pmPath(this.get('topic'));
   }.property(),
 
   browseMoreMessage: function() {
