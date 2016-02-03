@@ -72,7 +72,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def notification_level
-   user = scope.user
+   user = scope && scope.user
    object.notification_level ||
      (user && CategoryUser.where(user: user, category: object).first.try(:notification_level))
   end
