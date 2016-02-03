@@ -131,12 +131,13 @@ const Report = Discourse.Model.extend({
 
 Report.reopenClass({
 
-  find(type, startDate, endDate, categoryId) {
+  find(type, startDate, endDate, categoryId, groupId) {
     return Discourse.ajax("/admin/reports/" + type, {
       data: {
         start_date: startDate,
         end_date: endDate,
-        category_id: categoryId
+        category_id: categoryId,
+        group_id: groupId
       }
     }).then(json => {
       // Add a percent field to each tuple

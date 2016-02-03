@@ -38,6 +38,12 @@ $mobile-breakpoint: 700px;
   .filters input { margin-bottom: 0; }
 }
 
+.admin-contents .admin-reports-filter {
+  input[type="date"] {
+    width: 140px;
+  }
+}
+
 td.flaggers td {
   border-bottom: none;
   border-top: none;
