@@ -3,8 +3,12 @@
     {{plugin-outlet "above-static"}}
     {{{model.html}}}
 
+    {{#if showSignupButton}}
+      {{d-button action="showCreateAccount" class="btn-primary sign-up-button" label="sign_up"}}
+    {{/if}}
+
     {{#if showLoginButton}}
-    <button class="btn btn-primary" {{action "showLogin"}}>{{fa-icon "user"}}{{i18n 'log_in'}}</button>
+      {{d-button action="showLogin" class="btn-primary login-button" icon="user" label="log_in"}}
     {{/if}}
   </div>
 </div>
