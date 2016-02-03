@@ -7,7 +7,7 @@ module Email
       builder = Email::MessageBuilder.new(*builder_args)
       headers(builder.header_args) if builder.header_args.present?
       mail(builder.build_args).tap { |message|
-        if message and h = builder.html_part
+        if message && h = builder.html_part
           message.html_part = h
         end
       }

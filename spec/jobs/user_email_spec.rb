@@ -192,11 +192,16 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
+      it "doesn't send the mail if the user is using mailing list mode" do
+        Email::Sender.any_instance.expects(:send).never
+        user.update_column(:mailing_list_mode, true)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
+      end
+
       it "doesn't send the email if the post has been user deleted" do
         Email::Sender.any_instance.expects(:send).never
         post.update_column(:user_deleted, true)
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id,
-                                      notification_id: notification.id, post_id: post.id)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
       end
 
       context 'user is suspended' do

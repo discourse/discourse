@@ -15,7 +15,7 @@ module Jobs
 
       user = User.find_by(id: args[:user_id])
 
-      set_skip_context(type, args[:user_id], args[:to_address] || user.try(:email) || "no_email_found")
+      set_skip_context(type, args[:user_id], args[:to_address].presence || user.try(:email).presence || "no_email_found")
       return skip(I18n.t("email_log.no_user", user_id: args[:user_id])) unless user
 
       if args[:post_id]
@@ -45,11 +45,18 @@ module Jobs
     end
 
     def set_skip_context(type, user_id, to_address)
-      @skip_context = {type: type, user_id: user_id, to_address: to_address}
+      @skip_context = { type: type, user_id: user_id, to_address: to_address }
     end
 
+    NOTIFICATIONS_SENT_BY_MAILING_LIST ||= Set.new [
+      Notification.types[:posted],
+      Notification.types[:replied],
+      Notification.types[:mentioned],
+      Notification.types[:group_mentioned],
+      Notification.types[:quoted],
+    ]
 
-    def message_for_email(user, post, type, notification,
+   def message_for_email(user, post, type, notification,
                           notification_type=nil, notification_data_hash=nil,
                           email_token=nil, to_address=nil)
 
@@ -77,6 +84,13 @@ module Jobs
         email_args[:notification_type] ||= notification_type || notification.try(:notification_type)
         email_args[:notification_data_hash] ||= notification_data_hash || notification.try(:data_hash)
 
+        if user.mailing_list_mode? &&
+           !post.topic.private_message? &&
+           NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
+           # no need to log a reason when the mail was already sent via the mailing list job
+           return [nil, nil]
+        end
+
         unless user.email_always?
           if (notification && notification.read?) || (post && post.seen?(user))
             return skip_message(I18n.t('email_log.notification_already_read'))
@@ -97,7 +111,7 @@ module Jobs
       message = UserNotifications.send(type, user, email_args)
 
       # Update the to address if we have a custom one
-      if to_address.present?
+      if message && to_address.present?
         message.to = [to_address]
       end
 
