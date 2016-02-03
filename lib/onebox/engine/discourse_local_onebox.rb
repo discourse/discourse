@@ -14,7 +14,7 @@ module Onebox
         if other.kind_of?(URI)
           uri = other
           begin
-            route = Rails.application.routes.recognize_path(uri.path)
+            route = Rails.application.routes.recognize_path(uri.path.sub(Discourse.base_uri, ""))
             case route[:controller]
             when 'uploads'
               super
@@ -34,7 +34,7 @@ module Onebox
 
       def to_html
         uri = URI::parse(@url)
-        route = Rails.application.routes.recognize_path(uri.path)
+        route = Rails.application.routes.recognize_path(uri.path.sub(Discourse.base_uri, ""))
         url = @url.sub(/[&?]source_topic_id=(\d+)/, "")
         source_topic_id = $1.to_i
 
