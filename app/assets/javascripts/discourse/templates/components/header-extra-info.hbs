@@ -3,7 +3,9 @@
     <div class="title-wrapper">
       <h1>
         {{#if showPrivateMessageGlyph}}
-          <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+          <a href='{{pmPath}}'>
+            <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+          </a>
         {{/if}}
 
         {{#if topic.details.loaded}}

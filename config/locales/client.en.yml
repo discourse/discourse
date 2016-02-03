@@ -203,6 +203,7 @@ en:
 
     suggested_topics:
       title: "Suggested Topics"
+      pm_title: "Suggested Messages"
 
     about:
       simple_title: "About"

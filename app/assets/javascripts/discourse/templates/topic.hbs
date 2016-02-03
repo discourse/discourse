@@ -30,7 +30,9 @@
           {{else}}
             <h1>
               {{#unless model.is_warning}}
-                <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+                <a href="{{view.pmPath}}">
+                  <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+                </a>
               {{/unless}}
 
               {{#if model.details.loaded}}
@@ -108,9 +110,17 @@
 
             {{#if model.details.suggested_topics.length}}
               <div id="suggested-topics">
-                <h3>{{i18n "suggested_topics.title"}}</h3>
+                <h3>{{unbound view.suggestedTitle}}</h3>
                 <div class="topics">
+                  {{#if model.isPrivateMessage}}
+                  {{basic-topic-list
+                              hideCategory="true"
+                              showPosters="true"
+                              topics=model.details.suggested_topics
+                              postsAction="showTopicEntrance"}}
+                  {{else}}
                   {{basic-topic-list topics=model.details.suggested_topics postsAction="showTopicEntrance"}}
+                  {{/if}}
                 </div>
                 <h3>{{{view.browseMoreMessage}}}</h3>
               </div>
