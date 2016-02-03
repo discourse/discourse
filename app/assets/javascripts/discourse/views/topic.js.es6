@@ -20,9 +20,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
   SHORT_POST: 1200,
 
   categoryFullSlug: Em.computed.alias('topic.category.fullSlug'),
-
-  postStream: Em.computed.alias('controller.model.postStream'),
-
+  postStream: Em.computed.alias('topic.postStream'),
   archetype: Em.computed.alias('topic.archetype'),
 
   _composeChanged: function() {
@@ -120,9 +118,19 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     this.appEvents.trigger('topic:scrolled', offset);
   },
 
+  pmPath: function() {
+    return this.get('controller.currentUser').pmPath(this.get('topic'));
+  }.property(),
+
   browseMoreMessage: function() {
+
+    // TODO decide what to show for pms
+    if (this.get('topic.isPrivateMessage')) {
+      return;
+    }
+
     var opts = { latestLink: "<a href=\"" + Discourse.getURL("/latest") + "\">" + I18n.t("topic.view_latest_topics") + "</a>" },
-        category = this.get('controller.content.category');
+        category = this.get('topic.category');
 
     if(category && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
       category = null;
@@ -154,7 +162,13 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     } else {
       return I18n.t("topic.read_more", opts);
     }
-  }.property('topicTrackingState.messageCount', 'controller.content.category')
+  }.property('topicTrackingState.messageCount', 'topic'),
+
+  suggestedTitle: function(){
+    return this.get('controller.model.isPrivateMessage') ?
+      I18n.t("suggested_topics.pm_title") :
+      I18n.t("suggested_topics.title");
+  }.property()
 });
 
 function highlight(postNumber) {

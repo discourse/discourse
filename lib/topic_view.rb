@@ -295,7 +295,6 @@ class TopicView
   end
 
   def suggested_topics
-    return nil if topic.private_message?
     @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic)
   end
 
