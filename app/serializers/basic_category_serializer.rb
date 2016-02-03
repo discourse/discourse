@@ -38,6 +38,6 @@ class BasicCategorySerializer < ApplicationSerializer
   end
 
   def notification_level
-    object.notification_level || CategoryUser.where(user: object.user, category: object).first.try(:notification_level)
+    object.notification_level
   end
 end
