@@ -81,7 +81,7 @@ class UserEmailObserver < ActiveRecord::Observer
     end
 
     def private_delay
-      20.seconds
+      SiteSetting.private_email_time_window_seconds
     end
 
     def post_type
