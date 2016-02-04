@@ -151,6 +151,7 @@ module Jobs
       @extra[:start_date] = @extra[:start_date].to_date if @extra[:start_date].is_a?(String)
       @extra[:end_date]   = @extra[:end_date].to_date   if @extra[:end_date].is_a?(String)
       @extra[:category_id] = @extra[:category_id].to_i  if @extra[:category_id]
+      @extra[:group_id] = @extra[:group_id].to_i        if @extra[:group_id]
       r = Report.find(@extra[:name], @extra)
       r.data.map do |row|
         [row[:x].to_s(:db), row[:y].to_s(:db)]
