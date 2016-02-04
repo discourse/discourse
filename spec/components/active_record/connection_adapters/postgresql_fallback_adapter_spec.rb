@@ -27,40 +27,35 @@ describe ActiveRecord::ConnectionHandling do
       end
 
       it 'should failover to a replica server' do
-        begin
-          ActiveRecord::Base.expects(:postgresql_connection).with(config).raises(PG::ConnectionBad)
-          ActiveRecord::Base.expects(:verify_replica).with(@replica_connection)
+        ActiveRecord::Base.expects(:postgresql_connection).with(config).raises(PG::ConnectionBad)
+        ActiveRecord::Base.expects(:verify_replica).with(@replica_connection)
 
-          ActiveRecord::Base.expects(:postgresql_connection).with(config.merge({
-            host: "localhost", port: "6432"
-          })).returns(@replica_connection)
+        ActiveRecord::Base.expects(:postgresql_connection).with(config.merge({
+          host: "localhost", port: "6432"
+        })).returns(@replica_connection)
 
-          expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
-            .to raise_error(PG::ConnectionBad)
+        expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
+          .to raise_error(PG::ConnectionBad)
 
-          expect{ ActiveRecord::Base.postgresql_fallback_connection(config) }
-            .to change{ Discourse.readonly_mode? }.from(false).to(true)
+        expect{ ActiveRecord::Base.postgresql_fallback_connection(config) }
+          .to change{ Discourse.readonly_mode? }.from(false).to(true)
 
-          ActiveRecord::Base.unstub(:postgresql_connection)
+        ActiveRecord::Base.unstub(:postgresql_connection)
 
-          current_threads = Thread.list
+        current_threads = Thread.list
 
-          expect{ ActiveRecord::Base.connection_pool.checkout }
-            .to change{ Thread.list.size }.by(1)
+        expect{ ActiveRecord::Base.connection_pool.checkout }
+          .to change{ Thread.list.size }.by(1)
 
-          # Wait for the thread to finish execution
-          threads = (Thread.list - current_threads).each(&:join)
+        # Wait for the thread to finish execution
+        threads = (Thread.list - current_threads).each(&:join)
 
-          expect(Discourse.readonly_mode?).to eq(false)
+        expect(Discourse.readonly_mode?).to eq(false)
 
-          expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
+        expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
 
-          expect(ActiveRecord::Base.connection)
-            .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
-        ensure
-          # threads.each { |t| Thread.kill(t) } if threads
-          ActiveRecord::Base.establish_connection(:test)
-        end
+        expect(ActiveRecord::Base.connection)
+          .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
       end
     end
 
