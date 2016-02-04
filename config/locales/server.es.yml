@@ -27,6 +27,9 @@ es:
   purge_reason: "Eliminada automáticamente como cuenta abandonada, sin activar"
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
   anonymous: "Anónimos"
+  emails:
+    incoming:
+      default_subject: "Email entrante desde %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -299,6 +302,7 @@ es:
         one: "No se puede eliminar esta categoría porque tiene 1 tema. El más antiguo es %{topic_link}."
         other: "No se puede eliminar esta categoría porque tiene %{count} temas. El tema más antiguo es %{topic_link}."
       topic_exists_no_oldest: "No se puede eliminar esta categoría porque el contador de temas está en %{count}."
+    uncategorized_description: "Debates que no necesitan una categoría, o bien no encajan en alguna de las categorías existentes."
   trust_levels:
     newuser:
       title: "nuevo usuario"
@@ -1191,6 +1195,14 @@ es:
       max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (alcanzado el límite máximo). Contacta un miembro del staff."
   unsubscribe_mailer:
     subject_template: "Confirma que no quieres recibir más emails de %{site_title}"
+    text_body_template: |
+      Alguien (posiblemente tú?) solicitó no recibir más actualizaciones por email desde %{site_domain_name} a esta dirección de email.
+      Si deseas confirmar esta acción, por favor haz clic en el siguiente enlace:
+
+      %{confirm_unsubscribe_link}
+
+
+      Si quieres continuar recibiendo actualizaciones por email, por favor ignora este correo.
   invite_mailer:
     subject_template: "%{invitee_name} te invitó a '%{topic_title}' en %{site_domain_name}"
     text_body_template: |

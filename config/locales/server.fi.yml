@@ -27,6 +27,9 @@ fi:
   purge_reason: "Poistettu automaattisesti hylättynä, aktivoimattomana tilinä"
   disable_remote_images_download_reason: "Linkattujen kuvien lataaminen poistettiin käytöstä vähäisen tallennustilan vuoksi."
   anonymous: "Anonyymejä"
+  emails:
+    incoming:
+      default_subject: "Uusi sähköposti osoitteesta %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -308,6 +311,7 @@ fi:
         one: "Aluetta ei voi poistaa, koska siellä on 1 ketju. Linkki ketjuun %{topic_link}."
         other: "Aluetta ei voi poistaa, koska siellä on %{count} ketjua. Vanhin ketju on %{topic_link}."
       topic_exists_no_oldest: "Aluetta ei voi poistaa, koska ketjujen lukumäärä on #{count}."
+    uncategorized_description: "Ketjut, jotka eivät tarvitse aluetta tai eivät sovi muihin alueisiin."
   trust_levels:
     newuser:
       title: "tulokas"
@@ -1449,12 +1453,22 @@ fi:
     csv_export_failed:
       subject_template: "Datan vienti epäonnistui"
       text_body_template: "Pahoittelemme, mutta datan vientisi epäonnistui. Tarkasta lokit tai ota yhteyttä henkilökuntaan."
+    email_reject_reply_user_not_matching:
+      text_body_template: |
+        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
+        Viestisi ei saapunut siitä sähköpostiosoitteesta josta odotimme, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
+    email_reject_no_message_id:
+      text_body_template: |
+        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
+        Viestin otsikkotiedoista puuttui ID-numero, engl. 'Message-Id'. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_no_account:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon tili"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
-        Tälle sähköpostiosoitteelle ei löydy käyttäjätiliä. Yritä lähettää sähköposti toisesta osoitteesta tai ota yhteyttä henkilökuntaan.
+        Sähköpostiosoitteesi ei vastaa yhtäkään käyttäjistä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Ei sisältöä"
       text_body_template: "Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.\n\nEmme löytäneet sähköpostiviestistäsi sisältöä. \n\nJos saat tämän viestin ja viestisi _sisälsi_ sisältöä, yritä uudestaan yksinkertaisemmalla muotoilulla.\n\n"
@@ -1470,23 +1484,38 @@ fi:
         Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
 
         Tililläsi ei ole riittäviä oikeuksia, jotta saisit lähettää uusia ketjuja tälle alueelle. Jos uskot, että tämä johtuu virheestä, ota yhteyttä henkilökuntaan.
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] Sähköpostiongelma -- Pääsy estetty"
+      text_body_template: |
+        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
+        Alueelle jolle lähetit viestin voivat kirjoittaa ne, joilla on käypä käyttäjätunnus ja sähköpostiosoite. Jos uskot tämän olevan virhe, ota yhteyttä henkilökuntaan.
     email_reject_invalid_post:
+      subject_template: "[%{site_name}] Sähköpostiongelma -- Lähetysvirhe"
       text_body_template: |
         Pahoittelemme: sähköpostiviestisi kohteeseen %{destination} (titled %{former_title}) ei toiminut odotetusti.
 
         Mahdollisia syitä ovat muuan muassa: ei-tuettu muotoilu, liian suuri viesti, liian pieni viesti. Ole hyvä ja yritä uudelleen; voit myös lähettää viestisi sivuston kautta, jos tämä ongelma ei vaikuta poistuvan.
+    email_reject_invalid_post_specified:
+      subject_template: "[%{site_name}] Sähköpostiongelma -- Lähetysvirhe"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon vastausavain"
       text_body_template: |
-        Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
-        Annettu vastausavain on väärä tai tuntematon, joten emme pystyneet selvittämään mihin tämä sähköposti lähetettiin vastauksena. Ota yhteys henkilökuntaan.
+        Sähköpostiviestin vastaustunniste, engl. 'reply key', ei ole kelvollinen, minkä vuoksi ei tiedetä, mihin asiaan viestisi oli tarkoitus vastata. Ota yhteyttä henkilökuntaan.
+    email_reject_bad_destination_address:
+      subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon Vastaanottaja: -osoite"
+      text_body_template: |
+        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
+        Viestisi kohdesähköpostiosoitteet olivat tuntemattomia. Ole hyvä ja varmistu, että lähetit viestin oikeaan osoitteeseen.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Ketjua ei löytynyt"
       text_body_template: |
-        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
-        Ketjua, johon vastaat ei enää ole. Ehkäpä se on poistettu? Jos uskot, että on tapahtunut virhe, ota yhteys palstan henkilökuntaan.
+        Ketjua johon yritit kirjoittaa ei ole enää olemassa - ehkä se poistettiin? Jos uskot tömön olevan virhe, ota yhteyttä henkilökuntaan.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Suljettu ketju"
       text_body_template: |
@@ -1562,6 +1591,8 @@ fi:
     download_remote_images_disabled:
       subject_template: "Linkattujen kuvien lataaminen on otettu pois käytöstä"
       text_body_template: "Asetus `download_remote_images_to_local` on otettu pois käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
+  unsubscribe_via_email_link: |
+    tai, [klikkaa tästä](mailto:reply@%{hostname}?subject=unsubscribe), jos et halua näitä viestejä sähköpostiisi.
   subject_re: "VS:"
   subject_pm: "[YV]"
   user_notifications:
@@ -1569,6 +1600,8 @@ fi:
     unsubscribe:
       title: "Peru tilaus"
       description: "Etkö halua vastaanottaa näitä sähköposteja? Ei hätää! Klikkaa alta peruaksesi tilauksen välittömästi:"
+    reply_by_email: "Vastaa [vierailemalla ketjussa](%{base_url}%{url}) tai vastaamalla tähän sähköpostiin."
+    visit_link_to_respond: "Vastaa [vierailemalla ketjussa](%{base_url}%{url})."
     posted_by: "Käyttäjältä %{username} %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} kutsui sinut viestiin '%{topic_title}'"
@@ -1617,6 +1650,17 @@ fi:
         Seuraa tätä linkkiä nähdäksesi keskustelun: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [YV] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

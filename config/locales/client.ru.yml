@@ -25,8 +25,8 @@ ru:
             mb: МБ
             tb: ТБ
       short:
-        thousands: "{{number}} тыс."
-        millions: "{{number}} млн."
+        thousands: "{{number}} тыс."
+        millions: "{{number}} млн."
     dates:
       time: "HH:mm"
       long_no_year: "D MMM HH:mm"
@@ -148,6 +148,8 @@ ru:
       email: 'Поделиться ссылкой по электронной почте'
     action_codes:
       split_topic: "Разделил эту тему %{when}"
+      invited_user: "Пригласил %{who} %{when}"
+      removed_user: "Исключил %{who} %{when}"
       autoclosed:
         enabled: 'Закрыл тему %{when}'
         disabled: 'Открыл тему %{when}'
@@ -168,6 +170,19 @@ ru:
         disabled: 'Исключил из списков %{when}'
     topic_admin_menu: "действия администратора над темой"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Уведомления любого вида не будут отправляться на почту."
+    s3:
+      regions:
+        us_east_1: "US East (N. Virginia)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        eu_west_1: "EU (Ireland)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_northeast_1: "Asia Pacific (Tokyo)"
+        ap_northeast_2: "Asia Pacific (Seoul)"
+        sa_east_1: "South America (Sao Paulo)"
     edit: 'отредактировать название и раздел темы'
     not_implemented: "Извините, эта функция еще не реализована!"
     no_value: "Нет"
@@ -823,55 +838,57 @@ ru:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      more_emoji: "подробнее..."
-      options: "Опции"
+      emoji: "Смайлики :)"
+      more_emoji: "еще..."
+      options: "Дополнительные опции"
       whisper: "внутреннее сообщение"
       add_warning: "Это официальное предупреждение."
       toggle_whisper: "Внутреннее сообщение"
       posting_not_on_topic: "В какой теме вы хотите ответить?"
       saving_draft_tip: "Сохранение..."
-      saved_draft_tip: "сохранено"
-      saved_local_draft_tip: "сохранено локально"
+      saved_draft_tip: "Сохранено"
+      saved_local_draft_tip: "Сохранено локально"
       similar_topics: "Ваша тема похожа на..."
-      drafts_offline: "Сохраненные черновики"
+      drafts_offline: "Черновики, сохраненные в офлайн"
+      group_mentioned: "При использовании {{group}}, <a href='{{group_link}}'>{{count}} людям</a> будут отправлены уведомления."
       error:
-        title_missing: "Требуется заголовок"
-        title_too_short: "Заголовок должен быть не менее {{min}} символов"
-        title_too_long: "Заголовок не может быть длиннее {{max}} символов"
+        title_missing: "Требуется название темы"
+        title_too_short: "Название темы должно быть не короче {{min}} символов"
+        title_too_long: "Название темы не может быть длиннее {{max}} символов"
         post_missing: "Сообщение не может быть пустым"
-        post_length: "Сообщение должно содержать минимум {{min}} символов"
-        try_like: 'А вы пробовали лайкнуть сообщение с помощью кнопки <i class="fa fa-heart"></i> ?'
+        post_length: "Сообщение должно быть не короче {{min}} символов"
+        try_like: 'Пробовали ли вы выразить симпатию с помощью кнопки <i class="fa fa-heart"></i> ?'
         category_missing: "Нужно выбрать раздел"
       save_edit: "Сохранить"
       reply_original: "Ответ в первоначальной теме"
       reply_here: "Ответить в текущей теме"
       reply: "Ответить"
-      cancel: "Отменить"
+      cancel: "Отмена"
       create_topic: "Создать тему"
-      create_pm: "Сообщение"
+      create_pm: "Личное сообщение"
       title: "Или нажмите Ctrl+Enter"
       users_placeholder: "Добавить пользователя"
-      title_placeholder: "Название: суть обсуждения коротким предложением"
-      edit_reason_placeholder: "почему вы хотите изменить?"
+      title_placeholder: "Название: суть темы коротким предложением"
+      edit_reason_placeholder: "Причина редактирования..."
       show_edit_reason: "(добавить причину редактирования)"
-      reply_placeholder: "Поддерживаемые форматы: Markdown, BBCode или HTML. Для добавления изображений перетащите их"
+      reply_placeholder: "Поддерживаемые форматы: Markdown, BBCode и HTML. Чтобы вставить картинку, перетащите ее сюда или вставьте с помощью Ctrl+V, Command-V, или нажмите правой кнопкой мыши и выберите меню \"вставить\"."
       view_new_post: "Посмотреть созданное вами сообщение."
-      saving: "Сохранение"
+      saving: "Сохранение..."
       saved: "Сохранено!"
-      saved_draft: "Черновик сообщения. Нажмите, чтобы продолжить редактирование."
+      saved_draft: "Черновик сохранен; нажмите сюда, чтобы его открыть."
       uploading: "Загрузка..."
-      show_preview: 'предпросмотр &raquo;'
+      show_preview: 'показать предпросмотр &raquo;'
       hide_preview: '&laquo; скрыть предпросмотр'
-      quote_post_title: "Процитировать всё сообщение"
-      bold_title: "Выделение жирным"
+      quote_post_title: "Процитировать сообщение целиком"
+      bold_title: "Жирный"
       bold_text: "текст, выделенный жирным"
-      italic_title: "Выделение курсивом"
+      italic_title: "Курсив"
       italic_text: "текст, выделенный курсивом"
       link_title: "Ссылка"
       link_description: "введите описание ссылки"
       link_dialog_title: "Вставить ссылку"
-      link_optional_text: "необязательное название"
-      link_placeholder: "http://example.com \"необязательное название\""
+      link_optional_text: "текст ссылки"
+      link_placeholder: "Пример: http://example.com \"текст ссылки\""
       quote_title: "Цитата"
       quote_text: "Цитата"
       code_title: "Форматированный текст"
