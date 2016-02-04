@@ -290,7 +290,7 @@ test("Mentions", function() {
 });
 
 test("Category hashtags", () => {
-  var alwaysTrue = { categoryHashtagLookup: (function() { return "http://test.discourse.org/category-hashtag"; }) };
+  var alwaysTrue = { categoryHashtagLookup: (function() { return ["http://test.discourse.org/category-hashtag", "category-hashtag"]; }) };
 
   cookedOptions("Check out #category-hashtag", alwaysTrue,
          "<p>Check out <a class=\"hashtag\" href=\"http://test.discourse.org/category-hashtag\">#<span>category-hashtag</span></a></p>",
