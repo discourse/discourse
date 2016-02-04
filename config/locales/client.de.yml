@@ -482,6 +482,7 @@ de:
         groups: "Meine Gruppen"
         bulk_select: "Nachrichten auswählen"
         move_to_inbox: "In Posteingang verschieben"
+        move_to_archive: "Archivieren"
         failed_to_move: "Die ausgewählten Nachrichten konnten nicht bewegt werden (vielleicht gibt es ein Netzwerkproblem)."
         select_all: "Alle auswählen"
       change_password:
@@ -653,7 +654,7 @@ de:
         top_topics: "Die besten Themen"
         top_badges: "Die besten Abzeichen"
         more_topics: "weitere Themen"
-        more_replies: "weitere Antworten"
+        more_replies: "weitere Beiträge"
         more_badges: "weitere Abzeichen"
       associated_accounts: "Anmeldeinformationen"
       ip_address:

@@ -428,7 +428,7 @@ es:
         not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
         perm_default: "Activar notificaciones"
         perm_denied_btn: "Permiso denegado"
-        perm_denied_expl: "Has denegado el permiso para las notificaciones. Usa tu navegador para activarlas, después haz clic en el botón cuando esté hecho. (En escritorio: el icono a la izquierda de la barra de direcciones. En móvil: 'info del sitio'.)"
+        perm_denied_expl: "Has denegado los permisos para las notificaciones en tu navegador web. Configura tu navegador para permitir notificaciones. "
         disable: "Desactivar notificaciones"
         currently_enabled: "(activadas actualmente)"
         enable: "Activar notificaciones"
@@ -482,6 +482,7 @@ es:
         groups: "Mis grupos"
         bulk_select: "Mensajes seleccionados"
         move_to_inbox: "Mover a la bandeja de entrada"
+        move_to_archive: "Archivar"
         failed_to_move: "No se han podido mover los mensajes seleccionados (puede haber problemas de conexión)"
         select_all: "Seleccionar todo"
       change_password:
@@ -909,6 +910,9 @@ es:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> movió {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Se te ha concedido '{{description}}'</p>"
+      group_message_summary:
+        one: "<i title='mensaje en tu bandeja de grupo' class='fa fa-group'></i><p> {{count}} mensaje en la bandeja del grupo {{group_name}}</p>"
+        other: "<i title='mensajes en tu bandeja de grupo' class='fa fa-group'></i><p> {{count}} mensajes en la bandeja del grupo {{group_name}}</p>"
       alt:
         mentioned: "Mencionado por"
         quoted: "Citado por"
@@ -923,6 +927,7 @@ es:
         moved_post: "Tu post fue eliminado por"
         linked: "Enlace a tu post"
         granted_badge: "Distintivo concedido"
+        group_message_summary: "Mensajes en la bandeja del grupo"
       popup:
         mentioned: '{{username}} te mencionó en "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} te ha mencionado en "{{topic}}" - {{site_title}}'
@@ -2142,6 +2147,10 @@ es:
             create_category: "crear categoría"
             block_user: "bloquear usuario"
             unblock_user: "desbloquear usuario"
+            grant_admin: "conceder administración"
+            revoke_admin: "revocar administración"
+            grant_moderation: "conceder moderación"
+            revoke_moderation: "revocar moderación"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."

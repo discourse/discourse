@@ -2158,7 +2158,7 @@ fr:
           url: "URL"
           domain: "Domaine"
         screened_ips:
-          title: "IP Suivies"
+          title: "IP surveillés"
           description: 'Adresses IP qui sont surveillés. Utiliser "Autoriser" pour ajouter les adresses IP à la liste blanche.'
           delete_confirm: "Êtes-vous sûr de vouloir supprimer la règle pour %{ip_address} ?"
           roll_up_confirm: "Êtes-vous certain de vouloir consolider les adresses IP interdites sous forme de plages de sous réseaux ?"
