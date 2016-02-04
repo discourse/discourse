@@ -633,7 +633,6 @@ pt_BR:
     logout: "Você foi desconectado."
     refresh: "Atualizar"
     read_only_mode:
-      enabled: "O modo somente-leitura está habilitado. Você pode navegador mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
     too_few_topics_and_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversas para ler e responder."
     too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Novos visitantes precisam de algumas conversas para ler e responder."
@@ -748,7 +747,6 @@ pt_BR:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "mais..."
       options: "Opções"
       whisper: "sussuro"
@@ -1230,8 +1228,6 @@ pt_BR:
         yes_value: "Sim, abandone"
       via_email: "post recebido via email"
       whisper: "esta mensagem é um sussuro privado para moderadores"
-      wiki:
-        about: "essa resposta é uma wiki; usuários básicos podem editá-lo"
       archetypes:
         save: 'Salvar as opções'
       controls:
@@ -1942,9 +1938,8 @@ pt_BR:
             name: 'wiki'
             description: "Cor base usada para o fundo em postagens do wiki."
       email:
-        title: "Email"
         settings: "Settings"
-        all: "Todas"
+        preview_digest: "Preview Digest"
         sending_test: "Enviando e-mail de teste..."
         error: "<b>ERRO</b> - %{server_error}"
         test_error: "Houve um problema ao enviar o email de teste. Por favor, verifique as configurações de email, se o seu provedor não está bloqueando conexões de email e tente novamente."
@@ -1959,7 +1954,6 @@ pt_BR:
         send_test: "Enviar email de teste"
         sent_test: "enviado!"
         delivery_method: "Delivery Method"
-        preview_digest: "Preview Digest"
         preview_digest_desc: "Pré-visualizar o conteúdo do e-mail de resumo enviado para usuários inativos."
         refresh: "Atualizar"
         format: "Formato"

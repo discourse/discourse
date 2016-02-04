@@ -110,6 +110,8 @@ de:
       email: 'diesen Link per E-Mail senden'
     action_codes:
       split_topic: "Thema aufgeteilt, %{when}"
+      invited_user: "%{who} eingeladen, %{when}"
+      removed_user: "%{who} entfernt, %{when}"
       autoclosed:
         enabled: 'geschlossen, %{when}'
         disabled: 'geöffnet, %{when}'
@@ -130,6 +132,19 @@ de:
         disabled: 'unsichtbar gemacht, {when}'
     topic_admin_menu: "Thema administrieren"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
+    s3:
+      regions:
+        us_east_1: "USA Ost (Nord-Virginia)"
+        us_west_1: "USA West (Nordkalifornien)"
+        us_west_2: "USA West (Oregon)"
+        us_gov_west_1: "AWS GovCloud (USA)"
+        eu_west_1: "EU (Irland)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Asien-Pazifik (Singapur)"
+        ap_southeast_2: "Asien-Pazifik (Sydney)"
+        ap_northeast_1: "Asien-Pazifik (Tokio)"
+        ap_northeast_2: "Asien-Pazifik (Seoul)"
+        sa_east_1: "Südamerika (São Paulo)"
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -467,6 +482,7 @@ de:
         groups: "Meine Gruppen"
         bulk_select: "Nachrichten auswählen"
         move_to_inbox: "In Posteingang verschieben"
+        move_to_archive: "Archivieren"
         failed_to_move: "Die ausgewählten Nachrichten konnten nicht bewegt werden (vielleicht gibt es ein Netzwerkproblem)."
         select_all: "Alle auswählen"
       change_password:
@@ -625,6 +641,21 @@ de:
         same_as_email: "Dein Passwort entspricht deiner E-Mail-Adresse."
         ok: "Dein Passwort sieht in Ordnung aus."
         instructions: "Mindestens %{count} Zeichen."
+      summary:
+        title: "Übersicht"
+        stats: "Statistiken"
+        topic_count: "Erstellte Themen"
+        post_count: "Erstelle Beiträge"
+        likes_given: "Abgegebene Likes"
+        likes_received: "Erhaltene Likes"
+        days_visited: "Besuchstage"
+        posts_read_count: "Gelesene Beiträge"
+        top_replies: "Die besten Beiträge"
+        top_topics: "Die besten Themen"
+        top_badges: "Die besten Abzeichen"
+        more_topics: "weitere Themen"
+        more_replies: "weitere Beiträge"
+        more_badges: "weitere Abzeichen"
       associated_accounts: "Anmeldeinformationen"
       ip_address:
         title: "Letzte IP-Adresse"
@@ -667,7 +698,6 @@ de:
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     read_only_mode:
-      enabled: "Der Nur-Lesen-Modus ist aktiviert. Du kannst die Website weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
@@ -782,7 +812,7 @@ de:
       ctrl: 'Strg'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
+      emoji: "Emoji :)"
       more_emoji: "mehr..."
       options: "Optionen"
       whisper: "flüstern"
@@ -1480,7 +1510,6 @@ de:
       email_in_allow_strangers: "Akzeptiere E-Mails von nicht registrierten, anonymen Benutzern"
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
-      contains_messages: "Ändere diese Kategorie, sodass diese nur noch Nachrichten enthält."
       suppress_from_homepage: "Löse diese Kategorie von der Webseite."
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie"
       edit_permissions: "Berechtigungen bearbeiten"
@@ -2005,9 +2034,10 @@ de:
             name: 'Wiki'
             description: "Die Standardfarbe wird als Hintergrundfarbe für Wiki-Beiträge genutzt."
       email:
-        title: "E-Mail"
+        title: "E-Mails"
         settings: "Einstellungen"
-        all: "Alle"
+        templates: "Vorlagen"
+        preview_digest: "Vorschau auf Neuigkeiten anzeigen"
         sending_test: "Versende Test-E-Mail..."
         error: "<b>FEHLER</b> - %{server_error}"
         test_error: "Es gab ein Problem beim Senden der Test-E-Mail. Bitte überprüfe nochmals deine E-Mail-Einstellungen, stelle sicher dass dein Anbieter keine E-Mail-Verbindungen blockiert und probiere es erneut."
@@ -2022,7 +2052,6 @@ de:
         send_test: "Test-E-Mail senden"
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
-        preview_digest: "Vorschau auf Neuigkeiten anzeigen"
         preview_digest_desc: "Vorschau der Zusammenfassung der letzten Aktivitäten, die als E-Mail an inaktive Nutzer gesendet wird."
         refresh: "Aktualisieren"
         format: "Format"
@@ -2031,6 +2060,18 @@ de:
         last_seen_user: "Letzter Benutzer:"
         reply_key: "Antwort-Schlüssel"
         skipped_reason: "Grund des Überspringens"
+        incoming_emails:
+          from_address: "Von"
+          to_addresses: "An"
+          cc_addresses: "Cc"
+          subject: "Betreff"
+          error: "Fehler"
+          filters:
+            from_placeholder: "von@example.com"
+            to_placeholder: "an@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Betreff..."
+            error_placeholder: "Fehler"
         logs:
           none: "Keine Protokolleinträge gefunden."
           filters:
@@ -2094,6 +2135,8 @@ de:
             change_category_settings: "Kategorieeinstellungen ändern"
             delete_category: "Kategorie löschen"
             create_category: "Kategorie erstellen"
+            block_user: "Benutzer blockieren"
+            unblock_user: "Blockierung von Benutzer aufheben"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."

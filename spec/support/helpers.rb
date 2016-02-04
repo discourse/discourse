@@ -38,7 +38,14 @@ module Helpers
     args[:topic_id] = args[:topic].id if args[:topic]
     user = args.delete(:user) || Fabricate(:user)
     args[:category] = args[:category].name if args[:category].is_a?(Category)
-    PostCreator.create(user, args)
+    creator = PostCreator.new(user, args)
+    post = creator.create
+
+    if creator.errors.present?
+      raise StandardError.new(creator.errors.full_messages.join(" "))
+    end
+
+    post
   end
 
   def generate_username(length=10)

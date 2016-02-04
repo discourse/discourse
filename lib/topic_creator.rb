@@ -76,7 +76,8 @@ class TopicCreator
                  when TopicUser.notification_levels[:tracking] then "track!"
                  when TopicUser.notification_levels[:regular]  then "regular!"
                  when TopicUser.notification_levels[:muted]    then "mute!"
-                 else "watch!"
+                 when TopicUser.notification_levels[:watching] then "watch!"
+                 else "track!"
                  end
         topic.notifier.send(action, gu.user_id)
       end

@@ -203,6 +203,7 @@ en:
 
     suggested_topics:
       title: "Suggested Topics"
+      pm_title: "Suggested Messages"
 
     about:
       simple_title: "About"
@@ -469,7 +470,7 @@ en:
         not_supported: "Notifications are not supported on this browser. Sorry."
         perm_default: "Turn On Notifications"
         perm_denied_btn: "Permission Denied"
-        perm_denied_expl: "You have denied permission for notifications. Use your browser to enable notifications, then click the button when done. (Desktop: The leftmost icon in the address bar. Mobile: 'Site Info'.)"
+        perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
         currently_enabled: "(currently enabled)"
         enable: "Enable Notifications"
@@ -525,6 +526,7 @@ en:
         groups: "My Groups"
         bulk_select: "Select messages"
         move_to_inbox: "Move to Inbox"
+        move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
 
@@ -1001,6 +1003,10 @@ en:
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
 
+      group_message_summary:
+          one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} message in your {{group_name}} inbox</p>"
+          other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} messages in your {{group_name}} inbox</p>"
+
       alt:
         mentioned: "Mentioned by"
         quoted: "Quoted by"
@@ -1015,6 +1021,7 @@ en:
         moved_post: "Your post was moved by"
         linked: "Link to your post"
         granted_badge: "Badge granted"
+        group_message_summary: "Messages in group inbox"
 
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
@@ -1922,6 +1929,7 @@ en:
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"
+          groups: "All groups"
 
       commits:
         latest_changes: "Latest changes: please update often!"
@@ -2328,6 +2336,10 @@ en:
             create_category: "create category"
             block_user: "block user"
             unblock_user: "unblock user"
+            grant_admin: "grant admin"
+            revoke_admin: "revoke admin"
+            grant_moderation: "grant moderation"
+            revoke_moderation: "revoke moderation"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

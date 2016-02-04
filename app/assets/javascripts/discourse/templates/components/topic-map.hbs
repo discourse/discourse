@@ -5,11 +5,9 @@
 <section class="map {{if mapCollapsed 'map-collapsed'}}">
   <ul class="clearfix">
     <li>
-      <a href='{{unbound topic.url}}'>
       <h4>{{i18n 'created_lowercase'}}</h4>
       {{avatar details.created_by imageSize="tiny"}}
       {{format-date topic.created_at}}
-      </a>
     </li>
     <li>
       <a href={{topic.lastPostUrl}}>

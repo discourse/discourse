@@ -4,7 +4,7 @@ require_dependency 'jobs/base'
 describe Jobs::UserEmail do
 
   before do
-    SiteSetting.stubs(:email_time_window_mins).returns(10)
+    SiteSetting.email_time_window_mins = 10
   end
 
   let(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago ) }
@@ -59,6 +59,40 @@ describe Jobs::UserEmail do
       Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
     end
+  end
+
+  context "email_log" do
+
+    before { Fabricate(:post) }
+
+    it "creates an email log when the mail is sent (via Email::Sender)" do
+      last_emailed_at = user.last_emailed_at
+
+      expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+
+      email_log = EmailLog.last
+      expect(email_log.skipped).to eq(false)
+      expect(email_log.user_id).to eq(user.id)
+
+      # last_emailed_at should have changed
+      expect(email_log.user.last_emailed_at).to_not eq(last_emailed_at)
+    end
+
+    it "creates an email log when the mail is skipped" do
+      last_emailed_at = user.last_emailed_at
+      user.update_columns(suspended_till: 1.year.from_now)
+
+      expect { Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) }.to change { EmailLog.count }.by(1)
+
+      email_log = EmailLog.last
+      expect(email_log.skipped).to eq(true)
+      expect(email_log.skipped_reason).to be_present
+      expect(email_log.user_id).to eq(user.id)
+
+      # last_emailed_at doesn't change
+      expect(email_log.user.last_emailed_at).to eq(last_emailed_at)
+    end
+
   end
 
   context 'args' do
@@ -135,16 +169,20 @@ describe Jobs::UserEmail do
                  )
       }
 
-      it 'passes a notification as an argument when a notification_id is present' do
-        Email::Sender.any_instance.expects(:send)
-        UserNotifications.expects(:user_mentioned).with(user, notification: notification, post: post).returns(mailer)
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
-      end
-
       it "doesn't send the email if the notification has been seen" do
-        Email::Sender.any_instance.expects(:send).never
         notification.update_column(:read, true)
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
+        message, err = Jobs::UserEmail.new.message_for_email(
+                                          user,
+                                          post,
+                                          :user_mentioned,
+                                          notification,
+                                          notification.notification_type,
+                                          notification.data_hash,
+                                          nil,
+                                          nil)
+
+        expect(message).to eq nil
+        expect(err.skipped_reason).to match(/notification.*already/)
       end
 
       it "does send the email if the notification has been seen but the user is set for email_always" do
@@ -154,16 +192,29 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
+      it "doesn't send the mail if the user is using mailing list mode" do
+        Email::Sender.any_instance.expects(:send).never
+        user.update_column(:mailing_list_mode, true)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
+      end
+
       it "doesn't send the email if the post has been user deleted" do
         Email::Sender.any_instance.expects(:send).never
         post.update_column(:user_deleted, true)
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
       end
 
       context 'user is suspended' do
         it "doesn't send email for a pm from a regular user" do
-          Email::Sender.any_instance.expects(:send).never
-          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, notification_id: notification.id)
+          msg,err = Jobs::UserEmail.new.message_for_email(
+              suspended,
+              Fabricate.build(:post),
+              :user_private_message,
+              notification
+          )
+
+          expect(msg).to eq(nil)
+          expect(err).not_to eq(nil)
         end
 
         context 'pm from staff' do
@@ -176,19 +227,29 @@ describe Jobs::UserEmail do
                                             post_number: @pm_from_staff.post_number,
                                             data: { original_post_id: @pm_from_staff.id }.to_json
                                         )
-            UserNotifications.expects(:user_private_message).with(suspended, notification: @pm_notification, post: @pm_from_staff).returns(mailer)
           end
 
-          subject(:execute_user_email_job) {
-            Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, notification_id: @pm_notification.id) }
+          let :sent_message do
+            Jobs::UserEmail.new.message_for_email(
+                suspended,
+                @pm_from_staff,
+                :user_private_message,
+                @pm_notification
+            )
+          end
 
           it "sends an email" do
-            execute_user_email_job
+            msg,err = sent_message
+            expect(msg).not_to be(nil)
+            expect(err).to be(nil)
           end
 
           it "sends an email even if user was last seen recently" do
             suspended.update_column(:last_seen_at, 1.minute.ago)
-            execute_user_email_job
+
+            msg,err = sent_message
+            expect(msg).not_to be(nil)
+            expect(err).to be(nil)
           end
         end
       end
@@ -218,6 +279,4 @@ describe Jobs::UserEmail do
 
   end
 
-
 end
-

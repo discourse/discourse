@@ -110,6 +110,8 @@ he:
       email: 'שלח קישור בדוא"ל'
     action_codes:
       split_topic: "פצל את הפוסט %{when}"
+      invited_user: "%{who} הוזמנ/ה ב-%{when}"
+      removed_user: "%{who} הוסר/ה ב-%{when}"
       autoclosed:
         enabled: 'סגר  %{when}'
         disabled: 'פתח %{when}'
@@ -130,6 +132,18 @@ he:
         disabled: 'הוצא מהרשימה %{when}'
     topic_admin_menu: "פעולות ניהול לפוסט"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
+    s3:
+      regions:
+        us_east_1: "מזרח ארה\"ב (צפון וירג'יניה)"
+        us_west_1: "מערב ארה\"ב (צפון קליפורניה)"
+        us_west_2: "מערב ארה\"ב (ארגון)"
+        eu_west_1: "האיחוד האירופי (אירלנד)"
+        eu_central_1: "האיחוד האירופי (פרנקפורט)"
+        ap_southeast_1: "אסיה הפסיפית (סינגפור)"
+        ap_southeast_2: "אסיה הפסיפית (סידני)"
+        ap_northeast_1: "אסיה הפסיפית (טוקיו)"
+        ap_northeast_2: "אסיה הפסיפית (סיאול)"
+        sa_east_1: "דרום אמריקה (סאו פאולו)"
     edit: 'ערוך את הכותרת והקטגוריה של הפוסט'
     not_implemented: "סליחה, תכונה זו עדיין לא מומשה!"
     no_value: "לא"
@@ -294,6 +308,12 @@ he:
         one: "משתמש/ת 1"
         other: "%{count} משתמשים"
     groups:
+      empty:
+        posts: "אין פרסום של חברים בקבוצה זו"
+        members: "אין חברים בקבוצה זו."
+        mentions: "אין אזכורים של קבוצה זו."
+        messages: "אין מסרים לקבוצה זו."
+        topics: "אין נושא מטעם חברים בקבוצה זו."
       add: "הוספה"
       selector_placeholder: "הוספת חברים וחברות"
       owner: "מנהל"
@@ -304,6 +324,7 @@ he:
       members: "חברים"
       posts: "הודעות"
       alias_levels:
+        title: "מי יכול/ה לשלוח מסרים ו@לאזכר בקבוצה זו?"
         nobody: "אף אחד"
         only_admins: "רק מנהלים"
         mods_and_admins: "רק מנחים ומנהלים"
@@ -312,6 +333,12 @@ he:
       trust_levels:
         title: "רמת אמון הניתנת אוטומטית למשתמשים כשהם נוספים:"
         none: "ללא"
+      notifications:
+        watching:
+          title: "במעקב"
+          description: "תקבל/י הודעה על כל פרסום במסגרת כל מסר, וסך התשובות יוצג."
+        tracking:
+          title: "במעקב"
     user_action_groups:
       '1': "לייקים שניתנו"
       '2': "לייקים שהתקבלו"
@@ -631,7 +658,6 @@ he:
     logout: "נותקת מהמערכת"
     refresh: "רענן"
     read_only_mode:
-      enabled: "מופעל מצב קריאה בלבד. אפשר להמשיך לגלוש באתר, אך חלק מהפעולות עלולות לא לעבוד."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
     too_few_topics_and_posts_notice: "בוא <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים ו-<strong>%{currentPosts} / %{requiredPosts}</strong> הודעות. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
     too_few_topics_notice: "בוא <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
@@ -746,7 +772,6 @@ he:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "עוד..."
       options: "אפשרויות"
       whisper: "לחישה"
@@ -1227,8 +1252,6 @@ he:
         yes_value: "כן, נטוש"
       via_email: "פרסום זה הגיע באמצעות דוא\"ל"
       whisper: "פרסום זה הוא לחישה פרטית לצוות האתר"
-      wiki:
-        about: "פרסום זה הינו ויקי; משתמשים בסיסיים יכולים לערוך אותו"
       archetypes:
         save: 'שמור אפשרויות'
       controls:
@@ -1415,7 +1438,6 @@ he:
       email_in_allow_strangers: "קבלת דוא\"ל ממשתמשים אנונימיים ללא חשבונות במערכת הפורומים"
       email_in_disabled: "האפשרות פרסום פוסטים חדשים דרך הדוא\"ל נוטרלה דרך הגדרות האתר. לאפשר פרסום באמצעות  משלוח דוא\"ל."
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
-      contains_messages: "שנו את הקטגוריה כדי להכיל רק הודעות."
       suppress_from_homepage: "הרחק קטגוריה זו מהעמוד הראשי"
       allow_badges_label: "הרשו לתגים (badges) להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
@@ -1924,9 +1946,8 @@ he:
             name: 'ויקי'
             description: "צבעי יסוד משמשים כצבעי רקע בפרסומי ויקי."
       email:
-        title: "דואר אלקטרוני"
         settings: "הגדרות"
-        all: "הכל"
+        preview_digest: "תצוגה מקדימה של סיכום"
         sending_test: "שולח דואר אלקטרוני לבדיקה..."
         error: "<b>שגיאה</b> - %{server_error}"
         test_error: "הייתה בעיה בשליחת הדואר האלקטרוני. בבקשה בדוק את ההגדרות שלך ונסה שנית."
@@ -1941,7 +1962,6 @@ he:
         send_test: "שליחת מייל בדיקה"
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
-        preview_digest: "תצוגה מקדימה של סיכום"
         preview_digest_desc: "תצוגה מקדימה של מייל סיכום שנשלח למשתמשים לא פעילים. "
         refresh: "רענן"
         format: "פורמט"

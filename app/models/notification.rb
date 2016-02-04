@@ -41,7 +41,9 @@ class Notification < ActiveRecord::Base
                         granted_badge: 12,
                         invited_to_topic: 13,
                         custom: 14,
-                        group_mentioned: 15)
+                        group_mentioned: 15,
+                        group_message_summary: 16
+                       )
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
@@ -111,14 +113,11 @@ class Notification < ActiveRecord::Base
   end
 
   def url
-    if topic.present?
-      return topic.relative_url(post_number)
-    end
+    topic.relative_url(post_number) if topic.present?
   end
 
   def post
     return if topic_id.blank? || post_number.blank?
-
     Post.find_by(topic_id: topic_id, post_number: post_number)
   end
 
@@ -156,6 +155,10 @@ class Notification < ActiveRecord::Base
 
   def unread_pm?
     Notification.types[:private_message] == self.notification_type && !read
+  end
+
+  def post_id
+    Post.where(topic: topic_id, post_number: post_number).pluck(:id).first
   end
 
   protected

@@ -67,7 +67,7 @@ end
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  owner              :boolean          default(FALSE), not null
-#  notification_level :integer          default(3), not null
+#  notification_level :integer          default(2), not null
 #
 # Indexes
 #

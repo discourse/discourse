@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
   attr_accessor :import_mode
 
   # excluding fake users like the system user or anonymous users
-  scope :real, -> { where('id > 0').where('NOT EXISTS(
+  scope :real, -> { where('users.id > 0').where('NOT EXISTS(
                      SELECT 1
                      FROM user_custom_fields ucf
                      WHERE
@@ -294,8 +294,13 @@ class User < ActiveRecord::Base
     User.where("id = ? and seen_notification_id < ?", id, notification_id)
         .update_all ["seen_notification_id = ?", notification_id]
 
-    # mark all "badge granted" and "invite accepted" notifications read
-    Notification.where('user_id = ? AND NOT read AND notification_type IN (?)', id, [Notification.types[:granted_badge], Notification.types[:invitee_accepted]])
+    # some notifications are considered read once seen
+    Notification.where('user_id = ? AND NOT read AND notification_type IN (?)', id, [
+                       Notification.types[:granted_badge],
+                       Notification.types[:invitee_accepted],
+                       Notification.types[:group_message_summary],
+                       Notification.types[:liked]
+    ])
         .update_all ["read = ?", true]
   end
 
@@ -633,8 +638,14 @@ class User < ActiveRecord::Base
         .limit(limit)
   end
 
-  def self.count_by_signup_date(start_date, end_date)
-    where('created_at >= ? and created_at <= ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
+  def self.count_by_signup_date(start_date, end_date, group_id=nil)
+    result = where('users.created_at >= ? and users.created_at <= ?', start_date, end_date)
+
+    if group_id
+      result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
+      result = result.where("group_users.group_id = ?", group_id)
+    end
+    result.group('date(users.created_at)').order('date(users.created_at)').count
   end
 
 

@@ -630,7 +630,6 @@ zh_CN:
     logout: "你已登出。"
     refresh: "刷新"
     read_only_mode:
-      enabled: "只读模式已启用。你可以继续浏览这个站点但是无法进行交互操作。"
       login_disabled: "只读模式下不允许登录。"
     too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
@@ -744,7 +743,6 @@ zh_CN:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "更多…"
       options: "选项"
       whisper: "密语"
@@ -1399,7 +1397,6 @@ zh_CN:
       email_in_allow_strangers: "接受无账号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
-      contains_messages: "改变分类仅包括消息。"
       suppress_from_homepage: "不在主页中显示这个分类。"
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
@@ -1913,9 +1910,8 @@ zh_CN:
             name: '维基编辑'
             description: "维基帖子的背景颜色"
       email:
-        title: "电子邮件"
         settings: "设置"
-        all: "所有"
+        preview_digest: "预览"
         sending_test: "发送测试邮件..."
         error: "<b>错误</b> - %{server_error}"
         test_error: "发送测试邮件时遇到问题。请再检查一遍邮件设置，确认你的主机没有封锁邮件链接，然后重试。"
@@ -1930,7 +1926,6 @@ zh_CN:
         send_test: "发送测试电子邮件"
         sent_test: "已发送！"
         delivery_method: "发送方式"
-        preview_digest: "预览"
         preview_digest_desc: "预览发送给不活跃用户的摘要邮件内容。"
         refresh: "刷新"
         format: "格式"

@@ -653,7 +653,6 @@ sv:
     tl2_requires_likes_received: "Antalet gillningar en användare måste mottaga innan en befordran till förtroendenivå 2."
     tl2_requires_likes_given: "Antalet gillningar en användare måste ge innan en befordran till förtroendenivå 2."
     tl2_requires_topic_reply_count: "Antalet ämnen en användare måste svara på innan en befordran till förtroendenivå 2."
-    tl3_requires_days_visited: "Minsta antal dagar en användare måste ha besökt webbplatsen de senaste 100 dagarna för att bli kvalificerad till en befordran till förtroendenivå 3. (0 till 100)"
     tl3_requires_topics_replied_to: "Minsta antalet ämnen en användare behöver ha svarat på de senaste 100 dagarna för att bli kvalificerad till en befordran till förtroendenivå 3. (0 eller högre)"
     tl3_requires_topics_viewed_all_time: "Minsta antalet ämnen en användare måste ha tittat på för att bli kvalificerad för förtroendenivå 3."
     tl3_requires_posts_read_all_time: "Minsta antalet inlägg en användare måste ha läst för att bli kvalificerad för förtroendenivå 3."

@@ -123,6 +123,7 @@ Discourse::Application.routes.draw do
         get "skipped"
         get "received"
         get "rejected"
+        get "/incoming/:id/raw" => "email#raw_email"
         get "preview-digest" => "email#preview_digest"
         post "handle_mail"
       end

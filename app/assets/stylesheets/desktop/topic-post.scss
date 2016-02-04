@@ -275,8 +275,7 @@ nav.post-controls {
     width: 701px;
   }
   &.top.topic-body {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
   }
 
   .post-date { color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)); }
@@ -398,7 +397,15 @@ a.star {
   }
 
   .participants { // PMs //
-    .user {float: left; margin: 7px 20px 7px 0;}
+    .user { float: left; margin: 7px 20px 7px 0; }
+    .user a {
+      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      font-weight: bold;
+      font-size: 0.929em;
+    }
+    i.fa-times {
+        color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
+    }
   }
 
   .topic-links {
@@ -445,7 +452,6 @@ a.star {
     color: $primary;
   }
   .btn {
-    outline: 0;
     margin-bottom: 5px;
     margin-right: 10px;
     .fa-bookmark.bookmarked { color: $tertiary; }
@@ -568,9 +574,11 @@ video {
 
 a.mention, a.mention-group {
   padding: 2px 4px;
-  color: $primary;
-  background: dark-light-diff($primary, $secondary, 90%, -60%);
+  color: dark-light-diff($primary, $secondary, 30%, -30%);
+  background: dark-light-diff($primary, $secondary, 95%, -60%);
   border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.93em;
 }
 
 

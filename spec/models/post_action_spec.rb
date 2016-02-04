@@ -43,8 +43,11 @@ describe PostAction do
       expect(topic_user_ids).to include(codinghorror.id)
       expect(topic_user_ids).to include(mod.id)
 
-      # Notification level should be "Watching" for everyone
-      expect(topic.topic_users(true).map(&:notification_level).uniq).to eq([TopicUser.notification_levels[:watching]])
+      expect(topic.topic_users.where(user_id: mod.id)
+              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:tracking])
+
+      expect(topic.topic_users.where(user_id: codinghorror.id)
+              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:watching])
 
       # reply to PM should not clear flag
       PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags").create

@@ -394,7 +394,6 @@ posting:
     client: true
     default: true
     refresh: true
-  uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
   allow_duplicate_topic_titles: false
   min_title_similar_length:
     client: true
@@ -497,6 +496,7 @@ email:
   email_time_window_mins:
     default: 10
     client: true
+  private_email_time_window_seconds: 20
   email_posts_context: 5
   digest_min_excerpt_length: 100
   digest_topics: 20

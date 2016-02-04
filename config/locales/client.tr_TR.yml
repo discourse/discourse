@@ -632,7 +632,6 @@ tr_TR:
     logout: "Çıkış yapıldı."
     refresh: "Yenile"
     read_only_mode:
-      enabled: "Salt-okunur modu etkin. Siteyi gezmeye devam edebilirsiniz fakat etkileşimler çalışmayabilir."
       login_disabled: "Site salt-okunur modda iken oturum açma devre dışı bırakılır ."
     too_few_topics_and_posts_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu ve <strong>%{currentPosts} / %{requiredPosts}</strong> gönderi var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
     too_few_topics_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
@@ -746,7 +745,6 @@ tr_TR:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "dahası..."
       options: "Seçenekler"
       whisper: "fısıltı"
@@ -1400,7 +1398,6 @@ tr_TR:
       email_in_allow_strangers: "Hesabı olmayan, anonim kullanıcılardan e-posta kabul et"
       email_in_disabled: "E-posta üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. E-posta üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"
       email_in_disabled_click: '"e-postala" ayarını etkinleştir'
-      contains_messages: "Kategoriyi sadece mesajları kapsayacak şekilde değiştir."
       suppress_from_homepage: "Bu kategoriyi ana sayfadan gizle"
       allow_badges_label: "Bu kategoride rozet verilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
@@ -1914,9 +1911,8 @@ tr_TR:
             name: 'wiki'
             description: "wiki gönderilerinin arka plan rengi."
       email:
-        title: "E-posta"
         settings: "Ayarlar"
-        all: "Hepsi"
+        preview_digest: "Özeti Önizle"
         sending_test: "Test e-postası gönderiliyor..."
         error: "<b>HATA</b> - %{server_error}"
         test_error: "Test e-postasının gönderilmesinde sorun yaşandı. Lütfen e-posta ayarlarınızı tekrar kontrol edin, yer sağlayıcınızın e-posta bağlantılarını bloke etmediğinden emin olun, ve tekrar deneyin."
@@ -1931,7 +1927,6 @@ tr_TR:
         send_test: "Test E-postası Gönder"
         sent_test: "gönderildi!"
         delivery_method: "Gönderme Metodu"
-        preview_digest: "Özeti Önizle"
         preview_digest_desc: "Durgun kullanıcılara gönderilen özet e-postaların içeriğini önizle."
         refresh: "Yenile"
         format: "Format"

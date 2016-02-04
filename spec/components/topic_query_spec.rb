@@ -446,8 +446,70 @@ describe TopicQuery do
     end
   end
 
-  context 'suggested_for' do
+  context 'suggested_for message do' do
 
+    let(:user) do
+      Fabricate(:admin)
+    end
+
+    let(:sender) do
+      Fabricate(:admin)
+    end
+
+    let(:group_with_user) do
+      group = Fabricate(:group)
+      group.add(user)
+      group.save
+      group
+    end
+
+    def create_pm(user, opts=nil)
+      unless opts
+        opts = user
+        user = nil
+      end
+
+      create_post(opts.merge(user: user, archetype: Archetype.private_message)).topic
+    end
+
+    def read(user,topic,post_number)
+      TopicUser.update_last_read(user, topic, post_number, 10000)
+    end
+
+    it 'returns the correct suggestions' do
+
+
+      pm_to_group  = create_pm(sender, target_group_names: [group_with_user.name])
+      pm_to_user = create_pm(sender, target_usernames: [user.username])
+
+      new_pm  = create_pm(target_usernames: [user.username])
+
+      unread_pm  = create_pm(target_usernames: [user.username])
+      read(user,unread_pm, 0)
+
+      old_unrelated_pm = create_pm(target_usernames: [user.username])
+      read(user, old_unrelated_pm, 1)
+
+
+      related_by_user_pm = create_pm(sender, target_usernames: [user.username])
+      read(user, related_by_user_pm, 1)
+
+
+      related_by_group_pm  = create_pm(sender, target_group_names: [group_with_user.name])
+      read(user, related_by_group_pm, 1)
+
+
+      expect(TopicQuery.new(user).list_suggested_for(pm_to_group).topics.map(&:id)).to(
+        eq([related_by_group_pm.id, related_by_user_pm.id, pm_to_user.id])
+      )
+
+      expect(TopicQuery.new(user).list_suggested_for(pm_to_user).topics.map(&:id)).to(
+        eq([new_pm.id, unread_pm.id, related_by_user_pm.id])
+      )
+    end
+  end
+
+  context 'suggested_for' do
 
     before do
       RandomTopicSelector.clear_cache!

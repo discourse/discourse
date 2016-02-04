@@ -50,7 +50,7 @@ module PrettyText
 
     def category_hashtag_lookup(category_slug)
       if category = Category.query_from_hashtag_slug(category_slug)
-        ['category', category.url_with_id]
+        category.url_with_id
       else
         nil
       end
@@ -218,6 +218,7 @@ module PrettyText
       context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_hashtag_lookup(c);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
+      DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 

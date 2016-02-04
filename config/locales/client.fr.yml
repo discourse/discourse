@@ -109,7 +109,9 @@ fr:
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
     action_codes:
-      split_topic: "a été découpé ce sujet %{when}"
+      split_topic: "a scindé ce sujet %{when}"
+      invited_user: "a invité %{who} %{when}"
+      removed_user: "a retiré %{who} %{when}"
       autoclosed:
         enabled: 'fermé %{when}'
         disabled: 'ouvert %{when}'
@@ -130,6 +132,19 @@ fr:
         disabled: 'délisté %{when}'
     topic_admin_menu: "actions administrateur pour ce sujet"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
+    s3:
+      regions:
+        us_east_1: "US Est (N. Virginia)"
+        us_west_1: "US Ouest (N. California)"
+        us_west_2: "US Ouest (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        eu_west_1: "EU (Irlande)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_northeast_1: "Asia Pacific (Tokyo)"
+        ap_northeast_2: "Asia Pacific (Seoul)"
+        sa_east_1: "South America (Sao Paulo)"
     edit: 'éditer le titre et la catégorie de ce sujet'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
@@ -220,7 +235,7 @@ fr:
     saved: "Sauvegardé !"
     upload: "Envoyer"
     uploading: "Envoi en cours..."
-    uploading_filename: "Téléversement de {{filename}}..."
+    uploading_filename: "Téléchargement de {{filename}}..."
     uploaded: "Envoyé !"
     enable: "Activer"
     disable: "Désactiver"
@@ -317,11 +332,11 @@ fr:
         members_mods_and_admins: "Seulement les membres du groupe, les modérateurs et les administrateurs "
         everyone: "Tout le monde"
       trust_levels:
-        title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés à :"
+        title: "Niveau de confiance automatiquement attribué lorsque les membres sont ajoutés :"
         none: "Aucun"
       notifications:
         watching:
-          title: "S'abonner"
+          title: "Surveiller"
           description: "Vous serez notifié de chaque nouvelle réponse dans chaque message, et le nombre de nouvelles réponses sera affiché."
         tracking:
           title: "Suivre"
@@ -625,6 +640,21 @@ fr:
         same_as_email: "Votre mot de passe est le même que votre adresse mail."
         ok: "Votre mot de passe semble correct."
         instructions: "Au moins %{count} caractères."
+      summary:
+        title: "Résumé"
+        stats: "Statistiques"
+        topic_count: "Sujets créés"
+        post_count: "Messages crées"
+        likes_given: "J'aime donnés"
+        likes_received: "J'aime reçus"
+        days_visited: "Jours visités"
+        posts_read_count: "Messages lus"
+        top_replies: "Réponses les plus référencés"
+        top_topics: "Sujets les plus référencés"
+        top_badges: "Badges les plus accordés"
+        more_topics: "Plus de sujets"
+        more_replies: "Plus de réponses"
+        more_badges: "Plus de badges"
       associated_accounts: "Connexions"
       ip_address:
         title: "Dernières adresses IP"
@@ -667,7 +697,7 @@ fr:
     logout: "Vous avez été déconnecté"
     refresh: "Rafraîchir"
     read_only_mode:
-      enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
+      enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
@@ -782,7 +812,7 @@ fr:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
+      emoji: "Emoji :)"
       more_emoji: "plus..."
       options: "Options"
       whisper: "murmure"
@@ -895,6 +925,7 @@ fr:
         granted_badge: "Badge attribué"
       popup:
         mentioned: '{{username}} vous a mentionné dans «{{topic}}» - {{site_title}}'
+        group_mentioned: '{{username}} vous a mentionné dans «{{topic}}» - {{site_title}}'
         quoted: '{{username}} vous a cité dans «{{topic}}» - {{site_title}}'
         replied: '{{username}} vous a répondu dans «{{topic}}» - {{site_title}}'
         posted: '{{username}} a posté dans «{{topic}}» - {{site_title}}'
@@ -921,7 +952,7 @@ fr:
       most_viewed: "Plus Vu"
       most_liked: "Plus Aimé"
       select_all: "Sélectionner tout"
-      clear_all: "Supprimer tout"
+      clear_all: "Désélectionner tout"
       result_count:
         one: "1 résultat pour <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} résultats pour <span class='term'>\"{{term}}\"</span>"
@@ -999,6 +1030,12 @@ fr:
       create: 'Créer votre sujet'
       create_long: 'Créer un nouveau sujet'
       private_message: 'Écrire un message'
+      archive_message:
+        help: 'Transférer message dans votre archive'
+        title: 'Archiver'
+      move_to_inbox:
+        title: 'Déplacer dans la boîte de réception'
+        help: 'Redéplacer dans la boîte de réception'
       list: 'Sujets'
       new: 'nouveau sujet'
       unread: 'non-lus'
@@ -1049,6 +1086,7 @@ fr:
       auto_close_title: 'Paramètres de fermeture automatique'
       auto_close_save: "Sauvegarder"
       auto_close_remove: "Ne pas fermer automatiquement ce sujet"
+      auto_close_immediate: "Le dernier message dans ce sujet a déjà %{hours} heures, alors le sujet sera fermé immédiatement."
       progress:
         title: progression dans le sujet
         go_top: "haut"
@@ -1169,6 +1207,7 @@ fr:
         success: "Nous avons invité cet utilisateur à participer à cette discussion."
         error: "Désolé, il y a eu une erreur lors de l'invitation de cet utilisateur."
         group_name: "nom du groupe"
+      controls: "Actions sur le sujet"
       invite_reply:
         title: 'Inviter'
         username_placeholder: "pseudo"
@@ -1286,7 +1325,7 @@ fr:
       via_email: "message depuis un courriel"
       whisper: "ce message est un murmure privé pour les modérateurs"
       wiki:
-        about: "ce message est en mode wiki; les utilisateurs de base peuvent le modifier"
+        about: "ce message est un wiki"
       archetypes:
         save: 'Sauvegarder les options'
       controls:
@@ -1473,7 +1512,6 @@ fr:
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
-      contains_messages: "Modifier cette catégorie pour qu'elle ne contienne que des messages."
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Éditer les permissions"
@@ -1490,7 +1528,7 @@ fr:
           description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti pour tout nouveau message dans chaque sujet, et le nombre de nouvelles réponses sera affiché."
         tracking:
           title: "Suivi"
-          description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti si quelqu'un mentionne votre @nom ou vous répond, et le nombre de nouvelles réponses sera affiché."
+          description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti si quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
         regular:
           title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
@@ -1614,12 +1652,12 @@ fr:
       unread:
         title: "Non lus"
         title_with_count:
-          one: "Non lus (1)"
-          other: "Non lus ({{count}})"
+          one: "1 non-lu"
+          other: " ({{count}}) non-lus"
         help: "sujets que vous suivez ou suivez attentivement actuiellement avec des messages non lus"
         lower_title_with_count:
           one: "1 non-lu"
-          other: "{{count}} non lu(s)"
+          other: "{{count}} non-lus"
       new:
         lower_title_with_count:
           one: "1 nouveau"
@@ -1948,7 +1986,7 @@ fr:
         copy: "Copier"
         email_templates:
           title: "Modèle de courriel"
-          subject: "Sujet"
+          subject: "Objet"
           multiple_subjects: "Ce modèle d'e-mail a plusieurs objets."
           body: "Corps"
           none_selected: "Choisissez un modèle de courriel pour commencer l'édition"
@@ -2002,14 +2040,17 @@ fr:
             name: 'wiki'
             description: "Couleur de base utilisée pour le fond des messages de type wiki."
       email:
-        title: "Courriel"
+        title: "Courriels"
         settings: "Paramètrage"
-        all: "Tous"
+        templates: "Modèles"
+        preview_digest: "Prévisualisation du courriel"
         sending_test: "Envoi en cours du courriel de test..."
         error: "<b>ERREUR</b> - %{server_error}"
         test_error: "Il y a eu un problème avec l'envoi du courriel de test. Veuillez vérifier vos paramètres, que votre hébergeur ne bloque pas les connections aux courriels, et réessayer."
         sent: "Envoyés"
         skipped: "Ignorés"
+        received: "Reçus"
+        rejected: "Rejetés"
         sent_at: "Envoyer à"
         time: "Heure"
         user: "Utilisateur"
@@ -2019,7 +2060,6 @@ fr:
         send_test: "Envoyer un courriel de test"
         sent_test: "Envoyé !"
         delivery_method: "Méthode d'envoi"
-        preview_digest: "Prévisualisation du courriel"
         preview_digest_desc: "Prévisualiser le contenu des courriels hebdomadaires sommaires envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
         format: "Format"
@@ -2028,6 +2068,19 @@ fr:
         last_seen_user: "Dernière utilisateur vu :"
         reply_key: "Répondre"
         skipped_reason: "Passer Raison"
+        incoming_emails:
+          from_address: "De"
+          to_addresses: "A"
+          cc_addresses: "Cc"
+          subject: "Objet"
+          error: "Erreur"
+          none: "Aucun courriel reçu."
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Objet..."
+            error_placeholder: "Erreur"
         logs:
           none: "Pas de journaux trouvés."
           filters:
@@ -2077,6 +2130,7 @@ fr:
             change_site_setting: "modifier les paramètres du site"
             change_site_customization: "modifier la personnalisation du site"
             delete_site_customization: "supprimer la personnalisation du site"
+            change_site_text: "modifier le texte du site"
             suspend_user: "suspendre l'utilisateur"
             unsuspend_user: "retirer la suspension de l'utilisateur"
             grant_badge: "décerné le badge"
@@ -2087,9 +2141,11 @@ fr:
             impersonate: "incarner"
             anonymize_user: "rendre l'utilisateur anonyme"
             roll_up: "consolider des blocs d'IP"
-            change_category_settings: "Modifier les paramètres de la catégorie"
-            delete_category: "Supprimer la catégorie"
-            create_category: "Créer une catégorie"
+            change_category_settings: "modifier les paramètres de la catégorie"
+            delete_category: "supprimer la catégorie"
+            create_category: "créer une catégorie"
+            block_user: "bloquer l'utilisateur"
+            unblock_user: "débloquer l'utilisateur"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -2102,7 +2158,7 @@ fr:
           url: "URL"
           domain: "Domaine"
         screened_ips:
-          title: "IP Suivies"
+          title: "IP surveillés"
           description: 'Adresses IP qui sont surveillés. Utiliser "Autoriser" pour ajouter les adresses IP à la liste blanche.'
           delete_confirm: "Êtes-vous sûr de vouloir supprimer la règle pour %{ip_address} ?"
           roll_up_confirm: "Êtes-vous certain de vouloir consolider les adresses IP interdites sous forme de plages de sous réseaux ?"
@@ -2158,7 +2214,7 @@ fr:
           basic: 'Utilisateurs au niveau de confiance 1 (Utilisateurs de base)'
           member: 'Utilisateurs au Niveau de confiance 2 (Membre)'
           regular: 'Utilisateurs au Niveau de confiance 3 (Habitué)'
-          leader: 'Utilisateurs au Niveau de confiance 4 (meneur)'
+          leader: 'Utilisateurs au Niveau de confiance 4 (Meneur)'
           staff: "Membres de l'équipe des responables"
           admins: 'Administrateurs'
           moderators: 'Modérateurs'
@@ -2191,6 +2247,7 @@ fr:
         moderator: "Modérateur ?"
         admin: "Admin ?"
         blocked: "Bloqué ?"
+        staged: "En attente?"
         show_admin_profile: "Admin"
         edit_title: "Modifier le titre"
         save_title: "Sauvegarder le titre"
@@ -2255,9 +2312,12 @@ fr:
         deactivate_failed: "Il y a eu un problème lors de la désactivation du compte."
         unblock_failed: 'Problème rencontré lors du déblocage de l''utilisateur.'
         block_failed: 'Problème rencontré lors du blocage de l''utilisateur.'
+        block_confirm: 'Êtes-vous sûr de vouloir bloquer cet utilisateur? Ils ne pourront plus créer de sujet ou message.'
+        block_accept: 'Oui, bloquer cet utilisateur'
         deactivate_explanation: "Un utilisateur désactivé doit revalider son adresse de courriel."
         suspended_explanation: "Un utilisateur suspendu ne peut pas se connecter."
         block_explanation: "Un utilisateur bloqué ne peut pas écrire de message, ni créer de sujet."
+        stage_explanation: "Un utilisateur en attente ne peut envoyer des messages que par courriel et sur des sujets spécifiques."
         trust_level_change_failed: "Il y a eu un problème lors de la modification du niveau de confiance de l'utilisateur."
         suspend_modal_title: "Suspendre l'utilisateur"
         trust_level_2_users: "Utilisateurs de niveau de confiance 2"
@@ -2268,6 +2328,7 @@ fr:
         unlock_trust_level: "Déverrouiller le niveau de confiance"
         tl3_requirements:
           title: "Pré-requis pour le niveau de confiance 3"
+          table_title: "Dans les %{time_period} derniers jours:"
           value_heading: "Valeur"
           requirement_heading: "Pré-requis"
           visits: "Visites"
@@ -2535,6 +2596,10 @@ fr:
         mark_tracking: '<b>m</b>, <b>t</b> Marquer le sujet comme suivi'
         mark_watching: '<b>m</b>, <b>w</b> Marquer le sujet comme surveillé'
     badges:
+      earned_n_times:
+        one: "A reçu ce badge 1 fois"
+        other: "A reçu ce badge %{count} fois"
+      more_with_badge: "Autres avec ce badge"
       title: Badges
       allow_title: "peut être utilisé comme votre titre"
       multiple_grant: "peut être décerné plusieurs fois"

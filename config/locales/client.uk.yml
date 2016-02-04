@@ -1126,9 +1126,8 @@ uk:
           love:
             description: "Колір кнопки \"Подобається\"."
       email:
-        title: "Електронна пошта"
         settings: "Налаштування"
-        all: "All"
+        preview_digest: "Стислий виклад новин"
         sent: "Sent"
         skipped: "Skipped"
         sent_at: "Надіслано"
@@ -1140,7 +1139,6 @@ uk:
         send_test: "Надіслати Тестовий Email"
         sent_test: "надіслано!"
         delivery_method: "Спосіб доставки"
-        preview_digest: "Стислий виклад новин"
         refresh: "Оновити"
         format: "Формат"
         html: "html"

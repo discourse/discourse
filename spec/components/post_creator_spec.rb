@@ -78,6 +78,7 @@ describe PostCreator do
         DiscourseEvent.expects(:trigger).with(:after_validate_topic, anything, anything).once
         DiscourseEvent.expects(:trigger).with(:before_create_topic, anything, anything).once
         DiscourseEvent.expects(:trigger).with(:after_trigger_post_process, anything).once
+        DiscourseEvent.expects(:trigger).with(:markdown_context, anything).at_least_once
         creator.create
       end
 
@@ -324,13 +325,13 @@ describe PostCreator do
       end
 
       it "fails for dupe post accross topic" do
-        first = create_post
-        second = create_post
+        first = create_post(raw: "this is a test #{SecureRandom.hex}")
+        second = create_post(raw: "this is a test #{SecureRandom.hex}")
 
         dupe = "hello 123 test #{SecureRandom.hex}"
 
-        response_1 = create_post(raw: dupe, user: first.user, topic_id: first.topic_id)
-        response_2 = create_post(raw: dupe, user: first.user, topic_id: second.topic_id)
+        response_1 = PostCreator.create(first.user, raw: dupe, topic_id: first.topic_id)
+        response_2 = PostCreator.create(first.user, raw: dupe, topic_id: second.topic_id)
 
         expect(response_1.errors.count).to eq(0)
         expect(response_2.errors.count).to eq(1)

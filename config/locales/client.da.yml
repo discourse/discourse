@@ -639,7 +639,6 @@ da:
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
     read_only_mode:
-      enabled: "Skrivebeskyttet tilstand er aktiv. Du kan fortsætte med at læse indlæg, men du kan ikke ændre noget."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
     too_few_topics_and_posts_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion!</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner og <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg. Nye besøgende har brug for samtaler at læse og svare på."
     too_few_topics_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøgende har brug for samtaler at læse og svare på."
@@ -754,7 +753,6 @@ da:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
       more_emoji: "mere..."
       options: "Indstillinger"
       whisper: "hvisken"
@@ -1253,8 +1251,6 @@ da:
         yes_value: "Ja"
       via_email: "dette indlæg blev oprettet via email"
       whisper: "dette indlæg er en privat hvisken for moderatorer"
-      wiki:
-        about: "dette indlæg er en wiki; almindelige brugere kan redigere den"
       archetypes:
         save: 'Gem indstillinger'
       controls:
@@ -1441,7 +1437,6 @@ da:
       email_in_allow_strangers: "Accepter emails fra ikke oprettede brugere"
       email_in_disabled: "Nye emner via email er deaktiveret i Site opsætning. For at aktivere oprettelse af nye emner via email,"
       email_in_disabled_click: 'aktiver "email ind" indstilligen.'
-      contains_messages: "Ændr denne kategori så den kun indeholder beskeder."
       suppress_from_homepage: "Undertryk denne kategori fra hjemmesiden"
       allow_badges_label: "Tillad af badges bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
@@ -1970,9 +1965,8 @@ da:
             name: 'wiki'
             description: "Basis farven der bruges som baggrund i wiki posts."
       email:
-        title: "E-mail"
         settings: "Indstillinger"
-        all: "Alle"
+        preview_digest: "Forhåndsvisning af sammendrag"
         sending_test: "Sender test email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Der opstod et problem med at sende test emailen. Dobbelt check dine email indstillinger, verificer at din server ikke blokerer email forbindelser og prøv så igen."
@@ -1987,7 +1981,6 @@ da:
         send_test: "send test-e-mail"
         sent_test: "sednt!"
         delivery_method: "Leveringsmetode"
-        preview_digest: "Forhåndsvisning af sammendrag"
         preview_digest_desc: "Forhåndsvis indholdet af de opsamlings-emails der sendes til inaktive brugere"
         refresh: "Opdatér"
         format: "Format"

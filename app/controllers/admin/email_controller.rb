@@ -51,6 +51,12 @@ class Admin::EmailController < Admin::AdminController
     render text: "email was processed"
   end
 
+  def raw_email
+    params.require(:id)
+    incoming_email = IncomingEmail.find(params[:id].to_i)
+    render json: { raw_email: incoming_email.raw }
+  end
+
   private
 
   def filter_email_logs(email_logs, params)

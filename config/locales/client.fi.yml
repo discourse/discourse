@@ -110,6 +110,8 @@ fi:
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
       split_topic: "pilkkoi tämän ketjun %{when}"
+      invited_user: "kutsui käyttäjän %{who} %{when}"
+      removed_user: "poisti käyttäjän %{who} %{when}"
       autoclosed:
         enabled: 'sulki %{when}'
         disabled: 'avasi %{when}'
@@ -130,6 +132,19 @@ fi:
         disabled: 'poisti listauksista %{when}'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
+    s3:
+      regions:
+        us_east_1: "itäinen USA (Pohjois-Virginia)"
+        us_west_1: "Läntinen USA (Pohjois-Kalifornia)"
+        us_west_2: "Läntinen USA (Oregon)"
+        us_gov_west_1: "AWS GovCloud (USA)"
+        eu_west_1: "EU (Irlanti)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
+        ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
+        ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
+        ap_northeast_2: "Aasia ja Tyynimeri (Soul)"
+        sa_east_1: "Etelä-Amerikka (Sao Paulo)"
     edit: 'muokkaa ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -364,7 +379,7 @@ fi:
       latest: "Tuoreimmat"
       latest_by: "tuorein"
       toggle_ordering: "vaihda järjestystä"
-      subcategories: "Sisemmät alueet"
+      subcategories: "Tytäralueet"
       topic_stats: "Uusien ketjujen lukumäärä."
       topic_stat_sentence:
         one: "%{count} uusi ketju viimeisen %{unit} aikana."
@@ -413,7 +428,7 @@ fi:
         not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
         perm_default: "Näytä ilmoituksia"
         perm_denied_btn: "Ei oikeuksia"
-        perm_denied_expl: "Olet kieltänyt ilmoitusten näyttämisen. Salli ilmoitusten näyttäminen selaimen asetuksista ja klikkaa sen jälkeen painiketta. (Työpöytä: vasemmanpuoleisin kuvake osoiterivillä. Mobiili: 'Sivun tiedot'.)"
+        perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
         disable: "Poista ilmoitukset käytöstä"
         currently_enabled: "(nyt käytössä)"
         enable: "Näytä ilmoituksia"
@@ -467,6 +482,7 @@ fi:
         groups: "Omat ryhmäni"
         bulk_select: "Valitse viestejä"
         move_to_inbox: "Siirrä saapuneisiin"
+        move_to_archive: "Arkisto"
         failed_to_move: "Viestien siirto epäonnistui (vika saattaa olla internetyhteydessäsi)"
         select_all: "Valitse kaikki"
       change_password:
@@ -625,6 +641,21 @@ fi:
         same_as_email: "Salasanasi on sama kuin sähköpostisi."
         ok: "Salasana vaikuttaa hyvältä."
         instructions: "Vähintään %{count} merkkiä."
+      summary:
+        title: "Yhteenveto"
+        stats: "Tilastot"
+        topic_count: "Avattuja ketjuja"
+        post_count: "Kirjoitettuja viestejä"
+        likes_given: "Annettuja tykkäyksiä"
+        likes_received: "Saatuja tykkäyksiä"
+        days_visited: "Päiviä vierailtu"
+        posts_read_count: "Luettuja viestejä"
+        top_replies: "Parhaat viestit"
+        top_topics: "Parhaat ketjut"
+        top_badges: "Parhaat arvomerkit"
+        more_topics: "Lisää ketjuja"
+        more_replies: "Lisää viestejä"
+        more_badges: "Lisää arvomerkkejä"
       associated_accounts: "Kirjautumiset"
       ip_address:
         title: "Viimeinen IP-osoite"
@@ -667,7 +698,7 @@ fi:
     logout: "Sinut kirjattiin ulos."
     refresh: "Lataa sivu uudelleen"
     read_only_mode:
-      enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
+      enabled: "Sivusto on vain luku -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on toistaiseksi poissa käytöstä."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
     too_few_topics_and_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
@@ -782,7 +813,7 @@ fi:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
+      emoji: "Emoji :)"
       more_emoji: "lisää..."
       options: "Asetukset"
       whisper: "kuiskaus"
@@ -879,6 +910,9 @@ fi:
       moved_post: "<i title='siirsi viestin' class='fa fa-sign-out'></i><p><span>{{username}}</span> siirsi {{description}}</p>"
       linked: "<i title='linkattu viesti' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='arvomerkki myönnetty' class='fa fa-certificate'></i><p>Ansaitsit '{{description}}'</p>"
+      group_message_summary:
+        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viesti ryhmän {{group_name}} saapuneissa</p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viestiä ryhmän {{group_name}} saapuneissa</p>"
       alt:
         mentioned: "Viittaaja"
         quoted: "Lainaaja"
@@ -893,6 +927,7 @@ fi:
         moved_post: "Viestisi siirsi"
         linked: "Linkki viestiisi"
         granted_badge: "Arvomerkki myönnetty"
+        group_message_summary: "Viestejä ryhmän saapuneissa viesteissä."
       popup:
         mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
@@ -1448,7 +1483,7 @@ fi:
       delete: 'Poista alue'
       create: 'Uusi alue'
       create_long: 'Luo uusi alue'
-      save: 'Tallenna alue'
+      save: 'Tallenna'
       slug: 'Alueen lyhenne'
       slug_placeholder: '(Valinnainen) url-lyhenne'
       creation_error: Alueen luonnissa tapahtui virhe.
@@ -1458,7 +1493,7 @@ fi:
       topic: "alueen kuvausketju"
       logo: "Alueen logo"
       background_image: "Alueen taustakuva"
-      badge_colors: "Alueiden tunnusten värit"
+      badge_colors: "Alueen tunnusvärit"
       background_color: "Taustaväri"
       foreground_color: "Edustan väri"
       name_placeholder: "Yksi tai kaksi sanaa enimmillään"
@@ -1483,7 +1518,7 @@ fi:
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
       this_year: "tänä vuonna"
-      position: "asema"
+      position: "arvo"
       default_position: "Oletuspaikka"
       position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Muokataksesi järjestystä,"
       position_disabled_click: 'ota käyttöön "pysyvä aluejärjestys" asetuksista.'
@@ -2006,14 +2041,17 @@ fi:
             name: 'wiki'
             description: "Wiki-viestien taustaväri."
       email:
-        title: "Sähköposti"
+        title: "Sähköpostit"
         settings: "Asetukset"
-        all: "Kaikki"
+        templates: "Viestipohjat"
+        preview_digest: "Esikatsele tiivistelmä"
         sending_test: "Lähetetään testisähköpostia..."
         error: "<b>VIRHE</b> - %{server_error}"
         test_error: "Testisähköpostin lähettäminen ei onnistunut. Tarkista uudelleen sähköpostiasetukset, varmista, että palveluntarjoajasi ei estä sähköpostiyhteyksiä ja kokeile sitten uudestaan."
         sent: "Lähetetty"
         skipped: "Jätetty väliin"
+        received: "Vastaanotetut"
+        rejected: "Hylätyt"
         sent_at: "Lähetetty"
         time: "Aika"
         user: "Käyttäjä"
@@ -2023,7 +2061,6 @@ fi:
         send_test: "Lähetä testisähköposti"
         sent_test: "lähetetty!"
         delivery_method: "Lähetystapa"
-        preview_digest: "Esikatsele tiivistelmä"
         preview_digest_desc: "Esikatsele inaktiivisille käyttäjille lähetettyjen tiivistelmäsähköpostien sisältöä."
         refresh: "Päivitä"
         format: "Muotoilu"
@@ -2032,6 +2069,19 @@ fi:
         last_seen_user: "Käyttäjän edellinen kirjautuminen:"
         reply_key: "Vastausavain"
         skipped_reason: "Syy väliinjättämiselle"
+        incoming_emails:
+          from_address: "Lähettäjä"
+          to_addresses: "Vastaanottaja"
+          cc_addresses: "Kopio"
+          subject: "Otsikko"
+          error: "Virhe"
+          none: "Uusia sähköpostiviestejä ei löydetty."
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Otsikko..."
+            error_placeholder: "Virhe"
         logs:
           none: "Lokeja ei löytynyt."
           filters:
@@ -2095,6 +2145,12 @@ fi:
             change_category_settings: "muuta alueen asetuksia"
             delete_category: "poista alue"
             create_category: "luo alue"
+            block_user: "estä käyttäjä"
+            unblock_user: "poista esto"
+            grant_admin: "myönnä ylläpitäjän oikeudet"
+            revoke_admin: "peru ylläpitäjän oikeudet"
+            grant_moderation: "myönnä valvojan oikeudet"
+            revoke_moderation: "peru valvojan oikeudet"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -2260,6 +2316,8 @@ fi:
         deactivate_failed: "Käyttäjätilin poistaminen käytöstä ei onnistunut."
         unblock_failed: 'Käyttäjätilin eston poistaminen ei onnistunut.'
         block_failed: 'Käyttäjätilin estäminen ei onnistunut.'
+        block_confirm: 'Oletko varma, että haluat estää tämän käyttäjän? He eivät voi luoda uusia aiheita tai viestejä.'
+        block_accept: 'Kyllä, estä tämä käyttäjä'
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
@@ -2508,7 +2566,7 @@ fi:
         back: '<b>u</b> Takaisin'
         up_down: '<b>k</b>/<b>j</b> Siirrä valintaa &uarr; &darr;'
         open: '<b>o</b> tai <b>Enter</b> Avaa valittu ketju'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b>  Seuraava/edellinen osio'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b>  Seuraava/edellinen näkymä'
       application:
         title: 'Ohjelmisto'
         create: '<b>c</b> Luo uusi ketju'
@@ -2541,6 +2599,10 @@ fi:
         mark_tracking: '<b>m</b>, <b>t</b> Seuraa ketjua'
         mark_watching: '<b>m</b>, <b>w</b> Tarkkaile ketjua'
     badges:
+      earned_n_times:
+        one: "Ansaitsi tämän arvomerkin yhden kerran"
+        other: "Ansaitsi tämän arvomerkin %{count} kertaa"
+      more_with_badge: "Muita, joilla on tämä arvomerkki"
       title: Arvomerkit
       allow_title: "voidaan käyttää tittelinä"
       multiple_grant: "voidaan myöntää useita kertoja"

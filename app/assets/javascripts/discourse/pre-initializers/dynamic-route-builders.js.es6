@@ -10,6 +10,7 @@ export default {
     app.DiscoveryCategoryController = DiscoverySortableController.extend();
     app.DiscoveryParentCategoryController = DiscoverySortableController.extend();
     app.DiscoveryCategoryNoneController = DiscoverySortableController.extend();
+    app.DiscoveryCategoryWithIDController = DiscoverySortableController.extend();
 
     app.DiscoveryCategoryRoute = buildCategoryRoute('latest');
     app.DiscoveryParentCategoryRoute = buildCategoryRoute('latest');

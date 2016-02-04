@@ -1129,7 +1129,6 @@ zh_CN:
       must_begin_with_alphanumeric: "必须以一个字母或数字或下划线开头"
       must_end_with_alphanumeric: "必须以字母或数字结尾或是下划线"
       must_not_contain_two_special_chars_in_seq: "必须不包括连续的 2 个或更多的特殊字符（.-_）"
-      must_not_contain_confusing_suffix: "必须不包含奇怪的后缀，例如 .json 或 .png 等等。"
     email:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
       blocked: "不被允许。"
@@ -1295,91 +1294,6 @@ zh_CN:
         然而，如果帖子再次被社群标记并隐藏，它将被隐藏并等待版主处理——并且可能导致进一步的措施，包括禁止你的用户帐号的可能。
 
         想了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
-    usage_tips:
-      text_body_template: |
-        这是一条包含了一些可以让你快速开始的技巧提示的消息：
-
-        ## 阅读
-
-        要阅读更多，**只需要继续向下滚动页面！**
-
-        当有新的回复或者新主题时，他们将自动地出现 —— 没有必要刷新页面。
-
-        ## 导航
-
-        - 要搜索，用你的用户页面，或者使用<kbd>☰</kbd>菜单，这个**右上角的图标**。
-
-        - 点击主题标题将引导你至该主题**下一个未读**的帖子。要跳至主题顶部或底部，分别点击回复数量或者最后一次回复时间。
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - 当在阅读主题时，点击右下角的进度条打开导航控制。点击帖子标题可回到顶部。按键盘上的 <kbd>?</kbd> 键获取快速键盘快捷键列表。
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        ## 回复
-
-        - 要回复**整个主题**，使用页面最底下的 <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">。
-
-        - 要回复**特定的人**，使用他们帖子的 <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23">。
-
-        - 要用**一个新主题**回复，使用帖子右边的 <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25">。老的和新的主题将自动被链接至一起。
-
-        要插入引用，选择想要引用的文字，然后点击任何回复按钮。重复以上操作创建多个引用！
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        要提醒某人你的回复，提到他们的用户名。键入 `@` 开始选择一个用户名。
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        要使用[标准绘文字（Emoji）](http://www.emoji.codes/)，先键入 `:` 用名字匹配，或使用传统表情符 `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        要生成链接概要，直接将链接粘贴至单独的一行：
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation-2x.png" width="480" height="228">
-
-        ## 操作
-
-        每一个帖子底部有几个操作按钮：
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        要让别人知道你喜欢并且感谢他们的帖子，使用**赞**按钮。分享爱！
-
-        如果你觉得某人的帖子有问题，使用**标记**按钮私下让他或者[我们的职员](%{base_url}/about)知道。你也可以**分享**至该帖子的链接，或者标记**书签**以供以后在你的用户页查看。
-
-        ## 通知
-
-        当有人回复你、引用你的帖子或者提到`@你`的时候，一个数字将会立即出现在页面右上角。使用它查看**通知**。
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        不用担心错过他人的回复 —— 当你不在时，你将会收到邮件提醒。
-
-        ## 你的设置
-
-        - 所有小于**两天**的主题算新主题。
-
-        - 任何你**积极参与**的主题（通过创建、回复或者阅读很长时间）将被自动追踪。
-
-        你将会在主题名字附近见到蓝色的新主题提示和未读帖子数字指示：
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        你可以通过主题下方的通知控制改变通知状态。
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        你也可以为每个分类设置通知状态，比如你可以要监控一个主题的每一个新主题。
-
-        要修改任何设置，见[你的用户设置](%{base_url}/my/preferences)。
-
-        ## 社群信任
-
-        因为你的积极参与，你将渐渐获得社群信任，成为一个真正的公民，针对新用户的限制将被移除。当达到了一个足够的[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，你将会得到适当的能力一起帮助管理社群。
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
@@ -1445,12 +1359,6 @@ zh_CN:
     csv_export_failed:
       subject_template: "数据导出失败"
       text_body_template: "我们很抱歉，但是你的数据导出请求失败了。请检查日志或联系一位职员。"
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 信任等级不足"
-      text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
-
-        你的账户没有足够的信任等级向刚邮件地址发布新主题。如果你坚信这是一个错误，联系一个职员。
     email_reject_no_account:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未知账户"
       text_body_template: |
@@ -1477,34 +1385,12 @@ zh_CN:
         我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
         您的账户没有足够的权限在该分类发布一个新主题。如果您坚信这是一个错误，联系一个职员。
-    email_reject_post_error:
-      subject_template: "[%{site_name}] 邮件问题 -- 发表错误"
-      text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件无法发送。
-
-        一些可能的原因是：复杂的格式、消息超长、消息太短。请再试一次，若还不行，使用网站发表。
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] 邮件问题 -- 发表错误"
-      text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件消息无法发送。
-
-        援引：
-
-        %{post_error}
-
-        如果你能解决错误，请再试一次。
     email_reject_reply_key:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未知回复指纹"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件无法发送。
 
         提供的回复 key 是无效或者未知的，所以我们不知道邮件是回复给谁的。联系一个职员。
-    email_reject_destination:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 未知的回复至地址"
-      text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件消息无法发送。
-
-        在论坛中找不到该地址。请确认在你的发送到（而非抄送或密送）中填写的是站点的地址，并且你正在将邮件发送至论坛职员提供的邮件地址。
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] 邮件问题 -- 主题未找到"
       text_body_template: |
@@ -1576,8 +1462,6 @@ zh_CN:
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
-    reply_by_email: "回复邮件或访问[visit the topic](%{base_url}%{url})，以回复。"
-    visit_link_to_respond: "回复，[visit the topic](%{base_url}%{url})。"
     posted_by: "%{username}发表于%{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"

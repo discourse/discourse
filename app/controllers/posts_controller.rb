@@ -79,7 +79,7 @@ class PostsController < ApplicationController
   def raw_email
     post = Post.find(params[:id].to_i)
     guardian.ensure_can_view_raw_email!(post)
-    render json: {raw_email: post.raw_email}
+    render json: { raw_email: post.raw_email }
   end
 
   def short_link

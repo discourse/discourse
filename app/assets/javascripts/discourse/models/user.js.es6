@@ -70,6 +70,26 @@ const User = RestModel.extend({
     return Discourse.getURL(`/users/${this.get('username_lower')}`);
   },
 
+  pmPath(topic) {
+    const userId = this.get('id');
+    const username = this.get('username_lower');
+
+    const details = topic && topic.get('details');
+    const allowedUsers = details && details.get('allowed_users');
+    const groups = details && details.get('allowed_groups');
+
+    // directly targetted so go to inbox
+    if (!groups || (allowedUsers && allowedUsers.findBy("id", userId))) {
+      return Discourse.getURL(`/users/${username}/messages`);
+    } else {
+      if (groups && groups[0])
+      {
+        return Discourse.getURL(`/users/${username}/messages/group/${groups[0].name}`);
+      }
+    }
+
+  },
+
   adminPath: url('username_lower', "/admin/users/%@"),
 
   mutedTopicsPath: url('/latest?state=muted'),

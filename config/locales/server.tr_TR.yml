@@ -1105,7 +1105,6 @@ tr_TR:
       must_begin_with_alphanumeric: "bir harf, rakam ya da alt çizgi ile başlamalı"
       must_end_with_alphanumeric: "bir harf, sayı yada alt tire ile bitmeli"
       must_not_contain_two_special_chars_in_seq: "2 ya da daha fazla uzunlukta özel karakter dizisi (.-_) içermemeli"
-      must_not_contain_confusing_suffix: ".json ya da .png gibi kafa karıştırıcı bir son ek içermemeli"
     email:
       not_allowed: "için o e-posta sağlayıcısına izin verilmiyor. Lütfen başka bir email adresi kullanın. "
       blocked: "için izin yok."
@@ -1192,8 +1191,6 @@ tr_TR:
         Ancak, eğer gönderiniz kullanıcılar tarafından ikinci kere gizlenirse, görevliler tarafından incelenene kadar gizli kalacaktır - ve hesabınızın askıya alınması dahil olmak üzere farklı önlemler alınabilir.
 
         Daha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "Hemen başlayabilmeniz için bir kaç pratik tavsiye: \n\n## Okuma\n\nDaha fazla okumak için, **sayfayı aşağı kaydırmanız yeterli!** \n\nYeni cevaplar ve konular oluşturuldukça, otomatik olarak görünecekler. \n\n## Gezinme\n\n- Arama, kullanıcı sayfanız veya menü için **sağ üstteki <kbd>☰</kbd> ikonlu butona** tıklayın. \n\n- Herhangi bir konu başlığı sizi bir sonraki okunmamış gönderiye götürür. En üst veya en alta gitmek için gönderi sayısına veya son cevap tarihini tıklayın.\n\n<img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\"> \n\n- Bir konuyu okurken, tüm navigasyonla ilgili kontroller için sağ alttaki yeşil ilerleme barını seçin. Hızlıca en yukarıya gitmek için konu başlığına tıklayın. Klavye kısayollarını görüntülemek için <kbd>?</kbd> tuşuna basın. \n\n<img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\"> \n\n## Cevaplama \n\n- **Genel olarak konuya** cevap vermek için, sayfanın en altındaki Cevapla butonunu <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> kullanın. \n\n- **Belirli bir kişiye** cevap vermek için, o gönderinin altında bulunan Cevapla butonunu <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> kullanın. \n\n- **Yeni bir konu\" oluşturarak cevaplamak için, gönderinin sağında çıkan <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> ikonuna tıklayın. Eski ve yeni konular birbirleriyle otomatik olarak ilişkilendirilecek.\n\nAlıntı yapmak için, alıntı yapmak istediğiniz metni seçin ve sonrasında herhangi bir Cevapla butonuna tıklayın. Çoklu alıntılar için adımları tekrarlayın! \n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\"> \n\nBirine cevabınızla ilgili bildiri gitmesini istiyorsanız, o kişinin isminden bahsedin. Kullanıcı adı seçimine başlamak için `@` yazın. \n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\"> \n\n[Standart Emoji](http://www.emoji.codes/) için, `:` yazın ya da gülücük `;)` atın <img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\"> \n\nBir bağlantı için özet oluşturmak istiyorsanız, bağlantıyı kopyalayıp tek başına bir satıra yapıştırın:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n## Aksiyonlar\n\nHer gönderinin altında aksiyon butonları vardır. <img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\"> \n\nBirine gönderisini beğendiğinizi belirtmek istiyorsanız, **beğen** butonunu kullanın. Sevginizi paylaşın!\n\nBirinin gönderisiyle ilgili bir sorun görüyorsanız, özelden bu kişileri veya [görevlileri](%{base_url}/about) uyarmak için **bayrakla** butonunu kullanın. **Paylaş** butonu aracılığıyla gönderiye bir bağlantı paylaşabilir, veya **işaretle** butonu ile gönderiyi işaretleyip sonrasında kullanıcı sayfanızdan kolayca ulaşabilirsiniz. \n\n## Bildiriler \n\nBiri gönderinize cevap verir, gönderinizi alıntılar ya da `@kullanıcıadı` nızdan bahsederse, sayfanızın en sağ üstünde bir sayı hemen beliriverir. Bu sayıya tıklayarak **bildiriler**inize ulaşabilirsiniz. \n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nBir cevabı kaçıracaksınız diye kaygılanmayın – çevrimiçi olmadığınız zaman gelen bildiriler size e-postalanır.\n\n## Seçenekleriniz\n\nÜzerinden henüz **iki gün geçmemiş** tüm konular yeni sayılır. \n\n**Aktif olarak katıldığınız** (oluşturduğunuz, cevapladığınız, veya uzun bir süre okuduğunuz) tüm sohbetler otomatik olarak takip edilir. \n\nBu konuların yanında, yeni ve okunmamışlar gönderilerin sayılarını gösteren mavi işaretler göreceksiniz: \n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\"> \n\nHerhangi bir konunun bildiri ayarını o konunun altında bulunan bildiri kontrolü aracılığıyla değiştirebilirsiniz. \n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\"> \n\nBildiri ayarlarını kategori bazında da değiştirebilirsiniz, eğer belirli bir kategorideki her yeni konuyu gözlemek istiyorsanız. Bu ayarların herhangi birini değiştirmek için, [kullanıcı ayarlarınıza](%{base_url}/my/preferences) göz atın. \n\n## Topluluğun Güveni\n\nBurada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız, onun tam bir parçası haline gelirsiniz ve yeni kullanıcılar için konulan limitler kalkar. Yeterli yükseklikteki [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.\n"
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
       text_body_template: "%{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!\n\n%{new_user_tips}\n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
@@ -1249,12 +1246,6 @@ tr_TR:
     csv_export_failed:
       subject_template: "Dışarı veri aktarımı başarısız oldu"
       text_body_template: "Üzgünüz, dışarı veri aktarımı başarısız oldu. Lütfen kayıtları inceleyin veya bir görevli ile iletişime geçin."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] E-posta sorunu -- Yetersiz Güven Seviyesi"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        Bu e-posta adresine yeni gönderiler oluşturmanız için, hesabınız yeterli güven seviyesine sahip değil. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_no_account:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Hesap"
       text_body_template: |
@@ -1274,34 +1265,12 @@ tr_TR:
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
 
         Hesabınız o kategoride yeni konu oluşturabilmeniz için gereken ayrıcalıklara sahip değil. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
-    email_reject_post_error:
-      subject_template: "[%{site_name}] E-posta sorunu -- Gönderim hatası"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        Bir kaç muhtemel neden: karmaşık format, çok uzun mesaj, çok kısa mesaj. Lütfen tekrar deneyin, sorun devam ederse websitesi üzerinden gönderin.
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] E-posta sorunu -- Gönderim hatası"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        Sebep:
-
-        %{post_error}
-
-        Sorunu düzeltebilirseniz, lütfen tekrar deneyin.
     email_reject_reply_key:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Cevap Anahtarı"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
 
         Cevap anahtarı geçersiz ya da bulunamıyor, bu nedenle de bu mesajın neye cevaben gönderildiğini bilemiyoruz. Bir görevli ile iletişime geçin.
-    email_reject_destination:
-      subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Alıcı Adresi"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        Gönderilen adreslerinin hiçbiri bilinmiyor. Site adresinin To: kısmında olduğundan (Cc: ya da Bcc: değil) ve görevliler tarafından sağlanan doğru email adresine yolladığınızdan emin olun.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Bulunamadı"
       text_body_template: |

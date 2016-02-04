@@ -47,6 +47,10 @@ en:
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
 
+  emails:
+    incoming:
+      default_subject: "Incoming email from %{email}"
+
   errors: &errors
     format: ! '%{attribute} %{message}'
     messages:
@@ -364,6 +368,7 @@ en:
         one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
+    uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
   trust_levels:
     newuser:
       title: "new user"
@@ -764,7 +769,6 @@ en:
     min_search_term_length: "Minimum valid search term length in characters"
     search_tokenize_chinese_japanese_korean: "Force search to tokenize Chinese/Japanese/Korean even on non CJK sites"
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
-    uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
@@ -1034,6 +1038,7 @@ en:
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
+    private_email_time_window_seconds: "Wait (n) seconds before sending any private notification emails, to give users a chance to edit and finalize their posts."
     email_posts_context: "How many prior replies to include as context in notification emails."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
@@ -1779,21 +1784,21 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The original notification was not sent to this email address. Try sending from a different email address, or contact a staff member.
+        Your reply was sent from a different email address than the one we expected, so we're not sure if this is the same person. Try sending from another email address, or contact a staff member.
 
     email_reject_no_message_id:
       subject_template: "[%{site_name}] Email issue -- No Message Id"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        There was no Message-Id header in the email. Try sending from a different email address, or contact a staff member.
+        We couldn't find a `Message-Id` header in the email. Try sending from a different email address, or contact a staff member.
 
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        There is no known user account with this email address. Try sending from a different email address, or contact a staff member.
+        We can't find any accounts that match your email address. Try sending from a different email address, or contact a staff member.
 
     email_reject_empty:
       subject_template: "[%{site_name}] Email issue -- No Content"
@@ -1823,7 +1828,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The category you sent this email to does not allow emails from unrestricted accounts. If you believe this is in error, contact a staff member.
+        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is in error, contact a staff member.
 
     email_reject_invalid_post:
       subject_template: "[%{site_name}] Email issue -- Posting error"
@@ -1856,21 +1861,21 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
+        The reply key in the email is invalid or unknown, so we can't figure out what this email is in reply to. Contact a staff member.
 
     email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Email issue -- Unknown To: Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        None of the destination addresses are recognized. Please make sure that you are sending to the correct email address provided by staff.
+        None of the destination email addresses are recognized. Please make sure that you are sending to the correct email address provided by staff.
 
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Email issue -- Topic Not Found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic you are replying to no longer exists, perhaps it was deleted? If you believe this is in error, contact a staff member.
+        The topic you are replying to no longer exists -- perhaps it was deleted? If you believe this is in error, contact a staff member.
 
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Email issue -- Topic Closed"
@@ -1884,14 +1889,16 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your email was marked as "auto generated", which we can't accept. If you believe this is in error, contact a staff member.
+        Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is in error, contact a staff member.
 
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP authentication error"
       text_body_template: |
-        There has been an authentication error while polling mails from the POP server.
+        Unfortunately, there was an authentication error while polling mails from the POP server.
 
         Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
+
+        If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
 
     too_many_spam_flags:
       subject_template: "New account blocked"

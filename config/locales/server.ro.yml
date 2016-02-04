@@ -549,7 +549,6 @@ ro:
     download_remote_images_to_local: "Transformă imaginile de legătură în imagini locale downloadându-le; asta previne stricarea imaginilor."
     download_remote_images_threshold: "Spațiul mimin necesar pentru download-ul imaginilor de legătura local (în procente)"
     disabled_image_download_domains: "Imagini de legătură nu vor mai fi downloadate din aceste domenii. Listă delimitata-vertical."
-    editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versune nouă în istoricul postării."
     post_edit_time_limit: "Autorul poate edita sau șterge postarea până la (n) minute după postare. Setați 0 pentru totdeauna."
     edit_history_visible_to_public: "Permite oricui să vadă versiunea precedentă a unei postări editate. Când e dezactivat, doar membrii personalului pot vedea."
     delete_removed_posts_after: "Postările înlăturate de către autor vor fi automat șterse după (n) de ore."
@@ -864,30 +863,11 @@ ro:
         ```
         %{logs}
         ```
-    email_reject_trust_level:
-      text_body_template: |
-        Ne pare rău, dar emailul dvs către %{destination} (cu titlul %{former_title}) nu a funcționat.
-
-         Contul dvs nu are nivelul de încredere necesat pentru a poșta noi discuții pe această adresă de email. Dacă sunteți de părere că este o greșeală, contactați un membru din personal.
     email_reject_no_account:
       text_body_template: |
         Ne pare rău, dar emailul trimis de dvs către %{destination} (cu titlul %{former_title}) nu a funcționat.
 
         Nu există niciun cont corelat cu această adresă Email. Încercați să trimiteți de pe o altă adresa de email, sau contactați un membru al personalului.
-    email_reject_post_error:
-      text_body_template: |
-        Ne pare rău, dar emailul către %{destination} (cu titlul %{former_title}) nu a funcționat.
-
-        Cauzele posibile sunt: formatul complex, mesajul prea lung, mesajul prea scurt. Încercați din nou, sau postați prin website dacă problema persistă.
-    email_reject_post_error_specified:
-      text_body_template: |
-        Ne pare rău, dar emailul către %{destination} (cu titlul %{former_title}) nu a funcționat.
-
-        Respingerea mesajului:
-
-        %{post_error}
-
-        Încearcă să repari eroarea și încearcă din nou.
     email_reject_reply_key:
       text_body_template: |
         Ne pare rău, dar emailul către %{destination} (cu titlul %{former_title}) nu a funcționat.

@@ -14,8 +14,8 @@ Discourse.Dialect.inlineRegexp({
         categoryHashtagLookup = this.dialect.options.categoryHashtagLookup,
         result = categoryHashtagLookup && categoryHashtagLookup(slug);
 
-    if (result && result[0] === "category") {
-      return ['a', { class: attributeClass, href: result[1] }, '#', ["span", {}, slug]];
+    if (result) {
+      return ['a', { class: attributeClass, href: result[0] }, '#', ["span", {}, result[1]]];
     } else {
       return ['span', { class: attributeClass }, hashtag];
     }
