@@ -59,16 +59,6 @@ export default Ember.Component.extend({
     }
   },
 
-  isDeniedPermission: function() {
-    if (this.get('isNotSupported')) return false;
-
-    return Notification.permission === "denied";
-  }.property('isNotSupported', 'notificationsPermission'),
-
-  isGrantedPermission: function() {
-    if (this.get('isNotSupported')) return false;
-  },
-
   @computed("isNotSupported", "notificationsPermission")
   isDeniedPermission(isNotSupported, notificationsPermission) {
     return isNotSupported ? false : notificationsPermission === "denied";
