@@ -71,11 +71,10 @@ end
 
 # Point at our redis
 MessageBus.redis_config = GlobalSetting.redis_config
+MessageBus.reliable_pub_sub.max_backlog_size = GlobalSetting.message_bus_max_backlog_size
 
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
 MessageBus.long_polling_interval = SiteSetting.long_polling_interval
-
-
 MessageBus.cache_assets = !Rails.env.development?
 MessageBus.enable_diagnostics
 
