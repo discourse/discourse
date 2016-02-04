@@ -24,7 +24,6 @@ class PostgreSQLFallbackHandler
 
         if connection.active?
           logger.info "#{self.class}: Master server is active. Reconnecting..."
-          ActiveRecord::Base.remove_connection
           ActiveRecord::Base.establish_connection(config)
           Discourse.disable_readonly_mode
           @master = true
