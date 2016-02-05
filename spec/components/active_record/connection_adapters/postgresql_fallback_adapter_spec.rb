@@ -2,11 +2,14 @@ require 'rails_helper'
 require_dependency 'active_record/connection_adapters/postgresql_fallback_adapter'
 
 describe ActiveRecord::ConnectionHandling do
+  let(:replica_host) { "1.1.1.1" }
+  let(:replica_port) { "6432" }
+
   let(:config) do
     ActiveRecord::Base.configurations["test"].merge({
       "adapter" => "postgresql_fallback",
-      "replica_host" => "localhost",
-      "replica_port" => "6432"
+      "replica_host" => replica_host,
+      "replica_port" => replica_port
     }).symbolize_keys!
   end
 
@@ -31,7 +34,7 @@ describe ActiveRecord::ConnectionHandling do
         ActiveRecord::Base.expects(:verify_replica).with(@replica_connection)
 
         ActiveRecord::Base.expects(:postgresql_connection).with(config.merge({
-          host: "localhost", port: "6432"
+          host: replica_host, port: replica_port
         })).returns(@replica_connection)
 
         expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
@@ -46,6 +49,14 @@ describe ActiveRecord::ConnectionHandling do
 
         expect{ ActiveRecord::Base.connection_pool.checkout }
           .to change{ Thread.list.size }.by(1)
+
+        # Ensure that we don't try to connect back to the replica when a thread
+        # is running
+        begin
+          ActiveRecord::Base.postgresql_fallback_connection(config)
+        rescue PG::ConnectionBad => e
+          # This is expected if the thread finishes before the above is called.
+        end
 
         # Wait for the thread to finish execution
         threads = (Thread.list - current_threads).each(&:join)

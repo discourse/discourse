@@ -11,11 +11,14 @@ class PostgreSQLFallbackHandler
   def initialize
     @master = true
     @running = false
+    @mutex = Mutex.new
   end
 
   def verify_master
-    return if @running && recently_checked?
-    @running = true
+    @mutex.synchronize do
+      return if @running || recently_checked?
+      @running = true
+    end
 
     Thread.new do
       begin
@@ -23,6 +26,7 @@ class PostgreSQLFallbackHandler
         connection = ActiveRecord::Base.postgresql_connection(config)
 
         if connection.active?
+          connection.disconnect!
           logger.info "#{self.class}: Master server is active. Reconnecting..."
           ActiveRecord::Base.establish_connection(config)
           Discourse.disable_readonly_mode
@@ -53,7 +57,7 @@ class PostgreSQLFallbackHandler
 
   def recently_checked?
     if @last_check
-      Time.zone.now <= @last_check + 5.seconds
+      Time.zone.now <= (@last_check + 5.seconds)
     else
       false
     end
@@ -66,7 +70,7 @@ module ActiveRecord
       fallback_handler = ::PostgreSQLFallbackHandler.instance
       config = config.symbolize_keys
 
-      if !fallback_handler.master
+      if !fallback_handler.master && !fallback_handler.running
         connection = postgresql_connection(config.dup.merge({
           host: config[:replica_host], port: config[:replica_port]
         }))
