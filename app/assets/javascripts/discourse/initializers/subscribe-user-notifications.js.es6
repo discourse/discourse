@@ -97,7 +97,7 @@ export default {
       });
 
       if (!Ember.testing) {
-        registerPushNotifications(() => {
+        registerPushNotifications(user, () => {
           // Fallback to desktop notifications if push notification is not available
           if (!Discourse.Mobile.mobileView) subscribeToNotificationAlert(bus, user);
         });

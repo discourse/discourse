@@ -6,7 +6,9 @@ const keyValueStore = new KeyValueStore("discourse_desktop_notifications_");
 import {
   subscribe as subscribePushNotification,
   unsubscribe as unsubscribePushNotification,
-  isPushNotificationsSupported
+  isPushNotificationsSupported,
+  keyValueStore as pushNotificationKeyValueStore,
+  userSubscriptionKey as pushNotificationUserSubscriptionKey
 } from 'discourse/lib/push-notifications';
 
 import {
@@ -51,11 +53,12 @@ export default Ember.Component.extend({
   @computed
   pushNotficationSubscribed: {
     set(value) {
-      localStorage.setItem('push-notification-subscribed', value);
-      return localStorage.getItem('push-notification-subscribed');
+      const user = Discourse.User.current();
+      pushNotificationKeyValueStore.setItem(pushNotificationUserSubscriptionKey(user), value);
+      return pushNotificationKeyValueStore.getItem(pushNotificationUserSubscriptionKey(user));
     },
     get() {
-      return localStorage.getItem('push-notification-subscribed');
+      return pushNotificationKeyValueStore.getItem(pushNotificationUserSubscriptionKey(Discourse.User.current()));
     }
   },
 

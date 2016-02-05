@@ -1,3 +1,10 @@
+import KeyValueStore from 'discourse/lib/key-value-store';
+
+export const keyValueStore = new KeyValueStore("discourse-push-notifications-:");
+
+export function userSubscriptionKey(user) {
+  return `subscribed-${user.get('id')}`;
+}
 // This method handles the removal of subscriptionId
 // in Chrome 44 by concatenating the subscription Id
 // to the subscription endpoint
@@ -34,7 +41,7 @@ export function isPushNotificationsSupported() {
          ('PushManager' in window));
 }
 
-export function register(callback) {
+export function register(user, callback) {
   if (!isPushNotificationsSupported()) {
     if (callback) callback();
     return;
@@ -48,9 +55,8 @@ export function register(callback) {
         if (subscription) {
           sendSubscriptionToServer(subscription);
           // Resync localStorage
-          localStorage.setItem('push-notification-subscribed', 'subscribed');
+          keyValueStore.setItem(userSubscriptionKey(user), 'subscribed');
         } else {
-          localStorage.setItem('push-notification-subscribed', '');
           if (callback) callback();
         }
       }).catch(e => Ember.Logger.error(e));
