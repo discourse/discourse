@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'push_notifications'
 
 RSpec.describe PushNotifications do
