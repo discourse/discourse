@@ -87,6 +87,7 @@ module PrettyText
     ctx["helpers"] = Helpers.new
 
     ctx_load(ctx,
+      "vendor/assets/javascripts/md5.js",
       "vendor/assets/javascripts/lodash.js",
       "vendor/assets/javascripts/Markdown.Converter.js",
       "lib/headless-ember.js",
