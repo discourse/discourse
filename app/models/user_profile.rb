@@ -2,6 +2,7 @@ class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
 
   validates :bio_raw, length: { maximum: 3000 }
+  validates :website, format: { with: /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,9}(([0-9]{1,5})?\/.*)?$)/ix }, allow_blank: true
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
