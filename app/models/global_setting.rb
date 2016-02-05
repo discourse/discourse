@@ -18,11 +18,14 @@ class GlobalSetting
 
   def self.database_config
     hash = {"adapter" => "postgresql"}
-    %w{pool timeout socket host port username password}.each do |s|
+    %w{pool timeout socket host port username password replica_host replica_port}.each do |s|
       if val = self.send("db_#{s}")
         hash[s] = val
       end
     end
+
+    hash["adapter"] = "postgresql_fallback" if hash["replica_host"]
+
     hostnames = [ hostname ]
     hostnames << backup_hostname if backup_hostname.present?
 
