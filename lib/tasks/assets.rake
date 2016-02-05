@@ -103,7 +103,7 @@ end
 def compress_node(from,to)
   to_path = "#{assets_path}/#{to}"
   assets = cdn_relative_path("/assets")
-  source_map_root = assets + (d=File.dirname(from)) == "." ? "" : "/#{d}"
+  source_map_root = assets + ((d=File.dirname(from)) == "." ? "" : "/#{d}")
   source_map_url = cdn_path "/assets/#{to}.map"
 
   cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '#{source_map_url}'"
