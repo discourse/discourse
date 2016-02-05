@@ -195,7 +195,10 @@ describe Jobs::UserEmail do
       it "doesn't send the mail if the user is using mailing list mode" do
         Email::Sender.any_instance.expects(:send).never
         user.update_column(:mailing_list_mode, true)
+        # sometimes, we pass the notification_id
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
+        # other times, we only pass the type of notification
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_type: "posted", post_id: post.id)
       end
 
       it "doesn't send the email if the post has been user deleted" do
