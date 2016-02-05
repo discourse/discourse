@@ -104,6 +104,7 @@ class UserUpdater
   attr_reader :user, :guardian
 
   def format_url(website)
+    return nil if website.blank?
     website =~ /^http/ ? website : "http://#{website}"
   end
 end

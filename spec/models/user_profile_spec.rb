@@ -37,6 +37,18 @@ describe UserProfile do
       expect(user_profile).not_to be_valid
     end
 
+    it "doesn't support invalid website" do
+      user_profile = Fabricate.build(:user_profile, website: "http://https://google.com")
+      user_profile.user = Fabricate.build(:user)
+      expect(user_profile).not_to be_valid
+    end
+
+    it "supports valid website" do
+      user_profile = Fabricate.build(:user_profile, website: "https://google.com")
+      user_profile.user = Fabricate.build(:user)
+      expect(user_profile.valid?).to be true
+    end
+
     describe 'after save' do
       let(:user) { Fabricate(:user) }
 
