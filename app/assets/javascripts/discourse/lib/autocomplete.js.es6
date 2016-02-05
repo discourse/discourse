@@ -430,6 +430,10 @@ export default function(options) {
 
           term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
 
+          if ((completeStart === caretPosition) && (term === options.key)) {
+            closeAutocomplete();
+          }
+
           updateAutoComplete(options.dataSource(term));
           return true;
         default:
