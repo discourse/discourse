@@ -1,5 +1,3 @@
-/* global md5:true */
-
 /**
   markdown-js doesn't ensure that em/strong codes are present on word boundaries.
   So we create our own handlers here.
@@ -34,7 +32,7 @@ var unhoist = function(obj,from,to){
 };
 
 var replaceMarkdown = function(match, tag) {
-  var hash = md5(match[0]);
+  var hash = Discourse.Dialect.guid();
 
   Discourse.Dialect.registerInline(match, function(text, matched, prev){
     if(!text || text.length < match.length + 1) {

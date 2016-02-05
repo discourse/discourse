@@ -1,4 +1,3 @@
-/*global md5:true */
 /**
 
   Discourse uses the Markdown.js as its main parser. `Discourse.Dialect` is the framework
@@ -44,7 +43,7 @@ function processTextNodes(node, event, emitter) {
   if (node.length < 2) { return; }
 
   if (node[0] === '__RAW') {
-    var hash = md5(node[1]);
+    var hash = Discourse.Dialect.guid();
     hoisted[hash] = node[1];
     node[1] = hash;
     return;
@@ -156,7 +155,7 @@ function countLines(str) {
 function hoister(t, target, replacement) {
   var regexp = new RegExp(target.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), "g");
   if (t.match(regexp)) {
-    var hash = md5(target);
+    var hash = Discourse.Dialect.guid();
     t = t.replace(regexp, hash);
     hoisted[hash] = replacement;
   }
@@ -190,7 +189,7 @@ function hoistCodeBlocksAndSpans(text) {
 
   // fenced code blocks (AKA GitHub code blocks)
   text = text.replace(/(^\n*|\n)```([a-z0-9\-]*)\n([\s\S]*?)\n```/g, function(_, before, language, content) {
-    var hash = md5(content);
+    var hash = Discourse.Dialect.guid();
     hoisted[hash] = escape(showBackslashEscapedCharacters(removeEmptyLines(content)));
     return before + "```" + language + "\n" + hash + "\n```";
   });
@@ -206,14 +205,14 @@ function hoistCodeBlocksAndSpans(text) {
       }
     }
     // we can safely hoist the code block
-    var hash = md5(content);
+    var hash = Discourse.Dialect.guid();
     hoisted[hash] = escape(outdent(showBackslashEscapedCharacters(removeEmptyLines(content))));
     return before + "    " + hash + "\n";
   });
 
   // <pre>...</pre> code blocks
   text = text.replace(/(\s|^)<pre>([\s\S]*?)<\/pre>/ig, function(_, before, content) {
-    var hash = md5(content);
+    var hash = Discourse.Dialect.guid();
     hoisted[hash] = escape(showBackslashEscapedCharacters(removeEmptyLines(content)));
     return before + "<pre>" + hash + "</pre>";
   });
@@ -222,7 +221,7 @@ function hoistCodeBlocksAndSpans(text) {
   ["``", "`"].forEach(function(delimiter) {
     var regexp = new RegExp("(^|[^`])" + delimiter + "([^`\\n]+?)" + delimiter + "([^`]|$)", "g");
     text = text.replace(regexp, function(_, before, content, after) {
-      var hash = md5(content);
+      var hash = Discourse.Dialect.guid();
       hoisted[hash] = escape(showBackslashEscapedCharacters(content.trim()));
       return before + delimiter + hash + delimiter + after;
     });
@@ -240,6 +239,20 @@ function hoistCodeBlocksAndSpans(text) {
   @module Discourse
 **/
 Discourse.Dialect = {
+
+  // http://stackoverflow.com/a/8809472/17174
+  guid: function(){
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now(); //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  },
 
   /**
     Cook text using the dialects.

@@ -31,7 +31,6 @@
 //= require jquery.tagsinput.js
 //= require jquery.sortable.js
 //= require lodash.js
-//= require md5.js
 //= require modernizr.custom.00874.js
 //= require mousetrap.js
 //= require rsvp.js
