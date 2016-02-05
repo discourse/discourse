@@ -48,13 +48,7 @@ module Jobs
       @skip_context = { type: type, user_id: user_id, to_address: to_address }
     end
 
-    NOTIFICATIONS_SENT_BY_MAILING_LIST ||= Set.new [
-      Notification.types[:posted],
-      Notification.types[:replied],
-      Notification.types[:mentioned],
-      Notification.types[:group_mentioned],
-      Notification.types[:quoted],
-    ]
+    NOTIFICATIONS_SENT_BY_MAILING_LIST ||= Set.new %w{posted replied mentioned group_mentioned quoted}
 
    def message_for_email(user, post, type, notification,
                           notification_type=nil, notification_data_hash=nil,
@@ -83,6 +77,13 @@ module Jobs
       if notification || notification_type
         email_args[:notification_type] ||= notification_type || notification.try(:notification_type)
         email_args[:notification_data_hash] ||= notification_data_hash || notification.try(:data_hash)
+
+        unless String === email_args[:notification_type]
+          if Numeric === email_args[:notification_type]
+            email_args[:notification_type] = Notification.types[email_args[:notification_type]]
+          end
+          email_args[:notification_type] = email_args[:notification_type].to_s
+        end
 
         if user.mailing_list_mode? &&
            !post.topic.private_message? &&
