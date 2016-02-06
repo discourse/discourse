@@ -714,7 +714,12 @@ class UsersController < ApplicationController
 
     def user_params
       params.permit(:name, :email, :password, :username, :active)
-            .merge(ip_address: request.remote_ip, registration_ip_address: request.remote_ip)
+            .merge(ip_address: request.remote_ip, registration_ip_address: request.remote_ip,
+                   locale: user_locale)
+    end
+
+    def user_locale
+      I18n.locale
     end
 
     def fail_with(key)

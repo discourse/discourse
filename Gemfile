@@ -45,6 +45,8 @@ gem 'active_model_serializers', '~> 0.8.3'
 
 gem 'onebox'
 
+gem 'http_accept_language', '~>2.0.5'
+
 gem 'ember-rails'
 gem 'ember-source', '1.12.2'
 gem 'barber'
