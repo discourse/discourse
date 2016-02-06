@@ -44,7 +44,7 @@ module Jobs
     end
 
     def user_archive_export
-      user_archive_data = Post.includes(:topic => :category).where(user_id: @current_user.id).select('topic_id','post_number','raw','like_count','reply_count','created_at').order('created_at').with_deleted.to_a
+      user_archive_data = Post.includes(:topic => :category).where(user_id: @current_user.id).select(:topic_id, :post_number, :raw, :like_count, :reply_count, :created_at).order(:created_at).with_deleted.to_a
       user_archive_data.map do |user_archive|
         get_user_archive_fields(user_archive)
       end
@@ -57,53 +57,19 @@ module Jobs
       if SiteSetting.enable_sso
         # SSO enabled
         User.includes(:user_stat, :single_sign_on_record, :groups).find_each do |user|
-          user_info_string = "#{user.id},#{user.name},#{user.username},#{user.email},#{user.title},#{user.created_at},#{user.last_seen_at},#{user.last_posted_at},#{user.last_emailed_at},#{user.trust_level},#{user.approved},#{user.suspended_at},#{user.suspended_till},#{user.blocked},#{user.active},#{user.admin},#{user.moderator},#{user.ip_address},#{user.user_stat.topics_entered},#{user.user_stat.posts_read_count},#{user.user_stat.time_read},#{user.user_stat.topic_count},#{user.user_stat.post_count},#{user.user_stat.likes_given},#{user.user_stat.likes_received}"
-
-          # sso
-          if user.single_sign_on_record
-            user_info_string << ",#{user.single_sign_on_record.external_id},#{user.single_sign_on_record.external_email},#{user.single_sign_on_record.external_username},#{user.single_sign_on_record.external_name},#{user.single_sign_on_record.external_avatar_url}"
-          else
-            user_info_string << ",nil,nil,nil,nil,nil"
-          end
-
-          # custom fields
-          if user_field_ids.present?
-            user.user_fields.each do |custom_field|
-              user_info_string << ",#{custom_field[1]}"
-            end
-          end
-
-          # group names
-          group_names = ""
-          user.groups.each do |group|
-            group_names << "#{group.name};"
-          end
-          user_info_string << ",#{group_names[0..-2]}" unless group_names.blank?
-          group_names = nil
-
+          user_info_string = get_base_user_string(user)
+          user_info_string = add_single_sign_on(user, user_info_string)
+          user_info_string = add_custom_fields(user, user_info_string, user_field_ids)
+          user_info_string = add_group_names(user, user_info_string)
           user_array.push(user_info_string.split(","))
           user_info_string = nil
         end
       else
         # SSO disabled
         User.includes(:user_stat, :groups).find_each do |user|
-          user_info_string = "#{user.id},#{user.name},#{user.username},#{user.email},#{user.title},#{user.created_at},#{user.last_seen_at},#{user.last_posted_at},#{user.last_emailed_at},#{user.trust_level},#{user.approved},#{user.suspended_at},#{user.suspended_till},#{user.blocked},#{user.active},#{user.admin},#{user.moderator},#{user.ip_address},#{user.user_stat.topics_entered},#{user.user_stat.posts_read_count},#{user.user_stat.time_read},#{user.user_stat.topic_count},#{user.user_stat.post_count},#{user.user_stat.likes_given},#{user.user_stat.likes_received}"
-
-          # custom fields
-          if user_field_ids.present?
-            user.user_fields.each do |custom_field|
-              user_info_string << ",#{custom_field[1]}"
-            end
-          end
-
-          # group names
-          group_names = ""
-          user.groups.each do |group|
-            group_names << "#{group.name};"
-          end
-          user_info_string << ",#{group_names[0..-2]}" unless group_names.blank?
-          group_names = nil
-
+          user_info_string = get_base_user_string(user)
+          user_info_string = add_custom_fields(user, user_info_string, user_field_ids)
+          user_info_string = add_group_names(user, user_info_string)
           user_array.push(user_info_string.split(","))
           user_info_string = nil
         end
@@ -181,6 +147,37 @@ module Jobs
     end
 
     private
+
+      def get_base_user_string(user)
+        "#{user.id},#{user.name},#{user.username},#{user.email},#{user.title},#{user.created_at},#{user.last_seen_at},#{user.last_posted_at},#{user.last_emailed_at},#{user.trust_level},#{user.approved},#{user.suspended_at},#{user.suspended_till},#{user.blocked},#{user.active},#{user.admin},#{user.moderator},#{user.ip_address},#{user.user_stat.topics_entered},#{user.user_stat.posts_read_count},#{user.user_stat.time_read},#{user.user_stat.topic_count},#{user.user_stat.post_count},#{user.user_stat.likes_given},#{user.user_stat.likes_received}"
+      end
+
+      def add_single_sign_on(user, user_info_string)
+        if user.single_sign_on_record
+          user_info_string << ",#{user.single_sign_on_record.external_id},#{user.single_sign_on_record.external_email},#{user.single_sign_on_record.external_username},#{user.single_sign_on_record.external_name},#{user.single_sign_on_record.external_avatar_url}"
+        else
+          user_info_string << ",nil,nil,nil,nil,nil"
+        end
+        user_info_string
+      end
+
+      def add_custom_fields(user, user_info_string, user_field_ids)
+        if user_field_ids.present?
+          user.user_fields.each do |custom_field|
+            user_info_string << ",#{custom_field[1]}"
+          end
+        end
+        user_info_string
+      end
+
+      def add_group_names(user, user_info_string)
+        group_names = user.groups.each_with_object("") do |group, names|
+          names << "#{group.name};"
+        end
+        user_info_string << ",#{group_names[0..-2]}" unless group_names.blank?
+        group_names = nil
+        user_info_string
+      end
 
       def get_user_archive_fields(user_archive)
         user_archive_array = []
