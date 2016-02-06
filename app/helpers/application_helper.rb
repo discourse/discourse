@@ -60,7 +60,7 @@ module ApplicationHelper
   end
 
   def rtl_class
-    RTL.new(current_user).css_class
+    rtl? ? 'rtl' : ''
   end
 
   def escape_unicode(javascript)
@@ -111,7 +111,7 @@ module ApplicationHelper
   end
 
   def rtl?
-    ["ar", "fa_IR", "he"].include?(user_locale)
+    ["ar", "fa_IR", "he"].include? I18n.locale.to_s
   end
 
   def user_locale

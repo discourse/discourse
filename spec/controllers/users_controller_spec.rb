@@ -479,6 +479,15 @@ describe UsersController do
         email: @user.email
     end
 
+    context 'when creating a user' do
+      it 'sets the user locale to I18n.locale' do
+        SiteSetting.stubs(:default_locale).returns('en')
+        I18n.stubs(:locale).returns(:fr)
+        post_user
+        expect(User.find_by(username: @user.username).locale).to eq('fr')
+      end
+    end
+
     context 'when creating a non active user (unconfirmed email)' do
 
       it 'returns a 500 when local logins are disabled' do
@@ -1178,6 +1187,19 @@ describe UsersController do
           user.reload
 
           expect(user.muted_users.pluck(:username).sort).to be_empty
+
+        end
+
+        context 'a locale is chosen that differs from I18n.locale' do
+          it "updates the user's locale" do
+            I18n.stubs(:locale).returns('fr')
+
+            put :update,
+                username: user.username,
+                locale: :fa_IR
+
+            expect(User.find_by(username: user.username).locale).to eq('fa_IR')
+          end
 
         end
 

@@ -127,6 +127,7 @@ GEM
     htmlentities (4.3.4)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
+    http_accept_language (2.0.5)
     i18n (0.7.0)
     image_optim (0.20.2)
       exifr (~> 1.1, >= 1.1.3)
@@ -427,6 +428,7 @@ DEPENDENCIES
   highline
   hiredis
   htmlentities
+  http_accept_language (~> 2.0.5)
   image_optim (= 0.20.2)
   librarian (>= 0.0.25)
   listen (= 0.7.3)
