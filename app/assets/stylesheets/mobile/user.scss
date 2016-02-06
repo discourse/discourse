@@ -252,6 +252,11 @@
       background-color: dark-light-choose(rgba($primary, .9), rgba($secondary, .9));
       opacity: 0.8;
 
+      blockquote {
+        background-color: dark-light-diff($secondary, $primary, 30%, -70%);
+        border-left-color: dark-light-diff($secondary, $primary, 50%, -50%);
+      }
+
       h1 {
         font-size: 2.143em;
         font-weight: normal;
