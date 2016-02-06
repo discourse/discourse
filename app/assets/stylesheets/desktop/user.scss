@@ -302,6 +302,11 @@
       background: dark-light-choose(rgba($primary, .85), rgba($secondary, .85));
       transition: margin .15s linear;
 
+      blockquote {
+        background-color: dark-light-diff($secondary, $primary, 30%, -70%);
+        border-left-color: dark-light-diff($secondary, $primary, 50%, -50%);
+      }
+
       h1 {
         font-size: 2.143em;
         font-weight: normal;
