@@ -219,3 +219,17 @@ body {
     display: inline-block;
   }
 }
+
+// don't wrap relative dates, we want
+//
+// Jul 26, '15
+//
+// not
+//
+// Jul
+// 26,
+// '15
+//
+span.relative-date {
+  white-space:nowrap;
+}
