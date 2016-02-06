@@ -109,6 +109,8 @@ en:
         x_years:
           one: "1 year later"
           other: "%{count} years later"
+      previous_month: 'Previous Month'
+      next_month: 'Next Month'
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
