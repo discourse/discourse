@@ -47,7 +47,8 @@ export default function(options) {
 
     $(this).off('keypress.autocomplete')
            .off('keydown.autocomplete')
-           .off('paste.autocomplete');
+           .off('paste.autocomplete')
+           .off('click.autocomplete');
 
     return;
   }
@@ -276,6 +277,10 @@ export default function(options) {
     closeAutocomplete();
   });
 
+  $(this).on('click.autocomplete', function() {
+    closeAutocomplete();
+  });
+
   $(this).on('paste.autocomplete', function() {
     _.delay(function(){
       me.trigger("keydown");
@@ -375,16 +380,21 @@ export default function(options) {
     if (completeStart !== null) {
       caretPosition = Discourse.Utilities.caretPosition(me[0]);
 
+      // allow people to right arrow out of completion
+      if (e.which === keys.rightArrow && me[0].value[caretPosition] === ' ') {
+        closeAutocomplete();
+        return true;
+      }
+
       // If we've backspaced past the beginning, cancel unless no key
       if (caretPosition <= completeStart && options.key) {
         closeAutocomplete();
-        return false;
+        return true;
       }
 
       // Keyboard codes! So 80's.
       switch (e.which) {
         case keys.enter:
-        case keys.rightArrow:
         case keys.tab:
           if (!autocompleteOptions) return true;
           if (selectedOption >= 0 && (userToComplete = autocompleteOptions[selectedOption])) {
