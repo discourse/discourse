@@ -38,7 +38,7 @@
       actions: {
         didTransition: function() {
           Em.run.next(function(){
-            Discourse.authenticationComplete(<%=flash[:authentication_date].html_safe%>);
+            Discourse.authenticationComplete(<%=flash[:authentication_data].html_safe%>);
           });
           return this._super();
         }
