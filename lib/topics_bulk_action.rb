@@ -43,9 +43,9 @@ class TopicsBulkAction
       topics.each do |t|
         if guardian.can_see?(t) && t.private_message?
           if group
-            GroupArchivedMessage.where(group_id: group.id, topic_id: t.id).destroy_all
+            GroupArchivedMessage.move_to_inbox!(group.id, t.id)
           else
-            UserArchivedMessage.where(user_id: @user.id, topic_id: t.id).destroy_all
+            UserArchivedMessage.move_to_inbox!(@user.id,t.id)
           end
         end
       end
@@ -56,9 +56,9 @@ class TopicsBulkAction
       topics.each do |t|
         if guardian.can_see?(t) && t.private_message?
           if group
-            GroupArchivedMessage.create!(group_id: group.id, topic_id: t.id)
+            GroupArchivedMessage.archive!(group.id, t.id)
           else
-            UserArchivedMessage.create!(user_id: @user.id, topic_id: t.id)
+            UserArchivedMessage.archive!(@user.id, t.id)
           end
         end
       end
