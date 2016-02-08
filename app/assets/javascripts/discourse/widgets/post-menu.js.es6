@@ -26,14 +26,21 @@ function registerButton(name, builder) {
 
 registerButton('like', attrs => {
   if (!attrs.showLike) { return; }
-  const className = attrs.liked ? 'has-like fade-out' : 'like';
+  const className = attrs.liked ? 'toggle-like has-like fade-out' : 'toggle-like like';
+
+  const button = {
+    action: 'like',
+    icon: 'heart',
+    className
+  };
 
   if (attrs.canToggleLike) {
-    const descKey = attrs.liked ? 'post.controls.undo_like' : 'post.controls.like';
-    return { action: 'like', title: descKey, icon: 'heart', className };
+    button.title = attrs.liked ? 'post.controls.undo_like' : 'post.controls.like';
   } else if (attrs.liked) {
-    return { action: 'like', title: 'post.controls.has_liked', icon: 'heart', className, disabled: true };
+    button.title = 'post.controls.has_liked';
+    button.disabled = true;
   }
+  return button;
 });
 
 registerButton('like-count', attrs => {
