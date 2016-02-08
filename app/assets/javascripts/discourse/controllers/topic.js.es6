@@ -122,7 +122,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       const postStream = this.get('model.postStream');
       const firstLoadedPost = postStream.get('posts.firstObject');
 
-      this.set('model.currentPost', post.get('post_number'));
+      const currentPostNumber = post.get('post_number');
+      this.set('model.currentPost', currentPostNumber);
+      this.send('postChangedRoute', currentPostNumber);
 
       if (post.get('post_number') === 1) { return; }
 
@@ -711,14 +713,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return true;
     }
   },
-
-  // If our current post is changed, notify the router
-  _currentPostChanged: function() {
-    const currentPost = this.get('model.currentPost');
-    if (currentPost) {
-      this.send('postChangedRoute', currentPost);
-    }
-  }.observes('model.currentPost'),
 
   readPosts(topicId, postNumbers) {
     const topic = this.get("model"),
