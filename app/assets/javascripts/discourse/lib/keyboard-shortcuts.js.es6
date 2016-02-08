@@ -28,7 +28,7 @@ const bindings = {
   'home':            {handler: 'goToFirstPost', anonymous: true},
   'j':               {handler: 'selectDown', anonymous: true},
   'k':               {handler: 'selectUp', anonymous: true},
-  'l':               {click: '.topic-post.selected button[data-action="like"]'},
+  'l':               {click: '.topic-post.selected button.toggle-like'},
   'm m':             {click: 'div.notification-options li[data-id="0"] a'}, // mark topic as muted
   'm r':             {click: 'div.notification-options li[data-id="1"] a'}, // mark topic as regular
   'm t':             {click: 'div.notification-options li[data-id="2"] a'}, // mark topic as tracking
@@ -312,12 +312,7 @@ export default {
       }
 
       if ($article.is('.topic-post')) {
-        let tabLoc = $article.find('a.tabLoc');
-        if (tabLoc.length === 0) {
-          tabLoc = $('<a href class="tabLoc"></a>');
-          $article.prepend(tabLoc);
-        }
-        tabLoc.focus();
+        $('a.tabLoc', $article).focus();
       }
 
       this._scrollList($article, direction);
