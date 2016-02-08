@@ -34,6 +34,8 @@ export default MountWidget.extend({
   }).volatile(),
 
   scrolled() {
+    if (this.isDestroyed || this.isDestroying) { return; }
+
     const $w = $(window);
     const windowHeight = window.innerHeight ? window.innerHeight : $w.height();
     const slack = Math.round(windowHeight * 15);
