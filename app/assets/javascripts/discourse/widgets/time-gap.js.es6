@@ -17,7 +17,7 @@ function description(attrs) {
 }
 
 export default createWidget('time-gap', {
-  tagName: 'div.time-gap.small-action',
+  tagName: 'div.time-gap.small-action.clearfix',
 
   html(attrs) {
     return [h('div.topic-avatar', iconNode('clock-o')),
