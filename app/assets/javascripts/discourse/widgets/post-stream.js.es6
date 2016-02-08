@@ -48,7 +48,7 @@ export default createWidget('post-stream', {
       // Handle time gaps
       const curTime = new Date(transformed.created_at).getTime();
       if (prevDate) {
-        const daysSince = (curTime - prevDate) / DAY;
+        const daysSince = Math.floor((curTime - prevDate) / DAY);
         if (daysSince > this.siteSettings.show_time_gap_days) {
           result.push(this.attach('time-gap', { daysSince }));
         }
