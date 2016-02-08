@@ -933,7 +933,7 @@ pt_BR:
     automatically_download_gravatars: "Fazer download de Gravatars dos usuários ao criar conta ou mudança de email."
     digest_topics: "O número máximo de tópicos a serem mostrados no resumo via email."
     digest_min_excerpt_length: "O excerto mínimo de post no resumo via email, em caracteres."
-    suppress_digest_email_after_days: "Suprimir emails de resumo para usuários não vistos no site há mais do que (n) dias."
+    delete_digest_email_after_days: "Suprimir emails de resumo para usuários não vistos no site há mais do que (n) dias."
     disable_digest_emails: "Desabilitar emails de resumo para todos os usuários."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá checar o Gravatar por avatares personalizados em um dia"
     public_user_custom_fields: "Um conjunto de campos personalizados para um usuário que podem ser apresentados publicamente."

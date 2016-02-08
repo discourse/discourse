@@ -889,7 +889,7 @@ sq:
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
-    suppress_digest_email_after_days: "Suppress digest emails for users not seen on the site for more than (n) days."
+    delete_digest_email_after_days: "Suppress digest emails for users not seen on the site for more than (n) days."
     disable_digest_emails: "Disable digest emails for all users."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"

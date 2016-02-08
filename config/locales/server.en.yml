@@ -1116,7 +1116,7 @@ en:
     unsubscribe_via_email: "Allow users to unsubscribe from emails by sending an email with 'unsubscribe' in the subject or body"
     unsubscribe_via_email_footer: "Attach an unsubscribe link to the footer of sent emails"
 
-    suppress_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
+    delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
 
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
@@ -1147,7 +1147,7 @@ en:
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
-    suppress_digest_email_after_days: "Suppress digest emails for users not seen on the site for more than (n) days."
+    delete_digest_email_after_days: "Suppress digest emails for users not seen on the site for more than (n) days."
     disable_digest_emails: "Disable digest emails for all users."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."

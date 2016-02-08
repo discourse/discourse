@@ -811,7 +811,7 @@ pl_PL:
     email_editable: "Allow users to change their e-mail address after registration."
     digest_topics: "Maksymalna liczba tematów w podsumowaniu e-mail."
     digest_min_excerpt_length: "Minimalny wycinek wpisu (liczba znaków) w podsumowaniu e-mail."
-    suppress_digest_email_after_days: "Nie wysyłaj podsumowań e-mail użytkownikom, którzy nie odwiedzili serwisu dłużej niż (n) dni."
+    delete_digest_email_after_days: "Nie wysyłaj podsumowań e-mail użytkownikom, którzy nie odwiedzili serwisu dłużej niż (n) dni."
     disable_digest_emails: "Wyłącz wysyłanie podsumowania e-mail wszystkim uzytkownikom. "
     allow_anonymous_posting: "Zezwól użytkownikom na przechodzenie w tryb anonimowości."
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
