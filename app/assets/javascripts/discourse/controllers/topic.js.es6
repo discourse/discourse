@@ -715,14 +715,16 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   },
 
   readPosts(topicId, postNumbers) {
-    const topic = this.get("model"),
-          postStream = topic.get("postStream");
+    const topic = this.get("model");
+    const postStream = topic.get("postStream");
 
-    if (topic.get("id") === topicId) {
+    if (topic.get('id') === topicId) {
+
       // TODO identity map for postNumber
-      _.each(postStream.get('posts'), post => {
-        if (_.include(postNumbers, post.post_number) && !post.read) {
-          post.set("read", true);
+      postStream.get('posts').forEach(post => {
+        if (!post.read && postNumbers.indexOf(post.post_number) !== -1) {
+          post.set('read', true);
+          this.appEvents.trigger('post-stream:refresh', post.id);
         }
       });
 
