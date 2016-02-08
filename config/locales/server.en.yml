@@ -1116,6 +1116,8 @@ en:
     unsubscribe_via_email: "Allow users to unsubscribe from emails by sending an email with 'unsubscribe' in the subject or body"
     unsubscribe_via_email_footer: "Attach an unsubscribe link to the footer of sent emails"
 
+    suppress_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
+
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."

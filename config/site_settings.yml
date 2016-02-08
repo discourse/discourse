@@ -539,6 +539,9 @@ email:
     default: true
   unsubscribe_via_email_footer:
     default: false
+  suppress_email_logs_after_days:
+    default: 365
+    min: 0
 
 files:
   max_image_size_kb: 3072
