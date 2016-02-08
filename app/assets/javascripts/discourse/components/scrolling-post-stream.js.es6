@@ -43,7 +43,7 @@ export default MountWidget.extend({
 
     let windowTop = $w.scrollTop();
 
-    const $posts = this.$('article.boxed');
+    const $posts = this.$('.onscreen-post');
     const viewportTop = windowTop - slack;
     const topView = findTopView($posts, viewportTop, 0, $posts.length-1);
 

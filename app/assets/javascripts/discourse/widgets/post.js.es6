@@ -295,7 +295,7 @@ createWidget('post-body', {
 });
 
 createWidget('post-article', {
-  tagName: 'article.boxed',
+  tagName: 'article.boxed.onscreen-post',
   buildKey: attrs => `post-article-${attrs.id}`,
 
   defaultState() {

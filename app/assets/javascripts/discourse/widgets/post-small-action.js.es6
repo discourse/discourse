@@ -23,7 +23,7 @@ const icons = {
 };
 
 export default createWidget('post-small-action', {
-  tagName: 'div.small-action.clearfix',
+  tagName: 'div.small-action.onscreen-post.clearfix',
 
   html(attrs) {
     const contents = [];
