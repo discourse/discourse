@@ -1033,7 +1033,7 @@ sk:
     automatically_download_gravatars: "Po vytvorení účtu alebo zmene heslo stiahnuť používateľov Gravatar."
     digest_topics: "Maximálny počet tém, ktoré sa zobrazia v súhrnnom emaile."
     digest_min_excerpt_length: "Minimálny výťah príspevku v sumarizačnom emaile, v znakoch."
-    suppress_digest_email_after_days: "Zakázat súhrnný email používateľom, ktorý neboli na stránkach viac ako (n) dní."
+    delete_digest_email_after_days: "Zakázat súhrnný email používateľom, ktorý neboli na stránkach viac ako (n) dní."
     disable_digest_emails: "Vypnúť sumárny email pre všetkých používateľov."
     detect_custom_avatars: "Má alebo nemá sa kontrolovať nahratie vlastného profilového obrázka používateľa?"
     max_daily_gravatar_crawls: "Koľkokrát denne má Discourse kontrolovať Gravatar na zistenie vlastného avatara."

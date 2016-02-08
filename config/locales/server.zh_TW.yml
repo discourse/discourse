@@ -738,7 +738,7 @@ zh_TW:
     automatically_download_gravatars: "當用戶註冊或更改EMail時下載 Gravatars 圖片"
     digest_topics: "EMail 摘要中顯示的最大話題數量"
     digest_min_excerpt_length: "EMail 摘要中每篇文章最少顯示的字元數量"
-    suppress_digest_email_after_days: "不發送摘要郵件給超過 (n) 天閒置的用戶。"
+    delete_digest_email_after_days: "不發送摘要郵件給超過 (n) 天閒置的用戶。"
     disable_digest_emails: "禁用發送摘要郵件給所有用戶。"
     max_daily_gravatar_crawls: "一天內 Discourse 將自動檢查 Gravatar 自訂個人圖示的次數"
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單。"

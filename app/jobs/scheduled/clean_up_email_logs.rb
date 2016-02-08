@@ -4,9 +4,9 @@ module Jobs
     every 1.day
 
     def execute(args)
-      return if SiteSetting.suppress_email_logs_after_days <= 0
+      return if SiteSetting.delete_email_logs_after_days <= 0
 
-      threshold = SiteSetting.suppress_email_logs_after_days.days.ago
+      threshold = SiteSetting.delete_email_logs_after_days.days.ago
 
       EmailLog.where(reply_key: nil)
               .where("created_at < ?", threshold)

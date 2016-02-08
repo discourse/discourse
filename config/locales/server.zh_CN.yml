@@ -944,7 +944,7 @@ zh_CN:
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
     digest_topics: "邮件摘要中显示的最大主题数目。"
     digest_min_excerpt_length: "在邮件摘要中每个帖子最少显示的字符数量。"
-    suppress_digest_email_after_days: "不发送摘要邮件给超过 (n) 天未出现的用户。"
+    delete_digest_email_after_days: "不发送摘要邮件给超过 (n) 天未出现的用户。"
     disable_digest_emails: "为所有用户禁用摘要邮件。"
     detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"

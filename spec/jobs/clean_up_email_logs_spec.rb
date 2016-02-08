@@ -14,8 +14,8 @@ describe Jobs::CleanUpEmailLogs do
     expect(EmailLog.count).to eq(3)
   end
 
-  it "does not remove old email logs when suppress_email_logs_after_days is 0" do
-    SiteSetting.suppress_email_logs_after_days = 0
+  it "does not remove old email logs when delete_email_logs_after_days is 0" do
+    SiteSetting.delete_email_logs_after_days = 0
     Jobs::CleanUpEmailLogs.new.execute({})
     expect(EmailLog.count).to eq(4)
   end
