@@ -170,6 +170,7 @@ export default class Widget {
       }
 
       if (target) {
+        // TODO: Use ember closure actions
         const actions = target._actions || target.actionHooks;
         const method = actions[actionName];
         if (method) {

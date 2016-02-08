@@ -222,10 +222,14 @@ export default {
     // TODO: We should keep track of the post without a CSS class
     const selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
     if (selectedPostId) {
-      const topicController = container.lookup('controller:topic'),
-          post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
+      const topicController = container.lookup('controller:topic');
+      const post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
       if (post) {
-        topicController.send(action, post);
+        // TODO: Use ember closure actions
+        const result = topicController._actions[action].call(topicController, post);
+        if (result && result.then) {
+          this.appEvents.trigger('post-stream:refresh', selectedPostId)
+        }
       }
     }
   },
