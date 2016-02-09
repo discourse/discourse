@@ -3,6 +3,7 @@ import RawHtml from 'discourse/widgets/raw-html';
 import { iconNode } from 'discourse/helpers/fa-icon';
 import { h } from 'virtual-dom';
 import { actionDescriptionHtml } from 'discourse/components/small-action';
+import { avatarFor } from 'discourse/widgets/post';
 
 const icons = {
   'closed.enabled': 'lock',
@@ -43,6 +44,8 @@ export default createWidget('post-small-action', {
         title: 'post.controls.edit'
       }));
     }
+
+    contents.push(avatarFor.call(this, 'small', { template: attrs.avatar_template, username: attrs.avatar }));
 
     const description = actionDescriptionHtml(attrs.actionCode, attrs.created_at, attrs.actionCodeWho);
     contents.push(new RawHtml({ html: `<p>${description}</p>` }));
