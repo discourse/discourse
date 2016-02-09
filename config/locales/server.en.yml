@@ -1984,6 +1984,8 @@ en:
     header_instructions: ''
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond"
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond"
+    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond"
+    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond"
 
     posted_by: "Posted by %{username} on %{post_date}"
 

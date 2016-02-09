@@ -111,6 +111,9 @@ describe UserNotifications do
       # subject should include category name
       expect(mail.subject).to match(/India/)
 
+      # 2 "visit topic" link
+      expect(mail.html_part.to_s.scan(/Visit Topic/).count).to eq(2)
+
       # 2 respond to links cause we have 1 context post
       expect(mail.html_part.to_s.scan(/to respond/).count).to eq(2)
 
@@ -180,6 +183,9 @@ describe UserNotifications do
 
       # subject should include "[PM]"
       expect(mail.subject).to match("[PM]")
+
+      # 1 "visit message" link
+      expect(mail.html_part.to_s.scan(/Visit Message/).count).to eq(1)
 
       # 1 respond to link
       expect(mail.html_part.to_s.scan(/to respond/).count).to eq(1)

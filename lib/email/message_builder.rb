@@ -34,9 +34,9 @@ module Email
           @template_args[:respond_instructions] = ''
         else
           @template_args[:respond_instructions] = if allow_reply_by_email?
-            I18n.t('user_notifications.reply_by_email', @template_args)
+            @opts[:private_reply] ? I18n.t('user_notifications.reply_by_email_pm', @template_args) : I18n.t('user_notifications.reply_by_email', @template_args)
           else
-            I18n.t('user_notifications.visit_link_to_respond', @template_args)
+            @opts[:private_reply] ? I18n.t('user_notifications.visit_link_to_respond_pm', @template_args) : I18n.t('user_notifications.visit_link_to_respond', @template_args)
           end
         end
       end
