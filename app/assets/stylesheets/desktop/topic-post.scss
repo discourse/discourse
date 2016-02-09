@@ -139,65 +139,64 @@ nav.post-controls {
     background: transparent;
     border: none;
     margin-left: 3px;
-    transition: all linear 0.15s;
 
-        &:hover {
-          background: dark-light-diff($primary, $secondary, 90%, -60%);
-          color: $primary;
-        }
+    &.d-hover {
+      background: dark-light-diff($primary, $secondary, 90%, -60%);
+      color: $primary;
+    }
 
-        &:active {
-          box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
-        }
+    &:active {
+      box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
+    }
 
-        &.hidden {
-          display: none;
-        }
-        &.admin {
-          position: relative;
-        }
+    &.hidden {
+      display: none;
+    }
+    &.admin {
+      position: relative;
+    }
 
-        &.delete:hover {
-          background: $danger;
-          color: $secondary;
-        }
+    &.delete.d-hover {
+      background: $danger;
+      color: $secondary;
+    }
 
-        &.like:hover {
-          color: $love;
-          background: dark-light-diff($love, $secondary, 85%, -60%)
-        }
+    &.like.d-hover {
+      color: $love;
+      background: dark-light-diff($love, $secondary, 85%, -60%)
+    }
 
-        &.has-like {color: $love;}
-        &.has-like[disabled]:hover {
-          background: transparent;
-        }
-        &.has-like[disabled]:active {
-          box-shadow: none;
-        }
+    &.has-like {color: $love;}
+    &.has-like[disabled]:hover {
+      background: transparent;
+    }
+    &.has-like[disabled]:active {
+      box-shadow: none;
+    }
 
-        &.wikied {
-          color: green;
-        }
+    &.wikied {
+      color: green;
+    }
 
-        &.bookmark {padding: 8px 11px; }
+    &.bookmark {padding: 8px 11px; }
 
-        .read-icon {
-          &:before {
-            font-family: "FontAwesome";
-            content: "\f02e";
-          }
-          &.unseen {
-            &:before {
-              content: "\f097";
-            }
-          }
-          &.bookmarked {
-            &:before {
-              color: $tertiary;
-            }
-          }
+    .read-icon {
+      &:before {
+        font-family: "FontAwesome";
+        content: "\f02e";
+      }
+      &.unseen {
+        &:before {
+          content: "\f097";
         }
       }
+      &.bookmarked {
+        &:before {
+          color: $tertiary;
+        }
+      }
+    }
+  }
 
   .post-admin-menu {
     background-color: $secondary;
