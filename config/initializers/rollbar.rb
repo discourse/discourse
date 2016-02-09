@@ -35,7 +35,8 @@ Rollbar.configure do |config|
     'secret_token',
     'session_id',
     'user_session_secret',
-    'www-sso-session'
+    'discussion-sso-session',
+    'forums_session_nonce'
   ]
 
   # By default, Rollbar will try to call the `current_user` controller method
