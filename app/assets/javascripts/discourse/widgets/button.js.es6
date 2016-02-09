@@ -2,7 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon';
 
 export default createWidget('button', {
-  tagName: 'button',
+  tagName: 'button.widget-button',
 
   buildClasses() {
     if (this.attrs.className) { return this.attrs.className; }
@@ -42,7 +42,7 @@ export default createWidget('button', {
     const attrs = this.attrs;
     if (attrs.disabled) { return; }
 
-    $(`button`).blur();
+    $(`button.widget-button`).removeClass('d-hover').blur();
     return this.sendWidgetAction(attrs.action);
   }
 });

@@ -130,6 +130,15 @@ export default MountWidget.extend({
     $(window).bind('scroll.post-stream', debouncedScroll);
     this._scrollTriggered();
 
+    this.$().on('mouseenter.post-stream', 'button.widget-button', e => {
+      $('button.widget-button').removeClass('d-hover');
+      $(e.target).addClass('d-hover');
+    });
+
+    this.$().on('mouseleave.post-stream', 'button.widget-button', () => {
+      $('button.widget-button').removeClass('d-hover');
+    });
+
     this.appEvents.on('post-stream:refresh', postId => {
       if (postId) {
         keyDirty(`post-${postId}`);
@@ -143,6 +152,8 @@ export default MountWidget.extend({
     $(document).unbind('touchmove.post-stream');
     $(window).unbind('scroll.post-stream');
     this.appEvents.off('post-stream:refresh');
+    this.$().off('mouseenter.post-stream');
+    this.$().off('mouseleave.post-stream');
   }
 
 });
