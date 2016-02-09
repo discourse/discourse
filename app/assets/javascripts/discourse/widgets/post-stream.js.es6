@@ -15,7 +15,7 @@ export default createWidget('post-stream', {
     const result = [];
 
     const before = attrs.gaps && attrs.gaps.before ? attrs.gaps.before : {};
-    const after = attrs.gaps && attrs.gaps.before ? attrs.gaps.after : {};
+    const after = attrs.gaps && attrs.gaps.after ? attrs.gaps.after : {};
 
     let prevPost;
     let prevDate;

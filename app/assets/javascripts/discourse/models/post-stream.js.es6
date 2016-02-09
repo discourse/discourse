@@ -280,6 +280,7 @@ export default RestModel.extend({
     if (idx !== -1) {
       stream.pushObjects(gap);
       return this.appendMore().then(() => {
+        delete this.get('gaps.after')[postId];
         this.get('stream').enumerableContentDidChange();
       });
     }
