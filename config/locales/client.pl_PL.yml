@@ -422,7 +422,6 @@ pl_PL:
         not_supported: "Powiadomienia nie są wspierane przez tę przeglądarkę. Przepraszamy."
         perm_default: "Włącz powiadomienia"
         perm_denied_btn: "Brak uprawnień"
-        perm_denied_expl: "Wyświetlanie powiadomień jest zablokowane. Użyj ustawień swojej przeglądarki, aby odblokować powiadomienia dla tej domeny."
         disable: "Wyłącz powiadomienia"
         currently_enabled: "(aktualnie włączone)"
         enable: "Włącz powiadomienia"

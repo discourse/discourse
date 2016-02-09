@@ -428,7 +428,7 @@ fr:
         not_supported: "Les notifications ne sont pas supportées avec ce navigateur. Désolé."
         perm_default: "Activer les notifications"
         perm_denied_btn: "Permission Refusée"
-        perm_denied_expl: "Vous avez refusé la permission pour les notifications. Utilisez votre navigateur pour activer les notifications, puis appuyez sur le bouton une fois terminé. (Bureau : L'icône la plus à gauche dans la barre d'adresse. Mobile : 'Info Site'.)"
+        perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les depuis les paramètres de votre navigateur."
         disable: "Désactiver les notifications"
         currently_enabled: "(activé actuellement)"
         enable: "Activer les notifications"
@@ -482,6 +482,7 @@ fr:
         groups: "Mes groupes"
         bulk_select: "Sélection des messages"
         move_to_inbox: "Déplacer dans la boîte de réception"
+        move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (peut-être que votre connexion est coupée)"
         select_all: "Sélectionner tout"
       change_password:
@@ -909,6 +910,9 @@ fr:
       moved_post: "<i title='message déplacé' class='fa fa-sign-out'></i><p><span>{{username}}</span> a déplacé {{description}}</p>"
       linked: "<i title='message lié' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge décerné' class='fa fa-certificate'></i><p>Vous avez gagné {{description}}</p>"
+      group_message_summary:
+        one: "<i title='message dans la boite de réception de groupe' class='fa fa-group'></i><p>{{count}} message dans votre boite de réception {{group_name}} </p>"
+        other: "<i title='messages dans la boite de réception de groupe' class='fa fa-group'></i><p> {{count}} messages dans votre boite de réception {{group_name}} </p>"
       alt:
         mentioned: "Mentionné par"
         quoted: "Cité par"
@@ -923,6 +927,7 @@ fr:
         moved_post: "Votre message a été déplacé par"
         linked: "Lien vers votre message"
         granted_badge: "Badge attribué"
+        group_message_summary: "Messages dans la boite de réception de groupe."
       popup:
         mentioned: '{{username}} vous a mentionné dans «{{topic}}» - {{site_title}}'
         group_mentioned: '{{username}} vous a mentionné dans «{{topic}}» - {{site_title}}'
@@ -2146,6 +2151,10 @@ fr:
             create_category: "créer une catégorie"
             block_user: "bloquer l'utilisateur"
             unblock_user: "débloquer l'utilisateur"
+            grant_admin: "Accorder les droits d'admin"
+            revoke_admin: "Révoquer les droits d'admin"
+            grant_moderation: "Accorder les droits de modération"
+            revoke_moderation: "Révoquer les droits de modération"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."

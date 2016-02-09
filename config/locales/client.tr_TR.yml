@@ -380,7 +380,6 @@ tr_TR:
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
         perm_default: "Bildirimleri Etkinleştirin"
         perm_denied_btn: "Erişim İzni Reddedildi"
-        perm_denied_expl: "Bildirimler için gerekli izne sahip değilsiniz. Bildirimleri etkinleştirmek için tarayıcınızı kullanın, işlem tamamlandığında tuşa basın. (Masaüstü: Adres çubuğunda en soldaki simge. Mobil: 'Site Bilgisi'.)"
         disable: "Bildirimleri Devre Dışı Bırakın"
         currently_enabled: "(şu anda etkin)"
         enable: "Bildirimleri Etkinleştirin"

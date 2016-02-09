@@ -404,7 +404,6 @@ ro:
         not_supported: "Notificarile nu sunt suportate in acest browser. Scuze."
         perm_default: "Activeaza notificarile"
         perm_denied_btn: "Nu se permite accesul"
-        perm_denied_expl: "Ai blocat permisia pentru notificari. Utilieaza un browser pentru a le activa, apoi apasa butonul cand este gata. (Desktop: Iconita din stanga barei de adrese. Mobil: 'site Info'.)"
         disable: "Dezactiveaza notificarile"
         currently_enabled: "(acum activat)"
         enable: "Activeaza Notificarile"

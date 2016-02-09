@@ -392,7 +392,6 @@ da:
         not_supported: "Notifikationer understøttes ikke af denne browser. Beklager."
         perm_default: "Slå notifikationer til"
         perm_denied_btn: "Tilladelse nægtet"
-        perm_denied_expl: "Du har ikke givet tilladelse til notifikationer. Brug din browser til at aktivere notifikationer og klik derefter på knappen, når du er færdig. (Computer: Ikonet længst til venstre i adresselinjen. Mobil: 'Site info'.)"
         disable: "Deaktiver notifikationer"
         currently_enabled: "(slået til)"
         enable: "Aktiver notifikationer"

@@ -391,7 +391,6 @@ pt_BR:
         not_supported: "Notificações não são suportadas nesse browser. Desculpe-nos."
         perm_default: "Habilitar Notificações"
         perm_denied_btn: "Permissão Negada"
-        perm_denied_expl: "Você negou permissões para as notificações. Utilize seu navegador para habilitar notificações, e depois, clique no botão. (Desktop: O ícone mais a esquerda da barra de endereços. Dispositivos Móveis: 'Configurações do Site')"
         disable: "Desativar Notificações"
         currently_enabled: "(atualmente ativado)"
         enable: "Ativar Notificações"
