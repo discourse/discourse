@@ -11,6 +11,10 @@
 
   {{render "composer-messages"}}
   <div class='control'>
+
+    {{#if site.mobileView}}
+    <a href class='toggle-toolbar' {{action "toggleToolbar" bubbles=false}}></a>
+    {{/if}}
     <a href class='toggler' {{action "toggle" bubbles=false}} title={{i18n 'composer.toggler'}}></a>
 
     {{#if model.viewOpen}}
@@ -20,9 +24,11 @@
 
           <div class='reply-to'>
             {{{model.actionTitle}}}
+            {{#unless site.mobileView}}
             {{#if model.whisper}}
               <span class='whisper'>({{i18n "composer.whisper"}})</span>
             {{/if}}
+            {{/unless}}
 
             {{#if canEdit}}
               {{#if showEditReason}}
@@ -85,6 +91,7 @@
                           groupsMentioned="groupsMentioned"
                           importQuote="importQuote"
                           showOptions="showOptions"
+                          showToolbar=showToolbar
                           showUploadSelector="showUploadSelector"}}
 
         {{#if currentUser}}
@@ -92,6 +99,12 @@
             {{plugin-outlet "composer-fields-below"}}
             <button {{action "save"}} tabindex="5" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n 'composer.title'}}">{{{model.saveIcon}}}{{model.saveText}}</button>
             <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
+
+            {{#if site.mobileView}}
+            {{#if model.whisper}}
+            <span class='whisper'><i class='fa fa-eye-slash'></i></span>
+            {{/if}}
+            {{/if}}
           </div>
         {{/if}}
       </div>
