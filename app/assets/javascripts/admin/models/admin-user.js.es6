@@ -402,7 +402,7 @@ const AdminUser = Discourse.User.extend({
           }
         }
       }).catch(function() {
-        AdminUser.find( user.get('username') ).then(function(u){ user.setProperties(u); });
+        AdminUser.find(user.get('id')).then(u => user.setProperties(u));
         bootbox.alert(I18n.t("admin.user.delete_failed"));
       });
     };
@@ -475,7 +475,7 @@ const AdminUser = Discourse.User.extend({
 
     if (user.get('loadedDetails')) { return Ember.RSVP.resolve(user); }
 
-    return AdminUser.find(user.get('username_lower')).then(function (result) {
+    return AdminUser.find(user.get('id')).then(result => {
       user.setProperties(result);
       user.set('loadedDetails', true);
     });
@@ -533,8 +533,8 @@ AdminUser.reopenClass({
     });
   },
 
-  find(username) {
-    return Discourse.ajax("/admin/users/" + username + ".json").then(function (result) {
+  find(user_id) {
+    return Discourse.ajax("/admin/users/" + user_id + ".json").then(result => {
       result.loadedDetails = true;
       return AdminUser.create(result);
     });
