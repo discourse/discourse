@@ -54,12 +54,10 @@ export default Ember.Controller.extend({
   similarTopicsMessage: null,
   lastSimilaritySearch: null,
   optionsVisible: false,
-
   lastValidatedAt: null,
-
   isUploading: false,
-
   topic: null,
+  showToolbar: false,
 
   _initializeSimilar: function() {
     this.set('similarTopics', []);
@@ -88,6 +86,10 @@ export default Ember.Controller.extend({
 
     toggleWhisper() {
       this.toggleProperty('model.whisper');
+    },
+
+    toggleToolbar() {
+      this.toggleProperty('showToolbar');
     },
 
     showOptions(loc) {
