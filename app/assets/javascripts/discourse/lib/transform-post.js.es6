@@ -172,9 +172,9 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
 
   const likeAction = post.likeAction;
   if (likeAction) {
-    postAtts.showLike = true;
     postAtts.liked = likeAction.acted;
     postAtts.canToggleLike = likeAction.get('canToggle');
+    postAtts.showLike = postAtts.liked || postAtts.canToggleLike;
     postAtts.likeCount = likeAction.count;
   }
 
