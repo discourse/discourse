@@ -47,14 +47,14 @@ describe Admin::UsersController do
     describe '.show' do
       context 'an existing user' do
         it 'returns success' do
-          xhr :get, :show, id: @user.username
+          xhr :get, :show, id: @user.id
           expect(response).to be_success
         end
       end
 
       context 'an existing user' do
         it 'returns success' do
-          xhr :get, :show, id: 'foobar'
+          xhr :get, :show, id: 0
           expect(response).not_to be_success
         end
       end
