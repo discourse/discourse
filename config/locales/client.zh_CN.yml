@@ -379,7 +379,6 @@ zh_CN:
         not_supported: "通知功能暂不支持该浏览器。抱歉。"
         perm_default: "启用通知"
         perm_denied_btn: "拒绝授权"
-        perm_denied_expl: "你拒绝了通知权限。在你的浏览器中允许启用通知，然后再点击按钮。（桌面：点击最左边的图标。移动设备：“站点设置”。）"
         disable: "禁用通知"
         currently_enabled: "（目前已启用）"
         enable: "启用通知"

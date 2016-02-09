@@ -538,7 +538,6 @@ ro:
     min_topic_title_length: "Minimul de caractere permis per discuție"
     max_topic_title_length: "Maximul de caractere permis per discuție"
     min_search_term_length: "Minimul de caractere permis pentru o căutare validă"
-    uncategorized_description: "Descrierea categoriei necategorisite. Lăsați liber pentru nicio descriere."
     allow_duplicate_topic_titles: "Permite discuții cu titluri duplicate sau identice."
     unique_posts_mins: "Câte minute până un utilizator poate posta iar cu același conținut"
     educate_until_posts: "Când utilizatorul începe să scrie primele (n) postări, arată panelul de instruire în spațiul pentru compunere."
@@ -863,21 +862,6 @@ ro:
         ```
         %{logs}
         ```
-    email_reject_no_account:
-      text_body_template: |
-        Ne pare rău, dar emailul trimis de dvs către %{destination} (cu titlul %{former_title}) nu a funcționat.
-
-        Nu există niciun cont corelat cu această adresă Email. Încercați să trimiteți de pe o altă adresa de email, sau contactați un membru al personalului.
-    email_reject_reply_key:
-      text_body_template: |
-        Ne pare rău, dar emailul către %{destination} (cu titlul %{former_title}) nu a funcționat.
-
-        Cheia de răspuns este ori invalidă ori nefuncționabilă, deci nu știm la ce răspunde aces email. Contactați un membru al personalului.
-    email_error_notification:
-      text_body_template: |
-        S-a semnalat o eroare la sustragerea mailurilor din serverul  POP.
-
-        Asigurați-vă că ați setat serverul POP în [setările site-ului](%{base_url}/admin/setări_de_site/categorie/email).
     too_many_spam_flags:
       subject_template: "Cont nou blocat"
       text_body_template: |

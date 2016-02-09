@@ -594,7 +594,6 @@ nb_NO:
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
-    uncategorized_description: "Beskrivelsen av denne ukategoriserte kategorien. La stå tom for ingen beskrivelse."
     allow_duplicate_topic_titles: "Tillat emner med lik, duplikat tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage en post med det samme innholdet igjen"
     educate_until_posts: "Når bruker begynner å skrive på de første (n) innleggene, vis pop-up med opplæringspanelet for nye brukere i editoren."
