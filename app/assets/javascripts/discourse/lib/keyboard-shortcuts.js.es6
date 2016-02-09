@@ -228,7 +228,7 @@ export default {
         // TODO: Use ember closure actions
         const result = topicController._actions[action].call(topicController, post);
         if (result && result.then) {
-          this.appEvents.trigger('post-stream:refresh', selectedPostId)
+          this.appEvents.trigger('post-stream:refresh', selectedPostId);
         }
       }
     }
