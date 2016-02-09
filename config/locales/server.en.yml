@@ -1263,6 +1263,8 @@ en:
       pop3_polling_username_is_empty: "You must set a 'pop3 polling username' before enabling POP3 polling."
       pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
       pop3_polling_authentication_failed: "POP3 authentication failed. Please verify your pop3 credentials."
+      reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
+      pop3_polling_disabled: "You must first enabled POP3 polling before enabling reply by email."
 
   notification_types:
     group_mentioned: "%{group_name} was mentioned in %{link}"
