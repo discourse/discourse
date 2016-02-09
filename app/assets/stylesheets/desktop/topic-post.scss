@@ -34,16 +34,6 @@ h1 .topic-statuses .topic-status i {
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 
-  .gutter {
-    .reply-new {
-      .discourse-no-touch & {
-        opacity:0;
-        transition: opacity 0.7s ease-in-out;
-      }
-      .discourse-touch & {opacity: 1;}
-    }
-  }
-
   .actions .fade-out {
      .discourse-no-touch & {
        opacity: 0.7;
@@ -55,14 +45,25 @@ h1 .topic-statuses .topic-status i {
   &:hover .actions .fade-out, .selected .actions .fade-out {
     opacity: 1;
   }
+}
 
-  &:hover .gutter, .selected .gutter {
-      .reply-new,
-      .track-link {
-        opacity:1;
+.topic-post {
+  .gutter {
+    .reply-new {
+      .discourse-no-touch & {
+        opacity:0;
+        transition: opacity 0.7s ease-in-out;
       }
+      .discourse-touch & {opacity: 1;}
+    }
   }
 
+  &:hover .gutter, .selected .gutter {
+    .reply-new,
+    .track-link {
+      opacity:1;
+    }
+  }
 }
 
 section.post-menu-area {
