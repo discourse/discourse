@@ -1,5 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import transformPost from 'discourse/lib/transform-post';
+import { Placeholder } from 'discourse/lib/posts-with-placeholders';
 
 const DAY = 1000 * 60 * 60 * 24;
 
@@ -21,6 +22,12 @@ export default createWidget('post-stream', {
 
     for (let i=0; i<postArray.length; i++) {
       const post = postArray[i];
+
+      if (post instanceof Placeholder) {
+        result.push(this.attach('post-placeholder'));
+        continue;
+      }
+
       const nextPost = (i < postArray.length - 1) ? postArray[i+i] : null;
 
       const transformed = transformPost(this.currentUser, this.site, post, prevPost, nextPost);

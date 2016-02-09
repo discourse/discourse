@@ -144,6 +144,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       if (lastLoadedPost && lastLoadedPost === post) {
         postStream.appendMore().then(() => refresh());
+        // show loading stuff
+        refresh();
       }
     },
 
