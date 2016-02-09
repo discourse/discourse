@@ -268,6 +268,15 @@ describe UserNotifications do
     end
   end
 
+  # The parts of emails that are derived from templates are translated
+  shared_examples "sets user locale" do
+    context "set locale for translating templates" do
+      it "sets the locale" do
+        expects_build_with(has_key(:locale))
+      end
+    end
+  end
+
   shared_examples "notification email building" do
     let(:post) { Fabricate(:post, user: user) }
     let(:mail_type) { "user_#{notification_type}"}
@@ -341,6 +350,7 @@ describe UserNotifications do
     include_examples "notification email building" do
       let(:notification_type) { :mentioned }
       include_examples "supports reply by email"
+      include_examples "sets user locale"
     end
   end
 
@@ -348,6 +358,7 @@ describe UserNotifications do
     include_examples "notification email building" do
       let(:notification_type) { :replied }
       include_examples "supports reply by email"
+      include_examples "sets user locale"
     end
   end
 
@@ -355,6 +366,7 @@ describe UserNotifications do
     include_examples "notification email building" do
       let(:notification_type) { :quoted }
       include_examples "supports reply by email"
+      include_examples "sets user locale"
     end
   end
 
@@ -362,6 +374,7 @@ describe UserNotifications do
     include_examples "notification email building" do
       let(:notification_type) { :posted }
       include_examples "supports reply by email"
+      include_examples "sets user locale"
     end
   end
 
@@ -369,6 +382,7 @@ describe UserNotifications do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_private_message }
       include_examples "no reply by email"
+      include_examples "sets user locale"
     end
   end
 
@@ -376,7 +390,44 @@ describe UserNotifications do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
       include_examples "no reply by email"
+      include_examples "sets user locale"
     end
   end
 
+  # notification emails derived from templates are translated into the user's locale
+  shared_examples "notification derived from template" do
+    let(:user) { Fabricate(:user, locale: locale) }
+    let(:mail_type) { mail_type }
+    let(:notification) { Fabricate(:notification, user: user) }
+  end
+
+  describe "notifications from template" do
+
+    context "user locale has been set" do
+
+      %w(signup signup_after_approval authorize_email forgot_password admin_login account_created).each do |mail_type|
+        include_examples "notification derived from template" do
+          SiteSetting.default_locale = "en"
+          let(:locale) { "fr" }
+          let(:mail_type) { mail_type }
+          it "sets the locale" do
+            expects_build_with(has_entry(:locale, "fr"))
+          end
+        end
+      end
+    end
+
+    context "user locale has not been set" do
+      %w(signup signup_after_approval authorize_email forgot_password admin_login account_created).each do |mail_type|
+        include_examples "notification derived from template" do
+          SiteSetting.default_locale = "en"
+          let(:locale) { nil }
+          let(:mail_type) { mail_type }
+          it "sets the locale" do
+            expects_build_with(has_entry(:locale, nil))
+          end
+        end
+      end
+    end
+  end
 end
