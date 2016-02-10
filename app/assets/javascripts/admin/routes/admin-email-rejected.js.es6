@@ -5,9 +5,9 @@ export default AdminEmailIncomings.extend({
   status: "rejected",
 
   actions: {
-    showRawEmail(incomingEmailId) {
-      showModal('raw-email');
-      this.controllerFor('raw_email').loadIncomingRawEmail(incomingEmailId);
+    showIncomingEmail(id) {
+      showModal('modals/admin-incoming-email');
+      this.controllerFor("modals/admin-incoming-email").load(id);
     }
   }
 

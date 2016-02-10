@@ -57,6 +57,13 @@ class Admin::EmailController < Admin::AdminController
     render json: { raw_email: incoming_email.raw }
   end
 
+  def incoming
+    params.require(:id)
+    incoming_email = IncomingEmail.find(params[:id].to_i)
+    serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
+    render_json_dump(serializer)
+  end
+
   private
 
   def filter_email_logs(email_logs, params)

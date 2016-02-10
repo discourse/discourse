@@ -14,6 +14,10 @@ IncomingEmail.reopenClass({
     return this._super(attrs);
   },
 
+  find(id) {
+    return Discourse.ajax(`/admin/email/incoming/${id}.json`);
+  },
+
   findAll(filter, offset) {
     filter = filter || {};
     offset = offset || 0;

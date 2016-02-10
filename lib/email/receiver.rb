@@ -215,7 +215,7 @@ module Email
     end
 
     def find_related_post
-      message_ids = [@mail.in_reply_to, extract_references]
+      message_ids = [@mail.in_reply_to, Email::Receiver.extract_references(@mail.references)]
       message_ids.flatten!
       message_ids.select!(&:present?)
       message_ids.uniq!
@@ -226,11 +226,11 @@ module Email
           .first
     end
 
-    def extract_references
-      if Array === @mail.references
-        @mail.references
-      elsif @mail.references.present?
-        @mail.references.split(/[\s,]/).map { |r| r.sub(/^</, "").sub(/>$/, "") }
+    def self.extract_references(references)
+      if Array === references
+        references
+      elsif references.present?
+        references.split(/[\s,]/).map { |r| r.sub(/^</, "").sub(/>$/, "") }
       end
     end
 

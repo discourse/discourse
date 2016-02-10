@@ -50,6 +50,18 @@ en:
   emails:
     incoming:
       default_subject: "Incoming email from %{email}"
+      errors:
+        empty_email_error: "Happens when the raw mail we received was blank."
+        no_message_id_error: "Happens when the mail has no 'Message-Id' header."
+        auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
+        no_body_detected_error: "Happens when we couldn't extract a body and there was no attachments."
+        inactive_user_error: "Happens when the sender is not active."
+        bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
+        strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
+        insufficient_trust_level_error: "Happens when a use tried to create a new topic in a category they don't have the required trust level for."
+        reply_user_not_matching_error: "Happens when a reply came in from a different email address the notification was sent to."
+        topic_not_found_error: "Happens when a reply came in but the related topic has been deleted."
+        topic_closed_error: "Happens when a reply came in but the related topic has been closed."
 
   errors: &errors
     format: ! '%{attribute} %{message}'
