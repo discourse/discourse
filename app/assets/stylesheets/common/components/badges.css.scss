@@ -25,6 +25,7 @@
   &.bar { //bar category style
     line-height: 1.25;
     margin-right: 5px;
+    display: inline-flex;
 
     span.badge-category {
       color: $primary !important;
@@ -128,6 +129,10 @@
       }
     }
   }
+}
+
+.autocomplete .badge-wrapper {
+  max-width: 230px;
 }
 
 // Category badge dropdown
