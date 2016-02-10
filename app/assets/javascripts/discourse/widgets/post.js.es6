@@ -224,8 +224,12 @@ createWidget('expand-post-button', {
 createWidget('post-contents', {
   buildKey: attrs => `post-contents-${attrs.id}`,
 
+  defaultState() {
+    return { expandedFirstPost: false, repliesBelow: [] };
+  },
+
   buildClasses(attrs) {
-    const classes = [];
+    const classes = ['regular'];
     if (!this.state.repliesShown) {
       classes.push('contents');
     }
@@ -235,43 +239,23 @@ createWidget('post-contents', {
     return classes;
   },
 
-  html(attrs) {
-    return new PostCooked(attrs);
-  }
-});
-
-createWidget('post-body', {
-  tagName: 'div.topic-body',
-  buildKey: attrs => `topic-body-${attrs.id}`,
-
-  defaultState() {
-    return { expandedFirstPost: false, repliesBelow: [] };
-  },
-
   html(attrs, state) {
-    const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
-    const regular = [this.attach('post-contents', attrs, extraState)];
+    const result = [new PostCooked(attrs)];
 
     if (attrs.cooked_hidden) {
-      regular.push(this.attach('expand-hidden', attrs));
+      result.push(this.attach('expand-hidden', attrs));
     }
 
     if (!state.expandedFirstPost && attrs.expandablePost) {
-      regular.push(this.attach('expand-post-button', attrs));
+      result.push(this.attach('expand-post-button', attrs));
     }
 
-    regular.push(this.attach('post-menu', attrs, extraState));
+    const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
+    result.push(this.attach('post-menu', attrs, extraState));
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
-      regular.push(h('section.embedded-posts.bottom',
-                   repliesBelow.map(p => this.attach('embedded-post', p))));
-    }
-
-    const result = [this.attach('post-meta-data', attrs), h('div.regular', regular)];
-    result.push(this.attach('actions-summary', attrs));
-    if (attrs.showTopicMap) {
-      result.push(this.attach('topic-map', attrs));
+      result.push(h('section.embedded-posts.bottom', repliesBelow.map(p => this.attach('embedded-post', p))));
     }
 
     return result;
@@ -291,6 +275,22 @@ createWidget('post-body', {
   expandFirstPost() {
     const post = this.findAncestorModel();
     return post.expand().then(() => this.state.expandedFirstPost = true);
+  }
+});
+
+createWidget('post-body', {
+  tagName: 'div.topic-body',
+
+  html(attrs) {
+    const postContents = this.attach('post-contents', attrs);
+    const result = [this.attach('post-meta-data', attrs), postContents];
+
+    result.push(this.attach('actions-summary', attrs));
+    if (attrs.showTopicMap) {
+      result.push(this.attach('topic-map', attrs));
+    }
+
+    return result;
   }
 });
 
