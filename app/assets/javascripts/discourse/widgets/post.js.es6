@@ -315,7 +315,7 @@ createWidget('post-article', {
   },
 
   html(attrs, state) {
-    const rows = [h('a.tabLoc')];
+    const rows = [h('a.tabLoc', { attributes: { href: ''} })];
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map(p => this.attach('embedded-post', p, { state: { above: true } }));
       rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
