@@ -131,8 +131,10 @@
   }
 }
 
-.autocomplete .badge-wrapper {
-  max-width: 230px;
+.autocomplete, td.category {
+  .badge-wrapper {
+    max-width: 230px;
+  }
 }
 
 // Category badge dropdown
