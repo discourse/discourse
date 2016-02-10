@@ -1,6 +1,13 @@
 import { isValidLink } from 'discourse/lib/click-track';
 import { number } from 'discourse/lib/formatter';
 
+const _decorators = [];
+
+// Don't call this directly: use `plugin-api/decorateCooked`
+export function addDecorator(cb) {
+  _decorators.push(cb);
+}
+
 export default class PostCooked {
 
   constructor(attrs) {
@@ -21,6 +28,8 @@ export default class PostCooked {
     this._showLinkCounts($html);
     this._fixImageSizes($html);
     this._applySearchHighlight($html);
+
+    _decorators.forEach(cb => cb($html));
     return $html[0];
   }
 
