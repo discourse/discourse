@@ -226,7 +226,7 @@ ol.category-breadcrumb {
 }
 
 .fa-thumb-tack.unpinned {
-  @include fa-icon-rotate(315deg, 1);
+  @include fa-icon-rotate(180deg, 1);
   color: $primary;
 }
 
