@@ -142,7 +142,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
 
-      if (lastLoadedPost && lastLoadedPost === post) {
+      if (lastLoadedPost && lastLoadedPost === post && postStream.get('canAppendMore')) {
         postStream.appendMore().then(() => refresh());
         // show loading stuff
         refresh();
