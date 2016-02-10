@@ -447,6 +447,18 @@ describe SiteSettingExtension do
       end
     end
 
+    context "with blank global setting" do
+      before do
+        GlobalSetting.stubs(:nada).returns('')
+        settings.setting(:nada, 'nothing', shadowed_by_global: true)
+        settings.refresh!
+      end
+
+      it "should return default cause nothing is set" do
+        expect(settings.nada).to eq('nothing')
+      end
+    end
+
     context "with global setting" do
       before do
         GlobalSetting.stubs(:trout_api_key).returns('purringcat')
