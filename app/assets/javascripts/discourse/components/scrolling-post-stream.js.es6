@@ -77,7 +77,7 @@ export default MountWidget.extend({
     const posts = this.posts;
     if (onscreen.length) {
 
-      const refresh = () => this.queueRerender();
+      const refresh = cb => this.queueRerender(cb);
       const first = posts.objectAt(onscreen[0]);
       if (this._topVisible !== first) {
         this._topVisible = first;
@@ -89,10 +89,8 @@ export default MountWidget.extend({
         const distToElement = elemPos ? $body.scrollTop() - elemPos.top : 0;
 
         const topRefresh = () => {
-          refresh();
-
-          Ember.run.next(() => {
-            const $refreshedElem = $(elemId);
+          refresh(() => {
+            const $refreshedElem = $(`#${elemId}`);
 
             // Quickly going back might mean the element is destroyed
             const position = $refreshedElem.position();

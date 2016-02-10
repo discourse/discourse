@@ -6,6 +6,7 @@ export default Ember.Component.extend({
   _rootNode: null,
   _timeout: null,
   _widgetClass: null,
+  _afterRender: null,
 
   init() {
     this._super();
@@ -24,7 +25,11 @@ export default Ember.Component.extend({
     Ember.run.cancel(this._timeout);
   },
 
-  queueRerender() {
+  queueRerender(callback) {
+    if (callback && !this._afterRender) {
+      this._afterRender = callback;
+    }
+
     Ember.run.scheduleOnce('render', this, this.rerenderWidget);
   },
 
@@ -41,6 +46,11 @@ export default Ember.Component.extend({
       this._rootNode = patch(this._rootNode, patches);
       this._tree = newTree;
       console.log('render: ', new Date().getTime() - t0);
+
+      if (this._afterRender) {
+        this._afterRender();
+        this._afterRender = null;
+      }
     }
   }
 
