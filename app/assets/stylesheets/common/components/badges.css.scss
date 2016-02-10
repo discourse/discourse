@@ -130,30 +130,6 @@
   }
 }
 
-@mixin cooked-badge-bullet($length, $offset:0px) {
-  .badge-wrapper.bullet {
-    span {
-      position: relative;
-
-      &.badge-category-bg {
-        width: $length;
-        height: $length;
-        top: $offset;
-      }
-
-      &.badge-category-parent-bg {
-        width: $length / 2;
-        height: $length;
-        top: $offset;
-
-        & + .badge-category-bg {
-          width: $length / 2;
-        }
-      }
-    }
-  }
-}
-
 // Category badge dropdown
 // --------------------------------------------------
 
