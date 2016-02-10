@@ -45,7 +45,11 @@ export default createWidget('post-small-action', {
       }));
     }
 
-    contents.push(avatarFor.call(this, 'small', { template: attrs.avatar_template, username: attrs.avatar }));
+    contents.push(avatarFor.call(this, 'small', {
+      template: attrs.avatar_template,
+      username: attrs.avatar,
+      url: attrs.usernameUrl
+    }));
 
     const description = actionDescriptionHtml(attrs.actionCode, attrs.created_at, attrs.actionCodeWho);
     contents.push(new RawHtml({ html: `<p>${description}</p>` }));
