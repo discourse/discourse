@@ -29,7 +29,7 @@ export default class PostCooked {
     this._fixImageSizes($html);
     this._applySearchHighlight($html);
 
-    // _decorators.forEach(cb => cb($html));
+    _decorators.forEach(cb => cb($html));
     return $html[0];
   }
 
