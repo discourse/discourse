@@ -17,6 +17,11 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
+    <script>
+      window.EmberENV = window.EmberENV || {};
+      window.EmberENV['FORCE_JQUERY'] = true;
+    </script>
+
     <%= script "preload_store" %>
     <%= script "locales/#{I18n.locale}" %>
     <%= script "ember_jquery" %>
