@@ -28,7 +28,7 @@ export default createWidget('post-stream', {
         continue;
       }
 
-      const nextPost = (i < postArray.length - 1) ? postArray[i+i] : null;
+      const nextPost = (i < postArray.length - 1) ? postArray[i+1] : null;
 
       const transformed = transformPost(this.currentUser, this.site, post, prevPost, nextPost);
       transformed.canCreatePost = attrs.canCreatePost;
