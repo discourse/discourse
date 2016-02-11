@@ -26,6 +26,10 @@ const icons = {
 export default createWidget('post-small-action', {
   tagName: 'div.small-action.onscreen-post.clearfix',
 
+  buildClasses(attrs) {
+    if (attrs.deleted) { return 'deleted'; }
+  },
+
   html(attrs) {
     const contents = [];
 

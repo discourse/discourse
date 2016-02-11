@@ -588,9 +588,13 @@ a.mention, a.mention-group {
 }
 
 .deleted {
-  .topic-body, .small-action {
+  .topic-body {
     background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
   }
+}
+
+.small-action.deleted {
+  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
 }
 
 #share-link {
