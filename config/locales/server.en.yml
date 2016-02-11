@@ -56,6 +56,7 @@ en:
         auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
         no_body_detected_error: "Happens when we couldn't extract a body and there was no attachments."
         inactive_user_error: "Happens when the sender is not active."
+        blocked_user_error: "Happens when the sender has been blocked."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
         insufficient_trust_level_error: "Happens when a use tried to create a new topic in a category they don't have the required trust level for."
@@ -1794,6 +1795,13 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your account associated with this email address is not activated. Please activate your account before sending emails in.
+
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Email issue -- Blocked User"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your account associated with this email address has been blocked.
 
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] Email issue -- Reply User Not Matching"
