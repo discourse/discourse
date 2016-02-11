@@ -3,15 +3,14 @@
 }
 
 .time-gap {
-  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   color: lighten($primary, 50%);
   padding-bottom: 3px;
-  margin-bottom: 10px;
   text-transform: uppercase;
   font-weight: bold;
-  .topic-avatar {
-    margin: 0 5px 0 10px;
-  }
+}
+.small-action.time-gap .topic-avatar {
+  margin-top: 5px;
 }
 
 .topic-post {
@@ -526,9 +525,6 @@ span.highlighted {
   margin: 0;
 }
 
-.small-action.time-gap .topic-avatar {
-  margin-top: -5px;
-}
 
 .gap.jagged-border {
   margin-left: -10px;
