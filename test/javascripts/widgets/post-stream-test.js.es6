@@ -55,7 +55,7 @@ postStreamTest('deleted posts', {
   posts() {
     const topic = Topic.create({ details: { created_by: { id: 123 } } });
     return [
-      Post.create({ topic, id: 1, post_number: 1, deleted_at: new Date().getTime() }),
+      Post.create({ topic, id: 1, post_number: 1, deleted_at: new Date().toString() }),
     ];
   },
 
