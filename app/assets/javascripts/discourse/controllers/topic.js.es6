@@ -308,7 +308,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (post) {
         return post.toggleBookmark().catch(popupAjaxError);
       } else {
-        return this.get("model").toggleBookmark();
+        return this.get("model").toggleBookmark().then(changedIds => {
+          if (!changedIds) { return; }
+          changedIds.forEach(id => this.appEvents.trigger('post-stream:refresh', id));
+        });
       }
     },
 
