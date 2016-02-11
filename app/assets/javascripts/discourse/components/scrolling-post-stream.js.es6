@@ -124,6 +124,7 @@ export default MountWidget.extend({
     this._super();
     const debouncedScroll = () => Ember.run.debounce(this, this._scrollTriggered, 10);
 
+    this.appEvents.on('post-stream:refresh', debouncedScroll);
     $(document).bind('touchmove.post-stream', debouncedScroll);
     $(window).bind('scroll.post-stream', debouncedScroll);
     this._scrollTriggered();
@@ -152,6 +153,7 @@ export default MountWidget.extend({
     this.appEvents.off('post-stream:refresh');
     this.$().off('mouseenter.post-stream');
     this.$().off('mouseleave.post-stream');
+    this.appEvents.off('post-stream:refresh');
   }
 
 });
