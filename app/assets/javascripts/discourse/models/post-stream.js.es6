@@ -429,12 +429,15 @@ export default RestModel.extend({
   removePosts(posts) {
     if (Ember.isEmpty(posts)) { return; }
 
-    const postIds = posts.map(p => p.get('id'));
-    const identityMap = this._identityMap;
+    this.get('postsWithPlaceholders').refreshAll(() => {
+      const allPosts = this.get('posts');
+      const postIds = posts.map(p => p.get('id'));
+      const identityMap = this._identityMap;
 
-    this.get('stream').removeObjects(postIds);
-    this.get('posts').removeObjects(posts);
-    postIds.forEach(id => delete identityMap[id]);
+      this.get('stream').removeObjects(postIds);
+      allPosts.removeObjects(posts);
+      postIds.forEach(id => delete identityMap[id]);
+    });
   },
 
   // Returns a post from the identity map if it's been inserted.
