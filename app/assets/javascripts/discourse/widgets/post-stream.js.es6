@@ -7,7 +7,6 @@ const DAY = 1000 * 60 * 60 * 24;
 export default createWidget('post-stream', {
   tagName: 'div.post-stream',
 
-
   html(attrs) {
     const posts = attrs.posts || [];
     const postArray = posts.toArray();
