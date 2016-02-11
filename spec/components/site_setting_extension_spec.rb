@@ -19,7 +19,7 @@ describe SiteSettingExtension do
       end
     end
   end
-  
+
   let :provider_local do
     SiteSettings::LocalProcessProvider.new
   end
@@ -139,6 +139,17 @@ describe SiteSettingExtension do
       it "can be overridden with set" do
         settings.set("test_setting", 12)
         expect(settings.test_setting).to eq(12)
+      end
+
+      it "should publish changes to clients" do
+        settings.setting("test_setting", 100)
+        settings.client_setting("test_setting")
+
+        messages = MessageBus.track_publish do
+          settings.test_setting = 88
+        end
+
+        expect(messages.map(&:channel).include?('/client_settings')).to eq(true)
       end
     end
   end
