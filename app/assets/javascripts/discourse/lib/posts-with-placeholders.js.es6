@@ -36,6 +36,11 @@ export default Ember.Object.extend(Ember.Array, {
     this._changeArray(cb, this.get('posts.length') - 1, 1, 0);
   },
 
+  refreshAll(cb) {
+    const length = this.get('posts.length');
+    this._changeArray(cb, 0, length, length);
+  },
+
   appending(postIds) {
     this._changeArray(() => {
       const appendingIds = this._appendingIds;
