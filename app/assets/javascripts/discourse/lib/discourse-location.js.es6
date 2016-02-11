@@ -31,7 +31,12 @@ const DiscourseLocation = Ember.Object.extend({
     @method initState
   */
   initState() {
-    set(this, 'history', get(this, 'history') || window.history);
+    const history = get(this, 'history') || window.history;
+    if (history && history.scrollRestoration) {
+      history.scrollRestoration = "manual";
+    }
+
+    set(this, 'history', history);
 
     let url = this.formatURL(this.getURL());
     const loc = get(this, 'location');
