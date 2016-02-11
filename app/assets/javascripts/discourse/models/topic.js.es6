@@ -225,26 +225,36 @@ const Topic = RestModel.extend({
   },
 
   toggleBookmark() {
-    if (this.get("bookmarking")) { return; }
+    if (this.get('bookmarking')) { return Ember.RSVP.Promise.resolve(); }
     this.set("bookmarking", true);
 
-    const self = this,
-          stream = this.get('postStream'),
-          posts = Em.get(stream, 'posts'),
-          firstPost = posts && posts[0] && posts[0].get('post_number') === 1 && posts[0],
-          bookmark = !this.get('bookmarked'),
-          path = bookmark ? '/bookmark' : '/remove_bookmarks';
+    const stream = this.get('postStream');
+    const posts = Em.get(stream, 'posts');
+    const firstPost = posts && posts[0] && posts[0].get('post_number') === 1 && posts[0];
+    const bookmark = !this.get('bookmarked');
+    const path = bookmark ? '/bookmark' : '/remove_bookmarks';
 
-    const toggleBookmarkOnServer = function() {
-      return Discourse.ajax('/t/' + self.get('id') + path, {
-        type: 'PUT',
-      }).then(function() {
-        self.toggleProperty('bookmarked');
-        if (bookmark && firstPost) { firstPost.set('bookmarked', true); }
-        if (!bookmark && posts) {
-          posts.forEach((post) => post.get('bookmarked') && post.set('bookmarked', false));
+    const toggleBookmarkOnServer = () => {
+      return Discourse.ajax(`/t/${this.get('id')}${path}`, { type: 'PUT' }).then(() => {
+        this.toggleProperty('bookmarked');
+        if (bookmark && firstPost) {
+          firstPost.set('bookmarked', true);
+          return [firstPost.id];
         }
-      }).catch(function(error) {
+        if (!bookmark && posts) {
+
+          const updated = [];
+          posts.forEach(post => {
+            if (post.get('bookmarked')) {
+              post.set('bookmarked', false);
+              updated.push(post.get('id'));
+            }
+          });
+          return updated;
+        }
+
+        return [];
+      }).catch(error => {
         let showGenericError = true;
         if (error && error.responseText) {
           try {
@@ -258,28 +268,26 @@ const Topic = RestModel.extend({
         }
 
         throw error;
-      }).finally(function() {
-        self.set("bookmarking", false);
-      });
+      }).finally(() => this.set('bookmarking', false));
     };
 
-    let unbookmarkedPosts = [];
+    const unbookmarkedPosts = [];
     if (!bookmark && posts) {
-      posts.forEach((post) => post.get('bookmarked') && unbookmarkedPosts.push(post));
+      posts.forEach(post => post.get('bookmarked') && unbookmarkedPosts.push(post));
     }
 
-    if (unbookmarkedPosts.length > 1) {
-      return bootbox.confirm(
-        I18n.t("bookmarks.confirm_clear"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        function (confirmed) {
-          if (confirmed) { return toggleBookmarkOnServer(); }
-        }
-      );
-    } else {
-      return toggleBookmarkOnServer();
-    }
+    return new Ember.RSVP.Promise(resolve => {
+      if (unbookmarkedPosts.length > 1) {
+        bootbox.confirm(
+          I18n.t("bookmarks.confirm_clear"),
+          I18n.t("no_value"),
+          I18n.t("yes_value"),
+          confirmed => confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
+        );
+      } else {
+        toggleBookmarkOnServer().then(resolve);
+      }
+    });
   },
 
   createInvite(emailOrUsername, groupNames) {
