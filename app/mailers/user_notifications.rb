@@ -275,7 +275,7 @@ class UserNotifications < ActionMailer::Base
     context_posts = context_posts.to_a
 
     if context_posts.present?
-      context << "---\n*#{I18n.t('user_notifications.previous_discussion')}*\n"
+      context << "-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
         context << email_post_markdown(cp)
       end
