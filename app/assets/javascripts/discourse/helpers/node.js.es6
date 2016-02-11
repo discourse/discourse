@@ -5,7 +5,13 @@ import { number } from 'discourse/lib/formatter';
 export function dateNode(dt) {
   if (typeof dt === "string") { dt = new Date(dt); }
   if (dt) {
-    return h('span', { attributes: { title: longDate(dt) } }, relativeAge(dt));
+    const attributes = {
+      title: longDate(dt),
+      'data-time': dt.getTime(),
+      'data-format': 'tiny'
+    };
+
+    return h('span.relative-date', { attributes }, relativeAge(dt));
   }
 }
 
