@@ -151,7 +151,7 @@ module SiteSettingExtension
   # just like a setting, except that it is available in javascript via DiscourseSession
   def client_setting(name, default = nil, opts = {})
     setting(name, default, opts)
-    client_settings << name
+    client_settings << name.to_sym
   end
 
   def settings_hash
