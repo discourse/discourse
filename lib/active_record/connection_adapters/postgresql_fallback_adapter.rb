@@ -22,12 +22,12 @@ class PostgreSQLFallbackHandler
 
     Thread.new do
       begin
-        logger.info "#{self.class}: Checking master server..."
+        logger.warn "#{self.class}: Checking master server..."
         connection = ActiveRecord::Base.postgresql_connection(config)
 
         if connection.active?
           connection.disconnect!
-          logger.info "#{self.class}: Master server is active. Reconnecting..."
+          logger.warn "#{self.class}: Master server is active. Reconnecting..."
           ActiveRecord::Base.establish_connection(config)
           Discourse.disable_readonly_mode
           @master = true
