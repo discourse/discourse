@@ -280,6 +280,7 @@ export default Ember.Controller.extend({
         self.send('postWasEnqueued', result.responseJson);
         self.destroyDraft();
         self.close();
+        self.appEvents.trigger('post-stream:refresh');
         return result;
       }
 
