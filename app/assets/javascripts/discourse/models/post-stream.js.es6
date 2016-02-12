@@ -363,7 +363,6 @@ export default RestModel.extend({
 
   // Commit the post we staged. Call this after a save succeeds.
   commitPost(post) {
-
     if (this.get('topic.id') === post.get('topic_id')) {
       if (this.get('loadedAllPosts')) {
         this.appendPost(post);
