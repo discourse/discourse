@@ -62,6 +62,7 @@ class UserNotifications < ActionMailer::Base
     @site_name = SiteSetting.email_prefix.presence || SiteSetting.title
 
     @header_color = ColorScheme.hex_for_name('header_background')
+    @anchor_color = ColorScheme.hex_for_name('tertiary')
     @last_seen_at = short_date(@user.last_seen_at || @user.created_at)
 
     # A list of topics to show the user
