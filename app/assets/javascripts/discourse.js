@@ -161,7 +161,9 @@ function methodMissing() {
                "and your plugin needs to be updated.");
 };
 
-['reopen', 'registerButton'].forEach(function(m) { RemovedObject.prototype[m] = methodMissing; });
+Discourse.RemovedObject = RemovedObject;
+
+['reopen', 'registerButton', 'on', 'off'].forEach(function(m) { RemovedObject.prototype[m] = methodMissing; });
 
 ['discourse/views/post', 'discourse/components/post-menu'].forEach(function(moduleName) {
   define(moduleName, [], function() { return new RemovedObject(moduleName); });

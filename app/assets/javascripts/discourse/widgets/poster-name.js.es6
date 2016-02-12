@@ -6,6 +6,11 @@ function sanitizeName(name){
   return name.toLowerCase().replace(/[\s_-]/g,'');
 }
 
+const _callbacks = [];
+export function addPosterIcon(cb) {
+  _callbacks.push(cb);
+}
+
 export default createWidget('poster-name', {
   tagName: 'div.names.trigger-user-card',
 
@@ -56,6 +61,25 @@ export default createWidget('poster-name', {
       contents.push(h('span.user-title', titleContents));
     }
 
+    const cfs = attrs.userCustomFields;
+    if (cfs) {
+      _callbacks.forEach(cb => {
+        const result = cb(cfs);
+        if (result) {
+
+          let iconBody = iconNode(result.icon);
+          if (result.url) {
+            iconBody = h('a', { attributes: { href: result.url } }, iconBody);
+          }
+
+          contents.push(h('span',
+                         { className: result.className,
+                           attributes: { title: result.title }
+                         },
+                         iconBody));
+        }
+      });
+    }
     return contents;
   }
 });
