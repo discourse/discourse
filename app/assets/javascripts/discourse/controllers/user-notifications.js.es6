@@ -7,6 +7,8 @@ export default Ember.ArrayController.extend({
 
   showDismissButton: Ember.computed.gt('user.total_unread_notifications', 0),
 
+  currentPath: Em.computed.alias('controllers.application.currentPath'),
+
   actions: {
     resetNew: function() {
       Discourse.ajax('/notifications/mark-read', { method: 'PUT' }).then(() => {
