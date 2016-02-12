@@ -6,7 +6,8 @@ import User from 'discourse/models/user';
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   userActionType: null,
-  needs: ['user-notifications', 'user-topics-list'],
+  needs: ['application','user-notifications', 'user-topics-list'],
+  currentPath: Em.computed.alias('controllers.application.currentPath'),
 
   @computed("content.username")
   viewingSelf(username) {
