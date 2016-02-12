@@ -1,6 +1,7 @@
 import { iconNode } from 'discourse/helpers/fa-icon';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import RawHtml from 'discourse/widgets/raw-html';
 
 const MAX_GUTTER_LINKS = 5;
 
@@ -28,7 +29,7 @@ export default createWidget('post-gutter', {
       let title = l.title;
       if (title && !seenTitles[title]) {
         seenTitles[title] = true;
-        const linkBody = [Discourse.Emoji.unescape(title)];
+        const linkBody = [new RawHtml({ html: `<span>${Discourse.Emoji.unescape(title)}</span>` })];
         if (l.clicks) {
           linkBody.push(h('span.badge.badge-notification.clicks', l.clicks.toString()));
         }
