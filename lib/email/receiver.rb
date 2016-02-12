@@ -143,7 +143,7 @@ module Email
     end
 
     def previous_replies_regex
-      @previous_replies_regex ||= /^---\n\*#{I18n.t("user_notifications.previous_discussion")}\*\n/im
+      @previous_replies_regex ||= /^--[- ]\n\*#{I18n.t("user_notifications.previous_discussion")}\*\n/im
     end
 
     def trim_discourse_markers(reply)
