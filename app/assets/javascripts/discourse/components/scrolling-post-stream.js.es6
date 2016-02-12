@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import { keyDirty } from 'discourse/widgets/widget';
 import MountWidget from 'discourse/components/mount-widget';
 
@@ -129,6 +130,17 @@ export default MountWidget.extend({
     $(window).bind('scroll.post-stream', debouncedScroll);
     this._scrollTriggered();
 
+    this.appEvents.on('post-stream:posted', staged => {
+      const disableJumpReply = this.currentUser.get('disable_jump_reply');
+
+      this.queueRerender(() => {
+        if (staged && !disableJumpReply) {
+          const postNumber = staged.get('post_number');
+          DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
+        }
+      });
+    });
+
     this.$().on('mouseenter.post-stream', 'button.widget-button', e => {
       $('button.widget-button').removeClass('d-hover');
       $(e.target).addClass('d-hover');
@@ -154,6 +166,7 @@ export default MountWidget.extend({
     this.$().off('mouseenter.post-stream');
     this.$().off('mouseleave.post-stream');
     this.appEvents.off('post-stream:refresh');
+    this.appEvents.off('post-stream:posted');
   }
 
 });
