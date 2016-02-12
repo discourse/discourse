@@ -1,11 +1,13 @@
-import { decorateCooked } from 'discourse/lib/plugin-api';
 import highlightSyntax from 'discourse/lib/highlight-syntax';
 import lightbox from 'discourse/lib/lightbox';
+import { getPluginApi } from 'discourse/lib/plugin-api';
 
 export default {
   name: "post-decorations",
-  initialize: function(container) {
-    decorateCooked(container, highlightSyntax);
-    decorateCooked(container, lightbox);
+  initialize() {
+    const api = getPluginApi('0.1');
+
+    api.decorateCooked(highlightSyntax);
+    api.decorateCooked(lightbox);
   }
 };
