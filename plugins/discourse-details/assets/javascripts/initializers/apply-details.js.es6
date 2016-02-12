@@ -1,10 +1,11 @@
-import { decorateCooked } from "discourse/lib/plugin-api";
+import { getPluginApi } from 'discourse/lib/plugin-api';
 
 export default {
   name: "apply-details",
 
-  initialize(container) {
-    decorateCooked(container, $elem => $("details", $elem).details());
+  initialize() {
+    const api = getPluginApi('0.1');
+    api.decorateCooked($elem => $("details", $elem).details());
   }
 
 };
