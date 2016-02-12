@@ -1,6 +1,6 @@
 
 <section class='user-navigation'>
-  <ul class='notification-list action-list nav-stacked'>
+  {{#mobile-nav class='notifications-nav' desktopClass='notification-list action-list nav-stacked' currentPath=currentPath}}
     {{#if model}}
     <li class='no-glyph'>
       {{#link-to 'userNotifications.index'}}{{i18n 'user.filters.all'}}{{/link-to}}
@@ -19,7 +19,7 @@
     </li>
     <li>{{#link-to 'userNotifications.mentions'}}<i class="glyph fa fa-at"></i>{{i18n 'user_action_groups.7'}}{{/link-to}}</li>
     <li>{{#link-to 'userNotifications.edits'}}<i class="glyph fa fa-pencil"></i>{{i18n 'user_action_groups.11'}}{{/link-to}}</li>
-  </ul>
+    {{/mobile-nav}}
 </section>
 
 <section class='user-right'>
