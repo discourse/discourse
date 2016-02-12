@@ -96,6 +96,7 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
   postAtts.linkCounts = post.link_counts;
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
+  postAtts.userCustomFields = post.user_custom_fields;
 
   const showPMMap = topic.archetype === 'private_message' && post.post_number === 1;
   if (showPMMap) {
