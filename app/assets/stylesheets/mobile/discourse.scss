@@ -126,6 +126,7 @@ h2#site-text-logo
     padding: 8px 10px;
     height: 100%;
     width: 100%;
+    box-sizing: border-box;
     display: block;
   }
   .fa-caret-down {
@@ -142,16 +143,16 @@ h2#site-text-logo
     position: absolute;
     z-index: 10000000;
     background-color: $secondary;
-    width: 98%;
+    width: 100%;
     list-style: none;
     margin: 0;
     padding: 5px;
     border: 1px solid #eaeaea;
+    box-sizing: border-box;
     li {
       margin: 5px 0;
       padding: 0;
       a {
-        width: 100%;
         height: 100%;
         display: block;
         padding: 5px 8px;
