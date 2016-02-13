@@ -28,6 +28,7 @@ module I18n
       @overrides_by_site = {}
 
       reload_no_cache!
+      ensure_all_loaded!
     end
 
     LOAD_MUTEX = Mutex.new
