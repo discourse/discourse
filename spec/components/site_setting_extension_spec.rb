@@ -470,6 +470,18 @@ describe SiteSettingExtension do
       end
     end
 
+    context "with a false override" do
+      before do
+        GlobalSetting.stubs(:bool).returns(false)
+        settings.setting(:bool, true, shadowed_by_global: true)
+        settings.refresh!
+      end
+
+      it "should return default cause nothing is set" do
+        expect(settings.bool).to eq(false)
+      end
+    end
+
     context "with global setting" do
       before do
         GlobalSetting.stubs(:trout_api_key).returns('purringcat')
