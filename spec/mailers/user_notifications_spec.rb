@@ -6,21 +6,20 @@ describe UserNotifications do
 
   describe "#get_context_posts" do
     it "does not include hidden/deleted/user_deleted posts in context" do
-      post = create_post
-      reply1 = create_post(topic: post.topic)
-      reply2 = create_post(topic: post.topic)
-      reply3 = create_post(topic: post.topic)
-      reply4 = create_post(topic: post.topic)
+      post1 = create_post
+      post2 = Fabricate(:post, topic: post1.topic, deleted_at: 1.day.ago)
+      post3 = Fabricate(:post, topic: post1.topic, user_deleted: true)
+      post4 = Fabricate(:post, topic: post1.topic, hidden: true)
+      post5 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:moderator_action])
+      post6 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:small_action])
+      post7 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:whisper])
+      last  = Fabricate(:post, topic: post1.topic)
 
-      reply1.trash!
-
-      reply2.user_deleted = true
-      reply2.save
-
-      reply3.hidden = true
-      reply3.save
-
-      expect(UserNotifications.get_context_posts(reply4, nil).count).to eq(1)
+      # default is only post #1
+      expect(UserNotifications.get_context_posts(last, nil).count).to eq(1)
+      # staff members can also see the whisper
+      tu = TopicUser.new(topic: post1.topic, user: build(:moderator))
+      expect(UserNotifications.get_context_posts(last, tu).count).to eq(2)
     end
   end
 

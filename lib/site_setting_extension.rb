@@ -121,7 +121,7 @@ module SiteSettingExtension
       # exists it will be used instead of the setting and the setting will be hidden.
       # Useful for things like API keys on multisite.
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
-        if (val = GlobalSetting.send(name)).present?
+        unless (val = GlobalSetting.send(name)) == ''.freeze
           hidden_settings << name
           shadowed_settings << name
           current_value = val
