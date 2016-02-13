@@ -186,11 +186,14 @@ class UserNotifications < ActionMailer::Base
   end
 
   def self.get_context_posts(post, topic_user)
+    allowed_post_types = [Post.types[:regular]]
+    allowed_post_types << Post.types[:whisper] if topic_user.try(:user).try(:staff?)
+
     context_posts = Post.where(topic_id: post.topic_id)
                         .where("post_number < ?", post.post_number)
                         .where(user_deleted: false)
                         .where(hidden: false)
-                        .where(post_type: Topic.visible_post_types)
+                        .where(post_type: allowed_post_types)
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
 
