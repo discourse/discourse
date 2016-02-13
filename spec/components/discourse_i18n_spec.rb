@@ -40,6 +40,11 @@ describe I18n::Backend::DiscourseI18n do
     expect(results['items.other']).to eq('%{count} items')
   end
 
+  it 'uses fallback locales for searching' do
+    expect(backend.search(:de, 'bar')).to eq({'bar' => 'Bar in :de'})
+    expect(backend.search(:de, 'foo')).to eq({'foo' => 'Foo in :en'})
+  end
+
   describe '#exists?' do
     it 'returns true when a key is given that exists' do
       expect(backend.exists?(:de, :bar)).to eq(true)

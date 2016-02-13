@@ -43,7 +43,13 @@ module I18n
       end
 
       def search(locale, query)
-        find_results(/#{query}/i, {}, translations[locale])
+        results = {}
+
+        fallbacks(locale).each do |fallback|
+          find_results(/#{query}/i, results, translations[fallback])
+        end
+
+        results
       end
 
       protected
@@ -54,7 +60,9 @@ module I18n
             k = k_sym.to_s
             key_path = path ? "#{path}.#{k}" : k
             if v.is_a?(String)
-              results[key_path] = v if key_path =~ regexp || v =~ regexp
+              unless results.has_key?(key_path)
+                results[key_path] = v if key_path =~ regexp || v =~ regexp
+              end
             elsif v.is_a?(Hash)
               find_results(regexp, results, v, key_path)
             end
