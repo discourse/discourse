@@ -1290,7 +1290,7 @@ en:
     moved_post: "%{display_username} moved your post to %{link}"
     private_message: "%{display_username} sent you a message: %{link}"
     invited_to_private_message: "%{display_username} invited you to a message: %{link}"
-    invited_to_topic: "%{display_username} invited you to a topic: %{link}"
+    invited_to_topic: "%{display_username} invited you to %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
     linked: "%{display_username} linked you in %{link}"
     granted_badge: "You earned %{link}"
@@ -2044,7 +2044,7 @@ en:
         Please visit this link to view the message: %{base_url}%{url}
 
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} invited you to a topic '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} invited you to '%{topic_title}'"
       text_body_template: |
 
         %{username} invited you to a discussion
