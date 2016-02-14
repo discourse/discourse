@@ -80,7 +80,7 @@ Discourse.SiteSettingsOriginal = {
   "tos_accept_required":false,
   "faq_url":"",
   "allow_restore":false,
-  "maximum_backups":7,
+  "maximum_backups":5,
   "version_checks":true,
   "suppress_uncategorized_badge":true,
   "min_search_term_length":3,
