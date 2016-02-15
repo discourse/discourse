@@ -71,6 +71,8 @@ export default Ember.Component.extend({
 
   render(buffer) {
     const notification = this.get('notification');
+    // since we are reusing views now sometimes this can be unset
+    if (!notification) { return; }
     const description = this.get('description');
     const username = notification.get('data.display_username');
     var text;
