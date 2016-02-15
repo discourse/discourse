@@ -85,6 +85,35 @@ describe TopicsController do
 
   end
 
+  describe 'clear_notifications' do
+    it 'correctly clears notifications if specified via cookie' do
+      notification = Fabricate(:notification)
+      log_in_user(notification.user)
+
+      request.cookies['cn'] = "2828,100,#{notification.id}"
+
+      get :show, {topic_id: 100}
+
+      expect(response.cookies['cn']).to eq nil
+
+      notification.reload
+      expect(notification.read).to eq true
+
+    end
+
+    it 'correctly clears notifications if specified via header' do
+      notification = Fabricate(:notification)
+      log_in_user(notification.user)
+
+      request.headers['Discourse-Clear-Notifications'] = "2828,100,#{notification.id}"
+
+      get :show, {topic_id: 100}
+
+      notification.reload
+      expect(notification.read).to eq true
+    end
+  end
+
   describe 'set_locale' do
     it 'sets the one the user prefers' do
       SiteSetting.stubs(:allow_user_locale).returns(true)

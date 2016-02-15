@@ -293,15 +293,6 @@ class User < ActiveRecord::Base
   def saw_notification_id(notification_id)
     User.where("id = ? and seen_notification_id < ?", id, notification_id)
         .update_all ["seen_notification_id = ?", notification_id]
-
-    # some notifications are considered read once seen
-    Notification.where('user_id = ? AND NOT read AND notification_type IN (?)', id, [
-                       Notification.types[:granted_badge],
-                       Notification.types[:invitee_accepted],
-                       Notification.types[:group_message_summary],
-                       Notification.types[:liked]
-    ])
-        .update_all ["read = ?", true]
   end
 
   def publish_notifications_state
@@ -310,11 +301,43 @@ class User < ActiveRecord::Base
     notification = notifications.visible.order('notifications.id desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
+
+    sql = "
+       SELECT * FROM (
+         SELECT n.id, n.read FROM notifications n
+         LEFT JOIN topics t ON n.topic_id = t.id
+         WHERE
+          t.deleted_at IS NULL AND
+          n.notification_type = :type AND
+          n.user_id = :user_id AND
+          NOT read
+        ORDER BY n.id DESC
+        LIMIT 20
+      ) AS x
+      UNION ALL
+      SELECT * FROM (
+       SELECT n.id, n.read FROM notifications n
+       LEFT JOIN topics t ON n.topic_id = t.id
+       WHERE
+        t.deleted_at IS NULL AND
+        (n.notification_type <> :type OR read) AND
+        n.user_id = :user_id
+       ORDER BY n.id DESC
+       LIMIT 20
+      ) AS y
+    "
+
+    recent = User.exec_sql(sql, user_id: id,
+                       type:  Notification.types[:private_message]).values.map do |id, read|
+      [id.to_i, read == 't'.freeze]
+    end
+
     MessageBus.publish("/notification/#{id}",
                        {unread_notifications: unread_notifications,
                         unread_private_messages: unread_private_messages,
                         total_unread_notifications: total_unread_notifications,
-                        last_notification: json
+                        last_notification: json,
+                        recent: recent
                        },
                        user_ids: [id] # only publish the notification to this user
     )

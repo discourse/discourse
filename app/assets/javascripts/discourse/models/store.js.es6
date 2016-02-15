@@ -73,17 +73,41 @@ export default Ember.Object.extend({
   // refresh it in the background.
   findStale(type, findArgs, opts) {
     const stale = this.adapterFor(type).findStale(this, type, findArgs, opts);
-    if (stale.hasResults) {
-      stale.results = this._hydrateFindResults(stale.results, type, findArgs);
-    }
-    stale.refresh = () => this.find(type, findArgs, opts);
-    return stale;
+    return {
+      hasResults: (stale !== undefined),
+      results: stale,
+      refresh: () => this.find(type, findArgs, opts)
+    };
   },
 
   find(type, findArgs, opts) {
-    return this.adapterFor(type).find(this, type, findArgs, opts).then(result => {
-      return this._hydrateFindResults(result, type, findArgs, opts);
+    var adapter = this.adapterFor(type);
+    return adapter.find(this, type, findArgs, opts).then(result => {
+      var hydrated = this._hydrateFindResults(result, type, findArgs, opts);
+      if (adapter.cache) {
+        const stale = adapter.findStale(this, type, findArgs, opts);
+        hydrated = this._updateStale(stale, hydrated);
+        adapter.cacheFind(this, type, findArgs, opts, hydrated);
+      }
+      return hydrated;
     });
+  },
+
+  _updateStale(stale, hydrated) {
+    if (!stale) {
+      return hydrated;
+    }
+
+    hydrated.set('content', hydrated.get('content').map((item) => {
+      var staleItem = stale.content.findBy('id', item.get('id'));
+      if (staleItem) {
+        staleItem.setProperties(item);
+      } else {
+        staleItem = item;
+      }
+      return staleItem;
+    }));
+    return hydrated;
   },
 
   refreshResults(resultSet, type, url) {

@@ -130,15 +130,29 @@ class Notification < ActiveRecord::Base
                         .to_a
 
     if notifications.present?
-      notifications += user
-        .notifications
-        .order('notifications.created_at DESC')
-        .where(read: false, notification_type: Notification.types[:private_message])
-        .joins(:topic)
-        .where('notifications.id < ?', notifications.last.id)
-        .limit(count)
 
-      notifications.sort do |x,y|
+      ids = Notification.exec_sql("
+         SELECT n.id FROM notifications n
+         WHERE
+           n.notification_type = 6 AND
+           n.user_id = #{user.id.to_i} AND
+           NOT read
+        ORDER BY n.id ASC
+        LIMIT #{count.to_i}
+      ").values.map do |x,_|
+        x.to_i
+      end
+
+      if ids.length > 0
+        notifications += user
+          .notifications
+          .order('notifications.created_at DESC')
+          .where(id: ids)
+          .joins(:topic)
+          .limit(count)
+      end
+
+      notifications.uniq(&:id).sort do |x,y|
         if x.unread_pm? && !y.unread_pm?
           -1
         elsif y.unread_pm? && !x.unread_pm?

@@ -54,7 +54,7 @@ export default Ember.Component.extend({
     // TODO: It's a bit odd to use the store in a component, but this one really
     // wants to reach out and grab notifications
     const store = this.container.lookup('store:main');
-    const stale = store.findStale('notification', {recent: true, limit }, {storageKey: 'recent-notifications'});
+    const stale = store.findStale('notification', {recent: true, limit }, {cacheKey: 'recent-notifications'});
 
     if (stale.hasResults) {
       const results = stale.results;

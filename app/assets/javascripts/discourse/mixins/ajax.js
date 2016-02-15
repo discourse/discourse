@@ -3,8 +3,13 @@
   respect Discourse paths and the run loop.
 **/
 var _trackView = false;
+var _transientHeader = null;
 
 Discourse.Ajax = Em.Mixin.create({
+
+  setTransientHeader: function(k, v) {
+    _transientHeader = {key: k, value: v};
+  },
 
   viewTrackingRequired: function() {
     _trackView = true;
@@ -42,6 +47,11 @@ Discourse.Ajax = Em.Mixin.create({
     var performAjax = function(resolve, reject) {
 
       args.headers = args.headers || {};
+
+      if (_transientHeader) {
+        args.headers[_transientHeader.key] = _transientHeader.value;
+        _transientHeader = null;
+      }
 
       if (_trackView && (!args.type || args.type === "GET")) {
         _trackView = false;
