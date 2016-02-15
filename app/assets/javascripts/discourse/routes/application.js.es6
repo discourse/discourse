@@ -47,9 +47,18 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     composePrivateMessage(user, post) {
-      const self = this;
-      this.transitionTo('userActivity', user).then(function () {
-        self.controllerFor('user-activity').send('composePrivateMessage', user, post);
+
+      const recipient = user ? user.get('username') : '',
+          reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
+
+      // used only once, one less dependency
+      const Composer = require('discourse/models/composer').default;
+      return this.controllerFor('composer').open({
+        action: Composer.PRIVATE_MESSAGE,
+        usernames: recipient,
+        archetypeId: 'private_message',
+        draftKey: 'new_private_message',
+        reply: reply
       });
     },
 
