@@ -122,7 +122,7 @@ group :test do
 end
 
 group :test, :development do
-  gem 'rspec', '~> 3.2.0'
+  gem 'rspec', '3.5.0.beta1'
   gem 'mock_redis'
   gem 'listen', '0.7.3', require: false
   gem 'certified', require: false
@@ -132,7 +132,7 @@ group :test, :development do
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
-  gem 'rspec-rails', require: false
+  gem 'rspec-rails', '3.5.0.beta1', require: false
   gem 'shoulda', require: false
   gem 'simplecov', require: false
   gem 'timecop'
