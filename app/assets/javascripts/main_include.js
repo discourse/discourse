@@ -7,7 +7,6 @@
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
 //= require ./discourse/lib/hash
-//= require ./discourse/lib/stale-result
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events

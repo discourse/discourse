@@ -9,10 +9,11 @@ export default {
           site = container.lookup('site:main'),
           siteSettings = container.lookup('site-settings:main'),
           bus = container.lookup('message-bus:main'),
-          keyValueStore = container.lookup('key-value-store:main');
+          keyValueStore = container.lookup('key-value-store:main'),
+          store = container.lookup('store:main');
 
-    // clear old cached notifications
-    // they could be a week old for all we know
+    // clear old cached notifications, we used to store in local storage
+    // TODO 2017 delete this line
     keyValueStore.remove('recent-notifications');
 
     if (user) {
@@ -40,12 +41,12 @@ export default {
           user.set('lastNotificationChange', new Date());
         }
 
-        var stale = keyValueStore.getObject('recent-notifications');
+        const stale = store.findStale('notification', {}, {cacheKey: 'recent-notifications'});
         const lastNotification = data.last_notification && data.last_notification.notification;
 
-        if (stale && stale.notifications && lastNotification) {
+        if (stale && stale.hasResults && lastNotification) {
 
-          const oldNotifications = stale.notifications;
+          const oldNotifications = stale.results.get('content');
           const staleIndex = _.findIndex(oldNotifications, {id: lastNotification.id});
 
           if (staleIndex > -1) {
@@ -61,8 +62,21 @@ export default {
             insertPosition = insertPosition === -1 ? oldNotifications.length - 1 : insertPosition;
           }
 
-          oldNotifications.splice(insertPosition, 0, lastNotification);
-          keyValueStore.setItem('recent-notifications', JSON.stringify(stale));
+          oldNotifications.splice(insertPosition, 0, Em.Object.create(lastNotification));
+
+          var idx=0;
+          data.recent.forEach((info)=> {
+            var old = oldNotifications[idx];
+            if (old) {
+              if (old.get('id') !== info[0]) {
+                oldNotifications.splice(idx, 1);
+                return;
+              } else if (old.get('read') !== info[1]) {
+                old.set('read', info[1]);
+              }
+            }
+            idx += 1;
+          });
 
         }
       }, user.notification_channel_position);
