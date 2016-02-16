@@ -2095,6 +2095,18 @@ en:
         ---
         %{respond_instructions}
 
+    user_linked:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |

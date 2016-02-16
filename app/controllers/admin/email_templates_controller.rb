@@ -26,7 +26,8 @@ class Admin::EmailTemplatesController < Admin::AdminController
                      "user_notifications.user_invited_to_private_message_pm",
                      "user_notifications.user_invited_to_topic", "user_notifications.user_mentioned",
                      "user_notifications.user_posted", "user_notifications.user_posted_pm",
-                     "user_notifications.user_quoted", "user_notifications.user_replied"]
+                     "user_notifications.user_quoted", "user_notifications.user_replied",
+                     "user_notifications.user_linked"]
   end
 
   def show

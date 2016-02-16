@@ -99,6 +99,14 @@ describe UserEmailObserver do
     include_examples "enqueue_public"
   end
 
+  context 'user_linked' do
+    let(:type) { :user_linked }
+    let(:delay) { SiteSetting.email_time_window_mins.minutes }
+    let!(:notification) { create_notification(11) }
+
+    include_examples "enqueue_public"
+  end
+
   context 'user_posted' do
     let(:type) { :user_posted }
     let(:delay) { SiteSetting.email_time_window_mins.minutes }

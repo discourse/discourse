@@ -110,6 +110,13 @@ class UserNotifications < ActionMailer::Base
     notification_email(user, opts)
   end
 
+  def user_linked(user, opts)
+    opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:show_category_in_subject] = true
+    notification_email(user, opts)
+  end
+
   def user_mentioned(user, opts)
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
