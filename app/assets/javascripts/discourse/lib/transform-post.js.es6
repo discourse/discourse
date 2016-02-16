@@ -46,7 +46,7 @@ export function transformBasicPost(post) {
     canDelete: post.can_delete,
     canRecover: post.can_recover,
     canEdit: post.can_edit,
-    canFlag: !Ember.isEmpty(post.flagsAvailable),
+    canFlag: !Ember.isEmpty(post.get('flagsAvailable')),
     version: post.version,
     canRecoverTopic: false,
     canDeletedTopic: false,
@@ -65,6 +65,7 @@ export function transformBasicPost(post) {
     expandablePost: false,
     replyCount: post.reply_count,
   };
+
 }
 
 
