@@ -28,7 +28,7 @@
           {{#if model.can_edit_name}}
             {{text-field value=newNameInput classNames="input-xxlarge"}}
           {{else}}
-            <span class='static'>{{name}}</span>
+            <span class='static'>{{model.name}}</span>
           {{/if}}
         </div>
         <div class='instructions'>
