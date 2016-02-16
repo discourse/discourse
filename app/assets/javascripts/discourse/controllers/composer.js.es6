@@ -288,8 +288,12 @@ export default Ember.Controller.extend({
       if (result.responseJson.action === "create_post" || self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
       }
+      if (self.get('model.action') === 'edit') {
+        self.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
+      } else {
+        self.appEvents.trigger('post-stream:refresh');
+      }
 
-      self.appEvents.trigger('post-stream:refresh');
       if (result.responseJson.action === "create_post") {
         self.appEvents.trigger('post:highlight', result.payload.post_number);
       }
