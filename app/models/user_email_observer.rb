@@ -28,6 +28,10 @@ class UserEmailObserver < ActiveRecord::Observer
       enqueue :user_replied
     end
 
+    def linked
+      enqueue :user_linked
+    end
+
     def private_message
       enqueue_private(:user_private_message)
     end
