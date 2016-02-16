@@ -310,7 +310,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       } else {
         return this.get("model").toggleBookmark().then(changedIds => {
           if (!changedIds) { return; }
-          changedIds.forEach(id => this.appEvents.trigger('post-stream:refresh', id));
+          changedIds.forEach(id => this.appEvents.trigger('post-stream:refresh', { id }));
         });
       }
     },
@@ -326,14 +326,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         selectedPosts.addObjects(posts);
       }
       this.set('allPostsSelected', true);
-      this.appEvents.trigger('post-stream:refresh');
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     deselectAll() {
       this.get('selectedPosts').clear();
       this.get('selectedReplies').clear();
       this.set('allPostsSelected', false);
-      this.appEvents.trigger('post-stream:refresh');
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     toggleParticipant(user) {
@@ -354,7 +354,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     toggleMultiSelect() {
       this.toggleProperty('multiSelect');
-      this.appEvents.trigger('post-stream:refresh');
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     finishedEditingTopic() {
@@ -643,7 +643,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     // Unsubscribe before subscribing again
     this.unsubscribe();
 
-    const refresh = (id) => this.appEvents.trigger('post-stream:refresh', id);
+    const refresh = (id) => this.appEvents.trigger('post-stream:refresh', { id });
 
     this.messageBus.subscribe("/topic/" + this.get('model.id'), data => {
       const topic = this.get('model');
@@ -729,7 +729,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       postStream.get('posts').forEach(post => {
         if (!post.read && postNumbers.indexOf(post.post_number) !== -1) {
           post.set('read', true);
-          this.appEvents.trigger('post-stream:refresh', post.id);
+          this.appEvents.trigger('post-stream:refresh', { id: post.id });
         }
       });
 
