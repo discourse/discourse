@@ -78,9 +78,18 @@ function getPluginApi(version) {
   }
 }
 
-export function withPluginApi(version, cb) {
+/**
+ * withPluginApi(version, apiCode, noApi)
+ *
+ * Helper to version our client side plugin API. Pass the version of the API that your
+ * plugin is coded against. If that API is available, the `apiCodeCallback` function will
+ * be called with the `PluginApi` object.
+*/
+export function withPluginApi(version, apiCodeCallback, opts) {
+  opts = opts || {};
+
   const api = getPluginApi(version);
   if (api) {
-    cb(api);
+    return apiCodeCallback(api);
   }
 }
