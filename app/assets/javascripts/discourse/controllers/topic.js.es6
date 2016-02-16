@@ -386,27 +386,26 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     deleteSelected() {
-      const self = this;
-      bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
+      bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), result => {
         if (result) {
 
           // If all posts are selected, it's the same thing as deleting the topic
-          if (self.get('allPostsSelected')) {
-            return self.deleteTopic();
+          if (this.get('allPostsSelected')) {
+            return this.deleteTopic();
           }
 
-          const selectedPosts = self.get('selectedPosts'),
-              selectedReplies = self.get('selectedReplies'),
-              postStream = self.get('model.postStream'),
-              toRemove = [];
+          const selectedPosts = this.get('selectedPosts');
+          const selectedReplies = this.get('selectedReplies');
+          const postStream = this.get('model.postStream');
 
           Discourse.Post.deleteMany(selectedPosts, selectedReplies);
-          postStream.get('posts').forEach(function (p) {
-            if (self.postSelected(p)) { toRemove.addObject(p); }
+          postStream.get('posts').forEach(p => {
+            if (this.postSelected(p)) {
+              p.set('deleted_at', new Date());
+            }
           });
 
-          postStream.removePosts(toRemove);
-          self.send('toggleMultiSelect');
+          this.send('toggleMultiSelect');
         }
       });
     },
