@@ -15,3 +15,8 @@ export function decorateCooked(container, cb) {
   decorate(container.lookupFactory('view:embedded-post'), 'didInsertElement', cb);
   decorate(container.lookupFactory('view:user-stream'), 'didInsertElement', cb);
 }
+
+// Will be backported so plugins in the new format will not raise errors
+export function withPluginApi(version) {
+  console.warn(`Plugin API v${version} is not supported`);
+}
