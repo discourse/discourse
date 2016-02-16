@@ -67,7 +67,7 @@ class Admin::EmailController < Admin::AdminController
   private
 
   def filter_email_logs(email_logs, params)
-    email_logs = email_logs.includes(:user)
+    email_logs = email_logs.includes(:user, { post: :topic })
                            .references(:user)
                            .order(created_at: :desc)
                            .offset(params[:offset] || 0)

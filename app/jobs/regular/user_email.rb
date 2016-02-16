@@ -15,7 +15,7 @@ module Jobs
       user = User.find_by(id: args[:user_id])
       to_address = args[:to_address].presence || user.try(:email).presence || "no_email_found"
 
-      set_skip_context(type, args[:user_id], to_address)
+      set_skip_context(type, args[:user_id], to_address, args[:post_id])
 
       return skip(I18n.t("email_log.no_user", user_id: args[:user_id])) unless user
 
@@ -44,8 +44,8 @@ module Jobs
       end
     end
 
-    def set_skip_context(type, user_id, to_address)
-      @skip_context = { type: type, user_id: user_id, to_address: to_address }
+    def set_skip_context(type, user_id, to_address, post_id)
+      @skip_context = { type: type, user_id: user_id, to_address: to_address, post_id: post_id }
     end
 
     NOTIFICATIONS_SENT_BY_MAILING_LIST ||= Set.new %w{posted replied mentioned group_mentioned quoted}
@@ -54,7 +54,7 @@ module Jobs
                          notification_type=nil, notification_data_hash=nil,
                          email_token=nil, to_address=nil)
 
-      set_skip_context(type, user.id, to_address || user.email)
+      set_skip_context(type, user.id, to_address || user.email, post.try(:id))
 
       return skip_message(I18n.t("email_log.anonymous_user"))   if user.anonymous?
       return skip_message(I18n.t("email_log.suspended_not_pm")) if user.suspended? && type != :user_private_message
@@ -142,6 +142,7 @@ module Jobs
         email_type: @skip_context[:type],
         to_address: @skip_context[:to_address],
         user_id: @skip_context[:user_id],
+        post_id: @skip_context[:post_id],
         skipped: true,
         skipped_reason: "[UserEmail] #{reason}",
       )
