@@ -4,10 +4,14 @@ import { h } from 'virtual-dom';
 function emptyContent() { }
 
 const _registry = {};
-const _dirty = {};
+let _dirty = {};
 
 export function keyDirty(key) {
   _dirty[key] = true;
+}
+
+export function renderedKey(key) {
+  delete _dirty[key];
 }
 
 function drawWidget(builder, attrs, state) {
@@ -95,7 +99,11 @@ export default class Widget {
 
     if (prev && prev.shadowTree) {
       this.shadowTree = true;
-      if (!_dirty[prev.key]) { return prev.vnode; }
+      if (!_dirty[prev.key] && !_dirty['*']) {
+        return prev.vnode;
+      }
+
+      renderedKey(prev.key);
     }
 
     return this.draw(h, this.attrs, this.state);

@@ -150,9 +150,13 @@ export default MountWidget.extend({
       $('button.widget-button').removeClass('d-hover');
     });
 
-    this.appEvents.on('post-stream:refresh', postId => {
-      if (postId) {
-        keyDirty(`post-${postId}`);
+    this.appEvents.on('post-stream:refresh', args => {
+      if (args) {
+        if (args.id) {
+          keyDirty(`post-${args.id}`);
+        } else if (args.force) {
+          keyDirty(`*`);
+        }
       }
       this.queueRerender();
     });

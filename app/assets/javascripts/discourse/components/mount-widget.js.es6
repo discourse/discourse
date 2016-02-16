@@ -1,5 +1,6 @@
 import { diff, patch } from 'virtual-dom';
 import { WidgetClickHook } from 'discourse/widgets/click-hook';
+import { renderedKey } from 'discourse/widgets/widget';
 
 export default Ember.Component.extend({
   _tree: null,
@@ -51,6 +52,8 @@ export default Ember.Component.extend({
         this._afterRender();
         this._afterRender = null;
       }
+
+      renderedKey('*');
     }
   }
 
