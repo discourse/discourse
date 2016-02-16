@@ -379,7 +379,10 @@ export default createWidget('post', {
     const likeAction = post.get('likeAction');
 
     if (likeAction && likeAction.get('canToggle')) {
-      return likeAction.togglePromise(post);
+
+      const promise = likeAction.togglePromise(post);
+      this.scheduleRerender();
+      return promise;
     }
   },
 
