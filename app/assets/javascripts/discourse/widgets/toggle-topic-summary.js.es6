@@ -9,9 +9,9 @@ createWidget('toggle-summary-description', {
 
     if (attrs.topicWordCount) {
       const readingTime = Math.floor(attrs.topicWordCount / this.siteSettings.read_time_word_count);
-      return I18n.t('summary.description_time', { count: attrs.topicPostsCount, readingTime });
+      return I18n.t('summary.description_time', { replyCount: attrs.topicReplyCount, readingTime });
     }
-    return I18n.t('summary.description', { count: attrs.topicPostsCount });
+    return I18n.t('summary.description', { replyCount: attrs.topicReplyCount });
   },
 
   html(attrs) {

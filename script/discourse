@@ -135,12 +135,12 @@ class DiscourseCLI < Thor
   end
 
   desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
-  def export_category(category_id)
+  def export_category(category_id, filename=nil)
     raise "Category id argument is missing!" unless category_id
 
     load_rails
     load_import_export
-    ImportExport.export_category(category_id)
+    ImportExport.export_category(category_id, filename)
     puts "", "Done", ""
   end
 
