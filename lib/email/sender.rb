@@ -23,7 +23,7 @@ module Email
 
     def send
       return if SiteSetting.disable_emails
-      return skip(I18n.t('email_log.message_blank')) if @message.blank?
+      return skip(I18n.t('email_log.message_blank'))    if @message.blank?
       return skip(I18n.t('email_log.message_to_blank')) if @message.to.blank?
 
       if @message.text_part
@@ -135,7 +135,7 @@ module Email
 
     def to_address
       @to_address ||= begin
-        to = @message ? @message.to : nil
+        to = @message.try(:to)
         to = to.first if Array === to
         to.presence || "no_email_found"
       end
@@ -167,7 +167,7 @@ module Email
         to_address: to_address,
         user_id: @user.try(:id),
         skipped: true,
-        skipped_reason: reason
+        skipped_reason: "[Sender] #{reason}"
       )
     end
 

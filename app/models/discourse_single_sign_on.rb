@@ -81,7 +81,7 @@ class DiscourseSingleSignOn < SingleSignOn
   private
 
   def match_email_or_create_user(ip_address)
-    user = User.find_by_email(email)
+    user = User.find_by(email: email)
 
     try_name = name.blank? ? nil : name
     try_username = username.blank? ? nil : username
