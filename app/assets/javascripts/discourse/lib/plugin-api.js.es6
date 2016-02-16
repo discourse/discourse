@@ -67,13 +67,20 @@ class PluginApi {
 }
 
 let _pluginv01;
-export function getPluginApi(version) {
+function getPluginApi(version) {
   if (version === "0.1") {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
     return _pluginv01;
   } else {
-    throw `Plugin API v${version} is not supported`;
+    console.warn(`Plugin API v${version} is not supported`);
+  }
+}
+
+export function withPluginApi(version, cb) {
+  const api = getPluginApi(version);
+  if (api) {
+    cb(api);
   }
 }
