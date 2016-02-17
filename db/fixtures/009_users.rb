@@ -55,7 +55,7 @@ if User.exec_sql("SELECT 1 FROM schema_migration_details
       automatically_unpin_topics
       digest_after_days
     ].each do |column|
-      User.exec_sql("ALTER TABLE users DROP column #{column}")
+      User.exec_sql("ALTER TABLE users DROP column IF EXISTS #{column}")
     end
 
   end
