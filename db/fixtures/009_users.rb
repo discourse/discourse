@@ -70,20 +70,18 @@ if ENV["SMOKE"] == "1"
     u.username_lower = "smoke_user"
     u.email = "smoke_user@discourse.org"
     u.password = "P4ssw0rd"
-    u.email_direct = false
-    u.email_digests = false
-    u.email_private_messages = false
     u.active = true
     u.approved = true
     u.approved_at = Time.now
     u.trust_level = TrustLevel[3]
   end.first
 
-  EmailToken.seed do |et|
-    et.id = 1
-    et.user_id = smoke_user.id
-    et.email = smoke_user.email
-    et.confirmed = true
-  end
+  UserOption.where(user_id: smoke_user.id).update_all(
+    email_direct: false,
+    email_digests: false,
+    email_private_messages: false,
+  )
+
+  EmailToken.where(user_id: smoke_user.id).update_all(confirmed: true)
 end
 
