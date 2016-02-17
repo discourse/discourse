@@ -23,6 +23,10 @@ module Email
 
     def send
       return if SiteSetting.disable_emails
+
+      return if ActionMailer::Base::NullMail === @message
+      return if ActionMailer::Base::NullMail === (@message.message rescue nil)
+
       return skip(I18n.t('email_log.message_blank'))    if @message.blank?
       return skip(I18n.t('email_log.message_to_blank')) if @message.to.blank?
 
