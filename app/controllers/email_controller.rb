@@ -25,9 +25,12 @@ class EmailController < ApplicationController
     end
 
     if params[:from_all]
-      @user.update_columns(email_digests: false, email_direct: false, email_private_messages: false, email_always: false)
+      @user.user_option.update_columns(email_always: false,
+                                       email_digests: false,
+                                       email_direct: false,
+                                       email_private_messages: false)
     else
-      @user.update_column(:email_digests, false)
+      @user.user_option.update_column(:email_digests, false)
     end
 
     @success = true
@@ -36,7 +39,7 @@ class EmailController < ApplicationController
   def resubscribe
     @user = DigestUnsubscribeKey.user_for_key(params[:key])
     raise Discourse::NotFound unless @user.present?
-    @user.update_column(:email_digests, true)
+    @user.user_option.update_column(:email_digests, true)
   end
 
 end

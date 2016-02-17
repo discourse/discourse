@@ -152,15 +152,15 @@ describe User do
     it "is properly initialized" do
       expect(subject.approved_at).to be_blank
       expect(subject.approved_by_id).to be_blank
-      expect(subject.email_private_messages).to eq(true)
-      expect(subject.email_direct).to eq(true)
     end
 
     context 'after_save' do
       before { subject.save }
 
-      it "has an email token" do
+      it "has correct settings" do
         expect(subject.email_tokens).to be_present
+        expect(subject.user_option.email_private_messages).to eq(true)
+        expect(subject.user_option.email_direct).to eq(true)
       end
     end
 
@@ -1246,49 +1246,61 @@ describe User do
   context "when user preferences are overriden" do
 
     before do
-      SiteSetting.stubs(:default_email_digest_frequency).returns(1) # daily
-      SiteSetting.stubs(:default_email_private_messages).returns(false)
-      SiteSetting.stubs(:default_email_direct).returns(false)
-      SiteSetting.stubs(:default_email_mailing_list_mode).returns(true)
-      SiteSetting.stubs(:default_email_always).returns(true)
+      SiteSetting.default_email_digest_frequency = 1 # daily
+      SiteSetting.default_email_private_messages = false
+      SiteSetting.default_email_direct = false
+      SiteSetting.default_email_mailing_list_mode = true
+      SiteSetting.default_email_always = true
 
-      SiteSetting.stubs(:default_other_new_topic_duration_minutes).returns(-1) # not viewed
-      SiteSetting.stubs(:default_other_auto_track_topics_after_msecs).returns(0) # immediately
-      SiteSetting.stubs(:default_other_external_links_in_new_tab).returns(true)
-      SiteSetting.stubs(:default_other_enable_quoting).returns(false)
-      SiteSetting.stubs(:default_other_dynamic_favicon).returns(true)
-      SiteSetting.stubs(:default_other_disable_jump_reply).returns(true)
-      SiteSetting.stubs(:default_other_edit_history_public).returns(true)
+      SiteSetting.default_other_new_topic_duration_minutes = -1 # not viewed
+      SiteSetting.default_other_auto_track_topics_after_msecs = 0 # immediately
+      SiteSetting.default_other_external_links_in_new_tab = true
+      SiteSetting.default_other_enable_quoting = false
+      SiteSetting.default_other_dynamic_favicon = true
+      SiteSetting.default_other_disable_jump_reply = true
+      SiteSetting.default_other_edit_history_public = true
 
-      SiteSetting.stubs(:default_topics_automatic_unpin).returns(false)
+      SiteSetting.default_topics_automatic_unpin = false
 
-      SiteSetting.stubs(:default_categories_watching).returns("1")
-      SiteSetting.stubs(:default_categories_tracking).returns("2")
-      SiteSetting.stubs(:default_categories_muted).returns("3")
+      SiteSetting.default_categories_watching = "1"
+      SiteSetting.default_categories_tracking = "2"
+      SiteSetting.default_categories_muted = "3"
     end
 
     it "has overriden preferences" do
       user = Fabricate(:user)
-
-      expect(user.digest_after_days).to eq(1)
-      expect(user.email_private_messages).to eq(false)
-      expect(user.email_direct).to eq(false)
-      expect(user.mailing_list_mode).to eq(true)
-      expect(user.email_always).to eq(true)
+      options = user.user_option
+      expect(options.email_always).to eq(true)
+      expect(options.mailing_list_mode).to eq(true)
+      expect(options.digest_after_days).to eq(1)
+      expect(options.email_private_messages).to eq(false)
+      expect(options.external_links_in_new_tab).to eq(true)
+      expect(options.enable_quoting).to eq(false)
+      expect(options.dynamic_favicon).to eq(true)
+      expect(options.disable_jump_reply).to eq(true)
+      expect(options.edit_history_public).to eq(true)
+      expect(options.automatically_unpin_topics).to eq(false)
+      expect(options.email_direct).to eq(false)
 
       expect(user.new_topic_duration_minutes).to eq(-1)
       expect(user.auto_track_topics_after_msecs).to eq(0)
-      expect(user.external_links_in_new_tab).to eq(true)
-      expect(user.enable_quoting).to eq(false)
-      expect(user.dynamic_favicon).to eq(true)
-      expect(user.disable_jump_reply).to eq(true)
-      expect(user.edit_history_public).to eq(true)
-
-      expect(user.automatically_unpin_topics).to eq(false)
 
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([1])
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([3])
+    end
+  end
+
+  context UserOption do
+
+    it "Creates a UserOption row when a user record is created and destroys once done" do
+      user = Fabricate(:user)
+      expect(user.user_option.email_always).to eq(false)
+
+      user_id = user.id
+      user.destroy!
+      expect(UserOption.find_by(user_id: user_id)).to eq(nil)
+
     end
 
   end

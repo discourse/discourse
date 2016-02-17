@@ -147,24 +147,28 @@ const User = RestModel.extend({
             'location',
             'name',
             'locale',
-            'email_digests',
-            'email_direct',
-            'email_always',
-            'email_private_messages',
-            'dynamic_favicon',
-            'digest_after_days',
             'new_topic_duration_minutes',
-            'external_links_in_new_tab',
-            'mailing_list_mode',
-            'enable_quoting',
-            'disable_jump_reply',
             'custom_fields',
             'user_fields',
             'muted_usernames',
             'profile_background',
-            'card_background',
-            'automatically_unpin_topics'
+            'card_background'
           );
+
+    [       'email_always',
+            'mailing_list_mode',
+            'external_links_in_new_tab',
+            'email_digests',
+            'email_direct',
+            'email_private_messages',
+            'dynamic_favicon',
+            'enable_quoting',
+            'disable_jump_reply',
+            'automatically_unpin_topics',
+            'digest_after_days'
+    ].forEach(s => {
+      data[s] = this.get(`user_option.${s}`);
+    });
 
     ['muted','watched','tracked'].forEach(s => {
       let cats = this.get(s + 'Categories').map(c => c.get('id'));
@@ -174,7 +178,7 @@ const User = RestModel.extend({
     });
 
     if (!Discourse.SiteSettings.edit_history_visible_to_public) {
-      data['edit_history_public'] = this.get('edit_history_public');
+      data['edit_history_public'] = this.get('user_option.edit_history_public');
     }
 
     // TODO: We can remove this when migrated fully to rest model.
@@ -184,7 +188,7 @@ const User = RestModel.extend({
       type: 'PUT'
     }).then(result => {
       this.set('bio_excerpt', result.user.bio_excerpt);
-      const userProps = this.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
+      const userProps = Em.getProperties(this.get('user-option'),'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
     }).finally(() => {
       this.set('isSaving', false);
