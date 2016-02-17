@@ -62,7 +62,7 @@ module Jobs
       return if user.staged && type == :digest
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
-      seen_recently = false if user.email_always || user.staged
+      seen_recently = false if user.user_option.email_always || user.staged
 
       email_args = {}
 
@@ -85,14 +85,14 @@ module Jobs
           email_args[:notification_type] = email_args[:notification_type].to_s
         end
 
-        if user.mailing_list_mode? &&
+        if user.user_option.mailing_list_mode? &&
            !post.topic.private_message? &&
            NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
            # no need to log a reason when the mail was already sent via the mailing list job
            return [nil, nil]
         end
 
-        unless user.email_always?
+        unless user.user_option.email_always?
           if (notification && notification.read?) || (post && post.seen?(user))
             return skip_message(I18n.t('email_log.notification_already_read'))
           end

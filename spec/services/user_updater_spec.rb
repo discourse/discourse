@@ -32,26 +32,33 @@ describe UserUpdater do
   describe '#update' do
     it 'saves user' do
       user = Fabricate(:user, name: 'Billy Bob')
-      updater = described_class.new(acting_user, user)
+      updater = UserUpdater.new(acting_user, user)
 
       updater.update(name: 'Jim Tom')
 
       expect(user.reload.name).to eq 'Jim Tom'
     end
 
-    it 'updates bio' do
+    it 'updates various fields' do
       user = Fabricate(:user)
-      updater = described_class.new(acting_user, user)
+      updater = UserUpdater.new(acting_user, user)
 
-      updater.update(bio_raw: 'my new bio')
+      updater.update(bio_raw: 'my new bio',
+                     email_always: 'true',
+                     mailing_list_mode: true,
+                     digest_after_days: "8")
+      user.reload
 
-      expect(user.reload.user_profile.bio_raw).to eq 'my new bio'
+      expect(user.user_profile.bio_raw).to eq 'my new bio'
+      expect(user.user_option.email_always).to eq true
+      expect(user.user_option.mailing_list_mode).to eq true
+      expect(user.user_option.digest_after_days).to eq 8
     end
 
     context 'when update succeeds' do
       it 'returns true' do
         user = Fabricate(:user)
-        updater = described_class.new(acting_user, user)
+        updater = UserUpdater.new(acting_user, user)
 
         expect(updater.update).to be_truthy
       end
@@ -61,7 +68,7 @@ describe UserUpdater do
       it 'returns false' do
         user = Fabricate(:user)
         user.stubs(save: false)
-        updater = described_class.new(acting_user, user)
+        updater = UserUpdater.new(acting_user, user)
 
         expect(updater.update).to be_falsey
       end
@@ -73,7 +80,7 @@ describe UserUpdater do
         guardian = stub
         guardian.stubs(:can_grant_title?).with(user).returns(true)
         Guardian.stubs(:new).with(acting_user).returns(guardian)
-        updater = described_class.new(acting_user, user)
+        updater = UserUpdater.new(acting_user, user)
 
         updater.update(title: 'Minion')
 
