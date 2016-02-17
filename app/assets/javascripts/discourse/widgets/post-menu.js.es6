@@ -19,6 +19,11 @@ function animateHeart($elem, start, end, complete) {
 }
 
 const _builders = {};
+const _extraButtons = {};
+
+export function addButton(name, builder) {
+  _extraButtons[name] = builder;
+}
 
 function registerButton(name, builder) {
   _builders[name] = builder;
@@ -245,6 +250,39 @@ export default createWidget('post-menu', {
         icon: 'ellipsis-h' });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
     }
+
+    Object.keys(_extraButtons).forEach(k => {
+      const builder = _extraButtons[k];
+      if (builder) {
+        const buttonAtts = builder(attrs, this.state, this.siteSettings);
+        if (buttonAtts) {
+          const { position, beforeButton } = buttonAtts;
+          delete buttonAtts.position;
+
+          let button = this.attach('button', buttonAtts);
+
+          if (beforeButton) {
+            button = h('span', [beforeButton(h), button]);
+          }
+
+          if (button) {
+            switch(position) {
+              case 'first':
+                visibleButtons.unshift(button);
+                break;
+              case 'second-last-hidden':
+                if (!state.collapsed) {
+                  visibleButtons.splice(visibleButtons.length-2, 0, button);
+                }
+                break;
+              default:
+                visibleButtons.push(button);
+                break;
+            }
+          }
+        }
+      }
+    });
 
     const postControls = [];
 

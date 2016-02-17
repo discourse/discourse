@@ -1,6 +1,8 @@
 import { addDecorator } from 'discourse/widgets/post-cooked';
 import ComposerEditor from 'discourse/components/composer-editor';
 import { addPosterIcon } from 'discourse/widgets/poster-name';
+import { addButton } from 'discourse/widgets/post-menu';
+import { includeAttributes } from 'discourse/lib/transform-post';
 
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
@@ -17,6 +19,12 @@ class PluginApi {
   constructor(version, container) {
     this.version = version;
     this.container = container;
+
+    this._currentUser = container.lookup('current-user:main');
+  }
+
+  getCurrentUser() {
+    return this._currentUser;
   }
 
   /**
@@ -64,6 +72,20 @@ class PluginApi {
   addPosterIcon(cb) {
     addPosterIcon(cb);
   }
+
+  attachWidgetAction(widget, actionName, fn) {
+    const widgetClass = this.container.lookupFactory(`widget:${widget}`);
+    widgetClass.prototype[actionName] = fn;
+  }
+
+  includePostAttributes(...attributes) {
+    includeAttributes(...attributes);
+  }
+
+  addPostMenuButton(name, callback) {
+    addButton(name, callback);
+  }
+
 }
 
 let _pluginv01;
