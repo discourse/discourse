@@ -188,7 +188,7 @@ const User = RestModel.extend({
       type: 'PUT'
     }).then(result => {
       this.set('bio_excerpt', result.user.bio_excerpt);
-      const userProps = Em.getProperties(this.get('user-option'),'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
+      const userProps = Em.getProperties(this.get('user_option'),'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
     }).finally(() => {
       this.set('isSaving', false);
