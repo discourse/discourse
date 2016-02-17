@@ -27,6 +27,40 @@ UserOption.where(user_id: -1).update_all(
 
 Group.user_trust_level_change!(-1, TrustLevel[4])
 
+# 60 minutes after our migration runs we need to exectue this code...
+duration = Rails.env.production? ? 60 : 0
+if User.exec_sql("SELECT 1 FROM schema_migration_details
+                  WHERE EXISTS(
+                      SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+                      WHERE table_name = 'users' AND column_name = 'enable_quoting'
+                    ) AND
+                    name = 'AllowDefaultsOnUsersTable' AND
+                    created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} minutes')
+                 ").to_a.length > 0
+
+
+  User.transaction do
+    STDERR.puts "Removing superflous user columns!"
+    %w[
+      email_always
+      mailing_list_mode
+      email_digests
+      email_direct
+      email_private_messages
+      external_links_in_new_tab
+      enable_quoting
+      dynamic_favicon
+      disable_jump_reply
+      edit_history_public
+      automatically_unpin_topics
+      digest_after_days
+    ].each do |column|
+      User.exec_sql("ALTER TABLE users DROP column #{column}")
+    end
+
+  end
+end
+
 # User for the smoke tests
 if ENV["SMOKE"] == "1"
   smoke_user = User.seed do |u|
