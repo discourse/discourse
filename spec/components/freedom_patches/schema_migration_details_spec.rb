@@ -26,7 +26,6 @@ describe FreedomPatches::SchemaMigrationDetails do
     expect(info.git_version).to eq Discourse.git_version
     expect(info.direction).to eq "up"
     expect(info.rails_version).to eq Rails.version
-    expect(info.filename).to eq migration.filename
     expect(info.name).to eq "awesome_migration"
   end
 end
