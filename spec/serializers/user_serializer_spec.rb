@@ -15,6 +15,24 @@ describe UserSerializer do
     end
   end
 
+  context "as current user" do
+    it "serializes options correctly" do
+      # so we serialize more stuff
+      SiteSetting.edit_history_visible_to_public = false
+
+      user = Fabricate.build(:user,
+                              user_profile: Fabricate.build(:user_profile),
+                              user_option: UserOption.new(edit_history_public: true),
+                              user_stat: UserStat.new
+                            )
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:user_option][:edit_history_public]).to eq(true)
+
+    end
+  end
+
   context "with a user" do
     let(:user) { Fabricate.build(:user, user_profile: Fabricate.build(:user_profile) ) }
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
@@ -26,13 +44,14 @@ describe UserSerializer do
 
     context "with `enable_names` true" do
       before do
-        SiteSetting.stubs(:enable_names?).returns(true)
+        SiteSetting.enable_names = true
       end
 
       it "has a name" do
         expect(json[:name]).to be_present
       end
     end
+
 
     context "with `enable_names` false" do
       before do

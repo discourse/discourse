@@ -110,6 +110,13 @@ class UserNotifications < ActionMailer::Base
     notification_email(user, opts)
   end
 
+  def user_linked(user, opts)
+    opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:show_category_in_subject] = true
+    notification_email(user, opts)
+  end
+
   def user_mentioned(user, opts)
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
@@ -314,7 +321,7 @@ class UserNotifications < ActionMailer::Base
       context: context,
       username: username,
       add_unsubscribe_link: !user.staged,
-      add_unsubscribe_via_email_link: user.mailing_list_mode,
+      add_unsubscribe_via_email_link: user.user_option.mailing_list_mode,
       unsubscribe_url: post.topic.unsubscribe_url,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: use_site_subject,
