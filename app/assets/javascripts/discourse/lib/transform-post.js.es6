@@ -10,6 +10,12 @@ function actionDescription(action, acted, count) {
   }
 }
 
+const _additionalAttributes = [];
+
+export function includeAttributes(...attributes) {
+  attributes.forEach(a => _additionalAttributes.push(a));
+}
+
 export function transformBasicPost(post) {
   // Note: it can be dangerous to not use `get` in Ember code, but this is significantly
   // faster and has tests to confirm it works. We only call `get` when the property is a CP
@@ -188,6 +194,8 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;
     postAtts.canDelete = !postAtts.isDeleted && postAtts.canDelete;
   }
+
+  _additionalAttributes.forEach(a => postAtts[a] = post[a]);
 
   return postAtts;
 }

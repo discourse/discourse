@@ -75,6 +75,7 @@ export default class Widget {
     this.siteSettings = container.lookup('site-settings:main');
     this.currentUser = container.lookup('current-user:main');
     this.store = container.lookup('store:main');
+    this.appEvents = container.lookup('app-events:main');
   }
 
   defaultState() {
