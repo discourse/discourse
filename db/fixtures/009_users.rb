@@ -16,11 +16,14 @@ User.seed do |u|
   u.active = true
   u.admin = true
   u.moderator = true
-  u.email_direct = false
   u.approved = true
-  u.email_private_messages = false
   u.trust_level = TrustLevel[4]
 end
+
+UserOption.where(user_id: -1).update_all(
+  email_private_messages: false,
+  email_direct: false
+)
 
 Group.user_trust_level_change!(-1, TrustLevel[4])
 
@@ -49,3 +52,4 @@ if ENV["SMOKE"] == "1"
     et.confirmed = true
   end
 end
+

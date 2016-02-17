@@ -510,7 +510,7 @@ describe Guardian do
 
         it 'is true if the author has public edit history' do
           public_post_revision = Fabricate(:post_revision)
-          public_post_revision.post.user.edit_history_public = true
+          public_post_revision.post.user.user_option.edit_history_public = true
           expect(Guardian.new.can_see?(public_post_revision)).to be_truthy
         end
       end
@@ -533,7 +533,7 @@ describe Guardian do
 
         it 'is true if the author has public edit history' do
           public_post_revision = Fabricate(:post_revision)
-          public_post_revision.post.user.edit_history_public = true
+          public_post_revision.post.user.user_option.edit_history_public = true
           expect(Guardian.new.can_see?(public_post_revision)).to be_truthy
         end
       end

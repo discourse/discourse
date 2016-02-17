@@ -40,9 +40,12 @@ class AnonymousShadowCreator
         active: true,
         trust_level: 1,
         trust_level_locked: true,
-        email_private_messages: false,
-        email_digests: false,
         created_at: 1.day.ago # bypass new user restrictions
+      )
+
+      shadow.user_option.update_columns(
+        email_private_messages: false,
+        email_digests: false
       )
 
       shadow.email_tokens.update_all(confirmed: true)

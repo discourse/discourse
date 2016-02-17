@@ -51,7 +51,7 @@ describe UserEmailObserver do
     include_examples "enqueue"
 
     it "doesn't enqueue a job if the user has mention emails disabled" do
-      notification.user.expects(:email_direct?).returns(false)
+      notification.user.user_option.update_columns(email_direct: false)
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
       UserEmailObserver.process_notification(notification)
     end
@@ -61,7 +61,7 @@ describe UserEmailObserver do
     include_examples "enqueue"
 
     it "doesn't enqueue a job if the user has private message emails disabled" do
-      notification.user.expects(:email_private_messages?).returns(false)
+      notification.user.user_option.update_columns(email_private_messages: false)
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
       UserEmailObserver.process_notification(notification)
     end

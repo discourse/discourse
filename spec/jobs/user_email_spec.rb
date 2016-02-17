@@ -55,7 +55,8 @@ describe Jobs::UserEmail do
     end
 
     it "does send an email to a user that's been recently seen but has email_always set" do
-      user.update_attributes(last_seen_at: 9.minutes.ago, email_always: true)
+      user.update_attributes(last_seen_at: 9.minutes.ago)
+      user.user_option.update_attributes(email_always: true)
       Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
     end
@@ -188,13 +189,13 @@ describe Jobs::UserEmail do
       it "does send the email if the notification has been seen but the user is set for email_always" do
         Email::Sender.any_instance.expects(:send)
         notification.update_column(:read, true)
-        user.update_column(:email_always, true)
+        user.user_option.update_column(:email_always, true)
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
       it "doesn't send the mail if the user is using mailing list mode" do
         Email::Sender.any_instance.expects(:send).never
-        user.update_column(:mailing_list_mode, true)
+        user.user_option.update_column(:mailing_list_mode, true)
         # sometimes, we pass the notification_id
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
         # other times, we only pass the type of notification
