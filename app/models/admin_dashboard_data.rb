@@ -62,7 +62,8 @@ class AdminDashboardData
                       :failing_emails_check, :default_logo_check, :contact_email_check,
                       :send_consumer_email_check, :title_check,
                       :site_description_check, :site_contact_username_check,
-                      :notification_email_check, :subfolder_ends_in_slash_check
+                      :notification_email_check, :subfolder_ends_in_slash_check,
+                      :pop3_polling_configuration
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -203,6 +204,10 @@ class AdminDashboardData
 
   def subfolder_ends_in_slash_check
     I18n.t('dashboard.subfolder_ends_in_slash') if Discourse.base_uri =~ /\/$/
+  end
+
+  def pop3_polling_configuration
+    POP3PollingEnabledSettingValidator.new.error_message if SiteSetting.pop3_polling_enabled
   end
 
 end
