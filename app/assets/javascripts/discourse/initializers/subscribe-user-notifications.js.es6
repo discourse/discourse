@@ -49,34 +49,35 @@ export default {
           const oldNotifications = stale.results.get('content');
           const staleIndex = _.findIndex(oldNotifications, {id: lastNotification.id});
 
-          if (staleIndex > -1) {
-            oldNotifications.splice(staleIndex, 1);
+          if (staleIndex === -1) {
+            // this gets a bit tricky, uread pms are bumped to front
+            var insertPosition = 0;
+            if (lastNotification.notification_type !== 6) {
+              insertPosition = _.findIndex(oldNotifications, function(n){
+                return n.notification_type !== 6 || n.read;
+              });
+              insertPosition = insertPosition === -1 ? oldNotifications.length - 1 : insertPosition;
+            }
+
+            oldNotifications.insertAt(insertPosition, Em.Object.create(lastNotification));
           }
 
-          // this gets a bit tricky, uread pms are bumped to front
-          var insertPosition = 0;
-          if (lastNotification.notification_type !== 6) {
-            insertPosition = _.findIndex(oldNotifications, function(n){
-              return n.notification_type !== 6 || n.read;
-            });
-            insertPosition = insertPosition === -1 ? oldNotifications.length - 1 : insertPosition;
-          }
+          for (var idx=0; idx < data.recent.length; idx++) {
+            var old;
+            while(old = oldNotifications[idx]) {
+              var info = data.recent[idx];
 
-          oldNotifications.splice(insertPosition, 0, Em.Object.create(lastNotification));
-
-          var idx=0;
-          data.recent.forEach((info)=> {
-            var old = oldNotifications[idx];
-            if (old) {
               if (old.get('id') !== info[0]) {
-                oldNotifications.splice(idx, 1);
-                return;
-              } else if (old.get('read') !== info[1]) {
-                old.set('read', info[1]);
+                oldNotifications.removeAt(idx);
+              } else {
+                if (old.get('read') !== info[1]) {
+                  old.set('read', info[1]);
+                }
+                break;
               }
             }
-            idx += 1;
-          });
+            if ( !old ) { break; }
+          }
 
         }
       }, user.notification_channel_position);
