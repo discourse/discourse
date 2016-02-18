@@ -23,7 +23,7 @@ class POP3PollingEnabledSettingValidator
       I18n.t("site_settings.errors.pop3_polling_username_is_empty")
     elsif SiteSetting.pop3_polling_password.blank?
       I18n.t("site_settings.errors.pop3_polling_password_is_empty")
-    else
+    elsif !authentication_works?
       I18n.t("site_settings.errors.pop3_polling_authentication_failed")
     end
   end
