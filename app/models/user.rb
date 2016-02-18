@@ -77,8 +77,6 @@ class User < ActiveRecord::Base
 
   after_initialize :add_trust_level
 
-  before_create :set_default_user_preferences
-
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_option
@@ -90,7 +88,6 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
-  after_save :update_tracked_topics
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
@@ -626,20 +623,6 @@ class User < ActiveRecord::Base
     Promotion.new(self).change_trust_level!(level, opts)
   end
 
-  def treat_as_new_topic_start_date
-    duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
-    times = [case duration
-      when User::NewTopicDuration::ALWAYS
-        created_at
-      when User::NewTopicDuration::LAST_VISIT
-        previous_visit_at || user_stat.new_since
-      else
-        duration.minutes.ago
-    end, user_stat.new_since, Time.at(SiteSetting.min_new_topics_time).to_datetime]
-
-    times.max
-  end
-
   def readable_name
     return "#{name} (#{username})" if name.present? && name != username
     username
@@ -730,51 +713,6 @@ class User < ActiveRecord::Base
       .exists?
   end
 
-  def should_be_redirected_to_top
-    redirected_to_top.present?
-  end
-
-  def redirected_to_top
-    # redirect is enabled
-    return unless SiteSetting.redirect_users_to_top_page
-    # top must be in the top_menu
-    return unless SiteSetting.top_menu =~ /(^|\|)top(\||$)/i
-    # not enough topics
-    return unless period = SiteSetting.min_redirected_to_top_period
-
-    if !seen_before? || (trust_level == 0 && !redirected_to_top_yet?)
-      update_last_redirected_to_top!
-      return {
-        reason: I18n.t('redirected_to_top_reasons.new_user'),
-        period: period
-      }
-    elsif last_seen_at < 1.month.ago
-      update_last_redirected_to_top!
-      return {
-        reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
-        period: period
-      }
-    end
-
-    # don't redirect to top
-    nil
-  end
-
-  def redirected_to_top_yet?
-    last_redirected_to_top_at.present?
-  end
-
-  def update_last_redirected_to_top!
-    key = "user:#{id}:update_last_redirected_to_top"
-    delay = SiteSetting.active_user_rate_limit_secs
-
-    # only update last_redirected_to_top_at once every minute
-    return unless $redis.setnx(key, "1")
-    $redis.expire(key, delay)
-
-    # delay the update
-    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.id, redirected_at: Time.zone.now)
-  end
 
   def refresh_avatar
     return if @import_mode
@@ -880,11 +818,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_tracked_topics
-    return unless auto_track_topics_after_msecs_changed?
-    TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
-  end
-
   def clear_global_notice_if_needed
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
@@ -970,14 +903,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def set_default_user_preferences
-    set_default_other_new_topic_duration_minutes
-    set_default_other_auto_track_topics_after_msecs
-
-    # needed, otherwise the callback chain is broken...
-    true
-  end
-
   def set_default_categories_preferences
     values = []
 
@@ -1025,12 +950,6 @@ class User < ActiveRecord::Base
   end
 
 
-  %w{new_topic_duration_minutes auto_track_topics_after_msecs}.each do |s|
-    define_method("set_default_other_#{s}") do
-      self.send("#{s}=", SiteSetting.send("default_other_#{s}").to_i) if has_attribute?(s)
-    end
-  end
-
 end
 
 # == Schema Information
@@ -1054,7 +973,6 @@ end
 #  admin                         :boolean          default(FALSE), not null
 #  last_emailed_at               :datetime
 #  trust_level                   :integer          not null
-#  email_private_messages        :boolean          default(TRUE)
 #  approved                      :boolean          default(FALSE), not null
 #  approved_by_id                :integer
 #  approved_at                   :datetime
@@ -1062,11 +980,9 @@ end
 #  suspended_at                  :datetime
 #  suspended_till                :datetime
 #  date_of_birth                 :date
-#  auto_track_topics_after_msecs :integer
 #  views                         :integer          default(0), not null
 #  flag_level                    :integer          default(0), not null
 #  ip_address                    :inet
-#  new_topic_duration_minutes    :integer
 #  moderator                     :boolean          default(FALSE)
 #  blocked                       :boolean          default(FALSE)
 #  title                         :string(255)
@@ -1074,7 +990,6 @@ end
 #  primary_group_id              :integer
 #  locale                        :string(10)
 #  registration_ip_address       :inet
-#  last_redirected_to_top_at     :datetime
 #  trust_level_locked            :boolean          default(FALSE), not null
 #  staged                        :boolean          default(FALSE), not null
 #

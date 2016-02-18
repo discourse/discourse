@@ -82,8 +82,6 @@ class UserSerializer < BasicUserSerializer
                    :can_delete_all_posts
 
   private_attributes :locale,
-                     :auto_track_topics_after_msecs,
-                     :new_topic_duration_minutes,
                      :muted_category_ids,
                      :tracked_category_ids,
                      :watched_category_ids,
@@ -252,14 +250,6 @@ class UserSerializer < BasicUserSerializer
   ###
   ### PRIVATE ATTRIBUTES
   ###
-
-  def auto_track_topics_after_msecs
-    object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
-  end
-
-  def new_topic_duration_minutes
-    object.new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes
-  end
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)

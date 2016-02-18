@@ -46,13 +46,18 @@ describe UserUpdater do
       updater.update(bio_raw: 'my new bio',
                      email_always: 'true',
                      mailing_list_mode: true,
-                     digest_after_days: "8")
+                     digest_after_days: "8",
+                     new_topic_duration_minutes: 100,
+                     auto_track_topics_after_msecs: 101
+                    )
       user.reload
 
       expect(user.user_profile.bio_raw).to eq 'my new bio'
       expect(user.user_option.email_always).to eq true
       expect(user.user_option.mailing_list_mode).to eq true
       expect(user.user_option.digest_after_days).to eq 8
+      expect(user.user_option.new_topic_duration_minutes).to eq 100
+      expect(user.user_option.auto_track_topics_after_msecs).to eq 101
     end
 
     context 'when update succeeds' do
