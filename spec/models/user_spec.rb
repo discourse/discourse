@@ -986,95 +986,6 @@ describe User do
     end
   end
 
-  describe "should_be_redirected_to_top" do
-    let!(:user) { Fabricate(:user) }
-
-    it "should be redirected to top when there is a reason to" do
-      user.expects(:redirected_to_top).returns({ reason: "42" })
-      expect(user.should_be_redirected_to_top).to eq(true)
-    end
-
-    it "should not be redirected to top when there is no reason to" do
-      user.expects(:redirected_to_top).returns(nil)
-      expect(user.should_be_redirected_to_top).to eq(false)
-    end
-
-  end
-
-  describe ".redirected_to_top" do
-    let!(:user) { Fabricate(:user) }
-
-    it "should have no reason when `SiteSetting.redirect_users_to_top_page` is disabled" do
-      SiteSetting.expects(:redirect_users_to_top_page).returns(false)
-      expect(user.redirected_to_top).to eq(nil)
-    end
-
-    context "when `SiteSetting.redirect_users_to_top_page` is enabled" do
-      before { SiteSetting.expects(:redirect_users_to_top_page).returns(true) }
-
-      it "should have no reason when top is not in the `SiteSetting.top_menu`" do
-        SiteSetting.expects(:top_menu).returns("latest")
-        expect(user.redirected_to_top).to eq(nil)
-      end
-
-      context "and when top is in the `SiteSetting.top_menu`" do
-        before { SiteSetting.expects(:top_menu).returns("latest|top") }
-
-        it "should have no reason when there are not enough topics" do
-          SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
-          expect(user.redirected_to_top).to eq(nil)
-        end
-
-        context "and there are enough topics" do
-
-          before { SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly) }
-
-          describe "a new user" do
-            before do
-              user.stubs(:trust_level).returns(0)
-              user.stubs(:last_seen_at).returns(5.minutes.ago)
-            end
-
-            it "should have a reason for the first visit" do
-              user.expects(:last_redirected_to_top_at).returns(nil)
-              user.expects(:update_last_redirected_to_top!).once
-
-              expect(user.redirected_to_top).to eq({
-                reason: I18n.t('redirected_to_top_reasons.new_user'),
-                period: :monthly
-              })
-            end
-
-            it "should not have a reason for next visits" do
-              user.expects(:last_redirected_to_top_at).returns(10.minutes.ago)
-              user.expects(:update_last_redirected_to_top!).never
-
-              expect(user.redirected_to_top).to eq(nil)
-            end
-          end
-
-          describe "an older user" do
-            before { user.stubs(:trust_level).returns(1) }
-
-            it "should have a reason when the user hasn't been seen in a month" do
-              user.last_seen_at = 2.months.ago
-              user.expects(:update_last_redirected_to_top!).once
-
-              expect(user.redirected_to_top).to eq({
-                reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
-                period: :monthly
-              })
-            end
-
-          end
-
-        end
-
-      end
-
-    end
-
-  end
 
   describe "automatic avatar creation" do
     it "sets a system avatar for new users" do
@@ -1281,9 +1192,8 @@ describe User do
       expect(options.edit_history_public).to eq(true)
       expect(options.automatically_unpin_topics).to eq(false)
       expect(options.email_direct).to eq(false)
-
-      expect(user.new_topic_duration_minutes).to eq(-1)
-      expect(user.auto_track_topics_after_msecs).to eq(0)
+      expect(options.new_topic_duration_minutes).to eq(-1)
+      expect(options.auto_track_topics_after_msecs).to eq(0)
 
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([1])
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])

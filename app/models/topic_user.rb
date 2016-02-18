@@ -104,7 +104,7 @@ class TopicUser < ActiveRecord::Base
 
         if rows == 0
           now = DateTime.now
-          auto_track_after = User.select(:auto_track_topics_after_msecs).find_by(id: user_id).try(:auto_track_topics_after_msecs)
+          auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
           auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
 
           if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
@@ -140,6 +140,31 @@ class TopicUser < ActiveRecord::Base
 
     # Update the last read and the last seen post count, but only if it doesn't exist.
     # This would be a lot easier if psql supported some kind of upsert
+    UPDATE_TOPIC_USER_SQL = "UPDATE topic_users
+                                    SET
+                                      last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
+                                      highest_seen_post_number = t.highest_post_number,
+                                      total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
+                                      notification_level =
+                                         case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
+                                            coalesce(uo.auto_track_topics_after_msecs,:threshold) and
+                                            coalesce(uo.auto_track_topics_after_msecs, :threshold) >= 0 then
+                                              :tracking
+                                         else
+                                            tu.notification_level
+                                         end
+                                  FROM topic_users tu
+                                  join topics t on t.id = tu.topic_id
+                                  join users u on u.id = :user_id
+                                  join user_options uo on uo.user_id = :user_id
+                                  WHERE
+                                       tu.topic_id = topic_users.topic_id AND
+                                       tu.user_id = topic_users.user_id AND
+                                       tu.topic_id = :topic_id AND
+                                       tu.user_id = :user_id
+                                  RETURNING
+                                    topic_users.notification_level, tu.notification_level old_level, tu.last_read_post_number
+                                "
     def update_last_read(user, topic_id, post_number, msecs, opts={})
       return if post_number.blank?
       msecs = 0 if msecs.to_i < 0
@@ -160,31 +185,7 @@ class TopicUser < ActiveRecord::Base
       # ... user visited the topic but did not read the posts
       #
       # 86400000 = 1 day
-      rows = exec_sql("UPDATE topic_users
-                                    SET
-                                      last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
-                                      highest_seen_post_number = t.highest_post_number,
-                                      total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
-                                      notification_level =
-                                         case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
-                                            coalesce(u.auto_track_topics_after_msecs,:threshold) and
-                                            coalesce(u.auto_track_topics_after_msecs, :threshold) >= 0 then
-                                              :tracking
-                                         else
-                                            tu.notification_level
-                                         end
-                                  FROM topic_users tu
-                                  join topics t on t.id = tu.topic_id
-                                  join users u on u.id = :user_id
-                                  WHERE
-                                       tu.topic_id = topic_users.topic_id AND
-                                       tu.user_id = topic_users.user_id AND
-                                       tu.topic_id = :topic_id AND
-                                       tu.user_id = :user_id
-                                  RETURNING
-                                    topic_users.notification_level, tu.notification_level old_level, tu.last_read_post_number
-                                ",
-                                args).values
+      rows = exec_sql(UPDATE_TOPIC_USER_SQL,args).values
 
       if rows.length == 1
         before = rows[0][1].to_i
@@ -206,7 +207,7 @@ class TopicUser < ActiveRecord::Base
       if rows.length == 0
         # The user read at least one post in a topic that they haven't viewed before.
         args[:new_status] = notification_levels[:regular]
-        if (user.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs) == 0
+        if (user.user_option.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs) == 0
           args[:new_status] = notification_levels[:tracking]
         end
         TopicTrackingState.publish_read(topic_id, post_number, user.id, args[:new_status])
