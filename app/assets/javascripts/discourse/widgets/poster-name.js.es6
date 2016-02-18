@@ -72,8 +72,10 @@ export default createWidget('poster-name', {
           if (result.icon) {
             iconBody = iconNode(result.icon);
           } else if (result.emoji) {
-            const src = Discourse.Emoji.urlFor(result.emoji);
-            iconBody = h('img', { className: 'emoji', attributes: { src } });
+            iconBody = result.emoji.split('|').map(emoji => {
+              const src = Discourse.Emoji.urlFor(emoji);
+              return h('img', { className: 'emoji', attributes: { src } });
+            });
           }
 
           if (result.url) {
