@@ -64,10 +64,18 @@ export default createWidget('poster-name', {
     const cfs = attrs.userCustomFields;
     if (cfs) {
       _callbacks.forEach(cb => {
-        const result = cb(cfs);
+        const result = cb(cfs, attrs);
         if (result) {
 
-          let iconBody = iconNode(result.icon);
+          let iconBody;
+
+          if (result.icon) {
+            iconBody = iconNode(result.icon);
+          } else if (result.emoji) {
+            const src = Discourse.Emoji.urlFor(result.emoji);
+            iconBody = h('img', { className: 'emoji', attributes: { src } });
+          }
+
           if (result.url) {
             iconBody = h('a', { attributes: { href: result.url } }, iconBody);
           }
