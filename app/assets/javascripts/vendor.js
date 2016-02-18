@@ -40,4 +40,5 @@
 //= require jquery.autoellipsis-1.0.10.min.js
 //= require virtual-dom
 //= require virtual-dom-amd
+//= require highlight.js
 //= require_tree ./discourse/ember
