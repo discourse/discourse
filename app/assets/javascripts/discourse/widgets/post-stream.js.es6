@@ -19,6 +19,7 @@ export default createWidget('post-stream', {
     let prevPost;
     let prevDate;
 
+    const mobileView = this.site.mobileView;
     for (let i=0; i<postArray.length; i++) {
       const post = postArray[i];
 
@@ -31,6 +32,7 @@ export default createWidget('post-stream', {
 
       const transformed = transformPost(this.currentUser, this.site, post, prevPost, nextPost);
       transformed.canCreatePost = attrs.canCreatePost;
+      transformed.mobileView = mobileView;
 
       if (transformed.canManage) {
         transformed.multiSelect = attrs.multiSelect;

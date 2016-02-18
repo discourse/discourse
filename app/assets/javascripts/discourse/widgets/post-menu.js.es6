@@ -134,7 +134,7 @@ registerButton('reply', attrs => {
 
   if (!attrs.canCreatePost) { return; }
 
-  if (!Discourse.Mobile.mobileView) {
+  if (!attrs.mobileView) {
     args.label = 'topic.reply.title';
   }
 

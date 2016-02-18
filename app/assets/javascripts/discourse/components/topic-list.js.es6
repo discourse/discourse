@@ -19,7 +19,7 @@ export default Ember.Component.extend({
   }.property(),
 
   skipHeader: function() {
-    return Discourse.Mobile.mobileView;
+    return this.site.mobileView;
   }.property(),
 
   showLikes: function(){

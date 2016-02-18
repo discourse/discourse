@@ -58,7 +58,7 @@ export default class PostCooked {
       // deferring work only for posts with images
       // we got to use screen here, cause nothing is rendered yet.
       // long term we may want to allow for weird margins that are enforced, instead of hardcoding at 70/20
-      maxWindowWidth = maxWindowWidth || $(window).width() - (Discourse.Mobile.mobileView ? 20 : 70);
+      maxWindowWidth = maxWindowWidth || $(window).width() - (this.attrs.mobileView ? 20 : 70);
       if (maxImageWidth < maxWindowWidth) {
         maxWindowWidth = maxImageWidth;
       }

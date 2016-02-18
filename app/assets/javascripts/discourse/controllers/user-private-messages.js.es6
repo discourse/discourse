@@ -12,7 +12,7 @@ export default Ember.Controller.extend({
   bulkSelectEnabled: Em.computed.alias('controllers.user-topics-list.bulkSelectEnabled'),
 
   mobileView: function() {
-    return Discourse.Mobile.mobileView;
+    return this.site.mobileView;
   }.property(),
 
   showNewPM: function(){
