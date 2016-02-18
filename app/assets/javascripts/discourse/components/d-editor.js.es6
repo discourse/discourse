@@ -176,8 +176,13 @@ class Toolbar {
   }
 }
 
-export function onToolbarCreate(func) {
+export function addToolbarCallback(func) {
   _createCallbacks.push(func);
+}
+
+export function onToolbarCreate(func) {
+  console.warn('`onToolbarCreate` is deprecated, use the plugin api instead.');
+  addToolbarCallback(func);
 };
 
 export default Ember.Component.extend({
