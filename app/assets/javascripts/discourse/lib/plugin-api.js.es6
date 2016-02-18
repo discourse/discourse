@@ -3,6 +3,7 @@ import ComposerEditor from 'discourse/components/composer-editor';
 import { addPosterIcon } from 'discourse/widgets/poster-name';
 import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
+import { addToolbarCallback } from 'discourse/components/d-editor';
 
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
@@ -84,6 +85,10 @@ class PluginApi {
 
   addPostMenuButton(name, callback) {
     addButton(name, callback);
+  }
+
+  onToolbarCreate(callback) {
+    addToolbarCallback(callback);
   }
 
 }
