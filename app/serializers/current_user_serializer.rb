@@ -70,6 +70,14 @@ class CurrentUserSerializer < BasicUserSerializer
     object.user_option.automatically_unpin_topics
   end
 
+  def should_be_redirected_to_top
+    object.user_option.should_be_redirected_to_top
+  end
+
+  def redirected_to_top
+    object.user_option.redirected_to_top
+  end
+
   def site_flagged_posts_count
     PostAction.flagged_posts_count
   end
@@ -103,7 +111,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_redirected_to_top?
-    object.redirected_to_top.present?
+    object.user_option.redirected_to_top.present?
   end
 
   def custom_fields

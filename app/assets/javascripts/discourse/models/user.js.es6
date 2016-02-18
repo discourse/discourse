@@ -141,13 +141,11 @@ const User = RestModel.extend({
 
   save() {
     const data = this.getProperties(
-            'auto_track_topics_after_msecs',
             'bio_raw',
             'website',
             'location',
             'name',
             'locale',
-            'new_topic_duration_minutes',
             'custom_fields',
             'user_fields',
             'muted_usernames',
@@ -165,7 +163,9 @@ const User = RestModel.extend({
             'enable_quoting',
             'disable_jump_reply',
             'automatically_unpin_topics',
-            'digest_after_days'
+            'digest_after_days',
+            'new_topic_duration_minutes',
+            'auto_track_topics_after_msecs'
     ].forEach(s => {
       data[s] = this.get(`user_option.${s}`);
     });

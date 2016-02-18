@@ -18,7 +18,9 @@ class UserUpdater
     :disable_jump_reply,
     :edit_history_public,
     :automatically_unpin_topics,
-    :digest_after_days
+    :digest_after_days,
+    :new_topic_duration_minutes,
+    :auto_track_topics_after_msecs
   ]
 
   def initialize(actor, user)
@@ -37,14 +39,6 @@ class UserUpdater
 
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }
-
-    if attributes[:auto_track_topics_after_msecs]
-      user.auto_track_topics_after_msecs = attributes[:auto_track_topics_after_msecs].to_i
-    end
-
-    if attributes[:new_topic_duration_minutes]
-      user.new_topic_duration_minutes = attributes[:new_topic_duration_minutes].to_i
-    end
 
     if guardian.can_grant_title?(user)
       user.title = attributes.fetch(:title) { user.title }

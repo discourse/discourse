@@ -331,7 +331,7 @@ class TopicQuery
   def new_results(options={})
     # TODO does this make sense or should it be ordered on created_at
     #  it is ordering on bumped_at now
-    result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
+    result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.user_option.treat_as_new_topic_start_date)
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
 
