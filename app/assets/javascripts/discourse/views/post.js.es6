@@ -186,10 +186,12 @@ const PostView = Discourse.GroupedView.extend(Ember.Evented, {
         const $link = $(this),
               href = $link.attr('href');
 
-        let valid = !lc.internal && href === lc.url;
+        let valid = href === lc.url;
 
         // this might be an attachment
-        if (lc.internal) { valid = href.indexOf(lc.url) >= 0; }
+        if (lc.internal && /^\/uploads\//.test(lc.url)) {
+          valid = href.indexOf(lc.url) >= 0;
+        }
 
         if (valid) {
           // don't display badge counts on category badge & oneboxes (unless when explicitely stated)
