@@ -62,17 +62,19 @@ class PluginApi {
    *
    * This function can be used to add an icon with a link that will be displayed
    * beside a poster's name. The `callback` is called with the post's user custom
-   * fields, and will render an icon if it receives an object back.
+   * fields and post attrions. An icon will be rendered if the callback returns
+   * an object with the appropriate attributes.
    *
    * The returned object can have the following attributes:
    *
-   *   icon        (required) the font awesome icon to render
+   *   icon        the font awesome icon to render
+   *   emoji       an emoji icon to render
    *   className   (optional) a css class to apply to the icon
    *   url         (optional) where to link the icon
    *   title       (optional) the tooltip title for the icon on hover
    *
    * ```
-   * api.addPosterIcon(cfs => {
+   * api.addPosterIcon((cfs, attrs) => {
    *   if (cfs.customer) {
    *     return { icon: 'user', className: 'customer', title: 'customer' };
    *   }
