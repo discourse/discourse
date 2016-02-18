@@ -11,10 +11,21 @@ class UserOptionSerializer < ApplicationSerializer
              :disable_jump_reply,
              :digest_after_days,
              :automatically_unpin_topics,
-             :edit_history_public
+             :edit_history_public,
+             :auto_track_topics_after_msecs,
+             :new_topic_duration_minutes
 
 
   def include_edit_history_public?
     !SiteSetting.edit_history_visible_to_public
   end
+
+  def auto_track_topics_after_msecs
+    object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
+  end
+
+  def new_topic_duration_minutes
+    object.new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes
+  end
+
 end
