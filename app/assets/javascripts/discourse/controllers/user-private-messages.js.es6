@@ -2,7 +2,6 @@ import computed from 'ember-addons/ember-computed-decorators';
 import Topic from 'discourse/models/topic';
 
 export default Ember.Controller.extend({
-
   needs: ["application", "user-topics-list", "user"],
   pmView: false,
   viewingSelf: Em.computed.alias('controllers.user.viewingSelf'),
@@ -10,10 +9,6 @@ export default Ember.Controller.extend({
   currentPath: Em.computed.alias('controllers.application.currentPath'),
   selected: Em.computed.alias('controllers.user-topics-list.selected'),
   bulkSelectEnabled: Em.computed.alias('controllers.user-topics-list.bulkSelectEnabled'),
-
-  mobileView: function() {
-    return this.site.mobileView;
-  }.property(),
 
   showNewPM: function(){
     return this.get('controllers.user.viewingSelf') &&
