@@ -221,6 +221,17 @@ createWidget('expand-post-button', {
   }
 });
 
+class DecoratorHelper {
+  constructor(widget) {
+    this.container = widget.container;
+    this._widget = widget;
+  }
+
+  getModel() {
+    return this._widget.findAncestorModel();
+  }
+}
+
 createWidget('post-contents', {
   buildKey: attrs => `post-contents-${attrs.id}`,
 
@@ -240,7 +251,7 @@ createWidget('post-contents', {
   },
 
   html(attrs, state) {
-    const result = [new PostCooked(attrs)];
+    const result = [new PostCooked(attrs, new DecoratorHelper(this))];
 
     if (attrs.cooked_hidden) {
       result.push(this.attach('expand-hidden', attrs));

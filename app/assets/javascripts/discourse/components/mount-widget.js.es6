@@ -2,6 +2,12 @@ import { diff, patch } from 'virtual-dom';
 import { WidgetClickHook } from 'discourse/widgets/click-hook';
 import { renderedKey } from 'discourse/widgets/widget';
 
+const _cleanCallbacks = {};
+export function addWidgetCleanCallback(widgetName, fn) {
+  _cleanCallbacks[widgetName] = _cleanCallbacks[widgetName] || [];
+  _cleanCallbacks[widgetName].push(fn);
+}
+
 export default Ember.Component.extend({
   _tree: null,
   _rootNode: null,
@@ -20,6 +26,13 @@ export default Ember.Component.extend({
     this._rootNode = document.createElement('div');
     this.element.appendChild(this._rootNode);
     this._timeout = Ember.run.scheduleOnce('render', this, this.rerenderWidget);
+  },
+
+  willClearRender() {
+    const callbacks = _cleanCallbacks[this.get('widget')];
+    if (callbacks) {
+      callbacks.forEach(cb => cb());
+    }
   },
 
   willDestroyElement() {

@@ -4,6 +4,7 @@ import { addPosterIcon } from 'discourse/widgets/poster-name';
 import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
+import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
@@ -29,12 +30,15 @@ class PluginApi {
   }
 
   /**
-   * decorateCooked(callback)
+   * decorateCooked(callback, options)
    *
    * Used for decorating the `cooked` content of a post after it is rendered using
    * jQuery.
    *
    * `callback` will be called when it is time to decorate with a jQuery selector.
+   *
+   * Use `options.onlyStream` if you only want to decorate posts within a topic,
+   * and not in other places like the user stream.
    *
    * For example, to add a yellow background to all posts you could do this:
    *
@@ -42,10 +46,15 @@ class PluginApi {
    * api.decorateCooked($elem => $elem.css({ backgroundColor: 'yellow' }));
    * ```
    **/
-  decorateCooked(cb) {
-    addDecorator(cb);
-    decorate(ComposerEditor, 'previewRefreshed', cb);
-    decorate(this.container.lookupFactory('view:user-stream'), 'didInsertElement', cb);
+  decorateCooked(callback, opts) {
+    opts = opts || {};
+
+    addDecorator(callback);
+
+    if (!opts.onlyStream) {
+      decorate(ComposerEditor, 'previewRefreshed', callback);
+      decorate(this.container.lookupFactory('view:user-stream'), 'didInsertElement', callback);
+    }
   }
 
   /**
@@ -89,6 +98,10 @@ class PluginApi {
 
   onToolbarCreate(callback) {
     addToolbarCallback(callback);
+  }
+
+  cleanupStream(fn) {
+    addWidgetCleanCallback('post-stream', fn);
   }
 
 }
