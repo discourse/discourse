@@ -14,6 +14,7 @@ export default function(name, opts) {
     this.container.injection('component', 'siteSettings', 'site-settings:main');
     this.container.injection('component', 'appEvents', 'app-events:main');
     this.container.injection('component', 'capabilities', 'capabilities:main');
+    this.container.injection('component', 'site', 'site:main');
 
     this.siteSettings = Discourse.SiteSettings;
 
