@@ -1,7 +1,7 @@
 export default {
   name: 'ensure-image-dimensions',
   after: 'mobile',
-  initialize: function() {
+  initialize(container) {
     if (!window) { return; }
 
     // This enforces maximum dimensions of images based on site settings
@@ -11,7 +11,8 @@ export default {
     var width = Discourse.SiteSettings.max_image_width;
     var height = Discourse.SiteSettings.max_image_height;
 
-    if (Discourse.Mobile.mobileView) {
+    const site = container.lookup('site:main');
+    if (site.mobileView) {
       width = $(window).width() - 20;
     }
 

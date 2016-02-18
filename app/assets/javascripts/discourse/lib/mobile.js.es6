@@ -1,10 +1,10 @@
 //  An object that is responsible for logic related to mobile devices.
-Discourse.Mobile = {
+const Mobile = {
   isMobileDevice: false,
   mobileView: false,
 
-  init: function() {
-    var $html = $('html');
+  init() {
+    const $html = $('html');
     this.isMobileDevice = $html.hasClass('mobile-device');
     this.mobileView = $html.hasClass('mobile-view');
 
@@ -42,3 +42,13 @@ Discourse.Mobile = {
     window.location.assign(window.location.pathname + '?mobile_view=' + (mobile ? '1' : '0'));
   }
 };
+
+// Backwards compatibiltity, deprecated
+Object.defineProperty(Discourse, 'Mobile', {
+  get: function() {
+    Ember.warn("DEPRECATION: `Discourse.Mobile` is deprecated, use `this.site.mobileView` instead");
+    return Mobile;
+  }
+});
+
+export default Mobile;

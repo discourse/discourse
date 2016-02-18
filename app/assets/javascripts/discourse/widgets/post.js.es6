@@ -331,7 +331,7 @@ createWidget('post-article', {
     const replyPostNumber = this.attrs.reply_to_post_number;
 
     // jump directly on mobile
-    if (Discourse.Mobile.mobileView) {
+    if (this.attrs.mobileView) {
       DiscourseURL.jumpToPost(replyPostNumber);
       return Ember.RSVP.Promise.resolve();
     }

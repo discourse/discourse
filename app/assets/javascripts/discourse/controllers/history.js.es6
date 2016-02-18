@@ -10,7 +10,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   revisionsTextKey: "post.revisions.controls.comparing_previous_to_current_out_of_total",
 
   _changeViewModeOnMobile: function() {
-    if (Discourse.Mobile.mobileView) { this.set("viewMode", "inline"); }
+    if (this.site.mobileView) { this.set("viewMode", "inline"); }
   }.on("init"),
 
   refresh(postId, postVersion) {

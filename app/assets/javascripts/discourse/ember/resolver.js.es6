@@ -141,7 +141,7 @@ export default Ember.DefaultResolver.extend({
   },
 
   findMobileTemplate(parsedName) {
-    if (Discourse.Mobile.mobileView) {
+    if (this.mobileView) {
       var mobileParsedName = this.parseName(parsedName.fullName.replace("template:", "template:mobile/"));
       return this.findTemplate(mobileParsedName);
     }

@@ -82,7 +82,7 @@ export default Ember.View.extend({
 
       $shareLink.css({top: "" + y + "px"});
 
-      if (!Discourse.Mobile.mobileView) {
+      if (!this.site.mobileView) {
         $shareLink.css({left: "" + x + "px"});
       }
 
