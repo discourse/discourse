@@ -6,6 +6,7 @@ import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 import { decorateWidget } from 'discourse/widgets/widget';
+import PageTracker from 'discourse/lib/page-tracker';
 
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
@@ -84,7 +85,7 @@ class PluginApi {
    **/
   addPosterIcon(cb) {
     decorateWidget('poster-name:after', (h, attrs) => {
-      const result = cb(attrs.userCustomFields, attrs);
+      const result = cb(attrs.userCustomFields || {}, attrs);
       if (result) {
         let iconBody;
 
@@ -136,6 +137,10 @@ class PluginApi {
 
   cleanupStream(fn) {
     addWidgetCleanCallback('post-stream', fn);
+  }
+
+  onPageChange(fn) {
+    PageTracker.current().on('change', fn);
   }
 
 }
