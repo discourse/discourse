@@ -1,10 +1,11 @@
+import { iconNode } from 'discourse/helpers/fa-icon';
 import { addDecorator } from 'discourse/widgets/post-cooked';
 import ComposerEditor from 'discourse/components/composer-editor';
-import { addPosterIcon } from 'discourse/widgets/poster-name';
 import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
+import { decorateWidget } from 'discourse/widgets/widget';
 
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
@@ -82,7 +83,34 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
-    addPosterIcon(cb);
+    decorateWidget('poster-name:after', (h, attrs) => {
+      const result = cb(attrs.userCustomFields, attrs);
+      if (result) {
+        let iconBody;
+
+        if (result.icon) {
+          iconBody = iconNode(result.icon);
+        } else if (result.emoji) {
+          iconBody = result.emoji.split('|').map(emoji => {
+            const src = Discourse.Emoji.urlFor(emoji);
+            return h('img', { className: 'emoji', attributes: { src } });
+          });
+        }
+
+        if (result.text) {
+          iconBody = [iconBody, result.text];
+        }
+
+        if (result.url) {
+          iconBody = h('a', { attributes: { href: result.url } }, iconBody);
+        }
+
+
+        return h('span',
+                 { className: result.className, attributes: { title: result.title } },
+                 iconBody);
+      }
+    });
   }
 
   attachWidgetAction(widget, actionName, fn) {

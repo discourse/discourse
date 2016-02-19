@@ -6,11 +6,6 @@ function sanitizeName(name){
   return name.toLowerCase().replace(/[\s_-]/g,'');
 }
 
-const _callbacks = [];
-export function addPosterIcon(cb) {
-  _callbacks.push(cb);
-}
-
 export default createWidget('poster-name', {
   tagName: 'div.names.trigger-user-card',
 
@@ -61,35 +56,15 @@ export default createWidget('poster-name', {
       contents.push(h('span.user-title', titleContents));
     }
 
-    const cfs = attrs.userCustomFields;
-    if (cfs) {
-      _callbacks.forEach(cb => {
-        const result = cb(cfs, attrs);
-        if (result) {
-
-          let iconBody;
-
-          if (result.icon) {
-            iconBody = iconNode(result.icon);
-          } else if (result.emoji) {
-            iconBody = result.emoji.split('|').map(emoji => {
-              const src = Discourse.Emoji.urlFor(emoji);
-              return h('img', { className: 'emoji', attributes: { src } });
-            });
-          }
-
-          if (result.url) {
-            iconBody = h('a', { attributes: { href: result.url } }, iconBody);
-          }
-
-          contents.push(h('span',
-                         { className: result.className,
-                           attributes: { title: result.title }
-                         },
-                         iconBody));
-        }
-      });
-    }
+    // const cfs = attrs.userCustomFields;
+    // if (cfs) {
+    //   _callbacks.forEach(cb => {
+    //     const result = cb(cfs, attrs);
+    //     if (result) {
+    //
+    //     }
+    //   });
+    // }
     return contents;
   }
 });
