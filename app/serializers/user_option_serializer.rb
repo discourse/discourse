@@ -13,7 +13,8 @@ class UserOptionSerializer < ApplicationSerializer
              :automatically_unpin_topics,
              :edit_history_public,
              :auto_track_topics_after_msecs,
-             :new_topic_duration_minutes
+             :new_topic_duration_minutes,
+             :email_previous_replies
 
 
   def include_edit_history_public?

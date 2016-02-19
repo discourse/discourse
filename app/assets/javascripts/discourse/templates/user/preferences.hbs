@@ -176,6 +176,10 @@
           </div>
         {{/if}}
       {{/if}}
+      <div class='controls controls-dropdown'>
+        <label>{{i18n 'user.email_previous_replies.title'}}</label>
+        {{combo-box valueAttribute="value" content=previousRepliesOptions value=model.user_option.email_previous_replies}}
+      </div>
       {{preference-checkbox labelKey="user.email_private_messages" checked=model.user_option.email_private_messages}}
       {{preference-checkbox labelKey="user.email_direct" checked=model.user_option.email_direct}}
       <span class="pref-mailing-list-mode">{{preference-checkbox labelKey="user.mailing_list_mode" checked=model.user_option.mailing_list_mode}}</span>
@@ -188,6 +192,9 @@
           {{i18n 'user.email.frequency_immediately'}}
         {{/if}}
       </div>
+
+
+
     </div>
 
     <div class="control-group notifications">
