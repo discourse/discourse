@@ -113,6 +113,10 @@ class PluginApi {
     });
   }
 
+  decorateWidget(name, fn) {
+    decorateWidget(name, fn);
+  }
+
   attachWidgetAction(widget, actionName, fn) {
     const widgetClass = this.container.lookupFactory(`widget:${widget}`);
     widgetClass.prototype[actionName] = fn;
