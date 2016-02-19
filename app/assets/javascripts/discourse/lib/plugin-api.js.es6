@@ -6,7 +6,7 @@ import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 import { decorateWidget } from 'discourse/widgets/widget';
-import PageTracker from 'discourse/lib/page-tracker';
+import { onPageChange } from 'discourse/lib/page-tracker';
 
 let _decorateId = 0;
 function decorate(klass, evt, cb) {
@@ -139,8 +139,20 @@ class PluginApi {
     addWidgetCleanCallback('post-stream', fn);
   }
 
+  /**
+    Called whenever the "page" changes. This allows us to set up analytics
+    and other tracking.
+
+    To get notified when the page changes, you can install a hook like so:
+
+    ```javascript
+      api.onPageChange((url, title) => {
+        console.log('the page changed to: ' + url + ' and title ' + title);
+      });
+    ```
+  **/
   onPageChange(fn) {
-    PageTracker.current().on('change', fn);
+    onPageChange(fn);
   }
 
 }
