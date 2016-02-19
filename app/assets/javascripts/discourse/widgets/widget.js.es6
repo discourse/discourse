@@ -14,6 +14,18 @@ export function renderedKey(key) {
   delete _dirty[key];
 }
 
+const _decorators = {};
+
+export function decorateWidget(widgetName, cb) {
+  _decorators[widgetName] = _decorators[widgetName] || [];
+  _decorators[widgetName].push(cb);
+}
+
+function applyDecorators(name, type, attrs, state) {
+  const decorators = _decorators[`${name}:${type}`] || [];
+  return decorators.map(d => d(h, attrs, state));
+}
+
 function drawWidget(builder, attrs, state) {
   const properties = {};
 
@@ -44,7 +56,14 @@ function drawWidget(builder, attrs, state) {
     attributes.title = I18n.t(this.title);
   }
 
-  return h(this.tagName || 'div', properties, this.html(attrs, state));
+  let contents = this.html(attrs, state);
+  if (this.name) {
+    const beforeContents = applyDecorators(this.name, 'before', attrs, state) || [];
+    const afterContents = applyDecorators(this.name, 'after', attrs, state) || [];
+    contents = beforeContents.concat(contents).concat(afterContents);
+  }
+
+  return h(this.tagName || 'div', properties, contents);
 }
 
 export function createWidget(name, opts) {
@@ -54,6 +73,7 @@ export function createWidget(name, opts) {
     _registry[name] = result;
   }
 
+  opts.name = name;
   opts.html = opts.html || emptyContent;
   opts.draw = drawWidget;
 
