@@ -5,12 +5,17 @@ class UserOption < ActiveRecord::Base
 
   after_save :update_tracked_topics
 
+  def self.previous_replies_type
+    @previous_replies_type ||= Enum.new(always: 0, unless_emailed: 1, never: 2)
+  end
+
   def set_defaults
     self.email_always = SiteSetting.default_email_always
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
     self.email_direct = SiteSetting.default_email_direct
     self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
     self.email_private_messages = SiteSetting.default_email_private_messages
+    self.email_previous_replies = SiteSetting.default_email_previous_replies
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab

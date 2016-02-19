@@ -7,12 +7,12 @@ describe UserNotifications do
   describe "#get_context_posts" do
     it "does not include hidden/deleted/user_deleted posts in context" do
       post1 = create_post
-      post2 = Fabricate(:post, topic: post1.topic, deleted_at: 1.day.ago)
-      post3 = Fabricate(:post, topic: post1.topic, user_deleted: true)
-      post4 = Fabricate(:post, topic: post1.topic, hidden: true)
-      post5 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:moderator_action])
-      post6 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:small_action])
-      post7 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:whisper])
+      _post2 = Fabricate(:post, topic: post1.topic, deleted_at: 1.day.ago)
+      _post3 = Fabricate(:post, topic: post1.topic, user_deleted: true)
+      _post4 = Fabricate(:post, topic: post1.topic, hidden: true)
+      _post5 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:moderator_action])
+      _post6 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:small_action])
+      _post7 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:whisper])
       last  = Fabricate(:post, topic: post1.topic)
 
       # default is only post #1
@@ -20,6 +20,26 @@ describe UserNotifications do
       # staff members can also see the whisper
       tu = TopicUser.new(topic: post1.topic, user: build(:moderator))
       expect(UserNotifications.get_context_posts(last, tu).count).to eq(2)
+    end
+
+    it "allows users to control context" do
+      post1 = create_post
+      _post2  = Fabricate(:post, topic: post1.topic)
+      post3  = Fabricate(:post, topic: post1.topic)
+
+      user = Fabricate(:user)
+      TopicUser.change(user.id, post1.topic_id, last_emailed_post_number: 1)
+      topic_user = TopicUser.find_by(user_id: user.id, topic_id: post1.topic_id)
+      # to avoid reloads after update_columns
+      user = topic_user.user
+      expect(UserNotifications.get_context_posts(post3, topic_user).count).to eq(1)
+
+      user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:never])
+      expect(UserNotifications.get_context_posts(post3, topic_user).count).to eq(0)
+
+      user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:always])
+      expect(UserNotifications.get_context_posts(post3, topic_user).count).to eq(2)
+
     end
   end
 
