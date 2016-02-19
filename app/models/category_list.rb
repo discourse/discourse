@@ -146,9 +146,8 @@ class CategoryList
 
 
     def prune_empty
-      if @guardian.can_create?(Category) && !SiteSetting.allow_uncategorized_topics
-        # HACK: Don't show uncategorized to admins either, if uncategorized topics are not allowed
-        # and there are none.
+      unless SiteSetting.allow_uncategorized_topics
+        # HACK: Don't show uncategorized to anyone if not allowed
         @categories.delete_if do |c|
           c.uncategorized? && c.displayable_topics.blank?
         end
