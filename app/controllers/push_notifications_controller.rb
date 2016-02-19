@@ -36,7 +36,9 @@ class PushNotificationsController < ApplicationController
     site_title = SiteSetting.title
 
     info =
-      if notifications.count == 1
+      if notifications.count.many?
+        { body: t('user_notifications.push.body', count: notifications.count) }
+      else
         notification = notifications.first
 
         {
@@ -44,8 +46,6 @@ class PushNotificationsController < ApplicationController
           body: notification.topic.posts.find(notification.data_hash["original_post_id"]).excerpt(400, text_entities: true, strip_links: true),
           url: notification.topic.url(notification.post_number)
         }
-      else
-        { body: t('user_notifications.push.body', count: notifications.count) }
       end
 
     render_json_dump({

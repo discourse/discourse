@@ -97,19 +97,15 @@ export default Ember.Component.extend({
       this.propertyDidChange('notificationsPermission');
     },
     subscribe() {
-      const self = this;
-
       subscribePushNotification(() => {
         unsubscribeToNotificationAlert(self.messageBus, Discourse.User.current());
-        self.set("pushNotficationSubscribed", 'subscribed');
+        this.set("pushNotficationSubscribed", 'subscribed');
       });
     },
     unsubscribe() {
-      const self = this;
-
       unsubscribePushNotification(() => {
         subscribeToNotificationAlert(self.messageBus, Discourse.User.current());
-        self.set("pushNotficationSubscribed", '');
+        this.set("pushNotficationSubscribed", '');
       });
     }
   }
