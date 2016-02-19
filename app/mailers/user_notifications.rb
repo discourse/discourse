@@ -193,6 +193,11 @@ class UserNotifications < ActionMailer::Base
   end
 
   def self.get_context_posts(post, topic_user)
+    user_option = topic_user.try(:user).try(:user_option)
+    if user_option && (user_option.email_previous_replies == UserOption.previous_replies_type[:never])
+      return []
+    end
+
     allowed_post_types = [Post.types[:regular]]
     allowed_post_types << Post.types[:whisper] if topic_user.try(:user).try(:staff?)
 
@@ -204,7 +209,7 @@ class UserNotifications < ActionMailer::Base
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
 
-    if topic_user && topic_user.last_emailed_post_number
+    if topic_user && topic_user.last_emailed_post_number && user_option.try(:email_previous_replies) == UserOption.previous_replies_type[:unless_emailed]
       context_posts = context_posts.where("post_number > ?", topic_user.last_emailed_post_number)
     end
 

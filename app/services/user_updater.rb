@@ -20,7 +20,8 @@ class UserUpdater
     :automatically_unpin_topics,
     :digest_after_days,
     :new_topic_duration_minutes,
-    :auto_track_topics_after_msecs
+    :auto_track_topics_after_msecs,
+    :email_previous_replies
   ]
 
   def initialize(actor, user)
