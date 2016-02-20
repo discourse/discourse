@@ -69,8 +69,8 @@ ro:
           one: "1a"
           few: "%{count}a"
           other: "%{count}a"
-        date_month: "Z LLL"
-        date_year: "LLL 'AA"
+        date_month: "DD MMMM"
+        date_year: "MMM YYYY"
       medium:
         x_minutes:
           one: "1 min"
@@ -84,10 +84,10 @@ ro:
           one: "1 zi"
           few: "%{count} zile"
           other: "%{count} zile"
-        date_year: "Z LL AAAA"
+        date_year: "D MM YYYY"
       medium_with_ago:
         x_minutes:
-          one: "acum 1 min"
+          one: "acum un min"
           few: "acum %{count} min"
           other: "acum %{count} min"
         x_hours:
@@ -100,28 +100,28 @@ ro:
           other: "acum %{count} zile"
       later:
         x_days:
-          one: "După 1 zi"
+          one: "După o zi"
           few: "După %{count} zile"
           other: "După %{count} zile"
         x_years:
-          one: "După 1 an"
+          one: "După un an"
           few: "După %{count} ani"
           other: "După %{count} ani"
     share:
-      topic: 'distribuie adresă către această discuție'
-      post: 'distribuie o adresă către postarea #%{postNumber}'
+      topic: 'distribuie această discuție'
+      post: 'distribuie postarea #%{postNumber}'
       close: 'închide'
-      twitter: 'distribuie această adresă pe Twitter'
-      facebook: 'distribuie această adresă pe Facebook'
-      google+: 'distribuie această adresă pe Google+'
-      email: 'trimite această adresă în email'
+      twitter: 'distribuie pe Twitter'
+      facebook: 'distribuie pe Facebook'
+      google+: 'distribuie pe Google+'
+      email: 'trimite pe email'
     action_codes:
-      split_topic: "despartiti acest topic %{when}"
+      split_topic: "desparțiți acest topic %{when}"
       autoclosed:
-        enabled: 'inchis %{count}'
+        enabled: 'închis %{count}'
         disabled: 'deschis %{when}'
       closed:
-        enabled: 'inchis %{when}'
+        enabled: 'închis %{when}'
         disabled: 'deschis %{when}'
       archived:
         enabled: 'arhivat %{when}'
@@ -150,7 +150,7 @@ ro:
     admin_title: "Admin"
     flags_title: "Semnalare"
     show_more: "Detaliază"
-    show_help: "Optiuni"
+    show_help: "Opțiuni"
     links: "Adrese"
     links_lowercase:
       one: "adresă"
@@ -561,7 +561,7 @@ ro:
         title: "Invitații"
         user: "Utilizatori invitați"
         sent: "Trimis"
-        none: "Nu sunt invitatii in asteptare de afisat."
+        none: "Nu sunt invitatii in asteptare de afișat."
         redeemed: "Invitații rascumpărate"
         redeemed_at: "Răscumpărate"
         pending: "Invitații in așteptare"
@@ -1391,6 +1391,7 @@ ro:
       submit_tooltip: "Acceptă marcarea privată"
       take_action_tooltip: "Accesati permisiunea marcarii imediat, nu mai asteptati alte marcaje comune"
       cant: "Ne pare rău nu puteți marca această postare deocamdată."
+      notify_staff: "Anunță moderatorii"
       formatted_name:
         off_topic: "În afară discuției"
         inappropriate: "Inadecvat"
@@ -1544,7 +1545,7 @@ ro:
         private_messages_title: "Mesaje"
         space_free: "{{size}} liber"
         uploads: "încărcări"
-        backups: "salvări"
+        backups: "backups"
         traffic_short: "trafic"
         traffic: "Cereri web"
         page_views: "Cereri API"
@@ -1681,9 +1682,9 @@ ro:
         change_settings: "Schimbă Setările"
         howto: "Cum instalez un plugin?"
       backups:
-        title: "Rezervare"
+        title: "Backup"
         menu:
-          backups: "Rezerve"
+          backups: "Backups"
           logs: "Rapoarte"
         none: "Nicio rezervare valabilă."
         read_only:
@@ -1711,12 +1712,12 @@ ro:
           cancel:
             label: "Anulează"
             title: "Anulează operația curentă"
-            confirm: "Sunteți sigur că doriți să anulati operația curentă?"
+            confirm: "Sunteți sigur că doriți să anulați operația curentă?"
           backup:
             label: "Salvare de siguranţă"
             title: "Creați o rezervă"
             confirm: "Sunteți sigur că doriți să creați o nouă rezervă?"
-            without_uploads: "Da (nu include fişierele)"
+            without_uploads: "Da (nu include fișierele)"
           download:
             label: "Descarcă"
             title: "Downloadează brezervă"
@@ -2169,7 +2170,7 @@ ro:
           embedding: "Includere"
           legal: "Legal"
           uncategorized: 'Altele'
-          backups: "Rezervări"
+          backups: "Backup"
           login: "Autentificare"
           plugins: "Plugin-uri"
       badges:
