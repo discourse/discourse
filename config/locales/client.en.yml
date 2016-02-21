@@ -2123,7 +2123,7 @@ en:
           rollback:
             label: "Rollback"
             title: "Rollback the database to previous working state"
-            confirm: "Are your sure you want to rollback the database to the previous working state?"
+            confirm: "Are you sure you want to rollback the database to the previous working state?"
 
       export_csv:
         user_archive_confirm: "Are you sure you want to download your posts?"
