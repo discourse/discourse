@@ -278,7 +278,6 @@ class ImportScripts::Base
     avatar_url = opts.delete(:avatar_url)
 
     # Allow the || operations to work with empty strings ''
-    opts[:name] = nil if opts[:name].blank?
     opts[:username] = nil if opts[:username].blank?
 
     opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
@@ -287,7 +286,8 @@ class ImportScripts::Base
       opts[:username].length > User.username_length.end ||
       !User.username_available?(opts[:username]) ||
       !UsernameValidator.new(opts[:username]).valid_format?
-      opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
+
+      opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
     end
     opts[:email] = opts[:email].downcase
     opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
