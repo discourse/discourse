@@ -2120,6 +2120,7 @@ en:
             label: "Restore"
             title: "Restore the backup"
             confirm: "Are you sure you want to restore this backup?"
+            restart: "Remember to restart the container after the restore completes: `/var/discourse/launcher restart app`"
           rollback:
             label: "Rollback"
             title: "Rollback the database to previous working state"

@@ -83,6 +83,7 @@ export default Discourse.Route.extend({
           if (confirmed) {
             Discourse.User.currentProp("hideReadOnlyAlert", true);
             backup.restore().then(function() {
+              bootbox.alert(I18n.t("admin.backups.operations.restore.restart"));
               self.controllerFor("adminBackupsLogs").clear();
               self.controllerFor("adminBackups").set("model.isOperationRunning", true);
               self.transitionTo("admin.backups.logs");
