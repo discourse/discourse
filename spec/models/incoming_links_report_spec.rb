@@ -40,8 +40,8 @@ describe IncomingLinksReport do
 
       r = IncomingLinksReport.find('top_referrers').as_json
       expect(r[:data]).to eq [
-        {username: p1.user.username, num_clicks: 7 + 2, num_topics: 2},
-        {username: p2.user.username, num_clicks: 3, num_topics: 1}
+        {username: p1.user.username, user_id: p1.user.id, num_clicks: 7 + 2, num_topics: 2},
+        {username: p2.user.username, user_id: p2.user.id, num_clicks: 3, num_topics: 1}
       ]
 
       r = IncomingLinksReport.find('top_traffic_sources').as_json
@@ -98,8 +98,8 @@ describe IncomingLinksReport do
         Fabricate(:incoming_link, user: bob, post: post1).save
       end
 
-      expect(top_referrers[:data][0]).to eq({username: 'amy', num_clicks: 3, num_topics: 2})
-      expect(top_referrers[:data][1]).to eq({username: 'bob', num_clicks: 2, num_topics: 1})
+      expect(top_referrers[:data][0]).to eq({username: 'amy', user_id: amy.id, num_clicks: 3, num_topics: 2})
+      expect(top_referrers[:data][1]).to eq({username: 'bob', user_id: bob.id, num_clicks: 2, num_topics: 1})
     end
   end
 
