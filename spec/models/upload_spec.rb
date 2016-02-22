@@ -62,7 +62,6 @@ describe Upload do
     end
 
     it "computes width & height for images" do
-      FastImage.any_instance.expects(:size).returns([100, 200])
       ImageSizer.expects(:resize)
       image.expects(:rewind).twice
       Upload.create_for(user_id, image, image_filename, image_filesize)
