@@ -285,7 +285,7 @@
         {{#each r in top_referrers.data}}
           <tbody>
             <tr>
-              <td class="title">{{#link-to 'adminUser' r}}{{unbound r.username}}{{/link-to}}</td>
+              <td class="title">{{#link-to 'adminUser' r.user_id r.username}}{{unbound r.username}}{{/link-to}}</td>
               <td class="value">{{r.num_clicks}}</td>
               <td class="value">{{r.num_topics}}</td>
             </tr>

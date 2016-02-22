@@ -78,7 +78,7 @@ module Email
           raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
           raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
-          create_topic(user: user, raw: body, title: subject, category: category.id)
+          create_topic(user: user, raw: body, title: subject, category: category.id, skip_validations: user.staged?)
         when :reply
           email_log = destination[:obj]
 

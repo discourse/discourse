@@ -357,6 +357,17 @@ span.post-count {
   padding: 15px 0;
 }
 
+// mobile has no fixed width on topic-body so overflow: hidden causes problems
+.topic-body {
+  overflow:inherit;
+}
+
+// instead, for mobile we set overflow hidden on the cooked part of post body
+// this prevents image overflow on deeply nested blockquotes, lists, etc
+.cooked {
+  overflow: hidden;
+}
+
 .moderator .topic-body {
   background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
 }
