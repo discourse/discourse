@@ -16,6 +16,8 @@ ja:
     named_poll_must_have_at_least_2_options: "投票 <strong>%{name}</strong> は少なくとも2つのオプションが必要です。"
     default_poll_must_have_less_options:
       other: "投票は%{count}オプション以下でなければいけません。"
+    named_poll_must_have_less_options:
+      other: "投票 <strong>%{name}</strong> は%{count}オプション以下でなければいけません。"
     default_poll_must_have_different_options: "投票は異なるオプションが必要です。"
     named_poll_must_have_different_options: "投票 <strong>%{name}</strong> は異なるオプションが必要です。"
     default_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ投票に無効なパラメータがあります。"
@@ -31,3 +33,5 @@ ja:
     poll_must_be_open_to_vote: "投票するにはオープンになっている必要があります。"
     topic_must_be_open_to_toggle_status: "状態を切り替えるには、トピックがオープンになっている必要があります。"
     only_staff_or_op_can_toggle_status: "スタッフやオリジナル投稿者のみが投票状態を切り替えることができます。"
+    email:
+      link_to_poll: "クリックして投票を表示。"

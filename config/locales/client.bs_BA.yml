@@ -94,12 +94,12 @@ bs_BA:
           few: "Prije par godina"
           other: "%{count} godine/a prije"
     share:
-      topic: 'podjeli link ka ovoj temi'
-      post: 'podjeli link ka ovom postu #%{postNumber}'
+      topic: 'podijeli link ka ovoj temi'
+      post: 'podijeli link ka ovom postu #%{postNumber}'
       close: 'zatvori'
-      twitter: 'podjeli link na Twitteru'
-      facebook: 'podjeli link na Facebooku'
-      google+: 'podjeli link na Google+'
+      twitter: 'podijeli link na Twitteru'
+      facebook: 'podijeli link na Facebook-u'
+      google+: 'podijeli link na Google+'
       email: 'pošalji ovaj link na email'
     topic_admin_menu: "topic admin actions"
     edit: 'izmjeni naslov i kategoriju ove teme'
