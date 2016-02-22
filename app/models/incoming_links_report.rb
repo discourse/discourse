@@ -35,9 +35,10 @@ class IncomingLinksReport
 
     num_clicks  = link_count_per_user
     num_topics = topic_count_per_user
+    user_id_lookup = User.where(username: num_clicks.keys).select(:id, :username).inject({}) {|sum,v| sum[v.username] = v.id; sum;}
     report.data = []
     num_clicks.each_key do |username|
-      report.data << {username: username, num_clicks: num_clicks[username], num_topics: num_topics[username]}
+      report.data << {username: username, user_id: user_id_lookup[username], num_clicks: num_clicks[username], num_topics: num_topics[username]}
     end
     report.data = report.data.sort_by {|x| x[:num_clicks]}.reverse[0,10]
   end
