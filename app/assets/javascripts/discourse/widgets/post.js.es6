@@ -278,8 +278,13 @@ createWidget('post-contents', {
       return;
     }
 
+    const topic = this.findAncestorModel().get('topic');
+    const topicUrl = topic.get('url');
     return this.store.find('post-reply', { postId: this.attrs.id }).then(posts => {
-      this.state.repliesBelow = posts.map(transformBasicPost);
+      this.state.repliesBelow = posts.map(p => {
+        p.shareUrl = `${topicUrl}/${p.post_number}`;
+        return transformBasicPost(p);
+      });
     });
   },
 
@@ -351,8 +356,13 @@ createWidget('post-article', {
       this.state.repliesAbove = [];
       return Ember.RSVP.Promise.resolve();
     } else {
+      const topic = this.findAncestorModel().get('topic');
+      const topicUrl = topic.get('url');
       return this.store.find('post-reply-history', { postId: this.attrs.id }).then(posts => {
-        this.state.repliesAbove = posts.map(transformBasicPost);
+        this.state.repliesAbove = posts.map((p) => {
+          p.shareUrl = `${topicUrl}/${p.post_number}`;
+          return transformBasicPost(p);
+        });
       });
     }
   },

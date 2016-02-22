@@ -18,7 +18,7 @@ createWidget('post-link-arrow', {
   },
 
   click() {
-    DiscourseURL.jumpToPost(this.attrs.post_number);
+    DiscourseURL.routeTo(this.attrs.shareUrl);
   }
 });
 
@@ -32,7 +32,7 @@ export default createWidget('embedded-post', {
         h('div.topic-body', [
           h('div.topic-meta-data', [
             this.attach('poster-name', attrs),
-            this.attach('post-link-arrow', { above: state.above, post_number: attrs.post_number })
+            this.attach('post-link-arrow', { above: state.above, shareUrl: attrs.shareUrl })
           ]),
           new RawHtml({html: `<div class='cooked'>${attrs.cooked}</div>`})
         ])
