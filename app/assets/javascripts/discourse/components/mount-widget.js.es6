@@ -54,8 +54,6 @@ export default Ember.Component.extend({
   rerenderWidget() {
     Ember.run.cancel(this._timeout);
     if (this._rootNode) {
-      const t0 = new Date().getTime();
-
       const opts = { model: this.get('model') };
       const newTree = new this._widgetClass(this.get('args'), this.container, opts);
 
@@ -63,7 +61,6 @@ export default Ember.Component.extend({
       const patches = diff(this._tree || this._rootNode, newTree);
       this._rootNode = patch(this._rootNode, patches);
       this._tree = newTree;
-      console.log('render: ', new Date().getTime() - t0);
 
       if (this._afterRender) {
         this._afterRender();
