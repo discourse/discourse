@@ -2,9 +2,36 @@ module Onebox
   module Engine
     class PastebinOnebox
       include Engine
-      include StandardEmbed
+      include LayoutSupport
+
+      MAX_LINES = 10
 
       matches_regexp(/^http?:\/\/pastebin\.com/)
+
+      private
+
+      def data
+        @data ||= {
+          title: 'pastebin.com',
+          link: link,
+          content: content,
+          truncated?: truncated?
+        }
+      end
+
+      def content
+        lines.take(MAX_LINES).join("\n")
+      end
+
+      def truncated?
+        lines.size > MAX_LINES
+      end
+
+      def lines
+        return @lines if @lines
+        response = Onebox::Helpers.fetch_response("http://pastebin.com/raw/#{paste_key}", 1)
+        @lines = response.body.split("\n")
+      end
 
       def paste_key
         if uri.path =~ /\/raw\//
@@ -24,13 +51,6 @@ module Onebox
         nil
       rescue
         return nil
-      end
-
-      def to_html
-        return nil unless paste_key
-        response = Onebox::Helpers.fetch_response("http://pastebin.com/raw/#{paste_key}", 1)
-        return nil unless response && response.code.to_i == 200
-        return "<iframe src='//pastebin.com/embed_iframe/#{paste_key}' style='border:none;width:100%;max-height:100px;'></iframe>"
       end
     end
   end
