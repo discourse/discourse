@@ -84,7 +84,9 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
-    decorateWidget('poster-name:after', (h, attrs) => {
+    decorateWidget('poster-name:after', dec => {
+      const attrs = dec.attrs;
+
       const result = cb(attrs.userCustomFields || {}, attrs);
       if (result) {
         let iconBody;
@@ -94,7 +96,7 @@ class PluginApi {
         } else if (result.emoji) {
           iconBody = result.emoji.split('|').map(emoji => {
             const src = Discourse.Emoji.urlFor(emoji);
-            return h('img', { className: 'emoji', attributes: { src } });
+            return dec.h('img', { className: 'emoji', attributes: { src } });
           });
         }
 
@@ -103,13 +105,13 @@ class PluginApi {
         }
 
         if (result.url) {
-          iconBody = h('a', { attributes: { href: result.url } }, iconBody);
+          iconBody = dec.h('a', { attributes: { href: result.url } }, iconBody);
         }
 
 
-        return h('span',
-                 { className: result.className, attributes: { title: result.title } },
-                 iconBody);
+        return dec.h('span',
+                     { className: result.className, attributes: { title: result.title } },
+                     iconBody);
       }
     });
   }
