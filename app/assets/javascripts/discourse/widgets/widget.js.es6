@@ -1,5 +1,6 @@
 import { WidgetClickHook, WidgetClickOutsideHook } from 'discourse/widgets/click-hook';
 import { h } from 'virtual-dom';
+import Connector from 'discourse/widgets/connector';
 
 function emptyContent() { }
 
@@ -16,14 +17,33 @@ export function renderedKey(key) {
 
 const _decorators = {};
 
+class DecoratorHelper {
+  constructor(container, attrs, state) {
+    this.container = container;
+    this.attrs = attrs;
+    this.state = state;
+  }
+
+  connect(details) {
+    return new Connector(this.container, details);
+  }
+}
+DecoratorHelper.prototype.h = h;
+
 export function decorateWidget(widgetName, cb) {
   _decorators[widgetName] = _decorators[widgetName] || [];
   _decorators[widgetName].push(cb);
 }
 
-function applyDecorators(name, type, attrs, state) {
-  const decorators = _decorators[`${name}:${type}`] || [];
-  return decorators.map(d => d(h, attrs, state));
+function applyDecorators(widget, type, attrs, state) {
+  const decorators = _decorators[`${widget.name}:${type}`] || [];
+
+  if (decorators.length) {
+    const helper = new DecoratorHelper(widget, attrs, state);
+    return decorators.map(d => d(helper));
+  }
+
+  return [];
 }
 
 function drawWidget(builder, attrs, state) {
@@ -58,8 +78,8 @@ function drawWidget(builder, attrs, state) {
 
   let contents = this.html(attrs, state);
   if (this.name) {
-    const beforeContents = applyDecorators(this.name, 'before', attrs, state) || [];
-    const afterContents = applyDecorators(this.name, 'after', attrs, state) || [];
+    const beforeContents = applyDecorators(this, 'before', attrs, state) || [];
+    const afterContents = applyDecorators(this, 'after', attrs, state) || [];
     contents = beforeContents.concat(contents).concat(afterContents);
   }
 

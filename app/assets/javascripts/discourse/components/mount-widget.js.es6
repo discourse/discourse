@@ -18,6 +18,7 @@ export default Ember.Component.extend({
   init() {
     this._super();
     this._widgetClass = this.container.lookupFactory(`widget:${this.get('widget')}`);
+    this._connected = [];
   },
 
   didInsertElement() {
@@ -33,6 +34,9 @@ export default Ember.Component.extend({
     if (callbacks) {
       callbacks.forEach(cb => cb());
     }
+
+    this._connected.forEach(v => v.destroy());
+    this._connected.length = 0;
   },
 
   willDestroyElement() {
