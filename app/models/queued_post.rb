@@ -114,7 +114,7 @@ end
 # Table name: queued_posts
 #
 #  id             :integer          not null, primary key
-#  queue          :string(255)      not null
+#  queue          :string           not null
 #  state          :integer          not null
 #  user_id        :integer          not null
 #  raw            :text             not null

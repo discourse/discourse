@@ -217,32 +217,32 @@ end
 # Table name: site_customizations
 #
 #  id                      :integer          not null, primary key
-#  name                    :string(255)      not null
+#  name                    :string           not null
 #  stylesheet              :text
 #  header                  :text
-#  header_baked            :text
 #  user_id                 :integer          not null
 #  enabled                 :boolean          not null
-#  key                     :string(255)      not null
+#  key                     :string           not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  stylesheet_baked        :text             default(""), not null
 #  mobile_stylesheet       :text
+#  mobile_header           :text
 #  mobile_stylesheet_baked :text
 #  footer                  :text
-#  footer_baked            :text
-#  mobile_header           :text
 #  mobile_footer           :text
-#  mobile_header_baked     :text
-#  mobile_footer_baked     :text
 #  head_tag                :text
 #  body_tag                :text
-#  head_tag_baked          :text
-#  body_tag_baked          :text
 #  top                     :text
 #  mobile_top              :text
 #  embedded_css            :text
 #  embedded_css_baked      :text
+#  head_tag_baked          :text
+#  body_tag_baked          :text
+#  header_baked            :text
+#  mobile_header_baked     :text
+#  footer_baked            :text
+#  mobile_footer_baked     :text
 #
 # Indexes
 #

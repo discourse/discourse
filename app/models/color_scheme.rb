@@ -126,7 +126,7 @@ end
 # Table name: color_schemes
 #
 #  id           :integer          not null, primary key
-#  name         :string(255)      not null
+#  name         :string           not null
 #  enabled      :boolean          default(FALSE), not null
 #  versioned_id :integer
 #  version      :integer          default(1), not null

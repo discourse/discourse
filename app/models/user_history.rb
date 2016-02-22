@@ -155,16 +155,16 @@ end
 #  details        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  context        :string(255)
-#  ip_address     :string(255)
-#  email          :string(255)
+#  context        :string
+#  ip_address     :string
+#  email          :string
 #  subject        :text
 #  previous_value :text
 #  new_value      :text
 #  topic_id       :integer
 #  admin_only     :boolean          default(FALSE)
 #  post_id        :integer
-#  custom_type    :string(255)
+#  custom_type    :string
 #  category_id    :integer
 #
 # Indexes
