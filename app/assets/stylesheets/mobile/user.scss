@@ -305,6 +305,7 @@
 
         .primary-textual {
           float: left;
+          padding-left: 15px;
           a[href] {
             color: dark-light-diff($secondary, $primary, 75%, -10%);
           }
@@ -329,16 +330,15 @@
     }
 
     .controls {
-      width: 160px;
-      float: right;
-      text-align: right;
+      float: left;
+      padding-left: 15px;
       ul {
         list-style-type: none;
         margin: 0;
       }
       a {
         padding: 5px 10px;
-        width: 140px;
+        width: 120px;
         margin-bottom: 10px;
       }
     }
