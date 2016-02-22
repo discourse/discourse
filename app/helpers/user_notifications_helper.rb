@@ -28,8 +28,8 @@ module UserNotificationsHelper
     logo_url
   end
 
-  def html_site_link
-    "<a href='#{Discourse.base_url}'>#{@site_name}</a>"
+  def html_site_link(color)
+    "<a href='#{Discourse.base_url}' style='color: ##{color}'>#{@site_name}</a>"
   end
 
   def first_paragraph_from(html)
