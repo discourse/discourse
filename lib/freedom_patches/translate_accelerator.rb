@@ -28,6 +28,7 @@ module I18n
       @overrides_by_site = {}
 
       reload_no_cache!
+      ensure_all_loaded!
     end
 
     LOAD_MUTEX = Mutex.new
@@ -105,8 +106,7 @@ module I18n
 
       by_site = @overrides_by_site[site]
 
-      by_locale = nil
-      unless by_site
+      unless by_site && by_site.has_key?(locale)
         by_site = @overrides_by_site[site] = {}
 
         # Load overrides
