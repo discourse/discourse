@@ -158,7 +158,7 @@ export default class PostCooked {
 
       if (asideTopicId) {
         // If it's the same topic as ours, build the URL from the topic object
-        if (this.topicId === asideTopicId) {
+        if (this.attrs.topicId === asideTopicId) {
           navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
         } else {
           // Made up slug should be replaced with canonical URL
