@@ -50,7 +50,7 @@ class DirectoryItem < ActiveRecord::Base
                     SUM(CASE WHEN ua.action_type = :like_type THEN 1 ELSE 0 END),
                     COALESCE((SELECT COUNT(topic_id) FROM topic_views AS v WHERE v.user_id = u.id AND v.viewed_at >= :since), 0),
                     COALESCE((SELECT COUNT(id) FROM user_visits AS uv WHERE uv.user_id = u.id AND uv.visited_at >= :since), 0),
-                    COALESCE((SELECT SUM(posts_read) FROM user_visits AS uv2 WHERE uv2.user_id = u.id AND uv2.visited_at >= :since), 0),
+                    COALESCE((#{self.post_read_count(period_type)}), 0),
                     SUM(CASE WHEN ua.action_type = :new_topic_type THEN 1 ELSE 0 END),
                     SUM(CASE WHEN ua.action_type = :reply_type THEN 1 ELSE 0 END)
                   FROM users AS u
@@ -95,6 +95,16 @@ class DirectoryItem < ActiveRecord::Base
 
 SQL
       end
+    end
+  end
+
+  private
+
+  def self.post_read_count(period_type)
+    if period_type == :all
+      "SELECT posts_read_count FROM user_stats AS uv2 WHERE uv2.user_id = u.id"
+    else
+      "SELECT SUM(posts_read) FROM user_visits AS uv2 WHERE uv2.user_id = u.id AND uv2.visited_at >= :since"
     end
   end
 end
