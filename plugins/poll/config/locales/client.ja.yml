@@ -15,6 +15,12 @@ ja:
       average_rating: "平均評価: <strong>%{average}</strong>."
       multiple:
         help:
+          at_least_min_options:
+            other: "少なくとも <strong>%{count}</strong> 個のオプションを選んでください。"
+          up_to_max_options:
+            other: "<strong>%{count}</strong> 個のオプションまで選択することができます。"
+          x_options:
+            other: "<strong>%{count}</strong> 個のオプションを選択してください。"
           between_min_and_max_options: "<strong>%{min}</strong> と <strong>%{max}</strong> のオプションから選択することができます。"
       cast-votes:
         title: "投票する"

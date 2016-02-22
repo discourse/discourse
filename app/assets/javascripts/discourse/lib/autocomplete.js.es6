@@ -47,7 +47,8 @@ export default function(options) {
 
     $(this).off('keypress.autocomplete')
            .off('keydown.autocomplete')
-           .off('paste.autocomplete');
+           .off('paste.autocomplete')
+           .off('click.autocomplete');
 
     return;
   }
@@ -241,6 +242,15 @@ export default function(options) {
     });
   };
 
+  const dataSource = (term, opts) => {
+    if (term.length !== 0 && term.trim().length === 0) {
+      closeAutocomplete();
+      return null;
+    } else {
+      return opts.dataSource(term);
+    }
+  };
+
   var updateAutoComplete = function(r) {
 
     if (completeStart === null) return;
@@ -276,6 +286,10 @@ export default function(options) {
     closeAutocomplete();
   });
 
+  $(this).on('click.autocomplete', function() {
+    closeAutocomplete();
+  });
+
   $(this).on('paste.autocomplete', function() {
     _.delay(function(){
       me.trigger("keydown");
@@ -299,13 +313,13 @@ export default function(options) {
       var prevChar = me.val().charAt(caretPosition - 1);
       if (checkTriggerRule() && (!prevChar || allowedLettersRegex.test(prevChar))) {
         completeStart = completeEnd = caretPosition;
-        updateAutoComplete(options.dataSource(""));
+        updateAutoComplete(dataSource("", options));
       }
     } else if ((completeStart !== null) && (e.charCode !== 0)) {
       caretPosition = Discourse.Utilities.caretPosition(me[0]);
       term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
       term += String.fromCharCode(e.charCode);
-      updateAutoComplete(options.dataSource(term));
+      updateAutoComplete(dataSource(term, options));
     }
   });
 
@@ -355,7 +369,7 @@ export default function(options) {
             completeStart = c;
             caretPosition = completeEnd = initial;
             term = me[0].value.substring(c + 1, initial);
-            updateAutoComplete(options.dataSource(term));
+            updateAutoComplete(dataSource(term, options));
             return true;
           }
         }
@@ -375,16 +389,21 @@ export default function(options) {
     if (completeStart !== null) {
       caretPosition = Discourse.Utilities.caretPosition(me[0]);
 
+      // allow people to right arrow out of completion
+      if (e.which === keys.rightArrow && me[0].value[caretPosition] === ' ') {
+        closeAutocomplete();
+        return true;
+      }
+
       // If we've backspaced past the beginning, cancel unless no key
       if (caretPosition <= completeStart && options.key) {
         closeAutocomplete();
-        return false;
+        return true;
       }
 
       // Keyboard codes! So 80's.
       switch (e.which) {
         case keys.enter:
-        case keys.rightArrow:
         case keys.tab:
           if (!autocompleteOptions) return true;
           if (selectedOption >= 0 && (userToComplete = autocompleteOptions[selectedOption])) {
@@ -430,7 +449,11 @@ export default function(options) {
 
           term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
 
-          updateAutoComplete(options.dataSource(term));
+          if ((completeStart === caretPosition) && (term === options.key)) {
+            closeAutocomplete();
+          }
+
+          updateAutoComplete(dataSource(term, options));
           return true;
         default:
           completeEnd = caretPosition;

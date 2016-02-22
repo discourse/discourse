@@ -33,6 +33,18 @@
 </script>
 
 <script>
+  <%- if !current_user && flash[:authentication_data] %>
+    require('discourse/routes/application').default.reopen({
+      actions: {
+        didTransition: function() {
+          Em.run.next(function(){
+            Discourse.authenticationComplete(<%=flash[:authentication_data].html_safe%>);
+          });
+          return this._super();
+        }
+      }
+    });
+  <%- end %>
   Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host %>';
   Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname %>'.replace(/:[\d]*$/,"");
   Discourse.BaseUri = '<%= Discourse::base_uri %>';
@@ -52,11 +64,6 @@
       Discourse.S3CDN = '<%= SiteSetting.s3_cdn_url %>';
     <%- end %>
     Discourse.S3BaseUrl = '<%= Discourse.store.absolute_base_url %>';
-  <%- end %>
-  <%- if !current_user && flash[:authentication_data] %>
-  Em.run.next(function(){
-    Discourse.authenticationComplete(<%=flash[:authentication_data].html_safe%>);
-  });
   <%- end %>
 </script>
 

@@ -1,3 +1,25 @@
+
+
+
+###
+###
+### The output of this importer is bad.
+###
+### Improving it means getting better quality export data from Zoho,
+### or doing a lot more work on this importer.
+###
+### Consider leaving data in Zoho and starting fresh in Discourse.
+###
+###
+
+
+
+
+
+
+
+
+
 # Import from Zoho.
 # Be sure to get the posts CSV file, AND the user list csv file with people's email addresses.
 # You may need to contact Zoho support for the user list.

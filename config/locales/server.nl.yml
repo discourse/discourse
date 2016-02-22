@@ -952,7 +952,7 @@ nl:
     automatically_download_gravatars: "Download Gravatars voor gebruikers bij account creatie of aanpassing van email."
     digest_topics: "Het maximum aantal topics dat in de e-maildigest opgenomen wordt."
     digest_min_excerpt_length: "Hoeveel karakters er per bericht getoond worden in de mail digest"
-    suppress_digest_email_after_days: "Onderdruk e-mails met korte verslagen voor gebruikers die niet zijn gezien op de site voor meer dan (n) dagen."
+    delete_digest_email_after_days: "Onderdruk e-mails met korte verslagen voor gebruikers die niet zijn gezien op de site voor meer dan (n) dagen."
     disable_digest_emails: "Uitschakelen e-mails met korte verslagen voor alle gebruikers."
     detect_custom_avatars: "Wel of niet te verifiëren of gebruikers eigen profielfoto's hebben geüpload.  "
     max_daily_gravatar_crawls: "Maximaal aantal keren op een dag dat Discourse Gravatar zal controleren voor aangepaste avatars"

@@ -167,9 +167,9 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
   suggestedTitle: function(){
     return this.get('controller.model.isPrivateMessage') ?
-      I18n.t("suggested_topics.pm_title") :
+      "<i class='private-message-glyph fa fa-envelope'></i> " + I18n.t("suggested_topics.pm_title") :
       I18n.t("suggested_topics.title");
-  }.property()
+  }.property('topic')
 });
 
 function highlight(postNumber) {

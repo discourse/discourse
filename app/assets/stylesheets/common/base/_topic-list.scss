@@ -226,8 +226,11 @@ ol.category-breadcrumb {
 }
 
 .fa-thumb-tack.unpinned {
-  @include fa-icon-rotate(315deg, 1);
+  @include fa-icon-rotate(180deg, 1);
   color: $primary;
+  /* because it is rotated, right becomes left! */
+  padding-left: 3px; 
+  padding-right: 0 !important;
 }
 
 .topic-statuses .fa {

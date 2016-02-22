@@ -90,6 +90,8 @@ pt_BR:
   not_found: "A URL ou recurso solicitado não pôde ser encontrado."
   invalid_access: "Você não tem permissão para ver o recurso solicitado."
   read_only_mode_enabled: "O site está em modo somente leitura. As interações estão desativadas."
+  reading_time: "Tempo de leitura"
+  likes: "Curtidas"
   too_many_replies:
     one: "Lamentamos, mas usuários novos estão temporariamente limitados a 1 resposta no mesmo tópico."
     other: "Lamentamos, mas usuários novos estão temporariamente limitados a %{count} respostas no mesmo tópico."
@@ -295,6 +297,7 @@ pt_BR:
         one: "Não é possível excluir esta categoria porque ela tem um tópico. O tópico mais velho é %{topic_link}."
         other: "Não é possível excluir essa categoria porque ela tem %{count} tópicos. O tópico mais velho é %{topic_link}."
       topic_exists_no_oldest: "Não é possível excluir esta categoria porque contagem tópico é %{count}."
+    uncategorized_description: "Tópicos que não precisam de uma categoria, ou que não se encaixam em nenhuma outra categoria existente."
   trust_levels:
     newuser:
       title: "usuário novo"
@@ -316,6 +319,7 @@ pt_BR:
       create_topic: "Você está criando tópicos muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
       create_post: "Você está respondendo muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
       topics_per_day: "Você atingiu o número máximo de novos tópicos hoje. Por favor aguarde %{time_left} antes de tentar novamente."
+      pms_per_day: "Você alcançou o número máximo de mensagens por hoje. Por favor aguarde %{time_left} antes de tentar de novo."
       create_like: "Você atingiu o número máximo de curtidas hoje. Por favor aguarde% {time_left} antes de tentar novamente."
       create_bookmark: "Você atingiu o número máximo de marcadores hoje. Por favor aguarde% {time_left} antes de tentar novamente."
       edit_post: "Você atingiu o número máximo de edições hoje. Por favor aguarde% {tempo} esquerda antes de tentar novamente."
@@ -445,6 +449,8 @@ pt_BR:
     notify_moderators:
       title: "Algo mais"
       description: 'Esta postagem requer atenção da moderação por outra razão não listada acima.'
+      long_form: 'sinalizou isto para a atenção da equipe'
+      email_title: 'Um post em "%{title}" requer a atenção da equipe'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Adicionar Marcador'
@@ -469,6 +475,7 @@ pt_BR:
       long_form: 'sinalizar como impróprio'
     notify_moderators:
       title: "Algo mais"
+      description: 'Este tópico requer a atenção geral da equipe baseado nas <a href="/guidelines">diretrizes da comunidade</a>,  no <a href="%{tos_url}">Termos de Serviço</a>, ou em outra razão não listada acima.'
       long_form: 'sinalizar isso para atenção da moderação'
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
@@ -933,7 +940,7 @@ pt_BR:
     automatically_download_gravatars: "Fazer download de Gravatars dos usuários ao criar conta ou mudança de email."
     digest_topics: "O número máximo de tópicos a serem mostrados no resumo via email."
     digest_min_excerpt_length: "O excerto mínimo de post no resumo via email, em caracteres."
-    suppress_digest_email_after_days: "Suprimir emails de resumo para usuários não vistos no site há mais do que (n) dias."
+    delete_digest_email_after_days: "Suprimir emails de resumo para usuários não vistos no site há mais do que (n) dias."
     disable_digest_emails: "Desabilitar emails de resumo para todos os usuários."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá checar o Gravatar por avatares personalizados em um dia"
     public_user_custom_fields: "Um conjunto de campos personalizados para um usuário que podem ser apresentados publicamente."

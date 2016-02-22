@@ -81,6 +81,8 @@ zh_CN:
           other: "%{count}月后"
         x_years:
           other: "%{count}年后"
+      previous_month: '上个月'
+      next_month: '下个月'
     share:
       topic: '分享本主题的链接'
       post: '#%{postNumber} 楼'
@@ -111,6 +113,19 @@ zh_CN:
         disabled: '于%{when}移除出列表'
     topic_admin_menu: "主题管理操作"
     emails_are_disabled: "所有的出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
+    s3:
+      regions:
+        us_east_1: "美国东部（N. Virginia）"
+        us_west_1: "美国西部（N. California）"
+        us_west_2: "美国西部（Oregon）"
+        us_gov_west_1: "AWS GovCloud（美国）"
+        eu_west_1: "欧洲（Ireland）"
+        eu_central_1: "欧洲（Frankfurt）"
+        ap_southeast_1: "亚洲太平洋（Singapore）"
+        ap_southeast_2: "亚洲太平洋（Sydney）"
+        ap_northeast_1: "亚洲太平洋（Tokyo）"
+        ap_northeast_2: "亚洲太平洋（Seoul）"
+        sa_east_1: "南美（Sao Paulo）"
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
@@ -152,6 +167,7 @@ zh_CN:
       other: "%{count} 个字符"
     suggested_topics:
       title: "推荐主题"
+      pm_title: "推荐消息"
     about:
       simple_title: "关于"
       title: "关于%{title}"
@@ -294,12 +310,16 @@ zh_CN:
       notifications:
         watching:
           title: "关注"
+          description: "你将会在该消息中的每个新帖子发布后收到通知，并且会显示新回复数量。"
         tracking:
           title: "追踪"
+          description: "你会在别人@你或回复你时收到通知，并且新帖数量也将在这些主题后显示。"
         regular:
           title: "普通"
+          description: "如果某人@你或者回复你，你将收到通知。"
         muted:
           title: "忽略"
+          description: "你不会收到组内关于新主题中的任何通知。"
     user_action_groups:
       '1': "给赞"
       '2': "被赞"
@@ -379,7 +399,7 @@ zh_CN:
         not_supported: "通知功能暂不支持该浏览器。抱歉。"
         perm_default: "启用通知"
         perm_denied_btn: "拒绝授权"
-        perm_denied_expl: "你拒绝了通知权限。在你的浏览器中允许启用通知，然后再点击按钮。（桌面：点击最左边的图标。移动设备：“站点设置”。）"
+        perm_denied_expl: "你拒绝了通知提醒的权限。设置浏览器允许通知提醒。"
         disable: "禁用通知"
         currently_enabled: "（目前已启用）"
         enable: "启用通知"
@@ -433,6 +453,8 @@ zh_CN:
         groups: "我的小组"
         bulk_select: "选择消息"
         move_to_inbox: "移动到收件箱"
+        move_to_archive: "存档"
+        failed_to_move: "移动选中消息失败（可能你的网络出问题了）"
         select_all: "全选"
       change_password:
         success: "（电子邮件已发送）"
@@ -588,6 +610,21 @@ zh_CN:
         same_as_email: "你的密码与电子邮箱相同。"
         ok: "你设置的密码符合要求。"
         instructions: "至少需要 %{count} 个字符。"
+      summary:
+        title: "概要"
+        stats: "统计"
+        topic_count: "创建的主题"
+        post_count: "创建的帖子"
+        likes_given: "给出的赞"
+        likes_received: "收到的赞"
+        days_visited: "访问天数"
+        posts_read_count: "已读帖子"
+        top_replies: "热门回复"
+        top_topics: "热门帖子"
+        top_badges: "热门勋章"
+        more_topics: "更多主题"
+        more_replies: "更多回复"
+        more_badges: "更多徽章"
       associated_accounts: "登录"
       ip_address:
         title: "最后使用的 IP 地址"
@@ -630,6 +667,7 @@ zh_CN:
     logout: "你已登出。"
     refresh: "刷新"
     read_only_mode:
+      enabled: "这个站点正处于只读模式。请继续浏览，但是回复、赞和其他操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
     too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
@@ -743,6 +781,7 @@ zh_CN:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
+      emoji: "Emoji :)"
       more_emoji: "更多…"
       options: "选项"
       whisper: "密语"
@@ -839,6 +878,8 @@ zh_CN:
       moved_post: "<i title='移动了帖子' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移动了 {{description}}</p>"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>获得“{{description}}”</p>"
+      group_message_summary:
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} 条消息在你的{{group_name}}组内的收件箱中</p>"
       alt:
         mentioned: "被提及"
         quoted: "被引用"
@@ -853,6 +894,7 @@ zh_CN:
         moved_post: "你的帖子被移动自"
         linked: "链接至你的帖子"
         granted_badge: "勋章授予"
+        group_message_summary: "在群组收件箱中的消息"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         group_mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
@@ -1004,6 +1046,7 @@ zh_CN:
       auto_close_title: '自动关闭设置'
       auto_close_save: "保存"
       auto_close_remove: "不要自动关闭该主题"
+      auto_close_immediate: "主题中的上个帖子是 %{hours} 小时前发出的，所以主题将会立即关闭。"
       progress:
         title: 主题进度
         go_top: "顶部"
@@ -1088,7 +1131,7 @@ zh_CN:
         help: '私下报告本帖以引起注意或者发送一条匿名通知'
         success_message: '你已成功报告本帖。'
       feature_topic:
-        title: "设为精华主题"
+        title: "聚焦该主题"
         pin: "将该主题置于{{categoryLink}}分类最上方至"
         confirm_pin: "你已经有了{{count}}个置顶主题。太多的置顶主题可能会困扰新用户和访客。你确定想要在该分类再置顶一个主题么？"
         unpin: "从{{categoryLink}}分类最上方移除主题。"
@@ -1633,6 +1676,7 @@ zh_CN:
           refresh_report: "刷新报告"
           start_date: "开始日期"
           end_date: "结束日期"
+          groups: "所有群组"
       commits:
         latest_changes: "最近的更新：请经常升级！"
         by: "来自"
@@ -1910,13 +1954,17 @@ zh_CN:
             name: '维基编辑'
             description: "维基帖子的背景颜色"
       email:
+        title: "邮件"
         settings: "设置"
+        templates: "模板"
         preview_digest: "预览"
         sending_test: "发送测试邮件..."
         error: "<b>错误</b> - %{server_error}"
         test_error: "发送测试邮件时遇到问题。请再检查一遍邮件设置，确认你的主机没有封锁邮件链接，然后重试。"
         sent: "已发送"
         skipped: "跳过"
+        received: "收到"
+        rejected: "拒绝"
         sent_at: "发送时间"
         time: "时间"
         user: "用户"
@@ -1934,6 +1982,19 @@ zh_CN:
         last_seen_user: "用户最后登录时间:"
         reply_key: "回复关键字"
         skipped_reason: "跳过理由"
+        incoming_emails:
+          from_address: "来自"
+          to_addresses: "发至"
+          cc_addresses: "抄送"
+          subject: "主题"
+          error: "错误"
+          none: "没有找到进站邮件。"
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "主题..."
+            error_placeholder: "错误"
         logs:
           none: "未发现日志。"
           filters:
@@ -1997,6 +2058,12 @@ zh_CN:
             change_category_settings: "更改分类设置"
             delete_category: "删除分类"
             create_category: "创建分类"
+            block_user: "封禁用户"
+            unblock_user: "解封用户"
+            grant_admin: "授予管理员权限"
+            revoke_admin: "撤销管理员权限"
+            grant_moderation: "授予版主权限"
+            revoke_moderation: "撤销版主权限"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -2094,6 +2161,7 @@ zh_CN:
         moderator: "版主？"
         admin: "管理员？"
         blocked: "已封?"
+        staged: "部分权限？"
         show_admin_profile: "管理员"
         edit_title: "编辑头衔"
         save_title: "保存头衔"
@@ -2155,9 +2223,12 @@ zh_CN:
         deactivate_failed: "在停用用户帐号时发生了错误。"
         unblock_failed: '在解除用户帐号封禁时发生了错误。'
         block_failed: '在封禁用户帐号时发生了错误。'
+        block_confirm: '你确定要封禁用户吗？他们将没有办法创建任何主题或者帖子。'
+        block_accept: '是的，封禁用户'
         deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
         suspended_explanation: "一个被封禁的用户不能登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
+        stage_explanation: "部分访问权限的用户只能通过邮件在特定主题内发表帖子。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
         suspend_modal_title: "被禁用户"
         trust_level_2_users: "二级信任等级用户"
@@ -2435,6 +2506,9 @@ zh_CN:
         mark_tracking: '<b>m</b> 然后 <b>t</b> 追踪主题'
         mark_watching: '<b>m</b> 然后 <b>w</b> 关注主题'
     badges:
+      earned_n_times:
+        other: "授予徽章 %{count} 次"
+      more_with_badge: "其他有这些徽章的人"
       title: 徽章
       allow_title: "能用作头衔"
       multiple_grant: "能被授予多次"

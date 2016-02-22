@@ -265,6 +265,7 @@ it:
         one: "Non puoi eliminare questa categoria perché ha 1 argomento. L'argomento più vecchio è %{topic_link}."
         other: "Non puoi cancellare questa categoria perché ha %{count} argomenti. L'argomento più vecchio è %{topic_link}."
       topic_exists_no_oldest: "Non puoi cancellare questa categoria perché il numero di argomenti è di %{count}."
+    uncategorized_description: "Argomenti che non necessitano di una categoria, o che non ricadono in nessuna categoria esistente."
   trust_levels:
     newuser:
       title: "nuovo utente"
@@ -615,7 +616,7 @@ it:
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
     gc_warning: 'Il tuo server usa i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori prestazioni. Leggi questo argomento sulla taratura delle prestazioni: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
-    queue_size_warning: 'Il numero di job in coda è %{queue_size}, il che è alto. Questo potrebbe indicare un problema con i processi Sidekiq, o potrebbe essere necessario aggiungere altri worker Sidekiq.'
+    queue_size_warning: 'Il numero di job in coda è %{queue_size}, il che è alto. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
     google_oauth2_config_warning: 'Il server è configurato per permettere iscrizioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
     facebook_config_warning: 'Il server è configurato per accettare iscrizioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
@@ -649,7 +650,6 @@ it:
     min_search_term_length: "Numero minimo di caratteri per le parole cercate"
     search_tokenize_chinese_japanese_korean: "Attiva la tokenizzazione dei caratteri Cinesi/Giapponesi/Coreani nella ricerca anche sui siti non CJK"
     allow_uncategorized_topics: "Permetti la creazione di argomenti senza categoria. ATTENZIONE: se ci sono argomenti senza categoria, devi ricategorizzarli prima di disabilitare questa opzione."
-    uncategorized_description: "La descrizione della categoria \"Non classificato\". Lascia vuoto per nessuna descrizione."
     allow_duplicate_topic_titles: "Permetti più argomenti con lo stesso identico titolo"
     unique_posts_mins: "Quanti minuti prima che un utente possa inviare un altro argomento con lo stesso contenuto"
     educate_until_posts: "Per i primi (n) messaggi di un utente, mostra la finestra pop-up con il pannello di istruzioni per nuovi utenti."
@@ -919,7 +919,7 @@ it:
     notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo un tale numero di ore, invia un'email al contact_email. Imposta a 0 per disattivare."
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     enable_emoji: "Attiva gli emoji"
-    default_other_disable_jump_reply: "Non passare al post dell'utente dopo la sua risposta di default."
+    default_other_disable_jump_reply: "Per default non saltare al messaggio dell'utente dopo la sua risposta."
     default_categories_watching: "Elenco di categorie osservate per default."
     default_categories_tracking: "Elenco di categorie seguite per default."
     default_categories_muted: "Elenco di categorie silenziate per default."

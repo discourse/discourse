@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
   end
 
   before_filter :set_current_user_for_logs
+  before_filter :clear_notifications
   before_filter :set_locale
   before_filter :set_mobile_view
   before_filter :inject_preview_style
@@ -135,6 +136,31 @@ class ApplicationController < ActionController::Base
       response.headers["X-Discourse-Username"] = current_user.username
     end
     response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
+  end
+
+  def clear_notifications
+    if current_user && !Discourse.readonly_mode?
+
+      cookie_notifications = cookies['cn'.freeze]
+      notifications = request.headers['Discourse-Clear-Notifications'.freeze]
+
+      if cookie_notifications
+        if notifications.present?
+          notifications += "," << cookie_notifications
+        else
+          notifications = cookie_notifications
+        end
+      end
+
+      if notifications.present?
+        notification_ids = notifications.split(",").map(&:to_i)
+        count = Notification.where(user_id: current_user.id, id: notification_ids, read: false).update_all(read: true)
+        if count > 0
+          current_user.publish_notifications_state
+        end
+        cookies.delete('cn')
+      end
+    end
   end
 
   def set_locale

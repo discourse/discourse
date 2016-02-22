@@ -397,7 +397,6 @@ bs_BA:
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_private_message_title_length: "Minimum allowed title length for a private message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
-    uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
@@ -923,26 +922,14 @@ bs_BA:
       text_body_template: "The export has failed. Please check the logs."
     email_reject_no_account:
       subject_template: "Email issue -- No Account"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        There is no known account with this email address. Try sending from a different email address, or contact a staff member.
     email_reject_empty:
       subject_template: "Email issue -- No Content"
     email_reject_parsing:
       subject_template: "Email issue -- Content unrecognized"
     email_reject_reply_key:
       subject_template: "Email issue -- Bad Reply Key"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
     email_error_notification:
       subject_template: "Email issue -- POP authentication error"
-      text_body_template: |
-        There has been an authentication error while polling mails from the POP server.
-
-        Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
     too_many_spam_flags:
       subject_template: "New account blocked"
       text_body_template: |

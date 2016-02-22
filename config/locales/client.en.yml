@@ -109,6 +109,8 @@ en:
         x_years:
           one: "1 year later"
           other: "%{count} years later"
+      previous_month: 'Previous Month'
+      next_month: 'Next Month'
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
@@ -297,7 +299,7 @@ en:
         other: "This topic has <b>{{count}}</b> posts awaiting approval"
 
       confirm: "Save Changes"
-      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
+      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and IP address."
 
       approval:
         title: "Post Needs Approval"
@@ -472,9 +474,9 @@ en:
         perm_denied_btn: "Permission Denied"
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
-        currently_enabled: "(currently enabled)"
+        currently_enabled: ""
         enable: "Enable Notifications"
-        currently_disabled: "(currently disabled)"
+        currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
       dismiss_notifications: "Mark all as Read"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
@@ -625,6 +627,11 @@ en:
 
       website: "Web Site"
       email_settings: "Email"
+      email_previous_replies:
+        title: "Include previous replies"
+        unless_emailed: "unless previously sent"
+        always: "always"
+        never: "never"
       email_digests:
         title: "When I don't visit here, send an email digest of what's new:"
         daily: "daily"
@@ -802,8 +809,8 @@ en:
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
-      description: "There are <b>{{count}}</b> replies."
-      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
+      description: "There are <b>{{replyCount}}</b> replies."
+      description_time: "There are <b>{{replyCount}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
       enable: 'Summarize This Topic'
       disable: 'Show All Posts'
 
@@ -1111,8 +1118,8 @@ en:
         top: "There are no top topics."
         search: "There are no search results."
         educate:
-          new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
-          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
+          new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "There are no more latest topics."
         hot: "There are no more hot topics."
@@ -2223,10 +2230,6 @@ en:
           love:
             name: 'love'
             description: "The like button's color."
-          wiki:
-            name: 'wiki'
-            description: "Base color used for the background of wiki posts."
-
 
       email:
         title: "Emails"
@@ -2264,6 +2267,19 @@ en:
           subject: "Subject"
           error: "Error"
           none: "No incoming emails found."
+          modal:
+            title: "Incoming Email Details"
+            error: "Error"
+            return_path: "Return-Path"
+            message_id: "Message-Id"
+            in_reply_to: "In-Reply-To"
+            references: "References"
+            date: "Date"
+            from: "From"
+            to: "To"
+            cc: "Cc"
+            subject: "Subject"
+            body: "Body"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"

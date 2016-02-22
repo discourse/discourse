@@ -36,7 +36,7 @@ input {
   bottom: 0;
   font-size: 1em;
   position: fixed;
-  .toggler {
+  .toggle-toolbar, .toggler {
     width: 15px;
     right: 1px;
     position: absolute;
@@ -48,6 +48,14 @@ input {
       content: "\f078";
     }
   }
+
+  .toggle-toolbar {
+    right: 30px;
+    &:before {
+      content: "\f0c9";
+    }
+  }
+
   a.cancel {
     padding-left: 7px;
     line-height: 30px;
@@ -56,7 +64,7 @@ input {
     margin: 0 0 0 5px;
     .reply-to {
       overflow: hidden;
-      max-width: 92%;
+      max-width: 80%;
       white-space: nowrap;
       i {
         color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
@@ -235,6 +243,31 @@ input {
     .d-editor-preview-wrapper {
       display: none;
     }
+
+    .d-editor-preview-wrapper.force-preview {
+      display: block;
+      position: fixed;
+      z-index: 1000000;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: $secondary;
+
+      .d-editor-preview {
+        height: 90%;
+        height: calc(100% - 60px);
+        border: 0;
+        overflow: auto;
+      }
+
+      .hide-preview {
+        position: fixed;
+        right: 5px;
+        bottom: 5px;
+        z-index: 1000001;
+      }
+    }
     .d-editor-input {
       width: 100%;
       height: 100%;
@@ -259,6 +292,40 @@ input {
   }
   .d-editor-button-bar {
     display: none;
+  }
+
+
+  .wmd-controls.toolbar-visible .d-editor-input {
+    padding-top: 40px;
+  }
+
+  .wmd-controls.toolbar-visible .d-editor-button-bar {
+
+    .btn.link, .btn.upload, .btn.rule, .btn.bullet, .btn.list, .btn.heading {
+      display: none;
+    }
+
+    display: block;
+    margin: 1px 4px;
+    position: absolute;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    background-color: $secondary;
+    z-index: 100;
+    overflow: hidden;
+    width: 100%;
+    width: calc(100% - 10px);
+
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    button {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+    button.btn.no-text {
+      margin: 0 2px;
+      padding: 2px 5px;
+      position: static;
+    }
   }
 }
 

@@ -81,6 +81,8 @@ ja:
           other: "%{count} 月後"
         x_years:
           other: "%{count} 年後"
+      previous_month: '前月'
+      next_month: '来月'
     share:
       topic: 'このトピックのリンクをシェアする'
       post: 'ポスト #%{postNumber}'
@@ -91,6 +93,19 @@ ja:
       email: 'メールでこのリンクを送る'
     topic_admin_menu: "トピック管理"
     emails_are_disabled: "全てのメールアドレスの送信が管理者によって無効化されています。全ての種類のメール通知は行われません"
+    s3:
+      regions:
+        us_east_1: "US East (N. Virginia)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        eu_west_1: "EU (Ireland)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_northeast_1: "Asia Pacific (Tokyo)"
+        ap_northeast_2: "Asia Pacific (Seoul)"
+        sa_east_1: "South America (Sao Paulo)"
     edit: 'このトピックのタイトルとカテゴリを編集'
     not_implemented: "申し訳ありませんが、この機能はまだ実装されていません"
     no_value: "いいえ"
@@ -282,6 +297,7 @@ ja:
       category: "カテゴリ"
       reorder:
         title: "カテゴリを並び替える"
+        apply_all: "適用"
       posts: "ポスト"
       topics: "トピック"
       latest: "最新ポスト"
@@ -332,7 +348,6 @@ ja:
         not_supported: "申し訳ありません。そのブラウザは通知をサポートしていません。"
         perm_default: "通知をONにする"
         perm_denied_btn: "アクセス拒否"
-        perm_denied_expl: "通知へのアクセスを拒否されています。利用しているブラウザの通知を有効にし、完了したら、このボタンをクリックしてください。(デスクトップ: アドレスバーの左端のアイコン。 モバイル: \"サイト情報\")"
         disable: "通知を無効にする"
         currently_enabled: "(現在有効化されています)"
         enable: "通知を有効化"
@@ -377,6 +392,8 @@ ja:
         warnings_received: "注意"
       messages:
         all: "すべて"
+        inbox: "インボックス"
+        select_all: "全てを選択する"
       change_password:
         success: "(メールを送信しました)"
         in_progress: "(メールを送信中)"
@@ -475,6 +492,13 @@ ja:
       auto_track_options:
         never: "トラックしない"
         immediately: "今すぐ"
+        after_30_seconds: "30秒後"
+        after_1_minute: "1分後"
+        after_2_minutes: "2分後"
+        after_3_minutes: "3分後"
+        after_4_minutes: "4分後"
+        after_5_minutes: "5分後"
+        after_10_minutes: "10分後"
       invited:
         search: "招待履歴を検索するためにキーワードを入力してください..."
         title: "招待"
@@ -647,6 +671,7 @@ ja:
     twitter: "Twitter"
     emoji_one: "Emoji One"
     composer:
+      options: "オプション"
       add_warning: "これは公式の警告です。"
       posting_not_on_topic: "回答したいトピックはどれですか?"
       saving_draft_tip: "保存中..."
@@ -675,6 +700,7 @@ ja:
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
       view_new_post: "新規ポストを見る。"
+      saving: "保存中"
       saved: "保存完了!"
       saved_draft: "編集中の投稿があります。選択すると再開します"
       uploading: "アップロード中..."
@@ -703,6 +729,7 @@ ja:
       hr_title: "水平線"
       help: "Markdown 編集のヘルプ"
       toggler: "編集パネルの表示/非表示"
+      modal_cancel: "キャンセル"
       admin_options_title: "このトピックの詳細設定"
       auto_close:
         label: "このトピックを自動的に終了する時間:"
@@ -750,6 +777,7 @@ ja:
       select_file: "ファイル選択"
       image_link: "イメージのリンク先"
     search:
+      select_all: "全てを選択する"
       title: "トピック、ポスト、ユーザ、カテゴリを探す"
       no_results: "何も見つかりませんでした。"
       no_more_results: "これ以上結果が見つかりませんでした。"
@@ -1724,6 +1752,10 @@ ja:
         last_seen_user: "ユーザが最後にサイトを訪れた日:"
         reply_key: "回答キー"
         skipped_reason: "スキップの理由"
+        incoming_emails:
+          error: "エラー"
+          filters:
+            error_placeholder: "エラー"
         logs:
           none: "ログなし"
           filters:
@@ -1742,6 +1774,7 @@ ja:
         ip_address: "IP"
         topic_id: "トピックID"
         post_id: "ポストID"
+        category_id: "カテゴリID"
         delete: '削除'
         edit: '編集'
         save: '保存'
@@ -1783,6 +1816,12 @@ ja:
             anonymize_user: "匿名ユーザ"
             roll_up: "IPブロックをロールアップ"
             delete_category: "カテゴリを削除する"
+            block_user: "ユーザをブロック"
+            unblock_user: "ユーザをブロック解除"
+            grant_admin: "管理者権限を付与"
+            revoke_admin: "管理者権限を剥奪"
+            grant_moderation: "モデレータ権限を付与"
+            revoke_moderation: "モデレータ権限を剥奪"
         screened_emails:
           title: "ブロック対象アドレス"
           description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"

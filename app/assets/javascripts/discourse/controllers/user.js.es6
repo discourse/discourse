@@ -6,7 +6,8 @@ import User from 'discourse/models/user';
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   userActionType: null,
-  needs: ['user-notifications', 'user-topics-list'],
+  needs: ['application','user-notifications', 'user-topics-list'],
+  currentPath: Em.computed.alias('controllers.application.currentPath'),
 
   @computed("content.username")
   viewingSelf(username) {
@@ -84,8 +85,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     adminDelete() {
       // I really want this deferred, don't want to bring in all this code till used
       const AdminUser = require('admin/models/admin-user').default;
-      AdminUser.find(this.get('model.username').toLowerCase())
-                         .then(user => user.destroy({deletePosts: true}));
+      AdminUser.find(this.get('model.id')).then(user => user.destroy({deletePosts: true}));
     },
 
   }

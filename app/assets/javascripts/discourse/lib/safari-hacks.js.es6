@@ -89,8 +89,12 @@ function positioningWorkaround($fixedElement) {
   }
 
   const checkForInputs = _.debounce(function(){
-    $fixedElement.find('button,a:not(.mobile-file-upload)').each(function(idx, elem){
+    $fixedElement.find('button:not(.hide-preview),a:not(.mobile-file-upload):not(.toggle-toolbar)').each(function(idx, elem){
       if ($(elem).parents('.autocomplete').length > 0) {
+        return;
+      }
+
+      if ($(elem).parents('.d-editor-button-bar').length > 0) {
         return;
       }
 

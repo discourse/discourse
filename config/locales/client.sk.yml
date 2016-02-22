@@ -458,7 +458,6 @@ sk:
         not_supported: "Tento prehliadač nepodporuje upozornenia. Prepáčte."
         perm_default: "Zapnúť upozornenia"
         perm_denied_btn: "Prístup zamietnutý"
-        perm_denied_expl: "Notifikácie nie sú povolené. Povoľte notifikácie vo vašom prehliadači a potom kliknite na tlačidlo. (Desktop: ľavá krajná ikona v adresnom riadku. Mobil: 'Site info')"
         disable: "Zakázať upozornenia"
         currently_enabled: "(momentálne povolené)"
         enable: "Povoliť upozornenia"

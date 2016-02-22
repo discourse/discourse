@@ -100,6 +100,8 @@ es:
         x_years:
           one: "%{count} año después"
           other: "%{count} años después"
+      previous_month: 'Anterior mes'
+      next_month: 'Próximo mes'
     share:
       topic: 'comparte un enlace a este tema'
       post: 'post #%{postNumber}'
@@ -188,6 +190,7 @@ es:
       other: "{{count}} caracteres"
     suggested_topics:
       title: "Temas Sugeridos"
+      pm_title: "Mensajes sugeridos"
     about:
       simple_title: "Acerca de"
       title: "Sobre %{title}"
@@ -1759,6 +1762,7 @@ es:
           refresh_report: "Actualizar reporte"
           start_date: "Desde fecha"
           end_date: "Hasta fecha"
+          groups: "Todos los grupos"
       commits:
         latest_changes: "Cambios recientes: ¡actualiza a menudo!"
         by: "por"

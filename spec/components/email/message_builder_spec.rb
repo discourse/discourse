@@ -194,7 +194,7 @@ describe Email::MessageBuilder do
       end
 
       it "does not add unsubscribe via email link without site setting set" do
-        expect(message_with_unsubscribe_via_email.body).to_not match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)        
+        expect(message_with_unsubscribe_via_email.body).to_not match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
       end
     end
 

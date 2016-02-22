@@ -825,7 +825,7 @@ ko:
     automatically_download_gravatars: "사용자가 계정을 만들거나 이메일을 변경하자마자 Gravatar를 다운로드합니다."
     digest_topics: "요약 이메일에서 보여질 최대 글타래 개수"
     digest_min_excerpt_length: "요약 이메일에서 최소 글 발췌 수"
-    suppress_digest_email_after_days: "(n)일동안 사이트에서 보지 못한 사용자에게는 이메일 요약을 보내지 않습니다."
+    delete_digest_email_after_days: "(n)일동안 사이트에서 보지 못한 사용자에게는 이메일 요약을 보내지 않습니다."
     disable_digest_emails: "모든 유저들 이메일 다이제스트 못하게 하기"
     max_daily_gravatar_crawls: "하루에 Discourse가 커스텀 아파타를 위해 Gravatar를 체크하는 최대 횟수"
     public_user_custom_fields: "유저가 쓸 수 있는 공개 커스텀 필드 목록"

@@ -500,13 +500,15 @@ email:
   email_posts_context: 5
   digest_min_excerpt_length: 100
   digest_topics: 20
-  suppress_digest_email_after_days: 365
+  delete_digest_email_after_days: 365
   disable_digest_emails:
     default: false
     client: true
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
-  reply_by_email_enabled: false
+  reply_by_email_enabled:
+    default: false
+    validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
     validator: "ReplyByEmailAddressValidator"
@@ -539,6 +541,9 @@ email:
     default: true
   unsubscribe_via_email_footer:
     default: false
+  delete_email_logs_after_days:
+    default: 365
+    min: 0
 
 files:
   max_image_size_kb: 3072
@@ -866,7 +871,7 @@ backups:
     default: false
   maximum_backups:
     client: true
-    default: 7
+    default: 5
     shadowed_by_global: true
   automatic_backups_enabled:
     default: true
@@ -1059,6 +1064,9 @@ user_preferences:
   default_email_direct: true
   default_email_mailing_list_mode: false
   default_email_always: false
+  default_email_previous_replies:
+    enum: 'PreviousRepliesSiteSetting'
+    default: 1
 
   default_other_new_topic_duration_minutes:
     enum: 'NewTopicDurationSiteSetting'

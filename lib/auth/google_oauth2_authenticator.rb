@@ -31,12 +31,15 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
   end
 
   def register_middleware(omniauth)
+    # jwt encoding is causing auth to fail in quite a few conditions
+    # skipping
     omniauth.provider :google_oauth2,
            :setup => lambda { |env|
               strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
               strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
-           }
+           },
+           skip_jwt: true
   end
 
   protected

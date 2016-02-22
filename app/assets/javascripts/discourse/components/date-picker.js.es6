@@ -17,6 +17,14 @@ export default Em.Component.extend({
         format: "YYYY-MM-DD",
         defaultDate: moment().add(1, "day").toDate(),
         minDate: new Date(),
+        firstDay: moment.localeData().firstDayOfWeek(),
+        i18n: {
+          previousMonth: I18n.t('dates.previous_month'),
+          nextMonth: I18n.t('dates.next_month'),
+          months: moment.months(),
+          weekdays: moment.weekdays(),
+          weekdaysShort: moment.weekdaysShort()
+        },
         onSelect: date => this.set("value", moment(date).format("YYYY-MM-DD"))
       };
 

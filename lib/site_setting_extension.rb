@@ -121,9 +121,11 @@ module SiteSettingExtension
       # exists it will be used instead of the setting and the setting will be hidden.
       # Useful for things like API keys on multisite.
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
-        hidden_settings << name
-        shadowed_settings << name
-        current_value = GlobalSetting.send(name)
+        unless (val = GlobalSetting.send(name)) == ''.freeze
+          hidden_settings << name
+          shadowed_settings << name
+          current_value = val
+        end
       end
 
       if opts[:refresh]
@@ -149,7 +151,7 @@ module SiteSettingExtension
   # just like a setting, except that it is available in javascript via DiscourseSession
   def client_setting(name, default = nil, opts = {})
     setting(name, default, opts)
-    client_settings << name
+    client_settings << name.to_sym
   end
 
   def settings_hash

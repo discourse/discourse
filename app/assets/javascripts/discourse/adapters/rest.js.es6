@@ -1,5 +1,7 @@
-import StaleResult from 'discourse/lib/stale-result';
+import { hashString } from 'discourse/lib/hash';
+
 const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host'];
+
 
 export function Result(payload, responseJson) {
   this.payload = payload;
@@ -18,6 +20,15 @@ function rethrow(error) {
 }
 
 export default Ember.Object.extend({
+
+
+  storageKey(type, findArgs, options) {
+    if (options && options.cacheKey) {
+      return options.cacheKey;
+    }
+    const hashedArgs = Math.abs(hashString(JSON.stringify(findArgs)));
+    return `${type}_${hashedArgs}`;
+  },
 
   basePath(store, type) {
     if (ADMIN_MODELS.indexOf(type.replace('_', '-')) !== -1) { return "/admin/"; }
@@ -56,8 +67,15 @@ export default Ember.Object.extend({
     return ajax(this.pathFor(store, type, findArgs)).catch(rethrow);
   },
 
-  findStale() {
-    return new StaleResult();
+  findStale(store, type, findArgs, options) {
+    if (this.cached) {
+      return this.cached[this.storageKey(type, findArgs, options)];
+    }
+  },
+
+  cacheFind(store, type, findArgs, opts, hydrated) {
+    this.cached = this.cached || {};
+    this.cached[this.storageKey(type,findArgs,opts)] = hydrated;
   },
 
   update(store, type, id, attrs) {

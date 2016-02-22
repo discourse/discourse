@@ -632,6 +632,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           }
           return;
         }
+        case "move_to_inbox": {
+          topic.set("message_archived",false);
+          return;
+        }
+        case "archived": {
+          topic.set("message_archived",true);
+          return;
+        }
         default: {
           Em.Logger.warn("unknown topic bus message type", data);
         }

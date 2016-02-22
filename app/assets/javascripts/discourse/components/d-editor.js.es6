@@ -31,7 +31,7 @@ function Toolbar() {
   this.groups = [
     {group: 'fontStyles', buttons: []},
     {group: 'insertions', buttons: []},
-    {group: 'extras', buttons: [], lastGroup: true}
+    {group: 'extras', buttons: []}
   ];
 
   this.addButton({
@@ -105,6 +105,20 @@ function Toolbar() {
     title: 'composer.hr_title',
     perform: e => e.addText("\n\n----------\n")
   });
+
+  if (Discourse.Mobile.mobileView) {
+    this.groups.push({group: 'mobileExtras', buttons: []});
+
+    this.addButton({
+      id: 'preview',
+      group: 'mobileExtras',
+      icon: 'television',
+      title: 'composer.hr_preview',
+      perform: e => e.preview()
+    });
+  }
+
+  this.groups[this.groups.length-1].lastGroup = true;
 };
 
 Toolbar.prototype.addButton = function(button) {
@@ -166,6 +180,7 @@ export function onToolbarCreate(func) {
 export default Ember.Component.extend({
   classNames: ['d-editor'],
   ready: false,
+  forcePreview: false,
   insertLinkHidden: true,
   link: '',
   lastSel: null,
@@ -446,6 +461,10 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce("afterRender", () => this.$("textarea.d-editor-input").focus());
   },
 
+  _togglePreview() {
+    this.toggleProperty('forcePreview');
+  },
+
   actions: {
     toolbarButton(button) {
       const selected = this._getSelected();
@@ -453,7 +472,8 @@ export default Ember.Component.extend({
         selected,
         applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
         applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
-        addText: text => this._addText(selected, text)
+        addText: text => this._addText(selected, text),
+        preview: () => this._togglePreview()
       };
 
       if (button.sendAction) {
@@ -461,6 +481,10 @@ export default Ember.Component.extend({
       } else {
         button.perform(toolbarEvent);
       }
+    },
+
+    hidePreview() {
+      this.set('forcePreview', false);
     },
 
     showLinkModal() {

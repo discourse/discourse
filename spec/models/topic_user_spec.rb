@@ -48,7 +48,12 @@ describe TopicUser do
   let(:topic_creator_user) { TopicUser.get(topic, topic.user) }
 
   let(:post) { Fabricate(:post, topic: topic, user: user) }
-  let(:new_user) { Fabricate(:user, auto_track_topics_after_msecs: 1000) }
+  let(:new_user) {
+    u = Fabricate(:user)
+    u.user_option.update_columns(auto_track_topics_after_msecs: 1000)
+    u
+  }
+
   let(:topic_new_user) { TopicUser.get(topic, new_user)}
   let(:yesterday) { DateTime.now.yesterday }
 
@@ -68,15 +73,15 @@ describe TopicUser do
   describe 'notifications' do
 
     it 'should be set to tracking if auto_track_topics is enabled' do
-      user.update_column(:auto_track_topics_after_msecs, 0)
+      user.user_option.update_column(:auto_track_topics_after_msecs, 0)
       ensure_topic_user
       expect(TopicUser.get(topic, user).notification_level).to eq(TopicUser.notification_levels[:tracking])
     end
 
     it 'should reset regular topics to tracking topics if auto track is changed' do
       ensure_topic_user
-      user.auto_track_topics_after_msecs = 0
-      user.save
+      user.user_option.auto_track_topics_after_msecs = 0
+      user.user_option.save
       expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
     end
 

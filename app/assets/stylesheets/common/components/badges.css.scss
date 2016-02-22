@@ -25,6 +25,7 @@
   &.bar { //bar category style
     line-height: 1.25;
     margin-right: 5px;
+    display: inline-flex;
 
     span.badge-category {
       color: $primary !important;
@@ -130,27 +131,9 @@
   }
 }
 
-@mixin cooked-badge-bullet($length, $offset:0px) {
-  .badge-wrapper.bullet {
-    span {
-      position: relative;
-
-      &.badge-category-bg {
-        width: $length;
-        height: $length;
-        top: $offset;
-      }
-
-      &.badge-category-parent-bg {
-        width: $length / 2;
-        height: $length;
-        top: $offset;
-
-        & + .badge-category-bg {
-          width: $length / 2;
-        }
-      }
-    }
+.autocomplete, td.category {
+  .badge-wrapper {
+    max-width: 230px;
   }
 }
 

@@ -67,9 +67,8 @@
 }
 
 .profile-image {
-  height: 150px;
+  height: 25px;
   width: 100%;
-  background-size: cover;
 }
 
 
@@ -209,8 +208,7 @@
   }
 
   .about {
-    background-size: cover;
-    background: dark-light-diff($primary, $secondary, 0%, -75%) center center;
+    background: dark-light-diff($primary, $secondary, 0%, -75%) center;
     width: 100%;
     margin-bottom: 10px;
     overflow: hidden;
@@ -251,6 +249,11 @@
       padding: 15px 10px 4px 10px;
       background-color: dark-light-choose(rgba($primary, .9), rgba($secondary, .9));
       opacity: 0.8;
+
+      blockquote {
+        background-color: dark-light-diff($secondary, $primary, 30%, -70%);
+        border-left-color: dark-light-diff($secondary, $primary, 50%, -50%);
+      }
 
       h1 {
         font-size: 2.143em;
@@ -300,6 +303,7 @@
 
         .primary-textual {
           float: left;
+          padding-left: 15px;
           a[href] {
             color: dark-light-diff($secondary, $primary, 75%, -10%);
           }
@@ -324,16 +328,15 @@
     }
 
     .controls {
-      width: 160px;
-      float: right;
-      text-align: right;
+      float: left;
+      padding-left: 15px;
       ul {
         list-style-type: none;
         margin: 0;
       }
       a {
         padding: 5px 10px;
-        width: 140px;
+        width: 120px;
         margin-bottom: 10px;
       }
     }

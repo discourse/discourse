@@ -176,6 +176,8 @@ ar:
           few: "بعد %{count}  سنوات"
           many: "بعد %{count}  سنة"
           other: "بعد %{count}  سنة"
+      previous_month: 'الشهر السابق'
+      next_month: 'الشهر التالي'
     share:
       topic: 'شارك رابط هذا الموضوع'
       post: 'الموضوع رقم %{postNumber}'
@@ -186,6 +188,8 @@ ar:
       email: 'شارك هذا الرابط في بريد إلكتروني'
     action_codes:
       split_topic: "قسم هذا الموضوع في %{when}"
+      invited_user: "دعوة %{who} %{when}"
+      removed_user: "ازالة  %{who} %{when}"
       autoclosed:
         enabled: 'أُغلق في %{when}'
         disabled: 'فُتح في %{when}'
@@ -257,6 +261,7 @@ ar:
       other: "{{count}} حرف"
     suggested_topics:
       title: "مواضيع مقترحة"
+      pm_title: "رسائلة مقترحة "
     about:
       simple_title: "نبذة"
       title: "عن %{title}"
@@ -533,7 +538,7 @@ ar:
         not_supported: "عذراً , الإشعارات غير مدعومة على هذا المتصفح "
         perm_default: "تفعيل الإشعارات"
         perm_denied_btn: "الصلاحيات ممنوعة "
-        perm_denied_expl: "لقد قمت بإيقاف صلاحية الإشعارات في متصفحك  . إستخدم متصفحك لتفعيل التنبيهات و ثم أعد ضغط الزر .\n( سطح المكتب : الأيقونة في أقصى اليسار في شريط العنوان . للهواتف الذكية : في معلومات الموقع Site Info)"
+        perm_denied_expl: "لقد قمت بالغاء الاشعارات . قم بتفعيل الاشعارات عن طريق اعدادات االمتصفح"
         disable: "إيقاف الإشعارات "
         currently_enabled: "( مفعل مسبقاً )"
         enable: "تفعيل الإشعارات"
@@ -587,6 +592,7 @@ ar:
         groups: "مجموعاتي"
         bulk_select: "إختيار رسائل"
         move_to_inbox: "الذهاب إلى الرسائل الواردة"
+        move_to_archive: "الارشيف"
         failed_to_move: "فشل في نقل الرسائل المحددة (ربما يكون اتصالك ضعيفاً)"
         select_all: "إختيار الكل"
       change_password:
@@ -753,6 +759,20 @@ ar:
         same_as_email: "كلمة المرور مطابقة للبريد الإليكتروني."
         ok: "كلمة المرور هذة تعتبر جيدة."
         instructions: "على الاقل %{count} حرف"
+      summary:
+        title: "ملخص"
+        stats: "احصائيات"
+        topic_count: "مواضيع منشئة"
+        post_count: "مشاركات منشئة"
+        likes_given: "اجابات معطاة"
+        likes_received: "اعجابات مستقبلة"
+        days_visited: "ايام الزياره"
+        posts_read_count: "قراء المواضيع"
+        top_topics: "افضل المواضيع"
+        top_badges: "افضل الاوسمه"
+        more_topics: "المزيد من المواضيع"
+        more_replies: "المزيد من الردود"
+        more_badges: "المزيد من الاوسمه"
       associated_accounts: "حساب مرتبط"
       ip_address:
         title: "أخر عنوان أيبي"
@@ -795,6 +815,7 @@ ar:
     logout: "تم تسجيل خروجك"
     refresh: "تحديث"
     read_only_mode:
+      enabled: "الموقع في وضع القراءه فقط. الرجاء الاستمرار بالتصفح , لكن الردود و الاعجابات و الخصائص  الاخرى معطله  للان ."
       login_disabled: "تسجيل الدخول معطل لأن الموقع في خالة القراءة  فقط"
     too_few_topics_and_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة بدأت!</a> يوجد حاليا<strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> المشاركات. الزوار الجدد بحاجة إلى بعض الأحاديث لقراءة والرد على."
     too_few_topics_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي!</a> وهناك حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
@@ -913,6 +934,7 @@ ar:
       ctrl: 'التحكم'
       alt: 'Alt'
     composer:
+      emoji: "الرموز التعبيرية :)"
       more_emoji: "أكثر..."
       options: "خيارات"
       whisper: "همس"
@@ -1022,6 +1044,7 @@ ar:
         moved_post: "مشاركتك نقلت بواسطة"
         linked: "رابط لمشاركتك"
         granted_badge: "تم منح الوسام"
+        group_message_summary: "الرسائل في صندوق رسائل  المجموعه"
       popup:
         mentioned: '{{username}} أشار لك في "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ذكرك في "{{topic}}" - {{site_title}}'
@@ -1084,6 +1107,7 @@ ar:
         dismiss_read: "تجاهل المشاركات غير المقروءة"
         dismiss_button: "تجاهل..."
         dismiss_tooltip: "تجاهل فقط المشاركات الجديدة او توقف عن تتبع المواضيع"
+        also_dismiss_topics: "التوقف عن متابعه المواضيع حتي لا تظهر كغير مقروء مره اخرى "
         dismiss_new: "إخفاء الجديد"
         toggle: "إيقاف/تشغيل الاختيار المتعدد للمواضيع"
         actions: "عمليات تنفذ دفعة واحدة"
@@ -1340,6 +1364,7 @@ ar:
         success: "لقد دعونا ذلك المستخدم للمشاركة في هذه الرسالة."
         error: "للأسف, حدثت مشكلة في دعوة المستخدم"
         group_name: "اسم المجموعة"
+      controls: "خصائص  الموضوع"
       invite_reply:
         title: 'دعوة'
         username_placeholder: "اسم المستخدم"
@@ -2050,6 +2075,7 @@ ar:
           refresh_report: "تحديث التقرير "
           start_date: "تاريخ البدء"
           end_date: "تاريخ الإنتهاء"
+          groups: "جميع الفئات"
       commits:
         latest_changes: "آخر تغيير: يرجى التحديث"
         by: "بواسطة"
@@ -2352,13 +2378,17 @@ ar:
             name: 'ويكي'
             description: "اللون الأساسي المستخدم كخلفية لمشاركات الويكي."
       email:
+        title: "رسائل البريد الالكتروني"
         settings: "اعدادات"
+        templates: "نماذج"
         preview_digest: "ملخص المعاينة."
         sending_test: "إرسال بريد إلكتروني للتجربة..."
         error: "<b>خطأ</b> - %{server_error}"
         test_error: "حدث خطأ أثناء إرسال رسالة تجريبية. الرجاء فحص إعدادات البريد الإلكتروني و التأكد من أن الاستضافة لا تمنع مرور البريد الإلكتروني والمحاولة مرة أخرى."
         sent: "تم الإرسال"
         skipped: "تم التجاوز"
+        received: "وارد"
+        rejected: "مرفوض"
         sent_at: "أرسلت في"
         time: "الوقت"
         user: "المستخدم"
@@ -2376,6 +2406,19 @@ ar:
         last_seen_user: "آخر مستخدم تواجد:"
         reply_key: "مفتاح الرد"
         skipped_reason: "تجاوز السبب"
+        incoming_emails:
+          from_address: "من"
+          to_addresses: "الى"
+          cc_addresses: "Cc"
+          subject: "موضوع"
+          error: "خطأ"
+          none: "لا يوجد بريد وارد"
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "موضوع..."
+            error_placeholder: "خطأ"
         logs:
           none: "لا يوجد سجلات."
           filters:
@@ -2439,6 +2482,10 @@ ar:
             change_category_settings: "تغيير إعدادات الفئة"
             delete_category: "حذف الفئة"
             create_category: "أنشئ فئة"
+            block_user: "حظر"
+            unblock_user: "رفع الحظر"
+            grant_admin: "منح صلاحيات ادارية"
+            revoke_admin: "سحب الصلاحيات الادارية"
         screened_emails:
           title: "عناوين بريد إلكتروني محجوبة."
           description: "عندما تتم محاول انشاء حساب جديد, سيتم التحقق من قائمة البريد  الالكتروني وسيتم حظر التسجيل لهذا البريد واتخاذ اي اجراء متبع"
@@ -2632,6 +2679,8 @@ ar:
         deactivate_failed: "حدث خطأ عند تعطيل هذا المستخدم."
         unblock_failed: 'حدث خطأ عند الغاء حظر هذا المستخدم.'
         block_failed: 'حدث خطأ عند حظر هذا المستخدم.'
+        block_confirm: 'هل انت متأكد من حظر هذا المستخدم؟ لن يستطيع انشاء مواضيع او ردود جديدة'
+        block_accept: 'نعم, حظر هذا المستخدم'
         deactivate_explanation: "المستخدم الغير نشط يحب أن يتأكد من البريد الالكتروني"
         suspended_explanation: "المستخدم الموقوف لايملك صلاحية تسجيل الدخول"
         block_explanation: "المستخدم الموقوف لايستطيع أن يشارك"
@@ -2706,6 +2755,7 @@ ar:
           confirm: 'تأكيد'
           dropdown: "القائمة المنسدلة"
       site_text:
+        description: "يمكنك تخصيص اي نص في مدونتك . الرجاء البدء بالبحث في الاسفل:"
         search: "ابحث عن النص الذي تريد تعديله"
         title: 'محتوى النص'
         edit: 'تعديل'
@@ -2916,6 +2966,7 @@ ar:
         mark_tracking: '<b>m</b>, <b>t</b>  تابع الموضوع'
         mark_watching: '<b>m</b>, <b>w</b> شاهد الموضوع'
     badges:
+      more_with_badge: "اخرون بنفس الدرع"
       title: أوسمة
       allow_title: "يمكن استخدامه كعنوان"
       multiple_grant: "يمكن منحه عدة مرات. "

@@ -1,3 +1,4 @@
+/* global Int8Array:true */
 import { blank } from 'helpers/qunit-helpers';
 
 module("Discourse.Utilities");

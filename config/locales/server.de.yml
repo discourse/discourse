@@ -27,6 +27,9 @@ de:
   purge_reason: "Stillgelegtes, nicht aktives Konto wurde automatisch gelöscht."
   disable_remote_images_download_reason: "Der Download von Bildern wurde deaktiviert, weil nicht mehr genug Plattenplatz vorhanden war."
   anonymous: "Anonym"
+  emails:
+    incoming:
+      default_subject: "Eingehende E-Mail von %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -288,6 +291,7 @@ de:
         one: "Diese Kategorie kann nicht gelöscht werden, weil sie ein Thema enthält. Das Thema ist %{topic_link}."
         other: "Diese Kategorie kann nicht gelöscht werden, weil sie %{count} Themen enthält. Das älteste Thema ist %{topic_link}."
       topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, weil sie #{category.topic_count} Themen enthält."
+    uncategorized_description: "Themen welche keine Kategorie benötigen oder in keine existierende Kategorie passen."
   trust_levels:
     newuser:
       title: "Neuer Benutzer"
@@ -822,6 +826,7 @@ de:
     active_user_rate_limit_secs: "Sekunden, nach denen das 'last_seen_at'-Feld aktualisiert wird."
     verbose_localization: "Erweiterte Lokalisierungstipps in der Benutzeroberfläche anzeigen "
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert, bevor er als 'früherer' Besuch gezählt wird."
+    top_topics_formula_log_views_multiplier: "Wert von Log Ansichten Multiplikator (n) in Top Themen Formel: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Nach Erstellen eines Themas muss ein Nutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Nutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Nutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
@@ -865,6 +870,7 @@ de:
     tl2_requires_likes_given: "Die Anzahl der Likes, die ein Benutzer vergeben muss, bevor er in die Vertrauensstufe 2 befördert wird."
     tl2_requires_topic_reply_count: "Die Anzahl der Beiträge, auf die ein Benutzer antworten muss, bevor er in die Vertrauensstufe 2 befördert wird."
     tl3_time_period: "Zeitraum für die Bedingungen für Vertrauensstufe 3"
+    tl3_requires_days_visited: "Minimale Anzahl an Tagen, an denen der Nutzer die Seite besuchen haben muss, in den letzten 100 Tagen, um sich für eine Beförderung zu Vertrauenslevel 3 zu qualifizieren. Setze tl3 höher als die Zeitperiode um Beförderungen zu Vertrauenslevel 3 zu deaktivieren. (0 oder höher)"
     tl3_requires_topics_replied_to: "Die Mindestanzahl an Themen, auf die ein Benutzer in den letzten 100 Tagen geantwortet haben muss, um die Vertrauensstufe 3 erreichen zu können. (0 oder mehr)"
     tl3_requires_topics_viewed: "Prozentualer Anteil aller Themen der letzten 100 Tage, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können. (0 bis 100)"
     tl3_requires_posts_read: "Prozentualer Anteil aller Beiträge der letzten 100 Tage, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können. (0 bis 100)"
@@ -877,6 +883,7 @@ de:
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
+    min_trust_to_allow_self_wiki: "Das mindeste Vertrauenslevel, das ein Nutzer haben muss, um einen eigenen Wiki Eintrag zu erstellen."
     min_trust_to_send_messages: "Benötigte Vertrauensstufe um neue private Nachrichten erstellen zu dürfen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_images: "Maximale Anzahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -887,6 +894,7 @@ de:
     max_users_notified_per_group_mention: "Maximale Anzahl an Nutzern die benachrichtigt werden wenn eine Gruppe erwähnt wird (wird die Grenze erreicht, werden keine Nutzer benachrichtigt)"
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor Nutzern eine Hinweis-E-Mail geschickt wird, um ihnen Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
+    private_email_time_window_seconds: "Warte (n) Sekunden, bevor irgendwelche private E-Mail Benachrichtigungen gesendet werden, um den Nutzer die Möglichkeit zu geben, den Beitrag zu bearbeiten und finalisieren."
     email_posts_context: "Anzahl der Antworten welche als Konext einer Notifikations-Mail hinzugefügt werden."
     flush_timings_secs: "Sekunden, nach denen Zeiteinstellungen auf den Server übertragen werden."
     title_max_word_length: "Maximal erlaubte Wortlänge in Thementiteln, in Zeichen."
@@ -943,6 +951,7 @@ de:
     display_name_on_email_from: "Zeige vollständige Namen im Absender-Feld von E-Mails"
     unsubscribe_via_email: "Erlaube es Benutzern eine E-Mail mit dem Betreff oder Text: \"unsubscribe\" zum abbestellen der E-Mails zu senden."
     unsubscribe_via_email_footer: "Hänge einen Link zum abbestellen ans Ende der E-Mail."
+    delete_email_logs_after_days: "Lösche E-Mail Logs nach (N) Tagen. 0 um sie für immer zu behalten."
     pop3_polling_enabled: "E-Mail-Antworten über POP3 abholen."
     pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
     pop3_polling_period_mins: "Intervall in Minuten zum Abholen neuer E-Mails vom POP3-Konto. HINWEIS: benötigt Neustart."
@@ -969,7 +978,7 @@ de:
     automatically_download_gravatars: "Avatare von Gravatar herunterladen, wenn ein Nutzer sich registriert oder seine E-Mail-Adresse ändert."
     digest_topics: "Maximale Anzahl von Themen, die in der E-Mail-Zusammenfassung angezeigt werden."
     digest_min_excerpt_length: "Minimale Länge des Auszugs aus einem Beitrag in der E-Mail-Zusammenfassung, in Zeichen."
-    suppress_digest_email_after_days: "Sende keine E-Mail-Zusammenfassungen an Benutzer, die die Seite seit mehr als (n) Tagen nicht mehr besucht haben."
+    delete_digest_email_after_days: "Keine Zusammenfassungen an Nutzer senden, welche für mehr als (n) Tage nicht auf der Seite aktiv waren."
     disable_digest_emails: "E-Mail-Zusammenfassungen für alle Benutzer deaktivieren."
     detect_custom_avatars: "Aktiviere diese Option, um zu überprüfen, ob Benutzer eigene Profilbilder hochgeladen haben."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
@@ -981,6 +990,7 @@ de:
     anonymous_account_duration_minutes: "Um die Anonymität der virtuellen anonymen Nutzer zu erhalten, erzeuge ein neues anonymes Konto alle N Minuten je Benutzer. Beispiel: wenn dies auf 600 gesetzt ist wird ein neues anonymes Konto erzeugt, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit der letzten anonymen Nachricht dieses Nutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Nutzerprofile und das Benutzerverzeichnis für anonyme Nutzer."
     allow_profile_backgrounds: "Erlaube Benutzern Profilhintergründe hochzuladen."
+    sequential_replies_threshold: "Anzahl an Beiträgen die ein Nutzer machen muss, um benachrichtigt zu werden, dass er zu viele aufeinanderfolgende Antworten schreibt."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Seite zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Nutzer verfassen darf, bevor dieser Nutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Weise Benutzer nicht darauf hin, dass sie ihren Avatar ändern können"
@@ -990,6 +1000,7 @@ de:
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-NACHRICHT als global sichtbares Banner an. Deaktiviert bei leerer Nachricht. (HTML ist erlaubt.)"
     disable_edit_notifications: "Unterdrückt Bearbeitungshinweise durch den System-Nutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Nutzer das Ende erreicht."
+    read_time_word_count: "Wörteranzahl pro Minute um die abgeschätzte Lesezeit zu berechnen."
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
@@ -1013,6 +1024,7 @@ de:
     enable_cdn_js_debugging: "Ermöglicht die Anzeige vollständiger Fehler auf /logs, indem alle eingebetteten JavaScripts Cross-Origin Zugriffsberechtigungen erhalten."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: Lösche Entwürfe, die mehr als (n) Tage alt sind.
+    vacuum_db_days: "Führe VACUUM ANALYZE aus, um Datenbankspeicher nach Migrationen zurückzuerhalten (0 um zu deaktivieren)"
     prevent_anons_from_downloading_files: "Nichtangemeldeten Benutzern das Herunterladen von Anhängen verbieten. WARNUNG: dies verhindert auch das Herunterladen jeglicher Ressourcen für Website-Anpassungen, die als Anhänge gespeichert wurden."
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. 'encoded' verwendet einen Prozent-Encodierten String, bei 'none' wird kein Kürzel verwendet."
     enable_emoji: "Aktiviere emoji"
@@ -1051,7 +1063,12 @@ de:
       invalid_string_min: "Muss mindestens %{min} Zeichen lang sein."
       invalid_string_max: "Darf nicht länger als %{max} Zeichen sein."
       invalid_reply_by_email_address: "Adresse muss '%{reply_key}' enthalten und sich von der Benachrichtigungs E-Mail-Adresse unterscheiden."
+      pop3_polling_host_is_empty: "Du musst einen 'POP3 Abfrage Host' definieren, um POP3 Abfragen zu aktivieren."
+      pop3_polling_username_is_empty: "Du musst einen 'POP3 Abfrage Nutzername' definieren, um POP3 Abfragen zu aktivieren."
+      pop3_polling_password_is_empty: "Du must ein 'POP3 Abfrage Passwort' definieren, um POP3 Abfragen zu aktivieren."
+      pop3_polling_authentication_failed: "POP3 Authentifizierung ist fehlgeschlagen. Bitte überprüfe die POP3 Anmeldedaten."
   notification_types:
+    group_mentioned: "%{group_name} wurde auf %{link} erwähnt"
     mentioned: "%{display_username} hat Dich in %{link} erwähnt."
     liked: "%{display_username} gefällt deinen Beitrag in %{link}."
     replied: "%{display_username} hat auf deinen Beitrag in %{link} geantwortet."
@@ -1161,12 +1178,23 @@ de:
       must_begin_with_alphanumeric: "muss mit einem Buchstaben, einer Zahl oder einem Unterstrich beginnen"
       must_end_with_alphanumeric: "muss mit einem Buchstaben, einer Zahl oder einem Unterstrich enden"
       must_not_contain_two_special_chars_in_seq: "muss keine Reihenfolge von 2 oder mehr Sonderzeichen (.-_) haben"
+      must_not_end_with_confusing_suffix: "Darf nicht mit einem Suffix wie json, png, etc. enden."
     email:
       not_allowed: "ist für diesen Mailprovider nicht erlaubt. Bitte verwende eine andere Mailadresse."
       blocked: "ist nicht erlaubt."
     ip_address:
       blocked: "Von Deiner IP Adresse aus ist es nicht erlaub sich zu registrieren."
       max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (limit erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
+  unsubscribe_mailer:
+    subject_template: "Bestätige, dass du nicht länger E-Mail Updates von %{site_title} erhalten möchtest"
+    text_body_template: |
+      Jemand (wahrscheinlich du?) hat angefragt, nicht länger E-Mail Updates von %{site_domain_name} auf dieser Adresse zu erhalten.
+      Wenn du nicht länger Benachrichtigungen erhalten möchtest, dann klicke bitte diesen Link:
+
+      %{confirm_unsubscribe_link}
+
+
+      Wenn du weiterhin E-Mail Updates erhalten möchtest, dann kannst du diese E-Mail ignorieren.
   invite_mailer:
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
     text_body_template: |
@@ -1411,12 +1439,22 @@ de:
     csv_export_failed:
       subject_template: "Datenexport fehlgeschlagen"
       text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere einen Mitarbeiter oder sieh in die Logs."
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] E-Mail Problem -- Unzureichendes Vertrauenslevel"
+      text_body_template: |
+        Es tut uns leid, aber das Senden deiner E-Mail Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+
+        Dein Benutzerkonto hat nicht das benötigte Vertrauenslevel um neue Themen an diese E-Mail Adresse zu senden. Wenn du glaubst, dass dies ein Fehler ist, dann kontaktiere bitte einen Mitarbeiter.
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] E-Mail Problem -- Inaktiver Nutzer"
+      text_body_template: |
+        Es tut uns leid, aber das Senden deiner E-Mail Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+
+        Dein Benutzerkonto, assoziiert mit dieser E-Mail Adresse ist nicht aktiviert. Bitte aktiviere dein Konto bevor du E-Mails sendest.
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] E-Mail Problem -- Antwort Nutzer stimmt nicht überein"
     email_reject_no_account:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) konnte nicht verarbeitet werden!
-
-        Es ist kein Konto mit dieser E-Mail-Adresse bekannt. Versuche die Nachricht von einer anderen, im Forum registrierten E-Mail-Adresse zu verschicken oder kontaktiere einen Mitarbeiter.
     email_reject_empty:
       subject_template: "[%{site_name}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |

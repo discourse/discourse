@@ -27,6 +27,9 @@ sk:
   purge_reason: "Automaticky vymazaný ako opustený, neaktivovaný účet"
   disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."
   anonymous: "Anonymný"
+  emails:
+    incoming:
+      default_subject: "Prijatý email od %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -322,6 +325,7 @@ sk:
         few: "Nemôžte vymazať kategóriu pretože obsahuje %{count}  témy. Najstaršia téma je %{topic_link}."
         other: "Nemôžte vymazať kategóriu pretože obsahuje %{count}  tém. Najstaršia téma je %{topic_link}."
       topic_exists_no_oldest: "Nemôžte vymazať túto kategóriu pretože obsahuje %{count} tém."
+    uncategorized_description: "Témy, ktoré nepotrebujú kategóriu, alebo sa do žiadnej existujúcej nehodia."
   trust_levels:
     newuser:
       title: "nový používateľ"
@@ -951,6 +955,7 @@ sk:
     max_users_notified_per_group_mention: "Maximálny počet používateľov, ktorý môžu dostať notifikácie, v prípade notifikovania celej skupiny (ak sa dosiahne maximum, žiadne ďalšie notifikácie nebudú zaslané)"
     create_thumbnails: "Vytvor náhľad a okraje pre obrázoky, ktoré sú príliš veľké aby sa zmestili do príspevku."
     email_time_window_mins: "Počkať (n) minút pred poslaním akýchkoľvek notifikačných emailov, aby mali používatelia čas úpraviť a dokončiť svoje príspevky."
+    private_email_time_window_seconds: "Počkať (n) sekúnd pred poslaním akýchkoľvek súkromných notifikačných emailov, aby mali používatelia čas úpraviť a dokončiť svoje príspevky."
     email_posts_context: "Koľko posledných odpovedí zahrnúť do obsahu v notifikačných emailoch."
     flush_timings_secs: "Ako často posielať časové dáta na server, v sekundách."
     title_max_word_length: "Maximálna povolená dĺžka slov v názve témy, v znakoch."
@@ -1007,6 +1012,7 @@ sk:
     display_name_on_email_from: "V emailovom poli Od zobraziť plné mená"
     unsubscribe_via_email: "Umožniť používateľom odhlásiť sa z emailov pomocou zaslania emailu s textom 'unsubscribe' v predmete alebo v tele emailu"
     unsubscribe_via_email_footer: "Do päty stránky posielaných emailov pridať odkaz na odhlásenie sa"
+    delete_email_logs_after_days: "Zmazať logy o emailoch po (N) dňoch. 0 pre neobmedzene. "
     pop3_polling_enabled: "Získavať emailové odpovede pomocou POP3"
     pop3_polling_ssl: "Na spojenie s POP3 serverom použiť SSL. (Doporučované)"
     pop3_polling_period_mins: "Doba v minutách medzi POP3 kontrolami emailov. POZNÁMKA: vyžaduje reštart."
@@ -1033,7 +1039,7 @@ sk:
     automatically_download_gravatars: "Po vytvorení účtu alebo zmene heslo stiahnuť používateľov Gravatar."
     digest_topics: "Maximálny počet tém, ktoré sa zobrazia v súhrnnom emaile."
     digest_min_excerpt_length: "Minimálny výťah príspevku v sumarizačnom emaile, v znakoch."
-    suppress_digest_email_after_days: "Zakázat súhrnný email používateľom, ktorý neboli na stránkach viac ako (n) dní."
+    delete_digest_email_after_days: "Zakázat súhrnný email používateľom, ktorí neboli na stránkach viac ako (n) dní."
     disable_digest_emails: "Vypnúť sumárny email pre všetkých používateľov."
     detect_custom_avatars: "Má alebo nemá sa kontrolovať nahratie vlastného profilového obrázka používateľa?"
     max_daily_gravatar_crawls: "Koľkokrát denne má Discourse kontrolovať Gravatar na zistenie vlastného avatara."
@@ -1546,12 +1552,12 @@ sk:
         ```
     csv_export_succeeded:
       subject_template: "Export dát kompletný"
+    csv_export_failed:
+      subject_template: "Export dát zlyhal"
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Problém s emailom -- Neaktívny užívateľ"
     email_reject_no_account:
       subject_template: "[%{site_name}] Problém s emailom -- Neznámy účet"
-      text_body_template: |
-        Prepáčte, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-        S touto emailovou adresou neexistuje žiadny používateľský účet. Pokúste za zaslať správu pomocou inej email adresy alebo kontaktujte zamestnanca stránok.
     email_reject_empty:
       subject_template: "[%{site_name}] Problém s emailom -- Žiadny obsah"
       text_body_template: |
@@ -1572,18 +1578,18 @@ sk:
         Prepáčte, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Na založenie novej témy v tejto kategórií Váš účet nemá dostatočné oprávnenia. Ak si myslíte, že ide o chybu, kontaktujte zamestnanca stránok.
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] Problém s emailom -- Nesprávny prístup"
+    email_reject_invalid_post:
+      subject_template: "[%{site_name}] Problém s emailom -- Chyba pri uverejnení"
+    email_reject_invalid_post_specified:
+      subject_template: "[%{site_name}] Problém s emailom -- Chyba pri uverejnení"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problém s emailom -- Neznámy kľúč odpovede"
-      text_body_template: |
-        Prepáčte, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-        Poskytnutý kľúč odpovede je neplatný, alebo neznámy, takže nedokážeme určiť, k čomu táto emailová odpoveď patrí. Kontaktujte zamestnanca stránok.
+    email_reject_bad_destination_address:
+      subject_template: "[%{site_name}] Problém s emailom  -- Neznáma adresa príjemcu - Komu:"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problém s emailom -- Téma nebola nájdená"
-      text_body_template: |
-        Prepáčte, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-        Téma, na ktorú odpovedáte už neexistuje. možno bola vymazaná Ak si mysíte, že ide o chybu, kontaktujte zamestnanca stránok.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problém s emailom -- Téma je uzavretá"
       text_body_template: |
@@ -1733,6 +1739,10 @@ sk:
       subject_template: "[%{site_name}] Váš nový účet"
     authorize_email:
       subject_template: "[%{site_name}] Potvrďte Vašu novú email adresu"
+      text_body_template: |
+        Potvrďte Vašu novú emailovú adresu pre %{site_name} kliknutím na nasledujúci odkaz:
+
+        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Váš účet bol schválený na %{site_name}!"
     signup:

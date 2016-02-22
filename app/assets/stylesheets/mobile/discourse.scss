@@ -93,3 +93,70 @@ h2#site-text-logo
 .badge-wrapper {
   font-weight: normal;
 }
+
+.user-table {
+  position: relative;
+}
+
+.mobile-view .mobile-nav {
+  &.messages-nav, &.notifications-nav, &.activity-nav {
+    position: absolute;
+    right: 0px;
+    top: -55px;
+  }
+}
+
+
+.mobile-view .mobile-nav {
+  a .fa {
+    margin-right: 8px;
+  }
+  a {
+    color: $primary;
+  }
+  margin: 0;
+  padding: 0;
+  background: dark-light-diff($primary, $secondary, 90%, -65%);
+  list-style: none;
+  overflow: visible;
+  position: relative;
+  width: 40%;
+
+  > li > a {
+    padding: 8px 10px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+  }
+  .fa-caret-down {
+    position: absolute;
+    right: 0px;
+  }
+
+  .drop {
+    display: none;
+  }
+  .drop.expanded {
+    left: 0;
+    display: block;
+    position: absolute;
+    z-index: 10000000;
+    background-color: $secondary;
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+    border: 1px solid #eaeaea;
+    box-sizing: border-box;
+    li {
+      margin: 5px 0;
+      padding: 0;
+      a {
+        height: 100%;
+        display: block;
+        padding: 5px 8px;
+      }
+    }
+  }
+}

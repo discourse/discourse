@@ -393,7 +393,6 @@ nl:
         not_supported: "Notificaties worden niet ondersteund door deze browser. Sorry."
         perm_default: "Notificaties aanzetten"
         perm_denied_btn: "Toestemming geweigerd"
-        perm_denied_expl: "Gebruik van notificaties staat niet ingeschakeld. Gebruik je browser om notificaties toe te staan, klik vervolgens op de knop. (Desktop: Het meest linkse icoon op de adresbalk. Mobiel: 'Site Info' )"
         disable: "Notificaties uitschakelen"
         currently_enabled: "(momenteel ingeschakeld)"
         enable: "Notificaties inschakelen"

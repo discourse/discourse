@@ -109,7 +109,7 @@ it:
       google+: 'Condividi questo link su Google+'
       email: 'invia questo collegamento via email'
     action_codes:
-      split_topic: "suddividi questo argomento %{when}"
+      split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       removed_user: "rimosso %{who} %{when}"
       autoclosed:
@@ -415,7 +415,6 @@ it:
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
         perm_default: "Attiva Notifiche"
         perm_denied_btn: "Permesso Negato"
-        perm_denied_expl: "Hai negato il permesso per le notifiche. Usa il browser per abilitare le notifiche, poi premi il bottone quando hai finito. (Per il desktop: è l'icona più a sinistra sulla barra degli indirizzi. Mobile: 'Informazioni sul sito'.)"
         disable: "Disabilita Notifiche"
         currently_enabled: "(attualmente attivate)"
         enable: "Abilita Notifiche"
@@ -798,6 +797,7 @@ it:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
+      emoji: "Emoji :)"
       more_emoji: "altro..."
       options: "Opzioni"
       whisper: "sussurra"
@@ -966,7 +966,7 @@ it:
         dismiss_read: "Chiudi tutti i non letti"
         dismiss_button: "Chiudi..."
         dismiss_tooltip: "Chiudi solo gli ultimi messaggi o smetti di seguire gli argomenti"
-        also_dismiss_topics: "Smetti di tracciare questi topic così che non compaiano più come non letti"
+        also_dismiss_topics: "Smetti di seguire questi argomenti così che non compariranno più come non letti per me"
         dismiss_new: "Chiudi Nuovo"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
@@ -2018,6 +2018,7 @@ it:
             description: "Colore base usato per lo sfondo dei messaggi wiki."
       email:
         settings: "Impostazioni"
+        templates: "Template"
         preview_digest: "Anteprima Riassunto"
         sending_test: "Invio email di prova in corso..."
         error: "<b>ERRORE</b> - %{server_error}"

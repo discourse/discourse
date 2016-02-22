@@ -3,7 +3,7 @@ import { exportUserArchive } from 'discourse/lib/export-csv';
 export default Ember.Controller.extend({
   userActionType: null,
   needs: ["application", "user"],
-
+  currentPath: Em.computed.alias('controllers.application.currentPath'),
   viewingSelf: Em.computed.alias("controllers.user.viewingSelf"),
   showBookmarks: Em.computed.alias("controllers.user.showBookmarks"),
 

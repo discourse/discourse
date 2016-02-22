@@ -27,6 +27,9 @@ ar:
   purge_reason: "حُذف آليا باعتباره حسابا إما مهجورا أو غير منشّطا"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
   anonymous: "مجهول"
+  emails:
+    incoming:
+      default_subject: "رسالة ورادة من %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -1110,6 +1113,7 @@ ar:
     strip_images_from_short_emails: "شريط الصور من البريد الإلكتروني لها حجم أقل من 2800 بايت"
     short_email_length: "طول أقصر بريد الكتروني بـ Bytes."
     display_name_on_email_from: "أعرض الاسماء كاملة في البريد الالكتروني من المجال."
+    delete_email_logs_after_days: "حذف سجل البريد بعد (ن) يوم. 0 لحفظ السجل للابد"
     pop3_polling_enabled: "تصويت عبرPOP3 لردود البريد الإلكتروني."
     pop3_polling_ssl: "أستخدم SSL عند الأتصال بمخدم POP3.(مُستحسن)"
     pop3_polling_period_mins: "الفترة دقائق بين التحقق من حساب POP3 للبريد الإلكتروني. ملاحظة : تتطلب إعادة تشغيل."
@@ -1136,7 +1140,7 @@ ar:
     automatically_download_gravatars: "تحميل Gravatars للأعضاء عند تغيرهم البريد الإلكتروني الخاص بهم أو عند إنشائهم لحساب آخر."
     digest_topics: "العدد الاقصي من المواضيع لعرضها في مضمون البريد الإلكتروني "
     digest_min_excerpt_length: "الحد الادني من مشاركه مقتطفات خلاصه البريد الاكتروني,في الشخصيات"
-    suppress_digest_email_after_days: "احفظ خلاصه الرسائل الالكترونيه للمستخدمين الذين لم تتم رويتهم في الموقع لاكثر من (N) ايام"
+    delete_digest_email_after_days: "احفظ خلاصه الرسائل الالكترونيه للمستخدمين الذين لم تتم رويتهم في الموقع لاكثر من (N) ايام"
     disable_digest_emails: "عطل ملخص رسائل البريد الإلكتروني لكل الأعضاء."
     detect_custom_avatars: "سواء او لا تفقد اذا كان المستخدم قام بتحميل صور شخصيه مخصصه"
     max_daily_gravatar_crawls: "العدد الاقصي من مرات Dicourse  سوف يتفقد Gravatar  لصور رمزيه مخصصه في اليوم"
@@ -1749,6 +1753,16 @@ ar:
         الرجاء زيارة هذا الرابط لعرض الرسالة: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_replied_pm:
       text_body_template: |
         %{header_instructions}
 

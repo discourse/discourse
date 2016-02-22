@@ -152,6 +152,10 @@ aside.quote {
 }
 
 .topic-body {
+  // this is necessary for ANYTHING that extends past the right edge of
+  // the post body, such as an image in a deeply nested list, image in
+  // a deeply nested blockquote, and so on.. you get the idea.
+  overflow: hidden;
   &.highlighted {
     background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   }
@@ -172,7 +176,7 @@ aside.quote {
   }
   &.wiki {
     cursor: pointer;
-    color: $wiki;
+    color: #408040;
   }
   &.via-email {
     color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));

@@ -1,7 +1,7 @@
 <table style="border: 20px solid #eee;" cellspacing="0" cellpadding="0">
 <tr>
   <td style="padding: 10px 10px; background-color: #<%= @header_color %>;">
-    <a href="<%= Discourse.base_url %>">
+    <a href="<%= Discourse.base_url %>" style='color: #<%= @anchor_color %>'>
     <%- if logo_url.blank? %>
       <%= SiteSetting.title %>
     <%- else %>
@@ -11,7 +11,7 @@
 </tr>
 <tr>
   <td style="background-color: #fff; padding: 10px 10px; font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
-    <%= raw(t 'user_notifications.digest.why', site_link: html_site_link, last_seen_at: @last_seen_at) %>
+    <%= raw(t 'user_notifications.digest.why', site_link: html_site_link(@anchor_color), last_seen_at: @last_seen_at) %>
 
     <%- if @featured_topics.present? %>
       <hr/>
@@ -20,7 +20,7 @@
 
       <%- @featured_topics.each_with_index do |t, i| %>
         <div class='featured-topic'>
-          <a href='<%= Discourse.base_url + t.relative_url %>'><%= raw unescape_emoji(t.title) %></a>
+          <a href='<%= Discourse.base_url + t.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw unescape_emoji(t.title) %></a>
           <br/>
           <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </div>
@@ -43,7 +43,7 @@
       <%- @new_topics.each do |t| %>
         <ul>
           <li>
-            <a href='<%= Discourse.base_url + t.relative_url %>'><%= raw unescape_emoji(t.title) %></a>
+            <a href='<%= Discourse.base_url + t.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw unescape_emoji(t.title) %></a>
             <span class='post-count'><%= t.posts_count %></span>
             <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
           </li>
@@ -58,7 +58,7 @@
         <div>
         <%- @new_by_category.first(10).each do |c| %>
           <span style='white-space: nowrap'>
-            <a href='<%= Discourse.base_url %><%= c[0].url %>' style='color: #333'><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span>
+            <a href='<%= Discourse.base_url %><%= c[0].url %>' style='color: #<%= @anchor_color %>'><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span>
           </span>
         <%- end %>
       </div>
@@ -72,6 +72,6 @@
 
 <div class='footer'>
   <%=raw(t :'user_notifications.digest.unsubscribe',
-           site_link: html_site_link,
-           unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @unsubscribe_key)))  %>
+           site_link: html_site_link(@anchor_color),
+           unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @unsubscribe_key), {:style=>'color: #' + @anchor_color }))  %>
 </div>

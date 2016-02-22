@@ -586,7 +586,6 @@ sv:
     min_first_post_length: "Minst antal tillåtna tecken i första inlägget (ämnestext)"
     min_private_message_post_length: "Minst antal tillåtna tecken i inlägg för meddelanden"
     min_search_term_length: "Minsta giltiga teckenlängd på sökterm"
-    uncategorized_description: "Beskrivningen av den okategoriserade kategorin. Lämna tomt för ingen beskrivning."
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     title: "Namnet på denna webbplats som används i titel-taggen."

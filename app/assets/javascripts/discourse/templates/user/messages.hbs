@@ -4,7 +4,8 @@
   {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
   {{/if}}
   {{/unless}}
-  <ul class='action-list nav-stacked'>
+
+  {{#mobile-nav class='messages-nav' desktopClass='nav-stacked action-list' currentPath=currentPath}}
     <li class="noGlyph">
       {{#link-to 'userPrivateMessages.index' model}}
         {{i18n 'user.messages.inbox'}}
@@ -35,7 +36,7 @@
     </li>
     {{/if}}
     {{/each}}
-  </ul>
+  {{/mobile-nav}}
 
 </section>
 

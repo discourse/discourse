@@ -197,9 +197,9 @@
       margin-bottom: 10px;
     }
 
-    table {
+    .user-invite-list {
       width: 100%;
-      margin-top: 10px;
+      margin-top: 15px;
 
       th {
         text-align: left;
@@ -220,10 +220,6 @@
         max-width: 45px;
         max-height: 45px;
       }
-    }
-
-    .user-invite-list {
-      margin-top: 15px;
     }
 
     .user-invite-controls {
@@ -305,6 +301,11 @@
       margin-top: -200px;
       background: dark-light-choose(rgba($primary, .85), rgba($secondary, .85));
       transition: margin .15s linear;
+
+      blockquote {
+        background-color: dark-light-diff($secondary, $primary, 30%, -70%);
+        border-left-color: dark-light-diff($secondary, $primary, 50%, -50%);
+      }
 
       h1 {
         font-size: 2.143em;

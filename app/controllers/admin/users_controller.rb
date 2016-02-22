@@ -37,7 +37,7 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def show
-    @user = User.find_by(username_lower: params[:id])
+    @user = User.find_by(id: params[:id])
     raise Discourse::NotFound unless @user
     render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end

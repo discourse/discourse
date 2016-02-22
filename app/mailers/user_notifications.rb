@@ -62,6 +62,7 @@ class UserNotifications < ActionMailer::Base
     @site_name = SiteSetting.email_prefix.presence || SiteSetting.title
 
     @header_color = ColorScheme.hex_for_name('header_background')
+    @anchor_color = ColorScheme.hex_for_name('tertiary')
     @last_seen_at = short_date(@user.last_seen_at || @user.created_at)
 
     # A list of topics to show the user
@@ -104,6 +105,13 @@ class UserNotifications < ActionMailer::Base
   end
 
   def user_quoted(user, opts)
+    opts[:allow_reply_by_email] = true
+    opts[:use_site_subject] = true
+    opts[:show_category_in_subject] = true
+    notification_email(user, opts)
+  end
+
+  def user_linked(user, opts)
     opts[:allow_reply_by_email] = true
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
@@ -186,15 +194,23 @@ class UserNotifications < ActionMailer::Base
   end
 
   def self.get_context_posts(post, topic_user)
+    user_option = topic_user.try(:user).try(:user_option)
+    if user_option && (user_option.email_previous_replies == UserOption.previous_replies_type[:never])
+      return []
+    end
+
+    allowed_post_types = [Post.types[:regular]]
+    allowed_post_types << Post.types[:whisper] if topic_user.try(:user).try(:staff?)
+
     context_posts = Post.where(topic_id: post.topic_id)
                         .where("post_number < ?", post.post_number)
                         .where(user_deleted: false)
                         .where(hidden: false)
-                        .where(post_type: Topic.visible_post_types)
+                        .where(post_type: allowed_post_types)
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
 
-    if topic_user && topic_user.last_emailed_post_number
+    if topic_user && topic_user.last_emailed_post_number && user_option.try(:email_previous_replies) == UserOption.previous_replies_type[:unless_emailed]
       context_posts = context_posts.where("post_number > ?", topic_user.last_emailed_post_number)
     end
 
@@ -275,7 +291,7 @@ class UserNotifications < ActionMailer::Base
     context_posts = context_posts.to_a
 
     if context_posts.present?
-      context << "---\n*#{I18n.t('user_notifications.previous_discussion')}*\n"
+      context << "-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
         context << email_post_markdown(cp)
       end
@@ -311,7 +327,7 @@ class UserNotifications < ActionMailer::Base
       context: context,
       username: username,
       add_unsubscribe_link: !user.staged,
-      add_unsubscribe_via_email_link: user.mailing_list_mode,
+      add_unsubscribe_via_email_link: user.user_option.mailing_list_mode,
       unsubscribe_url: post.topic.unsubscribe_url,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: use_site_subject,
