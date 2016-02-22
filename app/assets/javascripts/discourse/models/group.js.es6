@@ -17,11 +17,11 @@ const Group = Discourse.Model.extend({
     return this.get("automatic") ? "automatic" : "custom";
   }.property("automatic"),
 
-  userCountDisplay: function(){
-    var c = this.get('user_count');
+  @computed('user_count')
+  userCountDisplay(userCount) {
     // don't display zero its ugly
-    if (c > 0) { return c; }
-  }.property('user_count'),
+    if (userCount > 0) { return userCount; }
+  },
 
   findMembers() {
     if (Em.isEmpty(this.get('name'))) { return ; }

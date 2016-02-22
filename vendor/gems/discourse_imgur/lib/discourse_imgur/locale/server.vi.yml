@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+vi:
+  site_settings:
+    enable_imgur: "Kích hoạt imgur api để tải file lên, không lưu trữ file tại máy chủ."
+    imgur_client_id: "Bạn cần client ID của imgur.com cho chức năng tải file lên."
+    imgur_client_secret: "Client secret của bạn tại imgur.com chưa cần để tải ảnh lên, nhưng nó sẽ được yêu cầu trong tương lai."

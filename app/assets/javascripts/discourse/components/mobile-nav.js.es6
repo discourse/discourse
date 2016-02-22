@@ -1,6 +1,9 @@
+import { on, observes } from 'ember-addons/ember-computed-decorators';
+
 export default Ember.Component.extend({
 
-  _init: function(){
+  @on('init')
+  _init() {
     if (!this.get('site.mobileView')) {
       var classes = this.get('desktopClass');
       if (classes) {
@@ -8,16 +11,17 @@ export default Ember.Component.extend({
         this.set('classNames', classes);
       }
     }
-  }.on('init'),
+  },
 
   tagName: 'ul',
 
   classNames: ['mobile-nav'],
 
-  currentPathChanged: function(){
+  @observes('currentPath')
+  currentPathChanged() {
     this.set('expanded', false);
     Em.run.next(() => this._updateSelectedHtml());
-  }.observes('currentPath'),
+  },
 
   _updateSelectedHtml(){
     const active = this.$('.active');
@@ -26,8 +30,20 @@ export default Ember.Component.extend({
     }
   },
 
-  didInsertElement(){
+  didInsertElement() {
     this._updateSelectedHtml();
+  },
+
+  @on('didInsertElement')
+  _bindClick() {
+    this.$().on("click.mobile-nav", 'ul li', () => {
+      this.set('expanded', false);
+    });
+  },
+
+  @on('willDestroyElement')
+  _unbindClick() {
+    this.$().off("click.mobile-nav", 'ul li');
   },
 
   actions: {

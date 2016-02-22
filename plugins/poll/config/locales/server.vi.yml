@@ -1,0 +1,37 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+vi:
+  site_settings:
+    poll_enabled: "Cho phép người dùng tạo các cuộc thăm dò?"
+    poll_maximum_options: "Số lượng tối đa tùy chọn trong một cuộc thăm dò."
+  poll:
+    multiple_polls_without_name: "Có nhiều cuộc thăm dò mà không có tên. Sử dụng thuộc tính '<code>name</code>' để xác định cuộc thăm dò của bạn."
+    multiple_polls_with_same_name: "Có nhiều cuộc thăm dò có cùng tên: <strong>%{name}</strong>. Sử dụng thuộc tính '<code>name</code>' để xác định cuộc thăm dò của bạn."
+    default_poll_must_have_at_least_2_options: "Thăm dò ý kiến ​​phải có ít nhất 2 lựa chọn."
+    named_poll_must_have_at_least_2_options: "Thăm dò có tên <strong>%{name}</strong> phải có ít nhất 2 lựa chọn."
+    default_poll_must_have_less_options:
+      other: "Thăm dò phải có ít hơn %{count} lựa chọn."
+    named_poll_must_have_less_options:
+      other: "Thăm dò <strong>%{name}</strong> phải có ít hơn %{count} tùy chọn."
+    default_poll_must_have_different_options: "Thăm dò ý kiến ​​phải có các tùy chọn khác nhau."
+    named_poll_must_have_different_options: "Thăm dò <strong>%{name}</strong> ​​phải có các tùy chọn khác nhau."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Thăm dò ý kiến ​​với nhiều sự lựa chọn có các tham số không hợp lệ."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Thăm dò <strong>%{name}</strong> ​​với nhiều sự lựa chọn có các tham số không hợp lệ. "
+    requires_at_least_1_valid_option: "Bạn phải chọn ít nhất 1 lựa chọn hợp lệ."
+    cannot_change_polls_after_5_minutes: "Bạn không thể thêm, xóa hoặc đổi tên các cuộc thăm dò 5 phút đầu tiên."
+    op_cannot_edit_options_after_5_minutes: "Bạn không thể thêm hoặc loại bỏ các bình chọn sau khi 5 phút đầu tiên. Hãy liên hệ với người điều hành nếu bạn cần chỉnh sửa một bình chọn nào đó."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Bạn không thể thêm hoặc loại bỏ các bình chọn sau khi 5 phút đầu tiên. Bạn nên đóng chủ đề này và tạo ra một cái mới để thay thế."
+    no_polls_associated_with_this_post: "Không có cuộc thăm dò được liên kết với bài này."
+    no_poll_with_this_name: "Không có thăm dò có tên <strong>%{name}</strong> liên kết với bài viết này."
+    post_is_deleted: "Không thể thực hiện trên bài viết đã xóa."
+    topic_must_be_open_to_vote: "Các chủ đề phải được mở để bầu chọn."
+    poll_must_be_open_to_vote: "Thăm dò ý kiến ​​phải được mở để bầu chọn."
+    topic_must_be_open_to_toggle_status: "Các chủ đề phải được mở để chuyển trạng thái."
+    only_staff_or_op_can_toggle_status: "Chỉ có một BQT hoặc các người đăng bài có thể chuyển đổi một trạng thái thăm dò ý kiến"
+    email:
+      link_to_poll: "Nhấn để hiển thị."

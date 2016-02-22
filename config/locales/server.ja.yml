@@ -10,6 +10,8 @@ ja:
     short_date_no_year: "MMM D"
     short_date: "MMM D, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  date:
+    month_names: [null, １月, ２月, ３月, ４月, ５月, ６月, ７月, ８月, ９月, １０月, １１月, １２月]
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -19,6 +21,9 @@ ja:
   purge_reason: "アクティブでないアカウントは放棄されたとして削除されました"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   anonymous: "匿名"
+  emails:
+    incoming:
+      default_subject: "%{email}からメール"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -35,8 +40,10 @@ ja:
       exclusion: は予約されています
       greater_than: は%{count}より大きい値にしてください
       greater_than_or_equal_to: は%{count}以上の値にしてください
+      has_already_been_used: "は既に使用されています"
       inclusion: は一覧にありません
       invalid: は不正な値です
+      is_invalid: "は不正です。もう少し説明を追加してください"
       less_than: は%{count}より小さい値にしてください
       less_than_or_equal_to: は%{count}以下の値にしてください
       not_a_number: は数値で入力してください
@@ -168,7 +175,7 @@ ja:
       post:
         raw: "本文"
       user_profile:
-        bio_raw: "About Me"
+        bio_raw: "自己紹介"
     errors:
       models:
         topic:

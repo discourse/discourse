@@ -81,6 +81,8 @@ ko:
           other: "%{count}달 후"
         x_years:
           other: "%{count}년 후"
+      previous_month: '이전 달'
+      next_month: '다음 달'
     share:
       topic: '토픽을 공유합니다.'
       post: '게시글 #%{postNumber}'
@@ -118,6 +120,7 @@ ko:
         us_east_1: "미국 동부 (N. 버지니아)"
         us_west_1: "미국 서부 (N. 캘리포니아)"
         us_west_2: "미국 서부 (오레곤)"
+        us_gov_west_1: "AWS GovCloud(US)"
         eu_west_1: "유럽연합 (아일랜드)"
         eu_central_1: "유럽연합 (프랑크푸르트)"
         ap_southeast_1: "아시아 태평양 (싱가폴)"
@@ -166,6 +169,7 @@ ko:
       other: "{{count}} 자"
     suggested_topics:
       title: "추천 토픽"
+      pm_title: "추천 메세지"
     about:
       simple_title: "About"
       title: "About %{title}"
@@ -391,12 +395,13 @@ ko:
       invited_by: "(이)가 초대했습니다."
       trust_level: "신뢰도"
       notifications: "알림"
+      statistics: "통계"
       desktop_notifications:
         label: "데스크탑 알림"
         not_supported: "안타깝게도 지금 사용하고 계시는 브라우저는 알림을 지원하지 않습니다."
         perm_default: "알림 켜기"
         perm_denied_btn: "권한 거부"
-        perm_denied_expl: "알림에 대한 권한이 없습니다. 알림을 활성화하기위해 브라우저의 알림설정을 하시고 난 후에 버튼을 눌러주세요. (데스크탑: 주소 표시 막대 가장 왼쪽에 있는 아이콘, 모바일: '사이트 정보'.)"
+        perm_denied_expl: "통지를 위한 허용을 거절했었습니다. 브라우저 설정을 통해서 통지를 허용해주세요."
         disable: "알림 비활성화"
         currently_enabled: "(현재 활성화됨)"
         enable: "알림 활성화"
@@ -450,6 +455,7 @@ ko:
         groups: "내 그룹"
         bulk_select: "메시지 선택"
         move_to_inbox: "수신함으로 이동"
+        move_to_archive: "보관하기"
         failed_to_move: "선택한 메시지를 이동할 수 없습니다 (아마도 네트워크가 다운됨)"
         select_all: "모두 선택"
       change_password:
@@ -574,6 +580,7 @@ ko:
           other: "앞 {{count}}개의 초대를 보여줍니다."
         redeemed: "초대를 받았습니다."
         redeemed_tab: "Redeemed"
+        redeemed_tab_with_count: "교환된 ({{count}})"
         redeemed_at: "에 초대되었습니다."
         pending: "초대를 보류합니다."
         pending_tab: "보류"
@@ -607,6 +614,7 @@ ko:
         instructions: "글자 수가 %{count}자 이상이어야 합니다."
       summary:
         title: "요약"
+        stats: "통계"
         topic_count: "생성된 토픽"
         post_count: "생성된 포스트"
         likes_given: "좋아요 누름"
@@ -617,6 +625,8 @@ ko:
         top_topics: "최고 인기 토픽"
         top_badges: "최고 뱃지"
         more_topics: "다른이에게 준 좋아요"
+        more_replies: "더 많은 답글"
+        more_badges: "뱃지 더 보기"
       associated_accounts: "로그인"
       ip_address:
         title: "마지막 IP 주소"
@@ -648,6 +658,7 @@ ko:
         network_fixed: "문제가 해결된 것으로 보입니다."
         server: "에러 코드: {{status}}"
         forbidden: "볼 수 있도록 허용되지 않았습니다."
+        not_found: "에구, 어플리케이션이 없는 URL를 가져오려고 시도했습니다."
         unknown: "문제가 발생했습니다."
       buttons:
         back: "뒤로가기"
@@ -741,6 +752,7 @@ ko:
       sent_activation_email_again: "<b> {{currentEmail}} </b> 주소로 인증 이메일을 보냈습니다. 이메일이 도착하기까지 몇 분 정도 걸릴 수 있습니다. 또한 스팸 메일을 확인하십시오."
       to_continue: "로그인 해주세요"
       preferences: "사용자 환경을 변경하려면 로그인이 필요합니다."
+      forgot: "내 계정의 상세내역 기억하지 않는다."
       google:
         title: "Google"
         message: "Google 인증 중(팝업 차단을 해제 하세요)"
@@ -768,9 +780,12 @@ ko:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
+      emoji: "이모지 :)"
       more_emoji: "더보기..."
       options: "온셥"
+      whisper: "귓속말"
       add_warning: "공식적인 경고입니다."
+      toggle_whisper: "귀속말 켜고 끄기"
       posting_not_on_topic: "어떤 토픽에 답글을 작성하시겠습니까?"
       saving_draft_tip: "저장 중..."
       saved_draft_tip: "저장 완료"
@@ -798,6 +813,7 @@ ko:
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
       view_new_post: "새로운 글을 볼 수 있습니다."
+      saving: "저장 중..."
       saved: "저장 완료!"
       saved_draft: "작성중인 글이 있습니다. 계속 작성하려면 여기를 클릭하세요."
       uploading: "업로딩 중..."
@@ -812,6 +828,7 @@ ko:
       link_description: "링크 설명을 입력"
       link_dialog_title: "하이퍼링크 삽입"
       link_optional_text: "옵션 제목"
+      link_placeholder: "http://example.com \"선택적 텍스트\""
       quote_title: "인용구"
       quote_text: "인용구"
       code_title: "코드 샘플"
@@ -828,6 +845,7 @@ ko:
       toggler: "작성 패널을 숨기거나 표시"
       modal_ok: "OK"
       modal_cancel: "취소"
+      cant_send_pm: "죄송합니다. %{username}님에게 메시지를 보낼 수 없습니다."
       admin_options_title: "이 토픽에 대한 옵션 설정"
       auto_close:
         label: "토픽 자동-닫기 시간:"
@@ -859,7 +877,18 @@ ko:
       alt:
         mentioned: "멘션 by"
         quoted: "인용  by"
+        replied: "답글을 전송했습니다."
         posted: "포스트 by"
+        edited: "당신 글이 다음 이용자에 의해 수정"
+        liked: "당신의 글을 좋아했음."
+        private_message: "다음 사람에게서온 개인 메시지"
+        invited_to_private_message: "다음 사람으로부터 개인 메시지가 초대됨"
+        invited_to_topic: "다음 사람으로부터 한 주제로 초대됨"
+        invitee_accepted: "다음 사람에 의해 초대가 수락됨."
+        moved_post: "다음 사람에 의해서 당신의 글이 이동됨"
+        linked: "당신 글로 링크하기"
+        granted_badge: "뱃지가 수여됨."
+        group_message_summary: "그룹 메시지함의 메시지"
       popup:
         mentioned: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 나를 멘션했습니다'
         quoted: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 나를 인용했습니다'
@@ -879,7 +908,12 @@ ko:
       select_file: "파일 선택"
       image_link: "이 이미지를 누르면 이동할 링크"
     search:
+      sort_by: "다음으로 정렬"
+      latest_post: "가장 최근 글"
+      most_viewed: "가장 많이 본"
+      most_liked: "가장 많이 좋아요를 받은"
       select_all: "모두 선택"
+      clear_all: "다 지우기"
       title: "토픽, 글, 사용자, 카테고리 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
@@ -892,6 +926,7 @@ ko:
         topic: "이 토픽을 검색"
         private_messages: "메시지 검색"
     hamburger_menu: "다른 토픽 목록이나 카테고리로 가기"
+    new_item: "새로운"
     go_back: '돌아가기'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: '사용자 페이지로 이동'
@@ -899,6 +934,9 @@ ko:
       bulk:
         reset_read: "읽기 초기화"
         delete: "토픽 삭제"
+        dismiss: "해지"
+        dismiss_read: "읽지않음 전부 해지"
+        dismiss_button: "해지..."
         dismiss_new: "새글 제거"
         toggle: "토픽 복수 선택"
         actions: "일괄 적용"

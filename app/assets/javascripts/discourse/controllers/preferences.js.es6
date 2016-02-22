@@ -62,6 +62,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
   },
 
+  previousRepliesOptions: [
+    {name: I18n.t('user.email_previous_replies.always'), value: 0},
+    {name: I18n.t('user.email_previous_replies.unless_emailed'), value: 1},
+    {name: I18n.t('user.email_previous_replies.never'), value: 2}
+  ],
+
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
                       { name: I18n.t('user.email_digests.every_three_days'), value: 3 },
                       { name: I18n.t('user.email_digests.weekly'), value: 7 },

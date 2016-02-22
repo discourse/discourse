@@ -1243,6 +1243,7 @@ en:
     default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_always: "Send an email notification even when the user is active by default."
+    default_email_previous_replies: "Include previous replies in emails by default."
 
     default_other_new_topic_duration_minutes: "Global default condition for which a topic is considered new."
     default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
@@ -1290,7 +1291,7 @@ en:
     moved_post: "%{display_username} moved your post to %{link}"
     private_message: "%{display_username} sent you a message: %{link}"
     invited_to_private_message: "%{display_username} invited you to a message: %{link}"
-    invited_to_topic: "%{display_username} invited you to a topic: %{link}"
+    invited_to_topic: "%{display_username} invited you to %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
     linked: "%{display_username} linked you in %{link}"
     granted_badge: "You earned %{link}"
@@ -1397,8 +1398,8 @@ en:
       characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
-      must_begin_with_alphanumeric: "must begin with a letter or number or an underscore"
-      must_end_with_alphanumeric: "must end with a letter or number or an underscore"
+      must_begin_with_alphanumeric_or_underscore: "must begin with a letter, a number or an underscore"
+      must_end_with_alphanumeric: "must end with a letter or a number"
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
       must_not_end_with_confusing_suffix: "must not end with a confusing suffix like .json or .png etc."
     email:
@@ -1407,6 +1408,14 @@ en:
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+
+  flags_reminder:
+    flags_were_submitted:
+      one: "Flags were submitted over 1 hour ago. Please review them."
+      other: "Flags were submitted over %{count} hours ago. Please review them."
+    subject_template:
+      one: "1 flag waiting to be handled"
+      other: "%{count} flags waiting to be handled"
 
   unsubscribe_mailer:
     subject_template: "Confirm you no longer want to receive email updates from %{site_title}"
@@ -1484,6 +1493,8 @@ en:
 
       - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
+      - Send a test email to [mail-tester.com][mt] to verify that everything is working correctly. 
+
       (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
 
       We hope you received this email deliverability test OK!
@@ -1502,6 +1513,7 @@ en:
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
       [mj]: https://www.mailjet.com/pricing
+      [mt]: http://www.mail-tester.com/
 
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
@@ -1538,17 +1550,6 @@ en:
       ### Release notes
 
       %{notes}
-
-  flags_reminder:
-    flags_were_submitted:
-      one: "These flags were submitted over 1 hour ago."
-      other: "These flags were submitted over %{count} hours ago."
-    please_review: "Please review them."
-    post_number: "post"
-    how_to_disable: 'You can disable or change the frequency of this email reminder via the "notify about flags after" setting.'
-    subject_template:
-      one: "1 flag waiting to be handled"
-      other: "%{count} flags waiting to be handled"
 
   queued_posts_reminder:
     subject_template:
@@ -2044,7 +2045,7 @@ en:
         Please visit this link to view the message: %{base_url}%{url}
 
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} invited you to a topic '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} invited you to '%{topic_title}'"
       text_body_template: |
 
         %{username} invited you to a discussion
@@ -2084,6 +2085,18 @@ en:
         %{respond_instructions}
 
     user_quoted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+
+    user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}

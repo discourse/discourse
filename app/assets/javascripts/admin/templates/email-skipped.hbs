@@ -30,7 +30,13 @@
       </td>
       <td><a href='mailto:{{unbound l.to_address}}'>{{l.to_address}}</a></td>
       <td>{{l.email_type}}</td>
-      <td>{{l.skipped_reason}}</td>
+      <td>
+        {{#if l.post_url}}
+          <a href="{{l.post_url}}">{{l.skipped_reason}}</a>
+        {{else}}
+          {{l.skipped_reason}}
+        {{/if}}
+      </td>
     </tr>
   {{else}}
     <tr><td colspan="5">{{i18n 'admin.email.logs.none'}}</td></tr>

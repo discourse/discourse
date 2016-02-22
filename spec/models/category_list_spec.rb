@@ -16,8 +16,8 @@ describe CategoryList do
 
       # uncategorized + this
       expect(CategoryList.new(Guardian.new admin).categories.count).to eq(2)
-      expect(CategoryList.new(Guardian.new user).categories.count).to eq(0)
-      expect(CategoryList.new(Guardian.new nil).categories.count).to eq(0)
+      expect(CategoryList.new(Guardian.new user).categories.count).to eq(1)
+      expect(CategoryList.new(Guardian.new nil).categories.count).to eq(1)
     end
 
     it "doesn't show topics that you can't view" do
@@ -51,55 +51,16 @@ describe CategoryList do
 
     let!(:topic_category) { Fabricate(:category) }
 
-    context "without a featured topic" do
-
-      it "should not return empty categories" do
-        expect(category_list.categories).to be_blank
-      end
-
-      it "returns empty categories for those who can create them" do
-        SiteSetting.stubs(:allow_uncategorized_topics).returns(true)
-        Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
-        expect(category_list.categories).not_to be_blank
-      end
-
-      it "returns empty categories with descriptions" do
-        Fabricate(:category, description: 'The category description.')
-        Guardian.any_instance.expects(:can_create?).with(Category).returns(false)
-        expect(category_list.categories).not_to be_blank
-      end
-
-      it 'returns the empty category and a non-empty category for those who can create them' do
-        SiteSetting.stubs(:allow_uncategorized_topics).returns(true)
-        Fabricate(:topic, category: Fabricate(:category))
-        Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
-        expect(category_list.categories.size).to eq(3)
-        expect(category_list.categories).to include(topic_category)
-      end
-
-      it "doesn't return empty uncategorized category to admins if allow_uncategorized_topics is false" do
-        SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
-        expect(CategoryList.new(Guardian.new(user)).categories).to be_empty
-        expect(CategoryList.new(Guardian.new(admin)).categories.map(&:id)).not_to include(SiteSetting.uncategorized_category_id)
-      end
-
-    end
-
     context "with a topic in a category" do
       let!(:topic) { Fabricate(:topic, category: topic_category) }
-      let(:category) { category_list.categories.first }
+      let(:category) { category_list.categories.find{|c| c.id == topic_category.id} }
 
       it "should return the category" do
         expect(category).to be_present
-      end
-
-      it "returns the correct category" do
         expect(category.id).to eq(topic_category.id)
-      end
-
-      it "should contain our topic" do
         expect(category.featured_topics.include?(topic)).to eq(true)
       end
+
     end
 
     context "with pinned topics in a category" do
@@ -107,7 +68,7 @@ describe CategoryList do
       let!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
       let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
       let!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
-      let(:category) { category_list.categories.first }
+      let(:category) { category_list.categories.find{|c| c.id == topic_category.id} }
 
       before do
         SiteSetting.stubs(:category_featured_topics).returns(2)

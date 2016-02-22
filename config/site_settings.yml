@@ -871,7 +871,7 @@ backups:
     default: false
   maximum_backups:
     client: true
-    default: 7
+    default: 5
     shadowed_by_global: true
   automatic_backups_enabled:
     default: true
@@ -1064,6 +1064,9 @@ user_preferences:
   default_email_direct: true
   default_email_mailing_list_mode: false
   default_email_always: false
+  default_email_previous_replies:
+    enum: 'PreviousRepliesSiteSetting'
+    default: 1
 
   default_other_new_topic_duration_minutes:
     enum: 'NewTopicDurationSiteSetting'

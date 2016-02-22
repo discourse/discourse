@@ -299,7 +299,7 @@ en:
         other: "This topic has <b>{{count}}</b> posts awaiting approval"
 
       confirm: "Save Changes"
-      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
+      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and IP address."
 
       approval:
         title: "Post Needs Approval"
@@ -627,6 +627,11 @@ en:
 
       website: "Web Site"
       email_settings: "Email"
+      email_previous_replies:
+        title: "Include previous replies"
+        unless_emailed: "unless previously sent"
+        always: "always"
+        never: "never"
       email_digests:
         title: "When I don't visit here, send an email digest of what's new:"
         daily: "daily"
@@ -804,8 +809,8 @@ en:
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
-      description: "There are <b>{{count}}</b> replies."
-      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
+      description: "There are <b>{{replyCount}}</b> replies."
+      description_time: "There are <b>{{replyCount}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
       enable: 'Summarize This Topic'
       disable: 'Show All Posts'
 
@@ -2114,11 +2119,11 @@ en:
             is_disabled: "Restore is disabled in the site settings."
             label: "Restore"
             title: "Restore the backup"
-            confirm: "Are your sure you want to restore this backup?"
+            confirm: "Are you sure you want to restore this backup?"
           rollback:
             label: "Rollback"
             title: "Rollback the database to previous working state"
-            confirm: "Are your sure you want to rollback the database to the previous working state?"
+            confirm: "Are you sure you want to rollback the database to the previous working state?"
 
       export_csv:
         user_archive_confirm: "Are you sure you want to download your posts?"

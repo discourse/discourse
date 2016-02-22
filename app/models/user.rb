@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   has_many :user_archived_messages, dependent: :destroy
 
 
+  has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
@@ -76,10 +77,9 @@ class User < ActiveRecord::Base
 
   after_initialize :add_trust_level
 
-  before_create :set_default_user_preferences
-
   after_create :create_email_token
   after_create :create_user_stat
+  after_create :create_user_option
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
   after_create :automatic_group_membership
@@ -88,7 +88,6 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
-  after_save :update_tracked_topics
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
@@ -123,7 +122,7 @@ class User < ActiveRecord::Base
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
-  # may want to create an index on (active, blocked, suspended_till, mailing_list_mode)?
+  # may want to create an index on (active, blocked, suspended_till)?
   scope :blocked, -> { where(blocked: true) }
   scope :not_blocked, -> { where(blocked: false) }
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
@@ -293,15 +292,6 @@ class User < ActiveRecord::Base
   def saw_notification_id(notification_id)
     User.where("id = ? and seen_notification_id < ?", id, notification_id)
         .update_all ["seen_notification_id = ?", notification_id]
-
-    # some notifications are considered read once seen
-    Notification.where('user_id = ? AND NOT read AND notification_type IN (?)', id, [
-                       Notification.types[:granted_badge],
-                       Notification.types[:invitee_accepted],
-                       Notification.types[:group_message_summary],
-                       Notification.types[:liked]
-    ])
-        .update_all ["read = ?", true]
   end
 
   def publish_notifications_state
@@ -310,11 +300,43 @@ class User < ActiveRecord::Base
     notification = notifications.visible.order('notifications.id desc').first
     json = NotificationSerializer.new(notification).as_json if notification
 
+
+    sql = "
+       SELECT * FROM (
+         SELECT n.id, n.read FROM notifications n
+         LEFT JOIN topics t ON n.topic_id = t.id
+         WHERE
+          t.deleted_at IS NULL AND
+          n.notification_type = :type AND
+          n.user_id = :user_id AND
+          NOT read
+        ORDER BY n.id DESC
+        LIMIT 20
+      ) AS x
+      UNION ALL
+      SELECT * FROM (
+       SELECT n.id, n.read FROM notifications n
+       LEFT JOIN topics t ON n.topic_id = t.id
+       WHERE
+        t.deleted_at IS NULL AND
+        (n.notification_type <> :type OR read) AND
+        n.user_id = :user_id
+       ORDER BY n.id DESC
+       LIMIT 20
+      ) AS y
+    "
+
+    recent = User.exec_sql(sql, user_id: id,
+                       type:  Notification.types[:private_message]).values.map do |id, read|
+      [id.to_i, read == 't'.freeze]
+    end
+
     MessageBus.publish("/notification/#{id}",
                        {unread_notifications: unread_notifications,
                         unread_private_messages: unread_private_messages,
                         total_unread_notifications: total_unread_notifications,
-                        last_notification: json
+                        last_notification: json,
+                        recent: recent
                        },
                        user_ids: [id] # only publish the notification to this user
     )
@@ -601,20 +623,6 @@ class User < ActiveRecord::Base
     Promotion.new(self).change_trust_level!(level, opts)
   end
 
-  def treat_as_new_topic_start_date
-    duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
-    times = [case duration
-      when User::NewTopicDuration::ALWAYS
-        created_at
-      when User::NewTopicDuration::LAST_VISIT
-        previous_visit_at || user_stat.new_since
-      else
-        duration.minutes.ago
-    end, user_stat.new_since, Time.at(SiteSetting.min_new_topics_time).to_datetime]
-
-    times.max
-  end
-
   def readable_name
     return "#{name} (#{username})" if name.present? && name != username
     username
@@ -705,51 +713,6 @@ class User < ActiveRecord::Base
       .exists?
   end
 
-  def should_be_redirected_to_top
-    redirected_to_top.present?
-  end
-
-  def redirected_to_top
-    # redirect is enabled
-    return unless SiteSetting.redirect_users_to_top_page
-    # top must be in the top_menu
-    return unless SiteSetting.top_menu =~ /(^|\|)top(\||$)/i
-    # not enough topics
-    return unless period = SiteSetting.min_redirected_to_top_period
-
-    if !seen_before? || (trust_level == 0 && !redirected_to_top_yet?)
-      update_last_redirected_to_top!
-      return {
-        reason: I18n.t('redirected_to_top_reasons.new_user'),
-        period: period
-      }
-    elsif last_seen_at < 1.month.ago
-      update_last_redirected_to_top!
-      return {
-        reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
-        period: period
-      }
-    end
-
-    # don't redirect to top
-    nil
-  end
-
-  def redirected_to_top_yet?
-    last_redirected_to_top_at.present?
-  end
-
-  def update_last_redirected_to_top!
-    key = "user:#{id}:update_last_redirected_to_top"
-    delay = SiteSetting.active_user_rate_limit_secs
-
-    # only update last_redirected_to_top_at once every minute
-    return unless $redis.setnx(key, "1")
-    $redis.expire(key, delay)
-
-    # delay the update
-    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.id, redirected_at: Time.zone.now)
-  end
 
   def refresh_avatar
     return if @import_mode
@@ -855,11 +818,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_tracked_topics
-    return unless auto_track_topics_after_msecs_changed?
-    TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
-  end
-
   def clear_global_notice_if_needed
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
@@ -886,6 +844,10 @@ class User < ActiveRecord::Base
     stat = UserStat.new(new_since: Time.now)
     stat.user_id = id
     stat.save!
+  end
+
+  def create_user_option
+    UserOption.create(user_id: id)
   end
 
   def create_email_token
@@ -941,27 +903,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def set_default_user_preferences
-    set_default_email_digest_frequency
-    set_default_email_private_messages
-    set_default_email_direct
-    set_default_email_mailing_list_mode
-    set_default_email_always
-
-    set_default_other_new_topic_duration_minutes
-    set_default_other_auto_track_topics_after_msecs
-    set_default_other_external_links_in_new_tab
-    set_default_other_enable_quoting
-    set_default_other_dynamic_favicon
-    set_default_other_disable_jump_reply
-    set_default_other_edit_history_public
-
-    set_default_topics_automatic_unpin
-
-    # needed, otherwise the callback chain is broken...
-    true
-  end
-
   def set_default_categories_preferences
     values = []
 
@@ -1008,42 +949,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def set_default_email_digest_frequency
-    if has_attribute?(:email_digests)
-      if SiteSetting.default_email_digest_frequency.to_i <= 0
-        self.email_digests = false
-      else
-        self.email_digests = true
-        self.digest_after_days ||= SiteSetting.default_email_digest_frequency.to_i if has_attribute?(:digest_after_days)
-      end
-    end
-  end
-
-  def set_default_email_mailing_list_mode
-    self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode if has_attribute?(:mailing_list_mode)
-  end
-
-  %w{private_messages direct always}.each do |s|
-    define_method("set_default_email_#{s}") do
-      self.send("email_#{s}=", SiteSetting.send("default_email_#{s}")) if has_attribute?("email_#{s}")
-    end
-  end
-
-  %w{new_topic_duration_minutes auto_track_topics_after_msecs}.each do |s|
-    define_method("set_default_other_#{s}") do
-      self.send("#{s}=", SiteSetting.send("default_other_#{s}").to_i) if has_attribute?(s)
-    end
-  end
-
-  %w{external_links_in_new_tab enable_quoting dynamic_favicon disable_jump_reply edit_history_public}.each do |s|
-    define_method("set_default_other_#{s}") do
-      self.send("#{s}=", SiteSetting.send("default_other_#{s}")) if has_attribute?(s)
-    end
-  end
-
-  def set_default_topics_automatic_unpin
-    self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
-  end
 
 end
 
@@ -1067,41 +972,26 @@ end
 #  last_seen_at                  :datetime
 #  admin                         :boolean          default(FALSE), not null
 #  last_emailed_at               :datetime
-#  email_digests                 :boolean          not null
 #  trust_level                   :integer          not null
-#  email_private_messages        :boolean          default(TRUE)
-#  email_direct                  :boolean          default(TRUE), not null
 #  approved                      :boolean          default(FALSE), not null
 #  approved_by_id                :integer
 #  approved_at                   :datetime
-#  digest_after_days             :integer
 #  previous_visit_at             :datetime
 #  suspended_at                  :datetime
 #  suspended_till                :datetime
 #  date_of_birth                 :date
-#  auto_track_topics_after_msecs :integer
 #  views                         :integer          default(0), not null
 #  flag_level                    :integer          default(0), not null
 #  ip_address                    :inet
-#  new_topic_duration_minutes    :integer
-#  external_links_in_new_tab     :boolean          not null
-#  enable_quoting                :boolean          default(TRUE), not null
 #  moderator                     :boolean          default(FALSE)
 #  blocked                       :boolean          default(FALSE)
-#  dynamic_favicon               :boolean          default(FALSE), not null
 #  title                         :string(255)
 #  uploaded_avatar_id            :integer
-#  email_always                  :boolean          default(FALSE), not null
-#  mailing_list_mode             :boolean          default(FALSE), not null
 #  primary_group_id              :integer
 #  locale                        :string(10)
 #  registration_ip_address       :inet
-#  last_redirected_to_top_at     :datetime
-#  disable_jump_reply            :boolean          default(FALSE), not null
-#  edit_history_public           :boolean          default(FALSE), not null
 #  trust_level_locked            :boolean          default(FALSE), not null
 #  staged                        :boolean          default(FALSE), not null
-#  automatically_unpin_topics    :boolean          default(TRUE)
 #
 # Indexes
 #

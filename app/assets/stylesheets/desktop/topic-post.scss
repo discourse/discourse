@@ -706,6 +706,7 @@ $topic-avatar-width: 45px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
 }
+
 .topic-avatar {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding-top: 15px;
@@ -1037,17 +1038,4 @@ and (max-width : 767px) {
     span {display: block;}
   }
 
-}
-
-@media all
-and (max-height: 700px) {
-
-   .post-menu-area {
-      margin-bottom: 0px;
-      margin-top: -18px;
-   }
-
-   .topic-body {
-      padding: 5px 11px 2px;
-   }
 }

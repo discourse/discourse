@@ -31,7 +31,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :is_anonymous,
              :post_queue_new_count,
              :show_queued_posts,
-             :read_faq
+             :read_faq,
+             :automatically_unpin_topics
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -47,6 +48,34 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def reply_count
     object.user_stat.topic_reply_count
+  end
+
+  def enable_quoting
+    object.user_option.enable_quoting
+  end
+
+  def disable_jump_reply
+    object.user_option.disable_jump_reply
+  end
+
+  def external_links_in_new_tab
+    object.user_option.external_links_in_new_tab
+  end
+
+  def dynamic_favicon
+    object.user_option.dynamic_favicon
+  end
+
+  def automatically_unpin_topics
+    object.user_option.automatically_unpin_topics
+  end
+
+  def should_be_redirected_to_top
+    object.user_option.should_be_redirected_to_top
+  end
+
+  def redirected_to_top
+    object.user_option.redirected_to_top
   end
 
   def site_flagged_posts_count
@@ -82,7 +111,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_redirected_to_top?
-    object.redirected_to_top.present?
+    object.user_option.redirected_to_top.present?
   end
 
   def custom_fields

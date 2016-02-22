@@ -7,7 +7,13 @@ describe Email::Sender do
     SiteSetting.expects(:disable_emails).returns(true)
     Mail::Message.any_instance.expects(:deliver_now).never
     message = Mail::Message.new(to: "hello@world.com" , body: "hello")
-    Email::Sender.new(message, :hello).send
+    expect(Email::Sender.new(message, :hello).send).to eq(nil)
+  end
+
+  it "doesn't deliver mail when the message is of type NullMail" do
+    Mail::Message.any_instance.expects(:deliver_now).never
+    message = ActionMailer::Base::NullMail.new
+    expect(Email::Sender.new(message, :hello).send).to eq(nil)
   end
 
   it "doesn't deliver mail when the message is nil" do

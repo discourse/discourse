@@ -30,7 +30,7 @@
           <discourse:topicPinned><%= topic.pinned_at ? 'Yes' : 'No' %></discourse:topicPinned>
           <discourse:topicClosed><%= topic.closed ? 'Yes' : 'No' %></discourse:topicClosed>
           <discourse:topicArchived><%= topic.archived ? 'Yes' : 'No' %></discourse:topicArchived>
-          <guid isPermaLink="false">topic-<%= topic.id %></guid>
+          <guid isPermaLink="false"><%= Discourse.current_hostname %>-topic-<%= topic.id %></guid>
           <source url="<%= topic_url %>.rss"><%= topic.title %></source>
         </item>
       <% end %>

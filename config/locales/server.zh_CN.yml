@@ -12,9 +12,9 @@ zh_CN:
     long_date: "lll"
   datetime_formats: &datetime_formats
     formats:
-      short: "%Y-%m-%d"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
+      short: "%Y 年 %-m 月 %-d 日"
+      short_no_year: "%-m 月 %-d 日"
+      date_only: "%Y 年 %-m 月 %-d 日"
   date:
     month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
@@ -1269,7 +1269,7 @@ zh_CN:
     off_topic: "你的帖子被标记为 **偏离主题**：鉴于当前的主题标题和第一个帖子，社群成员们感觉它不适合处于这个主题中。"
     inappropriate: "你的帖子被标记为 **不恰当**：社群成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社群准则](/guidelines)。"
     spam: "你的帖子被标记为 **广告**：社群成员觉得它是广告，像是在过度地推广着什么，而不是预期中与主题有关的内容。"
-    notify_moderators: "你的帖子被标记为 **需要版主关注**：社群成员感觉帖子需要职员的人工干预。"
+    notify_moderators: "你的帖子被标记为 **需要版主关注**：社群成员认为帖子需要职员介入。"
   flags_dispositions:
     agreed: "感谢通知我们。我们认为这是一个问题，并且我们正在了解情况。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"

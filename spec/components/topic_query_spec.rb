@@ -294,8 +294,8 @@ describe TopicQuery do
 
       context 'user with auto_track_topics list_unread' do
         before do
-          user.auto_track_topics_after_msecs = 0
-          user.save
+          user.user_option.auto_track_topics_after_msecs = 0
+          user.user_option.save
         end
 
         it 'only contains the partially read topic' do
@@ -360,8 +360,8 @@ describe TopicQuery do
 
         expect(topic_query.list_new.topics).to eq([new_topic])
 
-        user.new_topic_duration_minutes = 5
-        user.save
+        user.user_option.new_topic_duration_minutes = 5
+        user.user_option.save
         new_topic.created_at = 10.minutes.ago
         new_topic.save
         expect(topic_query.list_new.topics).to eq([])
@@ -561,8 +561,8 @@ describe TopicQuery do
         let!(:fully_read_archived) { Fabricate(:post, user: creator).topic }
 
         before do
-          user.auto_track_topics_after_msecs = 0
-          user.save
+          user.user_option.auto_track_topics_after_msecs = 0
+          user.user_option.save
           TopicUser.update_last_read(user, partially_read.id, 0, 0)
           TopicUser.update_last_read(user, fully_read.id, 1, 0)
           TopicUser.update_last_read(user, fully_read_closed.id, 1, 0)
