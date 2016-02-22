@@ -67,9 +67,8 @@
 }
 
 .profile-image {
-  height: 150px;
+  height: 25px;
   width: 100%;
-  background-size: cover;
 }
 
 
@@ -209,8 +208,7 @@
   }
 
   .about {
-    background-size: cover;
-    background: dark-light-diff($primary, $secondary, 0%, -75%) center center;
+    background: dark-light-diff($primary, $secondary, 0%, -75%) center;
     width: 100%;
     margin-bottom: 10px;
     overflow: hidden;
