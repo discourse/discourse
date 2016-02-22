@@ -273,31 +273,32 @@ describe Email::Receiver do
     let!(:category) { Fabricate(:category, email_in: "category@bar.com", email_in_allow_strangers: false) }
 
     it "raises a StrangersNotAllowedError when 'email_in_allow_strangers' is disabled" do
-      expect { process(:stranger_not_allowed) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
+      expect { process(:new_user) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
     end
 
     it "raises an InsufficientTrustLevelError when user's trust level isn't enough" do
+      Fabricate(:user, email: "existing@bar.com", trust_level: 3)
       SiteSetting.email_in_min_trust = 4
-      Fabricate(:user, email: "insufficient@bar.com", trust_level: 3)
-      expect { process(:insufficient_trust_level) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
+      expect { process(:existing_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
 
-    it "raises an InvalidAccess when the user is part of a readonly group" do
-      user = Fabricate(:user, email: "readonly@bar.com", trust_level: SiteSetting.email_in_min_trust)
+    it "works" do
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
       group = Fabricate(:group)
 
       group.add(user)
       group.save
 
-      category.set_permissions(group => :readonly)
+      category.set_permissions(group => :create_post)
       category.save
 
-      expect { process(:readonly) }.to raise_error(Discourse::InvalidAccess)
-    end
+      # raises an InvalidAccess when the user doesn't have the privileges to create a topic
+      expect { process(:existing_user) }.to raise_error(Discourse::InvalidAccess)
 
-    it "works" do
-      Fabricate(:user, email: "sufficient@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:sufficient_trust_level) }.to change(Topic, :count)
+      category.update_columns(email_in_allow_strangers: true)
+
+      # allows new user to create a topic
+      expect { process(:new_user) }.to change(Topic, :count)
     end
 
   end

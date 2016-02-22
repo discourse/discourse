@@ -100,6 +100,8 @@ de:
         x_years:
           one: "ein Jahr später"
           other: "%{count} Jahre später"
+      previous_month: 'Vormonat'
+      next_month: 'Nächster Monat'
     share:
       topic: 'Teile einen Link zu diesem Thema'
       post: 'Beitrag #%{postNumber}'
@@ -188,6 +190,7 @@ de:
       other: "{{count}} Zeichen"
     suggested_topics:
       title: "Vorgeschlagene Themen"
+      pm_title: "Vorgeschlagene Nachrichten"
     about:
       simple_title: "Über uns"
       title: "Über %{title}"
@@ -428,7 +431,7 @@ de:
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_default: "Benachrichtigungen einschalten"
         perm_denied_btn: "Zugriff verweigert"
-        perm_denied_expl: "Der Zugriff auf Benachrichtigungen wurde verweigert. Verwende Deinen Browser um Benachrichtigungen zu aktivieren. Anschließend klick auf die Schaltfläche. (Desktop: das Symbol ganz links in der Adressfläche. Mobil: \"Seiten Info\".)"
+        perm_denied_expl: "Du hast Benachrichtigungen blockiert. Aktiviere die Benachrichtigungen über deine Browser Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         currently_enabled: "(derzeit aktiviert)"
         enable: "Benachrichtigungen aktivieren"
@@ -698,6 +701,7 @@ de:
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     read_only_mode:
+      enabled: "Diese Seite ist im Nur-Lesen Modus. Du kannst weiterhin die Seite lesen, aber antworten, liken und andere Aktionen sind deaktiviert."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
@@ -909,6 +913,9 @@ de:
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
       linked: "<i title='Beitrag verlinkt' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
+      group_message_summary:
+        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> Eine Nachricht in deinem {{group_name}} Postfach</p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} Nachrichten in deinem {{group_name}} Postfach</p>"
       alt:
         mentioned: "Erwähnt von"
         quoted: "Zitiert von"
@@ -923,6 +930,7 @@ de:
         moved_post: "Dein Beitrag wurde verschoben von"
         linked: "Link zu deinem Beitrag"
         granted_badge: "Abzeichen erhalten"
+        group_message_summary: "Nachrichten in dem Gruppenpostfach"
       popup:
         mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
         group_mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
@@ -1752,6 +1760,7 @@ de:
           refresh_report: "Bericht aktualisieren"
           start_date: "Startdatum"
           end_date: "Enddatum"
+          groups: "Alle Gruppen"
       commits:
         latest_changes: "Letzte Änderungen: bitte häufig updaten!"
         by: "von"
@@ -2043,6 +2052,8 @@ de:
         test_error: "Es gab ein Problem beim Senden der Test-E-Mail. Bitte überprüfe nochmals deine E-Mail-Einstellungen, stelle sicher dass dein Anbieter keine E-Mail-Verbindungen blockiert und probiere es erneut."
         sent: "Gesendet"
         skipped: "Übersprungen"
+        received: "Empfangen"
+        rejected: "Abgelehnt"
         sent_at: "Gesendet am"
         time: "Zeit"
         user: "Benutzer"
@@ -2066,6 +2077,7 @@ de:
           cc_addresses: "Cc"
           subject: "Betreff"
           error: "Fehler"
+          none: "Keine eingehenden E-Mails gefunden."
           filters:
             from_placeholder: "von@example.com"
             to_placeholder: "an@example.com"
@@ -2137,6 +2149,10 @@ de:
             create_category: "Kategorie erstellen"
             block_user: "Benutzer blockieren"
             unblock_user: "Blockierung von Benutzer aufheben"
+            grant_admin: "Administration gewähren"
+            revoke_admin: "Administration entziehen"
+            grant_moderation: "Moderation gewähren"
+            revoke_moderation: "Moderation entziehen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -2238,6 +2254,7 @@ de:
         moderator: "Moderator?"
         admin: "Administrator?"
         blocked: "Geblockt?"
+        staged: "Insziniert?"
         show_admin_profile: "Administration"
         edit_title: "Titel bearbeiten"
         save_title: "Titel speichern"
@@ -2302,9 +2319,12 @@ de:
         deactivate_failed: "Beim Deaktivieren des Benutzers ist ein Fehler aufgetreten."
         unblock_failed: 'Beim Aufheben der Blockierung des Benutzers ist ein Fehler aufgetreten.'
         block_failed: 'Beim Blocken des Benutzers ist ein Fehler aufgetreten.'
+        block_confirm: 'Bust du sicher, dass du diesen Benutzer blockieren willst? Sie werden keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen.'
+        block_accept: 'Ja, den Nutzer blockieren.'
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
+        stage_explanation: "Ein inszenierter Nutzer kann nur via E-Mail zu gewissen Themen beitragen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
@@ -2583,6 +2603,10 @@ de:
         mark_tracking: '<b>m</b>, <b>t</b> Thema verfolgen'
         mark_watching: '<b>m</b>, <b>w</b> Thema beobachten'
     badges:
+      earned_n_times:
+        one: "Einmal dieses Abzeichen erhalten"
+        other: "%{count} mal dieses Abzeichen erhalten"
+      more_with_badge: "Andere mit diesem Abzeichen"
       title: Abzeichen
       allow_title: "kann als Titel verwendet werden"
       multiple_grant: "kann mehrfach verliehen werden"

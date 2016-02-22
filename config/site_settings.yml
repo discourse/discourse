@@ -868,7 +868,7 @@ backups:
     default: false
   maximum_backups:
     client: true
-    default: 7
+    default: 5
     shadowed_by_global: true
   automatic_backups_enabled:
     default: true

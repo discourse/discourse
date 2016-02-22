@@ -1059,6 +1059,7 @@ fr:
       invalid_string_min: "Doit être d'au moins %{count} caractères."
       invalid_string_max: "Ne doit pas être supérieur à %{max} caractères."
       invalid_reply_by_email_address: "La valeur doit contenir '%{reply_key}' et être différente de la notification email."
+      pop3_polling_authentication_failed: "Echec d'authentication POP3. Veuillez contrôler vos détails POP3."
   notification_types:
     group_mentioned: "%{group_name} a été mentionné dans %{link}"
     mentioned: "%{display_username} vous a mentionné dans %{link}"
@@ -1170,12 +1171,23 @@ fr:
       must_begin_with_alphanumeric: "doit débuter par une lettre ou un nombre ou un underscore"
       must_end_with_alphanumeric: "doit terminer par une lettre, un chiffre ou un caractère souligné (underscore)"
       must_not_contain_two_special_chars_in_seq: "ne doit pas contenir une séquence de 2 caractères spéciaux ou plus (.-_)"
+      must_not_end_with_confusing_suffix: "ne doit pas se terminer avec un suffixe déroutant comme .json ou .png etc."
     email:
       not_allowed: "n'est pas autorisé pour ce fournisseur de courriels. Merci d'utiliser une autre adresse."
       blocked: "n'est pas autorisé."
     ip_address:
       blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
       max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
+  unsubscribe_mailer:
+    subject_template: "Confirmez que vous ne souhaitez plus recevoir d'email de mise à jour de %{site_title}"
+    text_body_template: |
+      Quelqu’un (est-ce vous?) a demandé à ne plus envoyer d'email de mise à jour de %{site_domain_name} a cette adresse.
+      Pour confirmer, merci de cliquer sur ce lien:
+
+      %{confirm_unsubscribe_link}
+
+
+      Si vous souhaitez continuer à recevoir les emails, vous pouvez ignorer cette email.
   invite_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à participer à '%{topic_title}' sur %{site_domain_name}"
     text_body_template: |
@@ -1338,6 +1350,103 @@ fr:
 
         Afin d'être guider, merci de vous référer à notre  [charte](%{base_url}/guidelines).
 
+    usage_tips:
+      text_body_template: |
+        Vous trouverez ci-dessous quelques astuces pour vous aider à démarrer :
+
+        ## Lire
+
+        Pour en lire plus, **faites défiler vers le bas !**
+
+        Lorsque de nouveaux sujets ou de nouvelles réponses sont publiés, ils apparaissent automatiquement ; inutile de rafraîchir la page.
+
+        ## Navigation
+
+        - Pour effectuer une recherche, accéder à votre profil ou au utiliser le menu <kbd>☰</kbd>, cliquez sur les icônes en haut à droite.
+
+        - Sélectionner le titre d'un article, vous dirigera toujours vers **la nouvelle réponse non lue** dans celui-ci. Pour aller au début ou à la fin, sélectionnez le compteur de réponses ou la date de la dernière réponse.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Pendant la lecture d'un article, sélectionnez la barre de progression en bas à droite pour utiliser les commandes de navigation. Revenez directement au début en cliquant sur le titre de l'article. Appuyez sur <kbd>?</kbd> pour afficher la liste des raccourcis clavier.
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ## Répondre
+
+        - Pour répondre **de manière générale à une conversation**, utilisez <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> tout en bas de celle-ci.
+
+        - Pour répondre à **une personne en particulier**, utilisez <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> sur leur message.
+
+        - Pour répondre en initiant **une nouvelle conversation**, utilisez <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> qui se trouve à la droite du message. L'ancien et le nouveau sujet seront alors automatiquement liés.
+
+        Votre réponse peut être mise page en utilisant soit du HTML simple, soit les syntaxes BBCode ou [Markdown](http://commonmark.org/help/) :
+
+        Ceci est **gras**.
+        Ceci est <b>gras</b>.
+        Ceci est [b]gras<[/b].
+
+        Vous voulez apprendre Markdown ? [Suivez notre amusant tutoriel interactif de 10 minutes !](http://commonmark.org/help/tutorial/)
+
+        Pour insérer une citation, sélectionnez le texte que vous souhaitez citer, puis cliquez sur n'importe quel bouton Répondre. Répétez l'opération pour insérer d'autres citations.
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Pour signaler à quelqu'un votre réponse, mentionnez son nom. Tapez un `@` pour commencer à choisir un utilisateur.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Pour insérer un [émoticône standard Emoji](http://www.emoji.codes/), utilisez le caractère `:` et tapez son nom ou utilisez des des émoticônes traditionnels comme `;)`.
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        Pour générer l'aperçu d'un lien, mettez le lien seul sur une ligne.
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        ## Actions
+
+        Il y a des boutons d'actions en bas de chaque commentaire :
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        Pour prévenir quelqu'un que vous appréciez son commentaire, cliquez **sur le cœur**. Partagez votre amour !
+
+        Si un commentaire vous pose problème, prévenez soit son auteur en privé, soit [l'équipe de modération](%{base_url}/about) grâce au bouton **drapeau**.
+
+        Vous pouvez aussi partager un lien vers une contribution ou lui mettre un signet afin de la retrouver plus tard dans votre page utilisateur.
+
+        ## Notifications
+
+        Quand quelqu'un vous répond, vous cite ou mentionne votre `@pseudo`, un numéro apparaîtra immédiatement en haut à droite de la page. Cliquez dessus pour accéder à vos **notifications**.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        N'ayez pas la crainte de manquer une réponse ; vous serez notifié par courriel de toutes les notifications survenant pendant que vous n'êtes pas connecté.
+
+        ## Vos préférences
+
+        - Tout article vieux de **moins de 2 jours** est considéré comme nouveau.
+
+        - Toute conversation à laquelle vous avez **participé** (création, réponses ou lecture pendant une période prolongée) sera automatiquement suivie.
+
+        En face de ces articles, vous verrez en bleu la mention "nouveau" ou bien le nombre de notifications non lues :
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Vous pouvez changer les paramètres de notification de chaque article en utilisant la commande de notification, en bas de l'article.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        Vous pouvez aussi configurer les notifications par catégorie, si vous voulez voir chaque nouvel article d'une catégorie spécifique.
+
+        Pour changer n'importe lequel de ces paramètres, allez dans [vos préférences](%{base_url}/my/preferences).
+
+        ## Une communauté basé sur la confiance
+
+        Au fur et à mesure de votre participation, vous allez progressivement gagner la confiance de la communauté, vous deviendrez un membre à part entière et les limitations fonctionnelles propres à chaque nouvel utilisateur seront levées.
+
+        À un niveau de confiance [suffisamment élevé](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous aurez accès à de nouvelles fonctionnalités vous permettant de nous aider à gérer la communauté.
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: "Merci d'avoir rejoint %{site_name} et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)\n"
@@ -1564,6 +1673,8 @@ fr:
       description: "Ces courriels ne vous intéressent pas ? Aucun problème ! Cliquez ci-dessous pour vous désabonner immédiatement :"
     reply_by_email: "[Visiter sujet](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
     visit_link_to_respond: "[Visiter sujet](%{base_url}%{url}) pour répondre."
+    reply_by_email_pm: "[Visiter message](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
+    visit_link_to_respond_pm: "[Visiter message](%{base_url}%{url}) pour répondre."
     posted_by: "Ecrit par %{username} le %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} vous a invité dans la conversation '%{topic_title}'"
@@ -1664,6 +1775,7 @@ fr:
         ---
         %{respond_instructions}
     user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
         %{message}
