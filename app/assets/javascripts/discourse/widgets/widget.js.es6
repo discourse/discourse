@@ -1,6 +1,6 @@
 import { WidgetClickHook, WidgetClickOutsideHook } from 'discourse/widgets/click-hook';
 import { h } from 'virtual-dom';
-import Connector from 'discourse/widgets/connector';
+import DecoratorHelper from 'discourse/widgets/decorator-helper';
 
 function emptyContent() { }
 
@@ -16,19 +16,6 @@ export function renderedKey(key) {
 }
 
 const _decorators = {};
-
-class DecoratorHelper {
-  constructor(container, attrs, state) {
-    this.container = container;
-    this.attrs = attrs;
-    this.state = state;
-  }
-
-  connect(details) {
-    return new Connector(this.container, details);
-  }
-}
-DecoratorHelper.prototype.h = h;
 
 export function decorateWidget(widgetName, cb) {
   _decorators[widgetName] = _decorators[widgetName] || [];
@@ -52,6 +39,12 @@ function drawWidget(builder, attrs, state) {
   if (this.buildClasses) {
     let classes = this.buildClasses(attrs, state) || [];
     if (!Array.isArray(classes)) { classes = [classes]; }
+
+    const customClasses = applyDecorators(this, 'classNames', attrs, state);
+    if (customClasses && customClasses.length) {
+      classes = classes.concat(customClasses);
+    }
+
     if (classes.length) {
       properties.className = classes.join(' ');
     }
