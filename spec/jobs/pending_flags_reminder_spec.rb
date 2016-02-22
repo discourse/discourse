@@ -14,17 +14,17 @@ describe Jobs::PendingFlagsReminder do
   context "notify_about_flags_after is 48" do
     before { SiteSetting.stubs(:notify_about_flags_after).returns(48) }
 
-    it "doesn't send email when flags are less than 48 hours old" do
+    it "doesn't send message when flags are less than 48 hours old" do
       Fabricate(:flag, created_at: 47.hours.ago)
       PostAction.stubs(:flagged_posts_count).returns(1)
-      Email::Sender.any_instance.expects(:send).never
+      PostCreator.expects(:create).never
       described_class.new.execute({})
     end
 
-    it "sends email when there is a flag older than 48 hours" do
+    it "sends message when there is a flag older than 48 hours" do
       Fabricate(:flag, created_at: 49.hours.ago)
       PostAction.stubs(:flagged_posts_count).returns(1)
-      Email::Sender.any_instance.expects(:send).once.returns(true)
+      PostCreator.expects(:create).once.returns(true)
       described_class.new.execute({})
     end
   end

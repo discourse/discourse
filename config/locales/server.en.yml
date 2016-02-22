@@ -1406,6 +1406,14 @@ en:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
 
+  flags_reminder:
+    flags_were_submitted:
+      one: "Flags were submitted over 1 hour ago. Please review them."
+      other: "Flags were submitted over %{count} hours ago. Please review them."
+    subject_template:
+      one: "1 flag waiting to be handled"
+      other: "%{count} flags waiting to be handled"
+
   unsubscribe_mailer:
     subject_template: "Confirm you no longer want to receive email updates from %{site_title}"
     text_body_template: |
@@ -1482,6 +1490,8 @@ en:
 
       - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
+      - Send a test email to [mail-tester.com][mt] to verify that everything is working correctly. 
+
       (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
 
       We hope you received this email deliverability test OK!
@@ -1500,6 +1510,7 @@ en:
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
       [mj]: https://www.mailjet.com/pricing
+      [mt]: http://www.mail-tester.com/
 
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
@@ -1536,17 +1547,6 @@ en:
       ### Release notes
 
       %{notes}
-
-  flags_reminder:
-    flags_were_submitted:
-      one: "These flags were submitted over 1 hour ago."
-      other: "These flags were submitted over %{count} hours ago."
-    please_review: "Please review them."
-    post_number: "post"
-    how_to_disable: 'You can disable or change the frequency of this email reminder via the "notify about flags after" setting.'
-    subject_template:
-      one: "1 flag waiting to be handled"
-      other: "%{count} flags waiting to be handled"
 
   queued_posts_reminder:
     subject_template:
