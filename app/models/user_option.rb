@@ -103,3 +103,30 @@ class UserOption < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: user_options
+#
+#  user_id                       :integer          not null, primary key
+#  email_always                  :boolean          default(FALSE), not null
+#  mailing_list_mode             :boolean          default(FALSE), not null
+#  email_digests                 :boolean
+#  email_direct                  :boolean          default(TRUE), not null
+#  email_private_messages        :boolean          default(TRUE), not null
+#  external_links_in_new_tab     :boolean          default(FALSE), not null
+#  enable_quoting                :boolean          default(TRUE), not null
+#  dynamic_favicon               :boolean          default(FALSE), not null
+#  disable_jump_reply            :boolean          default(FALSE), not null
+#  edit_history_public           :boolean          default(FALSE), not null
+#  automatically_unpin_topics    :boolean          default(TRUE), not null
+#  digest_after_days             :integer
+#  auto_track_topics_after_msecs :integer
+#  new_topic_duration_minutes    :integer
+#  last_redirected_to_top_at     :datetime
+#  email_previous_replies        :integer          default(1), not null
+#
+# Indexes
+#
+#  index_user_options_on_user_id  (user_id) UNIQUE
+#

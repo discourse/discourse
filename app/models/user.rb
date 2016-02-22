@@ -956,42 +956,42 @@ end
 #
 # Table name: users
 #
-#  id                            :integer          not null, primary key
-#  username                      :string(60)       not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  name                          :string(255)
-#  seen_notification_id          :integer          default(0), not null
-#  last_posted_at                :datetime
-#  email                         :string(513)      not null
-#  password_hash                 :string(64)
-#  salt                          :string(32)
-#  active                        :boolean          default(FALSE), not null
-#  username_lower                :string(60)       not null
-#  auth_token                    :string(32)
-#  last_seen_at                  :datetime
-#  admin                         :boolean          default(FALSE), not null
-#  last_emailed_at               :datetime
-#  trust_level                   :integer          not null
-#  approved                      :boolean          default(FALSE), not null
-#  approved_by_id                :integer
-#  approved_at                   :datetime
-#  previous_visit_at             :datetime
-#  suspended_at                  :datetime
-#  suspended_till                :datetime
-#  date_of_birth                 :date
-#  views                         :integer          default(0), not null
-#  flag_level                    :integer          default(0), not null
-#  ip_address                    :inet
-#  moderator                     :boolean          default(FALSE)
-#  blocked                       :boolean          default(FALSE)
-#  title                         :string(255)
-#  uploaded_avatar_id            :integer
-#  primary_group_id              :integer
-#  locale                        :string(10)
-#  registration_ip_address       :inet
-#  trust_level_locked            :boolean          default(FALSE), not null
-#  staged                        :boolean          default(FALSE), not null
+#  id                      :integer          not null, primary key
+#  username                :string(60)       not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  name                    :string
+#  seen_notification_id    :integer          default(0), not null
+#  last_posted_at          :datetime
+#  email                   :string(513)      not null
+#  password_hash           :string(64)
+#  salt                    :string(32)
+#  active                  :boolean          default(FALSE), not null
+#  username_lower          :string(60)       not null
+#  auth_token              :string(32)
+#  last_seen_at            :datetime
+#  admin                   :boolean          default(FALSE), not null
+#  last_emailed_at         :datetime
+#  trust_level             :integer          not null
+#  approved                :boolean          default(FALSE), not null
+#  approved_by_id          :integer
+#  approved_at             :datetime
+#  previous_visit_at       :datetime
+#  suspended_at            :datetime
+#  suspended_till          :datetime
+#  date_of_birth           :date
+#  views                   :integer          default(0), not null
+#  flag_level              :integer          default(0), not null
+#  ip_address              :inet
+#  moderator               :boolean          default(FALSE)
+#  blocked                 :boolean          default(FALSE)
+#  title                   :string
+#  uploaded_avatar_id      :integer
+#  locale                  :string(10)
+#  primary_group_id        :integer
+#  registration_ip_address :inet
+#  trust_level_locked      :boolean          default(FALSE), not null
+#  staged                  :boolean          default(FALSE), not null
 #
 # Indexes
 #
