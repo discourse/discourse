@@ -100,6 +100,8 @@ fr:
         x_years:
           one: "1 année plus tard"
           other: "%{count} années plus tard"
+      previous_month: 'Mois précédent'
+      next_month: 'Mois suivant'
     share:
       topic: 'partager ce sujet'
       post: 'message #%{postNumber}'
@@ -188,6 +190,7 @@ fr:
       other: "{{count}} caractères"
     suggested_topics:
       title: "Sujets similaires"
+      pm_title: "Messages Proposés"
     about:
       simple_title: "A propos"
       title: "A propos de %{title}"
@@ -1763,6 +1766,7 @@ fr:
           refresh_report: "Actualiser le rapport"
           start_date: "Date de début"
           end_date: "Date de fin"
+          groups: "Tous les groupes"
       commits:
         latest_changes: "Dernières modifications: merci de mettre à jour régulièrement!"
         by: "par"

@@ -109,7 +109,7 @@ it:
       google+: 'Condividi questo link su Google+'
       email: 'invia questo collegamento via email'
     action_codes:
-      split_topic: "suddividi questo argomento %{when}"
+      split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       removed_user: "rimosso %{who} %{when}"
       autoclosed:

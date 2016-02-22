@@ -100,6 +100,8 @@ fi:
         x_years:
           one: "1 vuosi myöhemmin"
           other: "%{count} vuotta myöhemmin"
+      previous_month: 'Edellinen kuukausi'
+      next_month: 'Seuraava kuukausi'
     share:
       topic: 'jaa linkki tähän ketjuun'
       post: '%{postNumber}. viesti'
@@ -188,6 +190,7 @@ fi:
       other: "{{count}} merkkiä"
     suggested_topics:
       title: "Suositellut ketjut"
+      pm_title: "Suositellut viestit"
     about:
       simple_title: "Tietoja"
       title: "Tietoja sivustosta %{title}"
@@ -1053,7 +1056,7 @@ fi:
         login_required: "Sinun täytyy kirjautua sisään nähdäksesi tämän ketjun."
       server_error:
         title: "Ketjun lataaminen epäonnistui"
-        description: "Pahoittelut, ketjun lataaminen epäonnistui. Kyse saattaa olla yhteysongelmsta. Kokeile sivun lataamista uudestaan ja jos ongelma jatkuu, ota yhteyttä."
+        description: "Pahoittelut, ketjun lataaminen epäonnistui. Kyse saattaa olla yhteysongelmasta. Kokeile sivun lataamista uudestaan ja jos ongelma jatkuu, ota yhteyttä."
       not_found:
         title: "Ketjua ei löytynyt"
         description: "Pahoittelut, ketjua ei löytynyt. Ehkäpä valvoja on siirtänyt sen muualle?"
@@ -1759,6 +1762,7 @@ fi:
           refresh_report: "Päivitä raportti"
           start_date: "Alkupäivämäärä"
           end_date: "Loppupäivämäärä"
+          groups: "Kaikki ryhmät"
       commits:
         latest_changes: "Viimeisimmät muutokset: päivitä usein!"
         by: "käyttäjältä"
