@@ -8,17 +8,6 @@ import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 import { decorateWidget } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
 
-let _decorateId = 0;
-function decorate(klass, evt, cb) {
-  const mixin = {};
-  mixin["_decorate_" + (_decorateId++)] = function($elem) { cb($elem); }.on(evt);
-  klass.reopen(mixin);
-}
-
-export function decorateCooked() {
-  console.warn('`decorateCooked` has been removed. Use `getPluginApi(version).decorateCooked` instead');
-}
-
 class PluginApi {
   constructor(version, container) {
     this.version = version;
@@ -26,13 +15,15 @@ class PluginApi {
     this._currentUser = container.lookup('current-user:main');
   }
 
+  /**
+   * Use this function to retrieve the currently logged in user within your plugin.
+   * If the user is not logged in, it will be `null`.
+  **/
   getCurrentUser() {
     return this._currentUser;
   }
 
   /**
-   * decorateCooked(callback, options)
-   *
    * Used for decorating the `cooked` content of a post after it is rendered using
    * jQuery.
    *
@@ -115,27 +106,121 @@ class PluginApi {
     });
   }
 
+  /**
+   * The main interface for extending widgets with additional HTML.
+   *
+   * The `name` you pass it should be the name of the widget and a type
+   * for the decorator. All widgets support `before` and `after` types.
+   *
+   * Example:
+   *
+   * ```
+   * api.decorateWidget('post:after', () => {
+   *   return "I am displayed after every post!";
+   * });
+   * ```
+   *
+   * Your decorator will be called with an instance of a `DecoratorHelper`
+   * object, which provides methods you can use to build more interesting
+   * formatting.
+   *
+   * ```
+   * api.decorateWidget('post:after', helper => {
+   *   return helper.h('p.fancy', `I'm an HTML paragraph on post with id ${helper.attrs.id}`);
+   * });
+   *
+   * (View the source for `DecoratorHelper` for more helper methods you
+   * can use in your plugin decorators.)
+   *
+   **/
   decorateWidget(name, fn) {
     decorateWidget(name, fn);
   }
 
+  /**
+   * Adds a new action to a widget that already exists. You can use this to
+   * add additional functionality from your plugin.
+   *
+   * Example:
+   *
+   * ```
+   * api.attachWidgetAction('post', 'annoyMe', () => {
+   *  alert('ANNOYED!');
+   * });
+   * ```
+   **/
   attachWidgetAction(widget, actionName, fn) {
     const widgetClass = this.container.lookupFactory(`widget:${widget}`);
     widgetClass.prototype[actionName] = fn;
   }
 
+  /**
+   * Add more attributes to the Post's `attrs` object passed through to widgets.
+   * You'll need to do this if you've added attributes to the serializer for a
+   * Post and want to use them when you're rendering.
+   *
+   * Example:
+   *
+   * ```
+   * // attrs.poster_age and attrs.poster_height will be present
+   * api.includePostAttributes('poster_age', 'poster_height');
+   * ```
+   *
+   **/
   includePostAttributes(...attributes) {
     includeAttributes(...attributes);
   }
 
+  /**
+   * Add a new button below a post with your plugin.
+   *
+   * The `callback` function will be called whenever the post menu is rendered,
+   * and if you return an object with the button details it will be rendered.
+   *
+   * Example:
+   *
+   * ```
+   * api.addPostMenuButton('coffee', () => {
+   *   return {
+   *     action: 'drinkCoffee',
+   *     icon: 'coffee',
+   *     className: 'hot-coffee',
+   *     title: 'coffee.title',
+   *     position: 'first'  // can be `first`, `last` or `second-last-hidden`
+   *   };
+   * });
+   **/
   addPostMenuButton(name, callback) {
     addButton(name, callback);
   }
 
+  /**
+   * A hook that is called when the editor toolbar is created. You can
+   * use this to add custom editor buttons.
+   *
+   * Example:
+   *
+   * ```
+   * api.onToolbarCreate(toolbar => {
+   *   toolbar.addButton({
+   *     id: 'pop-text',
+   *     group: 'extras',
+   *     icon: 'bolt',
+   *     action: 'makeItPop',
+   *     title: 'pop_format.title'
+   *   });
+   * });
+   **/
   onToolbarCreate(callback) {
     addToolbarCallback(callback);
   }
 
+  /**
+   * A hook that is called when the post stream is removed from the DOM.
+   * This advanced hook should be used if you end up wiring up any
+   * events that need to be torn down when the user leaves the topic
+   * page.
+   **/
   cleanupStream(fn) {
     addWidgetCleanCallback('post-stream', fn);
   }
@@ -184,4 +269,15 @@ export function withPluginApi(version, apiCodeCallback, opts) {
   if (api) {
     return apiCodeCallback(api);
   }
+}
+
+let _decorateId = 0;
+function decorate(klass, evt, cb) {
+  const mixin = {};
+  mixin["_decorate_" + (_decorateId++)] = function($elem) { cb($elem); }.on(evt);
+  klass.reopen(mixin);
+}
+
+export function decorateCooked() {
+  console.warn('`decorateCooked` has been removed. Use `getPluginApi(version).decorateCooked` instead');
 }
