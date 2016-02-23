@@ -59,7 +59,13 @@ export default function(options) {
   }
 
   if (this.length !== 1) {
-    alert("only supporting one matcher at the moment");
+    if (window.console) {
+      window.console.log("WARNING: passed multiple elements to $.autocomplete, skipping.");
+      if (window.Error) {
+        window.console.log((new window.Error()).stack);
+      }
+    }
+    return this;
   }
 
   var disabled = options && options.disabled;
