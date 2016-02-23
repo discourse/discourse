@@ -781,7 +781,6 @@ pt:
     suppress_reply_directly_above: "Não mostrar em-resposta-a expansível quando há apenas uma única resposta diretamente acima desta publicação."
     suppress_reply_when_quoting: "Não mostraR em-resposta-a expansível numa mensagem quando esta cita uma resposta."
     max_reply_history: "Número máximo de respostas a serem expandidas quando se expande em-resposta-a"
-    experimental_reply_expansion: "Esconder respostas intermédias ao expandir uma resposta-a (experimental)"
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em  'Mostrar Mais' tópicos principais expandido."
     redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."

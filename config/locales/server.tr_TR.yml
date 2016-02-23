@@ -713,7 +713,6 @@ tr_TR:
     suppress_reply_directly_above: "Bu gönderinin direk üstünde sadece tek bir cevap varsa, gönderideki açılabilir hangi-cevaba-istinaden-cevapla bölümünü gösterme."
     suppress_reply_when_quoting: "Gönderi cevabı alıntılarsa, gönderideki açılabilir hangi-cevaba-istinaden-cevapla bölümünü gösterme."
     max_reply_history: "Hangi-cevaba-istinaden-cevapla bölümü açılınca gösterilecek en fazla cevap sayısı"
-    experimental_reply_expansion: "Hangi-cevaba-istinaden-cevapla bölümü açılınca ara cevapları gizle (deneysel)"
     topics_per_period_in_top_summary: "Popüler konular özetinde gösterilen popüler konu sayısı."
     topics_per_period_in_top_page: "'Daha Fazla Göster' ile genişletilen popüler konular bölümünde gösterilecek popüler konu sayısı. "
     redirect_users_to_top_page: "Yeni ve uzun süredir giriş yapmamış kullanıcıları otomatik olarak Popüler sayfasına yönlendir."

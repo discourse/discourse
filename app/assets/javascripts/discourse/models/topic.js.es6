@@ -224,34 +224,37 @@ const Topic = RestModel.extend({
            .then(function () { self.set('archetype', 'regular'); });
   },
 
-  estimatedReadingTime: function() {
-    const wordCount = this.get('word_count');
-    if (!wordCount) return;
-
-    return Math.floor(wordCount / Discourse.SiteSettings.read_time_word_count);
-  }.property('word_count'),
-
   toggleBookmark() {
-    if (this.get("bookmarking")) { return; }
+    if (this.get('bookmarking')) { return Ember.RSVP.Promise.resolve(); }
     this.set("bookmarking", true);
 
-    const self = this,
-          stream = this.get('postStream'),
-          posts = Em.get(stream, 'posts'),
-          firstPost = posts && posts[0] && posts[0].get('post_number') === 1 && posts[0],
-          bookmark = !this.get('bookmarked'),
-          path = bookmark ? '/bookmark' : '/remove_bookmarks';
+    const stream = this.get('postStream');
+    const posts = Em.get(stream, 'posts');
+    const firstPost = posts && posts[0] && posts[0].get('post_number') === 1 && posts[0];
+    const bookmark = !this.get('bookmarked');
+    const path = bookmark ? '/bookmark' : '/remove_bookmarks';
 
-    const toggleBookmarkOnServer = function() {
-      return Discourse.ajax('/t/' + self.get('id') + path, {
-        type: 'PUT',
-      }).then(function() {
-        self.toggleProperty('bookmarked');
-        if (bookmark && firstPost) { firstPost.set('bookmarked', true); }
-        if (!bookmark && posts) {
-          posts.forEach((post) => post.get('bookmarked') && post.set('bookmarked', false));
+    const toggleBookmarkOnServer = () => {
+      return Discourse.ajax(`/t/${this.get('id')}${path}`, { type: 'PUT' }).then(() => {
+        this.toggleProperty('bookmarked');
+        if (bookmark && firstPost) {
+          firstPost.set('bookmarked', true);
+          return [firstPost.id];
         }
-      }).catch(function(error) {
+        if (!bookmark && posts) {
+
+          const updated = [];
+          posts.forEach(post => {
+            if (post.get('bookmarked')) {
+              post.set('bookmarked', false);
+              updated.push(post.get('id'));
+            }
+          });
+          return updated;
+        }
+
+        return [];
+      }).catch(error => {
         let showGenericError = true;
         if (error && error.responseText) {
           try {
@@ -265,28 +268,26 @@ const Topic = RestModel.extend({
         }
 
         throw error;
-      }).finally(function() {
-        self.set("bookmarking", false);
-      });
+      }).finally(() => this.set('bookmarking', false));
     };
 
-    let unbookmarkedPosts = [];
+    const unbookmarkedPosts = [];
     if (!bookmark && posts) {
-      posts.forEach((post) => post.get('bookmarked') && unbookmarkedPosts.push(post));
+      posts.forEach(post => post.get('bookmarked') && unbookmarkedPosts.push(post));
     }
 
-    if (unbookmarkedPosts.length > 1) {
-      return bootbox.confirm(
-        I18n.t("bookmarks.confirm_clear"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        function (confirmed) {
-          if (confirmed) { return toggleBookmarkOnServer(); }
-        }
-      );
-    } else {
-      return toggleBookmarkOnServer();
-    }
+    return new Ember.RSVP.Promise(resolve => {
+      if (unbookmarkedPosts.length > 1) {
+        bootbox.confirm(
+          I18n.t("bookmarks.confirm_clear"),
+          I18n.t("no_value"),
+          I18n.t("yes_value"),
+          confirmed => confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
+        );
+      } else {
+        toggleBookmarkOnServer().then(resolve);
+      }
+    });
   },
 
   createInvite(emailOrUsername, groupNames) {
@@ -390,25 +391,6 @@ const Topic = RestModel.extend({
     });
   },
 
-  // Is the reply to a post directly below it?
-  isReplyDirectlyBelow(post) {
-    const posts = this.get('postStream.posts');
-    const postNumber = post.get('post_number');
-    if (!posts) return;
-
-    const postBelow = posts[posts.indexOf(post) + 1];
-
-    // If the post directly below's reply_to_post_number is our post number or we are quoted,
-    // it's considered directly below.
-    //
-    // TODO: we don't carry information about quoting, this leaves this code fairly fragile
-    //  instead we should start shipping quote meta data with posts, but this will add at least
-    //  1 query to the topics page
-    //
-    return postBelow && (postBelow.get('reply_to_post_number') === postNumber ||
-        postBelow.get('cooked').indexOf('data-post="'+ postNumber + '"') >= 0
-    );
-  },
 
   hasExcerpt: Em.computed.notEmpty('excerpt'),
 

@@ -1,5 +1,3 @@
-import CloakedCollectionView from 'discourse/views/cloaked-collection';
-
 /**
 @module Discourse
 */
@@ -33,7 +31,12 @@ const DiscourseLocation = Ember.Object.extend({
     @method initState
   */
   initState() {
-    set(this, 'history', get(this, 'history') || window.history);
+    const history = get(this, 'history') || window.history;
+    if (history && history.scrollRestoration) {
+      history.scrollRestoration = "manual";
+    }
+
+    set(this, 'history', history);
 
     let url = this.formatURL(this.getURL());
     const loc = get(this, 'location');
@@ -219,38 +222,6 @@ const DiscourseLocation = Ember.Object.extend({
     Ember.$(window).off('popstate.ember-location-'+guid);
   }
 
-});
-
-/**
-  Since we're using pushState/replaceState let's add extra hooks to cloakedView to
-  eject itself when the popState occurs. This results in better back button
-  behavior.
-**/
-CloakedCollectionView.reopen({
-  _watchForPopState: function() {
-    const self = this,
-        cb = function() {
-               // Sam: This is a hack, but a very important one
-               // Due to the way we use replace state the back button works strangely
-               //
-               // If you visit a topic from the front page, scroll a bit around and then hit back
-               // you notice that first the page scrolls a bit (within the topic) and then it goes back
-               // this transition is jarring and adds uneeded rendering costs.
-               //
-               // To repro comment the hack out and wack a debugger statement here and in
-               // topic_route deactivate
-               $('.posts,#topic-title').hide();
-               self.cleanUp();
-               self.set('controller.model.postStream.loaded', false);
-             };
-    this.set('_callback', cb);
-    popstateCallbacks.addObject(cb);
-  }.on('didInsertElement'),
-
-  _disbandWatcher: function() {
-    popstateCallbacks.removeObject(this.get('_callback'));
-    this.set('_callback', null);
-  }.on('willDestroyElement')
 });
 
 export default DiscourseLocation;

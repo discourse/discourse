@@ -19,7 +19,8 @@ export default {
       "post_types":{
         "regular":1,
         "moderator_action":2,
-        "small_action":3
+        "small_action":3,
+        "whisper":4
       },
       "group_names":[
         "admins",

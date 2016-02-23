@@ -29,7 +29,7 @@
     {{#link-to 'user' user}}
         {{avatar user imageSize="extra_large"}}
         <div class="details clearfix">
-          {{poster-name post=user}}
+          <div class='username'>{{user.username}}</div>
         </div>
     {{/link-to}}
     <div class='earned'>

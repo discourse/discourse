@@ -41,7 +41,6 @@ function acceptance(name, options) {
       Discourse.Utilities.avatarImg = () => "";
 
       // For now don't do scrolling stuff in Test Mode
-      Ember.CloakedCollectionView.scrolled = Ember.K;
       HeaderView.reopen({examineDockHeader: Ember.K});
 
       var siteJson = siteFixtures['site.json'].site;

@@ -89,7 +89,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     createFlag(opts) {
-      const self = this;
       let postAction; // an instance of ActionSummary
 
       if (!this.get('flagTopic')) {
@@ -103,13 +102,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       this.send('hideModal');
 
-      postAction.act(this.get('model'), params).then(function() {
-        self.send('closeModal');
+      postAction.act(this.get('model'), params).then(() => {
+        this.send('closeModal');
         if (params.message) {
-          self.set('message', '');
+          this.set('message', '');
         }
-      }, function(errors) {
-        self.send('closeModal');
+        this.appEvents.trigger('post-stream:refresh', { id: this.get('model.id') });
+      }).catch(errors => {
+        this.send('closeModal');
         if (errors && errors.responseText) {
           bootbox.alert($.parseJSON(errors.responseText).errors);
         } else {
