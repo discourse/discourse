@@ -45,7 +45,7 @@ export default function(options) {
   if (options === 'destroy') {
     Ember.run.cancel(inputTimeout);
 
-    $(this).off('keypress.autocomplete')
+    $(this).off('keyup.autocomplete')
            .off('keydown.autocomplete')
            .off('paste.autocomplete')
            .off('click.autocomplete');
@@ -59,7 +59,13 @@ export default function(options) {
   }
 
   if (this.length !== 1) {
-    alert("only supporting one matcher at the moment");
+    if (window.console) {
+      window.console.log("WARNING: passed multiple elements to $.autocomplete, skipping.");
+      if (window.Error) {
+        window.console.log((new window.Error()).stack);
+      }
+    }
+    return this;
   }
 
   var disabled = options && options.disabled;
@@ -242,7 +248,15 @@ export default function(options) {
     });
   };
 
+  const SKIP = "skip";
+  var prevTerm = null;
+
   const dataSource = (term, opts) => {
+    if (prevTerm === term) {
+      return SKIP;
+    }
+
+    prevTerm = term;
     if (term.length !== 0 && term.trim().length === 0) {
       closeAutocomplete();
       return null;
@@ -251,9 +265,9 @@ export default function(options) {
     }
   };
 
-  var updateAutoComplete = function(r) {
+  const updateAutoComplete = function(r) {
 
-    if (completeStart === null) return;
+    if (completeStart === null || r === SKIP) return;
 
     if (r && r.then && typeof(r.then) === "function") {
       if (div) {
@@ -304,21 +318,21 @@ export default function(options) {
     }
   };
 
-  $(this).on('keypress.autocomplete', function(e) {
-    var caretPosition, term;
+  $(this).on('keyup.autocomplete', function() {
 
-    // keep hunting backwards till you hit a the @ key
-    if (options.key && e.which === options.key.charCodeAt(0)) {
-      caretPosition = Discourse.Utilities.caretPosition(me[0]);
-      var prevChar = me.val().charAt(caretPosition - 1);
-      if (checkTriggerRule() && (!prevChar || allowedLettersRegex.test(prevChar))) {
-        completeStart = completeEnd = caretPosition;
-        updateAutoComplete(dataSource("", options));
+    var caretPosition = Discourse.Utilities.caretPosition(me[0]);
+
+    if (options.key && completeStart === null && caretPosition > 0) {
+      var key = me[0].value[caretPosition-1];
+      if (key === options.key) {
+        var prevChar = me.val().charAt(caretPosition-2);
+        if (checkTriggerRule() && (!prevChar || allowedLettersRegex.test(prevChar))) {
+          completeStart = completeEnd = caretPosition-1;
+          updateAutoComplete(dataSource("", options));
+        }
       }
-    } else if ((completeStart !== null) && (e.charCode !== 0)) {
-      caretPosition = Discourse.Utilities.caretPosition(me[0]);
-      term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
-      term += String.fromCharCode(e.charCode);
+    } else if (completeStart !== null) {
+      var term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
       updateAutoComplete(dataSource(term, options));
     }
   });
@@ -331,7 +345,7 @@ export default function(options) {
     }
 
     if(options.allowAny){
-      // saves us wiring up a change event as well, keypress is while its pressed
+      // saves us wiring up a change event as well
 
       Ember.run.cancel(inputTimeout);
       inputTimeout = Ember.run.later(function(){

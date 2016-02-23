@@ -15,6 +15,7 @@ describe I18n::Backend::DiscourseI18n do
   end
 
   after do
+    I18n.locale = :en
     I18n.reload!
   end
 
@@ -38,6 +39,11 @@ describe I18n::Backend::DiscourseI18n do
 
     expect(results['items.one']).to eq('one item')
     expect(results['items.other']).to eq('%{count} items')
+  end
+
+  it 'uses fallback locales for searching' do
+    expect(backend.search(:de, 'bar')).to eq({'bar' => 'Bar in :de'})
+    expect(backend.search(:de, 'foo')).to eq({'foo' => 'Foo in :en'})
   end
 
   describe '#exists?' do
@@ -73,13 +79,21 @@ describe I18n::Backend::DiscourseI18n do
   end
 
   describe 'with overrides' do
-    it 'returns the overriden key' do
+    it 'returns the overridden key' do
       TranslationOverride.upsert!('en', 'foo', 'Overwritten foo')
       expect(I18n.translate('foo')).to eq('Overwritten foo')
 
       TranslationOverride.upsert!('en', 'foo', 'new value')
-      I18n.reload!
       expect(I18n.translate('foo')).to eq('new value')
+    end
+
+    it 'returns the overridden key after switching the locale' do
+      TranslationOverride.upsert!('en', 'foo', 'Overwritten foo in EN')
+      TranslationOverride.upsert!('de', 'foo', 'Overwritten foo in DE')
+
+      expect(I18n.translate('foo')).to eq('Overwritten foo in EN')
+      I18n.locale = :de
+      expect(I18n.translate('foo')).to eq('Overwritten foo in DE')
     end
 
     it "can be searched" do

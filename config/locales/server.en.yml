@@ -1389,6 +1389,7 @@ en:
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the user fields"
     close_window: "Authentication is complete. Close this window to continue."
+    already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again?"
 
   user:
     no_accounts_associated: "No accounts associated"
@@ -1493,7 +1494,7 @@ en:
 
       - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
-      - Send a test email to [mail-tester.com][mt] to verify that everything is working correctly. 
+      - Send a test email to [mail-tester.com][mt] to verify that everything is working correctly.
 
       (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
 
@@ -1518,12 +1519,10 @@ en:
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
     text_body_template: |
-      A new version of [Discourse](http://www.discourse.org) is available.
+      Hooray, a new version of [Discourse](http://www.discourse.org) is available! :)
 
       Your version: %{installed_version}
       New version: **%{new_version}**
-
-      You may want to:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
@@ -1534,12 +1533,10 @@ en:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
     text_body_template: |
-      A new version of [Discourse](http://www.discourse.org) is available.
+      Hooray, a new version of [Discourse](http://www.discourse.org) is available! :)
 
       Your version: %{installed_version}
       New version: **%{new_version}**
-
-      You may want to:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 

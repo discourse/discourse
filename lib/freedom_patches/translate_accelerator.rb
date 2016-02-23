@@ -28,6 +28,7 @@ module I18n
       @overrides_by_site = {}
 
       reload_no_cache!
+      ensure_all_loaded!
     end
 
     LOAD_MUTEX = Mutex.new
@@ -105,14 +106,19 @@ module I18n
 
       by_site = @overrides_by_site[site]
 
-      by_locale = nil
-      unless by_site
+      if by_site.nil? || !by_site.has_key?(locale)
         by_site = @overrides_by_site[site] = {}
 
         # Load overrides
-        TranslationOverride.where(locale: locale).pluck(:translation_key, :value).each do |tuple|
-          by_locale = by_site[locale] ||= {}
-          by_locale[tuple[0]] = tuple[1]
+        translations_overrides = TranslationOverride.where(locale: locale).pluck(:translation_key, :value)
+
+        if translations_overrides.empty?
+          by_site[locale] = {}
+        else
+          translations_overrides.each do |tuple|
+            by_locale = by_site[locale] ||= {}
+            by_locale[tuple[0]] = tuple[1]
+          end
         end
       end
 
