@@ -1,4 +1,4 @@
-import { onToolbarCreate } from 'discourse/components/d-editor';
+import { withPluginApi } from 'discourse/lib/plugin-api';
 
 export default {
   name: 'enable-emoji',
@@ -7,13 +7,15 @@ export default {
     const siteSettings = container.lookup('site-settings:main');
 
     if (siteSettings.enable_emoji) {
-      onToolbarCreate(toolbar => {
-        toolbar.addButton({
-          id: 'emoji',
-          group: 'extras',
-          icon: 'smile-o',
-          action: 'emoji',
-          title: 'composer.emoji'
+      withPluginApi('0.1', api => {
+        api.onToolbarCreate(toolbar => {
+          toolbar.addButton({
+            id: 'emoji',
+            group: 'extras',
+            icon: 'smile-o',
+            action: 'emoji',
+            title: 'composer.emoji'
+          });
         });
       });
 

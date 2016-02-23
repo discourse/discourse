@@ -9,7 +9,7 @@ export default Ember.View.extend({
     $('#discourse-modal').modal('show');
 
     // Focus on first element
-    if (!Discourse.Mobile.mobileView && this.get('focusInput')) {
+    if (!this.site.mobileView && this.get('focusInput')) {
       Em.run.schedule('afterRender', () => this.$('input:first').focus());
     }
 

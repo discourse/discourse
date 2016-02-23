@@ -1,6 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
-import PageTracker from 'discourse/lib/page-tracker';
 import KeyValueStore from 'discourse/lib/key-value-store';
+import { onPageChange } from 'discourse/lib/page-tracker';
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -84,7 +84,8 @@ function setupNotifications() {
   if (document) {
     document.addEventListener("scroll", resetIdle);
   }
-  PageTracker.on("change", resetIdle);
+
+  onPageChange(resetIdle);
 }
 
 function resetIdle() {

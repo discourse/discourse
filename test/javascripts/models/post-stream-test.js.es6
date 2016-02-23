@@ -27,40 +27,6 @@ test('defaults', function() {
   present(postStream.get('topic'));
 });
 
-test('daysSincePrevious when appending', function(assert) {
-  const postStream = buildStream(10000001, [1,2,3]);
-  const store = postStream.store;
-
-  const p1 = store.createRecord('post', {id: 1, post_number: 1, created_at: "2015-05-29T18:17:35.868Z"}),
-        p2 = store.createRecord('post', {id: 2, post_number: 2, created_at: "2015-06-01T01:07:25.761Z"}),
-        p3 = store.createRecord('post', {id: 3, post_number: 3, created_at: "2015-06-02T01:07:25.761Z"});
-
-  postStream.appendPost(p1);
-  postStream.appendPost(p2);
-  postStream.appendPost(p3);
-
-  assert.ok(!p1.get('daysSincePrevious'));
-  assert.equal(p2.get('daysSincePrevious'), 2);
-  assert.equal(p3.get('daysSincePrevious'), 1);
-});
-
-test('daysSincePrevious when prepending', function(assert) {
-  const postStream = buildStream(10000001, [1,2,3]);
-  const store = postStream.store;
-
-  const p1 = store.createRecord('post', {id: 1, post_number: 1, created_at: "2015-05-29T18:17:35.868Z"}),
-        p2 = store.createRecord('post', {id: 2, post_number: 2, created_at: "2015-06-01T01:07:25.761Z"}),
-        p3 = store.createRecord('post', {id: 3, post_number: 3, created_at: "2015-06-02T01:07:25.761Z"});
-
-  postStream.prependPost(p3);
-  postStream.prependPost(p2);
-  postStream.prependPost(p1);
-
-  assert.ok(!p1.get('daysSincePrevious'));
-  assert.equal(p2.get('daysSincePrevious'), 2);
-  assert.equal(p3.get('daysSincePrevious'), 1);
-});
-
 test('appending posts', function() {
   const postStream = buildStream(4567, [1, 3, 4]);
   const store = postStream.store;
@@ -317,17 +283,6 @@ test("loadIntoIdentityMap with post ids", function() {
 
   postStream.loadIntoIdentityMap([10]).then(function() {
     present(postStream.findLoadedPost(10), "it adds the returned post to the store");
-  });
-});
-
-test("loading a post's history", function() {
-  const postStream = buildStream(1234);
-  const store = postStream.store;
-  const post = store.createRecord('post', {id: 4321});
-
-  postStream.findReplyHistory(post).then(function() {
-    present(postStream.findLoadedPost(2222), "it stores the returned post in the identity map");
-    present(post.get('replyHistory'), "it sets the replyHistory attribute for the post");
   });
 });
 

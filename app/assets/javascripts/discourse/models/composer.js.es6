@@ -154,7 +154,7 @@ const Composer = RestModel.extend({
         usernameLink
       });
 
-      if (!Discourse.Mobile.mobileView) {
+      if (!this.site.mobileView) {
         const replyUsername = post.get('reply_to_user.username');
         const replyAvatarTemplate = post.get('reply_to_user.avatar_template');
         if (replyUsername && replyAvatarTemplate && this.get('action') === EDIT) {

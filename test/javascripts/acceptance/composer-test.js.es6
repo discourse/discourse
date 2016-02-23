@@ -192,8 +192,8 @@ test("Edit the first post", () => {
 
   ok(!exists('.topic-post:eq(0) .post-info.edits'), 'it has no edits icon at first');
 
-  click('.topic-post:eq(0) button[data-action=showMoreActions]');
-  click('.topic-post:eq(0) button[data-action=edit]');
+  click('.topic-post:eq(0) button.show-more-actions');
+  click('.topic-post:eq(0) button.edit');
   andThen(() => {
     equal(find('.d-editor-input').val().indexOf('Any plans to support'), 0, 'it populates the input with the post text');
   });
@@ -212,11 +212,11 @@ test("Edit the first post", () => {
 test("Composer can switch between edits", () => {
   visit("/t/this-is-a-test-topic/9");
 
-  click('.topic-post:eq(0) button[data-action=edit]');
+  click('.topic-post:eq(0) button.edit');
   andThen(() => {
     equal(find('.d-editor-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
   });
-  click('.topic-post:eq(1) button[data-action=edit]');
+  click('.topic-post:eq(1) button.edit');
   andThen(() => {
     equal(find('.d-editor-input').val().indexOf('This is the second post.'), 0, 'it populates the input with the post text');
   });
@@ -225,9 +225,9 @@ test("Composer can switch between edits", () => {
 test("Composer with dirty edit can toggle to another edit", () => {
   visit("/t/this-is-a-test-topic/9");
 
-  click('.topic-post:eq(0) button[data-action=edit]');
+  click('.topic-post:eq(0) button.edit');
   fillIn('.d-editor-input', 'This is a dirty reply');
-  click('.topic-post:eq(1) button[data-action=edit]');
+  click('.topic-post:eq(1) button.edit');
   andThen(() => {
     ok(exists('.bootbox.modal'), 'it pops up a confirmation dialog');
   });
@@ -240,15 +240,15 @@ test("Composer with dirty edit can toggle to another edit", () => {
 test("Composer can toggle between edit and reply", () => {
   visit("/t/this-is-a-test-topic/9");
 
-  click('.topic-post:eq(0) button[data-action=edit]');
+  click('.topic-post:eq(0) button.edit');
   andThen(() => {
     equal(find('.d-editor-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
   });
-  click('.topic-post:eq(0) button[data-action=reply]');
+  click('.topic-post:eq(0) button.reply');
   andThen(() => {
     equal(find('.d-editor-input').val(), "", 'it clears the input');
   });
-  click('.topic-post:eq(0) button[data-action=edit]');
+  click('.topic-post:eq(0) button.edit');
   andThen(() => {
     equal(find('.d-editor-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
   });
@@ -257,9 +257,9 @@ test("Composer can toggle between edit and reply", () => {
 test("Composer with dirty reply can toggle to edit", () => {
   visit("/t/this-is-a-test-topic/9");
 
-  click('.topic-post:eq(0) button[data-action=reply]');
+  click('.topic-post:eq(0) button.reply');
   fillIn('.d-editor-input', 'This is a dirty reply');
-  click('.topic-post:eq(0) button[data-action=edit]');
+  click('.topic-post:eq(0) button.edit');
   andThen(() => {
     ok(exists('.bootbox.modal'), 'it pops up a confirmation dialog');
   });
@@ -272,10 +272,10 @@ test("Composer with dirty reply can toggle to edit", () => {
 test("Composer draft with dirty reply can toggle to edit", () => {
   visit("/t/this-is-a-test-topic/9");
 
-  click('.topic-post:eq(0) button[data-action=reply]');
+  click('.topic-post:eq(0) button.reply');
   fillIn('.d-editor-input', 'This is a dirty reply');
   click('.toggler');
-  click('.topic-post:eq(0) button[data-action=edit]');
+  click('.topic-post:eq(0) button.edit');
   andThen(() => {
     ok(exists('.bootbox.modal'), 'it pops up a confirmation dialog');
   });

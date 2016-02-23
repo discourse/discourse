@@ -152,21 +152,20 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   })
 });
 
-function proxyDep(propName, moduleFunc, msg) {
-  if (Discourse.hasOwnProperty(propName)) { return; }
-  Object.defineProperty(Discourse, propName, {
-    get: function() {
-      msg = msg || "import the module";
-      Ember.warn("DEPRECATION: `Discourse." + propName + "` is deprecated, " + msg + ".");
-      return moduleFunc();
-    }
-  });
+function RemovedObject(name) {
+  this._removedName = name;
 }
 
-proxyDep('computed', function() { return require('discourse/lib/computed'); });
-proxyDep('Formatter', function() { return require('discourse/lib/formatter'); });
-proxyDep('PageTracker', function() { return require('discourse/lib/page-tracker').default; });
-proxyDep('URL', function() { return require('discourse/lib/url').default; });
-proxyDep('Quote', function() { return require('discourse/lib/quote').default; });
-proxyDep('debounce', function() { return require('discourse/lib/debounce').default; });
-proxyDep('View', function() { return Ember.View; }, "Use `Ember.View` instead");
+function methodMissing() {
+  console.warn("The " + this._removedName + " object has been removed from Discourse " +
+               "and your plugin needs to be updated.");
+};
+
+Discourse.RemovedObject = RemovedObject;
+
+['reopen', 'registerButton', 'on', 'off'].forEach(function(m) { RemovedObject.prototype[m] = methodMissing; });
+
+['discourse/views/post', 'discourse/components/post-menu'].forEach(function(moduleName) {
+  define(moduleName, [], function() { return new RemovedObject(moduleName); });
+});
+

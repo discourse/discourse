@@ -96,7 +96,7 @@ export default {
       });
 
       if (!Ember.testing) {
-        if (!Discourse.Mobile.mobileView) {
+        if (!site.mobileView) {
           bus.subscribe("/notification-alert/" + user.get('id'), function(data){
             onNotification(data, user);
           });

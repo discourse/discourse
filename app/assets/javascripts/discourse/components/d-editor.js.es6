@@ -25,156 +25,164 @@ const OP = {
 
 const _createCallbacks = [];
 
-function Toolbar() {
-  this.shortcuts = {};
+class Toolbar {
 
-  this.groups = [
-    {group: 'fontStyles', buttons: []},
-    {group: 'insertions', buttons: []},
-    {group: 'extras', buttons: []}
-  ];
+  constructor(site) {
+    this.shortcuts = {};
 
-  this.addButton({
-    id: 'bold',
-    group: 'fontStyles',
-    shortcut: 'B',
-    perform: e => e.applySurround('**', '**', 'bold_text')
-  });
-
-  this.addButton({
-    id: 'italic',
-    group: 'fontStyles',
-    shortcut: 'I',
-    perform: e => e.applySurround('_', '_', 'italic_text')
-  });
-
-  this.addButton({id: 'link', group: 'insertions', shortcut: 'K', action: 'showLinkModal'});
-
-  this.addButton({
-    id: 'quote',
-    group: 'insertions',
-    icon: 'quote-right',
-    shortcut: 'Shift+9',
-    perform: e => e.applySurround('> ', '', 'code_text')
-  });
-
-  this.addButton({
-    id: 'code',
-    group: 'insertions',
-    shortcut: 'Shift+C',
-    perform(e) {
-      if (e.selected.value.indexOf("\n") !== -1) {
-        e.applySurround('    ', '', 'code_text');
-      } else {
-        e.applySurround('`', '`', 'code_text');
-      }
-    },
-  });
-
-  this.addButton({
-    id: 'bullet',
-    group: 'extras',
-    icon: 'list-ul',
-    shortcut: 'Shift+8',
-    title: 'composer.ulist_title',
-    perform: e => e.applyList('* ', 'list_item')
-  });
-
-  this.addButton({
-    id: 'list',
-    group: 'extras',
-    icon: 'list-ol',
-    shortcut: 'Shift+7',
-    title: 'composer.olist_title',
-    perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
-  });
-
-  this.addButton({
-    id: 'heading',
-    group: 'extras',
-    icon: 'font',
-    shortcut: 'Alt+1',
-    perform: e => e.applyList('## ', 'heading_text')
-  });
-
-  this.addButton({
-    id: 'rule',
-    group: 'extras',
-    icon: 'minus',
-    shortcut: 'Alt+R',
-    title: 'composer.hr_title',
-    perform: e => e.addText("\n\n----------\n")
-  });
-
-  if (Discourse.Mobile.mobileView) {
-    this.groups.push({group: 'mobileExtras', buttons: []});
+    this.groups = [
+      {group: 'fontStyles', buttons: []},
+      {group: 'insertions', buttons: []},
+      {group: 'extras', buttons: []}
+    ];
 
     this.addButton({
-      id: 'preview',
-      group: 'mobileExtras',
-      icon: 'television',
-      title: 'composer.hr_preview',
-      perform: e => e.preview()
+      id: 'bold',
+      group: 'fontStyles',
+      shortcut: 'B',
+      perform: e => e.applySurround('**', '**', 'bold_text')
     });
-  }
 
-  this.groups[this.groups.length-1].lastGroup = true;
-};
+    this.addButton({
+      id: 'italic',
+      group: 'fontStyles',
+      shortcut: 'I',
+      perform: e => e.applySurround('_', '_', 'italic_text')
+    });
 
-Toolbar.prototype.addButton = function(button) {
-  const g = this.groups.findProperty('group', button.group);
-  if (!g) {
-    throw `Couldn't find toolbar group ${button.group}`;
-  }
+    this.addButton({id: 'link', group: 'insertions', shortcut: 'K', action: 'showLinkModal'});
 
-  const createdButton = {
-    id: button.id,
-    className: button.className || button.id,
-    icon: button.icon || button.id,
-    action: button.action || 'toolbarButton',
-    perform: button.perform || Ember.K
-  };
+    this.addButton({
+      id: 'quote',
+      group: 'insertions',
+      icon: 'quote-right',
+      shortcut: 'Shift+9',
+      perform: e => e.applySurround('> ', '', 'code_text')
+    });
 
-  if (button.sendAction) {
-    createdButton.sendAction = button.sendAction;
-  }
+    this.addButton({
+      id: 'code',
+      group: 'insertions',
+      shortcut: 'Shift+C',
+      perform(e) {
+        if (e.selected.value.indexOf("\n") !== -1) {
+          e.applySurround('    ', '', 'code_text');
+        } else {
+          e.applySurround('`', '`', 'code_text');
+        }
+      },
+    });
 
-  const title = I18n.t(button.title || `composer.${button.id}_title`);
-  if (button.shortcut) {
-    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-    const mod = mac ? 'Meta' : 'Ctrl';
-    var shortcutTitle = `${mod}+${button.shortcut}`;
+    this.addButton({
+      id: 'bullet',
+      group: 'extras',
+      icon: 'list-ul',
+      shortcut: 'Shift+8',
+      title: 'composer.ulist_title',
+      perform: e => e.applyList('* ', 'list_item')
+    });
 
-    // Mac users are used to glyphs for shortcut keys
-    if (mac) {
-      shortcutTitle = shortcutTitle
-          .replace('Shift', "\u21E7")
-          .replace('Meta', "\u2318")
-          .replace('Alt', "\u2325")
-          .replace(/\+/g, '');
-    } else {
-      shortcutTitle = shortcutTitle
-          .replace('Shift', I18n.t('shortcut_modifier_key.shift'))
-          .replace('Ctrl', I18n.t('shortcut_modifier_key.ctrl'))
-          .replace('Alt', I18n.t('shortcut_modifier_key.alt'));
+    this.addButton({
+      id: 'list',
+      group: 'extras',
+      icon: 'list-ol',
+      shortcut: 'Shift+7',
+      title: 'composer.olist_title',
+      perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
+    });
+
+    this.addButton({
+      id: 'heading',
+      group: 'extras',
+      icon: 'font',
+      shortcut: 'Alt+1',
+      perform: e => e.applyList('## ', 'heading_text')
+    });
+
+    this.addButton({
+      id: 'rule',
+      group: 'extras',
+      icon: 'minus',
+      shortcut: 'Alt+R',
+      title: 'composer.hr_title',
+      perform: e => e.addText("\n\n----------\n")
+    });
+
+    if (site.mobileView) {
+      this.groups.push({group: 'mobileExtras', buttons: []});
+
+      this.addButton({
+        id: 'preview',
+        group: 'mobileExtras',
+        icon: 'television',
+        title: 'composer.hr_preview',
+        perform: e => e.preview()
+      });
     }
 
-    createdButton.title = `${title} (${shortcutTitle})`;
-
-    this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
-  } else {
-    createdButton.title = title;
+    this.groups[this.groups.length-1].lastGroup = true;
   }
 
-  if (button.unshift) {
-    g.buttons.unshift(createdButton);
-  } else {
-    g.buttons.push(createdButton);
+  addButton(button) {
+    const g = this.groups.findProperty('group', button.group);
+    if (!g) {
+      throw `Couldn't find toolbar group ${button.group}`;
+    }
+
+    const createdButton = {
+      id: button.id,
+      className: button.className || button.id,
+      icon: button.icon || button.id,
+      action: button.action || 'toolbarButton',
+      perform: button.perform || Ember.K
+    };
+
+    if (button.sendAction) {
+      createdButton.sendAction = button.sendAction;
+    }
+
+    const title = I18n.t(button.title || `composer.${button.id}_title`);
+    if (button.shortcut) {
+      const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+      const mod = mac ? 'Meta' : 'Ctrl';
+      var shortcutTitle = `${mod}+${button.shortcut}`;
+
+      // Mac users are used to glyphs for shortcut keys
+      if (mac) {
+        shortcutTitle = shortcutTitle
+            .replace('Shift', "\u21E7")
+            .replace('Meta', "\u2318")
+            .replace('Alt', "\u2325")
+            .replace(/\+/g, '');
+      } else {
+        shortcutTitle = shortcutTitle
+            .replace('Shift', I18n.t('shortcut_modifier_key.shift'))
+            .replace('Ctrl', I18n.t('shortcut_modifier_key.ctrl'))
+            .replace('Alt', I18n.t('shortcut_modifier_key.alt'));
+      }
+
+      createdButton.title = `${title} (${shortcutTitle})`;
+
+      this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
+    } else {
+      createdButton.title = title;
+    }
+
+    if (button.unshift) {
+      g.buttons.unshift(createdButton);
+    } else {
+      g.buttons.push(createdButton);
+    }
   }
-};
+}
+
+export function addToolbarCallback(func) {
+  _createCallbacks.push(func);
+}
 
 export function onToolbarCreate(func) {
-  _createCallbacks.push(func);
+  console.warn('`onToolbarCreate` is deprecated, use the plugin api instead.');
+  addToolbarCallback(func);
 };
 
 export default Ember.Component.extend({
@@ -237,7 +245,7 @@ export default Ember.Component.extend({
 
   @computed
   toolbar() {
-    const toolbar = new Toolbar();
+    const toolbar = new Toolbar(this.site);
     _createCallbacks.forEach(cb => cb(toolbar));
     this.sendAction('extraButtons', toolbar);
     return toolbar;

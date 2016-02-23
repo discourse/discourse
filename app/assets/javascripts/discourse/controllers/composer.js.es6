@@ -263,7 +263,6 @@ export default Ember.Controller.extend({
     }
 
     var staged = false;
-    const disableJumpReply = Discourse.User.currentProp('disable_jump_reply');
 
     // TODO: This should not happen in model
     const imageSizes = {};
@@ -281,6 +280,7 @@ export default Ember.Controller.extend({
         self.send('postWasEnqueued', result.responseJson);
         self.destroyDraft();
         self.close();
+        self.appEvents.trigger('post-stream:refresh');
         return result;
       }
 
@@ -288,7 +288,15 @@ export default Ember.Controller.extend({
       if (result.responseJson.action === "create_post" || self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
       }
+      if (self.get('model.action') === 'edit') {
+        self.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
+      } else {
+        self.appEvents.trigger('post-stream:refresh');
+      }
 
+      if (result.responseJson.action === "create_post") {
+        self.appEvents.trigger('post:highlight', result.payload.post_number);
+      }
       self.close();
 
       const currentUser = Discourse.User.current();
@@ -298,14 +306,14 @@ export default Ember.Controller.extend({
         currentUser.set('reply_count', currentUser.get('reply_count') + 1);
       }
 
-      // TODO disableJumpReply is super crude, it needs to provide some sort
-      // of notification to the end user
+      const disableJumpReply = Discourse.User.currentProp('disable_jump_reply');
       if (!composer.get('replyingToTopic') || !disableJumpReply) {
         const post = result.target;
         if (post && !staged) {
           DiscourseURL.routeTo(post.get('url'));
         }
       }
+
     }).catch(function(error) {
       composer.set('disableDrafts', false);
       self.appEvents.one('composer:opened', () => bootbox.alert(error));
@@ -316,18 +324,10 @@ export default Ember.Controller.extend({
       staged = composer.get('stagedPost');
     }
 
-    Em.run.schedule('afterRender', function() {
-      if (staged && !disableJumpReply) {
-        const postNumber = staged.get('post_number');
-        DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
-        self.appEvents.trigger('post:highlight', postNumber);
-      }
-    });
+    this.appEvents.trigger('post-stream:posted', staged);
 
     this.messageBus.pause();
-    promise.finally(function(){
-      self.messageBus.resume();
-    });
+    promise.finally(() => this.messageBus.resume());
 
     return promise;
   },
@@ -585,14 +585,6 @@ export default Ember.Controller.extend({
 
   closeAutocomplete() {
     $('.d-editor-input').autocomplete({ cancel: true });
-  },
-
-  showOptions() {
-    var _ref;
-    return (_ref = this.get('controllers.modal')) ? _ref.show(Discourse.ArchetypeOptionsModalView.create({
-      archetype: this.get('model.archetype'),
-      metaData: this.get('model.metaData')
-    })) : void 0;
   },
 
   canEdit: function() {
