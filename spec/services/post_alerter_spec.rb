@@ -150,4 +150,26 @@ describe PostAlerter do
     end
 
   end
+
+
+  describe ".create_notification" do
+
+    it "keeps the original title for PMs" do
+      user = Fabricate(:user)
+      topic = Fabricate(:private_message_topic, user: user, created_at: 1.hour.ago)
+      post = Fabricate(:post, topic: topic, created_at: 1.hour.ago)
+
+      original_title = topic.title
+
+      post.revise(user, { title: "This is the revised title" }, revised_at: Time.now)
+
+      expect {
+        PostAlerter.new.create_notification(user, Notification.types[:private_message], post)
+      }.to change { user.notifications.count }
+
+      expect(user.notifications.last.data_hash["topic_title"]).to eq(original_title)
+    end
+
+  end
+
 end
