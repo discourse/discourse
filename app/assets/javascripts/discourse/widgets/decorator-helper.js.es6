@@ -1,6 +1,7 @@
 import Connector from 'discourse/widgets/connector';
 import { h } from 'virtual-dom';
 import PostCooked from 'discourse/widgets/post-cooked';
+import RawHtml from 'discourse/widgets/raw-html';
 
 class DecoratorHelper {
   constructor(widget, attrs, state) {
@@ -15,6 +16,10 @@ class DecoratorHelper {
 
   getModel() {
     return this.widget.findAncestorModel();
+  }
+
+  rawHtml(html) {
+    return new RawHtml({ html });
   }
 
   cooked(cooked) {

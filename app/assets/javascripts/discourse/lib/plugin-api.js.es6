@@ -23,7 +23,6 @@ class PluginApi {
   constructor(version, container) {
     this.version = version;
     this.container = container;
-
     this._currentUser = container.lookup('current-user:main');
   }
 
