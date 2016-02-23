@@ -259,8 +259,16 @@ class PostAlerter
 
     UserActionObserver.log_notification(original_post, user, type, opts[:acting_user_id])
 
+    topic_title = post.topic.title
+    # when sending a private message email, keep the original title
+    if post.topic.private_message? && modifications = post.revisions.map(&:modifications).to_a
+      if first_title_modification = modifications.first { |m| m.has_key?("title") }
+        topic_title = first_title_modification["title"][0]
+      end
+    end
+
     notification_data = {
-      topic_title: post.topic.title,
+      topic_title: topic_title,
       original_post_id: original_post.id,
       original_post_type: original_post.post_type,
       original_username: original_username,

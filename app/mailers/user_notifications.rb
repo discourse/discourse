@@ -236,25 +236,20 @@ class UserNotifications < ActionMailer::Base
       user_name = name unless name.blank?
     end
 
-    title = notification_data[:topic_title]
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
-    use_site_subject = opts[:use_site_subject]
-    add_re_to_subject = opts[:add_re_to_subject]
-    show_category_in_subject = opts[:show_category_in_subject]
-    use_template_html = opts[:use_template_html]
     original_username = notification_data[:original_username] || notification_data[:display_username]
 
     send_notification_email(
-      title: title,
+      title: notification_data[:topic_title],
       post: post,
       username: original_username,
       from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
-      use_site_subject: use_site_subject,
-      add_re_to_subject: add_re_to_subject,
-      show_category_in_subject: show_category_in_subject,
+      use_site_subject: opts[:use_site_subject],
+      add_re_to_subject: opts[:add_re_to_subject],
+      show_category_in_subject: opts[:show_category_in_subject],
       notification_type: notification_type,
-      use_template_html: use_template_html,
+      use_template_html: opts[:use_template_html],
       user: user
     )
   end
