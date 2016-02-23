@@ -32,6 +32,7 @@ class DecoratorHelper {
    * const post = helper.getModel();
    * console.log(post.get('id'));
    * ```
+   **/
   getModel() {
     return this.widget.findAncestorModel();
   }
