@@ -48,6 +48,11 @@ HTML
       expect(PrettyText.cook('@hello @hello @hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
 
+    it "should handle group mentions with a hyphen and without" do
+      expect(PrettyText.cook('@hello @hello-hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello-hello</span></p>"
+    end
+
+
     it "should sanitize the html" do
       expect(PrettyText.cook("<script>alert(42)</script>")).to match_html "<p></p>"
     end
