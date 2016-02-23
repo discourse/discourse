@@ -22,7 +22,7 @@ export function decorateWidget(widgetName, cb) {
   _decorators[widgetName].push(cb);
 }
 
-function applyDecorators(widget, type, attrs, state) {
+export function applyDecorators(widget, type, attrs, state) {
   const decorators = _decorators[`${widget.name}:${type}`] || [];
 
   if (decorators.length) {

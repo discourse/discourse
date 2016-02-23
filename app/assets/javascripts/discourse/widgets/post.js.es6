@@ -1,5 +1,5 @@
 import PostCooked from 'discourse/widgets/post-cooked';
-import { createWidget } from 'discourse/widgets/widget';
+import { createWidget, applyDecorators } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon';
 import { transformBasicPost } from 'discourse/lib/transform-post';
 import { h } from 'virtual-dom';
@@ -251,7 +251,8 @@ createWidget('post-contents', {
   },
 
   html(attrs, state) {
-    const result = [new PostCooked(attrs, new DecoratorHelper(this))];
+    let result = [new PostCooked(attrs, new DecoratorHelper(this))];
+    result = result.concat(applyDecorators(this, 'after-cooked', attrs, state));
 
     if (attrs.cooked_hidden) {
       result.push(this.attach('expand-hidden', attrs));
