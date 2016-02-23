@@ -318,7 +318,7 @@ export default function(options) {
     }
   };
 
-  $(this).on('keyup.autocomplete', function(e) {
+  $(this).on('keyup.autocomplete', function() {
 
     var caretPosition = Discourse.Utilities.caretPosition(me[0]);
 
