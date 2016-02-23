@@ -278,8 +278,8 @@ createWidget('post-contents', {
       return;
     }
 
-    const topic = this.findAncestorModel().get('topic');
-    const topicUrl = topic.get('url');
+    const post = this.findAncestorModel();
+    const topicUrl = post ? post.get('topic.url') : null;
     return this.store.find('post-reply', { postId: this.attrs.id }).then(posts => {
       this.state.repliesBelow = posts.map(p => {
         p.shareUrl = `${topicUrl}/${p.post_number}`;
@@ -356,8 +356,8 @@ createWidget('post-article', {
       this.state.repliesAbove = [];
       return Ember.RSVP.Promise.resolve();
     } else {
-      const topic = this.findAncestorModel().get('topic');
-      const topicUrl = topic.get('url');
+      const post = this.findAncestorModel();
+      const topicUrl = post ? post.get('topic.url') : null;
       return this.store.find('post-reply-history', { postId: this.attrs.id }).then(posts => {
         this.state.repliesAbove = posts.map((p) => {
           p.shareUrl = `${topicUrl}/${p.post_number}`;
