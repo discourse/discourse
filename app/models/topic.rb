@@ -433,6 +433,7 @@ class Topic < ActiveRecord::Base
 
   def update_status(status, enabled, user, opts={})
     TopicStatusUpdate.new(self, user).update!(status, enabled, opts)
+    DiscourseEvent.trigger(:topic_status_updated, self.id, status, enabled)
   end
 
   # Atomically creates the next post number
