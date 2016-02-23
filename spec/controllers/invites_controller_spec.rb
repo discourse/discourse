@@ -218,6 +218,16 @@ describe InvitesController do
       end
     end
 
+    context 'user is already logged in' do
+      let!(:user) { log_in }
+      let(:topic) { Fabricate(:topic) }
+      let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
+
+      it "doesn't redeem the invite" do
+        Invite.any_instance.stubs(:redeem).never
+        get :show, id: invite.invite_key
+      end
+    end
   end
 
   context '.create_disposable_invite' do
