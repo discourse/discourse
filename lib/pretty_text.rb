@@ -73,7 +73,7 @@ module PrettyText
   @ctx_init = Mutex.new
 
   def self.mention_matcher
-    Regexp.new("\\W@(\\w{#{SiteSetting.min_username_length},#{SiteSetting.max_username_length}})\\b")
+    Regexp.new("\\W@([\\w\\-]{#{SiteSetting.min_username_length},#{SiteSetting.max_username_length}})\\b")
   end
 
   def self.app_root
