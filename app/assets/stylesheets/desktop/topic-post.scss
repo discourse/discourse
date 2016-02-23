@@ -895,12 +895,10 @@ $topic-avatar-width: 45px;
 
     .select-posts {
       position: absolute;
-      left: 100%;
+      right: 0;
       z-index: 490;
-      top: 8px;
-      width: 200px;
+      top: 3em;
       height: 100px;
-      background-color: $secondary;
 
       button {
         margin-left: 8px;
