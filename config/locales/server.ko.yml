@@ -643,7 +643,6 @@ ko:
     suppress_reply_directly_above: "단 하나의 댓글 위의 글이 하나 있는 상황에서 '~에 대한 댓글'을 보여주지 않음."
     suppress_reply_when_quoting: "글안에 답글이 인용될 때 in-reply-to를 보여주지 않습니다."
     max_reply_history: "덧글 확장해서 보여지는 최대 갯수"
-    experimental_reply_expansion: "답글을 펼쳤을 때 중간 답글을 숨깁니다(실험 중)"
     topics_per_period_in_top_summary: "인기 글타래 요약에 기본으로 보여질 글타래 수"
     topics_per_period_in_top_page: "인기 글타래에서 '더 보기'를 요청할 시 보여질 글타래 수"
     redirect_users_to_top_page: "자동으로 신규 사용자와 오래간만에 들어온 사용자를 탑 페이지로 리다이렉트 시킴"

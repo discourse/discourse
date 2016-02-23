@@ -877,9 +877,6 @@ en:
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
     max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
-
-    experimental_reply_expansion: "Hide intermediate replies when expanding a reply to (experimental)"
-
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
@@ -1389,7 +1386,7 @@ en:
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the user fields"
     close_window: "Authentication is complete. Close this window to continue."
-    already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again?"
+    already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
 
   user:
     no_accounts_associated: "No accounts associated"

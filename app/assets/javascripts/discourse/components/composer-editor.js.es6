@@ -18,7 +18,7 @@ export default Ember.Component.extend({
 
   @on('init')
   _setupPreview() {
-    const val = (Discourse.Mobile.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
+    const val = (this.site.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
     this.set('showPreview', val === 'true');
   },
 
@@ -91,6 +91,8 @@ export default Ember.Component.extend({
 
   _syncEditorAndPreviewScroll() {
     const $input = this.$('.d-editor-input');
+    if (!$input) { return; }
+
     const $preview = this.$('.d-editor-preview');
 
     if ($input.scrollTop() === 0) {
@@ -216,7 +218,7 @@ export default Ember.Component.extend({
       }
     });
 
-    if (Discourse.Mobile.mobileView) {
+    if (this.site.mobileView) {
       this.$(".mobile-file-upload").on("click.uploader", function () {
         // redirect the click on the hidden file input
         $("#mobile-uploader").click();

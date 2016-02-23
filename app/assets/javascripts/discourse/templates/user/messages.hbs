@@ -1,8 +1,8 @@
 <section class='user-navigation'>
-  {{#unless mobileView}}
-  {{#if showNewPM}}
-  {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
-  {{/if}}
+  {{#unless site.mobileView}}
+    {{#if showNewPM}}
+      {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+    {{/if}}
   {{/unless}}
 
   {{#mobile-nav class='messages-nav' desktopClass='nav-stacked action-list' currentPath=currentPath}}
@@ -47,10 +47,10 @@
       <i class="fa fa-list"></i>
     </button>
 
-    {{#if mobileView}}
-    {{#if showNewPM}}
-    {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
-    {{/if}}
+    {{#if site.mobileView}}
+      {{#if showNewPM}}
+        {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+      {{/if}}
     {{/if}}
 
     {{#if canArchive}}

@@ -6,6 +6,7 @@ moduleFor('controller:topic', 'controller:topic', {
 });
 
 import Topic from 'discourse/models/topic';
+import AppEvents from 'discourse/lib/app-events';
 
 var buildTopic = function() {
   return Topic.create({
@@ -62,7 +63,7 @@ test("toggledSelectedPost", function() {
 });
 
 test("selectAll", function() {
-  var tc = this.subject({model: buildTopic()}),
+  var tc = this.subject({model: buildTopic(), appEvents: AppEvents.create()}),
       post = Discourse.Post.create({id: 123, post_number: 2}),
       postStream = tc.get('model.postStream');
 

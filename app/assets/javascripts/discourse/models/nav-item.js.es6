@@ -7,7 +7,7 @@ const NavItem = Discourse.Model.extend({
         name = this.get('name'),
         count = this.get('count') || 0;
 
-    if (name === 'latest' && !Discourse.Mobile.mobileView) {
+    if (name === 'latest' && !Discourse.Site.currentProp('mobileView')) {
       count = 0;
     }
 

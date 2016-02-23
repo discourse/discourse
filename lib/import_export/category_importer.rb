@@ -39,25 +39,33 @@ module ImportExport
 
     def import_categories
       id = @export_data[:category].delete(:id)
-      permissions = @export_data[:category].delete(:permissions_params)
 
-      parent = Category.new(@export_data[:category])
-      parent.user_id = @topic_importer.new_user_id(@export_data[:category][:user_id]) # imported user's new id
-      parent.custom_fields["import_id"] = id
-      parent.permissions = permissions if permissions
-      parent.save!
-      set_category_description(parent, @export_data[:category][:description])
+      parent = CategoryCustomField.where(name: 'import_id', value: id.to_s).first.try(:category)
+
+      unless parent
+        permissions = @export_data[:category].delete(:permissions_params)
+        parent = Category.new(@export_data[:category])
+        parent.user_id = @topic_importer.new_user_id(@export_data[:category][:user_id]) # imported user's new id
+        parent.custom_fields["import_id"] = id
+        parent.permissions = permissions if permissions
+        parent.save!
+        set_category_description(parent, @export_data[:category][:description])
+      end
 
       @export_data[:subcategories].each do |cat_attrs|
         id = cat_attrs.delete(:id)
-        permissions = cat_attrs.delete(:permissions_params)
-        subcategory = Category.new(cat_attrs)
-        subcategory.parent_category_id = parent.id
-        subcategory.user_id = @topic_importer.new_user_id(cat_attrs[:user_id])
-        subcategory.custom_fields["import_id"] = id
-        subcategory.permissions = permissions if permissions
-        subcategory.save!
-        set_category_description(subcategory, cat_attrs[:description])
+        existing = CategoryCustomField.where(name: 'import_id', value: id.to_s).first.try(:category)
+
+        unless existing
+          permissions = cat_attrs.delete(:permissions_params)
+          subcategory = Category.new(cat_attrs)
+          subcategory.parent_category_id = parent.id
+          subcategory.user_id = @topic_importer.new_user_id(cat_attrs[:user_id])
+          subcategory.custom_fields["import_id"] = id
+          subcategory.permissions = permissions if permissions
+          subcategory.save!
+          set_category_description(subcategory, cat_attrs[:description])
+        end
       end
     end
 

@@ -781,7 +781,6 @@ fi:
     suppress_reply_directly_above: "Älä näytä vastauksena-painiketta viestin yläreunassa, jos viestissä on vastattu vain edelliseen viestiin."
     suppress_reply_when_quoting: "Älä näytä vastauksena-painiketta viestin yläreunassa, kun viestissä on lainaus."
     max_reply_history: "Maksimimäärä vastauksia, jotka avataan klikattaessa 'vastauksena' painiketta"
-    experimental_reply_expansion: "Piilota välilliset vastaukset, kun 'vastauksena' avataan (kokeellinen)"
     topics_per_period_in_top_summary: "Ketjujen lukumäärä, joka näytetään oletuksena Huiput-listauksissa."
     topics_per_period_in_top_page: "Ketjujen lukumäärä, joka näytetään laajennetussa Huiput-listauksessa."
     redirect_users_to_top_page: "Ohjaa uudet ja kauan poissa olleet käyttäjät automaattisesti huiput-sivulle."

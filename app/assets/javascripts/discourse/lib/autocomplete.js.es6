@@ -3,7 +3,6 @@
 
   @module $.fn.autocomplete
 **/
-
 export var CANCELLED_STATUS = "__CANCELLED";
 
 const allowedLettersRegex = /[\s\t\[\{\(\/]/;
@@ -232,7 +231,7 @@ export default function(options) {
       vOffset = div.height();
     }
 
-    if (Discourse.Mobile.mobileView && !isInput) {
+    if (Discourse.Site.currentProp('mobileView') && !isInput) {
       div.css('width', 'auto');
 
       if ((me.height() / 2) >= pos.top) { vOffset = -23; }
