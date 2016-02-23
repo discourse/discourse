@@ -39,8 +39,10 @@ class PostgreSQLFallbackHandler
           raise e
         end
       ensure
-        @last_check = Time.zone.now
-        @running = false
+        @mutex.synchronize do
+          @last_check = Time.zone.now
+          @running = false
+        end
       end
     end
   end
