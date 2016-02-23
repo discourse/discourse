@@ -1,3 +1,5 @@
+require_dependency 'push_notifications'
+
 class PostAlerter
 
   def self.post_created(post)
@@ -290,7 +292,10 @@ class PostAlerter
    if !existing_notification && NOTIFIABLE_TYPES.include?(type)
      # we may have an invalid post somehow, dont blow up
      post_url = original_post.url rescue nil
+
      if post_url
+        PushNotifications.push(user) unless PushNotifications.registration_ids(user).empty?
+
         MessageBus.publish("/notification-alert/#{user.id}", {
           notification_type: type,
           post_number: original_post.post_number,

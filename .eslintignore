@@ -4,6 +4,7 @@ app/assets/javascripts/main_include_admin.js
 app/assets/javascripts/preload_store.js
 app/assets/javascripts/pagedown_custom.js
 app/assets/javascripts/vendor.js
+app/assets/javascripts/push_service_worker.js
 app/assets/javascripts/locales/i18n.js
 app/assets/javascripts/defer/html-sanitizer-bundle.js
 app/assets/javascripts/ember-addons/

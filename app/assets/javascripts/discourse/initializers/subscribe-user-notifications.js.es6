@@ -1,5 +1,6 @@
 // Subscribes to user events on the message bus
-import { init as initDesktopNotifications, onNotification } from 'discourse/lib/desktop-notifications';
+import { init as initDesktopNotifications, subscribe as subscribeToNotificationAlert } from 'discourse/lib/desktop-notifications';
+import { register as registerPushNotifications } from 'discourse/lib/push-notifications';
 
 export default {
   name: 'subscribe-user-notifications',
@@ -96,13 +97,12 @@ export default {
       });
 
       if (!Ember.testing) {
-        if (!Discourse.Mobile.mobileView) {
-          bus.subscribe("/notification-alert/" + user.get('id'), function(data){
-            onNotification(data, user);
-          });
+        registerPushNotifications(user, () => {
+          // Fallback to desktop notifications if push notification is not available
+          if (!Discourse.Mobile.mobileView) subscribeToNotificationAlert(bus, user);
+        });
 
-          initDesktopNotifications(bus);
-        }
+        if (!Discourse.Mobile.mobileView) initDesktopNotifications(bus);
       }
     }
   }

@@ -1,4 +1,3 @@
-
 {{#if isNotSupported}}
   {{d-button icon="bell-slash" label="user.desktop_notifications.not_supported" disabled="true"}}
 {{/if}}
@@ -17,4 +16,16 @@
     {{d-button icon="bell-o" label="user.desktop_notifications.enable" action="turnon"}}
     {{i18n "user.desktop_notifications.currently_disabled"}}
   {{/if}}
+{{/if}}
+
+{{#if showPushNotification}}
+  <div>
+    {{#if pushNotficationSubscribed}}
+      {{d-button icon="bell-slash-o" label="user.desktop_notifications.disable_push_notifications" action="unsubscribe"}}
+      {{i18n "user.desktop_notifications.currently_enabled"}}
+    {{else}}
+      {{d-button icon="bell-o" label="user.desktop_notifications.enable_push_notifications" action="subscribe"}}
+      {{i18n "user.desktop_notifications.currently_disabled"}}
+    {{/if}}
+  </div>
 {{/if}}

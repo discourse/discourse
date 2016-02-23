@@ -861,6 +861,8 @@ en:
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    gcm_sender_id: "Google Cloud Messaging Sender ID; see https://developers.google.com/cloud-messaging/"
+    gcm_api_key: "Google Cloud Messaging API Key"
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
@@ -2249,6 +2251,11 @@ en:
         %{base_url}/users/activate-account/%{email_token}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
+    push:
+      body:
+        one: You have 1 new notification.
+        other: You have %{count} new notifications.
 
   page_not_found:
     title: "The page you requested doesn't exist or is private."

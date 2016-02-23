@@ -574,6 +574,14 @@ Discourse::Application.routes.draw do
     end
   end
 
+  resources :push_notifications do
+    collection do
+      post "subscribe"
+      post "unsubscribe"
+      get "latest"
+    end
+  end
+
   get "onebox" => "onebox#show"
 
   get "error" => "forums#error"
@@ -591,6 +599,7 @@ Discourse::Application.routes.draw do
 
   get "robots.txt" => "robots_txt#index"
   get "manifest.json" => "manifest_json#index", as: :manifest
+  get "/push_service_worker.js" => "service_workers#push"
 
   Discourse.filters.each do |filter|
     root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), :as => "list_#{filter}"

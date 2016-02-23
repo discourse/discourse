@@ -3,6 +3,19 @@ import KeyValueStore from 'discourse/lib/key-value-store';
 
 const keyValueStore = new KeyValueStore("discourse_desktop_notifications_");
 
+import {
+  subscribe as subscribePushNotification,
+  unsubscribe as unsubscribePushNotification,
+  isPushNotificationsSupported,
+  keyValueStore as pushNotificationKeyValueStore,
+  userSubscriptionKey as pushNotificationUserSubscriptionKey
+} from 'discourse/lib/push-notifications';
+
+import {
+  subscribe as subscribeToNotificationAlert,
+  unsubscribe as unsubscribeToNotificationAlert
+} from 'discourse/lib/desktop-notifications';
+
 export default Ember.Component.extend({
   classNames: ['controls'],
 
@@ -32,6 +45,23 @@ export default Ember.Component.extend({
     return isNotSupported ? false : notificationsPermission === "default";
   },
 
+  @computed('isEnabled')
+  showPushNotification(isEnabled) {
+    return isEnabled && isPushNotificationsSupported();
+  },
+
+  @computed
+  pushNotficationSubscribed: {
+    set(value) {
+      const user = Discourse.User.current();
+      pushNotificationKeyValueStore.setItem(pushNotificationUserSubscriptionKey(user), value);
+      return pushNotificationKeyValueStore.getItem(pushNotificationUserSubscriptionKey(user));
+    },
+    get() {
+      return pushNotificationKeyValueStore.getItem(pushNotificationUserSubscriptionKey(Discourse.User.current()));
+    }
+  },
+
   @computed("isNotSupported", "notificationsPermission")
   isDeniedPermission(isNotSupported, notificationsPermission) {
     return isNotSupported ? false : notificationsPermission === "denied";
@@ -59,11 +89,24 @@ export default Ember.Component.extend({
     turnoff() {
       this.set('notificationsDisabled', 'disabled');
       this.propertyDidChange('notificationsPermission');
+      this.send('unsubscribe');
     },
 
     turnon() {
       this.set('notificationsDisabled', '');
       this.propertyDidChange('notificationsPermission');
+    },
+    subscribe() {
+      subscribePushNotification(() => {
+        unsubscribeToNotificationAlert(self.messageBus, Discourse.User.current());
+        this.set("pushNotficationSubscribed", 'subscribed');
+      });
+    },
+    unsubscribe() {
+      unsubscribePushNotification(() => {
+        subscribeToNotificationAlert(self.messageBus, Discourse.User.current());
+        this.set("pushNotficationSubscribed", '');
+      });
     }
   }
 });
