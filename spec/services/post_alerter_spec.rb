@@ -112,13 +112,20 @@ describe PostAlerter do
 
       expect(GroupMention.count).to eq(1)
 
-      group.update_columns(alias_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
+      Fabricate(:group, name: 'group-alt', alias_level: Group::ALIAS_LEVELS[:everyone])
 
+      expect {
+        create_post_with_alerts(raw: "Hello, @group-alt should not trigger a notification?")
+      }.to change(evil_trout.notifications, :count).by(0)
+
+      expect(GroupMention.count).to eq(2)
+
+      group.update_columns(alias_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
       expect {
         create_post_with_alerts(raw: "Hello @group you are not mentionable")
       }.to change(evil_trout.notifications, :count).by(0)
 
-      expect(GroupMention.count).to eq(2)
+      expect(GroupMention.count).to eq(3)
     end
   end
 
