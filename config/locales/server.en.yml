@@ -2248,7 +2248,7 @@ en:
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
   page_not_found:
-    title: "The page you requested doesn't exist or is private."
+    title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"
     recent_topics: "Recent"
     see_more: "More"
