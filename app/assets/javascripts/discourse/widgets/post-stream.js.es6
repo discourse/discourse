@@ -1,8 +1,29 @@
 import { createWidget } from 'discourse/widgets/widget';
 import transformPost from 'discourse/lib/transform-post';
 import { Placeholder } from 'discourse/lib/posts-with-placeholders';
+import { h } from 'virtual-dom';
+import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 
+const CLOAKING_ENABLED = true;
 const DAY = 1000 * 60 * 60 * 24;
+
+let _cloaked = {};
+
+export function cloak(post, component) {
+  if (!CLOAKING_ENABLED || _cloaked[post.id]) { return; }
+
+  const $post = $(`#post_${post.post_number}`);
+  _cloaked[post.id] = $post.height();
+  Ember.run.debounce(component, 'queueRerender', 1000);
+}
+
+export function uncloak(post, component) {
+  if (!CLOAKING_ENABLED || !_cloaked[post.id]) { return; }
+  _cloaked[post.id] = null;
+  component.queueRerender();
+}
+
+addWidgetCleanCallback('post-stream', () => _cloaked = {});
 
 export default createWidget('post-stream', {
   tagName: 'div.post-stream',
@@ -63,8 +84,11 @@ export default createWidget('post-stream', {
       }
       prevDate = curTime;
 
-      // actual post contents
-      if (transformed.isSmallAction) {
+      const height = _cloaked[post.id];
+      if (height) {
+        result.push(h('div.cloaked-post', { id: `post_${post.post_number}`,
+                                            attributes: { style: `height: ${height}px` } }));
+      } else if (transformed.isSmallAction) {
         result.push(this.attach('post-small-action', transformed, { model: post }));
       } else {
         result.push(this.attach('post', transformed, { model: post }));
