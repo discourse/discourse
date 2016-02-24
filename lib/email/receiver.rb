@@ -300,11 +300,7 @@ module Email
         end
       end
 
-      post_options = {
-        cooking_options: { traditional_markdown_linebreaks: true },
-      }.merge(options)
-
-      create_post(post_options)
+      create_post(options)
     end
 
     def attachment_markdown(upload)
