@@ -247,15 +247,7 @@ export default function(options) {
     });
   };
 
-  const SKIP = "skip";
-  var prevTerm = null;
-
   const dataSource = (term, opts) => {
-    if (prevTerm === term) {
-      return SKIP;
-    }
-
-    prevTerm = term;
     if (term.length !== 0 && term.trim().length === 0) {
       closeAutocomplete();
       return null;
@@ -266,7 +258,7 @@ export default function(options) {
 
   const updateAutoComplete = function(r) {
 
-    if (completeStart === null || r === SKIP) return;
+    if (completeStart === null) return;
 
     if (r && r.then && typeof(r.then) === "function") {
       if (div) {
@@ -317,7 +309,8 @@ export default function(options) {
     }
   };
 
-  $(this).on('keyup.autocomplete', function() {
+  $(this).on('keyup.autocomplete', function(event) {
+    if (event.keyCode === 16 || event.shiftKey || event.metaKey || event.ctrlKey) return;
 
     var caretPosition = Discourse.Utilities.caretPosition(me[0]);
 
