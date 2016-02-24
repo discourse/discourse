@@ -200,6 +200,12 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
         # other times, we only pass the type of notification
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_type: "posted", post_id: post.id)
+        # When post is nil
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_type: "posted")
+        # When post does not have a topic
+        post = Fabricate(:post)
+        post.topic.destroy
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_type: "posted", post_id: post)
       end
 
       it "doesn't send the email if the post has been user deleted" do
