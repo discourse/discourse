@@ -261,8 +261,8 @@ class PostAlerter
 
     topic_title = post.topic.title
     # when sending a private message email, keep the original title
-    if post.topic.private_message? && modifications = post.revisions.map(&:modifications).to_a
-      if first_title_modification = modifications.first { |m| m.has_key?("title") }
+    if post.topic.private_message? && modifications = post.revisions.map(&:modifications)
+      if first_title_modification = modifications.find { |m| m.has_key?("title") }
         topic_title = first_title_modification["title"][0]
       end
     end
