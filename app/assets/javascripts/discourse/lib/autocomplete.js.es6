@@ -75,6 +75,7 @@ export default function(options) {
   var completeEnd = null;
   var me = this;
   var div = null;
+  var prevTerm = null;
 
   // input is handled differently
   var isInput = this[0].tagName === "INPUT";
@@ -87,6 +88,7 @@ export default function(options) {
     div = null;
     completeStart = null;
     autocompleteOptions = null;
+    prevTerm = null;
   };
 
   var addInputSelectedItem = function(item) {
@@ -248,7 +250,6 @@ export default function(options) {
   };
 
   const SKIP = "skip";
-  var prevTerm = null;
 
   const dataSource = (term, opts) => {
     if (prevTerm === term) {
