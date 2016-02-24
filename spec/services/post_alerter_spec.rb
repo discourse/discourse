@@ -3,6 +3,7 @@ require 'rails_helper'
 describe PostAlerter do
 
   let!(:evil_trout) { Fabricate(:evil_trout) }
+  let(:user) { Fabricate(:user) }
 
   def create_post_with_alerts(args={})
     post = Fabricate(:post, args)
@@ -131,7 +132,6 @@ describe PostAlerter do
 
   context '@mentions' do
 
-    let(:user) { Fabricate(:user) }
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout')}
     let(:topic) { mention_post.topic }
 
@@ -158,25 +158,31 @@ describe PostAlerter do
 
   end
 
-
   describe ".create_notification" do
+    let(:topic) { Fabricate(:private_message_topic, user: user, created_at: 1.hour.ago) }
+    let(:post) { Fabricate(:post, topic: topic, created_at: 1.hour.ago) }
+
+    it "creates a notification for PMs" do
+      post.revise(user, { raw: 'This is the revised post' }, revised_at: Time.zone.now)
+
+      expect {
+        PostAlerter.new.create_notification(user, Notification.types[:private_message], post)
+      }.to change { user.notifications.count }.by(1)
+
+      expect(user.notifications.last.data_hash["topic_title"]).to eq(topic.title)
+    end
 
     it "keeps the original title for PMs" do
-      user = Fabricate(:user)
-      topic = Fabricate(:private_message_topic, user: user, created_at: 1.hour.ago)
-      post = Fabricate(:post, topic: topic, created_at: 1.hour.ago)
-
       original_title = topic.title
 
       post.revise(user, { title: "This is the revised title" }, revised_at: Time.now)
 
       expect {
         PostAlerter.new.create_notification(user, Notification.types[:private_message], post)
-      }.to change { user.notifications.count }
+      }.to change { user.notifications.count }.by(1)
 
       expect(user.notifications.last.data_hash["topic_title"]).to eq(original_title)
     end
-
   end
 
 end
