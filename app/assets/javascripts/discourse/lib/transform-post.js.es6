@@ -85,7 +85,6 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
 
   const postAtts = transformBasicPost(post);
 
-  postAtts.topic = topic;
   postAtts.topicId = topic.id;
   postAtts.topicOwner = details.created_by.id === post.user_id;
   postAtts.post_type = postType;
@@ -105,6 +104,7 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
   postAtts.userCustomFields = post.user_custom_fields;
+  postAtts.topicUrl = topic.get('url');
 
   const showPMMap = topic.archetype === 'private_message' && post.post_number === 1;
   if (showPMMap) {
@@ -118,7 +118,6 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
   const showTopicMap = showPMMap || (post.post_number === 1 && topic.archetype === 'regular' && topic.posts_count > 1);
   if (showTopicMap) {
     postAtts.showTopicMap = true;
-    postAtts.topicUrl = topic.get('url');
     postAtts.topicCreatedAt = topic.created_at;
     postAtts.createdByUsername = details.created_by.username;
     postAtts.createdByAvatarTemplate = details.created_by.avatar_template;

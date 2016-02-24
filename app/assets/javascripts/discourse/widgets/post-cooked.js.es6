@@ -145,7 +145,7 @@ export default class PostCooked {
   }
 
   _urlForPostNumber(postNumber) {
-    return (postNumber > 0) ? `${this.attrs.topic.get('url')}/${postNumber}` : this.attrs.topic.get('url');
+    return (postNumber > 0) ? `${this.attrs.topicUrl}/${postNumber}` : this.attrs.topicUrl;
   }
 
   _updateQuoteElements($aside, desc) {
