@@ -81,8 +81,10 @@ class Group < ActiveRecord::Base
 
   def incoming_email_validator
     return if self.automatic || self.incoming_email.blank?
-    unless Email.is_valid?(incoming_email)
-      self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', incoming_email: incoming_email))
+    incoming_email.split("|").each do |email|
+      unless Email.is_valid?(email)
+        self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', incoming_email: email))
+      end
     end
   end
 
@@ -332,7 +334,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    self.find_by(incoming_email: Email.downcase(email))
+    self.where("incoming_email LIKE ?", "%#{Email.downcase(email)}%").first
   end
 
   def bulk_add(user_ids)

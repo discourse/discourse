@@ -223,7 +223,7 @@ describe Email::Receiver do
 
   context "new message to a group" do
 
-    let!(:group) { Fabricate(:group, incoming_email: "team@bar.com") }
+    let!(:group) { Fabricate(:group, incoming_email: "team@bar.com|meat@bar.com") }
 
     it "handles encoded display names" do
       expect { process(:encoded_display_name) }.to change(Topic, :count)
@@ -275,7 +275,7 @@ describe Email::Receiver do
 
   context "new topic in a category" do
 
-    let!(:category) { Fabricate(:category, email_in: "category@bar.com", email_in_allow_strangers: false) }
+    let!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: false) }
 
     it "raises a StrangersNotAllowedError when 'email_in_allow_strangers' is disabled" do
       expect { process(:new_user) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
