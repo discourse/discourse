@@ -98,8 +98,8 @@ class Notification < ActiveRecord::Base
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||= begin
-
       return nil if data.blank?
+
       parsed = JSON.parse(data)
       return nil if parsed.blank?
 

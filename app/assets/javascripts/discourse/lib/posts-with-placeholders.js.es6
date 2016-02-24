@@ -1,6 +1,8 @@
-import { Placeholder } from 'discourse/views/cloaked';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 
+export function Placeholder(viewName) {
+  this.viewName = viewName;
+}
 
 export default Ember.Object.extend(Ember.Array, {
   posts: null,
@@ -32,6 +34,11 @@ export default Ember.Object.extend(Ember.Array, {
 
   removePost(cb) {
     this._changeArray(cb, this.get('posts.length') - 1, 1, 0);
+  },
+
+  refreshAll(cb) {
+    const length = this.get('posts.length');
+    this._changeArray(cb, 0, length, length);
   },
 
   appending(postIds) {

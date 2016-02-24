@@ -14,11 +14,11 @@ export default Ember.Component.extend({
   }.property('targetUrl'),
 
   showSmallLogo: function() {
-    return !Discourse.Mobile.mobileView && this.get("minimized");
+    return !this.site.mobileView && this.get("minimized");
   }.property("minimized"),
 
   showMobileLogo: function() {
-    return Discourse.Mobile.mobileView && !Ember.isBlank(this.get('mobileBigLogoUrl'));
+    return this.site.mobileView && !Ember.isBlank(this.get('mobileBigLogoUrl'));
   }.property(),
 
   smallLogoUrl: setting('logo_small_url'),
