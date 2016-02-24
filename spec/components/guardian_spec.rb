@@ -370,6 +370,57 @@ describe Guardian do
       end
     end
 
+    describe 'a Category' do
+
+      it 'allows public categories' do
+        public_category = build(:category, read_restricted: false)
+        expect(Guardian.new.can_see?(public_category)).to be_truthy
+      end
+
+      it 'correctly handles secure categories' do
+        normal_user = build(:user)
+        staged_user = build(:user, staged: true)
+        admin_user  = build(:user, admin: true)
+
+        secure_category = build(:category, read_restricted: true)
+        expect(Guardian.new(normal_user).can_see?(secure_category)).to be_falsey
+        expect(Guardian.new(staged_user).can_see?(secure_category)).to be_falsey
+        expect(Guardian.new(admin_user).can_see?(secure_category)).to be_truthy
+
+        secure_category = build(:category, read_restricted: true, email_in: "foo@bar.com")
+        expect(Guardian.new(normal_user).can_see?(secure_category)).to be_falsey
+        expect(Guardian.new(staged_user).can_see?(secure_category)).to be_falsey
+        expect(Guardian.new(admin_user).can_see?(secure_category)).to be_truthy
+
+        secure_category = build(:category, read_restricted: true, email_in_allow_strangers: true)
+        expect(Guardian.new(normal_user).can_see?(secure_category)).to be_falsey
+        expect(Guardian.new(staged_user).can_see?(secure_category)).to be_falsey
+        expect(Guardian.new(admin_user).can_see?(secure_category)).to be_truthy
+
+        secure_category = build(:category, read_restricted: true, email_in: "foo@bar.com", email_in_allow_strangers: true)
+        expect(Guardian.new(normal_user).can_see?(secure_category)).to be_falsey
+        expect(Guardian.new(staged_user).can_see?(secure_category)).to be_truthy
+        expect(Guardian.new(admin_user).can_see?(secure_category)).to be_truthy
+      end
+
+      it 'allows members of an authorized group' do
+        user = Fabricate(:user)
+        group = Fabricate(:group)
+
+        secure_category = Fabricate(:category)
+        secure_category.set_permissions(group => :readonly)
+        secure_category.save
+
+        expect(Guardian.new(user).can_see?(secure_category)).to be_falsey
+
+        group.add(user)
+        group.save
+
+        expect(Guardian.new(user).can_see?(secure_category)).to be_truthy
+      end
+
+    end
+
     describe 'a Topic' do
       it 'allows non logged in users to view topics' do
         expect(Guardian.new.can_see?(topic)).to be_truthy
