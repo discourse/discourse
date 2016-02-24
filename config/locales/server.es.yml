@@ -773,7 +773,6 @@ es:
     suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
     suppress_reply_when_quoting: "No mostrar el desplegable en-respuesta-a en un post cuando el post cite la respuesta."
     max_reply_history: "Número máximo de respuestas a mostrar al expandir en-respuesta-a"
-    experimental_reply_expansion: "Ocultar respuestas intermedias cuando se expande una respuesta (experimental)"
     topics_per_period_in_top_summary: "Número de mejores temas mostrados en el resumen de mejores temas."
     topics_per_period_in_top_page: "Número de mejores temas mostrados en la vista expandida al clicar en 'ver más'."
     redirect_users_to_top_page: "Redirigir automáticamente a los nuevos usuarios y a los ausentes de larga duración a la página de mejores temas."

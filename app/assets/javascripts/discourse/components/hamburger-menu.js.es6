@@ -10,17 +10,17 @@ export default Ember.Component.extend({
 
   @computed()
   showKeyboardShortcuts() {
-    return !Discourse.Mobile.mobileView && !this.capabilities.touch;
+    return !this.site.mobileView && !this.capabilities.touch;
   },
 
   @computed()
   showMobileToggle() {
-    return Discourse.Mobile.mobileView || (this.siteSettings.enable_mobile_theme && this.capabilities.touch);
+    return this.site.mobileView || (this.siteSettings.enable_mobile_theme && this.capabilities.touch);
   },
 
   @computed()
   mobileViewLinkTextKey() {
-    return Discourse.Mobile.mobileView ? "desktop_view" : "mobile_view";
+    return this.site.mobileView ? "desktop_view" : "mobile_view";
   },
 
   @computed()
@@ -68,7 +68,7 @@ export default Ember.Component.extend({
       this.sendAction('showKeyboardAction');
     },
     toggleMobileView() {
-      Discourse.Mobile.toggleMobileView();
+      this.site.toggleMobileView();
     }
   }
 });

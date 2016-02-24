@@ -1,5 +1,5 @@
 import componentTest from 'helpers/component-test';
-import { onToolbarCreate } from 'discourse/components/d-editor';
+import { withPluginApi } from 'discourse/lib/plugin-api';
 
 moduleForComponent('d-editor', {integration: true});
 
@@ -540,12 +540,14 @@ componentTest('emoji', {
   template: '{{d-editor value=value}}',
   setup() {
     // Test adding a custom button
-    onToolbarCreate(toolbar => {
-      toolbar.addButton({
-        id: 'emoji',
-        group: 'extras',
-        icon: 'smile-o',
-        action: 'emoji'
+    withPluginApi('0.1', api => {
+      api.onToolbarCreate(toolbar => {
+        toolbar.addButton({
+          id: 'emoji',
+          group: 'extras',
+          icon: 'smile-o',
+          action: 'emoji'
+        });
       });
     });
     this.set('value', 'hello world.');

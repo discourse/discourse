@@ -22,13 +22,11 @@ function loadingResolver(cb) {
 }
 
 function parseName(fullName) {
-  /*jshint validthis:true */
-
   const nameParts = fullName.split(":"),
-      type = nameParts[0], fullNameWithoutType = nameParts[1],
-      name = fullNameWithoutType,
-      namespace = get(this, 'namespace'),
-      root = namespace;
+        type = nameParts[0], fullNameWithoutType = nameParts[1],
+        name = fullNameWithoutType,
+        namespace = get(this, 'namespace'),
+        root = namespace;
 
   return {
     fullName: fullName,
@@ -85,6 +83,10 @@ export default Ember.DefaultResolver.extend({
     return module;
   },
 
+  resolveWidget(parsedName) {
+    return this.customResolve(parsedName) || this._super(parsedName);
+  },
+
   resolveAdapter(parsedName) {
     return this.customResolve(parsedName) || this._super(parsedName);
   },
@@ -139,7 +141,7 @@ export default Ember.DefaultResolver.extend({
   },
 
   findMobileTemplate(parsedName) {
-    if (Discourse.Mobile.mobileView) {
+    if (this.mobileView) {
       var mobileParsedName = this.parseName(parsedName.fullName.replace("template:", "template:mobile/"));
       return this.findTemplate(mobileParsedName);
     }

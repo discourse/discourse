@@ -19,7 +19,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   loadedAllPosts: Em.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
   enteredAt: null,
   retrying: false,
-  firstPostExpanded: false,
   adminMenuVisible: false,
 
   showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
@@ -100,7 +99,64 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     DiscourseURL.routeTo(url);
   },
 
+  selectedQuery: function() {
+    return post => this.postSelected(post);
+  }.property(),
+
   actions: {
+
+    fillGapBefore(args) {
+      return this.get('model.postStream').fillGapBefore(args.post, args.gap);
+    },
+
+    fillGapAfter(args) {
+      return this.get('model.postStream').fillGapAfter(args.post, args.gap);
+    },
+
+    // Called the the topmost visible post on the page changes.
+    topVisibleChanged(event) {
+      const { post, refresh } = event;
+
+      if (!post) { return; }
+
+      const postStream = this.get('model.postStream');
+      const firstLoadedPost = postStream.get('posts.firstObject');
+
+      const currentPostNumber = post.get('post_number');
+      this.set('model.currentPost', currentPostNumber);
+      this.send('postChangedRoute', currentPostNumber);
+
+      if (post.get('post_number') === 1) { return; }
+
+      if (firstLoadedPost && firstLoadedPost === post) {
+        postStream.prependMore().then(() => refresh());
+      }
+    },
+
+    //  Called the the bottommost visible post on the page changes.
+    bottomVisibleChanged(event) {
+      const { post, refresh } = event;
+
+      const postStream = this.get('model.postStream');
+      const lastLoadedPost = postStream.get('posts.lastObject');
+
+      this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
+
+      if (lastLoadedPost && lastLoadedPost === post && postStream.get('canAppendMore')) {
+        postStream.appendMore().then(() => refresh());
+        // show loading stuff
+        refresh();
+      }
+    },
+
+    toggleSummary() {
+      return this.get('model.postStream').toggleSummary();
+    },
+
+    removeAllowedUser(user) {
+      return this.get('model.details').removeAllowedUser(user);
+    },
+
     showTopicAdminMenu() {
       this.set('adminMenuVisible', true);
     },
@@ -112,7 +168,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     deleteTopic() {
       this.deleteTopic();
     },
-
 
     archiveMessage() {
       const topic = this.get('model');
@@ -176,8 +231,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       // Deleting the first post deletes the topic
       if (post.get('post_number') === 1) {
-        this.deleteTopic();
-        return;
+        return this.deleteTopic();
       } else if (!post.can_delete) {
         // check if current user can delete post
         return false;
@@ -210,7 +264,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           }
         ]);
       } else {
-        post.destroy(user).catch(function(error) {
+        return post.destroy(user).then(() => {
+          this.appEvents.trigger('post-stream:refresh');
+        }).catch(error => {
           popupAjaxError(error);
           post.undoDeleteState();
         });
@@ -245,14 +301,17 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleBookmark(post) {
-      if (!Discourse.User.current()) {
+      if (!this.currentUser) {
         alert(I18n.t("bookmarks.not_bookmarked"));
         return;
       }
       if (post) {
         return post.toggleBookmark().catch(popupAjaxError);
       } else {
-        return this.get("model").toggleBookmark();
+        return this.get("model").toggleBookmark().then(changedIds => {
+          if (!changedIds) { return; }
+          changedIds.forEach(id => this.appEvents.trigger('post-stream:refresh', { id }));
+        });
       }
     },
 
@@ -261,18 +320,20 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     selectAll() {
-      const posts = this.get('model.postStream.posts'),
-          selectedPosts = this.get('selectedPosts');
+      const posts = this.get('model.postStream.posts');
+      const selectedPosts = this.get('selectedPosts');
       if (posts) {
         selectedPosts.addObjects(posts);
       }
       this.set('allPostsSelected', true);
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     deselectAll() {
       this.get('selectedPosts').clear();
       this.get('selectedReplies').clear();
       this.set('allPostsSelected', false);
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     toggleParticipant(user) {
@@ -293,6 +354,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     toggleMultiSelect() {
       this.toggleProperty('multiSelect');
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     finishedEditingTopic() {
@@ -324,27 +386,26 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     deleteSelected() {
-      const self = this;
-      bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
+      bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), result => {
         if (result) {
 
           // If all posts are selected, it's the same thing as deleting the topic
-          if (self.get('allPostsSelected')) {
-            return self.deleteTopic();
+          if (this.get('allPostsSelected')) {
+            return this.deleteTopic();
           }
 
-          const selectedPosts = self.get('selectedPosts'),
-              selectedReplies = self.get('selectedReplies'),
-              postStream = self.get('model.postStream'),
-              toRemove = [];
+          const selectedPosts = this.get('selectedPosts');
+          const selectedReplies = this.get('selectedReplies');
+          const postStream = this.get('model.postStream');
 
           Discourse.Post.deleteMany(selectedPosts, selectedReplies);
-          postStream.get('posts').forEach(function (p) {
-            if (self.postSelected(p)) { toRemove.addObject(p); }
+          postStream.get('posts').forEach(p => {
+            if (this.postSelected(p)) {
+              p.set('deleted_at', new Date());
+            }
           });
 
-          postStream.removePosts(toRemove);
-          self.send('toggleMultiSelect');
+          this.send('toggleMultiSelect');
         }
       });
     },
@@ -447,18 +508,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       });
     },
 
-    expandFirstPost(post) {
-      const self = this;
-      this.set('loadingExpanded', true);
-      post.expand().then(function() {
-        self.set('firstPostExpanded', true);
-      }).catch(function(error) {
-        bootbox.alert($.parseJSON(error.responseText).errors);
-      }).finally(function() {
-        self.set('loadingExpanded', false);
-      });
-    },
-
     retryLoading() {
       const self = this;
       self.set('retrying', true);
@@ -470,22 +519,22 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleWiki(post) {
-      post.updatePostField('wiki', !post.get('wiki'));
+      return post.updatePostField('wiki', !post.get('wiki'));
     },
 
     togglePostType(post) {
       const regular = this.site.get('post_types.regular');
       const moderator = this.site.get('post_types.moderator_action');
 
-      post.updatePostField('post_type', post.get('post_type') === moderator ? regular : moderator);
+      return post.updatePostField('post_type', post.get('post_type') === moderator ? regular : moderator);
     },
 
     rebakePost(post) {
-      post.rebake();
+      return post.rebake();
     },
 
     unhidePost(post) {
-      post.unhide();
+      return post.unhide();
     },
 
     changePostOwner(post) {
@@ -497,11 +546,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   togglePinnedState() {
     this.send('togglePinnedForUser');
   },
-
-  showExpandButton: function() {
-    const post = this.get('post');
-    return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
-  }.property(),
 
   canMergeTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
@@ -598,9 +642,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     // Unsubscribe before subscribing again
     this.unsubscribe();
 
-    const self = this;
-    this.messageBus.subscribe("/topic/" + this.get('model.id'), function(data) {
-      const topic = self.get('model');
+    const refresh = (id) => this.appEvents.trigger('post-stream:refresh', { id });
+
+    this.messageBus.subscribe("/topic/" + this.get('model.id'), data => {
+      const topic = this.get('model');
 
       if (data.notification_level_change) {
         topic.set('details.notification_level', data.notification_level_change);
@@ -608,26 +653,26 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return;
       }
 
-      const postStream = self.get('model.postStream');
+      const postStream = this.get('model.postStream');
       switch (data.type) {
         case "revised":
         case "acted":
         case "rebaked": {
           // TODO we could update less data for "acted" (only post actions)
-          postStream.triggerChangedPost(data.id, data.updated_at);
+          postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh(data.id));
           return;
         }
         case "deleted": {
-          postStream.triggerDeletedPost(data.id, data.post_number);
+          postStream.triggerDeletedPost(data.id, data.post_number).then(() => refresh(data.id));
           return;
         }
         case "recovered": {
-          postStream.triggerRecoveredPost(data.id, data.post_number);
+          postStream.triggerRecoveredPost(data.id, data.post_number).then(() => refresh(data.id));
           return;
         }
         case "created": {
-          postStream.triggerNewPostInStream(data.id);
-          if (self.get('currentUser.id') !== data.user_id) {
+          postStream.triggerNewPostInStream(data.id).then(() => refresh());
+          if (this.get('currentUser.id') !== data.user_id) {
             Discourse.notifyBackgroundCountIncrement();
           }
           return;
@@ -673,23 +718,17 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   },
 
-  // If our current post is changed, notify the router
-  _currentPostChanged: function() {
-    const currentPost = this.get('model.currentPost');
-    if (currentPost) {
-      this.send('postChangedRoute', currentPost);
-    }
-  }.observes('model.currentPost'),
-
   readPosts(topicId, postNumbers) {
-    const topic = this.get("model"),
-          postStream = topic.get("postStream");
+    const topic = this.get("model");
+    const postStream = topic.get("postStream");
 
-    if (topic.get("id") === topicId) {
+    if (topic.get('id') === topicId) {
+
       // TODO identity map for postNumber
-      _.each(postStream.get('posts'), post => {
-        if (_.include(postNumbers, post.post_number) && !post.read) {
-          post.set("read", true);
+      postStream.get('posts').forEach(post => {
+        if (!post.read && postNumbers.indexOf(post.post_number) !== -1) {
+          post.set('read', true);
+          this.appEvents.trigger('post-stream:refresh', { id: post.id });
         }
       });
 
@@ -709,59 +748,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   },
 
-  // Called the the topmost visible post on the page changes.
-  topVisibleChanged(post) {
-    if (!post) { return; }
-
-    const postStream = this.get('model.postStream');
-    const firstLoadedPost = postStream.get('posts.firstObject');
-
-    this.set('model.currentPost', post.get('post_number'));
-
-    if (post.get('post_number') === 1) { return; }
-
-    if (firstLoadedPost && firstLoadedPost === post) {
-      // Note: jQuery shouldn't be done in a controller, but how else can we
-      // trigger a scroll after a promise resolves in a controller? We need
-      // to do this to preserve upwards infinte scrolling.
-      const $body = $('body');
-      const elemId = `#post_${post.get('post_number')}`;
-      const $elem = $(elemId).closest('.post-cloak');
-      const elemPos = $elem.position();
-      const distToElement = elemPos ? $body.scrollTop() - elemPos.top : 0;
-
-      postStream.prependMore().then(function() {
-        Em.run.next(function () {
-          const $refreshedElem = $(elemId).closest('.post-cloak');
-
-          // Quickly going back might mean the element is destroyed
-          const position = $refreshedElem.position();
-          if (position && position.top) {
-            $('html, body').scrollTop(position.top + distToElement);
-          }
-        });
-      });
-    }
-  },
-
-  /**
-    Called the the bottommost visible post on the page changes.
-
-    @method bottomVisibleChanged
-    @params {Discourse.Post} post that is at the bottom
-  **/
-  bottomVisibleChanged(post) {
-    if (!post) { return; }
-
-    const postStream = this.get('model.postStream');
-    const lastLoadedPost = postStream.get('posts.lastObject');
-
-    this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
-
-    if (lastLoadedPost && lastLoadedPost === post) {
-      postStream.appendMore();
-    }
-  },
 
   _showFooter: function() {
     const showFooter = this.get("model.postStream.loaded") && this.get("model.postStream.loadedAllPosts");

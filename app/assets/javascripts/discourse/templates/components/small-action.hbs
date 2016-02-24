@@ -1,4 +1,3 @@
-<div class='topic-avatar'>{{fa-icon icon}}</div>
 <div class='small-action-desc'>
   {{#if post}}
     {{#if post.can_delete}}
@@ -10,9 +9,5 @@
     <a href={{post.usernameUrl}} data-user-card={{post.username}}>
       {{avatar post imageSize="small"}}
     </a>
-  {{/if}}
-  <p>{{description}}</p>
-  {{#if post.cooked}}
-    <div class='custom-message'>{{{post.cooked}}}</div>
   {{/if}}
 </div>

@@ -185,7 +185,7 @@ function highlight(postNumber) {
     });
 }
 
-listenForViewEvent(TopicView, 'post:highlight', function(postNumber) {
+listenForViewEvent(TopicView, 'post:highlight', postNumber => {
   Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
 });
 

@@ -85,7 +85,23 @@ export default function() {
 
     this.get('/users/:username/staff-info.json', () => response({}));
 
-    this.put('/categories/:category_id', function(request) {
+    this.get('/post_action_users', () => {
+      return response({
+        post_action_users: [
+           {id: 1, username: 'eviltrout', avatar_template: '/user_avatar/default/eviltrout/{size}/1.png', username_lower: 'eviltrout' }
+         ]
+      });
+    });
+
+    this.get('/post_replies', () => {
+      return response({ post_replies: [{ id: 1234, cooked: 'wat' }] });
+    });
+
+    this.get('/post_reply_histories', () => {
+      return response({ post_reply_histories: [{ id: 1234, cooked: 'wat' }] });
+    });
+
+    this.put('/categories/:category_id', request => {
       const category = parsePostData(request.requestBody);
       return response({category});
     });
@@ -132,6 +148,7 @@ export default function() {
 
     this.delete('/posts/:post_id', success);
     this.put('/posts/:post_id/recover', success);
+    this.get('/posts/:post_id/expand-embed', success);
 
     this.put('/posts/:post_id', request => {
       const data = parsePostData(request.requestBody);

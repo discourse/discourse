@@ -34,12 +34,6 @@ const TopicDetails = RestModel.extend({
     this.set('loaded', true);
   },
 
-  fewParticipants: function() {
-    if (!!Ember.isEmpty(this.get('participants'))) return null;
-    return this.get('participants').slice(0, 3);
-  }.property('participants'),
-
-
   notificationReasonText: function() {
     var level = this.get('notification_level');
     if(typeof level !== 'number'){
@@ -68,13 +62,13 @@ const TopicDetails = RestModel.extend({
   },
 
   removeAllowedUser(user) {
-    var users = this.get('allowed_users'),
-        username = user.get('username');
+    const users = this.get('allowed_users');
+    const username = user.get('username');
 
-    Discourse.ajax("/t/" + this.get('topic.id') + "/remove-allowed-user", {
+    return Discourse.ajax("/t/" + this.get('topic.id') + "/remove-allowed-user", {
       type: 'PUT',
       data: { username: username }
-    }).then(function() {
+    }).then(() => {
       users.removeObject(users.findProperty('username', username));
     });
   }
