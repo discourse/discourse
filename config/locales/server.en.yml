@@ -374,6 +374,7 @@ en:
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
       email_in_already_exist: "Incoming email address '%{email_in}' is already in use for '%{category_name}' category."
+      invalid_email_in: "'%{email_in}' is not a valid email address."
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."

@@ -33,6 +33,8 @@ class Category < ActiveRecord::Base
                    length: { in: 1..50 }
   validate :parent_category_validator
 
+  validate :email_in_validator
+
   validate :ensure_slug
   before_save :apply_permissions
   before_save :downcase_email
@@ -308,7 +310,16 @@ SQL
   end
 
   def downcase_email
-    self.email_in = email_in.downcase if self.email_in
+    self.email_in = (email_in || "").strip.downcase.presence
+  end
+
+  def email_in_validator
+    return if self.email_in.blank?
+    email_in.split("|").each do |email|
+      unless Email.is_valid?(email)
+        self.errors.add(:base, I18n.t('category.errors.invalid_email_in', email_in: email))
+      end
+    end
   end
 
   def downcase_name
@@ -380,7 +391,7 @@ SQL
   end
 
   def self.find_by_email(email)
-    self.find_by(email_in: Email.downcase(email))
+    self.where("email_in LIKE ?", "%#{Email.downcase(email)}%").first
   end
 
   def has_children?

@@ -214,11 +214,11 @@ module Email
     end
 
     def group_incoming_emails_regex
-      @group_incoming_emails_regex ||= Regexp.union Group.pluck(:incoming_email).select(&:present?).uniq
+      @group_incoming_emails_regex ||= Regexp.union Group.pluck(:incoming_email).select(&:present?).map { |e| e.split("|") }.flatten.uniq
     end
 
     def category_email_in_regex
-      @category_email_in_regex ||= Regexp.union Category.pluck(:email_in).select(&:present?).uniq
+      @category_email_in_regex ||= Regexp.union Category.pluck(:email_in).select(&:present?).map { |e| e.split("|") }.flatten.uniq
     end
 
     def find_related_post
