@@ -292,7 +292,7 @@ module Email
             if attachment.content_type.start_with?("image/") && options[:raw][/\[image: .+ \d+\]/]
               options[:raw].sub!(/\[image: .+ \d+\]/, attachment_markdown(upload))
             else
-              options[:raw] << "\n#{attachment_markdown(upload)}\n"
+              options[:raw] << "\n\n#{attachment_markdown(upload)}\n\n"
             end
           end
         ensure
