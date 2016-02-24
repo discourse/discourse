@@ -1,6 +1,7 @@
 import DiscourseURL from 'discourse/lib/url';
 import { keyDirty } from 'discourse/widgets/widget';
 import MountWidget from 'discourse/components/mount-widget';
+import { cloak, uncloak } from 'discourse/widgets/post-stream';
 
 function findTopView($posts, viewportTop, min, max) {
   if (max < min) { return min; }
@@ -45,7 +46,7 @@ export default MountWidget.extend({
 
     let windowTop = $w.scrollTop();
 
-    const $posts = this.$('.onscreen-post');
+    const $posts = this.$('.onscreen-post, .cloaked-post');
     const viewportTop = windowTop - slack;
     const topView = findTopView($posts, viewportTop, 0, $posts.length-1);
 
@@ -64,7 +65,7 @@ export default MountWidget.extend({
       if (!$post) { break; }
 
       const viewTop = $post.offset().top;
-      const viewBottom = viewTop + $post.height();
+      const viewBottom = viewTop + $post.height() + 100;
 
       if (viewTop > viewportBottom) { break; }
 
@@ -76,9 +77,8 @@ export default MountWidget.extend({
     }
 
     const posts = this.posts;
+    const refresh = cb => this.queueRerender(cb);
     if (onscreen.length) {
-
-      const refresh = cb => this.queueRerender(cb);
       const first = posts.objectAt(onscreen[0]);
       if (this._topVisible !== first) {
         this._topVisible = first;
@@ -113,7 +113,21 @@ export default MountWidget.extend({
       this._bottomVisible = null;
     }
 
-    const onscreenPostNumbers = onscreen.map(idx => posts.objectAt(idx).post_number);
+    const onscreenPostNumbers = [];
+    const prev = this._previouslyOnscreen;
+    const newPrev = {};
+    onscreen.forEach(idx => {
+      const post = posts.objectAt(idx);
+      const postNumber = post.post_number;
+      delete prev[postNumber];
+      onscreenPostNumbers.push(postNumber);
+      newPrev[postNumber] = post;
+      uncloak(post, this);
+    });
+
+    Object.keys(prev).forEach(pn => cloak(prev[pn], this));
+
+    this._previouslyOnscreen = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers);
   },
 
@@ -124,6 +138,8 @@ export default MountWidget.extend({
   didInsertElement() {
     this._super();
     const debouncedScroll = () => Ember.run.debounce(this, this._scrollTriggered, 10);
+
+    this._previouslyOnscreen = {};
 
     this.appEvents.on('post-stream:refresh', debouncedScroll);
     $(document).bind('touchmove.post-stream', debouncedScroll);
