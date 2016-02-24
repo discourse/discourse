@@ -22,6 +22,7 @@ class Guardian
     def staff?; false; end
     def moderator?; false; end
     def approved?; false; end
+    def staged?; false; end
     def secure_category_ids; []; end
     def topic_create_allowed_category_ids; []; end
     def has_trust_level?(level); false; end

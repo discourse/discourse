@@ -231,7 +231,7 @@ end
 #  reflection    :boolean          default(FALSE)
 #  clicks        :integer          default(0), not null
 #  link_post_id  :integer
-#  title         :string(255)
+#  title         :string
 #  crawled_at    :datetime
 #  quote         :boolean          default(FALSE), not null
 #

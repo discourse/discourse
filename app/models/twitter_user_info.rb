@@ -8,7 +8,7 @@ end
 #
 #  id              :integer          not null, primary key
 #  user_id         :integer          not null
-#  screen_name     :string(255)      not null
+#  screen_name     :string           not null
 #  twitter_user_id :integer          not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null

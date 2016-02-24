@@ -85,6 +85,7 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
 
   const postAtts = transformBasicPost(post);
 
+  postAtts.topic = topic;
   postAtts.topicId = topic.id;
   postAtts.topicOwner = details.created_by.id === post.user_id;
   postAtts.post_type = postType;

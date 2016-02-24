@@ -426,6 +426,11 @@ describe Post do
         expect(post.raw_mentions).to eq(['jake', 'finn', 'jake_old'])
       end
 
+      it "handles hyphen in groupname" do
+        post = Fabricate.build(:post, post_args.merge(raw: "@org-board"))
+        expect(post.raw_mentions).to eq(['org-board'])
+      end
+
     end
 
     context "max mentions" do

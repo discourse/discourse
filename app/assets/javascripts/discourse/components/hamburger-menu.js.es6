@@ -1,4 +1,6 @@
 import computed from 'ember-addons/ember-computed-decorators';
+import mobile from 'discourse/lib/mobile';
+
 export default Ember.Component.extend({
   classNames: ['hamburger-panel'],
 
@@ -68,7 +70,7 @@ export default Ember.Component.extend({
       this.sendAction('showKeyboardAction');
     },
     toggleMobileView() {
-      this.site.toggleMobileView();
+      mobile.toggleMobileView();
     }
   }
 });

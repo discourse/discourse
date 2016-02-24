@@ -452,7 +452,7 @@ end
 #  topics_year                   :integer          default(0)
 #  topics_month                  :integer          default(0)
 #  topics_week                   :integer          default(0)
-#  slug                          :string(255)      not null
+#  slug                          :string           not null
 #  description                   :text
 #  text_color                    :string(6)        default("FFFFFF"), not null
 #  read_restricted               :boolean          default(FALSE), not null
@@ -465,17 +465,18 @@ end
 #  posts_year                    :integer          default(0)
 #  posts_month                   :integer          default(0)
 #  posts_week                    :integer          default(0)
-#  email_in                      :string(255)
+#  email_in                      :string
 #  email_in_allow_strangers      :boolean          default(FALSE)
 #  topics_day                    :integer          default(0)
 #  posts_day                     :integer          default(0)
-#  logo_url                      :string(255)
-#  background_url                :string(255)
+#  logo_url                      :string
+#  background_url                :string
 #  allow_badges                  :boolean          default(TRUE), not null
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
 #  suppress_from_homepage        :boolean          default(FALSE)
+#  contains_messages             :boolean
 #
 # Indexes
 #

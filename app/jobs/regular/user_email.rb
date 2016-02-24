@@ -50,7 +50,7 @@ module Jobs
 
     NOTIFICATIONS_SENT_BY_MAILING_LIST ||= Set.new %w{posted replied mentioned group_mentioned quoted}
 
-   def message_for_email(user, post, type, notification,
+    def message_for_email(user, post, type, notification,
                          notification_type=nil, notification_data_hash=nil,
                          email_token=nil, to_address=nil)
 
@@ -86,7 +86,7 @@ module Jobs
         end
 
         if user.user_option.mailing_list_mode? &&
-           !post.topic.private_message? &&
+           (!post.try(:topic).try(:private_message?)) &&
            NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
            # no need to log a reason when the mail was already sent via the mailing list job
            return [nil, nil]
