@@ -23,9 +23,12 @@ export function onPageChange(fn) {
 }
 
 // backwards compatibility
-export default {
+const BackwardsCompat = {
   current() {
     console.warn(`Using PageTracker.current() is deprecated. Your plugin should use the PluginAPI`);
     return _pageTracker;
   }
 };
+
+Discourse.PageTracker = BackwardsCompat;
+export default BackwardsCompat;
