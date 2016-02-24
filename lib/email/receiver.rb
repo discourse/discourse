@@ -31,6 +31,7 @@ module Email
     end
 
     def process
+      @from_email, @from_display_name = parse_from_field
       @incoming_email = find_or_create_incoming_email
       process_internal
     rescue => e
@@ -42,14 +43,14 @@ module Email
       IncomingEmail.find_or_create_by(message_id: @mail.message_id) do |incoming_email|
         incoming_email.raw = @raw_email
         incoming_email.subject = subject
-        incoming_email.from_address = @mail.from.first.downcase
+        incoming_email.from_address = @from_email
         incoming_email.to_addresses = @mail.to.map(&:downcase).join(";") if @mail.to.present?
         incoming_email.cc_addresses = @mail.cc.map(&:downcase).join(";") if @mail.cc.present?
       end
     end
 
     def process_internal
-      user = find_or_create_user(from)
+      user = find_or_create_user(@from_email, @from_display_name)
       @incoming_email.update_columns(user_id: user.id)
       body = select_body || ""
 
@@ -150,25 +151,29 @@ module Email
       reply.split(previous_replies_regex)[0]
     end
 
-    def from
-      @from ||= @mail[:from].address_list.addresses.first
+    def parse_from_field
+      if @mail[:from].errors.blank?
+        address_field = @mail[:from].address_list.addresses.first
+        address_field.decoded
+        from_address = address_field.address
+        from_display_name = address_field.display_name.try(:to_s)
+      else
+        from_address = @mail.from[/<([^>]+)>/, 1]
+        from_display_name = @mail.from[/^([^<]+)/, 1]
+      end
+      [from_address.downcase, from_display_name]
     end
 
     def subject
-      @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @mail.from.first.downcase)
+      @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
     end
 
-    def find_or_create_user(address_field)
-      # decode the address field
-      address_field.decoded
-      # extract email and name
-      email = address_field.address.downcase
-      name = address_field.display_name.try(:to_s)
-      username = UserNameSuggester.sanitize_username(name) if name.present?
+    def find_or_create_user(email, display_name)
+      username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
 
       User.find_or_create_by(email: email) do |user|
         user.username = UserNameSuggester.suggest(username.presence || email)
-        user.name = name.presence || User.suggest_name(email)
+        user.name = display_name.presence || User.suggest_name(email)
         user.staged = true
       end
     end
@@ -336,9 +341,11 @@ module Email
         if @mail[d] && @mail[d].address_list && @mail[d].address_list.addresses
           @mail[d].address_list.addresses.each do |address_field|
             begin
+              address_field.decoded
               email = address_field.address.downcase
+              display_name = address_field.display_name.try(:to_s)
               if should_invite?(email)
-                user = find_or_create_user(address_field)
+                user = find_or_create_user(email, display_name)
                 if can_invite?(topic, user)
                   topic.topic_allowed_users.create!(user_id: user.id)
                   topic.add_small_action(sender, "invited_user", user.username)

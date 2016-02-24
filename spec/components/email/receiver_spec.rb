@@ -131,6 +131,11 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. Anf if\nyou can mix it up with some anise, then I'm in heaven ;)")
     end
 
+    it "handles invalid from header" do
+      expect { process(:invalid_from) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This email was sent with an invalid from header field.")
+    end
+
     describe 'Unsubscribing via email' do
       let(:last_email) { ActionMailer::Base.deliveries.last }
 
