@@ -1232,6 +1232,7 @@ describe UsersController do
           guardian = Guardian.new(user)
           guardian.stubs(:ensure_can_edit!).with(user).raises(Discourse::InvalidAccess.new)
           Guardian.stubs(new: guardian).with(user)
+          Guardian.stubs(new: guardian).with(nil)
 
           put :update, username: user.username, name: 'Jim Tom'
 

@@ -454,7 +454,7 @@ class ApplicationController < ActionController::Base
     def build_not_found_page(status=404, layout=false)
       category_topic_ids = Category.pluck(:topic_id).compact
       @container_class = "wrap not-found-container"
-      @top_viewed = Topic.where.not(id: category_topic_ids).top_viewed(10)
+      @top_viewed = TopicQuery.new(nil, {except_topic_ids: category_topic_ids}).list_top_for("monthly").topics.first(10)
       @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
