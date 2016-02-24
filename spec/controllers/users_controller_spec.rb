@@ -1229,10 +1229,7 @@ describe UsersController do
         it 'does not allow the update' do
           user = Fabricate(:user, name: 'Billy Bob')
           log_in_user(user)
-          guardian = Guardian.new(user)
-          guardian.stubs(:ensure_can_edit!).with(user).raises(Discourse::InvalidAccess.new)
-          Guardian.stubs(new: guardian).with(user)
-          Guardian.stubs(new: guardian).with(nil)
+          Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
 
           put :update, username: user.username, name: 'Jim Tom'
 
