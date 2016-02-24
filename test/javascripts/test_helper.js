@@ -41,6 +41,8 @@
 //
 //= require ../../public/javascripts/jquery.magnific-popup-min.js
 
+window.inTestEnv = true;
+
 window.assetPath = function(url) {
   if (url.indexOf('defer') === 0) {
     return "/assets/" + url;
