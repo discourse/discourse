@@ -117,7 +117,14 @@ class SessionController < ApplicationController
       SingleSignOn::ACCESSORS.each do |a|
         details[a] = sso.send(a)
       end
-      Rails.logger.error "Failed to create or lookup user: #{e}\n\n#{details.map{|k,v| "#{k}: #{v}"}.join("\n")}"
+
+      message = "Failed to create or lookup user: #{e}."
+      message << "\n\n" << "-" * 100
+      message << details.map { |k,v| "#{k}: #{v}" }.join("\n")
+      message << "\n\n" << "-" * 100
+      message << e.backtrace.join("\n")
+
+      Rails.logger.error(message)
 
       render text: I18n.t("sso.unknown_error"), status: 500
     end
