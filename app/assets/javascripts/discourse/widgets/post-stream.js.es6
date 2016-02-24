@@ -4,7 +4,7 @@ import { Placeholder } from 'discourse/lib/posts-with-placeholders';
 import { h } from 'virtual-dom';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 
-const CLOAKING_ENABLED = true;
+const CLOAKING_ENABLED = !window.inTestEnv;
 const DAY = 1000 * 60 * 60 * 24;
 
 let _cloaked = {};
