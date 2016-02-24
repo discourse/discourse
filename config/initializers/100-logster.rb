@@ -6,6 +6,7 @@ if Rails.env.production?
     /^PG::Error: ERROR:\s+duplicate key/,
 
     /^ActionController::UnknownFormat/,
+    /^ActionController::UnknownHttpMethod/,
 
     /^AbstractController::ActionNotFound/,
 
