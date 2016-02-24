@@ -52,7 +52,7 @@ class PostAnalyzer
     cooked_stripped.css("code").remove
     cooked_stripped.css(".onebox").remove
 
-    raw_mentions = cooked_stripped.css('.mention').map do |e|
+    raw_mentions = cooked_stripped.css('.mention, .mention-group').map do |e|
        if name = e.inner_text
          name = name[1..-1]
          name.downcase! if name
