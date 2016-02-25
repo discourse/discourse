@@ -8,6 +8,7 @@ class EmbedController < ApplicationController
 
   def comments
     embed_url = params[:embed_url]
+    embed_username = params[:discourse_username]
 
     topic_id = nil
     if embed_url.present?
@@ -35,7 +36,7 @@ class EmbedController < ApplicationController
       end
 
     elsif embed_url.present?
-      Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url)
+      Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url, author_username: embed_username)
       render 'loading'
     end
 
