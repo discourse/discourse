@@ -129,6 +129,12 @@
       content: $fa-var-google;
     }
   }
+  &.instagram {
+    background: $instagram;
+    &:before {
+      content: $fa-var-instagram;
+    }
+  }
   &.facebook {
     background: $facebook;
     &:before {
