@@ -63,8 +63,8 @@ class DecoratorHelper {
    * return helper.cooked(`<p>Cook me</p>`);
    * ```
    **/
-  cooked(cooked) {
-    return new PostCooked({ cooked });
+  cooked(cookedText) {
+    return new PostCooked({ cookedText });
   }
 
   /**
