@@ -1063,7 +1063,9 @@ user_preferences:
   default_email_always: false
   default_email_previous_replies:
     enum: 'PreviousRepliesSiteSetting'
-    default: 1
+    default: 2
+  default_email_in_reply_to:
+    default: true
 
   default_other_new_topic_duration_minutes:
     enum: 'NewTopicDurationSiteSetting'

@@ -193,9 +193,9 @@ class UserNotifications < ActionMailer::Base
     include UserNotificationsHelper
   end
 
-  def self.get_context_posts(post, topic_user)
-    user_option = topic_user.try(:user).try(:user_option)
-    if user_option && (user_option.email_previous_replies == UserOption.previous_replies_type[:never])
+  def self.get_context_posts(post, topic_user, user)
+
+    if user.user_option.email_previous_replies == UserOption.previous_replies_type[:never]
       return []
     end
 
@@ -210,7 +210,7 @@ class UserNotifications < ActionMailer::Base
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
 
-    if topic_user && topic_user.last_emailed_post_number && user_option.try(:email_previous_replies) == UserOption.previous_replies_type[:unless_emailed]
+    if topic_user && topic_user.last_emailed_post_number && user.user_option.email_previous_replies == UserOption.previous_replies_type[:unless_emailed]
       context_posts = context_posts.where("post_number > ?", topic_user.last_emailed_post_number)
     end
 
@@ -280,7 +280,7 @@ class UserNotifications < ActionMailer::Base
 
     context = ""
     tu = TopicUser.get(post.topic_id, user)
-    context_posts = self.class.get_context_posts(post, tu)
+    context_posts = self.class.get_context_posts(post, tu, user)
 
     # make .present? cheaper
     context_posts = context_posts.to_a
@@ -296,11 +296,13 @@ class UserNotifications < ActionMailer::Base
     if opts[:use_template_html]
       topic_excerpt = post.excerpt.gsub("\n", " ") if post.is_first_post? && post.excerpt
     else
+      in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
       html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
         template: 'email/notification',
         format: :html,
         locals: { context_posts: context_posts,
                   post: post,
+                  in_reply_to_post: in_reply_to_post,
                   classes: RTL.new(user).css_class
         }
       )

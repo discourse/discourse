@@ -628,7 +628,7 @@ en:
       website: "Web Site"
       email_settings: "Email"
       email_previous_replies:
-        title: "Include previous replies"
+        title: "Include previous replies at the bottom of emails"
         unless_emailed: "unless previously sent"
         always: "always"
         never: "never"
@@ -639,6 +639,7 @@ en:
         weekly: "weekly"
         every_two_weeks: "every two weeks"
 
+      email_in_reply_to: "Include an excerpt of replied to post in emails"
       email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
       email_private_messages: "Send me an email when someone messages me"
       email_always: "Send me email notifications even when I am active on the site"

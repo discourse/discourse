@@ -1243,6 +1243,8 @@ en:
     default_email_always: "Send an email notification even when the user is active by default."
     default_email_previous_replies: "Include previous replies in emails by default."
 
+    default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
+
     default_other_new_topic_duration_minutes: "Global default condition for which a topic is considered new."
     default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
@@ -1995,6 +1997,7 @@ en:
 
   user_notifications:
     previous_discussion: "Previous Replies"
+    in_reply_to: "In Reply To"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"

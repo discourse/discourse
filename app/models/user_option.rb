@@ -16,6 +16,7 @@ class UserOption < ActiveRecord::Base
     self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
     self.email_private_messages = SiteSetting.default_email_private_messages
     self.email_previous_replies = SiteSetting.default_email_previous_replies
+    self.email_in_reply_to = SiteSetting.default_email_in_reply_to
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab

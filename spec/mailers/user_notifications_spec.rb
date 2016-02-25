@@ -15,11 +15,16 @@ describe UserNotifications do
       _post7 = Fabricate(:post, topic: post1.topic, post_type: Post.types[:whisper])
       last  = Fabricate(:post, topic: post1.topic)
 
+      post1.user.user_option.email_previous_replies = UserOption.previous_replies_type[:always]
+
       # default is only post #1
-      expect(UserNotifications.get_context_posts(last, nil).count).to eq(1)
+      expect(UserNotifications.get_context_posts(last, nil, post1.user).count).to eq(1)
       # staff members can also see the whisper
-      tu = TopicUser.new(topic: post1.topic, user: build(:moderator))
-      expect(UserNotifications.get_context_posts(last, tu).count).to eq(2)
+      moderator = build(:moderator)
+      moderator.user_option = UserOption.new
+      moderator.user_option.email_previous_replies = UserOption.previous_replies_type[:always]
+      tu = TopicUser.new(topic: post1.topic, user: moderator)
+      expect(UserNotifications.get_context_posts(last, tu, tu.user).count).to eq(2)
     end
 
     it "allows users to control context" do
@@ -32,13 +37,15 @@ describe UserNotifications do
       topic_user = TopicUser.find_by(user_id: user.id, topic_id: post1.topic_id)
       # to avoid reloads after update_columns
       user = topic_user.user
-      expect(UserNotifications.get_context_posts(post3, topic_user).count).to eq(1)
+      user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:unless_emailed])
+
+      expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(1)
 
       user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:never])
-      expect(UserNotifications.get_context_posts(post3, topic_user).count).to eq(0)
+      expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(0)
 
       user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:always])
-      expect(UserNotifications.get_context_posts(post3, topic_user).count).to eq(2)
+      expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(2)
 
     end
   end
@@ -110,12 +117,14 @@ describe UserNotifications do
     let(:response_by_user) { Fabricate(:user, name: "John Doe") }
     let(:category) { Fabricate(:category, name: 'India') }
     let(:topic) { Fabricate(:topic, category: category) }
-    let(:post) { Fabricate(:post, topic: topic) }
-    let(:response) { Fabricate(:post, topic: post.topic, user: response_by_user)}
+    let(:post) { Fabricate(:post, topic: topic, raw: 'This is My super duper cool topic') }
+    let(:response) { Fabricate(:post, reply_to_post_number: 1, topic: post.topic, user: response_by_user)}
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
+
+      # Fabricator is not fabricating this ...
       SiteSetting.enable_names = true
       SiteSetting.display_name_on_posts = true
       mail = UserNotifications.user_replied(response.user,
@@ -123,25 +132,41 @@ describe UserNotifications do
                                              notification_type: notification.notification_type,
                                              notification_data_hash: notification.data_hash
                                            )
-
       # from should include full user name
       expect(mail[:from].display_names).to eql(['John Doe'])
 
       # subject should include category name
       expect(mail.subject).to match(/India/)
 
+      mail_html = mail.html_part.to_s
+
+      expect(mail_html.scan(/My super duper cool topic/).count).to eq(1)
+      expect(mail_html.scan(/In Reply To/).count).to eq(1)
+
       # 2 "visit topic" link
-      expect(mail.html_part.to_s.scan(/Visit Topic/).count).to eq(2)
+      expect(mail_html.scan(/Visit Topic/).count).to eq(2)
 
       # 2 respond to links cause we have 1 context post
-      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(2)
+      expect(mail_html.scan(/to respond/).count).to eq(2)
 
       # 1 unsubscribe
-      expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
+      expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
 
       # side effect, topic user is updated with post number
       tu = TopicUser.get(post.topic_id, response.user)
       expect(tu.last_emailed_post_number).to eq(response.post_number)
+
+
+      # no In Reply To if user opts out
+      response.user.user_option.email_in_reply_to = false
+      mail = UserNotifications.user_replied(response.user,
+                                             post: response,
+                                             notification_type: notification.notification_type,
+                                             notification_data_hash: notification.data_hash
+                                           )
+
+
+      expect(mail.html_part.to_s.scan(/In Reply To/).count).to eq(0)
     end
   end
 
@@ -169,8 +194,8 @@ describe UserNotifications do
       # subject should not include category name
       expect(mail.subject).not_to match(/Uncategorized/)
 
-      # 2 respond to links cause we have 1 context post
-      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(2)
+      # 1 respond to links as no context by default
+      expect(mail.html_part.to_s.scan(/to respond/).count).to eq(1)
 
       # 1 unsubscribe link
       expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
