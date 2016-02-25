@@ -101,7 +101,7 @@ class StaticController < ApplicationController
 
     data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60*30) do
       begin
-        file = FileHelper.download(SiteSetting.favicon_url, 50.kilobytes, "favicon.png")
+        file = FileHelper.download(SiteSetting.favicon_url, 50.kilobytes, "favicon.png", true)
         data = file.read
         file.unlink
         data
