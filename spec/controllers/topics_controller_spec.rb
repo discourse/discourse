@@ -563,6 +563,11 @@ describe TopicsController do
       expect(response).to redirect_to(topic.relative_url + "/42?page=123")
     end
 
+    it 'does not accept page params as an array' do
+      xhr :get, :show, id: topic.slug, post_number: 42, page: [2]
+      expect(response).to redirect_to("#{topic.relative_url}/42?page=1")
+    end
+
     it 'returns 404 when an invalid slug is given and no id' do
       xhr :get, :show, id: 'nope-nope'
       expect(response.status).to eq(404)
