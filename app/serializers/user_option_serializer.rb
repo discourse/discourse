@@ -14,7 +14,8 @@ class UserOptionSerializer < ApplicationSerializer
              :edit_history_public,
              :auto_track_topics_after_msecs,
              :new_topic_duration_minutes,
-             :email_previous_replies
+             :email_previous_replies,
+             :email_in_reply_to
 
 
   def include_edit_history_public?

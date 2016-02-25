@@ -158,6 +158,7 @@ const User = RestModel.extend({
             'external_links_in_new_tab',
             'email_digests',
             'email_direct',
+            'email_in_reply_to',
             'email_private_messages',
             'email_previous_replies',
             'dynamic_favicon',

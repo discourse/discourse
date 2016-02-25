@@ -48,7 +48,8 @@ describe UserUpdater do
                      mailing_list_mode: true,
                      digest_after_days: "8",
                      new_topic_duration_minutes: 100,
-                     auto_track_topics_after_msecs: 101
+                     auto_track_topics_after_msecs: 101,
+                     email_in_reply_to: false
                     )
       user.reload
 
@@ -58,6 +59,7 @@ describe UserUpdater do
       expect(user.user_option.digest_after_days).to eq 8
       expect(user.user_option.new_topic_duration_minutes).to eq 100
       expect(user.user_option.auto_track_topics_after_msecs).to eq 101
+      expect(user.user_option.email_in_reply_to).to eq false
     end
 
     context 'when update succeeds' do
