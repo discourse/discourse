@@ -170,6 +170,10 @@ export default MountWidget.extend({
       if (args) {
         if (args.id) {
           keyDirty(`post-${args.id}`);
+
+          if (args.refreshLikes) {
+            keyDirty(`post-menu-${args.id}`, { onRefresh: 'refreshLikes' });
+          }
         } else if (args.force) {
           keyDirty(`*`);
         }
