@@ -160,3 +160,27 @@ h2#site-text-logo
     }
   }
 }
+
+/* page not found styles */
+h1.page-not-found {
+  line-height: 24px;
+  margin: 5px 0 -5px 0;
+}
+
+.page-not-found-topics a.badge-wrapper {
+  margin-left: 8px;
+}
+
+h2.popular-topics-title {
+  margin-bottom: 6px;
+  font-size: 1.2em;
+}
+
+h2.recent-topics-title {
+  margin-bottom: 6px;
+  font-size: 1.2em;
+}
+
+.page-not-found-search h2 {
+  font-size: 1.2em;
+}
