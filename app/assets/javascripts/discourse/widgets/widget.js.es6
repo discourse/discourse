@@ -7,8 +7,8 @@ function emptyContent() { }
 const _registry = {};
 let _dirty = {};
 
-export function keyDirty(key) {
-  _dirty[key] = true;
+export function keyDirty(key, options) {
+  _dirty[key] = options || {};
 }
 
 export function renderedKey(key) {
@@ -131,13 +131,20 @@ export default class Widget {
       this.state = _.merge(this.state, this.mergeState);
     }
 
-    if (prev && prev.shadowTree) {
-      this.shadowTree = true;
-      if (!_dirty[prev.key] && !_dirty['*']) {
-        return prev.vnode;
+    if (prev) {
+      const dirtyOpts = _dirty[prev.key] || {};
+      if (prev.shadowTree) {
+        this.shadowTree = true;
+        if (!dirtyOpts && !_dirty['*']) {
+          return prev.vnode;
+        }
       }
-
       renderedKey(prev.key);
+
+      const refreshAction = dirtyOpts.onRefresh;
+      if (refreshAction) {
+        this.sendWidgetAction(refreshAction);
+      }
     }
 
     return this.draw(h, this.attrs, this.state);

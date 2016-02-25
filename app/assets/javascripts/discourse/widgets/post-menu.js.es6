@@ -340,14 +340,26 @@ export default createWidget('post-menu', {
     });
   },
 
-  toggleWhoLiked() {
+  refreshLikes() {
+    if (this.state.likedUsers.length) {
+      return this.getWhoLiked();
+    }
+  },
+
+  getWhoLiked() {
     const { attrs, state } = this;
+
+    return this.store.find('post-action-user', { id: attrs.id, post_action_type_id: LIKE_ACTION }).then(users => {
+      state.likedUsers = users.map(avatarAtts);
+    });
+  },
+
+  toggleWhoLiked() {
+    const state = this.state;
     if (state.likedUsers.length) {
       state.likedUsers = [];
     } else {
-      return this.store.find('post-action-user', { id: attrs.id, post_action_type_id: LIKE_ACTION }).then(users => {
-        state.likedUsers = users.map(avatarAtts);
-      });
+      return this.getWhoLiked();
     }
   },
 });

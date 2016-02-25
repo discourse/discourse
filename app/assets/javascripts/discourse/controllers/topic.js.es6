@@ -642,7 +642,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     // Unsubscribe before subscribing again
     this.unsubscribe();
 
-    const refresh = (id) => this.appEvents.trigger('post-stream:refresh', { id });
+    const refresh = (args) => this.appEvents.trigger('post-stream:refresh', args);
 
     this.messageBus.subscribe("/topic/" + this.get('model.id'), data => {
       const topic = this.get('model');
@@ -655,19 +655,20 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       const postStream = this.get('model.postStream');
       switch (data.type) {
-        case "revised":
         case "acted":
+          postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id, refreshLikes: true }));
+          break;
+        case "revised":
         case "rebaked": {
-          // TODO we could update less data for "acted" (only post actions)
-          postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh(data.id));
+          postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id }));
           return;
         }
         case "deleted": {
-          postStream.triggerDeletedPost(data.id, data.post_number).then(() => refresh(data.id));
+          postStream.triggerDeletedPost(data.id, data.post_number).then(() => refresh({ id: data.id }));
           return;
         }
         case "recovered": {
-          postStream.triggerRecoveredPost(data.id, data.post_number).then(() => refresh(data.id));
+          postStream.triggerRecoveredPost(data.id, data.post_number).then(() => refresh({ id: data.id }));
           return;
         }
         case "created": {
