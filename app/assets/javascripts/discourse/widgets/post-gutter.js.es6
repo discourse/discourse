@@ -34,7 +34,8 @@ export default createWidget('post-gutter', {
           linkBody.push(h('span.badge.badge-notification.clicks', l.clicks.toString()));
         }
 
-        const link = h('a.track-link', { attributes: { href: l.url } }, linkBody);
+        const className = l.reflection ? 'inbound' : 'outbound';
+        const link = h('a.track-link', { className, attributes: { href: l.url } }, linkBody);
         result.push(h('li', link));
       }
     }
