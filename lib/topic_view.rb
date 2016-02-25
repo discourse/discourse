@@ -43,10 +43,7 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
-    # work around people somehow sending in arrays,
-    # arrays are not supported
-    @page = @page.to_i rescue 1
-    @page = 1 if @page.zero?
+    @page = 1 if (!@page || @page.zero?)
     @chunk_size = options[:slow_platform] ? TopicView.slow_chunk_size : TopicView.chunk_size
     @limit ||= @chunk_size
 
@@ -183,7 +180,7 @@ class TopicView
     return filter_posts_by_ids(opts[:post_ids]) if opts[:post_ids].present?
     return filter_best(opts[:best], opts) if opts[:best].present?
 
-    filter_posts_paged(opts[:page].to_i)
+    filter_posts_paged(@page)
   end
 
   def primary_group_names
