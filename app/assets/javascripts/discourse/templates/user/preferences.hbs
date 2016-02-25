@@ -184,7 +184,7 @@
       {{preference-checkbox labelKey="user.email_direct" checked=model.user_option.email_direct}}
       <span class="pref-mailing-list-mode">{{preference-checkbox labelKey="user.mailing_list_mode" checked=model.user_option.mailing_list_mode}}</span>
       {{preference-checkbox labelKey="user.email_always" checked=model.user_option.email_always}}
-
+      {{#unless model.user_option.email_always}}
       <div class='instructions'>
         {{#if siteSettings.email_time_window_mins}}
           {{i18n 'user.email.frequency' count=siteSettings.email_time_window_mins}}
@@ -192,6 +192,7 @@
           {{i18n 'user.email.frequency_immediately'}}
         {{/if}}
       </div>
+      {{/unless}}
 
 
 
