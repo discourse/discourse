@@ -384,7 +384,7 @@ export default createWidget('post', {
     if (attrs.selected) { classNames.push('selected'); }
     if (attrs.topicOwner) { classNames.push('topic-owner'); }
     if (attrs.hidden) { classNames.push('post-hidden'); }
-    if (attrs.deleted || attrs.user_deleted) { classNames.push('deleted'); }
+    if (attrs.deleted) { classNames.push('deleted'); }
     if (attrs.primary_group_name) { classNames.push(`group-${attrs.primary_group_name}`); }
     if (attrs.wiki) { classNames.push(`wiki`); }
     if (attrs.isWhisper) { classNames.push('whisper'); }
