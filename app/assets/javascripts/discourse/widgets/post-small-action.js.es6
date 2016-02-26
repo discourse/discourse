@@ -24,6 +24,7 @@ const icons = {
 };
 
 export default createWidget('post-small-action', {
+  buildKey: attrs => `post-small-act-${attrs.id}`,
   tagName: 'div.small-action.onscreen-post.clearfix',
 
   buildId(attrs) {
