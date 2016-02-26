@@ -37,6 +37,12 @@ export function applyDecorators(widget, type, attrs, state) {
   return [];
 }
 
+const _customSettings = {};
+export function changeSetting(widgetName, settingName, newValue) {
+  _customSettings[widgetName] = _customSettings[widgetName] || {};
+  _customSettings[widgetName][settingName] = newValue;
+}
+
 function drawWidget(builder, attrs, state) {
   const properties = {};
 
@@ -113,6 +119,13 @@ export default class Widget {
     this.currentUser = container.lookup('current-user:main');
     this.store = container.lookup('store:main');
     this.appEvents = container.lookup('app-events:main');
+
+    if (this.name) {
+      const custom = _customSettings[this.name];
+      if (custom) {
+        Object.keys(custom).forEach(k => this.settings[k] = custom[k]);
+      }
+    }
   }
 
   defaultState() {

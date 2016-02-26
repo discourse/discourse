@@ -1,5 +1,6 @@
 import { moduleForWidget, widgetTest } from 'helpers/widget-test';
-import { decorateWidget, createWidget } from 'discourse/widgets/widget';
+import { createWidget } from 'discourse/widgets/widget';
+import { withPluginApi } from 'discourse/lib/plugin-api';
 
 moduleForWidget('base');
 
@@ -177,12 +178,14 @@ widgetTest('widget decorating', {
       },
     });
 
-    decorateWidget('decorate-test:before', dec => {
-      return dec.h('b', 'before');
-    });
+    withPluginApi('0.1', api => {
+      api.decorateWidget('decorate-test:before', dec => {
+        return dec.h('b', 'before');
+      });
 
-    decorateWidget('decorate-test:after', dec => {
-      return dec.h('i', 'after');
+      api.decorateWidget('decorate-test:after', dec => {
+        return dec.h('i', 'after');
+      });
     });
   },
 
@@ -190,5 +193,53 @@ widgetTest('widget decorating', {
     assert.ok(this.$('.decorate').length);
     assert.equal(this.$('.decorate b').text(), 'before');
     assert.equal(this.$('.decorate i').text(), 'after');
+  }
+});
+
+widgetTest('widget settings', {
+  template: `{{mount-widget widget="settings-test"}}`,
+
+  setup() {
+    createWidget('settings-test', {
+      tagName: 'div.settings',
+
+      settings: {
+        age: 36
+      },
+
+      html() {
+        return `age is ${this.settings.age}`;
+      },
+    });
+  },
+
+  test(assert) {
+    assert.equal(this.$('.settings').text(), 'age is 36');
+  }
+});
+
+widgetTest('override settings', {
+  template: `{{mount-widget widget="ov-settings-test"}}`,
+
+  setup() {
+    createWidget('ov-settings-test', {
+      tagName: 'div.settings',
+
+      settings: {
+        age: 36
+      },
+
+      html() {
+        return `age is ${this.settings.age}`;
+      },
+    });
+
+    withPluginApi('0.1', api => {
+      api.changeWidgetSetting('ov-settings-test', 'age', 37);
+    });
+  },
+
+  test(assert) {
+    assert.equal(this.$('.settings').text(), 'age is 37');
   }
 });
