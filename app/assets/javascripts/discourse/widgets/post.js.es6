@@ -378,7 +378,14 @@ export default createWidget('post', {
   buildKey: attrs => `post-${attrs.id}`,
   shadowTree: true,
 
+  buildAttributes(attrs) {
+    if (attrs.cloaked) {
+      return { style: `height: ${attrs.height}px` };
+    }
+  },
+
   buildClasses(attrs) {
+    if (attrs.cloaked) { return 'cloaked-post'; }
     const classNames = ['topic-post', 'clearfix'];
 
     if (attrs.selected) { classNames.push('selected'); }
@@ -397,6 +404,8 @@ export default createWidget('post', {
   },
 
   html(attrs) {
+    if (attrs.cloaked) { return 'cloaked'; }
+
     return this.attach('post-article', attrs);
   },
 

@@ -1,7 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import transformPost from 'discourse/lib/transform-post';
 import { Placeholder } from 'discourse/lib/posts-with-placeholders';
-import { h } from 'virtual-dom';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 
 const CLOAKING_ENABLED = !window.inTestEnv;
@@ -86,9 +85,11 @@ export default createWidget('post-stream', {
 
       const height = _cloaked[post.id];
       if (height) {
-        result.push(h('div.cloaked-post', { id: `post_${post.post_number}`,
-                                            attributes: { style: `height: ${height}px` } }));
-      } else if (transformed.isSmallAction) {
+        transformed.cloaked = true;
+        transformed.height = height;
+      }
+
+      if (transformed.isSmallAction) {
         result.push(this.attach('post-small-action', transformed, { model: post }));
       } else {
         result.push(this.attach('post', transformed, { model: post }));
