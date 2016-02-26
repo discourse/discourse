@@ -1,3 +1,5 @@
+/*eslint no-loop-func:0*/
+
 const CLICK_ATTRIBUTE_NAME = '_discourse_click_widget';
 const CLICK_OUTSIDE_ATTRIBUTE_NAME = '_discourse_click_outside_widget';
 
