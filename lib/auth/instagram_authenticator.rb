@@ -13,7 +13,7 @@ class Auth::InstagramAuthenticator < Auth::Authenticator
     data = auth_token[:info]
 
     result.username = screen_name = data["nickname"]
-    result.name = name = data["name"]
+    result.name = name = data["name"].slice!(0)
     instagram_user_id = auth_token["uid"]
 
     result.extra_data = {
