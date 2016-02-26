@@ -9,7 +9,6 @@ export default NavigationDefaultController.extend({
 
   @computed("showingSubcategoryList", "category", "noSubcategories")
   navItems(showingSubcategoryList, category, noSubcategories) {
-    if (showingSubcategoryList) { return []; }
     return Discourse.NavItem.buildList(category, { noSubcategories });
   }
 });
