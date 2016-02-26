@@ -15,6 +15,10 @@ export function renderedKey(key) {
   delete _dirty[key];
 }
 
+export function queryRegistry(name) {
+  return _registry[name];
+}
+
 const _decorators = {};
 
 export function decorateWidget(widgetName, cb) {
@@ -203,7 +207,7 @@ export default class Widget {
     }
   }
 
-  sendComponentAction(name, param) {
+  _sendComponentAction(name, param) {
     const view = this._findAncestorWithProperty('_emberView');
 
     let promise;
@@ -233,9 +237,7 @@ export default class Widget {
       }
     }
 
-    if (promise) {
-      return promise.then(() => this.scheduleRerender());
-    }
+    return this.rerenderResult(() => promise);
   }
 
   findAncestorModel() {
@@ -245,19 +247,25 @@ export default class Widget {
     }
   }
 
-  sendWidgetAction(name, param) {
-    const widget = this._findAncestorWithProperty(name);
-    if (widget) {
-      const result = widget[name](param);
-      if (result && result.then) {
-        return result.then(() => this.scheduleRerender());
-      } else {
-        this.scheduleRerender();
-        return result;
-      }
+  rerenderResult(fn) {
+    this.scheduleRerender();
+    const result = fn();
+    // re-render after any promises complete, too!
+    if (result && result.then) {
+      return result.then(() => this.scheduleRerender());
     }
+    return result;
+  }
 
-    return this.sendComponentAction(name, param || this.findAncestorModel());
+  sendWidgetAction(name, param) {
+    return this.rerenderResult(() => {
+      const widget = this._findAncestorWithProperty(name);
+      if (widget) {
+        return widget[name](param);
+      }
+
+      return this._sendComponentAction(name, param || this.findAncestorModel());
+    });
   }
 }
 
