@@ -327,6 +327,7 @@ class UserNotifications < ActionMailer::Base
       add_unsubscribe_via_email_link: user.user_option.mailing_list_mode,
       unsubscribe_url: post.topic.unsubscribe_url,
       allow_reply_by_email: allow_reply_by_email,
+      only_reply_by_email: allow_reply_by_email && user.staged,
       use_site_subject: use_site_subject,
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
@@ -336,7 +337,7 @@ class UserNotifications < ActionMailer::Base
       html_override: html,
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
-      style: :notification
+      style: :notification,
     }
 
     # If we have a display name, change the from address
