@@ -5,7 +5,7 @@ import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
-import { decorateWidget } from 'discourse/widgets/widget';
+import { decorateWidget, changeSetting } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
 
 class PluginApi {
@@ -241,6 +241,18 @@ class PluginApi {
     onPageChange(fn);
   }
 
+  /**
+   * Changes a setting associated with a widget. For example, if
+   * you wanted small avatars in the post stream:
+   *
+   * ```javascript
+   * api.changeWidgetSetting('post-avatar', 'size', 'small');
+   * ```
+   *
+   **/
+  changeWidgetSetting(widgetName, settingName, newValue) {
+    changeSetting(widgetName, settingName, newValue);
+  }
 }
 
 let _pluginv01;

@@ -77,12 +77,16 @@ createWidget('reply-to-tab', {
 createWidget('post-avatar', {
   tagName: 'div.topic-avatar',
 
+  settings: {
+    size: 'large'
+  },
+
   html(attrs) {
     let body;
     if (!attrs.user_id) {
       body = h('i', { className: 'fa fa-trash-o deleted-user-avatar' });
     } else {
-      body = avatarFor.call(this, 'large', {
+      body = avatarFor.call(this, this.settings.size, {
         template: attrs.avatar_template,
         username: attrs.username,
         url: attrs.usernameUrl,
