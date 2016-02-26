@@ -59,7 +59,23 @@ export default Ember.Component.extend({
 
       newTree._emberView = this;
       const patches = diff(this._tree || this._rootNode, newTree);
+
+      const $body = $(document);
+      const prevHeight = $body.height();
+      const prevScrollTop = $body.scrollTop();
+
       this._rootNode = patch(this._rootNode, patches);
+
+      const height = $body.height();
+      const scrollTop = $body.scrollTop();
+
+      // This hack is for when swapping out many cloaked views at once
+      // when using keyboard navigation. It could suddenly move the
+      // scroll
+      if (prevHeight === height && scrollTop !== prevScrollTop) {
+        $body.scrollTop(prevScrollTop);
+      }
+
       this._tree = newTree;
 
       if (this._afterRender) {
