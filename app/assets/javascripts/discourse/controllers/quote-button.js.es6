@@ -138,7 +138,7 @@ export default Ember.Controller.extend({
     const quotedText = Quote.build(post, buffer);
     composerOpts.quote = quotedText;
     if (composerController.get('content.viewOpen') || composerController.get('content.viewDraft')) {
-      this.appEvents.trigger('composer:insert-text', quotedText.trim());
+      this.appEvents.trigger('composer:insert-text', quotedText);
     } else {
       composerController.open(composerOpts);
     }
