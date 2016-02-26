@@ -25,7 +25,6 @@ export default {
       });
     });
 
-
     router.transientCache = function(key, data, count) {
       if (data === undefined) {
         return cache[key];
@@ -48,7 +47,7 @@ export default {
 
     // Also use Universal Analytics if it is present
     if (typeof window.ga !== 'undefined') {
-      onPageChange.on('change', (url, title) => {
+      onPageChange((url, title) => {
         window.ga('send', 'pageview', {page: url, title: title});
       });
     }
