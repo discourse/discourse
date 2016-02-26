@@ -40,7 +40,7 @@ WidgetClickHook.setupDocumentCallback = function() {
     while (node) {
       const widget = node[CLICK_ATTRIBUTE_NAME];
       if (widget) {
-        return widget.click(e);
+        return widget.rerenderResult(() => widget.click(e));
       }
       node = node.parentNode;
     }

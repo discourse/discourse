@@ -1,6 +1,6 @@
 import { diff, patch } from 'virtual-dom';
 import { WidgetClickHook } from 'discourse/widgets/click-hook';
-import { renderedKey } from 'discourse/widgets/widget';
+import { renderedKey, queryRegistry } from 'discourse/widgets/widget';
 
 const _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {
@@ -17,7 +17,9 @@ export default Ember.Component.extend({
 
   init() {
     this._super();
-    this._widgetClass = this.container.lookupFactory(`widget:${this.get('widget')}`);
+    const name = this.get('widget');
+
+    this._widgetClass = queryRegistry(name) || this.container.lookupFactory(`widget:${name}`);
     this._connected = [];
   },
 

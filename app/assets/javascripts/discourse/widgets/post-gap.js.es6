@@ -18,8 +18,6 @@ export default createWidget('post-gap', {
     if (state.loading) { return; }
     state.loading = true;
 
-    this.scheduleRerender();
-
     const args = { gap: attrs.gap, post: this.model };
     return this.sendWidgetAction(attrs.pos === 'before' ? 'fillGapBefore' : 'fillGapAfter', args);
   }
