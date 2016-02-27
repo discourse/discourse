@@ -9,6 +9,7 @@
       <li>{{d-link route='user' model=currentUser class="user-activity-link" icon="user" translateLabel="false" label=currentUser.username}}</li>
       {{/if}}
       <li class='glyphs'>
+        {{plugin-outlet "user-menu-glyphs"}}
         {{d-link path=bookmarksPath title="user.bookmarks" icon="bookmark"}}
         {{#if siteSettings.enable_private_messages}}
           {{d-link path=messagesPath title="user.private_messages" icon="envelope"}}
