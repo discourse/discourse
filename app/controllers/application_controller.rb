@@ -94,7 +94,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound do
+  class PluginDisabled < StandardError; end
+
+  rescue_from Discourse::NotFound, PluginDisabled do
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -119,8 +121,6 @@ class ApplicationController < ActionController::Base
       render text: build_not_found_page(status_code, include_ember ? 'application' : 'no_ember')
     end
   end
-
-  class PluginDisabled < StandardError; end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
   # disabled. This allows plugins to be disabled programatically.
