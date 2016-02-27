@@ -309,7 +309,16 @@ export default Ember.Component.extend({
           showSelector({
             appendTo: self.$(),
             container,
-            onSelect: title => self._addText(self._getSelected(), `${title}:`)
+            onSelect: title => {
+              // Remove the previously type characters when a new emoji is selected from the selector.
+              let selected = self._getSelected();
+              let newPre = selected.pre.replace(/:[^:]+$/, ":");
+              let numOfRemovedChars = selected.pre.length - newPre.length;
+              selected.pre = newPre;
+              selected.start -= numOfRemovedChars;
+              selected.end -= numOfRemovedChars;
+              self._addText(selected, `${title}:`);
+            }
           });
           return "";
         }
