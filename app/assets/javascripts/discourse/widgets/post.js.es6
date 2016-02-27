@@ -404,7 +404,7 @@ export default createWidget('post', {
   },
 
   html(attrs) {
-    if (attrs.cloaked) { return 'cloaked'; }
+    if (attrs.cloaked) { return ''; }
 
     return this.attach('post-article', attrs);
   },
