@@ -326,6 +326,12 @@ class StaffActionLogger
     }))
   end
 
+  def log_backup_operation(opts={})
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:backup_operation]
+    }))
+  end
+
   private
 
     def params(opts=nil)

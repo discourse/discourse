@@ -32,6 +32,7 @@ class Admin::BackupsController < Admin::AdminController
   rescue BackupRestore::OperationRunningError
     render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
   else
+    StaffActionLogger.new(current_user).log_backup_operation
     render json: success_json
   end
 
