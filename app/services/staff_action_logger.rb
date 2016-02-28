@@ -328,7 +328,8 @@ class StaffActionLogger
 
   def log_backup_operation(opts={})
     UserHistory.create(params(opts).merge({
-      action: UserHistory.actions[:backup_operation]
+      action: UserHistory.actions[:backup_operation],
+      ip_address: @admin.ip_address.to_s
     }))
   end
 
