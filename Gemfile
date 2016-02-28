@@ -50,7 +50,7 @@ gem 'ember-source', '1.12.2'
 gem 'barber'
 gem 'babel-transpiler'
 
-gem 'message_bus', '2.0.0.beta.2'
+gem 'message_bus', '2.0.0.beta.4'
 
 gem 'rails_multisite'
 
