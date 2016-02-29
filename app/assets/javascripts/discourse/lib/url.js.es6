@@ -76,7 +76,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
   },
 
   // Scroll to the same page, different anchor
-  scrollToId: function(id) {
+  scrollToId(id) {
     if (Em.isEmpty(id)) { return; }
 
     _jumpScheduled = true;
