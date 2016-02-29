@@ -6,10 +6,15 @@ import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 const CLOAKING_ENABLED = !window.inTestEnv;
 const DAY = 1000 * 60 * 60 * 24;
 
+const _dontCloak = {};
 let _cloaked = {};
 
+export function preventCloak(postId) {
+  _dontCloak[postId] = true;
+}
+
 export function cloak(post, component) {
-  if (!CLOAKING_ENABLED || _cloaked[post.id]) { return; }
+  if (!CLOAKING_ENABLED || _cloaked[post.id] || _dontCloak[post.id]) { return; }
 
   const $post = $(`#post_${post.post_number}`);
   _cloaked[post.id] = $post.height();
