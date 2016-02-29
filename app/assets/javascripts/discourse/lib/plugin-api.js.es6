@@ -7,6 +7,7 @@ import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 import { decorateWidget, changeSetting } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
+import { preventCloak } from 'discourse/widgets/post-stream';
 
 class PluginApi {
   constructor(version, container) {
@@ -252,6 +253,20 @@ class PluginApi {
    **/
   changeWidgetSetting(widgetName, settingName, newValue) {
     changeSetting(widgetName, settingName, newValue);
+  }
+
+  /**
+   * Prevents an element in the post stream from being cloaked.
+   * This is useful if you are using a plugin such as youtube
+   * and don't want the video removed once it has begun
+   * playing.
+   *
+   * ```javascript
+   * api.preventCloak(1234);
+   * ```
+   **/
+  preventCloak(postId) {
+    preventCloak(postId);
   }
 }
 
