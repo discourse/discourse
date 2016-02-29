@@ -379,9 +379,11 @@ export default createWidget('post', {
   shadowTree: true,
 
   buildAttributes(attrs) {
-    if (attrs.cloaked) {
-      return { style: `height: ${attrs.height}px` };
-    }
+    return attrs.cloaked ? { style: `height: ${attrs.height}px` } : undefined;
+  },
+
+  buildId(attrs) {
+    return attrs.cloaked ? `post_${attrs.post_number}` : undefined;
   },
 
   buildClasses(attrs) {
