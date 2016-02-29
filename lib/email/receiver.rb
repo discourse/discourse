@@ -72,20 +72,35 @@ module Email
         case destination[:type]
         when :group
           group = destination[:obj]
-          create_topic(user: user, raw: body, title: subject, archetype: Archetype.private_message, target_group_names: [group.name], skip_validations: true)
+          create_topic(user: user,
+                       raw: body,
+                       title: subject,
+                       archetype: Archetype.private_message,
+                       target_group_names: [group.name],
+                       is_group_message: true,
+                       skip_validations: true)
+
         when :category
           category = destination[:obj]
 
           raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
           raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
-          create_topic(user: user, raw: body, title: subject, category: category.id, skip_validations: user.staged?)
+          create_topic(user: user,
+                       raw: body,
+                       title: subject,
+                       category: category.id,
+                       skip_validations: user.staged?)
+
         when :reply
           email_log = destination[:obj]
 
           raise ReplyUserNotMatchingError if email_log.user_id != user.id
 
-          create_reply(user: user, raw: body, post: email_log.post, topic: email_log.post.topic)
+          create_reply(user: user,
+                       raw: body,
+                       post: email_log.post,
+                       topic: email_log.post.topic)
         end
       end
     end
@@ -271,6 +286,7 @@ module Email
       else
         options[:topic_id] = options[:post].try(:topic_id)
         options[:reply_to_post_number] = options[:post].try(:post_number)
+        options[:is_group_message] = options[:topic].private_message? && options[:topic].allowed_groups.exists?
         create_post_with_attachments(options)
       end
     end
@@ -291,7 +307,8 @@ module Email
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
-          upload = Upload.create_for(options[:user].id, tmp, attachment.filename, tmp.size)
+          opts = { is_attachment_for_group_message: options[:is_group_message] }
+          upload = Upload.create_for(options[:user].id, tmp, attachment.filename, tmp.size, opts)
           if upload && upload.errors.empty?
             # try to inline images
             if attachment.content_type.start_with?("image/") && options[:raw][/\[image: .+ \d+\]/]

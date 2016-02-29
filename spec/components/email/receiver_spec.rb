@@ -271,6 +271,12 @@ describe Email::Receiver do
       expect { process(:email_reply_4) }.to change { topic.posts.count }
     end
 
+    it "supports any kind of attachments when 'allow_all_attachments_for_group_messages' is enabled" do
+      SiteSetting.allow_all_attachments_for_group_messages = true
+      expect { process(:attached_rb_file) }.to change(Topic, :count)
+      expect(Post.last.raw).to match(/discourse\.rb/)
+    end
+
   end
 
   context "new topic in a category" do
