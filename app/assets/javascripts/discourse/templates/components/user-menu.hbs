@@ -23,8 +23,8 @@
 
   <div class='notifications'>
     {{#conditional-loading-spinner condition=loadingNotifications containerClass="spinner-container"}}
-      <hr>
       {{#if notifications}}
+        <hr>
         <ul>
           {{#each notifications as |n|}}
             {{notification-item notification=n}}
