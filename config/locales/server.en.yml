@@ -1001,6 +1001,8 @@ en:
 
     default_opengraph_image_url: "URL of the default opengraph image."
 
+    allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
+
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."

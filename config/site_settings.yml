@@ -617,8 +617,8 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
-
   default_opengraph_image_url: ''
+  allow_all_attachments_for_group_messages: false
 
 trust:
   default_trust_level:
