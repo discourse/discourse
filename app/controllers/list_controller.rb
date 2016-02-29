@@ -129,6 +129,18 @@ class ListController < ApplicationController
     render 'list', formats: [:rss]
   end
 
+  def top_feed
+    discourse_expires_in 1.minute
+
+    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.top")}"
+    @link = "#{Discourse.base_url}/top"
+    @atom_link = "#{Discourse.base_url}/top.rss"
+    @description = I18n.t("rss_description.top")
+    @topic_list = TopicQuery.new(nil).list_top_for("monthly")
+
+    render 'list', formats: [:rss]
+  end
+
   def category_feed
     guardian.ensure_can_see!(@category)
     discourse_expires_in 1.minute
@@ -175,6 +187,7 @@ class ListController < ApplicationController
       list.for_period = period
       list.more_topics_url = construct_url_with(:next, top_options)
       list.prev_topics_url = construct_url_with(:prev, top_options)
+      @rss = "top"
 
       if use_crawler_layout?
         @title = I18n.t("js.filters.top.#{period}.title")
