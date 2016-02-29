@@ -111,13 +111,24 @@ describe Discourse do
     end
 
     it "returns true when the key is present in redis" do
-      $redis.expects(:get).with(Discourse.readonly_mode_key).returns("1")
-      expect(Discourse.readonly_mode?).to eq(true)
+      begin
+        $redis.set(Discourse.readonly_mode_key, 1)
+        expect(Discourse.readonly_mode?).to eq(true)
+      ensure
+        $redis.del(Discourse.readonly_mode_key)
+      end
     end
 
     it "returns true when Discourse is recently read only" do
       Discourse.received_readonly!
       expect(Discourse.readonly_mode?).to eq(true)
+    end
+  end
+
+  context ".received_readonly!" do
+    it "sets the right time" do
+      time = Discourse.received_readonly!
+      expect(Discourse.last_read_only['default']).to eq(time)
     end
   end
 
