@@ -731,8 +731,8 @@ pt:
       value_prop: "Quando cria uma conta, nós lembramo-nos exatamente do que leu, por isso volta sempre ao sítio onde ficou. Também recebe notificações, aqui ou por email, sempre que novas mensagens são feitas. E pode gostar de mensagens para partilhar o amor. :heartbeat:"
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as mensagens mais interessantes são determinados pela comunidade."
-      description: "Existem <b>{{count}}</b> respostas."
-      description_time: "Existem <b>{{count}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
+      description: "Existem <b>{{replyCount}}</b> respostas."
+      description_time: "Existem <b>{{replyCount}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir Este Tópico'
       disable: 'Mostrar Todas As Mensagens'
     deleted_filter:

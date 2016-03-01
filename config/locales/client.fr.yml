@@ -731,8 +731,8 @@ fr:
       value_prop: "Quand vous créez votre compte, nous stockons ce que vous avez lu pour vous positionner systématiquement sur le bon emplacement à votre retour. Vous  avez également des notifications, ici et par courriel, quand de nouveaux messages sont postés. Et vous pouvez aimer les messages pour partager vos coups de cœurs. :heartbeat:"
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages importants choisis par la communauté."
-      description: "Il y a <b>{{count}}</b> réponses."
-      description_time: "Il y a <b>{{count}}</b> réponses avec un temps estimé de lecture de <b>{{readingTime}} minutes</b>."
+      description: "Il y a <b>{{replyCount}}</b> réponses."
+      description_time: "Il y a <b>{{replyCount}}</b> réponses avec un temps estimé de lecture de <b>{{readingTime}} minutes</b>."
       enable: 'Résumer ce sujet'
       disable: 'Afficher tous les messages'
     deleted_filter:

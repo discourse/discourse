@@ -697,8 +697,8 @@ cs:
       value_prop: "Pokud si založíš účet, budeme si přesně pomatovat, co jsi četly, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění, zde a přes e-mail, kdykoli přibydou nově příspěvky. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartbeat:"
     summary:
       enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
-      description: "Obsahuje <b>{{count}}</b> odpovědí."
-      description_time: "Obsahuje <b>{{count}}</b> odpovědí o odhadovaném času čtení <b>{{readingTime}} minut</b>."
+      description: "Obsahuje <b>{{replyCount}}</b> odpovědí."
+      description_time: "Obsahuje <b>{{replyCount}}</b> odpovědí o odhadovaném času čtení <b>{{readingTime}} minut</b>."
       enable: 'Přepnout na "nejlepší příspěvky"'
       disable: 'Přepnout na normální zobrazení'
     deleted_filter:
