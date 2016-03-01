@@ -582,7 +582,7 @@ class Topic < ActiveRecord::Base
     if private_message?
       # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
-      raise StandardError.new I18n.t("topic_invite_user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
         # Create a small action message
@@ -607,7 +607,7 @@ class Topic < ActiveRecord::Base
     else
       # invite existing member to a topic
       user = User.find_by_username(username_or_email)
-      raise StandardError.new I18n.t("topic_invite_user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
       if user && topic_allowed_users.create!(user_id: user.id)
         # rate limit topic invite

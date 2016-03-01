@@ -138,8 +138,6 @@ en:
   reading_time: "Reading time"
   likes: "Likes"
 
-  topic_invite_user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
-
   too_many_replies:
     one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
@@ -2747,3 +2745,6 @@ en:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports
+
+  topic_invite:
+    user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
