@@ -885,6 +885,8 @@ backups:
     default: ''
     regex: "^[^A-Z_.]+$" # can't use '.' when using HTTPS
     shadowed_by_global: true
+  s3_disable_cleanup:
+    default: false
   backup_time_of_day:
     default: '3:30'
     regex: "^((0?(0|1|2|3|4|5|6|7|8|9)|(10|11|12|13|14|15|16|17|18|19|20|21|22|23))):\\d\\d$"
