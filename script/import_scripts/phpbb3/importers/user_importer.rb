@@ -91,10 +91,12 @@ module ImportScripts::PhpBB3
       end
 
       if disable_email
-        user.email_digests = false
-        user.email_private_messages = false
-        user.email_direct = false
-        user.email_always = false
+        user_option = user.user_option
+        user_option.email_digests = false
+        user_option.email_private_messages = false
+        user_option.email_direct = false
+        user_option.email_always = false
+        user_option.save!
       end
 
       if user.save

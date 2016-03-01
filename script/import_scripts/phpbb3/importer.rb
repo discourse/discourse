@@ -111,7 +111,10 @@ module ImportScripts::PhpBB3
     # uncomment below lines to create permalink for categories
     # def create_category(opts, import_id)
     #   new_category = super
-    #   Permalink.create(url: "viewforum.php?f=#{import_id}", category_id: new_category.id)
+    #   url = "viewforum.php?f=#{import_id}"
+    #   if !Permalink.find_by(url: url)
+    #     Permalink.create(url: url, category_id: new_category.id)
+    #   end
     #   new_category
     # end
 
