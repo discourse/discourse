@@ -902,6 +902,7 @@ ko:
       from_my_computer: "컴퓨터에서 가져오기"
       from_the_web: "인터넷에서 가져오기"
       remote_tip: "이미지 링크"
+      remote_tip_with_attachments: "이미니자 파일 링크 {{authorized_extensions}}"
       local_tip: "기기에서 이미지 선택"
       hint: "(드래그&드랍으로 업로드 가능)"
       uploading: "업로드 중입니다..."
@@ -1085,7 +1086,7 @@ ko:
         auto_close: "자동으로 닫기..."
         pin: "토픽 고정..."
         unpin: "토픽 고정 취소..."
-        unarchive: "보관 안된 토픽"
+        unarchive: "토픽 보관 취소"
         archive: "토픽 보관"
         invisible: "목록에서 제외하기"
         visible: "목록에 넣기"
@@ -1902,6 +1903,10 @@ ko:
         last_seen_user: "마지막으로 본 사용자"
         reply_key: "답글 단축키"
         skipped_reason: "생략 이유"
+        incoming_emails:
+          error: "에러"
+          filters:
+            error_placeholder: "에러"
         logs:
           none: "로그가 없습니다."
           filters:

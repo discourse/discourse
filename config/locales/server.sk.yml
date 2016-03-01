@@ -735,7 +735,6 @@ sk:
     min_search_term_length: "Minimálny povolený počet znakov vo vyhľadávaní"
     search_tokenize_chinese_japanese_korean: "Prinúť vyhľádávanie rozložiť Čínštinu/Japončinu/Kórejčinu dokonca i pre nie CJK stránky"
     allow_uncategorized_topics: "Pvoliť vytváranie tém bez kategórií. UPOZORNENIE: Pokiaľ existujú nekategorizované témy, musíte ich zaradiť do kategórii skôr než túto možnosť vypnete."
-    uncategorized_description: "Popis nekategorizovanej kategórie. Nechajte prázdne pre žiadny popis.."
     allow_duplicate_topic_titles: "Povoliť témy s rovnakými, duplikovanými názvami"
     unique_posts_mins: "Koľko minút musí byť medzi dvomi rovnakými príspevkami od jedného užívateľa."
     educate_until_posts: "Ked užívateľ začne písať svojich prvých (n) príspevkov, zobraz sprievodcu vzdelávania pre nového užívateľa. "
@@ -1414,6 +1413,20 @@ sk:
   system_messages:
     post_hidden:
       subject_template: "Príspevok skrytý z dôvodu konumitného označenia vlajkou"
+      text_body_template: |
+        Dobrý deň,
+
+        toto je automaticky generovaná správa od %{site_name}, aby ste boli informovaní, že váš príspevok bol skrytý.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Viacero členov komunity označilo tento príspevok predtým, ako bol skrytý, takže skúste, prosím, zvážiť, ako by ste mohli príspevok upraviť, aby odrážal ich spätnú väzbu. **Váš príspevok môžete upraviť po %{edit_delay} minútach a bude automaticky opäť zobrazený.**
+
+        Avšak pokiaľ bude príspevok skrytý komunitou druhýkrát, ostane skrytý dovtedy, pokiaľ sa o to nepostarajú moderátori – a tam môže dôjsť k ďalším akciám, ako napr. možné pozastavenie vášho účtu.
+
+        Ohľadom ďalšieho poradenstva si, prosím, pozrite naše [community guidelines](%{base_url}/pokyny).
     usage_tips:
       text_body_template: |
         Tu je niekoľko rád, ako začať:
@@ -1554,6 +1567,8 @@ sk:
       subject_template: "Export dát kompletný"
     csv_export_failed:
       subject_template: "Export dát zlyhal"
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] Problém s emailom -- Nízka úroveň dôvery"
     email_reject_inactive_user:
       subject_template: "[%{site_name}] Problém s emailom -- Neaktívny užívateľ"
     email_reject_no_account:
@@ -1584,6 +1599,8 @@ sk:
       subject_template: "[%{site_name}] Problém s emailom -- Chyba pri uverejnení"
     email_reject_invalid_post_specified:
       subject_template: "[%{site_name}] Problém s emailom -- Chyba pri uverejnení"
+    email_reject_invalid_post_action:
+      subject_template: "[%{site_name}] Problém s emailom -- Neplatná akcia k príspevku"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problém s emailom -- Neznámy kľúč odpovede"
     email_reject_bad_destination_address:
@@ -1598,20 +1615,16 @@ sk:
         Téma, na ktorú odpovedáte je s súčasnosti uzavretá a ďalelšie odpovede nie sú akceptované. Ak si myslíte, že ide o chybu, kontaktujte zamestnanca stránok.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problém s emailom -- Automaticky generovaná odpoveď"
-      text_body_template: |
-        Prepáčte, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-        Váš email bol označený ako "automaticky generovaný", čo neakceptujeme. Ak si myslíte, že ide o problém, kontaktujte zamestnanca stránok.
     email_error_notification:
       subject_template: "[%{site_name}] Problém s emailom -- Chyba pri POP autentifikácií"
-      text_body_template: |
-        V priebehu načítania emailov z POP serveru nastala autintifikačná chyba.
-
-        Prosíme, uistite sa, že ste v [the site settings](%{base_url}/admin/site_settings/category/email) správne nastavili POP parametre.
     too_many_spam_flags:
       subject_template: "Nový účet je zablokovaný"
     blocked_by_staff:
       subject_template: "Účet je zablokovaný"
+    user_automatically_blocked:
+      subject_template: "Nový uživateľ %{username} je zablokovaný kôli označeniu komunitou"
+    spam_post_blocked:
+      subject_template: "Nový uživateľ %{username} je zablokovaný kôli opakovaným odkazom"
     unblocked:
       subject_template: "Učet je odblokovaný"
       text_body_template: |
@@ -1625,13 +1638,29 @@ sk:
         one: "1 užívateľ čaká na schválenie"
         few: "%{count} užívateľia čakajú na schválenie"
         other: "%{count} užívateľov čaká na schválenie"
+    download_remote_images_disabled:
+      subject_template: "Sťahovanie vzdialených obrázkov je zablokované."
+  unsubscribe_via_email_link: |+
+    alebo, [kliknite sem](mailto:reply@%{hostname}?subject=unsubscribe) pre odhlásenie prostredníctvom emailu.
+
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Prechádzajúce odpovede"
     unsubscribe:
       title: "Odhlásiť"
+      description: "Nezaujímajú Vás už tieto emaily? Žiadny problém! Pre okamžité odhlásenie kliknite nižšie: "
+    reply_by_email: "[Pozrite tému](%{base_url}%{url}), alebo zareagujte odpoveďou na tento email"
+    visit_link_to_respond: "[Pozrite tému](%{base_url}%{url}) pre reakciu"
+    reply_by_email_pm: "[Pozrite správu](%{base_url}%{url}), alebo zareagujte odpoveďou na tento email"
+    visit_link_to_respond_pm: "[Pozrite správu](%{base_url}%{url}) pre reakciu"
+    posted_by: "Príspevok od %{username} dňa %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
     user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} Vás pozval k téme '%{topic_title}'"
       text_body_template: |2
 
         %{username} Vás pozval do diskusie
@@ -1647,6 +1676,17 @@ sk:
         Prosím návštívte tento odkaz pre pozretie správy: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1728,15 +1768,28 @@ sk:
       click_here: "kliknite tu"
       from: "%{site_name} výber"
       read_more: "Čítať viac"
+      more_topics: "Boli vytvorené %{new_topics_since_seen} ďalšie nové témy."
       more_topics_category: "Viac nových tém:"
     forgot_password:
       subject_template: "[%{site_name}] Obnovenie hesla"
+      text_body_template: |
+        Niekto si vyžiadal reset Vášho hesla na [%{site_name}](%{base_url}).
+
+        Ak ste to neboli Vy, môžte ignorovať tento email.
+
+        Pre zmenu hesl kliknite na nasledujúci odkaz
+        %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Nastaviť heslo"
     admin_login:
       subject_template: "[%{site_name}] Prihlásenie"
     account_created:
       subject_template: "[%{site_name}] Váš nový účet"
+      text_body_template: |
+        Nový účet bol pre Vás vytvorený na %{site_name}
+
+        Kliknite na nasledujúci odkaz pre nastavenie hesla k Vášmu novému účtu:
+        %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Potvrďte Vašu novú email adresu"
       text_body_template: |

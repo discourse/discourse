@@ -58,7 +58,7 @@ zh_CN:
         almost_x_years:
           other: "近%{count}年"
         date_month: "MMMDo"
-        date_year: "YY-MM-D"
+        date_year: "YY年MMM"
       medium:
         x_minutes:
           other: "%{count}分钟"
@@ -93,6 +93,8 @@ zh_CN:
       email: '用电子邮件发送这个链接'
     action_codes:
       split_topic: "于%{when}分割了该主题"
+      invited_user: "于%{when}邀请%{who}"
+      removed_user: "于%{when}移除%{who}"
       autoclosed:
         enabled: '于%{when}关闭'
         disabled: '于%{when}开启'
@@ -161,7 +163,7 @@ zh_CN:
     weekly: "每周"
     every_two_weeks: "每两周"
     every_three_days: "每三天"
-    max_of_count: "最多 {{count}}"
+    max_of_count: "不超过 {{count}}"
     alternation: "或"
     character_count:
       other: "%{count} 个字符"
@@ -172,8 +174,8 @@ zh_CN:
       simple_title: "关于"
       title: "关于%{title}"
       stats: "站点统计"
-      our_admins: "我们的管理员们"
-      our_moderators: "我们的版主们"
+      our_admins: "我们的管理员"
+      our_moderators: "我们的版主"
       stat:
         all_time: "所有时间内"
         last_7_days: "7 天以内"
@@ -184,7 +186,7 @@ zh_CN:
       user_count: "新用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
-      contact_info: "在遇到影响站点的重大错误或者紧急事件时，请通过 %{contact_info} 联系我们。"
+      contact_info: "当有重大或者紧急事件时，请通过 %{contact_info} 联系我们。"
     bookmarked:
       title: "书签"
       clear_bookmarks: "删除书签"
@@ -199,7 +201,7 @@ zh_CN:
       remove: "删除书签"
       confirm_clear: "你确定要删除该主题的所有书签吗？"
     topic_count_latest:
-      other: "{{count}} 个新主题或更新的主题。"
+      other: "{{count}} 个近期的主题或更新的主题。"
     topic_count_unread:
       other: "{{count}} 未读主题。"
     topic_count_new:
@@ -216,14 +218,14 @@ zh_CN:
     uploaded: "上传完成！"
     enable: "启用"
     disable: "禁用"
-    undo: "重做"
+    undo: "重置"
     revert: "撤销"
     failed: "失败"
     switch_to_anon: "匿名模式"
     switch_from_anon: "退出匿名模式"
     banner:
       close: "隐藏横幅。"
-      edit: "编辑横幅>>"
+      edit: "编辑该横幅 >>"
     choose_topic:
       none_found: "没有找到主题。"
       title:
@@ -284,11 +286,11 @@ zh_CN:
         other: "%{count} 位用户"
     groups:
       empty:
-        posts: "此小组成员没有回复"
-        members: "此小组没有成员"
-        mentions: "此小组没有通知"
-        messages: "此小组没有消息"
-        topics: "此小组成员没有主题帖"
+        posts: "此小组的成员没有发表过帖子。"
+        members: "此小组没有成员。"
+        mentions: "此小组没有被提及过。"
+        messages: "此小组没有发送过消息。"
+        topics: "此小组的成员没有发表过主题。"
       add: "添加"
       selector_placeholder: "添加成员"
       owner: "所有者"
@@ -964,7 +966,7 @@ zh_CN:
         selected:
           other: "你已经选择了 <b>{{count}}</b>个主题"
       none:
-        unread: "你没有未阅主题。"
+        unread: "你没有未读主题。"
         new: "你没有新主题可读。"
         read: "你尚未阅读任何主题。"
         posted: "你尚未在任何主题中发帖。"
@@ -994,7 +996,7 @@ zh_CN:
         change_notification_state: "您现在的提醒状态是"
       filter_to: "本主题中的 {{post_count}} 帖"
       create: '新主题'
-      create_long: '创建一个新主题'
+      create_long: '创建新主题'
       private_message: '发送消息'
       archive_message:
         help: '移动消息到存档'
@@ -1277,7 +1279,7 @@ zh_CN:
         save: '保存选项'
       controls:
         reply: "开始给本帖撰写回复"
-        like: "赞本帖"
+        like: "点个赞"
         has_liked: "你已经赞了本帖"
         undo_like: "撤销赞"
         edit: "编辑本帖"
@@ -1295,8 +1297,8 @@ zh_CN:
         admin: "帖子管理"
         wiki: "使其成为维基帖子"
         unwiki: "使其成为普通帖子"
-        convert_to_moderator: "增加职员颜色"
-        revert_to_regular: "移除职员颜色"
+        convert_to_moderator: "添加管理人员颜色标记"
+        revert_to_regular: "移除管理人员颜色标记"
         rebake: "重建 HTML"
         unhide: "显示"
         change_owner: "更改所有权"
@@ -1458,14 +1460,14 @@ zh_CN:
           title: "追踪"
           description: "你将会自动追踪这些分类中的所有新主题。你会在别人@你或回复你的帖子时才会收到通知，并且新帖数量也将在这些主题后显示。"
         regular:
-          title: "常规"
+          title: "普通"
           description: "如果某人@你或者回复你，你将收到通知。"
         muted:
           title: "免打扰"
           description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在最新列表中。"
     flagging:
       title: '感谢帮助社群远离邪恶！'
-      private_reminder: '标记是不公开的，<b>只有</b>职员才可以见到'
+      private_reminder: '标记是不公开的，<b>只有</b>管理人员才可以见到'
       action: '报告帖子'
       take_action: "立即执行"
       notify_action: '消息'
@@ -1494,7 +1496,7 @@ zh_CN:
       notify_action: "消息"
     topic_map:
       title: "主题概要"
-      participants_title: "频繁发帖者"
+      participants_title: "主要发帖者"
       links_title: "热门链接"
       links_shown: "显示所有 {{totalLinks}} 个链接..."
       clicks:
@@ -1856,7 +1858,7 @@ zh_CN:
         button_text: "导出"
         button_title:
           user: "以CSV格式导出所有用户列表"
-          staff_action: "以CSV格式导出所有职员操作历史记录"
+          staff_action: "以CSV格式导出所有管理人员操作历史记录"
           screened_email: "以 CSV 格式导出所有已显示的电子邮件列表。"
           screened_ip: "以 CSV 格式导出所有已显示的IP地址列表。"
           screened_url: "以 CSV 格式导出所有已显示的URL列表。"
@@ -1916,7 +1918,7 @@ zh_CN:
           new_name: "新的颜色方案"
           copy_name_prefix: "复制于"
           delete_confirm: "删除这个颜色方案？"
-          undo: "重做"
+          undo: "重置"
           undo_title: "撤销你对这个颜色的编辑至上一次保存的状态。"
           revert: "撤销"
           revert_title: "重置这个颜色至 Discourse 的默认颜色方案"
@@ -2113,7 +2115,7 @@ zh_CN:
           new: "新建"
           active: "活跃"
           pending: "待定"
-          staff: '职员'
+          staff: '管理人员'
           suspended: '禁止登录'
           blocked: '禁止参与讨论'
           suspect: '怀疑'
@@ -2130,8 +2132,8 @@ zh_CN:
           basic: '信用等级为1的用户（基本用户）'
           member: '信用等级为2的用户（成员）'
           regular: '信用等级为3的用户（活跃）'
-          leader: '信用等级为4的用户（领导）'
-          staff: "职员"
+          leader: '信用等级为4的用户（资深）'
+          staff: "管理人员"
           admins: '管理员'
           moderators: '版主'
           blocked: '被封用户'
@@ -2232,16 +2234,16 @@ zh_CN:
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
         suspend_modal_title: "被禁用户"
         trust_level_2_users: "二级信任等级用户"
-        trust_level_3_requirements: "三级信任等级需求"
+        trust_level_3_requirements: "信任等级 3 要求"
         trust_level_locked_tip: "信任等级已经被锁定，系统将不会升降用户的信任等级"
         trust_level_unlocked_tip: "信任等级已经解锁，系统将自动升降用户的信任等级"
         lock_trust_level: "锁定信任等级"
         unlock_trust_level: "解锁信任等级"
         tl3_requirements:
-          title: "3 级信任等级的需求"
+          title: "信任等级 3 的要求"
           table_title: "在最近%{time_period}天："
           value_heading: "价值"
-          requirement_heading: "需求"
+          requirement_heading: "要求"
           visits: "访问"
           days: "天数"
           topics_replied_to: "回复的主题"
@@ -2253,7 +2255,7 @@ zh_CN:
           flagged_by_users: "标记的用户"
           likes_given: "给出的赞"
           likes_received: "收到的赞"
-          likes_received_days: "收到的赞：每天"
+          likes_received_days: "收到的赞：独立天数"
           likes_received_users: "收到的赞：每用户"
           qualifies: "符合等级3的信用度"
           does_not_qualify: "未符合等级3的信用度"
@@ -2545,7 +2547,7 @@ zh_CN:
           name: 活跃用户
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">已授予</a>重分类、重命名、跟踪链接和贵宾室
         leader:
-          name: 领导
+          name: 资深
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">已授予</a> 全局编辑、固定、关闭、存档、分割和合并
         welcome:
           name: 欢迎

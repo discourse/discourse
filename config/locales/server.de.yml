@@ -676,7 +676,6 @@ de:
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
     search_tokenize_chinese_japanese_korean: "Zwinge die Suche, Chinesisch, Japanisch und Koreanisch zu erkennen, auch wenn die Seite keine dieser Sprachen nutzt"
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie zu erstellen. ACHTUNG: Falls es unkategorisierte Themen gibt, musst du sie neu kategorisieren, bevor du diese Option abschaltest."
-    uncategorized_description: "Beschreibung der Kategorie für unkategorisierte Themen. Leer lassen, wenn keine Beschreibung erwünscht ist."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor sobald ein Nutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
@@ -762,6 +761,7 @@ de:
     suppress_reply_directly_above: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der beantwortete Beitrag direkt darüber angezeigt wird."
     suppress_reply_when_quoting: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der Beitrag den beantworteten Beitrag zitiert."
     max_reply_history: "Maximale Anzahl an Antworten beim Ausklappen von in-reply-to"
+    experimental_reply_expansion: "Verstecke dazwischenliegende Beiträge, wenn der beantwortete Beitrag erweitert wird (experimentell)."
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Top-Themübersicht angezeigt werden."
     topics_per_period_in_top_page: "Anzahl der Themen, die in der mit \"Mehr zeigen\" erweiterten Top-Themenübersicht angezeigt werden."
     redirect_users_to_top_page: "Verweise neue und länger abwesende Nutzer automatisch zur Top Übersichtsseite"
@@ -1013,7 +1013,7 @@ de:
     feed_polling_enabled: "NUR WENN EINGEBETTET: Bestimmt, ob Inhalte eines RSS-/ATOM-Feeds als zusätzliche Beiträge dargestellt werden."
     feed_polling_url: "NUR WENN EINGEBETTET: URL des einzubettenden RSS-/ATOM-Feeds."
     embed_by_username: "Discourse-Benutzername des Benutzers, der die eingebetteten Themen erstellt."
-    embed_username_key_from_feed: "Schlüsse, um Discourse-Benutzernamen aus Feed zu ziehen."
+    embed_username_key_from_feed: "Schlüssel, um Discourse-Benutzernamen aus Feed zu ermitteln."
     embed_truncate: "Kürze die eingebetteten Beiträge"
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Betragserstellung notwendig"
@@ -1452,8 +1452,22 @@ de:
         Dein Benutzerkonto, assoziiert mit dieser E-Mail Adresse ist nicht aktiviert. Bitte aktiviere dein Konto bevor du E-Mails sendest.
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] E-Mail Problem -- Antwort Nutzer stimmt nicht überein"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absenderadresse oder wende dich an einen Mitarbeiter.
+    email_reject_no_message_id:
+      subject_template: "[%{site_name}] E-Mail-Problem -- Keine Message-Id"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Wir konnten keinen `Message-Id`-Header in der E-Mail finden. Probiere eine andere Absenderadresse oder wende dich an einen Mitarbeiter.
     email_reject_no_account:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Wir konnten keinen Account finden, der zu deiner E-Mail-Adresse passt. Probiere eine andere Absenderadresse oder wende dich an einen Mitarbeiter.
     email_reject_empty:
       subject_template: "[%{site_name}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |
@@ -1474,17 +1488,24 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
 
         Dein Nutzerkonto verfügt nicht über die nötigen Rechte, um in dieser Kategorie ein neues Thema anzulegen. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] E-Mail-Problem -- Zugriff nicht erlaubt"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Die Kategorie, an die du diese E-Mail gesendet hast, erlaubt nur Antworten von Nutzern mit gültigem Konto und bekannter E-Mail-Adresse. Wenn du glaubst, dass dies ein Fehler ist, wende dich bitte an einen Mitarbeiter.
+    email_reject_invalid_post:
+      subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Mögliche Gründe sind komplizierte Formatierung und zu lange oder kurze Nachrichten. Bitte versuche es erneut oder schreibe deinen Beitrag über die Website.
+    email_reject_invalid_post_specified:
+      subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
     email_reject_reply_key:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekannter Antwort-Schlüssel"
-      text_body_template: |
-        Es tut uns leid, aber die E-Mail-Nachricht an %{destination} (Titel: „%{former_title}“) hat nicht geklappt.
-        Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Kontaktiere einen Mitarbeiter.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-Mail Problem -- Thema nicht gefunden"
-      text_body_template: |
-        Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (Titel: %{former_title}) gab es ein Problem.
-
-        Das Thema ist uns nicht bekannt oder es wurde gelöscht bzw. geschlossen. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-Mail Problem -- Thema geschlossen"
       text_body_template: |
@@ -1493,16 +1514,8 @@ de:
         Das Thema ist uns nicht bekannt oder es wurde gelöscht bzw. geschlossen. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-Mail Problem -- Automatisch erzeugte Antwort"
-      text_body_template: |
-        Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (Titel: %{former_title}) gab es ein Problem.
-
-        Das Thema wurde geschlossen. Wenn du glaubst das dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
     email_error_notification:
       subject_template: "[%{site_name}] E-Mail-Problem -- POP-Authentifizierungsfehler"
-      text_body_template: |
-        Es gab einen Authentifizierungsfehler beim Abrufen von Mails vom POP-Server.
-
-        Bitte stelle sicher, dass du die POP-Zugangsdaten in [den Seiteneinstellungen](%{base_url}/admin/site_settings/category/email) korrekt konfiguriert hast.
     too_many_spam_flags:
       subject_template: "Neues Benutzerkonto gesperrt"
       text_body_template: |
