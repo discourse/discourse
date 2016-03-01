@@ -17,7 +17,7 @@ export function cloak(post, component) {
   if (!CLOAKING_ENABLED || _cloaked[post.id] || _dontCloak[post.id]) { return; }
 
   const $post = $(`#post_${post.post_number}`);
-  _cloaked[post.id] = $post.height();
+  _cloaked[post.id] = $post.outerHeight();
   Ember.run.debounce(component, 'queueRerender', 1000);
 }
 
