@@ -146,6 +146,10 @@ export default function(options) {
           text = text.substring(0, completeStart) + (options.key || "") + term + ' ' + text.substring(completeEnd + 1, text.length);
           me.val(text);
           Discourse.Utilities.setCaretPosition(me[0], completeStart + 1 + term.length);
+
+          if (options && options.afterComplete) {
+            options.afterComplete(text);
+          }
         }
       }
     }
