@@ -27,6 +27,9 @@ pt:
   purge_reason: "Automaticamente eliminado devido a abandono, conta inativada"
   disable_remote_images_download_reason: "O download remoto de imagens foi desativado por não haver espaço disponível no disco."
   anonymous: "Anónimo"
+  emails:
+    incoming:
+      default_subject: "Email de entrada de %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -311,6 +314,7 @@ pt:
         one: "Não é possível eliminar esta categoria porque contém 1 tópico. O tópico mais antigo é  %{topic_link}."
         other: "Não é possível eliminar esta categoria porque contém %{count} tópicos. O tópico mais antigo é  %{topic_link}."
       topic_exists_no_oldest: "Não é possível eliminar esta categoria porque a contagem de tópicos é de %{count}."
+    uncategorized_description: "Tópicos que não precisam de uma categoria ou que não se encaixam em nenhuma outra categoria existente."
   trust_levels:
     newuser:
       title: "novo utilizador"
@@ -695,7 +699,6 @@ pt:
     min_search_term_length: "Tamanho mínimo válido para termos de pesquisa, em caracteres"
     search_tokenize_chinese_japanese_korean: "Forçar pesquisa para atomizar Chinês/Japonês/Coreano mesmo em sites que não sejam CJC"
     allow_uncategorized_topics: "Permitir a criação de tópicos sem categoria. AVISO: Se houver quaisquer tópicos não categorizados, tem que re-categorizá-los antes de desligar isto."
-    uncategorized_description: "Descrição da categoria sem classificação. Deixar em branco para nenhuma descrição."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes que um utilizador possa criar uma mensagem com o mesmo conteúdo outra vez?"
     educate_until_posts: "Quando um utilizador começar a escrever as primeiras (n) novas mensagens, mostrar o painel pop-up de educação do novo utilizador no editor."
@@ -781,6 +784,7 @@ pt:
     suppress_reply_directly_above: "Não mostrar em-resposta-a expansível quando há apenas uma única resposta diretamente acima desta publicação."
     suppress_reply_when_quoting: "Não mostraR em-resposta-a expansível numa mensagem quando esta cita uma resposta."
     max_reply_history: "Número máximo de respostas a serem expandidas quando se expande em-resposta-a"
+    experimental_reply_expansion: "Esconder respostas intermédias ao expandir uma resposta-a (experimental)"
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em  'Mostrar Mais' tópicos principais expandido."
     redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
@@ -844,6 +848,9 @@ pt:
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
     verbose_localization: "Mostrar extensas dicas de localização na IU"
     previous_visit_timeout_hours: "Quanto tempo dura uma visita antes de a considerarmos como 'visita anterior', em horas."
+    top_topics_formula_log_views_multiplier: "fórmula do multiplicador (n) de visualizações logarítmica nos melhores tópicos: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "fórmula do multiplicador (n) de primeiros gostos nos melhores tópicos: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "fórmula do multiplicador (n) de menos gostos nos melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Após a criação de um tópico, os utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_create_post: "Após a publicação, os utilizadores devem esperar (n) segundos antes de criarem outra mensagem."
     rate_limit_new_user_create_topic: "Após a criação de um tópico, os novos utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
@@ -900,6 +907,7 @@ pt:
     tl3_links_no_follow: "Não remover rel=nofollow das hiperligações publicadas por utilizadores com Nível de Confiança 3."
     min_trust_to_create_topic: "O Nível de Confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível mínimo de confiança necessário para editar mensagens marcadas como wiki."
+    min_trust_to_allow_self_wiki: "O nível mínimo de confiança necessário para criar mensagens wiki próprias."
     min_trust_to_send_messages: "O nível de confiança mínimo necessário para criar mensagens privadas."
     newuser_max_links: "Quantas hiperligações um novo utilizador pode adicionar a uma mensagem."
     newuser_max_images: "Quantas imagens um novo utilizador pode adicionar a uma mensagem."
@@ -910,6 +918,7 @@ pt:
     max_users_notified_per_group_mention: "Número máximo de utilizadores que podem receber uma notificação se um grupo é mencionado (se o limite é atingido, nenhuma notificação será levantada)"
     create_thumbnails: "Criar imagens miniatura e lightbox que são demasiado largas para caber numa mensagem."
     email_time_window_mins: "Esperar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos utilizadores a hipótese de editarem e finalizarem as suas mensagens."
+    private_email_time_window_seconds: "Espere (n) segundos antes de enviar emails de notificação privados, para dar aos utilizadores a oportunidade de editar e finalizar as suas mensagens."
     email_posts_context: "Quantas respostas prévias a serem incluídas como contexto em emails de notificação."
     flush_timings_secs: "Com que frequência o servidor é alimentado com dados de sincronização, em segundos."
     title_max_word_length: "Tamanho máximo permitido de comprimento de palavras, em caracteres, no título de um tópico."
@@ -964,6 +973,9 @@ pt:
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
     short_email_length: "Comprimento de email curto, em Bytes"
     display_name_on_email_from: "Exibir nomes completos em campos do formulário de email"
+    unsubscribe_via_email: "Permitir aos utilizadores cancelar a subscrição de emails enviando um email com \"unsubscribe\" no assunto ou no corpo do email"
+    unsubscribe_via_email_footer: "Adicionar uma hiperligação de cancelamento de subscrição ao rodapé de emails enviados"
+    delete_email_logs_after_days: "Apagar registos de email após (N) dias. 0 para os manter indefinidamente"
     pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
     pop3_polling_ssl: "Utilize SSL ao ligar a um servidor POP3. (Recomendado)"
     pop3_polling_period_mins: "Período em minutos entre a verificação da conta POP3 para o email. NOTA: requer reinicialização."
@@ -1190,12 +1202,23 @@ pt:
       must_begin_with_alphanumeric: "tem que começar com uma letra ou número ou um sublinhado"
       must_end_with_alphanumeric: "tem que terminar com uma letra ou número ou um sublinhado"
       must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de 2 ou mais caracteres especiais (.-_)"
+      must_not_end_with_confusing_suffix: "não deve terminar com um sufixo confuso tal como .json ou .png etc."
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
     ip_address:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
+  unsubscribe_mailer:
+    subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
+    text_body_template: |
+      Alguém (possivelmente você?) pediu para não receber mais emails com com actualizações de %{site_domain_name} neste endereço.
+      Se confirma este pedido por favor carregue nesta hiperligação:
+
+      %{confirm_unsubscribe_link}
+
+
+      Se quiser continuar a receber emails com actualizações pode ignorar este email.
   invite_mailer:
     subject_template: "%{invitee_name} convidou-o a juntar-se a '%{topic_title}' em %{site_domain_name}"
     text_body_template: |
@@ -1280,6 +1303,8 @@ pt:
     post_hidden:
       subject_template: "Mensagem oculta devido a sinalizações da comunidade"
       text_body_template: "Olá,\n\nEsta é uma mensagem automática de %{site_name} para informá-lo que a sua mensagem foi oculta. \n\n%{base_url}%{url} \n\n%{flag_reason}\n\nMúltiplos membros da comunidade sinalizaram esta mensagem antes de ser escondida, por isso considere como poderá rever a sua mensagem para refletir o seu feedback. **Pode editar a sua mensagem após %{edit_delay} minutos, e esta será automaticamente exibida.**\n\nContudo, se a mensagem for escondida pela comunidade uma segunda vez, irá manter-se escondida até ser tratada pelo pessoal – e poderão ainda ocorrer ações, incluindo uma possível suspensão da sua conta.\n\nPara orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).\n"
+    usage_tips:
+      text_body_template: "Aqui ficam algumas dicas para que possa começar:\n\n## Leitura \n\nPara ler mais, **simplesmente continue a arrastar para baixo!** \n\nÀ medida que novas mensagens ou novos tópicos surgem, estes irão surgir automaticamente – não é necessário actualizar a página.\n\n## Navegação\n\nPara pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**.\n\n- A selecção de um título do tópico leva-o sempre para a **próxima resposta não lida** no tópico. Para entrar na parte superior ou inferior, seleccione a contagem de resposta ou última data de resposta em seu lugar.\n\n    <img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Ao ler um tópico, selecione a barra de progresso no canto inferior direito para controlos de navegação completos. Salte rapidamente para o topo ao selecionar o título do tópico. Pressione <kbd>?</kbd> para uma lista rápida de atalhos do teclado.\n\n    <img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Responder\n\n- Para responder ao **tópico em geral**, utilize <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> no final de cada tópico.\n\n- Para responder a uma **pessoa específica**, utilize <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> nas suas mensagens.\n\n- Para responder com um **novo tópico**, utilize <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> à direita desta mensagem. Tanto os tópicos antigos como os novos serão ligados automaticamente.\n\nA sua resposta pode ser formatada com HTML simplificado, BBCode ou [Markdown](http://commonmark.org/help/):\n\n    Isto é **negrito**.\n    Isto é <b>negrito</b>.\n    Isto é [b]negrito[/b].\n\nQuer aprender Markdown [Faça o nosso curso interactivo de 10 minutos!](http://commonmark.org/help/tutorial/)\n\nPara inserir uma citação, seleccione o texto que deseja citar e de seguida pressione qualquer botão de Resposta. Repetir para múltiplas citações.\n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar alguém da sua resposta, mencione o seu nome. Digite `@` para começar a seleccionar um nome de utilizador.\n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\nPara utilizar [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` para encontrar por nome, ou os tradicionais risonhos `;)`\n\n<img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\nPara gerar um sumário para uma hiperligação, cole-o numa linha por si só:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n## Acções\n\nExistem botões de acção no final de cada mensagem:\n\n<img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara deixar alguém saber que gostou e apreciou as suas mensagens, utilize o botão **gosto**. Partilhe o amor!\n\nSe vir um problema com uma mensagem de alguém, avise a pessoa em privado, ou avise [o nosso pessoal](%{base_url}/about), sobre a mesma utilizando o botão **sinalizar**. Pode também **partilhar** uma hiperligação para uma mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.\n\n## Notificações\n\nQuando alguém lhe responde, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o para aceder às suas **notificações**.\n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nNão se preocupe em falhar uma resposta – irá receber notificações por email que chegam quando está ausente.\n\n## As Suas Preferências\n\n  - Todos os tópicos com menos de **dois dias** são considerados novos.\n\n  - Qualquer tópico em que tenha **participado activamente** (respondido, criado, ou lido por um extenso período) será acompanhado automaticamente.\n\nVerá o indicador numérico e o indicador azul novo junto desses tópicos:\n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nPode alterar as suas notificações para qualquer tópico através do controlo de notificações no final do tópico.\n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nPode também configurar estados de notificação por categoria, se quer observar cada novo tópico numa categoria específica.\n\nTo change any of these settings, see [your user preferences](%{base_url}/my/preferences).\n\n## Confiança da Comunidade\n\nÀ medida que for participando aqui, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e limitações de novos utilizadores serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar novas capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |
@@ -1364,12 +1389,38 @@ pt:
     csv_export_failed:
       subject_template: "A exportação dos dados falhou"
       text_body_template: "Pedimos desculpa mas a sua exportação de dados falhou. Por favor verifique os registos do log ou contacte um membro do pessoal."
-    email_reject_no_account:
-      subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] Problema com Email -- Insuficiente nível de confiança"
+      text_body_template: |
+        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) falhou.
+
+        A sua conta não possui o nível de confiança necessário para criar novos tópicos para este endereço de email. Se acredita que isto é um erro contacte alguém do pessoal.
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Problema de email -- Utilizador inactivo"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
-        Não há nenhuma conta de utilizador conhecida com este endereço de email. Tente enviar a partir de um endereço de email diferente, ou contacte um membro do pessoal.
+        A sua conta associada com este email não está activa. Por favor active a sua conta antes de enviar emails.
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] Problema de email -- Utilizador de resposta não encontrado"
+      text_body_template: |+
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        A sua resposta foi enviada de um email diferente daquele que esperávamos, por esta razão não temos a certeza que seja a mesma pessoa. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
+
+    email_reject_no_message_id:
+      subject_template: "[%{site_name}]  Problema de email -- Sem identificador de mensagem"
+      text_body_template: |
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        Não conseguimos encontrar o `Message-Id` nos cabeçalhos do email. Tente enviar através de outro endereço de email ou contacte um membro do pessoal.
+    email_reject_no_account:
+      subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
+      text_body_template: |+
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        Não conseguimos encontrar nenhuma conta com combine com o seu endereço de email. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
+
     email_reject_empty:
       subject_template: "[%{site_name}]  Problema de email -- Sem Conteúdo"
       text_body_template: |
@@ -1390,18 +1441,53 @@ pt:
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 
         A sua conta não tem privilégios para publicar novos tópicos nessa categoria. Se acredita que isto é um erro, contacte um membro do pessoal.
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] Problema de email -- Chave de Resposta Desconhecida"
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] Problema de email -- Acesso Inválido"
+      text_body_template: |+
+        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
+
+        A categoria que enviou neste email apenas permite respostas de utilizadores com contas validadas e endereços de email conhecidos. Se acredita ser um erro contacto um membro do pessoal.
+
+    email_reject_invalid_post:
+      subject_template: "[%{site_name}] Problema de email -- Erro de publicação"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
-        A chave de resposta fornecida é inválida ou desconhecida, por isso não sabemos a que resposta corresponde este email. Contacte um membro do pessoal.
+        Algumas causas possíveis são: formatação complexa, mensagem demasiado grande, mensagem demasiado pequena. Por favor tente novamente, ou publique através do sítio se isto continuar.
+    email_reject_invalid_post_specified:
+      subject_template: "[%{site_name}] Problema de email -- Erro de publicação"
+      text_body_template: |
+        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
+
+        Motivo:
+
+        %{post_error}
+
+        Se conseguir corrigir o problema, tente novamente.
+    email_reject_invalid_post_action:
+      subject_template: "[%{site_name}] Problema de email -- Acção de Post inválida"
+      text_body_template: |
+        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
+
+        A acção Post não foi reconhecida. Por favor tente novamente, ou publique através do sítio se isto continuar.
+    email_reject_reply_key:
+      subject_template: "[%{site_name}] Problema de email -- Chave de Resposta Desconhecida"
+      text_body_template: |
+        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+
+        A chave de resposta no email é inválida ou desconhecida e por isso não conseguimos determinar a que email estava a responder. Contacte um membro do pessoal.
+    email_reject_bad_destination_address:
+      subject_template: "[%{site_name}] Problema de email -- Endereço Para: Desconhecido"
+      text_body_template: |
+        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
+
+        Nenhum dos endereços de destino é reconhecido. Por favor, certifique-se que está a enviar o endereço de email correcto fornecido pelo pessoal.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema de email -- Tópico Não Encontrado"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 
-        O tópico ao qual está a responder já não existe, talvez tenha sido eliminado? Se acredita que isto é um erro, contacte um membro do pessoal.
+        O tópico ao qual está a responder já não existe -- talvez tenha sido apagado. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problema de email -- Tópico Encerrado"
       text_body_template: |
@@ -1413,13 +1499,15 @@ pt:
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 
-        O seu email foi marcado como "auto gerado", o qual não podemos aceitar. Se acredita que isto é um erro, contacte um membro do pessoal.
+        O seu email foi marcado como "gerado automaticamente", o que quer dizer que foi automaticamente criado por um computador em vez de ser escrito por uma pessoa; não podemos aceitar esse tipo de emails. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_error_notification:
       subject_template: "[%{site_name}] Problema de email -- Erro de autenticação POP"
       text_body_template: |
-        Ocorreu um erro de autenticação  ao recuperar emails do servidor POP.
+        Ocorreu um erro de autenticação ao recuperar emails do servidor POP.
 
-        Por favor certifique-se que configurou corretamente as credenciais POP em [configurações do sítio](%{base_url}/admin/site_settings/category/email).
+        Por favor certifique-se que configurou correctamente as credenciais POP em [configurações do sítio](%{base_url}/admin/site_settings/category/email).
+
+        Se existe uma interface web para a sua conta de POP de email pode necessitar se iniciar sessão na interface web e verificar a suas configurações aí.
     too_many_spam_flags:
       subject_template: "Nova conta bloqueada"
       text_body_template: |
@@ -1470,6 +1558,10 @@ pt:
     download_remote_images_disabled:
       subject_template: "Descarregamento de imagens remotas desativado"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
+  unsubscribe_link: |
+    Para parar de receber notificações para este tópico em particular, [clique aqui](%{unsubscribe_url}). Para cancelar a subscrição destes emails, altere as suas [preferências de utilizador](%{user_preferences_url}).
+  unsubscribe_via_email_link: |
+    ou, [carregue aqui](mailto:reply@%{hostname}?subject=unsubscribe) para cancelar a subscrição via email.
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1477,6 +1569,10 @@ pt:
     unsubscribe:
       title: "Cancelar a Subscrição"
       description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
+    reply_by_email: "[Consultar Tópico](%{base_url}%{url}) ou responda a este email para responder"
+    visit_link_to_respond: "[Consultar Tópico](%{base_url}%{url}) para responder"
+    reply_by_email_pm: "[Consultar Mensagem](%{base_url}%{url}) ou responda a este email para responder"
+    visit_link_to_respond_pm: "[Consultar Mensagem](%{base_url}%{url}) para responder"
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
@@ -1526,6 +1622,17 @@ pt:
         Por favor visite esta hiperligação para visualizar a mensagem: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 

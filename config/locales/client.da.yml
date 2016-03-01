@@ -100,6 +100,8 @@ da:
         x_years:
           one: "1 år senere"
           other: "%{count} år senere"
+      previous_month: 'Forrige måned'
+      next_month: 'Næste måned'
     share:
       topic: 'del et link til dette emne'
       post: 'indlæg #%{postNumber}'
@@ -110,6 +112,8 @@ da:
       email: 'send dette link i en e-mail'
     action_codes:
       split_topic: "delte dette emne op %{when}"
+      invited_user: "Inviterede %{who} %{when}"
+      removed_user: "fjernede %{who} %{when}"
       autoclosed:
         enabled: 'lukket %{when}'
         disabled: 'åbnet %{when}'
@@ -173,6 +177,7 @@ da:
       other: "{{count}} tegn"
     suggested_topics:
       title: "Foreslåede emner"
+      pm_title: "Foreslåede beskeder"
     about:
       simple_title: "Om"
       title: "Om %{title}"
@@ -294,6 +299,12 @@ da:
         one: "1 bruger"
         other: "%{count} brugere"
     groups:
+      empty:
+        posts: "Der er ingen indlæg af medlemmer af denne gruppe."
+        members: "Der er ingen medlemmer i denne gruppe."
+        mentions: "Denne gruppe er ikke nævnt."
+        messages: "Der er ingen besked til denne gruppe."
+        topics: "Der er intet emne af medlemmer af denne gruppe."
       add: "Tilføj"
       selector_placeholder: "Tilføj medlemmer"
       owner: "ejer"
@@ -313,6 +324,19 @@ da:
       trust_levels:
         title: "Tillidsniveau der automatisk tildeles medlemmer når de oprettes:"
         none: "Ingen"
+      notifications:
+        watching:
+          title: "Kigger"
+          description: "Du får beskeder om hvert nyt indlæg i hver besked og antallet af nye svar bliver vist."
+        tracking:
+          title: "Følger"
+          description: "Du får besked hvis nogen nævner dit @navn eller svarer dig og antallet af nye svar bliver vist."
+        regular:
+          title: "Normal"
+          description: "Du får besked hvis nogen nævner dit @navn "
+        muted:
+          title: "Tavs"
+          description: "Du får aldrig beskeder om nye emner i denne gruppe."
     user_action_groups:
       '1': "Likes givet"
       '2': "Likes modtaget"
@@ -331,6 +355,7 @@ da:
       all_subcategories: "Alle"
       no_subcategory: "ingen"
       category: "Kategori"
+      category_list: "Vis liste over kategorier"
       reorder:
         title: "Ret kategoriernes rækkefølge "
         title_long: "Omorganiser listen over kategorier"
@@ -387,11 +412,13 @@ da:
       invited_by: "Inviteret af"
       trust_level: "Tillidsniveau"
       notifications: "Underretninger"
+      statistics: "Statistik"
       desktop_notifications:
         label: "Desktop-notifikationer"
         not_supported: "Notifikationer understøttes ikke af denne browser. Beklager."
         perm_default: "Slå notifikationer til"
         perm_denied_btn: "Tilladelse nægtet"
+        perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         disable: "Deaktiver notifikationer"
         currently_enabled: "(slået til)"
         enable: "Aktiver notifikationer"
@@ -439,7 +466,15 @@ da:
         warnings_received: "advarsler"
       messages:
         all: "Alle"
+        inbox: "Indbakke"
+        sent: "Sendt"
+        archive: "Arkiv"
         groups: "Mine grupper"
+        bulk_select: "Vælg beskeder"
+        move_to_inbox: "Flyt til Indbakke"
+        move_to_archive: "Arkiv"
+        failed_to_move: "Kunne ikke flytte valgt beskeder (måske problemer med netværket)"
+        select_all: "Vælg alle"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
@@ -596,6 +631,21 @@ da:
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
         instructions: "Mindst %{count} tegn"
+      summary:
+        title: "Resume"
+        stats: "Statistik"
+        topic_count: "Emner oprettet"
+        post_count: "Indlæg oprettet"
+        likes_given: "Likes givet"
+        likes_received: "Likes modtaget"
+        days_visited: "Dage besøgt"
+        posts_read_count: "Indlæg læst"
+        top_replies: "Top svar"
+        top_topics: "Top emner"
+        top_badges: "Top badges"
+        more_topics: "Flere emner"
+        more_replies: "Flere svar"
+        more_badges: "Flere badges"
       associated_accounts: "Logins"
       ip_address:
         title: "Sidste IP-adresse"
@@ -752,6 +802,7 @@ da:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
+      emoji: "Emoji :)"
       more_emoji: "mere..."
       options: "Indstillinger"
       whisper: "hvisken"
@@ -848,6 +899,9 @@ da:
       moved_post: "<i title='indlæg flyttet' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='indlæg linket' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge givet' class='fa fa-certificate'></i><p>Du blev tildelt '{{description}}'</p>"
+      group_message_summary:
+        one: "<i title='beskeder i din gruppes indbakke' class='fa fa-group'></i><p> {{count}} besked i din {{group_name}} inbox</p>"
+        other: "<i title='beskeder i gruppens indbakke' class='fa fa-group'></i><p> {{count}} beskeder i din {{group_name}} inbox</p>"
       alt:
         mentioned: "Nævnt af"
         quoted: "Citeret af"
@@ -862,8 +916,10 @@ da:
         moved_post: "Dit indlæg blev flyttet af"
         linked: "Link til dit indlæg"
         granted_badge: "Badge tildelt"
+        group_message_summary: "Besker i gruppens indbakke"
       popup:
         mentioned: '{{username}} nævnte dig i "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} nævnte dig i "{{topic}}" - {{site_title}}'
         quoted: '{{username}} citerede dig i "{{topic}}" - {{site_title}}'
         replied: '{{username}} svarede dig i "{{topic}}" - {{site_title}}'
         posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
@@ -964,6 +1020,12 @@ da:
       create: 'Nyt emne'
       create_long: 'Opret et nyt emne i debatten'
       private_message: 'Start en besked'
+      archive_message:
+        help: 'Flyt beskeder til dit arkiv'
+        title: 'Arkiv'
+      move_to_inbox:
+        title: 'Flyt til Indbakke'
+        help: 'Flyt beskeder tilbage til Indbakke'
       list: 'Emner'
       new: 'nyt emne'
       unread: 'ulæste'
@@ -1014,6 +1076,7 @@ da:
       auto_close_title: 'Indstillinger for automatisk lukning'
       auto_close_save: "Gem"
       auto_close_remove: "Luk ikke dette emne automatisk"
+      auto_close_immediate: "Seneste indlæg i emnet er allerede %{hours} timer gammelt så emnet bliver lukket med det samme."
       progress:
         title: emnestatus
         go_top: "top"
@@ -1134,6 +1197,7 @@ da:
         success: "Vi har inviteret denne bruger til at være med i denne besked."
         error: "Beklager, der skete en fejl, da vi forsøgte at invitere brugeren."
         group_name: "gruppe navn"
+      controls: "Emnestyring"
       invite_reply:
         title: 'Invitér'
         username_placeholder: "brugernavn"
@@ -1250,6 +1314,8 @@ da:
         yes_value: "Ja"
       via_email: "dette indlæg blev oprettet via email"
       whisper: "dette indlæg er en privat hvisken for moderatorer"
+      wiki:
+        about: "dette indlæg er en wiki"
       archetypes:
         save: 'Gem indstillinger'
       controls:
@@ -1682,6 +1748,7 @@ da:
           refresh_report: "Genopfrisk rapporten"
           start_date: "Start dato"
           end_date: "Slut dato"
+          groups: "Alle grupper"
       commits:
         latest_changes: "Seneste ændringer: opdatér ofte!"
         by: "af"
@@ -1964,13 +2031,17 @@ da:
             name: 'wiki'
             description: "Basis farven der bruges som baggrund i wiki posts."
       email:
+        title: "Emails"
         settings: "Indstillinger"
+        templates: "Skabeloner"
         preview_digest: "Forhåndsvisning af sammendrag"
         sending_test: "Sender test email..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Der opstod et problem med at sende test emailen. Dobbelt check dine email indstillinger, verificer at din server ikke blokerer email forbindelser og prøv så igen."
         sent: "Sendt"
         skipped: "Droppet"
+        received: "Modtaget"
+        rejected: "Afvist"
         sent_at: "Sendt"
         time: "Tidspunkt"
         user: "Bruger"
@@ -1988,6 +2059,19 @@ da:
         last_seen_user: "Sidst sete bruge:"
         reply_key: "Svarnøgle"
         skipped_reason: "Begrundelse"
+        incoming_emails:
+          from_address: "Fra"
+          to_addresses: "Til"
+          cc_addresses: "Cc"
+          subject: "Emne"
+          error: "Fejl"
+          none: "Ingen indkommende emails fundet"
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Emne..."
+            error_placeholder: "Fejl"
         logs:
           none: "Ingen logs fundet"
           filters:
@@ -2037,6 +2121,7 @@ da:
             change_site_setting: "skift indstillinger for site"
             change_site_customization: "skift tilpasning af site"
             delete_site_customization: "slet tilpasning af site"
+            change_site_text: "skift tekst for site"
             suspend_user: "suspendér user"
             unsuspend_user: "ophæv suspendering af bruger"
             grant_badge: "tildel badge"
@@ -2050,6 +2135,12 @@ da:
             change_category_settings: "ret kategori-indstillinger"
             delete_category: "slet kategori"
             create_category: "opret kategori"
+            block_user: "bloker bruger"
+            unblock_user: "fjern blokering af bruger"
+            grant_admin: "tildel admin"
+            revoke_admin: "fjern admin"
+            grant_moderation: "tildel moderation"
+            revoke_moderation: "fjern moderation"
         screened_emails:
           title: "Blokerede e-mails"
           description: "Følgende e-mail-adresser kontrolleres når nogen prøver at oprette en konto, og oprettelsen vil enten blive blokeret, eller der vil blive foretaget en anden handling."
@@ -2215,6 +2306,8 @@ da:
         deactivate_failed: "Der opstod et problem ved deaktivering af brugeren."
         unblock_failed: 'Der opstod et problem ved ophævelsen af brugerens blokering.'
         block_failed: 'Der opstod et problem ved blokering af brugeren.'
+        block_confirm: 'Er du sikker på, at du vil blokere brugeren? Bruger kan ikke længere oprette emner eller indlæg.'
+        block_accept: 'Ja, bloker brugeren'
         deactivate_explanation: "En deaktiveret bruger skal genvalidere deres e-mail."
         suspended_explanation: "En suspenderet bruger kan ikke logge ind."
         block_explanation: "En blokeret bruger kan ikke oprette indlæg eller starte emner."
@@ -2228,6 +2321,7 @@ da:
         unlock_trust_level: "Lås tillidsniveau op"
         tl3_requirements:
           title: "Krav for fortrolighedsniveau 3"
+          table_title: "I de sidste %{time_period} dage:"
           value_heading: "værdi"
           requirement_heading: "Obligatoriske"
           visits: "Besøg"
@@ -2495,6 +2589,10 @@ da:
         mark_tracking: '<b>m</b>, <b>t</b> Følg emne'
         mark_watching: '<b>m</b>, <b>w</b> Iagtag emne'
     badges:
+      earned_n_times:
+        one: "Fortjente dette badge 1 gang"
+        other: "Fortjente dette badge %{count} gange."
+      more_with_badge: "Andre med dette badge"
       title: Badges
       allow_title: "kan bruges som titel"
       multiple_grant: "kan gives flere gange"

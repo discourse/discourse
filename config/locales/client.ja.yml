@@ -199,6 +199,7 @@ ja:
     revert: "戻す"
     failed: "失敗"
     switch_to_anon: "匿名モード"
+    switch_from_anon: "匿名モード停止"
     banner:
       close: "バナーを閉じる。"
       edit: "このバナーを編集 >>"

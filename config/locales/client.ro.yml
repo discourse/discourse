@@ -173,7 +173,7 @@ ro:
     sign_up: "Înregistrare"
     log_in: "Autentificare"
     age: "Vârsta"
-    joined: "Adăugat"
+    joined: "Înregistrat"
     admin_title: "Admin"
     flags_title: "Semnalare"
     show_more: "Detaliază"
@@ -661,7 +661,7 @@ ro:
         network_fixed: "Se pare ca și-a revenit."
         server: "Ceva nu a funcționat."
         forbidden: "Nu sunteţi autorizat să vedeţi aceasta."
-        not_found: "Oops, aplicatia incearca sa incarce un URL care nu exista."
+        not_found: "Oops, aplicația încearcă să încarce un URL care nu există."
         unknown: "Ceva nu a funcționat."
       buttons:
         back: "Înapoi"
@@ -698,8 +698,8 @@ ro:
       value_prop: "Cand creati un cont nou, vom retine exact ce ati citit, astfel continuati intotdeauna de unde ati ramas. Deasemenea primiti notificari, aici sau prin email atunci se posteaza ceva nou. Puteti \"aprecia\" postari pentru a impartasi iubire :heartbeat:"
     summary:
       enabled_description: "Vizualizați sumarul discuției: cea mai interesantă postare, așa cum a fost determinată de comunitate. Pentru toate postările, faceți click dedesubt."
-      description: "Există <b>{{count}}</b> de răspunsuri."
-      description_time: "Există <b>{{count}}</b> de răspunsuri cu timp de citit estimat la <b>{{readingTime}} de minute</b>."
+      description: "Există <b>{{replyCount}}</b> de răspunsuri."
+      description_time: "Există <b>{{replyCount}}</b> de răspunsuri cu timp de citit estimat la <b>{{readingTime}} de minute</b>."
       enable: 'Fă sumarul discuției'
       disable: 'Arată toate postările'
     deleted_filter:
@@ -906,6 +906,7 @@ ro:
         category: "Caută în categoria\"{{category}}\" "
         topic: "Caută în această discuție"
         private_messages: "Caută mesaje"
+    new_item: "nou"
     go_back: 'înapoi'
     not_logged_in_user: 'pagina utilizatorului cu sumarul activităților și preferințelor'
     current_user: 'mergi la pagina proprie de utilizator'
@@ -960,7 +961,7 @@ ro:
       new: 'discuție nouă'
       unread: 'necitită'
       new_topics:
-        one: '1 subiect nou'
+        one: 'Un subiect nou'
         few: '{{count}} subiecte noi'
         other: '{{count}} subiecte noi'
       unread_topics:
@@ -987,7 +988,7 @@ ro:
         few: "aveţi {{count}} mesaje vechi necitite în această discuţie."
         other: "aveţi {{count}} mesaje vechi necitite în această discuţie."
       new_posts:
-        one: "este 1 mesaj nou în această discuţie de la ultima citire"
+        one: "este un mesaj nou în această discuţie de la ultima citire"
         few: "sunt {{count}} mesaje noi în această discuţie de la ultima citire"
         other: "sunt {{count}} mesaje noi în această discuţie de la ultima citire"
       likes:
@@ -1055,8 +1056,8 @@ ro:
       actions:
         recover: "Rescrie discuție"
         delete: "Șterge Discuție"
-        open: "Deschide discuție"
-        close: "Închide discuție"
+        open: "Redeschide discuția"
+        close: "Închide discuția"
         multi_select: "Selectează discuţiile ..."
         auto_close: "Închide automat"
         pin: "Fixează discuţia pe pagină..."
@@ -1155,6 +1156,9 @@ ro:
           few: "Va rugăm să alegeţi noul propietar pentru cele {{count}} mesajele postate de <b>{{old_user}}</b>."
           other: "Va rugăm să alegeţi noul propietar pentru cele {{count}} mesajele postate de <b>{{old_user}}</b>."
         instructions_warn: " aveți în vedere că nicio notificare ce privește această postare nu va fi transferabilă retroactiv către noul utilizator.<br>Avertisment: Acum, nicio informație ce depinde de postare nu va fi transferată noului utilizator. Folosiți cu grijă."
+      change_timestamp:
+        title: "Schimbă data publicării"
+        action: "schimbă data publicării"
       multi_select:
         select: 'selectează'
         selected: 'selectate ({{count}})'
@@ -1539,8 +1543,12 @@ ro:
           other: "Necitite ({{count}})"
         help: "discuțiile pe care le vizualizați sau urmariți momentan ce includ postări necitite"
       new:
-        lower_title: "noi"
-        title: "Nou"
+        lower_title: "nou"
+        title: "Noi"
+        title_with_count:
+          one: "Nou (1)"
+          few: "Noi ({{count}})"
+          other: "Noi ({{count}})"
         help: "discuții create în ultimele zile"
       posted:
         title: "Postările mele"
@@ -1772,7 +1780,7 @@ ro:
             title: "Dezactivearea modului doar-citire"
             label: "Dezactivează modul doar-citire"
         logs:
-          none: "Nu exista rapoarte..."
+          none: "Nu există rapoarte..."
         columns:
           filename: "Numele fișierului"
           size: "Mărime"

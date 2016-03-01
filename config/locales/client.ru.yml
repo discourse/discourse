@@ -138,6 +138,8 @@ ru:
           few: "%{count} года спустя"
           many: "%{count} лет спустя"
           other: "%{count} лет спустя"
+      previous_month: 'Предыдущий Месяц'
+      next_month: 'Следующий Месяц'
     share:
       topic: 'Поделиться ссылкой на эту тему'
       post: 'Ссылка на сообщение №%{postNumber}'
@@ -229,6 +231,7 @@ ru:
       other: "{{count}} букв"
     suggested_topics:
       title: "Похожие темы"
+      pm_title: "Похожие Сообщения"
     about:
       simple_title: "Информация"
       title: "Информация про %{title}"
