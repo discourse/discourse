@@ -23,7 +23,8 @@ export default createWidget('post-admin-menu', {
     const contents = [];
     contents.push(h('h3', I18n.t('admin_title')));
 
-    if (this.currentUser.staff) {
+
+    if (!attrs.isWhisper && this.currentUser.staff) {
       const buttonAtts = { action: 'togglePostType', icon: 'shield', className: 'toggle-post-type' };
 
       if (attrs.isModeratorAction) {
