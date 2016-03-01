@@ -4,10 +4,10 @@ import showModal from 'discourse/lib/show-modal';
 import OpenComposer from "discourse/mixins/open-composer";
 import Category from 'discourse/models/category';
 
-function unlessReadOnly(method) {
+function unlessReadOnly(method, message) {
   return function() {
     if (this.site.get("isReadOnly")) {
-      bootbox.alert(I18n.t("read_only_mode.login_disabled"));
+      bootbox.alert(message);
     } else {
       this[method]();
     }
@@ -19,7 +19,9 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
   actions: {
 
-    logout() {
+    logout: unlessReadOnly('_handleLogout', I18n.t("read_only_mode.logout_disabled")),
+
+    _handleLogout() {
       if (this.currentUser) {
         this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
       }
@@ -83,9 +85,9 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       return true;
     },
 
-    showLogin: unlessReadOnly('handleShowLogin'),
+    showLogin: unlessReadOnly('handleShowLogin', I18n.t("read_only_mode.login_disabled")),
 
-    showCreateAccount: unlessReadOnly('handleShowCreateAccount'),
+    showCreateAccount: unlessReadOnly('handleShowCreateAccount', I18n.t("read_only_mode.login_disabled")),
 
     showForgotPassword() {
       showModal('forgotPassword', { title: 'forgot_password.title' });
