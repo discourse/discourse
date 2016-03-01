@@ -41,8 +41,9 @@ export default MountWidget.extend({
 
     const $w = $(window);
     const windowHeight = window.innerHeight ? window.innerHeight : $w.height();
-    const slack = Math.round(windowHeight * 15);
+    const slack = Math.round(windowHeight * 5);
     const onscreen = [];
+    const nearby = [];
 
     let windowTop = $w.scrollTop();
 
@@ -72,6 +73,7 @@ export default MountWidget.extend({
       if (viewBottom > windowTop && viewTop <= windowBottom) {
         onscreen.push(bottomView);
       }
+      nearby.push(bottomView);
 
       bottomView++;
     }
@@ -114,20 +116,23 @@ export default MountWidget.extend({
     }
 
     const onscreenPostNumbers = [];
-    const prev = this._previouslyOnscreen;
+    const prev = this._previouslyNearby;
     const newPrev = {};
-    onscreen.forEach(idx => {
+    nearby.forEach(idx => {
       const post = posts.objectAt(idx);
       const postNumber = post.post_number;
       delete prev[postNumber];
-      onscreenPostNumbers.push(postNumber);
+
+      if (onscreen.indexOf(idx) !== -1) {
+        onscreenPostNumbers.push(postNumber);
+      }
       newPrev[postNumber] = post;
       uncloak(post, this);
     });
 
     Object.keys(prev).forEach(pn => cloak(prev[pn], this));
 
-    this._previouslyOnscreen = newPrev;
+    this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers);
   },
 
@@ -139,7 +144,7 @@ export default MountWidget.extend({
     this._super();
     const debouncedScroll = () => Ember.run.debounce(this, this._scrollTriggered, 10);
 
-    this._previouslyOnscreen = {};
+    this._previouslyNearby = {};
 
     this.appEvents.on('post-stream:refresh', debouncedScroll);
     $(document).bind('touchmove.post-stream', debouncedScroll);
