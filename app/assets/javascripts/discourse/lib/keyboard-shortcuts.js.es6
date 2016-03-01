@@ -291,7 +291,7 @@ export default {
       index = 0;
       $articles.each(function() {
         const top = $(this).position().top;
-        if (top > scrollTop) {
+        if (top >= scrollTop) {
           return false;
         }
         index += 1;
