@@ -59,7 +59,7 @@ en:
         blocked_user_error: "Happens when the sender has been blocked."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
-        insufficient_trust_level_error: "Happens when a use tried to create a new topic in a category they don't have the required trust level for."
+        insufficient_trust_level_error: "Happens when a user tried to create a new topic in a category they don't have the required trust level for."
         reply_user_not_matching_error: "Happens when a reply came in from a different email address the notification was sent to."
         topic_not_found_error: "Happens when a reply came in but the related topic has been deleted."
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
