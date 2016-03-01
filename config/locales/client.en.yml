@@ -1700,7 +1700,6 @@ en:
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'
-      private_reminder: 'flags are private, <b>only</b> visible to staff'
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Message'
@@ -1712,7 +1711,7 @@ en:
       submit_tooltip: "Submit the private flag"
       take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
       cant: "Sorry, you can't flag this post at this time."
-      notify_staff: 'Notify Staff'
+      notify_staff: 'Notify staff privately'
       formatted_name:
         off_topic: "It's Off-Topic"
         inappropriate: "It's Inappropriate"
