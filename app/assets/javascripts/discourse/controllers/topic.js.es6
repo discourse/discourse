@@ -498,7 +498,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       composerController.open({
         action: Composer.CREATE_TOPIC,
         draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
-        categoryId: this.get('category.id')
+        categoryId: this.get('model.category.id')
       }).then(() => {
         return Em.isEmpty(quotedText) ? "" : quotedText;
       }).then(q => {
