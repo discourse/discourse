@@ -20,6 +20,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
   SHORT_POST: 1200,
 
   categoryFullSlug: Em.computed.alias('topic.category.fullSlug'),
+  categoryBackgroundUrl: Em.computed.alias('topic.category.background_url'),
   postStream: Em.computed.alias('topic.postStream'),
   archetype: Em.computed.alias('topic.archetype'),
 

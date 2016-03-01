@@ -11,7 +11,7 @@ export default {
 
     this._removeClass();
 
-    if (categoryFullSlug) {
+    if (categoryFullSlug && this.get("categoryBackgroundUrl")) {
       $("body").addClass("category-" + categoryFullSlug);
     }
   })),
