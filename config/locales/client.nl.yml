@@ -662,8 +662,8 @@ nl:
       value_prop: "Wanneer je een account aangemaakt hebt, herinneren deze wat je gelezen hebt, zodat je direct door kan lezen vanaf waar je gestopt bent. Je krijgt ook notificaties, hier en via email, wanneer nieuwe posts gemaakt zijn. En je kan ook nog posts liken :heartbeat:"
     summary:
       enabled_description: "Je leest een samenvatting van dit topic: alleen de meeste interessante berichten zoals bepaald door de community. "
-      description: "Er zijn <b>{{count}}</b> reacties."
-      description_time: "Er zijn <b>{{count}}</b> reacties met een gemiddelde leestijd van <b>{{readingTime}} minuten</b>."
+      description: "Er zijn <b>{{replyCount}}</b> reacties."
+      description_time: "Er zijn <b>{{replyCount}}</b> reacties met een gemiddelde leestijd van <b>{{readingTime}} minuten</b>."
       enable: 'Samenvatting Topic'
       disable: 'Alle berichten'
     deleted_filter:

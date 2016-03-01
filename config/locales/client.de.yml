@@ -731,8 +731,8 @@ de:
       value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzten kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn neue Beiträge verfasst werden. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartbeat:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
-      description: "Es gibt <b>{{count}}</b> Antworten."
-      description_time: "Es gibt <b>{{count}}</b> Antworten mit einer geschätzten Lesezeit von <b>{{readingTime}} Minuten</b>."
+      description: "Es gibt <b>{{replyCount}}</b> Antworten."
+      description_time: "Es gibt <b>{{replyCount}}</b> Antworten mit einer geschätzten Lesezeit von <b>{{readingTime}} Minuten</b>."
       enable: 'Zusammenfassung vom Thema erstellen'
       disable: 'Alle Beiträge anzeigen'
     deleted_filter:

@@ -731,8 +731,8 @@ fi:
       value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia, täällä tai sähköpostilla, kun uusia viestejä kirjoitetaan. Voit myös tykätä viesteistä. :heartbeat:"
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
-      description: "Tässä ketjussa on <b>{{count}}</b> viestiä."
-      description_time: "Ketjussa on <b>{{count}}</b> viestiä, joiden arvioitu lukemisaika on <b>{{readingTime}} minuuttia</b>."
+      description: "Tässä ketjussa on <b>{{replyCount}}</b> viestiä."
+      description_time: "Ketjussa on <b>{{replyCount}}</b> viestiä, joiden arvioitu lukemisaika on <b>{{readingTime}} minuuttia</b>."
       enable: 'Näytä ketjun tiivistelmä'
       disable: 'Näytä kaikki viestit'
     deleted_filter:

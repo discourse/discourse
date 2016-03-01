@@ -731,8 +731,8 @@ es:
       value_prop: "Cuando te registras, recordamos lo que has leído, para que puedas volver justo donde estabas leyendo. También recibes notificaciones, por aquí y por email, cuando se publican nuevos mensajes. ¡También puedes darle a Me gusta a los mensajes! :heartbeat:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
-      description: "Hay <b>{{count}}</b> respuestas."
-      description_time: "Hay <b>{{count}}</b> respuestas con un tiempo de lectura estimado de <b>{{readingTime}} minutos</b>."
+      description: "Hay <b>{{replyCount}}</b> respuestas."
+      description_time: "Hay <b>{{replyCount}}</b> respuestas con un tiempo de lectura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir este Tema'
       disable: 'Ver Todos los Posts'
     deleted_filter:

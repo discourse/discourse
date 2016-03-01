@@ -615,8 +615,8 @@ sq:
       hide_forever: "jo faleminderit"
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
-      description: "Janë <b>{{count}}</b> përgjigje."
-      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
+      description: "Janë <b>{{replyCount}}</b> përgjigje."
+      description_time: "There are <b>{{replyCount}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
       enable: 'Përmbidhë këtë Diskutim'
       disable: 'Shfaq të gjithë Postimet'
     deleted_filter:

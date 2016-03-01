@@ -764,8 +764,8 @@ sk:
       value_prop: "Keď si vytvoríte účet, zapamätáme si čo ste čítali, takže sa môžete vrátiť presne tam, kde ste prestali. Okrem toho dostanete upozornenie tu, aj na váš e-mail, vždy keď pribudnú nové príspevky. A môžete označiť príspevky ktoré sa vám páčia. :heartbeat:"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      description: "Je tu <b>{{count}}</b> odpovedí."
-      description_time: "Je tu <b>{{count}}</b> odpovedí s priemerným časom čítania <b>{{readingTime}} minút</b>."
+      description: "Je tu <b>{{replyCount}}</b> odpovedí."
+      description_time: "Je tu <b>{{replyCount}}</b> odpovedí s priemerným časom čítania <b>{{readingTime}} minút</b>."
       enable: 'Zhrnutie tejto témy'
       disable: 'Zobraziť všetky príspevky'
     deleted_filter:

@@ -698,8 +698,8 @@ zh_CN:
       value_prop: "当你创建了账户，我们能准确地追踪你的阅读进度，所以你能够在下一次访问时回到你上次阅读到的地方。你也可以在有新帖子的时候收到网页和邮件通知。并且你可以赞任何帖子来分享你的感谢。:heartbeat:"
     summary:
       enabled_description: "你正在查看这个主题的概括版本：由社群认定的最有意思的帖子。"
-      description: "有 <b>{{count}}</b> 个回复。"
-      description_time: "主题有 <b>{{count}}</b> 个回复，大约要花 <b>{{readingTime}} 分钟</b>阅读。"
+      description: "有 <b>{{replyCount}}</b> 个回复。"
+      description_time: "主题有 <b>{{replyCount}}</b> 个回复，大约要花 <b>{{readingTime}} 分钟</b>阅读。"
       enable: '概括本主题'
       disable: '显示所有帖子'
     deleted_filter:

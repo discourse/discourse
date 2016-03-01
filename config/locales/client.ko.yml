@@ -695,8 +695,8 @@ ko:
       value_prop: "회원가입 하시면 글을 어디까지 읽으셨는지 저희가 기억하기 때문에, 언제든지 마지막 읽은 위치로 바로 돌아갈 수 있답니다. 그리고 새글이 뜰때마다 이 화면과 이메일로 알림을 받을수도 있고, 좋아요를 클릭해서 글에 대한 애정을 표현하실 수도 있어요. :heartbeat:"
     summary:
       enabled_description: "현재 커뮤니티에서 가장 인기있는 토픽의 요약본을 보고 있습니다:"
-      description: "<b>{{count}}</b>개의 답글이 있습니다."
-      description_time: "총 <b>{{count}}</b>개의 댓글이 있습니다. 예상 소요 시간은 <b>{{readingTime}}분</b>입니다.."
+      description: "<b>{{replyCount}}</b>개의 답글이 있습니다."
+      description_time: "총 <b>{{replyCount}}</b>개의 댓글이 있습니다. 예상 소요 시간은 <b>{{readingTime}}분</b>입니다.."
       enable: '이 토픽을 요약Show All Posts'
       disable: '모든 포스트 보기'
     deleted_filter:
