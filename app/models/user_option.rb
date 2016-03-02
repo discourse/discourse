@@ -9,6 +9,10 @@ class UserOption < ActiveRecord::Base
     @previous_replies_type ||= Enum.new(always: 0, unless_emailed: 1, never: 2)
   end
 
+  def self.like_notification_frequency_type
+    @like_notification_frequency_type ||= Enum.new(always: 0, first_time_and_daily: 1, first_time: 2)
+  end
+
   def set_defaults
     self.email_always = SiteSetting.default_email_always
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
@@ -26,6 +30,8 @@ class UserOption < ActiveRecord::Base
 
     self.new_topic_duration_minutes = SiteSetting.default_other_new_topic_duration_minutes
     self.auto_track_topics_after_msecs = SiteSetting.default_other_auto_track_topics_after_msecs
+
+    self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
 
 
     if SiteSetting.default_email_digest_frequency.to_i <= 0

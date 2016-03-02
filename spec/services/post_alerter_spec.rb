@@ -25,7 +25,7 @@ describe PostAlerter do
   end
 
   context 'likes' do
-    it 'does not double notify users on likes' do
+    it 'notifies on likes correctly' do
       ActiveRecord::Base.observers.enable :all
 
       post = Fabricate(:post, raw: 'I love waffles')
@@ -38,6 +38,31 @@ describe PostAlerter do
 
       # one like and one edit notification
       expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(2)
+
+
+      post.user.user_option.update_columns(like_notification_frequency:
+                                           UserOption.like_notification_frequency_type[:always])
+
+      admin2 = Fabricate(:admin)
+      PostAction.act(admin2, post, PostActionType.types[:like])
+      # two likes one edit
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(3)
+
+      post.user.user_option.update_columns(like_notification_frequency:
+                                           UserOption.like_notification_frequency_type[:first_time_and_daily])
+
+      # this gets skipped
+      admin3 = Fabricate(:admin)
+      PostAction.act(admin3, post, PostActionType.types[:like])
+
+      Timecop.freeze(2.days.from_now) do
+        admin4 = Fabricate(:admin)
+        PostAction.act(admin4, post, PostActionType.types[:like])
+      end
+
+      # first happend within the same day, no need to notify
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(4)
+
     end
   end
 
