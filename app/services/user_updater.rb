@@ -22,7 +22,8 @@ class UserUpdater
     :new_topic_duration_minutes,
     :auto_track_topics_after_msecs,
     :email_previous_replies,
-    :email_in_reply_to
+    :email_in_reply_to,
+    :like_notification_frequency
   ]
 
   def initialize(actor, user)

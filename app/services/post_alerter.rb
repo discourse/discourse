@@ -194,6 +194,29 @@ class PostAlerter
     # TODO decide if it makes sense to also publish a desktop notification
   end
 
+  def should_notify_edit?(notification, opts)
+    return existing_notification.data_hash["display_username"] != opts[:display_username]
+  end
+
+  def should_notify_like?(user, notification)
+
+    return true if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:always]
+
+    return true if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:first_time_and_daily] && notification.created_at < 1.day.ago
+
+    return false
+  end
+
+  def should_notify_previous?(user, notification, opts)
+    type = notification.notification_type
+    if type == Notification.types[:edited]
+      return should_notify_edit?(notification, opts)
+    elsif type == Notification.types[:liked]
+      return should_notify_like?(user, notification)
+    end
+    return false
+  end
+
   def create_notification(user, type, post, opts=nil)
     return if user.blank?
     return if user.id == Discourse::SYSTEM_USER_ID
@@ -226,10 +249,7 @@ class PostAlerter
                                          post_number: post.post_number,
                                          notification_type: type)
 
-    if existing_notification
-       return unless existing_notification.notification_type == Notification.types[:edited] &&
-                     existing_notification.data_hash["display_username"] == opts[:display_username]
-    end
+    return if existing_notification && !should_notify_previous?(user, existing_notification, opts)
 
     collapsed = false
 

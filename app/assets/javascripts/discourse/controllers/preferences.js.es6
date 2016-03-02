@@ -73,6 +73,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
                       { name: I18n.t('user.email_digests.weekly'), value: 7 },
                       { name: I18n.t('user.email_digests.every_two_weeks'), value: 14 }],
 
+  likeNotificationFrequencies: [{ name: I18n.t('user.like_notification_frequency.always'), value: 0 },
+                      { name: I18n.t('user.like_notification_frequency.first_time_and_daily'), value: 1 },
+                      { name: I18n.t('user.like_notification_frequency.first_time'), value: 2 }],
+
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
                        { name: I18n.t('user.auto_track_options.immediately'), value: 0 },
                        { name: I18n.t('user.auto_track_options.after_30_seconds'), value: 30000 },
