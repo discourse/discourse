@@ -765,6 +765,14 @@ rate_limits:
   tl2_additional_likes_per_day_multiplier: 1.5
   tl3_additional_likes_per_day_multiplier: 2
   tl4_additional_likes_per_day_multiplier: 3
+  alert_admins_if_errors_per_minute:
+    client: true
+    shadowed_by_global: true
+    default: 0
+  alert_admins_if_errors_per_hour:
+    client: true
+    shadowed_by_global: true
+    default: 0
 
 developer:
   force_hostname:
