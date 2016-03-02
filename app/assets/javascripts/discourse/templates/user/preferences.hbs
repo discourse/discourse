@@ -172,7 +172,7 @@
         {{preference-checkbox labelKey="user.email_digests.title" checked=model.user_option.email_digests}}
         {{#if model.user_option.email_digests}}
           <div class='controls controls-dropdown'>
-            {{combo-box valueAttribute="value" content=digestFrequencies value=model.user_option.digest_after_days}}
+            {{combo-box valueAttribute="value" content=digestFrequencies value=model.user_option.digest_after_minutes}}
           </div>
         {{/if}}
       {{/if}}

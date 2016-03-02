@@ -193,6 +193,8 @@ en:
     more: "More"
     less: "Less"
     never: "never"
+    every_30_minutes: "every 30 minutes"
+    every_hour: "every hour"
     daily: "daily"
     weekly: "weekly"
     every_two_weeks: "every two weeks"
@@ -639,6 +641,8 @@ en:
         never: "never"
       email_digests:
         title: "When I don't visit here, send an email digest of what's new:"
+        every_30_minutes: "every 30 minutes"
+        every_hour: "hourly"
         daily: "daily"
         every_three_days: "every three days"
         weekly: "weekly"

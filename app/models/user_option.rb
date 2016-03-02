@@ -38,7 +38,7 @@ class UserOption < ActiveRecord::Base
       self.email_digests = false
     else
       self.email_digests = true
-      self.digest_after_days ||= SiteSetting.default_email_digest_frequency.to_i
+      self.digest_after_minutes ||= SiteSetting.default_email_digest_frequency.to_i
     end
 
     true
@@ -127,7 +127,7 @@ end
 #  disable_jump_reply            :boolean          default(FALSE), not null
 #  edit_history_public           :boolean          default(FALSE), not null
 #  automatically_unpin_topics    :boolean          default(TRUE), not null
-#  digest_after_days             :integer
+#  digest_after_minutes          :integer
 #  auto_track_topics_after_msecs :integer
 #  new_topic_duration_minutes    :integer
 #  last_redirected_to_top_at     :datetime
