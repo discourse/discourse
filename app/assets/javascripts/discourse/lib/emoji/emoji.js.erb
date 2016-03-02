@@ -12,6 +12,15 @@ Discourse.Dialect.registerEmoji = function(code, url) {
   extendedEmoji[code] = url;
 };
 
+var _unicodeReplacements;
+var _unicodeRegexp;
+Discourse.Dialect.setUnicodeReplacements = function(replacements) {
+  _unicodeReplacements = replacements;
+  if (replacements) {
+    _unicodeRegexp = new RegExp(Object.keys(replacements).join("|"), "g");
+  }
+}
+
 // This method is used by PrettyText to reset custom emojis in multisites
 Discourse.Dialect.resetEmojis = function() {
   extendedEmoji = {};
@@ -149,6 +158,19 @@ Object.keys(translations).forEach(function (t) {
       return checkPrev(prev) ? imageFor(replacement) : token;
     });
   }
+});
+
+Discourse.Dialect.addPreProcessor(function(text) {
+  if (_unicodeReplacements) {
+    _unicodeRegexp.lastIndex = 0;
+
+    var m;
+    while ((m = _unicodeRegexp.exec(text)) !== null) {
+      text = text.replace(m[0], ":" + _unicodeReplacements[m[0]] + ":");
+    }
+  }
+
+  return text;
 });
 
 function escapeRegExp(s) {
