@@ -17,15 +17,15 @@ function unlessReadOnly(method, message) {
 const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   siteTitle: setting('title'),
 
+  _handleLogout() {
+    if (this.currentUser) {
+      this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
+    }
+  },
+
   actions: {
 
     logout: unlessReadOnly('_handleLogout', I18n.t("read_only_mode.logout_disabled")),
-
-    _handleLogout() {
-      if (this.currentUser) {
-        this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
-      }
-    },
 
     _collectTitleTokens(tokens) {
       tokens.push(this.get('siteTitle'));
