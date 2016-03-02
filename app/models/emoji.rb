@@ -131,12 +131,8 @@ class Emoji
     @unicode_replacements
   end
 
-  def self.unicode_regexp
-    @unicode_regexp ||= Regexp.union(unicode_replacements.keys)
-  end
-
-  def self.sub_unicode!(text)
-    text.gsub!(unicode_regexp) {|m| ":#{unicode_replacements[m]}:"}
+  def self.unicode_replacements_json
+    @unicode_replacements_json ||= unicode_replacements.to_json
   end
 
 end

@@ -201,6 +201,12 @@ module PrettyText
         end
       end
 
+      if SiteSetting.enable_emoji?
+        context.eval("Discourse.Dialect.setUnicodeReplacements(#{Emoji.unicode_replacements_json})");
+      else
+        context.eval("Discourse.Dialect.setUnicodeReplacements(null)");
+      end
+
       # reset emojis (v8 context is shared amongst multisites)
       context.eval("Discourse.Dialect.resetEmojis();")
       # custom emojis
@@ -259,7 +265,6 @@ module PrettyText
     options[:topicId] = opts[:topic_id]
 
     working_text = text.dup
-    Emoji.sub_unicode!(working_text) if SiteSetting.enable_emoji?
     sanitized = markdown(working_text, options)
 
     doc = Nokogiri::HTML.fragment(sanitized)

@@ -395,6 +395,14 @@ HTML
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
     end
 
+    it "doesn't replace emoji in inline code blocks with our emoji sets if emoji is enabled" do
+      expect(PrettyText.cook("`💣`")).not_to match(/\:bomb\:/)
+    end
+
+    it "doesn't replace emoji in code blocks with our emoji sets if emoji is enabled" do
+      expect(PrettyText.cook("```\n💣`\n```\n")).not_to match(/\:bomb\:/)
+    end
+
     it "replaces some glyphs that are not in the emoji range" do
       expect(PrettyText.cook("☺")).to match(/\:slightly_smiling\:/)
     end
