@@ -915,6 +915,7 @@ en:
     reserved_usernames: "Usernames for which signup is not allowed."
 
     min_password_length: "Minimum password length."
+    min_admin_password_length: "Minimum password length for Admin."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
