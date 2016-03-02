@@ -9,6 +9,7 @@ module ImportScripts::PhpBB3
       @database = database
       @smiley_processor = smiley_processor
 
+      @settings = settings
       @new_site_prefix = settings.new_site_prefix
       create_internal_link_regexps(settings.original_site_prefix)
     end
@@ -18,6 +19,9 @@ module ImportScripts::PhpBB3
       text = CGI.unescapeHTML(text)
 
       clean_bbcodes(text)
+      if @settings.use_bbcode_to_md
+        text = bbcode_to_md(text)
+      end
       process_smilies(text)
       process_links(text)
       process_lists(text)
@@ -44,6 +48,15 @@ module ImportScripts::PhpBB3
       #   [url=https&#58;//google&#46;com:1qh1i7ky]click here[/url:1qh1i7ky]
       #   [quote=&quot;cybereality&quot;:b0wtlzex]Some text.[/quote:b0wtlzex]
       text.gsub!(/:(?:\w{8})\]/, ']')
+    end
+
+    def bbcode_to_md(text)
+      begin
+        text.bbcode_to_md(false)
+      rescue e
+        puts "Problem converting \n#{text}\n using ruby-bbcode-to-md"
+        text
+      end
     end
 
     def process_smilies(text)
