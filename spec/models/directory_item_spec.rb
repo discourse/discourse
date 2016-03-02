@@ -19,13 +19,17 @@ describe DirectoryItem do
   end
 
   context 'refresh' do
-    let!(:post) { Fabricate(:post) }
+    before do
+      ActiveRecord::Base.observers.enable :all
+    end
+
+    let!(:post) { create_post }
 
     it "creates the record for the user" do
       DirectoryItem.refresh!
       expect(DirectoryItem.where(period_type: DirectoryItem.period_types[:all])
                           .where(user_id: post.user.id)
-                          .exists?).to be_truthy
+                          .where(topic_count: 1).count).to eq(1)
     end
 
   end
