@@ -35,7 +35,7 @@ module FileStore
     end
 
     def relative_base_url
-      "/uploads/#{RailsMultisite::ConnectionManagement.current_db}"
+      "#{Discourse.base_uri}/uploads/#{RailsMultisite::ConnectionManagement.current_db}"
     end
 
     def external?
