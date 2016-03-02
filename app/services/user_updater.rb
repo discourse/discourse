@@ -18,7 +18,7 @@ class UserUpdater
     :disable_jump_reply,
     :edit_history_public,
     :automatically_unpin_topics,
-    :digest_after_days,
+    :digest_after_minutes,
     :new_topic_duration_minutes,
     :auto_track_topics_after_msecs,
     :email_previous_replies,
