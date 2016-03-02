@@ -292,7 +292,11 @@ users:
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
   min_password_length:
     client: true
-    default: 8
+    default: 10
+    min: 1
+  min_admin_password_length:
+    client: true
+    default: 15
     min: 1
   block_common_passwords: true
   enforce_global_nicknames:

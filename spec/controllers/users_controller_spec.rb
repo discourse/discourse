@@ -723,7 +723,7 @@ describe UsersController do
       context "with values for the fields" do
         let(:create_params) { {
           name: @user.name,
-          password: 'watwatwat',
+          password: 'watwatwatwat',
           username: @user.username,
           email: @user.email,
           user_fields: {
@@ -773,7 +773,7 @@ describe UsersController do
       context "without values for the fields" do
         let(:create_params) { {
           name: @user.name,
-          password: 'watwatwat',
+          password: 'watwatwatwat',
           username: @user.username,
           email: @user.email,
         } }
@@ -793,7 +793,7 @@ describe UsersController do
       let!(:staged) { Fabricate(:staged, email: "staged@account.com") }
 
       it "succeeds" do
-        xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd"
+        xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd$$"
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
         expect(User.find_by(email: staged.email).staged).to eq(false)
