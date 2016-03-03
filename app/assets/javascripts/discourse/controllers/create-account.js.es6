@@ -72,7 +72,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('authOptions.auth_provider'),
 
   passwordInstructions: function() {
-    return this.get('isDeveloper') ? I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_admin_password_length}) : I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_password_length});
+    return this.get('isDeveloper') ? I18n.t('user.password.instructions', {count: this.siteSettings.min_admin_password_length}) : I18n.t('user.password.instructions', {count: this.siteSettings.min_password_length});
   }.property('isDeveloper'),
 
   nameInstructions: function() {
@@ -284,16 +284,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return Discourse.InputValidation.create({ failed: true });
     }
 
-    // If too short for Admin
-    if (this.get('isDeveloper') && password.length < Discourse.SiteSettings.min_admin_password_length) {
-      return Discourse.InputValidation.create({
-        failed: true,
-        reason: I18n.t('user.password.too_short')
-      });
-    }
-
-    // If too short for normal user
-    if (!this.get('isDeveloper') && password.length < Discourse.SiteSettings.min_password_length) {
+    // If too short
+    const passwordLength = this.get('isDeveloper') ? this.siteSettings.min_admin_password_length : this.siteSettings.min_password_length;
+    if (password.length < passwordLength) {
       return Discourse.InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.too_short')
