@@ -134,7 +134,7 @@ class Admin::BackupsController < Admin::AdminController
     # when all chunks are uploaded
     if uploaded_file_size + current_chunk_size >= total_size
       # merge all the chunks in a background thread
-      Jobs.enqueue(:backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)
+      Jobs.enqueue_in(5.seconds, :backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)
     end
 
     render nothing: true
