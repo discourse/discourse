@@ -343,7 +343,8 @@ class UsersController < ApplicationController
           errors: user.errors.full_messages.join("\n")
         ),
         errors: user.errors.to_hash,
-        values: user.attributes.slice('name', 'username', 'email')
+        values: user.attributes.slice('name', 'username', 'email'),
+        is_developer: UsernameCheckerService.new.is_developer?(user.email)
       }
     end
   rescue ActiveRecord::StatementInvalid
