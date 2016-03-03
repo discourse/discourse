@@ -195,7 +195,7 @@ class PostAlerter
   end
 
   def should_notify_edit?(notification, opts)
-    return existing_notification.data_hash["display_username"] != opts[:display_username]
+    return notification.data_hash["display_username"] != opts[:display_username]
   end
 
   def should_notify_like?(user, notification)

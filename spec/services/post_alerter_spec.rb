@@ -24,20 +24,41 @@ describe PostAlerter do
     end
   end
 
+  context 'edits' do
+    it 'notifies correctly on edits' do
+
+      ActiveRecord::Base.observers.enable :all
+
+      post = Fabricate(:post, raw: 'I love waffles')
+
+      admin = Fabricate(:admin)
+      post.revise(admin, {raw: 'I made a revision'})
+
+      # skip this notification cause we already notified on a similar edit
+      Timecop.freeze(2.hours.from_now) do
+        post.revise(admin, {raw: 'I made another revision'})
+      end
+
+      post.revise(Fabricate(:admin), {raw: 'I made a revision'})
+
+      Timecop.freeze(4.hours.from_now) do
+        post.revise(admin, {raw: 'I made another revision'})
+      end
+
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(3)
+    end
+  end
+
   context 'likes' do
     it 'notifies on likes correctly' do
       ActiveRecord::Base.observers.enable :all
 
       post = Fabricate(:post, raw: 'I love waffles')
       PostAction.act(evil_trout, post, PostActionType.types[:like])
+      PostAction.act(Fabricate(:admin), post, PostActionType.types[:like])
 
-      admin = Fabricate(:admin)
-      post.revise(admin, {raw: 'I made a revision'})
-
-      PostAction.act(admin, post, PostActionType.types[:like])
-
-      # one like and one edit notification
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(2)
+      # one like
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
 
 
       post.user.user_option.update_columns(like_notification_frequency:
@@ -46,7 +67,7 @@ describe PostAlerter do
       admin2 = Fabricate(:admin)
       PostAction.act(admin2, post, PostActionType.types[:like])
       # two likes one edit
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(3)
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(2)
 
       post.user.user_option.update_columns(like_notification_frequency:
                                            UserOption.like_notification_frequency_type[:first_time_and_daily])
@@ -61,7 +82,7 @@ describe PostAlerter do
       end
 
       # first happend within the same day, no need to notify
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(4)
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(3)
 
     end
   end
