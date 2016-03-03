@@ -11,8 +11,15 @@ describe RandomTopicSelector do
       $redis.rpush key, t
     end
 
+    expect(RandomTopicSelector.next(0)).to eq([])
     expect(RandomTopicSelector.next(2)).to eq([0,1])
+
+    $redis.expects(:multi).returns(Discourse.received_readonly!)
     expect(RandomTopicSelector.next(2)).to eq([2,3])
+    $redis.unstub(:multi)
+
+    expect(RandomTopicSelector.next(2)).to eq([2,3])
+    expect(RandomTopicSelector.next(2)).to eq([])
   end
 
   it 'can correctly backfill' do
