@@ -74,19 +74,7 @@
     {{plugin-outlet "site-map-links-last"}}
   {{/menu-links}}
 
-  {{#if categories}}
-    <ul class="category-links clearfix">
-      <li class='heading'>
-        {{d-link class="heading"
-                 route="discovery.categories"
-                 class="categories-link"
-                 label="filters.categories.title"}}
-      </li>
-      {{#each categories as |c|}}
-        {{hamburger-category category=c}}
-      {{/each}}
-    </ul>
-  {{/if}}
+  {{mount-widget widget='hamburger-categories' args=(as-hash categories=categories)}}
   <hr>
 
   {{#menu-links omitRule="true"}}
