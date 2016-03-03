@@ -118,7 +118,7 @@ export default createWidget('actions-summary', {
       body.push(h('div.clearfix'));
     });
 
-    if (attrs.isDeleted) {
+    if (attrs.deleted_at) {
       body.push(h('div.post-action', [
         iconNode('trash-o'),
         ' ',
