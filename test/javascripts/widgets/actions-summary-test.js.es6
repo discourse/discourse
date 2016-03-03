@@ -68,7 +68,7 @@ widgetTest('post deleted', {
   template: '{{mount-widget widget="actions-summary" args=args}}',
   setup() {
     this.set('args', {
-      isDeleted: true,
+      deleted_at: "2016-01-01",
       deletedByUsername: 'eviltrout',
       deletedByAvatarTemplate: '/images/avatar.png'
     });
