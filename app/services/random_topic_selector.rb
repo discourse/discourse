@@ -47,7 +47,12 @@ class RandomTopicSelector
       $redis.ltrim(key, count, -1)
     end
 
-    results = results[0]
+    if !results.is_a?(Array) # Redis is in readonly mode
+      results = $redis.lrange(key, 0, count-1)
+    else
+      results = results[0]
+    end
+
     results.map!(&:to_i)
 
     left = count - results.length
