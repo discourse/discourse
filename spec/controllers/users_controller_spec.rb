@@ -333,7 +333,7 @@ describe UsersController do
         old_token = user.auth_token
 
         get :password_reset, token: token
-        put :password_reset, token: token, password: 'newpassword'
+        put :password_reset, token: token, password: 'hg9ow8yhg98o'
         expect(response).to be_success
         expect(assigns[:error]).to be_blank
 
@@ -372,14 +372,14 @@ describe UsersController do
       end
 
       it "logs in the user" do
-        put :password_reset, token: token, password: 'newpassword'
+        put :password_reset, token: token, password: 'ksjafh928r'
         expect(assigns(:user).errors).to be_blank
         expect(session[:current_user_id]).to be_present
       end
 
       it "doesn't log in the user when not approved" do
         SiteSetting.expects(:must_approve_users?).returns(true)
-        put :password_reset, token: token, password: 'newpassword'
+        put :password_reset, token: token, password: 'ksjafh928r'
         expect(assigns(:user).errors).to be_blank
         expect(session[:current_user_id]).to be_blank
       end

@@ -21,7 +21,6 @@ class CommonPasswords
     password_list.include?(password)
   end
 
-
   private
 
     class RedisPasswordList
