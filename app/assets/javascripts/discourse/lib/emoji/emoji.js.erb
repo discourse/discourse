@@ -48,9 +48,11 @@ var emojiHash = {};
 // add all default emojis
 emoji.forEach(function(code){ emojiHash[code] = true; });
 // and their aliases
+
+var aliasHash = {};
 for (var name in aliases) {
   aliases[name].forEach(function(alias) {
-    emojiHash[alias] = true;
+    aliasHash[alias] = name;
   });
 }
 
@@ -221,27 +223,29 @@ Discourse.Emoji.search = function(term, options) {
   var maxResults = (options && options["maxResults"]) || -1;
   if (maxResults === 0) { return []; }
 
-  toSearch = toSearch || _.union(_.keys(emojiHash), _.keys(extendedEmoji)).sort();
+  toSearch = toSearch || _.union(_.keys(emojiHash), _.keys(extendedEmoji), _.keys(aliasHash)).sort();
 
   var i, results = [];
-
-  var done = function() {
+  function addResult(term) {
+    var val = aliasHash[term] || term;
+    if (results.indexOf(val) === -1) {
+      results.push(val);
+    }
     return maxResults > 0 && results.length >= maxResults;
   }
 
-  for (i=0; i < toSearch.length; i++) {
-    if (toSearch[i].indexOf(term) === 0) {
-      results.push(toSearch[i]);
-      if(done()) { break; }
+  var item;
+  for (i=0; i<toSearch.length; i++) {
+    item = toSearch[i];
+    if (item.indexOf(term) === 0 && addResult(item)) {
+      return results;
     }
   }
 
-  if(!done()){
-    for (i=0; i < toSearch.length; i++) {
-      if (toSearch[i].indexOf(term) > 0) {
-        results.push(toSearch[i]);
-        if(done()) { break; }
-      }
+  for (i=0; i<toSearch.length; i++) {
+    item = toSearch[i];
+    if (item.indexOf(term) === 0 && addResult(item)) {
+      return results;
     }
   }
 
