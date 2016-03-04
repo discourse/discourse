@@ -188,7 +188,7 @@ class UserNotifications < ActionMailer::Base
   protected
 
   def user_locale(user)
-    user.respond_to?(:locale) ? user.locale : nil
+    (user.locale.present? && I18n.available_locales.include?(user.locale.to_sym)) ? user.locale : nil
   end
 
   def email_post_markdown(post)
