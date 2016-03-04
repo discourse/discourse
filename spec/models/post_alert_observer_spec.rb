@@ -21,11 +21,8 @@ describe PostAlertObserver do
     end
 
     context 'when removing a liked post' do
-      before do
-        PostAction.act(evil_trout, post, PostActionType.types[:like])
-      end
-
       it 'removes a notification' do
+        PostAction.act(evil_trout, post, PostActionType.types[:like])
         expect {
           PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
         }.to change(Notification, :count).by(-1)

@@ -50,12 +50,27 @@ describe PostAlerter do
   end
 
   context 'likes' do
+
+    it 'notifies on likes after an undo' do
+      ActiveRecord::Base.observers.enable :all
+
+      post = Fabricate(:post, raw: 'I love waffles')
+
+      PostAction.act(evil_trout, post, PostActionType.types[:like])
+      PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
+      PostAction.act(evil_trout, post, PostActionType.types[:like])
+
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+    end
+
     it 'notifies on likes correctly' do
       ActiveRecord::Base.observers.enable :all
 
       post = Fabricate(:post, raw: 'I love waffles')
+
       PostAction.act(evil_trout, post, PostActionType.types[:like])
-      PostAction.act(Fabricate(:admin), post, PostActionType.types[:like])
+      admin = Fabricate(:admin)
+      PostAction.act(admin, post, PostActionType.types[:like])
 
       # one like
       expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
@@ -66,8 +81,28 @@ describe PostAlerter do
 
       admin2 = Fabricate(:admin)
       PostAction.act(admin2, post, PostActionType.types[:like])
-      # two likes one edit
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(2)
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+
+      # adds info to the notification
+      notification = Notification.find_by(post_number: 1,
+                                          topic_id: post.topic_id)
+
+
+      expect(notification.data_hash["count"].to_i).to eq(2)
+      expect(notification.data_hash["username2"]).to eq(evil_trout.username)
+
+      # this is a tricky thing ... removing a like should fix up the notifications
+      PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
+
+      # rebuilds the missing notification
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      notification = Notification.find_by(post_number: 1,
+                                          topic_id: post.topic_id)
+
+      expect(notification.data_hash["count"]).to eq(2)
+      expect(notification.data_hash["username"]).to eq(admin2.username)
+      expect(notification.data_hash["username2"]).to eq(admin.username)
+
 
       post.user.user_option.update_columns(like_notification_frequency:
                                            UserOption.like_notification_frequency_type[:first_time_and_daily])
@@ -82,7 +117,7 @@ describe PostAlerter do
       end
 
       # first happend within the same day, no need to notify
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(3)
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(2)
 
     end
   end

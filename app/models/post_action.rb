@@ -147,10 +147,10 @@ SQL
       # so callback is called
       action.save
       action.add_moderator_post_if_needed(moderator, :agreed, delete_post)
-      @trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
+      trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
     end
 
-    DiscourseEvent.trigger(:confirmed_spam_post, post) if @trigger_spam
+    DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
 
     update_flagged_posts_count
   end
@@ -272,6 +272,7 @@ SQL
       post_action.recover!
       action_attrs.each { |attr, val| post_action.send("#{attr}=", val) }
       post_action.save
+      PostAlertObserver.after_create_post_action(post_action)
     else
       post_action = create(where_attrs.merge(action_attrs))
       if post_action && post_action.errors.count == 0
@@ -480,7 +481,7 @@ SQL
     elsif PostActionType.auto_action_flag_types.include?(post_action_type) &&
           SiteSetting.flags_required_to_hide_post > 0
 
-      old_flags, new_flags = PostAction.flag_counts_for(post.id)
+      _old_flags, new_flags = PostAction.flag_counts_for(post.id)
 
       if new_flags >= SiteSetting.flags_required_to_hide_post
         hide_post!(post, post_action_type, guess_hide_reason(post))
