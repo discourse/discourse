@@ -13,6 +13,10 @@ describe TopicsController do
     request.env['HTTP_REFERER'] = ref
   end
 
+  def set_accept_language(locale)
+    request.env['HTTP_ACCEPT_LANGUAGE'] = locale
+  end
+
   it "doesn't store an incoming link when there's no referer" do
     expect {
       get :show, id: topic.id
@@ -33,7 +37,7 @@ describe TopicsController do
       end
 
       it "uses the application layout even with an escaped fragment param" do
-        get :show, {'topic_id' => topic.id, 'slug' => topic.slug,  '_escaped_fragment_' => 'true'}
+        get :show, {'topic_id' => topic.id, 'slug' => topic.slug, '_escaped_fragment_' => 'true'}
         expect(response).to render_template(layout: 'application')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
@@ -51,7 +55,7 @@ describe TopicsController do
       end
 
       it "uses the crawler layout when there's an _escaped_fragment_ param" do
-        get :show, topic_id: topic.id, slug: topic.slug,  _escaped_fragment_: 'true'
+        get :show, topic_id: topic.id, slug: topic.slug, _escaped_fragment_: 'true'
         expect(response).to render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
@@ -114,25 +118,87 @@ describe TopicsController do
     end
   end
 
-  describe 'set_locale' do
-    it 'sets the one the user prefers' do
-      SiteSetting.stubs(:allow_user_locale).returns(true)
+  describe "set_locale" do
+    context "allow_user_locale disabled" do
+      context "accept-language header differs from default locale" do
+        before do
+          SiteSetting.stubs(:allow_user_locale).returns(false)
+          SiteSetting.stubs(:default_locale).returns("en")
+          set_accept_language("fr")
+        end
 
-      user = Fabricate(:user, locale: :fr)
-      log_in_user(user)
+        context "with an anonymous user" do
+          it "uses the default locale" do
+            get :show, {topic_id: topic.id}
 
-      get :show, {topic_id: topic.id}
+            expect(I18n.locale).to eq(:en)
+          end
+        end
 
-      expect(I18n.locale).to eq(:fr)
+        context "with a logged in user" do
+          it "it uses the default locale" do
+            user = Fabricate(:user, locale: :fr)
+            log_in_user(user)
+
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:en)
+          end
+        end
+      end
     end
 
-    it 'is sets the default locale when the setting not enabled' do
-      user = Fabricate(:user, locale: :fr)
-      log_in_user(user)
+    context "allow_user_locale enabled" do
+      context "accept-language header differs from default locale" do
+        before do
+          SiteSetting.stubs(:allow_user_locale).returns(true)
+          SiteSetting.stubs(:default_locale).returns("en")
+          set_accept_language("fr")
+        end
 
-      get :show, {topic_id: topic.id}
+        context "with an anonymous user" do
+          it "uses the locale from the headers" do
+            get :show, {topic_id: topic.id}
 
-      expect(I18n.locale).to eq(:en)
+            expect(I18n.locale).to eq(:fr)
+          end
+        end
+
+        context "with a logged in user" do
+          it "uses the user's preferred locale" do
+            user = Fabricate(:user, locale: :fr)
+            log_in_user(user)
+
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:fr)
+          end
+        end
+      end
+
+      context "the preferred locale includes a region" do
+        it "returns the locale and region separated by an underscore" do
+          SiteSetting.stubs(:allow_user_locale).returns(true)
+          SiteSetting.stubs(:default_locale).returns("en")
+          set_accept_language("zh-CN")
+
+          get :show, {topic_id: topic.id}
+
+          expect(I18n.locale).to eq(:zh_CN)
+        end
+      end
+
+      context 'accept-language header is not set' do
+        it 'uses the site default locale' do
+          SiteSetting.stubs(:allow_user_locale).returns(true)
+          SiteSetting.stubs(:default_locale).returns('en')
+          set_accept_language('')
+
+          get :show, {topic_id: topic.id}
+
+          expect(I18n.locale).to eq(:en)
+        end
+      end
     end
   end
 

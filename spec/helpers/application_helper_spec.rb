@@ -84,5 +84,16 @@ describe ApplicationHelper do
     end
   end
 
+  describe '#rtl_class' do
+    it "returns 'rtl' when the I18n.locale is rtl" do
+      I18n.stubs(:locale).returns(:he)
+      expect(helper.rtl_class).to eq('rtl')
+    end
+
+    it 'returns an empty string when the I18n.locale is not rtl' do
+      I18n.stubs(:locale).returns(:zh_TW)
+      expect(helper.rtl_class).to eq('')
+    end
+  end
 
 end

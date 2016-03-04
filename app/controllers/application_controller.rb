@@ -164,7 +164,15 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = current_user.try(:effective_locale) || SiteSetting.default_locale
+    if !current_user
+      if SiteSetting.allow_user_locale
+        I18n.locale = locale_from_header
+      else
+        I18n.locale = SiteSetting.default_locale
+      end
+    else
+      I18n.locale = current_user.effective_locale
+    end
     I18n.ensure_all_loaded!
   end
 
@@ -308,6 +316,18 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+    def locale_from_header
+      begin
+        # Rails I18n uses underscores between the locale and the region; the request
+        # headers use hyphens.
+        available_locales = I18n.available_locales.map { |locale| locale.to_s.gsub(/_/, '-') }
+        http_accept_language.language_region_compatible_from(available_locales).gsub(/-/, '_')
+      rescue
+        # If Accept-Language headers are not set.
+        I18n.default_locale
+      end
+    end
 
     def preload_anonymous_data
       store_preloaded("site", Site.json_for(guardian))
