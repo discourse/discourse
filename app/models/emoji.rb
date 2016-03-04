@@ -20,19 +20,19 @@ class Emoji
   end
 
   def self.all
-    Discourse.cache.fetch("all_emojis") { standard | custom }
+    Discourse.cache.fetch("all_emojis:v2") { standard | custom }
   end
 
   def self.standard
-    Discourse.cache.fetch("standard_emojis") { load_standard }
+    Discourse.cache.fetch("standard_emojis:v2") { load_standard }
   end
 
   def self.aliases
-    Discourse.cache.fetch("aliases_emojis") { load_aliases }
+    Discourse.cache.fetch("aliases_emojis:v2") { load_aliases }
   end
 
   def self.custom
-    Discourse.cache.fetch("custom_emojis") { load_custom }
+    Discourse.cache.fetch("custom_emojis:v2") { load_custom }
   end
 
   def self.exists?(name)
@@ -52,7 +52,7 @@ class Emoji
   end
 
   def self.create_from_db_item(emoji)
-    name = emoji["aliases"].first
+    name = emoji["name"]
     filename = "#{name}.png"
     Emoji.new.tap do |e|
       e.name = name
@@ -91,16 +91,19 @@ class Emoji
   end
 
   def self.load_standard
-    db.map { |emoji| Emoji.create_from_db_item(emoji) }
+    db['emojis'].map {|e| Emoji.create_from_db_item(e) }
   end
 
   def self.load_aliases
-    aliases = {}
+    return @aliases if @aliases
 
-    db.select { |emoji| emoji["aliases"].count > 1 }
-      .each { |emoji| aliases[emoji["aliases"][0]] = emoji["aliases"][1..-1] }
+    @aliases ||= db['aliases']
 
-    aliases
+    # Fix how `slightly_smiling` was mislabeled
+    @aliases['slight_smile'] ||= []
+    @aliases['slight_smile'] << 'slightly_smiling'
+
+    @aliases
   end
 
   def self.load_custom
@@ -121,10 +124,19 @@ class Emoji
   def self.unicode_replacements
     return @unicode_replacements if @unicode_replacements
 
-    @unicode_replacements = Hash[db.map {|e| [e['emoji'], e['aliases'][0]] }]
+
+    @unicode_replacements = {}
+    db['emojis'].each do |e|
+      hex = e['code'].hex
+      # Don't replace digits or letters
+      if hex > 128
+        @unicode_replacements[[hex].pack('U')] = e['name']
+      end
+    end
+
     @unicode_replacements["\u{2639}"] = 'frowning'
-    @unicode_replacements["\u{263A}"] = 'slightly_smiling'
-    @unicode_replacements["\u{263B}"] = 'slightly_smiling'
+    @unicode_replacements["\u{263A}"] = 'slight_smile'
+    @unicode_replacements["\u{263B}"] = 'slight_smile'
     @unicode_replacements["\u{2661}"] = 'heart'
     @unicode_replacements["\u{2665}"] = 'heart'
 

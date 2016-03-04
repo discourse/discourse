@@ -333,7 +333,7 @@ export default Ember.Component.extend({
           term = term.toLowerCase();
 
           if (term === "") {
-            return resolve(["slightly_smiling", "smile", "wink", "sunny", "blush"]);
+            return resolve(["slight_smile", "smile", "wink", "sunny", "blush"]);
           }
 
           if (Discourse.Emoji.translations[full]) {
