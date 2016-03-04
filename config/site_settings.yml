@@ -1074,6 +1074,9 @@ user_preferences:
   default_email_private_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false
+  disable_mailing_list_mode:
+    default: false
+    client: true
   default_email_always: false
   default_email_previous_replies:
     enum: 'PreviousRepliesSiteSetting'
