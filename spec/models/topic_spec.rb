@@ -1584,4 +1584,20 @@ describe Topic do
 
     expect(topic.message_archived?(user)).to eq(true)
   end
+
+  it 'will trigger :topic_status_updated' do
+    topic = Fabricate(:topic)
+    user = topic.user
+    user.admin = true
+    @topic_status_event_triggered = false
+
+    DiscourseEvent.on(:topic_status_updated) do
+      @topic_status_event_triggered = true
+    end
+
+    topic.update_status('closed', true, user)
+    topic.reload
+    
+    expect(@topic_status_event_triggered).to eq(true)
+  end
 end
