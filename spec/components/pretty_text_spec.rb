@@ -404,7 +404,7 @@ HTML
     end
 
     it "replaces some glyphs that are not in the emoji range" do
-      expect(PrettyText.cook("☺")).to match(/\:slightly_smiling\:/)
+      expect(PrettyText.cook("☺")).to match(/\:slight_smile\:/)
     end
 
     it "doesn't replace unicode emoji if emoji is disabled" do

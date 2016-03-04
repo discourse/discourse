@@ -28,7 +28,7 @@ module ImportScripts::PhpBB3
     def add_default_smilies
       {
         [':D', ':-D', ':grin:'] => ':smiley:',
-        [':)', ':-)', ':smile:'] => ':slightly_smiling:',
+        [':)', ':-)', ':smile:'] => ':slight_smile:',
         [';)', ';-)', ':wink:'] => ':wink:',
         [':(', ':-(', ':sad:'] => ':frowning:',
         [':o', ':-o', ':eek:'] => ':astonished:',
