@@ -44,6 +44,11 @@ class UserOption < ActiveRecord::Base
     true
   end
 
+  def mailing_list_mode
+    return false if SiteSetting.disable_mailing_list_mode
+    super
+  end
+
   def update_tracked_topics
     return unless auto_track_topics_after_msecs_changed?
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
