@@ -11,7 +11,7 @@ class UserBadgesController < ApplicationController
     if params[:username]
       user_id = User.where(username_lower: params[:username].downcase).pluck(:id).first
       user_badges = user_badges.where(user_id: user_id) if user_id
-      grant_count = user_badges.count
+      grant_count = badge.user_badges.where(user_id: user_id).count
     end
 
     if offset = params[:offset]
