@@ -10,7 +10,7 @@ module Jobs
 
       EmailLog.where(reply_key: nil)
               .where("created_at < ?", threshold)
-              .destroy_all
+              .delete_all
     end
 
   end
