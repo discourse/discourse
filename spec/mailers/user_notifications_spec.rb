@@ -429,5 +429,19 @@ describe UserNotifications do
         end
       end
     end
+
+    context "user locale is not a valid locale" do
+      %w(signup signup_after_approval authorize_email forgot_password admin_login account_created).each do |mail_type|
+        include_examples "notification derived from template" do
+          SiteSetting.default_locale = "en"
+          let(:locale) { "invalid" }
+          let(:mail_type) { mail_type }
+          it "sets the locale" do
+            expects_build_with(has_entry(:locale, nil))
+          end
+        end
+      end
+    end
+
   end
 end
