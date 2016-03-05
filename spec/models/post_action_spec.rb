@@ -12,6 +12,24 @@ describe PostAction do
   let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
+  describe "rate limits" do
+
+    it "limits redo/undo" do
+
+      RateLimiter.stubs(:disabled?).returns(false)
+
+      PostAction.act(eviltrout, post, PostActionType.types[:like])
+      PostAction.remove_act(eviltrout, post, PostActionType.types[:like])
+      PostAction.act(eviltrout, post, PostActionType.types[:like])
+      PostAction.remove_act(eviltrout, post, PostActionType.types[:like])
+
+      expect {
+        PostAction.act(eviltrout, post, PostActionType.types[:like])
+      }.to raise_error
+
+    end
+  end
+
   describe "messaging" do
 
     it "doesn't generate title longer than 255 characters" do
@@ -464,8 +482,6 @@ describe PostAction do
   end
 
   it "prevents user to act twice at the same time" do
-    post = Fabricate(:post)
-
     # flags are already being tested
     all_types_except_flags = PostActionType.types.except(PostActionType.flag_types)
     all_types_except_flags.values.each do |action|

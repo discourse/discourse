@@ -241,7 +241,14 @@ SQL
     PostCreator.new(user, opts).create.try(:id)
   end
 
+  def self.limit_action!(user,post,post_action_type_id)
+    RateLimiter.new(user, "post_action-#{post.id}_#{post_action_type_id}", 4, 1.minute).performed!
+  end
+
   def self.act(user, post, post_action_type_id, opts = {})
+
+    limit_action!(user,post,post_action_type_id)
+
     related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
     staff_took_action = opts[:take_action] || false
 
@@ -296,6 +303,9 @@ SQL
   end
 
   def self.remove_act(user, post, post_action_type_id)
+
+    limit_action!(user,post,post_action_type_id)
+
     finder = PostAction.where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id)
     finder = finder.with_deleted.includes(:post) if user.try(:staff?)
     if action = finder.first
