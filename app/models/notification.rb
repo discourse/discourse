@@ -122,12 +122,19 @@ class Notification < ActiveRecord::Base
   end
 
   def self.recent_report(user, count = nil)
+    return unless user && user.user_option
+
     count ||= 10
     notifications = user.notifications
                         .visible
                         .recent(count)
                         .includes(:topic)
-                        .to_a
+
+    if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
+      notifications = notifications.where('notification_type <> ?', Notification.types[:liked])
+    end
+
+    notifications = notifications.to_a
 
     if notifications.present?
 
