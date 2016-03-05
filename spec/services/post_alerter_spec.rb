@@ -63,6 +63,20 @@ describe PostAlerter do
       expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
     end
 
+    it 'notifies on does not notify when never is selected' do
+      ActiveRecord::Base.observers.enable :all
+
+      post = Fabricate(:post, raw: 'I love waffles')
+
+      post.user.user_option.update_columns(like_notification_frequency:
+                                           UserOption.like_notification_frequency_type[:never])
+
+      PostAction.act(evil_trout, post, PostActionType.types[:like])
+
+
+      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(0)
+    end
+
     it 'notifies on likes correctly' do
       ActiveRecord::Base.observers.enable :all
 

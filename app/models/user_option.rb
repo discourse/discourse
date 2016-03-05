@@ -10,7 +10,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def self.like_notification_frequency_type
-    @like_notification_frequency_type ||= Enum.new(always: 0, first_time_and_daily: 1, first_time: 2)
+    @like_notification_frequency_type ||= Enum.new(always: 0, first_time_and_daily: 1, first_time: 2, never: 3)
   end
 
   def set_defaults
