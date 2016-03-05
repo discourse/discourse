@@ -634,6 +634,7 @@ en:
         always: "Always"
         first_time_and_daily: "First time a post is liked and daily"
         first_time: "First time a post is liked"
+        never: "Never"
       email_previous_replies:
         title: "Include previous replies at the bottom of emails"
         unless_emailed: "unless previously sent"

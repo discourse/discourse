@@ -221,6 +221,8 @@ class PostAlerter
     return if user.blank?
     return if user.id == Discourse::SYSTEM_USER_ID
 
+    return if type == Notification.types[:liked] && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
+
     opts ||= {}
 
     # Make sure the user can see the post
