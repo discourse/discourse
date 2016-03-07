@@ -2,6 +2,7 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
 
   attributes :error,
              :error_description,
+             :rejection_message,
              :return_path,
              :date,
              :from,

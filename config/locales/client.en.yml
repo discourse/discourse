@@ -2296,6 +2296,7 @@ en:
             cc: "Cc"
             subject: "Subject"
             body: "Body"
+            rejection_message: "Rejection Mail"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"

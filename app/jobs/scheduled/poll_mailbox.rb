@@ -23,9 +23,14 @@ module Jobs
     def process_popmail(popmail)
       begin
         mail_string = popmail.pop
-        Email::Receiver.new(mail_string).process
+        receiver = Email::Receiver.new(mail_string)
+        receiver.process!
       rescue => e
-        handle_failure(mail_string, e)
+        rejection_message = handle_failure(mail_string, e)
+        if rejection_message.present? && receiver && receiver.incoming_email
+          receiver.incoming_email.rejection_message = rejection_message.body.to_s
+          receiver.incoming_email.save
+        end
       end
     end
 
@@ -49,6 +54,7 @@ module Jobs
         when ActiveRecord::Rollback                       then :email_reject_invalid_post
         when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
         when Discourse::InvalidAccess                     then :email_reject_invalid_access
+        when RateLimiter::LimitExceeded                   then :email_reject_rate_limit_specified
       end
 
       template_args = {}
@@ -57,6 +63,10 @@ module Jobs
       if message_template == :email_reject_invalid_post && e.message.size > 6
         message_template = :email_reject_invalid_post_specified
         template_args[:post_error] = e.message
+      end
+
+      if message_template == :email_reject_rate_limit_specified
+        template_args[:rate_limit_description] = e.description
       end
 
       if message_template
@@ -68,6 +78,8 @@ module Jobs
 
         client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
         Email::Sender.new(client_message, message_template).send
+
+        client_message
       else
         Discourse.handle_job_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))
       end

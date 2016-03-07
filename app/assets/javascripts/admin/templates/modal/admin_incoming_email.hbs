@@ -96,3 +96,15 @@
   </div>
 </div>
 
+{{#if model.rejection_message}}
+
+  <hr>
+
+  <div class="control-group">
+    <label>{{i18n "admin.email.incoming_emails.modal.rejection_message"}}</label>
+    <div class="controls">
+      {{textarea value=model.rejection_message}}
+    </div>
+  </div>
+
+{{/if}}
