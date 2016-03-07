@@ -86,11 +86,7 @@ module Jobs
       end
 
       def content
-        if @article_rss_item.content
-          @article_rss_item.content.scrub
-        else
-          @article_rss_item.description.scrub
-        end
+        @article_rss_item.content.try(:scrub) || @article_rss_item.description.try(:scrub)
       end
 
       def title
