@@ -401,6 +401,11 @@ class TopicQuery
         return result.includes(:first_post).order("(SELECT like_count FROM posts p3 WHERE p3.topic_id = topics.id AND p3.post_number = 1) #{sort_dir}")
       end
 
+      if sort_column.start_with?('custom_fields')
+        field = sort_column.split('.')[1]
+        return result.order("(SELECT CASE WHEN EXISTS (SELECT true FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') THEN (SELECT value::integer FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') ELSE 0 END) #{sort_dir}")
+      end
+
       result.order("topics.#{sort_column} #{sort_dir}")
     end
 
