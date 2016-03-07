@@ -67,7 +67,7 @@ end
 # Table name: screened_emails
 #
 #  id            :integer          not null, primary key
-#  email         :string(255)      not null
+#  email         :string           not null
 #  action_type   :integer          not null
 #  match_count   :integer          default(0), not null
 #  last_match_at :datetime

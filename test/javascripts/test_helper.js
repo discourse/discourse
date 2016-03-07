@@ -41,6 +41,8 @@
 //
 //= require ../../public/javascripts/jquery.magnific-popup-min.js
 
+window.inTestEnv = true;
+
 window.assetPath = function(url) {
   if (url.indexOf('defer') === 0) {
     return "/assets/" + url;
@@ -110,9 +112,6 @@ QUnit.testStart(function(ctx) {
     Ember.run.debounce = Ember.run;
   }
 });
-
-// Don't cloak in testing
-Ember.CloakedCollectionView = Ember.CollectionView;
 
 QUnit.testDone(function() {
   Ember.run.debounce = origDebounce;

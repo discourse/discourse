@@ -698,8 +698,8 @@ vi:
       value_prop: "Khi bạn tạo tài khoản, website nhớ chính xác những gì bạn đã đọc, vì vậy bạn sẽ luôn trở lại đúng nơi đã rời đi. Bạn cũng có thể nhận thông báo ở đây hoặc qua email mỗi khi có bài viết mới. Bạn cũng có thể like bài viết để chia sẻ cảm xúc của mình. :heartbeat:"
     summary:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
-      description: "Có  <b>{{count}}</b> trả lời"
-      description_time: "Đây là <b>{{count}}</b> trả lời tương ứng với thời gian đọc <b>{{readingTime}} phút</b>."
+      description: "Có  <b>{{replyCount}}</b> trả lời"
+      description_time: "Đây là <b>{{replyCount}}</b> trả lời tương ứng với thời gian đọc <b>{{readingTime}} phút</b>."
       enable: 'Tóm tắt lại chủ đề'
       disable: 'HIển thị tất cả các bài viết'
     deleted_filter:

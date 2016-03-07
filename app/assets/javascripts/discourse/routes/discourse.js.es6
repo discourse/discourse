@@ -75,8 +75,10 @@ const DiscourseRoute = Ember.Route.extend({
 });
 
 export function cleanDOM() {
-  // Close mini profiler
-  $('.profiler-results .profiler-result').remove();
+
+  if (window.MiniProfiler) {
+    window.MiniProfiler.pageTransition();
+  }
 
   // Close some elements that may be open
   $('header ul.icons li').removeClass('active');

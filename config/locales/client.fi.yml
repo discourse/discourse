@@ -269,7 +269,7 @@ fi:
         one: "<b>1</b> viesti ketjussa odottaa hyväksyntää"
         other: "<b>{{count}}</b> viestiä ketjussa odottaa hyväksyntää"
       confirm: "Tallenna muutokset"
-      delete_prompt: "Haluatko varmasti poistaa käyttäjän <b>%{username}</b>? Kaikki käyttäjän kirjoittamat viestit poistetaan ja tämän sähköposti- sekä IP-osoitteille asetetaan esto."
+      delete_prompt: "Haluatko todella poistaa käyttäjän <b>%{username}</b>? Kaikki hänen kirjoittamansa viestit poistetaan. Lisäksi hänen sähköposti- ja IP-osoitteillensa laitetaan esto."
       approval:
         title: "Viesti odottaa hyväksyntää"
         description: "Olemme vastaanottaneet viestisi, mutta se täytyy vielä hyväksyä ennen, kuin se näytetään sivustolla. Ole kärsivällinen."
@@ -433,9 +433,7 @@ fi:
         perm_denied_btn: "Ei oikeuksia"
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
         disable: "Poista ilmoitukset käytöstä"
-        currently_enabled: "(nyt käytössä)"
         enable: "Näytä ilmoituksia"
-        currently_disabled: "(pois käytöstä)"
         each_browser_note: "Huom: Sinun täytyy vaihtaa tämä asetus kaikissa selaimista, joita käytät."
       dismiss_notifications: "Merkitse kaikki luetuiksi"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
@@ -571,12 +569,18 @@ fi:
         title: "Käyttäjäkortin tunnus"
       website: "Nettisivu"
       email_settings: "Sähköposti"
+      email_previous_replies:
+        title: "Liitä aiemmat vastaukset mukaan sähköpostin alaosaan"
+        unless_emailed: "ellei aiemmin lähetetty"
+        always: "aina"
+        never: "ei koskaan"
       email_digests:
         title: "Lähetä tiivistelmä uusista viesteistä sähköpostilla, jos en käy sivustolla "
         daily: "päivittäin"
         every_three_days: "joka kolmas päivä"
         weekly: "viikottain"
         every_two_weeks: "joka toinen viikko"
+      email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
       email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni, tai kutsuu minut viestiketjuun"
       email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
       email_always: "Lähetä sähköposti-ilmoitukset, vaikka olen aktiivinen palstalla."
@@ -731,8 +735,8 @@ fi:
       value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia, täällä tai sähköpostilla, kun uusia viestejä kirjoitetaan. Voit myös tykätä viesteistä. :heartbeat:"
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
-      description: "Tässä ketjussa on <b>{{count}}</b> viestiä."
-      description_time: "Ketjussa on <b>{{count}}</b> viestiä, joiden arvioitu lukemisaika on <b>{{readingTime}} minuuttia</b>."
+      description: "Vastauksia on <b>{{replyCount}}</b> kpl."
+      description_time: "Vastauksia on <b>{{replyCount}}</b>. Niiden lukemiseen menee arviolta <b>{{readingTime}} minuuttia</b>."
       enable: 'Näytä ketjun tiivistelmä'
       disable: 'Näytä kaikki viestit'
     deleted_filter:
@@ -1012,9 +1016,6 @@ fi:
         category: "Alueella {{category}} ei ole ketjua."
         top: "Huippuketjuja ei ole."
         search: "Hakutuloksia ei löytynyt."
-        educate:
-          new: '<p>Uudet ketjut ilmestyvät tähän.</p><p>Oletuksena, ketjut tulkitaan uusiksi ja niiden yhteydessä näytetään<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkki, kun ne on luotu edellisen kahden päivän aikana.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
-          unread: '<p>Lukemattomat viestit ilmestyvät tähän.</p><p>Oletuksena, ketjut tulkitaan lukemattomiksi ja niiden yhteydessä näytetään <span class="badge new-posts badge-notification">1</span> jos olet:</p><ul><li>luonut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua enemmän, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurantaan tai tarkkailuun ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         hot: "Kuumia ketjuja ei ole enempää."
@@ -1378,18 +1379,6 @@ fi:
           bookmark: "Peru kirjanmerkki"
           like: "Peru tykkäys"
           vote: "Peru ääni"
-        people:
-          off_topic: "{{icons}} liputtivat tämän asiaan kuulumattomaksi"
-          spam: "{{icons}} liputtivat tämän roskapostiksi"
-          spam_with_url: "{{icons}} liputtivat <a href='{{postUrl}}'>tämän roskapostiksi</a>"
-          inappropriate: "{{icons}} liputtivat tämän asiattomaksi"
-          notify_moderators: "{{icons}} ilmoittivat valvojille"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>ilmoittivat valvojille</a>"
-          notify_user: "{{icons}} lähetti viestin"
-          notify_user_with_url: "{{icons}} lähetti <a href='{{postUrl}}'>viestin</a>"
-          bookmark: "{{icons}} lisäsivät tämän kirjanmerkkeihinsä"
-          like: "{{icons}} tykkäsivät tästä"
-          vote: "{{icons}} äänestivät tätä"
         by_you:
           off_topic: "Liputit tämän asiaankuulumattomaksi"
           spam: "Liputit tämän roskapostiksi"
@@ -1934,11 +1923,9 @@ fi:
             is_disabled: "Palautus on estetty sivuston asetuksissa."
             label: "Palauta"
             title: "Palauta varmuuskopio"
-            confirm: "Oletko varma, että haluat palauttaa tämän varmuuskopion?"
           rollback:
             label: "Palauta"
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
-            confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
         user_archive_confirm: "Oletko varma, että haluat ladata viestisi?"
         success: "Vienti on käynnissä. Saat ilmoituksen viestillä, kun prosessi on valmis."
@@ -2041,9 +2028,6 @@ fi:
           love:
             name: 'tykkäys'
             description: "Tykkäyspainikkeen väri."
-          wiki:
-            name: 'wiki'
-            description: "Wiki-viestien taustaväri."
       email:
         title: "Sähköpostit"
         settings: "Asetukset"
@@ -2080,6 +2064,13 @@ fi:
           subject: "Otsikko"
           error: "Virhe"
           none: "Uusia sähköpostiviestejä ei löydetty."
+          modal:
+            date: "Päivämäärä"
+            from: "Lähettäjä"
+            to: "Vastaanottaja"
+            cc: "Kopio"
+            subject: "Otsikko"
+            body: "Leipäteksti"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2155,6 +2146,7 @@ fi:
             revoke_admin: "peru ylläpitäjän oikeudet"
             grant_moderation: "myönnä valvojan oikeudet"
             revoke_moderation: "peru valvojan oikeudet"
+            backup_operation: "varmuuskopiointi"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."

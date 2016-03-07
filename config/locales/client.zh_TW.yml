@@ -601,8 +601,8 @@ zh_TW:
       sign_up: "註冊"
     summary:
       enabled_description: "你正在檢視此討論話題的摘要：在這個社群裡最熱門的文章。"
-      description: "共有 <b>{{count}}</b> 個回覆。"
-      description_time: "共有 <b>{{count}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀。"
+      description: "共有 <b>{{replyCount}}</b> 個回覆。"
+      description_time: "共有 <b>{{replyCount}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀。"
       enable: '以摘要檢視此討論話題'
       disable: '顯示所有文章'
     deleted_filter:

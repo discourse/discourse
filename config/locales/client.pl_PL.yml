@@ -700,8 +700,8 @@ pl_PL:
       value_prop: "Jeśli stworzysz konto, zapamiętamy przeczytane przez Ciebie wpisy i tematy, dzięki czemu zawsze powrócisz do odpowiedniego miejsca.  Otrzymasz też powiadomienia o nowych wpisach. Dodatkowo możliwe będzie polubienie ciekawych wpisów  :heartbeat:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
-      description: "Istnieją <b>{{count}}</b> odpowiedzi."
-      description_time: "Istnieją <b>{{count}}</b> odpowiedzi z czasem czytania oszacowanym na <b>{{readingTime}} minut</b>."
+      description: "Istnieją <b>{{replyCount}}</b> odpowiedzi."
+      description_time: "Istnieją <b>{{replyCount}}</b> odpowiedzi z czasem czytania oszacowanym na <b>{{readingTime}} minut</b>."
       enable: 'Podsumuj ten temat'
       disable: 'Pokaż wszystkie wpisy'
     deleted_filter:

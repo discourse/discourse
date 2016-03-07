@@ -588,7 +588,6 @@ zh_TW:
     suppress_reply_directly_above: "當帖子只有一個回覆時，不顯示回覆到該帖的回覆。"
     suppress_reply_when_quoting: "當帖子引用回覆時，不顯示可展開的回覆到某帖的標記。"
     max_reply_history: "擴展回覆到某帖時顯示的最大回覆數量"
-    experimental_reply_expansion: "當展開回覆到某帖時隱藏直接回覆（實驗性）"
     topics_per_period_in_top_summary: "預設推薦話題的顯示數量"
     topics_per_period_in_top_page: "在展開 \"顯示更多\" 推薦話題列表的顯示數量"
     redirect_users_to_top_page: "將新用戶或長時間未使用的用戶自動重新導向至熱門頁面"

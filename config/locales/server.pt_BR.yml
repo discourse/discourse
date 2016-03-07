@@ -27,6 +27,22 @@ pt_BR:
   purge_reason: "A conta não verificada, foi excluída."
   disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
   anonymous: "Anônimo"
+  emails:
+    incoming:
+      default_subject: "Email recebido de %{email}"
+      errors:
+        empty_email_error: "Ocorre quando o email bruto recebido estiver em branco."
+        no_message_id_error: "Ocorre quando o email não possui cabeçalho 'id-mensagem'."
+        auto_generated_email_error: "Ocorre quando o cabeçalho 'precedência' estiver definido como: lista, lixo eletrônico, lote ou resposta_automática, ou quando outro cabeçalho contiver: enviado_automaticamente, respondido_automaticamente ou gerado_automaticamente."
+        no_body_detected_error: "Ocorre quando não foi possível extrair o corpo de texto e não havia anexos."
+        inactive_user_error: "Ocorre quando o remetente não está ativo."
+        blocked_user_error: "Ocorre quando o remetente foi bloqueado."
+        bad_destination_address: "Ocorre quando nenhum dos endereços de email nos campos Para/Cc/Cco era correspondente ao endereço de email recebido."
+        strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
+        insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria de que não possui o nível de confiança necessário."
+        reply_user_not_matching_error: "Ocorre quando uma resposta chega em um endereço de email diferente ao da notificação enviada."
+        topic_not_found_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi excluído."
+        topic_closed_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi fechado."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -150,6 +166,7 @@ pt_BR:
   rss_description:
     latest: "Últimos tópicos"
     hot: "Tópicos quentes"
+    top: "Principais tópicos"
     posts: "Últimos tópicos"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   excerpt_image: "imagem"
@@ -678,7 +695,6 @@ pt_BR:
     min_private_message_title_length: "Comprimento mínimo de caracteres permitido para o título de uma mensagem"
     min_search_term_length: "Comprimento mínimo válido para o termo de pesquisa em caracteres"
     allow_uncategorized_topics: "Permitir criação de tópicos sem uma categoria. NOTA: Se existe algum tópico sem nenhuma categoria, você deve movê-los para uma categoria antes de desabilitar esta opção."
-    uncategorized_description: "A descrição da categoria Sem categoria. Deixe em branco para nenhuma descrição."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos duplicados, idênticos."
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar uma postagem com o mesmo conteúdo outra vez?"
     educate_until_posts: "Quando o usuário começa a digitar suas primeiras (n) novos posts, mostrar o novo painel pop-up de educação do usuário no compositor."
@@ -754,7 +770,6 @@ pt_BR:
     suppress_reply_directly_above: "Não mostrar a em-resposta-à expansível em um post quando há apenas uma única resposta diretamente acima deste post."
     suppress_reply_when_quoting: "Não mostrar a em-resposta-à expansível em um post quando o post cita a resposta."
     max_reply_history: "Número máximo de respostas para expandir quando expandindo em-resposta-à"
-    experimental_reply_expansion: "Esconder respostas intermediárias quando expandindo uma resposta à (experimental)"
     topics_per_period_in_top_summary: "Número de melhores tópicos mostrados no sumário padrão de melhores tópicos."
     topics_per_period_in_top_page: "Número de melhores tópicos mostrados no 'Exibir Mais' melhores tópicos quando expandido."
     redirect_users_to_top_page: "Automaticamente redirecionar usuários novos e há muito ausentes para a página melhores."
@@ -940,7 +955,6 @@ pt_BR:
     automatically_download_gravatars: "Fazer download de Gravatars dos usuários ao criar conta ou mudança de email."
     digest_topics: "O número máximo de tópicos a serem mostrados no resumo via email."
     digest_min_excerpt_length: "O excerto mínimo de post no resumo via email, em caracteres."
-    delete_digest_email_after_days: "Suprimir emails de resumo para usuários não vistos no site há mais do que (n) dias."
     disable_digest_emails: "Desabilitar emails de resumo para todos os usuários."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá checar o Gravatar por avatares personalizados em um dia"
     public_user_custom_fields: "Um conjunto de campos personalizados para um usuário que podem ser apresentados publicamente."
@@ -1012,7 +1026,6 @@ pt_BR:
     moved_post: "%{display_username} moveu a sua postagem para %{link}"
     private_message: "%{display_username} enviou-te uma mensagem particular: %{link}"
     invited_to_private_message: "%{display_username} convidou-te para uma conversa privada: %{link}"
-    invited_to_topic: "%{display_username} convidou você para um tópico: %{link}"
     invitee_accepted: "%{display_username} aceitou o seu convite"
     linked: "%{display_username} linkou você em %{link}"
     granted_badge: "Você ganhou %{link}"
@@ -1102,8 +1115,6 @@ pt_BR:
       characters: "deve incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
-      must_begin_with_alphanumeric: "deve começar com uma letra, número ou um underline"
-      must_end_with_alphanumeric: "deve terminar com uma letra, número ou um underline"
       must_not_contain_two_special_chars_in_seq: "não deve conter uma seqüência de 2 ou mais caracteres especiais (.-_)"
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
@@ -1111,6 +1122,10 @@ pt_BR:
     ip_address:
       blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
       max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Contate um membro da equipe."
+  flags_reminder:
+    subject_template:
+      one: "1 sinalização aguardando a ser controlada"
+      other: "%{count} sinalizações aguardando a ser controladas"
   invite_mailer:
     subject_template: "%{invitee_name} convidou você para '%{topic_title}' em %{site_domain_name}"
     text_body_template: |
@@ -1154,87 +1169,10 @@ pt_BR:
       (Se o link acima expirou, escolha a opção "Esqueci minha senha" quando efetuar o login com o seu endereço de e-mail.)
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
-    text_body_template: |
-      Este é um email de teste de
-
-      [**%{base_url}**][0]
-
-      Entregabilidade de Email é complicada. Seguem algumas coisas importantes que você deve verificar primeiro:
-
-      - Tenha *certeza* de definir o endereço de remetente `email de notificação` corretamente nas configurações do site. **O domínio especificado no endereço de remetente "from" dos emails enviados é o domínio que seus emails serão validados**.
-
-      - Aprenda a verificar o conteúdo completo do email no seu cliente de email, para que possa examinar os cabeçalhos do email para pistas importantes. No Gmail, é a opção "mostrar original" no menu de seleção no canto superior direito de cada email.
-
-      - **IMPORTANTE:** Seu provedor de internet (ISP) tem um registro de DNS reverso configurado para associar os nomes de domínio e os endereços de IP que você enviou os emails? [Testar seu registro reverso PTR][2] aqui. Se seu provedor (ISP) não entrou o registro de apontamento de DNS reverso apropriadamente, é muito improvável que qualquer email seja entregue.
-
-      - O [registro SPF][8] de seu domínio está correto? [Teste seu registro SPF][1] aqui. Observe que TXT é o typo de registro correto para SPF.
-
-      - O [registro DKIM][3] de seu domínio está correto? Isto irá melhorar significativamente a entregabilidade de email. [Teste seu registro DKIM][7] aqui.
-
-      - Se você utiliza seu próprio servidor de email, verifique que os IPs de seu servidor de email [não estão em nenhuma lista negra][4]. Também verifique que está definitivamente enviando um nome de domínio totalmente qualificado resolvido por DNS em sua mensagem HELO. Se não estiver, irá fazer com que email seja rejeitado por muitos serviços de mail.
-
-      (A maneira *fácil* é criar uma conta no [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], que tem generosos planos gratuitos e serão suficientes para comunidades pequenas. Entretanto você ainda terá que configurar os registros SPF e DKIM no seu DNS!)
-
-      Esperamos que tenha recebido este email de verificação de entrega com sucesso!
-
-      Boa sorte,
-
-      Seus amigos do [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Nova versão do Discourse, atualização disponível"
-    text_body_template: |
-      Uma nova versão do [Discourse](http://www.discourse.org) está disponível.
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      Você pode querer:
-
-      - Veja o que há de novo na [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Atualização do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visita [meta.discourse.org](http://meta.discourse.org) para notícias, discussão e apoio para Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: |
-      Uma nova versão do [Discourse](http://www.discourse.org) está disponível.
-
-      Sua versão: %{installed_version}
-      Nova versão: **%{new_version}**
-
-      Você pode querer:
-
-      - Veja o que há de novo na [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Atualização do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visita [meta.discourse.org](http://meta.discourse.org) para notícias, discussão e apoio para Discourse.
-
-      ### Notas de lançamento
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      one: "Essas sinalizações foram submetidos mais de 1 hora."
-      other: "Essas sinalizações foram submetidos mais de %{count} horas."
-    please_review: "Por favor, revise eles."
-    post_number: "mensagem"
-    how_to_disable: 'Você pode desabilitar ou modificar a frequência deste lembrete de email através da configuração "notificar sobre sinalizações após".'
-    subject_template:
-      one: "1 sinalização aguardando a ser controlada"
-      other: "%{count} sinalizações aguardando a ser controladas"
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 mensagem aguardando revisão"
@@ -1344,8 +1282,6 @@ pt_BR:
       text_body_template: "Nos desculpamos, mas sua exportação de dados falhou. Por favor verifique os logs ou entre em contato com um membro da staff."
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema com Email -- Conta Desconhecida"
-      text_body_template: |
-        Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou. Não há nenhum relato conhecido com este endereço de e-mail. Tente enviar a partir de um endereço de e-mail diferente, ou entre em contato com um membro da equipe.
     email_reject_empty:
       subject_template: "[%{site_name}] Problema com email -- Sem conteúdo"
     email_reject_parsing:
@@ -1358,10 +1294,6 @@ pt_BR:
         Sua conta não possui privilégios para postar novos topicos nessa categoria. Se acredita que isso esteja errado, entre em contato com um dos membros responsáveis..
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema com email -- Chave de Resposta Desconhecida"
-      text_body_template: |
-        Pedimos desculpas, mas seu email para %{destination} (titled %{former_title}) não foi enviado.
-
-        O endereço de email do destinatário é desconhecido ou inválido, Contate um dos moderadores para relatar esse problema
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema com email -- Tópico Não Encontrado"
     email_reject_topic_closed:
@@ -1370,10 +1302,6 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com email -- Resposta Gerada Automaticamente"
     email_error_notification:
       subject_template: "[%{site_name}] Problema com email -- Erro de autenticação POP"
-      text_body_template: |
-        Erro de autenticação ao baixar e-mails através do servidor POP.
-
-        Por favor verifique se você configurou corretamente suas credenciais de POP nos [ajustes](%{base_url}/admin_site_settings/category/email).
     too_many_spam_flags:
       subject_template: "Nova conta bloqueada"
       text_body_template: |
@@ -1431,7 +1359,6 @@ pt_BR:
 
         Por favor visitar este link para visualizar a mensagem: %{base_url}%{url}
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} convidou você para um tópico '%{topic_title}'"
       text_body_template: |2
 
         %{username} convidou você para uma discussão
@@ -1525,7 +1452,6 @@ pt_BR:
 
         Se não conseguires clicar no link em cima, tenta copia-lo e cola-lo na barra de endereções do seu browser de internet.
   page_not_found:
-    title: "A página solicitada não existe ou é privativa."
     popular_topics: "Popular"
     recent_topics: "Recente"
     see_more: "Mais"

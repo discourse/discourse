@@ -2,22 +2,27 @@
   /* may not need this */
 }
 
-.time-gap {
-  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+.small-action {
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   color: lighten($primary, 50%);
   padding-bottom: 3px;
-  margin-bottom: 10px;
   text-transform: uppercase;
   font-weight: bold;
-  .topic-avatar {
-    margin: 0 5px 0 10px;
-  }
 }
 
-.topic-post {
+.small-action .topic-avatar {
+  margin-top: 5px;
+}
+
+.topic-post article {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 6px 0;
 }
+
+.post-stream {
+  padding-bottom: 30px;
+}
+
 
 span.badge-posts {
   margin-right: 5px;
@@ -521,24 +526,6 @@ span.highlighted {
   button {
     margin-right: 7px;
   }
-}
-
-.small-action .small-action-desc {
-  p {
-    padding-top: 0;
-  }
-  .custom-message {
-    margin-left: -40px;
-  }
-}
-
-.small-action .topic-avatar {
-  padding: 0;
-  margin: 0;
-}
-
-.small-action.time-gap .topic-avatar {
-  margin-top: -5px;
 }
 
 .gap.jagged-border {

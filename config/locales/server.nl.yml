@@ -10,8 +10,14 @@ nl:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
     long_date: "D MMMM YYYY H:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%-d %B"
+      date_only: "%B %-d, %Y"
   date:
     month_names: [null, januari, februari, maart, april, mei, juni, juli, augustus, september, oktober, november, december]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Topics"
   posts: "berichten"
@@ -21,6 +27,22 @@ nl:
   purge_reason: "Automatisch verwijderd, account is nooit geactiveerd"
   disable_remote_images_download_reason: "Het downloaden van plaatjes is uitgeschakeld omdat er niet genoeg schijfruimte beschikbaar is."
   anonymous: "Anoniem"
+  emails:
+    incoming:
+      default_subject: "Inkomende email van %{email}"
+      errors:
+        empty_email_error: "Gebeurt wanneer de mail die wij ontvangen hebben leeg is."
+        no_message_id_error: "Gebeurt wanneer de mail geen  'Message-Id' header heeft."
+        auto_generated_email_error: "Gebeurt wanneer de 'voorrang' header is ingesteld op: lijst, ongewenst, bulk of automatisch auto_reply, of wanneer een andere header bevat: auto-submitted, auto-replied of auto-generated."
+        no_body_detected_error: "Gebeurt wanneer wij de body niet konden uitpakken en er geen bijlages zijn."
+        inactive_user_error: "Gebeurt wanneer de zender niet actief is."
+        blocked_user_error: "Gebeurt wanneer de zender is geblokkeerd."
+        bad_destination_address: "Gebeurt wanneer geen van de E-mail adressen in de To/Cc/Bcc velden gelijk zijn aan de geconfigureerde inkomende E-mail adressen."
+        strangers_not_allowed_error: "Gebeurt wanneer een gebruiker heeft geprobeerd een nieuw topic aan te maken in een categorie waar zijn geen lid van zijn."
+        insufficient_trust_level_error: "Gebeurt wanneer een gebruiker heeft geprobeerd een nieuw topic aan te maken in een categorie waar zijn niet het vereiste trust level voor hebben."
+        reply_user_not_matching_error: "Gebeurt wanneer een reactie kwam van een ander E-mail adres dan waar de notificatie was heen gestuurd. "
+        topic_not_found_error: "Gebeurt wanneer een reactie binnen kwam, maar het topic al is verwijdert."
+        topic_closed_error: "Gebeurt wanneer een reactie binnen kwam, maar het verwante topic is gesloten."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -84,6 +106,8 @@ nl:
   not_found: "De opgevraagde URL of resource kan niet gevonden worden."
   invalid_access: "Je hebt geen permissie om de opgevraagde resource te bekijken."
   read_only_mode_enabled: "De site is in read only modus. Interactie is niet mogelijk."
+  reading_time: "leestijd"
+  likes: "'Vind ik leuks' "
   too_many_replies:
     one: "Sorry, nieuwe gebruikers mogen één reactie plaatsen in hetzelfde topic."
     other: "Sorry, nieuwe gebruikers mogen %{count} reacties plaatsen in hetzelfde topic."
@@ -142,6 +166,7 @@ nl:
   rss_description:
     latest: "Nieuwste topics"
     hot: "Hot topics"
+    top: "Top topics"
     posts: "Nieuwste berichten"
   too_late_to_edit: "Dat bericht is lang geleden geschreven. Het kan niet meer gewijzigd of verwijderd worden."
   excerpt_image: "afbeelding"
@@ -151,6 +176,8 @@ nl:
     errors:
       can_not_modify_automatic: "Je kunt automatische groepen niet wijzigen"
       member_already_exist: "'%{username}' is al lid van deze groep."
+      invalid_domain: "%{domain}' is geen geldig domein."
+      invalid_incoming_email: "%{incoming_email}' is geen geldig E-mail adres."
     default_names:
       everyone: "iedereen"
       admins: "admins"
@@ -284,6 +311,7 @@ nl:
       self_parent: "Een categorie kan niet zijn eigen bovenliggende categorie zijn"
       depth: "Je kan een subcategorie niet onder een andere subcategorie plaatsen"
       email_in_already_exist: "Inkomend e-mailadres '%{email_in}' is al in gebruik voor '%{category_name}' categorie."
+      invalid_email_in: "%{email_in}' is geen geldig E-mail adres."
     cannot_delete:
       uncategorized: "De categorie Ongecategoriseerd kan niet verwijderd worden"
       has_subcategories: "Deze categorie kan niet verwijderd worden, omdat deze subcategorieën bevat"
@@ -291,11 +319,18 @@ nl:
         one: "Categorie kan niet verwijderd worden omdat het 1 topic heeft. Het oudste topic is %{topic_link}."
         other: "Categorie kan niet verwijderd worden omdat het %{count} topics heeft. Het oudste topic is %{topic_link}."
       topic_exists_no_oldest: "Categorie kan niet verwijderd worden omdat het aantal topics %{count} is."
+    uncategorized_description: "Topics die geen categorie nodig hebben of niet in een andere bestaande categorie passen."
   trust_levels:
     newuser:
       title: "nieuw lid"
     basic:
       title: "lid"
+    member:
+      title: "lid"
+    regular:
+      title: "Normaal"
+    leader:
+      title: "leider"
     change_failed_explanation: "Je probeerde %{user_name} te degraderen naar '%{new_trust_level}'. Echter, het trustlevel is al '%{current_trust_level}'. %{user_name} blijft op trust level '%{current_trust_level}'. Als je de gebruiker wil degraderen, zet het trustlevel dan eerst vast."
   rate_limiter:
     slow_down: "je hebt deze actie te vaak uitgevoerd, probeer het later nog eens."
@@ -428,11 +463,16 @@ nl:
       description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
       long_form: 'heeft dit als ongepast gemeld'
     notify_user:
+      title: 'Stuur @{{username}} een bericht'
+      description: 'I wil praten met deze persoon direct en privé over hun bericht.'
       long_form: 'bericht verstuurd aan gebruiker'
       email_title: 'Je bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Iets anders"
+      description: 'Dit bericht vereist actie van de moderator voor een reden die hier boven niet genoemd wordt.'
+      long_form: 'heeft dit gemarkeerd voor moderatie'
+      email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Favoriet'
@@ -662,7 +702,6 @@ nl:
     min_private_message_title_length: "Minimale toegestane titel lengte in tekens voor berichten"
     min_search_term_length: "Minimum lengte van een zoekterm in tekens"
     allow_uncategorized_topics: "Topics zonder categorie toestaan. WAARSCHUWING: Alle topics moet weer aan een categorie zijn toegekend voor dit wordt uitgezet."
-    uncategorized_description: "De omschrijving voor de ongecategoriseerde categorie. Laat blanco voor geen omschrijving."
     allow_duplicate_topic_titles: "Sta topics met dezelfde titels toe"
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "Laat de popup voor nieuwe gebruikers zien als een gebruiker start met het typen van hun eerste (n) nieuwe berichten in de berichtopsteller."
@@ -746,7 +785,6 @@ nl:
     suppress_reply_directly_above: "Verberg de uitklapbare 'in antwoord op' knop bij een bericht als er maar één reactie direct boven staat."
     suppress_reply_when_quoting: "Verberg de uitklapbare 'in antwoord op' knop bij een bericht als er er gequoteerd is."
     max_reply_history: "Maximaal aantal uit te klappen antwoorden als een 'in antwoord op' uitgeklapt wordt."
-    experimental_reply_expansion: "Verberg tussenliggende antwoorden als een antwoord uitgeklapt wordt (experimenteel)"
     topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
     topics_per_period_in_top_page: "Aantal topics in het uitgeklapte ´Meer...´ top-topics overzicht"
     redirect_users_to_top_page: "Stuur nieuwe en lang-niet-geziene gebruikers door naar de top-pagina"
@@ -952,7 +990,6 @@ nl:
     automatically_download_gravatars: "Download Gravatars voor gebruikers bij account creatie of aanpassing van email."
     digest_topics: "Het maximum aantal topics dat in de e-maildigest opgenomen wordt."
     digest_min_excerpt_length: "Hoeveel karakters er per bericht getoond worden in de mail digest"
-    delete_digest_email_after_days: "Onderdruk e-mails met korte verslagen voor gebruikers die niet zijn gezien op de site voor meer dan (n) dagen."
     disable_digest_emails: "Uitschakelen e-mails met korte verslagen voor alle gebruikers."
     detect_custom_avatars: "Wel of niet te verifiëren of gebruikers eigen profielfoto's hebben geüpload.  "
     max_daily_gravatar_crawls: "Maximaal aantal keren op een dag dat Discourse Gravatar zal controleren voor aangepaste avatars"
@@ -1043,7 +1080,6 @@ nl:
     moved_post: "%{display_username} verplaatste je bericht naar %{link}"
     private_message: "%{display_username} heeft je een bericht gestuurd: %{link}"
     invited_to_private_message: "%{display_username} heeft je uitgenodigd voor een bericht: %{link}"
-    invited_to_topic: "%{display_username} heeft je uitgenodigd voor een topic: %{link}"
     invitee_accepted: "%{display_username} heeft je uitnodiging geaccepteerd"
     linked: "%{display_username} heeft je gelinkt in %{link}"
     granted_badge: "%{link} is aan jou toegekend"
@@ -1140,8 +1176,6 @@ nl:
       characters: "mag alleen nummers, letters en underscores bevatten"
       unique: "moet uniek zijn"
       blank: "mag niet leeg zijn"
-      must_begin_with_alphanumeric: "moet beginnen met een letter, cijfer of underscore"
-      must_end_with_alphanumeric: "moet eindigen met een letter, cijfer of underscore"
       must_not_contain_two_special_chars_in_seq: "mag niet 2 of meer opvolgende speciale karakters bevatten (.-_)"
     email:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
@@ -1149,6 +1183,10 @@ nl:
     ip_address:
       blocked: "Nieuwe registraties vanaf jouw IP-adres zijn niet toegestaan."
       max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf jouw IP-adres zijn niet toegestaan (maximum limiet bereikt). Neem contact op met een staflid."
+  flags_reminder:
+    subject_template:
+      one: "Eén vlag af te handelen"
+      other: "%{count} vlaggen af te handelen"
   invite_mailer:
     subject_template: "%{invitee_name} nodigt je uit voor '%{topic_title}' op %{site_domain_name}"
     text_body_template: |
@@ -1196,16 +1234,6 @@ nl:
     subject_template: "[%{site_name}] Nieuwe Discourse-versie, update beschikbaar"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update beschikbaar"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Deze vlag is meer dan één uur gelden gemaakt."
-      other: "Deze vlaggen zijn meer dan %{count} uur gelden gemaakt."
-    please_review: "Kijk hier even naar."
-    post_number: "bericht"
-    how_to_disable: 'Je kunt de frequentie van deze herinnering e-mails uitschakelen of wijzigen met de "Notificeer over vlaggen na" instelling.'
-    subject_template:
-      one: "Eén vlag af te handelen"
-      other: "%{count} vlaggen af te handelen"
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 bericht wacht op beoordeling"
@@ -1306,8 +1334,6 @@ nl:
     posted_by: "Geplaatst door %{username} op %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} nodigt je uit voor een bericht '%{topic_title}'"
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} nodigt je uit voor een topic '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -1390,7 +1416,6 @@ nl:
 
         Mocht je de bovenstaande link niet kunnen aanklikken, probeer deze dan te kopiëren en te plakken in de adresbalk van je web browser.
   page_not_found:
-    title: "De opgevraagde pagina bestaat niet op dit forum of is privé."
     popular_topics: "Populair"
     recent_topics: "Recent"
     see_more: "Meer"
@@ -1479,6 +1504,8 @@ nl:
   performance_report:
     initial_post_raw: Deze topic bevat dagelijkse performance rapporten van je site
     initial_topic_title: Website performance rapporten
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

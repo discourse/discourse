@@ -234,6 +234,15 @@ login:
   twitter_consumer_secret:
     default: ''
     regex: "^[a-zA-Z0-9_+-]+$"
+  enable_instagram_logins:
+    client: true
+    default: false
+  instagram_consumer_key:
+    default: ''
+    regex: "^[a-z0-9]+$"
+  instagram_consumer_secret:
+    default: ''
+    regex: "^[a-z0-9]+$"
   enable_facebook_logins:
     client: true
     default: false
@@ -292,7 +301,11 @@ users:
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
   min_password_length:
     client: true
-    default: 8
+    default: 10
+    min: 1
+  min_admin_password_length:
+    client: true
+    default: 15
     min: 1
   block_common_passwords: true
   enforce_global_nicknames:
@@ -429,9 +442,6 @@ posting:
     default: true
   max_reply_history:
     default: 1
-    client: true
-  experimental_reply_expansion:
-    default: false
     client: true
   post_undo_action_window_mins: 10
   max_mentions_per_post: 10
@@ -620,8 +630,8 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
-
   default_opengraph_image_url: ''
+  allow_all_attachments_for_group_messages: false
 
 trust:
   default_trust_level:
@@ -764,6 +774,14 @@ rate_limits:
   tl2_additional_likes_per_day_multiplier: 1.5
   tl3_additional_likes_per_day_multiplier: 2
   tl4_additional_likes_per_day_multiplier: 3
+  alert_admins_if_errors_per_minute:
+    client: true
+    shadowed_by_global: true
+    default: 0
+  alert_admins_if_errors_per_hour:
+    client: true
+    shadowed_by_global: true
+    default: 0
 
 developer:
   force_hostname:
@@ -888,6 +906,8 @@ backups:
     default: ''
     regex: "^[^A-Z_.]+$" # can't use '.' when using HTTPS
     shadowed_by_global: true
+  s3_disable_cleanup:
+    default: false
   backup_time_of_day:
     default: '3:30'
     regex: "^((0?(0|1|2|3|4|5|6|7|8|9)|(10|11|12|13|14|15|16|17|18|19|20|21|22|23))):\\d\\d$"
@@ -1059,14 +1079,16 @@ uncategorized:
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'
-    default: 7
+    default: 10080
   default_email_private_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false
   default_email_always: false
   default_email_previous_replies:
     enum: 'PreviousRepliesSiteSetting'
-    default: 1
+    default: 2
+  default_email_in_reply_to:
+    default: true
 
   default_other_new_topic_duration_minutes:
     enum: 'NewTopicDurationSiteSetting'
@@ -1079,6 +1101,9 @@ user_preferences:
   default_other_dynamic_favicon: false
   default_other_disable_jump_reply: false
   default_other_edit_history_public: false
+  default_other_like_notification_frequency:
+    enum: 'LikeNotificationFrequencySiteSetting'
+    default: 1
 
   default_topics_automatic_unpin:
     default: true

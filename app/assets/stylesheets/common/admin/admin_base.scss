@@ -1850,6 +1850,12 @@ table#user-badges {
   margin: 0;
 }
 
+// Mobile specific style for Admin IP Lookup box
+.mobile-view .admin-contents .ip-lookup .location-box {
+  width: 300px;
+  left: 20px;
+}
+
 .cboxcontainer {
   display: inline-block;
   padding: 8px;

@@ -100,6 +100,8 @@ pt:
         x_years:
           one: "1 ano mais tarde"
           other: "%{count} anos mais tarde"
+      previous_month: 'Mês Anterior'
+      next_month: 'Mês Seguinte'
     share:
       topic: 'partilhar uma hiperligação para este tópico'
       post: 'Mensagem #%{postNumber}'
@@ -110,6 +112,8 @@ pt:
       email: 'enviar esta hiperligação por email'
     action_codes:
       split_topic: "dividir este tópico %{when}"
+      invited_user: "Convidou %{who} %{when}"
+      removed_user: "Removeu %{who} %{when}"
       autoclosed:
         enabled: 'fechado %{when}'
         disabled: 'aberto %{when}'
@@ -130,6 +134,19 @@ pt:
         disabled: 'removido da lista %{when}'
     topic_admin_menu: "Ações administrativas dos Tópicos"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
+    s3:
+      regions:
+        us_east_1: "Este dos E.U.A. (Virgínia do Norte)"
+        us_west_1: "Oeste dos E.U.A. (California do Norte)"
+        us_west_2: "Oeste dos E.U.A. (Óregon)"
+        us_gov_west_1: "AWS GovCloud (E.U.A.)"
+        eu_west_1: "U.E. (Irlanda)"
+        eu_central_1: "U.E. (Francoforte)"
+        ap_southeast_1: "Ásia-Pacífico (Singapura)"
+        ap_southeast_2: "Ásia-Pacífico (Sydney)"
+        ap_northeast_1: "Ásia-Pacífico (Tóquio)"
+        ap_northeast_2: "Ásia-Pacífico (Seoul)"
+        sa_east_1: "América do Sul (São Paulo)"
     edit: 'editar o título e a categoria deste tópico'
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
@@ -173,6 +190,7 @@ pt:
       other: "{{count}} caracteres"
     suggested_topics:
       title: "Tópicos Sugeridos"
+      pm_title: "Mensagens Sugeridas"
     about:
       simple_title: "Acerca"
       title: "Acerca de %{title}"
@@ -413,6 +431,7 @@ pt:
         not_supported: "Não são suportadas notificações neste navegador. Desculpe."
         perm_default: "Ligar Notificações"
         perm_denied_btn: "Permissão Negada"
+        perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
         disable: "Desativar Notificações"
         currently_enabled: "(atualmente ativo)"
         enable: "Ativar Notificações"
@@ -466,6 +485,7 @@ pt:
         groups: "Os Meus Grupos"
         bulk_select: "Selecionar mensagens"
         move_to_inbox: "Mover para Caixa de Entrada"
+        move_to_archive: "Arquivo"
         failed_to_move: "Falha ao mover as mensagens selecionadas (talvez a sua rede esteja em baixo)"
         select_all: "Selecionar Tudo"
       change_password:
@@ -624,6 +644,21 @@ pt:
         same_as_email: "A sua palavra-passe é a mesma que o seu email."
         ok: "A sua palavra-passe parece correta."
         instructions: "Pelo menos %{count} caracteres."
+      summary:
+        title: "Sumário"
+        stats: "Estatísticas"
+        topic_count: "Tópicos Criados"
+        post_count: "Mensagens Criadas"
+        likes_given: "Gostos Dados"
+        likes_received: "Gostos Recebidos"
+        days_visited: "Dias Visitados"
+        posts_read_count: "Mensagens Lidas"
+        top_replies: "Respostas"
+        top_topics: "Melhores Tópicos"
+        top_badges: "Melhores Distintivos"
+        more_topics: "Mais Tópicos"
+        more_replies: "Mais Respostas"
+        more_badges: "Mais Distintivos"
       associated_accounts: "Contas associadas"
       ip_address:
         title: "Último endereço IP"
@@ -666,6 +701,7 @@ pt:
     logout: "A sua sessão estava encerrada."
     refresh: "Atualizar"
     read_only_mode:
+      enabled: "Este sítio encontra-se no modo só de leitura. Por favor continue a navegar mas responder, dar gostos e outras acções estão de momento  desativadas."
       login_disabled: "A função de início de sessão está desativada enquanto o sítio se encontrar no modo só de leitura."
     too_few_topics_and_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de conversações para ler e responder a."
     too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentTopics} / %{requiredTopics}</strong> tópios. Novos visitantes precisam de algumas conversações para ler e responder a."
@@ -695,8 +731,8 @@ pt:
       value_prop: "Quando cria uma conta, nós lembramo-nos exatamente do que leu, por isso volta sempre ao sítio onde ficou. Também recebe notificações, aqui ou por email, sempre que novas mensagens são feitas. E pode gostar de mensagens para partilhar o amor. :heartbeat:"
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as mensagens mais interessantes são determinados pela comunidade."
-      description: "Existem <b>{{count}}</b> respostas."
-      description_time: "Existem <b>{{count}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
+      description: "Existem <b>{{replyCount}}</b> respostas."
+      description_time: "Existem <b>{{replyCount}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir Este Tópico'
       disable: 'Mostrar Todas As Mensagens'
     deleted_filter:
@@ -780,6 +816,7 @@ pt:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
+      emoji: "Emoji :)"
       more_emoji: "mais..."
       options: "Opções"
       whisper: "susurro"
@@ -876,6 +913,9 @@ pt:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moveu {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ganhou '{{description}}'</p>"
+      group_message_summary:
+        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mensagem na caixa de entrada do seu grupo {{group_name}}</p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mensagens na caixa de entrada do seu grupo {{group_name}}</p>"
       alt:
         mentioned: "Mencionado por"
         quoted: "Citado por"
@@ -890,6 +930,7 @@ pt:
         moved_post: "A sua mensagem foi movida por"
         linked: "Hiperligação para a sua mensagem"
         granted_badge: "Distintivo concedido"
+        group_message_summary: "Mensagens na caixa de entrada do seu grupo"
       popup:
         mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'
@@ -1721,6 +1762,7 @@ pt:
           refresh_report: "Atualizar relatório"
           start_date: "Data de Início"
           end_date: "Data final"
+          groups: "Todos os grupos"
       commits:
         latest_changes: "Últimas alterações: atualize com frequência!"
         by: "por"
@@ -2003,13 +2045,17 @@ pt:
             name: 'wiki'
             description: "Cor base utilizada para o fundo de mensagens wiki"
       email:
+        title: "Emails"
         settings: "Configurações"
+        templates: "Templates"
         preview_digest: "Pré-visualizar Resumo"
         sending_test: "A enviar Email de teste..."
         error: "<b>ERRO</b> - %{server_error}"
         test_error: "Occorreu um problema no envio do email de teste. Por favor verifique novamente as suas definições de email, verifique se o seu host não está a bloquear conexões de email, e tente novamente."
         sent: "Enviado"
         skipped: "Ignorado"
+        received: "Recebido"
+        rejected: "Rejeitado"
         sent_at: "Enviado em"
         time: "Tempo"
         user: "Utilizador"
@@ -2027,6 +2073,19 @@ pt:
         last_seen_user: "Último Utilizador Visto:"
         reply_key: "Chave de Resposta"
         skipped_reason: "Ignorar Motivo"
+        incoming_emails:
+          from_address: "De"
+          to_addresses: "Para"
+          cc_addresses: "Cc"
+          subject: "Assunto"
+          error: "Erro"
+          none: "Nenhum email de entrada encontrado."
+          filters:
+            from_placeholder: "de@exemplo.com"
+            to_placeholder: "para@exemplo.com"
+            cc_placeholder: "cc@exemplo.com"
+            subject_placeholder: "Assunto..."
+            error_placeholder: "Erro"
         logs:
           none: "Nenhuns logs encontrados."
           filters:
@@ -2090,6 +2149,12 @@ pt:
             change_category_settings: "alterar configurações de categoria"
             delete_category: "eliminar categoria"
             create_category: "criar categoria"
+            block_user: "utilizador bloqueado"
+            unblock_user: "Desbloquear utilizador"
+            grant_admin: "conceder administração"
+            revoke_admin: "revogar administração"
+            grant_moderation: "conceder moderação"
+            revoke_moderation: "revogar moderação"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de email serão verificados e o registo será bloqueado, ou outra ação será executada."
@@ -2191,6 +2256,7 @@ pt:
         moderator: "Moderador?"
         admin: "Administração?"
         blocked: "Bloqueado?"
+        staged: "Temporário?"
         show_admin_profile: "Administração"
         edit_title: "Editar Título"
         save_title: "Guardar Título"
@@ -2255,9 +2321,12 @@ pt:
         deactivate_failed: "Ocorreu um problema ao desativar o utilizador."
         unblock_failed: 'Ocorreu um problema ao desbloquear o utilizador.'
         block_failed: 'Ocorreu um problema ao bloquear o utilizador.'
+        block_confirm: 'Tem a certeza que pretende bloquear este utilizador? Este não será capaz de criar novos tópicos ou mensagens.'
+        block_accept: 'Sim, bloquear este utilizador'
         deactivate_explanation: "Um utilizador desativado deve revalidar o seu email."
         suspended_explanation: "Um utilizador suspenso não pode iniciar sessão."
         block_explanation: "Um utilizador bloqueado não pode publicar mensagens ou iniciar tópicos."
+        stage_explanation: "Um utilizador em estado temporário pode apenas publicar por email em tópicos específicos."
         trust_level_change_failed: "Ocorreu um problema ao alterar o Nível de Confiança do utilizador."
         suspend_modal_title: "Utilizador Suspenso"
         trust_level_2_users: "Utilizadores no Nível de Confiança 2"
@@ -2536,6 +2605,10 @@ pt:
         mark_tracking: '<b>m</b>, <b>t</b> Acompanhar tópico'
         mark_watching: '<b>m</b>, <b>w</b> Vigiar este tópico'
     badges:
+      earned_n_times:
+        one: "Ganhou este distintivo 1 vez"
+        other: "Ganhou este distintivo %{count} vezes"
+      more_with_badge: "Outros com este distintivo"
       title: Distintivos
       allow_title: "pode ser usado como título"
       multiple_grant: "pode ser premiado múltiplas vezes"

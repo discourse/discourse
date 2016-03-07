@@ -5,62 +5,102 @@ require 'discourse'
 class PostgreSQLFallbackHandler
   include Singleton
 
-  attr_reader :running
-  attr_accessor :master
-
   def initialize
-    @master = true
-    @running = false
-    @mutex = Mutex.new
+    @master = {}
+    @running = {}
+    @mutex = {}
+    @last_check = {}
+
+    setup!
   end
 
   def verify_master
-    @mutex.synchronize do
-      return if @running || recently_checked?
-      @running = true
+    @mutex[namespace].synchronize do
+      return if running || recently_checked?
+      @running[namespace] = true
     end
 
+    current_namespace = namespace
     Thread.new do
-      begin
-        logger.warn "#{self.class}: Checking master server..."
-        connection = ActiveRecord::Base.postgresql_connection(config)
+      RailsMultisite::ConnectionManagement.with_connection(current_namespace) do
+        begin
+          logger.warn "#{log_prefix}: Checking master server..."
+          connection = ActiveRecord::Base.postgresql_connection(config)
 
-        if connection.active?
-          connection.disconnect!
-          logger.warn "#{self.class}: Master server is active. Reconnecting..."
-          ActiveRecord::Base.establish_connection(config)
-          Discourse.disable_readonly_mode
-          @master = true
+          if connection.active?
+            connection.disconnect!
+            ActiveRecord::Base.clear_all_connections!
+            logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
+
+            if namespace == RailsMultisite::ConnectionManagement::DEFAULT
+              ActiveRecord::Base.establish_connection(config)
+            else
+              RailsMultisite::ConnectionManagement.establish_connection(db: namespace)
+            end
+
+            Discourse.disable_readonly_mode
+            master = true
+          end
+        rescue => e
+          if e.message.include?("could not connect to server")
+            logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
+          else
+            raise e
+          end
+        ensure
+          @mutex[namespace].synchronize do
+            @last_check[namespace] = Time.zone.now
+            @running[namespace] = false
+          end
         end
-      rescue => e
-        if e.message.include?("could not connect to server")
-          logger.warn "#{self.class}: Connection to master PostgreSQL server failed with '#{e.message}'"
-        else
-          raise e
-        end
-      ensure
-        @last_check = Time.zone.now
-        @running = false
       end
+    end
+  end
+
+  def master
+    @master[namespace]
+  end
+
+  def master=(args)
+    @master[namespace] = args
+  end
+
+  def running
+    @running[namespace]
+  end
+
+  def setup!
+    RailsMultisite::ConnectionManagement.all_dbs.each do |db|
+      @master[db] = true
+      @running[db] = false
+      @mutex[db] = Mutex.new
     end
   end
 
   private
 
   def config
-    ActiveRecord::Base.configurations[Rails.env]
+    ActiveRecord::Base.connection_config
   end
 
   def logger
     Rails.logger
   end
 
+  def log_prefix
+    "#{self.class} [#{namespace}]"
+  end
+
   def recently_checked?
-    if @last_check
-      Time.zone.now <= (@last_check + 5.seconds)
+    if @last_check[namespace]
+      Time.zone.now <= (@last_check[namespace] + 5.seconds)
     else
       false
     end
+  end
+
+  def namespace
+    RailsMultisite::ConnectionManagement.current_db
   end
 end
 

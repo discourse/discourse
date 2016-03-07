@@ -137,6 +137,7 @@ module Email
     end
 
     def format_html
+      style('h4', 'color: #222;')
       style('h3', 'margin: 15px 0 20px 0;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       style('a', 'text-decoration: none; font-weight: bold; color: #006699;')

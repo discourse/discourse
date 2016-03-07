@@ -33,6 +33,8 @@ class Category < ActiveRecord::Base
                    length: { in: 1..50 }
   validate :parent_category_validator
 
+  validate :email_in_validator
+
   validate :ensure_slug
   before_save :apply_permissions
   before_save :downcase_email
@@ -308,7 +310,16 @@ SQL
   end
 
   def downcase_email
-    self.email_in = email_in.downcase if self.email_in
+    self.email_in = (email_in || "").strip.downcase.presence
+  end
+
+  def email_in_validator
+    return if self.email_in.blank?
+    email_in.split("|").each do |email|
+      unless Email.is_valid?(email)
+        self.errors.add(:base, I18n.t('category.errors.invalid_email_in', email_in: email))
+      end
+    end
   end
 
   def downcase_name
@@ -380,7 +391,7 @@ SQL
   end
 
   def self.find_by_email(email)
-    self.find_by(email_in: Email.downcase(email))
+    self.where("email_in LIKE ?", "%#{Email.downcase(email)}%").first
   end
 
   def has_children?
@@ -452,7 +463,7 @@ end
 #  topics_year                   :integer          default(0)
 #  topics_month                  :integer          default(0)
 #  topics_week                   :integer          default(0)
-#  slug                          :string(255)      not null
+#  slug                          :string           not null
 #  description                   :text
 #  text_color                    :string(6)        default("FFFFFF"), not null
 #  read_restricted               :boolean          default(FALSE), not null
@@ -465,17 +476,18 @@ end
 #  posts_year                    :integer          default(0)
 #  posts_month                   :integer          default(0)
 #  posts_week                    :integer          default(0)
-#  email_in                      :string(255)
+#  email_in                      :string
 #  email_in_allow_strangers      :boolean          default(FALSE)
 #  topics_day                    :integer          default(0)
 #  posts_day                     :integer          default(0)
-#  logo_url                      :string(255)
-#  background_url                :string(255)
+#  logo_url                      :string
+#  background_url                :string
 #  allow_badges                  :boolean          default(TRUE), not null
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
 #  suppress_from_homepage        :boolean          default(FALSE)
+#  contains_messages             :boolean
 #
 # Indexes
 #

@@ -6,6 +6,7 @@ if Rails.env.production?
     /^PG::Error: ERROR:\s+duplicate key/,
 
     /^ActionController::UnknownFormat/,
+    /^ActionController::UnknownHttpMethod/,
 
     /^AbstractController::ActionNotFound/,
 
@@ -55,3 +56,22 @@ Logster.config.current_context = lambda{|env,&blk|
 Logster.config.subdirectory = "#{GlobalSetting.relative_url_root}/logs"
 
 Logster.config.application_version = Discourse.git_version
+
+redis = Logster.store.redis
+Logster.config.redis_prefix = "#{redis.namespace}"
+Logster.config.redis_raw_connection = redis.without_namespace
+
+%w{minute hour}.each do |duration|
+  site_setting_error_rate = SiteSetting.public_send("alert_admins_if_errors_per_#{duration}")
+
+  if site_setting_error_rate > 0
+    Logster.store.public_send(
+      "register_rate_limit_per_#{duration}",
+      [Logger::WARN, Logger::ERROR, Logger::FATAL, Logger::UNKNOWN],
+      site_setting_error_rate
+    ) do |rate|
+
+      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: duration })
+    end
+  end
+end

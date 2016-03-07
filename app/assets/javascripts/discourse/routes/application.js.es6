@@ -4,10 +4,10 @@ import showModal from 'discourse/lib/show-modal';
 import OpenComposer from "discourse/mixins/open-composer";
 import Category from 'discourse/models/category';
 
-function unlessReadOnly(method) {
+function unlessReadOnly(method, message) {
   return function() {
     if (this.site.get("isReadOnly")) {
-      bootbox.alert(I18n.t("read_only_mode.login_disabled"));
+      bootbox.alert(message);
     } else {
       this[method]();
     }
@@ -17,13 +17,15 @@ function unlessReadOnly(method) {
 const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   siteTitle: setting('title'),
 
+  _handleLogout() {
+    if (this.currentUser) {
+      this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
+    }
+  },
+
   actions: {
 
-    logout() {
-      if (this.currentUser) {
-        this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
-      }
-    },
+    logout: unlessReadOnly('_handleLogout', I18n.t("read_only_mode.logout_disabled")),
 
     _collectTitleTokens(tokens) {
       tokens.push(this.get('siteTitle'));
@@ -36,12 +38,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       Ember.run.once(router, router.trigger, 'willTransition');
       return this._super();
     },
-
-    // This is here as a bugfix for when an Ember Cloaked view triggers
-    // a scroll after a controller has been torn down. The real fix
-    // should be to fix ember cloaking to not do that, but this catches
-    // it safely just in case.
-    postChangedRoute: Ember.K,
 
     showTopicEntrance(data) {
       this.controllerFor('topic-entrance').send('show', data);
@@ -89,9 +85,9 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       return true;
     },
 
-    showLogin: unlessReadOnly('handleShowLogin'),
+    showLogin: unlessReadOnly('handleShowLogin', I18n.t("read_only_mode.login_disabled")),
 
-    showCreateAccount: unlessReadOnly('handleShowCreateAccount'),
+    showCreateAccount: unlessReadOnly('handleShowCreateAccount', I18n.t("read_only_mode.login_disabled")),
 
     showForgotPassword() {
       showModal('forgotPassword', { title: 'forgot_password.title' });

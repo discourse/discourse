@@ -16,9 +16,10 @@
   }
 
   .close {
-    font-size: 1.786em !important;
-    margin-top: -10px !important;
-    color: darken($tertiary, 45%);
+    font-size: 1.786em;
+    margin-top: -5px;
+    color: scale-color($tertiary, $lightness: 70%);
+    padding-left: 5px;
   }
 
   .meta {

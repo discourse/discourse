@@ -489,8 +489,8 @@ te:
     last_post: చివరి టపా
     summary:
       enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
-      description: "అక్కడ మొత్తం <b>{{count}}</b> జవాబులు ఉన్నాయి"
-      description_time: "అక్కడ మొత్తం <b>{{count}}</b> జవాబులు ఉన్నాయి. వీటిని చదవడానికి సుమారుగా <b>{{readingTime}} నిమిషాలు</b> పడ్తాయి."
+      description: "అక్కడ మొత్తం <b>{{replyCount}}</b> జవాబులు ఉన్నాయి"
+      description_time: "అక్కడ మొత్తం <b>{{replyCount}}</b> జవాబులు ఉన్నాయి. వీటిని చదవడానికి సుమారుగా <b>{{readingTime}} నిమిషాలు</b> పడ్తాయి."
       enable: 'ఈ విషయాన్ని సంగ్రహించు'
       disable: 'అన్ని టపాలూ చూపు'
     deleted_filter:

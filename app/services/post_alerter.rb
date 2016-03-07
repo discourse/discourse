@@ -194,9 +194,34 @@ class PostAlerter
     # TODO decide if it makes sense to also publish a desktop notification
   end
 
+  def should_notify_edit?(notification, opts)
+    return notification.data_hash["display_username"] != opts[:display_username]
+  end
+
+  def should_notify_like?(user, notification)
+
+    return true if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:always]
+
+    return true if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:first_time_and_daily] && notification.created_at < 1.day.ago
+
+    return false
+  end
+
+  def should_notify_previous?(user, notification, opts)
+    type = notification.notification_type
+    if type == Notification.types[:edited]
+      return should_notify_edit?(notification, opts)
+    elsif type == Notification.types[:liked]
+      return should_notify_like?(user, notification)
+    end
+    return false
+  end
+
   def create_notification(user, type, post, opts=nil)
     return if user.blank?
     return if user.id == Discourse::SYSTEM_USER_ID
+
+    return if type == Notification.types[:liked] && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
 
     opts ||= {}
 
@@ -226,9 +251,19 @@ class PostAlerter
                                          post_number: post.post_number,
                                          notification_type: type)
 
-    if existing_notification
-       return unless existing_notification.notification_type == Notification.types[:edited] &&
-                     existing_notification.data_hash["display_username"] == opts[:display_username]
+    return if existing_notification && !should_notify_previous?(user, existing_notification, opts)
+
+    notification_data = {}
+
+    if  existing_notification &&
+        existing_notification.created_at > 1.day.ago &&
+        user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:always]
+
+      data = existing_notification.data_hash
+      notification_data["username2"] = data["display_username"]
+      notification_data["count"] = (data["count"] || 1).to_i + 1
+      # don't use destroy so we don't trigger a notification count refresh
+      Notification.where(id: existing_notification.id).destroy_all
     end
 
     collapsed = false
@@ -259,13 +294,21 @@ class PostAlerter
 
     UserActionObserver.log_notification(original_post, user, type, opts[:acting_user_id])
 
-    notification_data = {
-      topic_title: post.topic.title,
+    topic_title = post.topic.title
+    # when sending a private message email, keep the original title
+    if post.topic.private_message? && modifications = post.revisions.map(&:modifications)
+      if first_title_modification = modifications.find { |m| m.has_key?("title") }
+        topic_title = first_title_modification["title"][0]
+      end
+    end
+
+    notification_data.merge!({
+      topic_title: topic_title,
       original_post_id: original_post.id,
       original_post_type: original_post.post_type,
       original_username: original_username,
       display_username: opts[:display_username] || post.user.username
-    }
+    })
 
     if group = opts[:group]
       notification_data[:group_id] = group.id

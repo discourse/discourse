@@ -18,10 +18,12 @@ class UserUpdater
     :disable_jump_reply,
     :edit_history_public,
     :automatically_unpin_topics,
-    :digest_after_days,
+    :digest_after_minutes,
     :new_topic_duration_minutes,
     :auto_track_topics_after_msecs,
-    :email_previous_replies
+    :email_previous_replies,
+    :email_in_reply_to,
+    :like_notification_frequency
   ]
 
   def initialize(actor, user)
@@ -53,10 +55,10 @@ class UserUpdater
 
 
     save_options = false
-    OPTION_ATTR.each do |attribute|
-      if attributes[attribute].present?
-        save_options = true
 
+    OPTION_ATTR.each do |attribute|
+      if attributes.key?(attribute)
+        save_options = true
 
         if [true,false].include?(user.user_option.send(attribute))
           val = attributes[attribute].to_s == 'true'

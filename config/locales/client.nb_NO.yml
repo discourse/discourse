@@ -645,8 +645,8 @@ nb_NO:
       value_prop: "Når du registrerer deg husker vi hvor langt du har lest, så du starter på riktig sted neste gang du åpner en tråd. Du får også varsler, her og på e-post når det skjer ting i diskusjonene du vil følge. I tillegg kan du like innlegg :heartbeat:"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene i følge nettsamfunnet."
-      description: "Det er <b>{{count}}</b> svar."
-      description_time: "Det er <b>{{count}}</b> svar med en estimert lesetid på <b>{{readingTime}} minutter</b>."
+      description: "Det er <b>{{replyCount}}</b> svar."
+      description_time: "Det er <b>{{replyCount}}</b> svar med en estimert lesetid på <b>{{readingTime}} minutter</b>."
       enable: 'Oppsummer dette emnet'
       disable: 'Vis alle innlegg'
     deleted_filter:

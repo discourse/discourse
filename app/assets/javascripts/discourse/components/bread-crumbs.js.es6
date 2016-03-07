@@ -12,8 +12,8 @@ export default Ember.Component.extend({
     return !c.get('parentCategory');
   }),
 
-  hidden: function(){
-    return Discourse.Mobile.mobileView && !this.get('category');
+  hidden: function() {
+    return this.site.mobileView && !this.get('category');
   }.property('category'),
 
   firstCategory: function() {
@@ -35,7 +35,7 @@ export default Ember.Component.extend({
     });
   }.property('firstCategory', 'hideSubcategories'),
 
-  render: function(buffer) {
+  render(buffer) {
     if (this.get('hidden')) { return; }
     this._super(buffer);
   }

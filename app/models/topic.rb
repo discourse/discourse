@@ -433,6 +433,7 @@ class Topic < ActiveRecord::Base
 
   def update_status(status, enabled, user, opts={})
     TopicStatusUpdate.new(self, user).update!(status, enabled, opts)
+    DiscourseEvent.trigger(:topic_status_updated, self.id, status, enabled)
   end
 
   # Atomically creates the next post number
@@ -581,6 +582,8 @@ class Topic < ActiveRecord::Base
     if private_message?
       # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
+      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+
       if user && topic_allowed_users.create!(user_id: user.id)
         # Create a small action message
         add_small_action(invited_by, "invited_user", user.username)
@@ -604,6 +607,8 @@ class Topic < ActiveRecord::Base
     else
       # invite existing member to a topic
       user = User.find_by_username(username_or_email)
+      raise StandardError.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
+
       if user && topic_allowed_users.create!(user_id: user.id)
         # rate limit topic invite
         RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
@@ -1051,7 +1056,7 @@ end
 # Table name: topics
 #
 #  id                            :integer          not null, primary key
-#  title                         :string(255)      not null
+#  title                         :string           not null
 #  last_posted_at                :datetime
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
@@ -1066,7 +1071,7 @@ end
 #  avg_time                      :integer
 #  deleted_at                    :datetime
 #  highest_post_number           :integer          default(0), not null
-#  image_url                     :string(255)
+#  image_url                     :string
 #  off_topic_count               :integer          default(0), not null
 #  like_count                    :integer          default(0), not null
 #  incoming_link_count           :integer          default(0), not null
@@ -1079,7 +1084,7 @@ end
 #  bumped_at                     :datetime         not null
 #  has_summary                   :boolean          default(FALSE), not null
 #  vote_count                    :integer          default(0), not null
-#  archetype                     :string(255)      default("regular"), not null
+#  archetype                     :string           default("regular"), not null
 #  featured_user4_id             :integer
 #  notify_moderators_count       :integer          default(0), not null
 #  spam_count                    :integer          default(0), not null
@@ -1089,8 +1094,8 @@ end
 #  score                         :float
 #  percent_rank                  :float            default(1.0), not null
 #  notify_user_count             :integer          default(0), not null
-#  subtype                       :string(255)
-#  slug                          :string(255)
+#  subtype                       :string
+#  slug                          :string
 #  auto_close_at                 :datetime
 #  auto_close_user_id            :integer
 #  auto_close_started_at         :datetime

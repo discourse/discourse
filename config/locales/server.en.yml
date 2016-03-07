@@ -59,7 +59,7 @@ en:
         blocked_user_error: "Happens when the sender has been blocked."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
-        insufficient_trust_level_error: "Happens when a use tried to create a new topic in a category they don't have the required trust level for."
+        insufficient_trust_level_error: "Happens when a user tried to create a new topic in a category they don't have the required trust level for."
         reply_user_not_matching_error: "Happens when a reply came in from a different email address the notification was sent to."
         topic_not_found_error: "Happens when a reply came in but the related topic has been deleted."
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
@@ -201,6 +201,7 @@ en:
   rss_description:
     latest: "Latest topics"
     hot: "Hot topics"
+    top: "Top topics"
     posts: "Latest posts"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
 
@@ -374,6 +375,7 @@ en:
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
       email_in_already_exist: "Incoming email address '%{email_in}' is already in use for '%{category_name}' category."
+      invalid_email_in: "'%{email_in}' is not a valid email address."
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -877,9 +879,6 @@ en:
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
     max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
-
-    experimental_reply_expansion: "Hide intermediate replies when expanding a reply to (experimental)"
-
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
@@ -916,6 +915,7 @@ en:
     reserved_usernames: "Usernames for which signup is not allowed."
 
     min_password_length: "Minimum password length."
+    min_admin_password_length: "Minimum password length for Admin."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
@@ -941,6 +941,10 @@ en:
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
     twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
 
+    enable_instagram_logins: "Enable Instagram authentication, requires instagram_consumer_key and instagram_consumer_secret"
+    instagram_consumer_key: "Consumer key for Instagram authentication"
+    instagram_consumer_secret: "Consumer secret Instagram authentication"
+
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
@@ -955,6 +959,7 @@ en:
     backup_frequency: "How frequently we create a site backup, in days."
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
+    s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
 
@@ -980,6 +985,9 @@ en:
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
 
+    alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
+    alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
+
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
 
@@ -1001,6 +1009,8 @@ en:
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitions are {username} {first_letter} {color} {size}"
 
     default_opengraph_image_url: "URL of the default opengraph image."
+
+    allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
@@ -1234,7 +1244,7 @@ en:
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "Force a square aspect ratio to all emojis."
 
-    approve_post_count: "The amount of posts from a new user that must be approved"
+    approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact email. Set to 0 to disable these emails."
 
@@ -1245,6 +1255,8 @@ en:
     default_email_always: "Send an email notification even when the user is active by default."
     default_email_previous_replies: "Include previous replies in emails by default."
 
+    default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
+
     default_other_new_topic_duration_minutes: "Global default condition for which a topic is considered new."
     default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
@@ -1252,6 +1264,8 @@ en:
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
     default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
     default_other_edit_history_public: "Make the post revisions public by default."
+
+    default_other_like_notification_frequency: "Notify users on likes by default"
 
     default_topics_automatic_unpin: "Automatically unpin topics when the user reaches the bottom by default."
 
@@ -1389,6 +1403,7 @@ en:
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the user fields"
     close_window: "Authentication is complete. Close this window to continue."
+    already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
 
   user:
     no_accounts_associated: "No accounts associated"
@@ -1493,9 +1508,9 @@ en:
 
       - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
-      - Send a test email to [mail-tester.com][mt] to verify that everything is working correctly. 
+      - We highly recommend you **send a test email to [mail-tester.com][mt]** to verify that all the above is working correctly.
 
-      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+      (The *easy* way is to create a free account on [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
 
       We hope you received this email deliverability test OK!
 
@@ -1510,7 +1525,8 @@ en:
       [4]: http://whatismyipaddress.com/blacklist-check
       [7]: http://dkimcore.org/tools/dkimrecordcheck.html
       [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
+      [sg]: https://sendgrid.com/
+      [sp]: https://www.sparkpost.com/
       [mg]: http://www.mailgun.com/
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
@@ -1518,12 +1534,10 @@ en:
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
     text_body_template: |
-      A new version of [Discourse](http://www.discourse.org) is available.
+      Hooray, a new version of [Discourse](http://www.discourse.org) is available! :)
 
       Your version: %{installed_version}
       New version: **%{new_version}**
-
-      You may want to:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
@@ -1534,12 +1548,10 @@ en:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
     text_body_template: |
-      A new version of [Discourse](http://www.discourse.org) is available.
+      Hooray, a new version of [Discourse](http://www.discourse.org) is available! :)
 
       Your version: %{installed_version}
       New version: **%{new_version}**
-
-      You may want to:
 
       - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
 
@@ -2000,14 +2012,16 @@ en:
 
   user_notifications:
     previous_discussion: "Previous Replies"
+    in_reply_to: "In Reply To"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ''
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond"
-    visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond"
     reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond"
+    only_reply_by_email: "Reply to this email to respond"
+    visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond"
     visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond"
 
     posted_by: "Posted by %{username} on %{post_date}"
@@ -2254,7 +2268,7 @@ en:
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
   page_not_found:
-    title: "The page you requested doesn't exist or is private."
+    title: "Oops! That page doesn’t exist or is private."
     popular_topics: "Popular"
     recent_topics: "Recent"
     see_more: "More"
@@ -2741,3 +2755,6 @@ en:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports
+
+  topic_invite:
+    user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."

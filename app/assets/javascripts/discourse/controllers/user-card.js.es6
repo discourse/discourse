@@ -45,7 +45,7 @@ export default Ember.Controller.extend({
     }
 
     // Don't show on mobile
-    if (Discourse.Mobile.mobileView) {
+    if (this.site.mobileView) {
       const url = "/users/" + username;
       DiscourseURL.routeTo(url);
       return;

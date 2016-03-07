@@ -10,10 +10,12 @@ class DigestEmailSiteSetting < EnumSiteSetting
   def self.values
     @values ||= [
       { name: 'never',            value:  0 },
-      { name: 'daily',            value:  1 },
-      { name: 'every_three_days', value:  3 },
-      { name: 'weekly',           value:  7 },
-      { name: 'every_two_weeks',  value: 14 }
+      { name: 'every_30_minutes', value:  30 },
+      { name: 'every_hour',       value:  60 },
+      { name: 'daily',            value:  1440 },
+      { name: 'every_three_days', value:  4320 },
+      { name: 'weekly',           value:  10080 },
+      { name: 'every_two_weeks',  value:  20160 }
     ]
   end
 

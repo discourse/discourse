@@ -69,14 +69,38 @@ describe NewPostManager do
       end
     end
 
-    context 'with a high approval post count' do
+    context 'with a high approval post count and TL0' do
       before do
         SiteSetting.approve_post_count = 100
+        topic.user.trust_level = 0
       end
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+      end
+    end
+
+    context 'with a high approval post count and TL1' do
+      before do
+        SiteSetting.approve_post_count = 100
+        topic.user.trust_level = 1
+      end
+      it "will return an enqueue result" do
+        result = NewPostManager.default_handler(manager)
+        expect(NewPostManager.queue_enabled?).to eq(true)
+        expect(result.action).to eq(:enqueued)
+      end
+    end
+
+    context 'with a high approval post count, but TL2' do
+      before do
+        SiteSetting.approve_post_count = 100
+        topic.user.trust_level = 2
+      end
+      it "will return an enqueue result" do
+        result = NewPostManager.default_handler(manager)
+        expect(result).to be_nil
       end
     end
 

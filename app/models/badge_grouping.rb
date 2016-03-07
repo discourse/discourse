@@ -22,7 +22,7 @@ end
 # Table name: badge_groupings
 #
 #  id          :integer          not null, primary key
-#  name        :string(255)      not null
+#  name        :string           not null
 #  description :text
 #  position    :integer          not null
 #  created_at  :datetime         not null

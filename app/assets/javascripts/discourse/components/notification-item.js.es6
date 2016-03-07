@@ -1,3 +1,4 @@
+const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
 const GROUP_SUMMARY_TYPE = 16;
 
@@ -80,7 +81,16 @@ export default Ember.Component.extend({
       const count = notification.get('data.inbox_count');
       const group_name = notification.get('data.group_name');
       text = I18n.t(this.get('scope'), {count, group_name});
-    } else {
+    } else if (notification.get('notification_type') === LIKED_TYPE && notification.get("data.count") > 1)  {
+      const count = notification.get('data.count') - 2;
+      const username2 = notification.get('data.username2');
+      if (count===0) {
+        text = I18n.t('notifications.liked_2', {description, username, username2});
+      } else {
+        text = I18n.t('notifications.liked_many', {description, username, username2, count});
+      }
+    }
+    else {
       text = I18n.t(this.get('scope'), {description, username});
     }
     text = Discourse.Emoji.unescape(text);

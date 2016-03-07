@@ -40,7 +40,7 @@ class AddUserOptions < ActiveRecord::Migration
             mailing_list_mode,
             email_digests,
             email_direct,
-            email_private_messages,
+            COALESCE(email_private_messages,true),
             external_links_in_new_tab,
             enable_quoting,
             dynamic_favicon,

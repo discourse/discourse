@@ -33,7 +33,7 @@ end
 # Table name: user_exports
 #
 #  id         :integer          not null, primary key
-#  file_name  :string(255)      not null
+#  file_name  :string           not null
 #  user_id    :integer          not null
 #  created_at :datetime
 #  updated_at :datetime

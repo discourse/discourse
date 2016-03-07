@@ -107,7 +107,6 @@ module HasCustomFields
 
       end
     end
-
   end
 
   def reload(options = nil)

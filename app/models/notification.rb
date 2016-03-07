@@ -98,8 +98,8 @@ class Notification < ActiveRecord::Base
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||= begin
-
       return nil if data.blank?
+
       parsed = JSON.parse(data)
       return nil if parsed.blank?
 
@@ -122,12 +122,19 @@ class Notification < ActiveRecord::Base
   end
 
   def self.recent_report(user, count = nil)
+    return unless user && user.user_option
+
     count ||= 10
     notifications = user.notifications
                         .visible
                         .recent(count)
                         .includes(:topic)
-                        .to_a
+
+    if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
+      notifications = notifications.where('notification_type <> ?', Notification.types[:liked])
+    end
+
+    notifications = notifications.to_a
 
     if notifications.present?
 
@@ -203,5 +210,6 @@ end
 #  idx_notifications_speedup_unread_count                       (user_id,notification_type)
 #  index_notifications_on_post_action_id                        (post_action_id)
 #  index_notifications_on_user_id_and_created_at                (user_id,created_at)
+#  index_notifications_on_user_id_and_id                        (user_id,id) UNIQUE
 #  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
 #

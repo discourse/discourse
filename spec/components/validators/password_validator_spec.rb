@@ -40,6 +40,15 @@ describe PasswordValidator do
           validate
           expect(record.errors[:password]).to be_present
         end
+
+        it "adds an error when user is admin and password is less than 15 chars" do
+          SiteSetting.min_admin_password_length = 15
+
+          @password = "12345678912"
+          record.admin = true
+          validate
+          expect(record.errors[:password]).to be_present
+        end
       end
 
       context "min password length is 12" do
@@ -55,6 +64,7 @@ describe PasswordValidator do
 
     context "password is commonly used" do
       before do
+        SiteSetting.stubs(:min_password_length).returns(8)
         CommonPasswords.stubs(:common_password?).returns(true)
       end
 
@@ -74,7 +84,7 @@ describe PasswordValidator do
     end
 
     it "adds an error when password is the same as the username" do
-      @password = "porkchops1"
+      @password = "porkchops1234"
       record.username = @password
       validate
       expect(record.errors[:password]).to be_present

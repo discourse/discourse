@@ -14,6 +14,8 @@ class Upload < ActiveRecord::Base
 
   has_many :optimized_images, dependent: :destroy
 
+  attr_accessor :is_attachment_for_group_message
+
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
@@ -62,8 +64,9 @@ class Upload < ActiveRecord::Base
 
   # options
   #   - content_type
-  #   - origin
-  #   - image_type
+  #   - origin (url)
+  #   - image_type ("avatar", "profile_background", "card_background")
+  #   - is_attachment_for_group_message (boolean)
   def self.create_for(user_id, file, filename, filesize, options = {})
     DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
       # do some work on images
@@ -140,6 +143,10 @@ class Upload < ActiveRecord::Base
       upload.width             = width
       upload.height            = height
       upload.origin            = options[:origin][0...1000] if options[:origin]
+
+      if options[:is_attachment_for_group_message]
+        upload.is_attachment_for_group_message = true
+      end
 
       if is_dimensionless_image?(filename, upload.width, upload.height)
         upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
@@ -257,11 +264,11 @@ end
 #
 #  id                :integer          not null, primary key
 #  user_id           :integer          not null
-#  original_filename :string(255)      not null
+#  original_filename :string           not null
 #  filesize          :integer          not null
 #  width             :integer
 #  height            :integer
-#  url               :string(255)      not null
+#  url               :string           not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  sha1              :string(40)

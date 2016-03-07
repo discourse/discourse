@@ -106,8 +106,8 @@ end
 # Table name: user_profiles
 #
 #  user_id              :integer          not null, primary key
-#  location             :string(255)
-#  website              :string(255)
+#  location             :string
+#  website              :string
 #  bio_raw              :text
 #  bio_cooked           :text
 #  profile_background   :string(255)

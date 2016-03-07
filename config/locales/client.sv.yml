@@ -633,8 +633,8 @@ sv:
       hide_forever: "Nej tack"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
-      description: "Det finns <b>{{count}}</b> svar."
-      description_time: "Det finns <b>{{count}}</b> svar med en uppskattad lästid på <b>{{readingTime}} minuter</b>."
+      description: "Det finns <b>{{replyCount}}</b> svar."
+      description_time: "Det finns <b>{{replyCount}}</b> svar med en uppskattad lästid på <b>{{readingTime}} minuter</b>."
       enable: 'Sammanfatta detta ämne'
       disable: 'Visa alla inlägg'
     deleted_filter:

@@ -688,8 +688,8 @@ pt_BR:
       value_prop: "Quando você cria uma conta, nós lembramos exatamente o que você leu, assim você sempre volta exatamente aonde estava. Você também recebe notificações, aqui e por e-mail, quando novas mensagens são feitas. E você pode curtir tópicos para compartilhar o amor. :heartbeat:"
     summary:
       enabled_description: "Você está vendo um sumário deste tópico: os posts mais interessantes conforme determinados pela comunidade."
-      description: "Há <b>{{count}}</b> respostas."
-      description_time: "Há <b>{{count}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
+      description: "Há <b>{{replyCount}}</b> respostas."
+      description_time: "Há <b>{{replyCount}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
       enable: 'Resumir Este Tópico'
       disable: 'Exibir Todas as Mensagens'
     deleted_filter:

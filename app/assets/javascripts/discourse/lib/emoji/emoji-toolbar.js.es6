@@ -161,7 +161,7 @@ function showSelector(options) {
   options.appendTo.append('<div class="emoji-modal-wrapper"></div>');
   $('.emoji-modal-wrapper').click(() => closeSelector());
 
-  if (Discourse.Mobile.mobileView) PER_ROW = 9;
+  if (Discourse.Site.currentProp('mobileView')) { PER_ROW = 9; }
   const page = keyValueStore.getInt("emojiPage", 0);
   const offset = keyValueStore.getInt("emojiOffset", 0);
 

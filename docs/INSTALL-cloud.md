@@ -72,9 +72,9 @@ After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
-- No existing mail server? Create a free account on [SendGrid][sg] (12k emails/month) [SparkPost][sp] (10k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (200 emails/day) or [**Mandrill**][man], and use the credentials provided in the dashboard.
+- No existing mail server? Create a free account on [SendGrid][sg] (12k emails/month) [SparkPost][sp] (10k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (200 emails/day), and use the credentials provided in the dashboard.
 
-- For proper email deliverability, you must set the [SPF and DKIM records](http://help.mandrill.com/entries/21751322-What-are-SPF-and-DKIM-and-do-I-need-to-set-them-up-) in your DNS. See your email provider instructions for specifics.
+- For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
 
 # Bootstrap Discourse
 
@@ -141,7 +141,7 @@ Do you want...
 
 * Users to log in *only* via your pre-existing website's registration system? [Configure Single-Sign-On](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045).
 
-- Users to log in via Google? (new Oauth2 authentication) [Configure Google logins](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858).
+- Users to log in via Google? [Configure Google logins](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858).
 
 - Users to log in via Facebook? [Configure Facebook logins](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394).
 
@@ -168,7 +168,6 @@ Do you want...
 Help us improve this guide! Feel free to ask about it on [meta.discourse.org][meta], or even better, submit a pull request.
 
    [dd]: https://github.com/discourse/discourse_docker
-  [man]: https://mandrillapp.com
    [sp]: https://www.sparkpost.com/
   [ssh]: https://help.github.com/articles/generating-ssh-keys
  [meta]: https://meta.discourse.org

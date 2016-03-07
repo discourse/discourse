@@ -328,7 +328,7 @@ const AdminUser = Discourse.User.extend({
       }).then(function(data) {
         if (data.success) {
           if (data.username) {
-            document.location = Discourse.getURL("/admin/users/" + data.username);
+            document.location = Discourse.getURL("/admin/users/" + user.get('id') + "/" + data.username);
           } else {
             document.location = Discourse.getURL("/admin/users/list/active");
           }

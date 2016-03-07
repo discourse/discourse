@@ -1157,7 +1157,7 @@ describe User do
   context "when user preferences are overriden" do
 
     before do
-      SiteSetting.default_email_digest_frequency = 1 # daily
+      SiteSetting.default_email_digest_frequency = 1440 # daily
       SiteSetting.default_email_private_messages = false
       SiteSetting.default_email_direct = false
       SiteSetting.default_email_mailing_list_mode = true
@@ -1183,7 +1183,7 @@ describe User do
       options = user.user_option
       expect(options.email_always).to eq(true)
       expect(options.mailing_list_mode).to eq(true)
-      expect(options.digest_after_days).to eq(1)
+      expect(options.digest_after_minutes).to eq(1440)
       expect(options.email_private_messages).to eq(false)
       expect(options.external_links_in_new_tab).to eq(true)
       expect(options.enable_quoting).to eq(false)

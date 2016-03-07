@@ -28,16 +28,18 @@ module Email
       }.merge!(@opts)
 
       if @template_args[:url].present?
-        @template_args[:header_instructions] = I18n.t('user_notifications.header_instructions')
+        @template_args[:header_instructions] = I18n.t('user_notifications.header_instructions', locale: @opts[:locale])
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''
         else
-          @template_args[:respond_instructions] = if allow_reply_by_email?
-            @opts[:private_reply] ? I18n.t('user_notifications.reply_by_email_pm', @template_args) : I18n.t('user_notifications.reply_by_email', @template_args)
+          if @opts[:only_reply_by_email]
+            string = "user_notifications.only_reply_by_email"
           else
-            @opts[:private_reply] ? I18n.t('user_notifications.visit_link_to_respond_pm', @template_args) : I18n.t('user_notifications.visit_link_to_respond', @template_args)
+            string = allow_reply_by_email? ? "user_notifications.reply_by_email" : "user_notifications.visit_link_to_respond"
+            string << "_pm" if @opts[:private_reply]
           end
+          @template_args[:respond_instructions] = I18n.t(string, @template_args)
         end
       end
     end
@@ -65,7 +67,7 @@ module Email
         html_override.gsub!("%{unsubscribe_link}", unsubscribe_link)
 
         if SiteSetting.unsubscribe_via_email_footer && @opts[:add_unsubscribe_via_email_link]
-          unsubscribe_via_email_link = PrettyText.cook(I18n.t('unsubscribe_via_email_link', hostname: Discourse.current_hostname), sanitize: false).html_safe
+          unsubscribe_via_email_link = PrettyText.cook(I18n.t('unsubscribe_via_email_link', hostname: Discourse.current_hostname, locale: @opts[:locale]), sanitize: false).html_safe
           html_override.gsub!("%{unsubscribe_via_email_link}", unsubscribe_via_email_link)
         else
           html_override.gsub!("%{unsubscribe_via_email_link}", "")
@@ -112,7 +114,7 @@ module Email
         body << "\n"
         body << I18n.t('unsubscribe_link', template_args)
         if SiteSetting.unsubscribe_via_email_footer && @opts[:add_unsubscribe_via_email_link]
-          body << I18n.t('unsubscribe_via_email_link', hostname: Discourse.current_hostname)
+          body << I18n.t('unsubscribe_via_email_link', hostname: Discourse.current_hostname, locale: @opts[:locale])
         end
       end
 

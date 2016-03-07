@@ -1,7 +1,8 @@
 // TODO @robin to move this whole thing to es6
 Discourse.Emoji = {};
+
 // bump up this number to expire all emojis
-Discourse.Emoji.ImageVersion = "1"
+Discourse.Emoji.ImageVersion = "2"
 
 var emoji = <%= Emoji.standard.map(&:name).flatten.inspect %>;
 var aliases = <%= Emoji.aliases.inspect.gsub("=>", ":") %>;
@@ -11,6 +12,15 @@ Discourse.Dialect.registerEmoji = function(code, url) {
   code = code.toLowerCase();
   extendedEmoji[code] = url;
 };
+
+var _unicodeReplacements;
+var _unicodeRegexp;
+Discourse.Dialect.setUnicodeReplacements = function(replacements) {
+  _unicodeReplacements = replacements;
+  if (replacements) {
+    _unicodeRegexp = new RegExp(Object.keys(replacements).join("|"), "g");
+  }
+}
 
 // This method is used by PrettyText to reset custom emojis in multisites
 Discourse.Dialect.resetEmojis = function() {
@@ -38,9 +48,11 @@ var emojiHash = {};
 // add all default emojis
 emoji.forEach(function(code){ emojiHash[code] = true; });
 // and their aliases
+
+var aliasHash = {};
 for (var name in aliases) {
   aliases[name].forEach(function(alias) {
-    emojiHash[alias] = true;
+    aliasHash[alias] = name;
   });
 }
 
@@ -99,8 +111,8 @@ function imageFor(code) {
 
 // Also support default emotions
 var translations = {
-  ':)'   : 'slightly_smiling',
-  ':-)'  : 'slightly_smiling',
+  ':)'   : 'slight_smile',
+  ':-)'  : 'slight_smile',
   ':('   : 'frowning',
   ':-('  : 'frowning',
   ';)'   : 'wink',
@@ -151,6 +163,19 @@ Object.keys(translations).forEach(function (t) {
   }
 });
 
+Discourse.Dialect.addPreProcessor(function(text) {
+  if (_unicodeReplacements) {
+    _unicodeRegexp.lastIndex = 0;
+
+    var m;
+    while ((m = _unicodeRegexp.exec(text)) !== null) {
+      text = text.replace(m[0], ":" + _unicodeReplacements[m[0]] + ":");
+    }
+  }
+
+  return text;
+});
+
 function escapeRegExp(s) {
   return s.replace(/[-/\\^$*+?.()|[\]{}]/gi, '\\$&');
 }
@@ -198,27 +223,29 @@ Discourse.Emoji.search = function(term, options) {
   var maxResults = (options && options["maxResults"]) || -1;
   if (maxResults === 0) { return []; }
 
-  toSearch = toSearch || _.union(_.keys(emojiHash), _.keys(extendedEmoji)).sort();
+  toSearch = toSearch || _.union(_.keys(emojiHash), _.keys(extendedEmoji), _.keys(aliasHash)).sort();
 
   var i, results = [];
-
-  var done = function() {
+  function addResult(term) {
+    var val = aliasHash[term] || term;
+    if (results.indexOf(val) === -1) {
+      results.push(val);
+    }
     return maxResults > 0 && results.length >= maxResults;
   }
 
-  for (i=0; i < toSearch.length; i++) {
-    if (toSearch[i].indexOf(term) === 0) {
-      results.push(toSearch[i]);
-      if(done()) { break; }
+  var item;
+  for (i=0; i<toSearch.length; i++) {
+    item = toSearch[i];
+    if (item.indexOf(term) === 0 && addResult(item)) {
+      return results;
     }
   }
 
-  if(!done()){
-    for (i=0; i < toSearch.length; i++) {
-      if (toSearch[i].indexOf(term) > 0) {
-        results.push(toSearch[i]);
-        if(done()) { break; }
-      }
+  for (i=0; i<toSearch.length; i++) {
+    item = toSearch[i];
+    if (item.indexOf(term) === 0 && addResult(item)) {
+      return results;
     }
   }
 

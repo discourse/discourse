@@ -94,7 +94,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound do
+  class PluginDisabled < StandardError; end
+
+  rescue_from Discourse::NotFound, PluginDisabled do
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -119,8 +121,6 @@ class ApplicationController < ActionController::Base
       render text: build_not_found_page(status_code, include_ember ? 'application' : 'no_ember')
     end
   end
-
-  class PluginDisabled < StandardError; end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
   # disabled. This allows plugins to be disabled programatically.
@@ -164,7 +164,15 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = current_user.try(:effective_locale) || SiteSetting.default_locale
+    if !current_user
+      if SiteSetting.allow_user_locale
+        I18n.locale = locale_from_header
+      else
+        I18n.locale = SiteSetting.default_locale
+      end
+    else
+      I18n.locale = current_user.effective_locale
+    end
     I18n.ensure_all_loaded!
   end
 
@@ -308,6 +316,20 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+    def locale_from_header
+      begin
+        # Rails I18n uses underscores between the locale and the region; the request
+        # headers use hyphens.
+        require 'http_accept_language' unless defined? HttpAcceptLanguage
+        available_locales = I18n.available_locales.map { |locale| locale.to_s.gsub(/_/, '-') }
+        parser = HttpAcceptLanguage::Parser.new(request.env["HTTP_ACCEPT_LANGUAGE"])
+        parser.language_region_compatible_from(available_locales).gsub(/-/, '_')
+      rescue
+        # If Accept-Language headers are not set.
+        I18n.default_locale
+      end
+    end
 
     def preload_anonymous_data
       store_preloaded("site", Site.json_for(guardian))
@@ -454,7 +476,7 @@ class ApplicationController < ActionController::Base
     def build_not_found_page(status=404, layout=false)
       category_topic_ids = Category.pluck(:topic_id).compact
       @container_class = "wrap not-found-container"
-      @top_viewed = Topic.where.not(id: category_topic_ids).top_viewed(10)
+      @top_viewed = TopicQuery.new(nil, {except_topic_ids: category_topic_ids}).list_top_for("monthly").topics.first(10)
       @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?

@@ -119,6 +119,8 @@ sk:
           one: "1 rok neskôr"
           few: "%{count} roky neskôr"
           other: "%{count} rokov neskôr"
+      previous_month: 'Predchádzajúci mesiac'
+      next_month: 'Nasledujúci mesiac'
     share:
       topic: 'zdieľaj odkaz na túto tému'
       post: 'príspevok #%{postNumber}'
@@ -209,6 +211,7 @@ sk:
       other: "{{count}} znakov"
     suggested_topics:
       title: "Odporúčané témy"
+      pm_title: "Odporúčané správy"
     about:
       simple_title: "O fóre"
       title: "O %{title}"
@@ -458,6 +461,7 @@ sk:
         not_supported: "Tento prehliadač nepodporuje upozornenia. Prepáčte."
         perm_default: "Zapnúť upozornenia"
         perm_denied_btn: "Prístup zamietnutý"
+        perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
         disable: "Zakázať upozornenia"
         currently_enabled: "(momentálne povolené)"
         enable: "Povoliť upozornenia"
@@ -511,6 +515,7 @@ sk:
         groups: "Moje skupiny"
         bulk_select: "Označ správy"
         move_to_inbox: "Presuň do prijatej pošty"
+        move_to_archive: "Archív"
         failed_to_move: "Zlyhalo presunutie označených správ (možno je chyba vo vašom pripojení)"
         select_all: "Označ všetky"
       change_password:
@@ -759,8 +764,8 @@ sk:
       value_prop: "Keď si vytvoríte účet, zapamätáme si čo ste čítali, takže sa môžete vrátiť presne tam, kde ste prestali. Okrem toho dostanete upozornenie tu, aj na váš e-mail, vždy keď pribudnú nové príspevky. A môžete označiť príspevky ktoré sa vám páčia. :heartbeat:"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      description: "Je tu <b>{{count}}</b> odpovedí."
-      description_time: "Je tu <b>{{count}}</b> odpovedí s priemerným časom čítania <b>{{readingTime}} minút</b>."
+      description: "Je tu <b>{{replyCount}}</b> odpovedí."
+      description_time: "Je tu <b>{{replyCount}}</b> odpovedí s priemerným časom čítania <b>{{readingTime}} minút</b>."
       enable: 'Zhrnutie tejto témy'
       disable: 'Zobraziť všetky príspevky'
     deleted_filter:
@@ -941,6 +946,10 @@ sk:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> presunul {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Získal '{{description}}'</p>"
+      group_message_summary:
+        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} správa vo vašej {{group_name}} schránke</p>"
+        few: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} správy vo vašej {{group_name}} schránke</p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} správ vo vašej {{group_name}} schránke</p>"
       alt:
         mentioned: "Spomenutý od"
         quoted: "Citovaný od"
@@ -955,6 +964,7 @@ sk:
         moved_post: "Váš príspevok bol presunutý "
         linked: "Odkaz na váš príspevok"
         granted_badge: "Priznaný odznak"
+        group_message_summary: "Správy v skupinovej schránke"
       popup:
         mentioned: '{{username}} vás spomenul v "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} vás spomenul v "{{topic}}" - {{site_title}}'
@@ -1836,6 +1846,7 @@ sk:
           refresh_report: "Obnoviť report"
           start_date: "Od"
           end_date: "Do"
+          groups: "Všetky skupiny"
       commits:
         latest_changes: "Najnov3ie zmeny. Prosime aktualizujte čo najčastejšie!"
         by: "podľa"
@@ -2229,6 +2240,10 @@ sk:
             create_category: "vytvoriť kategóriu"
             block_user: "blokovať používateľa"
             unblock_user: "odblokovať používateľa"
+            grant_admin: "udeliť admin"
+            revoke_admin: "odobrať admin"
+            grant_moderation: "udeliť moderovanie"
+            revoke_moderation: "odvolať moderovanie"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "

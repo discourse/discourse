@@ -9,6 +9,10 @@ class UserOption < ActiveRecord::Base
     @previous_replies_type ||= Enum.new(always: 0, unless_emailed: 1, never: 2)
   end
 
+  def self.like_notification_frequency_type
+    @like_notification_frequency_type ||= Enum.new(always: 0, first_time_and_daily: 1, first_time: 2, never: 3)
+  end
+
   def set_defaults
     self.email_always = SiteSetting.default_email_always
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
@@ -16,6 +20,7 @@ class UserOption < ActiveRecord::Base
     self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
     self.email_private_messages = SiteSetting.default_email_private_messages
     self.email_previous_replies = SiteSetting.default_email_previous_replies
+    self.email_in_reply_to = SiteSetting.default_email_in_reply_to
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
@@ -26,12 +31,14 @@ class UserOption < ActiveRecord::Base
     self.new_topic_duration_minutes = SiteSetting.default_other_new_topic_duration_minutes
     self.auto_track_topics_after_msecs = SiteSetting.default_other_auto_track_topics_after_msecs
 
+    self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
+
 
     if SiteSetting.default_email_digest_frequency.to_i <= 0
       self.email_digests = false
     else
       self.email_digests = true
-      self.digest_after_days ||= SiteSetting.default_email_digest_frequency.to_i
+      self.digest_after_minutes ||= SiteSetting.default_email_digest_frequency.to_i
     end
 
     true
@@ -103,3 +110,30 @@ class UserOption < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: user_options
+#
+#  user_id                       :integer          not null, primary key
+#  email_always                  :boolean          default(FALSE), not null
+#  mailing_list_mode             :boolean          default(FALSE), not null
+#  email_digests                 :boolean
+#  email_direct                  :boolean          default(TRUE), not null
+#  email_private_messages        :boolean          default(TRUE), not null
+#  external_links_in_new_tab     :boolean          default(FALSE), not null
+#  enable_quoting                :boolean          default(TRUE), not null
+#  dynamic_favicon               :boolean          default(FALSE), not null
+#  disable_jump_reply            :boolean          default(FALSE), not null
+#  edit_history_public           :boolean          default(FALSE), not null
+#  automatically_unpin_topics    :boolean          default(TRUE), not null
+#  digest_after_minutes          :integer
+#  auto_track_topics_after_msecs :integer
+#  new_topic_duration_minutes    :integer
+#  last_redirected_to_top_at     :datetime
+#  email_previous_replies        :integer          default(1), not null
+#
+# Indexes
+#
+#  index_user_options_on_user_id  (user_id) UNIQUE
+#

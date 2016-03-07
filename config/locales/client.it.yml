@@ -712,8 +712,8 @@ it:
       value_prop: "Quando hai un account ci ricordiamo esattamente cosa stavi leggendo, così potrai riprendere da dove ti eri fermato. Inoltre ricevi le notifiche, sia qui sia via email, ogni volta che ci saranno nuovi messaggi. Inoltre potrai metterei i \"Mi piace\" ai messaggi e condividerne l'apprezzamento. :heartbeat:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
-      description: "Ci sono <b>{{count}}</b> risposte."
-      description_time: "Ci sono <b>{{count}}</b> risposte con un tempo stimato di lettura di  <b>{{readingTime}} minuti</b>."
+      description: "Ci sono <b>{{replyCount}}</b> risposte."
+      description_time: "Ci sono <b>{{replyCount}}</b> risposte con un tempo stimato di lettura di  <b>{{readingTime}} minuti</b>."
       enable: 'Riassumi Questo Argomento'
       disable: 'Mostra Tutti i Messaggi'
     deleted_filter:

@@ -333,7 +333,7 @@ describe UsersController do
         old_token = user.auth_token
 
         get :password_reset, token: token
-        put :password_reset, token: token, password: 'newpassword'
+        put :password_reset, token: token, password: 'hg9ow8yhg98o'
         expect(response).to be_success
         expect(assigns[:error]).to be_blank
 
@@ -372,14 +372,14 @@ describe UsersController do
       end
 
       it "logs in the user" do
-        put :password_reset, token: token, password: 'newpassword'
+        put :password_reset, token: token, password: 'ksjafh928r'
         expect(assigns(:user).errors).to be_blank
         expect(session[:current_user_id]).to be_present
       end
 
       it "doesn't log in the user when not approved" do
         SiteSetting.expects(:must_approve_users?).returns(true)
-        put :password_reset, token: token, password: 'newpassword'
+        put :password_reset, token: token, password: 'ksjafh928r'
         expect(assigns(:user).errors).to be_blank
         expect(session[:current_user_id]).to be_blank
       end
@@ -477,6 +477,15 @@ describe UsersController do
         username: @user.username,
         password: "strongpassword",
         email: @user.email
+    end
+
+    context 'when creating a user' do
+      it 'sets the user locale to I18n.locale' do
+        SiteSetting.stubs(:default_locale).returns('en')
+        I18n.stubs(:locale).returns(:fr)
+        post_user
+        expect(User.find_by(username: @user.username).locale).to eq('fr')
+      end
     end
 
     context 'when creating a non active user (unconfirmed email)' do
@@ -723,7 +732,7 @@ describe UsersController do
       context "with values for the fields" do
         let(:create_params) { {
           name: @user.name,
-          password: 'watwatwat',
+          password: 'watwatwatwat',
           username: @user.username,
           email: @user.email,
           user_fields: {
@@ -773,7 +782,7 @@ describe UsersController do
       context "without values for the fields" do
         let(:create_params) { {
           name: @user.name,
-          password: 'watwatwat',
+          password: 'watwatwatwat',
           username: @user.username,
           email: @user.email,
         } }
@@ -793,7 +802,7 @@ describe UsersController do
       let!(:staged) { Fabricate(:staged, email: "staged@account.com") }
 
       it "succeeds" do
-        xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd"
+        xhr :post, :create, email: staged.email, username: "zogstrip", password: "P4ssw0rd$$"
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
         expect(User.find_by(email: staged.email).staged).to eq(false)
@@ -1181,6 +1190,19 @@ describe UsersController do
 
         end
 
+        context 'a locale is chosen that differs from I18n.locale' do
+          it "updates the user's locale" do
+            I18n.stubs(:locale).returns('fr')
+
+            put :update,
+                username: user.username,
+                locale: :fa_IR
+
+            expect(User.find_by(username: user.username).locale).to eq('fa_IR')
+          end
+
+        end
+
         context "with user fields" do
           context "an editable field" do
             let!(:user_field) { Fabricate(:user_field) }
@@ -1229,9 +1251,7 @@ describe UsersController do
         it 'does not allow the update' do
           user = Fabricate(:user, name: 'Billy Bob')
           log_in_user(user)
-          guardian = Guardian.new(user)
-          guardian.stubs(:ensure_can_edit!).with(user).raises(Discourse::InvalidAccess.new)
-          Guardian.stubs(new: guardian).with(user)
+          Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
 
           put :update, username: user.username, name: 'Jim Tom'
 

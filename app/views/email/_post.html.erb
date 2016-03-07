@@ -1,4 +1,4 @@
-<table class='post-wrapper <%= post.whisper? ? "whisper" : "" %>'>
+<table class='post-wrapper <%= post.whisper? ? "whisper" : "" %> <%= use_excerpt ? "excerpt" : ""%>'>
   <tbody>
     <tr>
       <td>
@@ -23,7 +23,7 @@
       </td>
     </tr>
     <tr>
-      <td class='body'><%= format_for_email(post.cooked) %></td>
+      <td class='body'><%= format_for_email(use_excerpt ? post.excerpt :  post.cooked) %></td>
     </tr>
   </tbody>
 </table>

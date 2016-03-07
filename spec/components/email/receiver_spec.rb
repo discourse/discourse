@@ -131,6 +131,11 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. Anf if\nyou can mix it up with some anise, then I'm in heaven ;)")
     end
 
+    it "handles invalid from header" do
+      expect { process(:invalid_from) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This email was sent with an invalid from header field.")
+    end
+
     describe 'Unsubscribing via email' do
       let(:last_email) { ActionMailer::Base.deliveries.last }
 
@@ -218,7 +223,7 @@ describe Email::Receiver do
 
   context "new message to a group" do
 
-    let!(:group) { Fabricate(:group, incoming_email: "team@bar.com") }
+    let!(:group) { Fabricate(:group, incoming_email: "team@bar.com|meat@bar.com") }
 
     it "handles encoded display names" do
       expect { process(:encoded_display_name) }.to change(Topic, :count)
@@ -266,38 +271,45 @@ describe Email::Receiver do
       expect { process(:email_reply_4) }.to change { topic.posts.count }
     end
 
+    it "supports any kind of attachments when 'allow_all_attachments_for_group_messages' is enabled" do
+      SiteSetting.allow_all_attachments_for_group_messages = true
+      expect { process(:attached_rb_file) }.to change(Topic, :count)
+      expect(Post.last.raw).to match(/discourse\.rb/)
+    end
+
   end
 
   context "new topic in a category" do
 
-    let!(:category) { Fabricate(:category, email_in: "category@bar.com", email_in_allow_strangers: false) }
+    let!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: false) }
 
     it "raises a StrangersNotAllowedError when 'email_in_allow_strangers' is disabled" do
-      expect { process(:stranger_not_allowed) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
+      expect { process(:new_user) }.to raise_error(Email::Receiver::StrangersNotAllowedError)
     end
 
     it "raises an InsufficientTrustLevelError when user's trust level isn't enough" do
+      Fabricate(:user, email: "existing@bar.com", trust_level: 3)
       SiteSetting.email_in_min_trust = 4
-      Fabricate(:user, email: "insufficient@bar.com", trust_level: 3)
-      expect { process(:insufficient_trust_level) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
+      expect { process(:existing_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
 
-    it "raises an InvalidAccess when the user is part of a readonly group" do
-      user = Fabricate(:user, email: "readonly@bar.com", trust_level: SiteSetting.email_in_min_trust)
+    it "works" do
+      user = Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
       group = Fabricate(:group)
 
       group.add(user)
       group.save
 
-      category.set_permissions(group => :readonly)
+      category.set_permissions(group => :create_post)
       category.save
 
-      expect { process(:readonly) }.to raise_error(Discourse::InvalidAccess)
-    end
+      # raises an InvalidAccess when the user doesn't have the privileges to create a topic
+      expect { process(:existing_user) }.to raise_error(Discourse::InvalidAccess)
 
-    it "works" do
-      Fabricate(:user, email: "sufficient@bar.com", trust_level: SiteSetting.email_in_min_trust)
-      expect { process(:sufficient_trust_level) }.to change(Topic, :count)
+      category.update_columns(email_in_allow_strangers: true)
+
+      # allows new user to create a topic
+      expect { process(:new_user) }.to change(Topic, :count)
     end
 
   end

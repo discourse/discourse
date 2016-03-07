@@ -14,7 +14,6 @@ test('defaults', function() {
   var post = Discourse.Post.create({id: 1});
   blank(post.get('deleted_at'), "it has no deleted_at by default");
   blank(post.get('deleted_by'), "there is no deleted_by by default");
-  equal(post.get('replyHistory.length'), 0, "there is no reply history by default");
 });
 
 test('new_user', function() {
@@ -46,16 +45,6 @@ test('updateFromPost', function() {
 
   equal(post.get('raw'), "different raw", "raw field updated");
 });
-
-test('hasHistory', function() {
-  var post = Discourse.Post.create({id: 1});
-  ok(!post.get('hasHistory'), 'posts without versions have no history');
-  post.set('version', 1);
-  ok(!post.get('hasHistory'), 'posts with one version have no history');
-  post.set('version', 2);
-  ok(post.get('hasHistory'), 'posts with more than one version have a history');
-});
-
 
 test('destroy by staff', function() {
   var user = Discourse.User.create({username: 'staff', staff: true}),

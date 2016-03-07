@@ -81,8 +81,10 @@ class Group < ActiveRecord::Base
 
   def incoming_email_validator
     return if self.automatic || self.incoming_email.blank?
-    unless Email.is_valid?(incoming_email)
-      self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', incoming_email: incoming_email))
+    incoming_email.split("|").each do |email|
+      unless Email.is_valid?(email)
+        self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', incoming_email: email))
+      end
     end
   end
 
@@ -332,7 +334,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    self.find_by(incoming_email: Email.downcase(email))
+    self.where("incoming_email LIKE ?", "%#{Email.downcase(email)}%").first
   end
 
   def bulk_add(user_ids)
@@ -358,6 +360,10 @@ class Group < ActiveRecord::Base
       end
     end
     true
+  end
+
+  def mentionable?(user, group_id)
+    Group.mentionable(user).where(id: group_id).exists?
   end
 
   protected
@@ -455,7 +461,7 @@ end
 # Table name: groups
 #
 #  id                                 :integer          not null, primary key
-#  name                               :string(255)      not null
+#  name                               :string           not null
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
@@ -465,7 +471,7 @@ end
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
-#  title                              :string(255)
+#  title                              :string
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null

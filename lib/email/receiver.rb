@@ -31,6 +31,7 @@ module Email
     end
 
     def process
+      @from_email, @from_display_name = parse_from_field
       @incoming_email = find_or_create_incoming_email
       process_internal
     rescue => e
@@ -42,14 +43,14 @@ module Email
       IncomingEmail.find_or_create_by(message_id: @mail.message_id) do |incoming_email|
         incoming_email.raw = @raw_email
         incoming_email.subject = subject
-        incoming_email.from_address = @mail.from.first.downcase
+        incoming_email.from_address = @from_email
         incoming_email.to_addresses = @mail.to.map(&:downcase).join(";") if @mail.to.present?
         incoming_email.cc_addresses = @mail.cc.map(&:downcase).join(";") if @mail.cc.present?
       end
     end
 
     def process_internal
-      user = find_or_create_user(from)
+      user = find_or_create_user(@from_email, @from_display_name)
       @incoming_email.update_columns(user_id: user.id)
       body = select_body || ""
 
@@ -71,20 +72,35 @@ module Email
         case destination[:type]
         when :group
           group = destination[:obj]
-          create_topic(user: user, raw: body, title: subject, archetype: Archetype.private_message, target_group_names: [group.name], skip_validations: true)
+          create_topic(user: user,
+                       raw: body,
+                       title: subject,
+                       archetype: Archetype.private_message,
+                       target_group_names: [group.name],
+                       is_group_message: true,
+                       skip_validations: true)
+
         when :category
           category = destination[:obj]
 
           raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
           raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
-          create_topic(user: user, raw: body, title: subject, category: category.id)
+          create_topic(user: user,
+                       raw: body,
+                       title: subject,
+                       category: category.id,
+                       skip_validations: user.staged?)
+
         when :reply
           email_log = destination[:obj]
 
           raise ReplyUserNotMatchingError if email_log.user_id != user.id
 
-          create_reply(user: user, raw: body, post: email_log.post, topic: email_log.post.topic)
+          create_reply(user: user,
+                       raw: body,
+                       post: email_log.post,
+                       topic: email_log.post.topic)
         end
       end
     end
@@ -150,25 +166,29 @@ module Email
       reply.split(previous_replies_regex)[0]
     end
 
-    def from
-      @from ||= @mail[:from].address_list.addresses.first
+    def parse_from_field
+      if @mail[:from].errors.blank?
+        address_field = @mail[:from].address_list.addresses.first
+        address_field.decoded
+        from_address = address_field.address
+        from_display_name = address_field.display_name.try(:to_s)
+      else
+        from_address = @mail.from[/<([^>]+)>/, 1]
+        from_display_name = @mail.from[/^([^<]+)/, 1]
+      end
+      [from_address.downcase, from_display_name]
     end
 
     def subject
-      @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @mail.from.first.downcase)
+      @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
     end
 
-    def find_or_create_user(address_field)
-      # decode the address field
-      address_field.decoded
-      # extract email and name
-      email = address_field.address.downcase
-      name = address_field.display_name.try(:to_s)
-      username = UserNameSuggester.sanitize_username(name) if name.present?
+    def find_or_create_user(email, display_name)
+      username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
 
       User.find_or_create_by(email: email) do |user|
         user.username = UserNameSuggester.suggest(username.presence || email)
-        user.name = name.presence || User.suggest_name(email)
+        user.name = display_name.presence || User.suggest_name(email)
         user.staged = true
       end
     end
@@ -209,11 +229,11 @@ module Email
     end
 
     def group_incoming_emails_regex
-      @group_incoming_emails_regex ||= Regexp.union Group.pluck(:incoming_email).select(&:present?).uniq
+      @group_incoming_emails_regex ||= Regexp.union Group.pluck(:incoming_email).select(&:present?).map { |e| e.split("|") }.flatten.uniq
     end
 
     def category_email_in_regex
-      @category_email_in_regex ||= Regexp.union Category.pluck(:email_in).select(&:present?).uniq
+      @category_email_in_regex ||= Regexp.union Category.pluck(:email_in).select(&:present?).map { |e| e.split("|") }.flatten.uniq
     end
 
     def find_related_post
@@ -266,6 +286,7 @@ module Email
       else
         options[:topic_id] = options[:post].try(:topic_id)
         options[:reply_to_post_number] = options[:post].try(:post_number)
+        options[:is_group_message] = options[:topic].private_message? && options[:topic].allowed_groups.exists?
         create_post_with_attachments(options)
       end
     end
@@ -286,13 +307,14 @@ module Email
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
-          upload = Upload.create_for(options[:user].id, tmp, attachment.filename, tmp.size)
+          opts = { is_attachment_for_group_message: options[:is_group_message] }
+          upload = Upload.create_for(options[:user].id, tmp, attachment.filename, tmp.size, opts)
           if upload && upload.errors.empty?
             # try to inline images
             if attachment.content_type.start_with?("image/") && options[:raw][/\[image: .+ \d+\]/]
               options[:raw].sub!(/\[image: .+ \d+\]/, attachment_markdown(upload))
             else
-              options[:raw] << "\n#{attachment_markdown(upload)}\n"
+              options[:raw] << "\n\n#{attachment_markdown(upload)}\n\n"
             end
           end
         ensure
@@ -300,11 +322,7 @@ module Email
         end
       end
 
-      post_options = {
-        cooking_options: { traditional_markdown_linebreaks: true },
-      }.merge(options)
-
-      create_post(post_options)
+      create_post(options)
     end
 
     def attachment_markdown(upload)
@@ -340,9 +358,11 @@ module Email
         if @mail[d] && @mail[d].address_list && @mail[d].address_list.addresses
           @mail[d].address_list.addresses.each do |address_field|
             begin
+              address_field.decoded
               email = address_field.address.downcase
+              display_name = address_field.display_name.try(:to_s)
               if should_invite?(email)
-                user = find_or_create_user(address_field)
+                user = find_or_create_user(email, display_name)
                 if can_invite?(topic, user)
                   topic.topic_allowed_users.create!(user_id: user.id)
                   topic.add_small_action(sender, "invited_user", user.username)

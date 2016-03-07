@@ -3,20 +3,6 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default RestModel.extend({
 
-  // Description for the action
-  description: function() {
-    const action = this.get('actionType.name_key');
-    if (this.get('acted')) {
-      if (this.get('count') <= 1) {
-        return I18n.t('post.actions.by_you.' + action);
-      } else {
-        return I18n.t('post.actions.by_you_and_others.' + action, { count: this.get('count') - 1 });
-      }
-    } else {
-      return I18n.t('post.actions.by_others.' + action, { count: this.get('count') });
-    }
-  }.property('count', 'acted', 'actionType'),
-
   canToggle: function() {
     return this.get('can_undo') || this.get('can_act');
   }.property('can_undo', 'can_act'),
@@ -31,7 +17,14 @@ export default RestModel.extend({
     });
   },
 
-  toggle: function(post) {
+  togglePromise(post) {
+    if (!this.get('acted')) {
+      return this.act(post).then(() => true);
+    }
+    return this.undo(post).then(() => false);
+  },
+
+  toggle(post) {
     if (!this.get('acted')) {
       this.act(post);
       return true;
@@ -42,7 +35,7 @@ export default RestModel.extend({
   },
 
   // Perform this action
-  act: function(post, opts) {
+  act(post, opts) {
 
     if (!opts) opts = {};
 
@@ -83,37 +76,20 @@ export default RestModel.extend({
   },
 
   // Undo this action
-  undo: function(post) {
+  undo(post) {
     this.removeAction(post);
 
     // Remove our post action
     return Discourse.ajax("/post_actions/" + post.get('id'), {
       type: 'DELETE',
-      data: {
-        post_action_type_id: this.get('id')
-      }
-    }).then(function(result) {
-      return post.updateActionsSummary(result);
-    });
+      data: { post_action_type_id: this.get('id') }
+    }).then(result => post.updateActionsSummary(result));
   },
 
-  deferFlags: function(post) {
-    const self = this;
+  deferFlags(post) {
     return Discourse.ajax("/post_actions/defer_flags", {
       type: "POST",
-      data: {
-        post_action_type_id: this.get("id"),
-        id: post.get('id')
-      }
-    }).then(function () {
-      self.set("count", 0);
-    });
-  },
-
-  loadUsers(post) {
-    return this.store.find('post-action-user', {
-      id: post.get('id'),
-      post_action_type_id: this.get('id')
-    });
+      data: { post_action_type_id: this.get("id"), id: post.get('id') }
+    }).then(() => this.set('count', 0));
   }
 });

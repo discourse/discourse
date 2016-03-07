@@ -199,6 +199,7 @@ ja:
     revert: "戻す"
     failed: "失敗"
     switch_to_anon: "匿名モード"
+    switch_from_anon: "匿名モード停止"
     banner:
       close: "バナーを閉じる。"
       edit: "このバナーを編集 >>"
@@ -593,8 +594,8 @@ ja:
       sign_up: "新しいアカウントを作成"
     summary:
       enabled_description: "トピックのまとめを表示されています。"
-      description: "<b>{{count}}</b> 返信があります。"
-      description_time: "全てを確認するのに <b>{{readingTime}} 分</b> 前後を要する <b>{{count}}</b> 個の回答があります。"
+      description: "<b>{{replyCount}}</b> 返信があります。"
+      description_time: "全てを確認するのに <b>{{readingTime}} 分</b> 前後を要する <b>{{replyCount}}</b> 個の回答があります。"
       enable: 'このトピックを要訳する'
       disable: '全ての投稿を表示する'
     deleted_filter:

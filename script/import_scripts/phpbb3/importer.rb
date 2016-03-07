@@ -108,6 +108,29 @@ module ImportScripts::PhpBB3
       end
     end
 
+    # uncomment below lines to create permalink for categories
+    # def create_category(opts, import_id)
+    #   new_category = super
+    #   url = "viewforum.php?f=#{import_id}"
+    #   if !Permalink.find_by(url: url)
+    #     Permalink.create(url: url, category_id: new_category.id)
+    #   end
+    #   new_category
+    # end
+
+    # uncomment below lines to create permalink for topics
+    # def create_post(opts, import_id)
+    #   post = super
+    #   if post && (topic = post.topic) && (category = topic.category)
+    #     url = "viewtopic.php?f=#{category.custom_fields["import_id"]}&t=#{opts[:import_topic_id]}"
+
+    #     if !Permalink.find_by(url: url)
+    #       Permalink.create(url: url, topic_id: topic.id)
+    #     end
+    #   end
+    #   post
+    # end
+
     def import_private_messages
       if @settings.fix_private_messages
         puts '', 'fixing private messages'

@@ -68,10 +68,17 @@ export default Ember.Controller.extend(CanCheckEmails, {
     {name: I18n.t('user.email_previous_replies.never'), value: 2}
   ],
 
-  digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
-                      { name: I18n.t('user.email_digests.every_three_days'), value: 3 },
-                      { name: I18n.t('user.email_digests.weekly'), value: 7 },
-                      { name: I18n.t('user.email_digests.every_two_weeks'), value: 14 }],
+  digestFrequencies: [{ name: I18n.t('user.email_digests.every_30_minutes'), value: 30 },
+                      { name: I18n.t('user.email_digests.every_hour'), value: 60 },
+                      { name: I18n.t('user.email_digests.daily'), value: 1440 },
+                      { name: I18n.t('user.email_digests.every_three_days'), value: 4320 },
+                      { name: I18n.t('user.email_digests.weekly'), value: 10080 },
+                      { name: I18n.t('user.email_digests.every_two_weeks'), value: 20160 }],
+
+  likeNotificationFrequencies: [{ name: I18n.t('user.like_notification_frequency.always'), value: 0 },
+                      { name: I18n.t('user.like_notification_frequency.first_time_and_daily'), value: 1 },
+                      { name: I18n.t('user.like_notification_frequency.first_time'), value: 2 },
+                      { name: I18n.t('user.like_notification_frequency.never'), value: 3 }],
 
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
                        { name: I18n.t('user.auto_track_options.immediately'), value: 0 },
