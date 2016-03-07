@@ -6,7 +6,7 @@ export default Discourse.Route.extend({
 
   actions: {
     exportUsers() {
-      exportEntity('user_list').then(outputExportResult);
+      exportEntity('user_list', {trust_level: this.controllerFor('admin-users-list-show').get('query')}).then(outputExportResult);
     },
 
     sendInvites() {
