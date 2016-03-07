@@ -19,7 +19,7 @@
       <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
     <%- end %>
     <header>
-      <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+      <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo" style="max-width: 400px;"></a>
     </header>
     <div id="main-outlet" class="wrap">
       <%= yield %>
