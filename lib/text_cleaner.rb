@@ -1,6 +1,10 @@
 #
 # Clean up a text
 #
+
+# Whe use ActiveSupport mb_chars from here to properly support non ascii downcase
+require 'active_support/core_ext/string/multibyte'
+
 class TextCleaner
 
   def self.title_options
@@ -27,7 +31,7 @@ class TextCleaner
     # Replace ????? with a single ?
     text.gsub!(/\?+/, '?') if opts[:deduplicate_question_marks]
     # Replace all-caps text with regular case letters
-    text.tr!('A-Z', 'a-z') if opts[:replace_all_upper_case] && (text =~ /[A-Z]+/) && (text == text.upcase)
+    text = text.mb_chars.downcase if opts[:replace_all_upper_case] && (text =~ /[A-Z]+/) && (text == text.upcase)
     # Capitalize first letter, but only when entire first word is lowercase
     text.sub!(/\A([a-z]*)\b/) { |first| first.capitalize } if opts[:capitalize_first_letter]
     # Remove unnecessary periods at the end
