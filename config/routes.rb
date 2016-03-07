@@ -292,8 +292,8 @@ Discourse::Application.routes.draw do
   put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}, as: :email_preferences
-  get "users/:username/preferences/email" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
-  put "users/:username/preferences/email" => "users#change_email", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/preferences/email" => "users_email#index", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "users/:username/preferences/email" => "users_email#update", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/about-me" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/badge_title" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/badge_title" => "users#badge_title", constraints: {username: USERNAME_ROUTE_FORMAT}
