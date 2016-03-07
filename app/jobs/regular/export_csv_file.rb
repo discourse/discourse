@@ -53,10 +53,14 @@ module Jobs
     def user_list_export
       user_array = []
       user_field_ids = UserField.pluck(:id)
+      condition = {}
+      if @extra && @extra[:trust_level] && trust_level = TrustLevel.levels[@extra[:trust_level].to_sym]
+        condition = {trust_level: trust_level}
+      end
 
       if SiteSetting.enable_sso
         # SSO enabled
-        User.includes(:user_stat, :single_sign_on_record, :groups).find_each do |user|
+        User.where(condition).includes(:user_stat, :single_sign_on_record, :groups).find_each do |user|
           user_info_string = get_base_user_string(user)
           user_info_string = add_single_sign_on(user, user_info_string)
           user_info_string = add_custom_fields(user, user_info_string, user_field_ids)
@@ -66,7 +70,7 @@ module Jobs
         end
       else
         # SSO disabled
-        User.includes(:user_stat, :groups).find_each do |user|
+        User.where(condition).includes(:user_stat, :groups).find_each do |user|
           user_info_string = get_base_user_string(user)
           user_info_string = add_custom_fields(user, user_info_string, user_field_ids)
           user_info_string = add_group_names(user, user_info_string)
