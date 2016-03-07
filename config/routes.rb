@@ -75,7 +75,7 @@ Discourse::Application.routes.draw do
 
     resources :users, id: USERNAME_ROUTE_FORMAT, except: [:show] do
       collection do
-        get 'list' => 'users#show'
+        get 'list' => redirect('admin/users/list/active')
         get "list/:query" => "users#index"
         get "ip-info" => "users#ip_info"
         delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
