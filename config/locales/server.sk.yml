@@ -1790,7 +1790,7 @@ sk:
 
         Kliknite na nasledujúci odkaz pre nastavenie hesla k Vášmu novému účtu:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Potvrďte Vašu novú email adresu"
       text_body_template: |
         Potvrďte Vašu novú emailovú adresu pre %{site_name} kliknutím na nasledujúci odkaz:

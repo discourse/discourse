@@ -1297,7 +1297,7 @@ fa_IR:
     account_created:
       subject_template: "[%{site_name}] حساب کاربری جدید شما"
       text_body_template: "حساب کاربری جدید برای شما ساخته شد در  %{site_name}\n\nبر روری پیوند پیش رو کلیک کنید برای انتخاب رمز برای حساب کاربری جدیدتان: \n\n%{base_url}/users/password-reset/%{email_token}\n"
-    authorize_email:
+    confirm_new_email:
       subject_template: "آدرس ایمیل جدید را تایید کنید برای [%{site_name}]"
       text_body_template: "آدرس ایمیل جدید را تایید کنید برای %{site_name} با کلیک کردن بر پیوند پیش رو : \n\n\n%{base_url}/users/authorize-email/%{email_token}\n"
     signup_after_approval:

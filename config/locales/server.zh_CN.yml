@@ -1850,7 +1850,7 @@ zh_CN:
 
         点击下面的链接来为新账户设置密码：
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         点击下面的链接来确认你在 %{site_name} 上的新电子邮箱地址：

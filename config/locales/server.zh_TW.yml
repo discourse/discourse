@@ -943,7 +943,7 @@ zh_TW:
       subject_template: "[%{site_name}] 設定密碼"
     account_created:
       subject_template: "[%{site_name}] 你的新帳號"
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] 確認你的新電子郵箱位址"
       text_body_template: |
         點擊下面的連結來確認你在 %{site_name} 上的新電子郵箱位址：

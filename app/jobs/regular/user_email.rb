@@ -109,6 +109,10 @@ module Jobs
         email_args[:email_token] = email_token
       end
 
+      if type == 'notify_old_email'
+        email_args[:new_email] = user.email
+      end
+
       message = UserNotifications.send(type, user, email_args)
 
       # Update the to address if we have a custom one

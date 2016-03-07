@@ -1381,7 +1381,7 @@ nl:
 
         Klik op deze link om een wachtwoord in te stellen voor je nieuwe account:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Bevestig je nieuwe e-mailadres"
       text_body_template: |
         Bevestig je nieuwe e-mailadres voor %{site_name} door op de volgende link te klikken:

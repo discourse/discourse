@@ -2,6 +2,44 @@ require 'rails_helper'
 
 describe UsersEmailController do
 
+  describe '.confirm' do
+    it 'errors out for invalid tokens' do
+      get :confirm, token: 'asdfasdf'
+      expect(response).to be_success
+      expect(assigns(:update_result)).to eq(:error)
+    end
+
+    context 'valid old address token' do
+      let(:user) { Fabricate(:moderator) }
+      let(:updater) { EmailUpdater.new(user.guardian, user) }
+
+      before do
+        updater.change_to('new.n.cool@example.com')
+      end
+
+      it 'confirms with a correct token' do
+        get :confirm, token: user.email_tokens.last.token
+        expect(response).to be_success
+        expect(assigns(:update_result)).to eq(:authorizing_new)
+      end
+    end
+
+    context 'valid new address token' do
+      let(:user) { Fabricate(:user) }
+      let(:updater) { EmailUpdater.new(user.guardian, user) }
+
+      before do
+        updater.change_to('new.n.cool@example.com')
+      end
+
+      it 'confirms with a correct token' do
+        get :confirm, token: user.email_tokens.last.token
+        expect(response).to be_success
+        expect(assigns(:update_result)).to eq(:complete)
+      end
+    end
+  end
+
   describe '.update' do
     let(:new_email) { 'bubblegum@adventuretime.ooo' }
 
@@ -57,14 +95,8 @@ describe UsersEmailController do
       end
 
       context 'success' do
-
         it 'has an email token' do
-          expect { xhr :put, :update, username: user.username, email: new_email }.to change(EmailToken, :count)
-        end
-
-        it 'enqueues an email authorization' do
-          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :authorize_email, user_id: user.id, to_address: new_email))
-          xhr :put, :update, username: user.username, email: new_email
+          expect { xhr :put, :update, username: user.username, email: new_email }.to change(EmailChangeRequest, :count)
         end
       end
     end

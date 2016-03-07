@@ -1319,7 +1319,7 @@ ja:
 
         以下のリンクをクリックしてパスワードを設定してください:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] メールアドレスの確認"
       text_body_template: |
         次のリンクをクリックして %{site_name} 用のメールアドレスを確認してください:

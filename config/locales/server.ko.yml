@@ -1424,7 +1424,7 @@ ko:
 
         비밀번호 설정 페이지:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] 이메일 확인"
       text_body_template: |
         %{site_name} 사이트에서 사용할 새로운 이메일을 아래 링크를 클릭하여 확인하세요:

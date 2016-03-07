@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :uploads
   has_many :warnings
   has_many :user_archived_messages, dependent: :destroy
+  has_many :email_change_requests, dependent: :destroy
 
 
   has_one :user_option, dependent: :destroy

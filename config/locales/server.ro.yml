@@ -950,7 +950,7 @@ ro:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Autentificare"
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirmă noua adresă de email"
       text_body_template: |
         Confirmă noua adresă de email pentru %{site_name} făcând click pe următoarea adresă:

@@ -5,7 +5,7 @@ require_dependency 'rate_limiter'
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
 
   before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
   before_filter :respond_to_suspicious_request, only: [:create]
@@ -21,7 +21,6 @@ class UsersController < ApplicationController
                                                             :activate_account,
                                                             :perform_account_activation,
                                                             :send_activation_email,
-                                                            :authorize_email,
                                                             :password_reset,
                                                             :confirm_email_token,
                                                             :admin_login]
@@ -469,16 +468,6 @@ class UsersController < ApplicationController
     else
       render json: failed_json, status: 403
     end
-  end
-
-  def authorize_email
-    expires_now()
-    if @user = EmailToken.confirm(params[:token])
-      log_on_user(@user)
-    else
-      flash[:error] = I18n.t('change_email.error')
-    end
-    render layout: 'no_ember'
   end
 
   def account_created

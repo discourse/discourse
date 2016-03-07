@@ -1417,7 +1417,7 @@ pt_BR:
 
         Clique no link a seguir para escolher uma senha para a sua nova conta:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirma o seu novo endereço de email"
       text_body_template: |
         Confirma o seu endereço de email novo para %{site_name} clicando no seguinte link:

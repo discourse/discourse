@@ -1829,7 +1829,7 @@ fi:
 
         Klikkaa seuraavaa linkkiä asettaaksesi salasanan uudelle tunnuksellesi:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Vahvista uusi sähköpostiosoite"
       text_body_template: |
         Vahvista uusi sähköpostiosoite sivustolle %{site_name} klikkaamalla alla olevaa linkkiä:

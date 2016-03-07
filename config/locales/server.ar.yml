@@ -1874,7 +1874,7 @@ ar:
 
         انقر على الرابط التالي لاختيار كلمة مرور لحسابك الجديد:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] تأكيد البريد الإلكتروني الجديد "
       text_body_template: |
         قم بتاكيد عنوان بريدك الالكتروني لـ  %{site_name}  عن طريق الضغط علي الرابط التالي:
