@@ -9,7 +9,6 @@ class RateLimiter
     end
 
     def description
-
       time_left = ""
       if @available_in < 1.minute.to_i
         time_left = I18n.t("rate_limiter.seconds", count: @available_in)
@@ -20,7 +19,7 @@ class RateLimiter
       end
 
       if @type.present?
-        type_key = @type.gsub(/-/, '_')
+        type_key = @type.tr("-", "_")
         msg = I18n.t("rate_limiter.by_type.#{type_key}", time_left: time_left, default: "")
         return msg if msg.present?
       end

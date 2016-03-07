@@ -13,7 +13,7 @@ describe Email::Receiver do
   end
 
   def process(email_name)
-    Email::Receiver.new(email(email_name)).process
+    Email::Receiver.new(email(email_name)).process!
   end
 
   it "raises an EmptyEmailError when 'mail_string' is blank" do

@@ -23,6 +23,8 @@ module Email
     class InvalidPost                 < ProcessingError; end
     class InvalidPostAction           < ProcessingError; end
 
+    attr_reader :incoming_email
+
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
       @raw_email = mail_string
@@ -30,7 +32,7 @@ module Email
       raise NoMessageIdError if @mail.message_id.blank?
     end
 
-    def process
+    def process!
       @from_email, @from_display_name = parse_from_field
       @incoming_email = find_or_create_incoming_email
       process_internal
@@ -40,12 +42,12 @@ module Email
     end
 
     def find_or_create_incoming_email
-      IncomingEmail.find_or_create_by(message_id: @mail.message_id) do |incoming_email|
-        incoming_email.raw = @raw_email
-        incoming_email.subject = subject
-        incoming_email.from_address = @from_email
-        incoming_email.to_addresses = @mail.to.map(&:downcase).join(";") if @mail.to.present?
-        incoming_email.cc_addresses = @mail.cc.map(&:downcase).join(";") if @mail.cc.present?
+      IncomingEmail.find_or_create_by(message_id: @mail.message_id) do |ie|
+        ie.raw = @raw_email
+        ie.subject = subject
+        ie.from_address = @from_email
+        ie.to_addresses = @mail.to.map(&:downcase).join(";") if @mail.to.present?
+        ie.cc_addresses = @mail.cc.map(&:downcase).join(";") if @mail.cc.present?
       end
     end
 
