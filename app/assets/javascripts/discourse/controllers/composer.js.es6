@@ -57,7 +57,25 @@ export default Ember.Controller.extend({
   lastValidatedAt: null,
   isUploading: false,
   topic: null,
-  showToolbar: false,
+  showToolbar: Em.computed({
+    get(key){
+      const keyValueStore = this.container.lookup('key-value-store:main');
+      const storedVal = keyValueStore.get("toolbar-enabled");
+      if (this._toolbarEnabled === undefined && storedVal === undefined) {
+        // iPhone 6 is 375, anything narrower and toolbar should
+        // be default disabled.
+        // That said we should remember the state
+        this._toolbarEnabled = $(window).width() > 370;
+      }
+      return this._toolbarEnabled || storedVal === "true";
+    },
+    set(key, val){
+      const keyValueStore = this.container.lookup('key-value-store:main');
+      this._toolbarEnabled = val;
+      keyValueStore.set({key: "toolbar-enabled", value: val ? "true" : "false"});
+      return val;
+    }
+  }),
 
   _initializeSimilar: function() {
     this.set('similarTopics', []);
