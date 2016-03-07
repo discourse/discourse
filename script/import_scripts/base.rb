@@ -197,20 +197,20 @@ class ImportScripts::Base
   def all_records_exist?(type, import_ids)
     return false if import_ids.empty?
 
-    Post.exec_sql('create temp table import_ids(val varchar(200) primary key)')
+    Post.exec_sql('CREATE TEMP TABLE import_ids(val varchar(200) PRIMARY KEY)')
 
-    import_id_clause = import_ids.map{|id| "('#{PG::Connection.escape_string(id.to_s)}')"}.join(",")
-    Post.exec_sql("insert into import_ids values #{import_id_clause}")
+    import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
+    Post.exec_sql("INSERT INTO import_ids VALUES #{import_id_clause}")
 
     existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
-    existing = existing.joins('JOIN import_ids ON val=value')
+    existing = existing.joins('JOIN import_ids ON val = value')
 
     if existing.count == import_ids.length
       puts "Skipping #{import_ids.length} already imported #{type}"
       return true
     end
   ensure
-    Post.exec_sql('drop table import_ids')
+    Post.exec_sql('DROP TABLE import_ids')
   end
 
   # Iterate through a list of user records to be imported.
