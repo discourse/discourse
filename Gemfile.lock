@@ -199,6 +199,9 @@ GEM
       multi_json (~> 1.3)
       omniauth (>= 1.1.1)
       omniauth-oauth2 (>= 1.3.1)
+    omniauth-instagram (1.0.2)
+      omniauth (~> 1)
+      omniauth-oauth2 (~> 1)
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)
@@ -448,6 +451,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-github-discourse
   omniauth-google-oauth2
+  omniauth-instagram
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
