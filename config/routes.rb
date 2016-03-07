@@ -274,7 +274,7 @@ Discourse::Application.routes.draw do
   put "users/password-reset/:token" => "users#password_reset"
   get "users/activate-account/:token" => "users#activate_account"
   put "users/activate-account/:token" => "users#perform_account_activation", as: 'perform_activate_account'
-  get "users/authorize-email/:token" => "users#authorize_email"
+  get "users/authorize-email/:token" => "users_email#confirm"
   get "users/hp" => "users#get_honeypot_value"
   get "my/*path", to: 'users#my_redirect'
 

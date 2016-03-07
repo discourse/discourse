@@ -1812,7 +1812,7 @@ pt:
 
         Clique na hiperligação seguinte para escolher uma palavra-passe para a sua nova conta.
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirme o seu novo endereço de email"
       text_body_template: |
         Confirme o seu novo endereço de email para %{site_name} ao clicar na seguinte hiperligação:

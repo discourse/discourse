@@ -104,26 +104,6 @@ describe UsersController do
     end
   end
 
-  describe '.authorize_email' do
-    it 'errors out for invalid tokens' do
-      get :authorize_email, token: 'asdfasdf'
-      expect(response).to be_success
-      expect(flash[:error]).to be_present
-    end
-
-    context 'valid token' do
-      it 'authorizes with a correct token' do
-        user = Fabricate(:user)
-        email_token = user.email_tokens.create(email: user.email)
-
-        get :authorize_email, token: email_token.token
-        expect(response).to be_success
-        expect(flash[:error]).to be_blank
-        expect(session[:current_user_id]).to be_present
-      end
-    end
-  end
-
   describe '.activate_account' do
     before do
       UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false)

@@ -38,9 +38,9 @@ describe Jobs::UserEmail do
 
   context 'to_address' do
     it 'overwrites a to_address when present' do
-      UserNotifications.expects(:authorize_email).returns(mailer)
+      UserNotifications.expects(:confirm_new_email).returns(mailer)
       Email::Sender.any_instance.expects(:send)
-      Jobs::UserEmail.new.execute(type: :authorize_email, user_id: user.id, to_address: 'jake@adventuretime.ooo')
+      Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id, to_address: 'jake@adventuretime.ooo')
       expect(mailer.to).to eq(['jake@adventuretime.ooo'])
     end
   end

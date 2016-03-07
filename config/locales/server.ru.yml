@@ -1522,7 +1522,7 @@ ru:
 
         Чтобы установить пароль, пройдите по следующей ссылке:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Подтвердите новый адрес электронной почты"
       text_body_template: |
         Подтвердите ваш новый адрес электронной почты для сайта %{site_name}, перейдя по следующей ссылке:

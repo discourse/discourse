@@ -517,6 +517,10 @@ en:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
+    already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
+    authorizing_old:
+      title: "Thanks for confirming your current email address"
+      description: "We're now emailing your new address for confirmation."
 
   activation:
     action: "Click here to activate your account"
@@ -2245,12 +2249,34 @@ en:
         Click the following link to choose a password for your new account:
         %{base_url}/users/password-reset/%{email_token}
 
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
         %{base_url}/users/authorize-email/%{email_token}
+
+    confirm_old_email:
+      subject_template: "[%{site_name}] Confirm your current email address"
+      text_body_template: |
+        Before we can change your email address, we need you to confirm that you control
+        the current email account. After you complete this step, we will have you confirm
+        the new email address.
+
+        Confirm your current email address for %{site_name} by clicking on the following link:
+
+        %{base_url}/users/authorize-email/%{email_token}
+
+    notify_old_email:
+      subject_template: "[%{site_name}] Your email address has been changed"
+      text_body_template: |
+        This is an automated message to let you know that your email address for
+        %{site_name} has been changed. If this was done in error, please contact
+        a site administrator.
+
+        Your email address has been changed to:
+
+        %{new_email}
 
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"

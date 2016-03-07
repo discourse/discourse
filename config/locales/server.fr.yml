@@ -1793,7 +1793,7 @@ fr:
 
         Cliquez sur le lien ci-dessous pour choisir un mot de passe pour votre nouveau compte :
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirmation de votre nouvelle adresse de courriel"
       text_body_template: |
         Confirmez votre nouvelle adresse de courriel pour %{site_name} en cliquant sur le lien suivant :

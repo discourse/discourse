@@ -1702,7 +1702,7 @@ es:
 
         Pulsa en el siguiente enlace para escoger una contraseña para tu nueva cuenta:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirma tu nueva dirección de email"
       text_body_template: |
         Confirma tu nueva dirección de email para %{site_name} haciendo clic en el siguiente enlace:

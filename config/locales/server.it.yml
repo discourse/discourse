@@ -1207,7 +1207,7 @@ it:
 
         Fai clic sul seguente collegamento per scegliere una password per il tuo nuovo account:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Conferma il tuo nuovo indirizzo email"
       text_body_template: |
         Conferma il tuo nuovo indirizzo email per %{site_name} cliccando sul seguente collegamento:

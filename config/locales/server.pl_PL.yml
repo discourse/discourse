@@ -1143,7 +1143,7 @@ pl_PL:
 
         Kliknij na linku poniżej, aby ustawić swoje hasło:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Potwierdź nowy adres email"
       text_body_template: |
         Potwierdź Twój nowy adres email na forum %{site_name} przez kliknięcie na poniższy link:

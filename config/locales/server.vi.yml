@@ -1111,7 +1111,7 @@ vi:
       subject_template: "[%{site_name}] Đăng nhập"
     account_created:
       subject_template: "[%{site_name}] Tài khoản mới"
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Xác nhận địa chỉ email mới của bạn"
     signup_after_approval:
       subject_template: "Bạn đã được kiểm duyệt ở %{site_name}!"

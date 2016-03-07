@@ -1421,7 +1421,7 @@ tr_TR:
 
         Yeni hesabınıza ait bir parola oluşturmak için aşağıdaki bağlantıya tıklayın:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Yeni e-posta adresinizi onaylayın"
       text_body_template: |
         Aşağıdaki bağlantıya tıklayarak %{site_name} sitesindeki yeni e-posta adresinizi onaylayın:

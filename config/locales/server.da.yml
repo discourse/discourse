@@ -780,7 +780,7 @@ da:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Din nye konto"
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Bekræft din nye e-mail-adresse"
       text_body_template: |
         Bekræft din nye e-mail-adresse på %{site_name} ved at klikke på følgende link:

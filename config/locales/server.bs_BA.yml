@@ -1029,7 +1029,7 @@ bs_BA:
 
         Kliknite na link ispod da kreirate šifru za vaš nalog:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Potvrdite vaš novi email"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:

@@ -23,9 +23,23 @@ class UserNotifications < ActionMailer::Base
                 new_user_tips: I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url, locale: locale))
   end
 
-  def authorize_email(user, opts={})
+  def notify_old_email(user, opts={})
     build_email(user.email,
-                template: "user_notifications.authorize_email",
+                template: "user_notifications.notify_old_email",
+                locale: user_locale(user),
+                new_email: opts[:new_email])
+  end
+
+  def confirm_old_email(user, opts={})
+    build_email(user.email,
+                template: "user_notifications.confirm_old_email",
+                locale: user_locale(user),
+                email_token: opts[:email_token])
+  end
+
+  def confirm_new_email(user, opts={})
+    build_email(user.email,
+                template: "user_notifications.confirm_new_email",
                 locale: user_locale(user),
                 email_token: opts[:email_token])
   end
