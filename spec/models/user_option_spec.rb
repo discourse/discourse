@@ -18,7 +18,7 @@ describe UserOption do
 
   end
 
-  describe ".mailing_list_mode" do
+  describe "#mailing_list_mode" do
     let!(:forum_user) { Fabricate(:user) }
     let!(:mailing_list_user) { Fabricate(:user) }
 
@@ -28,13 +28,13 @@ describe UserOption do
     end
 
     it "should return false when `SiteSetting.disable_mailing_list_mode` is enabled" do
-      SiteSetting.expects(:disable_mailing_list_mode).twice.returns(true)
+      SiteSetting.disable_mailing_list_mode = true
       expect(forum_user.user_option.mailing_list_mode).to eq(false)
       expect(mailing_list_user.user_option.mailing_list_mode).to eq(false)
     end
 
     it "should return the stored value when `SiteSetting.disable_mailing_list_mode` is disabled" do
-      SiteSetting.expects(:disable_mailing_list_mode).twice.returns(false)
+      SiteSetting.disable_mailing_list_mode = false
       expect(forum_user.user_option.mailing_list_mode).to eq(false)
       expect(mailing_list_user.user_option.mailing_list_mode).to eq(true)
     end
