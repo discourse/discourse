@@ -208,14 +208,18 @@ class PostAlerter
   end
 
   def should_notify_previous?(user, notification, opts)
-    type = notification.notification_type
-    if type == Notification.types[:edited]
-      return should_notify_edit?(notification, opts)
-    elsif type == Notification.types[:liked]
-      return should_notify_like?(user, notification)
+    case notification.notification_type
+    when Notification.types[:edited] then should_notify_edit?(notification, opts)
+    when Notification.types[:liked]  then should_notify_like?(user, notification)
+    else false
     end
-    return false
   end
+
+  COLLAPSED_NOTIFICATION_TYPES ||= [
+    Notification.types[:replied],
+    Notification.types[:quoted],
+    Notification.types[:posted],
+  ]
 
   def create_notification(user, type, post, opts=nil)
     return if user.blank?
@@ -268,9 +272,10 @@ class PostAlerter
 
     collapsed = false
 
-    if type == Notification.types[:replied] || type == Notification.types[:posted]
-      destroy_notifications(user, Notification.types[:replied], post.topic)
-      destroy_notifications(user, Notification.types[:posted], post.topic)
+    if COLLAPSED_NOTIFICATION_TYPES.include?(type)
+      COLLAPSED_NOTIFICATION_TYPES.each do |t|
+        destroy_notifications(user, t, post.topic)
+      end
       collapsed = true
     end
 
