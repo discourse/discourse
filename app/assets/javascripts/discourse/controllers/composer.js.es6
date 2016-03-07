@@ -58,7 +58,7 @@ export default Ember.Controller.extend({
   isUploading: false,
   topic: null,
   showToolbar: Em.computed({
-    get(key){
+    get(){
       const keyValueStore = this.container.lookup('key-value-store:main');
       const storedVal = keyValueStore.get("toolbar-enabled");
       if (this._toolbarEnabled === undefined && storedVal === undefined) {
