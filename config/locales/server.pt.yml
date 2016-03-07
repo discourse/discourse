@@ -30,6 +30,19 @@ pt:
   emails:
     incoming:
       default_subject: "Email de entrada de %{email}"
+      errors:
+        empty_email_error: "Acontece quando, a informação não processada, do correio recebido veio em branco."
+        no_message_id_error: "Acontece quando o correio recebido não tem identificador de mensagem no cabeçalho."
+        auto_generated_email_error: "Acontece quando a antecedência do cabeçalho é definida como: 'list', 'junk' ou 'auto_reply', ou quando algum cabeçalho contém: 'auto-submitted', 'auto-replied' ou 'auto-generated'."
+        no_body_detected_error: "Acontece quando não conseguimos extrair o corpo da mensagem e não existem anexos."
+        inactive_user_error: "Acontece quando o remetente não está activo."
+        blocked_user_error: "Acontece quando o remetente está bloqueado."
+        bad_destination_address: "Acontece quando nenhum dos endereços de email nos campos para/cc/bcc coincide com um endereço de email configurado."
+        strangers_not_allowed_error: "Acontece quando um utilizador tenta criar um tópico numa categoria em que não é membro."
+        insufficient_trust_level_error: "Acontece quando um utilizador tentar criar um tópico numa categoria para qual este não o nível de confiança necessário."
+        reply_user_not_matching_error: "Acontece quando uma resposta veio de um endereço de email diferente do destinatário da notificação."
+        topic_not_found_error: "Acontece quando a resposta veio de um tópico relacionado mas o tópico relacionado foi apagado."
+        topic_closed_error: "Acontece quando uma resposta chegou mas o tópico relacionado foi fechado."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -153,6 +166,7 @@ pt:
   rss_description:
     latest: "Tópicos recentes"
     hot: "Tópicos quentes"
+    top: "Melhores tópicos"
     posts: "Últimas mensagens"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   excerpt_image: "imagem"
@@ -307,6 +321,7 @@ pt:
       self_parent: "Uma subcategoria não pode ser superior a ela própria"
       depth: "Não pode juntar uma subcategoria dentro de outra"
       email_in_already_exist: "Endereço de email de recepção %{email_in}' já está a ser utilizado pela categoria %{category_name}'."
+      invalid_email_in: "'%{email_in}' não é um endereço de email válido."
     cannot_delete:
       uncategorized: "Não é possível eliminar Sem Categoria"
       has_subcategories: "Não é possível eliminar esta categoria porque contém sub-categorias."
@@ -784,7 +799,6 @@ pt:
     suppress_reply_directly_above: "Não mostrar em-resposta-a expansível quando há apenas uma única resposta diretamente acima desta publicação."
     suppress_reply_when_quoting: "Não mostraR em-resposta-a expansível numa mensagem quando esta cita uma resposta."
     max_reply_history: "Número máximo de respostas a serem expandidas quando se expande em-resposta-a"
-    experimental_reply_expansion: "Esconder respostas intermédias ao expandir uma resposta-a (experimental)"
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em  'Mostrar Mais' tópicos principais expandido."
     redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
@@ -880,6 +894,7 @@ pt:
     external_system_avatars_enabled: "Utilize o serviço do sistema externo de avatars."
     external_system_avatars_url: "URL do serviço do sistema externo de avatars. Substituições permitidas são  {nome_de_utilizador} {primeira_letra} {cor} {tamanho}"
     default_opengraph_image_url: "URL da imagem opengraph por defeito."
+    allow_all_attachments_for_group_messages: "Permitir qualquer anexo de email nas mensagens de grupo."
     enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
     default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
@@ -1062,6 +1077,8 @@ pt:
     default_email_direct: "Por defeito, enviar um email quando alguém cita/responde a/menciona ou convida o utilizador."
     default_email_mailing_list_mode: "Por defeito, enviar um email por cada nova mensagem."
     default_email_always: "Por defeito, enviar notificações por email mesmo quando o utilizador está ativo."
+    default_email_previous_replies: "Incluir respostas previas nos emails por defeito."
+    default_email_in_reply_to: "Por defeito Incluir excerto de mensagem de resposta nos email."
     default_other_new_topic_duration_minutes: "Condição global por defeito para o qual um tópico é considerado novo."
     default_other_auto_track_topics_after_msecs: "Tempo global por defeito antes de um tópico ser automaticamente acompanhado."
     default_other_external_links_in_new_tab: "Por defeito, abrir hiperligações externas num novo separador."
@@ -1091,6 +1108,8 @@ pt:
       pop3_polling_username_is_empty: "Deve configurar um 'nome de utilizador de polling pop3' antes de ativar o polling POP3."
       pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
       pop3_polling_authentication_failed: "Autenticação POP3 falhada. Por favor verifique as suas credenciais pop3."
+      reply_by_email_address_is_empty: "Tem que definir um 'respostas por endereço de email' antes de habilitar a reposta por email."
+      pop3_polling_disabled: "Tem de habilitar o polling POP3 antes de habilitar a reposta por email."
   notification_types:
     group_mentioned: "%{group_name} foi mencionado em %{link}"
     mentioned: "%{display_username} mencionou-o em %{link}"
@@ -1102,7 +1121,7 @@ pt:
     moved_post: "%{display_username} moveu a sua mensagem para %{link}"
     private_message: "%{display_username} enviou-lhe uma mensagem: %{link}"
     invited_to_private_message: "%{display_username} convidou-o para uma mensagem: %{link}"
-    invited_to_topic: "%{display_username} convidou-o para um tópico: %{link}"
+    invited_to_topic: "%{display_username} convidou-o para %{link}"
     invitee_accepted: "%{display_username} aceitou o seu convite"
     linked: "%{display_username} hiperligou-o em %{link}"
     granted_badge: "Ganhou %{link}"
@@ -1191,6 +1210,7 @@ pt:
     reserved_username: "Esse nome de utilizador não é permitido."
     missing_user_field: "Não completou todos os campos de utilizador."
     close_window: "A autenticação está completa. Feche esta janela para continuar."
+    already_logged_in: "Oops, parece que tentou aceitar um convite para outro utilizador. Se não é o %{current_user}, por favor saia e tente novamente."
   user:
     no_accounts_associated: "Sem contas associadas"
     username:
@@ -1199,8 +1219,8 @@ pt:
       characters: "pode incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que estar preenchido"
-      must_begin_with_alphanumeric: "tem que começar com uma letra ou número ou um sublinhado"
-      must_end_with_alphanumeric: "tem que terminar com uma letra ou número ou um sublinhado"
+      must_begin_with_alphanumeric_or_underscore: "tem de começar por uma letra, um número ou o carácter sublinhado"
+      must_end_with_alphanumeric: "tem de terminar com uma letra ou um número"
       must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de 2 ou mais caracteres especiais (.-_)"
       must_not_end_with_confusing_suffix: "não deve terminar com um sufixo confuso tal como .json ou .png etc."
     email:
@@ -1209,6 +1229,13 @@ pt:
     ip_address:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
+  flags_reminder:
+    flags_were_submitted:
+      one: "Sinalizações foram submetidas há 1 hora atrás. Por favor analise-as. "
+      other: "Sinalizações foram submetidas há %{count} horas atrás. Por favor analise-as. "
+    subject_template:
+      one: "1 sinalização à espera de ser tratada"
+      other: "%{count} sinalizações à espera de serem tratadas"
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
     text_body_template: |
@@ -1262,23 +1289,37 @@ pt:
       (Se a hiperligação acima tiver expirado, escolha "Esqueci a minha palavra-passe" ao iniciar sessão com o seu endereço de email.)
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
-    text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n - *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**. \n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF. \n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n(A maneira *fácil* é criar uma conta gratuita em [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], que tem vários planos de email gratuitos e será bom para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!) \n\nEsperamos que tenha recebido este teste de entrega de email sem problemas! \n\nBoa sorte, \n\nOs seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[md]: http://mandrill.com\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n"
+    text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n- *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**.\n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF.\n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n- Recomendamos vivamente que **envie um email de teste para [mail-tester.com][mt]** para verificar que tudo mencionado em cima está a funcionar correctamente.\n\n(A maneira *fácil* é criar uma conta grátis em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que fornecem grátis, generosamente grátis, pacotes de envio de emails  e será suficiente para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!)\n\nEsperamos que tenha recebido este teste de entrega de email sem problemas!\n\nBoa sorte, \n\nDos seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://sendgrid.com/\n[sp]: https://www.sparkpost.com/\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n[mt]: http://www.mail-tester.com/\n"
   new_version_mailer:
     subject_template: "[%{site_name}]  Nova versão Discourse, atualização disponível"
-    text_body_template: "Uma nova versão de [Discourse](http://www.discourse.org) está disponível. \n\nA sua versão: %{installed_version}\nNova versão: **%{new_version}**\n\nPode desejar: \n\n- Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).\n\n- Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.\n"
+    text_body_template: |
+      Hurra, uma nova versão do [Discourse](http://www.discourse.org) está disponível :)
+
+      A sua versão: %{installed_version}
+      A nova versão: **%{new_version}**
+
+      - Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: "Uma nova versão de [Discourse](http://www.discourse.org) está disponível. \n\nA sua versão: %{installed_version}\nNova versão: **%{new_version}**\n\nPode desejar: \n\n- Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).\n\n- Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.\n\n### Release notes\n\n%{notes}\n"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Estas sinalizações foram submetidas há 1 hora atrás."
-      other: "Estas sinalizações foram submetidas há %{count} horas atrás."
-    please_review: "Por favor examine-os."
-    post_number: "mensagem"
-    how_to_disable: 'Pode desativar ou mudar a frequência deste email notificativo através de "notify about flags after" nas configurações.'
-    subject_template:
-      one: "1 sinalização à espera de ser tratada"
-      other: "%{count} sinalizações à espera de serem tratadas"
+    text_body_template: |
+      Hurra, uma nova versão do [Discourse](http://www.discourse.org) está disponível :)
+
+      A sua versão: %{installed_version}
+      A nova versão: **%{new_version}**
+
+      - Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
+
+      ### Notas da versão
+
+      %{notes}
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 mensagem à espera de revisão"
@@ -1401,6 +1442,13 @@ pt:
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         A sua conta associada com este email não está activa. Por favor active a sua conta antes de enviar emails.
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Problema de email -- Utilizador bloqueado"
+      text_body_template: |+
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        A sua conta associada com este endereço de email foi bloqueada.
+
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] Problema de email -- Utilizador de resposta não encontrado"
       text_body_template: |+
@@ -1566,12 +1614,14 @@ pt:
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Respostas Anteriores"
+    in_reply_to: "Em Resposta A"
     unsubscribe:
       title: "Cancelar a Subscrição"
       description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
     reply_by_email: "[Consultar Tópico](%{base_url}%{url}) ou responda a este email para responder"
-    visit_link_to_respond: "[Consultar Tópico](%{base_url}%{url}) para responder"
     reply_by_email_pm: "[Consultar Mensagem](%{base_url}%{url}) ou responda a este email para responder"
+    only_reply_by_email: "Responda a este email para responder"
+    visit_link_to_respond: "[Consultar Tópico](%{base_url}%{url}) para responder"
     visit_link_to_respond_pm: "[Consultar Mensagem](%{base_url}%{url}) para responder"
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
@@ -1606,7 +1656,7 @@ pt:
         Por favor visite esta hiperligação para ver a mensagem: %{base_url}%{url}
 
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} convidou-o para um tópico '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} convidou-o para '%{topic_title}'"
       text_body_template: |2
 
         %{username} convidou-o para uma discussão
@@ -1643,6 +1693,17 @@ pt:
         ---
         %{respond_instructions}
     user_quoted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1786,7 +1847,7 @@ pt:
 
         Se a hiperligação não for clicável, tente copiá-la e colá-la na barra de endereço do seu navegador de internet.
   page_not_found:
-    title: "A página que solicitou não existe ou é privada."
+    title: "Oops! Essa página não existe or é privada."
     popular_topics: "Popular"
     recent_topics: "Recente"
     see_more: "Mais"
