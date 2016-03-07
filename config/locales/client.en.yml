@@ -895,6 +895,9 @@ en:
       twitter:
         title: "with Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
+      instagram:
+        title: "with Instagram"
+        message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
         title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"

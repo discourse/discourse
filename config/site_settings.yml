@@ -234,6 +234,15 @@ login:
   twitter_consumer_secret:
     default: ''
     regex: "^[a-zA-Z0-9_+-]+$"
+  enable_instagram_logins:
+    client: true
+    default: false
+  instagram_consumer_key:
+    default: ''
+    regex: "^[a-z0-9]+$"
+  instagram_consumer_secret:
+    default: ''
+    regex: "^[a-z0-9]+$"
   enable_facebook_logins:
     client: true
     default: false
