@@ -187,7 +187,7 @@ de:
 
       - Verwende gebräuchliche, gut definierte Wörter, damit dein Thema *gefunden* werden kann. Wähle eine Kategorie, um es mit ähnlichen Themen zu gruppieren.
 
-      Für mehr Tips, [siehe unsere Community-Richtlinien](/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
+      Mehr Tipps findest du in [unseren Community-Richtlinien](/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
     new-reply: |
       Willkommen bei %{site_name} &mdash; **Danke für deinen Beitrag zum Thema!**
 
@@ -761,7 +761,6 @@ de:
     suppress_reply_directly_above: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der beantwortete Beitrag direkt darüber angezeigt wird."
     suppress_reply_when_quoting: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der Beitrag den beantworteten Beitrag zitiert."
     max_reply_history: "Maximale Anzahl an Antworten beim Ausklappen von in-reply-to"
-    experimental_reply_expansion: "Verstecke dazwischenliegende Beiträge, wenn der beantwortete Beitrag erweitert wird (experimentell)."
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Top-Themübersicht angezeigt werden."
     topics_per_period_in_top_page: "Anzahl der Themen, die in der mit \"Mehr zeigen\" erweiterten Top-Themenübersicht angezeigt werden."
     redirect_users_to_top_page: "Verweise neue und länger abwesende Nutzer automatisch zur Top Übersichtsseite"
@@ -1077,7 +1076,6 @@ de:
     moved_post: "%{display_username} hat deinen Beitrag nach %{link} verschoben."
     private_message: "%{display_username} hat Dir eine Nachricht geschickt: %{link}"
     invited_to_private_message: "%{display_username} hat dich zu einer Unterhaltung eingeladen: %{link}"
-    invited_to_topic: "%{display_username} hat dich in ein Thema eingeladen: %{link}"
     invitee_accepted: "%{display_username} hat deine Einladung angenommen."
     linked: "%{display_username} hat dich auf %{link} verlinkt"
     granted_badge: "Sie haben %{link} verdient"
@@ -1174,8 +1172,6 @@ de:
       characters: "darf nur aus Zahlen und Buchstaben bestehen"
       unique: "muss eindeutig sein"
       blank: "muss angegeben werden"
-      must_begin_with_alphanumeric: "muss mit einem Buchstaben, einer Zahl oder einem Unterstrich beginnen"
-      must_end_with_alphanumeric: "muss mit einem Buchstaben, einer Zahl oder einem Unterstrich enden"
       must_not_contain_two_special_chars_in_seq: "muss keine Reihenfolge von 2 oder mehr Sonderzeichen (.-_) haben"
       must_not_end_with_confusing_suffix: "Darf nicht mit einem Suffix wie json, png, etc. enden."
     email:
@@ -1184,6 +1180,10 @@ de:
     ip_address:
       blocked: "Von Deiner IP Adresse aus ist es nicht erlaub sich zu registrieren."
       max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (limit erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
+  flags_reminder:
+    subject_template:
+      one: "Eine Markierung wartet auf Bearbeitung"
+      other: "%{count} Markierungen warten auf Bearbeitung"
   unsubscribe_mailer:
     subject_template: "Bestätige, dass du nicht länger E-Mail Updates von %{site_title} erhalten möchtest"
     text_body_template: |
@@ -1235,87 +1235,10 @@ de:
       (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail Adresse einloggen möchtest.)
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
-    text_body_template: |
-      Das ist eine zu Testzwecken versendete E-Mail von
-
-      [**%{base_url}**][0]
-
-      E-Mail-Zustellbarkeit ist komplex. Hier sind einige wichtige Dinge, die du überprüfen solltest:
-
-      - Sei dir *sicher*, dass in den Einstellungen die `notification email` auf die korrekte Absender-Adresse gesetzt ist. **Der in der „From“ Adresse angegebene Domainname wird für die Überprüfung der versendeten E-Mails herangezogen.**
-
-      - Du solltest wissen, wie du den Quelltext einer E-Mail in deinem E-Mail-Client betrachten kannst, um die E-Mail-Header auf Hinweise zu untersuchen. Bei Gmail findest du den Menüpunkt „Original anzeigen“ im Dropdown-Menü in der rechten, oberen Ecke jeder E-Mail.
-
-      - **WICHTIG:** Hat dein Internetprovider Reverse-DNS-Einträge eingetragen, um den zum Versenden von E-Mails verwendeten IP-Adressen die passenden Domainnamen zuzuordnen? Du kannst [den PTR-Eintrag hier testen][2]. Wenn Dein Internetprovider nicht die passenden Reverse-DNS-Einträge eingetragen hat, ist es sehr unwahrscheinlich, dass deine E-Mails zugestellt werden.
-
-      - Ist der [SPF-Eintrag][8] deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1]. Beachte, dass TXT der korrekte, offizielle Typ für SPF-Einträge ist.
-
-      - Ist der [DKIM-Eintrag][3] deiner Domain korrekt? Das verbessert die Zustellbarkeit der E-Mails erheblich. Du kannst den [DKIM-Eintrag hier testen][7].
-
-      - Wenn du deinen eigenen Mailserver betreibst, überprüfe, dass die IP-Adressen deines Mailservers [nicht auf einer schwarzen Liste stehen][4]. Prüfe auch dass dieser definitiv einen vollständig qualifizierten Hostnamen in seinen HELO-Nachrichten verwendet, der per DNS aufgelöst werden kann. Falls das nicht der Fall ist, werden deine E-Mails von vielen E-Mail-Anbietern abgelehnt.
-
-      (Der *einfache* Weg ist sich bei [Mandrill][md] oder [Mailgun][mg] oder [Mailjet][mj] anzumelden. Deren großzügiges, kostenloses Abo zum E-Mail-Versand ist für kleine Foren ausreichend. Du musst allerdings trotzdem die SPF und DKIM Einträge in deinem DNS einrichten!)
-
-      Wir hoffen, dass der Mail-Zustelltest erfolgreich war!
-
-      Viel Erfolg,
-
-      deine Freunde von [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
-    text_body_template: |
-      Eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      Das kannst du jetzt tun:
-
-      - Schaue dir an was neu ist [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Update direkt von deinem Browser aus über [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen, und Support für Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
-    text_body_template: |
-      Eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar.
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      Das kannst du jetzt tun:
-
-      - Schaue dir an was neu ist [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Update direkt von deinem Browser aus über [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Besuche [meta.discourse.org](http://meta.discourse.org) für Neuigkeiten, Diskussionen, und Support für Discourse.
-
-      ### Release notes
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      one: "Folgende Markierungen wurden währen der letzten Stunden vorgenommen."
-      other: "Folgende Markierungen wurden währen der letzten %{count} Stunden vorgenommen."
-    please_review: "Bitte überprüfe sie."
-    post_number: "Beitrag"
-    how_to_disable: 'Die Benachrichtungen für markierte Beiträge kann deaktiviert oder in ihrer Häufigkeit geändert werden mittels des Wertes unter "notify about flags after".'
-    subject_template:
-      one: "Eine Markierung wartet auf Bearbeitung"
-      other: "%{count} Markierungen warten auf Bearbeitung"
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] %{count} auf Freischaltung wartender Beitrag."
@@ -1581,7 +1504,6 @@ de:
 
         eingeladen. Bitte besuche diesen Link um die Unterhaltung zu lesen: %{base_url}%{url}
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} hat dich zum Thema '%{topic_title}' eingeladen"
       text_body_template: |2
 
         %{username} hat dich zum Thema
@@ -1686,7 +1608,6 @@ de:
 
         Wenn dieser Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
   page_not_found:
-    title: "Die angeforderte Seite existiert nicht oder ist privat."
     popular_topics: "Beliebt"
     recent_topics: "Aktuell"
     see_more: "Mehr"

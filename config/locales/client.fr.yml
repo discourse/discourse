@@ -380,7 +380,7 @@ fr:
       posts: "Messages"
       topics: "Sujets"
       latest: "Récents"
-      latest_by: "dernièr sujet de"
+      latest_by: "dernier sujet de"
       toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories"
       topic_stats: "Le nombre de nouveaux sujets."
@@ -433,9 +433,7 @@ fr:
         perm_denied_btn: "Permission Refusée"
         perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les depuis les paramètres de votre navigateur."
         disable: "Désactiver les notifications"
-        currently_enabled: "(activé actuellement)"
         enable: "Activer les notifications"
-        currently_disabled: "(désactivé actuellement)"
         each_browser_note: "Note : Vous devez changer ce paramètre sur chaque navigateur que vous utilisez."
       dismiss_notifications: "Marquer tout comme lu"
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
@@ -571,12 +569,18 @@ fr:
         title: "Badge pour la carte de l'utilisateur"
       website: "Site internet"
       email_settings: "Courriel"
+      email_previous_replies:
+        title: "Inclure les réponses précédentes en bas des courriels"
+        unless_emailed: "sauf si déjà envoyé"
+        always: "toujours"
+        never: "jamais"
       email_digests:
         title: "Quand je ne visite pas ce site, m'envoyer un résumé des nouveautés par courriel:"
         daily: "quotidien"
         every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
         every_two_weeks: "toutes les deux semaines"
+      email_in_reply_to: "Inclure un extrait du message auquel il a été répondu dans les courriels"
       email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
       email_always: "Recevoir des notifications par email même lorsque je suis actif sur le site"
@@ -1013,12 +1017,8 @@ fr:
         top: "Il n'y a pas de meilleurs sujets."
         search: "Votre recherche ne retourne aucun résultat."
         educate:
-          new: '<p>Vos nouveaux sujets apparaissent ici</p><p>Par défaut, les sujets sont considérés comme nouveau et affiche l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nouveau</span> lorsqu''ils ont été crées dans les deux derniers jours.</p><p>
-
-            Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
-          unread: '<p>Vos sujets non-lus apparaissent ici</p><p>Par défaut, les sujets sont considérés comme non-lus et affichent le nombre de messages non-lus <span class="badge new-posts badge-notification">1</span> sont ceux:</p>
-
-            <ul><li>Que vous avez crées</li><li>Auxquels vous avez répondu</li><li>Que vous avez lu plus de 4 minutes</li></ul><p>Ou que vous avez explicitement suivis ou surveillés</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
+          new: '<p>Vos nouveaux sujets apparaissent ici</p><p>Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nouveau</span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
+          unread: '<p>Vos sujets non-lus apparaissent ici</p><p>Par défaut, les sujets sont considérés comme non-lus et affichent le nombre de messages non-lus <span class="badge new-posts badge-notification">1</span> sont ceux:</p> <ul><li>Que vous avez crées</li><li>Auxquels vous avez répondu</li><li>Que vous avez lu plus de 4 minutes</li></ul><p>Ou que vous avez explicitement suivis ou surveillés</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
       bottom:
         latest: "Il n'y a plus de sujet à lire."
         hot: "Il n'y a plus de sujet populaire à lire."
@@ -1383,17 +1383,14 @@ fr:
           like: "Annuler j'aime"
           vote: "Retirer votre vote"
         people:
-          off_topic: "{{icons}} l'ont signalé comme étant hors-sujet"
-          spam: "{{icons}} l'ont signalé comme étant du spam"
-          spam_with_url: "{{icons}} signalé <a href='{{postUrl}}'>ceci comme spam</a>"
-          inappropriate: "{{icons}} l'ont signalé comme inapproprié"
-          notify_moderators: "{{icons}} l'ont signalé pour modération"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>l'ont signalé pour modération</a>"
-          notify_user: "{{icons}} a envoyé un message"
-          notify_user_with_url: "{{icons}} a envoyé un <a href='{{postUrl}}'>message</a>"
-          bookmark: "{{icons}} l'ont ajouté à leurs signets"
-          like: "{{icons}} l'ont aimé"
-          vote: "{{icons}} ont voté pour"
+          off_topic: "signalé comme hors-sujet."
+          spam: "signalé comme spam"
+          inappropriate: "signalé comme inapproprié"
+          notify_moderators: "signalé aux modérateurs"
+          notify_user: "a envoyé un message"
+          bookmark: "ajouté aux signets"
+          like: "a aimé ceci"
+          vote: "a voté pour ce message"
         by_you:
           off_topic: "Vous l'avez signalé comme étant hors-sujet"
           spam: "Vous l'avez signalé comme étant du spam"
@@ -1942,7 +1939,7 @@ fr:
           rollback:
             label: "Revenir en arrière"
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
-            confirm: "Êtes-vous sûr de vouloir restaurer (rollback) la base de données à l'état de fonctionnement précédent?"
+            confirm: "Êtes-vous sûr de vouloir restaurer la base de données à l'état de fonctionnement précédent?"
       export_csv:
         user_archive_confirm: "Êtes-vous sûr de vouloir télécharger vos messages?"
         success: "L'exportation a été initialisé. Vous serez averti par message lorsque le traitement sera terminé."
@@ -2045,9 +2042,6 @@ fr:
           love:
             name: 'aimer'
             description: "La couleur du bouton \"J'aime\"."
-          wiki:
-            name: 'wiki'
-            description: "Couleur de base utilisée pour le fond des messages de type wiki."
       email:
         title: "Courriels"
         settings: "Paramètrage"
@@ -2084,6 +2078,19 @@ fr:
           subject: "Objet"
           error: "Erreur"
           none: "Aucun courriel reçu."
+          modal:
+            title: "Détails du courriel entrant"
+            error: "Erreur"
+            return_path: "Return-Path"
+            message_id: "Message-Id"
+            in_reply_to: "In-Reply-To"
+            references: "References"
+            date: "Date"
+            from: "From"
+            to: "à"
+            cc: "Cc"
+            subject: "Objet"
+            body: "Corps"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2159,6 +2166,7 @@ fr:
             revoke_admin: "Révoquer les droits d'admin"
             grant_moderation: "Accorder les droits de modération"
             revoke_moderation: "Révoquer les droits de modération"
+            backup_operation: "sauvegarde"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."

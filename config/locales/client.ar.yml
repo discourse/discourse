@@ -356,7 +356,7 @@ ar:
         many: "هذا الموضوع له <b>كثير</b> من المشاركات بانتظار الموافقة"
         other: "هذا الموضوع له <b>{{count}}</b> مشاركات بانتظار الموافقة"
       confirm: "حفظ التعديلات"
-      delete_prompt: "هل أنت متأكد أنك تريد حذف <b>%{username}</b>؟ هذا سيحذف جميع مشاركاتك ويحظر بريدك الإلكتروني و عنوانك الـIP ."
+      delete_prompt: "هل أنت متأكد أنك تريد حذف <b>%{username}</b>؟ جميع مشاركته سوف تحذف كذلك و سوف يحظر كل من بريده الإلكتروني و عنوان الـ IP."
       approval:
         title: "المشاركات تحتاج موافقة"
         description: "لقد استلمنا مشاركتك لكنها تحتاج موافقة المشرف قبل ظهورها. الرجاء الانتظار"
@@ -540,9 +540,7 @@ ar:
         perm_denied_btn: "الصلاحيات ممنوعة "
         perm_denied_expl: "لقد قمت بالغاء الاشعارات . قم بتفعيل الاشعارات عن طريق اعدادات االمتصفح"
         disable: "إيقاف الإشعارات "
-        currently_enabled: "( مفعل مسبقاً )"
         enable: "تفعيل الإشعارات"
-        currently_disabled: "( مفعل مسبقاً )"
         each_browser_note: "ملاحظة : يجب انت تقوم بتغيير هذا الإعداد عند كل مرة تستخدم فيها متصفح جديد ."
       dismiss_notifications: "جعل الجميع مقروء"
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
@@ -682,6 +680,9 @@ ar:
         title: "وسام بطاقة المستخدم"
       website: "موقع الكتروني"
       email_settings: "بريد الكتروني"
+      email_previous_replies:
+        title: "تضمين مشاركات سابقة في أسفل البريد المرسل"
+        always: "دائماً"
       email_digests:
         title: "إرسال رسالة إلكترونية تحتوي على جديد الموقع عندما لا أزور الموقع"
         daily: "يومي"
@@ -768,6 +769,7 @@ ar:
         likes_received: "اعجابات مستقبلة"
         days_visited: "ايام الزياره"
         posts_read_count: "قراء المواضيع"
+        top_replies: "أفضل المشاركات"
         top_topics: "افضل المواضيع"
         top_badges: "افضل الاوسمه"
         more_topics: "المزيد من المواضيع"
@@ -849,8 +851,8 @@ ar:
       value_prop: "عندما تنشئ حساب، ننحن نتذكر ما كنت تقرأه بالضبط، و سترجع دائما في المكان الذي تركته، و ستصلك الاشعارات ايضا، هنا و عبر البريد الإلكتروني، في اي وقت ينشأ  فيه منشور جديد، و تستطيع أن تُعجب بالمنشورارت لتشارك ما يعجبك :heartbeat:"
     summary:
       enabled_description: "أنت تنظر الى ملخص لهذا الموضوع , مشاركات مثيرة للإهتمام بحسب رأي المجتمع"
-      description: "هناك  <b>{{replyCount}}</b> ردود"
-      description_time: "هناك  <b>{{replyCount}}</b> ردود مع تقدير وقت القراءة <b>{{readingTime}} دقائق</b>."
+      description: "يوجد <b>{{replyCount}}</b> مشاركة."
+      description_time: "يوجد <b>{{replyCount}}</b> مشاركة, والوقت المقدر للقراءة <b>{{readingTime}} minutes</b> دقيقة."
       enable: 'لخّص هذا الموضوع'
       disable: 'عرض جميع المشاركات'
     deleted_filter:
@@ -1134,9 +1136,6 @@ ar:
         category: "لا يوجد مواضيع في التصنيف {{category}}"
         top: "لا يوجد مواضيع تستحق أن تكون ضمن الأفضل مع الأسف."
         search: "لا يوجد نتائج للبحث."
-        educate:
-          new: '<p>مواضيعك الجديدة ستظهر هنا.</p><p> بشكل افتراضي ، كل المواضيع ستعتبر جديدة و تحمل الوسم <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> جديد </span> إذا تمت كتابتها قبل يومين على الأكثر.</p><p> تستطيع ان تغير المدة من <a href="%{userPrefsUrl}"> إعداداتك </a>.</p>'
-          unread: '<p>المواضيع الغير مقروءة ستظهر هنا</p><p> افتراضياً, سيتم اعتبارالمواضيع غير مقروءة وتحمل الوسم <span class="badge new-posts badge-notification">1</span> إذا:</p><ul><li> كتبت موضوع جديد</li><li> رددت على موضوع</li><li>قرأت موضوع لأكثر من 4 دقائق.</li></ul><p> أو إذا قمت باختيار خيار تتبع موضوع أو إضافته للمواضيع المراقبة من خلال لوحة التحكم بالإشعارات.</p><p> تستطيع تغيير الإعدادات من خلال <a href="%{userPrefsUrl}"> إعداداتك</a>.</p>'
       bottom:
         latest: "لا يوجد المزيد من المواضيع الحديثة"
         hot: "هذه كل المواضيع التي عليها إقبال عالي حتى هذه اللحظة"
@@ -1583,18 +1582,6 @@ ar:
           bookmark: "التراجع عن التفضيل"
           like: "التراجع عن الإعجاب"
           vote: "التراجع عن التصويت"
-        people:
-          off_topic: "{{icons}} بلغ أن هذا لاعلاقة له بالموضوع"
-          spam: "{{icons}} بلغ انه هذا هو سبام"
-          spam_with_url: "{{icons}} بُلغ <a href='{{postUrl}}'>انه غير مرغوب به</a>"
-          inappropriate: "{{icons}} بلغ أنه غير لائق"
-          notify_moderators: "{{icons}} تنبيه المشرف"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>نبه المشرف</a>"
-          notify_user: "{{icons}}  رسالة مُرسلة."
-          notify_user_with_url: "{{icons}} أرسلت <a href='{{postUrl}}'>message</a> ."
-          bookmark: "{{icons}} اضف في المفضلة"
-          like: "{{icons}} استحسان"
-          vote: "{{icons}} صوت لهذا"
         by_you:
           off_topic: "لقد تم الإبلاغ عن الموضوع على أنه ليس في المكان الصحيح"
           spam: "تم الإبلاغ عن الموضوع على أنه سبام"
@@ -2267,11 +2254,9 @@ ar:
             is_disabled: "Restore is disabled in the site settings."
             label: "استعادة"
             title: "اعادة تخزين النسخة الاحتياطية"
-            confirm: "هل أنت متأكد من رغبتك في اعادة تخزين النسخة الاحتياطية؟"
           rollback:
             label: "اعادة السنخة السابقة"
             title: "Rollback the database to previous working state"
-            confirm: "Are your sure you want to rollback the database to the previous working state?"
       export_csv:
         user_archive_confirm: "هل أنت متأكد من رغبتك في تحميل جميع مشاركاتك ؟"
         success: "بدأ التصدير, سيتم إعلامك برسالة عند اكتمال العملية."
@@ -2374,9 +2359,6 @@ ar:
           love:
             name: 'إعجاب'
             description: "لون زر الإعجاب."
-          wiki:
-            name: 'ويكي'
-            description: "اللون الأساسي المستخدم كخلفية لمشاركات الويكي."
       email:
         title: "رسائل البريد الالكتروني"
         settings: "اعدادات"
@@ -3078,20 +3060,20 @@ ar:
           name: الرابط الأول
           description: اضافة رابط لموضوع اخر
         first_quote:
-          name: التعليق الأول
-          description: إقتباسات
+          name: أول اقتباس
+          description: اقتبس من عضو
         read_guidelines:
           name: اقرأ التعليمات
           description: اطلع على  <a href="/guidelines">توجيهات المجتمع</a>
         reader:
           name: قارئ
-          description: قراءة أكثر من 100 تعليق في الموضوع
+          description: قراءة جميع المشاركات في موضوع فيه أكثر من 100 مشاركة
         popular_link:
           name: رابط مشهور
           description: شارك رابط خارجي بـ  50 نقرة على الأقل.
         hot_link:
           name: الرابط الساخن
-          description: شارك الرابط الخارجي بـ 300 نقرة على الأقل.
+          description: شارك رابط خارجي بـ 300 نقرة على الأقل.
         famous_link:
           name: رابط مشهور
           description: شارك الرابط الخارجي بـ 1000 نقرة على الأقل

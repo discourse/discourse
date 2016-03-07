@@ -16,7 +16,7 @@ fr:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
   date:
-    month_names: [null, Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre]
+    month_names: [null, janvier, février, mars, avril, mai, juin, juillet, août, septembre, octobre, novembre, décembre]
     <<: *datetime_formats
   title: "Discourse"
   topics: "Sujets"
@@ -30,6 +30,18 @@ fr:
   emails:
     incoming:
       default_subject: "Courriel arrivant de %{email}"
+      errors:
+        empty_email_error: "Arrive quand le courriel reçu était vide."
+        no_message_id_error: "Arrive quand le courrier n'a pas d'en-tête \"Message-Id\"."
+        no_body_detected_error: "Arrive quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces-jointes."
+        inactive_user_error: "Arrive quand l'expéditeur n'est pas actif."
+        blocked_user_error: "Arrive quand l'expéditeur a été bloqué."
+        bad_destination_address: "Arrive quand aucune des adresses de courriel dans les champs To/Cc/Bcc ne correspondent à une adresse de courriel entrante configurée."
+        strangers_not_allowed_error: "Arrive quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'est pas membre."
+        insufficient_trust_level_error: "Arrive quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'a pas un niveau de confiance suffisant."
+        reply_user_not_matching_error: "Arrive quand une réponse est venue d'une adresse de courriel différente de celle où a été envoyée la notification."
+        topic_not_found_error: "Arrive quand quelqu'un répond à un sujet qui a été supprimé."
+        topic_closed_error: "Arrive quand quelqu'un répond mais le sujet lié a été fermé."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -80,7 +92,7 @@ fr:
       min_username_length_exists: "Il n'est pas possible de définir une longeur minimale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
       min_username_length_range: "Il n'est pas possible de définir un minimum plus grand qu'un maximum."
       max_username_length_exists: "Il n'est pas possible de définir une longeur maximale de pseudo qui soit plus court qu'un pseudo qui existe déjà."
-      max_username_length_range: "Vous ne pouvez pas mettre le maximum sous le minimum"
+      max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
   bulk_invite:
@@ -111,26 +123,26 @@ fr:
     replies:
       one: "1 réponse"
       other: "%{count} réponses"
-  no_mentions_allowed: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
+  no_mentions_allowed: "Désolé, vous ne pouvez pas mentionner d'autres utilisateurs."
   too_many_mentions:
-    one: "Désolé, vous ne pouvez mentionner que 1 utilisateur."
-    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateurs dans un sujet."
-  no_mentions_allowed_newuser: "Désolé, les nouveaux utilisateurs ne peuvent pas mentionner d'utilisateur."
+    one: "Désolé, vous ne pouvez mentionner qu'un utilisateur dans un message."
+    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateurs dans un message."
+  no_mentions_allowed_newuser: "Désolé, les nouveaux utilisateurs ne peuvent pas mentionner d'autres utilisateurs."
   too_many_mentions_newuser:
-    one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que 1 utilisateur dans un message."
+    one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un message."
     other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un message."
   no_images_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'image dans les messages."
   too_many_images:
-    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que 1 image."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images."
+    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'une image dans un message."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images dans un message."
   no_attachments_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
   too_many_attachments:
-    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que 1 fichier dans leurs messages."
+    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'un fichier dans leurs messages."
     other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} fichiers dans leurs messages."
-  no_links_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas insérer de liens."
+  no_links_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas insérer de liens dans leurs messages."
   too_many_links:
-    one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens."
+    one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien par message."
+    other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens par message."
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez?"
@@ -153,6 +165,7 @@ fr:
   rss_description:
     latest: "Sujets récents"
     hot: "Sujets populaires"
+    top: "Meilleurs sujets"
     posts: "Messages récents"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   excerpt_image: "image"
@@ -163,7 +176,7 @@ fr:
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
       member_already_exist: "'%{username}' est déjà membre de ce groupe."
       invalid_domain: "'%{domain}' n'est pas un domaine valide."
-      invalid_incoming_email: "'%{incoming_email}' n'est pas une adresse e-mail valide."
+      invalid_incoming_email: "'%{incoming_email}' n'est pas une adresse de courriel valide."
     default_names:
       everyone: "tous"
       admins: "administrateurs"
@@ -299,6 +312,7 @@ fr:
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
       email_in_already_exist: "L'adresse courriel entrante '%{email_in}' est déjà utilisée pour la catégorie '%{category_name}'."
+      invalid_email_in: "'%{email_in}' n'est pas une adresse de courriel valide."
     cannot_delete:
       uncategorized: "Vous ne pouvez pas supprimer Sans Catégorie"
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
@@ -450,8 +464,8 @@ fr:
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation de la <a href="/guidelines">charte de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_user:
-      title: 'Envoyer à @{{username}} un message'
-      description: 'Je veux parler directement et de manière privée à cette personne à propos de son message.'
+      title: 'Envoyer un message à @{{username}} '
+      description: 'Je veux parler à cette personne directement et de manière privée à propos de son message.'
       long_form: 'utilisateur contacté'
       email_title: 'Votre message sur "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -484,7 +498,7 @@ fr:
       long_form: 'signalé comme inapproprié'
     notify_moderators:
       title: "Autre chose"
-      description: 'Ce message requiert l''attention d''un responsable d''après la <a href=''/fguidelines''>charte de la communauté</a>, <a href=''%{tos_url}''>conditions générales de service</a>, ou pour une autre raison indéterminée.'
+      description: 'Ce message requiert l''attention d''un responsable d''après la <a href=''/fguidelines''>charte de la communauté</a>, <a href=''%{tos_url}''>les conditions générales de service</a>, ou pour une autre raison indéterminée.'
       long_form: 'signalé pour modération'
       email_title: 'Ce sujet "%{title}" requière l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
@@ -733,6 +747,7 @@ fr:
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur 'Résumé du sujet', montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par 'Résumé de ce sujet'"
+    enable_private_messages: "Autorise les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages)."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'url utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple: http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
@@ -869,6 +884,7 @@ fr:
     external_system_avatars_enabled: "Utilisez un service d'avatars externe."
     external_system_avatars_url: "URL du système de service d'avatars externe. Substitutions permises: {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL de l'image par défaut pour les balises Open Graph."
+    allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -904,8 +920,10 @@ fr:
     newuser_max_mentions_per_post: "Nombre maximum de @pseudo qu'un nouvel utilisateur peut mentionner dans un message."
     newuser_max_replies_per_topic: "Nombre maximum de réponses qu'un nouvel utilisateur peut faire dans une même discussion avant que quelqu'un lui réponde."
     max_mentions_per_post: "Nombre maximal de @pseudo que tout le monde peut mentionner dans un message."
+    max_users_notified_per_group_mention: "Nombre maximum d'utilisateurs qui peuvent recevoir une notification si un groupe est mentionné (si le seuil est atteint aucune notification n'est envoyée)"
     create_thumbnails: "Créer un aperçu pour les images imbriquées qui sont trop large pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
+    private_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer les notifications par courriel, afin de laisser aux utilisateurs l'opportunité de modifier leurs messages."
     email_posts_context: "Combien de réponses précédentes doit-on inclure dans les courriels de notifications pour situer le contexte."
     flush_timings_secs: "A quelle fréquence les données de timing doivent être vider, en secondes."
     title_max_word_length: "Le nombre maximum de caractères dans le titre d'un sujet."
@@ -940,6 +958,8 @@ fr:
     newuser_spam_host_threshold: "Limite du nombre de liens vers un même host compris dans `newuser_spam_host_posts` qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un spam."
     white_listed_spam_host_domains: "Une liste des domaines exclus des hôtes testés comme spam. Les nouveaux utilisateurs ne seront jamais restreint dans la création de message contenant des liens vers ses domaines. "
     staff_like_weight: "Quel poids supplémentaire donner aux J'aime de l'équipe."
+    topic_view_duration_hours: "Compte la vue d'un sujet une seule fois par IP ou par utilisateur toutes les N heures"
+    user_profile_view_duration_hours: "Compte la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Lorsque des courriels correspondent à des spammer, la différence du nombre de caractère permettra toujours une correspondance floue."
     max_new_accounts_per_registration_ip: "S'il y a déjà (n) Niveau de confiance 0 comptes à partir de cette adresse IP ( et aucun n'est un membre du personnel ou au NC2 ou ultérieure), ne plus accepter de nouvelles inscriptions de cette IP."
     min_ban_entries_for_roll_up: "En cliquant sur le bouton Consolider, une liste d'au moins (N) adresses interdites sera remplacée par une plage de sous réseau."
@@ -957,6 +977,10 @@ fr:
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
     short_email_length: "Taille des courriels courts en Octets"
+    display_name_on_email_from: "Affiche les noms complets dans le champ From du courriel."
+    unsubscribe_via_email: "Autorise les utilisateurs à se désinscrire des courriels en envoyant un courriel avec \"se désinscrire\" dans le sujet ou le corps du message."
+    unsubscribe_via_email_footer: "Ajoute un lien pour se désinscrire dans le pied des courriels envoyés"
+    delete_email_logs_after_days: "Efface les journaux de messagerie après (N) jours. 0 pour conserver indéfiniment."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connections au serveur POP3. (Recommandé)"
     pop3_polling_period_mins: "La période en minute entre chaque vérification du compte POP3 des courriels.\nNote: nécessite un redémarrage de la machine."
@@ -983,7 +1007,7 @@ fr:
     automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou de la modification de courriel."
     digest_topics: "Nombre maximum de sujets à afficher dans le courriel de résumé."
     digest_min_excerpt_length: "Taille minimum du résumé des messages dans les courriels, en caractères."
-    delete_digest_email_after_days: "Ne pas envoyer de résumés courriel aux utilisateurs qui n'ont pas visité le site depuis (n) jours."
+    delete_digest_email_after_days: "Ne pas envoyer de résumés courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
     disable_digest_emails: "Désactiver les résumés par courriels pour tous les utilisateurs."
     detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
@@ -993,14 +1017,19 @@ fr:
     allow_anonymous_posting: "Permettre aux utilisateurs de passer en mode anonyme"
     anonymous_posting_min_trust_level: "Le niveau de confiance minimum pour passer en mode anonyme."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme tous les N minutes pour chaque utilisateur. Exemple: si 600 est choisi, dès 600 minutes après le dernier message ET que l'utilisateur passe en mode anonyme, un nouveau compte anonyme lui sera crée."
+    hide_user_profiles_from_public: "Désactive les cartes utilisateurs, les profils utilisateurs et les répertoires utilisateurs pour les utilisateurs anonymes."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
+    sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
     dominating_topic_minimum_percent: "Quel est le pourcentage de messages un utilisateur doit poster dans un sujet avant d'être rappelé à l'ordre pour laissé la communauté répondre."
+    disable_avatar_education_message: "Désactiver le message incitant à changer l'avatar."
     daily_performance_report: "Analyser les logs de NGINX quotidiennement et poster un sujet Responsables Uniquement avec les détails"
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets."
     permalink_normalizations: "Appliquer l'expression régulière suivante avant de faire correspondre les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les query strings des routes des sujets. Le format est regex+string, utilisez \\1 etc. pour accéder aux captures"
     global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le cacher (HTML autorisé)."
     disable_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
+    automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
+    read_time_word_count: "Nombre de mots par minute servant de base de calcul à l'estimation du temps de lecture."
     full_name_required: "Le nom complet est requis dans le profil utilisateur."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les courriels. Décocher pour cacher les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son @pseudo."
@@ -1024,6 +1053,7 @@ fr:
     enable_cdn_js_debugging: "Autoriser /logs à afficher correctement les erreurs en ajoutant des permissions de crossorigin sur toutes les inclusions de js."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
+    vacuum_db_days: "Exécuter VACUUM ANALYZE pour récupérer de l'espace dans la base de données après une migration (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux utilisateurs anonymes. ATTENTION: cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. \"encodé\" générera des chaines de caractères encodées avec des pourcentages. \"aucune\" désactivera complètement les identifiants."
     enable_emoji: "Activer les emojis"
@@ -1037,11 +1067,15 @@ fr:
     default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
     default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
     default_email_always: "Envoyer une notification courriel même quand l'utilisateur est actif."
+    default_email_previous_replies: "Inclure par défaut les réponses précédentes dans les courriels."
+    default_other_new_topic_duration_minutes: "Paramètre global de temps pendant lequel un sujet est considéré comme nouveau."
+    default_other_auto_track_topics_after_msecs: "Paramètre global fixant le temps par défaut au bout duquel un sujet est suivi automatiquement."
     default_other_external_links_in_new_tab: "Par défaut, ouvrir tous les liens externes dans un nouvel onglet"
     default_other_enable_quoting: "Par défaut, proposer la citation du texte surligné."
     default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur."
     default_other_disable_jump_reply: "Par défaut, ne pas se déplacer au nouveau message après avoir répondu."
     default_other_edit_history_public: "Par défaut, rendre publiques les révisions de message."
+    default_topics_automatic_unpin: "Par défaut, désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
@@ -1059,6 +1093,9 @@ fr:
       invalid_string_min: "Doit être d'au moins %{count} caractères."
       invalid_string_max: "Ne doit pas être supérieur à %{max} caractères."
       invalid_reply_by_email_address: "La valeur doit contenir '%{reply_key}' et être différente de la notification email."
+      pop3_polling_host_is_empty: "Vous devez indiquer le \"nom d'un serveur pop3\" avant d'activer le relevé via POP3."
+      pop3_polling_username_is_empty: "Vous devez indiquer le \"login utilisateur pop3\" avant d'activer le relevé via POP3."
+      pop3_polling_password_is_empty: "Vous devez indiquer le \"mot de passe pop3\" avant d'activer le relevé via POP3."
       pop3_polling_authentication_failed: "Echec d'authentication POP3. Veuillez contrôler vos détails POP3."
   notification_types:
     group_mentioned: "%{group_name} a été mentionné dans %{link}"
@@ -1071,7 +1108,7 @@ fr:
     moved_post: "%{display_username} a déplacé votre message vers %{link}"
     private_message: "%{display_username} vous a envoyé un message : %{link}"
     invited_to_private_message: "%{display_username} vous a invité dans une discussion: %{link}"
-    invited_to_topic: "%{display_username} vous a invité dans un sujet: %{link}"
+    invited_to_topic: "%{display_username} vous a invité à %{link}"
     invitee_accepted: "%{display_username} a accepté votre invitation"
     linked: "%{display_username} a mentionné l'un de vos messages : %{link}"
     granted_badge: "Vous avez gagné %{link}"
@@ -1160,6 +1197,7 @@ fr:
     reserved_username: "Ce pseudo n'est pas autorisé."
     missing_user_field: "Vous n'avez pas renseigné l'ensemble des champs utilisateur"
     close_window: "Identification terminée. Fermez cette fenêtre pour continuer."
+    already_logged_in: "Oups, on dirait que vous essayez d'accepter une invitation d'un autre utilisateur. Si vous n'êtes pas %{current_user}, veuillez vous déconnecter et réessayer."
   user:
     no_accounts_associated: "Aucun compte associé"
     username:
@@ -1168,8 +1206,8 @@ fr:
       characters: "doit inclure uniquement des chiffres, lettres et caractères de soulignement"
       unique: "doit être unique"
       blank: "doit être présent"
-      must_begin_with_alphanumeric: "doit débuter par une lettre ou un nombre ou un underscore"
-      must_end_with_alphanumeric: "doit terminer par une lettre, un chiffre ou un caractère souligné (underscore)"
+      must_begin_with_alphanumeric_or_underscore: "doit commencer par une lettre, un chiffre ou un tiret du bas."
+      must_end_with_alphanumeric: "doit finir par une lettre ou un chiffre"
       must_not_contain_two_special_chars_in_seq: "ne doit pas contenir une séquence de 2 caractères spéciaux ou plus (.-_)"
       must_not_end_with_confusing_suffix: "ne doit pas se terminer avec un suffixe déroutant comme .json ou .png etc."
     email:
@@ -1178,6 +1216,13 @@ fr:
     ip_address:
       blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
       max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
+  flags_reminder:
+    flags_were_submitted:
+      one: "Un signalement a été soumis il y a plus d'une heure. Veuillez la passer en revue."
+      other: "Des signalements ont été soumis il y a plus de %{count} heures. Veuillez les passer en revue."
+    subject_template:
+      one: "un signalement en attente de traitement"
+      other: "%{count} signalements en attente de traitement."
   unsubscribe_mailer:
     subject_template: "Confirmez que vous ne souhaitez plus recevoir d'email de mise à jour de %{site_title}"
     text_body_template: |
@@ -1187,7 +1232,7 @@ fr:
       %{confirm_unsubscribe_link}
 
 
-      Si vous souhaitez continuer à recevoir les emails, vous pouvez ignorer cette email.
+      Si vous souhaitez continuer à recevoir les emails, vous pouvez ignorer cet email.
   invite_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à participer à '%{topic_title}' sur %{site_domain_name}"
     text_body_template: |
@@ -1231,87 +1276,10 @@ fr:
       (Si le lien est expiré, choisissez "J'ai oublié mon mot de passe" lorsque vous essayez de vous connecter avec votre adresse mail.)
   test_mailer:
     subject_template: "[%{site_name}] Test de délivrabilité d'un courriel"
-    text_body_template: |
-      Ceci est un courriel de test de
-
-      [**%{base_url}**][0]
-
-      Assurer la distribution de courriel est compliqué. Voici un certain nombre de points importants que vous devez vérifier au préalable:
-
-      - Soyez *certain* de renseigner le champs from: de la `notification par email`  correctement dans votre configuration. **Le nom de domaine renseigné dans l'addresse "from" des courriels que vous envoyez sera le nom de domaine utilisé pour la validation**.
-
-      - Sachez comment consulter le format brut d'un courriel dans votre client de courriel, pour vous permettre de consulter les entêtes pour obtenirs des indices importants. Dans Gmail, c'est l'option "show original" dans le menu contextuel situé en haut à droite  de chaque courriel.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - l'enregistrement [SPF record][8] de votre nom de domaine est-il correcte ? [Testez votre enregistrement SPF][1] ici Veuillez noter que le type officiel d'enregistrment est TXT pour l'enregistrement SPF.
-
-      - l'enregistrement [DKIM record][3] de votre nom de domaine est-il correcte ? Ce point particulier augmentera de manière significative la bonne distribution de vos courriels. [Testez votre enregistrement DKIM][7] ici.
-
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      (La mannière la plus *facile* est de créer un compte gratuit sur [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], qui ont des options gratuites généreuses et qui seront parfaite pour de petites communautés. Vous devrez quand même configurer les entrées SPF et DKIM dans votre DNS!)
-
-      Nous espérons que vous avez bien reçu ce courriel de test de distribution !
-
-      Bonne chance,
-
-      Vos amis de [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
-      Une nouvelle version de [Discourse](http://www.discourse.org)  est disponible.
-
-      Votre version: %{installed_version}
-      Nouvelle version: **%{new_version}**
-
-      Vous voulez peut-être:
-
-      - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Mettre à jour depuis votre navigateur en allant sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)
-
-      - Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
-    text_body_template: |
-      Une nouvelle version de [Discourse](http://www.discourse.org)  est disponible.
-
-      Votre version: %{installed_version}
-      Nouvelle version: **%{new_version}**
-
-      Vous voulez peut-être:
-
-      - Voir les nouveautés sur le [changelog de GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Mettre à jour depuis votre navigateur en allant sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)
-
-      - Visiter [meta.discourse.org](http://meta.discourse.org) pour vous tenir au courant, discuter et avoir de l'aide à propos de Discourse.
-
-      ### Notes de mise à jour
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      one: "Il y a un signalement qui a été soumis il y a plus de %{count} heures."
-      other: "Ces signalements ont été soumis il y a plus de %{count} heures."
-    please_review: "Veuillez examiner cela."
-    post_number: "message"
-    how_to_disable: 'Vous pouvez désactiver ou modifier la fréquence de ce courriel de rappel via le réglage "m''informer sur les signalements".'
-    subject_template:
-      one: "un signalement en attente de traitement"
-      other: "%{count} signalements en attente de traitement."
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 message en attente de modération"
@@ -1452,7 +1420,7 @@ fr:
       text_body_template: "Merci d'avoir rejoint %{site_name} et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)\n"
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name} et bienvenue !\n\nNous avons créé un nouveau compte : **%{username}**, et vous y êtes connecté. Vous pouvez changer votre pseudo en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Toujours **utiliser la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [sur votre profil][prefs] et connectez-vous avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message).\n\n[prefs] : %{user_preferences_url}\n"
+      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name} et bienvenue !\n\nNous avons créé un nouveau compte : **%{username}**, et vous y êtes connecté. Vous pouvez changer votre pseudo en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Toujours **utiliser la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [sur votre profil][prefs] et connectez-vous avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message).\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: "La sauvegarde a bien réussie.\nVisitez [la section admin > sauvegarde](%{base_url}/admin/backups) pour télécharger votre nouvelle sauvegarde."
@@ -1668,12 +1636,14 @@ fr:
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Réponses précédentes"
+    in_reply_to: "En réponse à"
     unsubscribe:
       title: "Désabonnement"
       description: "Ces courriels ne vous intéressent pas ? Aucun problème ! Cliquez ci-dessous pour vous désabonner immédiatement :"
     reply_by_email: "[Visiter sujet](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
-    visit_link_to_respond: "[Visiter sujet](%{base_url}%{url}) pour répondre."
     reply_by_email_pm: "[Visiter message](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
+    only_reply_by_email: "Répondre à ce courriel pour répondre"
+    visit_link_to_respond: "[Visiter sujet](%{base_url}%{url}) pour répondre."
     visit_link_to_respond_pm: "[Visiter message](%{base_url}%{url}) pour répondre."
     posted_by: "Ecrit par %{username} le %{post_date}"
     user_invited_to_private_message_pm:
@@ -1695,7 +1665,6 @@ fr:
 
         Veuillez suivre ce lien pour consulter le message: %{base_url}%{url}
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} vous a invité dans le sujet '%{topic_title}'"
       text_body_template: "\n%{username} vous a invité à une conversation\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nsur \n\n> %{site_title} -- %{site_description}\n\nVeuillez suivre ce lien pour voir le message: %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1730,6 +1699,8 @@ fr:
 
         ---
         %{respond_instructions}
+    user_linked:
+      subject_template: "[%{site_name}] %{topic_title}"
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1856,7 +1827,7 @@ fr:
 
         Si le lien ci-dessus n'est pas cliquable, essayez de le copier et coller dans la barre d'adresse de votre navigateur web.
   page_not_found:
-    title: "La page que vous avez demandé n'existe pas ou est privée."
+    title: "Oops! Cette page n'existe pas ou est privée."
     popular_topics: "Populaires"
     recent_topics: "Récents"
     see_more: "Plus"
