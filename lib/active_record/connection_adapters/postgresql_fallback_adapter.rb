@@ -74,6 +74,7 @@ class PostgreSQLFallbackHandler
       @master[db] = true
       @running[db] = false
       @mutex[db] = Mutex.new
+      @last_check[db] = nil
     end
   end
 
