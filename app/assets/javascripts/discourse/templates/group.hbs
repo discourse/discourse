@@ -4,8 +4,8 @@
     <ul class='action-list nav-stacked'>
       {{#each tabs as |tab|}}
         <li class="{{if tab.active 'active'}}">
-          {{#link-to tab.location model}}
-            {{tab.name}}
+          {{#link-to tab.location model title=tab.message}}
+            {{tab.message}}
             {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
           {{/link-to}}
         </li>
