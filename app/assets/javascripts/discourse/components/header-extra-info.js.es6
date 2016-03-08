@@ -1,6 +1,7 @@
 import DiscourseURL from 'discourse/lib/url';
 
 const TopicCategoryComponent = Ember.Component.extend({
+  classNames: ['extra-info-cell'],
   needsSecondRow: Ember.computed.gt('secondRowItems.length', 0),
   secondRowItems: function() { return []; }.property(),
 
