@@ -215,7 +215,9 @@ en:
       can_not_modify_automatic: "You can not modify an automatic group"
       member_already_exist: "'%{username}' is already a member of this group."
       invalid_domain: "'%{domain}' is not a valid domain."
-      invalid_incoming_email: "'%{incoming_email}' is not a valid email address."
+      invalid_incoming_email: "'%{email}' is not a valid email address."
+      email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
+      email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -374,8 +376,9 @@ en:
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
-      email_in_already_exist: "Incoming email address '%{email_in}' is already in use for '%{category_name}' category."
-      invalid_email_in: "'%{email_in}' is not a valid email address."
+      invalid_email_in: "'%{email}' is not a valid email address."
+      email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
+      email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
