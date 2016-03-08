@@ -364,7 +364,10 @@ en:
         one: "group"
         other: "groups"
       members: "Members"
+      topics: "Topics"
       posts: "Posts"
+      mentions: "Mentions"
+      messages: "Messages"
       alias_levels:
         title: "Who can message and @mention this group?"
         nobody: "Nobody"
