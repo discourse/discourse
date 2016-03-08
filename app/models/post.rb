@@ -222,6 +222,10 @@ class Post < ActiveRecord::Base
     @acting_user = pu
   end
 
+  def last_editor
+    self.last_editor_id ? (User.find_by_id(self.last_editor_id) || user) : user
+  end
+
   def whitelisted_spam_hosts
 
     hosts = SiteSetting

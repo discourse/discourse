@@ -38,14 +38,23 @@ class PostAlerter
     # mentions (users/groups)
     mentioned_groups, mentioned_users = extract_mentions(post)
 
-    expand_group_mentions(mentioned_groups, post) do |group, users|
-      notify_users(users - notified, :group_mentioned, post, group: group)
-      notified += users
-    end
+    if mentioned_groups || mentioned_users
+      mentioned_opts = {}
+      if post.last_editor_id != post.user_id
+        # Mention comes from an edit by someone else, so notification should say who added the mention.
+        editor = post.last_editor
+        mentioned_opts = {user_id: editor.id, original_username: editor.username, display_username: editor.username}
+      end
 
-    if mentioned_users
-      notify_users(mentioned_users - notified, :mentioned, post)
-      notified += mentioned_users
+      expand_group_mentions(mentioned_groups, post) do |group, users|
+        notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge({group: group}))
+        notified += users
+      end
+
+      if mentioned_users
+        notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
+        notified += mentioned_users
+      end
     end
 
     # replies
@@ -232,7 +241,7 @@ class PostAlerter
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
 
-    notifier_id = opts[:user_id] || post.user_id
+    notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
 
     # apply muting here
     return if notifier_id && MutedUser.where(user_id: user.id, muted_user_id: notifier_id)
@@ -285,7 +294,7 @@ class PostAlerter
     end
 
     original_post = post
-    original_username = opts[:display_username] || post.username
+    original_username = opts[:display_username] || post.username # xxxxx need something here too
 
     if collapsed
       post = first_unread_post(user, post.topic) || post
