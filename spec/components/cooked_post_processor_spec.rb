@@ -267,6 +267,12 @@ describe CookedPostProcessor do
         expect(cpp.get_size("http://foo.bar/image2.png")).to eq([100, 200])
       end
 
+      it "returns nil if FastImage can't get the original size" do
+        Discourse.store.class.any_instance.expects(:has_been_uploaded?).returns(true)
+        FastImage.expects(:size).returns(nil)
+        expect(cpp.get_size("http://foo.bar/image3.png")).to eq(nil)
+      end
+
     end
 
   end
