@@ -4,6 +4,11 @@ var Tab = Em.Object.extend({
   @computed('name')
   location(name) {
     return 'group.' + name;
+  },
+
+  @computed('name')
+  message(name) {
+    return I18n.t('groups.' + name);
   }
 });
 
