@@ -17,6 +17,10 @@
     text-overflow: clip;
   }
 
+  .extra-info-cell {
+    display: none;
+  }
+
   .icons {
     .badge-notification {
       top: -5px;
@@ -30,6 +34,11 @@
 
   button.sign-up-button {
     display:none;
+  }
+
+  .not-minimized, .minimized {
+    .title { width: auto; }
+    .panel { width: auto; }
   }
 }
 
