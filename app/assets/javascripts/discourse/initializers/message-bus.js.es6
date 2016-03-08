@@ -12,7 +12,20 @@ export default {
       siteSettings = container.lookup('site-settings:main');
 
     messageBus.alwaysLongPoll = Discourse.Environment === "development";
-    messageBus.start();
+
+    // we do not want to start anything till document is complete
+    messageBus.stop();
+    // jQuery ready is called on "interactive" we want "complete"
+    // Possibly change to document.addEventListener('readystatechange',...
+    // but would only stop a handful of interval, message bus being delayed by
+    // 500ms on load is fine. stuff that needs to catch up correctly should
+    // pass in a position
+    const interval = setInterval(()=>{
+      if (document.readyState === "complete") {
+        clearInterval(interval);
+        messageBus.start();
+      }
+    },500);
 
     messageBus.callbackInterval = siteSettings.anon_polling_interval;
     messageBus.backgroundCallbackInterval = siteSettings.background_polling_interval;
