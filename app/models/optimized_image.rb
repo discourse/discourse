@@ -108,6 +108,7 @@ class OptimizedImage < ActiveRecord::Base
       -interpolate bicubic
       -unsharp 2x0.5+0.7+0
       -quality 98
+      -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     }
   end
@@ -130,6 +131,7 @@ class OptimizedImage < ActiveRecord::Base
       -gravity center
       -background transparent
       -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     }
   end
