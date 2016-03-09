@@ -258,7 +258,7 @@ describe PostAlerter do
         post.revise(admin, { raw: "Mention @eviltrout in this edit." })
       }.to change(evil_trout.notifications, :count)
       n = evil_trout.notifications.last
-      n.data_hash["original_username"].should == admin.username
+      expect(n.data_hash["original_username"]).to eq(admin.username)
     end
   end
 
