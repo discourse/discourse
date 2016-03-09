@@ -68,6 +68,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
     {name: I18n.t('user.email_previous_replies.never'), value: 2}
   ],
 
+  mailingListModeOptions: [
+    {name: I18n.t('user.mailing_list_mode.daily'), value: 0},
+    {name: I18n.t('user.mailing_list_mode.combined'), value: 1},
+    {name: I18n.t('user.mailing_list_mode.individual', {dailyEmailEstimate: 'X'}), value: 2}
+  ],
+
   digestFrequencies: [{ name: I18n.t('user.email_digests.every_30_minutes'), value: 30 },
                       { name: I18n.t('user.email_digests.every_hour'), value: 60 },
                       { name: I18n.t('user.email_digests.daily'), value: 1440 },

@@ -499,7 +499,16 @@ en:
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
       github_profile: "Github"
-      mailing_list_mode: "Send me an email for every new post (unless I mute the topic or category)"
+      email_activity_summary: "Activity Summary"
+      mailing_list_mode:
+        label: "Mailing list mode"
+        enabled: "Enable mailing list mode."
+        instructions: |
+          This setting overrides the activity summary.<br />
+          Muted topics and categories are not included in these emails.
+        daily: "Send daily updates"
+        combined: "Send combined updates (25 messages per email)"
+        individual: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
