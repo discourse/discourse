@@ -91,7 +91,7 @@ class DirectoryItem < ActiveRecord::Base
       UPDATE directory_items di SET
                likes_received = x.likes_received,
                likes_given = x.likes_given,
-               topics_entered = x.likes_given,
+               topics_entered = x.topics_entered,
                days_visited = x.days_visited,
                posts_read = x.posts_read,
                topic_count = x.topic_count,
@@ -102,7 +102,7 @@ class DirectoryItem < ActiveRecord::Base
         di.period_type = :period_type AND (
         di.likes_received <> x.likes_received OR
         di.likes_given <> x.likes_given OR
-        di.topics_entered <> x.likes_given OR
+        di.topics_entered <> x.topics_entered OR
         di.days_visited <> x.days_visited OR
         di.posts_read <> x.posts_read OR
         di.topic_count <> x.topic_count OR
