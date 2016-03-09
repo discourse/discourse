@@ -830,6 +830,79 @@ describe PostsController do
 
   end
 
+  describe 'revert post to a specific revision' do
+    include_examples 'action requires login', :put, :revert, post_id: 123, revision: 2
+
+    let(:post) { Fabricate(:post, user: logged_in_as, raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex") }
+    let(:post_revision) { Fabricate(:post_revision, post: post, modifications: {"raw" => ["this is original post body.", "this is edited post body."]}) }
+    let(:blank_post_revision) { Fabricate(:post_revision, post: post, modifications: {"edit_reason" => ["edit reason #1", "edit reason #2"]}) }
+    let(:same_post_revision) { Fabricate(:post_revision, post: post, modifications: {"raw" => ["Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex", "this is edited post body."]}) }
+
+    let(:revert_params) do
+      {
+        post_id: post.id,
+        revision: post_revision.number
+      }
+    end
+    let(:moderator) { Fabricate(:moderator) }
+
+    describe 'when logged in as a regular user' do
+      let(:logged_in_as) { log_in }
+
+      it "does not work" do
+        xhr :put, :revert, revert_params
+        expect(response).to_not be_success
+      end
+    end
+
+    describe "when logged in as staff" do
+      let(:logged_in_as) { log_in(:moderator) }
+
+      it "throws an exception when revision is < 2" do
+        expect {
+          xhr :put, :revert, post_id: post.id, revision: 1
+        }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "fails when post_revision record is not found" do
+        xhr :put, :revert, post_id: post.id, revision: post_revision.number + 1
+        expect(response).to_not be_success
+      end
+
+      it "fails when post record is not found" do
+        xhr :put, :revert, post_id: post.id + 1, revision: post_revision.number
+        expect(response).to_not be_success
+      end
+
+      it "fails when revision is blank" do
+        xhr :put, :revert, post_id: post.id, revision: blank_post_revision.number
+
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('revert_version_same'))
+      end
+
+      it "fails when revised version is same as current version" do
+        xhr :put, :revert, post_id: post.id, revision: same_post_revision.number
+
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('revert_version_same'))
+      end
+
+      it "works!" do
+        xhr :put, :revert, revert_params
+        expect(response).to be_success
+      end
+
+      it "supports reverting posts in deleted topics" do
+        first_post = post.topic.ordered_posts.first
+        PostDestroyer.new(moderator, first_post).destroy
+
+        xhr :put, :revert, revert_params
+        expect(response).to be_success
+      end
+    end
+  end
+
   describe 'expandable embedded posts' do
     let(:post) { Fabricate(:post) }
 

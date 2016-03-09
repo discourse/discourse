@@ -73,6 +73,7 @@ const TopicRoute = Discourse.Route.extend({
     showHistory(model) {
       showModal('history', { model });
       this.controllerFor('history').refresh(model.get("id"), "latest");
+      this.controllerFor('history').set('post', model);
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
