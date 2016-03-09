@@ -72,7 +72,7 @@ After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
-- No existing mail server? Create a free account on [SendGrid][sg] (12k emails/month) [SparkPost][sp] (10k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (200 emails/day), and use the credentials provided in the dashboard.
+- No existing mail server? Create a free account on [SendGrid][sg] (12k emails/month) [SparkPost][sp] (100k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (6k emails/month), and use the credentials provided in the dashboard.
 
 - For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
 
