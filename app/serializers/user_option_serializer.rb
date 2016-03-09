@@ -2,6 +2,7 @@ class UserOptionSerializer < ApplicationSerializer
   attributes :user_id,
              :email_always,
              :mailing_list_mode,
+             :mailing_list_mode_frequency,
              :email_digests,
              :email_private_messages,
              :email_direct,
