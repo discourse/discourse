@@ -66,6 +66,13 @@ class UserStat < ActiveRecord::Base
     cache_last_seen(Time.now.to_f)
   end
 
+  def mailing_list_mode_frequency_estimate
+    @about_stats ||= About.fetch_stats
+    # weight last 7 days of post volume 75%, last 30 days of post volume 25%
+    @mailing_list_mode_frequency_estimate ||= ((0.75 * @about_stats[:posts_7_days]) / 7) +
+                                              ((0.25 * @about_stats[:posts_30_days]) / 30)
+  end
+
   protected
 
   def trigger_badges

@@ -32,10 +32,15 @@ class CurrentUserSerializer < BasicUserSerializer
              :post_queue_new_count,
              :show_queued_posts,
              :read_faq,
-             :automatically_unpin_topics
+             :automatically_unpin_topics,
+             :mailing_list_mode_frequency_estimate
 
   def include_site_flagged_posts_count?
     object.staff?
+  end
+
+  def mailing_list_mode_frequency_estimate
+    object.user_stat.mailing_list_mode_frequency_estimate
   end
 
   def read_faq

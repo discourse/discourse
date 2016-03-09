@@ -62,16 +62,29 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
   },
 
+  @computed()
+  frequencyEstimate() {
+    var estimate = this.get('currentUser.mailing_list_mode_frequency_estimate');
+    if (estimate > 1) {
+      return Math.round(estimate);
+    } else {
+      return estimate.toFixed(1);
+    }
+  },
+
+  @computed()
+  mailingListModeOptions() {
+    return [
+      {name: I18n.t('user.mailing_list_mode.daily'), value: 0},
+      {name: I18n.t('user.mailing_list_mode.combined'), value: 1},
+      {name: I18n.t('user.mailing_list_mode.individual', {dailyEmailEstimate: this.get('frequencyEstimate') }), value: 2}
+    ];
+  },
+
   previousRepliesOptions: [
     {name: I18n.t('user.email_previous_replies.always'), value: 0},
     {name: I18n.t('user.email_previous_replies.unless_emailed'), value: 1},
     {name: I18n.t('user.email_previous_replies.never'), value: 2}
-  ],
-
-  mailingListModeOptions: [
-    {name: I18n.t('user.mailing_list_mode.daily'), value: 0},
-    {name: I18n.t('user.mailing_list_mode.combined'), value: 1},
-    {name: I18n.t('user.mailing_list_mode.individual', {dailyEmailEstimate: 'X'}), value: 2}
   ],
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.every_30_minutes'), value: 30 },
