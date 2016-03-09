@@ -174,7 +174,7 @@ Discourse.Dialect.addPreProcessor(function(text) {
 
       var before = text.charAt(m.index-1);
       if (!/\B/.test(before)) {
-        replacement = " " + replacement;
+        replacement = "\u200b" + replacement;
       }
 
       text = text.replace(m[0], replacement);
