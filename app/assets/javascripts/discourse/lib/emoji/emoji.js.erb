@@ -169,7 +169,15 @@ Discourse.Dialect.addPreProcessor(function(text) {
 
     var m;
     while ((m = _unicodeRegexp.exec(text)) !== null) {
-      text = text.replace(m[0], ":" + _unicodeReplacements[m[0]] + ":");
+
+      var replacement = ":" + _unicodeReplacements[m[0]] + ":";
+
+      var before = text.charAt(m.index-1);
+      if (!/\B/.test(before)) {
+        replacement = " " + replacement;
+      }
+
+      text = text.replace(m[0], replacement);
     }
   }
 

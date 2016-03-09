@@ -131,8 +131,8 @@ class Emoji
     @unicode_replacements = {}
     db['emojis'].each do |e|
       hex = e['code'].hex
-      # Don't replace digits or letters
-      if hex > 128
+      # Don't replace digits, letters and some symbols
+      if hex > 255 && e['name'] != 'tm'
         @unicode_replacements[[hex].pack('U')] = e['name']
       end
     end
