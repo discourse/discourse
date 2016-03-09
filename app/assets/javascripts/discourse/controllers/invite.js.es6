@@ -170,7 +170,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                   userInvitedController.set('totalInvites', invite_model.invites.length);
                 });
               } else if (this.get('isMessage') && result && result.user) {
-                this.get('model.details.allowed_users').pushObject(result.user);
+                this.get('model.details.allowed_users').pushObject(Ember.Object.create(result.user));
               }
             }).catch(function(e) {
               if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
