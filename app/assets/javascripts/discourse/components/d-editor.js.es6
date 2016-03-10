@@ -37,6 +37,7 @@ class Toolbar {
     ];
 
     this.addButton({
+      trimLeading: true,
       id: 'bold',
       group: 'fontStyles',
       shortcut: 'B',
@@ -44,6 +45,7 @@ class Toolbar {
     });
 
     this.addButton({
+      trimLeading: true,
       id: 'italic',
       group: 'fontStyles',
       shortcut: 'I',
@@ -134,7 +136,8 @@ class Toolbar {
       className: button.className || button.id,
       icon: button.icon || button.id,
       action: button.action || 'toolbarButton',
-      perform: button.perform || Ember.K
+      perform: button.perform || Ember.K,
+      trimLeading: button.trimLeading
     };
 
     if (button.sendAction) {
@@ -355,7 +358,7 @@ export default Ember.Component.extend({
     });
   },
 
-  _getSelected() {
+  _getSelected(trimLeading) {
     if (!this.get('ready')) { return; }
 
     const textarea = this.$('textarea.d-editor-input')[0];
@@ -368,9 +371,11 @@ export default Ember.Component.extend({
       end--;
     }
 
-    // trim leading spaces cause ** test** would be invalid
-    while(end > start && /\s/.test(value.charAt(start))) {
-      start++;
+    if (trimLeading) {
+      // trim leading spaces cause ** test** would be invalid
+      while(end > start && /\s/.test(value.charAt(start))) {
+        start++;
+      }
     }
 
     const selVal = value.substring(start, end);
@@ -492,7 +497,7 @@ export default Ember.Component.extend({
 
   actions: {
     toolbarButton(button) {
-      const selected = this._getSelected();
+      const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
         applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
