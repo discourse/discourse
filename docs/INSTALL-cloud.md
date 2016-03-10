@@ -35,7 +35,7 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
     wget -qO- https://get.docker.com/ | sh
 
-This command installs the latest versions of Docker and Git on your server. Alternately, you can manually install the respective [Docker package for your OS](https://docs.docker.com/installation/).
+This command installs the latest versions of Docker and Git on your server. Alternately, you can manually install Git and the [Docker package for your OS](https://docs.docker.com/installation/).
 
 # Install Discourse
 
@@ -45,6 +45,8 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
     cd /var/discourse
     cp samples/standalone.yml containers/app.yml
+
+(if you are not root, you may need to `sudo mkdir /var/discourse` and then `chown username /var/discourse`)
 
 # Edit Discourse Configuration
 
@@ -64,7 +66,7 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 <img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1" width="600px">
 
-After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
+Please be careful while editing; YAML is very sensitive to incorrect spacing and misplaced characters. After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
 # Email Is Important
 
@@ -82,7 +84,7 @@ Save the `app.yml` file, and begin bootstrapping Discourse:
 
     ./launcher bootstrap app
 
-This command takes about **8 minutes** to automagically configure your Discourse. After that completes, start Discourse:
+This command takes between **2-8 minutes** to automagically configure your Discourse. After that completes, start Discourse:
 
     ./launcher start app
 
@@ -98,7 +100,7 @@ Your Discourse should be accessible in your web browser via the domain name `dis
 
 There is a reminder at the top about the `DISCOURSE_DEVELOPER_EMAILS` you entered previously in `app.yml`; register a new account using one of those email addresses, and your account will automatically be made an Admin.
 
-(If you *don't* get any email from your install, and are unable to register a new admin account, please see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
+(If you *don't* get any email from your install, and are unable to register a new admin account, please check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
 <img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
 
