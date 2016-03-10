@@ -207,6 +207,16 @@ testCase('link modal (simple link)', function(assert, textarea) {
   });
 });
 
+testCase('link modal auto http addition', function(assert) {
+  click('button.link');
+  fillIn('.insert-link input', 'sam.com');
+  click('.insert-link button.btn-primary');
+  const desc = I18n.t('composer.link_description');
+  andThen(() => {
+    assert.equal(this.get('value'), `hello world.[${desc}](http://sam.com)`);
+  });
+});
+
 testCase('link modal (simple link) with selected text', function(assert, textarea) {
   textarea.selectionStart = 0;
   textarea.selectionEnd = 12;
