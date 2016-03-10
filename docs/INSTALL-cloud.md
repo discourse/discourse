@@ -66,7 +66,7 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 <img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1" width="600px">
 
-Please be careful while editing; YAML is very sensitive to incorrect spacing and misplaced characters. After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
+Please be careful while editing and double check your work; YAML is _very_ sensitive to incorrect spacing and misplaced characters. After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
 # Email Is Important
 
@@ -77,6 +77,8 @@ Please be careful while editing; YAML is very sensitive to incorrect spacing and
 - No existing mail server? Create a free account on [SendGrid][sg] (12k emails/month) [SparkPost][sp] (100k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (6k emails/month), and use the credentials provided in the dashboard.
 
 - For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
+
+If you need to change or fix your email settings, you must edit the `app.yml` file again and re-bootstrap, otherwise your changes will not take effect.
 
 # Bootstrap Discourse
 
