@@ -516,18 +516,26 @@ export default Ember.Component.extend({
       const link = this.get('link');
       const sel = this._lastSel;
 
+      const autoHttp = function(l){
+        if (l.indexOf("://") === -1) {
+          return "http://" + l;
+        } else {
+          return l;
+        }
+      };
+
       if (Ember.isEmpty(link)) { return; }
       const m = / "([^"]+)"/.exec(link);
       if (m && m.length === 2) {
         const description = m[1];
         const remaining = link.replace(m[0], '');
-        this._addText(sel, `[${description}](${remaining})`);
+        this._addText(sel, `[${description}](${autoHttp(remaining)})`);
       } else {
         if (sel.value) {
-          this._addText(sel, `[${sel.value}](${link})`);
+          this._addText(sel, `[${sel.value}](${autoHttp(link)})`);
         } else {
           const desc = I18n.t('composer.link_description');
-          this._addText(sel, `[${desc}](${link})`);
+          this._addText(sel, `[${desc}](${autoHttp(link)})`);
           this._selectText(sel.start + 1, desc.length);
         }
       }
