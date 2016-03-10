@@ -62,6 +62,18 @@ function testCase(title, testFunc) {
   });
 }
 
+testCase(`selecting the space before a word`, function(assert, textarea) {
+  textarea.selectionStart = 5;
+  textarea.selectionEnd = 7;
+
+  click(`button.bold`);
+  andThen(() => {
+    assert.equal(this.get('value'), `hello **w**orld.`);
+    assert.equal(textarea.selectionStart, 8);
+    assert.equal(textarea.selectionEnd, 9);
+  });
+});
+
 testCase(`selecting the space after a word`, function(assert, textarea) {
   textarea.selectionStart = 0;
   textarea.selectionEnd = 6;

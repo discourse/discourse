@@ -360,12 +360,17 @@ export default Ember.Component.extend({
 
     const textarea = this.$('textarea.d-editor-input')[0];
     const value = textarea.value;
-    const start = textarea.selectionStart;
+    var start = textarea.selectionStart;
     let end = textarea.selectionEnd;
 
-    // Windows selects the space after a word when you double click
+    // trim trailing spaces cause **test ** would be invalid
     while (end > start && /\s/.test(value.charAt(end-1))) {
       end--;
+    }
+
+    // trim leading spaces cause ** test** would be invalid
+    while(end > start && /\s/.test(value.charAt(start))) {
+      start++;
     }
 
     const selVal = value.substring(start, end);
