@@ -46,11 +46,14 @@
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn">{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
+              {{plugin-outlet "user-profile-controls" tagName="li"}}
+
               {{#if collapsedInfo}}
               {{#if viewingSelf}}
               <li><a {{action "expandProfile"}} href class="btn">{{fa-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
               {{/if}}
               {{/if}}
+
             </ul>
           </section>
 

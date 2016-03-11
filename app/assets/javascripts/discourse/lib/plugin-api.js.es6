@@ -5,7 +5,7 @@ import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
-import { decorateWidget, changeSetting } from 'discourse/widgets/widget';
+import { createWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 
@@ -89,6 +89,8 @@ class PluginApi {
             const src = Discourse.Emoji.urlFor(emoji);
             return dec.h('img', { className: 'emoji', attributes: { src } });
           });
+
+          iconBody = result.emoji.split('|').map(name => dec.attach('emoji', { name }));
         }
 
         if (result.text) {
@@ -268,11 +270,20 @@ class PluginApi {
   preventCloak(postId) {
     preventCloak(postId);
   }
+
+  /**
+   * Exposes the widget creating ability to plugins. Plugins can
+   * register their own plugins and attach them with decorators.
+   * See `createWidget` in `discourse/widgets/widget` for more info.
+   **/
+  createWidget(name, args) {
+    return createWidget(name, args);
+  }
 }
 
 let _pluginv01;
 function getPluginApi(version) {
-  if (version === "0.1") {
+  if (version === "0.1" || version === "0.2") {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }

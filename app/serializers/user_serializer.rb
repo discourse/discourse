@@ -318,15 +318,10 @@ class UserSerializer < BasicUserSerializer
   end
 
   def custom_fields
-    fields = nil
+    fields = User.whitelisted_user_custom_fields(scope)
 
     if scope.can_edit?(object)
-      fields = DiscoursePluginRegistry.serialized_current_user_fields.to_a
-    end
-
-    if SiteSetting.public_user_custom_fields.present?
-      fields ||= []
-      fields += SiteSetting.public_user_custom_fields.split('|')
+      fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a
     end
 
     if fields.present?
