@@ -67,6 +67,10 @@ class Plugin::Instance
     klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
   end
 
+  def whitelist_staff_user_custom_field(field)
+    User.register_plugin_staff_custom_field(field, self)
+  end
+
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
   def add_to_class(klass, attr, &block)

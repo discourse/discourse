@@ -23,6 +23,20 @@ class DecoratorHelper {
   // h() is attached via `prototype` below
 
   /**
+   * Attach another widget inside this one.
+   *
+   * ```
+   * return helper.attach('widget-name');
+   * ```
+   */
+  attach(name, attrs, state) {
+    attrs = attrs || this.widget.attrs;
+    state = state || this.widget.state;
+
+    return this.widget.attach(name, attrs, state);
+  }
+
+  /**
    * Returns the model associated with this widget. When decorating
    * posts this will normally be the post.
    *
