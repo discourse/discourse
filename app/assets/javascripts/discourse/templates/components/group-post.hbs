@@ -3,7 +3,7 @@
     <a href="{{unbound post.user.userUrl}}" data-user-card="{{unbound post.user.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar post.user imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
     <span class='time'>{{format-date post.created_at leaveAgo="true"}}</span>
     <span class="title">
-      <a href="{{unbound post.url}}">{{unbound post.title}}</a>
+      {{topic-link post.topic}}
     </span>
     <span class="category">{{category-link post.category}}</span>
     <div class="group-member-info">
