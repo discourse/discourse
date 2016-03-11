@@ -172,7 +172,7 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
     // just shove it in.
     const viewClass = (childViews.length > 1) ? Ember.ContainerView : childViews[0];
 
-    const newHash = viewInjections(env.data.view.container);
+    const newHash = $.extend({}, viewInjections(env.data.view.container));
     if (hash.tagName) { newHash.tagName = hash.tagName; }
 
     delete options.fn;  // we don't need the default template since we have a connector
