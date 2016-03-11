@@ -50,6 +50,7 @@ en:
   emails:
     incoming:
       default_subject: "Incoming email from %{email}"
+      show_trimmed_content: "Show trimmed content"
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
