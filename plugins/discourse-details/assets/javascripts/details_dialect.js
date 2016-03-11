@@ -23,4 +23,6 @@
     return text;
   });
 
+  Discourse.Markdown.whiteListTag("details", "class", "elided");
+
 })();
