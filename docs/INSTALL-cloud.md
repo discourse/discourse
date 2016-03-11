@@ -61,7 +61,7 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 - Set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
 
-- Place your mail credentials in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
+- Place your [mail credentials][mailconfig] in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
@@ -75,11 +75,11 @@ Please be careful while editing and double check your work; YAML is _very_ sensi
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
-- No existing mail server? Create a free account on [SendGrid][sg] (12k emails/month) [SparkPost][sp] (100k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (6k emails/month), and use the credentials provided in the dashboard.
+- No existing mail server? Read [**Email Service Configuration**][mailconfig].
 
 - For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
 
-If you need to change or fix your email settings after bootstrapping, you must edit the `app.yml` file again and `./launcher rebuild app`, otherwise your changes will not take effect.
+If you need to change or fix your email settings after bootstrapping, you must edit the `app.yml` file again and `./launcher rebuild app`, otherwise your changes will not take effect. If you didn't receive an email from your install, read [Register New Account and Become Admin][#register-new-account-and-become-admin] for troubleshooting.
 
 # Bootstrap Discourse
 
@@ -173,11 +173,8 @@ Do you want...
 Help us improve this guide! Feel free to ask about it on [meta.discourse.org][meta], or even better, submit a pull request.
 
    [dd]: https://github.com/discourse/discourse_docker
-   [sp]: https://www.sparkpost.com/
   [ssh]: https://help.github.com/articles/generating-ssh-keys
  [meta]: https://meta.discourse.org
    [do]: https://www.digitalocean.com/?refcode=5fa48ac82415
-  [jet]: https://www.mailjet.com/pricing
-  [gun]: http://www.mailgun.com/
-   [sg]: https://sendgrid.com/
   [put]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+  [mailconfig]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-email.md
