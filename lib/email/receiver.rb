@@ -166,7 +166,9 @@ module Email
 
     def try_to_encode(string, encoding)
       string.encode("UTF-8", encoding)
-    rescue Encoding::InvalidByteSequenceError, Encoding::UndefinedConversionError
+    rescue Encoding::InvalidByteSequenceError,
+           Encoding::UndefinedConversionError,
+           Encoding::ConverterNotFoundError
       nil
     end
 
