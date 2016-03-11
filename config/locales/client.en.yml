@@ -1639,6 +1639,7 @@ en:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
+          revert: "Revert to this revision"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
