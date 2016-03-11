@@ -109,6 +109,9 @@ describe Email::Receiver do
 
       expect { process(:chinese_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("您好！ 你今天好吗？")
+
+      expect { process(:reply_with_weird_encoding) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a reply with a weird encoding.")
     end
 
     it "prefers text over html" do
