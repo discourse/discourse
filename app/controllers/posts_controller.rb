@@ -282,6 +282,55 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def revert
+    raise Discourse::NotFound unless guardian.is_staff?
+
+    post_id = params[:id] || params[:post_id]
+    revision = params[:revision].to_i
+    raise Discourse::InvalidParameters.new(:revision) if revision < 2
+
+    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
+    raise Discourse::NotFound unless post_revision
+
+    post = find_post_from_params
+    raise Discourse::NotFound if post.blank?
+
+    post_revision.post = post
+    guardian.ensure_can_see!(post_revision)
+    guardian.ensure_can_edit!(post)
+    return render_json_error(I18n.t('revert_version_same')) if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? && post_revision.modifications["category_id"].blank?
+
+    topic = Topic.with_deleted.find(post.topic_id)
+
+    changes = {}
+    changes[:raw] = post_revision.modifications["raw"][0] if post_revision.modifications["raw"].present? && post_revision.modifications["raw"][0] != post.raw
+    if post.is_first_post?
+      changes[:title] = post_revision.modifications["title"][0] if post_revision.modifications["title"].present? && post_revision.modifications["title"][0] != topic.title
+      changes[:category_id] = post_revision.modifications["category_id"][0] if post_revision.modifications["category_id"].present? && post_revision.modifications["category_id"][0] != topic.category.id
+    end
+    return render_json_error(I18n.t('revert_version_same')) unless changes.length > 0
+    changes[:edit_reason] = "reverted to version ##{post_revision.number.to_i - 1}"
+
+    revisor = PostRevisor.new(post, topic)
+    revisor.revise!(current_user, changes)
+
+    return render_json_error(post) if post.errors.present?
+    return render_json_error(topic) if topic.errors.present?
+
+    post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+    post_serializer.draft_sequence = DraftSequence.current(current_user, topic.draft_key)
+    link_counts = TopicLink.counts_for(guardian, topic, [post])
+    post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
+
+    result = { post: post_serializer.as_json }
+    if post.is_first_post?
+      result[:topic] = BasicTopicSerializer.new(topic, scope: guardian, root: false).as_json if post_revision.modifications["title"].present?
+      result[:category_id] = post_revision.modifications["category_id"][0] if post_revision.modifications["category_id"].present?
+    end
+
+    render_json_dump(result)
+  end
+
   def bookmark
     post = find_post_from_params
 
