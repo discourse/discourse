@@ -53,6 +53,28 @@ describe DiscourseRedis do
         fallback_handler.master = true
       end
     end
+
+    it "should return the slave config when master's hostname cannot be resolved" do
+      begin
+        error = RuntimeError.new('Name or service not known')
+
+        Redis::Client.any_instance.expects(:call).raises(error).twice
+        expect { connector.resolve }.to raise_error(error)
+
+        config = connector.resolve
+
+        expect(config[:host]).to eq(slave_host)
+        expect(config[:port]).to eq(slave_port)
+      ensure
+        fallback_handler.master = true
+      end
+    end
+
+    it "should raise the right error" do
+      error = RuntimeError.new('test error')
+      Redis::Client.any_instance.expects(:call).raises(error).twice
+      2.times { expect { connector.resolve }.to raise_error(error) }
+    end
   end
 
   describe DiscourseRedis::FallbackHandler do

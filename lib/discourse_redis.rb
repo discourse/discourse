@@ -81,7 +81,10 @@ class DiscourseRedis
         client = ::Redis::Client.new(options)
         client.call([:role])[0]
         @options
-      rescue Redis::ConnectionError, Redis::CannotConnectError => ex
+      rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
+        # A consul service name may be deregistered for a redis container setup
+        raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
+
         return @slave_options if !@fallback_handler.master
         @fallback_handler.master = false
         raise ex
