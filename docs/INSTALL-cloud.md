@@ -61,7 +61,7 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 - Set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
 
-- Place your [mail credentials][mailconfig] in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
+- Place your [Email Server credentials][mailconfig] in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
@@ -75,7 +75,7 @@ Please be careful while editing and double check your work; YAML is _very_ sensi
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
-- No existing mail server? Read [**Email Service Configuration**][mailconfig].
+- No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
 
 - For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
 
