@@ -41,7 +41,10 @@ export default createWidget('post-gutter', {
     }
 
     if (state.collapsed) {
-      const remaining = links.length - MAX_GUTTER_LINKS;
+      var differentTitles = new Set();
+      links.forEach(function(x) { differentTitles.add(x.title); });
+      const remaining = differentTitles.size - MAX_GUTTER_LINKS;
+
       if (remaining > 0) {
         result.push(h('li', h('a.toggle-more', I18n.t('post.more_links', {count: remaining}))));
       }
