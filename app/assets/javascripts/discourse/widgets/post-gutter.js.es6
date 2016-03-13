@@ -43,7 +43,7 @@ export default createWidget('post-gutter', {
     if (state.collapsed) {
       var differentTitles = [], allTitles = [];
       links.forEach(function(x) { allTitles.push(x.title); });
-      differentTitles = allTitles.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+      differentTitles = allTitles.filter(function(item, iter, ar){ return ar.indexOf(item) === iter; });
       const remaining = differentTitles.length - MAX_GUTTER_LINKS;
 
       if (remaining > 0) {
