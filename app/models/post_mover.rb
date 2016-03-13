@@ -91,6 +91,16 @@ class PostMover
   def move(post)
     @first_post_number_moved ||= post.post_number
 
+    post.replies.each do |reply|
+      quotes = reply.raw.scan(/\[quote[^\]]+\]/)
+      quotes.each do |quote|
+        new_quote = quote.sub(/(?<=post:)[^,"]+/, @move_map[post.post_number].to_s)
+        new_quote = new_quote.sub(/(?<=topic:)[^,"]+/, destination_topic.id.to_s)
+        reply.raw = reply.raw.sub(quote, new_quote)
+      end
+      reply.save
+    end
+
     Post.where(id: post.id, topic_id: original_topic.id).update_all(
       [
         ['post_number = :post_number',
@@ -108,6 +118,7 @@ class PostMover
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
+
   end
 
   def update_statistics

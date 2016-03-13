@@ -19,6 +19,7 @@ describe PostMover do
   end
 
   context 'move_posts' do
+    let(:reply_quote) { "[quote=\"#{user.username}, post:#{p2.post_number}, topic:#{topic.id}\"]" }
     let(:user) { Fabricate(:user) }
     let(:another_user) { Fabricate(:evil_trout) }
     let(:category) { Fabricate(:category, user: user) }
@@ -26,12 +27,13 @@ describe PostMover do
     let!(:p1) { Fabricate(:post, topic: topic, user: user) }
     let!(:p2) { Fabricate(:post, topic: topic, user: another_user, raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.", reply_to_post_number: p1.post_number)}
     let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user)}
-    let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user)}
+    let!(:p4) { Fabricate(:post, topic: topic, raw: reply_quote, reply_to_post_number: p2.post_number, user: user)}
 
     before do
       # add a like to a post, enable observers so we get user actions
       ActiveRecord::Base.observers.enable :all
       @like = PostAction.act(another_user, p4, PostActionType.types[:like])
+      p4.save_reply_relationships
     end
 
     context 'success' do
@@ -142,15 +144,19 @@ describe PostMover do
           expect(moved_to.like_count).to eq(1)
           expect(moved_to.category_id).to eq(SiteSetting.uncategorized_category_id)
 
-          # Posts should be re-ordered
+          # Quote links are updated
           p2.reload
+          p4.reload.reload
+          expect(p4.raw).to include("post:#{p2.post_number}")
+          expect(p4.raw).to include("topic:#{p2.topic_id}")
+          
+          # Posts should be re-ordered
           expect(p2.sort_order).to eq(2)
           expect(p2.post_number).to eq(2)
           expect(p2.topic_id).to eq(moved_to.id)
           expect(p2.reply_count).to eq(1)
           expect(p2.reply_to_post_number).to eq(nil)
 
-          p4.reload
           expect(p4.post_number).to eq(3)
           expect(p4.sort_order).to eq(3)
           expect(p4.topic_id).to eq(moved_to.id)
