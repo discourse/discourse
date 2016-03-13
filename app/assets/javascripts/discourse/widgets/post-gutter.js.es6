@@ -41,9 +41,10 @@ export default createWidget('post-gutter', {
     }
 
     if (state.collapsed) {
-      var differentTitles = new Set();
-      links.forEach(function(x) { differentTitles.add(x.title); });
-      const remaining = differentTitles.size - MAX_GUTTER_LINKS;
+      var differentTitles = [], allTitles = [];
+      links.forEach(function(x) { allTitles.push(x.title); });
+      differentTitles = allTitles.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+      const remaining = differentTitles.length - MAX_GUTTER_LINKS;
 
       if (remaining > 0) {
         result.push(h('li', h('a.toggle-more', I18n.t('post.more_links', {count: remaining}))));
