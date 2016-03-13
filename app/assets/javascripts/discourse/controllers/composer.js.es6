@@ -294,18 +294,15 @@ export default Ember.Controller.extend({
     });
 
     const promise = composer.save({ imageSizes, editReason: this.get("editReason")}).then(function(result) {
+      self.destroyDraft();
+
       if (result.responseJson.action === "enqueued") {
         self.send('postWasEnqueued', result.responseJson);
-        self.destroyDraft();
         self.close();
         self.appEvents.trigger('post-stream:refresh');
         return result;
       }
 
-      // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
-      if (result.responseJson.action === "create_post" || self.get('replyAsNewTopicDraft')) {
-        self.destroyDraft();
-      }
       if (self.get('model.action') === 'edit') {
         self.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
       } else {
