@@ -11,9 +11,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
     return _jumpScheduled;
   },
 
-  /**
-    Jumps to a particular post in the stream
-  **/
+  // Jumps to a particular post in the stream
   jumpToPost(postNumber, opts) {
     const holderId = `#post_${postNumber}`;
     const offset = () => {
