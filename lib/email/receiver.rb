@@ -74,7 +74,11 @@ module Email
         message = SubscriptionMailer.send(action, user)
         Email::Sender.new(message, :subscription).send
       elsif post = find_related_post
-        create_reply(user: user, raw: body, post: post, topic: post.topic)
+        create_reply(user: user,
+                     raw: body,
+                     post: post,
+                     topic: post.topic,
+                     skip_validations: user.staged?)
       else
         destination = destinations.first
 
