@@ -44,7 +44,6 @@ details .lazyYT-container {
 
 
 .elided {
-  color: dark-light-choose(scale-color($primary, $lightness: 65%), scale-color($secondary, $lightness: 35%));
 
   summary:before {
     content: '' !important;
