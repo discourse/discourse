@@ -348,12 +348,20 @@ createWidget('post-article', {
     return rows;
   },
 
+  _getTopicUrl() {
+    const post = this.findAncestorModel();
+    return post ? post.get('topic.url') : null;
+  },
+
   toggleReplyAbove() {
     const replyPostNumber = this.attrs.reply_to_post_number;
 
     // jump directly on mobile
     if (this.attrs.mobileView) {
-      DiscourseURL.jumpToPost(replyPostNumber);
+      const topicUrl = this._getTopicUrl();
+      if (topicUrl) {
+        DiscourseURL.routeTo(`${topicUrl}/${replyPostNumber}`);
+      }
       return Ember.RSVP.Promise.resolve();
     }
 
@@ -361,8 +369,7 @@ createWidget('post-article', {
       this.state.repliesAbove = [];
       return Ember.RSVP.Promise.resolve();
     } else {
-      const post = this.findAncestorModel();
-      const topicUrl = post ? post.get('topic.url') : null;
+      const topicUrl = this._getTopicUrl();
       return this.store.find('post-reply-history', { postId: this.attrs.id }).then(posts => {
         this.state.repliesAbove = posts.map((p) => {
           p.shareUrl = `${topicUrl}/${p.post_number}`;
