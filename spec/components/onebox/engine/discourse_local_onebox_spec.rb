@@ -60,9 +60,14 @@ describe Onebox::Engine::DiscourseLocalOnebox do
     end
 
     it "returns a link if not allowed to see the post" do
-      url = "#{topic.url}"
+      url = topic.url
       Guardian.any_instance.stubs(:can_see?).returns(false)
       expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
+    end
+
+    it "replaces emoji in the title" do
+      topic.update_column(:title, "Who wants to eat a :hamburger:")
+      expect(Onebox.preview(topic.url).to_s).to match(/hamburger.png/)
     end
 
     it "returns some onebox goodness if post exists and can be seen" do
@@ -94,7 +99,7 @@ describe Onebox::Engine::DiscourseLocalOnebox do
       expect(html).to eq("<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>")
     end
   end
-  
+
   context "When deployed to a subfolder" do
     let(:base_url) { "http://test.localhost/subfolder" }
     let(:base_uri) { "/subfolder" }
