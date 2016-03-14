@@ -165,7 +165,7 @@ class ApplicationController < ActionController::Base
 
   def set_locale
     if !current_user
-      if SiteSetting.allow_user_locale
+      if SiteSetting.set_locale_from_accept_language_header
         I18n.locale = locale_from_header
       else
         I18n.locale = SiteSetting.default_locale
