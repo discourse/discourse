@@ -1837,13 +1837,6 @@ en:
 
         Your reply was sent from a different email address than the one we expected, so we're not sure if this is the same person. Try sending from another email address, or contact a staff member.
 
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] Email issue -- No Message Id"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        We couldn't find a `Message-Id` header in the email. Try sending from a different email address, or contact a staff member.
-
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
       text_body_template: |
