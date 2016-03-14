@@ -125,11 +125,11 @@ class ImportScripts::Mbox < ImportScripts::Base
   end
 
   def parse_email(msg)
-    receiver = Email::Receiver.new(msg, skip_sanity_check: true)
+    receiver = Email::Receiver.new(msg)
     mail = Mail.read_from_string(msg)
     mail.body
 
-    selected = receiver.select_body(mail)
+    selected = receiver.select_body
     selected.force_encoding(selected.encoding).encode("UTF-8")
   end
 
@@ -147,11 +147,11 @@ class ImportScripts::Mbox < ImportScripts::Base
 
       create_posts(topics, total: topic_count, offset: offset) do |t|
         raw_email = File.read(t['file'])
-        receiver = Email::Receiver.new(raw_email, skip_sanity_check: true)
+        receiver = Email::Receiver.new(raw_email)
         mail = Mail.read_from_string(raw_email)
         mail.body
 
-        selected = receiver.select_body(mail)
+        selected = receiver.select_body
         next unless selected
 
         raw = selected.force_encoding(selected.encoding).encode("UTF-8")
@@ -190,11 +190,11 @@ class ImportScripts::Mbox < ImportScripts::Base
         next unless topic_id
 
         raw_email = File.read(p['file'])
-        receiver = Email::Receiver.new(raw_email, skip_sanity_check: true)
+        receiver = Email::Receiver.new(raw_email)
         mail = Mail.read_from_string(raw_email)
         mail.body
 
-        selected = receiver.select_body(mail)
+        selected = receiver.select_body
         raw = selected.force_encoding(selected.encoding).encode("UTF-8")
 
         { id: id,
