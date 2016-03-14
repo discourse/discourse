@@ -21,7 +21,7 @@ export default (filter, params) => {
           record.setupGroupsAndPermissions();
           this.site.updateCategory(record);
           return { category: Category.findBySlug(modelParams.slug, modelParams.parentSlug) };
-        })
+        });
       };
       return { category };
     },
