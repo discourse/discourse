@@ -2,7 +2,7 @@ require_dependency 'category_serializer'
 
 class CategoriesController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:index, :show, :redirect]
+  before_filter :ensure_logged_in, except: [:index, :show, :redirect, :find_by_slug]
   before_filter :fetch_category, only: [:show, :update, :destroy]
   before_filter :initialize_staff_action_logger, only: [:create, :update, :destroy]
   skip_before_filter :check_xhr, only: [:index, :redirect]
@@ -151,6 +151,15 @@ class CategoriesController < ApplicationController
     end
 
     render json: success_json
+  end
+
+  def find_by_slug
+    params.require(:category_slug)
+    @category = Category.find_by_slug(params[:category_slug], params[:parent_category_slug])
+    guardian.ensure_can_see!(@category)
+
+    @category.permission = CategoryGroup.permission_types[:full] if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
+    render_serialized(@category, CategorySerializer)
   end
 
   private
