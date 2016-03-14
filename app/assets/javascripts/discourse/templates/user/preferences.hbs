@@ -190,7 +190,7 @@
     <div class='control-group pref-activity-summary'>
       <label class="control-label">{{i18n 'user.email_activity_summary'}}</label>
       {{#if canReceiveDigest}}
-        {{preference-checkbox labelKey="user.email_digests.title" checked=model.user_option.email_digests}}
+        {{preference-checkbox labelKey="user.email_digests.title" disabled=model.user_option.mailing_list_mode checked=model.user_option.email_digests}}
         {{#if model.user_option.email_digests}}
           <div class='controls controls-dropdown'>
             {{combo-box valueAttribute="value" content=digestFrequencies value=model.user_option.digest_after_minutes}}

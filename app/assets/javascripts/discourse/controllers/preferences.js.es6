@@ -65,10 +65,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
   @computed()
   frequencyEstimate() {
     var estimate = this.get('currentUser.mailing_list_mode_frequency_estimate');
-    if (estimate > 1) {
-      return Math.round(estimate);
+    if (estimate >= 1) {
+      return I18n.t('user.mailing_list_mode.many_per_day', { dailyEmailEstimate: Math.round(estimate) });
     } else {
-      return estimate.toFixed(1);
+      return I18n.t('user.mailing_list_mode.few_per_day')
     }
   },
 
@@ -77,7 +77,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return [
       {name: I18n.t('user.mailing_list_mode.daily'), value: 0},
       {name: I18n.t('user.mailing_list_mode.combined'), value: 1},
-      {name: I18n.t('user.mailing_list_mode.individual', {dailyEmailEstimate: this.get('frequencyEstimate') }), value: 2}
+      {name: this.get('frequencyEstimate'), value: 2}
     ];
   },
 

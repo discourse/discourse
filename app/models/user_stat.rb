@@ -67,10 +67,8 @@ class UserStat < ActiveRecord::Base
   end
 
   def mailing_list_mode_frequency_estimate
-    @about_stats ||= About.fetch_stats
-    # weight last 7 days of post volume 75%, last 30 days of post volume 25%
-    @mailing_list_mode_frequency_estimate ||= ((0.75 * @about_stats[:posts_7_days]) / 7) +
-                                              ((0.25 * @about_stats[:posts_30_days]) / 30)
+    # average of last 30 days of posts
+    @mailing_list_mode_frequency_estimate ||= About.fetch_stats[:posts_30_days].to_f / 30
   end
 
   protected
