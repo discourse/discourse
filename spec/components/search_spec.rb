@@ -408,15 +408,21 @@ describe Search do
 
   describe 'Advanced search' do
 
-    it 'supports min_age and max_age in:first user:' do
-      topic = Fabricate(:topic, created_at: 3.months.ago)
-      Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+    it 'supports before and after in:first user:' do
+
+      time = Time.zone.parse('2001-05-20 2:55')
+      freeze_time(time)
+
+      topic = Fabricate(:topic)
+      Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic, created_at: time.months_ago(2))
       _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
 
-      expect(Search.execute('test min_age:100').posts.length).to eq(1)
-      expect(Search.execute('test min_age:10').posts.length).to eq(0)
-      expect(Search.execute('test max_age:10').posts.length).to eq(1)
-      expect(Search.execute('test max_age:100').posts.length).to eq(0)
+      expect(Search.execute('test before:1').posts.length).to eq(1)
+      expect(Search.execute('test before:2001-04-20').posts.length).to eq(1)
+      expect(Search.execute('test before:2001').posts.length).to eq(0)
+      expect(Search.execute('test before:monday').posts.length).to eq(1)
+
+      expect(Search.execute('test after:jan').posts.length).to eq(1)
 
       expect(Search.execute('test in:first').posts.length).to eq(1)
       expect(Search.execute('boom').posts.length).to eq(1)
@@ -510,6 +516,35 @@ describe Search do
 
     ts_query = Search.ts_query(str, "simple")
     Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
+  end
+
+  context '#word_to_date' do
+    it 'parses relative dates correctly' do
+      time = Time.zone.parse('2001-02-20 2:55')
+      freeze_time(time)
+
+      expect(Search.word_to_date('yesterday')).to eq(time.beginning_of_day.yesterday)
+      expect(Search.word_to_date('suNday')).to eq(Time.zone.parse('2001-02-18'))
+      expect(Search.word_to_date('thursday')).to eq(Time.zone.parse('2001-02-15'))
+      expect(Search.word_to_date('deCember')).to eq(Time.zone.parse('2000-12-01'))
+      expect(Search.word_to_date('deC')).to eq(Time.zone.parse('2000-12-01'))
+      expect(Search.word_to_date('january')).to eq(Time.zone.parse('2001-01-01'))
+      expect(Search.word_to_date('jan')).to eq(Time.zone.parse('2001-01-01'))
+
+
+      expect(Search.word_to_date('100')).to eq(time.beginning_of_day.days_ago(100))
+
+      expect(Search.word_to_date('invalid')).to eq(nil)
+    end
+
+    it 'parses absolute dates correctly' do
+      expect(Search.word_to_date('2001-1-20')).to eq(Time.zone.parse('2001-01-20'))
+      expect(Search.word_to_date('2030-10-2')).to eq(Time.zone.parse('2030-10-02'))
+      expect(Search.word_to_date('2030-10')).to eq(Time.zone.parse('2030-10-01'))
+      expect(Search.word_to_date('2030')).to eq(Time.zone.parse('2030-01-01'))
+      expect(Search.word_to_date('2030-01-32')).to eq(nil)
+      expect(Search.word_to_date('10000')).to eq(nil)
+    end
   end
 
 end
