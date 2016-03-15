@@ -79,7 +79,7 @@ Please be careful while editing and double check your work; YAML is _very_ sensi
 
 - For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
 
-If you need to change or fix your email settings after bootstrapping, you must edit the `app.yml` file again and `./launcher rebuild app`, otherwise your changes will not take effect. If you didn't receive an email from your install, read [Register New Account and Become Admin][#register-new-account-and-become-admin] for troubleshooting.
+If you need to change or fix your email settings after bootstrapping, you must edit the `app.yml` file again and `./launcher rebuild app`, otherwise your changes will not take effect. If you didn't receive an email from your install, read [Register New Account and Become Admin](#register-new-account-and-become-admin) for troubleshooting.
 
 # Bootstrap Discourse
 
