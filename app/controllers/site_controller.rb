@@ -23,5 +23,4 @@ class SiteController < ApplicationController
   def emoji
     render json: custom_emoji
   end
-
 end

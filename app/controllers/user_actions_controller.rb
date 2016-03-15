@@ -1,5 +1,4 @@
 class UserActionsController < ApplicationController
-
   def index
     params.require(:username)
     params.permit(:filter, :offset)
@@ -36,5 +35,4 @@ class UserActionsController < ApplicationController
     # DO NOT REMOVE
     # TODO should preload messages to avoid extra http req
   end
-
 end

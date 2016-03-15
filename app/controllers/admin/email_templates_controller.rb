@@ -1,5 +1,4 @@
 class Admin::EmailTemplatesController < Admin::AdminController
-
   def self.email_keys
     @email_keys ||= ["invite_forum_mailer", "invite_mailer", "invite_password_instructions",
                      "new_version_mailer", "new_version_mailer_with_notes", "queued_posts_reminder",
@@ -55,5 +54,4 @@ class Admin::EmailTemplatesController < Admin::AdminController
   def index
     render_serialized(self.class.email_keys, AdminEmailTemplateSerializer, root: 'email_templates', rest_serializer: true)
   end
-
 end

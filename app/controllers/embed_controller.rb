@@ -86,6 +86,4 @@ class EmbedController < ApplicationController
     rescue URI::InvalidURIError
       raise Discourse::InvalidAccess.new('invalid referer host')
     end
-
-
 end

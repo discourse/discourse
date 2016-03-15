@@ -27,5 +27,4 @@ class ClicksController < ApplicationController
       params.require(:url)
       params.permit(:url, :post_id, :topic_id, :redirect)
     end
-
 end

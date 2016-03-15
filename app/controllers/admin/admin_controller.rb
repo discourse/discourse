@@ -6,5 +6,4 @@ class Admin::AdminController < ApplicationController
   def index
     render nothing: true
   end
-
 end

@@ -1,5 +1,4 @@
 class Admin::SiteTextsController < Admin::AdminController
-
   def self.preferred_keys
     ['system_messages.usage_tips.text_body_template',
      'education.new-topic',
@@ -66,5 +65,4 @@ class Admin::SiteTextsController < Admin::AdminController
       raise Discourse::NotFound unless I18n.exists?(params[:id])
       {id: params[:id], value: I18n.t(params[:id]) }
     end
-
 end

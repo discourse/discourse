@@ -1,5 +1,4 @@
 class Admin::BadgesController < Admin::AdminController
-
   def index
     data = {
       badge_types: BadgeType.all.order(:id).to_a,

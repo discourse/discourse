@@ -1,5 +1,4 @@
 class Admin::UserFieldsController < Admin::AdminController
-
   def self.columns
     [:name, :field_type, :editable, :description, :required, :show_on_profile, :position]
   end
@@ -55,4 +54,3 @@ class Admin::UserFieldsController < Admin::AdminController
       end
     end
 end
-

@@ -1,5 +1,4 @@
 class Admin::ApiController < Admin::AdminController
-
   def index
     render_serialized(ApiKey.where(hidden: false).to_a, ApiKeySerializer)
   end
@@ -24,5 +23,4 @@ class Admin::ApiController < Admin::AdminController
     api_key = ApiKey.create_master_key
     render_serialized(api_key, ApiKeySerializer)
   end
-
 end

@@ -360,5 +360,4 @@ class Admin::UsersController < Admin::AdminController
     def refresh_browser(user)
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     end
-
 end

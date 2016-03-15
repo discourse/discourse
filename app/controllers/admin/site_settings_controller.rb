@@ -1,5 +1,4 @@
 class Admin::SiteSettingsController < Admin::AdminController
-
   def index
     render_json_dump(site_settings: SiteSetting.all_settings, diags: SiteSetting.diags)
   end
@@ -18,5 +17,4 @@ class Admin::SiteSettingsController < Admin::AdminController
       render json: {errors: [e.message]}, status: 422
     end
   end
-
 end

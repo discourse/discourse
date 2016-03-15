@@ -1,7 +1,6 @@
 require 'flag_query'
 
 class Admin::FlagsController < Admin::AdminController
-
   def index
     # we may get out of sync, fix it here
     PostAction.update_flagged_posts_count
@@ -62,5 +61,4 @@ class Admin::FlagsController < Admin::AdminController
 
     render nothing: true
   end
-
 end
