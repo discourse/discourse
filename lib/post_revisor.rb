@@ -154,6 +154,7 @@ class PostRevisor
     POST_TRACKED_FIELDS.each do |field|
       return true if @fields.has_key?(field) && @fields[field] != @post.send(field)
     end
+    advance_draft_sequence
     false
   end
 
