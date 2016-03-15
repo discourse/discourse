@@ -292,6 +292,18 @@ end
   end
 end
 
+Badge.seed do |b|
+  b.id = Badge::Admired
+  b.default_name = "Admired"
+  b.default_icon = "fa-heart"
+  b.badge_type_id = BadgeType::Gold
+  b.query = Badge::Queries::Admired
+  b.default_badge_grouping_id = BadgeGrouping::Community
+  b.trigger = Badge::Trigger::None
+  b.auto_revoke = true
+  b.system = true
+end
+
 Badge.where("NOT system AND id < 100").each do |badge|
   new_id = [Badge.maximum(:id) + 1, 100].max
   old_id = badge.id
