@@ -175,7 +175,14 @@ module PostGuardian
 
   def can_wiki?(post)
     return false unless authenticated?
-    is_staff? || @user.has_trust_level?(TrustLevel[4]) || (@user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post))
+    return true if is_staff? || @user.has_trust_level?(TrustLevel[4])
+
+    if @user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post)
+      return false if post.hidden?
+      return !post.edit_time_limit_expired?
+    end
+
+    false
   end
 
   def can_change_post_type?
