@@ -300,7 +300,19 @@ Badge.seed do |b|
   b.query = Badge::Queries::Admired
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::None
-  b.auto_revoke = true
+  b.auto_revoke = false
+  b.system = true
+end
+
+Badge.seed do |b|
+  b.id = Badge::GivesBack
+  b.default_name = "Gives Back"
+  b.default_icon = "fa-heart"
+  b.badge_type_id = BadgeType::Silver
+  b.query = Badge::Queries::GivesBack
+  b.default_badge_grouping_id = BadgeGrouping::Community
+  b.trigger = Badge::Trigger::None
+  b.auto_revoke = false
   b.system = true
 end
 
