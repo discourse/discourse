@@ -1,5 +1,4 @@
 class Admin::EmojisController < Admin::AdminController
-
   def index
     render_serialized(Emoji.custom, EmojiSerializer, root: false)
   end
@@ -25,7 +24,6 @@ class Admin::EmojisController < Admin::AdminController
       MessageBus.publish("/uploads/emoji", data.as_json, user_ids: [current_user.id])
     end
 
-
     render json: success_json
   end
 
@@ -34,6 +32,4 @@ class Admin::EmojisController < Admin::AdminController
     Emoji[name].try(:remove)
     render nothing: true
   end
-
 end
-

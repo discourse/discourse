@@ -1,4 +1,5 @@
 class RobotsTxtController < ApplicationController
+  
   layout false
   skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required
 

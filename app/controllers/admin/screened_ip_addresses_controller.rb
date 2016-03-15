@@ -59,5 +59,4 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
     def fetch_screened_ip_address
       @screened_ip_address = ScreenedIpAddress.find(params[:id])
     end
-
 end

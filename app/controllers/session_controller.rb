@@ -282,5 +282,4 @@ class SessionController < ApplicationController
     end
     render_serialized(user, UserSerializer)
   end
-
 end

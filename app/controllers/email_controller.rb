@@ -1,4 +1,5 @@
 class EmailController < ApplicationController
+  
   skip_before_filter :check_xhr, :preload_json
   layout 'no_ember'
 
@@ -41,5 +42,4 @@ class EmailController < ApplicationController
     raise Discourse::NotFound unless @user.present?
     @user.user_option.update_column(:email_digests, true)
   end
-
 end

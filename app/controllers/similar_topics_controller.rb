@@ -36,5 +36,4 @@ class SimilarTopicsController < ApplicationController
       str = (key == :raw) ? "body" : key.to_s
       attr.length < SiteSetting.send("min_#{str}_similar_length")
     end
-
 end

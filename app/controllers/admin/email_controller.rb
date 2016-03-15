@@ -1,7 +1,6 @@
 require_dependency 'email/renderer'
 
 class Admin::EmailController < Admin::AdminController
-
   def index
     data = { delivery_method: delivery_method, settings: delivery_settings }
     render_json_dump(data)

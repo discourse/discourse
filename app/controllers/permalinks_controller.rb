@@ -1,4 +1,5 @@
 class PermalinksController < ApplicationController
+  
   skip_before_filter :check_xhr, :preload_json
 
   def show
@@ -16,5 +17,4 @@ class PermalinksController < ApplicationController
       raise Discourse::NotFound
     end
   end
-
 end

@@ -31,5 +31,4 @@ class Admin::PermalinksController < Admin::AdminController
   def fetch_permalink
     @permalink = Permalink.find(params[:id])
   end
-
 end

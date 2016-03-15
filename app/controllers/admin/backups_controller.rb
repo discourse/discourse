@@ -145,5 +145,4 @@ class Admin::BackupsController < Admin::AdminController
   def has_enough_space_on_disk?(size)
     `df -Pk #{Rails.root}/public/backups | awk 'NR==2 {print $4 * 1024;}'`.to_i > size
   end
-
 end

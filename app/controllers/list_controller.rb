@@ -350,5 +350,4 @@ class ListController < ApplicationController
       raise Discourse::NotFound
     end
   end
-
 end

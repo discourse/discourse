@@ -1,5 +1,4 @@
 class Admin::GroupsController < Admin::AdminController
-
   def index
     groups = Group.order(:name)
 

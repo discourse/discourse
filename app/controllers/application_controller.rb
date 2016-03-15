@@ -508,5 +508,4 @@ class ApplicationController < ActionController::Base
         params[key].split(delimiter).map(&:to_i)
       end
     end
-
 end

@@ -1,7 +1,6 @@
 require_dependency 'oneboxer'
 
 class OneboxController < ApplicationController
-
   def show
     result = Oneboxer.preview(params[:url], invalidate_oneboxes: params[:refresh] == 'true')
     result.strip! if result.present?
@@ -13,5 +12,4 @@ class OneboxController < ApplicationController
       render text: result
     end
   end
-
 end
