@@ -2970,6 +2970,9 @@ en:
         gives_back:
           name: Gives Back
           description: Has a high ratio of likes given to likes received
+        generous:
+          name: Generous
+          description: Used the maximum amount of likes in a day
 
     google_search: |
       <h3>Search with Google</h3>

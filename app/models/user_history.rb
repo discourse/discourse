@@ -51,7 +51,8 @@ class UserHistory < ActiveRecord::Base
                           revoke_admin: 33,
                           grant_moderation: 34,
                           revoke_moderation: 35,
-                          backup_operation: 36)
+                          backup_operation: 36,
+                          rate_limited_like: 37)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
