@@ -42,7 +42,8 @@ if defined?(Rack::MiniProfiler)
     /^\/favicon\/proxied/
   ]
 
-  # For our app, let's just show mini profiler always, polling is chatty so nuke that
+  # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
+  # so let's rule out all handheld, tablet, and mobile devices
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
     path = env['PATH_INFO']
 
