@@ -1,4 +1,5 @@
 class HighlightJsController < ApplicationController
+
   skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show]
 
   def show
@@ -26,4 +27,3 @@ class HighlightJsController < ApplicationController
     end
   end
 end
-

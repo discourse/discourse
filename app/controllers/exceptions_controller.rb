@@ -1,4 +1,5 @@
 class ExceptionsController < ApplicationController
+  
   skip_before_filter :check_xhr, :preload_json
 
   def not_found
@@ -16,5 +17,4 @@ class ExceptionsController < ApplicationController
 
     render text: build_not_found_page(200, false)
   end
-
 end

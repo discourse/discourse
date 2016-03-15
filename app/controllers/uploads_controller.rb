@@ -1,4 +1,5 @@
 class UploadsController < ApplicationController
+  
   before_filter :ensure_logged_in, except: [:show]
   skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
@@ -106,5 +107,4 @@ class UploadsController < ApplicationController
       tempfile.try(:close!) rescue nil
     end
   end
-
 end

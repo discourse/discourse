@@ -8,6 +8,4 @@ class ComposerMessagesController < ApplicationController
     finder = ComposerMessagesFinder.new(current_user, params.slice(:composerAction, :topic_id, :post_id))
     render_json_dump([finder.find].compact)
   end
-
 end
-

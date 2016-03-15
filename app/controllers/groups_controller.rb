@@ -144,5 +144,4 @@ class GroupsController < ApplicationController
       guardian.ensure_can_see!(group)
       group
     end
-
 end

@@ -500,6 +500,3 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
-
-BUNDLED WITH
-   1.11.2

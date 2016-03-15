@@ -5,6 +5,7 @@ require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 
 class TopicsController < ApplicationController
+
   before_filter :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
                                           :update,
@@ -28,7 +29,6 @@ class TopicsController < ApplicationController
                                           :archive_message,
                                           :move_to_inbox,
                                           :bookmark]
-
   before_filter :consider_user_for_promotion, only: :show
 
   skip_before_filter :check_xhr, only: [:show, :unsubscribe, :feed]
@@ -620,5 +620,4 @@ class TopicsController < ApplicationController
     params.require(:email)
     params[:email]
   end
-
 end

@@ -153,5 +153,4 @@ class StaticController < ApplicationController
     # TODO send_file chunks which kills caching, need to render text here
     send_file(path, opts)
   end
-
 end

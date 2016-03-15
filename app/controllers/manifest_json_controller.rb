@@ -1,4 +1,5 @@
 class ManifestJsonController < ApplicationController
+  
   layout false
   skip_before_filter :preload_json, :check_xhr
 

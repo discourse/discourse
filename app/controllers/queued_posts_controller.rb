@@ -53,5 +53,4 @@ class QueuedPostsController < ApplicationController
 
       base
     end
-
 end

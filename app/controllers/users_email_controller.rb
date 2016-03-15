@@ -41,6 +41,4 @@ class UsersEmailController < ApplicationController
 
     render layout: 'no_ember'
   end
-
 end
-

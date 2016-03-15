@@ -94,5 +94,4 @@ class SearchController < ApplicationController
       [context_obj, type_filter]
     end
   end
-
 end

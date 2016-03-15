@@ -158,5 +158,4 @@ class UserAvatarsController < ApplicationController
       allow_animation: SiteSetting.allow_animated_avatars,
     )
   end
-
 end

@@ -88,5 +88,4 @@ class Admin::SiteCustomizationsController < Admin::AdminController
     def enable_customization
       session[:disable_customization] = false
     end
-
 end

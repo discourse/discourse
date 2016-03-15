@@ -1,6 +1,7 @@
 require_dependency 'memory_diagnostics'
 
 class Admin::DiagnosticsController < Admin::AdminController
+
   layout false
   skip_before_filter :check_xhr
 
@@ -51,5 +52,4 @@ class Admin::DiagnosticsController < Admin::AdminController
       render text: "HEAP DUMP:\nnot supported", content_type: Mime::TEXT
     end
   end
-
 end

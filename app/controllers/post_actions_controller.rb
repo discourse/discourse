@@ -1,6 +1,7 @@
 require_dependency 'discourse'
 
 class PostActionsController < ApplicationController
+  
   before_filter :ensure_logged_in
   before_filter :fetch_post_from_params
   before_filter :fetch_post_action_type_id_from_params

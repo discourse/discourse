@@ -1,6 +1,7 @@
 require_dependency 'rate_limiter'
 
 class AboutController < ApplicationController
+  
   skip_before_filter :check_xhr, only: [:index]
   before_filter :ensure_logged_in, only: [:live_post_counts]
 

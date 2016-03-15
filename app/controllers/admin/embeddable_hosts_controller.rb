@@ -30,5 +30,4 @@ class Admin::EmbeddableHostsController < Admin::AdminController
         render_json_error(host)
       end
     end
-
 end

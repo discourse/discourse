@@ -51,5 +51,4 @@ class NotificationsController < ApplicationController
 
     render json: success_json
   end
-
 end

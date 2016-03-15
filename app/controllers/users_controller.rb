@@ -696,5 +696,4 @@ class UsersController < ApplicationController
         UserProfileView.add(user_profile_id, ip, user_id)
       end
     end
-
 end
