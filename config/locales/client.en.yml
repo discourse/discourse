@@ -2967,6 +2967,9 @@ en:
         admired:
           name: Admired
           description: Has a high ratio of liked posts
+        gives_back:
+          name: Gives Back
+          description: Has a high ratio of likes given to likes received
 
     google_search: |
       <h3>Search with Google</h3>
