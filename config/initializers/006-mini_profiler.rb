@@ -46,7 +46,7 @@ if defined?(Rack::MiniProfiler)
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
     path = env['PATH_INFO']
 
-    (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Nexus 7|Android/) &&
+    (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Android/) &&
     !skip.any?{|re| re =~ path}
   end
 

@@ -37,7 +37,7 @@ class LogAnalyzer
     end
 
     def is_mobile?
-      user_agent =~ /Mobile|webOS|Nexus 7/ && !(user_agent =~ /iPad/)
+      user_agent =~ /Mobile|webOS|Nexus (5|6|7)/ && !(user_agent =~ /iPad/)
     end
 
     def parsed_time
