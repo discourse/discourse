@@ -202,7 +202,7 @@ SQL
     SELECT us.user_id, current_timestamp AS granted_at
     FROM user_stats AS us
     INNER JOIN posts AS p ON us.user_id = p.user_id
-    WHERE us.post_count > 5
+    WHERE us.post_count > 500000
       AND p.like_count > 0
       AND (:backfill OR us.user_id IN (:user_ids))
     GROUP BY us.user_id, us.post_count
@@ -214,6 +214,7 @@ SQL
     FROM user_stats AS us
     INNER JOIN posts AS p ON us.user_id = p.user_id
     WHERE p.like_count > 0
+      AND us.post_count > 50000
       AND (:backfill OR us.user_id IN (:user_ids))
     GROUP BY us.user_id
     HAVING us.likes_given::float / count(*) > 5.0
