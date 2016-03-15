@@ -137,13 +137,12 @@
                 <h3>{{{view.suggestedTitle}}}</h3>
                 <div class="topics">
                   {{#if model.isPrivateMessage}}
-                  {{basic-topic-list
-                              hideCategory="true"
-                              showPosters="true"
-                              topics=model.details.suggested_topics
-                              postsAction="showTopicEntrance"}}
+                    {{basic-topic-list hideCategory="true"
+                                       showPosters="true"
+                                       topics=model.details.suggested_topics
+                                       postsAction="showTopicEntrance"}}
                   {{else}}
-                  {{basic-topic-list topics=model.details.suggested_topics postsAction="showTopicEntrance"}}
+                    {{basic-topic-list topics=model.details.suggested_topics postsAction="showTopicEntrance"}}
                   {{/if}}
                 </div>
                 <h3>{{{view.browseMoreMessage}}}</h3>
