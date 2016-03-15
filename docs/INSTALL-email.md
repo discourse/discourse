@@ -15,6 +15,12 @@ DISCOURSE_SMTP_USER_NAME: SMTP_Injection
 DISCOURSE_SMTP_PASSWORD: [Any API key with Send via SMTP permission]
 ```
 
+If not using **the exact** domain you verified (e.g. you're using a subdomain of it), you must change the default `from` email to match the sending domain. Uncomment (and update with your sending domain) this line in `app.yml`:
+
+```yml
+- exec: rails r "SiteSetting.notification_email='info@unconfigured.discourse.org'"
+```
+
 #### [SendGrid][sg] (12k emails/month)
 
 ```yml
