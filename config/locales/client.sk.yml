@@ -199,6 +199,8 @@ sk:
     more: "Viac"
     less: "Menej"
     never: "nikdy"
+    every_30_minutes: "každých 30 mintút"
+    every_hour: "každú hodinu"
     daily: "denne"
     weekly: "týždenne"
     every_two_weeks: "každé dva týždne"
@@ -294,7 +296,7 @@ sk:
         few: "Téma má <b>{{count}}</b> príspevky čakajúce na schválenie"
         other: "Téma má <b>{{count}}</b> príspevkov čakajúcich na schválenie"
       confirm: "Uložiť zmeny"
-      delete_prompt: "Ste si istý, že chcete vymazať <b>%{username}</b>? To odstráni všetky ich príspevky a zablokuje ich emailové a IP adresy."
+      delete_prompt: "Táto akcia zmaže všetky príspevky, zablokuje e-mail a IP adresu užívateľa <b>%{username}</b>. Ste si istý, že chcete zmazať tohto užívateľa? "
       approval:
         title: "Príspevok vyžaduje schválenie"
         description: "Váš príspevok sme obdžali, ale skôr než bude zverejnený musí byť schválený moderátorom. Prosíme o trpezlivosť."
@@ -463,9 +465,7 @@ sk:
         perm_denied_btn: "Prístup zamietnutý"
         perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
         disable: "Zakázať upozornenia"
-        currently_enabled: "(momentálne povolené)"
         enable: "Povoliť upozornenia"
-        currently_disabled: "(momentálne nepovolené)"
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom používanom prehliadači."
       dismiss_notifications: "Označiť všetky ako prečítané"
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
@@ -500,7 +500,6 @@ sk:
       muted_users: "Ignorovaný"
       muted_users_instructions: "Pozastaviť všetky notifikácie od týchto užívateľov."
       muted_topics_link: "Zobraziť umlčané témy"
-      automatically_unpin_topics: "Automaticky zrušiť pripnutie témy ak sa dočítate na koniec."
       staff_counters:
         flags_given: "nápomocné značky"
         flagged_posts: "označkované príspevky"
@@ -602,8 +601,17 @@ sk:
         title: "Odznak karty užívateľa"
       website: "Webová stránka"
       email_settings: "Email"
+      like_notification_frequency:
+        title: "Oznámiť pri lajknutí"
+        always: "Vždy"
+        never: "Nikdy"
+      email_previous_replies:
+        always: "vždy"
+        never: "nikdy"
       email_digests:
         title: "Ak to tu nenavštívim, pošlite mi emailový súhrn s novinkami:"
+        every_30_minutes: "každých 30 mintút"
+        every_hour: "každú hodinu"
         daily: "denne"
         every_three_days: "každé tri dni"
         weekly: "týždenne"
@@ -735,6 +743,7 @@ sk:
     read_only_mode:
       enabled: "Stránky sú v móde iba na čítanie. Prosím pokračujte v prezeraní, ale iné akcie, ako odpovedanie, dávanie páči sa mi alebo niektové ďalšie sú teraz vypnuté."
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."
+      logout_disabled: "Odhlásenie nie je možné, kým je stránka v móde iba na čítanie."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Začnime diskusiu!</a> Je tu <strong>%{currentTopics} / %{requiredTopics}</strong> tém a <strong>%{currentPosts} / %{requiredPosts}</strong> príspevkov. Noví návštevníci potrebujú mať témy, ktoré môžu čítať a na ktoré budú reagovať."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Začnime diskusiu!</a> Je tu <strong>%{currentTopics} / %{requiredTopics}</strong> tém. Noví návštevníci potrebujú mať témy, ktoré môžu čítať a na ktoré budú reagovať."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Začnime diskusiu!</a> Je tu <strong>%{currentPosts} / %{requiredPosts}</strong> príspevkov. Noví návštevníci potrebujú mať témy, ktoré môžu čítať a na ktoré budú reagovať."
@@ -764,8 +773,6 @@ sk:
       value_prop: "Keď si vytvoríte účet, zapamätáme si čo ste čítali, takže sa môžete vrátiť presne tam, kde ste prestali. Okrem toho dostanete upozornenie tu, aj na váš e-mail, vždy keď pribudnú nové príspevky. A môžete označiť príspevky ktoré sa vám páčia. :heartbeat:"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      description: "Je tu <b>{{replyCount}}</b> odpovedí."
-      description_time: "Je tu <b>{{replyCount}}</b> odpovedí s priemerným časom čítania <b>{{readingTime}} minút</b>."
       enable: 'Zhrnutie tejto témy'
       disable: 'Zobraziť všetky príspevky'
     deleted_filter:
@@ -831,6 +838,9 @@ sk:
       twitter:
         title: "pomocou Twitter účtu"
         message: "Prihlásenie pomocou Twitter účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
+      instagram:
+        title: "so službou Instagram"
+        message: "Prihlásenie pomocou Instagram účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
       facebook:
         title: "pomocou stránky Facebook"
         message: "Prihlásenie pomocou Facebook účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
@@ -1048,9 +1058,6 @@ sk:
         category: "V kategórii {{category}} nie je žiadna téma"
         top: "Nie sú žiadne populárne témy."
         search: "Nenašli sa žiadne výsledky"
-        educate:
-          new: '<p>Tu sa zobrazí Vaša nová téma.</p><p>V predvolenom nastavení sú témy považované za nové a zobrazia sa s príznakom <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nová</span> pokiaľ boli vytvorené za posledné 2 dni.</p><p>Môžte to zmeniť vo Vašich  <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
-          unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za nové a zobrazí sa počet neprečítaných<span class="badge new-posts badge-notification">1</span> Ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste nastavili na tému Sledovať alebo Pozorovať prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich  <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
       bottom:
         latest: "Nie je už viac najnovšich tém."
         hot: "Nie je už viac horúcich tém"
@@ -1435,18 +1442,6 @@ sk:
           bookmark: "Vrátiť záložku späť"
           like: "Zruš \"Páči sa\""
           vote: "Zruš hlasovanie"
-        people:
-          off_topic: "{{icons}}  to označíl ako mimo tému"
-          spam: "{{icons}}  to označíl ako spam"
-          spam_with_url: "{{icons}} to označíl <a href='{{postUrl}}'>ako spam</a>"
-          inappropriate: "{{icons}}  to označíl ako nevhodné"
-          notify_moderators: "{{icons}} upozornil moderátorov"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>upozornil moderátorov</a>"
-          notify_user: "{{icons}} poslal správu"
-          notify_user_with_url: "{{icons}} poslal <a href='{{postUrl}}'>správu </a>"
-          bookmark: "{{icons}}  si na to vytvoril záložku"
-          like: "Páčilo sa to {{icons}}"
-          vote: "{{icons}} hlasoval za"
         by_you:
           off_topic: "Označíli ste to ako mimo tému"
           spam: "Označíli ste to ako spam"
@@ -1615,7 +1610,6 @@ sk:
           description: "Nikdy nebudete informovaní o udalostiach v nových témach týchto kategórií. Tieto témy sa zároveň nebudú zobrazovať v zozname posledných udalostí."
     flagging:
       title: 'Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!'
-      private_reminder: 'Označenia sú súkromné viditeľné  <b>iba</b> pre personál'
       action: 'Označ príspevok'
       take_action: "Vykonať akciu"
       notify_action: 'Správa'
@@ -1627,7 +1621,6 @@ sk:
       submit_tooltip: "Odoslať súkromné označenie"
       take_action_tooltip: "Dosiahnuť okamžite limit označení, namiesto čakania na ďalšie označenia od komunity"
       cant: "Ľutujeme, ale tento príspevok sa teraz nedá označiť ."
-      notify_staff: 'Notifikovať redakciu'
       formatted_name:
         off_topic: "Je to mimo témy"
         inappropriate: "Je to nevhodné"
@@ -2023,11 +2016,9 @@ sk:
             is_disabled: "Obnovenie je vypnuté na Nastaveniach stránky."
             label: "Obnoviť"
             title: "Obnoviť zálohu"
-            confirm: "Ste si istý, že chcete obnoviť túto zálohu?"
           rollback:
             label: "Vrátiť späť"
             title: "Vrátiť databázu do predchádzajúceho funkčného stavu"
-            confirm: "Ste si istý, že chcete vrátiť databázu do predchádzajúceho funkčńeho stavu?"
       export_csv:
         user_archive_confirm: "Ste si istý, že si chcete stiahnut svoje príspevky?"
         success: "Export bol spustený, o jeho skončení budete informovaný správou."
@@ -2130,9 +2121,6 @@ sk:
           love:
             name: 'obľúbené'
             description: "Farba tlačidla \"Páči sa\""
-          wiki:
-            name: 'wiki'
-            description: "Základná farba pozadia wiki príspevkov."
       email:
         title: "Email"
         settings: "Nastavenia"
@@ -2169,6 +2157,8 @@ sk:
           subject: "Predmet"
           error: "Chyba"
           none: "Nenájdené žiadne ďalšie emaily."
+          modal:
+            date: "Dátum"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"

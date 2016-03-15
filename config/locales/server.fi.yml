@@ -30,6 +30,19 @@ fi:
   emails:
     incoming:
       default_subject: "Uusi sähköposti osoitteesta %{email}"
+      errors:
+        empty_email_error: "Näin käy, kun saapuneessa sähköpostissa ei lue mitään."
+        no_message_id_error: "Näin käy, kun viestin otsikkotiedoista puuttuu ID-tunniste (engl. message-ID)."
+        auto_generated_email_error: "Näin käy, kun viestin kiireellisyysluokitus (engl. precedence header) on joku seuraavista: list, junk, bulk tai auto_reply, tai kun joku muu otsikkotiedoista sisältää jonkun seuraavista: auto-submitted, auto-replied tai auto-generated."
+        no_body_detected_error: "Näin käy, kun leipätekstin poiminta epäonnistuu eikä liitteitä ole."
+        inactive_user_error: "Näin käy, kun lähettäjä ei ole aktiivinen."
+        blocked_user_error: "Näin käy, kun lähettäjä on estetty."
+        bad_destination_address: "Näin käy, kun viestin vastaanottaja/kopio/piilokopio -kenttien osoitteet eivät täsmää asetettuihin saapuvan sähköpostin osoitteiden kanssa."
+        strangers_not_allowed_error: "Näin käy, kun käyttäjä yrittää luoda ketjun alueelle, jonka jäsen ei ole."
+        insufficient_trust_level_error: "Näin käy, kun käyttäjä yrittää luoda ketjun alueelle, jonka vähimmäisluottamustasovaatimusta ei täytä."
+        reply_user_not_matching_error: "Näin käy, kun vastaus saapuu eri sähköpostiosoitteesta kuin mihin ilmoitus lähetettiin."
+        topic_not_found_error: "Näin käy, kun vastauksen saapuessa ketju, johon viesti oli tarkoitettu, on poistettu."
+        topic_closed_error: "Näin käy, kun vastauksen saapuessa ketju, johon viesti oli tarkoitettu, on suljettu."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -304,6 +317,7 @@ fi:
       self_parent: "Alue ei voi olla itsensä ylempi alue."
       depth: "Alue ei voi olla tytäralueen tytäralue"
       email_in_already_exist: "Sisääntulevan sähköpostin osoite '%{email_in}' on jo käytössä alueella '%{category_name}'."
+      invalid_email_in: "'%{email_in}' ei ole käypä sähköpostiosoite."
     cannot_delete:
       uncategorized: "Alueettomat-aluetta ei voi poistaa"
       has_subcategories: "Aluetta ei voi poistaa, koska sillä on sisempiä alueita."
@@ -326,15 +340,16 @@ fi:
     change_failed_explanation: "Yritit alentaa käyttäjän %{user_name} luottamustasolle '%{new_trust_level}'. Käyttäjän luottamustaso on jo valmiiksi '%{current_trust_level}'. %{user_name} jatkaa edelleen luottamustasolla '%{current_trust_level}' - jos haluat alentaa luottamustasoa, lukitse se ensin"
   rate_limiter:
     slow_down: "Olet tehnyt tämän toiminnon liian monta kertaa, yritä uudelleen myöhemmin."
-    too_many_requests: "Sille, kuinka useasti tämä toiminto voidaan suorittaa on määritelty päivittäinen raja. Odota %{time_left} ennen uudelleen kokeilemista."
+    too_many_requests: "Tämä toiminto voidaan suorittaa vain määrätyn monta kertaa päivässä. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
     by_type:
-      first_day_replies_per_day: "Olet lähettänyt enimmäismäärän viestejä, jonka uusi käyttäjä saa lähettää ensimmäisenä päivänään. Odota %{time_left}, ennen kuin yrität uudelleen."
-      first_day_topics_per_day: "Olet luonut enimmäismäärän ketjuja, jonka uusi käyttäjä saa lähettää ensimmäisenä päivänään. Odota %{time_left}, ennen kuin yrität uudelleen."
-      create_topic: "Yrität luoda ketjuja liian nopeasti. Odota %{time_left}, ennen kuin yrität uudelleen."
-      create_post: "Yrität vastata liian nopeasti. Odota %{time_left}, ennen kuin yrität uudelleen."
-      topics_per_day: "Olet luonut enimmäismäärän uusia ketjuja tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
-      pms_per_day: "Olet lähettänyt enimmäismäärän viestejä tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
-      create_like: "Olet tykännyt enimmäismäärän tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
+      first_day_replies_per_day: "Uusi käyttäjä ei voi ensimmäisenä päivänään kirjoittaa enempää viestejä. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
+      first_day_topics_per_day: "Uusi käyttäjä ei voi ensimmäisenä päivänään luoda enempää ketjuja. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
+      create_topic: "Yrität luoda ketjuja liian nopeasti. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
+      create_post: "Yrität vastata liian nopeasti. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
+      delete_post: "Poistat viestejä liian nopeasti. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
+      topics_per_day: "Olet luonut enimmäismäärän uusia ketjuja tälle päivälle. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
+      pms_per_day: "Olet lähettänyt enimmäismäärän viestejä tälle päivälle. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
+      create_like: "Olet tykännyt enimmäismäärän tälle päivälle. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
       create_bookmark: "Olet lisännyt enimmäismäärän kirjanmerkkejä tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
       edit_post: "Olet saavuttanut muokkausten enimmäismäärän tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
     hours:
@@ -806,6 +821,7 @@ fi:
     max_username_length: "Käyttäjänimen enimmäispituus merkeissä."
     reserved_usernames: "Käyttäjänimet, joiden rekisteröintiä ei sallita."
     min_password_length: "Salasanan vähimmäispituus."
+    min_admin_password_length: "Ylläpitäjän salasanan vähimmäispituus."
     block_common_passwords: "Älä salli salasanoja, jotka ovat 10 000 yleisimmän salasanan joukossa."
     enable_sso: "Ota käyttöön single sign on ulkopuolisen sivuston kautta (VAROITUS: ULKOPUOLISEN SIVUSTON TÄYTYY VALIDOIDA SÄHKÖPOSTIOSOITTEET!)"
     enable_sso_provider: "Ota käyttöön Discourse SSO provider -protokolla /session/sso_provider päätepisteessä, vaatii asetuksen sso_secret asettamista."
@@ -838,6 +854,7 @@ fi:
     backup_frequency: "Kuinka usein luodaan sivuston varmuuskopio, päivissä."
     enable_s3_backups: "Lataa varmuuskopiot S3:een niiden valmistuttua. TÄRKEÄÄ: edellyttää, että toimivat S3 kirjautumistiedot on syötetty asetuksiin."
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
+    s3_disable_cleanup: "Älä poista varmuuskopiota S3:sta, kun se poistetaan paikallisesti."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä on pois käytöstä, vain tietokanta varmuuskopioidaan."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
@@ -854,7 +871,7 @@ fi:
     max_flags_per_day: "Liputusten päivittäinen maksimäärä per käyttäjä."
     max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimäärä per käyttäjä."
     max_edits_per_day: "Muokkausten päivittäinen maksimäärä per käyttäjä."
-    max_topics_per_day: "Luotujen ketjujen päivittäinen maksimäärä per käyttäjä."
+    max_topics_per_day: "Luotujen ketjujen päivittäinen enimmäismäärä per käyttäjä."
     max_private_messages_per_day: "Viestien päivittäinen maksimäärä per käyttäjä"
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
@@ -1048,7 +1065,6 @@ fi:
     enable_emoji: "Ota emoji käyttöön"
     emoji_set: "Minkälaisa emojia haluaisit käyttää?"
     enforce_square_emoji: "Pakota neliö kuvasuhteeksi kaikille emojille."
-    approve_post_count: "Viestien lukumäärä, joka tarkastetaan uusilta käyttäjiltä"
     approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit tarkastetaan"
     notify_about_queued_posts_after: "Jos hyväksyntää odottavia viestejä on odottanut näin monta tuntia, lähetä sähköposti contact_email osoitteeseen. Aseta 0 ottaaksesi pois käytöstä."
     default_email_digest_frequency: "Kuinka usein käyttäjille lähetetään tiivistelmäsähköposti oletuksena."
@@ -1829,7 +1845,7 @@ fi:
 
         Klikkaa seuraavaa linkkiä asettaaksesi salasanan uudelle tunnuksellesi:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
+    authorize_email:
       subject_template: "[%{site_name}] Vahvista uusi sähköpostiosoite"
       text_body_template: |
         Vahvista uusi sähköpostiosoite sivustolle %{site_name} klikkaamalla alla olevaa linkkiä:

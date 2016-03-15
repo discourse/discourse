@@ -30,6 +30,9 @@ sk:
   emails:
     incoming:
       default_subject: "Prijatý email od %{email}"
+      errors:
+        inactive_user_error: "Nastane, keď odosielateľ nie je aktívny."
+        blocked_user_error: "Nastane, keď odosielateľ bol zablokovaný."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -820,7 +823,6 @@ sk:
     suppress_reply_directly_above: "Nezobrazovať rozbaľovacie tlačidlo v-odpovedi-na ak je len jedna odpoveď priamo nad príspevkom."
     suppress_reply_when_quoting: "Nezobrazovať rozbaľovacie tlačidlo v-odpovedi-na ak príspevok cituje odpoveď."
     max_reply_history: "Maximálny počet odpovedí ktoré sa zobrazia po rozbalení v-odpovedi-na"
-    experimental_reply_expansion: "Skryť prostredné odpovede v prípade rozbaľovania odpovede (experimentálne)"
     topics_per_period_in_top_summary: "Zobrazovaný počet najlepších tém vo východzom zozname najlepších tém."
     topics_per_period_in_top_page: "Zobrazovaný počet najlepších tém vzozname po rozbalení 'Ukáž viac' najlepších tém."
     redirect_users_to_top_page: "Automaticky presmeruj nových a dlho neprihlásených užívateľov na hlavnú stránku. "
@@ -847,6 +849,7 @@ sk:
     max_username_length: "Maximálna dĺžka používateľského mena v znakoch."
     reserved_usernames: "Používateľské mená, ktorých registrácia nie je povolená."
     min_password_length: "Minimálna dĺžka hesla."
+    min_admin_password_length: "Minimálna dĺžka hesla pre Administrátora."
     block_common_passwords: "Nepovoliť heslá, ktoré sú v zozname 10 000 najbežnejších hesiel."
     enable_sso: "Povolit prihlasovanie pomocou externej stránky (VAROVANIE: POUŽÍVATEĽSKÉ EAMILOVÉ ADRESY *MUSIA* BYŤ OVERENÉ EXTERNOU STRÁNKOU)"
     enable_sso_provider: "Implementácia protokolu Discourse SSO poskytovateľa na koncovom bode /session/sso_provider, vyžaduje nastavenie sso_secret"
@@ -1090,7 +1093,6 @@ sk:
     enable_emoji: "Zapnúť emoji"
     emoji_set: "Aké emoji chcete mať?"
     enforce_square_emoji: "Vynútiť švorcový pomer strán na všetkých emoji."
-    approve_post_count: "Koľko úvodných prispevkov od nového používateľa musí byť schválených"
     approve_unless_trust_level: "Príspevky používateľov pod touto úrovňou důvery musia byť schválené"
     notify_about_queued_posts_after: "Ak existujú príspevky, ktoré čakali na schválenie viac ako uvedený počet hodín, na kontaktný email bude zaslaná správa. Na vypnutie emailov nastavte 0."
     default_email_digest_frequency: "Ako často štandardne používatelia dostávajú sumárny email."
@@ -1138,7 +1140,6 @@ sk:
     moved_post: "%{display_username} presunul  Váš príspevok do %{link}"
     private_message: "%{display_username} vám poslal správu: %{link}"
     invited_to_private_message: "%{display_username} Vás pozval k správe: %{link}"
-    invited_to_topic: "%{display_username} Vás pozval k téme: %{link}"
     invitee_accepted: "%{display_username} prijal vaše pozvanie"
     linked: "%{display_username} odkazuje na Vás v %{link}"
     granted_badge: "Získali ste %{link}"
@@ -1243,8 +1244,6 @@ sk:
       characters: "musí obsahovať len čísla, písmená a podržníky"
       unique: "musí byť jedinečné"
       blank: "musí existovať"
-      must_begin_with_alphanumeric: "musí začínať písmenom, číslom alebo podržítkom"
-      must_end_with_alphanumeric: "musí končiť písmenom, číslom alebo podržítkom"
       must_not_contain_two_special_chars_in_seq: "nesmie obsahovať reťazec 2 alebo viac špeciálnych znakov po sebe (.-_)"
       must_not_end_with_confusing_suffix: "nesmie byť ukončené mätúcou príponou ako napríklad .json alebo .png a podobne."
     email:
@@ -1253,6 +1252,11 @@ sk:
     ip_address:
       blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
       max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
+  flags_reminder:
+    subject_template:
+      one: "1 značká čaká na zpracovanie"
+      few: "%{count} značky čakajú na zpracovanie"
+      other: "%{count} značiek čaká na zpracovanie"
   unsubscribe_mailer:
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
     text_body_template: |
@@ -1306,89 +1310,10 @@ sk:
       (Ak vyššie uvedený odkaz vyexpiroval, vyberte "Zabudol som heslo" keď sa prihlasujete pomocou svojej emailovej adresy.)
   test_mailer:
     subject_template: "[%{site_name}] Overenie doručiteľnosti emailu"
-    text_body_template: |
-      Toto je testovací email z
-
-      [**%{base_url}**][0]
-
-      Doručovanie emailov je komplikované. Nižšie je niekoľko dôležitých vecí, ktoré by ste mali skontrolovať ako prvé:
-
-      - *Uistite sa*, že ste pre oznamovací email v nastaveniach stránky nastavili správnu emailovú adresu Od. **Doména vašich emailov bude kontrolované voči doméne, ktorú ste nastavili v poli "od"**.
-
-      - Zistite, ako vo Vašom emailovom programe zobraziť zdojový text emailov. Tým môžete preskúmať emailové hlavičky. V Gmail je to voľba "show original" v položkovom zozname menu na pravej hornej strane každého emailu.
-
-      - **DÔLEŽITÉ:** Zadal Váš poskytovateľ pripojenia reverzné DNS záznamy, abe spojil doménové mená a IP adresy z ktorých odosielate emaily?? [Overte si Váš obrátený PTR záznam][2]. Je veľmi nepravdepodobné, že budé akýkoľvek z Vašich emailov doručený ak nie je správne zadaný obrátený DNS záznam.
-
-      - Je Váš doménový [SPF záznam][8] správny? [Overte si Váš SPF záznam][1]. Uvedomte si, že TXT je správny oficiálny typ pre SPF.
-
-      - Je Váš doménový [DKIM záznam][3] správny? Tot výrazne vylepší Vašu duručiteľnosť emailov. [Overte si Váš DKIM záznam][7].
-
-      - Ak prevádzkujete vlastný email server, uistite sa, že jeho IP adresy [nie sú na žiadnej emailovej čiernej listine][4]. Tiež sa uistite, pomocou HALO správy, že určite posiela správne adresy, ktoré sa prekladajú v DNS. Ak nie, tak to spôsobí, že Vaš email bude zamietnutý množstvom emailových služieb.
-
-      (*Jednoduchou* možnosťou je vytvorenie účtu zdarma na [Mandrill][md] alebo [Mailgun][mg] alebo [Mailjet][mj], ktoré majú štedré plány zdarma a pre malé komunity sú dostatočné. I tak budete musieť nastaviť záznamy SPF a DKIM vo Vašom DNS!)
-
-      Dúfame, že ste tento test doručiteľnosti obdržali v poriadku.!
-
-      Veľa šťastia,
-
-      Vaši priatelia z [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Nové verzia Discourse, dostupná aktualizácia"
-    text_body_template: |
-      Je dostupná nová verzia [Discourse](http://www.discourse.org).
-
-      Vaša verzia: %{installed_version}
-      Nová verzia: **%{new_version}**
-
-      Môžete:
-
-      - Si pozrieť, čo je nového pomocou [zoznamu zmien na GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Aktualizovať z Vášho prehliadača [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Navštíviť [meta.discourse.org](http://meta.discourse.org) a zistiť novinky, prehliadnuť si diskusiu alebo požiadať o podporu pre Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] aktualizácia dostupná"
-    text_body_template: |
-      Je dostupná nová verzia [Discourse](http://www.discourse.org).
-
-      Vaša verzia: %{installed_version}
-      Nová verzia: **%{new_version}**
-
-      Môžete:
-
-      - Si pozrieť, čo je nového pomocou [zoznamu zmien na GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Aktualizovať z Vášho prehliadača [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Navštíviť [meta.discourse.org](http://meta.discourse.org) a zistiť novinky, prehliadnuť si diskusiu alebo požiadať o podporu pre Discourse.
-
-      ### Poznámky k vydaniu
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      one: "Tieto príznaky boli odoslané pred viac ako 1hodinou."
-      few: "Tieto príznaky boli odoslané pred viac ako %{count} hodinami.."
-      other: "Tieto príznaky boli odoslané pred viac ako %{count} hodinami."
-    please_review: "Prosím o ich preverenie."
-    post_number: "príspevok"
-    how_to_disable: 'Interval zasielania upozornení emailom možete vypnúť alebo zmeniť v Nastaveniach pomocou možnosti "upozorniť o značke po".'
-    subject_template:
-      one: "1 značká čaká na zpracovanie"
-      few: "%{count} značky čakajú na zpracovanie"
-      other: "%{count} značiek čaká na zpracovanie"
   queued_posts_reminder:
     subject_template:
       one: "%{site_name}] 1 príspevok čaká na revíziu"
@@ -1651,8 +1576,8 @@ sk:
       title: "Odhlásiť"
       description: "Nezaujímajú Vás už tieto emaily? Žiadny problém! Pre okamžité odhlásenie kliknite nižšie: "
     reply_by_email: "[Pozrite tému](%{base_url}%{url}), alebo zareagujte odpoveďou na tento email"
-    visit_link_to_respond: "[Pozrite tému](%{base_url}%{url}) pre reakciu"
     reply_by_email_pm: "[Pozrite správu](%{base_url}%{url}), alebo zareagujte odpoveďou na tento email"
+    visit_link_to_respond: "[Pozrite tému](%{base_url}%{url}) pre reakciu"
     visit_link_to_respond_pm: "[Pozrite správu](%{base_url}%{url}) pre reakciu"
     posted_by: "Príspevok od %{username} dňa %{post_date}"
     user_invited_to_private_message_pm:
@@ -1660,7 +1585,6 @@ sk:
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} Vás pozval k téme '%{topic_title}'"
       text_body_template: |2
 
         %{username} Vás pozval do diskusie
@@ -1790,7 +1714,7 @@ sk:
 
         Kliknite na nasledujúci odkaz pre nastavenie hesla k Vášmu novému účtu:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
+    authorize_email:
       subject_template: "[%{site_name}] Potvrďte Vašu novú email adresu"
       text_body_template: |
         Potvrďte Vašu novú emailovú adresu pre %{site_name} kliknutím na nasledujúci odkaz:
@@ -1801,7 +1725,7 @@ sk:
     signup:
       subject_template: "[%{site_name}] Potvrďte Váš nový účet"
   page_not_found:
-    title: "Stránka ktorú požadujete neexistuje alebo je súkromná."
+    title: "Stránka neexistuje alebo je privátna."
     popular_topics: "Populárne"
     recent_topics: "Nedávne"
     see_more: "Viac"
