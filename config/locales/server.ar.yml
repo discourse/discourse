@@ -30,6 +30,14 @@ ar:
   emails:
     incoming:
       default_subject: "رسالة ورادة من %{email}"
+      errors:
+        inactive_user_error: "يحدث عندما يكون المرسل غير نشط "
+        blocked_user_error: "يحدث عندما يكون المرسل محظور"
+        strangers_not_allowed_error: "يحدث عندما يحاول المستخدم انشاء موضوع جديد في قسم هو ليس عضواً فيه"
+        insufficient_trust_level_error: "يحدث عندما يحاول مستخدم انشاء موضوع جديد في قسم و تكون درجه ثقه المستخدم اقل من القسم المطلوب "
+        reply_user_not_matching_error: "يحدث عندما ياتي الرد من عنوان بريد ألكتروني مختلف من الذي أرسل اليه ألاشعار "
+        topic_not_found_error: "يحدث عندما يصل رد لموضوع تم حذفه"
+        topic_closed_error: "يحدث عندما يصل رد لموضوع تم اغلاقه "
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -201,6 +209,7 @@ ar:
   rss_description:
     latest: "آخر المواضيع"
     hot: "عناوين ساخنة"
+    top: "أفضل المواضيع"
     posts: "اخر المشاركات "
   too_late_to_edit: "أُنشئ المنشور منذ فترة طويلة جدا، لذا تعديله أو حذفه لم يعد ممكنا."
   excerpt_image: "صورة"
@@ -351,6 +360,7 @@ ar:
       self_parent: "الفئة الفرعية لا يمكن ان تكون كالفئة الرئيسية."
       depth: "لا يمكنك تضمين فئة فرعية تحت فئة فرعية اخرى"
       email_in_already_exist: "البريد الإلكتروني الوارد '%{email_in}' مستخدم حاليا للفئة '%{category_name}'."
+      invalid_email_in: "'%{email_in}' ليس بريداً صالحاَ"
     cannot_delete:
       uncategorized: "لايمكن حذف الغير مصنف"
       has_subcategories: "لايمكن حذف هذه الفئة لأنها تحتوي على فئات فرعية "
@@ -362,6 +372,7 @@ ar:
         many: "لا يمكنك حذف هذه الفئة ﻷن لها مواضيع كثيرة.أقدم موضوع هو %{topic_link}."
         other: "لا يمكنك حذف هذه الفئة ﻷن لها %{count} مواضيع.أقدم موضوع هو %{topic_link}."
       topic_exists_no_oldest: "لايمكن حذف هذه الفئة لعدد المواضيع التي تحتويه. عدد المواضيع %{count}."
+    uncategorized_description: "المواضيع التي لا تحتاج للتصنيف , او لا تتناسق مع اي تصنفيات اخرى موجوده"
   trust_levels:
     newuser:
       title: "مستخدم جديد "
@@ -382,6 +393,7 @@ ar:
       first_day_topics_per_day: "لقد وصلت للعدد الأقصى للمواضيع التي يمكن  للعضو الجديد إنشائها في يومهم الأول. رجاء انتظر %{time_left} قبل المحاولة مجددا."
       create_topic: "أنت تنشأ مواضيع بسرعة عالية. رجاء انتظر %{time_left} قبل المحاولة مجددا."
       create_post: "أنت ترد بسرعة عالية. رجاء انتظر %{time_left} قبل المحاولة مجددا."
+      delete_post: "أنت تقوم بمسح المنشورات بسرعه عاليه . الرجاء الانتظار  %{time_left} قبل المحاوله مجدداً"
       topics_per_day: "لقد وصلت للعدد الأقصى للمواضيع الجديدة اليوم. رجاء انتظر %{time_left} قبل المحاولة مجددا."
       pms_per_day: "لقد وصلت للعدد الأقصى للرسائل اليوم. رجاء انتظر %{time_left} قبل المحاولة مجددا."
       create_like: "لقد وصلت للعدد الأقصى للإعجابات اليوم. رجاء انتظر %{time_left} قبل المحاولة مجددا."
@@ -845,7 +857,6 @@ ar:
     min_private_message_title_length: "الحد الأدنى المسموح به لطول عنوان لرسالة في الأحرف"
     min_search_term_length: "الحد الأدنى الصالح لطول مصطلح  في الأحرف"
     allow_uncategorized_topics: "اسمح بتصميم النقاشات من غير فئات.  تحذير: اذا كان هناك نقاشات غير مصنفه،  يجب عليك تصنيفها قبل اغلاق هذا "
-    uncategorized_description: "الوصف للفئة غير المصنفة. اتركه فارغا لعدم الوصف."
     allow_duplicate_topic_titles: "اسمح بالمواضيع المماثلة والعناوين المكررة."
     unique_posts_mins: "كمية الدقائق التي يمكن للعضو قبلها إنشاء مشاركة مع نفس المحتوى مجددا"
     educate_until_posts: "عندما يبدا المستخدم كتابه منشورهم الاول.، اظهر انبثاق  لوحه تعليمات المستخدم الجديد في المؤلف"
@@ -957,6 +968,7 @@ ar:
     max_username_length: "الحد الأعلى لطول اسم العضو في الأحرف."
     reserved_usernames: "الأعضاء الغير مسموح لها بالتسجيل."
     min_password_length: "أقل طول لكلمة المرور"
+    min_admin_password_length: "أقل طول مسموح به  للكلمه مرور  بالنسبه لاداري"
     block_common_passwords: "لا تسمح لكلمات المرور المسجلة في قائمة كلمات المرور الشائعةز"
     enable_sso: " اسمح تسجيل دخول واحد عبر موقع خارجي(تحذير :عنوان بريد المستخدم *يجب* ان يتم التحقق من صحته عبر الموقع الخارجي)"
     enable_sso_provider: "تنفيذ مزود بروتوكول Discourse SSO على نقطة نهاية /session/sso_provider, يتطلب sso_secret لتعينها"
@@ -977,6 +989,8 @@ ar:
     enable_twitter_logins: "تفعيل مصادقة تويتر , يطلب : twitter_consumer_key و twitter_consumer_secret"
     twitter_consumer_key: "مفتاح المستهلك للمصادقة تويتر، مسجلة في http://dev.twitter.com"
     twitter_consumer_secret: "مفتاح المستهلك للمصادقة تويتر، مسجلة في http://dev.twitter.com"
+    instagram_consumer_key: "مفتاح الاستخدام لتوثيق الانستغرام "
+    instagram_consumer_secret: "استخدم توثيق انستغرام السري "
     enable_facebook_logins: "تمكين مصادقة الفيسبوك، يتطلب facebook_app_id وfacebook_app_secret"
     facebook_app_id: "التطبيق معرف للمصادقة الفيسبوك، مسجلة في https://developers.facebook.com/apps"
     facebook_app_secret: "التطبيق معرف للمصادقة الفيسبوك، مسجلة في https://developers.facebook.com/apps"
@@ -1023,6 +1037,7 @@ ar:
     external_system_avatars_enabled: "استخدم خدمات الهه النظام الخارجي "
     external_system_avatars_url: "عنوان URL لخدمة الصور الرمزية النظام الخارجي. الاستعمال المسموح بها {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "عنوان رابط صورة ال اوبن جراف الثابتة"
+    allow_all_attachments_for_group_messages: "اسمح بجميع ملحقات البريد  للرسائل الجماعيه "
     enable_flash_video_onebox: "تمكين التضمين من swf  و FLV (أدوبي فلاش) وصلات في مربع واحد. تحذير: قد يعرض المخاطر الأمنية."
     default_invitee_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين."
     default_trust_level: "مستوى الثقة الإفتراضي (0-4) للأعضاء المدعوين.تحذير! التغيرات ستضعك تحت خطر البريد الغير هام."
@@ -1049,6 +1064,7 @@ ar:
     tl3_links_no_follow: "لا تحذف rel=nofollow من روابط المشاركة بواسطة أعضاء مستوى الثقة 3."
     min_trust_to_create_topic: "أدنى مستوى ثقة مطلوب لإنشاء موضوع جديد."
     min_trust_to_edit_wiki_post: "الحد الأدنى لمستوى الثقة المطلوب لتعديل مشاركة معلمة كويكي."
+    min_trust_to_allow_self_wiki: "الحد الادنى لمستوى ثقه المطلوب لأستحقاق مستخدم مشنور wiki"
     min_trust_to_send_messages: "المستوي الأدني المطلوب لإرسال رسالة خاصة"
     newuser_max_links: "عدد الروابط التي يمكن للمستخدم الجديد إضافتها للمشاركة."
     newuser_max_images: "عدد الصور التي يمكن للمستخدم الجديد إضافتها للمشاركة."
@@ -1112,6 +1128,8 @@ ar:
     strip_images_from_short_emails: "شريط الصور من البريد الإلكتروني لها حجم أقل من 2800 بايت"
     short_email_length: "طول أقصر بريد الكتروني بـ Bytes."
     display_name_on_email_from: "أعرض الاسماء كاملة في البريد الالكتروني من المجال."
+    unsubscribe_via_email: "أسمح للمستخدمين بالغاء الاشتراك لرسائل البريد الالكتروني عن طريق أرسال بريد الكتروني يحتوي على 'unsubscribe' في العنوان او محتوى البريد"
+    unsubscribe_via_email_footer: "أرفق رابط الغاء الاشتراك الى اخر البريد المرسل "
     delete_email_logs_after_days: "حذف سجل البريد بعد (ن) يوم. 0 لحفظ السجل للابد"
     pop3_polling_enabled: "تصويت عبرPOP3 لردود البريد الإلكتروني."
     pop3_polling_ssl: "أستخدم SSL عند الأتصال بمخدم POP3.(مُستحسن)"
@@ -1139,7 +1157,6 @@ ar:
     automatically_download_gravatars: "تحميل Gravatars للأعضاء عند تغيرهم البريد الإلكتروني الخاص بهم أو عند إنشائهم لحساب آخر."
     digest_topics: "العدد الاقصي من المواضيع لعرضها في مضمون البريد الإلكتروني "
     digest_min_excerpt_length: "الحد الادني من مشاركه مقتطفات خلاصه البريد الاكتروني,في الشخصيات"
-    delete_digest_email_after_days: "احفظ خلاصه الرسائل الالكترونيه للمستخدمين الذين لم تتم رويتهم في الموقع لاكثر من (N) ايام"
     disable_digest_emails: "عطل ملخص رسائل البريد الإلكتروني لكل الأعضاء."
     detect_custom_avatars: "سواء او لا تفقد اذا كان المستخدم قام بتحميل صور شخصيه مخصصه"
     max_daily_gravatar_crawls: "العدد الاقصي من مرات Dicourse  سوف يتفقد Gravatar  لصور رمزيه مخصصه في اليوم"
@@ -1151,6 +1168,7 @@ ar:
     anonymous_account_duration_minutes: "للحمايه الهويه اصنع حساب مجهول كل n دقائق لكل مستخدم.\nمثال:اذا ضبط 600 , بعد انقضي 600 دقيقه من اخر منشور و غير المستخدم  للمجهول.تم انشاء حساب مجهول."
     hide_user_profiles_from_public: "قم بإلغاء الصفحة الشخصية و حقيبة المستخدم و بطاقة المستخدم للمستخدمين المجهولين"
     allow_profile_backgrounds: "اسمح للأعضاء برفع خلفيات ملف التعريف."
+    sequential_replies_threshold: "عدد المشاركات التي يجب على المستخدم انشاءها في عمود في الموضوع الواحد قبل ان يتم تنبيه بكثره الردود المتتاليه ."
     enable_mobile_theme: "اجهزه الموبايل تستخدم ثيم مناسب للجوال,امكانيه التحويل للموقع الكامل .الغي هذا اذا اردت استخدام انماط سريعه الاستجابه"
     dominating_topic_minimum_percent: "ما هي النسبه المئويه للمشاركات التي يجب علي المستخدم عملها في الموضوع قبل تلقيه لتنبيه عن خروجه لنطاق الموضوع"
     disable_avatar_education_message: "عطل الرسالة التعليمية لتغيير الصورة الرمزية."
@@ -1160,6 +1178,7 @@ ar:
     global_notice: "اعرض تنبيه, شعار عام طارئ ملاحظه لكل الزوار, غير الفراغ لاخفاء(HTML مسموح)"
     disable_edit_notifications: "لتعطيل تحرير الاشعارات بواسطة العضو النظام عندما يكون نشطاً 'download_remote_images_to_local'."
     automatically_unpin_topics: "تلقائياً قم بنزع الدبوس عندا يصل المستخدم إلي نهاية الصفحه"
+    read_time_word_count: "عداد الكلمات  للدقيقه لحساب الوقت المقدر للقراءه "
     full_name_required: "الإسم الكامل مطلوب وهو ضروري لإكمال الحساب "
     enable_names: "عرض الاسم الكامل للعضو , بطاقة العضو , ورسائل البريد الالكتروني , تعطيل عرض الاسم في اي مكان "
     display_name_on_posts: "عرض الاسم الكامل للعضو على التعليقات بالاضافة الى @username."
@@ -1188,7 +1207,7 @@ ar:
     enable_emoji: "تمكين الرموز التعبيرية "
     emoji_set: "كيف تريد أن تكون الرموز التعبيرية الخاصة بك؟"
     enforce_square_emoji: "أجبر نسبة جانب المربع لكل الرموز التعبيرية."
-    approve_post_count: "كمية مشاركات العضو الجديد التي يجب أن تتم الموافقة عليها"
+    approve_post_count: "عدد المنشورات للمستخدم الجديد او الاساسي يجب ان تتم الموافقه عليه "
     approve_unless_trust_level: "مشاركات للأعضاء أدنى من مستوى الثقة هذا يجب أن تتم الموافقة عليها."
     notify_about_queued_posts_after: "اذا كان هناك مشاركات تنتظر ليتم معينتها لاكثر من هذه الساعات, سوف يتم ارسال بريد الكتروني لبريد الاتصال . اختر 0 لتعطيل هذه الرسائل"
     default_email_digest_frequency: "عدد المرات التي يتلقى الأعضاء فيها ملخص لبريدهم الإلكتروني إفتراضيا."
@@ -1196,6 +1215,7 @@ ar:
     default_email_direct: "ارسل بريد الكتروني عندما يقوم احدهم بالرد/الاقتباس الي/ذكر او دعوه مستخدم افتراضيا"
     default_email_mailing_list_mode: "ارسل بريد إلكتروني لكل مشاركة جديدة افتراضيا."
     default_email_always: "أرسل إشعار بريد إلكتروني حتى عندما يكون العضو متاح إفتراضيا."
+    default_email_previous_replies: "ارفق الردود السابقه في رسائل البريد افتراضياً"
     default_other_new_topic_duration_minutes: "الشروط العالمية الافتراضية لموضوع يعتبر جديد."
     default_other_auto_track_topics_after_msecs: "الوقت العالمي الافتراضي قبل الموضوع متعقب آليا."
     default_other_external_links_in_new_tab: "أفتح الروابط الخارجية في تبويب جديد إفتراضيا."
@@ -1203,6 +1223,7 @@ ar:
     default_other_dynamic_favicon: "إعرض عدد المواضيع الجديدة/الحديثة في أيقونة المتصفح إفتراضيا."
     default_other_disable_jump_reply: "لا تتجاوز إلى مشاركة الضو بعد ردهم إفتراضيا."
     default_other_edit_history_public: "أنشئ مشاركة المراجعات العامة إفتراضيا."
+    default_other_like_notification_frequency: "أشعر المستخدمين بالاستحسان على المشورات افتراضياً"
     default_topics_automatic_unpin: "تلقائياً قم إزالة تثبيت المواضيع عندما يصل العضو إلى الأسفل \"إفتراضيا\"."
     default_categories_watching: "قائمة الفئات التي تشاهد إفتراضيا."
     default_categories_tracking: "قائمة الفئات التي تتابع إفتراضيا."
@@ -1232,7 +1253,6 @@ ar:
     moved_post: "%{display_username} نقل مشاركتك إلى %{link}"
     private_message: "%{display_username} أرسل لك رسالة: %{link}"
     invited_to_private_message: "%{display_username} دعاك لرسالة: %{link}"
-    invited_to_topic: "%{display_username} دعاك لموضوع: %{link}"
     invitee_accepted: "%{display_username} قبل دعوتك"
     linked: "%{display_username} ربطك في %{link}"
     granted_badge: "كسبت %{link}"
@@ -1361,15 +1381,25 @@ ar:
       characters: "يجب ان تحتوي الارقام والاحرف الصغيرة فقط "
       unique: "يجب أن يكون فريدا"
       blank: "يجب أن يكون موجود"
-      must_begin_with_alphanumeric: "يجب البدء بحرف أو رقم أو _"
-      must_end_with_alphanumeric: "يجب الإنتهاء بحرف أو رقم أو _"
+      must_end_with_alphanumeric: "يجب أن ينتهي برقم أو حرف "
       must_not_contain_two_special_chars_in_seq: "يجب أن لا يحتوي على تسلسل من 2 أو رموز خاصة (.-_)"
+      must_not_end_with_confusing_suffix: "يجب أن لا ينتهي ب صيغ معقده كــ .json  أو .png"
     email:
       not_allowed: "بريد الكتروني غير مسموح . يرجى استخدام بريد الكتروني آخر "
       blocked: "غير مسموح"
     ip_address:
       blocked: "لا يُسمح بتسجيل جديد من عنوان ip الخاص بك "
       max_new_accounts_per_registration_ip: "وفقًا لعنوان IP الخاص بك فقد تم حظر التسجيل (لقد وصلت للحد الأقصى المسموح به) تواصل مع أحد المشرفين."
+  flags_reminder:
+    subject_template:
+      zero: "لا يوجد تبليغات تنتظر التعامل معها"
+      one: "تبليغ 1 ينتظر التعامل معها"
+      two: "تبليغان ينتظران التعامل معها"
+      few: "%{count} تبليغات تنتظر التعامل معها"
+      many: "%{count} تبليغات تنتظر التعامل معها"
+      other: "%{count} تبليغات تنتظر التعامل معها"
+  unsubscribe_mailer:
+    subject_template: "اكد انك لا تريد استقبال بريد الكتروني من %{site_title} بعد ألان"
   invite_mailer:
     subject_template: "%{invitee_name} دعاك إلى '%{topic_title}' على %{site_domain_name}"
     text_body_template: |
@@ -1413,95 +1443,10 @@ ar:
       (إذا انتهت مدة صلاحية الرابط أعلاه، اختر "نسيت كلمة المرور" عند تسجيل الدخول مع عنوان البريد الإلكتروني الخاص بك.)
   test_mailer:
     subject_template: "[%{site_name}] بريد الكتروني بهدف الاختبار"
-    text_body_template: |
-      هذا بريد إختبار إلكتروني من
-
-      [**%{base_url}**][0]
-
-      أهداف البريد معقدة. هنا بعض الأشياء المهمة يجب عليك مراجعتها أولا:
-
-      - كن *متأكد* لوضع `إشعارات البريد الإلكتروني` من: عنوان صحيح في إعدادات موقعك. **النطاق المخصص في أو "من" عنوان رسائل البريد الإلكتروني التي أرسلتها سيتم التحقق تجاه مجال بريدك الإلكتروني**.
-
-      - معرفة كيفية عرض المصدر الخام للبريد الإلكتروني في عميل بريدك , لذا يمكنك البحث في رؤوس صفحات البريد الإلكتروني للأدلة المهمة. في Gmail, خيار "إظهار الأصلية"  في القائمة المنسدلة في أعلى اليمين لكل بريد إلكتروني.
-
-      - **مهم جدا:** هل الـ ISP الخاص بك له سجل DNS عكسي مدخل لربط أسماء النطاقات وعناوين IP التي أرسلت بريد منها؟ [اختبر سجل PTR العكسي][2] هنا. إذا كان ISP الخاص بك لم يدخل سجل مؤشر DNS العكسي المناسب, من غير المحتمل جدا تسليم أي من بريدك الإلكتروني.
-
-      - هل مجالك لـ[سجل SPF][8] صحيح؟ [أختبر سجل SPF الخاص بك][1] هنا. لاحظ أن TXT هو نوع سجل رسمي صحيح لـSPF.
-
-      - Iهل مجالك لـ [DKIM سجل][3] صحيح؟ هذا سيحسن بشكل كبير أهداف البريد الإلكتروني. [أختبر سجل DKIM الخاص بك][7] هنا.
-
-      - إذا شغلت خادم البريد الخاص بك, راجع للتأكد من IPs لخادم بريدك [ليست في أي قوائم سوداء][4]. أيضا تحقق من إرسال تأكيد مضيف كامل التأهيل  الذي يحل في  DNS في رسالته الترحيبية. إذا كان لا, سيسبب رفض بريدك الإلكتروني من عدة خدمات.
-
-      (الطريقة *السهلة* هي إنشاء حساب مجاني في [Mandrill][md] أو [Mailgun][mg] أو [Mailjet][mj], التي لديها عطاء مجاني والبريد مجاني والخطط وستكون جيدة للإتصالات القصيرة. لا تزال بحاجة لإعداد سجلات SPF و DKIM  في DNS الخاص بك, رغم ذلك!)
-
-      نأمل منك أن يلقي إختبار أهداف البريد الإلكتروني الموافقة!
-
-      حظ جيد,
-
-      أصدقائك في [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] يوجد اصدار جديد , تحديث متوفر"
-    text_body_template: |
-      نسخة جديدة من [Discourse](http://www.discourse.org) متوفرة.
-
-      نسختك: %{installed_version}
-      النسخة الجديدة: **%{new_version}**
-
-      ربما تريد أن:
-
-      - ما الجدي في [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - التحديث من متصفحك من [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - زيارة [meta.discourse.org](http://meta.discourse.org) للأخبار, والمناقشة, ودعم Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] التحديث متوفر"
-    text_body_template: |
-      نسخة جديدة من [Discourse](http://www.discourse.org) متوفرة.
-
-      نسختك: %{installed_version}
-      النسخة الجديدة: **%{new_version}**
-
-      ربما تريد أن:
-
-      - ما الجدي في [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - التحديث من متصفحك من [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - زيارة [meta.discourse.org](http://meta.discourse.org) للأخبار, والمناقشة, ودعم Discourse.
-
-      ### ملاحظات الإصدارة
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      zero: "لم ترسل تبليغات خلال الساعات الماضية."
-      one: "هذه التبليغات أرسلت خلال ساعة مضت."
-      two: "هذه التبليغات أرسلت خلال ساعتان مضتا."
-      few: "هذه التبليغات أرسلت خلال %{count} ساعات مضت."
-      many: "هذه التبليغات أرسلت خلال %{count} ساعات مضت."
-      other: "هذه التبليغات أرسلت خلال %{count} ساعات مضت."
-    please_review: "يرجى مراجعة ذلك "
-    post_number: "مشاركة"
-    how_to_disable: 'يمكنك تعطيل أو تغيير تكرار تذكير البريد الإلكتروني عبر "إشعار حول الإعلامات بعد" الإعدادات.'
-    subject_template:
-      zero: "لا يوجد تبليغات تنتظر التعامل معها"
-      one: "تبليغ 1 ينتظر التعامل معها"
-      two: "تبليغان ينتظران التعامل معها"
-      few: "%{count} تبليغات تنتظر التعامل معها"
-      many: "%{count} تبليغات تنتظر التعامل معها"
-      other: "%{count} تبليغات تنتظر التعامل معها"
   queued_posts_reminder:
     subject_template:
       zero: "[%{site_name}] %{count} المشاركات التي تنتظر معينتها"
@@ -1622,7 +1567,6 @@ ar:
       text_body_template: "نحن آسفون، لكنه فشل تصدير البيانات الخاصة بك. يرجى التحقق من السجلات أو اتصل بأحد المشرفين."
     email_reject_no_account:
       subject_template: "[%{site_name}] بريد الكتروني -- حساب غير معروف"
-      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nليس هنالك حساب عضو يمتلك هذا البريد الالكتروني. حاول أن ترسل من بريد الكتروني مختلف، أو أتصل بـ أحد المشرفين.\n\n"
     email_reject_empty:
       subject_template: "[%{site_name}] بريد الكتروني -- بدون محتوى"
       text_body_template: |2
@@ -1637,24 +1581,23 @@ ar:
     email_reject_invalid_access:
       subject_template: "[%{site_name}] بريد الكتروني -- غير صالح"
       text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nحسابك لا يمتلك الصلاحيات لنشر مواضيع جديدة في تلك الفئة. إذا كنت تعتقد أن هذا الخطأ، اتصل بالاعضاء  المشرفين.\n"
+    email_reject_strangers_not_allowed:
+      subject_template: "مشاكل البريد ألالكتروني [%{site_name}] -- دخول غير صالح"
+    email_reject_invalid_post:
+      subject_template: "مشاكل البريد ألالكتروني [%{site_name}] -- مشكله في النشر "
+    email_reject_invalid_post_specified:
+      subject_template: "مشاكل البريد ألالكتروني [%{site_name}] -- مشكله في النشر "
     email_reject_reply_key:
       subject_template: "[%{site_name}] بريد الكتروني -- مفتاح رد غير معروف"
-      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nمفتاح الرد المُقدم غير صالح أو غير معروف، لذلك نحن لا نعرف ما هو هذا البريد الإلكتروني للرد عليه. أتصل بالأعضاء المشرفين.\n"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] بريد الكتروني -- موضوع غير موجود"
-      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nالموضوع الذي تريد الرد عليه لم يعد موجودا، وربما تم حذفه؟ إذا كنت تعتقد أن هذا خطأ، اتصل أحد الاعضاء المشرفين. \n"
     email_reject_topic_closed:
       subject_template: "[%{site_name}] بريد الكتروني -- موضوع مغلق"
       text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nالموضوع الذي تريد الرد عليه مغلق حاليا والتي لم تعد تقبل ردود. إذا كنت تعتقد أن هذا خطأ، اتصل أحد الأعضاء المشرفين.\n"
     email_reject_auto_generated:
       subject_template: "[%{site_name}] بريد الكتروني -- توليد رد آلي"
-      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\n بريدك الإلكتروني عُلّم كـ\"مولد تلقائي\"، وهو ما لا يمكن قبوله. إذا كنت تعتقد أن هذا خطأ، اتصل أحد الاعضاء المشرفين.\n"
     email_error_notification:
       subject_template: "[%{site_name}] بريد الكتروني -- خطأ مصادقة POP"
-      text_body_template: |
-        خطأ في المصادقة عند استطلاع الرسائل من خادم POP .
-
-        من فضلك تأكد من تكوين إعدادات خادم POP من[إعدادات الموقع](%{base_url}/admin/site_settings/category/email).
     too_many_spam_flags:
       subject_template: "حساب جديد مقفول"
       text_body_template: |
@@ -1736,7 +1679,6 @@ ar:
 
         يرجى زيارة هذا الرابط لعرض الرسالة: %{base_url}%{url}
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username}  دعوتك للموضوع '%{topic_title}'"
       text_body_template: |2
 
         %{username} دعوتك للنقاش
@@ -1874,7 +1816,7 @@ ar:
 
         انقر على الرابط التالي لاختيار كلمة مرور لحسابك الجديد:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
+    authorize_email:
       subject_template: "[%{site_name}] تأكيد البريد الإلكتروني الجديد "
       text_body_template: |
         قم بتاكيد عنوان بريدك الالكتروني لـ  %{site_name}  عن طريق الضغط علي الرابط التالي:
@@ -1906,7 +1848,6 @@ ar:
 
         إذا كان الرابط أعلاه غير قابل للنقر، حاول نسخه ولصقه في شريط العناوين في متصفح الويب عندك.
   page_not_found:
-    title: "الصفحة المطلوبة غير موجودة او ليس لديك صلاحيات لرؤيتها "
     popular_topics: "شعبي "
     recent_topics: "الأخيرة"
     see_more: "المزيد"

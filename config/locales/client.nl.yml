@@ -179,6 +179,8 @@ nl:
     more: "Meer"
     less: "Minder"
     never: "nooit"
+    every_30_minutes: "elke dertig minuten"
+    every_hour: "elk uur"
     daily: "dagelijks"
     weekly: "wekelijks"
     every_two_weeks: "elke twee weken"
@@ -468,7 +470,7 @@ nl:
       muted_users: "Negeren"
       muted_users_instructions: "Negeer alle meldingen van deze leden."
       muted_topics_link: "Toon gedempte topics."
-      automatically_unpin_topics: "ontspelt onderwerp automatische wanneer de bodem is bereikt."
+      automatically_unpin_topics: "Topics automatisch lospinnen als ik het laatste bericht bereik."
       staff_counters:
         flags_given: "behulpzame markeringen"
         flagged_posts: "gemarkeerde berichten"
@@ -569,6 +571,11 @@ nl:
         title: "Badge van gebruikersprofiel"
       website: "Website"
       email_settings: "E-mail"
+      like_notification_frequency:
+        always: "Altijd"
+        first_time_and_daily: "De eerste keer dat iemand een bericht leuk vond en dagelijks"
+        first_time: "De eerste keer dat iemand een bericht leuk vond"
+        never: "Nooit"
       email_previous_replies:
         title: "Voeg de vorige reacties bij onderaan de emails"
         unless_emailed: "tenzij eerder verzonden"
@@ -576,6 +583,8 @@ nl:
         never: "nooit"
       email_digests:
         title: "Stuur me een mail met de laatste updates wanneer ik de site niet bezoek:"
+        every_30_minutes: "elke dertig minuten"
+        every_hour: "elk uur"
         daily: "dagelijks"
         every_three_days: "elke drie dagen"
         weekly: "wekelijks"
@@ -707,6 +716,7 @@ nl:
     read_only_mode:
       enabled: "De site is in alleen lezen modus. Interactie is niet mogelijk."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
+      logout_disabled: "Uitloggen is uitgeschakeld als de site op alleen lezen staat."
     too_few_topics_and_posts_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     too_few_topics_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     too_few_posts_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a>. Er zijn al <strong>%{currentPosts} / %{requiredPosts}</strong> posts Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
@@ -802,6 +812,9 @@ nl:
       twitter:
         title: "met Twitter"
         message: "Inloggen met een Twitteraccount (zorg ervoor dat je popup blocker uit staat)"
+      instagram:
+        title: "met Instagram"
+        message: "Inloggen met een Instagram-account (zorg ervoor dat je pop-upblocker uitstaat)."
       facebook:
         title: "met Facebook"
         message: "Inloggen met een Facebookaccount (zorg ervoor dat je popup blocker uit staat)"
@@ -1542,7 +1555,6 @@ nl:
           description: "Je zult nooit op de hoogte worden gebracht over nieuwe topics in deze categorie, en ze zullen niet verschijnen in Nieuwste."
     flagging:
       title: 'Bedankt voor het helpen beleefd houden van onze gemeenschap!'
-      private_reminder: 'vlaggen zijn privé, <b>alleen</b> zichtbaar voor de staf'
       action: 'Meld bericht'
       take_action: "Onderneem actie"
       notify_action: 'Bericht'
@@ -1554,7 +1566,6 @@ nl:
       submit_tooltip: "Verstuur de privé markering"
       take_action_tooltip: "Bereik de vlag drempel direct, in plaats van het wachten op meer gemeenschapsvlaggen"
       cant: "Sorry, je kan dit bericht momenteel niet melden."
-      notify_staff: 'Licht de staf in'
       formatted_name:
         off_topic: "Het is off topic"
         inappropriate: "Het is ongepast"
