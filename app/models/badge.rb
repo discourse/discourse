@@ -26,6 +26,7 @@ class Badge < ActiveRecord::Base
   PopularLink = 28
   HotLink = 29
   FamousLink = 30
+  Admired = 31
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -193,6 +194,17 @@ SQL
        AND (:backfill OR u.id IN (:user_ids))
      GROUP BY u.id
      HAVING COUNT(p.id) > 0
+SQL
+
+    Admired = <<-SQL
+    SELECT us.user_id, current_timestamp AS granted_at
+    FROM user_stats AS us
+    INNER JOIN posts AS p ON us.user_id = p.user_id
+    WHERE us.post_count > 5
+      AND p.like_count > 0
+      AND (:backfill OR us.user_id IN (:user_ids))
+    GROUP BY us.user_id, us.post_count
+    HAVING count(*)::float / us.post_count > 0.75
 SQL
 
     def self.invite_badge(count,trust_level)

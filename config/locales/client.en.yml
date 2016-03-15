@@ -2964,6 +2964,9 @@ en:
         famous_link:
           name: Famous Link
           description: Posted an external link with at least 1000 clicks
+        admired:
+          name: Admired
+          description: Has a high ratio of liked posts
 
     google_search: |
       <h3>Search with Google</h3>
