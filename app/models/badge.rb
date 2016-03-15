@@ -28,6 +28,7 @@ class Badge < ActiveRecord::Base
   FamousLink = 30
   Admired = 31
   GivesBack = 32
+  Generous = 33
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -216,6 +217,14 @@ SQL
       AND (:backfill OR us.user_id IN (:user_ids))
     GROUP BY us.user_id
     HAVING us.likes_given::float / count(*) > 5.0
+SQL
+
+    Generous = <<-SQL
+    SELECT uh.target_user_id AS user_id, MIN(uh.created_at) AS granted_at
+    FROM user_histories AS uh
+    WHERE uh.action = #{UserHistory.actions[:rate_limited_like]}
+      AND (:backfill OR uh.target_user_id IN (:user_ids))
+    GROUP BY uh.target_user_id
 SQL
 
     def self.invite_badge(count,trust_level)

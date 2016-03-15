@@ -94,10 +94,6 @@ describe RateLimiter do
       end
 
     end
-
   end
-
-
-
 
 end
