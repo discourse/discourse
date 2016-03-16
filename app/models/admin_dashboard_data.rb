@@ -63,7 +63,7 @@ class AdminDashboardData
                       :send_consumer_email_check, :title_check,
                       :site_description_check, :site_contact_username_check,
                       :notification_email_check, :subfolder_ends_in_slash_check,
-                      :pop3_polling_configuration
+                      :pop3_polling_configuration, :email_polling_errored_recently
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -208,6 +208,11 @@ class AdminDashboardData
 
   def pop3_polling_configuration
     POP3PollingEnabledSettingValidator.new.error_message if SiteSetting.pop3_polling_enabled
+  end
+
+  def email_polling_errored_recently
+    errors = Jobs::PollMailbox.errors_in_past_24_hours
+    I18n.t('dashboard.email_polling_errored_recently', count: errors) if errors > 0
   end
 
 end

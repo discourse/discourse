@@ -80,6 +80,7 @@ module Jobs
 
         client_message
       else
+        mark_as_errored!
         Discourse.handle_job_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))
       end
     end
@@ -94,7 +95,20 @@ module Jobs
         end
       end
     rescue Net::POPAuthenticationError => e
+      mark_as_errored!
       Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming email"))
+    end
+
+    POLL_MAILBOX_ERRORS_KEY ||= "poll_mailbox_errors".freeze
+
+    def self.errors_in_past_24_hours
+      $redis.zremrangebyscore(POLL_MAILBOX_ERRORS_KEY, 0, 24.hours.ago.to_i)
+      $redis.zcard(POLL_MAILBOX_ERRORS_KEY).to_i
+    end
+
+    def mark_as_errored!
+      now = Time.now.to_i
+      $redis.zadd(POLL_MAILBOX_ERRORS_KEY, now, now.to_s)
     end
 
   end
