@@ -1,6 +1,6 @@
 module MobileDetection
   def self.mobile_device?(user_agent)
-    user_agent =~ /Mobile|webOS|Nexus (5|6|7)/ && !(user_agent =~ /iPad/)
+    user_agent =~ /Mobile|Android|webOS/ && !(user_agent =~ /iPad|Nexus (9|10)/)
   end
 
   # we need this as a reusable chunk that is called from the cache
