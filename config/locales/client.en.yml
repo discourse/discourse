@@ -2973,9 +2973,6 @@ en:
         admired:
           name: Admired
           description: Has received at least 5 likes on 300 posts
-        gives_back:
-          name: Gives Back
-          description: Has a high ratio of likes given to likes received
         out_of_love:
           name: Out of Love
           description: Used the maximum amount of likes in a day
@@ -2985,6 +2982,15 @@ en:
         crazy_in_love:
           name: Crazy in Love
           description: Used the maximum amount of likes in a day 20 times
+        thank_you:
+          name: Thank You
+          description: Has at least 6 liked posts and a high like ratio
+        gives_back:
+          name: Gives Back
+          description: Has at least 100 liked posts and a very high like ratio
+        empathetic:
+          name: Empathetic
+          description: Has at least 500 liked posts and a superlative like ratio
 
     google_search: |
       <h3>Search with Google</h3>

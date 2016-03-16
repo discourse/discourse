@@ -20,19 +20,26 @@ class Badge < ActiveRecord::Base
   GoodShare = 22
   GreatShare = 23
   OneYearAnniversary = 24
+
   Promoter = 25
   Campaigner = 26
   Champion = 27
+
   PopularLink = 28
   HotLink = 29
   FamousLink = 30
+
   Appreciated = 36
   Respected = 37
   Admired = 31
-  GivesBack = 32
+
   OutOfLove = 33
   MyCupRunnethOver = 34
   CrazyInLove = 35
+
+  ThankYou = 38
+  GivesBack = 32
+  Empathetic = 39
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -202,17 +209,6 @@ SQL
      HAVING COUNT(p.id) > 0
 SQL
 
-    GivesBack = <<-SQL
-    SELECT us.user_id, current_timestamp AS granted_at
-    FROM user_stats AS us
-    INNER JOIN posts AS p ON us.user_id = p.user_id
-    WHERE p.like_count > 0
-      AND us.post_count > 50000
-      AND (:backfill OR us.user_id IN (:user_ids))
-    GROUP BY us.user_id
-    HAVING us.likes_given::float / count(*) > 5.0
-SQL
-
     def self.invite_badge(count,trust_level)
 "
     SELECT u.id user_id, current_timestamp granted_at
@@ -299,6 +295,18 @@ SQL
       SQL
     end
 
+    def self.liked_back(min_posts, ratio)
+      <<-SQL
+        SELECT p.user_id, current_timestamp AS granted_at
+        FROM posts AS p
+        INNER JOIN user_stats AS us ON us.user_id = p.user_id
+        WHERE p.like_count > 0
+          AND (:backfill OR p.user_id IN (:user_ids))
+        GROUP BY p.user_id, us.likes_given
+        HAVING count(*) > #{min_posts}
+          AND (us.likes_given / count(*)::float) > #{ratio}
+      SQL
+    end
   end
 
   belongs_to :badge_type

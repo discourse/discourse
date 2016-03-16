@@ -312,16 +312,24 @@ end
   end
 end
 
-Badge.seed do |b|
-  b.id = Badge::GivesBack
-  b.default_name = "Gives Back"
-  b.default_icon = "fa-heart"
-  b.badge_type_id = BadgeType::Silver
-  b.query = Badge::Queries::GivesBack
-  b.default_badge_grouping_id = BadgeGrouping::Community
-  b.trigger = Badge::Trigger::None
-  b.auto_revoke = false
-  b.system = true
+
+[
+  [Badge::ThankYou,   "Thank You",  BadgeType::Bronze, 6, 0.50],
+  [Badge::GivesBack,  "Gives Back", BadgeType::Silver, 100, 1.0],
+  [Badge::Empathetic, "Empathetic", BadgeType::Gold,   500, 2.0],
+].each do |spec|
+  id, name, level, count, ratio = spec
+  Badge.seed do |b|
+    b.id = id
+    b.default_name = name
+    b.default_icon = "fa-heart"
+    b.badge_type_id = level
+    b.query = Badge::Queries.liked_back(count, ratio)
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    b.trigger = Badge::Trigger::None
+    b.auto_revoke = false
+    b.system = true
+  end
 end
 
 [
