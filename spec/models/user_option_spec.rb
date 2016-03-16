@@ -3,6 +3,18 @@ require_dependency 'user_option'
 
 describe UserOption do
 
+  describe "#ensure_consistency!" do
+    it "recreates missing user option records" do
+      user = Fabricate(:user)
+      user.user_option.destroy
+      UserOption.ensure_consistency!
+
+      user.reload
+
+      expect(user.user_option.email_always).to eq(SiteSetting.default_email_always)
+    end
+  end
+
   describe "should_be_redirected_to_top" do
     let!(:user) { Fabricate(:user) }
 
