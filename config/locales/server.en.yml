@@ -781,6 +781,9 @@ en:
     site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
     notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
     subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
+    email_polling_errored_recently:
+      one: "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
+      other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
