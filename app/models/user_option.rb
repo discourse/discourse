@@ -5,6 +5,14 @@ class UserOption < ActiveRecord::Base
 
   after_save :update_tracked_topics
 
+  def self.ensure_consistency!
+    exec_sql("SELECT u.id FROM users u
+              LEFT JOIN user_options o ON o.user_id = u.id
+              WHERE o.user_id IS NULL").values.each do |id,_|
+      UserOption.create(user_id: id.to_i)
+    end
+  end
+
   def self.previous_replies_type
     @previous_replies_type ||= Enum.new(always: 0, unless_emailed: 1, never: 2)
   end
