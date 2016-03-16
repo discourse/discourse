@@ -14,15 +14,15 @@ describe ReplyByEmailEnabledValidator do
       expect(validator.valid_value?("t")).to eq(false)
     end
 
-    it "returns false if POP3 polling is disabled" do
+    it "returns false if email polling is disabled" do
       SiteSetting.expects(:reply_by_email_address).returns("foo.%{reply_key}+42@bar.com")
-      SiteSetting.expects(:pop3_polling_enabled).returns(false)
+      SiteSetting.expects(:email_polling_enabled?).returns(false)
       expect(validator.valid_value?("t")).to eq(false)
     end
 
-    it "returns true when POP3 polling is enabled and the reply_by_email_address is configured" do
+    it "returns true when email polling is enabled and the reply_by_email_address is configured" do
       SiteSetting.expects(:reply_by_email_address).returns("foo.%{reply_key}+42@bar.com")
-      SiteSetting.expects(:pop3_polling_enabled).returns(true)
+      SiteSetting.expects(:email_polling_enabled?).returns(true)
       expect(validator.valid_value?("t")).to eq(true)
     end
 

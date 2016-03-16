@@ -105,6 +105,10 @@ class SiteSetting < ActiveRecord::Base
     nil
   end
 
+  def self.email_polling_enabled?
+    SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
+  end
+
 end
 
 # == Schema Information

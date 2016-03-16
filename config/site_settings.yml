@@ -525,6 +525,8 @@ email:
   reply_by_email_address:
     default: ''
     validator: "ReplyByEmailAddressValidator"
+  manual_polling_enabled:
+    default: false
   pop3_polling_enabled:
     default: false
     validator: "POP3PollingEnabledSettingValidator"
