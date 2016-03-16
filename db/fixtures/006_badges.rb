@@ -325,6 +325,7 @@ end
     b.default_icon = "fa-heart"
     b.badge_type_id = level
     b.query = Badge::Queries.liked_back(count, ratio)
+    b.badge_grouping_id = BadgeGrouping::Community
     b.default_badge_grouping_id = BadgeGrouping::Community
     b.trigger = Badge::Trigger::None
     b.auto_revoke = false
@@ -345,6 +346,7 @@ end
     b.default_icon = "fa-heart"
     b.badge_type_id = level
     b.query = Badge::Queries.like_rate_limit(count)
+    b.badge_grouping_id = BadgeGrouping::Community
     b.default_badge_grouping_id = BadgeGrouping::Community
     b.trigger = Badge::Trigger::None
     b.auto_revoke = false
