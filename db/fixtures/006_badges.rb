@@ -292,16 +292,24 @@ end
   end
 end
 
-Badge.seed do |b|
-  b.id = Badge::Admired
-  b.default_name = "Admired"
-  b.default_icon = "fa-heart"
-  b.badge_type_id = BadgeType::Gold
-  b.query = Badge::Queries::Admired
-  b.default_badge_grouping_id = BadgeGrouping::Community
-  b.trigger = Badge::Trigger::None
-  b.auto_revoke = false
-  b.system = true
+[
+  [Badge::Appreciated, "Appreciated", BadgeType::Bronze, 1, 20],
+  [Badge::Respected,   "Respected",   BadgeType::Silver, 2, 100],
+  [Badge::Admired,     "Admired",     BadgeType::Gold,   5, 300],
+].each do |spec|
+  id, name, level, like_count, post_count = spec
+  Badge.seed do |b|
+    b.id = id
+    b.name = name
+    b.default_name = name
+    b.default_icon = "fa-heart"
+    b.badge_type_id = level
+    b.query = Badge::Queries.liked_posts(post_count, like_count)
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    b.trigger = Badge::Trigger::None
+    b.auto_revoke = false
+    b.system = true
+  end
 end
 
 Badge.seed do |b|

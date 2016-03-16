@@ -2964,15 +2964,27 @@ en:
         famous_link:
           name: Famous Link
           description: Posted an external link with at least 1000 clicks
+        appreciated:
+          name: Appreciated
+          description: Has received at least 1 like on 20 posts
+        respected:
+          name: Respected
+          description: Has received at least 2 likes on 100 posts
         admired:
           name: Admired
-          description: Has a high ratio of liked posts
+          description: Has received at least 5 likes on 300 posts
         gives_back:
           name: Gives Back
           description: Has a high ratio of likes given to likes received
-        generous:
-          name: Generous
+        out_of_love:
+          name: Out of Love
           description: Used the maximum amount of likes in a day
+        my_cup_runneth_over:
+          name: My Cup Runneth Over
+          description: Used the maximum amount of likes in a day 5 times
+        crazy_in_love:
+          name: Crazy in Love
+          description: Used the maximum amount of likes in a day 20 times
 
     google_search: |
       <h3>Search with Google</h3>
