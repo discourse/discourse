@@ -26,6 +26,8 @@ class Badge < ActiveRecord::Base
   PopularLink = 28
   HotLink = 29
   FamousLink = 30
+  Appreciated = 36
+  Respected = 37
   Admired = 31
   GivesBack = 32
   OutOfLove = 33
@@ -200,17 +202,6 @@ SQL
      HAVING COUNT(p.id) > 0
 SQL
 
-    Admired = <<-SQL
-    SELECT us.user_id, current_timestamp AS granted_at
-    FROM user_stats AS us
-    INNER JOIN posts AS p ON us.user_id = p.user_id
-    WHERE us.post_count > 500000
-      AND p.like_count > 0
-      AND (:backfill OR us.user_id IN (:user_ids))
-    GROUP BY us.user_id, us.post_count
-    HAVING count(*)::float / us.post_count > 0.75
-SQL
-
     GivesBack = <<-SQL
     SELECT us.user_id, current_timestamp AS granted_at
     FROM user_stats AS us
@@ -283,6 +274,17 @@ SQL
            WHERE NOT tl.internal
              AND tl.clicks >= #{count}
         GROUP BY tl.user_id, tl.post_id
+      SQL
+    end
+
+    def self.liked_posts(post_count, like_count)
+      <<-SQL
+        SELECT p.user_id, current_timestamp AS granted_at
+        FROM posts AS p
+        WHERE p.like_count >= #{like_count}
+          AND (:backfill OR p.user_id IN (:user_ids))
+        GROUP BY p.user_id
+        HAVING count(*) > #{post_count}
       SQL
     end
 
