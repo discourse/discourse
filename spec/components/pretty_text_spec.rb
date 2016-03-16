@@ -188,6 +188,10 @@ HTML
       expect(PrettyText.extract_links("<aside class='quote'>not a linked quote</aside>\n").to_a).to be_empty
     end
 
+    it "doesn't extract links from elided parts" do
+      expect(PrettyText.extract_links("<details class='elided'><a href='http://cnn.com'>cnn</a></details>\n").to_a).to be_empty
+    end
+
     def extract_urls(text)
       PrettyText.extract_links(text).map(&:url).to_a
     end
