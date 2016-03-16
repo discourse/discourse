@@ -21,8 +21,9 @@ describe PostOwnerChanger do
 
     it "changes the user" do
       old_user = p1.user
-      described_class.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
       p1.reload
+      expect(p1.topic.last_post_user_id).to eq(user_a.id)
       expect(old_user).not_to eq(p1.user)
       expect(p1.user).to eq(user_a)
     end
