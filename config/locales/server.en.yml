@@ -1158,6 +1158,7 @@ en:
 
     delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
 
+    manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
@@ -1310,7 +1311,7 @@ en:
       pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
       pop3_polling_authentication_failed: "POP3 authentication failed. Please verify your pop3 credentials."
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
-      pop3_polling_disabled: "You must first enabled POP3 polling before enabling reply by email."
+      email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
 
   notification_types:
