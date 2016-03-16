@@ -28,7 +28,9 @@ class Badge < ActiveRecord::Base
   FamousLink = 30
   Admired = 31
   GivesBack = 32
-  Generous = 33
+  OutOfLove = 33
+  MyCupRunnethOver = 34
+  CrazyInLove = 35
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -220,14 +222,6 @@ SQL
     HAVING us.likes_given::float / count(*) > 5.0
 SQL
 
-    Generous = <<-SQL
-    SELECT uh.target_user_id AS user_id, MIN(uh.created_at) AS granted_at
-    FROM user_histories AS uh
-    WHERE uh.action = #{UserHistory.actions[:rate_limited_like]}
-      AND (:backfill OR uh.target_user_id IN (:user_ids))
-    GROUP BY uh.target_user_id
-SQL
-
     def self.invite_badge(count,trust_level)
 "
     SELECT u.id user_id, current_timestamp granted_at
@@ -292,6 +286,17 @@ SQL
       SQL
     end
 
+    def self.like_rate_limit(count)
+      <<-SQL
+        SELECT uh.target_user_id AS user_id, MAX(uh.created_at) AS granted_at
+        FROM user_histories AS uh
+        WHERE uh.action = #{UserHistory.actions[:rate_limited_like]}
+          AND (:backfill OR uh.target_user_id IN (:user_ids))
+        GROUP BY uh.target_user_id
+        HAVING COUNT(*) >= #{count}
+      SQL
+    end
+
   end
 
   belongs_to :badge_type
@@ -312,7 +317,6 @@ SQL
   def self.protected_system_fields
     [:badge_type_id, :multiple_grant, :target_posts, :show_posts, :query, :trigger, :auto_revoke, :listable]
   end
-
 
   def self.trust_level_badge_ids
     (1..4).to_a
