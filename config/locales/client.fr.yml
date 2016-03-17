@@ -328,7 +328,10 @@ fr:
         one: "groupe"
         other: "groupes"
       members: "Membres"
+      topics: "Sujets"
       posts: "Messages"
+      mentions: "Mentions"
+      messages: "Messages"
       alias_levels:
         title: "Qui peut envoyer un message et @notifier ce groupe ?"
         nobody: "Personne"
@@ -721,6 +724,7 @@ fr:
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
+    logs_error_rate_exceeded_notice: "%{timestamp}: Le taux actuel de <a href='%{url}' target='_blank'>%{rate} erreurs/%{duration}</a> a dépassé la limite des paramètres du site de %{siteSettingLimit} erreurs/%{duration}."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -921,7 +925,7 @@ fr:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='cité' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='édité' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='aimé' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
@@ -1480,6 +1484,7 @@ fr:
           last: "Dernière révision"
           hide: "Masquer la révision"
           show: "Afficher la révision"
+          revert: "Revenir à cette révision"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1571,6 +1576,7 @@ fr:
       submit_tooltip: "Soumettre le signalement privé"
       take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre plus de signalement de la communauté."
       cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
+      notify_staff: 'Notifier les responsables de manière privée'
       formatted_name:
         off_topic: "C'est hors-sujet"
         inappropriate: "C'est inapproprié"
@@ -2107,6 +2113,7 @@ fr:
             cc: "Cc"
             subject: "Subject"
             body: "Body"
+            rejection_message: "Courriel de refus"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"

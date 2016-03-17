@@ -328,7 +328,10 @@ es:
         one: "grupo"
         other: "grupos"
       members: "Miembros"
+      topics: "Temas"
       posts: "Posts"
+      mentions: "Menciones"
+      messages: "Mensajes"
       alias_levels:
         title: "¿Quién puede emviar mensajes y @mencionar a este grupo?"
         nobody: "Nadie"
@@ -922,7 +925,7 @@ es:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
@@ -1481,6 +1484,7 @@ es:
           last: "Última revisión"
           hide: "Ocultar revisión."
           show: "Mostrar revisión."
+          revert: "Volver a esta revisión"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

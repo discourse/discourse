@@ -30,6 +30,7 @@ fi:
   emails:
     incoming:
       default_subject: "Uusi sähköposti osoitteesta %{email}"
+      show_trimmed_content: "Näytä piilotettu sisältö"
       errors:
         empty_email_error: "Näin käy, kun saapuneessa sähköpostissa ei lue mitään."
         no_message_id_error: "Näin käy, kun viestin otsikkotiedoista puuttuu ID-tunniste (engl. message-ID)."
@@ -166,8 +167,10 @@ fi:
   rss_description:
     latest: "Tuoreimmat viestiketjut"
     hot: "Kuumat ketjut"
+    top: "Huippuketjut"
     posts: "Uusimmat viestit"
   too_late_to_edit: "Tämä viesti luotiin liian kauan sitten. Sitä ei voi enää muokata tai poistaa."
+  revert_version_same: "Nykyinen revisio on sama, kuin jonka yrität palauttaa."
   excerpt_image: "kuva"
   queue:
     delete_reason: "Poistettu moderointijonon kautta"
@@ -176,7 +179,9 @@ fi:
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
       member_already_exist: "'%{username}' on jo ryhmän jäsen."
       invalid_domain: "'%{domain}' ei ole käypä verkkotunnus."
-      invalid_incoming_email: "'%{incoming_email}' ei ole käypä sähköpostiosoite."
+      invalid_incoming_email: "'%{email}' ei ole käypä sähköpostiosoite."
+      email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
+      email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
     default_names:
       everyone: "kaikki"
       admins: "ylläpitäjät"
@@ -316,8 +321,9 @@ fi:
       uncategorized_parent: "Alueettomia ei voi asettaa toisen alueen alle"
       self_parent: "Alue ei voi olla itsensä ylempi alue."
       depth: "Alue ei voi olla tytäralueen tytäralue"
-      email_in_already_exist: "Sisääntulevan sähköpostin osoite '%{email_in}' on jo käytössä alueella '%{category_name}'."
-      invalid_email_in: "'%{email_in}' ei ole käypä sähköpostiosoite."
+      invalid_email_in: "'%{email}' ei ole käypä sähköpostiosoite"
+      email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
+      email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
     cannot_delete:
       uncategorized: "Alueettomat-aluetta ei voi poistaa"
       has_subcategories: "Aluetta ei voi poistaa, koska sillä on sisempiä alueita."
@@ -352,6 +358,9 @@ fi:
       create_like: "Olet tykännyt enimmäismäärän tälle päivälle. Ole hyvä ja odota %{time_left} ja yritä sitten uudelleen."
       create_bookmark: "Olet lisännyt enimmäismäärän kirjanmerkkejä tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
       edit_post: "Olet saavuttanut muokkausten enimmäismäärän tälle päivälle. Odota %{time_left}, ennen kuin yrität uudelleen."
+      live_post_counts: "Kysyt viestimääriä liian nopealla tahdilla. Odota %{time_left} ennen uudelleen yrittämistä."
+      unsubscribe_via_email: "Olet perunut enimmäismäärän sähköpostitse tänään. Odota %{time_left} ennen uudelleen yrittämistä."
+      topic_invitations_per_day: "Olet kutsunut enimmäismäärän tälle päivälle. Odota %{time_left} ennen uudelleen yrittämistä."
     hours:
       one: "1 tunti"
       other: "%{count} tuntia"
@@ -446,6 +455,10 @@ fi:
     confirmed: "Sähköpostiosoite päivitetty."
     please_continue: "Jatka sivustolle %{site_name}"
     error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä tämä sähköpostiosoite on jo käytössä?"
+    already_done: "Pahoittelut, tämä varmennuslinnkki ei ole enää voimassa. Ehkäpä sähköpostiosoitteesi on jo vaihdettu?"
+    authorizing_old:
+      title: "Kiitos sähköpostiosoitteesi varmentamisesta"
+      description: "Lähetämme sinulle sähköpostin varmennusta varten."
   activation:
     action: "Klikkaa tähän aktivoidaksesi tilisi"
     already_done: "Pahoittelut, tämän tilin varmennuslinkki ei ole enää voimassa. Ehkäpä tili on jo varmennettu?"
@@ -842,6 +855,9 @@ fi:
     enable_twitter_logins: "Ota käyttöön Twitter kirjautuminen, vaatimuksena twitter_consumer_key ja twitter_consumer_secret"
     twitter_consumer_key: "Consumer key Twitter autentikaatioon, rekisteröinti osoitteessa http://dev.twitter.com"
     twitter_consumer_secret: "Consumer secret key Twitter autentikaatioon, rekisteröinti osoitteessa http://dev.twitter.com"
+    enable_instagram_logins: "Ota Instagram-autentikaatio käyttöön, vaatimuksena instagram_consumer_key ja instagram_consumer_secret"
+    instagram_consumer_key: "Consumer key Instagram-autentikaatioon"
+    instagram_consumer_secret: "Consumer secret Instagram-autentikaatioon"
     enable_facebook_logins: "Ota käyttöön Facebook autentikaatio, vaatimuksena facebook_app_id ja facebook_app_secret"
     facebook_app_id: "App id Facebook autentikaatioon, rekisteröinti osoitteessa https://developers.facebook.com/apps"
     facebook_app_secret: "App secret Facebook autentikaatioon, rekisteröinti osoitteessa https://developers.facebook.com/apps"
@@ -875,6 +891,8 @@ fi:
     max_private_messages_per_day: "Viestien päivittäinen maksimäärä per käyttäjä"
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
+    alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
+    alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     suggested_topics: "Suositeltujen ketjujen määrä ketjun alaosassa."
     limit_suggested_to_category: "Näytä suositeltuja ketjuja vain nykyiseltä alueelta."
     clean_up_uploads: "Poista orpoutuneet liitetiedostot, joita ei käytetä viesteissä, laittoman hostauksen estämiseksi. VAROITUS: kannattaa varmuuskopioida /uploads kansio ennen tämän asetuksen ottamista käyttöön."
@@ -892,6 +910,7 @@ fi:
     external_system_avatars_enabled: "Käytä ulkopuolista avatarpalvelua."
     external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "Oletuksena käytettävän opengraph-kuvan URL."
+    allow_all_attachments_for_group_messages: "Sali kaikki sähköpostiliitteet ryhmäviestessä."
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Uusien käyttäjien oletusarvoinen luottamustaso (0-4). VAROITUS! Tämän muuttaminen altistaa roskapostille."
@@ -1065,13 +1084,17 @@ fi:
     enable_emoji: "Ota emoji käyttöön"
     emoji_set: "Minkälaisa emojia haluaisit käyttää?"
     enforce_square_emoji: "Pakota neliö kuvasuhteeksi kaikille emojille."
+    approve_post_count: "Viestien lukumäärä, joka tarkastetaan uusilta käyttäjiltä ja haastajilta."
     approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit tarkastetaan"
     notify_about_queued_posts_after: "Jos hyväksyntää odottavia viestejä on odottanut näin monta tuntia, lähetä sähköposti contact_email osoitteeseen. Aseta 0 ottaaksesi pois käytöstä."
     default_email_digest_frequency: "Kuinka usein käyttäjille lähetetään tiivistelmäsähköposti oletuksena."
     default_email_private_messages: "Lähetä oletuksena sähköposti, kun joku lähettää käyttäjälle viestin."
     default_email_direct: "Lähetä oletuksena sähköposti, kun joku lainaa/vastaa/mainitsee tai kutsuu käyttäjän."
     default_email_mailing_list_mode: "Lähetä oletuksena sähköposti jokaisesta uudesta viestistä."
+    disable_mailing_list_mode: "Älä salli käyttäjien valita sähköpostilista-moodia."
     default_email_always: "Lähetä oletuksena sähköposti, vaikka käyttäjä on ollut aktiivinen palstalla."
+    default_email_previous_replies: "Sisällytä aiemmat vastaukset sähköposteihin oletuksena."
+    default_email_in_reply_to: "Sisällytä lyhennelmä vastattavasta viestistä sähköpostiin oletuksena."
     default_other_new_topic_duration_minutes: "Yleinen oletusarvo sille, koska ketju tulkitaan uudeksi."
     default_other_auto_track_topics_after_msecs: "Yleinen oletusarvo sille, missä ajassa ketjua aletaan seurata."
     default_other_external_links_in_new_tab: "Avaa oletuksena ulkopuoliset linkit uudessa välilehdessä."
@@ -1079,6 +1102,7 @@ fi:
     default_other_dynamic_favicon: "Näytä oletuksena uusien/päivittyneiden ketjujen määrä selaimen ikonissa."
     default_other_disable_jump_reply: "Älä hyppää oletuksena uuteen vastaukseen käyttäjän lähetettyä sen."
     default_other_edit_history_public: "Tee oletuksena viestien versioista julkisia."
+    default_other_like_notification_frequency: "Ilmoita käyttäjiä tykkäyksistä oletuksena"
     default_topics_automatic_unpin: "Aseta oletukseksi, että ketjun kiinnitys poistuu automaattisesti, jos käyttäjä selaa keskustelun loppuun"
     default_categories_watching: "Lista oletuksena tarkkailtavista alueista."
     default_categories_tracking: "Lista oletuksena seurattavista alueista."
@@ -1101,6 +1125,8 @@ fi:
       pop3_polling_username_is_empty: "Sinun täytyy asettaa 'pop3 polling username' ennen POP3-pollauksen ottamista käyttöön."
       pop3_polling_password_is_empty: "Sinun täytyy asettaa 'pop3 polling password' ennen POP3-pollauksen ottamista käyttöön."
       pop3_polling_authentication_failed: "POP3 autentikaatio epäonnistui. Tarkasta pop3 kirjautumistiedot."
+      reply_by_email_address_is_empty: "'reply by email address' täytyy olla asetettuna ennen sähköpostivastausten ottamista käyttöön."
+      pop3_polling_disabled: "POP3 polling täytyy olla asetettuna ennen sähköpostivastausten ottamista käyttöön."
   notification_types:
     group_mentioned: "%{group_name} mainittiin täällä %{link}"
     mentioned: "%{display_username} viittasi sinuun viestissä %{link}"
@@ -1112,6 +1138,7 @@ fi:
     moved_post: "%{display_username} siirsi viestisi tänne %{link}"
     private_message: "%{display_username} lähetti sinulle viestin: %{link}"
     invited_to_private_message: "%{display_username} kutsui sinut viestiin: %{link}"
+    invited_to_topic: "%{display_username} kutsui sinut %{link}"
     invitee_accepted: "%{display_username} hyväksyi kutsusi"
     linked: "%{display_username} linkitti sinuun täällä %{link}"
     granted_badge: "Ansaitsit %{link}"
@@ -1200,6 +1227,7 @@ fi:
     reserved_username: "Käyttäjänimi ei ole sallittu."
     missing_user_field: "Et ole täyttänyt kaikkia kenttiä"
     close_window: "Kirjautuminen onnistui. Sulje tämä ikkuna jatkaaksesi."
+    already_logged_in: "Hups, näyttää siltä, että yrität hyväksyä kutsun käyttäjänä, jolle sitä ei lähetetty. Jos et ole %{current_user}, kirjaudu ulos ja yritä uudestaan."
   user:
     no_accounts_associated: "Ei liittyviä käyttäjätilejä"
     username:
@@ -1208,6 +1236,8 @@ fi:
       characters: "täytyy koostua vain numeroista, kirjaimista ja alaviivoista"
       unique: "täytyy olla uniikki"
       blank: "pakollinen kenttä"
+      must_begin_with_alphanumeric_or_underscore: "täytyy alkaa kirjaimella, numerolla tai alaviivalla"
+      must_end_with_alphanumeric: "täytyy loppua kirjaimeen tai numeroon"
       must_not_contain_two_special_chars_in_seq: "ei saa sisältää peräkkäin kahta tai useampaa erikoismerkkiä (.-_)"
       must_not_end_with_confusing_suffix: "ei voi päättyä harhaanjohtavaan päätteeseen kuten .json tai .png jne."
     email:
@@ -1217,6 +1247,9 @@ fi:
       blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
       max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
   flags_reminder:
+    flags_were_submitted:
+      one: "Viestejä liputettiin yli tunti sitten. Tarkasta liputukset."
+      other: "Viestejä liputettiin yli %{count} tuntia sitten. Tarkasta liputukset."
     subject_template:
       one: "Yksi liputus odottaa käsittelyä"
       other: "%{count} liputusta odottaa käsittelyä"
@@ -1274,8 +1307,31 @@ fi:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse versio, päivitys saatavilla"
+    text_body_template: |
+      Uusi versio [Discoursesta](http://www.discourse.org) on saatavilla :)
+
+      Sinun versiosi: %{installed_version}
+      Uusin versio: **%{new_version}**
+
+      - Tarkastele, mitä uutta on [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master).
+
+      - Asenna päivitys vierailemalla osoitteessa [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) englanninkielisten uutisten, keskustelun ja tuen Discourselle vuoksi.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] päivitys saatavilla"
+    text_body_template: |+
+      Uusi versio [Discoursesta](http://www.discourse.org) on saatavilla
+
+      Sinun versiosi: %{installed_version}
+      Uusin versio: **%{new_version}**
+
+      - Tarkastele, mitä uutta on [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master).
+
+      - Asenna päivitys vierailemalla osoitteessa [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) englanninkielisten uutisten, keskustelun ja tuen Discourselle vuoksi.
+
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 viesti odottaa hyväksyntää"
@@ -1498,18 +1554,18 @@ fi:
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Käyttäjätiliä tällä sähköpostiosoitteella ei ole aktivoitu. Aktivoi käyttäjätili ennen sähköpostien lähettämistä.
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Sähköpostiongelma-- Estetty käyttäjä"
+      text_body_template: |
+        Pahoittelemme, mutta sähköpostiviesetisi tänne  %{destination} (otsikolla %{former_title}) ei onnistunut.
+
+        Käyttäjätili tällä sähköpostiosoitteella on estetty.
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Käyttäjä ei täsmää"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
         Viestisi ei saapunut siitä sähköpostiosoitteesta josta odotimme, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Ei viestin Id:tä"
-      text_body_template: |
-        Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
-
-        Viestin otsikkotiedoista puuttui ID-numero, engl. 'Message-Id'. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_no_account:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon tili"
       text_body_template: |
@@ -1553,6 +1609,12 @@ fi:
         %{post_error}
 
         Jos voit korjata ongelman, yritä uudelleen.
+    email_reject_rate_limit_specified:
+      subject_template: "[%{site_name}] Sähköpostiongelma -- Rajat"
+      text_body_template: |
+        Pahoittelemme, mutta sähköpostiviesetisi tänne  %{destination} (otsikolla %{former_title}) ei onnistunut.
+
+        Syy: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Kielletty viestitoiminto"
       text_body_template: |
@@ -1662,11 +1724,13 @@ fi:
   subject_pm: "[YV]"
   user_notifications:
     previous_discussion: "Edelliset vastaukset"
+    in_reply_to: "Vastauksena"
     unsubscribe:
       title: "Peru tilaus"
       description: "Etkö halua vastaanottaa näitä sähköposteja? Ei hätää! Klikkaa alta peruaksesi tilauksen välittömästi:"
     reply_by_email: "Vastaa [vierailemalla ketjussa](%{base_url}%{url}) tai vastaamalla tähän sähköpostiin."
     reply_by_email_pm: "Vastaa [vierailemalla ketjussa](%{base_url}%{url}) tai vastaamalla tähän sähköpostiin."
+    only_reply_by_email: "Vastaa vastaamalla tähän viestiin"
     visit_link_to_respond: "Vastaa [vierailemalla ketjussa](%{base_url}%{url})"
     visit_link_to_respond_pm: "Vastaa [vierailemalla ketjussa](%{base_url}%{url})."
     posted_by: "Käyttäjältä %{username} %{post_date}"
@@ -1701,6 +1765,7 @@ fi:
 
         Klikkaa tätä linkkiä nähdäksesi viestin: %{base_url}%{url}
     user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} kutsui sinut ketjuun '%{topic_title}'"
       text_body_template: |2
 
         %{username} kutsui sinut keskusteluun
@@ -1737,6 +1802,17 @@ fi:
         ---
         %{respond_instructions}
     user_quoted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1845,12 +1921,29 @@ fi:
 
         Klikkaa seuraavaa linkkiä asettaaksesi salasanan uudelle tunnuksellesi:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Vahvista uusi sähköpostiosoite"
       text_body_template: |
         Vahvista uusi sähköpostiosoite sivustolle %{site_name} klikkaamalla alla olevaa linkkiä:
 
         %{base_url}/users/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] Vahvista nykyinen sähköpostiosoiteesi"
+      text_body_template: |+
+        Ennen kuin voit vaihtaa sähköpostiosoitteesti, meidän täytyy varmistaa, että hallinnoit nykyistä sähköpostiosoitetta. Kun olet suorittanut tämän, varmistamme vielä uuden sähköpostiosoitteenkin.
+
+        Vahvista sähköpostiosoitteesti sivustolle %{site_name} klikkaamalla linkkiä:
+
+        %{base_url}/users/authorize-email/%{email_token}
+
+    notify_old_email:
+      subject_template: "[%{site_name}] Sähköpostiosoitteesi on vaihdettu"
+      text_body_template: |
+        Tämä on automaattinen vahvistus siitä, että sähköpostiosoitteesi sivustolle %{site_name} on vaihdettu. Jos on tapahtunut virhe, ota yhteyttä sivuston ylläpitäjään.
+
+        Sähköpostiosoitteeksesi on vaihdettu:
+
+        %{new_email}
     signup_after_approval:
       subject_template: "Sinut on hyväksytty sivustolle %{site_name}!"
       text_body_template: |
@@ -1880,6 +1973,7 @@ fi:
 
         Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
   page_not_found:
+    title: "Hups! Sivua ei ole tai se on yksityinen."
     popular_topics: "Suosittuja"
     recent_topics: "Tuoreimpia"
     see_more: "Lisää"
@@ -2128,6 +2222,8 @@ fi:
   performance_report:
     initial_post_raw: Tämä ketju sisältää päivittäisiä suorituskykyrapotteja sivustoltasi
     initial_topic_title: Sivuston suorituskykyraportit
+  topic_invite:
+    user_exists: "Pahoittelut, tämä käyttäjä on jo kutsuttu. Voit kutsua toisen käyttäjän ketjuun vain yhden kerran."
   time:
     <<: *datetime_formats
   activemodel:

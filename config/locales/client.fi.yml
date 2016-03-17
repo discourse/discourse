@@ -328,7 +328,10 @@ fi:
         one: "ryhmä"
         other: "ryhmät"
       members: "Jäsenet"
+      topics: "Ketjut"
       posts: "Viestit"
+      mentions: "Viittaukset"
+      messages: "Viestit"
       alias_levels:
         title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @viitata siihen?"
         nobody: "Ei kukaan"
@@ -470,6 +473,7 @@ fi:
       muted_users: "Vaimennetut"
       muted_users_instructions: "Älä näytä ilmoituksia näiltä käyttäjiltä"
       muted_topics_link: "Näytä vaimennetut ketjut"
+      automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, selattuani sen loppuun."
       staff_counters:
         flags_given: "hyödyllistä liputusta"
         flagged_posts: "liputettuja viestejä"
@@ -720,6 +724,7 @@ fi:
     too_few_topics_and_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     too_few_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
+    logs_error_rate_exceeded_notice: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate} errors/%{duration}</a> has exceeded site settings's limit of %{siteSettingLimit} errors/%{duration}."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -812,6 +817,9 @@ fi:
       twitter:
         title: "Twitterillä"
         message: "Todennetaan Twitterin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
+      instagram:
+        title: "Instagramilla"
+        message: "Todennetaan Instagramin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       facebook:
         title: "Facebookilla"
         message: "Todennetaan Facebookin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
@@ -917,9 +925,13 @@ fi:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='lainasi' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='vastasi' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='vastasi' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='kirjoitti' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='muokkasi' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='tykkäsi' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='tykkäsi' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='tykkäsi' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} ja 1 muu</span> {{description}}</p>"
+        other: "<i title='tykkäsi' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} ja {{count}} muuta</span> {{description}}</p>"
       private_message: "<i title='yksityisviesti' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='yksityisviesti' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='kutsui ketjuun' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1026,6 +1038,9 @@ fi:
         category: "Alueella {{category}} ei ole ketjua."
         top: "Huippuketjuja ei ole."
         search: "Hakutuloksia ei löytynyt."
+        educate:
+          new: '<p>Uuden ketjut näytetään tässä.</p><p>Ketjut tulkitaan uusiksi ja niiden yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkki, kun ne on luotu edellisen kahden päivän aikana.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
+          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge new-posts badge-notification">1</span> jos olet:</p><ul><li>luonut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         hot: "Kuumia ketjuja ei ole enempää."
@@ -1389,6 +1404,15 @@ fi:
           bookmark: "Peru kirjanmerkki"
           like: "Peru tykkäys"
           vote: "Peru ääni"
+        people:
+          off_topic: "liputti tämän asiaan kuulumattomaksi"
+          spam: "liputti tämän roskapostiksi"
+          inappropriate: "liputti tämän asiattomaksi"
+          notify_moderators: "ilmoitti valvojille"
+          notify_user: "lähetti viestin"
+          bookmark: "lisäsi tämän kirjanmerkkeihin"
+          like: "tykkäsi tästä"
+          vote: "äänesti tätä"
         by_you:
           off_topic: "Liputit tämän asiaankuulumattomaksi"
           spam: "Liputit tämän roskapostiksi"
@@ -1460,6 +1484,7 @@ fi:
           last: "Viimeinen revisio"
           hide: "Piilota revisio"
           show: "Näytä revisio"
+          revert: "Palaa tähän revisioon"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1551,6 +1576,7 @@ fi:
       submit_tooltip: "Toimita lippu"
       take_action_tooltip: "Saavuta liputusraja välittömästi, ennemmin kuin odota muidenkin käyttäjien liputuksia."
       cant: "Pahoittelut, et pysty liputtamaan tätä viestiä tällä hetkellä."
+      notify_staff: 'Ilmoita ylläpidolle yksityisesti'
       formatted_name:
         off_topic: "Se on asiaankuulumaton"
         inappropriate: "Se on asiaton"
@@ -1931,9 +1957,11 @@ fi:
             is_disabled: "Palautus on estetty sivuston asetuksissa."
             label: "Palauta"
             title: "Palauta varmuuskopio"
+            confirm: "Oletko varma, että haluat palauttaa tämän varmuuskopion?"
           rollback:
             label: "Palauta"
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
+            confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
         user_archive_confirm: "Oletko varma, että haluat ladata viestisi?"
         success: "Vienti on käynnissä. Saat ilmoituksen viestillä, kun prosessi on valmis."
@@ -2073,12 +2101,19 @@ fi:
           error: "Virhe"
           none: "Uusia sähköpostiviestejä ei löydetty."
           modal:
+            title: "Saapuvan sähköpostin tiedot"
+            error: "Virhe"
+            return_path: "Paluupolku"
+            message_id: "Viestin ID"
+            in_reply_to: "Vastauksena"
+            references: "Viittaukset"
             date: "Päivämäärä"
             from: "Lähettäjä"
             to: "Vastaanottaja"
             cc: "Kopio"
             subject: "Otsikko"
             body: "Leipäteksti"
+            rejection_message: "Hylkäysviesti"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2256,6 +2291,7 @@ fi:
         moderator: "Valvoja?"
         admin: "Ylläpitäjä?"
         blocked: "Estetty?"
+        staged: "Luotu?"
         show_admin_profile: "Ylläpito"
         edit_title: "Muokkaa nimikettä"
         save_title: "Tallenna nimike"
@@ -2325,6 +2361,7 @@ fi:
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
+        stage_explanation: "Automaattisesti luotu käyttäjä voi vastata sähköpostilla vain erikseen määritettyihin ketjuihin."
         trust_level_change_failed: "Käyttäjän luottamustason vaihtamisessa tapahtui virhe."
         suspend_modal_title: "Hyllytä käyttäjä"
         trust_level_2_users: "Käyttäjät luottamustasolla 2"

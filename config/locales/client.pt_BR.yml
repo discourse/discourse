@@ -113,6 +113,7 @@ pt_BR:
     action_codes:
       split_topic: "dividiu este tópico %{when}"
       invited_user: "convidou %{who} %{when}"
+      removed_user: "removido %{who} %{when}"
       autoclosed:
         enabled: 'fechou %{when}'
         disabled: 'abriu %{when}'
@@ -258,7 +259,7 @@ pt_BR:
         one: "Este tópico tem <b>1</b> mensagem aguardando aprovação"
         other: "Este tópico tem <b>{{count}}</b> mensagens aguardando aprovação"
       confirm: "Salvar Mudanças"
-      delete_prompt: "Você tem certeza que deseja deletar <b>%{username}</b>? Isso irá remover todas as mensagens e irá bloquear o email e endereço IP desse usuário."
+      delete_prompt: "Você tem certeza que quer deletar <b>%{username}</b>? Esta ação irá remover todas as suas postagens e bloquear seu email e endereço IP."
       approval:
         title: "Aprovação Necessária da Mensagem"
         description: "Nós recebemos sua nova postagem mas é necessário que seja aprovada por um moderador antes de ser exibida. Por favor tenha paciência."
@@ -328,6 +329,7 @@ pt_BR:
         none: "Nenhum"
       notifications:
         watching:
+          title: "Assistindo"
           description: "Você será notificado sobre toda nova postagem em toda mensagem, e uma contagem de novas mensagens será mostrada."
         tracking:
           title: "Rastreando"
@@ -413,15 +415,15 @@ pt_BR:
       invited_by: "Convidado por"
       trust_level: "Nível de Confiança"
       notifications: "Notificações"
+      statistics: "Estatísticas"
       desktop_notifications:
         label: "Notificações de Área de Trabalho"
         not_supported: "Notificações não são suportadas nesse browser. Desculpe-nos."
         perm_default: "Habilitar Notificações"
         perm_denied_btn: "Permissão Negada"
+        perm_denied_expl: "Você negou a permissão para notificações. Configure as permissões para notificações no seu navegador."
         disable: "Desativar Notificações"
-        currently_enabled: "(atualmente ativado)"
         enable: "Ativar Notificações"
-        currently_disabled: "(atualmente desativado)"
         each_browser_note: "Nota: Você deve modificar essa configuração em todos navegadores que você usa."
       dismiss_notifications: "Marcar todas como lidas"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidos"
@@ -464,7 +466,12 @@ pt_BR:
         warnings_received: "avisos"
       messages:
         all: "Todas"
+        sent: "Enviado"
         groups: "Meus Grupos"
+        bulk_select: "Selecionar mensagens"
+        move_to_inbox: "Mover para Caixa de Entrada"
+        failed_to_move: "Falha ao mover as mensagens selecionadas (talvez você esteja sem conexão com a rede)"
+        select_all: "Selecionar Tudo"
       change_password:
         success: "(email enviado)"
         in_progress: "(enviando email)"
@@ -544,6 +551,9 @@ pt_BR:
         title: "Cartão de emblemas do usuário"
       website: "Web Site"
       email_settings: "Email"
+      email_previous_replies:
+        always: "sempre"
+        never: "nunca"
       email_digests:
         title: "Quando eu não visitar aqui, envie um resumo via email do que há de novo:"
         daily: "diariamente"
@@ -617,6 +627,16 @@ pt_BR:
         same_as_email: "Sua senha é a mesma que o seu email."
         ok: "A sua senha parece boa."
         instructions: "Deve ter pelo menos %{count} caracteres."
+      summary:
+        stats: "Estatísticas"
+        topic_count: "Tópicos Criados"
+        post_count: "Postagens Criadas"
+        likes_given: "Curtidas Dadas"
+        likes_received: "Curtidas Recebidas"
+        days_visited: "Dias Visitados"
+        posts_read_count: "Postagens Lidas"
+        top_replies: "Mais Respondidos"
+        more_topics: "Mais Tópicos"
       associated_accounts: "Logins"
       ip_address:
         title: "Último endereço IP"
@@ -659,6 +679,7 @@ pt_BR:
     logout: "Você foi desconectado."
     refresh: "Atualizar"
     read_only_mode:
+      enabled: "Este site está em modo de leitura apenas. Por favor continue a navegar, no entanto, respostas, curtidas e outras ações estão desativadas por enquanto."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
     too_few_topics_and_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos e <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversas para ler e responder."
     too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar essa discussão!</a> Existem atualmente <strong>%{currentTopics} / %{requiredTopics}</strong> tópicos. Novos visitantes precisam de algumas conversas para ler e responder."
@@ -688,8 +709,8 @@ pt_BR:
       value_prop: "Quando você cria uma conta, nós lembramos exatamente o que você leu, assim você sempre volta exatamente aonde estava. Você também recebe notificações, aqui e por e-mail, quando novas mensagens são feitas. E você pode curtir tópicos para compartilhar o amor. :heartbeat:"
     summary:
       enabled_description: "Você está vendo um sumário deste tópico: os posts mais interessantes conforme determinados pela comunidade."
-      description: "Há <b>{{replyCount}}</b> respostas."
-      description_time: "Há <b>{{replyCount}}</b> respostas com um tempo de leitura estimado de <b>{{readingTime}} minutos</b>."
+      description: "Existem <b>{{replyCount}}</b> respostas."
+      description_time: "Existem <b>{{replyCount}}</b> respostas com tempo de leitura estimado em <b>{{readingTime}} minutos</b>."
       enable: 'Resumir Este Tópico'
       disable: 'Exibir Todas as Mensagens'
     deleted_filter:
@@ -784,6 +805,7 @@ pt_BR:
       saved_local_draft_tip: "salvo localmente"
       similar_topics: "Seu tópico é parecido com..."
       drafts_offline: "rascunhos offline"
+      group_mentioned: "Ao usar {{group}}, você irá notificar <a href='{{group_link}}'>{{count}} pessoas.</a>."
       error:
         title_missing: "Título é obrigatório"
         title_too_short: "O título tem que ter no mínimo {{min}} caracteres"
@@ -981,6 +1003,11 @@ pt_BR:
       create: 'Novo tópico'
       create_long: 'Criar um novo tópico'
       private_message: 'Iniciar uma mensagem'
+      archive_message:
+        help: 'Mover mensagens para o seu arquivo'
+      move_to_inbox:
+        title: 'Mover para caixa de entrada'
+        help: 'Mover mensagem para Caixa de Entrada'
       list: 'Tópicos'
       new: 'novo tópico'
       unread: 'não lido'
@@ -1031,6 +1058,7 @@ pt_BR:
       auto_close_title: 'Configurações para fechar automaticamente'
       auto_close_save: "Salvar"
       auto_close_remove: "Não fechar automaticamente este tópico"
+      auto_close_immediate: "O último tópico postado foi há %{hours} horas, então o tópico será fechado imadiatamente.."
       progress:
         title: progresso do tópico
         go_top: "topo"
@@ -1121,6 +1149,7 @@ pt_BR:
         unpin_until: "Remover este tópico do topo da categoria {{categoryLink}} ou esperar até <strong>%{until}</strong>."
         pin_note: "Usuários podem desafixar o tópico individualmente para si."
         pin_validation: "Uma data é necessária para fixar este tópico."
+        not_pinned: "Não existem tópicos fixados em {{categoryLink}}."
         pin_globally: "Fazer com que este tópico apareça no topo de todas listas de tópicos até"
         confirm_pin_globally: "Você já tem {{count}} tópicos fixados globalmente. Muitos tópicos fixados podem prejudicar usuários novos e anônimos. Tem certeza que quer fixar outro tópico globalmente?"
         unpin_globally: "Remover este tópico do inicio de todas as listas de tópicos."
@@ -1254,6 +1283,8 @@ pt_BR:
         yes_value: "Sim, abandone"
       via_email: "post recebido via email"
       whisper: "esta mensagem é um sussuro privado para moderadores"
+      wiki:
+        about: "esta postagem é uma wiki"
       archetypes:
         save: 'Salvar as opções'
       controls:
