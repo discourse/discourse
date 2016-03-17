@@ -2984,7 +2984,7 @@ en:
           description: Used the maximum amount of likes in a day 20 times
         thank_you:
           name: Thank You
-          description: Has at least 6 liked posts and a high like ratio
+          description: Has at least 20 liked posts
         gives_back:
           name: Gives Back
           description: Has at least 100 liked posts and a very high like ratio
