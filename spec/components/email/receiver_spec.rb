@@ -119,7 +119,7 @@ describe Email::Receiver do
 
     it "removes the 'on <date>, <contact> wrote' quoting line" do
       expect { process(:on_date_contact_wrote) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is the actual reply.\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\nOn Tue, Jan 14, 2016 at 0:42 AM, Bar Foo <wat@discourse.org> wrote:\n\n> This is the previous email.\n> And it had\n>\n> a lot\n>\n>\n> of lines ;)\n</details>")
+      expect(topic.posts.last.raw).to eq("This is the actual reply.")
     end
 
     it "removes the 'Previous Replies' marker" do
@@ -193,6 +193,15 @@ describe Email::Receiver do
     end
 
     it "strips 'original message' context" do
+      expect { process(:original_message) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a reply :)")
+    end
+
+    it "add the 'elided' part of the original message only for private messages" do
+      topic.update_columns(category_id: nil, archetype: Archetype.private_message)
+      topic.allowed_users << user
+      topic.save
+
       expect { process(:original_message) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
     end
