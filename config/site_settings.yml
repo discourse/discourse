@@ -1085,6 +1085,7 @@ user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'
     default: 10080
+  default_include_tl0_in_digests: false
   default_email_private_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false

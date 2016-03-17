@@ -174,8 +174,10 @@
           <div class='controls controls-dropdown'>
             {{combo-box valueAttribute="value" content=digestFrequencies value=model.user_option.digest_after_minutes}}
           </div>
+          {{preference-checkbox labelKey="user.include_tl0_in_digests" checked=model.user_option.include_tl0_in_digests}}
         {{/if}}
       {{/if}}
+      <br/>
       <div class='controls controls-dropdown'>
         <label>{{i18n 'user.email_previous_replies.title'}}</label>
         {{combo-box valueAttribute="value" content=previousRepliesOptions value=model.user_option.email_previous_replies}}
