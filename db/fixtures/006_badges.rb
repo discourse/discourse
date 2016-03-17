@@ -334,9 +334,9 @@ end
 end
 
 [
-  [Badge::OutOfLove,        "Out of Love",         BadgeType::Bronze, 1],
-  [Badge::MyCupRunnethOver, "My Cup Runneth Over", BadgeType::Silver, 5],
-  [Badge::CrazyInLove,      "Crazy in Love",       BadgeType::Gold,   20],
+  [Badge::OutOfLove,   "Out of Love",   BadgeType::Bronze, 1],
+  [Badge::HigherLove,  "Higher Love",   BadgeType::Silver, 5],
+  [Badge::CrazyInLove, "Crazy in Love", BadgeType::Gold,   20],
 ].each do |spec|
   id, name, level, count = spec
   Badge.seed do |b|
