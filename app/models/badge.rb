@@ -34,7 +34,7 @@ class Badge < ActiveRecord::Base
   Admired = 31
 
   OutOfLove = 33
-  MyCupRunnethOver = 34
+  HigherLove = 34
   CrazyInLove = 35
 
   ThankYou = 38

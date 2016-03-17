@@ -2976,8 +2976,8 @@ en:
         out_of_love:
           name: Out of Love
           description: Used the maximum amount of likes in a day
-        my_cup_runneth_over:
-          name: My Cup Runneth Over
+        higher_love:
+          name: Higher Love
           description: Used the maximum amount of likes in a day 5 times
         crazy_in_love:
           name: Crazy in Love
