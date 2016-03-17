@@ -17,7 +17,6 @@ describe PostActionsController do
         PostAction.expects(:act).once.raises(RateLimiter::LimitExceeded.new(60, 'create_like'))
         expect(-> {
           xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
-          puts response.success?
         }).to change(UserHistory, :count).by(1)
       end
     end

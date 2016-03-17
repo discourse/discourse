@@ -314,10 +314,13 @@ class Topic < ActiveRecord::Base
               .joins("LEFT OUTER JOIN users ON users.id = topics.user_id")
               .where(closed: false, archived: false)
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
-              .where("COALESCE(users.trust_level, 0) > 0")
               .created_since(since)
               .listable_topics
               .includes(:category)
+
+    unless user.user_option.try(:include_tl0_in_digests)
+      topics = topics.where("COALESCE(users.trust_level, 0) > 0")
+    end
 
     if !!opts[:top_order]
       topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")

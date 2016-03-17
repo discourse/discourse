@@ -1303,6 +1303,16 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "returns topics from TL0 users if enabled in preferences" do
+      new_user = Fabricate(:user, trust_level: 0)
+      topic = Fabricate(:topic, user_id: new_user.id)
+
+      u = Fabricate(:user)
+      u.user_option.include_tl0_in_digests = true
+
+      expect(Topic.for_digest(u, 1.year.ago, top_order: true)).to eq([topic])
+    end
+
   end
 
   describe 'secured' do

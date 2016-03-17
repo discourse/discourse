@@ -1267,6 +1267,7 @@ en:
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact email. Set to 0 to disable these emails."
 
     default_email_digest_frequency: "How often users receive digest emails by default."
+    default_include_tl0_in_digests: "Include posts from new users in digest emails by default. Users can change this in their preferences."
     default_email_private_messages: "Send an email when someone messages the user by default."
     default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
     default_email_mailing_list_mode: "Send an email for every new post by default."
