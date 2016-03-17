@@ -1442,6 +1442,8 @@ sk:
           bookmark: "Vrátiť záložku späť"
           like: "Zruš \"Páči sa\""
           vote: "Zruš hlasovanie"
+        people:
+          vote: "hlasovať za toto"
         by_you:
           off_topic: "Označíli ste to ako mimo tému"
           spam: "Označíli ste to ako spam"
@@ -2158,6 +2160,7 @@ sk:
           error: "Chyba"
           none: "Nenájdené žiadne ďalšie emaily."
           modal:
+            error: "Chyba"
             date: "Dátum"
           filters:
             from_placeholder: "from@example.com"

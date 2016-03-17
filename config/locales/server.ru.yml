@@ -28,6 +28,7 @@ ru:
   emails:
     incoming:
       default_subject: "Входящее письмо от %{email}"
+      show_trimmed_content: "Показывать урезанное содержимое"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -1429,6 +1430,8 @@ ru:
     download_remote_images_disabled:
       subject_template: "Загрузка копий изображений выключена"
       text_body_template: "Настройка `download_remote_images_to_local` была отключена, т.к. диск заполнился до отменки, указанной в настройке `download_remote_images_threshold`."
+  unsubscribe_link: |
+    Отписаться от подобных писем можно в ваших [настройках профиля](%{user_preferences_url}). Чтобы больше не получать письма с оповещениями по этой конкретной теме, [нажмите здесь](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1436,6 +1439,8 @@ ru:
     unsubscribe:
       title: "Отписаться"
       description: "Не заинтересованы в получении данных писем? Нет проблем! Нажмите на ссылку ниже, чтобы мгновенно отписаться от рассылки:"
+    reply_by_email: "[Посмотреть тему на сайте](%{base_url}%{url}), чтобы ответить.  Или можно просто ответить на это письмо, и  ваш ответ попадёт в эту тему на форуме."
+    visit_link_to_respond: "[Посмотреть тему на сайте](%{base_url}%{url}), чтобы ответить"
     posted_by: "Отправлено %{username} %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} приглашает вас к обсуждению сообщения '%{topic_title}'"

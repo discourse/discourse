@@ -1039,6 +1039,9 @@ fa_IR:
     ip_address:
       blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
       max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
+  flags_reminder:
+    subject_template:
+      other: "%{count} نشانه ها منتظر استفاده"
   invite_mailer:
     subject_template: "%{invitee_name} شما را دعوت کرده به %{topic_title}' در  %{site_domain_name}"
     text_body_template: "%{invitee_name} شما را دعوت کرده به یک گفتگو\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nدر \n\n> %{site_title} -- %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌\n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"

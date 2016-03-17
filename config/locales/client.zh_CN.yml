@@ -300,7 +300,10 @@ zh_CN:
       title:
         other: "群组"
       members: "成员"
+      topics: "主题"
       posts: "帖子"
+      mentions: "提及"
+      messages: "消息"
       alias_levels:
         title: "谁能给这个小组发送消息和@提醒？"
         nobody: "无人"
@@ -1313,8 +1316,8 @@ zh_CN:
         more: "更多"
         delete_replies:
           confirm:
-            other: "你也想要删除 {{count}} 个直接回复这个帖子的回复么？"
-          yes_value: "是，删除回复"
+            other: "你也想要删除 {{count}} 个回复这个帖子的相关帖子么？"
+          yes_value: "是，一并删除相关回复"
           no_value: "否，仅删除该帖"
         admin: "帖子管理"
         wiki: "使其成为维基帖子"
@@ -1406,6 +1409,7 @@ zh_CN:
           last: "最新版"
           hide: "隐藏版本历史"
           show: "显示版本历史"
+          revert: "回退至该版本"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

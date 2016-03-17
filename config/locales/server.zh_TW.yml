@@ -903,6 +903,7 @@ zh_TW:
   subject_pm: "[私訊]"
   user_notifications:
     previous_discussion: "之前的回覆"
+    in_reply_to: "回覆給"
     unsubscribe:
       title: "取消訂閱"
       description: "不再對這些郵件感興趣？沒問題！點擊下面按鈕來立即取消訂閱："
