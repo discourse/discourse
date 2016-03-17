@@ -66,9 +66,6 @@ describe TopicsController do
     render_views
 
     context "when not a crawler" do
-      before do
-        CrawlerDetection.expects(:crawler?).returns(false)
-      end
       it "renders with the application layout" do
         get :show, topic_id: topic.id, slug: topic.slug
         expect(response).to render_template(layout: 'application')
@@ -77,10 +74,8 @@ describe TopicsController do
     end
 
     context "when a crawler" do
-      before do
-        CrawlerDetection.expects(:crawler?).returns(true)
-      end
       it "renders with the crawler layout" do
+        request.env["HTTP_USER_AGENT"] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
         get :show, topic_id: topic.id, slug: topic.slug
         expect(response).to render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
