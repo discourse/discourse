@@ -286,12 +286,11 @@ SQL
         BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: post_action)
       end
     end
+    GivenDailyLike.increment_for(user.id)
 
     # agree with other flags
     if staff_took_action
       PostAction.agree_flags!(post, user)
-
-      # update counters
       post_action.try(:update_counters)
     end
 
@@ -311,6 +310,7 @@ SQL
     if action = finder.first
       action.remove_act!(user)
       action.post.unhide! if action.staff_took_action
+      GivenDailyLike.decrement_for(user.id)
     end
   end
 

@@ -7,20 +7,6 @@ describe PostActionsController do
       expect { xhr :post, :create }.to raise_error(Discourse::NotLoggedIn)
     end
 
-    describe 'logged in as regular user' do
-      before do
-        @user = log_in(:user)
-        @post = Fabricate(:post, user: Fabricate(:coding_horror))
-      end
-
-      it 'creates user history if the rate limit for a like is hit' do
-        PostAction.expects(:act).once.raises(RateLimiter::LimitExceeded.new(60, 'create_like'))
-        expect(-> {
-          xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
-        }).to change(UserHistory, :count).by(1)
-      end
-    end
-
     describe 'logged in as moderator' do
       before do
         @user = log_in(:moderator)
