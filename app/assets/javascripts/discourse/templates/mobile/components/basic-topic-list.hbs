@@ -3,7 +3,7 @@
     <table class="topic-list">
       <tbody>
       {{#each t in topics}}
-        <tr {{bind-attr class="t.archived"}}>
+        <tr {{bind-attr class="t.archived"}} data-topic-id={{t.id}}>
           <td>
             <div class='main-link'>
               {{topic-status topic=t}}

@@ -38,7 +38,6 @@ describe User do
       Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_user').never
       user.enqueue_welcome_message('welcome_user')
     end
-
   end
 
   describe '.approve' do

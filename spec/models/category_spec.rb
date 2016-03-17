@@ -583,4 +583,14 @@ describe Category do
     end
   end
 
+  describe "find_by_slug" do
+    it "finds with category and sub category" do
+      category = Fabricate(:category, slug: 'awesome-category')
+      sub_category = Fabricate(:category, parent_category_id: category.id, slug: 'awesome-sub-category')
+
+      expect(Category.find_by_slug('awesome-category')).to eq(category)
+      expect(Category.find_by_slug('awesome-sub-category', 'awesome-category')).to eq(sub_category)
+    end
+  end
+
 end

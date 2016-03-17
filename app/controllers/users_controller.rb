@@ -5,9 +5,9 @@ require_dependency 'rate_limiter'
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
+  before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -21,7 +21,6 @@ class UsersController < ApplicationController
                                                             :activate_account,
                                                             :perform_account_activation,
                                                             :send_activation_email,
-                                                            :authorize_email,
                                                             :password_reset,
                                                             :confirm_email_token,
                                                             :admin_login]
@@ -469,45 +468,6 @@ class UsersController < ApplicationController
     else
       render json: failed_json, status: 403
     end
-  end
-
-  def change_email
-    params.require(:email)
-    user = fetch_user_from_params
-    guardian.ensure_can_edit_email!(user)
-    lower_email = Email.downcase(params[:email]).strip
-
-    RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour).performed!
-    RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
-
-    EmailValidator.new(attributes: :email).validate_each(user, :email, lower_email)
-    return render_json_error(user.errors.full_messages) if user.errors[:email].present?
-
-    # Raise an error if the email is already in use
-    return render_json_error(I18n.t('change_email.error')) if User.find_by_email(lower_email)
-
-    email_token = user.email_tokens.create(email: lower_email)
-    Jobs.enqueue(
-      :user_email,
-      to_address: lower_email,
-      type: :authorize_email,
-      user_id: user.id,
-      email_token: email_token.token
-    )
-
-    render nothing: true
-  rescue RateLimiter::LimitExceeded
-    render_json_error(I18n.t("rate_limiter.slow_down"))
-  end
-
-  def authorize_email
-    expires_now()
-    if @user = EmailToken.confirm(params[:token])
-      log_on_user(@user)
-    else
-      flash[:error] = I18n.t('change_email.error')
-    end
-    render layout: 'no_ember'
   end
 
   def account_created

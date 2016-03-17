@@ -3,6 +3,96 @@
 #
 require_dependency 'cache'
 class DiscourseRedis
+  class FallbackHandler
+    include Singleton
+
+    MASTER_LINK_STATUS = "master_link_status:up".freeze
+
+    def initialize
+      @master = true
+      @running = false
+      @mutex = Mutex.new
+      @slave_config = DiscourseRedis.slave_config
+    end
+
+    def verify_master
+      synchronize do
+        return if @running && !recently_checked?
+        @running = true
+      end
+
+      Thread.new { initiate_fallback_to_master }
+    end
+
+    def initiate_fallback_to_master
+      begin
+        slave_client = ::Redis::Client.new(@slave_config)
+
+        if slave_client.call([:info]).split("\r\n").include?(MASTER_LINK_STATUS)
+          slave_client.call([:client, [:kill, 'type', 'normal']])
+          Discourse.clear_readonly!
+          Discourse.request_refresh!
+          @master = true
+        end
+      ensure
+        @running = false
+        @last_checked = Time.zone.now
+        slave_client.disconnect
+      end
+    end
+
+    def master
+      synchronize { @master }
+    end
+
+    def master=(args)
+      synchronize { @master = args }
+    end
+
+    def recently_checked?
+      if @last_checked
+        Time.zone.now > (@last_checked + 5.seconds)
+      else
+        false
+      end
+    end
+
+    private
+
+    def synchronize
+      @mutex.synchronize { yield }
+    end
+  end
+
+  class Connector < Redis::Client::Connector
+    MASTER = 'master'.freeze
+    SLAVE = 'slave'.freeze
+
+    def initialize(options)
+      super(options)
+      @slave_options = DiscourseRedis.slave_config(options)
+      @fallback_handler = DiscourseRedis::FallbackHandler.instance
+    end
+
+    def resolve
+      begin
+        options = @options.dup
+        options.delete(:connector)
+        client = ::Redis::Client.new(options)
+        client.call([:role])[0]
+        @options
+      rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
+        # A consul service name may be deregistered for a redis container setup
+        raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
+
+        return @slave_options if !@fallback_handler.master
+        @fallback_handler.master = false
+        raise ex
+      ensure
+        client.disconnect
+      end
+    end
+  end
 
   def self.raw_connection(config = nil)
     config ||= self.config
@@ -13,9 +103,17 @@ class DiscourseRedis
     GlobalSetting.redis_config
   end
 
+  def self.slave_config(options = config)
+    options.dup.merge!({ host: options[:slave_host], port: options[:slave_port] })
+  end
+
   def initialize(config=nil)
     @config = config || DiscourseRedis.config
     @redis = DiscourseRedis.raw_connection(@config)
+  end
+
+  def self.fallback_handler
+    @fallback_handler ||= DiscourseRedis::FallbackHandler.instance
   end
 
   def without_namespace
@@ -30,6 +128,8 @@ class DiscourseRedis
       unless Discourse.recently_readonly?
         STDERR.puts "WARN: Redis is in a readonly state. Performed a noop"
       end
+
+      fallback_handler.verify_master if !fallback_handler.master
       Discourse.received_readonly!
     else
       raise ex

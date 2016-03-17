@@ -292,6 +292,69 @@ end
   end
 end
 
+[
+  [Badge::Appreciated, "Appreciated", BadgeType::Bronze, 1, 20],
+  [Badge::Respected,   "Respected",   BadgeType::Silver, 2, 100],
+  [Badge::Admired,     "Admired",     BadgeType::Gold,   5, 300],
+].each do |spec|
+  id, name, level, like_count, post_count = spec
+  Badge.seed do |b|
+    b.id = id
+    b.name = name
+    b.default_name = name
+    b.default_icon = "fa-heart"
+    b.badge_type_id = level
+    b.query = Badge::Queries.liked_posts(post_count, like_count)
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    b.trigger = Badge::Trigger::None
+    b.auto_revoke = false
+    b.system = true
+  end
+end
+
+
+[
+  [Badge::ThankYou,   "Thank You",  BadgeType::Bronze, 6, 0.50],
+  [Badge::GivesBack,  "Gives Back", BadgeType::Silver, 100, 1.0],
+  [Badge::Empathetic, "Empathetic", BadgeType::Gold,   500, 2.0],
+].each do |spec|
+  id, name, level, count, ratio = spec
+  Badge.seed do |b|
+    b.id = id
+    b.default_name = name
+    b.default_icon = "fa-heart"
+    b.badge_type_id = level
+    b.query = Badge::Queries.liked_back(count, ratio)
+    b.badge_grouping_id = BadgeGrouping::Community
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    b.trigger = Badge::Trigger::None
+    b.auto_revoke = false
+    b.system = true
+  end
+end
+
+[
+  [Badge::OutOfLove,   "Out of Love",   BadgeType::Bronze, 1],
+  [Badge::HigherLove,  "Higher Love",   BadgeType::Silver, 5],
+  [Badge::CrazyInLove, "Crazy in Love", BadgeType::Gold,   20],
+].each do |spec|
+  id, name, level, count = spec
+  Badge.seed do |b|
+    b.id = id
+    b.name = name
+    b.default_name = name
+    b.default_icon = "fa-heart"
+    b.badge_type_id = level
+    b.query = Badge::Queries.like_rate_limit(count)
+    b.badge_grouping_id = BadgeGrouping::Community
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    b.trigger = Badge::Trigger::None
+    b.auto_revoke = false
+    b.system = true
+  end
+end
+
+
 Badge.where("NOT system AND id < 100").each do |badge|
   new_id = [Badge.maximum(:id) + 1, 100].max
   old_id = badge.id

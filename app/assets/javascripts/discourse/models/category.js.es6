@@ -286,6 +286,10 @@ Category.reopenClass({
     return Discourse.ajax(`/c/${id}/show.json`);
   },
 
+  reloadBySlug(slug, parentSlug) {
+    return parentSlug ? Discourse.ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`) : Discourse.ajax(`/c/${slug}/find_by_slug.json`);
+  },
+
   search(term, opts) {
     var limit = 5;
 

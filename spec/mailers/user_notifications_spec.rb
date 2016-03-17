@@ -405,7 +405,8 @@ describe UserNotifications do
 
     context "user locale has been set" do
 
-      %w(signup signup_after_approval authorize_email forgot_password admin_login account_created).each do |mail_type|
+      %w(signup signup_after_approval confirm_old_email notify_old_email confirm_new_email
+         forgot_password admin_login account_created).each do |mail_type|
         include_examples "notification derived from template" do
           SiteSetting.default_locale = "en"
           let(:locale) { "fr" }
@@ -418,7 +419,8 @@ describe UserNotifications do
     end
 
     context "user locale has not been set" do
-      %w(signup signup_after_approval authorize_email forgot_password admin_login account_created).each do |mail_type|
+      %w(signup signup_after_approval notify_old_email confirm_old_email confirm_new_email
+         forgot_password admin_login account_created).each do |mail_type|
         include_examples "notification derived from template" do
           SiteSetting.default_locale = "en"
           let(:locale) { nil }
@@ -431,7 +433,8 @@ describe UserNotifications do
     end
 
     context "user locale is an empty string" do
-      %w(signup signup_after_approval authorize_email forgot_password admin_login account_created).each do |mail_type|
+      %w(signup signup_after_approval notify_old_email confirm_new_email confirm_old_email
+         forgot_password admin_login account_created).each do |mail_type|
         include_examples "notification derived from template" do
           SiteSetting.default_locale = "en"
           let(:locale) { "" }

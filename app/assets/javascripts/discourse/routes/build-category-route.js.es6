@@ -2,6 +2,8 @@ import { filterQueryParams, findTopicList } from 'discourse/routes/build-topic-r
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 import TopicList from 'discourse/models/topic-list';
 import PermissionType from 'discourse/models/permission-type';
+import CategoryList from 'discourse/models/category-list';
+import Category from 'discourse/models/category';
 
 // A helper function to create a category route with parameters
 export default (filter, params) => {
@@ -9,7 +11,19 @@ export default (filter, params) => {
     queryParams,
 
     model(modelParams) {
-      return { category: Discourse.Category.findBySlug(modelParams.slug, modelParams.parentSlug) };
+      const category = Category.findBySlug(modelParams.slug, modelParams.parentSlug);
+      if (!category) {
+        return Category.reloadBySlug(modelParams.slug, modelParams.parentSlug).then((atts) => {
+          if (modelParams.parentSlug) {
+            atts.category.parentCategory = Category.findBySlug(modelParams.parentSlug);
+          }
+          const record = this.store.createRecord('category', atts.category);
+          record.setupGroupsAndPermissions();
+          this.site.updateCategory(record);
+          return { category: Category.findBySlug(modelParams.slug, modelParams.parentSlug) };
+        });
+      };
+      return { category };
     },
 
     afterModel(model, transition) {
@@ -38,7 +52,6 @@ export default (filter, params) => {
     _createSubcategoryList(category) {
       this._categoryList = null;
       if (Em.isNone(category.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
-        const CategoryList = require('discourse/models/category-list').default;
         return CategoryList.listForParent(this.store, category).then(list => this._categoryList = list);
       }
 

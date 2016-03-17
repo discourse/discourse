@@ -75,9 +75,13 @@ class ApplicationController < ActionController::Base
     render 'default/empty'
   end
 
+  def render_rate_limit_error(e)
+    render_json_error e.description, type: :rate_limit, status: 429
+  end
+
   # If they hit the rate limiter
   rescue_from RateLimiter::LimitExceeded do |e|
-    render_json_error e.description, type: :rate_limit, status: 429
+    render_rate_limit_error(e)
   end
 
   rescue_from PG::ReadOnlySqlTransaction do |e|
@@ -165,7 +169,7 @@ class ApplicationController < ActionController::Base
 
   def set_locale
     if !current_user
-      if SiteSetting.allow_user_locale
+      if SiteSetting.set_locale_from_accept_language_header
         I18n.locale = locale_from_header
       else
         I18n.locale = SiteSetting.default_locale

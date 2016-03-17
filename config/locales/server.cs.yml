@@ -805,7 +805,7 @@ cs:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Přihlášení"
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Potvrďte vaši novou emailovou adresu"
       text_body_template: |
         Potvrďte vaši novou emailovou adresu pro %{site_name} kliknutím na následující odkaz:

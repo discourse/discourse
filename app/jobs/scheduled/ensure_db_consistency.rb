@@ -14,6 +14,7 @@ module Jobs
       Topic.ensure_consistency!
       Badge.ensure_consistency!
       CategoryUser.ensure_consistency!
+      UserOption.ensure_consistency!
     end
   end
 end

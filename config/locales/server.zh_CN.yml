@@ -30,6 +30,20 @@ zh_CN:
   emails:
     incoming:
       default_subject: "来自%{email}的邮件"
+      show_trimmed_content: "显示被截短的内容"
+      errors:
+        empty_email_error: "当收到空白邮件时发生"
+        no_message_id_error: "当邮件头部没有 “Message-Id” 时发生"
+        auto_generated_email_error: "当邮件头部没有设置 “ precedence” 为：list、junk、bulk 或 auto_reply，或者当头部包含了：auto-submitted、auto-replied 或 auto-generated"
+        no_body_detected_error: "当无法提取内容或者没有附件时发生。"
+        inactive_user_error: "当发送者不活跃时发生。"
+        blocked_user_error: "当发送者被封禁时发生。"
+        bad_destination_address: "当发至/抄送/密送栏中的所有邮件都不匹配进站邮件地址时发生。"
+        strangers_not_allowed_error: "当用户尝试在他们不是成员的分类中创建主题时发生。"
+        insufficient_trust_level_error: "当用户尝试在用户等级不满足分类要求时发帖时发生。"
+        reply_user_not_matching_error: "当回复来自与通知发送至的邮件地址不同时发生。"
+        topic_not_found_error: "当回复到已经删除的相关主题时发生。"
+        topic_closed_error: "当回复到已经关闭的相关主题时发生。"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -141,8 +155,10 @@ zh_CN:
   rss_description:
     latest: "最新主题"
     hot: "最热主题"
+    top: "热门主题"
     posts: "最新帖子"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
+  revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
   queue:
     delete_reason: "通过帖子审核队列删除"
@@ -151,7 +167,9 @@ zh_CN:
       can_not_modify_automatic: "你不能修改一个自动组"
       member_already_exist: "“%{username}”已经是群组成员了。"
       invalid_domain: "'%{domain}'不是一个有效域名。"
-      invalid_incoming_email: "'%{incoming_email}'不是一个有效邮箱地址。"
+      invalid_incoming_email: "'%{email}' 不是一个有效邮箱地址。"
+      email_already_used_in_group: "'%{email}' 已经被群组'%{group_name}'使用了。"
+      email_already_used_in_category: "'%{email}' 已经被分类'%{category_name}'使用了。"
     default_names:
       everyone: "任何人"
       admins: "管理面板"
@@ -290,7 +308,9 @@ zh_CN:
       uncategorized_parent: "未分类不能有一个父分类"
       self_parent: "一个子分类不能属于它自己。"
       depth: "你不能在一个子分类下再包含一个子分类。"
-      email_in_already_exist: "入站邮件地址 “%{email_in}” 已经被用于 “%{category_name}” 分类了。"
+      invalid_email_in: "'%{email}'不是一个有效邮箱地址。"
+      email_already_used_in_group: "'%{email}' 已经被群组'%{group_name}'使用了。"
+      email_already_used_in_category: "'%{email}' 已经被分类'%{category_name}'使用了。"
     cannot_delete:
       uncategorized: "不能删除未分类。"
       has_subcategories: "不能删除该分类，因为它有子分类"
@@ -318,11 +338,15 @@ zh_CN:
       first_day_topics_per_day: "你创建新主题的数量已经超出身为新用户当天允许的上限，请等待%{time_left}之后再试。"
       create_topic: "你创建新主题太快了，请等待%{time_left}之后再试。"
       create_post: "你回帖太快了，请等待%{time_left}之后再试。"
+      delete_post: "你正在快速地删除帖子。请等 %{time_left}之后再试。"
       topics_per_day: "你今天新主题的数量已经到达上限，请等待%{time_left}之后再试。"
       pms_per_day: "你今天的消息数量已经到达上限，请等待%{time_left}之后再试。"
       create_like: "你今天的“赞”数量已经到达上限，请等待%{time_left}之后再试。"
       create_bookmark: "你今天的收藏已经到达上限，请等待%{time_left}之后再试。"
       edit_post: "你今天编辑帖子的数量已经到达上限，请等待%{time_left}之后再试。"
+      live_post_counts: "你请求新帖子的速度太快了，请等待 %{time_left}之后再试。"
+      unsubscribe_via_email: "你已经达到了今日用邮件接触订阅的最大数量限制。请等 %{time_left}之后再试。"
+      topic_invitations_per_day: "你已经达到了今日主题邀请的最大数量限制。请等 %{time_left}之后再试。"
     hours:
       other: "%{count} 小时"
     minutes:
@@ -392,6 +416,10 @@ zh_CN:
     confirmed: "你的电子邮箱已被更新。"
     please_continue: "转入到 %{site_name}"
     error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
+    already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
+    authorizing_old:
+      title: "感谢你确认你目前的邮箱地址"
+      description: "我们正向你的新地址发送确认邮件。"
   activation:
     action: "点击这儿激活你的账户"
     already_done: "抱歉，此帐号激活链接已经失效。可能你的帐号已经被激活了？"
@@ -468,7 +496,7 @@ zh_CN:
   unsubscribed:
     title: '取消订阅'
     description: "你已经取消订阅，我们不会再发送邮件给你！"
-    oops: "如果你并非想要取消订阅，请点击下面。"
+    oops: "如果你并不想取消订阅，请点击下方的按钮。"
     error: "取消订阅时出错"
     preferences_link: "你也可以在你的<a href='/my/preferences'>参数设置页面</a>取消订阅摘要邮件"
     different_user_description: "你现在正以另一个用户的身份登录，而非摘要邮件寄给的用户。请登出并再试一次。"
@@ -769,6 +797,7 @@ zh_CN:
     max_username_length: "最大用户名长度。"
     reserved_usernames: "注册时不可使用的用户名。"
     min_password_length: "最小密码长度。"
+    min_admin_password_length: "管理员最短密码长度"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
     enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 提供方协议，要求设置 sso_secret"
@@ -789,6 +818,9 @@ zh_CN:
     enable_twitter_logins: "启用 Twitter 帐号验证登录，需要 twitter_consumer_key 和 twitter_consumer_secret"
     twitter_consumer_key: "Twitter 帐号验证的客户密匙（Consumer key），到 http://dev.twitter.com 来注册获取"
     twitter_consumer_secret: "Twitter 帐号验证的客户密码（Consumer secret），到 http://dev.twitter.com 来注册获取"
+    enable_instagram_logins: "启用 Instagram 验证，需要 instagram_consumer_key 和 instagram_consumer_secret"
+    instagram_consumer_key: "Instagram 验证的 Consumer key"
+    instagram_consumer_secret: "Instagram 验证的 Consumer secret"
     enable_facebook_logins: "启用 Facebook 帐号验证登录，需要 facebook_app_id 和 facebook_app_secret"
     facebook_app_id: "Facebook 帐号验证的应用帐号（App id），到 https://developers.facebook.com/apps 来注册获取"
     facebook_app_secret: "脸书帐号验证的应用密码（App secret），到 https://developers.facebook.com/apps 来注册获取"
@@ -801,6 +833,7 @@ zh_CN:
     backup_frequency: "自动创建站点备份的频率，以天为单位。"
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
+    s3_disable_cleanup: "当在本地删除备份时不删除 S3 上的备份。"
     backup_time_of_day: "备份发送时的UTC时间"
     backup_with_uploads: "在备份日程中包括上传。关闭此项仅备份数据库。"
     active_user_rate_limit_secs: "更新'最后一次见到'数据的间隔，单位为秒"
@@ -821,6 +854,8 @@ zh_CN:
     max_private_messages_per_day: "每个用户每天能发消息数量的最大值。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
     max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
+    alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
+    alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"
     suggested_topics: "在一个主题底部显示的推荐主题的数量。"
     limit_suggested_to_category: "只在当前分类的推荐帖子列表中显示帖子。"
     clean_up_uploads: "移除孤立的已上传资料。警告：你可能想要在启用这个设定前备份一下 /uploads 目录。"
@@ -838,6 +873,7 @@ zh_CN:
     external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "opengraph图像的缺省URL。"
+    allow_all_attachments_for_group_messages: "允许群组消息中包含任何邮件附近。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
     default_trust_level: "所有新用户的缺省信任等级（0-4）。警告！改变此项将提高广告泛滥的风险。"
@@ -1012,14 +1048,17 @@ zh_CN:
     enable_emoji: "启用绘文字（emoji）"
     emoji_set: "你喜欢哪一种 emoji？"
     enforce_square_emoji: "强制为所有 emojis 设置正方形比例。"
-    approve_post_count: "新用户需要被审核的帖子数量"
+    approve_post_count: "新用户或基础用户需要被审核的帖子数量"
     approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
     notify_about_queued_posts_after: "如果有帖子等待了设定的小时数后仍在等候处理，发送一封邮件给联络邮件地址。设为 0 将禁用这些邮件。"
     default_email_digest_frequency: "用户默认收到摘要邮件的默认频率。"
     default_email_private_messages: "默认在有人发消息给用户时发送一封邮件通知。"
     default_email_direct: "默认在有人引用、回复、提及或者邀请用户时发送一封邮件通知。"
     default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
+    disable_mailing_list_mode: "禁止用户使用邮件列表模式。"
     default_email_always: "即使用户活跃时，仍默认发送邮件通知。"
+    default_email_previous_replies: "默认在邮件中包含之前的回复。"
+    default_email_in_reply_to: "默认在邮件中包含回复的摘要文本。"
     default_other_new_topic_duration_minutes: "新主题条件的全局缺省设置"
     default_other_auto_track_topics_after_msecs: "经过多少毫秒之后一个主题就被自动追踪的全局缺省设置"
     default_other_external_links_in_new_tab: "默认在新的标签页打开外部链接"
@@ -1027,6 +1066,7 @@ zh_CN:
     default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
     default_other_disable_jump_reply: "默认不在用户回复后跳转到新帖子位置"
     default_other_edit_history_public: "将帖子修订历史默认公开。"
+    default_other_like_notification_frequency: "默认通知用户赞的消息"
     default_topics_automatic_unpin: "默认时当用户到达底部时自动解除主题置顶。"
     default_categories_watching: "分类列表默认跟踪。"
     default_categories_tracking: "分类列表默认追踪。"
@@ -1049,6 +1089,8 @@ zh_CN:
       pop3_polling_username_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling username'。"
       pop3_polling_password_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling password'。"
       pop3_polling_authentication_failed: "POP3 验证失败。请验证你的 pop3 账户信息。"
+      reply_by_email_address_is_empty: "在启用邮件回复之前，你必须设置“reply by email address”。"
+      pop3_polling_disabled: "在启用邮件回复之前，你必须先启用 POP3 轮询。"
   notification_types:
     group_mentioned: "%{group_name} 在 %{link} @ 了你"
     mentioned: "%{display_username} 在 %{link} @ 了你"
@@ -1060,7 +1102,7 @@ zh_CN:
     moved_post: "%{display_username} 把你的帖子移动到了 %{link}"
     private_message: "%{display_username} 发送给你一条消息：%{link}"
     invited_to_private_message: "%{display_username} 邀请你参与消息讨论：%{link}"
-    invited_to_topic: "%{display_username} 邀请你至主题：%{link}"
+    invited_to_topic: "%{display_username} 请你看看 %{link}"
     invitee_accepted: "%{display_username} 接受了你的邀请"
     linked: "%{display_username} 在 %{link} 里链接了你"
     granted_badge: "你获得了 %{link}"
@@ -1086,7 +1128,7 @@ zh_CN:
     new_topic_moderator_post:
       other: "%{count} 个帖子被分离到了新主题：%{topic_link}"
     existing_topic_moderator_post:
-      other: "%{count} 个帖子被何明至已存在的主题：%{topic_link}"
+      other: "%{count} 个帖子被合并到现存主题：%{topic_link}"
   change_owner:
     post_revision_text: "所有权从 %{old_user} 转移至 %{new_user}"
     deleted_user: "已经删除的用户"
@@ -1141,6 +1183,7 @@ zh_CN:
     reserved_username: "该用户名不可被使用。"
     missing_user_field: "你还没有填写完所有用户字段"
     close_window: "验证已经完成。关闭窗口以继续。"
+    already_logged_in: "喔，看起来你正尝试查看给另一个用户的邀请链接。如果你不是%{current_user}，请登出再重试。"
   user:
     no_accounts_associated: "无关联账户"
     username:
@@ -1149,8 +1192,8 @@ zh_CN:
       characters: "必须只包含字母、数字和下划线"
       unique: "必须是唯一的"
       blank: "必须存在"
-      must_begin_with_alphanumeric: "必须以一个字母或数字或下划线开头"
-      must_end_with_alphanumeric: "必须以字母或数字结尾或是下划线"
+      must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"
+      must_end_with_alphanumeric: "必须以字母或数字结尾"
       must_not_contain_two_special_chars_in_seq: "必须不包括连续的 2 个或更多的特殊字符（.-_）"
       must_not_end_with_confusing_suffix: "不能以难以分辨的后缀结尾，比如 .json 或者 .png 等"
     email:
@@ -1159,6 +1202,11 @@ zh_CN:
     ip_address:
       blocked: "不允许从你的 IP 地址注册新用户。"
       max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
+  flags_reminder:
+    flags_were_submitted:
+      other: "这些标记在过去 %{count} 小时内被提交。请审核他们。"
+    subject_template:
+      other: "%{count} 个标记需要被处理"
   unsubscribe_mailer:
     subject_template: "确认你不想要收到%{site_title}的电子邮件更新"
     text_body_template: |
@@ -1217,23 +1265,25 @@ zh_CN:
 
       [**%{base_url}**][0]
 
-      电子邮件分发很复杂。以下是一些重要的你应该检查的内容：
+      电子邮件分发很复杂。以下是一些你应该检查的重点：
 
-      - 确定你设置了站点设置为 `notification email` 设置了正确的地址。**“来自”中指定的域名应和将要验证的域名一致。**
+      - 确定你在站点设置为 `notification email` 设置了正确的地址。**这是系统发送邮件里的“发自”地址，需要和你的 DNS 以及域名匹配**。
 
-      - 确定你会使用你的邮件客户端查看*电子邮件源代码*，这样你可以通过查看邮件头来获取重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始消息”来查看。
+      - 确定你用邮件客户端查看电子邮件源代码，这样你可以通过查看邮件头部来获取重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始消息”来查看。
 
-      - **重要：** 你的 ISP 是否对你发送邮件的域名和IP作了反向DNS解析？你可以在此[测试你的反向枚举指针（PTR）记录][2]。如果你的 ISP 没有正确的反向 DNS 记录，那么很可能你的任何电子邮件都不会被成功发送。
+      - **重要：** 你的 ISP 是否对你发送邮件的域名和 IP 作了反向 DNS 解析？你可以在此[测试你的反向枚举指针（PTR）记录][2]。如果你的 ISP 没有设置正确的反向 DNS 记录，那么很可能你的任何电子邮件都不会被成功发送。
 
       - 你的域名的[发件人策略框架（SPF）记录][8]是否正确？你可以在此[测试你的SPF记录][1]。注意 TXT 是一种正确的官方 SPF 记录。
 
-      - 你域名的[域名密钥身份识别邮件（DKIM）记录][3]正确？这将显著提高邮件分发的成功率。在此[测试你的 DKIM 记录]。
+      - 你域名的[域名密钥身份识别邮件（DKIM）记录][3]设置是否正确？这将显著提高邮件分发的成功率。在此[测试你的 DKIM 记录][7]。
 
-      - 如果你自己运行邮件服务器，检查确认你发送电子邮件的服务器IP [不在任何邮件黑名单中][4]。验证你的 DNS 记录的 HELO 消息中*确定无疑地*发送了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒绝你的邮件。
+      - 如果你自己运行邮件服务器，检查确认你发送电子邮件的服务器 IP [不在任何邮件黑名单中][4]。验证你的 DNS 记录的 HELO 消息中确定无疑地设置了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒绝你的邮件。
 
-      （最简单的方法是在[Mandrill][md]或[Mailgun][mg]或[Mailjet][mj]注册免费账户，他们的免费账户对一个小社群是足够的。如果你希望在中国大陆提供稳定的服务，你可以考虑[SendCloud][sc]不过你仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
+      - 我们强烈建议你**发送测试邮件至 [mail-tester.com][mt]**，这样可以检查上述设置是否正确。
 
-      我们衷心希望你收到这封邮件，成功完成邮件发送测试！
+      （最简单的方法是在 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 和 [Mailjet][mj]注册免费账户，他们的免费账户对一个小社群是足够的。如果你希望在中国大陆提供稳定的服务，你可以考虑[SendCloud][sc]。不过你仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
+
+      我们衷心希望你成功完成邮件发送测试！
 
       祝好运！
 
@@ -1246,21 +1296,21 @@ zh_CN:
       [4]: http://whatismyipaddress.com/blacklist-check
       [7]: http://dkimcore.org/tools/dkimrecordcheck.html
       [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
+      [sg]: https://sendgrid.com/
+      [sp]: https://www.sparkpost.com/
       [mg]: http://www.mailgun.com/
-      [mj]: http://www.mailjet.com/pricing
+      [mj]: https://www.mailjet.com/pricing
+      [mt]: http://www.mail-tester.com/
       [sc]: http://sendcloud.sohu.com/
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
     text_body_template: |
-      有新版本的 [Discourse](http://www.discourse.org) 可供升级。
+      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！ :)
 
       你的版本：%{installed_version}
-      新版本：**%{new_version}**
+      新的版本：**%{new_version}**
 
-      你可能想要：
-
-      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
+      - 查看[GitHub 改动日志（英文）](https://github.com/discourse/discourse/commits/master)中更新的内容。
 
       - 浏览器访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)  升级。
 
@@ -1268,14 +1318,12 @@ zh_CN:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
     text_body_template: |
-      有新版本的 [Discourse](http://www.discourse.org) 可供升级。
+      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！ :)
 
       你的版本：%{installed_version}
-      新版本：**%{new_version}**
+      新的版本：**%{new_version}**
 
-      你可能想要：
-
-      - 查看[GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
+      - 查看[GitHub 改动日志（英文）](https://github.com/discourse/discourse/commits/master)中更新的内容。
 
       - 浏览器访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)  升级。
 
@@ -1497,19 +1545,19 @@ zh_CN:
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
-        与你账户管理的邮件地址没有激活，请先激活你的账号再发送邮件。
+        与你账户关联的邮件地址没有激活，请先激活你的账号再发送邮件。
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] 电子邮件错误 -- 封禁的用户"
+      text_body_template: |
+        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+
+        与你账户关联的邮件地址已经被封禁。
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] 电子邮件错误 -- 回复用户不符"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         你发送回复的邮件地址与我们等待的地址不同，所以我们不确定你是不是同一个人。试试从另外一个邮件地址发送，或者联系管理人员。
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 无信息ID"
-      text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
-        我们没法在邮件里找到 `Message-Id`。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_no_account:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未知账户"
       text_body_template: |
@@ -1558,6 +1606,12 @@ zh_CN:
         %{post_error}
 
         如果你能解决错误，请再试一次。
+    email_reject_rate_limit_specified:
+      subject_template: "[%{site_name}] 电子邮件错误 -- 频率限制"
+      text_body_template: |
+        我们很抱歉，但是您发送至 %{destination}（名为%{former_title}）的邮件出问题了。
+
+        原因： %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无发表权限"
       text_body_template: |
@@ -1666,12 +1720,14 @@ zh_CN:
   subject_pm: "[私信]"
   user_notifications:
     previous_discussion: "之前的回复"
+    in_reply_to: "回复给"
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
     reply_by_email: "访问[visit the topic](%{base_url}%{url})或回复邮件以回复"
-    visit_link_to_respond: "访问[Visit Topic](%{base_url}%{url})以回复"
     reply_by_email_pm: "[访问消息](%{base_url}%{url})或者用邮件回复"
+    only_reply_by_email: "用邮件回复"
+    visit_link_to_respond: "访问[Visit Topic](%{base_url}%{url})以回复"
     visit_link_to_respond_pm: "访问[Visit Message](%{base_url}%{url})以回复"
     posted_by: "%{username}发表于%{post_date}"
     user_invited_to_private_message_pm:
@@ -1705,7 +1761,7 @@ zh_CN:
 
         请访问 %{base_url}%{url} 来查看该主题。
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} 邀请你至主题：'%{topic_title}'"
+      subject_template: "[%{site_name}] %{username}邀请你参与“%{topic_title}”"
       text_body_template: |2
 
         %{username} 邀请你参与讨论：
@@ -1742,6 +1798,17 @@ zh_CN:
         ---
         %{respond_instructions}
     user_quoted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1805,7 +1872,7 @@ zh_CN:
         ---
         %{respond_instructions}
     digest:
-      why: "在你上一次于 %{last_seen_at} 访问后，%{site_link}的简洁摘要。"
+      why: "在你上一次于 %{last_seen_at}访问后，%{site_link}的新内容摘要。"
       subject_template: "[%{site_name}] 摘要"
       new_activity: "在你的主题和帖子里的动态："
       top_topics: "热门帖子"
@@ -1850,12 +1917,28 @@ zh_CN:
 
         点击下面的链接来为新账户设置密码：
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
-        点击下面的链接来确认你在 %{site_name} 上的新电子邮箱地址：
+        点击下面的链接来确认你在%{site_name}上的新电子邮箱地址：
 
         %{base_url}/users/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
+      text_body_template: |
+        在我们修改你的邮箱地址前，我们需要你确认你拥有当前的邮件账号。在你完成这步之后，我们将确认你的新邮件地址。
+
+        点击下面的链接来确认你当前在%{site_name}上的电子邮箱地址：
+
+        %{base_url}/users/authorize-email/%{email_token}
+    notify_old_email:
+      subject_template: "[%{site_name}] 你的邮箱地址已经修改成功"
+      text_body_template: |
+        这是一封自 %{site_name} 自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
+
+        你的邮箱地址被修改为：
+
+        %{new_email}
     signup_after_approval:
       subject_template: "你已经被 %{site_name} 论坛批准加入了！"
       text_body_template: |
@@ -1885,7 +1968,7 @@ zh_CN:
 
         如果上面的链接无法点击，请拷贝该链接并粘贴到你的浏览器的地址栏里。
   page_not_found:
-    title: "你请求的页面不存在或者是私密的。"
+    title: "抱歉！这个页面不存在或者是私密的。"
     popular_topics: "热门"
     recent_topics: "最近"
     see_more: "更多"
@@ -2167,7 +2250,32 @@ zh_CN:
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
   static:
     search_help: |
-      <h3>小技巧</h3> <p> <ul> <li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li> <li>搜索独一无二且不常见的单词可以得到最好的结果</li> <li>试试搜索特定的分类、用户或主题</li> </ul> </p> <h3>选项</h3> <p> <table> <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr> <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr> <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><;code>group:foo<;/code></td><;td><code>badge:foo<;/code></td><td></td></tr> <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr> <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr> <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr> </table> </p> <p>;&lt;code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。 </p>
+      <h3>小技巧</h3>
+      <p>
+      <ul>
+        <li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li>
+        <li>搜索独一无二且不常见的词可以找到最好的结果</li>
+        <li>试试搜索特定的分类、用户或主题</li>
+      </ul>
+      </p>
+      <h3>选项</h3>
+      <p>
+        <table>
+        <tr><td><code>order:views（按照显示次数排序）</code></td><td><code>order:latest（按照更新时间排序）</code></td><td><code>order:likes（按照赞的次数排序）</code><td></td><td colspan=2></td></tr>
+        <tr><td><code>status:open（搜索正常状态的主题）</code></td><td><code>status:closed（搜索已经关闭的主题）</code></td><td><code>status:archived（搜索已经存档的主题）</code></td><td><code>status:noreplies（搜索没有回复的主题）</code></td><td><code>status:single_user（搜索单个用户的主题）</code></td></tr>
+        <tr><td><code>category:分类名</code></td><td><code>user:用户名</code></td><td><code>group:群组名</code></td><td><code>badge:徽章名</code></td><td></td></tr>
+        <tr><td><code>in:likes（在已经赞的帖子里搜索）</code></td><td><code>in:posted（在发表的帖子里搜索）</code></td><td><code>in:watching（在关注的帖子里搜索）</code></td><td><code>in:tracking（在追踪的帖子里搜索）</code></td><td><code>in:private（在私密的帖子里搜索）</code></td></tr>
+        <tr><td><code>in:bookmarks（在加书签的帖子里搜索）</code></td><td><code>in:first（在第一帖里搜索）</code></td><td colspan=3></td></tr>
+        <tr><td><code>posts_count:数字（帖子数量）</code></td><td><code>before:天数或者日期</code></td><td><code>after:天数或者日期</code></td> <td colspan=2></td></tr>
+        </table>
+      </p>
+      <h3>例子</h3>
+      <p>
+        <ul>
+          <li><code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。</li>
+          <li><code>彩虹 category:"公园和花园" in:bookmarks</code> 将搜索在“公园和花园”分类中已被你加过书签的且名字包含“彩虹”的主题。</li>
+        </ul>
+      </p>
   badges:
     long_descriptions:
       autobiographer: |
@@ -2231,6 +2339,8 @@ zh_CN:
   performance_report:
     initial_post_raw: 这个主题包括你网站的每日性能报告
     initial_topic_title: 网站性能报告
+  topic_invite:
+    user_exists: "抱歉，用户已经被邀请了。你可能只想邀请用户参与主题一次。"
   time:
     <<: *datetime_formats
   activemodel:

@@ -185,8 +185,8 @@ export default createWidget('topic-map', {
   tagName: 'div.topic-map',
   buildKey: attrs => `topic-map-${attrs.id}`,
 
-  defaultState() {
-    return { collapsed: true };
+  defaultState(attrs) {
+    return { collapsed: !attrs.hasTopicSummary };
   },
 
   html(attrs, state) {

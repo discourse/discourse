@@ -37,6 +37,7 @@ class Toolbar {
     ];
 
     this.addButton({
+      trimLeading: true,
       id: 'bold',
       group: 'fontStyles',
       shortcut: 'B',
@@ -44,6 +45,7 @@ class Toolbar {
     });
 
     this.addButton({
+      trimLeading: true,
       id: 'italic',
       group: 'fontStyles',
       shortcut: 'I',
@@ -134,7 +136,8 @@ class Toolbar {
       className: button.className || button.id,
       icon: button.icon || button.id,
       action: button.action || 'toolbarButton',
-      perform: button.perform || Ember.K
+      perform: button.perform || Ember.K,
+      trimLeading: button.trimLeading
     };
 
     if (button.sendAction) {
@@ -355,17 +358,24 @@ export default Ember.Component.extend({
     });
   },
 
-  _getSelected() {
+  _getSelected(trimLeading) {
     if (!this.get('ready')) { return; }
 
     const textarea = this.$('textarea.d-editor-input')[0];
     const value = textarea.value;
-    const start = textarea.selectionStart;
+    var start = textarea.selectionStart;
     let end = textarea.selectionEnd;
 
-    // Windows selects the space after a word when you double click
+    // trim trailing spaces cause **test ** would be invalid
     while (end > start && /\s/.test(value.charAt(end-1))) {
       end--;
+    }
+
+    if (trimLeading) {
+      // trim leading spaces cause ** test** would be invalid
+      while(end > start && /\s/.test(value.charAt(start))) {
+        start++;
+      }
     }
 
     const selVal = value.substring(start, end);
@@ -487,7 +497,7 @@ export default Ember.Component.extend({
 
   actions: {
     toolbarButton(button) {
-      const selected = this._getSelected();
+      const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
         applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
@@ -516,18 +526,26 @@ export default Ember.Component.extend({
       const link = this.get('link');
       const sel = this._lastSel;
 
+      const autoHttp = function(l){
+        if (l.indexOf("://") === -1) {
+          return "http://" + l;
+        } else {
+          return l;
+        }
+      };
+
       if (Ember.isEmpty(link)) { return; }
       const m = / "([^"]+)"/.exec(link);
       if (m && m.length === 2) {
         const description = m[1];
         const remaining = link.replace(m[0], '');
-        this._addText(sel, `[${description}](${remaining})`);
+        this._addText(sel, `[${description}](${autoHttp(remaining)})`);
       } else {
         if (sel.value) {
-          this._addText(sel, `[${sel.value}](${link})`);
+          this._addText(sel, `[${sel.value}](${autoHttp(link)})`);
         } else {
           const desc = I18n.t('composer.link_description');
-          this._addText(sel, `[${desc}](${link})`);
+          this._addText(sel, `[${desc}](${autoHttp(link)})`);
           this._selectText(sel.start + 1, desc.length);
         }
       }

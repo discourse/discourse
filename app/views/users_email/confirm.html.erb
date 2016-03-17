@@ -1,0 +1,15 @@
+<div id="simple-container">
+  <% if @update_result == :authorizing_new %>
+    <h2><%= t 'change_email.authorizing_old.title' %></h2>
+    <br>
+    <p><%= t 'change_email.authorizing_old.description' %></p>
+  <% elsif @update_result == :complete %>
+    <h2><%= t 'change_email.confirmed' %></h2>
+    <br>
+    <a class="btn" href="/"><%= t('change_email.please_continue', site_name: SiteSetting.title) %></a>
+  <% else %>
+    <div class='alert alert-error'>
+      <%=t 'change_email.error' %>
+    </div>
+  <% end %>
+</div>

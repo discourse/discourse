@@ -141,7 +141,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   fetchUserDetails() {
     if (Discourse.User.currentProp('staff') && this.get('model.username')) {
       const AdminUser = require('admin/models/admin-user').default;
-      AdminUser.find(this.get('model.id')).then(user => this.set('userDetails', user));
+      AdminUser.find(this.get('model.user_id')).then(user => this.set('userDetails', user));
     }
   }
 

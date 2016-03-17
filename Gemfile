@@ -52,7 +52,7 @@ gem 'ember-source', '1.12.2'
 gem 'barber'
 gem 'babel-transpiler'
 
-gem 'message_bus', '2.0.0.beta.4'
+gem 'message_bus', '2.0.0.beta.5'
 
 gem 'rails_multisite'
 
@@ -66,7 +66,7 @@ gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.0.8'
+gem 'email_reply_trimmer', '0.1.1'
 
 # note: for image_optim to correctly work you need to follow
 # https://github.com/toy/image_optim

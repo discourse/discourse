@@ -38,14 +38,23 @@ class PostAlerter
     # mentions (users/groups)
     mentioned_groups, mentioned_users = extract_mentions(post)
 
-    expand_group_mentions(mentioned_groups, post) do |group, users|
-      notify_users(users - notified, :group_mentioned, post, group: group)
-      notified += users
-    end
+    if mentioned_groups || mentioned_users
+      mentioned_opts = {}
+      if post.last_editor_id != post.user_id
+        # Mention comes from an edit by someone else, so notification should say who added the mention.
+        editor = post.last_editor
+        mentioned_opts = {user_id: editor.id, original_username: editor.username, display_username: editor.username}
+      end
 
-    if mentioned_users
-      notify_users(mentioned_users - notified, :mentioned, post)
-      notified += mentioned_users
+      expand_group_mentions(mentioned_groups, post) do |group, users|
+        notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge({group: group}))
+        notified += users
+      end
+
+      if mentioned_users
+        notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
+        notified += mentioned_users
+      end
     end
 
     # replies
@@ -208,14 +217,18 @@ class PostAlerter
   end
 
   def should_notify_previous?(user, notification, opts)
-    type = notification.notification_type
-    if type == Notification.types[:edited]
-      return should_notify_edit?(notification, opts)
-    elsif type == Notification.types[:liked]
-      return should_notify_like?(user, notification)
+    case notification.notification_type
+    when Notification.types[:edited] then should_notify_edit?(notification, opts)
+    when Notification.types[:liked]  then should_notify_like?(user, notification)
+    else false
     end
-    return false
   end
+
+  COLLAPSED_NOTIFICATION_TYPES ||= [
+    Notification.types[:replied],
+    Notification.types[:quoted],
+    Notification.types[:posted],
+  ]
 
   def create_notification(user, type, post, opts=nil)
     return if user.blank?
@@ -228,7 +241,7 @@ class PostAlerter
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
 
-    notifier_id = opts[:user_id] || post.user_id
+    notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
 
     # apply muting here
     return if notifier_id && MutedUser.where(user_id: user.id, muted_user_id: notifier_id)
@@ -268,9 +281,10 @@ class PostAlerter
 
     collapsed = false
 
-    if type == Notification.types[:replied] || type == Notification.types[:posted]
-      destroy_notifications(user, Notification.types[:replied], post.topic)
-      destroy_notifications(user, Notification.types[:posted], post.topic)
+    if COLLAPSED_NOTIFICATION_TYPES.include?(type)
+      COLLAPSED_NOTIFICATION_TYPES.each do |t|
+        destroy_notifications(user, t, post.topic)
+      end
       collapsed = true
     end
 
@@ -280,7 +294,7 @@ class PostAlerter
     end
 
     original_post = post
-    original_username = opts[:display_username] || post.username
+    original_username = opts[:display_username] || post.username # xxxxx need something here too
 
     if collapsed
       post = first_unread_post(user, post.topic) || post

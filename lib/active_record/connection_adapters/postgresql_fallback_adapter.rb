@@ -39,7 +39,7 @@ class PostgreSQLFallbackHandler
             end
 
             Discourse.disable_readonly_mode
-            master = true
+            self.master = true
           end
         rescue => e
           if e.message.include?("could not connect to server")
@@ -74,7 +74,12 @@ class PostgreSQLFallbackHandler
       @master[db] = true
       @running[db] = false
       @mutex[db] = Mutex.new
+      @last_check[db] = nil
     end
+  end
+
+  def verify?
+    !master && !running && !recently_checked?
   end
 
   private
@@ -110,7 +115,7 @@ module ActiveRecord
       fallback_handler = ::PostgreSQLFallbackHandler.instance
       config = config.symbolize_keys
 
-      if !fallback_handler.master && !fallback_handler.running
+      if fallback_handler.verify?
         connection = postgresql_connection(config.dup.merge({
           host: config[:replica_host], port: config[:replica_port]
         }))
@@ -148,9 +153,7 @@ module ActiveRecord
       end
 
       def switch_back?
-        if !fallback_handler.master && !fallback_handler.running
-          fallback_handler.verify_master
-        end
+        fallback_handler.verify_master if fallback_handler.verify?
       end
     end
   end

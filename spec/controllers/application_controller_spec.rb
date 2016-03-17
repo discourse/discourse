@@ -66,9 +66,6 @@ describe TopicsController do
     render_views
 
     context "when not a crawler" do
-      before do
-        CrawlerDetection.expects(:crawler?).returns(false)
-      end
       it "renders with the application layout" do
         get :show, topic_id: topic.id, slug: topic.slug
         expect(response).to render_template(layout: 'application')
@@ -77,10 +74,8 @@ describe TopicsController do
     end
 
     context "when a crawler" do
-      before do
-        CrawlerDetection.expects(:crawler?).returns(true)
-      end
       it "renders with the crawler layout" do
+        request.env["HTTP_USER_AGENT"] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
         get :show, topic_id: topic.id, slug: topic.slug
         expect(response).to render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
@@ -148,10 +143,11 @@ describe TopicsController do
       end
     end
 
-    context "allow_user_locale enabled" do
+    context "set_locale_from_accept_language_header enabled" do
       context "accept-language header differs from default locale" do
         before do
           SiteSetting.stubs(:allow_user_locale).returns(true)
+          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(true)
           SiteSetting.stubs(:default_locale).returns("en")
           set_accept_language("fr")
         end
@@ -178,7 +174,7 @@ describe TopicsController do
 
       context "the preferred locale includes a region" do
         it "returns the locale and region separated by an underscore" do
-          SiteSetting.stubs(:allow_user_locale).returns(true)
+          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(true)
           SiteSetting.stubs(:default_locale).returns("en")
           set_accept_language("zh-CN")
 

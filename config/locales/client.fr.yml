@@ -179,6 +179,8 @@ fr:
     more: "Plus"
     less: "Moins"
     never: "jamais"
+    every_30_minutes: "toutes les 30 minutes"
+    every_hour: "chaque heure"
     daily: "quotidiennes"
     weekly: "hebdomadaires"
     every_two_weeks: "bi-mensuelles"
@@ -326,7 +328,10 @@ fr:
         one: "groupe"
         other: "groupes"
       members: "Membres"
+      topics: "Sujets"
       posts: "Messages"
+      mentions: "Mentions"
+      messages: "Messages"
       alias_levels:
         title: "Qui peut envoyer un message et @notifier ce groupe ?"
         nobody: "Personne"
@@ -468,7 +473,7 @@ fr:
       muted_users: "Silencieux"
       muted_users_instructions: "Cacher toutes les notifications de ces utilisateurs."
       muted_topics_link: "Afficher les sujets en sourdine"
-      automatically_unpin_topics: "Automatiquement désépingler les sujets lorsque vous atteignez le bas."
+      automatically_unpin_topics: "Desépingler automatiquement quand j'arrive à la fin."
       staff_counters:
         flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
@@ -569,6 +574,12 @@ fr:
         title: "Badge pour la carte de l'utilisateur"
       website: "Site internet"
       email_settings: "Courriel"
+      like_notification_frequency:
+        title: "Notifier lors d'un J'aime"
+        always: "Toujours"
+        first_time_and_daily: "La première fois qu'un message est aimé, et quotidiennement"
+        first_time: "La première fois qu'un message est aimé"
+        never: "Jamais"
       email_previous_replies:
         title: "Inclure les réponses précédentes en bas des courriels"
         unless_emailed: "sauf si déjà envoyé"
@@ -576,6 +587,8 @@ fr:
         never: "jamais"
       email_digests:
         title: "Quand je ne visite pas ce site, m'envoyer un résumé des nouveautés par courriel:"
+        every_30_minutes: "toutes les 30 minutes"
+        every_hour: "toutes les heures"
         daily: "quotidien"
         every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
@@ -707,9 +720,11 @@ fr:
     read_only_mode:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
+      logout_disabled: "Impossible de se deconnecter quand le site est en mode lecture seule."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
+    logs_error_rate_exceeded_notice: "%{timestamp}: Le taux actuel de <a href='%{url}' target='_blank'>%{rate} erreurs/%{duration}</a> a dépassé la limite des paramètres du site de %{siteSettingLimit} erreurs/%{duration}."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -802,6 +817,9 @@ fr:
       twitter:
         title: "via Twitter"
         message: "Authentification via Twitter (assurez-vous que les popups ne soient pas bloquées)"
+      instagram:
+        title: "avec Instagram"
+        message: "Authentification via Instagtram (assurez-vous que les popups ne soient pas bloquées)"
       facebook:
         title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
@@ -907,9 +925,13 @@ fr:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='cité' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='avec réponse' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='édité' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='aimé' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} et 1 autre</span> {{description}}</p>"
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} et {{count}} autres</span> {{description}}</p>"
       private_message: "<i title='message privé' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='message privé' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='invité' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1462,6 +1484,7 @@ fr:
           last: "Dernière révision"
           hide: "Masquer la révision"
           show: "Afficher la révision"
+          revert: "Revenir à cette révision"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1542,7 +1565,6 @@ fr:
           description: "Vous ne serez jamais notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
     flagging:
       title: 'Merci de nous aider à garder notre communauté aimable !'
-      private_reminder: 'les signalements sont privés, <b>seulement</b> visible aux modérateurs'
       action: 'Signaler ce message'
       take_action: "Signaler"
       notify_action: 'Message'
@@ -1554,7 +1576,7 @@ fr:
       submit_tooltip: "Soumettre le signalement privé"
       take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre plus de signalement de la communauté."
       cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
-      notify_staff: 'Notifier les responsables'
+      notify_staff: 'Notifier les responsables de manière privée'
       formatted_name:
         off_topic: "C'est hors-sujet"
         inappropriate: "C'est inapproprié"
@@ -2087,10 +2109,11 @@ fr:
             references: "References"
             date: "Date"
             from: "From"
-            to: "à"
+            to: "To"
             cc: "Cc"
-            subject: "Objet"
-            body: "Corps"
+            subject: "Subject"
+            body: "Body"
+            rejection_message: "Courriel de refus"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"

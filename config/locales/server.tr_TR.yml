@@ -1110,6 +1110,9 @@ tr_TR:
     ip_address:
       blocked: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor."
       max_new_accounts_per_registration_ip: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor. (Belirlenen maksimum limit aşıldı.) Bir yetkili ile iletişime geçin."
+  flags_reminder:
+    subject_template:
+      other: "İlgilenilmesi gereken %{count} bayrak var"
   invite_mailer:
     subject_template: "%{invitee_name}  sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti. "
     text_body_template: "%{invitee_name} sizi \n\n> %{site_title} -- %{site_description} \n\nsitesindeki\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\ntartışmasına davet ediyor.\n\nEğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:\n\n%{invite_link}\n\nBu davet güvenilir bir kullanıcı tarafından gönderilmiştir, cevap yazarak tartışmaya hemen katılabilirsiniz.\n"
@@ -1421,7 +1424,7 @@ tr_TR:
 
         Yeni hesabınıza ait bir parola oluşturmak için aşağıdaki bağlantıya tıklayın:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Yeni e-posta adresinizi onaylayın"
       text_body_template: |
         Aşağıdaki bağlantıya tıklayarak %{site_name} sitesindeki yeni e-posta adresinizi onaylayın:

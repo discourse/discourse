@@ -27,7 +27,7 @@ fi:
     requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
     cannot_change_polls_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen."
     op_cannot_edit_options_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen. Ota yhteyttä valvojaan, jos sinun täytyy muokata kyselyn vaihtoehtoja."
-    staff_cannot_add_or_remove_options_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen. Sinun tulee poistaa tämä ketju ja avata uusi sen sijaan."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen. Sinun tulee poistaa tämä ketju ja luoda uusi sen sijaan."
     no_polls_associated_with_this_post: "Tämä viesti ei sisällä äänestyskyselyä."
     no_poll_with_this_name: "Tämä viesti ei sisällä äänestyskyselyä nimeltä <strong>%{name}</strong>."
     post_is_deleted: "Ei voi tehdä poistetulle viestille"

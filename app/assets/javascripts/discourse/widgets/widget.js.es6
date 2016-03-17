@@ -140,7 +140,7 @@ export default class Widget {
     if (prev && prev.state) {
       this.state = prev.state;
     } else {
-      this.state = this.defaultState();
+      this.state = this.defaultState(this.attrs, this.state);
     }
 
     // Sometimes we pass state down from the parent

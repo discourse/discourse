@@ -1119,6 +1119,10 @@ he:
     ip_address:
       blocked: "הרשמות חדשות אסורות מכתובת ה-IP שלך. "
       max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם מנהל."
+  flags_reminder:
+    subject_template:
+      one: "סימון אחד ממתין לטיפול"
+      other: "%{count} סימונים ממתינים לטיפול"
   invite_mailer:
     subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
     text_body_template: |
@@ -1472,7 +1476,7 @@ he:
 
         הקישו על הקישור המצורף כדי להגדיר סיסמא לחשבונך החדש:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:

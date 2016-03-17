@@ -58,7 +58,7 @@
         <div>
         <%- @new_by_category.first(10).each do |c| %>
           <span style='white-space: nowrap'>
-            <a href='<%= Discourse.base_url %><%= c[0].url %>' style='color: #<%= @anchor_color %>'><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span>
+            <a href='<%= Discourse.base_url %><%= c[0].url %>' style='color: #<%= @anchor_color %>'><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span></a>
           </span>
         <%- end %>
       </div>
@@ -71,7 +71,7 @@
 </table>
 
 <div class='footer'>
-  <%=raw(t :'user_notifications.digest.unsubscribe',
+  <%=raw(t 'user_notifications.digest.unsubscribe',
            site_link: html_site_link(@anchor_color),
            unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @unsubscribe_key), {:style=>'color: #' + @anchor_color }))  %>
 </div>

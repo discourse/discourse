@@ -29,17 +29,18 @@ pt:
   anonymous: "Anónimo"
   emails:
     incoming:
-      default_subject: "Email de entrada de %{email}"
+      default_subject: "Email recebido de %{email}"
+      show_trimmed_content: "Mostrar conteúdo aparado"
       errors:
-        empty_email_error: "Acontece quando, a informação não processada, do correio recebido veio em branco."
-        no_message_id_error: "Acontece quando o correio recebido não tem identificador de mensagem no cabeçalho."
-        auto_generated_email_error: "Acontece quando a antecedência do cabeçalho é definida como: 'list', 'junk' ou 'auto_reply', ou quando algum cabeçalho contém: 'auto-submitted', 'auto-replied' ou 'auto-generated'."
+        empty_email_error: "Acontece quando, a informação não processada, do email recebido veio em branco."
+        no_message_id_error: "Acontece quando o email recebido não tem 'Message-Id' no cabeçalho da mensagem."
+        auto_generated_email_error: "Acontece quando o cabeçalho 'precedence' é definida como: 'list', 'junk' ou 'auto_reply', ou quando algum cabeçalho contém: 'auto-submitted', 'auto-replied' ou 'auto-generated'."
         no_body_detected_error: "Acontece quando não conseguimos extrair o corpo da mensagem e não existem anexos."
         inactive_user_error: "Acontece quando o remetente não está activo."
         blocked_user_error: "Acontece quando o remetente está bloqueado."
         bad_destination_address: "Acontece quando nenhum dos endereços de email nos campos para/cc/bcc coincide com um endereço de email configurado."
         strangers_not_allowed_error: "Acontece quando um utilizador tenta criar um tópico numa categoria em que não é membro."
-        insufficient_trust_level_error: "Acontece quando um utilizador tentar criar um tópico numa categoria para qual este não o nível de confiança necessário."
+        insufficient_trust_level_error: "Acontece quando um utilizador tentar criar um tópico numa categoria para a qual não tem o nível de confiança necessário."
         reply_user_not_matching_error: "Acontece quando uma resposta veio de um endereço de email diferente do destinatário da notificação."
         topic_not_found_error: "Acontece quando a resposta veio de um tópico relacionado mas o tópico relacionado foi apagado."
         topic_closed_error: "Acontece quando uma resposta chegou mas o tópico relacionado foi fechado."
@@ -169,6 +170,7 @@ pt:
     top: "Melhores tópicos"
     posts: "Últimas mensagens"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
+  revert_version_same: "A versão atual é o mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
   queue:
     delete_reason: "Eliminado através da fila de moderação de mensagens"
@@ -177,7 +179,9 @@ pt:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
       member_already_exist: "'%{username}' já é membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
-      invalid_incoming_email: "'%{incoming_email}' não é um endereço de email válido."
+      invalid_incoming_email: "'%{email}' não é um endereço de email válido."
+      email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -320,8 +324,9 @@ pt:
       uncategorized_parent: "Sem categoria não podem ter categorias de nível superior"
       self_parent: "Uma subcategoria não pode ser superior a ela própria"
       depth: "Não pode juntar uma subcategoria dentro de outra"
-      email_in_already_exist: "Endereço de email de recepção %{email_in}' já está a ser utilizado pela categoria %{category_name}'."
-      invalid_email_in: "'%{email_in}' não é um endereço de email válido."
+      invalid_email_in: "'%{email}' não é um endereço de email válido."
+      email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Não é possível eliminar Sem Categoria"
       has_subcategories: "Não é possível eliminar esta categoria porque contém sub-categorias."
@@ -350,11 +355,15 @@ pt:
       first_day_topics_per_day: "Atingiu o número máximo de tópicos que um novo utilizador pode criar no seu primeiro dia. Por favor espere %{time_left} antes de tentar novamente."
       create_topic: "Está a criar tópicos demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
       create_post: "Está a responder demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
+      delete_post: "Está a apagar mensagens demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
       topics_per_day: "Atingiu o número máximo de novos tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
       pms_per_day: "Atingiu o número máximo de mensagens de hoje. Por favor espere %{time_left} antes de tentar novamente."
       create_like: "Atingiu o número máximo de gostos de hoje. Por favor espere %{time_left} antes de tentar novamente."
       create_bookmark: "Atingiu o número máximo de marcações de hoje. Por favor espere %{time_left} antes de tentar novamente."
       edit_post: "Atingiu o número máximo de edições de hoje. Por favor espere %{time_left} antes de tentar novamente."
+      live_post_counts: "Tem estado a pedir contagens de mensagens em directo demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
+      unsubscribe_via_email: "Atingiu o número máximo de cancelamentos de subscrições por email de hoje. Por favor espere %{time_left} antes de tentar novamente."
+      topic_invitations_per_day: "Atingiu o número máximo de convites para tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -449,6 +458,10 @@ pt:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja a ser utilizado?"
+    already_done: "Pedimos desculpa, esta hiperligação de confirmação já não é valida. Talvez o seu email já foi alterado?"
+    authorizing_old:
+      title: "Obrigado por confirmar o seu endereço de email atual."
+      description: "Estamos a enviar um email, para o seu novo endereço de email, para confirmação."
   activation:
     action: "Clique aqui para ativar a sua conta"
     already_done: "Pedimos desculpa, esta hiperligação de confirmação já não está válida. Talvez a sua conta já esteja ativa?"
@@ -825,6 +838,7 @@ pt:
     max_username_length: "Comprimento máximo do nome de utilizador, em caracteres."
     reserved_usernames: "Nomes de utilizadores para os quais o registo não é permitido."
     min_password_length: "Tamanho mínimo da palavra-passe."
+    min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
     enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
     enable_sso_provider: "Implementar o protocolo do provedor SSO do Discourse no caminho /session/sso_provider, requer que sso_secret seja configurado"
@@ -845,6 +859,9 @@ pt:
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
     twitter_consumer_key: "Chave de consumidor para autenticação pelo Twitter, registada em http://dev.twitter.com"
     twitter_consumer_secret: "Chave do Consumidor para a autenticação pelo Twitter, registada em http://dev.twitter.com"
+    enable_instagram_logins: "Ativar autenticação pelo Instagram, requer instagram_consumer_key e instagram_consumer_secret"
+    instagram_consumer_key: "Chave de cliente para a autenticação via Instagram"
+    instagram_consumer_secret: "Segredo de cliente para a autenticação via Instagram"
     enable_facebook_logins: "Ativar autenticação pelo Facebook, requer facebook_app_id e facebook_app_secret"
     facebook_app_id: "Id App usado para autenticação pelo Facebook, registado em https://developers.facebook.com/apps"
     facebook_app_secret: "Chave da App para autenticação com o Facebook, registado em https://developers.facebook.com/apps"
@@ -857,6 +874,7 @@ pt:
     backup_frequency: "Com que frequência criamos cópias de segurança do sítio, em dias."
     enable_s3_backups: "Carregar cópias de segurança para S3 quando completo. IMPORTANTE: requer credenciais S3 válidas inseridas nas configurações dos ficheiros."
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
+    s3_disable_cleanup: "Desative a remoção das cópias de segurança do S3 quando removidas localmente."
     backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
     backup_with_uploads: "Incluir carregamentos em cópias de segurança agendadas. Desativar isto irá salvaguardar apenas a base de dados."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
@@ -877,6 +895,8 @@ pt:
     max_private_messages_per_day: "Número máximo de mensagens que os utilizadores podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um utilizador pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
+    alert_admins_if_errors_per_minute: "O número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
+    alert_admins_if_errors_per_hour: "O número de erros por hora necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Apenas mostrar tópicos da categoria atual nos tópicos sugeridos."
     clean_up_uploads: "Remover carregamentos orfãos não referenciados para prevenir alojamento ilegal. AVISO: poderá querer criar uma cópia de segurança da diretoria /uploads antes de ativar esta configuração."
@@ -1069,13 +1089,14 @@ pt:
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
     enforce_square_emoji: "Forçar uma relação de aspecto quadrado para todos os emojis."
-    approve_post_count: "A quantidade de mensagens de um novo utilizador que devem ser aprovadas"
+    approve_post_count: "A quantidade de mensagens de um novo utilizador ou utilizador básico que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
     notify_about_queued_posts_after: "Se não houver mensagens que estiveram à espera de revisão por mais do que estas horas, um email será enviado para o email de contacto. Configure para 0 para desativar estes emails."
     default_email_digest_frequency: "Por defeito, quantas vezes os utilizadores recebem emails de resumo."
     default_email_private_messages: "Por defeito, enviar um email quando alguém envia mensagens ao utilizador."
     default_email_direct: "Por defeito, enviar um email quando alguém cita/responde a/menciona ou convida o utilizador."
     default_email_mailing_list_mode: "Por defeito, enviar um email por cada nova mensagem."
+    disable_mailing_list_mode: "Não permitir aos utilizadores habilitar o modo de lista de distribuição."
     default_email_always: "Por defeito, enviar notificações por email mesmo quando o utilizador está ativo."
     default_email_previous_replies: "Incluir respostas previas nos emails por defeito."
     default_email_in_reply_to: "Por defeito Incluir excerto de mensagem de resposta nos email."
@@ -1086,6 +1107,7 @@ pt:
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
     default_other_disable_jump_reply: "Por defeito, não saltar para a mensagem do utilizador após ter respondido."
     default_other_edit_history_public: "Por defeito, realizar revisões públicas das mensagens."
+    default_other_like_notification_frequency: "Notificar por defeito os utilizadores quando alguém gostar"
     default_topics_automatic_unpin: "Desafixar automaticamente tópicos quando um utilizador chega ao final, por defeito."
     default_categories_watching: "Lista de categorias que por defeito são vigiadas."
     default_categories_tracking: "Lista de categorias que por defeito são acompanhadas."
@@ -1512,6 +1534,12 @@ pt:
         %{post_error}
 
         Se conseguir corrigir o problema, tente novamente.
+    email_reject_rate_limit_specified:
+      subject_template: "[%{site_name}] Problema de email -- Envios limitados"
+      text_body_template: |
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        Razão: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Problema de email -- Acção de Post inválida"
       text_body_template: |
@@ -1812,12 +1840,32 @@ pt:
 
         Clique na hiperligação seguinte para escolher uma palavra-passe para a sua nova conta.
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirme o seu novo endereço de email"
       text_body_template: |
         Confirme o seu novo endereço de email para %{site_name} ao clicar na seguinte hiperligação:
 
         %{base_url}/users/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] Confirme o seu endereço de email atual"
+      text_body_template: |
+        Antes de podermos alterar o seu endereço de email precisámos de confirmar que
+        controla a conta de email atual. Após completar este passo, iremos confirmar
+        o seu novo endereço de email.
+
+        Confirme o seu endereço de email para o %{site_name} ao clicar na seguinte hiperligação:
+
+        %{base_url}/users/authorize-email/%{email_token}
+    notify_old_email:
+      subject_template: "[%{site_name}] O seu endereço de email foi alterado"
+      text_body_template: |
+        Isto é uma mensagem automática para o informar que o seu endereço de email para
+        %{site_name} foi alterado. Se isto foi feito em erro, por favor contacte
+        o administração do sítio.
+
+        O seu endereço de email foi alterado para:
+
+        %{new_email}
     signup_after_approval:
       subject_template: "Foi aprovado no %{site_name}!"
       text_body_template: |
@@ -1914,31 +1962,31 @@ pt:
     body: "<a name=\"collect\"></a> \n\n## [Que informações reunimos?](#reunião) \n\nReunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado. \n\nAo inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email. \n\nAo inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor. \n\n<a name=\"use\"></a> \n\n## [Para que usamos as suas informações?](#usar) \n\nTodas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras: \n\n* Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si. \n* Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte. \n* Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões. \n\n<a name=\"protect\"></a> \n\n## [Como protegemos a sua informação?](#protect)\n\nImplementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal. \n\n<a name=\"data-retention\"></a> \n\n## [Qual é a sua política de retenção de dados?](#retenção-dados)\n\nIremos fazer um esforço de boa fé para: \n\n* Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias. \n* Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos. \n\n<a name=\"cookies\"></a> \n\n## [Usamos cookies?](#cookies) \n\nSim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa. \n\nUsamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio. \n\n<a name=\"disclose\"></a> \n\n## [Divulgamos informação com partes exteriores?](#divulgar) \n\nNão vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos. \n\n<a name=\"third-party\"></a> \n\n## [Hiperligações de Terceiras Partes](#terceira-parte) \n\nOcasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios. \n\n<a name=\"coppa\"></a> \n\n## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa) \n\nO nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio. \n\n<a name=\"online\"></a> \n\n## [Política de Privacidade Online](#online) \n\nEstas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline. \n\n<a name=\"consent\"></a> \n\n## [O seu consentimento](#consentimento) \n\nAo utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio. \n\n<a name=\"changes\"></a> \n\n## [Mudanças à nossa Política de Privacidade](#mudanças) \n\nSe decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.\n"
   static:
     search_help: |
-      <h3> Dicas </h3>
+      <h3>Dicas</h3>
       <p>
       <ul>
-      <li> A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
-      <li> Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
-      <li> Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
+        <li>A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li> <li> Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
+        <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
+        <li>Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
       </ul>
       </p>
-      <h3> Opções</h3>
+      <h3>Opções</h3>
       <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+        <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
+        </table>
       </p>
       <h3>Exemplos</h3>
       <p>
-      <ul>
-      <li><code>rainbows category:parks status:open order:latest</code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem. </li>
-      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> irá retornar uma pesquisa de tópicos que contêm a palavra “rainbows” na categoria “parks and gardens” e que estão marcados por si. </li>
-      </ul>
+        <ul>
+          <li><code>rainbows category:parks status:open order:latest</code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.</li>
+          <li><code>rainbows category:"parks and gardens" in:bookmarks</code> irá retornar uma pesquisa de tópicos que contêm a palavra “rainbows” na categoria “parks and gardens” e que estão marcados por si.</li>
+        </ul>
       </p>
   badges:
     long_descriptions:
@@ -2002,6 +2050,8 @@ pt:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios diários de desempenho para o seu sítio.
     initial_topic_title: Relatórios de desempenho do sítio
+  topic_invite:
+    user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode apenas convidar um utilizador para um tópico uma vez."
   time:
     <<: *datetime_formats
   activemodel:

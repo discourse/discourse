@@ -50,6 +50,7 @@ en:
   emails:
     incoming:
       default_subject: "Incoming email from %{email}"
+      show_trimmed_content: "Show trimmed content"
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
@@ -204,6 +205,7 @@ en:
     top: "Top topics"
     posts: "Latest posts"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
+  revert_version_same: "The current version is same as the version you are trying to revert to."
 
   excerpt_image: "image"
 
@@ -215,7 +217,9 @@ en:
       can_not_modify_automatic: "You can not modify an automatic group"
       member_already_exist: "'%{username}' is already a member of this group."
       invalid_domain: "'%{domain}' is not a valid domain."
-      invalid_incoming_email: "'%{incoming_email}' is not a valid email address."
+      invalid_incoming_email: "'%{email}' is not a valid email address."
+      email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
+      email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -374,8 +378,9 @@ en:
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
-      email_in_already_exist: "Incoming email address '%{email_in}' is already in use for '%{category_name}' category."
-      invalid_email_in: "'%{email_in}' is not a valid email address."
+      invalid_email_in: "'%{email}' is not a valid email address."
+      email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
+      email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -406,11 +411,15 @@ en:
       first_day_topics_per_day: "You've reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} before trying again."
       create_topic: "You're creating topics too quickly. Please wait %{time_left} before trying again."
       create_post: "You're replying too quickly. Please wait %{time_left} before trying again."
+      delete_post: "You're deleting posts too quickly. Please wait %{time_left} before trying again."
       topics_per_day: "You've reached the maximum number of new topics today. Please wait %{time_left} before trying again."
       pms_per_day: "You've reached the maximum number of messages today. Please wait %{time_left} before trying again."
       create_like: "You've reached the maximum number of likes today. Please wait %{time_left} before trying again."
       create_bookmark: "You've reached the maximum number of bookmarks today. Please wait %{time_left} before trying again."
       edit_post: "You've reached the maximun number of edits today. Please wait %{time_left} before trying again."
+      live_post_counts: "You've asking for live post counts too quickly. Please wait %{time_left} before trying again."
+      unsubscribe_via_email: "You've reached the maximum number of unsubscribe via email today. Please wait %{time_left} before trying again."
+      topic_invitations_per_day: "You've reached the maximum number of topic invitations today. Please wait %{time_left} before trying again."
 
     hours:
       one: "1 hour"
@@ -510,6 +519,10 @@ en:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
+    already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
+    authorizing_old:
+      title: "Thanks for confirming your current email address"
+      description: "We're now emailing your new address for confirmation."
 
   activation:
     action: "Click here to activate your account"
@@ -768,12 +781,16 @@ en:
     site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
     notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
     subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
+    email_polling_errored_recently:
+      one: "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
+      other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
+    set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     min_post_length: "Minimum allowed post length in characters"
     min_first_post_length: "Minimum allowed first post (topic body) length in characters"
     min_private_message_post_length: "Minimum allowed post length in characters for messages"
@@ -1029,17 +1046,17 @@ en:
     tl2_requires_likes_given: "How many likes a user must cast before promotion to trust level 2."
     tl2_requires_topic_reply_count: "How many topics user must reply to before promotion to trust level 2."
 
-    tl3_time_period: "Trust Level 3 requirements time period"
-    tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to trust level 3. Set higher than tl3 time period to disable promotions to tl3. (0 or higher)"
-    tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to trust level 3. (0 or higher)"
-    tl3_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
-    tl3_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
+    tl3_time_period: "Trust Level 3 requirements time period (in days)"
+    tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last (tl3 time period) days to qualify for promotion to trust level 3. Set higher than tl3 time period to disable promotions to tl3. (0 or higher)"
+    tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last (tl3 time period) days to qualify for promotion to trust level 3. (0 or higher)"
+    tl3_requires_topics_viewed: "The percentage of topics created in the last (tl3 time period) days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
+    tl3_requires_posts_read: "The percentage of posts created in the last (tl3 time period) days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_topics_viewed_all_time: "The minimum total number of topics a user must have viewed to qualify for trust level 3."
     tl3_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for trust level 3."
-    tl3_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to trust level 3, where x is this setting's value. (0 or higher)"
+    tl3_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last (tl3 time period) days to qualify for promotion to trust level 3, where x is this setting's value. (0 or higher)"
     tl3_promotion_min_duration: "The minimum number of days that a promotion to trust level 3 lasts before a user can be demoted back to trust level 2."
-    tl3_requires_likes_given: "The minimum number of likes that must be given in the last 100 days to qualify for promotion to trust level 3."
-    tl3_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to trust level 3."
+    tl3_requires_likes_given: "The minimum number of likes that must be given in the last (tl3 time period) days to qualify for promotion to trust level 3."
+    tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
@@ -1061,7 +1078,7 @@ en:
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
-    private_email_time_window_seconds: "Wait (n) seconds before sending any private notification emails, to give users a chance to edit and finalize their posts."
+    private_email_time_window_seconds: "Wait (n) seconds before sending any private notification emails, to give users a chance to edit and finalize their messages."
     email_posts_context: "How many prior replies to include as context in notification emails."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
@@ -1141,6 +1158,7 @@ en:
 
     delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
 
+    manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
@@ -1252,6 +1270,7 @@ en:
     default_email_private_messages: "Send an email when someone messages the user by default."
     default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
     default_email_mailing_list_mode: "Send an email for every new post by default."
+    disable_mailing_list_mode: "Disallow users from enabling mailing list mode."
     default_email_always: "Send an email notification even when the user is active by default."
     default_email_previous_replies: "Include previous replies in emails by default."
 
@@ -1292,7 +1311,8 @@ en:
       pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
       pop3_polling_authentication_failed: "POP3 authentication failed. Please verify your pop3 credentials."
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
-      pop3_polling_disabled: "You must first enabled POP3 polling before enabling reply by email."
+      email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
+      user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
 
   notification_types:
     group_mentioned: "%{group_name} was mentioned in %{link}"
@@ -1823,13 +1843,6 @@ en:
 
         Your reply was sent from a different email address than the one we expected, so we're not sure if this is the same person. Try sending from another email address, or contact a staff member.
 
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] Email issue -- No Message Id"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        We couldn't find a `Message-Id` header in the email. Try sending from a different email address, or contact a staff member.
-
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
       text_body_template: |
@@ -1884,6 +1897,13 @@ en:
         %{post_error}
 
         If you can correct the problem, please try again.
+
+    email_reject_rate_limit_specified:
+      subject_template: "[%{site_name}] Email issue -- Rate limited"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Reason: %{rate_limit_description}
 
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Email issue -- Invalid Post Action"
@@ -2230,12 +2250,34 @@ en:
         Click the following link to choose a password for your new account:
         %{base_url}/users/password-reset/%{email_token}
 
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
         %{base_url}/users/authorize-email/%{email_token}
+
+    confirm_old_email:
+      subject_template: "[%{site_name}] Confirm your current email address"
+      text_body_template: |
+        Before we can change your email address, we need you to confirm that you control
+        the current email account. After you complete this step, we will have you confirm
+        the new email address.
+
+        Confirm your current email address for %{site_name} by clicking on the following link:
+
+        %{base_url}/users/authorize-email/%{email_token}
+
+    notify_old_email:
+      subject_template: "[%{site_name}] Your email address has been changed"
+      text_body_template: |
+        This is an automated message to let you know that your email address for
+        %{site_name} has been changed. If this was done in error, please contact
+        a site administrator.
+
+        Your email address has been changed to:
+
+        %{new_email}
 
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
@@ -2680,7 +2722,7 @@ en:
         <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
         <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-        <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+        <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
         </table>
       </p>
       <h3>Examples</h3>

@@ -251,6 +251,15 @@ describe PostAlerter do
       }.not_to change(user.notifications, :count)
     end
 
+  it "notification comes from editor is mention is added later" do
+      admin = Fabricate(:admin)
+      post = create_post_with_alerts(user: user, raw: 'No mention here.')
+      expect {
+        post.revise(admin, { raw: "Mention @eviltrout in this edit." })
+      }.to change(evil_trout.notifications, :count)
+      n = evil_trout.notifications.last
+      expect(n.data_hash["original_username"]).to eq(admin.username)
+    end
   end
 
   describe ".create_notification" do

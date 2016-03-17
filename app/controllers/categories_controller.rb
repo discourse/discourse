@@ -2,7 +2,7 @@ require_dependency 'category_serializer'
 
 class CategoriesController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:index, :show, :redirect]
+  before_filter :ensure_logged_in, except: [:index, :show, :redirect, :find_by_slug]
   before_filter :fetch_category, only: [:show, :update, :destroy]
   before_filter :initialize_staff_action_logger, only: [:create, :update, :destroy]
   skip_before_filter :check_xhr, only: [:index, :redirect]
@@ -102,19 +102,16 @@ class CategoriesController < ApplicationController
     json_result(@category, serializer: CategorySerializer) do |cat|
 
       cat.move_to(category_params[:position].to_i) if category_params[:position]
+      category_params.delete(:position)
 
-      if category_params.key? :email_in and category_params[:email_in].length == 0
-        # properly null the value so the database constrain doesn't catch us
+      # properly null the value so the database constraint doesn't catch us
+      if category_params.has_key?(:email_in) && category_params[:email_in].blank?
         category_params[:email_in] = nil
-      elsif category_params.key? :email_in and existing_category = Category.find_by(email_in: category_params[:email_in]) and existing_category.id != @category.id
-        # check if email_in address is already in use for other category
-        return render_json_error I18n.t('category.errors.email_in_already_exist', {email_in: category_params[:email_in], category_name: existing_category.name})
       end
 
-      category_params.delete(:position)
-      old_permissions = Category.find(@category.id).permissions_params
+      old_permissions = cat.permissions_params
 
-      if result = cat.update_attributes(category_params)
+      if result = cat.update(category_params)
         Scheduler::Defer.later "Log staff action change category settings" do
           @staff_action_logger.log_category_settings_change(@category, category_params, old_permissions)
         end
@@ -154,6 +151,15 @@ class CategoriesController < ApplicationController
     end
 
     render json: success_json
+  end
+
+  def find_by_slug
+    params.require(:category_slug)
+    @category = Category.find_by_slug(params[:category_slug], params[:parent_category_slug])
+    guardian.ensure_can_see!(@category)
+
+    @category.permission = CategoryGroup.permission_types[:full] if Category.topic_create_allowed(guardian).where(id: @category.id).exists?
+    render_serialized(@category, CategorySerializer)
   end
 
   private

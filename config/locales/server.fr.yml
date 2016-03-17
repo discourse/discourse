@@ -30,15 +30,17 @@ fr:
   emails:
     incoming:
       default_subject: "Courriel arrivant de %{email}"
+      show_trimmed_content: "Montrer le contenu raccourci"
       errors:
         empty_email_error: "Arrive quand le courriel reçu était vide."
         no_message_id_error: "Arrive quand le courrier n'a pas d'en-tête \"Message-Id\"."
+        auto_generated_email_error: "Se produit lorsque le header 'precedence' est : list, junk, bulk ou auto-reply, ou lorsque n'importe quel autre header contient : auto-submitted, auto-replied ou auto-generated."
         no_body_detected_error: "Arrive quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces-jointes."
         inactive_user_error: "Arrive quand l'expéditeur n'est pas actif."
         blocked_user_error: "Arrive quand l'expéditeur a été bloqué."
         bad_destination_address: "Arrive quand aucune des adresses de courriel dans les champs To/Cc/Bcc ne correspondent à une adresse de courriel entrante configurée."
         strangers_not_allowed_error: "Arrive quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'est pas membre."
-        insufficient_trust_level_error: "Arrive quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'a pas un niveau de confiance suffisant."
+        insufficient_trust_level_error: "Se produit lorsqu'un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'a pas le niveau de confiance nécessaire."
         reply_user_not_matching_error: "Arrive quand une réponse est venue d'une adresse de courriel différente de celle où a été envoyée la notification."
         topic_not_found_error: "Arrive quand quelqu'un répond à un sujet qui a été supprimé."
         topic_closed_error: "Arrive quand quelqu'un répond mais le sujet lié a été fermé."
@@ -168,6 +170,7 @@ fr:
     top: "Meilleurs sujets"
     posts: "Messages récents"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
+  revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"
   queue:
     delete_reason: "Supprimé depuis la liste des messages en attente de validation"
@@ -176,7 +179,9 @@ fr:
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
       member_already_exist: "'%{username}' est déjà membre de ce groupe."
       invalid_domain: "'%{domain}' n'est pas un domaine valide."
-      invalid_incoming_email: "'%{incoming_email}' n'est pas une adresse de courriel valide."
+      invalid_incoming_email: "'%{email}' n'est pas une adresse de courriel valide."
+      email_already_used_in_group: "'%{email}' est déjà utilisé par le groupe '%{group_name}'."
+      email_already_used_in_category: "'%{email}' est déjà utilisé par la catégorie '%{category_name}'."
     default_names:
       everyone: "tous"
       admins: "administrateurs"
@@ -311,8 +316,9 @@ fr:
       uncategorized_parent: "Sans catégorie ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
-      email_in_already_exist: "L'adresse courriel entrante '%{email_in}' est déjà utilisée pour la catégorie '%{category_name}'."
-      invalid_email_in: "'%{email_in}' n'est pas une adresse de courriel valide."
+      invalid_email_in: "'%{email}' n'est pas une adresse de courriel valide."
+      email_already_used_in_group: "'%{email}' est déjà utilisé par le groupe '%{group_name}'."
+      email_already_used_in_category: "'%{email}' est déjà utilisé par la catégorie '%{category_name}'."
     cannot_delete:
       uncategorized: "Vous ne pouvez pas supprimer Sans Catégorie"
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
@@ -341,11 +347,14 @@ fr:
       first_day_topics_per_day: "Vous avez atteint le nombre maximum de sujets qu'un nouvel utilisateur peut créer pour son premier jour. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       create_topic: "Vous créez des sujets trop rapidement. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       create_post: "Vous répondez trop rapidement. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      delete_post: "Vous effacez des messages trop rapidement. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       topics_per_day: "Vous avez atteint le nombre maximum de nouveaux sujets pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       pms_per_day: "Vous avez atteint le nombre maximum de nouveaux messages pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       create_like: "Vous avez atteint le nombre maximum de J'aime pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       create_bookmark: "Vous avez atteint le nombre maximum de favoris pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       edit_post: "Vous avez atteint le nombre maximum de modifications pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      unsubscribe_via_email: "Vous avez atteint le nombre maximum de désinscriptions par email pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      topic_invitations_per_day: "Vous avez atteint le nombre maximum d'invitations dans un sujet pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
     hours:
       one: "1 heure"
       other: "%{count} heures"
@@ -440,6 +449,10 @@ fr:
     confirmed: "Votre adresse de courriel a été mise à jour."
     please_continue: "Continuer vers %{site_name}"
     error: "Il y a eu une erreur lors de la modification de votre adresse de courriel. Elle est peut-être déjà utilisée ?"
+    already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre adresse de courriel a peut-être déjà été changée ?"
+    authorizing_old:
+      title: "Merci d'avoir confirmée votre adresse de courriel"
+      description: "Nous envoyons un courriel sur votre nouvelle adresse pour confirmation."
   activation:
     action: "Cliquer ici pour activer votre compte"
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
@@ -793,6 +806,7 @@ fr:
     topics_per_period_in_top_summary: "Nombre de meilleurs sujets affichés dans le résumé par défaut des meilleurs sujets."
     topics_per_period_in_top_page: "Nombre de meilleurs sujets affichés lorsqu'on sélectionne \"Voir plus\" des meilleurs sujets."
     redirect_users_to_top_page: "Rediriger automatiquement les nouveaux utilisateurs et les longues absences sur la page Top."
+    top_page_default_timeframe: "Période par défaut pour la page la plus vue."
     show_email_on_profile: "Afficher l'adresse du courriel de l'utilisateur sur leur page utilisateur (seulement visible pour l'utilisateur et les équipes techniques)"
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
     email_token_grace_period_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont encore valides pour une période de grâce de (n) heures après leur expiration."
@@ -815,6 +829,7 @@ fr:
     max_username_length: "Longueur maximum des pseudos en nombre de caractères."
     reserved_usernames: "Pseudos pour lesquels l'inscription n'est pas autorisée."
     min_password_length: "Longueur minimale du mot de passe."
+    min_admin_password_length: "Longueur minimale du mot de passe pour l'administrateur."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
     enable_sso: "Activer l'authentification unique via un site externe (ATTENTION: LES ADRESSES EMAIL *DOIVENT* ÊTRE VALIDÉES PAR LE SITE EXTERNE !)"
     enable_sso_provider: "Implémenter le procotole Discourse de provider SSO à /session/sso_provider, requiert sso_secret"
@@ -835,6 +850,9 @@ fr:
     enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret"
     twitter_consumer_key: "Clé utilisateur pour l'authentification Twitter, enregistrée sur http://dev.twitter.com"
     twitter_consumer_secret: "Secret utilisateur pour l'authentification Twitter, enregistré sur http://dev.twitter.com"
+    enable_instagram_logins: "Activer l'authentification Instagram, nécessite instagram_consumer_key et  instagram_consumer_secret"
+    instagram_consumer_key: "\"Consumer key\" pour l'identification Instagram"
+    instagram_consumer_secret: "\"Consumer secret\" pour l'identification Instagram"
     enable_facebook_logins: "Activer l'authentification Facebook, nécessite facebook_app_id et  facebook_app_secret"
     facebook_app_id: "App id pour l'authentification Facebook, enregistré sur https://developers.facebook.com/apps"
     facebook_app_secret: "App secret pour l'authentification Facebook, enregistré sur https://developers.facebook.com/apps"
@@ -847,6 +865,7 @@ fr:
     backup_frequency: "Fréquence de création des sauvegardes du site, en jours."
     enable_s3_backups: "Envoyer vos sauvegardes à S3 lorsqu'elles sont terminées. IMPORTANT: Vous devez avoir renseigné vos identifiants S3 dans les paramètres de fichiers."
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifiez que c'est un bucket privé"
+    s3_disable_cleanup: "Désactiver la suppression des sauvegardes de S3 lors de leur suppression locale."
     backup_time_of_day: "Heure de la sauvegarde, au format UTC."
     backup_with_uploads: "Inclure les téléchargements dans les archivages. Si désactivé, seul la base de données sera archivée."
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'last_seen_at' (Dernière vu à), en secondes."
@@ -867,6 +886,8 @@ fr:
     max_private_messages_per_day: "Nombre maximum de messages que les utilisateurs peuvent créer chaque jour."
     max_invites_per_day: "Nombre maximum d'invitations qu'un utilisateur peut envoyer par jour."
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
+    alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. NB : nécessite un redémarrage."
+    alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. NB : Nécessite un redémarrage."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie courante dans les sujets similaires."
     clean_up_uploads: "Retirer les fichiers téléchargés orphelins pour prévenir les hébergements illégaux. ATTENTION: vous devriez faire une sauvegarde de votre répertoire /uploads avant d'activer ce paramètre."
@@ -978,7 +999,7 @@ fr:
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
     short_email_length: "Taille des courriels courts en Octets"
     display_name_on_email_from: "Affiche les noms complets dans le champ From du courriel."
-    unsubscribe_via_email: "Autorise les utilisateurs à se désinscrire des courriels en envoyant un courriel avec \"se désinscrire\" dans le sujet ou le corps du message."
+    unsubscribe_via_email: "Autorise les utilisateurs à se désinscrire des courriels en envoyant un courriel avec \"unsubscribe\" dans le sujet ou le corps du message."
     unsubscribe_via_email_footer: "Ajoute un lien pour se désinscrire dans le pied des courriels envoyés"
     delete_email_logs_after_days: "Efface les journaux de messagerie après (N) jours. 0 pour conserver indéfiniment."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
@@ -1059,15 +1080,17 @@ fr:
     enable_emoji: "Activer les emojis"
     emoji_set: "Comment aimeriez-vous vos emoji ?"
     enforce_square_emoji: "Forcer tous les emojiis à être carrés."
-    approve_post_count: "Le nombre de messages d'un nouvel utilisateur qui doivent être approuvés"
+    approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
     notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, un email sera envoyé à l'email de contact. Désactivez ces emails en indiquant 0."
     default_email_digest_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les courriels par défaut."
     default_email_private_messages: "Envoyer un courriel quand quelqu'un envoie un message à un utilisateur."
     default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
     default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
+    disable_mailing_list_mode: "Interdit aux utilisateur d'activer le mode mailing list."
     default_email_always: "Envoyer une notification courriel même quand l'utilisateur est actif."
     default_email_previous_replies: "Inclure par défaut les réponses précédentes dans les courriels."
+    default_email_in_reply_to: "Inclure par défaut l'extrait du message auquel se fait la réponse dans les courriels."
     default_other_new_topic_duration_minutes: "Paramètre global de temps pendant lequel un sujet est considéré comme nouveau."
     default_other_auto_track_topics_after_msecs: "Paramètre global fixant le temps par défaut au bout duquel un sujet est suivi automatiquement."
     default_other_external_links_in_new_tab: "Par défaut, ouvrir tous les liens externes dans un nouvel onglet"
@@ -1075,6 +1098,7 @@ fr:
     default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur."
     default_other_disable_jump_reply: "Par défaut, ne pas se déplacer au nouveau message après avoir répondu."
     default_other_edit_history_public: "Par défaut, rendre publiques les révisions de message."
+    default_other_like_notification_frequency: "Notifier lors d'un J'aime par défaut"
     default_topics_automatic_unpin: "Par défaut, désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
@@ -1097,6 +1121,7 @@ fr:
       pop3_polling_username_is_empty: "Vous devez indiquer le \"login utilisateur pop3\" avant d'activer le relevé via POP3."
       pop3_polling_password_is_empty: "Vous devez indiquer le \"mot de passe pop3\" avant d'activer le relevé via POP3."
       pop3_polling_authentication_failed: "Echec d'authentication POP3. Veuillez contrôler vos détails POP3."
+      reply_by_email_address_is_empty: "Vous devez renseigner une 'adresse de réponse par courriel' avant d'activer la réponse par courriel."
   notification_types:
     group_mentioned: "%{group_name} a été mentionné dans %{link}"
     mentioned: "%{display_username} vous a mentionné dans %{link}"
@@ -1276,10 +1301,76 @@ fr:
       (Si le lien est expiré, choisissez "J'ai oublié mon mot de passe" lorsque vous essayez de vous connecter avec votre adresse mail.)
   test_mailer:
     subject_template: "[%{site_name}] Test de délivrabilité d'un courriel"
+    text_body_template: |
+      Ceci est un courriel de test de
+
+      [**%{base_url}**][0]
+
+       Assurer la distribution de courriel est compliqué. Voici un certain nombre de points importants que vous devez vérifier au préalable :
+
+       - Soyez *certain* de renseigner le champs from: de la `notification par email` correctement dans votre configuration. **Le nom de domaine renseigné dans l'addresse "from" des courriels que vous envoyez sera le nom de domaine utilisé pour la validation**.
+
+       - Sachez comment consulter le format brut d'un courriel dans votre client de courriel, pour vous permettre de consulter les entêtes pour obtenirs des indices importants. Dans Gmail, c'est l'option "show original" dans le menu contextuel situé en haut à droite de chaque courriel.
+
+       - **IMPORTANT:** Votre FAI a-t-il un enregistrement DNS inverse renseigné pour associer les noms de domaine et les adresses IP depuis lesquelles vous envoyez des courriels ? [Testez votre enregistrement inverse PTR][2] ici. Si votre FAI n'a pas renseigné correctement votre enregistrement DNS inverse, il est très improbable que vos courriels soient délivrés.
+
+       - L'[enregistrement SPF][8] de votre nom de domaine est-il correct ? [Testez votre enregistrement SPF][1] ici. Veuillez noter que le type officiel d'enregistrement est TXT pour le SPF.
+
+       - L'[enregistrement DKIM][3] de votre nom de domaine est-il correct ? Ceci augmentera de manière significative la bonne distribution de vos courriels. [Testez votre enregistrement DKIM][7] ici.
+
+       - Si vous maintenez votre propre serveur de courriel, assurez-vous que les IPs de votre serveur [liste noire de courriel][4]. Vérifiez également qu'il envoie un "fully qualified hostname" résolvable en DNS dans son message HELO. Si ce n'est pas le cas, vos courriels seront rejetés par de nombreux services de courriel.
+
+      - Nous vous recommandons chaudement d'**envoyer un courriel de test à [mail-tester.com][mt]** pour vérifier que tout ce qui est mentionné ci-dessus fonctionne bien.
+
+
+      (La manière *la plus facile* est de créer un compte gratuit sur [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], qui ont de généreuses options gratuites et qui seront parfaits pour de petites communautés. Vous devrez quand même configurer les entrées SPF et DKIM dans votre DNS !)
+
+      Nous espérons que vous avez bien reçu ce courriel de test de distribution !
+
+      Bonne chance, vos amis de [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://sendgrid.com/
+      [sp]: https://www.sparkpost.com/
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
+      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
+    text_body_template: |
+      Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible ! :)
+
+      Votre version: %{installed_version}
+      Nouvelle version: **%{new_version}**
+
+      - Consultez les nouveautés sur le [changelog GitHub](https://github.com/discourse/discourse/commits/master).
+
+      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
+    text_body_template: |
+      Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible ! :)
+
+      Votre version: %{installed_version}
+      Nouvelle version: **%{new_version}**
+
+      - Consultez les nouveautés sur le [changelog GitHub](https://github.com/discourse/discourse/commits/master).
+
+      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+
+      ### Notes de version
+
+      %{notes}
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 message en attente de modération"
@@ -1330,7 +1421,7 @@ fr:
 
         ## Navigation
 
-        - Pour effectuer une recherche, accéder à votre profil ou au utiliser le menu <kbd>☰</kbd>, cliquez sur les icônes en haut à droite.
+        - Pour effectuer une recherche, accéder à votre profil ou utiliser le menu <kbd>☰</kbd>, cliquez sur les **icônes en haut à droite**.
 
         - Sélectionner le titre d'un article, vous dirigera toujours vers **la nouvelle réponse non lue** dans celui-ci. Pour aller au début ou à la fin, sélectionnez le compteur de réponses ou la date de la dernière réponse.
 
@@ -1342,11 +1433,11 @@ fr:
 
         ## Répondre
 
-        - Pour répondre **de manière générale à une conversation**, utilisez <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> tout en bas de celle-ci.
+        - Pour répondre **de manière générale à un sujete**, utilisez <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> tout en bas de celle-ci.
 
         - Pour répondre à **une personne en particulier**, utilisez <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> sur leur message.
 
-        - Pour répondre en initiant **une nouvelle conversation**, utilisez <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> qui se trouve à la droite du message. L'ancien et le nouveau sujet seront alors automatiquement liés.
+        - Pour répondre en initiant **un nouveau sujet**, utilisez <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> qui se trouve à la droite du message. L'ancien et le nouveau sujet seront alors automatiquement liés.
 
         Votre réponse peut être mise page en utilisant soit du HTML simple, soit les syntaxes BBCode ou [Markdown](http://commonmark.org/help/) :
 
@@ -1354,7 +1445,7 @@ fr:
         Ceci est <b>gras</b>.
         Ceci est [b]gras<[/b].
 
-        Vous voulez apprendre Markdown ? [Suivez notre amusant tutoriel interactif de 10 minutes !](http://commonmark.org/help/tutorial/)
+        Vous voulez apprendre Markdown ? [Suivez notre tutoriel interactif amusant de 10 minutes !](http://commonmark.org/help/tutorial/)
 
         Pour insérer une citation, sélectionnez le texte que vous souhaitez citer, puis cliquez sur n'importe quel bouton Répondre. Répétez l'opération pour insérer d'autres citations.
 
@@ -1396,9 +1487,9 @@ fr:
 
         - Tout article vieux de **moins de 2 jours** est considéré comme nouveau.
 
-        - Toute conversation à laquelle vous avez **participé** (création, réponses ou lecture pendant une période prolongée) sera automatiquement suivie.
+        - Tout sujet auquel vous avez **participé** (création, réponses ou lecture pendant une période prolongée) sera automatiquement suivi.
 
-        En face de ces articles, vous verrez en bleu la mention "nouveau" ou bien le nombre de notifications non lues :
+        En face de ces articles, vous verrez en bleu la mention "nouveau" ou bien le nombre de messages non lues :
 
         <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
 
@@ -1412,9 +1503,7 @@ fr:
 
         ## Une communauté basé sur la confiance
 
-        Au fur et à mesure de votre participation, vous allez progressivement gagner la confiance de la communauté, vous deviendrez un membre à part entière et les limitations fonctionnelles propres à chaque nouvel utilisateur seront levées.
-
-        À un niveau de confiance [suffisamment élevé](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous aurez accès à de nouvelles fonctionnalités vous permettant de nous aider à gérer la communauté.
+        Au fur et à mesure de votre participation, vous allez progressivement gagner la confiance de la communauté, vous deviendrez un membre à part entière et les limitations fonctionnelles propres à chaque nouvel utilisateur seront levées. À un niveau de confiance [suffisamment élevé](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous aurez accès à de nouvelles fonctionnalités vous permettant de nous aider à gérer la communauté.
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: "Merci d'avoir rejoint %{site_name} et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)\n"
@@ -1483,18 +1572,18 @@ fr:
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
         Le compte associé avec cette adresse existe n'est pas activé. Veuillez activer votre compte avant d'envoyer des courriels.
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Erreur de courriel -- Utilisateur bloqué"
+      text_body_template: |
+        Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
+
+        Le compte associé avec cette adresse a été bloqué.
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] Problème de courriel - l'adresse de réponse ne correspond pas"
       text_body_template: |
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
         Votre réponses nous est parvenue d'une autre adresse courriel que celle attendue, nous ne savons donc pas s'il s'agit de la même personne. Essayez de l'envoyer depuis une autre adresse, ou contactez un responsable.
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] Problème de courriel - Message Id manquant"
-      text_body_template: |
-        Nous sommes désolé, mais votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Nous n'avons pas trouvé l'entête `Message-Id` dans le courriel. Veuillez ressayer depuis une autre adresse, ou contacter un responsable.
     email_reject_no_account:
       subject_template: "[%{site_name}] Problème de courriel - Compte utilisateur inconnu"
       text_body_template: "Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.\n\nAucun compte d'utilisateur avec cette adresse existe. Essayez de l'envoyer depuis une autre adresse, ou contactez un membre de l'équipe. \n"
@@ -1540,6 +1629,13 @@ fr:
         %{post_error}
 
         Si vous pouvez corriger les erreurs, veuillez réessayer.
+    email_reject_rate_limit_specified:
+      subject_template: "[%{site_name}] Problème de courriel -- Limitation du débit"
+      text_body_template: |+
+        Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        Pour la raison suivante: %{rate_limit_description}
+
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Problème de courriel -- Action Post invalide"
       text_body_template: |
@@ -1665,6 +1761,7 @@ fr:
 
         Veuillez suivre ce lien pour consulter le message: %{base_url}%{url}
     user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} vous a invité dans le sujet '%{topic_title}'"
       text_body_template: "\n%{username} vous a invité à une conversation\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nsur \n\n> %{site_title} -- %{site_description}\n\nVeuillez suivre ce lien pour voir le message: %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1701,6 +1798,15 @@ fr:
         %{respond_instructions}
     user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1793,12 +1899,32 @@ fr:
 
         Cliquez sur le lien ci-dessous pour choisir un mot de passe pour votre nouveau compte :
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] Confirmation de votre nouvelle adresse de courriel"
+    confirm_new_email:
+      subject_template: "[%{site_name}] Confirmer votre nouvelle adresse courriel"
       text_body_template: |
-        Confirmez votre nouvelle adresse de courriel pour %{site_name} en cliquant sur le lien suivant :
+        Confirmer votre nouvelle adresse courriel pour %{site_name} en cliquant sur le lien suivant :
 
         %{base_url}/users/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] Confirmer votre adresse courriel actuelle"
+      text_body_template: |
+        Avant de pouvoir changer votre adresse courriel, nous devons confirmer que vous contrôlez
+        bien l'adresse actuelle. Après avoir effectuée cette étape, vous devrez confirmer
+        la nouvelle adresse courriel.
+
+        Confirmer votre adresse courriel actuelle pour %{site_name} en cliquant sur le lien suivant :
+
+        %{base_url}/users/authorize-email/%{email_token}
+    notify_old_email:
+      subject_template: "[%{site_name}] Votre adresse courriel a bien été modifiée"
+      text_body_template: |
+        Ceci est un message automatique pour vous informer que votre adresse courriel pour
+        %{site_name} a été modifiée. Si c'est une erreur, merci de contacter
+        un administrateur du site.
+
+        Votre adresse courriel a été modifiée pour :
+
+        %{new_email}
     signup_after_approval:
       subject_template: "Votre compte a été approuvé sur %{site_name} !"
       text_body_template: |
@@ -2029,6 +2155,8 @@ fr:
   performance_report:
     initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
     initial_topic_title: Rapports de performances du site
+  topic_invite:
+    user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
   time:
     <<: *datetime_formats
   activemodel:

@@ -1573,7 +1573,7 @@ de:
 
         Klicke auf den folgenden Link, um ein Passwort für dein neues Konto festzulegen:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Bestätige deine neue Mailadresse"
       text_body_template: |
         Um deine Mailadresse auf %{site_name} zu bestätigen, klicke auf den folgenden Link:

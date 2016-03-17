@@ -3,6 +3,18 @@ require_dependency 'user_option'
 
 describe UserOption do
 
+  describe "#ensure_consistency!" do
+    it "recreates missing user option records" do
+      user = Fabricate(:user)
+      user.user_option.destroy
+      UserOption.ensure_consistency!
+
+      user.reload
+
+      expect(user.user_option.email_always).to eq(SiteSetting.default_email_always)
+    end
+  end
+
   describe "should_be_redirected_to_top" do
     let!(:user) { Fabricate(:user) }
 
@@ -16,6 +28,28 @@ describe UserOption do
       expect(user.user_option.should_be_redirected_to_top).to eq(false)
     end
 
+  end
+
+  describe "#mailing_list_mode" do
+    let!(:forum_user) { Fabricate(:user) }
+    let!(:mailing_list_user) { Fabricate(:user) }
+
+    before do
+      forum_user.user_option.update(mailing_list_mode: false)
+      mailing_list_user.user_option.update(mailing_list_mode: true)
+    end
+
+    it "should return false when `SiteSetting.disable_mailing_list_mode` is enabled" do
+      SiteSetting.disable_mailing_list_mode = true
+      expect(forum_user.user_option.mailing_list_mode).to eq(false)
+      expect(mailing_list_user.user_option.mailing_list_mode).to eq(false)
+    end
+
+    it "should return the stored value when `SiteSetting.disable_mailing_list_mode` is disabled" do
+      SiteSetting.disable_mailing_list_mode = false
+      expect(forum_user.user_option.mailing_list_mode).to eq(false)
+      expect(mailing_list_user.user_option.mailing_list_mode).to eq(true)
+    end
   end
 
   describe ".redirected_to_top" do

@@ -316,8 +316,12 @@ SQL
   def email_in_validator
     return if self.email_in.blank?
     email_in.split("|").each do |email|
-      unless Email.is_valid?(email)
-        self.errors.add(:base, I18n.t('category.errors.invalid_email_in', email_in: email))
+      if !Email.is_valid?(email)
+        self.errors.add(:base, I18n.t('category.errors.invalid_email_in', email: email))
+      elsif group = Group.find_by_email(email)
+        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_group', email: email, group_name: group.name))
+      elsif category = Category.where.not(id: self.id).find_by_email(email)
+        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_category', email: email, category_name: category.name))
       end
     end
   end
@@ -391,7 +395,7 @@ SQL
   end
 
   def self.find_by_email(email)
-    self.where("email_in LIKE ?", "%#{Email.downcase(email)}%").first
+    self.where("string_to_array(email_in, '|') @> ARRAY[?]", Email.downcase(email)).first
   end
 
   def has_children?
@@ -445,6 +449,15 @@ SQL
 
   def publish_discourse_stylesheet
     DiscourseStylesheets.cache.clear
+  end
+
+  def self.find_by_slug(category_slug, parent_category_slug=nil)
+    if parent_category_slug
+      parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).pluck(:id).first
+      self.where(slug: category_slug, parent_category_id: parent_category_id).first
+    else
+      self.where(slug: category_slug, parent_category_id: nil).first
+    end
   end
 end
 

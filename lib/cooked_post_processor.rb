@@ -116,13 +116,16 @@ class CookedPostProcessor
     if w > 0 || h > 0
       w = w.to_f
       h = h.to_f
-      original_width, original_height = get_size(img["src"]).map {|integer| integer.to_f}
+
+      return unless original_image_size = get_size(img["src"])
+      original_width, original_height = original_image_size.map(&:to_f)
+
       if w > 0
         ratio = w/original_width
-        return [w.floor, (original_height*ratio).floor]
+        [w.floor, (original_height*ratio).floor]
       else
         ratio = h/original_height
-        return [(original_width*ratio).floor, h.floor]
+        [(original_width*ratio).floor, h.floor]
       end
     end
   end

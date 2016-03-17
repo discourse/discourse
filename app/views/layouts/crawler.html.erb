@@ -11,7 +11,39 @@
     <%= render_google_universal_analytics_code %>
     <%= yield :head %>
     <style>
-        img { max-width: 100%; width: auto; height: auto; }
+      header img {
+        max-width: 90% !important;
+        padding-bottom: 10px;
+      }
+
+      img { max-width: 100%; width: auto; height: auto; }
+
+      #main-outlet > div {
+        margin-bottom: 15px;
+      }
+
+      footer nav a {
+        margin-right: 15px;
+      }
+
+      footer nav {
+        line-height: 30px;
+      }
+
+      body {
+        max-width: 98%;
+        padding-left: 1%;
+      }
+      .topic-list > div > a {
+        margin-right: 10px;
+      }
+      .topic-list > div .posts {
+          margin-left: 10px;
+      }
+      .topic-list > div {
+        margin-bottom: 15px;
+      }
+
     </style>
   </head>
   <body>
@@ -19,7 +51,7 @@
       <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
     <%- end %>
     <header>
-      <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+      <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo" style="max-width: 400px;"></a>
     </header>
     <div id="main-outlet" class="wrap">
       <%= yield %>

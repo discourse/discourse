@@ -9,14 +9,14 @@ class ReplyByEmailEnabledValidator
     return true if val == "f"
     # ensure reply_by_email_address is configured && polling is working
     SiteSetting.reply_by_email_address.present? &&
-    SiteSetting.pop3_polling_enabled?
+    SiteSetting.email_polling_enabled?
   end
 
   def error_message
     if SiteSetting.reply_by_email_address.blank?
       I18n.t("site_settings.errors.reply_by_email_address_is_empty")
     else
-      I18n.t("site_settings.errors.pop3_polling_disabled")
+      I18n.t("site_settings.errors.email_polling_disabled")
     end
   end
 

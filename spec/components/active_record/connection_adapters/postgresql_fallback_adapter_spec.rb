@@ -13,8 +13,10 @@ describe ActiveRecord::ConnectionHandling do
     }).symbolize_keys!
   end
 
+  let(:postgresql_fallback_handler) { PostgreSQLFallbackHandler.instance }
+
   after do
-    ::PostgreSQLFallbackHandler.instance.setup!
+    postgresql_fallback_handler.setup!
   end
 
   describe "#postgresql_fallback_connection" do
@@ -58,18 +60,26 @@ describe ActiveRecord::ConnectionHandling do
           })).returns(@replica_connection)
         end
 
+        expect(postgresql_fallback_handler.master).to eq(true)
+
         expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
           .to raise_error(PG::ConnectionBad)
 
         expect{ ActiveRecord::Base.postgresql_fallback_connection(config) }
           .to change{ Discourse.readonly_mode? }.from(false).to(true)
 
+        expect(postgresql_fallback_handler.master).to eq(false)
+
         with_multisite_db(multisite_db) do
+          expect(postgresql_fallback_handler.master).to eq(true)
+
           expect { ActiveRecord::Base.postgresql_fallback_connection(multisite_config) }
             .to raise_error(PG::ConnectionBad)
 
           expect{ ActiveRecord::Base.postgresql_fallback_connection(multisite_config) }
             .to change{ Discourse.readonly_mode? }.from(false).to(true)
+
+          expect(postgresql_fallback_handler.master).to eq(false)
         end
 
         ActiveRecord::Base.unstub(:postgresql_connection)
@@ -91,6 +101,8 @@ describe ActiveRecord::ConnectionHandling do
         (Thread.list - current_threads).each(&:join)
 
         expect(Discourse.readonly_mode?).to eq(false)
+
+        expect(PostgreSQLFallbackHandler.instance.master).to eq(true)
 
         expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
 

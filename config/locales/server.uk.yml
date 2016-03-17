@@ -457,7 +457,7 @@ uk:
 
         Перейдіть за посиланням, щоб обрати пароль:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Підтвердіть свою електронну скриньку"
       text_body_template: |
         Підтвердіть свою нову електронну скриньку для сайта %{site_name}, перейшовши за посиланням:

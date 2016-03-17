@@ -172,8 +172,10 @@ module ImportScripts::PhpBB3
       # no need for this since the importer sets last_seen_at for each user during the import
     end
 
+    # Do not use the bbcode_to_md in base.rb. If enabled, it will be
+    # used in text_processor.rb instead.
     def use_bbcode_to_md?
-      @settings.use_bbcode_to_md
+      false
     end
 
     def batches

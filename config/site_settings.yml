@@ -64,6 +64,9 @@ basic:
   allow_user_locale:
     client: true
     default: false
+  set_locale_from_accept_language_header:
+    default: false
+    validator: "AllowUserLocaleEnabledValidator"
   suggested_topics:
     client: true
     default: 5
@@ -522,6 +525,8 @@ email:
   reply_by_email_address:
     default: ''
     validator: "ReplyByEmailAddressValidator"
+  manual_polling_enabled:
+    default: false
   pop3_polling_enabled:
     default: false
     validator: "POP3PollingEnabledSettingValidator"
@@ -1083,6 +1088,9 @@ user_preferences:
   default_email_private_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false
+  disable_mailing_list_mode:
+    default: false
+    client: true
   default_email_always: false
   default_email_previous_replies:
     enum: 'PreviousRepliesSiteSetting'

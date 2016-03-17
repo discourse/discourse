@@ -271,6 +271,10 @@ const Post = RestModel.extend({
       json = Post.munge(json);
       this.set('actions_summary', json.actions_summary);
     }
+  },
+
+  revertToRevision(version) {
+    return Discourse.ajax(`/posts/${this.get('id')}/revisions/${version}/revert`, { type: 'PUT' });
   }
 
 });

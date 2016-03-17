@@ -1,7 +1,7 @@
 {{#if controller.bulkSelectEnabled}}
-<td class='star'>
-  <input type="checkbox" class="bulk-select">
-</td>
+  <td class='star'>
+    <input type="checkbox" class="bulk-select">
+  </td>
 {{/if}}
 
 <td class='main-link clearfix' colspan="{{titleColSpan}}">
@@ -36,18 +36,18 @@
 {{#if controller.showLikes}}
 <td class="num likes">
   {{#if hasLikes}}
-  <a href='{{topic.summaryUrl}}'>
-    {{number topic.like_count}} <i class='fa fa-heart'></i></td>
-  </a>
+    <a href='{{topic.summaryUrl}}'>
+      {{number topic.like_count}} <i class='fa fa-heart'></i></td>
+    </a>
   {{/if}}
 {{/if}}
 
 {{#if controller.showOpLikes}}
 <td class="num likes">
   {{#if hasOpLikes}}
-  <a href='{{topic.summaryUrl}}'>
-    {{number topic.op_like_count}} <i class='fa fa-heart'></i></td>
-  </a>
+    <a href='{{topic.summaryUrl}}'>
+      {{number topic.op_like_count}} <i class='fa fa-heart'></i></td>
+    </a>
   {{/if}}
 {{/if}}
 

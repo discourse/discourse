@@ -20,7 +20,8 @@ Discourse::Application.routes.draw do
     mount Sidekiq::Web => "/sidekiq"
     mount Logster::Web => "/logs"
   else
-    mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
+    # only allow sidekie in master site
+    mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new(require_master: true)
     mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
 
@@ -274,7 +275,7 @@ Discourse::Application.routes.draw do
   put "users/password-reset/:token" => "users#password_reset"
   get "users/activate-account/:token" => "users#activate_account"
   put "users/activate-account/:token" => "users#perform_account_activation", as: 'perform_activate_account'
-  get "users/authorize-email/:token" => "users#authorize_email"
+  get "users/authorize-email/:token" => "users_email#confirm"
   get "users/hp" => "users#get_honeypot_value"
   get "my/*path", to: 'users#my_redirect'
 
@@ -292,8 +293,8 @@ Discourse::Application.routes.draw do
   put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}, as: :email_preferences
-  get "users/:username/preferences/email" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
-  put "users/:username/preferences/email" => "users#change_email", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/preferences/email" => "users_email#index", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "users/:username/preferences/email" => "users_email#update", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/about-me" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/badge_title" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/badge_title" => "users#badge_title", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -386,6 +387,7 @@ Discourse::Application.routes.draw do
     get "revisions/:revision" => "posts#revisions", constraints: { revision: /\d+/ }
     put "revisions/:revision/hide" => "posts#hide_revision", constraints: { revision: /\d+/ }
     put "revisions/:revision/show" => "posts#show_revision", constraints: { revision: /\d+/ }
+    put "revisions/:revision/revert" => "posts#revert", constraints: { revision: /\d+/ }
     put "recover"
     collection do
       delete "destroy_many"
@@ -429,6 +431,8 @@ Discourse::Application.routes.draw do
   put "category/:category_id/slug" => "categories#update_slug"
 
   get "c/:id/show" => "categories#show"
+  get "c/:category_slug/find_by_slug" => "categories#find_by_slug"
+  get "c/:parent_category_slug/:category_slug/find_by_slug" => "categories#find_by_slug"
   get "c/:category.rss" => "list#category_feed", format: :rss
   get "c/:parent_category/:category.rss" => "list#category_feed", format: :rss
   get "c/:category" => "list#category_latest"

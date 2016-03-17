@@ -903,6 +903,7 @@ zh_TW:
   subject_pm: "[私訊]"
   user_notifications:
     previous_discussion: "之前的回覆"
+    in_reply_to: "回覆給"
     unsubscribe:
       title: "取消訂閱"
       description: "不再對這些郵件感興趣？沒問題！點擊下面按鈕來立即取消訂閱："
@@ -943,7 +944,7 @@ zh_TW:
       subject_template: "[%{site_name}] 設定密碼"
     account_created:
       subject_template: "[%{site_name}] 你的新帳號"
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] 確認你的新電子郵箱位址"
       text_body_template: |
         點擊下面的連結來確認你在 %{site_name} 上的新電子郵箱位址：
