@@ -314,7 +314,7 @@ end
 
 
 [
-  [Badge::ThankYou,   "Thank You",  BadgeType::Bronze, 6, 0.50],
+  [Badge::ThankYou,   "Thank You",  BadgeType::Bronze, 20, 0.00],
   [Badge::GivesBack,  "Gives Back", BadgeType::Silver, 100, 1.0],
   [Badge::Empathetic, "Empathetic", BadgeType::Gold,   500, 2.0],
 ].each do |spec|
