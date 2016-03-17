@@ -286,11 +286,11 @@ SQL
 
     def self.like_rate_limit(count)
       <<-SQL
-        SELECT uh.target_user_id AS user_id, MAX(uh.created_at) AS granted_at
-        FROM user_histories AS uh
-        WHERE uh.action = #{UserHistory.actions[:rate_limited_like]}
-          AND (:backfill OR uh.target_user_id IN (:user_ids))
-        GROUP BY uh.target_user_id
+        SELECT gdl.user_id, current_timestamp AS granted_at
+        FROM given_daily_likes AS gdl
+        WHERE gdl.limit_reached
+          AND (:backfill OR gdl.user_id IN (:user_ids))
+        GROUP BY gdl.user_id
         HAVING COUNT(*) >= #{count}
       SQL
     end
