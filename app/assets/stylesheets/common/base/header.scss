@@ -1,167 +1,136 @@
 .d-header {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  z-index: 1001;
-  background-color: $header_background;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
-
-  .docked & {
-    position: fixed;
-    backface-visibility: hidden;  /** do magic for scrolling performance **/
-  }
-
-  .d-header-table {
-    display: table;
-    table-layout: fixed; /* or else long topic titles break everything */
     width: 100%;
-    margin: 8px auto;
-  }
-  .d-header-row {
-    display: table-header-group; /* table-row doesn't work on mobile */
-  }
-  .d-header-wrap {
-    padding: 0;
-  }
-  .title, .extra-info-cell, .panel {
-    display: table-cell;
-  }
-  .title {
-    vertical-align: middle;
-    padding-left: 8px;
-    overflow: hidden;
-    width: 65%;
-  }
-  .extra-info-cell {
-    vertical-align: middle;
-    padding-left: 8px;
-  }
-  .panel {
-    width:35%;
-    text-align: right;
-    position: relative;
-    .menu-panel {
-      text-align: left;
+    position: absolute;
+    top: 0;
+    z-index: 1001;
+    background-color: $header_background;
+    box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
+
+    .docked & {
+      position: fixed;
+      backface-visibility: hidden;  /** do magic for scrolling performance **/
     }
-  }
 
-  .not-minimized {
-    .title { width: 65%; }
-    .panel { width: 35%; }
-  }
-  /* .minimized is different for desktop and mobile */
+    .contents {
+      margin: 8px 0;
+    }
 
-  .d-header-nav {
-    position: relative;
-    float: right;
-  }
-
-  #site-logo {
-    max-height: 40px;
-  }
-
-  .fa-home {
-    font-size: 1.643em;
-  }
-
-  .login-button, button.sign-up-button {
-    float: none;
-    margin-top: 7px;
-    padding: 6px 10px;
-    .fa { margin-right: 3px; }
-  }
-
-  button.login-button {
-    margin-left: 7px;
-  }
-
-  .icons {
-    text-align: center;
-    margin: 0 0 0 5px;
-    list-style: none;
-
-    > li {
+    .title {
       float: left;
     }
-    .icon {
-      display: block;
-      padding: 3px;
-      color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
-      text-decoration: none;
-      cursor: pointer;
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-right: 1px solid transparent;
-      transition: all linear .15s;
 
+    #site-logo {
+      max-height: 40px;
+    }
 
-      &:hover {
-        color: $primary;
-        background-color:  dark-light-diff($primary, $secondary, 90%, -60%);
+    .fa-home {
+      font-size: 1.643em;
+    }
+
+    .panel {
+      float: right;
+      position: relative;
+    }
+
+    .login-button, button.sign-up-button {
+      float: left;
+      margin-top: 7px;
+      padding: 6px 10px;
+      .fa { margin-right: 3px; }
+    }
+
+    button.login-button {
+      margin-left: 7px;
+    }
+
+    .icons {
+      float: left;
+      text-align: center;
+      margin: 0 0 0 5px;
+      list-style: none;
+
+      > li {
+        float: left;
+      }
+      .icon {
+        display: block;
+        padding: 3px;
+        color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
+        text-decoration: none;
+        cursor: pointer;
         border-top: 1px solid transparent;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
-      }
-      &:active {
-        color: $primary;
-        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-      }
-    }
-    .drop-down-visible & {
-      .active .icon {
-        position: relative;
-        color: #7b7b7b;
-        background-color: $secondary;
-        cursor: default;
-        border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        &:after {
-          display: block;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          z-index: 1101;
-          width: 100%;
-          height: 0;
-          content: "";
-          border-top: 1px solid $secondary;
-        }
+        transition: all linear .15s;
+
+
         &:hover {
-          border-bottom: none;
+          color: $primary;
+          background-color:  dark-light-diff($primary, $secondary, 90%, -60%);
+          border-top: 1px solid transparent;
+          border-left: 1px solid transparent;
+          border-right: 1px solid transparent;
+        }
+        &:active {
+          color: $primary;
+          background-color: dark-light-diff($primary, $secondary, 90%, -60%);
         }
       }
-    }
-    [class^="fa fa-"] {
-      width: 32px;
-      height: 32px;
-      font-size: 1.714em;
-      line-height: 32px;
-      display: inline-block;
-    }
-    .notifications {
-      position: relative;
-    }
-    .badge-notification {
-      position: absolute;
-      top: -9px;
-      z-index: 1;
-      margin-left: 0;
-    }
-    .unread-notifications {
-      right: 0;
-      background-color: scale-color($tertiary, $lightness: 50%);
-    }
-    .unread-private-messages {
-      right: 25px;
+      .drop-down-visible & {
+        .active .icon {
+          position: relative;
+          color: #7b7b7b;
+          background-color: $secondary;
+          cursor: default;
+          border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+          &:after {
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1101;
+            width: 100%;
+            height: 0;
+            content: "";
+            border-top: 1px solid $secondary;
+          }
+          &:hover {
+            border-bottom: none;
+          }
+        }
+      }
+      [class^="fa fa-"] {
+        width: 32px;
+        height: 32px;
+        font-size: 1.714em;
+        line-height: 32px;
+        display: inline-block;
+      }
+      .notifications {
+        position: relative;
+      }
+      .badge-notification {
+        position: absolute;
+        top: -9px;
+        z-index: 1;
+        margin-left: 0;
+      }
+      .unread-notifications {
+        right: 0;
+        background-color: scale-color($tertiary, $lightness: 50%);
+      }
+      .unread-private-messages {
+        right: 25px;
+      }
+      .flagged-posts {
+        right: 65px;
+      }
     }
     .flagged-posts {
-      right: 65px;
+      background: $danger;
     }
-  }
-  .flagged-posts {
-    background: $danger;
-  }
 }
 
 

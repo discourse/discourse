@@ -2,7 +2,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { setting } from 'discourse/lib/computed';
 
 export default Ember.Component.extend({
-  classNameBindings: [":title", "minimized"],
+  classNames: ["title"],
 
   targetUrl: function() {
     // For overriding by customizations
