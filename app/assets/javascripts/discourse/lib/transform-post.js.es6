@@ -87,6 +87,7 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
 
   postAtts.topicId = topic.id;
   postAtts.topicOwner = details.created_by.id === post.user_id;
+  postAtts.topicCreatedById = details.created_by.id;
   postAtts.post_type = postType;
   postAtts.via_email = post.via_email;
   postAtts.isModeratorAction = postType === postTypes.moderator_action;
