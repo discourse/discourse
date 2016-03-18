@@ -77,6 +77,12 @@ class UserNotifications < ActionMailer::Base
     build_summary_for(user)
     min_date = opts[:since] || 1.day.ago
     @topics = Topic.for_digest(user, min_date)
+                   .joins(:posts)
+                   .where('posts.created_at > ?', min_date)
+                   .order(updated_at: :desc)
+                   .uniq
+    return unless @topics.any?
+
     @posts_by_topic = Post.where(topic: @topics)
                           .where('created_at > ?', min_date)
                           .order(created_at: :asc)

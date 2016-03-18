@@ -88,8 +88,11 @@ describe UserNotifications do
     context "with new posts" do
       let(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:topic, user: user) }
-      let!(:new_post) { Fabricate(:post, topic: topic, created_at: 2.hours.ago, raw: "Feel the Bern!") }
-      let!(:old_post) { Fabricate(:post, topic: topic, created_at: 25.hours.ago, raw: "Make America great again!") }
+      let!(:new_post) { Fabricate(:post, topic: topic, created_at: 2.hours.ago, raw: "Feel the Bern") }
+      let!(:old_post) { Fabricate(:post, topic: topic, created_at: 25.hours.ago, raw: "Make America Great Again") }
+      let(:another_topic) { Fabricate(:topic, user: user) }
+      let(:another_post) { Fabricate(:post, topic: another_topic, created_at: 2.hours.ago, raw: "Yes We Can") }
+      let(:stale_post) { Fabricate(:post, topic: another_topic, created_at: 2.days.ago, raw: "A New American Century") }
 
       it "works" do
         expect(subject.to).to eq([user.email])
@@ -105,7 +108,18 @@ describe UserNotifications do
 
       it "does not include posts older than 24 hours old" do
         expect(subject.html_part.body.to_s).to_not include old_post.cooked
+      end
 
+      it "includes multiple topics" do
+        another_post
+        expect(subject.html_part.body.to_s).to include another_topic.title
+        expect(subject.html_part.body.to_s).to include another_post.cooked
+      end
+
+      it "does not include topics not updated for the past 24 hours" do
+        stale_post
+        expect(subject.html_part.body.to_s).to_not include another_topic.title
+        expect(subject.html_part.body.to_s).to_not include stale_post.cooked
       end
 
       it "includes email_prefix in email subject instead of site title" do
