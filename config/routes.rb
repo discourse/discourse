@@ -354,6 +354,9 @@ Discourse::Application.routes.draw do
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   resources :groups do
+    get "posts.rss" => "groups#posts_feed", format: :rss
+    get "mentions.rss" => "groups#mentions_feed", format: :rss
+
     get 'members'
     get 'posts'
     get 'topics'

@@ -1,6 +1,7 @@
 class GroupsController < ApplicationController
 
   before_filter :ensure_logged_in, only: [:set_notifications]
+  skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
   def show
     render_serialized(find_group(:id), BasicGroupSerializer)
@@ -29,6 +30,15 @@ class GroupsController < ApplicationController
     render_serialized posts.to_a, GroupPostSerializer
   end
 
+  def posts_feed
+    group = find_group(:group_id)
+    @posts = group.posts_for(guardian).limit(50)
+    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.group_posts", group_name: group.name)}"
+    @link = Discourse.base_url
+    @description = I18n.t("rss_description.group_posts", group_name: group.name)
+    render 'posts/latest', formats: [:rss]
+  end
+
   def topics
     group = find_group(:group_id)
     posts = group.posts_for(guardian, params[:before_post_id]).where(post_number: 1).limit(20)
@@ -39,6 +49,15 @@ class GroupsController < ApplicationController
     group = find_group(:group_id)
     posts = group.mentioned_posts_for(guardian, params[:before_post_id]).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
+  end
+
+  def mentions_feed
+    group = find_group(:group_id)
+    @posts = group.mentioned_posts_for(guardian).limit(50)
+    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.group_mentions", group_name: group.name)}"
+    @link = Discourse.base_url
+    @description = I18n.t("rss_description.group_mentions", group_name: group.name)
+    render 'posts/latest', formats: [:rss]
   end
 
   def messages
