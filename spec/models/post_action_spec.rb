@@ -12,6 +12,10 @@ describe PostAction do
   let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
+  def value_for(user_id, dt)
+    GivenDailyLike.find_for(user_id, dt).pluck(:likes_given)[0] || 0
+  end
+
   describe "rate limits" do
 
     it "limits redo/undo" do
@@ -172,7 +176,7 @@ describe PostAction do
         # we need this to test it
         TopicUser.change(codinghorror, post.topic, posted: true)
 
-        expect(GivenDailyLike.value_for(moderator.id, Date.today)).to eq(0)
+        expect(value_for(moderator.id, Date.today)).to eq(0)
 
         PostAction.act(moderator, post, PostActionType.types[:like])
         PostAction.act(codinghorror, second_post, PostActionType.types[:like])
@@ -180,7 +184,7 @@ describe PostAction do
         post.topic.reload
         expect(post.topic.like_count).to eq(2)
 
-        expect(GivenDailyLike.value_for(moderator.id, Date.today)).to eq(1)
+        expect(value_for(moderator.id, Date.today)).to eq(1)
 
         tu = TopicUser.get(post.topic, codinghorror)
         expect(tu.liked).to be true
@@ -251,7 +255,7 @@ describe PostAction do
         expect(post.like_score).to eq(1)
         post.topic.reload
         expect(post.topic.like_count).to eq(1)
-        expect(GivenDailyLike.value_for(codinghorror.id, Date.today)).to eq(1)
+        expect(value_for(codinghorror.id, Date.today)).to eq(1)
 
         # When a staff member likes it
         PostAction.act(moderator, post, PostActionType.types[:like])
@@ -264,7 +268,7 @@ describe PostAction do
         post.reload
         expect(post.like_count).to eq(1)
         expect(post.like_score).to eq(3)
-        expect(GivenDailyLike.value_for(codinghorror.id, Date.today)).to eq(0)
+        expect(value_for(codinghorror.id, Date.today)).to eq(0)
 
         PostAction.remove_act(moderator, post, PostActionType.types[:like])
         post.reload

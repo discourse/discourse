@@ -423,7 +423,27 @@ export default createWidget('post', {
     const likeAction = post.get('likeAction');
 
     if (likeAction && likeAction.get('canToggle')) {
-      return likeAction.togglePromise(post);
+      return likeAction.togglePromise(post).then(result => this._warnIfClose(result));
+    }
+  },
+
+  _warnIfClose(result) {
+    if (!result || !result.acted) { return; }
+
+    const kvs = this.keyValueStore;
+    const lastWarnedLikes = kvs.get('lastWarnedLikes');
+
+    // only warn once per day
+    const yesterday = new Date().getTime() - 1000 * 60 * 60 * 24;
+    if (lastWarnedLikes && parseInt(lastWarnedLikes) > yesterday) {
+      return;
+    }
+
+    const { remaining, max } = result;
+    const threshold = Math.ceil(max * 0.1);
+    if (remaining === threshold) {
+      bootbox.alert(I18n.t('post.few_likes_left'));
+      kvs.set({ key: 'lastWarnedLikes', value: new Date().getTime() });
     }
   },
 

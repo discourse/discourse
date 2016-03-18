@@ -21,6 +21,12 @@ class PostActionsController < ApplicationController
     else
       # We need to reload or otherwise we are showing the old values on the front end
       @post.reload
+
+      if @post_action_type_id == PostActionType.types[:like]
+        limiter = post_action.post_action_rate_limiter
+        response.headers['Discourse-Actions-Remaining'] = limiter.remaining.to_s
+        response.headers['Discourse-Actions-Max'] = limiter.max.to_s
+      end
       render_post_json(@post, _add_raw = false)
     end
   end
