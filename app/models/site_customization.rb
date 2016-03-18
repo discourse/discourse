@@ -27,6 +27,17 @@ class SiteCustomization < ActiveRecord::Base
     raise e
   end
 
+  def transpile(es6_source, version)
+    template  = Tilt::ES6ModuleTranspilerTemplate.new {}
+    wrapped = <<PLUGIN_API_JS
+Discourse._registerPluginCode('#{version}', api => {
+  #{es6_source}
+});
+PLUGIN_API_JS
+
+    template.babel_transpile(wrapped)
+  end
+
   def process_html(html)
     doc = Nokogiri::HTML.fragment(html)
     doc.css('script[type="text/x-handlebars"]').each do |node|
@@ -41,6 +52,17 @@ class SiteCustomization < ActiveRecord::Base
   Ember.TEMPLATES[#{name.inspect}] = #{precompiled};
 SCRIPT
       node.replace("<script>#{compiled}</script>")
+    end
+
+    doc.css('script[type="text/discourse-plugin"]').each do |node|
+      if node['version'].present?
+        begin
+          code = transpile(node.inner_html, node['version'])
+          node.replace("<script>#{code}</script>")
+        rescue Tilt::ES6ModuleTranspilerTemplate::JavaScriptError => ex
+          node.replace("<script type='text/discourse-js-error'>#{ex.message}</script>")
+        end
+      end
     end
 
     doc.to_s
