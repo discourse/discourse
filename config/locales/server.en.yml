@@ -2722,7 +2722,7 @@ en:
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
         <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td></td></tr>
         <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
         </table>
       </p>
