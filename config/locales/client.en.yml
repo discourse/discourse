@@ -1511,7 +1511,7 @@ en:
       archetypes:
         save: 'Save Options'
 
-      few_likes_left: "Thanks for sharing the love! You only have a few likes left for today, so use them wisely."
+      few_likes_left: "Thanks for sharing the love! You only have a few likes left for today."
 
       controls:
         reply: "begin composing a reply to this post"
