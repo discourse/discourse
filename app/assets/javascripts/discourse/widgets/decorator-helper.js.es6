@@ -19,6 +19,8 @@ class DecoratorHelper {
    * // renders `<div class='some-class'><p>paragraph</p></div>`
    * return helper.h('div.some-class', helper.h('p', 'paragraph'));
    * ```
+   * Check out  https://github.com/Matt-Esch/virtual-dom/blob/master/virtual-hyperscript/README.md
+   * for more details on how to construct markup with h.
    **/
   // h() is attached via `prototype` below
 
