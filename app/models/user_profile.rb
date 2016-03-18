@@ -4,7 +4,7 @@ class UserProfile < ActiveRecord::Base
   WEBSITE_REGEXP = /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,9}(([0-9]{1,5})?\/.*)?$)/ix
 
   validates :bio_raw, length: { maximum: 3000 }
-  validates :website, format: { with: WEBSITE_REGEXP }, allow_blank: true
+  validates :website, format: { with: WEBSITE_REGEXP }, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
