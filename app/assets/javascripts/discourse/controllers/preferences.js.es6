@@ -68,7 +68,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     if (estimate >= 1) {
       return I18n.t('user.mailing_list_mode.many_per_day', { dailyEmailEstimate: Math.round(estimate) });
     } else {
-      return I18n.t('user.mailing_list_mode.few_per_day')
+      return I18n.t('user.mailing_list_mode.few_per_day');
     }
   },
 
