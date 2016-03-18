@@ -64,9 +64,7 @@ class QueuedPost < ActiveRecord::Base
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
-      if user.blocked?
-        user.update_columns(blocked: false)
-      end
+      UserBlocker.unblock(user, approved_by) if user.blocked?
 
       creator = PostCreator.new(user, create_options.merge(skip_validations: true))
       created_post = creator.create
