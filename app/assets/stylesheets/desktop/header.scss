@@ -11,6 +11,11 @@
     padding:8px;
     font-size: 2.1em;
   }
+
+  .site-text-logo {
+    position: relative;
+    top: 10px;
+  }
 }
 
 @media all
@@ -34,5 +39,11 @@ and (max-width : 570px) {
   line-height: 1.3em;
   .search-highlight {
     color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
+  }
+}
+
+header {
+  #site-text-logo {
+    line-height: 40px;
   }
 }
