@@ -1,6 +1,6 @@
 import AppEvents from 'discourse/lib/app-events';
 import createStore from 'helpers/create-store';
-import { loadAllHelpers } from 'discourse/initializers/load-all-helpers';
+import { autoLoadModules } from 'discourse/initializers/auto-load-modules';
 
 export default function(name, opts) {
   opts = opts || {};
@@ -18,7 +18,7 @@ export default function(name, opts) {
 
     this.siteSettings = Discourse.SiteSettings;
 
-    loadAllHelpers();
+    autoLoadModules();
 
     if (opts.setup) {
       const store = createStore();
