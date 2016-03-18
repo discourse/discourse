@@ -119,4 +119,37 @@ HTML
     expect(SiteCustomization.custom_head_tag).to match(/<b>test<\/b>/)
   end
 
+  context "plugin api" do
+    def transpile(html)
+      c = SiteCustomization.create!(user_id: -1, name: "test", head_tag: html, body_tag: html)
+      c.head_tag_baked
+    end
+
+    it "transpiles ES6 code" do
+      html = <<HTML
+        <script type='text/discourse-plugin' version='0.1'>
+          const x = 1;
+        </script>
+HTML
+
+      transpiled = transpile(html)
+      expect(transpiled).to match(/\<script\>/)
+      expect(transpiled).to match(/var x = 1;/)
+      expect(transpiled).to match(/_registerPluginCode\('0.1'/)
+    end
+
+    it "converts errors to a script type that is not evaluated" do
+      html = <<HTML
+        <script type='text/discourse-plugin' version='0.1'>
+          const x = 1;
+          x = 2;
+        </script>
+HTML
+
+      transpiled = transpile(html)
+      expect(transpiled).to match(/text\/discourse-js-error/)
+      expect(transpiled).to match(/read-only/)
+    end
+  end
+
 end

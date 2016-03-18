@@ -6,6 +6,8 @@ define('ember', ['exports'], function(__exports__) {
   __exports__.default = Ember;
 });
 
+var _pluginCallbacks = [];
+
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
   _docTitle: document.title,
@@ -127,6 +129,18 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       }
     });
 
+    // Plugins that are registered via `<script>` tags.
+    var withPluginApi = require('discourse/lib/plugin-api').withPluginApi;
+    var initCount = 0;
+    _pluginCallbacks.forEach(function(cb) {
+      Discourse.instanceInitializer({
+        name: "_discourse_plugin_" + (++initCount),
+        after: 'inject-objects',
+        initialize: function() {
+          withPluginApi(cb.version, cb.code);
+        }
+      });
+    });
   },
 
   requiresRefresh: function(){
@@ -134,6 +148,9 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return desired && Discourse.get("currentAssetVersion") !== desired;
   }.property("currentAssetVersion", "desiredAssetVersion"),
 
+  _registerPluginCode(version, code) {
+    _pluginCallbacks.push({ version: version, code: code });
+  },
 
   assetVersion: Ember.computed({
     get: function() {
