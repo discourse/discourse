@@ -9,8 +9,7 @@ class MailingListModeSiteSetting < EnumSiteSetting
   def self.values
     @values ||= [
       { name: 'user.email.mailing_list_mode.daily',      value:  0 },
-      { name: 'user.email.mailing_list_mode.combined',   value:  1 },
-      { name: 'user.email.mailing_list_mode.individual', value:  2 }
+      { name: 'user.email.mailing_list_mode.individual', value:  1 }
     ]
   end
 

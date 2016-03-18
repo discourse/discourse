@@ -507,7 +507,6 @@ en:
           This setting overrides the activity summary.<br />
           Muted topics and categories are not included in these emails.
         daily: "Send daily updates"
-        combined: "Send combined updates (25 messages per email)"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (less than 1 per day)"
       watched_categories: "Watched"
