@@ -130,6 +130,7 @@ const Group = Discourse.Model.extend({
     return Discourse.ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
       return posts.map(p => {
         p.user = Discourse.User.create(p.user);
+        p.topic = Discourse.Topic.create(p.topic);
         return Em.Object.create(p);
       });
     });

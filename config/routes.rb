@@ -20,7 +20,8 @@ Discourse::Application.routes.draw do
     mount Sidekiq::Web => "/sidekiq"
     mount Logster::Web => "/logs"
   else
-    mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
+    # only allow sidekie in master site
+    mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new(require_master: true)
     mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
 
@@ -386,6 +387,7 @@ Discourse::Application.routes.draw do
     get "revisions/:revision" => "posts#revisions", constraints: { revision: /\d+/ }
     put "revisions/:revision/hide" => "posts#hide_revision", constraints: { revision: /\d+/ }
     put "revisions/:revision/show" => "posts#show_revision", constraints: { revision: /\d+/ }
+    put "revisions/:revision/revert" => "posts#revert", constraints: { revision: /\d+/ }
     put "recover"
     collection do
       delete "destroy_many"
@@ -429,6 +431,8 @@ Discourse::Application.routes.draw do
   put "category/:category_id/slug" => "categories#update_slug"
 
   get "c/:id/show" => "categories#show"
+  get "c/:category_slug/find_by_slug" => "categories#find_by_slug"
+  get "c/:parent_category_slug/:category_slug/find_by_slug" => "categories#find_by_slug"
   get "c/:category.rss" => "list#category_feed", format: :rss
   get "c/:parent_category/:category.rss" => "list#category_feed", format: :rss
   get "c/:category" => "list#category_latest"

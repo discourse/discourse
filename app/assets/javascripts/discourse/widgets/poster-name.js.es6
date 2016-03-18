@@ -56,15 +56,6 @@ export default createWidget('poster-name', {
       contents.push(h('span.user-title', titleContents));
     }
 
-    // const cfs = attrs.userCustomFields;
-    // if (cfs) {
-    //   _callbacks.forEach(cb => {
-    //     const result = cb(cfs, attrs);
-    //     if (result) {
-    //
-    //     }
-    //   });
-    // }
     return contents;
   }
 });

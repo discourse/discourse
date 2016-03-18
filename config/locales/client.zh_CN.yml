@@ -159,6 +159,8 @@ zh_CN:
     more: "更多"
     less: "更少"
     never: "从未"
+    every_30_minutes: "每半小时"
+    every_hour: "每小时"
     daily: "每天"
     weekly: "每周"
     every_two_weeks: "每两周"
@@ -298,7 +300,10 @@ zh_CN:
       title:
         other: "群组"
       members: "成员"
+      topics: "主题"
       posts: "帖子"
+      mentions: "提及"
+      messages: "消息"
       alias_levels:
         title: "谁能给这个小组发送消息和@提醒？"
         nobody: "无人"
@@ -438,7 +443,7 @@ zh_CN:
       muted_users: "忽略"
       muted_users_instructions: "禁止任何关于这些用户的通知。"
       muted_topics_link: "显示已忽略的主题"
-      automatically_unpin_topics: "当你到达底部时自动解除主题置顶。"
+      automatically_unpin_topics: "当我完整阅读了主题时自动解除置顶。"
       staff_counters:
         flags_given: "有效标记"
         flagged_posts: "被报告的帖子"
@@ -487,7 +492,7 @@ zh_CN:
         upload_title: "上传图片"
         upload_picture: "上传图片"
         image_is_not_a_square: "注意：我们已经裁剪了你的图片；它不是正方形的。"
-        cache_notice: "你已经成功地改变了你的个人头像，但是鉴于浏览器缓存可能要一段时间才能生效。"
+        cache_notice: "你已经成功地修改了你的个人头像，但是鉴于浏览器缓存可能需要一段时间才会生效。"
       change_profile_background:
         title: "个人资料背景"
         instructions: "个人资料背景将被居中，且默认宽度为 850px。"
@@ -538,6 +543,12 @@ zh_CN:
         title: "用户资料徽章"
       website: "网站"
       email_settings: "电子邮箱"
+      like_notification_frequency:
+        title: "通知用户赞的消息"
+        always: "始终"
+        first_time_and_daily: "每天第一个被赞帖子"
+        first_time: "第一个被赞的帖子"
+        never: "从不"
       email_previous_replies:
         title: "包括邮件底下的以前的回复"
         unless_emailed: "除非曾经发送过"
@@ -545,6 +556,8 @@ zh_CN:
         never: "从不"
       email_digests:
         title: "当我不访问时，向我的邮箱发送最新信息："
+        every_30_minutes: "每半小时"
+        every_hour: "每小时"
         daily: "每天"
         every_three_days: "每三天"
         weekly: "每周"
@@ -675,9 +688,11 @@ zh_CN:
     read_only_mode:
       enabled: "这个站点正处于只读模式。请继续浏览，但是回复、赞和其他操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
+      logout_disabled: "站点在只读模式下无法登出。"
     too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
     too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
+    logs_error_rate_exceeded_notice: "%{timestamp}：目前的错误率 <a href='%{url}' target='_blank'>%{rate}/%{duration}</a>已经超出了站点设置中设置的 %{siteSettingLimit}/%{duration}。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -769,6 +784,9 @@ zh_CN:
       twitter:
         title: "使用 Twitter 帐号登录"
         message: "正使用 Twitter 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
+      instagram:
+        title: "用 Instagram 登录"
+        message: "使用 Instagram 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       facebook:
         title: "使用 Facebook 帐号登录"
         message: "正使用 Facebook 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
@@ -877,6 +895,9 @@ zh_CN:
       posted: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='编辑' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='赞' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='赞' class='fa fa-heart'></i><p><span>{{username}}、{{username2}}</span> {{description}}</p>"
+      liked_many:
+        other: "<i title='赞' class='fa fa-heart'></i><p><span>{{username}}、{{username2}}</span>和其他 {{count}} 人</span>{{description}}</p>"
       private_message: "<i title='私信' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='私信' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='邀请至主题' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1295,8 +1316,8 @@ zh_CN:
         more: "更多"
         delete_replies:
           confirm:
-            other: "你也想要删除 {{count}} 个直接回复这个帖子的回复么？"
-          yes_value: "是，删除回复"
+            other: "你也想要删除 {{count}} 个回复这个帖子的相关帖子么？"
+          yes_value: "是，一并删除相关回复"
           no_value: "否，仅删除该帖"
         admin: "帖子管理"
         wiki: "使其成为维基帖子"
@@ -1388,6 +1409,7 @@ zh_CN:
           last: "最新版"
           hide: "隐藏版本历史"
           show: "显示版本历史"
+          revert: "回退至该版本"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1468,7 +1490,6 @@ zh_CN:
           description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在最新列表中。"
     flagging:
       title: '感谢帮助社群远离邪恶！'
-      private_reminder: '标记是不公开的，<b>只有</b>管理人员才可以见到'
       action: '报告帖子'
       take_action: "立即执行"
       notify_action: '消息'
@@ -1480,7 +1501,7 @@ zh_CN:
       submit_tooltip: "提交私有标记"
       take_action_tooltip: "立即采取标记到达限制值时的措施，而不是等待更多的社群标记"
       cant: "抱歉，当前你不能报告本帖。"
-      notify_staff: '通知员工'
+      notify_staff: '私下通知管理人员'
       formatted_name:
         off_topic: "偏题"
         inappropriate: "不合适"
@@ -1578,7 +1599,7 @@ zh_CN:
       unread:
         title: "未读"
         title_with_count:
-          other: "{{count}} 个未读主题"
+          other: "未读（{{count}}）"
         help: "你正在监视或追踪的主题中有未阅帖子的主题"
         lower_title_with_count:
           other: "{{count}} 条未读"
@@ -2002,6 +2023,7 @@ zh_CN:
             cc: "抄送"
             subject: "主题"
             body: "内容"
+            rejection_message: "拒绝邮件"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"

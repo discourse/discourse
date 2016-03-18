@@ -21,27 +21,28 @@ export default createWidget('post-gutter', {
 
     const seenTitles = {};
 
-
-    let i = 0;
-    while (i < links.length && result.length < toShow) {
-      const l = links[i++];
-
+    let titleCount = 0;
+    links.forEach(function(l) {
       let title = l.title;
       if (title && !seenTitles[title]) {
         seenTitles[title] = true;
-        const linkBody = [new RawHtml({ html: `<span>${Discourse.Emoji.unescape(title)}</span>` })];
-        if (l.clicks) {
-          linkBody.push(h('span.badge.badge-notification.clicks', l.clicks.toString()));
-        }
+        titleCount++;
+        if (result.length < toShow) {
+          const linkBody = [new RawHtml({html: `<span>${Discourse.Emoji.unescape(title)}</span>`})];
+          if (l.clicks) {
+            linkBody.push(h('span.badge.badge-notification.clicks', l.clicks.toString()));
+          }
 
-        const className = l.reflection ? 'inbound' : 'outbound';
-        const link = h('a.track-link', { className, attributes: { href: l.url } }, linkBody);
-        result.push(h('li', link));
+          const className = l.reflection ? 'inbound' : 'outbound';
+          const link = h('a.track-link', {className, attributes: {href: l.url}}, linkBody);
+          result.push(h('li', link));
+        }
       }
-    }
+    });
 
     if (state.collapsed) {
-      const remaining = links.length - MAX_GUTTER_LINKS;
+      const remaining = titleCount - MAX_GUTTER_LINKS;
+
       if (remaining > 0) {
         result.push(h('li', h('a.toggle-more', I18n.t('post.more_links', {count: remaining}))));
       }

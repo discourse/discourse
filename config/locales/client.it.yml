@@ -713,7 +713,7 @@ it:
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{replyCount}}</b> risposte."
-      description_time: "Ci sono <b>{{replyCount}}</b> risposte con un tempo stimato di lettura di  <b>{{readingTime}} minuti</b>."
+      description_time: "Ci sono <b>{{replyCount}}</b> risposte con un tempo stimato di lettura di <b>{{readingTime}} minuti</b>."
       enable: 'Riassumi Questo Argomento'
       disable: 'Mostra Tutti i Messaggi'
     deleted_filter:

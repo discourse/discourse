@@ -2,6 +2,7 @@ class RateLimiter
 
   # A rate limit has been exceeded.
   class LimitExceeded < StandardError
+    attr_reader :type
 
     def initialize(available_in, type=nil)
       @available_in = available_in

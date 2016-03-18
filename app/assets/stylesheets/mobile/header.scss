@@ -2,6 +2,12 @@
 // Discourse header
 // --------------------------------------------------
 
+@media only screen and (max-width: 320px) {
+  #site-text-logo {
+    font-size: 18px;
+  }
+}
+
 .d-header {
 
   #site-logo {
@@ -10,7 +16,7 @@
 
   // some protection for text-only site titles
   .title {
-    max-width: 130px;
+    max-width: 50%;
     height: 39px;
     overflow: hidden;
     padding: 0;

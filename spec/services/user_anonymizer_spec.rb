@@ -32,32 +32,60 @@ describe UserAnonymizer do
       expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
-    it "resets profile to default values" do
-      user.update_attributes( name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star" )
+    context "Site Settings do not require full name" do
+      before do
+        SiteSetting.full_name_required = false
+      end
 
-      profile = user.user_profile(true)
-      profile.update_attributes( location: "Moose Jaw",
-                                 website: "www.bim.com",
-                                 bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
-                                 bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
-                                 profile_background: "http://example.com/bg.jpg",
-                                 bio_cooked_version: 2,
-                                 card_background: "http://example.com/cb.jpg")
-      make_anonymous
-      user.reload
+      it "resets profile to default values" do
+        user.update_attributes( name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star" )
 
-      expect(user.name).not_to be_present
-      expect(user.date_of_birth).to eq(nil)
-      expect(user.title).not_to be_present
-      expect(user.auth_token).to eq(nil)
+        profile = user.user_profile(true)
+        profile.update_attributes( location: "Moose Jaw",
+                                   website: "www.bim.com",
+                                   bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
+                                   bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
+                                   profile_background: "http://example.com/bg.jpg",
+                                   bio_cooked_version: 2,
+                                   card_background: "http://example.com/cb.jpg")
 
-      profile = user.user_profile(true)
-      expect(profile.location).to eq(nil)
-      expect(profile.website).to eq(nil)
-      expect(profile.bio_cooked).to eq(nil)
-      expect(profile.profile_background).to eq(nil)
-      expect(profile.bio_cooked_version).to eq(nil)
-      expect(profile.card_background).to eq(nil)
+        prev_username = user.username
+
+        make_anonymous
+        user.reload
+
+        expect(user.username).not_to eq(prev_username)
+        expect(user.name).not_to be_present
+        expect(user.date_of_birth).to eq(nil)
+        expect(user.title).not_to be_present
+        expect(user.auth_token).to eq(nil)
+
+        profile = user.user_profile(true)
+        expect(profile.location).to eq(nil)
+        expect(profile.website).to eq(nil)
+        expect(profile.bio_cooked).to eq(nil)
+        expect(profile.profile_background).to eq(nil)
+        expect(profile.bio_cooked_version).to eq(nil)
+        expect(profile.card_background).to eq(nil)
+      end
+    end
+
+    context "Site Settings require full name" do
+      before do
+        SiteSetting.full_name_required = true
+      end
+
+      it "changes name to anonymized username" do
+        prev_username = user.username
+
+        user.update_attributes( name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star" )
+
+        make_anonymous
+        user.reload
+
+        expect(user.name).not_to eq(prev_username)
+        expect(user.name).to eq(user.username)
+      end
     end
 
     it "removes the avatar" do

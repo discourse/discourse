@@ -113,6 +113,8 @@ class PostMover
   def update_statistics
     destination_topic.update_statistics
     original_topic.update_statistics
+    TopicUser.update_post_action_cache(topic_id: original_topic.id, post_action_type: :bookmark)
+    TopicUser.update_post_action_cache(topic_id: destination_topic.id, post_action_type: :bookmark)
   end
 
   def update_user_actions

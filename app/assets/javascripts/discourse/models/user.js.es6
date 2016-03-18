@@ -169,7 +169,8 @@ const User = RestModel.extend({
             'digest_after_minutes',
             'new_topic_duration_minutes',
             'auto_track_topics_after_msecs',
-            'like_notification_frequency'
+            'like_notification_frequency',
+            'include_tl0_in_digests'
     ].forEach(s => {
       data[s] = this.get(`user_option.${s}`);
     });

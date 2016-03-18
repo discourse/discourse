@@ -64,6 +64,9 @@ basic:
   allow_user_locale:
     client: true
     default: false
+  set_locale_from_accept_language_header:
+    default: false
+    validator: "AllowUserLocaleEnabledValidator"
   suggested_topics:
     client: true
     default: 5
@@ -522,6 +525,8 @@ email:
   reply_by_email_address:
     default: ''
     validator: "ReplyByEmailAddressValidator"
+  manual_polling_enabled:
+    default: false
   pop3_polling_enabled:
     default: false
     validator: "POP3PollingEnabledSettingValidator"
@@ -1080,6 +1085,7 @@ user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'
     default: 10080
+  default_include_tl0_in_digests: false
   default_email_private_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false

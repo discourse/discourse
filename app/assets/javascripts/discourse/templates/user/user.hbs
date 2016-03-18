@@ -46,11 +46,14 @@
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn">{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
+              {{plugin-outlet "user-profile-controls" tagName="li"}}
+
               {{#if collapsedInfo}}
               {{#if viewingSelf}}
               <li><a {{action "expandProfile"}} href class="btn">{{fa-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
               {{/if}}
               {{/if}}
+
             </ul>
           </section>
 
@@ -87,12 +90,14 @@
               <div class="public-user-fields">
                 {{#each uf in publicUserFields}}
                   {{#if uf.value}}
-                    <div class="public-user-field">
+                    <div class="public-user-field {{uf.field.dasherized_name}}">
                       <span class="user-field-name">{{uf.field.name}}</span>:
                       <span class="user-field-value">{{uf.value}}</span>
                     </div>
                   {{/if}}
                 {{/each}}
+
+                {{plugin-outlet "user-profile-public-fields"}}
               </div>
             {{/if}}
 

@@ -5,8 +5,6 @@ export default Ember.Component.extend({
   layoutName: fmt('field.field_type', 'components/user-fields/%@'),
 
   noneLabel: function() {
-    if (!this.get('field.required')) {
-      return 'user_fields.none';
-    }
-  }.property('field.required')
+    return 'user_fields.none';
+  }.property()
 });

@@ -30,6 +30,7 @@ es:
   emails:
     incoming:
       default_subject: "Email entrante desde %{email}"
+      show_trimmed_content: "Mostrar contenido recortado"
       errors:
         empty_email_error: "Sucede cuando el texto en bruto del email que recibimos está en blanco."
         no_message_id_error: "Sucede cuando el email no tiene Id del mensaje en el encabezado."
@@ -169,6 +170,7 @@ es:
     top: "Top temas"
     posts: "Últimos posts"
   too_late_to_edit: "Ese post fue publicado hace demasiado tiempo. No puede ser editado ni eliminado."
+  revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
   excerpt_image: "imagen"
   queue:
     delete_reason: "Eliminado vía moderación"
@@ -177,7 +179,9 @@ es:
       can_not_modify_automatic: "No puedes modificar un grupo automático"
       member_already_exist: "'%{username}' ya es miembro de este grupo."
       invalid_domain: "'%{domain}' no es un dominio válido."
-      invalid_incoming_email: "'%{incoming_email}' no es una dirección de email válida."
+      invalid_incoming_email: "'%{email}' no es una dirección de email válida."
+      email_already_used_in_group: "'%{email}' ya está siendo utilizado por el grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' ya está siendo utilizado por la categoría '%{category_name}'."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -308,8 +312,9 @@ es:
       uncategorized_parent: "Sin categoría no puede tener categoría primaria"
       self_parent: "La categoría primaria de una subcategoría no puede ser ella misma."
       depth: "No se puede anidar una subcategoría debajo de otra"
-      email_in_already_exist: "La dirección de email entrante '%{email_in}' ya está en uso para la categoría '%{category_name}'."
-      invalid_email_in: "'%{email_in}' no es una dirección de email válida."
+      invalid_email_in: "'%{email}' no es una dirección de email válida."
+      email_already_used_in_group: "'%{email}' ya está siendo utilizado por el grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' ya está siendo utilizado por la categoría '%{category_name}'."
     cannot_delete:
       uncategorized: "Sin categoría no se puede eliminar"
       has_subcategories: "No se puede eliminar esta categoría porque tiene sub-categorías."

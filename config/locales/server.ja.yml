@@ -988,6 +988,9 @@ ja:
     ip_address:
       blocked: "あなたのIPアドレスからの新規登録は許可されていません"
       max_new_accounts_per_registration_ip: "あなたのIPアドレスからの新規登録は許可されていません(最大数に達しました)。スタッフメンバーに連絡してください"
+  flags_reminder:
+    subject_template:
+      other: "%{count} 個のフラグが判断待ちです"
   invite_mailer:
     subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
     text_body_template: |

@@ -35,16 +35,19 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
     wget -qO- https://get.docker.com/ | sh
 
-This command installs the latest versions of Docker and Git on your server. Alternately, you can manually install the respective [Docker package for your OS](https://docs.docker.com/installation/).
+This command installs the latest versions of Docker and Git on your server. Alternately, you can manually install Git and the [Docker package for your OS](https://docs.docker.com/installation/).
 
 # Install Discourse
 
 Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it, and make a copy of the config file as `app.yml`:
 
+    sudo -s
     mkdir /var/discourse
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
     cd /var/discourse
     cp samples/standalone.yml containers/app.yml
+
+You will need to be root through the rest of the bootstrap process.
 
 # Edit Discourse Configuration
 
@@ -58,13 +61,13 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 - Set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
 
-- Place your mail credentials in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
+- Place your [Email Server credentials][mailconfig] in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
 <img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1" width="600px">
 
-After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
+Please be careful while editing and double check your work; YAML is _very_ sensitive to incorrect spacing and misplaced characters. After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
 # Email Is Important
 
@@ -72,9 +75,11 @@ After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
-- No existing mail server? Create a free account on [SendGrid][sg] (12k emails/month) [SparkPost][sp] (10k emails/month) [Mailgun][gun] (10k emails/month), [Mailjet][jet] (200 emails/day), and use the credentials provided in the dashboard.
+- No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
 
 - For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
+
+If you need to change or fix your email settings after bootstrapping, you must edit the `app.yml` file again and `./launcher rebuild app`, otherwise your changes will not take effect. If you didn't receive an email from your install, read [Register New Account and Become Admin](#register-new-account-and-become-admin) for troubleshooting.
 
 # Bootstrap Discourse
 
@@ -82,7 +87,7 @@ Save the `app.yml` file, and begin bootstrapping Discourse:
 
     ./launcher bootstrap app
 
-This command takes about **8 minutes** to automagically configure your Discourse. After that completes, start Discourse:
+This command takes between **2-8 minutes** to automagically configure your Discourse. After that completes, start Discourse:
 
     ./launcher start app
 
@@ -98,7 +103,7 @@ Your Discourse should be accessible in your web browser via the domain name `dis
 
 There is a reminder at the top about the `DISCOURSE_DEVELOPER_EMAILS` you entered previously in `app.yml`; register a new account using one of those email addresses, and your account will automatically be made an Admin.
 
-(If you *don't* get any email from your install, and are unable to register a new admin account, please see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
+(If you *don't* get any email from your install, and are unable to register a new admin account, please check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
 <img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
 
@@ -168,11 +173,8 @@ Do you want...
 Help us improve this guide! Feel free to ask about it on [meta.discourse.org][meta], or even better, submit a pull request.
 
    [dd]: https://github.com/discourse/discourse_docker
-   [sp]: https://www.sparkpost.com/
   [ssh]: https://help.github.com/articles/generating-ssh-keys
  [meta]: https://meta.discourse.org
    [do]: https://www.digitalocean.com/?refcode=5fa48ac82415
-  [jet]: https://www.mailjet.com/pricing
-  [gun]: http://www.mailgun.com/
-   [sg]: https://sendgrid.com/
   [put]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+  [mailconfig]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-email.md

@@ -93,7 +93,7 @@ module Onebox
 
             quote = post.excerpt(SiteSetting.post_onebox_maxlength)
             args = { original_url: url,
-                     title: topic.title,
+                     title: PrettyText.unescape_emoji(topic.title),
                      avatar: PrettyText.avatar_img(topic.user.avatar_template, 'tiny'),
                      posts_count: topic.posts_count,
                      last_post: FreedomPatches::Rails4.time_ago_in_words(topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose'),

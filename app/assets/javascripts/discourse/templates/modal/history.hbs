@@ -10,12 +10,6 @@
       </div>
       {{d-button action="loadNextVersion" icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
       {{d-button action="loadLastVersion" icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
-      {{#if displayHide}}
-        {{d-button action="hideVersion" icon="trash-o" title="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
-      {{/if}}
-      {{#if displayShow}}
-        {{d-button action="showVersion" icon="undo" title="post.revisions.controls.show" disabled=loading}}
-      {{/if}}
     </div>
     <div id="display-modes">
       {{d-button action="displayInline" label="post.revisions.displays.inline.button" title="post.revisions.displays.inline.title" class=inlineClass}}
@@ -85,5 +79,15 @@
     <div class="row">
       {{{bodyDiff}}}
     </div>
+
+    {{#if displayRevert}}
+      {{d-button action="revertToVersion" icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
+    {{/if}}
+    {{#if displayHide}}
+      {{d-button action="hideVersion" icon="eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
+    {{/if}}
+    {{#if displayShow}}
+      {{d-button action="showVersion" icon="eye" label="post.revisions.controls.show" disabled=loading}}
+    {{/if}}
   </div>
 </div>

@@ -147,6 +147,7 @@ module Discourse
 
     require 'discourse_redis'
     require 'logster/redis_store'
+    require 'freedom_patches/redis'
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
     $redis = DiscourseRedis.new

@@ -179,6 +179,8 @@ es:
     more: "Más"
     less: "Menos"
     never: "nunca"
+    every_30_minutes: "cada 30 minutos"
+    every_hour: "cada hora"
     daily: "cada día"
     weekly: "cada semana"
     every_two_weeks: "cada dos semanas"
@@ -269,7 +271,7 @@ es:
         one: "Este tema tiene <b>1</b> post esperando aprobación"
         other: "Este tema tiene <b>{{count}}</b> posts esperando aprobación"
       confirm: "Guardar Cambios"
-      delete_prompt: "¿Seguro que quieres eliminar a <b>%{username}</b>? Esto eliminará todos sus posts y bloqueará su email y dirección IP."
+      delete_prompt: "¿Seguro que quieres eliminar a <b>%{username}</b>? Se eliminarán todos sus posts y se bloqueará su email y dirección IP."
       approval:
         title: "El Post Necesita Aprobación"
         description: "Hemos recibido tu nuevo post pero necesita ser aprobado por un moderador antes de aparecer. Por favor, ten paciencia."
@@ -326,7 +328,10 @@ es:
         one: "grupo"
         other: "grupos"
       members: "Miembros"
+      topics: "Temas"
       posts: "Posts"
+      mentions: "Menciones"
+      messages: "Mensajes"
       alias_levels:
         title: "¿Quién puede emviar mensajes y @mencionar a este grupo?"
         nobody: "Nadie"
@@ -433,9 +438,7 @@ es:
         perm_denied_btn: "Permiso denegado"
         perm_denied_expl: "Has denegado los permisos para las notificaciones en tu navegador web. Configura tu navegador para permitir notificaciones. "
         disable: "Desactivar notificaciones"
-        currently_enabled: "(activadas actualmente)"
         enable: "Activar notificaciones"
-        currently_disabled: "(desactivadas actualmente)"
         each_browser_note: "Nota: Tendrás que cambiar esta opción para cada navegador que uses."
       dismiss_notifications: "Marcador todos como leídos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
@@ -470,7 +473,7 @@ es:
       muted_users: "Silenciados"
       muted_users_instructions: "Omite todas las notificaciones de estos usuarios."
       muted_topics_link: "Mostrar temas silenciados"
-      automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
+      automatically_unpin_topics: "Dejar de destacar temas automáticamente cuando los leo por completo."
       staff_counters:
         flags_given: "reportes útiles"
         flagged_posts: "posts reportados"
@@ -571,12 +574,26 @@ es:
         title: "Distintivo de Tarjeta de Usuario"
       website: "Sitio Web"
       email_settings: "E-mail"
+      like_notification_frequency:
+        title: "Notificar cuando me dan Me gusta"
+        always: "Con cada Me gusta que reciban mis posts"
+        first_time_and_daily: "Al primer Me gusta que reciben mis posts y luego diariamente si reciben más"
+        first_time: "Al primer Me gusta que reciben mi posts"
+        never: "Nunca"
+      email_previous_replies:
+        title: "Incluir respuestas previas al pie de los emails"
+        unless_emailed: "a menos que se hayan enviado previamente"
+        always: "siempre"
+        never: "nunca"
       email_digests:
         title: "Cuando no visite la página, enviarme un correo con las últimas novedades."
+        every_30_minutes: "cada 30 minutos"
+        every_hour: "cada hora"
         daily: "diariamente"
         every_three_days: "cada tres días"
         weekly: "semanalmente"
         every_two_weeks: "cada dos semanas"
+      email_in_reply_to: "Incluir un extracto del post al que se responde en los emails"
       email_direct: "Envíame un email cuando alguien me cite, responda a mis posts, mencione mi @usuario o me invite a un tema"
       email_private_messages: "Notifícame por email cuando alguien me envíe un mensaje"
       email_always: "Quiero recibir notificaciones por email incluso cuando esté de forma activa por el sitio"
@@ -703,9 +720,11 @@ es:
     read_only_mode:
       enabled: "Este sitio está en modo solo-lectura. Puedes continuar navegando pero algunas acciones como responder o dar \"me gusta\" no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
+      logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de sólo lectura."
     too_few_topics_and_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    logs_error_rate_exceeded_notice: "%{timestamp}: La tasa actual de <a href='%{url}' target='_blank'>%{rate} errors/%{duration}</a> ha excedido el límite establecido en las opciones del sitio de %{siteSettingLimit} errors/%{duration}."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -798,6 +817,9 @@ es:
       twitter:
         title: "con Twitter"
         message: "Autenticando con Twitter (asegúrate de desactivar cualquier bloqueador de pop ups)"
+      instagram:
+        title: "con Instagram"
+        message: "Autenticando con Instagram (asegúrate que los bloqueadores de pop up no están activados)"
       facebook:
         title: "con Facebook"
         message: "Autenticando con Facebook (asegúrate de desactivar cualquier bloqueador de pop ups)"
@@ -903,9 +925,13 @@ es:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} y otro</span> {{description}}</p>"
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} y {{count}} otros</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1013,8 +1039,8 @@ es:
         top: "No hay temas en el top más vistos."
         search: "No hay resultados de búsqueda."
         educate:
-          new: '<p>Tus nuevos temas aparecerán aquí.</p><p>Por defecto, los temas son considerados nuevos y mostrarán un indicador: <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuevo</span> si son creados en los 2 últimos días.</p><p>Puedes cambiar esto en tus <a href="%{userPrefsUrl}">preferencias</a>.</p>'
-          unread: '<p>Tus temas sin leer aparecerán aquí.</p><p>Por defecto, los temas son considerados no leídos y mostrán contadores de post sin leer <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema durante más de 4 minutos</li></ul><p>O si has establecido específicamente el tema a Seguir o Vigilar en el control de notificaciones al pie de cada tema.</p><p>Puedes cambiar esto en tus <a href="%{userPrefsUrl}">preferencias</a>.</p>'
+          new: '<p>Tus temas nuevos aparecen aquí.</p><p>Por defecto, los temas se consideran nuevos y mostrarán un indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuevo</span> si fueron creados en los últimos 2 días.</p><p>Dirígite a <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
+          unread: '<p>Tus temas sin leer aparecen aquí.</p><p>Por defecto, los temas son considerados sin leer y mostrarán contadores de posts sin leer <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema por más de 4 minutos</li></ul><p>O si has establecido específicamente el tema como Siguiendo o Vigilando a través del control de notificaciones al pie de cada tema.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
       bottom:
         latest: "No hay más temas recientes para leer."
         hot: "No hay más temas candentes."
@@ -1379,17 +1405,14 @@ es:
           like: "Deshacer Me gusta"
           vote: "Deshacer voto"
         people:
-          off_topic: "{{icons}} reportó esto como off-topic"
-          spam: "{{icons}} reportó esto como spam"
-          spam_with_url: "{{icons}} reportó <a href='{{postUrl}}'>esto como spam</a>"
-          inappropriate: "{{icons}} flagged reportó esto como inapropiado"
-          notify_moderators: "{{icons}} ha notificado a los moderadores"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>moderadores notificados</a>"
-          notify_user: "{{icons}} ha enviado un mensaje"
-          notify_user_with_url: "{{icons}} ha enviado un <a href='{{postUrl}}'>mensaje</a>"
-          bookmark: "{{icons}} ha marcado esto"
-          like: "{{icons}} les gusta esto"
-          vote: "{{icons}} ha votado esto"
+          off_topic: "reportó esto como off-topic"
+          spam: "reportó esto como spam"
+          inappropriate: "reportó esto como inapropiado"
+          notify_moderators: "notificó a moderadores"
+          notify_user: "envió un mensaje"
+          bookmark: "guardó esto en marcadores"
+          like: "le gustó esto"
+          vote: "votó por esto"
         by_you:
           off_topic: "Has reportado esto como off-topic"
           spam: "Has reportado esto como Spam"
@@ -1461,6 +1484,7 @@ es:
           last: "Última revisión"
           hide: "Ocultar revisión."
           show: "Mostrar revisión."
+          revert: "Volver a esta revisión"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1541,7 +1565,6 @@ es:
           description: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de mensajes recientes."
     flagging:
       title: '¡Gracias por ayudar a mantener una comunidad civilizada!'
-      private_reminder: 'los reportes son privados, son visibles <b>únicamente</b> por los administradores'
       action: 'Reportar post'
       take_action: "Tomar medidas"
       notify_action: 'Mensaje'
@@ -1553,7 +1576,7 @@ es:
       submit_tooltip: "Enviar el reporte privado"
       take_action_tooltip: "Alcanzar el umbral de reportes inmediatamente, en vez de esperar a más reportes de la comunidad"
       cant: "Lo sentimos, no puedes reportar este post en este momento."
-      notify_staff: 'Notificar al Staff'
+      notify_staff: 'Notificar a los administradores de forma privada'
       formatted_name:
         off_topic: "Está fuera de lugar"
         inappropriate: "Es inapropiado"
@@ -1934,11 +1957,11 @@ es:
             is_disabled: "Restaurar está deshabilitado en la configuración del sitio."
             label: "Restaurar"
             title: "Restaurar la copia de seguridad"
-            confirm: "¿Estás seguro que quieres restaurar esta copia de seguridad?"
+            confirm: "¿Seguro que quieres restaurar esta copia de seguridad?"
           rollback:
             label: "Revertir"
             title: "Regresar la base de datos al estado funcional anterior"
-            confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
+            confirm: "¿Seguro que quieres retornar la base de datos al estado funcional previo?"
       export_csv:
         user_archive_confirm: "¿Seguro que quieres descargar todos tus posts?"
         success: "Exportación iniciada, se te notificará a través de un mensaje cuando el proceso se haya completado."
@@ -2041,9 +2064,6 @@ es:
           love:
             name: 'me gusta'
             description: "El color del botón de \"me gusta\""
-          wiki:
-            name: 'wiki'
-            description: "Color base usado para el fondo en los posts del wiki."
       email:
         title: "Emails"
         settings: "Ajustes"
@@ -2080,6 +2100,20 @@ es:
           subject: "Asunto"
           error: "Error"
           none: "No se encontraron emails entrantes."
+          modal:
+            title: "Detalles de emails entrantes"
+            error: "Error"
+            return_path: "Ruta de retorno"
+            message_id: "Id del mensaje"
+            in_reply_to: "En respuesta a"
+            references: "Referencias"
+            date: "Fecha"
+            from: "De"
+            to: "Para"
+            cc: "Cc"
+            subject: "Asunto"
+            body: "Cuerpo"
+            rejection_message: "Correo de rechazo"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2155,6 +2189,7 @@ es:
             revoke_admin: "revocar administración"
             grant_moderation: "conceder moderación"
             revoke_moderation: "revocar moderación"
+            backup_operation: "operación de copia de seguridad de respaldo"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."

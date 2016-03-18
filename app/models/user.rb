@@ -148,6 +148,33 @@ class User < ActiveRecord::Base
     User.where(username_lower: lower).blank? && !SiteSetting.reserved_usernames.split("|").include?(username)
   end
 
+  def self.plugin_staff_user_custom_fields
+    @plugin_staff_user_custom_fields ||= {}
+  end
+
+  def self.register_plugin_staff_custom_field(custom_field_name, plugin)
+    plugin_staff_user_custom_fields[custom_field_name] = plugin
+  end
+
+  def self.whitelisted_user_custom_fields(guardian)
+    fields = []
+
+    if SiteSetting.public_user_custom_fields.present?
+      fields += SiteSetting.public_user_custom_fields.split('|')
+    end
+
+    if guardian.is_staff?
+      if SiteSetting.staff_user_custom_fields.present?
+        fields += SiteSetting.staff_user_custom_fields.split('|')
+      end
+      plugin_staff_user_custom_fields.each do |k, v|
+        fields << k if v.enabled?
+      end
+    end
+
+    fields.uniq
+  end
+
   def effective_locale
     if SiteSetting.allow_user_locale && self.locale.present?
       self.locale

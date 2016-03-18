@@ -17,7 +17,8 @@ class UserOptionSerializer < ApplicationSerializer
              :new_topic_duration_minutes,
              :email_previous_replies,
              :email_in_reply_to,
-             :like_notification_frequency
+             :like_notification_frequency,
+             :include_tl0_in_digests
 
 
   def include_edit_history_public?

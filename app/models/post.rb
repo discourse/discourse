@@ -439,7 +439,12 @@ class Post < ActiveRecord::Base
       new_user: new_user.username_lower
     )
 
-    revise(actor, { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason })
+    revise(actor, {raw: self.raw, user_id: new_user.id, edit_reason: edit_reason}, bypass_bump: true)
+
+    if post_number == topic.highest_post_number
+      topic.update_columns(last_post_user_id: new_user.id)
+    end
+
   end
 
   before_create do

@@ -1,6 +1,6 @@
 # name: discourse-details
 # about: HTML5.1 Details polyfill for Discourse
-# version: 0.3
+# version: 0.4
 # authors: Régis Hanol
 # url: https://github.com/discourse/discourse/tree/master/plugins/discourse-details
 
@@ -13,14 +13,15 @@ register_asset "stylesheets/details.scss"
 
 after_initialize do
 
-  # replace all details with their summary in emails
   Email::Styles.register_plugin_style do |fragment|
-    if SiteSetting.details_enabled
-      fragment.css("details").each do |details|
-        summary = details.css("summary")[0]
-        summary.name = "p"
-        details.replace(summary)
-      end
+    # remove all elided content
+    fragment.css("details.elided").each { |d| d.remove }
+
+    # replace all details with their summary in emails
+    fragment.css("details").each do |details|
+      summary = details.css("summary")[0]
+      summary.name = "p"
+      details.replace(summary)
     end
   end
 

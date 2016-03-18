@@ -788,6 +788,10 @@ sv:
     ip_address:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtet från din IP-adress (maxgräns uppnådd). Kontakta personal."
+  flags_reminder:
+    subject_template:
+      one: "1 flagga väntar på att bli hanterad"
+      other: "%{count} flaggor väntar på att bli hanterade"
   invite_mailer:
     subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
     text_body_template: |

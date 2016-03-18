@@ -62,6 +62,18 @@ function testCase(title, testFunc) {
   });
 }
 
+testCase(`selecting the space before a word`, function(assert, textarea) {
+  textarea.selectionStart = 5;
+  textarea.selectionEnd = 7;
+
+  click(`button.bold`);
+  andThen(() => {
+    assert.equal(this.get('value'), `hello **w**orld.`);
+    assert.equal(textarea.selectionStart, 8);
+    assert.equal(textarea.selectionEnd, 9);
+  });
+});
+
 testCase(`selecting the space after a word`, function(assert, textarea) {
   textarea.selectionStart = 0;
   textarea.selectionEnd = 6;
@@ -204,6 +216,16 @@ testCase('link modal (simple link)', function(assert, textarea) {
     assert.equal(this.get('value'), `hello world.[${desc}](http://eviltrout.com)`);
     assert.equal(textarea.selectionStart, 13);
     assert.equal(textarea.selectionEnd, 13 + desc.length);
+  });
+});
+
+testCase('link modal auto http addition', function(assert) {
+  click('button.link');
+  fillIn('.insert-link input', 'sam.com');
+  click('.insert-link button.btn-primary');
+  const desc = I18n.t('composer.link_description');
+  andThen(() => {
+    assert.equal(this.get('value'), `hello world.[${desc}](http://sam.com)`);
   });
 });
 

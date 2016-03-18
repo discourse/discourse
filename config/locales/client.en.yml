@@ -661,6 +661,7 @@ en:
         weekly: "weekly"
         every_two_weeks: "every two weeks"
 
+      include_tl0_in_digests: "Include posts from new users in digest emails"
       email_in_reply_to: "Include an excerpt of replied to post in emails"
       email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
       email_private_messages: "Send me an email when someone messages me"
@@ -1027,7 +1028,7 @@ en:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
@@ -1648,6 +1649,7 @@ en:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
+          revert: "Revert to this revision"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -2972,6 +2974,33 @@ en:
         famous_link:
           name: Famous Link
           description: Posted an external link with at least 1000 clicks
+        appreciated:
+          name: Appreciated
+          description: Has received at least 1 like on 20 posts
+        respected:
+          name: Respected
+          description: Has received at least 2 likes on 100 posts
+        admired:
+          name: Admired
+          description: Has received at least 5 likes on 300 posts
+        out_of_love:
+          name: Out of Love
+          description: Used the maximum amount of likes in a day
+        higher_love:
+          name: Higher Love
+          description: Used the maximum amount of likes in a day 5 times
+        crazy_in_love:
+          name: Crazy in Love
+          description: Used the maximum amount of likes in a day 20 times
+        thank_you:
+          name: Thank You
+          description: Has at least 20 liked posts
+        gives_back:
+          name: Gives Back
+          description: Has at least 100 liked posts and a very high like ratio
+        empathetic:
+          name: Empathetic
+          description: Has at least 500 liked posts and a superlative like ratio
 
     google_search: |
       <h3>Search with Google</h3>
