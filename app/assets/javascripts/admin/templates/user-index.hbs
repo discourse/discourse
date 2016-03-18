@@ -386,15 +386,15 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'created'}}</div>
-    <div class='value'>{{{model.created_at_age}}}</div>
+    <div class='value'>{{format-date model.created_at leaveAgo="true"}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.users.last_emailed'}}</div>
-    <div class='value'>{{{model.last_emailed_age}}}</div>
+    <div class='value'>{{format-date model.last_emailed_at leaveAgo="true"}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'last_seen'}}</div>
-    <div class='value'>{{{model.last_seen_age}}}</div>
+    <div class='value'>{{format-date model.last_seen_at leaveAgo="true"}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.like_count'}}</div>
