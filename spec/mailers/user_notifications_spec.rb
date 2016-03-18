@@ -76,6 +76,48 @@ describe UserNotifications do
 
   end
 
+  describe '.mailing_list' do
+    subject { UserNotifications.mailing_list(user) }
+
+    context "without new posts" do
+      it "doesn't send the email" do
+        expect(subject.to).to be_blank
+      end
+    end
+
+    context "with new posts" do
+      let(:user) { Fabricate(:user) }
+      let(:topic) { Fabricate(:topic, user: user) }
+      let!(:new_post) { Fabricate(:post, topic: topic, created_at: 2.hours.ago, raw: "Feel the Bern!") }
+      let!(:old_post) { Fabricate(:post, topic: topic, created_at: 25.hours.ago, raw: "Make America great again!") }
+
+      it "works" do
+        expect(subject.to).to eq([user.email])
+        expect(subject.subject).to be_present
+        expect(subject.from).to eq([SiteSetting.notification_email])
+        expect(subject.html_part.body.to_s).to include topic.title
+        expect(subject.text_part.body.to_s).to be_present
+      end
+
+      it "includes posts less than 24 hours old" do
+        expect(subject.html_part.body.to_s).to include new_post.cooked
+      end
+
+      it "does not include posts older than 24 hours old" do
+        expect(subject.html_part.body.to_s).to_not include old_post.cooked
+
+      end
+
+      it "includes email_prefix in email subject instead of site title" do
+        SiteSetting.email_prefix = "Try Discourse"
+        SiteSetting.title = "Discourse Meta"
+
+        expect(subject.subject).to match(/Try Discourse/)
+        expect(subject.subject).not_to match(/Discourse Meta/)
+      end
+    end
+  end
+
   describe '.digest' do
 
     subject { UserNotifications.digest(user) }
