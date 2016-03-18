@@ -148,7 +148,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return desired && Discourse.get("currentAssetVersion") !== desired;
   }.property("currentAssetVersion", "desiredAssetVersion"),
 
-  _registerPluginCode(version, code) {
+  _registerPluginCode: function(version, code) {
     _pluginCallbacks.push({ version: version, code: code });
   },
 
