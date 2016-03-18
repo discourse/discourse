@@ -219,6 +219,18 @@ class Search
     posts.where("posts.post_number = 1")
   end
 
+  advanced_filter(/in:pinned/) do |posts|
+    posts.where("topics.pinned_at IS NOT NULL")
+  end
+
+  advanced_filter(/in:unpinned/) do |posts|
+    if @guardian.user
+      posts.where("topics.pinned_at IS NOT NULL AND topics.id IN (
+                  SELECT topic_id FROM topic_users WHERE user_id = ? AND cleared_pinned_at IS NOT NULL
+                 )", @guardian.user.id)
+    end
+  end
+
   advanced_filter(/badge:(.*)/) do |posts,match|
     badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
     if badge_id
