@@ -25,7 +25,7 @@ class SearchController < ApplicationController
     search = Search.new(params[:q], search_args)
     result = search.execute
 
-    result.find_user_data(guardian)
+    result.find_user_data(guardian) if result
 
     serializer = serialize_data(result, GroupedSearchResultSerializer, result: result)
 
