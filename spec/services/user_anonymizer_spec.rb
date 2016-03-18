@@ -48,9 +48,13 @@ describe UserAnonymizer do
                                    profile_background: "http://example.com/bg.jpg",
                                    bio_cooked_version: 2,
                                    card_background: "http://example.com/cb.jpg")
+
+        prev_username = user.username
+
         make_anonymous
         user.reload
 
+        expect(user.username).not_to eq(prev_username)
         expect(user.name).not_to be_present
         expect(user.date_of_birth).to eq(nil)
         expect(user.title).not_to be_present
@@ -72,11 +76,14 @@ describe UserAnonymizer do
       end
 
       it "changes name to anonymized username" do
+        prev_username = user.username
+
         user.update_attributes( name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star" )
 
         make_anonymous
         user.reload
 
+        expect(user.name).not_to eq(prev_username)
         expect(user.name).to eq(user.username)
       end
     end
