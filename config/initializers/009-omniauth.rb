@@ -9,3 +9,5 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     authenticator.register_middleware(self)
   end
 end
+ 
+OmniAuth.config.logger = Rails.logger
