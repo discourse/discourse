@@ -130,7 +130,7 @@ describe CookedPostProcessor do
 
     context "with large images when using subfolders" do
 
-      let(:subfolder_upload) { Fabricate(:subfolder_upload) }
+      let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image_on_subfolder) }
       let(:cpp) { CookedPostProcessor.new(post) }
       let(:base_url) { "http://test.localhost/subfolder" }
@@ -142,7 +142,7 @@ describe CookedPostProcessor do
         Discourse.stubs(:base_url).returns(base_url)
         Discourse.stubs(:base_uri).returns(base_uri)
 
-        Upload.expects(:get_from_url).returns(subfolder_upload)
+        Upload.expects(:get_from_url).returns(upload)
         FastImage.stubs(:size).returns([1000, 2000])
 
         # hmmm this should be done in a cleaner way
