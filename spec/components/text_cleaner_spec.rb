@@ -194,7 +194,7 @@ describe TextCleaner do
       it "capitalizes first unicode letter" do
         expect(TextCleaner.clean_title("épico encontro")).to eq("Épico encontro")
       end
-      
+
     end
 
   end
