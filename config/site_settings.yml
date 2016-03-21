@@ -1091,7 +1091,7 @@ user_preferences:
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
     enum: 'MailingListModeSiteSetting'
-    default: 0
+    default: 1
   disable_mailing_list_mode:
     default: false
     client: true
