@@ -8,12 +8,12 @@ export default Ember.Controller.extend({
 
   // shows the results when
   //   - poll is closed
-  //   - topic is archived/closed
+  //   - topic is archived
   //   - user wants to see the results
-  showingResults: Em.computed.or("isClosed", "post.topic.closed", "post.topic.archived", "showResults"),
+  showingResults: Em.computed.or("isClosed", "post.topic.archived", "showResults"),
 
   showResultsDisabled: Em.computed.equal("poll.voters", 0),
-  hideResultsDisabled: Em.computed.or("isClosed", "post.topic.closed", "post.topic.archived"),
+  hideResultsDisabled: Em.computed.or("isClosed", "post.topic.archived"),
 
   @computed("model", "vote", "model.voters", "model.options", "model.status")
   poll(poll, vote) {
@@ -100,12 +100,11 @@ export default Ember.Controller.extend({
 
   castVotesDisabled: Em.computed.not("canCastVotes"),
 
-  @computed("loading", "post.user_id", "post.topic.closed", "post.topic.archived")
-  canToggleStatus(loading, userId, topicClosed, topicArchived) {
+  @computed("loading", "post.user_id", "post.topic.archived")
+  canToggleStatus(loading, userId, topicArchived) {
     return this.currentUser &&
            (this.currentUser.get("id") === userId || this.currentUser.get("staff")) &&
            !loading &&
-           !topicClosed &&
            !topicArchived;
   },
 
