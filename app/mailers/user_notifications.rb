@@ -76,17 +76,13 @@ class UserNotifications < ActionMailer::Base
   def mailing_list(user, opts={})
     build_summary_for(user)
     min_date = opts[:since] || 1.day.ago
-    @topics = Topic.for_digest(user, min_date)
-                   .joins(:posts)
-                   .where('posts.created_at > ?', min_date)
-                   .order(updated_at: :desc)
-                   .uniq
-    return unless @topics.any?
 
-    @posts_by_topic = Post.where(topic: @topics)
-                          .where('created_at > ?', min_date)
-                          .order(created_at: :asc)
-                          .group_by(&:topic_id)
+    @posts_by_topic = Post.joins(:topic)
+                          .where(topic: Topic.for_digest(user, min_date))
+                          .where('posts.created_at > ?', min_date)
+                          .order('topics.updated_at DESC, posts.created_at ASC')
+                          .group_by(&:topic)
+    return unless @posts_by_topic.present?
 
     build_email @user.email,
                 from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),

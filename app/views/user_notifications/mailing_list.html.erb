@@ -1,6 +1,6 @@
-<% @topics.each do |topic| %>
+<% @posts_by_topic.keys.each do |topic| %>
   <%= topic.title %>
-  <% @posts_by_topic[topic.id].each do |post| %>
+  <% @posts_by_topic[topic].each do |post| %>
     <%= post.cooked.html_safe %>
   <% end %>
 <% end %>
