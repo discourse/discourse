@@ -506,9 +506,10 @@ en:
         instructions: |
           This setting overrides the activity summary.<br />
           Muted topics and categories are not included in these emails.
-        daily: "Send daily updates"
-        many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
-        few_per_day: "Send me an email for every new post (less than 1 per day)"
+        daily: "Send daily updates."
+        individual: "Send an email for every new post."
+        many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)."
+        few_per_day: "Send me an email for every new post (less than 1 per day)."
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
