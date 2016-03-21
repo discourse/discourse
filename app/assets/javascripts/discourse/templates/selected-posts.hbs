@@ -24,4 +24,8 @@
   {{d-button action="changeOwner" icon="user" label="topic.change_owner.action"}}
 {{/if}}
 
+{{#if canMergePosts}}
+  {{d-button action="mergePosts" icon="arrows-v" label="topic.merge_posts.action"}}
+{{/if}}
+
 <p class='cancel'><a href {{action "toggleMultiSelect"}}>{{i18n 'topic.multi_select.cancel'}}</a></p>
