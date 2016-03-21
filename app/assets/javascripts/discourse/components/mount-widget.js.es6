@@ -56,6 +56,8 @@ export default Ember.Component.extend({
   rerenderWidget() {
     Ember.run.cancel(this._timeout);
     if (this._rootNode) {
+      const t0 = new Date().getTime();
+
       const opts = { model: this.get('model') };
       const newTree = new this._widgetClass(this.get('args'), this.container, opts);
 
@@ -86,6 +88,10 @@ export default Ember.Component.extend({
       }
 
       renderedKey('*');
+      if (this.profileWidget) {
+        console.log(new Date().getTime() - t0);
+      }
+
     }
   }
 

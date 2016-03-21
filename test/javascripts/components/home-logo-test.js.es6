@@ -17,6 +17,7 @@ componentTest('basics', {
   },
 
   test(assert) {
+    assert.ok(this.$('.title').length === 1);
     assert.ok(this.$('a[data-auto-route]').length === 1);
 
     assert.ok(this.$('img#site-logo.logo-big').length === 1);
@@ -55,29 +56,22 @@ componentTest('no logo', {
 });
 
 componentTest('mobile logo', {
-  template: "{{home-logo minimized=minimized}}",
+  template: "{{home-logo}}",
   setup() {
     this.siteSettings.mobile_logo_url = mobileLogo;
     this.siteSettings.logo_small_url= smallLogo;
-    this.set('minimized', true);
     this.site.mobileView = true;
   },
 
   test(assert) {
     assert.ok(this.$('img#site-logo.logo-big').length === 1);
     assert.equal(this.$('#site-logo').attr('src'), mobileLogo);
-
-    this.set('minimized', true);
-    andThen(() => {
-      assert.equal(this.$('#site-logo').attr('src'), mobileLogo);
-    });
   }
 });
 
 componentTest('mobile without logo', {
-  template: "{{home-logo minimized=minimized}}",
+  template: "{{home-logo}}",
   setup() {
-    this.set('minimized', true);
     this.siteSettings.logo_url = bigLogo;
     this.site.mobileView = true;
   },
