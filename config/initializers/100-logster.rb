@@ -57,21 +57,22 @@ Logster.config.subdirectory = "#{GlobalSetting.relative_url_root}/logs"
 
 Logster.config.application_version = Discourse.git_version
 
+store = Logster.store
 redis = Logster.store.redis
-Logster.config.redis_prefix = "#{redis.namespace}"
-Logster.config.redis_raw_connection = redis.without_namespace
+store.redis_prefix = Proc.new { redis.namespace }
+store.redis_raw_connection = redis.without_namespace
+severities = [Logger::WARN, Logger::ERROR, Logger::FATAL, Logger::UNKNOWN]
 
-%w{minute hour}.each do |duration|
-  site_setting_error_rate = SiteSetting.public_send("alert_admins_if_errors_per_#{duration}")
+RailsMultisite::ConnectionManagement.each_connection do
+  if error_rate_per_minute = SiteSetting.alert_admins_if_errors_per_minute > 0
+    store.register_rate_limit_per_minute(severities, error_rate_per_minute) do |rate|
+      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'minute' })
+    end
+  end
 
-  if site_setting_error_rate > 0
-    Logster.store.public_send(
-      "register_rate_limit_per_#{duration}",
-      [Logger::WARN, Logger::ERROR, Logger::FATAL, Logger::UNKNOWN],
-      site_setting_error_rate
-    ) do |rate|
-
-      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: duration })
+  if error_rate_per_hour = SiteSetting.alert_admins_if_errors_per_hour > 0
+    store.register_rate_limit_per_hour(severities, error_rate_per_hour) do |rate|
+      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'hour' })
     end
   end
 end
