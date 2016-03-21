@@ -342,11 +342,11 @@ SQL
     builder.where("COALESCE(p.post_type, p2.post_type) IN (:visible_post_types)", visible_post_types: visible_post_types)
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
-      builder.where("a.action_type not in (#{BOOKMARK})")
       builder.where("t.visible")
     end
 
     unless guardian.can_see_notifications?(User.where(id: user_id).first)
+      builder.where("a.action_type not in (#{BOOKMARK})")
       builder.where('a.action_type <> :pending', pending: UserAction::PENDING)
     end
 
