@@ -55,27 +55,56 @@ describe PostsController do
 
   describe 'latest' do
     let(:user) { log_in }
-    let!(:post) { Fabricate(:post, user: user) }
+    let!(:public_topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, user: user, topic: public_topic) }
+    let!(:private_topic) { Fabricate(:topic, archetype: Archetype.private_message, category: nil) }
+    let!(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
     let!(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
 
-    before do
-      topicless_post.update topic_id: -100
+    context "public posts" do
+      before do
+        topicless_post.update topic_id: -100
+      end
+
+      it 'returns public posts with topic for json' do
+        xhr :get, :latest, id: "latest_posts", format: :json
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        post_ids = json['latest_posts'].map { |p| p['id'] }
+        expect(post_ids).to include post.id
+        expect(post_ids).to_not include private_post.id
+        expect(post_ids).to_not include topicless_post.id
+      end
+
+      it 'returns public posts with topic for rss' do
+        xhr :get, :latest, id: "latest_posts", format: :rss
+        expect(response).to be_success
+        expect(assigns(:posts)).to include post
+        expect(assigns(:posts)).to_not include private_post
+        expect(assigns(:posts)).to_not include topicless_post
+      end
     end
 
-    it 'does not return posts without a topic for json' do
-      xhr :get, :latest, format: :json
-      expect(response).to be_success
-      json = ::JSON.parse(response.body)
-      post_ids = json['latest_posts'].map { |p| p['id'] }
-      expect(post_ids).to include post.id
-      expect(post_ids).to_not include topicless_post.id
-    end
+    context 'private posts' do
+      before do
+        Guardian.any_instance.expects(:can_see?).with(private_post).returns(true)
+      end
 
-    it 'does not return posts without a topic for rss' do
-      xhr :get, :latest, format: :rss
-      expect(response).to be_success
-      expect(assigns(:posts)).to include post
-      expect(assigns(:posts)).to_not include topicless_post
+      it 'returns private posts for json' do
+        xhr :get, :latest, id: "private_posts", format: :json
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        post_ids = json['private_posts'].map { |p| p['id'] }
+        expect(post_ids).to include private_post.id
+        expect(post_ids).to_not include post.id
+      end
+
+      it 'returns private posts for rss' do
+        xhr :get, :latest, id: "private_posts", format: :rss
+        expect(response).to be_success
+        expect(assigns(:posts)).to include private_post
+        expect(assigns(:posts)).to_not include post
+      end
     end
   end
 
