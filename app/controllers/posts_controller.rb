@@ -70,7 +70,7 @@ class PostsController < ApplicationController
         @posts = posts
         @title = "#{SiteSetting.title} - #{rss_description}"
         @link = Discourse.base_url
-        @description = I18n.t("rss_description.posts")
+        @description = rss_description
         render 'posts/latest', formats: [:rss]
       end
       format.json do
