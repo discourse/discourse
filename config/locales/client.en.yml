@@ -1516,6 +1516,14 @@ en:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
 
+      merge_posts:
+        title: "Merge Selected Posts"
+        action: "merge selected posts"
+        error: "There was an error merging the selected posts."
+        instructions:
+          one: "Please choose the topic you'd like to move that post to."
+          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+
       change_owner:
         title: "Change Owner of Posts"
         action: "change ownership"

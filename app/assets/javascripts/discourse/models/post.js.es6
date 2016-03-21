@@ -324,6 +324,16 @@ Post.reopenClass({
     });
   },
 
+  mergePosts(selectedPosts, selectedReplies) {
+    return Discourse.ajax("/posts/merge_posts", {
+      type: 'PUT',
+      data: {
+        post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
+        reply_post_ids: selectedReplies.map(function(p) { return p.get('id'); })
+      }
+    });
+  },
+
   loadRevision(postId, version) {
     return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json")
                     .then(result => Ember.Object.create(result));

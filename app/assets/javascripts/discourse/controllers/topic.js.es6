@@ -517,6 +517,25 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       });
     },
 
+    mergePosts() {
+      bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), result => {
+        if (result) {
+          const selectedPosts = this.get('selectedPosts');
+          const selectedReplies = this.get('selectedReplies');
+          const postStream = this.get('model.postStream');
+
+          Discourse.Post.mergePosts(selectedPosts, selectedReplies);
+          //postStream.get('posts').forEach(p => {
+          //  if (this.postSelected(p)) {
+          //    p.set('deleted_at', new Date());
+          //  }
+          //});
+
+          this.send('toggleMultiSelect');
+        }
+      });
+    },
+
     expandHidden(post) {
       post.expandHidden();
     },
@@ -691,6 +710,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     if (!Discourse.User.current() || !Discourse.User.current().admin) return false;
     return this.get('selectedPostsUsername') !== undefined;
   }.property('selectedPostsUsername'),
+
+  canMergePosts: function() {
+    if (this.get('selectedPostsCount') < 2) return false;
+    return this.get('selectedPostsUsername') !== undefined;
+  }.property('selectedPostsCount'),
 
   categories: function() {
     return Discourse.Category.list();

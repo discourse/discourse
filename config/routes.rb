@@ -410,6 +410,7 @@ Discourse::Application.routes.draw do
     put "recover"
     collection do
       delete "destroy_many"
+      put "merge_posts"
     end
   end
 

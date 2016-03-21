@@ -273,6 +273,36 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
+  def merge_posts
+    params.require(:post_ids)
+
+
+    posts = Post.where(id: post_ids_including_replies).order(:id)
+    raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
+
+    # Make sure we can delete the posts
+    posts.each {|p| guardian.ensure_can_delete!(p) }
+
+    postContent = []
+    posts.each do |p|
+      # only merge posts that are not replies to other posts, for now
+      if p.reply_to_post_number == nil
+        postContent.push(p.raw)
+      end
+    end
+
+    post = posts.last
+    changes = {
+      raw: postContent.join("\n\n"),
+      edit_reason: ""
+    }
+    revisor = PostRevisor.new(post, post.topic)
+    revisor.revise!(current_user, changes, {})
+
+    debugger
+    render nothing: true
+  end
+
   # Direct replies to this post
   def replies
     post = find_post_from_params
