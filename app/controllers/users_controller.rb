@@ -165,7 +165,7 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    raise Discourse::NotFound if params[:path] !~ /^[a-z\-\/]+$/
+    raise Discourse::NotFound if params[:path] !~ /^[a-z_\-\/]+$/
 
     if current_user.blank?
       cookies[:destination_url] = "/my/#{params[:path]}"
