@@ -28,7 +28,7 @@ export default Ember.Component.extend({
 
     e.preventDefault();
 
-    DiscourseURL.routeTo(this.get('targetUrl'));
+    DiscourseURL.routeTo(this.linkUrl);
     return false;
   },
 
