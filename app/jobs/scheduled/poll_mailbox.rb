@@ -57,6 +57,7 @@ module Jobs
       end
 
       template_args = {}
+      client_message = nil
 
       # there might be more information available in the exception
       if message_template == :email_reject_invalid_post && e.message.size > 6
@@ -77,12 +78,12 @@ module Jobs
 
         client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
         Email::Sender.new(client_message, message_template).send
-
-        client_message
       else
         mark_as_errored!
         Discourse.handle_job_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))
       end
+
+      client_message
     end
 
     def poll_pop3
