@@ -1,6 +1,33 @@
-<% @posts_by_topic.keys.each do |topic| %>
-  <%= topic.title %>
-  <% @posts_by_topic[topic].each do |post| %>
-    <%= post.cooked.html_safe %>
+<table style="border: 20px solid #eee;" cellspacing="0" cellpadding="0">
+  <thead>
+    <td style="padding: 10px 10px; background-color: #<%= @header_color %>;">
+      <a href="<%= Discourse.base_url %>" style='color: #<%= @anchor_color %>'>
+        <% if logo_url.blank? %>
+          <%= SiteSetting.title %>
+        <% else %>
+          <img src="<%= logo_url %>" style="max-height: 35px; min-height: 35px; height: 35px;" class='site-logo'></a>
+        <% end %>
+      </a>
+    </td>
+  </thead>
+  <tr>
+    <td>
+      <%= raw(t 'user_notifications.mailing_list.why', site_link: html_site_link(@anchor_color), date: @date) %>
+      <hr />
+    </td>
+  </tr>
+  <% @posts_by_topic.keys.each do |topic| %>
+    <tr>
+      <td><%= topic.title %></td>
+    </tr>
   <% end %>
-<% end %>
+  <% @posts_by_topic.keys.each do |topic| %>
+    <tr>
+      <td>
+        <% @posts_by_topic[topic].each do |post| %>
+          <%= post.cooked.html_safe %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>

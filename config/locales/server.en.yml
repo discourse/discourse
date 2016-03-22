@@ -2214,6 +2214,10 @@ en:
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
 
+    mailing_list:
+      subject_template: "[%{site_name}] Summary for %{date}"
+      unsubscribe: "This summary is sent daily due to mailing list mode being enabled. To unsubscribe %{unsubscribe_link}."
+      why: "All activity on %{site_link} for %{date}"
     forgot_password:
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |

@@ -63,6 +63,12 @@ class Post < ActiveRecord::Base
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
   scope :secured, lambda { |guardian| where('posts.post_type in (?)', Topic.visible_post_types(guardian && guardian.user))}
+  scope :for_mailing_list, ->(user, since=nil) {
+     joins(:topic)
+    .where(topic: Topic.for_digest(user, since))
+    .where('posts.created_at > ?', since)
+    .order('posts.created_at ASC')
+  }
 
   delegate :username, to: :user
 

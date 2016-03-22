@@ -74,21 +74,15 @@ class UserNotifications < ActionMailer::Base
   end
 
   def mailing_list(user, opts={})
+    return unless @posts_by_topic = Post.for_mailing_list(user, opts[:since] || 1.day.ago)
+                                        .group_by(&:topic)
+
     build_summary_for(user)
-    min_date = opts[:since] || 1.day.ago
-
-    @posts_by_topic = Post.joins(:topic)
-                          .where(topic: Topic.for_digest(user, min_date))
-                          .where('posts.created_at > ?', min_date)
-                          .order('topics.updated_at DESC, posts.created_at ASC')
-                          .group_by(&:topic)
-    return unless @posts_by_topic.present?
-
     build_email @user.email,
-                from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
-                subject: I18n.t('user_notifications.digest.subject_template',
+                from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
+                subject: I18n.t('user_notifications.mailing_list.subject_template',
                                 site_name: @site_name,
-                                date: short_date(Time.now))
+                                date: @date)
   end
 
   def digest(user, opts={})
@@ -388,6 +382,7 @@ class UserNotifications < ActionMailer::Base
 
   def build_summary_for(user)
     @user            = user
+    @date            = short_date(Time.now)
     @base_url        = Discourse.base_url
     @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title
     @header_color    = ColorScheme.hex_for_name('header_background')
