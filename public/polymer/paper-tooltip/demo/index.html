@@ -1,0 +1,133 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html lang="en">
+<head>
+  <title>paper-tooltip demo</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-icons/iron-icons.html">
+  <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../paper-styles/color.html">
+  <link rel="import" href="../paper-tooltip.html">
+  <link rel="import" href="test-button.html">
+
+  <style is="custom-style" include="demo-pages-shared-styles">
+    paper-icon-button, input, .avatar {
+      margin: 0 10px;
+    }
+
+    .avatar {
+      box-sizing: border-box;
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .blue {
+      background-color: var(--paper-light-blue-300);
+    }
+    .orange {
+      background-color: var(--paper-amber-500);
+    }
+    .green {
+      background-color: var(--paper-green-500);
+    }
+    .red {
+      background-color: var(--paper-pink-500);
+    }
+  </style>
+</head>
+<body unresolved>
+  <div class="vertical-section-container centered">
+    <h3>Tooltips can be anchored to elements using their ID</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <paper-icon-button id="id_1" icon="favorite" alt="heart"></paper-icon-button>
+        <paper-icon-button id="id_2" icon="alarm-on" alt="go back"></paper-icon-button>
+        <div id="id_3" class="avatar blue" tabindex="0"></div>
+        <div id="id_4" class="avatar orange" tabindex="0"></div>
+
+        <!-- paper-icon-buttons have an inherent padding that will push the tooltip down. offset undoes it -->
+        <paper-tooltip for="id_1" offset="0">&lt;3 &lt;3 &lt;3 </paper-tooltip>
+        <paper-tooltip for="id_2" offset="0">wake up!</paper-tooltip>
+        <paper-tooltip for="id_3" offset="0">halp I am trapped in a tooltip</paper-tooltip>
+        <paper-tooltip for="id_4" offset="0">meow!</paper-tooltip>
+      </template>
+    </demo-snippet>
+
+    <h3>Tooltips can be anchored to elements relative to their parent</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <!-- Adding a tabindex so that we can show the tooltip when the whole box is tabbed to -->
+        <div tabindex="0">
+          <input type="checkbox">allosaurus
+          <paper-tooltip>the name means "different lizard"</paper-tooltip>
+        </div>
+        <div tabindex="0">
+          <input type="checkbox">brontosaurus
+          <paper-tooltip>the name means "thunder lizard"</paper-tooltip>
+        </div>
+        <div tabindex="0">
+          <input type="checkbox">megalosaurus
+          <paper-tooltip>the name means "roof lizard"</paper-tooltip>
+        </div>
+      </div>
+      </template>
+    </demo-snippet>
+
+    <h3>Tooltips can open in different directions</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <div id="dir_1" class="avatar red" tabindex="0"></div>
+        <div id="dir_2" class="avatar blue" tabindex="0"></div>
+        <div id="dir_3" class="avatar green" tabindex="0"></div>
+        <div id="dir_4" class="avatar orange" tabindex="0"></div>
+
+        <paper-tooltip for="dir_1" position="left" animation-delay="0">👈</paper-tooltip>
+        <paper-tooltip for="dir_2" position="right" animation-delay="0">👉</paper-tooltip>
+        <paper-tooltip for="dir_3" position="top" animation-delay="0">👍</paper-tooltip>
+        <paper-tooltip for="dir_4" position="bottom" animation-delay="0">👎</paper-tooltip>
+      </template>
+    </demo-snippet>
+
+    <h3>Tooltips can contain rich text (though against the Material Design spec)</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <style is="custom-style">
+          paper-tooltip.custom img {
+            width: 40px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+            float: left;
+          }
+          .custom {
+            --paper-tooltip-background: black;
+            --paper-tooltip-text-color: var(--paper-pink-100);
+            width: 160px;
+          }
+        </style>
+        <paper-icon-button id="demo4_icon1" icon="favorite" alt="heart"></paper-icon-button>
+        <paper-tooltip for="demo4_icon1" class="custom" animation-delay="0">
+          <img src="http://i.imgur.com/OuUe8Da.jpg">
+          Rich-text tooltips are doable but against the Material Design spec.
+        </paper-tooltip>
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+</html>

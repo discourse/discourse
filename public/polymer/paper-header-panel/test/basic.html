@@ -1,0 +1,156 @@
+<!--
+    @license
+    Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>paper-header-panel tests</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+  <link rel="import" href="../../test-fixture/test-fixture.html">
+  <link rel="import" href="../paper-header-panel.html">
+
+  <style>
+
+    paper-header-panel {
+      height: 100%;
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <test-fixture id="standard">
+    <template>
+      <paper-header-panel mode="standard">
+        <div class="paper-header">header</div>
+        <div>body</div>
+      </paper-header-panel>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="seamed">
+    <template>
+      <paper-header-panel mode="seamed">
+        <div class="paper-header">header</div>
+        <div>body</div>
+      </paper-header-panel>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="seamed-shadow">
+    <template>
+      <paper-header-panel mode="seamed" shadow>
+        <div class="paper-header">header</div>
+        <div>body</div>
+      </paper-header-panel>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="waterfall">
+    <template>
+      <paper-header-panel mode="waterfall">
+        <div class="paper-header">header</div>
+        <div>body</div>
+      </paper-header-panel>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="waterfall-tall">
+    <template>
+      <paper-header-panel mode="waterfall-tall">
+        <div class="paper-header">header</div>
+        <div>body</div>
+      </paper-header-panel>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="scroll">
+    <template>
+      <paper-header-panel mode="scroll">
+        <div class="paper-header">header</div>
+        <div>body</div>
+      </paper-header-panel>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="cover">
+    <template>
+      <paper-header-panel mode="cover">
+        <div class="paper-header">header</div>
+        <div>body</div>
+      </paper-header-panel>
+    </template>
+  </test-fixture>
+
+  <script>
+
+    suite('shadow', function() {
+      var standard, seamed, waterfall, waterfallTall, scroll, cover;
+
+      setup(function(done) {
+        standard = fixture('standard');
+        seamed = fixture('seamed');
+        seamedShadow = fixture('seamed-shadow');
+        waterfall = fixture('waterfall');
+        waterfallTall = fixture('waterfall-tall');
+        scroll = fixture('scroll');
+        cover = fixture('cover');
+        // async to let change handlers fire
+        setTimeout(done, 0);
+      });
+
+      function hasShadow(panel) {
+        return panel.visibleShadow;
+      };
+
+      test('has shadow in standard mode', function() {
+        assert.isTrue(hasShadow(standard), 'shadow has display');
+      });
+
+      test('no shadow in seamed mode', function() {
+        assert.isFalse(hasShadow(seamed), 'shadow is display:none');
+      });
+
+      test('no shadow in waterfall mode', function() {
+        assert.isFalse(hasShadow(waterfall), 'shadow is display:none');
+      });
+
+      test('no shadow in waterfall-tall mode', function() {
+        assert.isFalse(hasShadow(waterfallTall), 'shadow is display:none');
+      });
+
+      test('no shadow in scroll mode', function() {
+        assert.isFalse(hasShadow(scroll), 'shadow is display:none');
+      });
+
+      test('no shadow in cover mode', function() {
+        assert.isFalse(hasShadow(cover), 'shadow is display:none');
+      });
+
+      test('shadow property forces shadow to show', function() {
+        assert.isTrue(hasShadow(seamedShadow), 'shadow has display');
+      });
+
+    });
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!doctype html>
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html>
+  <head>
+
+    <title>iron-collapse-basic</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+    <link rel="import" href="../iron-collapse.html">
+
+  </head>
+  <body>
+
+    <test-fixture id="test">
+      <template>
+        <iron-collapse id="collapse" opened>
+          <div style="height:100px;">
+            Lorem ipsum
+          </div>
+        </iron-collapse>
+      </template>
+    </test-fixture>
+
+    <script>
+
+      suite('basic', function() {
+
+        var collapse;
+        var collapseHeight;
+
+        setup(function() {
+          collapse = fixture('test');
+          collapseHeight = getComputedStyle(collapse).height;
+        });
+
+        test('opened attribute', function() {
+          assert.equal(collapse.opened, true);
+        });
+
+        test('animated by default', function() {
+          assert.isTrue(!collapse.noAnimation, '`noAnimation` is falsy');
+        });
+
+        test('horizontal attribute', function() {
+          assert.equal(collapse.horizontal, false);
+        });
+
+        test('default opened height', function() {
+          assert.equal(collapse.style.height, 'auto');
+        });
+
+        test('set opened to false triggers animation', function(done) {
+          collapse.opened = false;
+          // Animation got enabled.
+          assert.notEqual(collapse.style.transitionDuration, '0s');
+          collapse.addEventListener('transitionend', function() {
+            // Animation disabled.
+            assert.equal(collapse.style.transitionDuration, '0s');
+            done();
+          });
+        });
+
+        test('enableTransition(false) disables animations', function() {
+          collapse.enableTransition(false);
+          assert.isTrue(collapse.noAnimation, '`noAnimation` is true');
+          // trying to animate the size update
+          collapse.updateSize('0px', true);
+          // Animation immediately disabled.
+          assert.equal(collapse.style.height, '0px');
+        });
+
+        test('set opened to false, then to true', function(done) {
+          // this listener will be triggered twice (every time `opened` changes)
+          collapse.addEventListener('transitionend', function() {
+            if (collapse.opened) {
+              // Check finalSize after animation is done.
+              assert.equal(collapse.style.height, 'auto');
+              done();
+            } else {
+              // Check if size is still 0px.
+              assert.equal(collapse.style.height, '0px');
+              // Trigger 2nd toggle.
+              collapse.opened = true;
+              // Size should be immediately set.
+              assert.equal(collapse.style.height, collapseHeight);
+            }
+          });
+          // Trigger 1st toggle.
+          collapse.opened = false;
+          // Size should be immediately set.
+          assert.equal(collapse.style.height, '0px');
+        });
+
+        test('opened changes trigger iron-resize', function() {
+          var spy = sinon.stub();
+          collapse.addEventListener('iron-resize', spy);
+          // No animations for faster test.
+          collapse.noAnimation = true;
+          collapse.opened = false;
+          assert.isTrue(spy.calledOnce, 'iron-resize was fired');
+        });
+
+        test('overflow is hidden while animating', function(done) {
+          collapse.addEventListener('transitionend', function() {
+            // Should still be hidden.
+            assert.equal(getComputedStyle(collapse).overflow, 'hidden');
+            done();
+          });
+          assert.equal(getComputedStyle(collapse).overflow, 'visible');
+          collapse.opened = false;
+          // Immediately updated style.
+          assert.equal(getComputedStyle(collapse).overflow, 'hidden');
+        });
+
+        test('toggle horizontal updates size', function() {
+          collapse.horizontal = false;
+          assert.equal(collapse.style.width, '');
+          assert.equal(collapse.style.height, 'auto');
+          assert.equal(collapse.style.transitionProperty, 'height');
+
+          collapse.horizontal = true;
+          assert.equal(collapse.style.width, 'auto');
+          assert.equal(collapse.style.height, '');
+          assert.equal(collapse.style.transitionProperty, 'width');
+        });
+
+      });
+
+    </script>
+
+  </body>
+</html>

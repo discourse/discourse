@@ -1,0 +1,90 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <title>paper-fab demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../paper-styles/color.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-icons/iron-icons.html">
+  <link rel="import" href="../paper-fab.html">
+
+  <style is="custom-style" include="demo-pages-shared-styles">
+    paper-fab {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
+    .vertical-section-container {
+      max-width: 550px;
+    }
+  </style>
+</head>
+<body unresolved>
+  <div class="vertical-section-container centered">
+    <h3>FABs can be enabled or disabled</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <style>
+          paper-fab.label {
+            font-size: 20px;
+          }
+        </style>
+        <paper-fab icon="favorite" title="heart"></paper-fab>
+        <paper-fab disabled icon="reply" title="reply"></paper-fab>
+        <paper-fab class="label" label="😻" title="heart eyes cat"></paper-fab>
+      </template>
+    </demo-snippet>
+
+    <h3>FABs can be made smaller using the <i>mini</i> attribute</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <paper-fab mini icon="favorite" title="heart"></paper-fab>
+        <paper-fab mini disabled icon="reply" title="reply"></paper-fab>
+        <paper-fab mini class="label" label="😻" title="heart eyes cat"></paper-fab>
+      </template>
+    </demo-snippet>
+
+    <h3>FABs can hide the ripple effect using the <i>noink</i> attribute</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <paper-fab noink icon="favorite" title="heart"></paper-fab>
+      </template>
+    </demo-snippet>
+
+    <h3>FABs can be styled using custom properties</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <style is="custom-style">
+          paper-fab.blue {
+            --paper-fab-background: var(--paper-light-blue-500);
+            --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+          }
+          paper-fab.orange {
+            --paper-fab-background: var(--paper-orange-500);
+            --paper-fab-keyboard-focus-background: var(--paper-orange-900);
+          }
+        </style>
+
+        <paper-fab icon="favorite" title="heart" class="blue"></paper-fab>
+        <paper-fab icon="favorite" title="heart" class="orange"></paper-fab>
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+</html>

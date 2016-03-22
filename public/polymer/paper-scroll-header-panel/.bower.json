@@ -1,0 +1,47 @@
+{
+  "name": "paper-scroll-header-panel",
+  "description": "A header bar with scrolling behavior",
+  "version": "1.0.15",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "private": true,
+  "authors": "The Polymer Authors",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "layout",
+    "responsive"
+  ],
+  "main": "paper-scroll-header-panel.html",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/paper-scroll-header-panel.git"
+  },
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^1.0.0"
+  },
+  "devDependencies": {
+    "paper-styles": "PolymerElements/paper-styles#^1.0.0",
+    "paper-toolbar": "PolymerElements/paper-toolbar#^1.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.0.0",
+    "paper-input": "PolymerElements/paper-input#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "ignore": [],
+  "homepage": "https://github.com/PolymerElements/paper-scroll-header-panel",
+  "_release": "1.0.15",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.15",
+    "commit": "9e264cc643fc36d5b35597d20623f504914ac04e"
+  },
+  "_source": "git://github.com/PolymerElements/paper-scroll-header-panel.git",
+  "_target": "^1.0.0",
+  "_originalSource": "PolymerElements/paper-scroll-header-panel"
+}

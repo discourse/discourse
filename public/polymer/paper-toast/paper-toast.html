@@ -1,0 +1,305 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-a11y-announcer/iron-a11y-announcer.html">
+<link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
+
+<!--
+Material design: [Snackbards & toasts](https://www.google.com/design/spec/components/snackbars-toasts.html)
+
+`paper-toast` provides a subtle notification toast. Only one `paper-toast` will
+be visible on screen.
+
+Use `opened` to show the toast:
+
+Example:
+
+    <paper-toast text="Hello world!" opened></paper-toast>
+
+Also `open()` or `show()` can be used to show the toast:
+
+Example:
+
+    <paper-button on-click="openToast">Open Toast</paper-button>
+    <paper-toast id="toast" text="Hello world!"></paper-toast>
+
+    ...
+
+    openToast: function() {
+      this.$.toast.open();
+    }
+
+Set `duration` to 0, a negative number or Infinity to persist the toast on screen:
+
+Example:
+
+    <paper-toast text="Terms and conditions" opened duration="0">
+      <a href="#">Show more</a>
+    </paper-toast>
+
+
+### Styling
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-toast-background-color` | The paper-toast background-color | `#323232`
+`--paper-toast-color` | The paper-toast color | `#f1f1f1`
+
+This element applies the mixin `--paper-font-common-base` but does not import `paper-styles/typography.html`.
+In order to apply the `Roboto` font to this element, make sure you've imported `paper-styles/typography.html`.
+
+@group Paper Elements
+@element paper-toast
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="paper-toast">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: fixed;
+        background-color: var(--paper-toast-background-color, #323232);
+        color: var(--paper-toast-color, #f1f1f1);
+        min-height: 48px;
+        min-width: 288px;
+        padding: 16px 24px;
+        box-sizing: border-box;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        border-radius: 2px;
+        left: 0;
+        bottom: 0;
+        margin: 12px;
+        font-size: 14px;
+        cursor: default;
+        -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+        transition: transform 0.3s, opacity 0.3s;
+        opacity: 0;
+        -webkit-transform: translateY(100px);
+        transform: translateY(100px);
+        @apply(--paper-font-common-base);
+      }
+
+      :host(.capsule) {
+        border-radius: 24px;
+      }
+
+      :host(.fit-bottom) {
+        width: 100%;
+        min-width: 0;
+        border-radius: 0;
+        margin: 0;
+      }
+
+      :host(.paper-toast-open) {
+        opacity: 1;
+        -webkit-transform: translateY(0px);
+        transform: translateY(0px);
+      }
+    </style>
+
+    <span id="label">{{text}}</span>
+    <content></content>
+  </template>
+
+  <script>
+    (function() {
+      // Keeps track of the toast currently opened.
+      var currentToast = null;
+
+      Polymer({
+        is: 'paper-toast',
+
+        behaviors: [
+          Polymer.IronOverlayBehavior
+        ],
+
+        properties: {
+          /**
+           * The duration in milliseconds to show the toast.
+           * Set to `0`, a negative number, or `Infinity`, to disable the
+           * toast auto-closing.
+           */
+          duration: {
+            type: Number,
+            value: 3000
+          },
+
+          /**
+           * The text to display in the toast.
+           */
+          text: {
+            type: String,
+            value: ''
+          },
+
+          /**
+           * Overridden from `IronOverlayBehavior`.
+           * Set to false to enable closing of the toast by clicking outside it.
+           */
+          noCancelOnOutsideClick: {
+            type: Boolean,
+            value: true
+          }
+        },
+
+        listeners: {
+          'transitionend': '__onTransitionEnd'
+        },
+
+        /**
+         * Read-only. Deprecated. Use `opened` from `IronOverlayBehavior`.
+         * @property visible
+         * @deprecated
+         */
+        get visible() {
+          console.warn('`visible` is deprecated, use `opened` instead');
+          return this.opened;
+        },
+
+        /**
+         * Read-only. Can auto-close if duration is a positive finite number.
+         * @property _canAutoClose
+         */
+        get _canAutoClose() {
+          return this.duration > 0 && this.duration !== Infinity;
+        },
+
+        created: function() {
+          this._autoClose = null;
+          Polymer.IronA11yAnnouncer.requestAvailability();
+        },
+
+        /**
+         * Show the toast. Without arguments, this is the same as `open()` from `IronOverlayBehavior`.
+         * @param {Object|string|undefined} properties Properties to be set before opening the toast.
+         * e.g. `toast.show('hello')` or `toast.show({text: 'hello', duration: 3000})`
+         */
+        show: function(properties) {
+          if (typeof properties == 'string') {
+            properties = { text: properties };
+          }
+          for (var property in properties) {
+            if (property.indexOf('_') === 0) {
+              console.warn('The property "' + property + '" is private and was not set.');
+            } else if (property in this) {
+              this[property] = properties[property];
+            } else {
+              console.warn('The property "' + property + '" is not valid.');
+            }
+          }
+          this.open();
+        },
+
+        /**
+         * Hide the toast. Same as `close()` from `IronOverlayBehavior`.
+         */
+        hide: function() {
+          this.close();
+        },
+
+        /**
+         * Overridden from `IronFitBehavior`.
+         * Positions the toast at the bottom left of fitInto.
+         */
+        center: function () {
+          if (this.fitInto === window) {
+            this.style.bottom = this.style.left = '';
+          } else {
+            var rect = this.fitInto.getBoundingClientRect();
+            this.style.left = rect.left + 'px';
+            this.style.bottom = (window.innerHeight - rect.bottom) + 'px';
+          }
+        },
+
+        /**
+         * Called on transitions of the toast, indicating a finished animation
+         * @private
+         */
+        __onTransitionEnd: function(e) {
+          // there are different transitions that are happening when opening and
+          // closing the toast. The last one so far is for `opacity`.
+          // This marks the end of the transition, so we check for this to determine if this
+          // is the correct event.
+          if (e && e.target === this && e.propertyName === 'opacity') {
+            if (this.opened) {
+              this._finishRenderOpened();
+            } else {
+              this._finishRenderClosed();
+            }
+          }
+        },
+
+        /**
+         * Overridden from `IronOverlayBehavior`.
+         * Called when the value of `opened` changes.
+         */
+        _openedChanged: function() {
+          if (this._autoClose !== null) {
+            this.cancelAsync(this._autoClose);
+            this._autoClose = null;
+          }
+          if (this.opened) {
+            if (currentToast && currentToast !== this) {
+              currentToast.close();
+            }
+            currentToast = this;
+            this.fire('iron-announce', {
+              text: this.text
+            });
+            if (this._canAutoClose) {
+              this._autoClose = this.async(this.close, this.duration);
+            }
+          } else if (currentToast === this) {
+            currentToast = null;
+          }
+          Polymer.IronOverlayBehaviorImpl._openedChanged.apply(this, arguments);
+        },
+
+        /**
+         * Overridden from `IronOverlayBehavior`.
+         */
+        _renderOpened: function() {
+          this.classList.add('paper-toast-open');
+        },
+
+        /**
+         * Overridden from `IronOverlayBehavior`.
+         */
+        _renderClosed: function() {
+          this.classList.remove('paper-toast-open');
+        },
+
+        /**
+         * Overridden from `IronOverlayBehavior`.
+         * iron-fit-behavior will set the inline style position: static, which
+         * causes the toast to be rendered incorrectly when opened by default.
+         */
+        _onIronResize: function() {
+          Polymer.IronOverlayBehaviorImpl._onIronResize.apply(this, arguments);
+          if (this.opened) {
+            // Make sure there is no inline style for position.
+            this.style.position = '';
+          }
+        }
+
+        /**
+         * Fired when `paper-toast` is opened.
+         *
+         * @event 'iron-announce'
+         * @param {{text: string}} detail Contains text that will be announced.
+         */
+      });
+    })();
+  </script>
+</dom-module>

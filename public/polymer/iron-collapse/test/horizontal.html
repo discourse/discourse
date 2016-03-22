@@ -1,0 +1,86 @@
+<!doctype html>
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html>
+  <head>
+    <title>iron-collapse-horizontal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+    <link rel="import" href="../iron-collapse.html">
+  </head>
+  <body>
+
+    <test-fixture id="test">
+      <template>
+        <iron-collapse id="collapse" opened horizontal>
+          <div style="width:100px;">
+            Lorem ipsum
+          </div>
+        </iron-collapse>
+      </template>
+    </test-fixture>
+
+    <script>
+
+      suite('horizontal', function() {
+
+        var collapse;
+        var collapseWidth;
+
+        setup(function () {
+          collapse = fixture('test');
+          collapseWidth = getComputedStyle(collapse).width;
+        });
+
+        test('opened attribute', function() {
+          assert.equal(collapse.opened, true);
+        });
+
+        test('horizontal attribute', function() {
+          assert.equal(collapse.horizontal, true);
+        });
+
+        test('default opened width', function() {
+          assert.equal(collapse.style.width, 'auto');
+        });
+
+        test('set opened to false, then to true', function(done) {
+          // This listener will be triggered twice (every time `opened` changes).
+          collapse.addEventListener('transitionend', function() {
+            if (collapse.opened) {
+              // Check finalSize after animation is done.
+              assert.equal(collapse.style.width, 'auto');
+              done();
+            } else {
+              // Check if size is still 0px.
+              assert.equal(collapse.style.width, '0px');
+              // Trigger 2nd toggle.
+              collapse.opened = true;
+              // Size should be immediately set.
+              assert.equal(collapse.style.width, collapseWidth);
+            }
+          });
+          // Trigger 1st toggle.
+          collapse.opened = false;
+          // Size should be immediately set.
+          assert.equal(collapse.style.width, '0px');
+        });
+      });
+
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>paper-toolbar basic tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+  <link rel="import" href="../../test-fixture/test-fixture.html">
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../paper-toolbar.html">
+
+</head>
+<body>
+
+  <test-fixture id="basic">
+    <template>
+      <paper-toolbar></paper-toolbar>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="title">
+    <template>
+      <paper-toolbar>
+        <span class="title">Title</span>
+      </paper-toolbar>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="title-with-id">
+    <template>
+      <paper-toolbar>
+        <span class="title" id="title">Title</span>
+      </paper-toolbar>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="multiple-titles">
+    <template>
+      <paper-toolbar>
+        <span class="title">Title 1</span>
+        <span class="title">Title 2</span>
+      </paper-toolbar>
+    </template>
+  </test-fixture>
+
+  <script>
+    'use strict';
+
+    suite('basic', function() {
+
+      var toolbar;
+
+      setup(function() {
+        toolbar = fixture('basic');
+      });
+
+      test('has expected medium-tall height', function() {
+        var old = toolbar.offsetHeight;
+        toolbar.classList.add('medium-tall');
+        expect(toolbar.offsetHeight).to.be.eql(old * 2);
+      });
+
+      test('has expected tall height', function() {
+        var old = toolbar.offsetHeight;
+        toolbar.classList.add('tall');
+        expect(toolbar.offsetHeight).to.be.eql(old * 3);
+      });
+
+      test('distributes nodes to topBar by default', function() {
+        var item = document.createElement('div');
+        Polymer.dom(toolbar).appendChild(item);
+        Polymer.dom.flush();
+
+        var insertionPoint = Polymer.dom(item).getDestinationInsertionPoints()[0];
+        expect(Polymer.dom(insertionPoint).parentNode).to.be.eql(toolbar.$.topBar);
+      });
+
+      test('distributes nodes with "middle" class to middleBar', function() {
+        var item = document.createElement('div');
+        item.classList.add('middle');
+        Polymer.dom(toolbar).appendChild(item);
+        Polymer.dom.flush();
+
+        var insertionPoint = Polymer.dom(item).getDestinationInsertionPoints()[0];
+        expect(Polymer.dom(insertionPoint).parentNode).to.be.eql(toolbar.$.middleBar);
+      });
+
+      test('distributes nodes with "bottom" class to bottombar', function() {
+        var item = document.createElement('div');
+        item.classList.add('bottom');
+        Polymer.dom(toolbar).appendChild(item);
+        Polymer.dom.flush();
+
+        var insertionPoint = Polymer.dom(item).getDestinationInsertionPoints()[0];
+        expect(Polymer.dom(insertionPoint).parentNode).to.be.eql(toolbar.$.bottomBar);
+      });
+
+    });
+
+    suite('a11y', function() {
+
+      test('has role="toolbar"', function() {
+        var toolbar = fixture('basic');
+        assert.equal(toolbar.getAttribute('role'), 'toolbar', 'has role="toolbar"');
+      });
+
+      test('children with .title becomes the label', function() {
+        var toolbar = fixture('title');
+        assert.isTrue(toolbar.hasAttribute('aria-labelledby'), 'has aria-labelledby');
+        assert.equal(toolbar.getAttribute('aria-labelledby'), Polymer.dom(toolbar).querySelector('.title').id, 'aria-labelledby has the id of the .title element');
+      });
+
+      test('existing ids on titles are preserved', function() {
+        var toolbar = fixture('title-with-id');
+        assert.isTrue(toolbar.hasAttribute('aria-labelledby'), 'has aria-labelledby');
+        assert.equal(Polymer.dom(toolbar).querySelector('.title').id, 'title', 'id is preserved');
+      });
+
+      test('multiple children with .title becomes the label', function() {
+        var toolbar = fixture('multiple-titles');
+        assert.isTrue(toolbar.hasAttribute('aria-labelledby'), 'has aria-labelledby');
+        var ids = [];
+        var titles = Polymer.dom(toolbar).querySelectorAll('.title');
+        for (var title, index = 0; title = titles[index]; index++) {
+          ids.push(title.id);
+        }
+        assert.equal(toolbar.getAttribute('aria-labelledby'), ids.join(' '), 'aria-labelledby has the id of all .title elements');
+      });
+
+    });
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+
+  <head>
+    <title>paper-header-panel demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="../../paper-styles/paper-styles.html">
+    <link rel="import" href="../../paper-styles/demo-pages.html">
+    <link rel="import" href="../paper-header-panel.html">
+
+    <style is="custom-style">
+      body {
+        padding: 40px;
+      }
+
+      paper-header-panel {
+        float: left;
+        width: 240px;
+        height: 240px;
+        margin: 12px;
+        @apply(--shadow-elevation-2dp);
+      }
+
+      .paper-header {
+        height: 60px;
+        font-size: 16px;
+        line-height: 60px;
+        padding: 0 10px;
+        color: white;
+        transition: height 0.2s;
+      }
+
+      .paper-header.tall {
+        height: 120px;
+      }
+
+      .paper-header.medium-tall {
+        height: 100px;
+        line-height: 50px;
+      }
+
+      .content {
+        height: 2000px;
+      }
+
+      .cover {
+        margin: 60px;
+      }
+
+      .blue .paper-header {
+        background-color: var(--paper-light-blue-500);
+      }
+      .red .paper-header {
+        background-color: var(--paper-red-500);
+      }
+      .orange .paper-header {
+        background-color: var(--paper-amber-500);
+      }
+      .green .paper-header {
+        background-color: var(--paper-green-500);
+      }
+      .cyan .paper-header {
+        background-color: var(--paper-cyan-500);
+      }
+      .lime .paper-header {
+        background-color: var(--paper-lime-500);
+      }
+      .pink .paper-header {
+        background-color: var(--paper-pink-a200);
+      }
+
+      /* TODO: replace these with background: linear-gradient(white, var(...))
+       when custom properties allow it */
+
+      .blue .content {
+        background: linear-gradient(white, #b3e5fc);
+      }
+      .red .content {
+        background: linear-gradient(white, #ffcdd2);
+      }
+      .orange .content {
+        background: linear-gradient(white, #ffecb3);
+      }
+      .green .content {
+        background: linear-gradient(white, #c8e6c9);
+      }
+      .cyan .content {
+        background: linear-gradient(white, #b2ebf2);
+      }
+      .lime .content {
+        background: linear-gradient(white, #f0f4c3);
+      }
+      .pink .content {
+        background: linear-gradient(white, #f8bbd0);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="layout wrap inline center-center">
+      <paper-header-panel class="blue">
+        <div class="paper-header">standard</div>
+        <div class="content"></div>
+      </paper-header-panel>
+
+      <paper-header-panel mode="seamed" class="red">
+        <div class="paper-header">seamed</div>
+        <div class="content"></div>
+      </paper-header-panel>
+
+      <paper-header-panel mode="scroll" class="orange">
+        <div class="paper-header">scroll</div>
+        <div class="content"></div>
+      </paper-header-panel>
+
+      <paper-header-panel mode="waterfall" class="green">
+        <div class="paper-header">waterfall</div>
+        <div class="content"></div>
+      </paper-header-panel>
+
+      <paper-header-panel mode="waterfall-tall" class="pink">
+        <div class="paper-header">waterfall-tall</div>
+        <div class="content"></div>
+      </paper-header-panel>
+
+      <paper-header-panel mode="waterfall-tall" tall-class="medium-tall" class="cyan">
+        <div class="paper-header">waterfall-tall<br>tall-class: medium-tall</div>
+        <div class="content"></div>
+      </paper-header-panel>
+
+      <paper-header-panel mode="cover" class="lime">
+        <div class="paper-header tall">cover</div>
+        <div class="content cover"></div>
+      </paper-header-panel>
+    </div>
+  </body>
+
+</html>

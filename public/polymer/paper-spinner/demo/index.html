@@ -1,0 +1,97 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html lang="en">
+  <head>
+    <title>paper-spinner demo</title>
+
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../paper-styles/color.html">
+    <link rel="import" href="../paper-spinner-lite.html">
+    <link rel="import" href="../paper-spinner.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+      .vertical-section-container {
+        max-width: 550px;
+      }
+
+      paper-spinner, paper-spinner-lite {
+        margin-right: 24px;
+      }
+    </style>
+  </head>
+  <body unresolved>
+    <div class="vertical-section-container centered">
+      <h3>Spinners can be deactivated or activated</h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <paper-spinner></paper-spinner>
+          <paper-spinner active></paper-spinner>
+
+          <paper-spinner-lite></paper-spinner-lite>
+          <paper-spinner-lite active></paper-spinner-lite>
+
+          <button onclick="toggle(event)">Toggle</button>
+        </template>
+      </demo-snippet>
+
+      <h3>Spinners can be styled using custom properties</h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <style is="custom-style">
+            paper-spinner.multi {
+              --paper-spinner-layer-1-color: var(--paper-purple-500);
+              --paper-spinner-layer-2-color: var(--paper-cyan-500);
+              --paper-spinner-layer-3-color: var(--paper-blue-grey-500);
+              --paper-spinner-layer-4-color: var(--paper-amber-500);
+            }
+            paper-spinner-lite.orange {
+              --paper-spinner-color: var(--google-yellow-500);
+            }
+            paper-spinner-lite.green {
+              --paper-spinner-color: var(--google-green-500);
+            }
+            paper-spinner-lite.thin {
+              --paper-spinner-stroke-width: 1px;
+            }
+            paper-spinner-lite.thick {
+              --paper-spinner-stroke-width: 6px;
+            }
+          </style>
+
+          <paper-spinner class="multi" active></paper-spinner>
+
+          <paper-spinner-lite class="orange" active></paper-spinner-lite>
+          <paper-spinner-lite class="green" active></paper-spinner-lite>
+
+          <paper-spinner-lite class="thin" active></paper-spinner-lite>
+          <paper-spinner-lite class="thick" active></paper-spinner-lite>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <script>
+      function toggle(event) {
+        var spinners = event.target.parentElement.querySelectorAll('paper-spinner, paper-spinner-lite');
+        Array.prototype.forEach.call(spinners, function(spinner) {
+          spinner.active = !spinner.active;
+        });
+      };
+    </script>
+  </body>
+</html>

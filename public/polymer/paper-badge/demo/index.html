@@ -1,0 +1,112 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html lang="en">
+<head>
+  <title>paper-badge demo</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../paper-styles/color.html">
+  <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../iron-icons/iron-icons.html">
+  <link rel="import" href="../../iron-icons/social-icons.html">
+  <link rel="import" href="../../iron-icons/communication-icons.html">
+  <link rel="import" href="../paper-badge.html">
+  <link rel="import" href="test-button.html">
+
+  <style is="custom-style" include="demo-pages-shared-styles">
+    .vertical-section-container {
+      max-width: 550px;
+    }
+    paper-icon-button, test-button {
+      padding: 3px;
+      border-radius: 3px;
+      margin-left: 30px;
+      margin-right: 30px;
+    }
+  </style>
+</head>
+<body unresolved>
+  <div class="vertical-section-container centered">
+    <h3>Badges can be applied to specific elements</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <paper-icon-button id="number" icon="communication:email" alt="inbox">
+        </paper-icon-button>
+        <paper-badge for="number" label="4">
+        </paper-badge>
+
+        <paper-icon-button id="icon" icon="account-box" alt="person">
+        </paper-icon-button>
+        <paper-badge icon="social:mood" for="icon" label="happy">
+        </paper-badge>
+      </template>
+    </demo-snippet>
+
+    <h3>Badges can be applied to direct siblings</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <div class="container" tabindex="0">
+          <span>Inbox</span>
+          <paper-badge label="4"></paper-badge>
+        </div>
+
+        <div class="container" tabindex="0">
+          <span>Mood</span>
+          <paper-badge icon="social:mood" label="happy"></paper-badge>
+        </div>
+
+        <style is="custom-style">
+          .container {
+            display: inline-block;
+            margin-left: 30px;
+            margin-right: 30px;
+          }
+          /* Need to position the badge to look like a text superscript */
+          .container > paper-badge {
+            --paper-badge-margin-left: 20px;
+            --paper-badge-margin-bottom: 0px;
+          }
+        </style>
+      </template>
+    </demo-snippet>
+
+    <h3>Badges can be customized using custom properties</h3>
+    <demo-snippet class="centered-demo">
+      <template>
+        <paper-icon-button id="number2" icon="communication:email" alt="inbox">
+        </paper-icon-button>
+        <paper-badge for="number2" label="4" class="red">
+        </paper-badge>
+
+        <paper-icon-button id="icon2" icon="account-box" alt="account-box">
+        </paper-icon-button>
+        <paper-badge icon="social:mood" for="icon2" label="happy" class="blue">
+        </paper-badge>
+
+        <style is="custom-style">
+          .red {
+            --paper-badge-background: var(--paper-red-300);
+          }
+          .blue {
+            --paper-badge-background: var(--paper-light-blue-300);
+          }
+        </style>
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+</html>

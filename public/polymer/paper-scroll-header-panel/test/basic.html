@@ -1,0 +1,127 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+-->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>paper-scroll-header-panel test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+  <link rel="import" href="../paper-scroll-header-panel.html">
+  <link rel="import" href="../demo/sample-content.html">
+  <link rel="import" href="../../paper-toolbar/paper-toolbar.html">
+  <link rel="import" href="../../test-fixture/test-fixture.html">
+</head>
+<body>
+
+  <test-fixture id="trivialProgress">
+    <template>
+      <paper-scroll-header-panel>
+        <paper-toolbar>
+        </paper-toolbar>
+        <div class="content">
+        <sample-content size="100"></sample-content>
+        </div>
+      </paper-scroll-header-panel>
+    </template>
+  </test-fixture>
+
+  <script>
+
+    suite('basic features', function() {
+      var scrollHeaderPanel, toolbar, content;
+
+      setup(function() {
+        scrollHeaderPanel = fixture('trivialProgress');
+
+        toolbar = Polymer.dom(scrollHeaderPanel).querySelector('paper-toolbar');
+        content = Polymer.dom(scrollHeaderPanel).querySelector('.content');
+      });
+
+      test('check default', function() {
+        assert.equal(scrollHeaderPanel.header, toolbar);
+        assert.equal(scrollHeaderPanel.content, content);
+        assert.equal(scrollHeaderPanel.condenses, false);
+        assert.equal(scrollHeaderPanel.noReveal, false);
+        assert.equal(scrollHeaderPanel.fixed, false);
+        assert.typeOf(scrollHeaderPanel.scroller, 'object');
+        assert.equal(scrollHeaderPanel.keepCondensedHeader, false);
+        assert.equal(scrollHeaderPanel.keepCondensedHeader, false);
+
+        scrollHeaderPanel.measureHeaderHeight();
+        assert.equal(scrollHeaderPanel.headerHeight, toolbar.offsetHeight);
+        assert.equal(scrollHeaderPanel.condensedHeaderHeight, Math.round(toolbar.offsetHeight * 1/3));
+      });
+
+      test('condensation', function(done) {
+        var top1 = toolbar.getBoundingClientRect().top;
+
+        scrollHeaderPanel.condenses = true;
+        scrollHeaderPanel.headerHeight = 150;
+        scrollHeaderPanel.condensedHeaderHeight = 50;
+        scrollHeaderPanel.scroller.scrollTop = 300;
+
+        flush(function() {
+          assert.notEqual(top1, toolbar.getBoundingClientRect().top)
+          done();
+        });
+      });
+
+      test('paper-header-transform event', function(done) {
+        scrollHeaderPanel.condenses = false;
+        scrollHeaderPanel.headerHeight = scrollHeaderPanel.headerHeight || 150;
+
+        scrollHeaderPanel.addEventListener('paper-header-transform', function(e) {
+          assert.typeOf(e.detail.y, 'number');
+          assert.equal(e.detail.height, scrollHeaderPanel.headerHeight);
+          assert.equal(e.detail.condensedHeight, scrollHeaderPanel.condensedHeaderHeight);
+          done();
+        });
+
+        flush(function() {
+          scrollHeaderPanel.scroller.scrollTop = 300;
+        });
+      });
+
+      test('content-scroll event', function(done) {
+        scrollHeaderPanel.condenses = false;
+
+        scrollHeaderPanel.addEventListener('content-scroll', function(e) {
+          assert.equal(e.detail.target, scrollHeaderPanel.scroller);
+          done();
+        });
+
+        flush(function() {
+          scrollHeaderPanel.scroller.scrollTop = 300;
+        });
+      });
+
+      test('custom `condensedHeaderHeight`', function(done) {
+        var CUSTOM_HEIGHT = 100;
+        scrollHeaderPanel.condensedHeaderHeight = CUSTOM_HEIGHT;
+        scrollHeaderPanel.headerHeight = CUSTOM_HEIGHT;
+
+        assert.equal(scrollHeaderPanel.condensedHeaderHeight, CUSTOM_HEIGHT);
+        assert.equal(scrollHeaderPanel.headerHeight, CUSTOM_HEIGHT);
+
+
+        done();
+
+      });
+    });
+
+  </script>
+
+</body>
+</html>

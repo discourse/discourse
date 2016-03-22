@@ -1,0 +1,403 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+
+<!--
+`iron-image` is an element for displaying an image that provides useful sizing and
+preloading options not found on the standard `<img>` tag.
+
+The `sizing` option allows the image to be either cropped (`cover`) or
+letterboxed (`contain`) to fill a fixed user-size placed on the element.
+
+The `preload` option prevents the browser from rendering the image until the
+image is fully loaded.  In the interim, either the element's CSS `background-color`
+can be be used as the placeholder, or the `placeholder` property can be
+set to a URL (preferably a data-URI, for instant rendering) for an
+placeholder image.
+
+The `fade` option (only valid when `preload` is set) will cause the placeholder
+image/color to be faded out once the image is rendered.
+
+Examples:
+
+  Basically identical to `<img src="...">` tag:
+
+    <iron-image src="http://lorempixel.com/400/400"></iron-image>
+
+  Will letterbox the image to fit:
+
+    <iron-image style="width:400px; height:400px;" sizing="contain"
+      src="http://lorempixel.com/600/400"></iron-image>
+
+  Will crop the image to fit:
+
+    <iron-image style="width:400px; height:400px;" sizing="cover"
+      src="http://lorempixel.com/600/400"></iron-image>
+
+  Will show light-gray background until the image loads:
+
+    <iron-image style="width:400px; height:400px; background-color: lightgray;"
+      sizing="cover" preload src="http://lorempixel.com/600/400"></iron-image>
+
+  Will show a base-64 encoded placeholder image until the image loads:
+
+    <iron-image style="width:400px; height:400px;" placeholder="data:image/gif;base64,..."
+      sizing="cover" preload src="http://lorempixel.com/600/400"></iron-image>
+
+  Will fade the light-gray background out once the image is loaded:
+
+    <iron-image style="width:400px; height:400px; background-color: lightgray;"
+      sizing="cover" preload fade src="http://lorempixel.com/600/400"></iron-image>
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--iron-image-placeholder` | Mixin applied to #placeholder | `{}`
+`--iron-image-width` | Sets the width of the wrapped image | `auto`
+`--iron-image-height` | Sets the height of the wrapped image | `auto`
+
+@group Iron Elements
+@element iron-image
+@demo demo/index.html
+-->
+
+<dom-module id="iron-image">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #sizedImgDiv {
+        @apply(--layout-fit);
+
+        display: none;
+      }
+
+      #img {
+        display: block;
+        width: var(--iron-image-width, auto);
+        height: var(--iron-image-height, auto);
+      }
+
+      :host([sizing]) #sizedImgDiv {
+        display: block;
+      }
+
+      :host([sizing]) #img {
+        display: none;
+      }
+
+      #placeholder {
+        @apply(--layout-fit);
+
+        background-color: inherit;
+        opacity: 1;
+
+        @apply(--iron-image-placeholder);
+      }
+
+      #placeholder.faded-out {
+        transition: opacity 0.5s linear;
+        opacity: 0;
+      }
+    </style>
+
+    <div id="sizedImgDiv"
+      role="img"
+      hidden$="[[_computeImgDivHidden(sizing)]]"
+      aria-hidden$="[[_computeImgDivARIAHidden(alt)]]"
+      aria-label$="[[_computeImgDivARIALabel(alt, src)]]"></div>
+    <img id="img" alt$="[[alt]]" hidden$="[[_computeImgHidden(sizing)]]">
+    <div id="placeholder"
+      hidden$="[[_computePlaceholderHidden(preload, fade, loading, loaded)]]"
+      class$="[[_computePlaceholderClassName(preload, fade, loading, loaded)]]"></div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'iron-image',
+
+      properties: {
+        /**
+         * The URL of an image.
+         */
+        src: {
+          observer: '_srcChanged',
+          type: String,
+          value: ''
+        },
+
+        /**
+         * A short text alternative for the image.
+         */
+        alt: {
+          type: String,
+          value: null
+        },
+
+        /**
+         * When true, the image is prevented from loading and any placeholder is
+         * shown.  This may be useful when a binding to the src property is known to
+         * be invalid, to prevent 404 requests.
+         */
+        preventLoad: {
+          type: Boolean,
+          value: false,
+          observer: '_preventLoadChanged'
+        },
+
+        /**
+         * Sets a sizing option for the image.  Valid values are `contain` (full
+         * aspect ratio of the image is contained within the element and
+         * letterboxed) or `cover` (image is cropped in order to fully cover the
+         * bounds of the element), or `null` (default: image takes natural size).
+         */
+        sizing: {
+          type: String,
+          value: null,
+          reflectToAttribute: true
+        },
+
+        /**
+         * When a sizing option is used (`cover` or `contain`), this determines
+         * how the image is aligned within the element bounds.
+         */
+        position: {
+          type: String,
+          value: 'center'
+        },
+
+        /**
+         * When `true`, any change to the `src` property will cause the `placeholder`
+         * image to be shown until the new image has loaded.
+         */
+        preload: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * This image will be used as a background/placeholder until the src image has
+         * loaded.  Use of a data-URI for placeholder is encouraged for instant rendering.
+         */
+        placeholder: {
+          type: String,
+          value: null,
+          observer: '_placeholderChanged'
+        },
+
+        /**
+         * When `preload` is true, setting `fade` to true will cause the image to
+         * fade into place.
+         */
+        fade: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Read-only value that is true when the image is loaded.
+         */
+        loaded: {
+          notify: true,
+          readOnly: true,
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Read-only value that tracks the loading state of the image when the `preload`
+         * option is used.
+         */
+        loading: {
+          notify: true,
+          readOnly: true,
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Read-only value that indicates that the last set `src` failed to load.
+         */
+        error: {
+          notify: true,
+          readOnly: true,
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Can be used to set the width of image (e.g. via binding); size may also be
+         * set via CSS.
+         */
+        width: {
+          observer: '_widthChanged',
+          type: Number,
+          value: null
+        },
+
+        /**
+         * Can be used to set the height of image (e.g. via binding); size may also be
+         * set via CSS.
+         *
+         * @attribute height
+         * @type number
+         * @default null
+         */
+        height: {
+          observer: '_heightChanged',
+          type: Number,
+          value: null
+        },
+      },
+
+      observers: [
+        '_transformChanged(sizing, position)'
+      ],
+
+      ready: function() {
+        var img = this.$.img;
+
+        img.onload = function() {
+          if (this.$.img.src !== this._resolveSrc(this.src)) return;
+
+          this._setLoading(false);
+          this._setLoaded(true);
+          this._setError(false);
+        }.bind(this);
+
+        img.onerror = function() {
+          if (this.$.img.src !== this._resolveSrc(this.src)) return;
+
+          this._reset();
+
+          this._setLoading(false);
+          this._setLoaded(false);
+          this._setError(true);
+        }.bind(this);
+
+        this._resolvedSrc = '';
+      },
+
+      _load: function(src) {
+        if (src) {
+          this.$.img.src = src;
+        } else {
+          this.$.img.removeAttribute('src');
+        }
+        this.$.sizedImgDiv.style.backgroundImage = src ? 'url("' + src + '")' : '';
+
+        this._setLoading(!!src);
+        this._setLoaded(false);
+        this._setError(false);
+      },
+
+      _reset: function() {
+        this.$.img.removeAttribute('src');
+        this.$.sizedImgDiv.style.backgroundImage = '';
+
+        this._setLoading(false);
+        this._setLoaded(false);
+        this._setError(false);
+      },
+
+      _computePlaceholderHidden: function() {
+        return !this.preload || (!this.fade && !this.loading && this.loaded);
+      },
+
+      _computePlaceholderClassName: function() {
+        return (this.preload && this.fade && !this.loading && this.loaded) ? 'faded-out' : '';
+      },
+
+      _computeImgDivHidden: function() {
+        return !this.sizing;
+      },
+
+      _computeImgDivARIAHidden: function() {
+        return this.alt === '' ? 'true' : undefined;
+      },
+
+      _computeImgDivARIALabel: function() {
+        if (this.alt !== null) {
+          return this.alt;
+        }
+
+        // Polymer.ResolveUrl.resolveUrl will resolve '' relative to a URL x to
+        // that URL x, but '' is the default for src.
+        if (this.src === '') {
+          return '';
+        }
+
+        var pathComponents = (new URL(this._resolveSrc(this.src))).pathname.split("/");
+        return pathComponents[pathComponents.length - 1];
+      },
+
+      _computeImgHidden: function() {
+        return !!this.sizing;
+      },
+
+      _widthChanged: function() {
+        this.style.width = isNaN(this.width) ? this.width : this.width + 'px';
+      },
+
+      _heightChanged: function() {
+        this.style.height = isNaN(this.height) ? this.height : this.height + 'px';
+      },
+
+      _preventLoadChanged: function() {
+        if (this.preventLoad || this.loaded) return;
+
+        this._reset();
+        this._load(this.src);
+      },
+
+      _srcChanged: function(newSrc, oldSrc) {
+        var newResolvedSrc = this._resolveSrc(newSrc);
+        if (newResolvedSrc === this._resolvedSrc) return;
+        this._resolvedSrc = newResolvedSrc;
+
+        this._reset();
+        if (!this.preventLoad) {
+          this._load(newSrc);
+        }
+      },
+
+      _placeholderChanged: function() {
+        this.$.placeholder.style.backgroundImage =
+          this.placeholder ? 'url("' + this.placeholder + '")' : '';
+      },
+
+      _transformChanged: function() {
+        var sizedImgDivStyle = this.$.sizedImgDiv.style;
+        var placeholderStyle = this.$.placeholder.style;
+
+        sizedImgDivStyle.backgroundSize =
+        placeholderStyle.backgroundSize =
+          this.sizing;
+
+        sizedImgDivStyle.backgroundPosition =
+        placeholderStyle.backgroundPosition =
+          this.sizing ? this.position : '';
+
+        sizedImgDivStyle.backgroundRepeat =
+        placeholderStyle.backgroundRepeat =
+          this.sizing ? 'no-repeat' : '';
+      },
+
+      _resolveSrc: function(testSrc) {
+        return Polymer.ResolveUrl.resolveUrl(testSrc, this.ownerDocument.baseURI);
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="25px" viewBox="0 0 24 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: sketchtool 3.4.2 (385) - http://www.bohemiancoding.com/sketch -->
+    <title>RSS</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Natter-Home" sketch:type="MSArtboardGroup" transform="translate(-396.000000, -2367.000000)" fill="#E17B26">
+            <g id="Footer" sketch:type="MSLayerGroup" transform="translate(-1.000000, 2081.000000)">
+                <g id="RSS" transform="translate(397.000000, 286.500000)" sketch:type="MSShapeGroup">
+                    <path d="M12,0 C5.383,0 0,5.383 0,12 C0,18.617 5.383,24 12,24 C18.617,24 24,18.617 24,12 C24,5.383 18.617,0 12,0 L12,0 Z M12,23 C5.935,23 1,18.066 1,12 C1,5.935 5.935,1 12,1 C18.065,1 23,5.935 23,12 C23,18.066 18.065,23 12,23 L12,23 Z" id="Fill-1"></path>
+                    <path d="M7,11.002 L7,12.002 C10.308,12.002 12.998,14.693 12.998,18 L13.998,18 C13.998,14.141 10.858,11.002 7,11.002" id="Fill-3"></path>
+                    <path d="M7.5,15 C7.224,15 7,15.224 7,15.5 L7,17.5 C7,17.775999 7.224,18 7.5,18 L9.5,18 C9.776,18 10,17.776 10,17.5 C10,16.215 8.785,15 7.5,15 L7.5,15 Z M8,17 L8,16.113 C8.381,16.281 8.719,16.618999 8.888,17 L8,17 L8,17 Z" id="Fill-4"></path>
+                    <path d="M7,6.969 L7,7.969 C12.531,7.969 17.031,12.469 17.031,18 L18.031,18 C18.031,11.918 13.083,6.969 7,6.969" id="Fill-5"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
