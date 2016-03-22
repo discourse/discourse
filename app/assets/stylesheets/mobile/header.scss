@@ -21,6 +21,11 @@
     overflow: hidden;
     padding: 0;
     text-overflow: clip;
+    display: table;
+    a {
+      display: table-cell;
+      vertical-align: middle;
+    }
   }
 
   .icons {
