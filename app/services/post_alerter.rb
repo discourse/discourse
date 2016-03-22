@@ -47,12 +47,12 @@ class PostAlerter
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
-        notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge({group: group}))
+        notify_non_pm_users(users - notified, :group_mentioned, post, mentioned_opts.merge({group: group}))
         notified += users
       end
 
       if mentioned_users
-        notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
+        notify_non_pm_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
         notified += mentioned_users
       end
     end
@@ -61,41 +61,42 @@ class PostAlerter
     reply_to_user = post.reply_notification_target
 
     if new_record && reply_to_user && !notified.include?(reply_to_user) && post.post_type == Post.types[:regular]
-      notify_users(reply_to_user, :replied, post)
+      notify_non_pm_users(reply_to_user, :replied, post)
       notified += [reply_to_user]
     end
 
     # quotes
     quoted_users = extract_quoted_users(post)
-    notify_users(quoted_users - notified, :quoted, post)
+    notify_non_pm_users(quoted_users - notified, :quoted, post)
     notified += quoted_users
 
     # linked
     linked_users = extract_linked_users(post)
-    notify_users(linked_users - notified, :linked, post)
+    notify_non_pm_users(linked_users - notified, :linked, post)
     notified += linked_users
 
     # private messages
     if new_record
       if post.topic.private_message?
-        # users that aren't part of any mentionned groups
+        # users that aren't part of any mentioned groups
         directly_targeted_users(post).each do |user|
-          if !notified.include?(user)
+          notification_level = TopicUser.get(post.topic, user).try(:notification_level)
+          if notified.include?(user) || notification_level == TopicUser.notification_levels[:watching]
             create_notification(user, Notification.types[:private_message], post)
-            notified += [user]
           end
         end
         # users that are part of all mentionned groups
         indirectly_targeted_users(post).each do |user|
-          if !notified.include?(user)
-            # only create a notification when watching the group
-            notification_level = TopicUser.get(post.topic, user).try(:notification_level)
-            if notification_level == TopicUser.notification_levels[:watching]
+          # only create a notification when watching the group
+          notification_level = TopicUser.get(post.topic, user).try(:notification_level)
+
+          if notification_level == TopicUser.notification_levels[:watching]
+            create_notification(user, Notification.types[:private_message], post)
+          elsif notification_level == TopicUser.notification_levels[:tracking]
+            if notified.include?(user)
               create_notification(user, Notification.types[:private_message], post)
-              notified += [user]
-            elsif notification_level == TopicUser.notification_levels[:tracking]
+            else
               notify_group_summary(user, post)
-              notified += [user]
             end
           end
         end
@@ -400,13 +401,11 @@ class PostAlerter
   end
 
   # Notify a bunch of users
-  def notify_users(users, type, post, opts=nil)
-    users = [users] unless users.is_a?(Array)
+  def notify_non_pm_users(users, type, post, opts=nil)
 
-    if post.topic.try(:private_message?)
-      whitelist = all_allowed_users(post)
-      users.reject! { |u| !whitelist.include?(u) }
-    end
+    return if post.topic.try(:private_message?)
+
+    users = [users] unless users.is_a?(Array)
 
     users.each do |u|
       create_notification(u, Notification.types[type], post, opts)
