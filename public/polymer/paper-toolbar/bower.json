@@ -1,0 +1,37 @@
+{
+  "name": "paper-toolbar",
+  "version": "1.1.4",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "description": "A material design toolbar that is easily customizable",
+  "private": true,
+  "main": "paper-toolbar.html",
+  "authors": [
+    "The Polymer Authors"
+  ],
+  "keywords": [
+    "web-components",
+    "polymer",
+    "toolbar",
+    "layout"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/paper-toolbar.git"
+  },
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "paper-styles": "PolymerElements/paper-styles#^1.1.0",
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.0.0",
+    "paper-progress": "PolymerElements/paper-progress#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "ignore": []
+}

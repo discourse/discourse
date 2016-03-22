@@ -1,0 +1,505 @@
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+
+<!--
+`paper-header-panel` contains a header section and a content panel section.
+
+__Important:__ The `paper-header-panel` will not display if its parent does not have a height.
+
+Using layout classes, you can make the `paper-header-panel` fill the screen
+
+    <body class="fullbleed layout vertical">
+      <paper-header-panel class="flex">
+        <paper-toolbar>
+          <div>Hello World!</div>
+        </paper-toolbar>
+      </paper-header-panel>
+    </body>
+
+Special support is provided for scrolling modes when one uses a paper-toolbar or equivalent for the
+header section.
+
+Example:
+
+    <paper-header-panel>
+      <paper-toolbar>Header</paper-toolbar>
+      <div>Content goes here...</div>
+    </paper-header-panel>
+
+If you want to use other than `paper-toolbar` for the header, add `paper-header` class to that
+element.
+
+Example:
+
+    <paper-header-panel>
+      <div class="paper-header">Header</div>
+      <div>Content goes here...</div>
+    </paper-header-panel>
+
+To have the content fit to the main area, use the `fit` class.
+
+    <paper-header-panel>
+      <div class="paper-header">standard</div>
+      <div class="fit">content fits 100% below the header</div>
+    </paper-header-panel>
+
+### Modes
+
+Controls header and scrolling behavior. Options are `standard`, `seamed`, `waterfall`, `waterfall-tall`, `scroll` and
+`cover`. Default is `standard`.
+
+Mode | Description
+----------------|-------------
+`standard` | The header is a step above the panel. The header will consume the panel at the point of entry, preventing it from passing through to the opposite side.
+`seamed` | The header is presented as seamed with the panel.
+`waterfall` | Similar to standard mode, but header is initially presented as seamed with panel, but then separates to form the step.
+`waterfall-tall` | The header is initially taller (`tall` class is added to the header). As the user scrolls, the header separates (forming an edge) while condensing (`tall` class is removed from the header).
+`scroll` | The header keeps its seam with the panel, and is pushed off screen.
+`cover` | The panel covers the whole `paper-header-panel` including the header. This allows user to style the panel in such a way that the panel is partially covering the header.
+
+Example:
+
+    <paper-header-panel mode="waterfall">
+      <div class="paper-header">standard</div>
+      <div class="content fit">content fits 100% below the header</div>
+    </paper-header-panel>
+
+
+### Styling
+
+To change the shadow that shows up underneath the header:
+
+    paper-header-panel {
+      --paper-header-panel-shadow: {
+          height: 6px;
+          bottom: -6px;
+          box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+      };
+    }
+
+To change the panel container in different modes:
+
+    paper-header-panel {
+      --paper-header-panel-standard-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-seamed-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-waterfall-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-waterfall-tall-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-scroll-container: {
+        border: 1px solid gray;
+      };
+
+      --paper-header-panel-cover-container: {
+        border: 1px solid gray;
+      };
+    }
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-header-panel` | Mixin applied to the element | `{}`
+`--paper-header-panel-body` | Mixin applied to the element's body (i.e. everything below the toolbar) | `{}`
+`--paper-header-panel-scroll-container` | Mixin applied to the container when in scroll mode | `{}`
+`--paper-header-panel-cover-container` | Mixin applied to the container when in cover mode | `{}`
+`--paper-header-panel-standard-container` | Mixin applied to the container when in standard mode | `{}`
+`--paper-header-panel-seamed-container` | Mixin applied to the container when in seamed mode | `{}`
+`--paper-header-panel-waterfall-container` | Mixin applied to the container when in waterfall mode | `{}`
+`--paper-header-panel-waterfall-tall-container` | Mixin applied to the container when in tall waterfall mode | `{}`
+
+@group Paper Elements
+@element paper-header-panel
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="paper-header-panel">
+  <template>
+    <style>
+      :host {
+        --paper-header-panel-shadow: {
+          height: 6px;
+          bottom: -6px;
+          box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+        };
+
+        @apply(--layout-vertical);
+
+        position: relative;
+        height: 100%;
+
+        @apply(--paper-header-panel);
+      }
+
+      #mainContainer {
+        @apply(--layout-flex);
+
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #mainPanel {
+        @apply(--layout-vertical);
+        @apply(--layout-flex);
+
+        position: relative;
+        min-height: 0;
+
+        @apply(--paper-header-panel-body);
+      }
+
+      /*
+       * mode: scroll
+       */
+      :host([mode=scroll]) #mainContainer {
+        @apply(--paper-header-panel-scroll-container);
+
+        overflow: visible;
+      }
+
+      :host([mode=scroll]) {
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /*
+       * mode: cover
+       */
+      :host([mode=cover]) #mainContainer {
+        @apply(--paper-header-panel-cover-container);
+
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      :host([mode=cover]) #mainPanel {
+        position: static;
+      }
+
+      /*
+       * mode: standard
+       */
+      :host([mode=standard]) #mainContainer {
+        @apply(--paper-header-panel-standard-container);
+      }
+
+      /*
+       * mode: seamed
+       */
+      :host([mode=seamed]) #mainContainer {
+        @apply(--paper-header-panel-seamed-container);
+      }
+
+
+      /*
+       * mode: waterfall
+       */
+      :host([mode=waterfall]) #mainContainer {
+        @apply(--paper-header-panel-waterfall-container);
+      }
+
+      /*
+       * mode: waterfall-tall
+       */
+      :host([mode=waterfall-tall]) #mainContainer {
+        @apply(--paper-header-panel-waterfall-tall-container);
+      }
+
+      #dropShadow {
+        @apply(--paper-header-panel-shadow);
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        pointer-events: none;
+
+        -webkit-transition: opacity 0.5s;
+        transition: opacity 0.5s;
+
+        opacity: 0;
+      }
+
+      #dropShadow.has-shadow {
+        opacity: 1;
+      }
+    </style>
+
+    <content id="headerContent" select="paper-toolbar, .paper-header"></content>
+
+    <div id="mainPanel">
+      <div id="mainContainer" class$="[[_computeMainContainerClass(mode)]]">
+        <content id="mainContent" select="*"></content>
+      </div>
+      <div id="dropShadow"></div>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      var SHADOW_WHEN_SCROLLING = 1;
+      var SHADOW_ALWAYS = 2;
+      var MODE_CONFIGS = {
+        outerScroll: {
+          'scroll': true
+        },
+
+        shadowMode: {
+          'standard': SHADOW_ALWAYS,
+          'waterfall': SHADOW_WHEN_SCROLLING,
+          'waterfall-tall': SHADOW_WHEN_SCROLLING
+        },
+
+        tallMode: {
+          'waterfall-tall': true
+        }
+      };
+
+      Polymer({
+        is: 'paper-header-panel',
+
+        /**
+         * Fired when the content has been scrolled.  `event.detail.target` returns
+         * the scrollable element which you can use to access scroll info such as
+         * `scrollTop`.
+         *
+         *     <paper-header-panel on-content-scroll="scrollHandler">
+         *       ...
+         *     </paper-header-panel>
+         *
+         *
+         *     scrollHandler: function(event) {
+         *       var scroller = event.detail.target;
+         *       console.log(scroller.scrollTop);
+         *     }
+         *
+         * @event content-scroll
+         */
+
+        properties: {
+          /**
+           * Controls header and scrolling behavior. Options are
+           * `standard`, `seamed`, `waterfall`, `waterfall-tall`, `scroll` and
+           * `cover`. Default is `standard`.
+           *
+           * `standard`: The header is a step above the panel. The header will consume the
+           * panel at the point of entry, preventing it from passing through to the
+           * opposite side.
+           *
+           * `seamed`: The header is presented as seamed with the panel.
+           *
+           * `waterfall`: Similar to standard mode, but header is initially presented as
+           * seamed with panel, but then separates to form the step.
+           *
+           * `waterfall-tall`: The header is initially taller (`tall` class is added to
+           * the header).  As the user scrolls, the header separates (forming an edge)
+           * while condensing (`tall` class is removed from the header).
+           *
+           * `scroll`: The header keeps its seam with the panel, and is pushed off screen.
+           *
+           * `cover`: The panel covers the whole `paper-header-panel` including the
+           * header. This allows user to style the panel in such a way that the panel is
+           * partially covering the header.
+           *
+           *     <paper-header-panel mode="cover">
+           *       <paper-toolbar class="tall">
+           *         <paper-icon-button icon="menu"></paper-icon-button>
+           *       </paper-toolbar>
+           *       <div class="content"></div>
+           *     </paper-header-panel>
+           */
+          mode: {
+            type: String,
+            value: 'standard',
+            observer: '_modeChanged',
+            reflectToAttribute: true
+          },
+
+          /**
+           * If true, the drop-shadow is always shown no matter what mode is set to.
+           */
+          shadow: {
+            type: Boolean,
+            value: false
+          },
+
+          /**
+           * The class used in waterfall-tall mode.  Change this if the header
+           * accepts a different class for toggling height, e.g. "medium-tall"
+           */
+          tallClass: {
+            type: String,
+            value: 'tall'
+          },
+
+          /**
+           * If true, the scroller is at the top
+           */
+          atTop: {
+            type: Boolean,
+            value: true,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true
+          }
+        },
+
+        observers: [
+          '_computeDropShadowHidden(atTop, mode, shadow)'
+        ],
+
+        ready: function() {
+          this.scrollHandler = this._scroll.bind(this);
+        },
+
+        attached: function() {
+          this._addListener();
+          // Run `scroll` logic once to initialize class names, etc.
+          this._keepScrollingState();
+        },
+
+        detached: function() {
+          this._removeListener();
+        },
+
+        /**
+         * Returns the header element
+         *
+         * @property header
+         * @type Object
+         */
+        get header() {
+          return Polymer.dom(this.$.headerContent).getDistributedNodes()[0];
+        },
+
+        /**
+         * Returns the scrollable element.
+         *
+         * @property scroller
+         * @type Object
+         */
+        get scroller() {
+          return this._getScrollerForMode(this.mode);
+        },
+
+        /**
+         * Returns true if the scroller has a visible shadow.
+         *
+         * @property visibleShadow
+         * @type Boolean
+         */
+        get visibleShadow() {
+          return this.$.dropShadow.classList.contains('has-shadow');
+        },
+
+        _computeDropShadowHidden: function(atTop, mode, shadow) {
+          var shadowMode = MODE_CONFIGS.shadowMode[mode];
+
+          if (this.shadow) {
+            this.toggleClass('has-shadow', true, this.$.dropShadow);
+          } else if (shadowMode === SHADOW_ALWAYS) {
+            this.toggleClass('has-shadow', true, this.$.dropShadow);
+          } else if (shadowMode === SHADOW_WHEN_SCROLLING && !atTop) {
+            this.toggleClass('has-shadow', true, this.$.dropShadow);
+          } else {
+            this.toggleClass('has-shadow', false, this.$.dropShadow);
+          }
+        },
+
+        _computeMainContainerClass: function(mode) {
+          // TODO:  It will be useful to have a utility for classes
+          // e.g. Polymer.Utils.classes({ foo: true });
+
+          var classes = {};
+
+          classes['flex'] = mode !== 'cover';
+
+          return Object.keys(classes).filter(
+            function(className) {
+              return classes[className];
+            }).join(' ');
+        },
+
+        _addListener: function() {
+          this.scroller.addEventListener('scroll', this.scrollHandler, false);
+        },
+
+        _removeListener: function() {
+          this.scroller.removeEventListener('scroll', this.scrollHandler);
+        },
+
+        _modeChanged: function(newMode, oldMode) {
+          var configs = MODE_CONFIGS;
+          var header = this.header;
+          var animateDuration = 200;
+
+          if (header) {
+            // in tallMode it may add tallClass to the header; so do the cleanup
+            // when mode is changed from tallMode to not tallMode
+            if (configs.tallMode[oldMode] && !configs.tallMode[newMode]) {
+              header.classList.remove(this.tallClass);
+              this.async(function() {
+                header.classList.remove('animate');
+              }, animateDuration);
+            } else {
+              header.classList.toggle('animate', configs.tallMode[newMode]);
+            }
+          }
+          this._keepScrollingState();
+        },
+
+        _keepScrollingState: function() {
+          var main = this.scroller;
+          var header = this.header;
+
+          this._setAtTop(main.scrollTop === 0);
+
+          if (header && this.tallClass && MODE_CONFIGS.tallMode[this.mode]) {
+            this.toggleClass(this.tallClass, this.atTop ||
+                header.classList.contains(this.tallClass) &&
+                main.scrollHeight < this.offsetHeight, header);
+          }
+        },
+
+        _scroll: function() {
+          this._keepScrollingState();
+          this.fire('content-scroll', {target: this.scroller}, {bubbles: false});
+        },
+
+        _getScrollerForMode: function(mode) {
+          return MODE_CONFIGS.outerScroll[mode] ?
+              this : this.$.mainContainer;
+        }
+      });
+    })();
+  </script>
+</dom-module>

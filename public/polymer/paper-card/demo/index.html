@@ -1,0 +1,323 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html lang="en">
+<head>
+  <title>paper-card demo</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+
+  <link rel="import" href="../../iron-collapse/iron-collapse.html">
+  <link rel="import" href="../../iron-icons/iron-icons.html">
+  <link rel="import" href="../../iron-icons/communication-icons.html">
+  <link rel="import" href="../../iron-icons/hardware-icons.html">
+  <link rel="import" href="../../iron-icons/social-icons.html">
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="../../paper-button/paper-button.html">
+  <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+  <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../paper-styles/color.html">
+  <link rel="import" href="../../paper-styles/typography.html">
+  <link rel="import" href="../paper-card.html">
+
+  <style is="custom-style" include="demo-pages-shared-styles">
+    demo-snippet {
+      --demo-snippet-demo: {
+        background: var(--paper-grey-200);
+        padding: 8px;
+      };
+      --demo-snippet-code: {
+        max-height: 300px;
+      };
+    }
+
+    paper-card {
+      width: 100%;
+    }
+
+    .horizontal {
+      @apply(--layout-horizontal);
+    }
+
+    .justified {
+      @apply(--layout-justified);
+    }
+
+    .amber {
+      background: var(--paper-amber-900);
+    }
+
+    .lime {
+      background: var(--paper-lime-500);
+    }
+
+    .cyan {
+      background: var(--paper-cyan-500);
+    }
+
+    .dark {
+      background: var(--paper-blue-grey-500);
+    }
+    paper-card.dark, paper-card.amber, paper-card.lime, paper-card.cyan {
+      color: white;
+      --paper-card-header-color: white;
+    }
+
+    paper-checkbox {
+      display: block;
+      margin-bottom: 4px;
+      --paper-checkbox-label-color: white;
+      --paper-checkbox-unchecked-color: white;
+    }
+
+    paper-icon-button {
+      color: var(--paper-grey-600);
+    }
+
+    paper-icon-button.white {
+      color: white !important;
+    }
+  </style>
+
+</head>
+<body unresolved>
+  <body unresolved>
+    <div class="vertical-section-container centered">
+      <h3>A paper-card with a simple heading, header image, body content, and actions</h3>
+      <demo-snippet>
+        <template>
+          <paper-card heading="Emmental" image="http://placehold.it/350x150/FFC107/000000">
+            <div class="card-content">
+              Emmentaler or Emmental is a yellow, medium-hard cheese that originated in the area around Emmental, Switzerland. It is one of the cheeses of Switzerland, and is sometimes known as Swiss cheese.
+            </div>
+            <div class="card-actions">
+              <paper-button>Share</paper-button>
+              <paper-button>Explore!</paper-button>
+            </div>
+          </paper-card>
+        </template>
+      </demo-snippet>
+
+      <h3>Paper-cards can contain advanced content</h3>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            .cafe-header { @apply(--paper-font-headline); }
+            .cafe-light { color: var(--paper-grey-600); }
+            .cafe-location {
+              float: right;
+              font-size: 15px;
+              vertical-align: middle;
+            }
+            .cafe-reserve { color: var(--google-blue-500); }
+            iron-icon.star {
+              --iron-icon-width: 16px;
+              --iron-icon-height: 16px;
+              color: var(--paper-amber-500);
+            }
+            iron-icon.star:last-of-type { color: var(--paper-grey-500); }
+          </style>
+            <paper-card image="./donuts.png">
+              <div class="card-content">
+                <div class="cafe-header">Cafe Basilico
+                  <div class="cafe-location cafe-light">
+                    <iron-icon icon="communication:location-on"></iron-icon>
+                    <span>250ft</span>
+                  </div>
+                </div>
+                <div class="cafe-rating">
+                  <iron-icon class="star" icon="star"></iron-icon>
+                  <iron-icon class="star" icon="star"></iron-icon>
+                  <iron-icon class="star" icon="star"></iron-icon>
+                  <iron-icon class="star" icon="star"></iron-icon>
+                  <iron-icon class="star" icon="star"></iron-icon>
+                </div>
+                <p>$・Italian, Cafe</p>
+                <p class="cafe-light">Small plates, salads &amp; sandwiches in an intimate setting with 12 indoor seats plus patio seating.</p>
+              </div>
+              <div class="card-actions">
+                <p>Tonight's availability</p>
+                <div class="horizontal justified">
+                  <paper-icon-button icon="icons:event"></paper-icon-button>
+                  <paper-button>5:30PM</paper-button>
+                  <paper-button>7:30PM</paper-button>
+                  <paper-button>9:00PM</paper-button>
+                </div>
+                <paper-button class="cafe-reserve">Reserve</paper-button>
+              </div>
+            </paper-card>
+        </template>
+      </demo-snippet>
+
+      <h3>Paper-cards can have a horizontal image</h3>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            paper-card.rate { @apply(--layout-horizontal); }
+            .rate-image {
+              width: 100px;
+              height: 170px;
+              background: url('./donuts.png');
+              background-size: cover;
+            }
+            .rate-content {
+              @apply(--layout-flex);
+              float: left;
+            }
+            .rate-header { @apply(--paper-font-headline); }
+            .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+            paper-icon-button.rate-icon {
+              --iron-icon-fill-color: white;
+              --iron-icon-stroke-color: var(--paper-grey-600);
+            }
+          </style>
+          <paper-card class="rate">
+            <div class="rate-content">
+              <div class="card-content">
+                <div class="rate-header">Rate this album</div>
+                <div class="rate-name">Mac Miller</div>
+                <div>Live from space</div>
+              </div>
+              <div class="card-actions">
+                <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+                <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+                <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+                <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+                <paper-icon-button class="rate-icon" icon="star"></paper-icon-button>
+              </div>
+            </div>
+            <div class="rate-image"></div>
+          </paper-card>
+        </template>
+      </demo-snippet>
+
+      <h3>Paper-cards can have expanded supporting text</h3>
+      <demo-snippet>
+        <template>
+          <paper-card heading="Top western road trips" image="./trip.png" class="white">
+            <div class="card-content">1,000 miles of wonder</div>
+            <div class="card-actions">
+              <paper-button>Share</paper-button>
+              <paper-button>Explore</paper-button>
+              <paper-icon-button
+                icon="hardware:keyboard-arrow-up"
+                title="more info"
+                onclick="_toggle()"
+                style="float:right;">
+              </paper-icon-button>
+              <iron-collapse id="more-info" style="width:100%;">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent enim ante, tempus eget volutpat ac, cursus ac ante. Nulla facilisi. Praesent sed lacinia ligula. Donec malesuada nisl eget quam iaculis, vel placerat justo cursus.
+              </iron-collapse>
+              <script>
+                function _toggle() {
+                  var moreInfo = document.getElementById('more-info');
+                  var iconButton = Polymer.dom(event).localTarget;
+                  iconButton.icon = moreInfo.opened ? 'hardware:keyboard-arrow-up'
+                                                    : 'hardware:keyboard-arrow-down';
+                  moreInfo.toggle();
+                }
+              </script>
+            </div>
+          </paper-card>
+        </template>
+      </demo-snippet>
+
+      <h3>Paper-cards can be organized in different collections</h3>
+
+      <h3>Same layout, different content</h3>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            paper-card.white {
+              --paper-card-header-color: #fff;
+            }
+          </style>
+          <paper-card heading="Pre-fab homes" image="./house.png" class="white" style="margin-bottom:8px;">
+            <div class="card-actions">
+              <paper-icon-button icon="favorite"></paper-icon-button>
+              <paper-icon-button icon="bookmark"></paper-icon-button>
+              <paper-icon-button icon="social:share"></paper-icon-button>
+            </div>
+          </paper-card>
+          <div class="horizontal">
+            <paper-card heading="Favorite trips" image="./trip.png" class="white" style="margin-right:4px;">
+              <div class="card-actions horizontal justified">
+                <paper-icon-button icon="favorite"></paper-icon-button>
+                <paper-icon-button icon="bookmark"></paper-icon-button>
+                <paper-icon-button icon="social:share"></paper-icon-button>
+              </div>
+            </paper-card>
+            <paper-card heading="Best airlines" image="./travel.png" class="white" style="margin-left:4px;">
+              <div class="card-actions horizontal justified">
+                <paper-icon-button icon="favorite"></paper-icon-button>
+                <paper-icon-button icon="bookmark"></paper-icon-button>
+                <paper-icon-button icon="social:share"></paper-icon-button>
+              </div>
+            </paper-card>
+          </div>
+        </template>
+      </demo-snippet>
+
+      <h3>Different layout and content</h3>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            #notes {
+              @apply(--layout-vertical);
+              @apply(--layout-wrap);
+              height: 344px;
+              width: 384px;
+            }
+
+            #notes > paper-card {
+              box-sizing: border-box;
+              max-width: 184px;
+              margin: 4px;
+              flex: 0 0 auto;
+            }
+          </style>
+          <div id="notes">
+            <paper-card heading="Call Jennifer" class="cyan">
+              <div class="card-actions">
+                <paper-icon-button icon="communication:call" style="color:white;"></paper-icon-button>
+                <span>March 19, 2017</span>
+              </div>
+            </paper-card>
+            <paper-card class="dark">
+              <div class="card-content">
+                <p>Groceries:</p>
+                <paper-checkbox>almond milk</paper-checkbox>
+                <paper-checkbox>coconut water</paper-checkbox>
+                <paper-checkbox>cheese</paper-checkbox>
+                <paper-checkbox>green apples</paper-checkbox>
+              </div>
+              <div class="card-actions">
+                <paper-icon-button icon="communication:location-on" style="color:white"></paper-icon-button>
+                <span>Campbell</span>
+              </div>
+            </paper-card>
+            <paper-card heading="clean desk" class="lime"></paper-card>
+            <paper-card image="./donuts.png" class="amber">
+              <div class="card-content">New cafe opened on Valencia St.</div>
+            </paper-card>
+            <paper-card heading="Yuna tickets on sale 6/24" class="cyan">
+            </paper-card>
+          </div>
+        </template>
+      </demo-snippet>
+    </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="17px" viewBox="0 0 24 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: sketchtool 3.4.2 (385) - http://www.bohemiancoding.com/sketch -->
+    <title>Envelope</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Natter-Home" sketch:type="MSArtboardGroup" transform="translate(-428.000000, -2371.000000)" fill="#199FAD">
+            <g id="Footer" sketch:type="MSLayerGroup" transform="translate(-1.000000, 2081.000000)">
+                <g id="Envelope" transform="translate(429.000000, 290.500000)" sketch:type="MSShapeGroup">
+                    <path d="M22,0 L2,0 C0.897,0 0,0.896 0,2 L0,14 C0,15.103 0.897,16 2,16 L22,16 C23.103,16 24,15.103 24,14 L24,2 C24,0.896 23.103,0 22,0 L22,0 Z M23,14 C23,14.551 22.551,15 22,15 L2,15 C1.449,15 1,14.551 1,14 L1,2 C1,1.449 1.449,1 2,1 L22,1 C22.551,1 23,1.449 23,2 L23,14 L23,14 Z" id="Fill-1"></path>
+                    <path d="M20.92,4.229 C20.77,3.998 20.461,3.931 20.229,4.081 L12,9.404 L3.771,4.08 C3.54,3.931 3.23,3.997 3.08,4.229 C2.93,4.46 2.997,4.77 3.229,4.92 L11.729,10.42 C11.812,10.474 11.906,10.5 12,10.5 C12.094,10.5 12.189,10.474 12.271,10.42 L20.771,4.92 C21.003,4.77 21.07,4.46 20.92,4.229" id="Fill-3"></path>
+                    <path d="M6.752,9.566 L3.252,11.566 C3.012,11.702 2.929,12.008 3.066,12.248 C3.158,12.41 3.327,12.5 3.5,12.5 C3.584,12.5 3.669,12.479 3.748,12.434 L7.248,10.434 C7.488,10.298 7.571,9.992 7.434,9.752 C7.296,9.511 6.992,9.428 6.752,9.566" id="Fill-4"></path>
+                    <path d="M20.748,11.566 L17.248,9.566 C17.007,9.427 16.702,9.511 16.566,9.752 C16.429,9.992 16.512,10.298 16.752,10.434 L20.252,12.434 C20.33,12.479 20.416,12.5 20.5,12.5 C20.674,12.5 20.842,12.41 20.935,12.248 C21.071,12.009001 20.988,11.702 20.748,11.566" id="Fill-5"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

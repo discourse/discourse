@@ -1,0 +1,42 @@
+{
+  "name": "iron-collapse",
+  "version": "1.0.6",
+  "description": "Provides a collapsable container",
+  "authors": [
+    "The Polymer Authors"
+  ],
+  "keywords": [
+    "web-components",
+    "polymer",
+    "container"
+  ],
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PolymerElements/iron-collapse"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/PolymerElements/iron-collapse",
+  "ignore": [],
+  "dependencies": {
+    "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "paper-styles": "PolymerElements/paper-styles#^1.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "main": "iron-collapse.html",
+  "_release": "1.0.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.6",
+    "commit": "afd2b928c84fb1a1d6069b05a36c37b269f25209"
+  },
+  "_source": "git://github.com/PolymerElements/iron-collapse.git",
+  "_target": "^1.0.0",
+  "_originalSource": "PolymerElements/iron-collapse"
+}

@@ -1,0 +1,372 @@
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+
+<!--
+Material design: [Tooltips](https://www.google.com/design/spec/components/tooltips.html)
+
+`<paper-tooltip>` is a label that appears on hover and focus when the user
+hovers over an element with the cursor or with the keyboard. It will be centered
+to an anchor element specified in the `for` attribute, or, if that doesn't exist,
+centered to the parent node containing it.
+
+Example:
+
+    <div style="display:inline-block">
+      <button>Click me!</button>
+      <paper-tooltip>Tooltip text</paper-tooltip>
+    </div>
+
+    <div>
+      <button id="btn">Click me!</button>
+      <paper-tooltip for="btn">Tooltip text</paper-tooltip>
+    </div>
+
+The tooltip can be positioned on the top|bottom|left|right of the anchor using
+the `position` attribute. The default position is bottom.
+
+    <paper-tooltip for="btn" position="left">Tooltip text</paper-tooltip>
+    <paper-tooltip for="btn" position="top">Tooltip text</paper-tooltip>
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-tooltip-background` | The background color of the tooltip | `#616161`
+`--paper-tooltip-opacity` | The opacity of the tooltip | `0.9`
+`--paper-tooltip-text-color` | The text color of the tooltip | `white`
+`--paper-tooltip` | Mixin applied to the tooltip | `{}`
+
+@group Paper Elements
+@element paper-tooltip
+@demo demo/index.html
+-->
+
+<dom-module id="paper-tooltip">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        outline: none;
+        z-index: 1002;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: default;
+      }
+
+      #tooltip {
+        display: block;
+        outline: none;
+        @apply(--paper-font-common-base);
+        font-size: 10px;
+        line-height: 1;
+
+        background-color: var(--paper-tooltip-background, #616161);
+        opacity: var(--paper-tooltip-opacity, 0.9);
+        color: var(--paper-tooltip-text-color, white);
+
+        padding: 8px;
+        border-radius: 2px;
+
+        @apply(--paper-tooltip);
+      }
+
+      /* Thanks IE 10. */
+      .hidden {
+        display: none !important;
+      }
+    </style>
+
+    <div id="tooltip" class="hidden">
+      <content></content>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-tooltip',
+
+      hostAttributes: {
+        role: 'tooltip',
+        tabindex: -1
+      },
+
+      behaviors: [
+        Polymer.NeonAnimationRunnerBehavior
+      ],
+
+      properties: {
+        /**
+         * The id of the element that the tooltip is anchored to. This element
+         * must be a sibling of the tooltip.
+         */
+        for: {
+          type: String,
+          observer: '_forChanged'
+        },
+
+        /**
+         * Set this to true if you want to manually control when the tooltip
+         * is shown or hidden.
+         */
+        manualMode: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Positions the tooltip to the top, right, bottom, left of its content.
+         */
+        position: {
+          type: String,
+          value: 'bottom'
+        },
+
+        /**
+         * If true, no parts of the tooltip will ever be shown offscreen.
+         */
+        fitToVisibleBounds: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * The spacing between the top of the tooltip and the element it is
+         * anchored to.
+         */
+        offset: {
+          type: Number,
+          value: 14
+        },
+
+        /**
+         * This property is deprecated, but left over so that it doesn't
+         * break exiting code. Please use `offset` instead. If both `offset` and
+         * `marginTop` are provided, `marginTop` will be ignored.
+         * @deprecated since version 1.0.3
+         */
+        marginTop: {
+          type: Number,
+          value: 14
+        },
+
+        /**
+         * The delay that will be applied before the `entry` animation is
+         * played when showing the tooltip.
+         */
+        animationDelay: {
+          type: Number,
+          value: 500
+        },
+
+        /**
+         * The entry and exit animations that will be played when showing and
+         * hiding the tooltip. If you want to override this, you must ensure
+         * that your animationConfig has the exact format below.
+         */
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'entry': [{
+                name: 'fade-in-animation',
+                node: this,
+                timing: {delay: 0}
+              }],
+              'exit': [{
+                name: 'fade-out-animation',
+                node: this
+              }]
+            }
+          }
+        },
+
+        _showing: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      listeners: {
+        'neon-animation-finish': '_onAnimationFinish',
+        'mouseenter': 'hide'
+      },
+
+      /**
+       * Returns the target element that this tooltip is anchored to. It is
+       * either the element given by the `for` attribute, or the immediate parent
+       * of the tooltip.
+       */
+      get target () {
+        var parentNode = Polymer.dom(this).parentNode;
+        // If the parentNode is a document fragment, then we need to use the host.
+        var ownerRoot = Polymer.dom(this).getOwnerRoot();
+
+        var target;
+        if (this.for) {
+          target = Polymer.dom(ownerRoot).querySelector('#' + this.for);
+        } else {
+          target = parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE ?
+              ownerRoot.host : parentNode;
+        }
+
+        return target;
+      },
+
+      attached: function() {
+        this._target = this.target;
+
+        if (this.manualMode)
+          return;
+
+        this.listen(this._target, 'mouseenter', 'show');
+        this.listen(this._target, 'focus', 'show');
+        this.listen(this._target, 'mouseleave', 'hide');
+        this.listen(this._target, 'blur', 'hide');
+        this.listen(this._target, 'tap', 'hide');
+      },
+
+      detached: function() {
+        if (this._target && !this.manualMode) {
+          this.unlisten(this._target, 'mouseenter', 'show');
+          this.unlisten(this._target, 'focus', 'show');
+          this.unlisten(this._target, 'mouseleave', 'hide');
+          this.unlisten(this._target, 'blur', 'hide');
+          this.unlisten(this._target, 'tap', 'hide');
+        }
+      },
+
+      show: function() {
+        // If the tooltip is already showing, there's nothing to do.
+        if (this._showing)
+          return;
+
+        if (Polymer.dom(this).textContent.trim() === '')
+          return;
+
+
+        this.cancelAnimation();
+        this._showing = true;
+        this.toggleClass('hidden', false, this.$.tooltip);
+        this.updatePosition();
+
+        this.animationConfig.entry[0].timing.delay = this.animationDelay;
+        this._animationPlaying = true;
+        this.playAnimation('entry');
+      },
+
+      hide: function() {
+        // If the tooltip is already hidden, there's nothing to do.
+        if (!this._showing) {
+          return;
+        }
+
+        // If the entry animation is still playing, don't try to play the exit
+        // animation since this will reset the opacity to 1. Just end the animation.
+        if (this._animationPlaying) {
+          this.cancelAnimation();
+          this._showing = false;
+          this._onAnimationFinish();
+          return;
+        }
+
+        this._showing = false;
+        this._animationPlaying = true;
+        this.playAnimation('exit');
+      },
+
+      _forChanged: function() {
+        this._target = this.target;
+      },
+
+      updatePosition: function() {
+        if (!this._target || !this.offsetParent)
+          return;
+
+        var offset = this.offset;
+        // If a marginTop has been provided by the user (pre 1.0.3), use it.
+        if (this.marginTop != 14 && this.offset == 14)
+          offset = this.marginTop;
+
+        var parentRect = this.offsetParent.getBoundingClientRect();
+        var targetRect = this._target.getBoundingClientRect();
+        var thisRect = this.getBoundingClientRect();
+
+        var horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
+        var verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
+
+        var targetLeft = targetRect.left - parentRect.left;
+        var targetTop = targetRect.top - parentRect.top;
+
+        var tooltipLeft, tooltipTop;
+
+        switch (this.position) {
+          case 'top':
+            tooltipLeft = targetLeft + horizontalCenterOffset;
+            tooltipTop = targetTop - thisRect.height - offset;
+            break;
+          case 'bottom':
+            tooltipLeft = targetLeft + horizontalCenterOffset;
+            tooltipTop = targetTop + targetRect.height + offset;
+            break;
+          case 'left':
+            tooltipLeft = targetLeft - thisRect.width - offset;
+            tooltipTop = targetTop + verticalCenterOffset;
+            break;
+          case 'right':
+            tooltipLeft = targetLeft + targetRect.width + offset;
+            tooltipTop = targetTop + verticalCenterOffset;
+            break;
+        }
+
+        // TODO(noms): This should use IronFitBehavior if possible.
+        if (this.fitToVisibleBounds) {
+          // Clip the left/right side.
+          if (tooltipLeft + thisRect.width > window.innerWidth) {
+            this.style.right = '0px';
+            this.style.left = 'auto';
+          } else {
+            this.style.left = Math.max(0, tooltipLeft) + 'px';
+            this.style.right = 'auto';
+          }
+
+          // Clip the top/bottom side.
+          if (tooltipTop + thisRect.height > window.innerHeight) {
+            this.style.bottom = '0px';
+            this.style.top = 'auto';
+          } else {
+            this.style.top = Math.max(0, tooltipTop) + 'px';
+            this.style.bottom = 'auto';
+          }
+        } else {
+          this.style.left = tooltipLeft + 'px';
+          this.style.top = tooltipTop + 'px';
+        }
+
+      },
+
+      _onAnimationFinish: function() {
+        this._animationPlaying = false;
+        if (!this._showing) {
+          this.toggleClass('hidden', true, this.$.tooltip);
+        }
+      },
+    });
+  </script>
+</dom-module>

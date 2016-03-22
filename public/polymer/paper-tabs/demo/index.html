@@ -1,0 +1,270 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html>
+  <head>
+
+    <title>paper-tabs demo</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+    <link rel="import" href="../../iron-pages/iron-pages.html">
+    <link rel="import" href="../../paper-toolbar/paper-toolbar.html">
+    <link rel="import" href="../paper-tab.html">
+    <link rel="import" href="../paper-tabs.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+      #container {
+        max-width: 600px;
+      }
+
+      paper-tabs, paper-toolbar {
+        background-color: var(--paper-blue-900);
+        color: #fff;
+      }
+    </style>
+
+  </head>
+  <body unresolved>
+
+    <div id="container" class="vertical-section-container centered">
+
+      <h3>Plain <code>paper-tabs</code>.</h3>
+      <demo-snippet>
+        <template>
+          <paper-tabs selected="0">
+            <paper-tab>ITEM ONE</paper-tab>
+            <paper-tab>ITEM TWO</paper-tab>
+            <paper-tab>ITEM THREE</paper-tab>
+          </paper-tabs>
+        </template>
+      </demo-snippet>
+
+      <h3>The <code>no-bar</code> attribute disables the selection bar.</h3>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            paper-tabs[no-bar] paper-tab.iron-selected {
+              color: #ffff8d;
+            }
+          </style>
+
+          <paper-tabs id="plain-tabs" selected="0" no-bar>
+            <paper-tab>ITEM ONE</paper-tab>
+            <paper-tab>ITEM TWO</paper-tab>
+            <paper-tab>ITEM THREE</paper-tab>
+          </paper-tabs>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        The <code>no-slide</code> attribute prevents the selection bar from
+        animating when the selection changes.
+      </h3>
+      <demo-snippet>
+        <template>
+          <paper-tabs selected="0" no-slide>
+            <paper-tab>ITEM ONE</paper-tab>
+            <paper-tab>ITEM TWO</paper-tab>
+            <paper-tab>ITEM THREE</paper-tab>
+          </paper-tabs>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        The <code>noink</code> attribute disables the ink ripple animation seen
+        when the user activates a tab (by clicking, tapping, etc.).
+      </h3>
+      <demo-snippet>
+        <template>
+          <paper-tabs selected="0" noink>
+            <paper-tab>ITEM ONE</paper-tab>
+            <paper-tab>ITEM TWO</paper-tab>
+            <paper-tab>ITEM THREE</paper-tab>
+          </paper-tabs>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        The <code>scrollable</code> attribute causes the tabs to scroll, rather
+        than compress, when there is not enough space. Arrow buttons appear when
+        any of the tabs are not completely visible.
+      </h3>
+      <demo-snippet>
+        <template>
+          <paper-tabs selected="0" scrollable>
+            <paper-tab>NUMBER ONE ITEM</paper-tab>
+            <paper-tab>ITEM TWO</paper-tab>
+            <paper-tab>THE THIRD ITEM</paper-tab>
+            <paper-tab>THE ITEM FOUR</paper-tab>
+            <paper-tab>FIFTH</paper-tab>
+            <paper-tab>THE SIXTH TAB</paper-tab>
+            <paper-tab>NUMBER SEVEN</paper-tab>
+            <paper-tab>EIGHT</paper-tab>
+            <paper-tab>NUMBER NINE</paper-tab>
+            <paper-tab>THE TENTH</paper-tab>
+            <paper-tab>THE ITEM ELEVEN</paper-tab>
+            <paper-tab>TWELFTH ITEM</paper-tab>
+          </paper-tabs>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        Tab layout is effected by the writing direction of the surrounding area.
+      </h3>
+      <demo-snippet>
+        <template>
+          <div dir="rtl">
+            <paper-tabs selected="0">
+              <paper-tab>ITEM ONE</paper-tab>
+              <paper-tab>ITEM TWO</paper-tab>
+              <paper-tab>ITEM THREE</paper-tab>
+            </paper-tabs>
+            &nbsp;
+            <paper-tabs selected="0" scrollable>
+              <paper-tab>NUMBER ONE ITEM</paper-tab>
+              <paper-tab>ITEM TWO</paper-tab>
+              <paper-tab>THE THIRD ITEM</paper-tab>
+              <paper-tab>THE ITEM FOUR</paper-tab>
+              <paper-tab>FIFTH</paper-tab>
+              <paper-tab>THE SIXTH TAB</paper-tab>
+              <paper-tab>NUMBER SEVEN</paper-tab>
+              <paper-tab>EIGHT</paper-tab>
+              <paper-tab>NUMBER NINE</paper-tab>
+              <paper-tab>THE TENTH</paper-tab>
+              <paper-tab>THE ITEM ELEVEN</paper-tab>
+              <paper-tab>TWELFTH ITEM</paper-tab>
+            </paper-tabs>
+          </div>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        Use the <code>align-bottom</code> attribute when your tabs are
+        positioned below the content they control. The selection bar will be
+        shown at the top of the tabs.
+      </h3>
+      <demo-snippet>
+        <template>
+          <paper-tabs selected="0" align-bottom>
+            <paper-tab>ITEM ONE</paper-tab>
+            <paper-tab>ITEM TWO</paper-tab>
+            <paper-tab>ITEM THREE</paper-tab>
+          </paper-tabs>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        Use the <code>link</code> attribute when a <code>paper-tab</code>
+        contains a link. The link will fill the entire tab.
+      </h3>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            paper-tab[link] a {
+              /* These mixins (from iron-flex-layout) center the link text. */
+              @apply(--layout-horizontal);
+              @apply(--layout-center-center);
+              color: #fff;
+              text-decoration: none;
+            }
+          </style>
+
+          <paper-tabs selected="0">
+            <paper-tab link><a href="#item1">ITEM ONE</a></paper-tab>
+            <paper-tab link><a href="#item2">ITEM TWO</a></paper-tab>
+            <paper-tab link><a href="#item3">ITEM THREE</a></paper-tab>
+          </paper-tabs>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        Tabs can be used in a <code>paper-toolbar</code>.
+      </h3>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            paper-toolbar {
+              --paper-toolbar-background: var(--paper-blue-900);
+            }
+
+            .self-end {
+              /* This mixin (from iron-flex-layout) aligns the tabs to the
+                 bottom of the toolbar. */
+              @apply(--layout-self-end);
+            }
+          </style>
+
+          <paper-toolbar class="tall">
+            <paper-tabs selected="0" class="bottom self-end" style="width: 300px;">
+              <paper-tab>ITEM ONE</paper-tab>
+              <paper-tab>ITEM TWO</paper-tab>
+            </paper-tabs>
+          </paper-toolbar>
+        </template>
+      </demo-snippet>
+
+      <!--
+      Nested templates are not supported in IE, meaning they can't be used in a
+      demo-snippet. See Polymer/polymer#2495 for more details.
+      -->
+      <!--
+      <h3>J. Bound Selection</h3>
+      <demo-snippet>
+        <template>
+          <template is="dom-bind">
+            <h2>Current Tab: <span>[[selected]]</span></h2>
+            <paper-tabs selected="{{selected}}">
+              <paper-tab>ITEM ONE</paper-tab>
+              <paper-tab>ITEM TWO</paper-tab>
+              <paper-tab>ITEM THREE</paper-tab>
+            </paper-tabs>
+          </template>
+        </template>
+      </demo-snippet>
+
+      <h3>K. Controlling content</h3>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            iron-pages {
+              border: 1px solid #ccc;
+              border-top: none;
+              padding: 8px;
+            }
+          </style>
+
+          <template is="dom-bind">
+            <paper-tabs selected="{{selected}}">
+              <paper-tab>ITEM ONE</paper-tab>
+              <paper-tab>ITEM TWO</paper-tab>
+              <paper-tab>ITEM THREE</paper-tab>
+            </paper-tabs>
+            <iron-pages selected="{{selected}}">
+              <div>CONTENT ONE</div>
+              <div>CONTENT TWO</div>
+              <div>CONTENT THREE</div>
+            </iron-pages>
+          </template>
+        </template>
+      </demo-snippet>
+      -->
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,262 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+
+    <title>iron-image</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../iron-image.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+      .example {
+        margin: 4px;
+        flex: 1;
+      }
+
+      code {
+        white-space: nowrap;
+      }
+    </style>
+
+    <script>
+      function load(id) {
+        document.getElementById(id).src = "./polymer.svg?" + Math.random();
+      }
+    </script>
+
+  </head>
+  <body unresolved>
+
+    <div class="vertical-section-container centered">
+
+      <h3>A plain <code>iron-image</code>.</h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <iron-image alt="The Polymer logo." src="./polymer.svg"></iron-image>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        <code>sizing="cover"</code> expands the image to cover all of its
+        specified size.
+      </h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <style is="custom-style">
+            #example-sizing-cover {
+              width: 150px;
+              height: 150px;
+              background: #ddd;
+            }
+          </style>
+
+          <iron-image sizing="cover" id="example-sizing-cover" alt="The Polymer logo." src="./polymer.svg"></iron-image>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        <code>sizing="contain"</code> expands the image to fit within its
+        specified size.
+      </h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <style is="custom-style">
+            #example-sizing-contain {
+              width: 150px;
+              height: 150px;
+              background: #ddd;
+            }
+          </style>
+
+          <iron-image sizing="contain" id="example-sizing-contain" alt="The Polymer logo." src="./polymer.svg"></iron-image>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        Use the <code>--iron-image-width</code> property to set the width of
+        the image wrapped by the <code>iron-image</code>.
+      </h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <style is="custom-style">
+            #example-full-width-container {
+              width: 200px;
+              border: 2px solid #444;
+              background: #444;
+            }
+
+            #example-full-width-container iron-image {
+              background: #ddd;
+            }
+
+            #example-full-width {
+              width: 100%;
+              --iron-image-width: 100%;
+            }
+
+            #example-half-width {
+              width: 50%;
+              --iron-image-width: 100%;
+            }
+          </style>
+
+
+          <div id="example-full-width-container">
+            <iron-image id="example-full-width" alt="The Polymer logo." src="./polymer.svg"></iron-image>
+            <iron-image id="example-half-width" alt="The Polymer logo." src="./polymer.svg"></iron-image>
+          </div>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        Use the <code>--iron-image-height</code> property to set the height of
+        the image wrapped by the <code>iron-image</code>.
+      </h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <style is="custom-style">
+            #example-full-height-container {
+              height: 150px;
+              border: 2px solid #444;
+              background: #444;
+            }
+
+            #example-full-height-container iron-image{
+              background: #ddd;
+            }
+
+            #example-full-height {
+              height: 100%;
+              --iron-image-height: 100%;
+            }
+
+            #example-half-height {
+              height: 50%;
+              --iron-image-height: 100%;
+            }
+          </style>
+
+
+          <div id="example-full-height-container">
+            <iron-image id="example-full-height" alt="The Polymer logo." src="./polymer.svg"></iron-image>
+            <iron-image id="example-half-height" alt="The Polymer logo." src="./polymer.svg"></iron-image>
+          </div>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        No placeholder is shown by default.
+      </h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <style is="custom-style">
+            .example.without-preload iron-image {
+              width: 150px;
+              height: 150px;
+              background: #ddd;
+            }
+          </style>
+
+          <div class="example without-preload">
+            <button onclick="load('example-without-preload-1')">
+              Load image
+            </button>
+            <br>
+            <iron-image sizing="contain" alt="The Polymer logo." id="example-without-preload-1"></iron-image>
+          </div>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        The <code>preload</code> attribute shows a placeholder element in front
+        of the image before it has loaded. Use the
+        <code>--iron-image-placeholder</code> CSS mixin to style it.
+      </h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <style is="custom-style">
+            .example.preload iron-image {
+              width: 150px;
+              height: 150px;
+              background: #ddd;
+              --iron-image-placeholder: {
+                background: #939ed5;
+              };
+            }
+          </style>
+
+          <div class="example preload">
+            <button onclick="load('example-preload-1')">
+              Load image
+            </button>
+            <br>
+            <iron-image preload id="example-preload-1" alt="The Polymer logo." class="sized" sizing="contain"></iron-image>
+            <br>
+            Without the <code>fade</code> attribute, the placeholder element is
+            hidden with no transition when the image loads.
+          </div>
+          <div class="example preload">
+            <button onclick="load('example-preload-2')">
+              Load image
+            </button>
+            <br>
+            <iron-image preload fade id="example-preload-2" alt="The Polymer logo." class="sized" sizing="contain"></iron-image>
+            <br>
+            With the <code>fade</code> attribute, the placeholder element is
+            fades away when the image loads.
+          </div>
+        </template>
+      </demo-snippet>
+
+      <h3>
+        Use the <code>placeholder</code> attribute to specify a background image
+        for the placeholder element.
+      </h3>
+      <demo-snippet class="centered-demo">
+        <template>
+          <style is="custom-style">
+            .example.preload-image iron-image {
+              width: 150px;
+              height: 150px;
+              background: #ddd;
+            }
+          </style>
+
+          <div class="example preload-image">
+            <button onclick="load('example-preload-image-1')">
+              Load image
+            </button>
+            <br>
+            <iron-image preload placeholder="./loading.png" id="example-preload-image-1" alt="The Polymer logo." class="sized" sizing="contain"></iron-image>
+            <br>
+            (without <code>fade</code> attribute)
+          </div>
+          <div class="example preload-image">
+            <button onclick="load('example-preload-image-2')">
+              Load image
+            </button>
+            <br>
+            <iron-image preload placeholder="./loading.png" fade id="example-preload-image-2" alt="The Polymer logo." class="sized" sizing="contain"></iron-image>
+            <br>
+            (with <code>fade</code> attribute)
+          </div>
+        </template>
+      </demo-snippet>
+
+    </div>
+
+  </body>
+</html>

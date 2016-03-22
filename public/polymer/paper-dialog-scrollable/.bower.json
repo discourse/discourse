@@ -1,0 +1,45 @@
+{
+  "name": "paper-dialog-scrollable",
+  "version": "1.1.1",
+  "description": "A scrollable area used inside the material design dialog",
+  "authors": [
+    "The Polymer Authors"
+  ],
+  "keywords": [
+    "web-components",
+    "polymer",
+    "dialog",
+    "overlay"
+  ],
+  "main": "paper-dialog-scrollable.html",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/paper-dialog-scrollable"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/PolymerElements/paper-dialog-scrollable",
+  "ignore": [],
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "paper-styles": "PolymerElements/paper-styles#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "_release": "1.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.1",
+    "commit": "f3342accc3829c116f4cec75e821e13009831d28"
+  },
+  "_source": "git://github.com/PolymerElements/paper-dialog-scrollable.git",
+  "_target": "^1.0.0",
+  "_originalSource": "PolymerElements/paper-dialog-scrollable"
+}

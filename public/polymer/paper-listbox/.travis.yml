@@ -1,0 +1,31 @@
+language: node_js
+sudo: false
+cache:
+  directories:
+  - node_modules
+matrix:
+  include:
+  - node_js: stable
+    script: xvfb-run -a wct --simpleOutput -l firefox -l chrome
+    addons:
+      firefox: latest
+      apt:
+        sources:
+        - google-chrome
+        packages:
+        - google-chrome-stable
+  - node_js: node
+    script:
+    - |
+      if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+        wct --simpleOutput -s 'Windows 10/microsoftedge' -s 'Windows 8.1/internet explorer@11' -s 'Windows 7/internet explorer@10' -s 'OS X 10.10/safari@8' -s 'OS X 10.9/safari@7'
+      fi
+before_script:
+- npm install bower
+- npm install web-component-tester
+- export PATH=$PWD/node_modules/.bin:$PATH
+- bower install
+env:
+  global:
+  - secure: uR09ZOD9Sm4HB8QLY2CAr2dWkjxzCggAQF7Tf9mjyk6ZFdzIkktv/IG5Q6ywUPrBwEgpR15a//vknAh1e96w2sdsU7x4SHdnVFV46mN0i3higjiQ0V6qSbFKH0Lom89yh3+nQtmJ8JCF/zWRYGsgpfUC/O3kRQv0ghZ0pjWeO57pvSv8mOTRMUi34cSJchBDZj9U1CzJqJYakST30XBMDHabqm6wbIqvSDve9duPiFPJi6GloRfMXxzC+Lt+WpEdjiYuZ33cmqepW3TEQf0TiZFqg9aQcBINv8723O9IcInvylXmtHRCBikCqoXE6xUNDJZWXbjxzNOwiFO4WSF9t1M7il99ByE3r4MwHlmKTCwHUb4VTvfXy1Ad+sZ0dwDJl92CmTd1/jJGXLXrqUjnUTDFucH4OxQPWtSPxOINzxBebXq+x+cpjdZPe5wp0BpcNiYN0QBNOT08C9B+vLw+/cSn5FXkYO/T+8F/Lhu6SYN1ZQ3HGpjUsNpqhEJgw+l6syQoIZfs3xN6mWqWFbs1RgtGJNrJRwn8umH1I8xy+5yZaif88RhoqTSZnTIkVWMF3/USEDZlhPv+iivFn3Oq3sAopxbR39s9KAGCMu9XdaJk/WA8crS3Jeeq+78tknrpO0VTth8DY6fHY/dV56ZJrc8wHO5souGzg2NLC+D/X20=
+  - secure: k4qJ+VUFYDfWN1FEGqDSLXz6s6zb9fQu9Pwc+b4EMCvhC4Tfhdk7LbGDaw8cnBuDEA1jA9NvmbNN5PqvQ65MxTtPOWpQ/G2N08x9BVJ/u/MkWIY5/LZZoabaiHj4pQAA10sBEeBnhOhfKjNHT3H9s1lo2aWTucc+27fhiWsf2Kmkc4meYU9HKLazrCh+34neOdrkLAMA0EGIEn8OSsmDNhaY5yL71X3wil3qNvfpzXIy0ceAPvLqhM4WvEEYSeel7AohlSyTSC/9GdBvdqN6UmPKJTrk1J2wMsAMcznWDjashORcf/PaVVg4WHfYEBuDk7ECnX+G3Zb02hhw1JnVP+zK/wI9vwwkQXvYqNa+Q+713cWuGXYgVwH2TXKpsO6u69WHw50yKn6k+oOqDvX5SzRgOouFaHFO4GAllgFuX4iAltpluE+aE7I98C968FI3JrHEhCSxH8NlmmPRx794MKUsXBzPLeZ8CqrFs2llvBjVif0vJkad+X4xSxXgxs7SzK0sQS+CtKG3EFLMRNqi9OR98LRFgmkwM7OtOABnZ49lVXqrIaBk0quKAvjSg6PPXf4BUOJdvs8G91N1sf80XOfMj22iGdVUVnmwcktfhdwbm+hN5ToGgbVFTpYOM45+husfmUn7DamYmPudN2EJoawqe44zD6MfjfwqjJCv5Dk=

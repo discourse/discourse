@@ -1,0 +1,87 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>paper-card a11y tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../paper-card.html">
+
+  <style>
+    paper-card {
+      width: 400px;
+    }
+  </style>
+
+</head>
+<body>
+  <test-fixture id="basic">
+    <template>
+      <paper-card heading="header">
+        <div class="card-content"><p>Sample content</p></div>
+      </paper-card>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('a11y', function() {
+      var f;
+      setup(function () {
+        f = fixture('basic');
+      });
+
+      test('aria-label set on card', function() {
+        assert.strictEqual(f.getAttribute('aria-label'), f.heading);
+      });
+
+      test('aria-label can be updated', function() {
+        assert.strictEqual(f.getAttribute('aria-label'), f.heading);
+        f.heading = 'batman';
+        assert.strictEqual(f.getAttribute('aria-label'), 'batman');
+      });
+    });
+    suite('header image', function() {
+      var f, img;
+      setup(function () {
+        f = fixture('basic');
+        img = f.$$('iron-image');
+      });
+
+      test('is iron-image', function(){
+        expect(img).to.be.ok;
+      });
+
+      test('width properly setup', function() {
+        assert.strictEqual(img.offsetWidth, 0);
+        f.image = 'some-img-url';
+        assert.strictEqual(img.src, f.image);
+        assert.strictEqual(img.offsetWidth, f.offsetWidth);
+      });
+
+      test('preload properly setup', function() {
+        assert.strictEqual(img.preload, f.preloadImage);
+        f.preloadImage = !f.preloadImage;
+        assert.strictEqual(img.preload, f.preloadImage);
+      });
+
+      test('fade properly setup', function() {
+        assert.strictEqual(img.fade, f.fadeImage);
+        f.fadeImage = !f.fadeImage;
+        assert.strictEqual(img.fade, f.fadeImage);
+      });
+    });
+  </script>
+
+</body>
+</html>
