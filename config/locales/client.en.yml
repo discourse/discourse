@@ -2885,40 +2885,40 @@ en:
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
         member:
           name: Member
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations, group messaging, more likes
         regular:
           name: Regular
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links, wiki, more likes
         leader:
           name: Leader
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge, more likes
         welcome:
           name: Welcome
           description: Received a like
         autobiographer:
           name: Autobiographer
-          description: Filled user <a href="/my/preferences">profile</a> information
+          description: Filled out <a href="/my/preferences">profile</a> information
         anniversary:
           name: Anniversary
           description: Active member for a year, posted at least once
         nice_post:
-          name: Nice Post
-          description: Received 10 likes on a post. This badge can be granted multiple times
+          name: Nice Reply
+          description: Received 10 likes on a reply
         good_post:
-          name: Good Post
-          description: Received 25 likes on a post. This badge can be granted multiple times
+          name: Good Reply
+          description: Received 25 likes on a reply
         great_post:
-          name: Great Post
-          description: Received 50 likes on a post. This badge can be granted multiple times
+          name: Great Reply
+          description: Received 50 likes on a reply
         nice_topic:
           name: Nice Topic
-          description: Received 10 likes on a topic. This badge can be granted multiple times
+          description: Received 10 likes on a topic
         good_topic:
           name: Good Topic
-          description: Received 25 likes on a topic. This badge can be granted multiple times
+          description: Received 25 likes on a topic
         great_topic:
           name: Great Topic
-          description: Received 50 likes on a topic. This badge can be granted multiple times
+          description: Received 50 likes on a topic
         nice_share:
           name: Nice Share
           description: Shared a post with 25 unique visitors
@@ -2939,61 +2939,61 @@ en:
           description: Invited a user
         campaigner:
           name: Campaigner
-          description: Invited 3 basic users (trust level 1)
+          description: Invited 3 basic users
         champion:
           name: Champion
-          description: Invited 5 members (trust level 2)
+          description: Invited 5 members
         first_share:
           name: First Share
           description: Shared a post
         first_link:
           name: First Link
-          description: Added an internal link to another topic
+          description: Added a link to another topic
         first_quote:
           name: First Quote
-          description: Quoted a user
+          description: Quoted a post
         read_guidelines:
           name: Read Guidelines
           description: Read the <a href="/guidelines">community guidelines</a>
         reader:
           name: Reader
-          description: Read every post in a topic with more than 100 posts
+          description: Read every reply in a topic with more than 100 replies
         popular_link:
           name: Popular Link
-          description: Posted an external link with at least 50 clicks
+          description: Posted an external link with 50 clicks
         hot_link:
           name: Hot Link
-          description: Posted an external link with at least 300 clicks
+          description: Posted an external link with 300 clicks
         famous_link:
           name: Famous Link
-          description: Posted an external link with at least 1000 clicks
+          description: Posted an external link with 1000 clicks
         appreciated:
           name: Appreciated
-          description: Has received at least 1 like on 20 posts
+          description: Received 1 like on 20 posts
         respected:
           name: Respected
-          description: Has received at least 2 likes on 100 posts
+          description: Received 2 likes on 100 posts
         admired:
           name: Admired
-          description: Has received at least 5 likes on 300 posts
+          description: Received 5 likes on 300 posts
         out_of_love:
           name: Out of Love
-          description: Used the maximum amount of likes in a day
+          description: Used 50 likes in a day
         higher_love:
           name: Higher Love
-          description: Used the maximum amount of likes in a day 5 times
+          description: Used 50 likes in a day 5 times
         crazy_in_love:
           name: Crazy in Love
-          description: Used the maximum amount of likes in a day 20 times
+          description: Used 50 likes in a day 20 times
         thank_you:
           name: Thank You
-          description: Has at least 20 liked posts
+          description: Has 20 liked posts
         gives_back:
           name: Gives Back
-          description: Has at least 100 liked posts and a very high like ratio
+          description: Has 100 liked posts and a high like ratio
         empathetic:
           name: Empathetic
-          description: Has at least 500 liked posts and a superlative like ratio
+          description: Has 500 liked posts and a superlative like ratio
 
     google_search: |
       <h3>Search with Google</h3>
