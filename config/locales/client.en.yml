@@ -2987,13 +2987,13 @@ en:
           description: Used 50 likes in a day 20 times
         thank_you:
           name: Thank You
-          description: Has 20 liked posts
+          description: Has 20 liked posts and gave 10 likes
         gives_back:
           name: Gives Back
-          description: Has 100 liked posts and a high like ratio
+          description: Has 100 liked posts and gave 100 likes
         empathetic:
           name: Empathetic
-          description: Has 500 liked posts and a superlative like ratio
+          description: Has 500 liked posts and gave 1000 likes
 
     google_search: |
       <h3>Search with Google</h3>
