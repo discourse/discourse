@@ -295,16 +295,13 @@ SQL
       SQL
     end
 
-    def self.liked_back(min_posts, ratio)
+    def self.liked_back(likes_received, likes_given)
       <<-SQL
-        SELECT p.user_id, current_timestamp AS granted_at
-        FROM posts AS p
-        INNER JOIN user_stats AS us ON us.user_id = p.user_id
-        WHERE p.like_count > 0
-          AND (:backfill OR p.user_id IN (:user_ids))
-        GROUP BY p.user_id, us.likes_given
-        HAVING count(*) > #{min_posts}
-          AND (us.likes_given / count(*)::float) > #{ratio}
+        SELECT us.user_id, current_timestamp AS granted_at
+        FROM user_stats AS us
+        WHERE us.likes_received >= #{likes_received}
+          AND us.likes_given >= #{likes_given}
+          AND (:backfill OR us.user_id IN (:user_ids))
       SQL
     end
   end
