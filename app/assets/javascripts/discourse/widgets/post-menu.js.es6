@@ -270,6 +270,9 @@ export default createWidget('post-menu', {
               case 'first':
                 visibleButtons.unshift(button);
                 break;
+              case 'second':
+                visibleButtons.splice(1, 0, button);
+                break;
               case 'second-last-hidden':
                 if (!state.collapsed) {
                   visibleButtons.splice(visibleButtons.length-2, 0, button);
