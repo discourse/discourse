@@ -3,6 +3,8 @@ module Jobs
   class NotifyMailingListSubscribers < Jobs::Base
 
     def execute(args)
+      return if SiteSetting.disable_mailing_list_mode
+
       post_id = args[:post_id]
       post = post_id ? Post.with_deleted.find_by(id: post_id) : nil
 
