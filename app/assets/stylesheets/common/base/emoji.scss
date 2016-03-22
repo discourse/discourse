@@ -100,3 +100,11 @@ table.emoji-page td {
 .emoji-modal .nav a {
   color: dark-light-choose(#333, #ccc);
 }
+
+.emoji-shortname {
+  display: inline-block;
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  vertical-align: middle;
+}
