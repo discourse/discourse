@@ -4,12 +4,20 @@ class MetadataController < ApplicationController
 
   def manifest
     manifest = {
+      name: SiteSetting.title,
       short_name: SiteSetting.title,
       display: 'standalone',
       orientation: 'portrait',
       start_url: "#{Discourse.base_uri}/",
       background_color: "##{ColorScheme.hex_for_name('secondary')}",
-      theme_color: "##{ColorScheme.hex_for_name('header_background')}"
+      theme_color: "##{ColorScheme.hex_for_name('header_background')}",
+      icons: [
+        {
+          src: SiteSetting.apple_touch_icon_url,
+          sizes: "144x144",
+          type: "image/png"
+        }
+      ]
     }
 
     render json: manifest.to_json
