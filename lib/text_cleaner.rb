@@ -34,7 +34,7 @@ class TextCleaner
     text = text.mb_chars.downcase.to_s if opts[:replace_all_upper_case] && (text =~ /[A-Z]+/) && (text == text.upcase)
     # Capitalize first letter, but only when entire first word is lowercase
     first, rest = text.split(' ', 2)
-    if opts[:capitalize_first_letter] && first == first.mb_chars.downcase
+    if first && opts[:capitalize_first_letter] && first == first.mb_chars.downcase
       text = "#{first.mb_chars.capitalize}#{rest ? ' ' + rest : ''}"
     end
     # Remove unnecessary periods at the end
