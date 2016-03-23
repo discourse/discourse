@@ -75,7 +75,6 @@
   }
 
   border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   width: 90%;
   padding: 10px;
   display: table;
@@ -93,7 +92,6 @@
   }
 
   .grant-count {
-    text-align: center;
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     font-size: 120%;
   }
