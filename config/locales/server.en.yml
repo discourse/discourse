@@ -1162,6 +1162,7 @@ en:
 
     delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
+    enable_staged_users: "Automatically create staged users when processing incoming emails."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1827,6 +1828,13 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
+
+    email_reject_user_not_found:
+      subject_template: "[%{site_name}] Email issue -- User Not Found"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your reply was sent from an unknown email address. Try sending from another email address, or contact a staff member.
 
     email_reject_inactive_user:
       subject_template: "[%{site_name}] Email issue -- Inactive User"

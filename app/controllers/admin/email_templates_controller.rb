@@ -11,7 +11,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
                      "system_messages.email_reject_destination", "system_messages.email_reject_empty",
                      "system_messages.email_reject_invalid_access", "system_messages.email_reject_no_account",
                      "system_messages.email_reject_parsing", "system_messages.email_reject_post_error",
-                     "system_messages.email_reject_post_error_specified",
+                     "system_messages.email_reject_post_error_specified", "system_messages.email_reject_user_not_found",
                      "system_messages.email_reject_reply_key", "system_messages.email_reject_topic_closed",
                      "system_messages.email_reject_topic_not_found", "system_messages.email_reject_trust_level",
                      "system_messages.pending_users_reminder", "system_messages.post_hidden",

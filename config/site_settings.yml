@@ -560,6 +560,7 @@ email:
     default: 365
     min: 0
   max_emails_per_day_per_user: 100
+  enable_staged_users: true
 
 files:
   max_image_size_kb: 3072
