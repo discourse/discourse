@@ -202,9 +202,9 @@ class Post < ActiveRecord::Base
 
     if post_type == Post.types[:regular]
       if new_cooked != cooked && new_cooked.blank?
-        Rails.logger.warn("Plugin is blanking out post: #{self.url}\nraw: #{self.raw}")
+        Rails.logger.debug("Plugin is blanking out post: #{self.url}\nraw: #{self.raw}")
       elsif new_cooked.blank?
-        Rails.logger.warn("Blank post detected post: #{self.url}\nraw: #{self.raw}")
+        Rails.logger.debug("Blank post detected post: #{self.url}\nraw: #{self.raw}")
       end
     end
 
