@@ -1345,10 +1345,10 @@ en:
       user: 'Users'
 
   sso:
-    not_found: "Unable to lookup or create account, contact site admin"
-    account_not_approved: "Account is pending approval, you will receive an email notification once approved"
-    unknown_error: "Error updating information, contact site admin"
-    timeout_expired: "Account login timed out, please try logging in again"
+    not_found: "Your account couldn't be found. Please contact the site's administrator."
+    account_not_approved: "Your account is pending approval. You will receive an email notification when you are approved."
+    unknown_error: "There is a problem with your account. Please contact the site's administrator."
+    timeout_expired: "Account login timed out, please try logging in again."
 
   original_poster: "Original Poster"
   most_posts: "Most Posts"
