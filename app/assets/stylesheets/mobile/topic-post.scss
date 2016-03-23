@@ -486,8 +486,12 @@ span.highlighted {
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
-    span {
+    span.full-name, span.user-title, span.username {
       display: block;
+    }
+
+    .poster-icon {
+      float: right;
     }
   }
   .post-info {
