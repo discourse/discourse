@@ -5,6 +5,12 @@
     {{model.displayName}}
   </h1>
 
+  {{#if showLongDescription}}
+  <div class='long-description banner'>
+    {{{longDescription}}}
+  </div>
+  {{/if}}
+
   <div class='badges-listing'>
     <div class='row'>
       <div class='badge'>{{user-badge badge=model}}</div>
@@ -18,11 +24,6 @@
   </div>
 
 
-  {{#if showLongDescription}}
-  <div class='long-description banner'>
-    {{{long_description}}}
-  </div>
-  {{/if}}
 
   {{#if user}}
   <div class='badge-user-info'>

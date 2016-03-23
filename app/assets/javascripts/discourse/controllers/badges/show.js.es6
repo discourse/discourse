@@ -61,8 +61,12 @@ export default Ember.Controller.extend({
     this.set("controllers.application.showFooter", !this.get("canLoadMore"));
   }.observes("canLoadMore"),
 
+  longDescription: function(){
+    return Discourse.Emoji.unescape(this.get('model.long_description'));
+  }.property('model.long_description'),
+
   showLongDescription: function(){
-    return window.location.search.match("long-description");
+    return this.get('model.long_description');
   }.property('userBadges')
 
 });
