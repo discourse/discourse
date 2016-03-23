@@ -1981,6 +1981,10 @@ en:
 
         This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
 
+        Please be aware that you will not be able to create new replies or topics until unblocked by a staff member.
+
+        If you have questions regarding this block, please contact a [staff members](%{base_url}/about).
+
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     user_automatically_blocked:
