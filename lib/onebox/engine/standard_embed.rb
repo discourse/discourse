@@ -27,7 +27,7 @@ module Onebox
       add_oembed_provider /(.*\.)?vimeo\.com\//, 'http://vimeo.com/api/oembed.json'
 
       # Sites that work better with OpenGraph
-      # add_opengraph_provider /gfycat\.com\//
+      add_opengraph_provider /nytimes\.com\//
 
       def always_https?
         WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts)
