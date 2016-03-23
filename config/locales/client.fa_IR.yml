@@ -420,7 +420,6 @@ fa_IR:
       muted_users: "بی صدا شده"
       muted_users_instructions: "متفوقف کردن تمام اطلاعیه ها از طرف این کاربران."
       muted_topics_link: "نمایش مباحث قطع شده"
-      automatically_unpin_topics: "از سنجاق خارج کردن خودکار مباحث وقتی که به پایین میرسید."
       staff_counters:
         flags_given: "پرچم گذاری های مفید"
         flagged_posts: "نوشته های پرچم گذاری شده"
@@ -830,7 +829,6 @@ fa_IR:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1401,7 +1399,6 @@ fa_IR:
           description: "شما هیچ وقت از مبحث های تازه در این دسته بندی ها مطلع نمیشوید, و آن ها در آخرین ها نمایش داده نمیشوند."
     flagging:
       title: 'تشکر برای کمک به نگه داشتن جامعه ما  بصورت مدنی !'
-      private_reminder: 'پرچم های خصوصی, <b>فقط</b> قابل مشاهده برای مدیران'
       action: 'پرچم‌گذاری نوشته'
       take_action: "اقدام"
       notify_action: 'پیام'
@@ -1413,7 +1410,6 @@ fa_IR:
       submit_tooltip: "ایجاد پرچم خصوصی"
       take_action_tooltip: "رسیدن سریع به آستانه پرچم، بلافاصله به جای انتظار برای پرچم انجمن"
       cant: "متأسفیم، در این زمان نمی‌توانید  روی این نوشته پرچم بگذارید."
-      notify_staff: 'مطلع کردن مدیران'
       formatted_name:
         off_topic: "آن موضوع قدیمی است"
         inappropriate: "این نامناسب است"

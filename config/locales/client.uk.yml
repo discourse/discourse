@@ -275,9 +275,7 @@ uk:
         perm_default: "Ввімкнути сповіщення"
         perm_denied_btn: "Немає доступу"
         disable: "Вимкнути сповіщення"
-        currently_enabled: "(зараз увімкнено)"
         enable: "Увімкнути сповіщення"
-        currently_disabled: "(зараз вимкнено)"
       dismiss_notifications: "Позначити все як прочитане"
       dismiss_notifications_tooltip: "Позначити всі сповіщення як прочитані"
       disable_jump_reply: "Не перескакувати до мого допису коли я відповім"
@@ -460,7 +458,6 @@ uk:
     unmute: Unmute
     last_post: Останній допис
     summary:
-      description: "Тут <b>{{count}}</b> відповідей."
       enable: 'Підсумувати цю тему'
       disable: 'Показати всі дописи'
     deleted_filter:
@@ -801,12 +798,6 @@ uk:
           bookmark: "Скасувати закладку"
           like: "Скасувати вподобання"
           vote: "Відкликати голос"
-        people:
-          notify_moderators: "Звернули увагу модераторів: {{icons}}"
-          notify_moderators_with_url: "<a href='{{postUrl}}'>Звернули увагу модераторів</a>: {{icons}}"
-          bookmark: "Лишили тут закладку: {{icons}}"
-          like: "Вподобали це: {{icons}}"
-          vote: "Проголосували за це: {{icons}}"
         by_you:
           off_topic: "Ви поскаржилися на це як на недотичне до теми"
           spam: "Ви поскаржилися на це як на спам"
@@ -1080,10 +1071,8 @@ uk:
           restore:
             is_disabled: "Restore is disabled in the site settings."
             title: "Restore the backup"
-            confirm: "Are your sure you want to restore this backup?"
           rollback:
             title: "Rollback the database to previous working state"
-            confirm: "Are your sure you want to rollback the database to the previous working state?"
       customize:
         title: "Customize"
         long_title: "Site Customizations"

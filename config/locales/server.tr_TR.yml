@@ -148,7 +148,6 @@ tr_TR:
       can_not_modify_automatic: "Otomatik oluşturulan grubu düzenleyemezsiniz"
       member_already_exist: "'%{username}' zaten grubun bir üyesi."
       invalid_domain: "'%{domain}' geçerli bir alan adı değil."
-      invalid_incoming_email: "'%{incoming_email}' geçerli bir e-posta adresi değil."
     default_names:
       everyone: "herkes"
       admins: "adminler"
@@ -261,7 +260,6 @@ tr_TR:
       uncategorized_parent: "Kategorisizin üst kategorisi olamaz"
       self_parent: "Alt kategorinin üst kategorisi kendisi olamaz"
       depth: "Bir alt kategori başka bir alt kategorinin altında yer alamaz"
-      email_in_already_exist: "Gelen e-posta adresi '%{email_in}' %{category_name}' kategorisi için zaten kullanılıyor."
     cannot_delete:
       uncategorized: "Kategorisiz silinemez"
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
@@ -627,7 +625,6 @@ tr_TR:
     min_search_term_length: "Arama için girilecek kelimede olması gereken en az karakter sayısı"
     search_tokenize_chinese_japanese_korean: " CJK olmayan siteler dahil, -Çince/Japonca/Korece için aramayı bilgileri sıfırlamaya zorla"
     allow_uncategorized_topics: "Konuların kategori seçmeden oluşturulmasına izin ver. DİKKAT: Bu özelliği kapamadan önce kategorisiz tüm konuları kategorize etmeniz lazım."
-    uncategorized_description: "Kategorisiz kategorisinin tanıtımı. Boş bırakabilirsiniz."
     allow_duplicate_topic_titles: "Aynı başlık ile birden çok konu açılmasına izin ver."
     unique_posts_mins: "Kullanıcının aynı içerikle yeni bir gönderi oluşturmadan önce geçmesi gereken dakika"
     educate_until_posts: "Kullanıcılar, ilk (n) gönderilerini yazmaya başladıklarında, pop-up yeni kullanıcı eğitim paneli metin düzenleyecisinin üstünde çıksın."
@@ -919,7 +916,6 @@ tr_TR:
     automatically_download_gravatars: "Hesap oluşturma veya e-posta değişikliği esnasında kullanıcılar için Gravatarları indir"
     digest_topics: "Özet e-postalarda yer alacak en fazla konu sayısı. "
     digest_min_excerpt_length: "Özet e-postalarında, gönderi alıntılarında olması gereken en az karakter sayısı."
-    delete_digest_email_after_days: "Siteye (n) günden fazla süredir uğramayan kullanıcılar için özet e-posta gönderimini durdur"
     disable_digest_emails: "Tüm kullanıcılar için özet e-postalarını devre dışı bırak."
     detect_custom_avatars: "Kullanıcıların özel profil resimleri yükleyip yüklemediklerini kontrol et ya da etme."
     max_daily_gravatar_crawls: "Discourse'un gün içinde özel avatarlar için Gravatar'ı en fazla kaç kere kontrol edeceği."
@@ -968,7 +964,6 @@ tr_TR:
     enable_emoji: "Emojiyi aktifleştir"
     emoji_set: "Emojinizi nasıl isterdiniz?"
     enforce_square_emoji: "Tüm emojileri kare en-boy oranına zorla"
-    approve_post_count: "Yeni bir kullanıcıdan onaylanması gereken gönderi sayısı"
     approve_unless_trust_level: "Bu güven seviyesi altındaki kullanıcılardan gelen gönderilerin onaylanması gerekir"
     notify_about_queued_posts_after: "Bu kadar saat geçmesine rağmen hala incelenmemiş konular varsa, iletişim adresine e-posta gönder. Devre dışı bırakmak için 0 girin."
     default_email_digest_frequency: "Öntanımlı olarak kullanıcılar hangi sıklıkta özet e-postalar alırlar."
@@ -1012,7 +1007,6 @@ tr_TR:
     moved_post: "%{display_username} gönderinizi buraya taşıdı: %{link}"
     private_message: "%{display_username} sana bir mesaj gönderdi: %{link}"
     invited_to_private_message: "%{display_username} seni bir mesaja davet etti: %{link}"
-    invited_to_topic: "%{display_username} seni bir konuya davet etti: %{link}"
     invitee_accepted: "%{display_username} davetinizi kabul etti"
     linked: "%{display_username} size %{link} sayfasında bağlantı verdi"
     granted_badge: "%{link} kazandınız"
@@ -1101,8 +1095,6 @@ tr_TR:
       characters: "sadece rakam, harf ve altçizgi bulundurabilir "
       unique: "özgün olmalı"
       blank: "bulunmalı"
-      must_begin_with_alphanumeric: "bir harf, rakam ya da alt çizgi ile başlamalı"
-      must_end_with_alphanumeric: "bir harf, sayı yada alt tire ile bitmeli"
       must_not_contain_two_special_chars_in_seq: "2 ya da daha fazla uzunlukta özel karakter dizisi (.-_) içermemeli"
     email:
       not_allowed: "için o e-posta sağlayıcısına izin verilmiyor. Lütfen başka bir email adresi kullanın. "
@@ -1141,23 +1133,10 @@ tr_TR:
       (Eğer yukarıdaki bağlantının süresi dolmuşsa e-posta adresinizle giriş yaparken "Parolamı unuttum" bağlantısına tıklayınız.)
   test_mailer:
     subject_template: "[%{site_name}] E-posta Ulaştırma Testi"
-    text_body_template: "Bu aşağıdaki adresten gönderilen bir test e-postasıdır.\n\n[**%{base_url}**][0]\n\nE-postaların ulaştırılması karışık bir meseledir. Öncelikle dikkat etmeniz gereken bir kaç önemli nokta:\n\n- Site ayarlarınızda 'bildiri e-postaları' için gönderen adresini doğru ayarladığınıza emin olun. **Yolladığınız e-postalarda \"gönderen\" adresi olarak belirlediğiniz alan adı, e-postalarınızın doğrulanacağı alan adıdır.**\n\n- E-posta başlıklarındaki önemli ipuçlarını yakalayabilmek için e-posta istemcinizde e-postaların kaynak kodunu nasıl görüntüleyebileceğinizi öğrenin. Gmail'da, her e-postanın sağ üstündeki açılır menüden \"show original\" opsiyonuna tıklayabilirsiniz.\n\n- **ÖNEMLİ:** ISP'nizde e-posta yollamak için kullanıdığınız alan adlarıyla IP adreslerinin eşleşmesini sağlayacak bir reverse DNS kaydı var mı? Buradan [reverse PTR kayıtlarınızı test edin][2]. Eğer ISP'niz doğru reverse DNS pointer kaydı girmezse, büyük ihtimal e-postalarınızın hiç biri yerine ulaşmayacaktır.\n\n- Alan adınızın [SPF kaydı][8] doğru mu? Buradan [SPF kaydınızı test edin][1]. SPF için doğru resmi kayıt tipinin TXT olduğunu unutmayın. \n\n- Alan adınızın [DKIM kaydı][3] doğru mu? Bu e-postaların ulaştırılabilirliğini ciddi şekilde artıracaktır. Buradan [DKIM kaydınızı test edin][7].\n\n- Kendi e-posta sunucunuzu kullanıyorsanız, e-posta sunucunuzun IPlerinin [hiç bir e-posta karalistesine][4] alınmadığına emin olun. Sunucunuzun, kesinlikle, HELO mesajında DNS olarak çözümlenen tam tanımlanmış bilgisayar adı da gönderdiğinden emin olun. Göndermemesi, e-postanızın bir çok e-posta servisi tarafından reddedilmesine sebep olacaktır. \n\n(En kolayı, küçük topluluklar için rahat rahat yetecek sayıda bedava email yollama paketleri içeren, [Mandrill][md] veya [Mailgun][mg] veya [Mailjet][mj]'te ücretsiz hesap açmak. Tabi, gene, DNS ayarlarınızda SPF ve DKIM kayıtlarını oluşturmanız gerekecek!) \n\nUmarız bu e-posta ulaştırma testini başarıyla atlatmışsınızdır. \n\nİyi şanslar, \n\n[Discourse](http://www.discourse.org)'tan arkadaşlarınız \n\n[0]: %{base_url} \n[1]: http://www.kitterman.com/spf/validate.html \n[2]: http://mxtoolbox.com/ReverseLookup.aspx \n[3]: http://www.dkim.org/ \n[4]: http://whatismyipaddress.com/blacklist-check \n[7]: http://dkimcore.org/tools/dkimrecordcheck.html \n[8]: http://www.openspf.org/SPF_Record_Syntax [md]: http://mandrill.com [mg]: http://www.mailgun.com/ [mj]: https://www.mailjet.com/pricing\n"
   new_version_mailer:
     subject_template: "[%{site_name}] Yeni Discourse versiyonu, güncelleme var"
-    text_body_template: |
-      [Discourse'un](http://www.discourse.org) yeni versiyonu hazır. Sizin kullandığınız versiyon: %{installed_version} Yeni versiyon: **%{new_version}** Aşağıdakileri uygulayabilirsiniz: - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master). - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz. - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org)
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] güncellemesi var"
-    text_body_template: |
-      [Discourse'un](http://www.discourse.org) yeni bir versiyonu hazır. Sizin kullandığınız versiyon: %{installed_version} Yeni versiyon: **%{new_version}** Aşağıdakileri uygulayabilirsiniz: - Yenilikleri [GitHub değişiklikler listesinde] görüntüleyebilirsiniz (https://github.com/discourse/discourse/commits/master). - [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) sayfasını ziyaret ederek ve "Güncelle" butonuna basarak yeni versiyona geçebilirsiniz. - Haberler, tartışmalar ve Discourse ile ilgili destek için burayı ziyaret edebilirsiniz: [meta.discourse.org](http://meta.discourse.org) ### Yeni sürüm notları %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      other: "Bu bayraklar %{count} saat önce verildi."
-    please_review: "Lütfen onları inceleyin."
-    post_number: "gönderi"
-    how_to_disable: '"Bayraklarla ilgili bilgilendirme süresi" ayarından bu hatırlatma e-postasının gönderimini devre dışı bırakabilir ya da sıklığını değiştirebilirsiniz. '
-    subject_template:
-      other: "İlgilenilmesi gereken %{count} bayrak var"
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} konu incelenmeyi bekliyor."
@@ -1250,10 +1229,6 @@ tr_TR:
       text_body_template: "Üzgünüz, dışarı veri aktarımı başarısız oldu. Lütfen kayıtları inceleyin veya bir görevli ile iletişime geçin."
     email_reject_no_account:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Hesap"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        Bu e-posta adresine sahip bir kullanıcı bulunamadı. Başka bir e-posta adresinden göndermeyi deneyin ya da bir görevli ile iletişime geçin.
     email_reject_empty:
       subject_template: "[%{site_name}] E-posta sorunu -- İçerik Yok"
       text_body_template: "Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu. \n\nE-postada herhangi bir cevap bulamadık.\n\nEğer bu mesajı alıyorsanız ve cevap eklediyseniz, daha basit bir biçimleme ile yeniden deneyin.\n\n\n\n"
@@ -1269,28 +1244,16 @@ tr_TR:
         Hesabınız o kategoride yeni konu oluşturabilmeniz için gereken ayrıcalıklara sahip değil. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_reply_key:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Cevap Anahtarı"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        Cevap anahtarı geçersiz ya da bulunamıyor, bu nedenle de bu mesajın neye cevaben gönderildiğini bilemiyoruz. Bir görevli ile iletişime geçin.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Bulunamadı"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu. Konu bulunamadı, silinmiş olabilir. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Kapatıldı"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu. Konu kapatılmış. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-posta sorunu -- Otomatik Üretilmiş Cevap"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine yollamak istediğiniz e-posta başarısız oldu. Otomatik olarak üretilmiş e-posta cevaplarını kabul edemiyoruz. Bir hata olduğuna inanıyorsanız, lütfen bir görevli ile iletişime geçin.
     email_error_notification:
       subject_template: "[%{site_name}] E-posta sorunu -- POP doğrulama hatası"
-      text_body_template: |
-        Mailler POP sunucusundan çağrılırken bir doğrulama hatası oluştu.
-
-        Lütfen, [site ayarlarında](%{base_url}/admin/site_settings/category/email) POP bilgilerinin doğru şekilde düzenlendiğinden emin olun.
     too_many_spam_flags:
       subject_template: "Yeni hesap engellendi"
       text_body_template: |
@@ -1352,7 +1315,6 @@ tr_TR:
 
         Mesajı görüntülemek için lütfen bu bağlantıyı ziyaret edin: %{base_url}%{url}
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} sizi bir konuya davet etti '%{topic_title}'"
       text_body_template: |2
 
         %{username} sizi bir tartışmaya davet etti
@@ -1424,12 +1386,6 @@ tr_TR:
 
         Yeni hesabınıza ait bir parola oluşturmak için aşağıdaki bağlantıya tıklayın:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Yeni e-posta adresinizi onaylayın"
-      text_body_template: |
-        Aşağıdaki bağlantıya tıklayarak %{site_name} sitesindeki yeni e-posta adresinizi onaylayın:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} sitesinde hesabınız onaylandı!"
       text_body_template: "%{site_name} sitesine hoşgeldiniz! \n\n%{site_name} sitesindeki hesabınız bir görevli tarafından onaylandı.\n\nAşağıdaki linke tıklayın ve yeni hesabınızı aktive edin: %{base_url}/users/activate-account/%{email_token} \n\nEğer link tıklanabilir değilse, linki kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyebilirsiniz. \n\n%{new_user_tips} \n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
@@ -1443,7 +1399,6 @@ tr_TR:
 
         Eğer yukarıdaki bağlantı tıklanabilir değilse, bağlantıyı kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyin.
   page_not_found:
-    title: "Aradığınız sayfa bulunmuyor ya da gizli."
     popular_topics: "Popüler"
     recent_topics: "Yeni"
     see_more: "Daha fazla"

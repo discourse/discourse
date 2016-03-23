@@ -276,7 +276,6 @@ cs:
         few: "Toto téma má <b>{{count}}</b> příspěvky, které čekají na schválení."
         other: "Toto téma má <b>{{count}}</b> příspěvků, které čekají na schválení."
       confirm: "Uložit změny"
-      delete_prompt: "Jsi si jistý, že chceš smazat <b>%{username}</b>? Smažou se všechny jeho příspěvky, zablokuje se jeho email a IP adresa,"
       approval:
         title: "Příspěvek potřebuje schválení"
         description: "Obdrželi jsme váš příspěvek, ale musí být před zveřejněním schválen moderátorem. Buďte trpěliví."
@@ -423,9 +422,7 @@ cs:
         perm_default: "Vypnout upozornění."
         perm_denied_btn: "Povolení zamítnuto"
         disable: "Vypnout upozornění"
-        currently_enabled: "(momentálně povoleno)"
         enable: "Povolit upozornění"
-        currently_disabled: "(momentálně vypnuto)"
         each_browser_note: "Poznámka: Musíš změnit tuto volbu v každém prohlížeči, který používáš."
       dismiss_notifications: "Označ vše jako přečtené"
       dismiss_notifications_tooltip: "Označit všechny nepřečtené notifikace jako přečtené"
@@ -460,7 +457,6 @@ cs:
       muted_users: "Ztišení"
       muted_users_instructions: "Umlčet všechny notifikace od těchto uživatelů."
       muted_topics_link: "Ukázat utlumená témata"
-      automatically_unpin_topics: "Automaticky odepni témata, když se dostaneš na konec."
       staff_counters:
         flags_given: "užitečná nahlášení"
         flagged_posts: "nahlášených příspěvků"
@@ -697,8 +693,6 @@ cs:
       value_prop: "Pokud si založíš účet, budeme si přesně pomatovat, co jsi četly, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění, zde a přes e-mail, kdykoli přibydou nově příspěvky. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartbeat:"
     summary:
       enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
-      description: "Obsahuje <b>{{replyCount}}</b> odpovědí."
-      description_time: "Obsahuje <b>{{replyCount}}</b> odpovědí o odhadovaném času čtení <b>{{readingTime}} minut</b>."
       enable: 'Přepnout na "nejlepší příspěvky"'
       disable: 'Přepnout na normální zobrazení'
     deleted_filter:
@@ -868,7 +862,6 @@ cs:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -974,9 +967,6 @@ cs:
         category: "V kategorii {{category}} nejsou žádná témata."
         top: "Nejsou tu žádná populární témata."
         search: "There are no search results."
-        educate:
-          new: '<p>Zde se zobrazují nová témata.</p><p>Podle výchozího nastavení jsou za nová témata považována ta, která byla vytvořena v posledních 2 dnech.</p>U těch se ukáže ukazatel <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">Nové</span>.<p>Můžete to změnit ve vašem <a href="%{userPrefsUrl}">nastavení</a>.</p>'
-          unread: '<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Podle výchozího nastavení jsou za nepřečtená témata, ukterých se zobrazuje počet nepřečtení  <span class="badge new-posts badge-notification">1</span>, považována ta, která jste:</p><ul><li>Vytvořil toto téma</li><li>Odpovědětl v tématu</li><li>Četl téma více než 4 minuty</li></ul><p>Nebo pokud jste nastavil téma jako Hlídané či Sledované pomocí nabídky na spodku každého tématu.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
       bottom:
         latest: "Nejsou tu žádná další témata z poslední doby."
         hot: "Nejsou tu žádná další populární témata k přečtení."
@@ -1346,18 +1336,6 @@ cs:
           bookmark: "Odebrat ze záložek"
           like: "Už se mi to nelíbí"
           vote: "Zrušit hlas"
-        people:
-          off_topic: "{{icons}} označili tento příspěvek jako off-topic"
-          spam: "{{icons}} označili tento příspěvek jako spam"
-          spam_with_url: "{{icons}} označení <a href='{{postUrl}}'>jako spam</a>"
-          inappropriate: "{{icons}} označili tento příspěvek jako nevhodný"
-          notify_moderators: "{{icons}} nahlásili tento příspěvek"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>nahlásili tento příspěvek</a>"
-          notify_user: "{{icons}} poslal zprávu"
-          notify_user_with_url: "{{icons}} poslal <a href='{{postUrl}}'>zprávu</a>"
-          bookmark: "{{icons}} si přidali příspěvek do záložek"
-          like: "{{icons}} se líbí tento příspěvek"
-          vote: "{{icons}} hlasovali pro tento příspěvek"
         by_you:
           off_topic: "Označili jste tento příspěvek jako off-topic"
           spam: "Označili jste tento příspěvek jako spam"
@@ -1525,7 +1503,6 @@ cs:
           description: "Nikdy nebudete dostávat upozornění na nová témata v těchto kategoriích a neobjeví se v aktuálních."
     flagging:
       title: 'Děkujeme, že pomáháte udržovat komunitu zdvořilou!'
-      private_reminder: 'nahlášení jsou soukromá, viditelná <b>pouze</b> pro správce'
       action: 'Nahlásit příspěvek'
       take_action: "Zakročit"
       notify_action: 'Zpráva'
@@ -1537,7 +1514,6 @@ cs:
       submit_tooltip: "Podat soukromé nahlášení"
       take_action_tooltip: "Ihned dosáhni vlaječky prahu, než aby jsi čekal na více komunitních vlaječek"
       cant: "Bohužel nyní nemůžete tento příspěvek nahlásit."
-      notify_staff: 'Upozorni redakci'
       formatted_name:
         off_topic: "Je to mimo téma."
         inappropriate: "Je to nevhodné"
@@ -1932,11 +1908,9 @@ cs:
             is_disabled: "Restore is disabled in the site settings."
             label: "Obnovit"
             title: "Restore the backup"
-            confirm: "Are your sure you want to restore this backup?"
           rollback:
             label: "Rollback"
             title: "Rollback the database to previous working state"
-            confirm: "Are your sure you want to rollback the database to the previous working state?"
       export_csv:
         user_archive_confirm: "Jste si jistí, že chcete stáhnout všechny své příspěvky?"
         success: "Export byl spuštěn. O dokončení celého procesu budete informování pomocí zprávy."
@@ -2038,9 +2012,6 @@ cs:
           love:
             name: 'láska'
             description: "Barva tlačítka Like."
-          wiki:
-            name: 'wiki'
-            description: "Základní barva použita pro pozadí wiki článků."
       email:
         settings: "Nastavení"
         preview_digest: "Náhled souhrnu"

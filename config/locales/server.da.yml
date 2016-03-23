@@ -236,7 +236,6 @@ da:
       uncategorized_parent: "Ukategoriserede  kan ikke have en overordnede kategori"
       self_parent: "En underkategori kan ikke være sin egen overordnede kategori."
       depth: "Du kan ikke indlejre en underkategori i en anden underkategori."
-      email_in_already_exist: "Den indgående email-adresse  '%{email_in}' bruges allerede til kategorien '%{category_name}'."
     cannot_delete:
       uncategorized: "Kan ikke slette Ukategoriseret"
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
@@ -699,8 +698,6 @@ da:
     subject_template: "[%{site_name}] test af e-mail-udsendelse"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Opdateringer er tilgængelige"
-  flags_reminder:
-    post_number: "indlæg"
   system_messages:
     post_hidden:
       subject_template: "Indlæg skjult på grund af feedback fra brugerne"
@@ -780,12 +777,6 @@ da:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Din nye konto"
-    confirm_new_email:
-      subject_template: "[%{site_name}] Bekræft din nye e-mail-adresse"
-      text_body_template: |
-        Bekræft din nye e-mail-adresse på %{site_name} ved at klikke på følgende link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Du er blevet godkendt på %{site_name}!"
     signup:
@@ -798,7 +789,6 @@ da:
 
         Hvis linket ikke virker, så prøv at kopiere hele linket ind i adressefeltet på din web browser.
   page_not_found:
-    title: "Den side du efterspurgte findes ikke. Måske kan vi hjælpe dig med at finde den, eller et andet lignende emne:"
     popular_topics: "Populære"
     recent_topics: "Nye"
     see_more: "Flere"

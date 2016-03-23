@@ -9,7 +9,7 @@ pl_PL:
   js:
     number:
       format:
-        separator: "."
+        separator: ","
         delimiter: ","
       human:
         storage_units:
@@ -119,6 +119,8 @@ pl_PL:
           one: "1 rok później"
           few: "%{count} lata później"
           other: "%{count} lat później"
+      previous_month: 'Poprzedni miesiąc'
+      next_month: 'Następny miesiąc'
     share:
       topic: 'udostępnij odnośnik do tego tematu'
       post: 'wpis #%{postNumber}'
@@ -149,6 +151,19 @@ pl_PL:
         disabled: 'odlistowanie %{when}'
     topic_admin_menu: "akcje administratora"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
+    s3:
+      regions:
+        us_east_1: "US East (N. Virginia)"
+        us_west_1: "US West (N. California)"
+        us_west_2: "US West (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        eu_west_1: "EU (Ireland)"
+        eu_central_1: "EU (Frankfurt)"
+        ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_northeast_1: "Asia Pacific (Tokyo)"
+        ap_northeast_2: "Asia Pacific (Seoul)"
+        sa_east_1: "South America (Sao Paulo)"
     edit: 'edytuj tytuł i kategorię tego tematu'
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
@@ -182,6 +197,8 @@ pl_PL:
     more: "Więcej"
     less: "Mniej"
     never: "nigdy"
+    every_30_minutes: "co 30 minut"
+    every_hour: "co godzinę"
     daily: "dziennie"
     weekly: "tygodniowo"
     every_two_weeks: "co dwa tygodnie"
@@ -276,7 +293,7 @@ pl_PL:
         few: "Ten temat posiada <b>{{count}}</b> wpisy oczekujące na akceptację"
         other: "Ten temat posiada <b>{{count}}</b> wpisów oczekujących na akceptację"
       confirm: "Zapisz zmiany"
-      delete_prompt: "Czy na pewno chcesz usunąć <b>%{username}</b>? Zostaną usunięte wszystkie wpisy utworzone z tego konta oraz zostanie zablokowany powiązany e-mail oraz adres IP."
+      delete_prompt: "Czy na pewno chcesz usunąć <b>%{username}</b>? To spowoduje usunięcie wszystkich wiadomości, zablokowanie adresu e-mail i adresu IP tego użytkownika."
       approval:
         title: "Wpis wymaga zatwierdzenia"
         description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
@@ -330,7 +347,9 @@ pl_PL:
         few: "grupy"
         other: "grupy"
       members: "Członkowie"
+      topics: "Tematy"
       posts: "Wpisów"
+      messages: "Wiadomości"
       alias_levels:
         title: "Kto może wysyłać wiadomości i używać @aliasu tej grupy?"
         nobody: "Nikt"
@@ -341,6 +360,11 @@ pl_PL:
       trust_levels:
         title: "Domyślny poziom zaufania przyznawany nowych użytkownikom:"
         none: "Brak"
+      notifications:
+        watching:
+          title: "Obserwowanie"
+        tracking:
+          title: "Śledzenie"
     user_action_groups:
       '1': "Przyznane polubienia"
       '2': "Otrzymane polubienia"
@@ -423,9 +447,7 @@ pl_PL:
         perm_default: "Włącz powiadomienia"
         perm_denied_btn: "Brak uprawnień"
         disable: "Wyłącz powiadomienia"
-        currently_enabled: "(aktualnie włączone)"
         enable: "Włącz powiadomienia"
-        currently_disabled: "(aktualnie wyłączone)"
         each_browser_note: "Uwaga: to ustawienie musisz zmienić w każdej przeglądarce której używasz."
       dismiss_notifications: "Oznacz jako przeczytane"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
@@ -460,7 +482,6 @@ pl_PL:
       muted_users: "Uciszeni"
       muted_users_instructions: "Wstrzymaj powiadomienia od tych użytkowników."
       muted_topics_link: "Pokaż wyciszone tematy"
-      automatically_unpin_topics: "Automatycznie odpinaj tematy po przeczytaniu ostatniego wpisu."
       staff_counters:
         flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"
@@ -556,6 +577,7 @@ pl_PL:
       email_settings: "Email"
       email_digests:
         title: "Gdy nie odwiedzam strony, wysyłaj e-mail z podsumowaniem aktywności:"
+        every_30_minutes: "co 30 minut"
         daily: "codziennie"
         every_three_days: "co trzy dni"
         weekly: "co tydzień"
@@ -700,8 +722,6 @@ pl_PL:
       value_prop: "Jeśli stworzysz konto, zapamiętamy przeczytane przez Ciebie wpisy i tematy, dzięki czemu zawsze powrócisz do odpowiedniego miejsca.  Otrzymasz też powiadomienia o nowych wpisach. Dodatkowo możliwe będzie polubienie ciekawych wpisów  :heartbeat:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
-      description: "Istnieją <b>{{replyCount}}</b> odpowiedzi."
-      description_time: "Istnieją <b>{{replyCount}}</b> odpowiedzi z czasem czytania oszacowanym na <b>{{readingTime}} minut</b>."
       enable: 'Podsumuj ten temat'
       disable: 'Pokaż wszystkie wpisy'
     deleted_filter:
@@ -871,7 +891,6 @@ pl_PL:
       group_mentioned: "<i title='wywołanie grupy' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='cytat' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='odpowiedź' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='odpowiedź' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edycja' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='polubienie' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='prywatna wiadomość' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -977,11 +996,6 @@ pl_PL:
         category: "Nie ma tematów w kategorii {{category}}."
         top: "Brak najlepszych tematów."
         search: "Brak wyników wyszukiwania."
-        educate:
-          new: '<p>Pojawią się tu nowe tematy.</p><p>Domyślnie, tematy są traktowane jako <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nowe</span> jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Możesz to zmienić w <a href="%{userPrefsUrl}">swoich ustawieniach</a>.</p>'
-          unread: '<p>Pojawią się tu tematy oznaczone licznikiem <span class="badge new-posts badge-notification">1</span> nieprzeczytanych wpisów.</p>
-
-            <p>Domyślnie, jako nieprzeczytane rozumiane są tematy:</p><ul><li>twojego autorstwa</li><li>te w których są twoje odpowiedzi </li><li>czytane przez ciebie dłużej niż 4 minuty</li></ul><p>Znajdą się tu też te, którym ręcznie przyznano status Śledzony lub Obserwowany przyciskiem znajdującym się na końcu każdego tematu.</p><p>Możesz zmienić te zachowania w swoich <a href="%{userPrefsUrl}">ustawieniach</a>.</p>'
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         hot: "Nie ma więcej gorących tematów."
@@ -1355,18 +1369,6 @@ pl_PL:
           bookmark: "Cofnij zakładkę"
           like: "Cofnij"
           vote: "Cofnij głos"
-        people:
-          off_topic: "{{icons}} oznaczyli jako nie-na-temat"
-          spam: "{{icons}} oznaczyli jako spam"
-          spam_with_url: "{{icons}} oznacza <a href='{{postUrl}}'>to jako spam</a>"
-          inappropriate: "{{icons}} oznaczyli jako niewłaściwe"
-          notify_moderators: "{{icons}} powiadomiło moderatorów"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>powiadomiło moderatorów</a>"
-          notify_user: "{{icons}} wysłana wiadomość"
-          notify_user_with_url: "{{icons}} wysłana <a href='{{postUrl}}'>wiadomość</a>"
-          bookmark: "{{icons}} dodało to do zakładek"
-          like: "{{icons}} lubi to"
-          vote: "{{icons}} zagłosowało za tym"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
@@ -1535,7 +1537,6 @@ pl_PL:
           description: "Nie otrzymasz powiadomień o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
     flagging:
       title: 'Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!'
-      private_reminder: 'oflagowania są poufne i widoczne <b>jedynie</b> dla obsługi serwisu'
       action: 'Oflaguj wpis'
       take_action: "Podejmij działanie"
       notify_action: 'Wiadomość'
@@ -1547,7 +1548,6 @@ pl_PL:
       submit_tooltip: "Zapisz prywatną flagę."
       take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych,  natychmiast oflaguj do działania . "
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
-      notify_staff: 'Powiadom administrację'
       formatted_name:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
@@ -1936,11 +1936,9 @@ pl_PL:
             is_disabled: "Przywracanie jest zablokowane w ustawieniach."
             label: "Przywróć"
             title: "Przywróć kopię zapasową"
-            confirm: "Czy na pewno chcesz przywrócić tą kopię zapasową?"
           rollback:
             label: "Wycofaj"
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
-            confirm: "Czy na pewno chcesz przywrócić bazę danych do poprzedniego poprawnego stanu?"
       export_csv:
         user_archive_confirm: "Czy na pewno chcesz pobrać swoje wszystkie wpisy?"
         success: "Rozpoczęto eksport: otrzymasz wiadomość, gdy proces zostanie zakończony."
@@ -2043,9 +2041,6 @@ pl_PL:
           love:
             name: 'polubienie'
             description: "Kolor przycisku polub"
-          wiki:
-            name: 'wiki'
-            description: "Kolor tła wpisów typu wiki."
       email:
         settings: "Ustawienia"
         preview_digest: "Pokaż zestawienie aktywności"
@@ -2071,6 +2066,15 @@ pl_PL:
         last_seen_user: "Ostatnia "
         reply_key: "Klucz odpowiedzi"
         skipped_reason: "Powód pominięcia"
+        incoming_emails:
+          error: "Błąd"
+          modal:
+            error: "Błąd"
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            error_placeholder: "Błąd"
         logs:
           none: "Nie znaleziono logów."
           filters:
@@ -2305,6 +2309,7 @@ pl_PL:
         deactivate_failed: "Wystąpił problem przy deaktywacji konta użytkownika."
         unblock_failed: 'Wystąpił problem podczaj odblokowania użytkownika.'
         block_failed: 'Wystąpił problem podczas blokowania użytkownika.'
+        block_accept: 'Tak, zablokuj tego użytkownika'
         deactivate_explanation: "Wymusza ponowne potwierdzenie adresu email tego konta."
         suspended_explanation: "Zawieszony użytkownik nie może się logować."
         block_explanation: "Zablokowany użytkownik nie może tworzyć wpisów ani zaczynać tematów."
@@ -2586,6 +2591,11 @@ pl_PL:
         mark_tracking: '<b>m</b>, <b>t</b> śledź temat'
         mark_watching: '<b>m</b>, <b>w</b> śledź wszystko w temacie'
     badges:
+      earned_n_times:
+        one: "Otrzymano tą odznakę 1 raz"
+        few: "Otrzymano tą odznakę %{count} razy"
+        other: "Otrzymano tą odznakę %{count} razy"
+      more_with_badge: "Inni użytkownicy z tą odznaką"
       title: Odznaki
       allow_title: "może być użyta jako tytuł"
       multiple_grant: "może być przyznana wielokrotnie"

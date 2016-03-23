@@ -39,7 +39,6 @@ pt_BR:
         blocked_user_error: "Ocorre quando o remetente foi bloqueado."
         bad_destination_address: "Ocorre quando nenhum dos endereços de email nos campos Para/Cc/Cco era correspondente ao endereço de email recebido."
         strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
-        insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria de que não possui o nível de confiança necessário."
         reply_user_not_matching_error: "Ocorre quando uma resposta chega em um endereço de email diferente ao da notificação enviada."
         topic_not_found_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi excluído."
         topic_closed_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi fechado."
@@ -177,7 +176,6 @@ pt_BR:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
       member_already_exist: "'%{username}' já é um membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
-      invalid_incoming_email: "'%{incoming_email}' não é um endereço de email válido."
     default_names:
       everyone: "todos"
       admins: "admins"
@@ -306,7 +304,6 @@ pt_BR:
       uncategorized_parent: "Sem categoria não pode ter uma categoria pai"
       self_parent: "A subcategoria mãe não pode ser ela mesma"
       depth: "Você não pode aninhar uma subcategoria sob outra"
-      email_in_already_exist: "Endereço de email de entrada '%{email_in}' já está em uso para categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Não é possível excluir Sem categoria"
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
@@ -999,7 +996,6 @@ pt_BR:
     enable_emoji: "Habilitar emoji"
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
-    approve_post_count: "Quantidade de mensagens de novos usuários que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
     notify_about_queued_posts_after: "Se existirem tópicos aguardando revisão a mais de N horas, um e-mail será enviado para o e-mail de contato. Coloque 0 para cancelar estes e-mails."
     errors:
@@ -1417,12 +1413,6 @@ pt_BR:
 
         Clique no link a seguir para escolher uma senha para a sua nova conta:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Confirma o seu novo endereço de email"
-      text_body_template: |
-        Confirma o seu endereço de email novo para %{site_name} clicando no seguinte link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Você foi aprovado no %{site_name}!"
       text_body_template: |

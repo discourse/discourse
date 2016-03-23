@@ -100,6 +100,8 @@ it:
         x_years:
           one: "1 anno dopo"
           other: "%{count} anni dopo"
+      previous_month: 'Mese Precedente'
+      next_month: 'Mese Successivo'
     share:
       topic: 'Condividi un link a questa conversazione'
       post: 'messaggio n°%{postNumber}'
@@ -253,7 +255,6 @@ it:
         one: "Questo argomento ha <b>1</b> messaggio in attesa di approvazione"
         other: "Questo argomento ha <b>{{count}}</b> messaggi in attesa di approvazione"
       confirm: "Salva Modifiche"
-      delete_prompt: "Sei sicuro di voler eliminare <b>%{username}</b>? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'IP."
       approval:
         title: "Il Messaggio Richiede Approvazione"
         description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia è necessario che venga approvato da un moderatore. Per favore sii paziente."
@@ -310,7 +311,10 @@ it:
         one: "gruppo"
         other: "gruppi"
       members: "Membri"
+      topics: "Argomenti"
       posts: "Messaggi"
+      mentions: "Menzioni"
+      messages: "Messaggi"
       alias_levels:
         title: "Chi può inviare @menzionare e inviare messaggi a questo gruppo?"
         nobody: "Nessuno"
@@ -416,9 +420,7 @@ it:
         perm_default: "Attiva Notifiche"
         perm_denied_btn: "Permesso Negato"
         disable: "Disabilita Notifiche"
-        currently_enabled: "(attualmente attivate)"
         enable: "Abilita Notifiche"
-        currently_disabled: "(attualmente disabilitate)"
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
       dismiss_notifications: "Imposta tutti come Letti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
@@ -453,7 +455,6 @@ it:
       muted_users: "Silenziati"
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       muted_topics_link: "Mostra argomenti silenziati"
-      automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -553,6 +554,9 @@ it:
         title: "Targhetta Scheda Utente"
       website: "Sito Web"
       email_settings: "Email"
+      like_notification_frequency:
+        always: "Sempre"
+        never: "Mai"
       email_digests:
         title: "Quando non visito il sito, invia un riassunto delle novità per email: "
         daily: "ogni giorno"
@@ -884,7 +888,6 @@ it:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -989,9 +992,6 @@ it:
         category: "Non ci sono argomenti in {{category}}."
         top: "Non ci sono argomenti di punta."
         search: "Non ci sono risultati della ricerca."
-        educate:
-          new: '<p>Qui compaiono i tuoi nuovi argomenti.</p><p>Per difetto, gli argomenti creati negli ultimi 2 giorni saranno considerati nuovi e mostreranno l''indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuovo</span>.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
-          unread: '<p>Qui compaiono i tuoi argomenti non letti.</p><p>Per difetto, gli argomenti sono considerati non letti e mostrano un conteggio di non lettura <span class="badge new-posts badge-notification">1</span> se hai:</p><ul><li>Creato l''argomento</li><li>Risposto all''argomento</li><li>Letto l''argomento per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato usando il pannello di controllo delle notifiche in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         hot: "Non ci sono altri argomenti caldi."
@@ -1356,17 +1356,10 @@ it:
           like: "Annulla il \"Mi piace\""
           vote: "Rimuovi voto"
         people:
-          off_topic: "{{icons}} l'hanno segnalato come fuori tema"
-          spam: "{{icons}} l'hanno segnalato come spam"
-          spam_with_url: "{{icons}} ha segnalato <a href='{{postUrl}}'>questo come spam</a>"
-          inappropriate: "{{icons}} l'hanno segnalato come inappropriato"
-          notify_moderators: "{{icons}} hanno informato i moderatori"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>hanno informato i moderatori</a>"
-          notify_user: "{{icons}} ha inviato un messaggio"
-          notify_user_with_url: "{{icons}} ha inviato un <a href='{{postUrl}}'>messaggio</a>"
-          bookmark: "{{icons}} l'hanno inserito nei segnalibri"
-          like: "A {{icons}} è piaciuto"
-          vote: "{{icons}} l'hanno votato"
+          off_topic: "l'hanno segnalato come fuori tema"
+          spam: "l'hanno segnalato come spam"
+          inappropriate: "l'hanno segnalato come inappropriato"
+          notify_moderators: "hanno informato i moderatori"
         by_you:
           off_topic: "L'hai segnalato come fuori tema"
           spam: "L'hai segnalato come spam"
@@ -1518,7 +1511,6 @@ it:
           description: "Non ti verrà mai notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nell'elenco dei Non letti."
     flagging:
       title: 'Grazie per aiutarci a mantenere la nostra comunità civile!'
-      private_reminder: 'le segnalazioni sono private, visibili <b>soltanto</b> allo staff  '
       action: 'Segnala Messaggio'
       take_action: "Procedi"
       notify_action: 'Messaggio'
@@ -1530,7 +1522,6 @@ it:
       submit_tooltip: "Invia la segnalazione privata"
       take_action_tooltip: "Raggiungi la soglia di segnalazioni immediatamente, piuttosto che aspettare altre segnalazioni della comunità"
       cant: "Spiacenti, al momento non puoi segnalare questo messaggio."
-      notify_staff: 'Notifica Staff'
       formatted_name:
         off_topic: "E' fuori tema"
         inappropriate: "È inappropriato"
@@ -1906,11 +1897,9 @@ it:
             is_disabled: "Il ripristino è disabilitato nelle opzioni del sito."
             label: "Ripristina"
             title: "Ripristina il backup"
-            confirm: "Sicuro di voler ripristinare questo backup?"
           rollback:
             label: "Rollback"
             title: "Ripristina il database a una versione funzionante precedente"
-            confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
       export_csv:
         user_archive_confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
         success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
@@ -2013,9 +2002,6 @@ it:
           love:
             name: 'amo'
             description: "Il colore del bottone \"Mi piace\"."
-          wiki:
-            name: 'wiki'
-            description: "Colore base usato per lo sfondo dei messaggi wiki."
       email:
         settings: "Impostazioni"
         templates: "Template"

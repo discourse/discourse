@@ -178,7 +178,6 @@ sk:
       can_not_modify_automatic: "Nemôžte upravovať automatickú skupinu"
       member_already_exist: "'%{username}' už je členom tejto skupiny."
       invalid_domain: "'%{domain}' nie je platnou doménou."
-      invalid_incoming_email: "'%{incoming_email}' je neplatná emailová addresa."
     default_names:
       everyone: "všetci"
       admins: "administrátori"
@@ -319,7 +318,6 @@ sk:
       uncategorized_parent: "Nekategorizovaná nemôže mať nadradenú kategóriu"
       self_parent: "Podkategória si nemôže byť zároveň kategóriou "
       depth: "Nemôžte umiestniť podkategóriu pod inú podkategóriu"
-      email_in_already_exist: "Prichádzajúca emailová adresa '%{email_in}' sa už používa pre kategóriu '%{category_name}'."
     cannot_delete:
       uncategorized: "Nemôžte vymazať nekategorizované"
       has_subcategories: "Nemôžte vymazať kategóriu pretože obsahuje podkategórie"
@@ -1714,12 +1712,6 @@ sk:
 
         Kliknite na nasledujúci odkaz pre nastavenie hesla k Vášmu novému účtu:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] Potvrďte Vašu novú email adresu"
-      text_body_template: |
-        Potvrďte Vašu novú emailovú adresu pre %{site_name} kliknutím na nasledujúci odkaz:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Váš účet bol schválený na %{site_name}!"
     signup:

@@ -30,6 +30,20 @@ de:
   emails:
     incoming:
       default_subject: "Eingehende E-Mail von %{email}"
+      show_trimmed_content: "Zeige gekürzten Inhalt"
+      errors:
+        empty_email_error: "Passiert wenn die empfangene E-Mail leer war."
+        no_message_id_error: "Passiert wenn in der E-Mail die Kopfzeile 'Message-Id' fehlt."
+        auto_generated_email_error: "Passiert wenn die Kopfzeile 'precedence' folgendes enthält: list, junk, bulk oder auto_reply, oder eine der anderen Kopfzeilen enthält: auto-submitted, auto-replied oder auto-generated."
+        no_body_detected_error: "Passiert wenn kein Inhalt extrahiert werden konnte und keine Anhänge vorhanden waren."
+        inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
+        blocked_user_error: "Passiert wenn der Sender geblockt wurde."
+        bad_destination_address: "Passiert wenn keine der E-Mail Adressen in den Feldern To/Cc/Bcc zu einer konfigurierten eingehenden E-Mail Adresse passt."
+        strangers_not_allowed_error: "Passiert wenn ein Nutzer versuchte ein neues Thema in einer Kategorie ohne Mitgliedschaft zu erstellen."
+        insufficient_trust_level_error: "Passiert wenn ein Nutzer versuchte ein neues Thema in einer Kategorie zu erstellen, ohne die erforderliche Vertrauensstufe dafür zu haben."
+        reply_user_not_matching_error: "Passiert wenn die Adresse der Antwort E-Mail von der Adresse abweicht, an die gesendet wurde."
+        topic_not_found_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema gelöscht wurde."
+        topic_closed_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema geschlossen wurde."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -153,6 +167,7 @@ de:
   rss_description:
     latest: "Aktuelle Themen"
     hot: "Beliebte Themen"
+    top: "Die besten Themen"
     posts: "Letzte Beiträge"
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   excerpt_image: "Bild"
@@ -163,7 +178,9 @@ de:
       can_not_modify_automatic: "Du kannst eine automatisch verwaltete Gruppe nicht verändern."
       member_already_exist: "'%{username}' ist bereits Mitglied dieser Gruppe."
       invalid_domain: "'%{domain}' ist keine gültige Domain."
-      invalid_incoming_email: "'%{incoming_email}' ist keine gültige E-Mail-Adresse."
+      invalid_incoming_email: "'%{email}' ist keine gültige E-Mail Adresse."
+      email_already_used_in_group: "'%{email}' wird bereits von der Gruppe '%{group_name}' verwendet."
+      email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
     default_names:
       everyone: "jeder"
       admins: "admins"
@@ -283,7 +300,9 @@ de:
       uncategorized_parent: "Die \"unkategorisiert\" Kategorie kann keine Elternkategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
       depth: "Unterkategorien können nicht ineinander verschachtelt werden."
-      email_in_already_exist: "Die E-Mail-Adresse '%{email_in}' für eingehende Themen wird bereits von der Kategorie '%{category_name}' verwendet."
+      invalid_email_in: "'%{email}' ist keine gültige E-Mail Adresse."
+      email_already_used_in_group: "'%{email}' wird bereits von der Gruppe '%{group_name}' verwendet."
+      email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
     cannot_delete:
       uncategorized: "Die \"unkategorisiert\" Kategorie kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien besitzt."
@@ -1028,7 +1047,6 @@ de:
     enable_emoji: "Aktiviere emoji"
     emoji_set: "Wie magst du dein emoji?"
     enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
-    approve_post_count: "Anzahl Beiträge eines neuen Nutzers, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Nutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, welche seit mehreren Stunden auf Ihre Freischaltung warten, sende eine E-Mail an die Kontaktemailadresse. Setze diesen Wert auf 0 um das zu deaktivieren."
     default_email_digest_frequency: "Lege fest, wie oft die Benutzer eine Zusammenfassung per E-Mail erhalten."
@@ -1379,12 +1397,6 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
 
         Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absenderadresse oder wende dich an einen Mitarbeiter.
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] E-Mail-Problem -- Keine Message-Id"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
-
-        Wir konnten keinen `Message-Id`-Header in der E-Mail finden. Probiere eine andere Absenderadresse oder wende dich an einen Mitarbeiter.
     email_reject_no_account:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
       text_body_template: |
@@ -1573,12 +1585,6 @@ de:
 
         Klicke auf den folgenden Link, um ein Passwort für dein neues Konto festzulegen:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Bestätige deine neue Mailadresse"
-      text_body_template: |
-        Um deine Mailadresse auf %{site_name} zu bestätigen, klicke auf den folgenden Link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |

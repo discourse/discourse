@@ -134,7 +134,6 @@ ko:
       can_not_modify_automatic: "자동 그룹은 수정 하실 수 없습니다."
       member_already_exist: "'%{username}'은 이미 이 그룹의 멤버입니다."
       invalid_domain: "'%{domain}'은 유효한 도메인이 아닙니다."
-      invalid_incoming_email: "'%{incoming_email}'은 유효한 이메일 주소가 아닙니다."
     default_names:
       everyone: "모든 사람"
       admins: "관리자"
@@ -244,8 +243,6 @@ ko:
       uncategorized_parent: "Uncategorized 카테고리는 부모 카테고리를 가질 수 없습니다."
       self_parent: "하위 카테고리의 부모는 자신이 될 수 없습니다."
       depth: "하위 카테고리는 계층 구조로 사용할 수 없습니다."
-      email_in_already_exist: "'%{email_in}' 수신용 이메일 주소는 '%{category_name}' 카테고리 에서 사용 중입니다."
-      invalid_email_in: "'%{email_in}' 은 유효한 이메일 주소가 아닙니다."
     cannot_delete:
       uncategorized: "Uncategorized는 삭제할 수 없습니다."
       has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
@@ -897,7 +894,6 @@ ko:
     enable_emoji: "emoji 활성화"
     emoji_set: "어떤 emoji가 좋은가요?"
     enforce_square_emoji: "모든 emoji를 정사각형 비율로 강제로 바꿉니다."
-    approve_post_count: "신규가입자가 올릴 수 있는 글 수"
     approve_unless_trust_level: "허가 받고 글 올려야 하는 유저들 최저 회원등급"
     notify_about_queued_posts_after: "글이 리뷰가 되길 기다리면서 이 시간이 지나면 문의처 메일로 연락을 보냅니다. 0으로 두면 보내지 않습니다."
     errors:
@@ -1424,12 +1420,6 @@ ko:
 
         비밀번호 설정 페이지:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] 이메일 확인"
-      text_body_template: |
-        %{site_name} 사이트에서 사용할 새로운 이메일을 아래 링크를 클릭하여 확인하세요:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "당신은 %{site_name} 가입이 승인되었습니다!"
       text_body_template: |
