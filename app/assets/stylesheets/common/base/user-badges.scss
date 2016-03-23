@@ -78,6 +78,7 @@
   width: 90%;
   padding: 10px;
   display: table;
+  color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
 
   .row {
     display: table-row;
@@ -92,7 +93,6 @@
   }
 
   .grant-count {
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     font-size: 120%;
   }
 
