@@ -99,7 +99,17 @@ const DiscourseURL = Ember.Object.createWithMixins({
   **/
 
   isInternalPathButNotEmber: function(path){
-    return path.indexOf("posts.rss") >= 0
+   /*
+   RSSwhitelist = ["posts.rss", "support.rss", "bug.rss", "feature.rss", "dev.rss", "ux.rss", "installation.rss",
+   "meta.rss", "marketplace.rss", "hosting.rss", "howto.rss", "plugin.rss", "praise.rss", "blog.rss", "faq.rss", "releases.rss"];
+
+   This array contains some of the .rss routes on Discourse, several of them are categories, and the method is
+   extracting the .rss route and verifying if the indexOf is >= to zero.
+   */
+
+   let pathStripped =  path.split("/").pop();
+   return path.indexOf(pathStripped) >= 0;
+
   },
 
   routeTo(path, opts) {
