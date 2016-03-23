@@ -74,8 +74,13 @@ class UserNotifications < ActionMailer::Base
   end
 
   def mailing_list(user, opts={})
-    return unless @posts_by_topic = Post.for_mailing_list(user, opts[:since] || 1.day.ago)
-                                        .group_by(&:topic)
+    @since = opts[:since] || 1.day.ago
+    @since_formatted = short_date(@since)
+
+    @new_topic_posts      = Post.mailing_list_new_topics(user, @since).group_by(&:topic) || {}
+    @existing_topic_posts = Post.mailing_list_updates(user, @since).group_by(&:topic) || {}
+    @posts_by_topic       = @new_topic_posts.merge @existing_topic_posts
+    return unless @posts_by_topic.present?
 
     build_summary_for(user)
     build_email @user.email,

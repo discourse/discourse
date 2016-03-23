@@ -90,9 +90,9 @@ describe UserNotifications do
       let(:topic) { Fabricate(:topic, user: user) }
       let!(:new_post) { Fabricate(:post, topic: topic, created_at: 2.hours.ago, raw: "Feel the Bern") }
       let!(:old_post) { Fabricate(:post, topic: topic, created_at: 25.hours.ago, raw: "Make America Great Again") }
-      let(:another_topic) { Fabricate(:topic, user: user) }
-      let(:another_post) { Fabricate(:post, topic: another_topic, created_at: 2.hours.ago, raw: "Yes We Can") }
-      let(:stale_post) { Fabricate(:post, topic: another_topic, created_at: 2.days.ago, raw: "A New American Century") }
+      let(:old_topic) { Fabricate(:topic, user: user, created_at: 10.days.ago) }
+      let(:new_post_in_old_topic) { Fabricate(:post, topic: old_topic, created_at: 2.hours.ago, raw: "Yes We Can") }
+      let(:stale_post) { Fabricate(:post, topic: old_topic, created_at: 2.days.ago, raw: "A New American Century") }
 
       it "works" do
         expect(subject.to).to eq([user.email])
@@ -110,15 +110,22 @@ describe UserNotifications do
         expect(subject.html_part.body.to_s).to_not include old_post.cooked
       end
 
+      it "includes topics created over 24 hours ago which have new posts" do
+        new_post_in_old_topic
+        expect(subject.html_part.body.to_s).to include old_topic.title
+        expect(subject.html_part.body.to_s).to include new_post_in_old_topic.cooked
+        expect(subject.html_part.body.to_s).to_not include stale_post.cooked
+      end
+
       it "includes multiple topics" do
-        another_post
-        expect(subject.html_part.body.to_s).to include another_topic.title
-        expect(subject.html_part.body.to_s).to include another_post.cooked
+        new_post_in_old_topic
+        expect(subject.html_part.body.to_s).to include topic.title
+        expect(subject.html_part.body.to_s).to include old_topic.title
       end
 
       it "does not include topics not updated for the past 24 hours" do
         stale_post
-        expect(subject.html_part.body.to_s).to_not include another_topic.title
+        expect(subject.html_part.body.to_s).to_not include old_topic.title
         expect(subject.html_part.body.to_s).to_not include stale_post.cooked
       end
 
