@@ -1161,6 +1161,7 @@ en:
     unsubscribe_via_email_footer: "Attach an unsubscribe link to the footer of sent emails"
 
     delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
+    max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -2037,6 +2038,9 @@ en:
 
   user_notifications:
     previous_discussion: "Previous Replies"
+    reached_limit:
+      one: "WARNING: you reached the limit of daily emails. Further email notifications will be suppressed."
+      other: "WARNING: you reached the limit of %{count} daily emails. Further email notifications will be suppressed."
     in_reply_to: "In Reply To"
     unsubscribe:
       title: "Unsubscribe"
@@ -2363,6 +2367,7 @@ en:
     post_deleted: "post was deleted by the author"
     user_suspended: "user was suspended"
     already_read: "user has already read this post"
+    exceeded_limit: "Exceeded max_emails_per_day_per_user"
     message_blank: "message is blank"
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"

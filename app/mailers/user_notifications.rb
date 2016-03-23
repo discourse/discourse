@@ -317,6 +317,11 @@ class UserNotifications < ActionMailer::Base
       end
     end
 
+    reached_limit = SiteSetting.max_emails_per_day_per_user > 0
+    reached_limit &&= (EmailLog.where(user_id: user.id, skipped: false)
+                            .where('created_at > ?', 1.day.ago)
+                            .count) >= (SiteSetting.max_emails_per_day_per_user-1)
+
     topic_excerpt = ""
     if opts[:use_template_html]
       topic_excerpt = post.excerpt.gsub("\n", " ") if post.is_first_post? && post.excerpt
@@ -326,6 +331,7 @@ class UserNotifications < ActionMailer::Base
         template: 'email/notification',
         format: :html,
         locals: { context_posts: context_posts,
+                  reached_limit: reached_limit,
                   post: post,
                   in_reply_to_post: in_reply_to_post,
                   classes: RTL.new(user).css_class
@@ -339,10 +345,11 @@ class UserNotifications < ActionMailer::Base
       template << "_staged" if user.staged?
     end
 
+
     email_opts = {
       topic_title: title,
       topic_excerpt: topic_excerpt,
-      message: email_post_markdown(post),
+      message: email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : ""),
       url: post.url,
       post_id: post.id,
       topic_id: post.topic_id,

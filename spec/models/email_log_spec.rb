@@ -26,6 +26,21 @@ describe EmailLog do
     end
   end
 
+  describe '#reached_max_emails?' do
+    it "tracks when max emails are reached" do
+      SiteSetting.max_emails_per_day_per_user = 2
+      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id, skipped: true)
+      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id, created_at: 3.days.ago)
+
+      expect(EmailLog.reached_max_emails?(user)).to eq(false)
+
+      user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+
+      expect(EmailLog.reached_max_emails?(user)).to eq(true)
+    end
+  end
+
   describe '#count_per_day' do
     it "counts sent emails" do
       user.email_logs.create(email_type: 'blah', to_address: user.email)

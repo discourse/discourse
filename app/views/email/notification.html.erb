@@ -10,12 +10,12 @@
   <% end %>
 
   <% if in_reply_to_post.present? %>
-    <h4 class='.previous-discussion'><%= t "user_notifications.in_reply_to" %></h4>
+    <h4 class='previous-discussion'><%= t "user_notifications.in_reply_to" %></h4>
     <%= render partial: 'email/post', locals: { post: in_reply_to_post, use_excerpt: true} %>
   <% end %>
 
   <% if context_posts.present? %>
-    <h4 class='.previous-discussion'><%= t "user_notifications.previous_discussion" %></h4>
+    <h4 class='previous-discussion'><%= t "user_notifications.previous_discussion" %></h4>
     <% context_posts.each do |p| %>
       <%= render partial: 'email/post', locals: { post: p, use_excerpt: false } %>
     <% end %>
@@ -23,6 +23,9 @@
 
   <hr>
 
+  <% if reached_limit %>
+    <div class='footer'><%= t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user %></div>
+  <% end %>
   <div class='footer'>%{respond_instructions}</div>
   <div class='footer'>%{unsubscribe_link}%{unsubscribe_via_email_link}</div>
 
