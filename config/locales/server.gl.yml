@@ -1,0 +1,492 @@
+gl:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "D MMMM, YYYY h:mm a"
+  datetime_formats:
+    formats:
+      short: "%d-%m-%Y"
+      short_no_year: "%-d de %B"
+      date_only: "%-d de %B, %Y"
+  date:
+    month_names: [null, Xaneiro, Febreiro, Marzo, Abril, Maio, Xuño, Xullo, Agosto, Setembro, Outubro, Novembro, Decembro]
+  title: "Discourse"
+  topics: "Temas"
+  posts: "publicacións"
+  loading: "Cargndo"
+  log_in: "Iniciar sesión"
+  anonymous: "Anónimo"
+  errors:
+    format: '%{attribute} %{message}'
+    messages:
+      taken: "xa está en uso"
+      accepted: debe ser aceptado
+      blank: non pode quedar baleiro
+      present: debe quedar baleiro
+      confirmation: "%{attribute} non coincide"
+      empty: non pode quedar baleiro
+      equal_to: debe ser igual a %{count}
+      exclusion: está reservado
+      greater_than: debe ser maior de %{count}
+      greater_than_or_equal_to: debe ser igual ou maior de %{count}
+      has_already_been_used: "xa está en uso"
+      inclusion: no está incluído na lista
+      invalid: é incorrecto
+      less_than: debe ser menor de %{count}
+      less_than_or_equal_to: debe ser igual ou menor de %{count}
+      not_a_number: non é un número
+      not_an_integer: debe ser un enteiro
+      odd: debe ser impar
+      record_invalid: 'Fallou a validación: %{errors}'
+      restrict_dependent_destroy:
+        one: "Non é posíbel eliminalo porque existe outro %{record} dependente"
+        many: "Non é posíbel eliminalo porque existen outros %{record} dependentes"
+      too_long:
+        one: demasiado longo (máximo un caracterer)
+        other: demasiado longo (máximo %{count} caracteres)
+      too_short:
+        one: demasiado curto (mínimo un caracter)
+        other: demasiado curto (mínimo %{count} caracteres)
+      other_than: "debe ser distinto de %{count}"
+    template:
+      body: 'Producíronse problemas cos seguintes campos:'
+    embed:
+      load_from_remote: "Produciuse un erro cargando esta publicación."
+    site_settings:
+      min_username_length_range: "O mínimo non pode ser maior que o máximo."
+  not_logged_in: "Debes iniciar sesión para facer iso."
+  not_found: "Non foi posíbel atopar o recurso ou URL solicitado."
+  invalid_access: "Non se che permite ver o recurso solicitado."
+  read_only_mode_enabled: "O sitio está en modo só-lectura. As interaccións están desactivadas."
+  reading_time: "Tempo de lectura"
+  likes: "Gústames"
+  embed:
+    start_discussion: "Comezar a discusión"
+    continue: "Continuar a discusión"
+    more_replies:
+      one: "Unha resposta máis"
+      other: "%{count} respostas máis"
+    loading: "Cargando a discusión..."
+    permalink: "Ligazón permanente"
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "Unha resposta"
+      other: "%{count} respostas"
+  no_mentions_allowed: "Sentímolo pero non podes mencionar outros usuarios"
+  has_already_been_used: "xa está en uso"
+  invalid_characters: "contén caracteres incorrectos"
+  next_page: "páxina seguinte →"
+  prev_page: "← páxina anterior"
+  page_num: "Páxina %{num}"
+  home_title: "Inicio"
+  rss_posts_in_topic: "Fonte RSS de '%{topic}»"
+  author_wrote: "%{author} escribiu:"
+  num_posts: "Publicacións:"
+  num_participants: "Participantes:"
+  read_full_topic: "Ler todo o tema"
+  private_message_abbrev: "Msx."
+  rss_description:
+    latest: "Últimos temas"
+    hot: "Temas quentes"
+    posts: "Últimas publicacións"
+  too_late_to_edit: "Esta publicación ten moito tempo. Xa non se pode modificar nin eliminar."
+  excerpt_image: "imaxe"
+  queue:
+    delete_reason: "Eliminación por medio da cola de moderación de publicacións"
+  groups:
+    default_names:
+      everyone: "todos"
+      admins: "administradores"
+      moderators: "moderadores"
+      staff: "equipo"
+      trust_level_0: "nivel_de_confianza_0"
+      trust_level_1: "nivel_de_confianza_1"
+      trust_level_2: "nivel_de_confianza_2"
+      trust_level_3: "nivel_de_confianza_3"
+      trust_level_4: "nivel_de_confianza_4"
+  education:
+    until_posts:
+      one: "Unha publicación"
+      other: "%{count} publicacións"
+  activerecord:
+    attributes:
+      category:
+        name: "Nome da categoría"
+      post:
+        raw: "Corpo"
+      user_profile:
+        bio_raw: "Verbo de min"
+    errors:
+      models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: "Só podes anexar avisos a mensaxes privadas."
+              no_user_selected: "Debes seleccionar un usuario correcto."
+        user:
+          attributes:
+            password:
+              common: "é un dos 10000 contrasinais máis habituais. Usa un máis seguro."
+              same_as_username: "é igual ao teu nome de usuario. Usa un contrasinal máis seguro."
+              same_as_email: "é igual ao teu correo electrónico. Usa un contrasinal máis seguro."
+            ip_address:
+              signup_not_allowed: "Non esta permitido rexistrarse desde esta conta."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "non é unha cor válida"
+  vip_category_name: "Taberna"
+  vip_category_description: "Unha categoría exclusiva para membros cun nivel de confianza igual ou maior a 3."
+  meta_category_name: "Opinións sobre o sitio"
+  meta_category_description: "Discusións sobre este sitio, a súa organización, como funciona e como se pode mellorar."
+  staff_category_name: "Equipo"
+  staff_category_description: "Categoría privada para discusións do equipo. Os temas son visíbeis unicamente para administradores e moderadores."
+  lounge_welcome:
+    title: "Benvido/a á Taberna"
+  category:
+    topic_prefix: "Sobre a categoría %{category}"
+    errors:
+      depth: "Non podes aniñar unha subcategoría dentro doutra"
+  trust_levels:
+    newuser:
+      title: "novo usuario"
+    basic:
+      title: "usuario básico"
+    member:
+      title: "membro"
+    regular:
+      title: "normal"
+    leader:
+      title: "líder"
+  rate_limiter:
+    hours:
+      one: "Unha hora"
+      other: "%{count} horas"
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1m"
+      less_than_x_seconds:
+        one: "< 1s"
+        other: "< %{count}s"
+      x_seconds:
+        one: "1s"
+        other: "%{count}s"
+      less_than_x_minutes:
+        one: "< 1m"
+        other: "< %{count}m"
+      about_x_hours:
+        one: "1h"
+        other: "%{count}h"
+      x_days:
+        one: "1d"
+        other: "%{count}d"
+      about_x_months:
+        one: "1mes"
+        other: "%{count}mes"
+      x_months:
+        one: "1mes"
+        other: "%{count}mes"
+      about_x_years:
+        one: "1ano"
+        other: "%{count}ano"
+      over_x_years:
+        one: "> 1ano"
+        other: "> %{count}ano"
+      almost_x_years:
+        one: "1ano"
+        other: "%{count}ano"
+    distance_in_words_verbose:
+      half_a_minute: "agora mesmiño"
+  password_reset:
+    choose_new: "Selecciona un novo contrasinal"
+    choose: "Selecciona un contrasinal"
+    update: 'Actualizar contrasinal'
+    save: 'Estabelecer o contrasinal'
+    title: 'Contrasinal restabelecido'
+    continue: "Continuar a %{site_name}"
+  change_email:
+    confirmed: "O teu correo electrónico foi actualizado."
+    please_continue: "Continuar a %{site_name}"
+    error: "Produciuse un erro cambiando o enderezo de correo electrónico. Quizais xa está en uso?"
+  activation:
+    action: "Preme aquí para activar a conta"
+    continue_button: "Continuar a %{site_name}"
+    welcome_to: "Benvido/a a %{site_name}!"
+  post_action_types:
+    off_topic:
+      title: 'Sen-relación'
+      long_form: 'marcou isto como non relacionado'
+    spam:
+      title: 'Spam'
+      long_form: 'denunciou isto como spam'
+    inappropriate:
+      title: 'Inapropiado'
+      long_form: 'denunciou isto como inapropiado'
+    notify_moderators:
+      title: "Algo máis"
+      description: 'Esta publicación require a atención dos responsábeis do sitio por unha razón non listada arriba.'
+      long_form: 'denunciou isto para revisión polo equipo'
+      email_title: 'Unha publicación en «%{title}» require a atención dos responsábeis do sitio'
+    bookmark:
+      title: 'Marcador'
+      description: 'Marcar esta publicación'
+      long_form: 'Marcar este tema'
+    like:
+      title: 'Gústame'
+      description: 'Gústame esta publicación'
+      long_form: 'gustoume isto'
+    vote:
+      title: 'Votar'
+      description: 'Votar por esta publicación'
+      long_form: 'votei esta publicación'
+  topic_flag_types:
+    spam:
+      title: 'Spam'
+      long_form: 'denunciou isto como spam'
+    inappropriate:
+      title: 'Inapropiado'
+      long_form: 'denunciou isto como inapropiado'
+    notify_moderators:
+      title: "Algo máis"
+      long_form: 'denunciou isto para revisión por un moderador'
+  archetypes:
+    regular:
+      title: "Tema normal"
+    banner:
+      title: "Tema do báner"
+  unsubscribed:
+    title: 'Dado de baixa'
+    description: "Démoste de baixa. Non contactaremos contigo de novo."
+  resubscribe:
+    action: "Re-subscribir"
+    title: "Subscrito de novo"
+    description: "Subscribícheste de novo"
+  reports:
+    visits:
+      title: "Visitas de usuarios"
+      xaxis: "Día"
+      yaxis: "Número de visitas"
+    signups:
+      title: "Novos usuarios"
+      xaxis: "Día"
+      yaxis: "Número de novos usuarios"
+    profile_views:
+      title: "Vistas dos perfís de usuario"
+      xaxis: "Día"
+      yaxis: "Número de perfís de usuario vistos"
+    topics:
+      title: "Temas"
+      xaxis: "Día"
+      yaxis: "Número de temas vistos"
+    posts:
+      title: "Publicacións"
+      xaxis: "Día"
+      yaxis: "Número de novas publicacións"
+    likes:
+      title: "Gústames"
+      xaxis: "Día"
+      yaxis: "Número de novos gústames"
+    flags:
+      title: "Denuncias"
+      xaxis: "Día"
+      yaxis: "Número de denuncias"
+    bookmarks:
+      title: "Marcadores"
+      xaxis: "Día"
+      yaxis: "Número de novos marcadores"
+    starred:
+      title: "Con estrela"
+      xaxis: "Día"
+      yaxis: "Número de novos temas con estrela"
+    users_by_trust_level:
+      title: "Usuarios por nivel de confianza"
+      xaxis: "Nivel de confianza"
+      yaxis: "Número de usuarios"
+    emails:
+      title: "Correos-e enviados"
+      xaxis: "Día"
+      yaxis: "Número de correos-e enviados"
+    user_to_user_private_messages:
+      title: "Entre usuarios"
+      xaxis: "Día"
+      yaxis: "Número de mensaxes"
+    system_private_messages:
+      title: "Sistema"
+      xaxis: "Día"
+      yaxis: "Número de mensaxes"
+    moderator_warning_private_messages:
+      title: "Avisos dun moderador"
+      xaxis: "Día"
+      yaxis: "Número de mensaxes"
+    notify_moderators_private_messages:
+      title: "Notificacións os moderadores"
+      xaxis: "Día"
+      yaxis: "Número de mensaxes"
+    notify_user_private_messages:
+      title: "Notificacións os usuarios"
+      xaxis: "Día"
+      yaxis: "Número de mensaxes"
+    top_referrers:
+      xaxis: "Usuario"
+      num_clicks: "Clics"
+      num_topics: "Temas"
+    top_traffic_sources:
+      title: "As maiores fontes de tráfico"
+      xaxis: "Dominio"
+      num_clicks: "Clics"
+      num_topics: "Temas"
+      num_users: "Usuarios"
+    top_referred_topics:
+      xaxis: "Tema"
+      num_clicks: "Clics"
+    page_view_anon_reqs:
+      title: "Anónimo"
+      xaxis: "Día"
+      yaxis: "Peticións API anónimas"
+    page_view_logged_in_reqs:
+      title: "Sesión iniciada"
+      xaxis: "Día"
+    page_view_crawler_reqs:
+      title: "Extractores web"
+      xaxis: "Día"
+      yaxis: "Peticións API dos extractores web"
+    page_view_total_reqs:
+      title: "Total"
+      xaxis: "Día"
+      yaxis: "Total de peticións API"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Día"
+    page_view_anon_mobile_reqs:
+      xaxis: "Día"
+    http_background_reqs:
+      title: "Fondo"
+      xaxis: "Día"
+      yaxis: "Peticións usadas para actualizacións e seguimentos"
+    http_2xx_reqs:
+      title: "Estado 2xx (OK)"
+      xaxis: "Día"
+      yaxis: "Peticións con éxito (estado 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (redireccionar)"
+      xaxis: "Día"
+      yaxis: "Redireccionar peticións (estado 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (erro do cliente)"
+      xaxis: "Día"
+      yaxis: "Erros do cliente (estado 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (erro do servidor)"
+      xaxis: "Día"
+    http_total_reqs:
+      title: "Total"
+      xaxis: "Día"
+    time_to_first_response:
+      xaxis: "Día"
+    topics_with_no_response:
+      xaxis: "Día"
+      yaxis: "Total"
+    mobile_visits:
+      title: "Visitas de usuarios"
+      xaxis: "Día"
+      yaxis: "Número de visitas"
+  site_settings:
+    delete_old_hidden_posts: "Eliminar automaticamente as publicacións ocultas durante máis de 30 días."
+    default_locale: "Idioma predeterminado desta instancia (código ISO 639-1)"
+    allow_user_locale: "Permitir os usuarios escoller o idioma da interface"
+    min_post_length: "Número mínimo de caracteres permitido para unha publicación"
+    min_first_post_length: "Número mínimo de caracteres (corpo do tema) permitido para unha primeira publicación"
+    min_private_message_post_length: "Número mínimo de caracteres permitido para unha mensaxe"
+    max_post_length: "Número máximo de caracteres permitido para unha publicación"
+    post_undo_action_window_mins: "Número de minutos que os usuarios teñen para desfacer accións recentes nunha publicación (gústames, denuncias, etc)."
+    enable_badges: "Activar o sistema de insignias"
+    max_flags_per_day: "Número máximo de denuncias por usuario e día."
+    category_style: "Estilo visual para as insignias de categoría."
+    enable_user_directory: "Proporcionar un directorio de usuarios para navegación"
+    allow_anonymous_posting: "Permitir os usuarios cambiar ao modo anónimo"
+    suppress_uncategorized_badge: "Non mostrar a insignia para temas sen categoría nas listas de temas."
+    automatically_unpin_topics: "Despegar os temas automaticamente cando o usuario chega ao fondo."
+    full_name_required: "O nome completo no perfil do usuario é obrigatorio."
+    embed_username_key_from_feed: "Clave para recuperar o nome do usuario desde a fonte."
+    enable_emoji: "Activar emojis"
+  notification_types:
+    liked: "A %{display_username} gustoulle a túa publicación en %{link}"
+  search:
+    types:
+      category: 'Categorías'
+      user: 'Usuarios'
+  frequent_poster: "Publicador frecuente"
+  redirected_to_top_reasons:
+    new_user: "Benvido/a á nosa comunidade. Estes son os temas recentes máis populares."
+  login:
+    admin_not_allowed_from_ip_address: "Non podes acceder como administrador desde este enderezo IP."
+    new_registrations_disabled: "Neste momento non se permite o rexistro de novas contas."
+  flags_dispositions:
+    agreed: "Grazas por comunicárnolo. Estamos de acordo en que hai un problema e estamos botándolle un ollo."
+    agreed_and_deleted: "Grazas por comunicárnolo. Estamos de acordo en que hai un problema e xa eliminamos a publicación."
+    disagreed: "Grazas por comunicárnolo. Estamos botándolle un ollo."
+    deferred: "Grazas por comunicárnolo. Estamos botándolle un ollo."
+    deferred_and_deleted: "Grazas por comunicárnolo. Xa eliminamos a publicación."
+  temporarily_closed_due_to_flags: "Este tema está pechado temporalmente polo gran número de denuncias da comunidade."
+  system_messages:
+    post_hidden:
+      subject_template: "Publicación oculta polas denuncias da comunidade."
+    welcome_user:
+      subject_template: "Benvido/a a %{site_name}!"
+      text_body_template: |
+        Grazas por unirte %{site_name}, e benvido/a!
+
+        %{new_user_tips}
+
+        Cremos nun [comportamento civilizado da comunidade](%{base_url}/guidelines) en todo momento.
+
+        Goza da túa estancia!
+
+        (Se precisas comunicarte cos [membros do equipo](%{base_url}/about) como novo usuario responde a esta mensaxe.)
+    welcome_invite:
+      subject_template: "Benvido/a a %{site_name}!"
+    backup_succeeded:
+      subject_template: "A copia de seguranza completouse correctamente"
+    bulk_invite_succeeded:
+      subject_template: "O convite en bloque procesouse correctamente"
+    csv_export_succeeded:
+      subject_template: "Completouse a exportación dos datos"
+  page_not_found:
+    see_more: "Máis"
+    search_google: "Google"
+  terms_of_service:
+    title: "Termos do servizo"
+  about: "Sobre"
+  guidelines: "Directrices"
+  privacy: "Confidencialidade"
+  csv_export:
+    boolean_yes: "Si"
+    boolean_no: "Non"
+  tos_topic:
+    title: "Termos do servizo"
+  privacy_topic:
+    title: "Política de intimidade"
+  badges:
+    long_descriptions:
+      first_like: |
+        Esta insignia concédese a primeira vez que che gusta unha publicación e usas o botón :heart:. Darlle Gústame a unha publicción e unha gran forma de dicirlles aos membros da comunidade que publicaron algo interesante, útil, riquiño ou divertido. Comparte o amor!
+      first_flag: |
+        Esta insignia concédese por marcar unha publicación. Marcar publicacións é fundamental para a saúde da comunidade. Se ves algunha publicación que
+
+        requira a atención dun moderador, non dubides en marcala. Tamén podes usar o diálogo de marcar para enviar <b>mensaxes</b> a outros usuarios.
+      welcome: |
+        Esta insignia concédese cando recibes o primeiro Gústame nunha publicación. Parabéns, publicaches algo que os membros da comunidade consideraron interesante, riquiño ou útil.
+      nice_post: |
+        Esta insignia concédese por crear unha resposta que recibe 10 gústames. Traballo riquiño.
+      nice_topic: |
+        Esta insignia concédese por crear un tema que recibe 10 gústames. Traballo riquiño.
+      good_post: |
+        Esta insignia concédese por crear unha resposta que recibe 25 gústames. Bo traballo.
+      good_topic: |
+        Esta insignia concédese por crear un tema que recibe 25 gústames. Bo traballo.
+      great_post: |
+        Esta insignia concédese por crear unha publicación que recibe 50 gústames. Moi ben!
+      great_topic: |
+        Esta insignia concédese por crear unha resposta que recibe 50 gústames. Moi ben!
+  admin_login:
+    error: "Erro!"
+    submit_button: "Enviar correo-e"
