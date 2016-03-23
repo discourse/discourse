@@ -85,7 +85,7 @@ export default Ember.Controller.extend({
       let topOff = markerOffset.top;
       let leftOff = markerOffset.left;
 
-      if (isMobileDevice) {
+      if (isMobileDevice || this.capabilities.isIOS) {
         topOff = topOff + 20;
         leftOff = Math.min(leftOff + 10, $(window).width() - $quoteButton.outerWidth());
       } else {
