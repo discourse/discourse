@@ -108,7 +108,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: 'like-count|like|share|flag|edit|bookmark|wiki|delete|admin|reply'
+    default: 'like-count|like|share|flag|edit|bookmark|delete|admin|reply'
     choices:
      - like-count
      - like
@@ -119,11 +119,10 @@ basic:
      - bookmark
      - admin
      - reply
-     - wiki
   post_menu_hidden_items:
     client: true
     type: list
-    default: 'bookmark|edit|wiki|delete|admin'
+    default: 'bookmark|edit|delete|admin'
     choices:
      - like
      - edit
@@ -133,7 +132,6 @@ basic:
      - bookmark
      - admin
      - reply
-     - wiki
   share_links:
     client: true
     type: list
