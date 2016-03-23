@@ -177,7 +177,6 @@ nl:
       can_not_modify_automatic: "Je kunt automatische groepen niet wijzigen"
       member_already_exist: "'%{username}' is al lid van deze groep."
       invalid_domain: "%{domain}' is geen geldig domein."
-      invalid_incoming_email: "%{incoming_email}' is geen geldig E-mail adres."
     default_names:
       everyone: "iedereen"
       admins: "admins"
@@ -310,8 +309,6 @@ nl:
       uncategorized_parent: "Ongecategoriseerd kan geen bovenliggende categorie hebben"
       self_parent: "Een categorie kan niet zijn eigen bovenliggende categorie zijn"
       depth: "Je kan een subcategorie niet onder een andere subcategorie plaatsen"
-      email_in_already_exist: "Inkomend e-mailadres '%{email_in}' is al in gebruik voor '%{category_name}' categorie."
-      invalid_email_in: "%{email_in}' is geen geldig E-mail adres."
     cannot_delete:
       uncategorized: "De categorie Ongecategoriseerd kan niet verwijderd worden"
       has_subcategories: "Deze categorie kan niet verwijderd worden, omdat deze subcategorieën bevat"
@@ -1384,12 +1381,6 @@ nl:
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         Je reactie werd verstuurd van een ander e-mailadres dan we verwacht hadden, dus we weten niet zeker of dit dezelfde persoon is. Probeer de e-mail vanaf een ander adres te sturen, of neem contact op met de staf.
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] E-mailprobleem -- Geen message-id"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        We konden geen ‘message-id’ in de e-mail vinden. Probeer de e-mail vanaf een ander adres te sturen, of neem contact op met de staf.
     email_reject_no_account:
       subject_template: "[%{site_name}] E-mailprobleem -- Onbekende account"
       text_body_template: |
@@ -1591,12 +1582,6 @@ nl:
 
         Klik op deze link om een wachtwoord in te stellen voor je nieuwe account:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] Bevestig je nieuwe e-mailadres"
-      text_body_template: |
-        Bevestig je nieuwe e-mailadres voor %{site_name} door op de volgende link te klikken:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Je inschrijving op %{site_name} is geaccepteerd!"
       text_body_template: |

@@ -29,6 +29,11 @@ ru:
     incoming:
       default_subject: "Входящее письмо от %{email}"
       show_trimmed_content: "Показывать урезанное содержимое"
+      errors:
+        empty_email_error: "Происходит, когда мы получаем пустое письмо."
+        no_message_id_error: "Происходит, когда письмо не имеет заголовка 'Message-Id'."
+        inactive_user_error: "Происходит, когда отправитель неактивен."
+        blocked_user_error: "Происходит, когда отправитель заблокирован."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -182,7 +187,6 @@ ru:
       can_not_modify_automatic: "Нельзя изменять автоматическую группу."
       member_already_exist: "'%{username}' уже является членом этой группы."
       invalid_domain: "'%{domain}' является некорректным доменом."
-      invalid_incoming_email: "'%{incoming_email}' является некорректным адресом электронной почты."
     default_names:
       everyone: "все"
       admins: "администраторы"
@@ -306,7 +310,6 @@ ru:
       uncategorized_parent: "Разделу для тем вне разделов нельзя назначать родительский раздел."
       self_parent: "Подраздел не может быть родительским для самого себя."
       depth: "Подраздел не может быть родительским, т.к. допустим только один уровень вложенности разделов. "
-      email_in_already_exist: "Данный имейл адрес  '%{email_in}'  уже используется для уведомлений в категории '%{category_name}'"
     cannot_delete:
       uncategorized: "Нельзя удалить раздел, предназначенный для тем вне разделов"
       has_subcategories: "Невозможно удалить этот раздел, т.к. в нем есть подразделы."
@@ -333,6 +336,7 @@ ru:
     by_type:
       first_day_replies_per_day: "Вы достигли лимита на создание ответов для нового пользователя в первый день на сайте. Пожалуйста, попробуйте через %{time_left}."
       first_day_topics_per_day: "Вы достигли лимита на создание тем для нового пользователя в первый день на сайте. Пожалуйста, попробуйте через %{time_left}."
+      edit_post: "Вы достигли лимита редактирования сообщений на сегодня. Пожалуйста, подождите %{time_left} перед следующей попыткой."
     hours:
       one: "1 час"
       few: "1 часа"
@@ -477,6 +481,10 @@ ru:
     confirmed: "Ваш адрес электронной почты обновлен."
     please_continue: "Перейти на %{site_name}"
     error: "При смене электронного адреса произошла ошибка. Возможно, этот адрес уже используется?"
+    already_done: "Извините, ссылка для подтверждения устарела. Возможно, ваш email уже изменен?"
+    authorizing_old:
+      title: "Спасибо за подтверждение вашего email-адреса"
+      description: "Мы отправили сообщение с ссылкой для подтверждения вашего нового адреса."
   activation:
     action: "Нажмите сюда, чтобы активировать вашу учетную запись"
     already_done: "Извините, ссылка на активацию учетной записи устарела. Возможно, ваша учетная запись уже активирована?"
@@ -790,6 +798,7 @@ ru:
     traditional_markdown_linebreaks: "Использовать стандартный способ переноса строки в Markdown: строка должна заканчиваться двумя пробелами, чтобы перенос строки после нее сработал."
     post_undo_action_window_mins: "Количество минут, в течение которых пользователь может отменить действия, связанные с сообщениями: 'Мне нравится', 'Жалоба' и др."
     must_approve_users: "Персонал должен подтвердить регистрации новых пользователей перед тем, как им будет разрешен доступ к сайту.\nВНИМАНИЕ: включая данную функцию на существуещем сайте будет закрыт доступ к сайту для всех пользователей, кроме персонала."
+    pending_users_reminder_delay: "Уведомлять модераторов, если новые пользователи ждут одобрения больше чем столько часов. Установите в -1 для отключения уведомлений."
     ga_tracking_code: "Google analytics (ga.js) tracking code код, например: UA-12345678-9; смотрите http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) доменное имя, например: mysite.com; смотрите http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code код, например: UA-12345678-9; больше информации можно узнать на странице http://google.com/analytics"
@@ -833,11 +842,13 @@ ru:
     max_username_length: "Максимально допустимая длина псевдонима, символов."
     reserved_usernames: "Псевдонимы, запрещенные для регистрации"
     min_password_length: "Минимальная длина пароля"
+    min_admin_password_length: "Минимальная длина пароля для Администратора."
     block_common_passwords: "Не позволять использовать пароли из списка 10 000 самых частоиспользуемых паролей."
     enable_sso_provider: "Реализация протокола SSO провайдера через /session/sso_provider , необходимо установить sso_secret"
     sso_url: "URL точки единого входа"
     sso_secret: "Секретный набор символов, используемый для проверки подлинности  зашиврованного входа с помощью SSO, убедитесь, что это 10 или более символов"
     sso_overrides_avatar: "Использовать аватары предоставляемые внешним SSO провайдером. При этом настоятельно рекомендуется отключить функцию: разрешить закгрузку аватаров."
+    sso_not_approved_url: "Перенаправлять неподтвержденные SSO-аккаунты на этот URL"
     enable_local_logins: "Включить внутреннюю систему учетных записей пользователей по логину и паролю. (Требуется для работы системы приглашений.)"
     allow_new_registrations: "Разрешить регистрацию новых пользователей. Выключите, чтобы запретить посетителям создавать новые учетные записи."
     enable_yahoo_logins: "Разрешить идентификацию с Yahoo"
@@ -886,6 +897,7 @@ ru:
     s3_secret_access_key: "Amazon S3 secret key для загрузки и хранения изображений"
     s3_region: "Географический регион Amazon S3, который будет использоваться для хранения изображений"
     avatar_sizes: "Список автоматически сгенерированных размеров аватар."
+    default_opengraph_image_url: "URL картинки opengraph по-умолчанию."
     enable_flash_video_onebox: "Разрешить умную вставку ссылок sqf и flv (Adobe Flash). ВНИМАНИЕ: повышает риски безопасности сайта."
     default_invitee_trust_level: "Уровень доверия приглашенных пользователей по-умолчанию (от 0 до 4)."
     default_trust_level: "Уровень доверия по умолчанию для всех новых пользователей (0-4). ВНИМАНИЕ! Повышая уровень доверия для новых пользователей, Вы можете столкнуться с большим колличеством спама."
@@ -965,6 +977,7 @@ ru:
     disable_emails: "Запретить форуму отсылать какие-либо письма."
     strip_images_from_short_emails: "Удалять картинки из писем размером менее 2800 байт"
     short_email_length: "Какие письма считать короткими,  в байтах"
+    unsubscribe_via_email_footer: "Прикреплять ссылку для отписки от рассылки в футер отправляемых email'ов"
     pop3_polling_enabled: "Загружать ответы в форум в виде писем с учетной записи POP3."
     pop3_polling_ssl: "Использовать SSL при подключениик POP3 серверу. (Рекомендовано)"
     pop3_polling_period_mins: "Периодичность загрузки e-mail учетной записи POP3. ВНИМАНИЕ: требует перезапуска."
@@ -1001,6 +1014,7 @@ ru:
     allow_profile_backgrounds: "Разрешить пользователям загружать фоновые картинки для своих страниц профиля."
     enable_mobile_theme: "Мобильные устройства используют адаптированную тему с возможностью переключения в обычный вид. Отключите данную настройку если вы хотите использовать собственный стиль для мобильных устройств."
     dominating_topic_minimum_percent: "Количество сообщений, отправленных пользователем подряд в одной теме, прежде чем ему будет показано предупреждение о слишком частых ответах."
+    disable_avatar_education_message: "Отключить обучающее сообщение при смене аватара."
     daily_performance_report: "Ежедневно анализировать логи сервера NGINX и отправлять сообщение с результатами анализа в тему, видимую только персоналу."
     suppress_uncategorized_badge: "Не показывать награду в списках тем для тех тем, которые вне разделов."
     global_notice: "Показать СРОЧНОЕ ВАЖНОЕ объявление на сайте всем пользователям и посетителям. Удалите содержание, чтобы отменить объявление. Разрешено использование HTML."
@@ -1032,7 +1046,6 @@ ru:
     enable_emoji: "Активировать смайлы Emoji"
     emoji_set: "Какую коллекцию Emoji использовать?"
     enforce_square_emoji: "Принудительно использовать квадратные пропорции для смайликов."
-    approve_post_count: "Колличество постов от новых пользователей, которые должны быть проверены и одобрены."
     approve_unless_trust_level: "Сообщения для пользователей ниже этого уровня доверия подлежат проверки"
     errors:
       invalid_email: "Неправильный адрес электронной почты."
@@ -1181,6 +1194,8 @@ ru:
       few: "%{count} жалобы ожидают рассмотрения"
       many: "%{count} жалоб ожидают рассмотрения"
       other: "%{count} жалоб ожидают рассмотрения"
+  unsubscribe_mailer:
+    subject_template: "Подтвердите, что вы больше не желаете получать обновления по электронной почте от %{site_title}"
   invite_mailer:
     subject_template: "%{invitee_name} приглашает вас присоединиться к '%{topic_title}' на сайте %{site_domain_name}"
     text_body_template: |
@@ -1355,6 +1370,10 @@ ru:
     csv_export_failed:
       subject_template: "Экспорт не удался"
       text_body_template: "Мы сожалеем, но возникли неполадки с экспортом ваших данных. Свяжитесь с администратором сайта."
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Неполадки с e-mail -- неактивный пользователь"
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Неполадки с e-mail -- заблокированный пользователь"
     email_reject_no_account:
       subject_template: "[%{site_name}] Неполадки с письмом - не найдена учетная запись"
     email_reject_empty:
@@ -1473,14 +1492,100 @@ ru:
         Просмотреть сообщение вы можете по ссылке: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [ЛС] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_linked:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [Личное сообщение] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     digest:
       why: "Сводка обсуждений на сайте %{site_link} с момента вашего последнего визита %{last_seen_at}"
       subject_template: "Cводка новостей сайта [%{site_name}]"
@@ -1533,6 +1638,10 @@ ru:
         Подтвердите ваш новый адрес электронной почты для сайта %{site_name}, перейдя по следующей ссылке:
 
         %{base_url}/users/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] Подтвердите текущий адрес электронной почты"
+    notify_old_email:
+      subject_template: "[%{site_name}] Ваш адрес электронной почты был подтвержден"
     signup_after_approval:
       subject_template: "Ваша учетная запись на сайте %{site_name} одобрена!"
       text_body_template: |
@@ -1563,6 +1672,7 @@ ru:
 
         Если данная ссылка не работает, попробуйте скопировать её и вставить в строку адреса вашего браузера.
   page_not_found:
+    title: "Упс! Эта страница не существует или скрыта от публичного просмотра."
     popular_topics: "Популярные"
     recent_topics: "Недавние"
     see_more: "Еще"

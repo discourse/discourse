@@ -27,6 +27,10 @@ it:
   purge_reason: "Cancellato automaticamente come account abbandonato e mai attivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
+  emails:
+    incoming:
+      default_subject: "Email in arrivo da %{email}"
+      show_trimmed_content: "Mostra contenuto tagliato"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -160,7 +164,6 @@ it:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
       member_already_exist: "'%{username}' è già membro di questo gruppo."
       invalid_domain: "'%{domain}' non è un dominio valido."
-      invalid_incoming_email: "'%{incoming_email}' non è un indirizzo email valido."
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -257,7 +260,6 @@ it:
       uncategorized_parent: "La categoria \"Non classificato\" non può avere una categoria superiore."
       self_parent: "La categoria-genitore di una sottocategoria non può essere se stessa."
       depth: "Non puoi annidare una sottocategoria sotto un'altra"
-      email_in_already_exist: "L'indirizzo email in ingresso '%{email_in}' è già stato usato per la categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Non puoi eliminare la categoria \"Non classificato\""
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
@@ -1044,15 +1046,6 @@ it:
     subject_template: "[%{site_name}] Nuova versione di Discourse, aggiornamento disponibile"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] aggiornamento disponibile"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Queste segnalazioni sono state inviate oltre un'ora fa."
-      other: "Queste segnalazioni sono state inviate oltre %{count} ore fa."
-    please_review: "Per favore, revisionale."
-    post_number: "messaggio"
-    subject_template:
-      one: "1 segnalazione in attesa di essere revisionata"
-      other: "%{count} segnalazioni in attesa di essere revisionate"
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](/guidelines)."
@@ -1167,17 +1160,60 @@ it:
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} ti invita a partecipare all'argomento '%{topic_title}'"
+      text_body_template: |2+
+
+        %{username} ti ha invitato a partecipare ad una discussione
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        su
+
+        > %{site_title} -- %{site_description}
+
+        Visita il seguente collegamento per vedere il messaggio: %{base_url}%{url}
+
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
+    user_replied_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
+    user_linked:
+      subject_template: "[%{site_name}] %{topic_title} "
+      text_body_template: "%{header_instructions}\n \n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: "%{header_instructions}\n\n%{message}\n \n%{context}\n\n---\n%{respond_instructions}\n"
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: "%{header_instructions}\n\n%{message}\n\n%{context}\n \n---\n%{respond_instructions}\n"
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: "%{header_instructions}\n\n%{message}\n \n%{context}\n\n---\n%{respond_instructions}\n"
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       subject_template: "[%{site_name}] Riepilogo"
@@ -1211,12 +1247,6 @@ it:
 
         Fai clic sul seguente collegamento per scegliere una password per il tuo nuovo account:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Conferma il tuo nuovo indirizzo email"
-      text_body_template: |
-        Conferma il tuo nuovo indirizzo email per %{site_name} cliccando sul seguente collegamento:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
       text_body_template: "Benvenuto su %{site_name}! \n\nUn membro dello staff ha approvato il tuo account su %{site_name}. \n\nClicca sul seguente collegamento per confermare e attivare il tuo nuovo account:\n%{base_url}/users/activate-account/%{email_token} \n\nSe il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser. \n\n%{new_user_tips}\n\nNoi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre.\n\nBuona permanenza!\n\nps: se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.\n"

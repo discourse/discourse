@@ -243,7 +243,6 @@ sv:
         one: "Detta ämne har <b>1</b> ämne som inväntar godkännande"
         other: "Detta ämne har <b>{{count}}</b> inlägg som inväntar godkännande"
       confirm: "Spara ändringar"
-      delete_prompt: "Är du säker på att du vill ta bort <b>%{username}</b>? Detta kommer ta bort all deras poster och blockera deras epostadresser samt IP-adresser."
       approval:
         title: "Inlägget behöver godkännande"
         description: "Vi har mottagit ditt nya inlägg men det behöver bli godkänt av en moderator innan det kan visas. Ha tålamod."
@@ -633,8 +632,6 @@ sv:
       hide_forever: "Nej tack"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
-      description: "Det finns <b>{{replyCount}}</b> svar."
-      description_time: "Det finns <b>{{replyCount}}</b> svar med en uppskattad lästid på <b>{{readingTime}} minuter</b>."
       enable: 'Sammanfatta detta ämne'
       disable: 'Visa alla inlägg'
     deleted_filter:
@@ -794,7 +791,6 @@ sv:
       mentioned: "<i title='omnämnd' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -875,9 +871,6 @@ sv:
         category: "Det finns inga ämnen i {{category}}."
         top: "Det finns inga toppämnen."
         search: "Inga sökresultat hittades."
-        educate:
-          new: '<p>Dina nya ämnen hamnar här.</p><p>Som standard är ämnen sedda som nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator om de skapats de senaste 2 dagarna.</p><p>Du kan ändra detta i dina <a href="%{userPrefsUrl}">inställningar</a>.</p>'
-          unread: '<p>Dina olästa ämnen hamnar här</p><p>Som standard är ämnen sedda som olästa och kommer att visa antal olästa <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läst ämnet längre än 4 minuter</li></ul><p>Eller om du explicit har satt ämnet till Följd eller Sedd via notifieringspanelen längst ned i varje ämne.</p><p>Du kan ändra detta i dina <a href="%{userPrefsUrl}">inställningar</a>.</p>'
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         hot: "Det finns inga fler heta ämnen."
@@ -1197,18 +1190,6 @@ sv:
           bookmark: "Ångra bokmärkning"
           like: "Ångra gillning"
           vote: "Ångra röstning"
-        people:
-          off_topic: "{{icons}} flaggade det här som off-topic"
-          spam: "{{icons}} flaggade det här som spam"
-          spam_with_url: "{{icons}} flaggade <a href='{{postUrl}}'>detta som skräp</a>"
-          inappropriate: "{{icons}} flaggade det här som olämpligt"
-          notify_moderators: "{{icons}} notifierade moderatorer"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notifierade moderatorer</a>"
-          notify_user: "{{icons}} skickade ett meddelande"
-          notify_user_with_url: "{{icons}} skickade ett <a href='{{postUrl}}'>meddelande</a>"
-          bookmark: "{{icons}} bokmärkte detta"
-          like: "{{icons}} gillade detta"
-          vote: "{{icons}} röstade för detta"
         by_you:
           off_topic: "Du flaggade detta som off-topic"
           spam: "Du flaggade detta som spam"
@@ -1352,7 +1333,6 @@ sv:
           title: "Tystad"
     flagging:
       title: 'Tack för att du hjälper till att hålla vår gemenskap civiliserad!'
-      private_reminder: 'flaggor är privata, <b>endast</b> synliga för funktionärer'
       action: 'Flagga Inlägg'
       take_action: "Åtgärda"
       notify_action: 'Meddelande'
@@ -1700,11 +1680,9 @@ sv:
             is_disabled: "Återställ är inaktiverat i sidans inställningar."
             label: "Återställ"
             title: "återställ säkerhetskopian"
-            confirm: "Är du säker på att du vill återställa denna säkerhetskopia?"
           rollback:
             label: "Tillbakarullning"
             title: "Gör rollback på databasen till ett tidigare fungerande tillstånd."
-            confirm: "Är du säker på att du vill göra rollback på databasen till det tidigare fungerande tillståndet?"
       export_csv:
         user_archive_confirm: "Är du säker på att du vill ladda ner dina inlägg?"
         success: "Export påbörjad, du får en notis via meddelande när processen är genomförd."
@@ -1798,9 +1776,6 @@ sv:
           love:
             name: 'älska'
             description: "Gillaknappens färg."
-          wiki:
-            name: 'wiki'
-            description: "Huvudfärg som används som bakgrund till wikiinlägg."
       email:
         settings: "Inställningar"
         preview_digest: "Sammandrag"

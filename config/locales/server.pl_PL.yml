@@ -265,7 +265,6 @@ pl_PL:
       uncategorized_parent: "Inne nie mogą być podkategorią innej kategorii."
       self_parent: "Podkategoria nie może być swoim rodzicem"
       depth: "Nie możesz umieścić subkategorii w innej subkategorii"
-      email_in_already_exist: "Przychodzący adres email '%{email_in}' jest teraz używany w tej '%{category_name}' kategorii. "
     cannot_delete:
       uncategorized: "Nie można usunąć kategorii Inne"
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
@@ -822,7 +821,6 @@ pl_PL:
     display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego postach, a także jego @nazwę użytkownika."
     enable_emoji: "Włącz obsługę emoji"
     emoji_set: "Jaki jest twój preferowany styl emoji?"
-    approve_post_count: "Liczba postów nowego użytkownika, które muszą być zatwierdzone"
     approve_unless_trust_level: "Posty użytkowników poniżej tego poziomu zaufania muszą być zatwierdzane"
     default_categories_watching: "Lista kategorii obserwowanych domyślnie."
     default_categories_tracking: "Lista kategorii śledzonych domyślnie."
@@ -1143,12 +1141,6 @@ pl_PL:
 
         Kliknij na linku poniżej, aby ustawić swoje hasło:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Potwierdź nowy adres email"
-      text_body_template: |
-        Potwierdź Twój nowy adres email na forum %{site_name} przez kliknięcie na poniższy link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
       text_body_template: |+

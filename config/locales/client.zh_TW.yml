@@ -81,6 +81,8 @@ zh_TW:
           other: "%{count} 個月後"
         x_years:
           other: "%{count} 年後"
+      previous_month: '上個月'
+      next_month: '下個月'
     share:
       topic: '在此話題內分享連結'
       post: '文章 #%{postNumber}'
@@ -223,7 +225,6 @@ zh_TW:
       has_pending_posts:
         other: "本主題仍有 <b>{{count}}</b>篇貼文等待審核"
       confirm: "儲存變更"
-      delete_prompt: "您確定要刪除 <b>%{username}</b> 這個帳號嗎？這會同時將該帳號的所有貼文一併刪除，並封鎖他的電子郵件與 IP。"
       approval:
         title: "貼文需等待審核"
         description: "貼文已經送出，但必須等待管理者審核過後才會出現在板上，請耐心等候。"
@@ -359,9 +360,7 @@ zh_TW:
         perm_default: "啟用桌面通知"
         perm_denied_btn: "權限被拒絕"
         disable: "停用通知"
-        currently_enabled: "(當前已啟用)"
         enable: "啟用通知"
-        currently_disabled: "(當前已關閉)"
       dismiss_notifications: "全部標記為已讀"
       dismiss_notifications_tooltip: "標記所有未讀通知為已讀"
       disable_jump_reply: "不要在回覆之後直接跳到我的文章"
@@ -601,8 +600,6 @@ zh_TW:
       sign_up: "註冊"
     summary:
       enabled_description: "你正在檢視此討論話題的摘要：在這個社群裡最熱門的文章。"
-      description: "共有 <b>{{replyCount}}</b> 個回覆。"
-      description_time: "共有 <b>{{replyCount}}</b> 個回覆，大約需要 <b>{{readingTime}} 分鐘</b>閱讀。"
       enable: '以摘要檢視此討論話題'
       disable: '顯示所有文章'
     deleted_filter:
@@ -764,7 +761,6 @@ zh_TW:
       mentioned: "<i title='被提到' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -828,9 +824,6 @@ zh_TW:
         bookmarks: "您目前沒有加入書籤的討論話題。"
         category: "沒有 {{category}} 的討論話題。"
         top: "沒有精選討論話題。"
-        educate:
-          new: '<p>你的新討論話題會出現在這裡。</p><p>預設上，2 天內新增的討論話題會被當成新的，並會出現 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 此一標籤。</p><p>你可以在<a href="%{userPrefsUrl}">偏好設定</a>中修改設定。</p>'
-          unread: '<p>你的未讀討論話題會出現在這裡。</p><p>預設上，以下話題會被標示成未讀話題，並且未讀文章數量 <span class="badge new-posts badge-notification">1</span> 會顯示：</p><ul><li>建立新的討論話題</li><li>回覆討論話題</li><li>閱讀討論話題超過 4 分鐘</li></ul><p>或若透過討論話題下面的通知設定追蹤或觀察。</p><p>你可以在<a href="%{userPrefsUrl}">偏好設定</a>中修改設定。</p>'
       bottom:
         latest: "已經沒有其它最近的討論話題了。"
         hot: "已經沒有其它熱門的討論話題了。"
@@ -1112,18 +1105,6 @@ zh_TW:
           bookmark: "移除書籤"
           like: "撤回讚"
           vote: "撤回投票"
-        people:
-          off_topic: "{{icons}} 標示為偏離主題"
-          spam: "{{icons}} 標示為垃圾文章"
-          spam_with_url: "{{icons}} 投訴 <a href='{{postUrl}}'>此為 spam</a>"
-          inappropriate: "{{icons}} 標示為不適內容"
-          notify_moderators: "{{icons}} 已通知板主"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>已通知板主</a>"
-          notify_user: "{{icons}} 已送出訊息"
-          notify_user_with_url: "{{icons}} 已送出 <a href='{{postUrl}}'>訊息</a>"
-          bookmark: "{{icons}} 已加上書籤"
-          like: "{{icons}} 已按讚"
-          vote: "{{icons}} 已投票支持"
         by_you:
           off_topic: "你已投訴此文章偏離討論話題"
           spam: "你已投訴此文章為垃圾"
@@ -1251,7 +1232,6 @@ zh_TW:
           title: "靜音"
     flagging:
       title: '感謝幫助社群遠離邪惡！'
-      private_reminder: '標記是不公開的，<b>只有</b> 工作人員才可看到'
       action: '投訴文章'
       take_action: "執行動作"
       notify_action: '訊息'
@@ -1610,11 +1590,9 @@ zh_TW:
             is_disabled: "此站設定已關閉復原"
             label: "還原"
             title: "復原備份"
-            confirm: "你確定要復原備份嗎?"
           rollback:
             label: "回溯"
             title: "回溯資料庫到以前的工作階段"
-            confirm: "你確定要回溯資料庫到以前的工作階段?"
       export_csv:
         user_archive_confirm: "你確定要下載你的文章嗎?"
         success: "開始匯出，處理完畢後將以私人訊息通知你。"
@@ -1717,9 +1695,6 @@ zh_TW:
           love:
             name: '愛'
             description: "按讚按鈕的顏色"
-          wiki:
-            name: '共筆'
-            description: "共筆文章的背景顏色"
       email:
         settings: "設定"
         preview_digest: "預覽文摘"

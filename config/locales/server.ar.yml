@@ -30,9 +30,14 @@ ar:
   emails:
     incoming:
       default_subject: "رسالة ورادة من %{email}"
+      show_trimmed_content: "اظهر محتوى أقل"
       errors:
+        empty_email_error: "يحدث عندما يكون البريد المستلم فارغ"
+        no_message_id_error: "يحدث عندما لا يحتوي البريد على  'Message-Id' في العنوان"
+        no_body_detected_error: "يحدث عندما لا نستطيع اقتباس المحتوى و لا يوجد مرفق ."
         inactive_user_error: "يحدث عندما يكون المرسل غير نشط "
         blocked_user_error: "يحدث عندما يكون المرسل محظور"
+        bad_destination_address: "يحدع عندما لا يكون اي من عنوان البريد االكتروني في حقول  To/Cc/Bcc تتطابق مع كون البريد القادم"
         strangers_not_allowed_error: "يحدث عندما يحاول المستخدم انشاء موضوع جديد في قسم هو ليس عضواً فيه"
         insufficient_trust_level_error: "يحدث عندما يحاول مستخدم انشاء موضوع جديد في قسم و تكون درجه ثقه المستخدم اقل من القسم المطلوب "
         reply_user_not_matching_error: "يحدث عندما ياتي الرد من عنوان بريد ألكتروني مختلف من الذي أرسل اليه ألاشعار "
@@ -212,6 +217,7 @@ ar:
     top: "أفضل المواضيع"
     posts: "اخر المشاركات "
   too_late_to_edit: "أُنشئ المنشور منذ فترة طويلة جدا، لذا تعديله أو حذفه لم يعد ممكنا."
+  revert_version_same: "ألاصدار الحالي يتطابق مع نفس ألاصدار الذي تحاول استرجاعه ."
   excerpt_image: "صورة"
   queue:
     delete_reason: "حذف عبر طابور مشاركة معتدل"
@@ -220,7 +226,9 @@ ar:
       can_not_modify_automatic: "لا يمكنك تعديل مجموعة تلقائية"
       member_already_exist: " '%{username}' هو عضو في هذه المجموعة بالفعل."
       invalid_domain: "'%{domain}' ليس نطاقا صالحا."
-      invalid_incoming_email: "'%{incoming_email}' ليس بريدا إلكترونيا صالحا."
+      invalid_incoming_email: "'%{email_in}' ليس عنوان بريد الكتروني صالح ."
+      email_already_used_in_group: "'%{email}' مستخدم من قبل المجموعه '%{group_name}'. "
+      email_already_used_in_category: "'%{email}' مستخدم من قبل القسم '%{category_name}'."
     default_names:
       everyone: "الجميع"
       admins: "المسؤولين"
@@ -359,8 +367,9 @@ ar:
       uncategorized_parent: "غير مصنف لا يمكن أن يكون فئة الأم"
       self_parent: "الفئة الفرعية لا يمكن ان تكون كالفئة الرئيسية."
       depth: "لا يمكنك تضمين فئة فرعية تحت فئة فرعية اخرى"
-      email_in_already_exist: "البريد الإلكتروني الوارد '%{email_in}' مستخدم حاليا للفئة '%{category_name}'."
-      invalid_email_in: "'%{email_in}' ليس بريداً صالحاَ"
+      invalid_email_in: "'%{email_in}' ليس عنوان بريد الكتروني صالح ."
+      email_already_used_in_group: "'%{email}' مستخدم من قبل المجموعه '%{group_name}'. "
+      email_already_used_in_category: "'%{email}' مستخدم من قبل القسم '%{category_name}'."
     cannot_delete:
       uncategorized: "لايمكن حذف الغير مصنف"
       has_subcategories: "لايمكن حذف هذه الفئة لأنها تحتوي على فئات فرعية "
@@ -593,6 +602,10 @@ ar:
     confirmed: "حُدّث بريدك الإلكتروني."
     please_continue: "تابع إلى %{site_name}"
     error: "حدث خطأ في تغيير عنوان بريدك الإلكتروني. لربما يكون العنوان مستخدما بالفعل."
+    already_done: "نأسف عنوان التاكيد هدا لم يعد صالحا بعد الان. ربما تم تغيير بريدك بالفعل؟"
+    authorizing_old:
+      title: "شكرا لك لتاكيدك عنوان بريدك الحالي."
+      description: "نحن الان نقوم بمراسله عنوانك الجديد للتأكيد."
   activation:
     action: "انقر هنا لتنشيط حسابك."
     already_done: "آسفون، لم يعد رابط تأكيد الحساب صالحا. لربما يكون الحساب نشطا بالفعل."
@@ -989,6 +1002,7 @@ ar:
     enable_twitter_logins: "تفعيل مصادقة تويتر , يطلب : twitter_consumer_key و twitter_consumer_secret"
     twitter_consumer_key: "مفتاح المستهلك للمصادقة تويتر، مسجلة في http://dev.twitter.com"
     twitter_consumer_secret: "مفتاح المستهلك للمصادقة تويتر، مسجلة في http://dev.twitter.com"
+    enable_instagram_logins: "تفعيل تسجيل الدخول عن طريق الانستغرام , يتطلب instagram_consumer_key و instagram_consumer_secret"
     instagram_consumer_key: "مفتاح الاستخدام لتوثيق الانستغرام "
     instagram_consumer_secret: "استخدم توثيق انستغرام السري "
     enable_facebook_logins: "تمكين مصادقة الفيسبوك، يتطلب facebook_app_id وfacebook_app_secret"
@@ -1003,6 +1017,7 @@ ar:
     backup_frequency: "كمية النسخ الإحتياطية المتكررة التي أنشأناها، في اليوم."
     enable_s3_backups: "تحميل النسخ الاحتياطي لS3 عند اكتماله. هام: يتطلب اعتماد S3 صالحة دخلت في إعدادات الملفات."
     s3_backup_bucket: "الرفع عن بعد لإجراء نسخ إحتياطية. تحذير : تأكد من أنه رفع خاص."
+    s3_disable_cleanup: "عطل النسخ الاحتياطيه المحذوفه من S3 عندما يتم حذفها محلياً"
     backup_time_of_day: "الوقت الذي يجب ان تأخد النسخ الاحتياطية فيه."
     backup_with_uploads: "إضافة التحميلات ل النسخ الإحتياطية. إلغاء هذة الخاصية سوف تؤدي إلى أخذ نسخ إحتياطية من قاعدة البيانات فقط."
     active_user_rate_limit_secs: "كيف في كثير من الأحيان نقوم بتحديث حقل 'last_seen_at، في ثوان"
@@ -1214,8 +1229,10 @@ ar:
     default_email_private_messages: "أرسل بريد إلكتروني عندما يراسل شخص ما العضو إفتراضيا."
     default_email_direct: "ارسل بريد الكتروني عندما يقوم احدهم بالرد/الاقتباس الي/ذكر او دعوه مستخدم افتراضيا"
     default_email_mailing_list_mode: "ارسل بريد إلكتروني لكل مشاركة جديدة افتراضيا."
+    disable_mailing_list_mode: "عدم السماح للمستخدمين بتفعيل خيار  المراسله الجماعيه"
     default_email_always: "أرسل إشعار بريد إلكتروني حتى عندما يكون العضو متاح إفتراضيا."
     default_email_previous_replies: "ارفق الردود السابقه في رسائل البريد افتراضياً"
+    default_email_in_reply_to: "ارفق مقتبسات الرد على المنشور في رسائل البريد افتراضياً"
     default_other_new_topic_duration_minutes: "الشروط العالمية الافتراضية لموضوع يعتبر جديد."
     default_other_auto_track_topics_after_msecs: "الوقت العالمي الافتراضي قبل الموضوع متعقب آليا."
     default_other_external_links_in_new_tab: "أفتح الروابط الخارجية في تبويب جديد إفتراضيا."
@@ -1816,11 +1833,6 @@ ar:
 
         انقر على الرابط التالي لاختيار كلمة مرور لحسابك الجديد:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] تأكيد البريد الإلكتروني الجديد "
-      text_body_template: |
-        قم بتاكيد عنوان بريدك الالكتروني لـ  %{site_name}  عن طريق الضغط علي الرابط التالي:
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "قد وافقت على %{site_name}!"
       text_body_template: |

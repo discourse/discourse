@@ -169,6 +169,8 @@ pt_BR:
     more: "Mais"
     less: "Menos"
     never: "nunca"
+    every_30_minutes: "a cada 30 minutos"
+    every_hour: "a cada hora"
     daily: "diário"
     weekly: "semanal"
     every_two_weeks: "a cada duas semanas"
@@ -316,7 +318,10 @@ pt_BR:
         one: "grupo"
         other: "grupos"
       members: "Membros"
+      topics: "Tópicos"
       posts: "Mensagens"
+      mentions: "Menções"
+      messages: "Mensagens"
       alias_levels:
         title: "Quem pode enviar mensagem e @mention a este grupo?"
         nobody: "Ninguém"
@@ -556,6 +561,7 @@ pt_BR:
         never: "nunca"
       email_digests:
         title: "Quando eu não visitar aqui, envie um resumo via email do que há de novo:"
+        every_30_minutes: "a cada 30 minutos"
         daily: "diariamente"
         every_three_days: "a cada três dias"
         weekly: "semanalmente"
@@ -879,7 +885,6 @@ pt_BR:
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -981,9 +986,6 @@ pt_BR:
         category: "Não há tópicos na categoria {{category}}."
         top: "Não há tópicos em alta."
         search: "Não foram encontrados resultados."
-        educate:
-          new: '<p>Seus novos tópicos aparecerão aqui.</p><p>Por padrão, tópicos são considerados novos e irão mostrar um indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se eles foram criados nos últimos 2 dias.</p><p>Você pode mudar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
-          unread: '<p>Seus tópicos não lidos aparecerão aqui.</p><p>Por padrão, tópicos são considerados não lidos e irão mostrar contadores <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu para o tópico</li><li>Leu o tópico por mais de 4 minutos</li></ul><p>Ou se você explicitamente marcou o tópico para Acompanhar ou Assistir via o controle de notificação na parte de baixo de cada tópico.</p><p>Você pode mudar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
       bottom:
         latest: "Não há mais tópicos recentes."
         hot: "Não mais tópicos quentes."
@@ -1334,17 +1336,9 @@ pt_BR:
           like: "Descurtir"
           vote: "Desfazer voto"
         people:
-          off_topic: "{{icons}} marcado como off-topic"
-          spam: "{{icons}} marcado como spam"
-          spam_with_url: "{{icons}} marcou <a href='{{postUrl}}'>isto como spam</a>"
-          inappropriate: "{{icons}} marcado como inapropriado"
-          notify_moderators: "{{icons}} notificaram os moderadores"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notificaram os moderadores</a>"
-          notify_user: "{{icons}} enviou uma mensagem particular"
-          notify_user_with_url: "{{icons}} enviou uma <a href='{{postUrl}}'>mensagem particular</a>"
-          bookmark: "{{icons}} favoritaram isto"
-          like: "{{icons}} curtiram isto"
-          vote: "{{icons}} votaram nisto"
+          off_topic: "marcado como off-topic"
+          spam: "marcado como spam"
+          inappropriate: "marcado como inapropriado"
         by_you:
           off_topic: "Você sinalizou isto como off-topic"
           spam: "Você sinalizou isto como spam"
@@ -1496,7 +1490,6 @@ pt_BR:
           description: "Você nunca será notificado sobre novos tópicos nessas categorias, e não aparecerão no Recentes."
     flagging:
       title: 'Obrigado por ajudar a manter a civilidade da nossa comunidade!'
-      private_reminder: 'sinalizações são privadas, <b>apenas</b> ficam visíveis a moderação'
       action: 'Sinalizar resposta'
       take_action: "Tomar Atitude"
       notify_action: 'Mensagem'
@@ -1508,7 +1501,6 @@ pt_BR:
       submit_tooltip: "Enviar uma sinalização privada"
       take_action_tooltip: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
       cant: "Desculpe, não é possível colocar uma sinalização neste momento."
-      notify_staff: 'Notificar Equipe'
       formatted_name:
         off_topic: "É Off-Tópico"
         inappropriate: "É inapropriado"
@@ -1885,11 +1877,9 @@ pt_BR:
             is_disabled: "Restaurar está desativado nas configurações do site."
             label: "Restaurar"
             title: "Restaurar o backup"
-            confirm: "Tem certeza de que quer restaurar este backup?"
           rollback:
             label: "Reverter"
             title: "Reverter o banco de dados para seu estado anterior"
-            confirm: "Tem certeza de que quer reverter o banco de dados para o estado anterior?"
       export_csv:
         user_archive_confirm: "Tem certeza que você quer baixar os seus tópicos?"
         success: "Exportação iniciada, você será notificado por mensagem particular quando o processo estiver completo."
@@ -1991,9 +1981,6 @@ pt_BR:
           love:
             name: 'curtir'
             description: "A cor do botão curtir."
-          wiki:
-            name: 'wiki'
-            description: "Cor base usada para o fundo em postagens do wiki."
       email:
         settings: "Settings"
         preview_digest: "Preview Digest"

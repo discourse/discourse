@@ -1,22 +1,30 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 gl:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D MMMM, YYYY h:mm a"
-  datetime_formats:
+  datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
       short_no_year: "%-d de %B"
       date_only: "%-d de %B, %Y"
   date:
     month_names: [null, Xaneiro, Febreiro, Marzo, Abril, Maio, Xuño, Xullo, Agosto, Setembro, Outubro, Novembro, Decembro]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Temas"
   posts: "publicacións"
   loading: "Cargndo"
   log_in: "Iniciar sesión"
   anonymous: "Anónimo"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       taken: "xa está en uso"
@@ -135,6 +143,7 @@ gl:
           attributes:
             hex:
               invalid: "non é unha cor válida"
+      <<: *errors
   vip_category_name: "Taberna"
   vip_category_description: "Unha categoría exclusiva para membros cun nivel de confianza igual ou maior a 3."
   meta_category_name: "Opinións sobre o sitio"
@@ -490,3 +499,8 @@ gl:
   admin_login:
     error: "Erro!"
     submit_button: "Enviar correo-e"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

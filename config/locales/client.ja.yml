@@ -221,7 +221,6 @@ ja:
       has_pending_posts:
         other: "このトピックは<b>{{count}}</b>個の投稿が承認待ちです"
       confirm: "変更を保存"
-      delete_prompt: "<b>%{username}</b>を本当に削除しますか？全ての投稿が削除されるのと同時にメールアドレスとIPアドレスがブロックされます。"
       approval:
         title: "この投稿は承認が必要"
         description: "投稿された新規のポストは受付されましたがモデレータによる承認が必要です。もう少々お待ち下さい。"
@@ -350,9 +349,7 @@ ja:
         perm_default: "通知をONにする"
         perm_denied_btn: "アクセス拒否"
         disable: "通知を無効にする"
-        currently_enabled: "(現在有効化されています)"
         enable: "通知を有効化"
-        currently_disabled: "(現在無効化されています)"
         each_browser_note: "注意: 利用するブラウザ全てでこの設定を変更する必要があります"
       dismiss_notifications: "全て既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
@@ -594,8 +591,6 @@ ja:
       sign_up: "新しいアカウントを作成"
     summary:
       enabled_description: "トピックのまとめを表示されています。"
-      description: "<b>{{replyCount}}</b> 返信があります。"
-      description_time: "全てを確認するのに <b>{{readingTime}} 分</b> 前後を要する <b>{{replyCount}}</b> 個の回答があります。"
       enable: 'このトピックを要訳する'
       disable: '全ての投稿を表示する'
     deleted_filter:
@@ -749,7 +744,6 @@ ja:
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -818,9 +812,6 @@ ja:
         category: "{{category}} トピックはありません。"
         top: "トップトピックはありません。"
         search: "検索結果はありません。"
-        educate:
-          new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面</a>で日数変更が可能です。'
-          unread: '参加中のトピックに対して新しい投稿がある場合、未読記事として表示されます。'
       bottom:
         latest: "最新のトピックはこれ以上ありません。"
         hot: "ホットなトピックはこれ以上ありません。"
@@ -1127,18 +1118,6 @@ ja:
           bookmark: "ブックマークを取り消す"
           like: "「いいね！」を取り消す"
           vote: "投票を取り消す"
-        people:
-          off_topic: "{{icons}} オフトピックとしてマーク"
-          spam: "{{icons}} スパムとしてマーク"
-          spam_with_url: "{{icons}} <a href='{{postUrl}}'>スパムとして</a>フラグ付き"
-          inappropriate: "{{icons}} 不適切であると報告するフラグを立つ"
-          notify_moderators: "{{icons}} がモデレータに通報しました"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知されたモデレータ</a>"
-          notify_user: "{{icons}} メッセージを送信しました"
-          notify_user_with_url: "{{icons}} <a href='{{postUrl}}'>メッセージ</a>を送信しました"
-          bookmark: "{{icons}} がブックマークしました"
-          like: "{{icons}} が「いいね！」しています"
-          vote: "{{icons}} が投票しました"
         by_you:
           off_topic: "オフトピックのフラグを立てました"
           spam: "スパムを報告するフラグを立てました"
@@ -1266,7 +1245,6 @@ ja:
           title: "ミュート中"
     flagging:
       title: '私達のコミュニティの維持を助けてくれてありがとうごうざいます'
-      private_reminder: 'フラグはプライベートです。スタッフ<b>のみ</b>が参照できます'
       action: 'フラグをつける'
       take_action: "アクションをする"
       notify_action: 'メッセージ'
@@ -1628,11 +1606,9 @@ ja:
             is_disabled: "バックアップ復元を無効にされています。"
             label: "復元"
             title: "バックアップを復元"
-            confirm: "本当にバックアップを復元しますか？"
           rollback:
             label: "ロールバック"
             title: "データベースを元の作業状態にロールバックする"
-            confirm: "本当にデータベースを元の作業状態にロールバックしますか？"
       export_csv:
         user_archive_confirm: "あなたのポストをダウンロードしてよいですか？"
         success: "エスクポートを開始しました。処理が完了すると、メッセージで通知されます。"
@@ -1726,9 +1702,6 @@ ja:
           love:
             name: 'love'
             description: "ライクボタンの色"
-          wiki:
-            name: 'wiki'
-            description: "Wiki投稿の背景に使用する基本色"
       email:
         settings: "設定"
         preview_digest: "ダイジェストのプレビュー"

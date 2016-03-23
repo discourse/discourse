@@ -320,6 +320,7 @@ ru:
         many: "В этой теме <b>{{count}}</b> сообщений, ожидающих проверки"
         other: "В этой теме <b>{{count}}</b> сообщений, ожидающих проверки"
       confirm: "Сохранить"
+      delete_prompt: "Вы уверены, что хотите удалить <b>%{username}</b>? Это также удалит все его сообщения и заблокирует его email и IP-адрес."
       approval:
         title: "Сообщения для проверки"
         description: "Ваше сообщение отправлено, но требует проверки и утверждения модератором. Пожалуйста, будьте терпеливы."
@@ -835,6 +836,8 @@ ru:
       twitter:
         title: "С помощью Twitter"
         message: "Вход с помощью учетной записи Twitter (убедитесь, что блокировщик всплывающих окон отключен)"
+      instagram:
+        message: "Вход с помощью учетной записи Instagram (убедитесь, что блокировщик всплывающих окон отключен)"
       facebook:
         title: "С помощью Facebook"
         message: "Вход с помощью учетной записи Facebook (всплывающие окна должны быть разрешены)"
@@ -939,7 +942,6 @@ ru:
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -962,6 +964,7 @@ ru:
         granted_badge: "Награда получена от"
       popup:
         mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'
         quoted: '{{username}} процитировал Вас в "{{topic}}" - {{site_title}}'
         replied: '{{username}} ответил вам в "{{topic}}" - {{site_title}}'
         posted: '{{username}} написал в "{{topic}}" - {{site_title}}'
@@ -973,6 +976,7 @@ ru:
       from_my_computer: "From my device"
       from_the_web: "From the web"
       remote_tip: "ссылка на изображение"
+      remote_tip_with_attachments: "ссылка на изображение или файл {{authorized_extensions}}"
       local_tip: "выбрать изображения с вашего устройства"
       local_tip_with_attachments: "выбрать изображения или файлы с вашего устройства {{authorized_extensions}}"
       hint: "(вы так же можете перетащить объект в редактор для его загрузки)"
@@ -1424,6 +1428,9 @@ ru:
           bookmark: "Удалить из закладок"
           like: "Больше не нравится"
           vote: "Отозвать голос"
+        people:
+          like: "понравилось это"
+          vote: "проголосовал за это"
         by_you:
           off_topic: "Помечена вами как оффтопик"
           spam: "Помечена вами как спам"
@@ -1757,6 +1764,12 @@ ru:
         title: "Закладки"
         help: "темы, которые вы добавили в закладки"
       category:
+        title: "{{categoryName}}"
+        title_with_count:
+          one: "{{categoryName}} (1)"
+          few: "{{categoryName}} ({{count}})"
+          many: "{{categoryName}} ({{count}})"
+          other: "{{categoryName}} ({{count}})"
         help: "последние темы в разделе {{categoryName}}"
       top:
         title: "Обсуждаемые"
@@ -2552,6 +2565,11 @@ ru:
             header: "ВНИМАНИЕ!"
             text: "Обнаружены несуществующие примеры выдачи наград. Это может произойти, когда запрос возвращает несуществующие идентификаторы ID пользователей или сообщений. Это может привести к неожиданным проблемам со временем, поэтому внимательно проверьте ваш запрос."
           no_grant_count: "Нет наград для выдачи."
+          grant_count:
+            one: "Будет выдана <b>1</b> награда."
+            few: "<b>%{count}</b> наград будут выданы."
+            many: "<b>%{count}</b> наград будут выданы."
+            other: "<b>%{count}</b> наград будут выданы."
           sample: "Пример:"
           grant:
             with: <span class="username">%{username}</span>
@@ -2575,6 +2593,7 @@ ru:
         embed_truncate: "Обрезать встроенные сообщения."
         embed_whitelist_selector: "Селекторы CSS которые разрешены для использования."
         embed_blacklist_selector: "Селекторы CSS которые запрещены для использования."
+        feed_polling_enabled: "Импорт сообщений через RSS/ATOM"
         save: "Сохранить настройки встраивания"
       permalink:
         title: "Постоянные ссылки"

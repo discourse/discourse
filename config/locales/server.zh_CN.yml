@@ -770,7 +770,6 @@ zh_CN:
     suppress_reply_directly_above: "当一个帖子只有一个回复时，不显示回复到该贴的回复。"
     suppress_reply_when_quoting: "当帖子引用回复时，不显示可展开的回复到某贴的标记。"
     max_reply_history: "扩展回复至时显示的最大回复数量"
-    experimental_reply_expansion: "当展开回复至内容时隐藏直接回复（实验性）"
     topics_per_period_in_top_summary: "在一个主题底部显示的默认推荐主题的数量。"
     topics_per_period_in_top_page: "在展开“显示更多”推荐主题列表显示的主题数量。"
     redirect_users_to_top_page: "自动重定向至新用户或者长时间未登入的用户至热门页面。"
@@ -823,7 +822,7 @@ zh_CN:
     instagram_consumer_secret: "Instagram 验证的 Consumer secret"
     enable_facebook_logins: "启用 Facebook 帐号验证登录，需要 facebook_app_id 和 facebook_app_secret"
     facebook_app_id: "Facebook 帐号验证的应用帐号（App id），到 https://developers.facebook.com/apps 来注册获取"
-    facebook_app_secret: "脸书帐号验证的应用密码（App secret），到 https://developers.facebook.com/apps 来注册获取"
+    facebook_app_secret: "Facebook 帐号验证的应用密码（App secret），到 https://developers.facebook.com/apps 来注册获取"
     enable_github_logins: "启用 Github 帐号验证登录，需要 github_client_id 和 github_client_secret"
     github_client_id: "Github 帐号验证的客户端帐号（Client id），到 https://github.com/settings/applications 来注册获取"
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
@@ -1332,14 +1331,6 @@ zh_CN:
       ### 发行注记
 
       %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      other: "这些标记在过去 %{count} 内被提交。"
-    please_review: "请核查他们。"
-    post_number: "帖子"
-    how_to_disable: '你可以通过修改“notify about flags after”设置项以禁用或改变邮件提醒设置。'
-    subject_template:
-      other: "%{count} 个标记需要被处理"
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 个帖子等待审核"
@@ -1895,9 +1886,9 @@ zh_CN:
     set_password:
       subject_template: "[%{site_name}] 设置密码"
       text_body_template: |
-        有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证邮件地址的在线服务商（Google、Facebook等等）登录。
+        有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证过你邮件地址的在线服务商登录。
 
-        如果不是你请求添加密码，你可以直接忽略本邮件。
+        如果不是你在请求添加密码，你可以直接忽略本邮件。
 
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}

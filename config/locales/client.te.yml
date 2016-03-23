@@ -489,8 +489,6 @@ te:
     last_post: చివరి టపా
     summary:
       enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
-      description: "అక్కడ మొత్తం <b>{{replyCount}}</b> జవాబులు ఉన్నాయి"
-      description_time: "అక్కడ మొత్తం <b>{{replyCount}}</b> జవాబులు ఉన్నాయి. వీటిని చదవడానికి సుమారుగా <b>{{readingTime}} నిమిషాలు</b> పడ్తాయి."
       enable: 'ఈ విషయాన్ని సంగ్రహించు'
       disable: 'అన్ని టపాలూ చూపు'
     deleted_filter:
@@ -631,7 +629,6 @@ te:
       total_flagged: "మొత్తం కేతనించిన టపాలు"
       quoted: "<i title='కోట్ చేసారు' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='జవాబిచ్చారు' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='జవాబిచ్చారు' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title=' సవరించారు' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='ఇష్టపడ్డారు' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -686,9 +683,6 @@ te:
         bookmarks: "మీకింకా ఎట్టి పేజీక విషయాలూ లేవు."
         category: "ఎట్టి {{category}}  విషయాలూ లేవు"
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
-        educate:
-          new: '<p>మీ కొత్త విషయాలు ఇక్కడ వస్తాయి.</p><p>అప్రమేయంగా 2 రోజులలోపు సృష్టించిన అన్ని విషయాలూ కొత్తగా భావించబడతాయి మరియు  <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">కొత్త</span> ఇండికేటరు తో చూపబడతాయి.</p><p>మీరు దీన్ని మీ <a href="%{userPrefsUrl}">అభీష్టాలులో</a> మార్చుకోవచ్చు.</p>'
-          unread: '<p>మీరు చదవని విషయాలు ఇక్కడ కనబడుతాయి.</p><p>అప్రమేయంగా, విషయాలు చదవని వాటిగా పరిశీలించబడతాయి మరియు చదవని వాటి సంఖ్య మీకు చూపబడతాయి <span class="badge new-posts badge-notification">1</span> మీరు:</p><ul><li>విషయం సృష్టించినట్లయితే</li><li>విషయానికి సమాధానం ఇచ్చినట్లయితే</li><li>విషయం 4 నిమిషాల కంటే ఎక్కువ చదివినట్లయితే</li></ul><p>లేదా మీరు స్పష్టముగా విషయం అమర్చినట్లయితే ప్రతి విషయానికి క్రింది భాగంలో నియంత్రణ ప్రకటన ద్వారా గమనించబడుతుంది లేదా కనిపెడుతూ ఉంటుంది  .</p><p>మీరు ఇది మార్చగలరు <a href="%{userPrefsUrl}"> మీ preferences లో</a>.</p>'
       bottom:
         latest: "ఇంకా కొత్త విషయాలు లేవు."
         hot: "ఇంకా వేడివేడి విషయాలు లేవు."
@@ -946,16 +940,6 @@ te:
           bookmark: "పేజీక రద్దు"
           like: "ఇష్టం రద్దు"
           vote: "ఓటు రద్దు"
-        people:
-          off_topic: "{{icons}} దీన్ని విషయాంతరంగా కేతనించాయి"
-          spam: "{{icons}} దీన్ని స్పాముగా కేతనించాయి"
-          spam_with_url: "{{ప్రతీకలు}} స్పామ్ లా <a href='{{postUrl}}'>కేతనించు</a>"
-          inappropriate: "{{icons}} దీన్ని అసమంజసంగా కేతనించాయి"
-          notify_moderators: "{{icons}} దీన్ని నిర్వాహకుల దృష్టికి తెచ్చాయి"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>నిర్వాహకుల దృష్టికి తెచ్చారు</a>"
-          bookmark: "{{icons}} పేజీక ఉంచారు"
-          like: "{{icons}} ఇష్టపడ్డారు"
-          vote: "{{icons}}  దీనికి ఓటు వేసారు"
         by_you:
           off_topic: "మీరు దీన్ని విషయాంతరంగా కేతనించారు"
           spam: "మీరు దీన్ని స్పాముగా కేతనించారు"
@@ -1088,7 +1072,6 @@ te:
           title: "నిశ్శబ్దం"
     flagging:
       title: 'మా కమ్యునిటీని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు'
-      private_reminder: 'కేతనాలు ప్రైవేటు. <b>కేవలం</b> సిబ్బందికి మాత్రమే కనిపిస్తాయి'
       action: 'టపాను కేతనించు'
       take_action: "చర్య తీసుకో"
       delete_spammer: "స్పామరును తొలగించు"
@@ -1385,10 +1368,8 @@ te:
           restore:
             is_disabled: "సైటు అమరికల్లో రీస్టోరు అచేతనమైంది. "
             title: "బ్యాకప్ ను రీస్టోరు చేయి"
-            confirm: "మీరు నిజంగానే ఈ బ్యాకప్ ను రీస్టోరు చేయాలనుకుంటున్నారా?"
           rollback:
             title: "డాటాబేసును గత పనిచేసే స్థితికి రోల్ బ్యాక్ చేయి"
-            confirm: "మీరు నిజంగానే డాటాబేసును గత పనిచేసే స్థితికి రోల్ బ్యాక్ చేయాలనుకుంటున్నారా?"
       export_csv:
         user_archive_confirm: "మీరు నిజంగా మీ టపాల దిగుమతి కోరుకుంటున్నారా ?"
         failed: "ఎగుమతి విఫలమైంది. దయచేసి లాగులు చూడంది. "
@@ -1477,9 +1458,6 @@ te:
           love:
             name: 'ప్రేమ'
             description: "ఇష్ఠ బటను రంగు."
-          wiki:
-            name: 'వికీ'
-            description: "వికీ టపాలు వెనుతలంకు ప్రాథమిక రంగు"
       email:
         settings: "అమరికలు"
         preview_digest: "డైజెస్టు మునుజూపు"
