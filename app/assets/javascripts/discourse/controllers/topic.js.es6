@@ -522,7 +522,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         if (result) {
           const selectedPosts = this.get('selectedPosts');
           const selectedReplies = this.get('selectedReplies');
-          const postStream = this.get('model.postStream');
 
           Discourse.Post.mergePosts(selectedPosts, selectedReplies);
           this.send('toggleMultiSelect');
