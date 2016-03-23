@@ -518,19 +518,13 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     mergePosts() {
-      bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), result => {
+      bootbox.confirm(I18n.t("post.merge.confirm", { count: this.get('selectedPostsCount')}), result => {
         if (result) {
           const selectedPosts = this.get('selectedPosts');
           const selectedReplies = this.get('selectedReplies');
           const postStream = this.get('model.postStream');
 
           Discourse.Post.mergePosts(selectedPosts, selectedReplies);
-          //postStream.get('posts').forEach(p => {
-          //  if (this.postSelected(p)) {
-          //    p.set('deleted_at', new Date());
-          //  }
-          //});
-
           this.send('toggleMultiSelect');
         }
       });
@@ -712,7 +706,19 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   }.property('selectedPostsUsername'),
 
   canMergePosts: function() {
+    // Two or more posts selected
     if (this.get('selectedPostsCount') < 2) return false;
+    // Must be able to delete all of the posts, this makes it so
+    // that the main post of a topic can't be part of the merged posts
+    const selectedPosts = this.get('selectedPosts');
+    let canDelete = true;
+    selectedPosts.forEach(function(p) {
+      if (!canDelete || !p.get('can_delete')) {
+        canDelete = false;
+      }
+    });
+    if(!canDelete) return false;
+    // All the posts must have the same creator
     return this.get('selectedPostsUsername') !== undefined;
   }.property('selectedPostsCount'),
 

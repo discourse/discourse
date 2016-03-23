@@ -1,6 +1,7 @@
 require_dependency 'new_post_manager'
 require_dependency 'post_creator'
 require_dependency 'post_destroyer'
+require_dependency 'post_merger'
 require_dependency 'distributed_memoizer'
 require_dependency 'new_post_result_serializer'
 
@@ -276,30 +277,23 @@ class PostsController < ApplicationController
   def merge_posts
     params.require(:post_ids)
 
-
     posts = Post.where(id: post_ids_including_replies).order(:id)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
 
     # Make sure we can delete the posts
     posts.each {|p| guardian.ensure_can_delete!(p) }
 
-    postContent = []
-    posts.each do |p|
-      # only merge posts that are not replies to other posts, for now
-      if p.reply_to_post_number == nil
-        postContent.push(p.raw)
+    PostMerger.new(current_user, posts).merge
+
+    Post.transaction do
+      posts.each_with_index  do |p, index|
+        # do not delete the last post since in will have the content of the merged posts
+        if index < posts.length - 1
+          PostDestroyer.new(current_user, p).destroy
+        end
       end
     end
 
-    post = posts.last
-    changes = {
-      raw: postContent.join("\n\n"),
-      edit_reason: ""
-    }
-    revisor = PostRevisor.new(post, post.topic)
-    revisor.revise!(current_user, changes, {})
-
-    debugger
     render nothing: true
   end
 
