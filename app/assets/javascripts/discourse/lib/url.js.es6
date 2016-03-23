@@ -97,10 +97,15 @@ const DiscourseURL = Ember.Object.createWithMixins({
     It contains the logic necessary to route within a topic using replaceState to
     keep the history intact.
   **/
+
+  isInternalPathButNotEmber: function(path){
+    return path.indexOf("posts.rss") >= 0
+  },
+
   routeTo(path, opts) {
     if (Em.isEmpty(path)) { return; }
 
-    if (Discourse.get('requiresRefresh')) {
+    if (Discourse.get('requiresRefresh') || this.isInternalPathButNotEmber(path)) {
       document.location.href = Discourse.getURL(path);
       return;
     }
