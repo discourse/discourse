@@ -2218,9 +2218,9 @@ en:
       more_topics_category: "More new topics:"
 
     mailing_list:
+      why: "All activity on %{site_link} for %{date}"
       subject_template: "[%{site_name}] Summary for %{date}"
       unsubscribe: "This summary is sent daily due to mailing list mode being enabled. To unsubscribe %{unsubscribe_link}."
-      why: "All activity on %{site_link} for %{date}"
       from: "%{site_name} summary"
       new_topics: "New topics"
       topic_updates: "Topic updates"
