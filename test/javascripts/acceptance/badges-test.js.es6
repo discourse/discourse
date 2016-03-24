@@ -11,6 +11,6 @@ test("Visit Badge Pages", () => {
   visit("/badges/9/autobiographer");
   andThen(() => {
     ok(exists('.badges-listing div'), "has the badge in the listing");
-    ok(exists('.badge-user'), "has the list of users with that badge");
+    ok(exists('.user-info'), "has the list of users with that badge");
   });
 });
