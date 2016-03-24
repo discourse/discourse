@@ -13,21 +13,11 @@
 
   <div class='badges-listing'>
     <div class='row'>
-      {{#unless user}}
-        <div class='grant-count'>{{i18n 'badges.granted' count=grantCount}}</div>
-      {{/unless}}
+      <div class='grant-count'>{{i18n 'badges.granted' count=grantCount}}</div>
       <div class='info'>{{i18n 'badges.allow_title'}} {{{view.allowTitle}}}<br>{{i18n 'badges.multiple_grant'}} {{{view.multipleGrant}}}
       </div>
     </div>
   </div>
-
-  {{#if user}}
-  <div class='badge-user-info'>
-    <div class='earned'>
-      {{i18n 'badges.earned_n_times' count=grantCount}}
-    </div>
-  </div>
-  {{/if}}
 
   {{#if userBadges}}
     <div class="user-badges">
