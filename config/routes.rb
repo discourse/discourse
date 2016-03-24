@@ -252,15 +252,15 @@ Discourse::Application.routes.draw do
   end
 
   resources :static
-  post "login" => "static#enter"
-  get "login" => "static#show", id: "login"
-  get "password-reset" => "static#show", id: "password_reset"
-  get "faq" => "static#show", id: "faq"
-  get "guidelines" => "static#show", id: "guidelines", as: 'guidelines'
-  get "tos" => "static#show", id: "tos", as: 'tos'
-  get "privacy" => "static#show", id: "privacy", as: 'privacy'
-  get "signup" => "static#show", id: "signup"
-  get "login-preferences" => "static#show", id: "login"
+  post "login" => "static#enter", constraints: { format: /(json|html)/ }
+  get "login" => "static#show", id: "login", constraints: { format: /(json|html)/ }
+  get "password-reset" => "static#show", id: "password_reset", constraints: { format: /(json|html)/ }
+  get "faq" => "static#show", id: "faq", constraints: { format: /(json|html)/ }
+  get "guidelines" => "static#show", id: "guidelines", as: 'guidelines', constraints: { format: /(json|html)/ }
+  get "tos" => "static#show", id: "tos", as: 'tos', constraints: { format: /(json|html)/ }
+  get "privacy" => "static#show", id: "privacy", as: 'privacy', constraints: { format: /(json|html)/ }
+  get "signup" => "static#show", id: "signup", constraints: { format: /(json|html)/ }
+  get "login-preferences" => "static#show", id: "login", constraints: { format: /(json|html)/ }
 
   get "users/admin-login" => "users#admin_login"
   put "users/admin-login" => "users#admin_login"
