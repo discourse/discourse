@@ -66,15 +66,17 @@
 
 /* Badge listing in /badges. */
 .badges-listing {
+
   margin: 20px 0;
-  tr {
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    td {
-      padding: 10px 0;
-    }
+
+  tr.title {
+    border-bottom: 2px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
 
-  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  td {
+    padding: 10px 0;
+  }
+
   width: 90%;
   padding: 10px;
   display: table;
@@ -94,6 +96,7 @@
 
   .grant-count {
     font-size: 120%;
+    font-weight: bold;
   }
 
   .badge, .grant-count {
