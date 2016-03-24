@@ -135,66 +135,23 @@
     }
   }
 }
+.user-info.medium.badge-info {
+  min-height: 80px;
 
-
-/* /badges/:id/:slug page styling. */
-.show-badge {
-  .badge-user {
-    text-align: center;
-    width: 100px;
-    padding: 5px 10px;
-    margin-bottom: 10px;
-    display: inline-block;
-    vertical-align: top;
-
-    .details {
-      margin: 0 10px;
-      padding-top: 3px;
-      color: $primary;
-    }
-
-    .username {
-      word-wrap: break-word;
-    }
-
-    .date {
-      display: block;
-      color: lighten($primary, 40%);
-      font-size: 0.714em;
-    }
-  }
-}
-
-.show-badge .user-badge-with-posts .badge-user {
-  width: 45%;
-  padding: 0 0 0 4%;
-  margin-bottom: 20px;
-
-  .badge-info {
-    width: 100px;
-    display: block;
-    float: left;
+  .granted-on {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
 
   .post-link {
-    width: 250px;
     display: block;
-    float: left;
-    margin-left: 18px;
-    text-align: left;
+    margin-top: 0.2em;
   }
 }
 
 .show-badge .badge-user-info {
-  margin-left: 2%;
   .earned {
-    margin-top: 15px;
     font-size: 1.3em;
-  }
-  .username {
-    margin-top: 5px;
-    display: block;
-    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+    margin-bottom: 1em;
   }
 }
 

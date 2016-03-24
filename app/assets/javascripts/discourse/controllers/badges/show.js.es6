@@ -6,7 +6,7 @@ export default Ember.Controller.extend({
   userBadges: null,
   needs: ["application"],
 
-  user: function(){
+  user: function() {
     if (this.get("username")) {
       return this.get('userBadges')[0].get('user');
     }
@@ -36,16 +36,6 @@ export default Ember.Controller.extend({
       });
     }
   },
-
-  layoutClass: function(){
-    var user = this.get("user") ? " single-user" : "";
-    var ub = this.get("userBadges");
-    if(ub && ub[0] && ub[0].post_id){
-      return "user-badge-with-posts" + user;
-    } else {
-      return "user-badge-no-posts" + user;
-    }
-  }.property("userBadges"),
 
   canLoadMore: function() {
     if (this.get('noMoreBadges')) { return false; }
