@@ -66,7 +66,7 @@ severities = [Logger::WARN, Logger::ERROR, Logger::FATAL, Logger::UNKNOWN]
 RailsMultisite::ConnectionManagement.each_connection do
   error_rate_per_minute = SiteSetting.alert_admins_if_errors_per_minute rescue 0
 
-  if error_rate_per_minute > 0
+  if (error_rate_per_minute || 0) > 0
     store.register_rate_limit_per_minute(severities, error_rate_per_minute) do |rate|
       MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'minute' })
     end
@@ -74,7 +74,7 @@ RailsMultisite::ConnectionManagement.each_connection do
 
   error_rate_per_hour = SiteSetting.alert_admins_if_errors_per_hour rescue 0
 
-  if error_rate_per_hour > 0
+  if (error_rate_per_hour || 0) > 0
     store.register_rate_limit_per_hour(severities, error_rate_per_hour) do |rate|
       MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'hour' })
     end
