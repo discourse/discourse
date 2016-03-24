@@ -32,8 +32,9 @@
 
       {{#unless canLoadMore}}
         {{#if user}}
-          {{log model}}
+        <div class='clearfix'>
           <a class='btn' href='{{model.url}}'>{{i18n 'badges.others_count' count=model.grant_count}}</a>
+        </div>
         {{/if}}
       {{/unless}}
     </div>
