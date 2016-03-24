@@ -95,7 +95,28 @@ class ImportScripts::Mbox < ImportScripts::Base
   end
 
   def clean_title(title)
-    title.gsub(/^Re: */i, '')
+    #Strip mailing list name from subject
+    title = title.gsub(/\[[^\]]+\]+/, '').strip
+
+    original_length = title.length
+
+    #Strip Reply prefix from title (Standard and localized)
+    title = title.gsub(/^Re: */i, '')
+    title = title.gsub(/^R: */i, '') #Italian
+    title = title.gsub(/^RIF: */i, '') #Italian
+
+    #Strip Forward prefix from title (Standard and localized)
+    title = title.gsub(/^Fwd: */i, '')
+    title = title.gsub(/^I: */i, '') #Italian
+
+    title.strip
+
+    #In case of mixed localized prefixes there could be many of them if the mail client didn't strip the localized ones
+    if original_length >  title.length
+      clean_title(title)
+    else
+      title
+    end
   end
 
   def clean_raw(raw)
@@ -156,7 +177,7 @@ class ImportScripts::Mbox < ImportScripts::Base
 
         raw = selected.force_encoding(selected.encoding).encode("UTF-8")
 
-        title = mail.subject.gsub(/\[[^\]]+\]+/, '').strip
+        title = mail.subject
 
         { id: t['id'],
           title: clean_title(title),
