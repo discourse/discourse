@@ -48,7 +48,7 @@ export default Ember.Controller.extend({
 
   @computed('model.long_description')
   longDescription(modelLongDesc) {
-    return Discourse.Emoji.unescape(modelLongDesc);
+    return Discourse.Emoji.unescape(modelLongDesc || '');
   }
 
 });
