@@ -1,0 +1,13 @@
+<div id='main' class=<%= classes %>>
+
+  <div class='header-instructions'>%{header_instructions}</div>
+
+  <% if message.present? %>
+    <div><%= message %></div>
+  <% end %>
+
+  <hr>
+  <div class='footer'>%{respond_instructions}</div>
+  <div class='footer'>%{unsubscribe_link}%{unsubscribe_via_email_link}</div>
+
+</div>
