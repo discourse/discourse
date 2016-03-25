@@ -33,13 +33,6 @@ const Badge = RestModel.extend({
     return I18n.t(i18nKey, {defaultValue: this.get('name')});
   }.property('name', 'i18nNameKey'),
 
-  /**
-    The i18n translated description for this badge. Returns the null if no
-    translation exists.
-
-    @property translatedDescription
-    @type {String}
-  **/
   translatedDescription: function() {
     const i18nKey = "badges.badge." + this.get('i18nNameKey') + ".description";
     let translation = I18n.t(i18nKey);

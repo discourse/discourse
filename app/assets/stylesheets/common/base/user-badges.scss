@@ -32,6 +32,7 @@
   }
 }
 
+
 /* User badge listing. */
 .user-badges-list {
   text-align: center;
@@ -62,55 +63,6 @@
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
   }
-}
-
-/* Badge listing in /badges. */
-.badges-listing {
-
-  margin: 20px 0;
-
-  tr.title {
-    border-bottom: 2px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  }
-
-  td {
-    padding: 10px 0;
-  }
-
-  width: 90%;
-  padding: 10px;
-  display: table;
-  color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
-
-  .row {
-    display: table-row;
-    > div {
-      display: table-cell;
-      vertical-align: middle;
-    }
-  }
-
-  .user-badge {
-    font-size: $base-font-size;
-  }
-
-  .grant-count {
-    font-size: 120%;
-    font-weight: bold;
-  }
-
-  .badge, .grant-count {
-    white-space: nowrap;
-  }
-
-  .info {
-    font-size: 0.9em;
-    text-align: right;
-  }
-
-  .description {
-  }
-
 }
 
 @media all and (max-width: 750px) {
@@ -202,3 +154,127 @@
   margin-bottom: 15px;
   margin-top: 15px;
 }
+
+.badge-card {
+  position: relative;
+  display: inline-block;
+  background-color: dark-light-diff($primary, $secondary, 95%, -65%);
+  margin-right: 5px;
+  margin-bottom: 10px;
+  box-shadow: 1px 1px 3px rgba(0.0, 0.0, 0.0, 0.2);
+
+  .check-display {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+  }
+
+  .grant-count {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-weight: bold;
+    color: dark-light-diff($primary, $secondary, 50%, -65%);
+    font-size: 1.2em;
+  }
+
+  .badge-contents {
+    display: flex;
+    flex-direction: row;
+    min-height: 128px;
+
+    .badge-icon {
+      min-width: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: dark-light-diff($primary, $secondary, 92%, -60%);
+      font-size: 3em;
+
+      &.badge-type-gold .fa {
+        color: #ffd700 !important;
+      }
+
+      &.badge-type-silver .fa {
+        color: #c0c0c0 !important;
+      }
+
+      &.badge-type-bronze .fa {
+        color: #cd7f32 !important;
+      }
+    }
+
+    .badge-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      color: $primary;
+
+      h3 {
+        margin-bottom: 0.25em;
+      }
+    }
+  }
+}
+
+.badge-card.medium {
+  width: 360px;
+}
+
+.badge-card.large {
+  width: 750px;
+  a {
+    cursor: default;
+  }
+}
+
+
+.badge-groups {
+  margin: 20px 0;
+  color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+  h3 {
+    margin-bottom: 1.0em;
+  }
+}
+
+.badge-grouping {
+  margin-bottom: 1.5em;
+}
+
+.show-badge-details {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 2em;
+  margin-top: 1em;
+
+  .badge-grant-info {
+    display: flex;
+    align-items: center;
+    margin-left: 1em;
+  }
+  .grant-info-item {
+    margin-bottom: 1em;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+  }
+}
+
+.check-display {
+  display: inline-block;
+  width: 18px;
+  border-radius: 10px;
+  text-align: center;
+  .fa {
+    font-size: 0.9em;
+    color: $secondary;
+  }
+}
+
+.check-display.status-checked {
+  background-color: dark-light-diff($primary, $secondary, 40%, -60%);
+}
+
+.check-display.status-unchecked {
+  background-color: $danger;
+}
+
