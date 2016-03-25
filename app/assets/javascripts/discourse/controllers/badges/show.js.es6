@@ -1,5 +1,5 @@
 import UserBadge from 'discourse/models/user-badge';
-import computed from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   queryParams: ['username'],
@@ -7,19 +7,17 @@ export default Ember.Controller.extend({
   userBadges: null,
   needs: ["application"],
 
-  user: function() {
-    if (this.get("username")) {
+  @computed('username')
+  user(username) {
+    if (username) {
       return this.get('userBadges')[0].get('user');
     }
-  }.property("username"),
+  },
 
-  grantCount: function() {
-    if (this.get("username")) {
-      return this.get('userBadges.grant_count');
-    } else {
-      return this.get('model.grant_count');
-    }
-  }.property('username', 'model', 'userBadges'),
+  @computed('username', 'model.grant_count', 'userBadges.grant_count')
+  grantCount(username, modelCount, userCount) {
+    return username ? userCount : modelCount;
+  },
 
   actions: {
     loadMore() {
@@ -37,22 +35,20 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed('noMoreBadges', 'model.grant_count', 'userBadges.length')
+  @computed('noMoreBadges', 'grantCount', 'userBadges.length')
   canLoadMore(noMoreBadges, grantCount, userBadgeLength) {
     if (noMoreBadges) { return false; }
     return grantCount > (userBadgeLength || 0);
   },
 
-  _showFooter: function() {
+  @observes('canLoadMore')
+  _showFooter() {
     this.set("controllers.application.showFooter", !this.get("canLoadMore"));
-  }.observes("canLoadMore"),
+  },
 
-  longDescription: function(){
-    return Discourse.Emoji.unescape(this.get('model.long_description'));
-  }.property('model.long_description'),
-
-  showLongDescription: function(){
-    return this.get('model.long_description');
-  }.property('userBadges')
+  @computed('model.long_description')
+  longDescription(modelLongDesc) {
+    return Discourse.Emoji.unescape(modelLongDesc);
+  }
 
 });
