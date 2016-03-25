@@ -2067,53 +2067,57 @@ en:
 
     posted_by: "Posted by %{username} on %{post_date}"
 
+    invited_to_private_message_body: |
+      %{username} invited you to a message
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      at
+
+      > %{site_title} -- %{site_description}
+
+    invited_to_topic_body: |
+      %{username} invited you to a discussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      at
+
+      > %{site_title} -- %{site_description}
+
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
+        %{header_instructions}
 
-        %{username} invited you to a message
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        at
-
-        > %{site_title} -- %{site_description}
-
-        Please visit this link to view the message: %{base_url}%{url}
+        ---
+        %{respond_instructions}
 
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
+        %{header_instructions}
 
-        %{username} invited you to a message
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        at
-
-        > %{site_title} -- %{site_description}
-
-        Please visit this link to view the message: %{base_url}%{url}
+        ---
+        %{respond_instructions}
 
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} invited you to '%{topic_title}'"
       text_body_template: |
+        %{header_instructions}
 
-        %{username} invited you to a discussion
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        at
-
-        > %{site_title} -- %{site_description}
-
-        Please visit this link to view the message: %{base_url}%{url}
+        ---
+        %{respond_instructions}
 
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
