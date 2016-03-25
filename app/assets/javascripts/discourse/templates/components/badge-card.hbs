@@ -1,19 +1,17 @@
-{{#link-to 'badges.show' badge}}
-  {{#if badge.grant_count}}
-    <span class='grant-count' title={{i18n 'badges.granted' count=badge.grant_count}}>{{badge.grant_count}}</span>
-  {{/if}}
-  {{#if badge.has_badge}}
-    <span class='check-display status-checked'>{{fa-icon "check"}}</span>
-  {{/if}}
-  <div class='badge-contents'>
-    <div class='badge-icon {{badge.badgeTypeClassName}}'>
-      {{icon-or-image badge.icon}}
-    </div>
-    <div class='badge-info'>
-      <div class='badge-info-item'>
-        <h3>{{badge.displayName}}</h3>
-        <div class='badge-summary'>{{{summary}}}</div>
-      </div>
+{{#if displayCount}}
+  <span class='grant-count' title={{i18n 'badges.granted' count=displayCount}}>{{displayCount}}</span>
+{{/if}}
+{{#if badge.has_badge}}
+  <span class='check-display status-checked'>{{fa-icon "check"}}</span>
+{{/if}}
+<div class='badge-contents'>
+  <div class='badge-icon {{badge.badgeTypeClassName}}'>
+    {{icon-or-image badge.icon}}
+  </div>
+  <div class='badge-info'>
+    <div class='badge-info-item'>
+      <h3>{{badge.displayName}}</h3>
+      <div class='badge-summary'>{{{summary}}}</div>
     </div>
   </div>
-{{/link-to}}
+</div>
