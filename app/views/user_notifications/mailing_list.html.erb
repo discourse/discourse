@@ -54,13 +54,14 @@
       <td style='border-left: 20px solid #eee; border-right: 20px solid #eee; border-bottom: 10px solid #eee; padding: 10px 10px; background: #fff;'>
         <% @posts_by_topic[topic].each do |post| %>
           <div>
+            <img style="float: left; width: 20px; padding-right: 5px;" src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
             <p style="font-size: 15px; color: #888">
               <a href='<%= [Discourse.base_url, :users, post.user.username].join('/') %>'><%= post.user.name || post.user.username %></a>
               <span> - </span>
               <span><%= I18n.l(post.created_at, format: :long) %></span>
             </p>
             <%= raw format_for_email(post.cooked) %>
-              <hr />
+            <hr />
           </div>
         <% end %>
         <a style='font-size: 12px; float: right;' href='<%= Discourse.base_url + topic.relative_url %>'><%= t('user_notifications.mailing_list.view_this_topic') %></a>
