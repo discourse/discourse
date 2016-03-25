@@ -65,8 +65,8 @@ module UserNotificationsHelper
       normalize_name(post.user.name) != normalize_name(post.user.username)
   end
 
-  def format_for_email(html)
-    PrettyText.format_for_email(html).html_safe
+  def format_for_email(html, style: nil)
+    PrettyText.format_for_email(html, style: style).html_safe
   end
 
 end

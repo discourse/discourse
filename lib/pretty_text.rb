@@ -371,30 +371,14 @@ module PrettyText
     fragment.to_html
   end
 
-  # Given a Nokogiri doc, convert all links to absolute
-  def self.make_all_links_absolute(doc)
-    site_uri = nil
-    doc.css("a").each do |link|
-      href = link["href"].to_s
-      begin
-        uri = URI(href)
-        site_uri ||= URI(Discourse.base_url)
-        link["href"] = "#{site_uri}#{link['href']}" unless uri.host.present?
-      rescue URI::InvalidURIError, URI::InvalidComponentError
-        # leave it
-      end
-    end
-  end
-
   def self.strip_image_wrapping(doc)
     doc.css(".lightbox-wrapper .meta").remove
   end
 
-  def self.format_for_email(html)
-    doc = Nokogiri::HTML.fragment(html)
-    make_all_links_absolute(doc)
-    strip_image_wrapping(doc)
-    doc.to_html
+  def self.format_for_email(html, style: nil)
+    Email::Styles.new(html, style: style).tap do |doc|
+      doc.send :"format_#{style}" if style
+    end.to_html
   end
 
   protected
