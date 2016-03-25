@@ -44,11 +44,6 @@ export default Ember.Controller.extend({
   @observes('canLoadMore')
   _showFooter() {
     this.set("controllers.application.showFooter", !this.get("canLoadMore"));
-  },
-
-  @computed('model.long_description')
-  longDescription(modelLongDesc) {
-    return Discourse.Emoji.unescape(modelLongDesc || '');
   }
 
 });

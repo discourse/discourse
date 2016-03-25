@@ -5,18 +5,16 @@
     {{model.displayName}}
   </h1>
 
-  {{#if longDescription}}
-    <div class='long-description banner'>
-      {{{longDescription}}}
-    </div>
-  {{/if}}
-
-  <div class='badges-listing'>
-    <div class='row'>
-      <div class='grant-count'>{{i18n 'badges.granted' count=grantCount}}</div>
-      <div class='info'>
-        {{i18n 'badges.allow_title'}} {{check-mark checked=model.allow_title}}<br>
-        {{i18n 'badges.multiple_grant'}} {{check-mark checked=model.multiple_grant}}
+  <div class='show-badge-details'>
+    {{badge-card badge=model size="large"}}
+    <div class='badge-grant-info'>
+      <div>
+        <div class='grant-info-item'>
+          {{check-mark checked=model.allow_title}} {{i18n 'badges.allow_title'}}
+        </div>
+        <div class='grant-info-item'>
+          {{check-mark checked=model.multiple_grant}} {{i18n 'badges.multiple_grant'}}
+        </div>
       </div>
     </div>
   </div>
