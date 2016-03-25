@@ -1296,6 +1296,16 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "doesn't return topics from suppressed categories" do
+      user = Fabricate(:user)
+      category = Fabricate(:category)
+      Fabricate(:topic, category: category)
+
+      SiteSetting.digest_suppress_categories = "#{category.id}"
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+    end
+
     it "doesn't return topics from TL0 users" do
       new_user = Fabricate(:user, trust_level: 0)
       Fabricate(:topic, user_id: new_user.id)
@@ -1607,7 +1617,7 @@ describe Topic do
 
     topic.update_status('closed', true, user)
     topic.reload
-    
+
     expect(@topic_status_event_triggered).to eq(true)
   end
 end
