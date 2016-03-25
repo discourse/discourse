@@ -32,39 +32,6 @@
   }
 }
 
-
-/* User badge listing. */
-.user-badges-list {
-  text-align: center;
-
-  .user-badge {
-    max-width: 80px;
-    text-align: center;
-    vertical-align: top;
-    margin: 10px;
-    border: none;
-
-    .fa {
-      display: block;
-      font-size: 3.571em;
-      margin-bottom: 5px;
-    }
-
-    img {
-      display: block;
-      margin: auto auto 4px;
-      width: 55px;
-      height: 55px;
-    }
-
-    .count {
-      display: block;
-      font-size: 0.8em;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    }
-  }
-}
-
 @media all and (max-width: 750px) {
   .show-badge .user-badge-with-posts .badge-user a.post-link {
     width: auto;
@@ -219,16 +186,12 @@
 }
 
 .badge-card.medium {
-  width: 360px;
+  width: 350px;
 }
 
 .badge-card.large {
   width: 750px;
-  a {
-    cursor: default;
-  }
 }
-
 
 .badge-groups {
   margin: 20px 0;
