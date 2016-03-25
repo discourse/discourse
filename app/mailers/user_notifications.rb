@@ -173,12 +173,14 @@ class UserNotifications < ActionMailer::Base
   end
 
   def user_invited_to_private_message(user, opts)
-    opts[:use_template_html] = true
+    opts[:allow_reply_by_email] = false
+    opts[:use_invite_template] = true
     notification_email(user, opts)
   end
 
   def user_invited_to_topic(user, opts)
-    opts[:use_template_html] = true
+    opts[:allow_reply_by_email] = false
+    opts[:use_invite_template] = true
     opts[:show_category_in_subject] = true
     notification_email(user, opts)
   end
@@ -273,7 +275,7 @@ class UserNotifications < ActionMailer::Base
       add_re_to_subject: opts[:add_re_to_subject],
       show_category_in_subject: opts[:show_category_in_subject],
       notification_type: notification_type,
-      use_template_html: opts[:use_template_html],
+      use_invite_template: opts[:use_invite_template],
       user: user
     )
   end
@@ -322,9 +324,21 @@ class UserNotifications < ActionMailer::Base
                             .where('created_at > ?', 1.day.ago)
                             .count) >= (SiteSetting.max_emails_per_day_per_user-1)
 
-    topic_excerpt = ""
-    if opts[:use_template_html]
+    if opts[:use_invite_template]
+      if post.topic.private_message?
+        invite_template = "user_notifications.invited_to_private_message_body"
+      else
+        invite_template = "user_notifications.invited_to_topic_body"
+      end
       topic_excerpt = post.excerpt.gsub("\n", " ") if post.is_first_post? && post.excerpt
+      message = I18n.t(invite_template, username: post.username, topic_title: title, topic_excerpt: topic_excerpt, site_title: SiteSetting.title, site_description: SiteSetting.site_description)
+      html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+        template: 'email/invite',
+        format: :html,
+        locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
+                  classes: RTL.new(user).css_class
+        }
+      )
     else
       in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
       html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
@@ -337,6 +351,7 @@ class UserNotifications < ActionMailer::Base
                   classes: RTL.new(user).css_class
         }
       )
+      message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "");
     end
 
     template = "user_notifications.user_#{notification_type}"
@@ -348,8 +363,7 @@ class UserNotifications < ActionMailer::Base
 
     email_opts = {
       topic_title: title,
-      topic_excerpt: topic_excerpt,
-      message: email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : ""),
+      message: message,
       url: post.url,
       post_id: post.id,
       topic_id: post.topic_id,
