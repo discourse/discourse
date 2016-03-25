@@ -6,9 +6,9 @@ export default Ember.Component.extend({
 
   @computed('count', 'badge.grant_count')
   displayCount(count, grantCount) {
-    const count = parseInt(count || grantCount || 0);
-    if (count > 1) {
-      return count;
+    const c = parseInt(count || grantCount || 0);
+    if (c > 1) {
+      return c;
     }
   },
 
