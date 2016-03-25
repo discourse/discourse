@@ -234,7 +234,7 @@
 }
 
 .check-display.status-checked {
-  background-color: dark-light-diff($primary, $secondary, 40%, -60%);
+  background-color: $success;
 }
 
 .check-display.status-unchecked {
