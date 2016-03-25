@@ -377,6 +377,7 @@ module PrettyText
 
   def self.format_for_email(html, style: nil)
     Email::Styles.new(html, style: style).tap do |doc|
+      doc.make_all_links_absolute
       doc.send :"format_#{style}" if style
     end.to_html
   end

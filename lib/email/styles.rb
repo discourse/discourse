@@ -187,6 +187,17 @@ module Email
       @fragment.to_s
     end
 
+    def make_all_links_absolute
+      site_uri = URI(Discourse.base_url)
+      @fragment.css("a").each do |link|
+        begin
+          link["href"] = "#{site_uri}#{link['href']}" unless URI(link["href"].to_s).host.present?
+        rescue URI::InvalidURIError, URI::InvalidComponentError
+          # leave it
+        end
+      end
+    end
+
     private
 
     def replace_relative_urls
