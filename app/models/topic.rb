@@ -339,6 +339,10 @@ class Topic < ActiveRecord::Base
 
     # Remove muted categories
     muted_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
+    if SiteSetting.digest_suppress_categories.present?
+      muted_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
+      muted_category_ids = muted_category_ids.uniq
+    end
     if muted_category_ids.present?
       topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
     end

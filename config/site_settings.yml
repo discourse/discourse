@@ -512,6 +512,9 @@ email:
   digest_min_excerpt_length: 100
   digest_topics: 20
   delete_digest_email_after_days: 365
+  digest_suppress_categories:
+    type: category_list
+    default: ''
   disable_digest_emails:
     default: false
     client: true
