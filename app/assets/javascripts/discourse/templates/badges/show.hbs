@@ -14,21 +14,25 @@
   <div class='badges-listing'>
     <div class='row'>
       <div class='grant-count'>{{i18n 'badges.granted' count=grantCount}}</div>
-      <div class='info'>{{i18n 'badges.allow_title'}} {{{view.allowTitle}}}<br>{{i18n 'badges.multiple_grant'}} {{{view.multipleGrant}}}
+      <div class='info'>
+        {{i18n 'badges.allow_title'}} {{check-mark checked=model.allow_title}}<br>
+        {{i18n 'badges.multiple_grant'}} {{check-mark checked=model.multiple_grant}}
       </div>
     </div>
   </div>
 
   {{#if userBadges}}
     <div class="user-badges">
-      {{#each userBadges as |ub|}}
-        {{#user-info user=ub.user size="medium" class="badge-info" date=ub.granted_at}}
-          <div class="granted-on">{{i18n 'badges.granted_on' date=(inline-date ub.granted_at)}}</div>
-          {{#if ub.post_number}}
-            <a class="post-link" href="{{unbound ub.topic.url}}/{{unbound ub.post_number}}">{{{ub.topic.fancyTitle}}}</a>
-          {{/if}}
-        {{/user-info}}
-      {{/each}}
+      {{#load-more selector=".badge-info" action="loadMore"}}
+        {{#each userBadges as |ub|}}
+          {{#user-info user=ub.user size="medium" class="badge-info" date=ub.granted_at}}
+            <div class="granted-on">{{i18n 'badges.granted_on' date=(inline-date ub.granted_at)}}</div>
+            {{#if ub.post_number}}
+              <a class="post-link" href="{{unbound ub.topic.url}}/{{unbound ub.post_number}}">{{{ub.topic.fancyTitle}}}</a>
+            {{/if}}
+          {{/user-info}}
+        {{/each}}
+      {{/load-more}}
 
       {{#unless canLoadMore}}
         {{#if user}}
