@@ -19,6 +19,14 @@
   i.fa-heart {
     color: $love !important;
   }
+  .nav-pills {
+    a {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+    }
+    i {
+      color: dark-light-choose(scale-color($primary, $lightness: 55%), scale-color($secondary, $lightness: 55%));
+    }
+  }
 }
 
 .user-field {
