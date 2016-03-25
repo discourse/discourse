@@ -96,9 +96,12 @@ module Jobs
           process_popmail(p)
         end
       end
+    rescue Net::OpenTimeout => e
+      mark_as_errored!
+      Discourse.handle_job_exception(e, error_context(@args, "Connecting to '#{SiteSetting.pop3_polling_host}' for polling emails."))
     rescue Net::POPAuthenticationError => e
       mark_as_errored!
-      Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming email"))
+      Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming emails."))
     end
 
     POLL_MAILBOX_ERRORS_KEY ||= "poll_mailbox_errors".freeze
