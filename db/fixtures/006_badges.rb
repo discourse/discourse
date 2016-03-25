@@ -287,7 +287,8 @@ end
     b.target_posts = true
     b.show_posts = true
     b.query = Badge::Queries.linking_badge(count)
-    b.default_badge_grouping_id = BadgeGrouping::Community
+    b.badge_grouping_id = BadgeGrouping::Posting
+    b.default_badge_grouping_id = BadgeGrouping::Posting
     # don't trigger for now, its too expensive
     b.trigger = Badge::Trigger::None
     b.system = true
