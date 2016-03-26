@@ -17,7 +17,7 @@ export default Ember.Component.extend({
     if (size === 'large') {
       return Discourse.Emoji.unescape(this.get('badge.long_description') || '');
     }
-    return this.get('badge.translatedDescription');
+    return this.get('badge.displayDescriptionHtml');
   }
 
 });
