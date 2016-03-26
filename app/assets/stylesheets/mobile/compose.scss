@@ -181,7 +181,7 @@ input {
       bottom: 35px;
     }
     .submit-panel {
-      width: 50%;
+      // don't specify width; needs to auto-size for smallest phones
       position: absolute;
       display: block;
       bottom: 2px;
