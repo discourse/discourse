@@ -179,12 +179,9 @@
   }
 
   .user-content {
-    padding: 10px 8px;
     background-color: $secondary;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    margin-bottom: 10px;
     box-sizing: border-box;
-    margin-top: 20px;
+    margin-top: 10px;
 
     .btn.right {
       float: right
@@ -599,4 +596,14 @@
 
 .notification-buttons {
   display: inline-block;
+}
+
+// mobile fixups for badges
+
+.badge-card.medium {
+  width: 300px;
+}
+
+.show-badge-details .badge-grant-info {
+  display: none;
 }
