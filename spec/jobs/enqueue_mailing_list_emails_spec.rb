@@ -60,16 +60,45 @@ describe Jobs::EnqueueMailingListEmails do
     end
 
     context 'users with mailing list mode on' do
-      let!(:user) { Fabricate(:active_user) }
-
-      it "returns the user if the frequency is set to daily" do
-        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
-        expect(Jobs::EnqueueMailingListEmails.new.target_user_ids).to eq([user.id])
+      let(:user) { Fabricate(:active_user, first_seen_at: 24.hours.ago) }
+      let(:user_option) { user.user_option }
+      subject { Jobs::EnqueueMailingListEmails.new.target_user_ids }
+      before do
+        user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
       end
 
-      it "does not return the user if the frequency is not set to daily" do
-        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
-        expect(Jobs::EnqueueMailingListEmails.new.target_user_ids).to_not eq([user.id])
+      it "returns a user whose first_seen_at matches the current hour" do
+        expect(subject).to include user.id
+      end
+
+      it "returns a user seen multiple days ago" do
+        user.update(first_seen_at: 72.hours.ago)
+        expect(subject).to include user.id
+      end
+
+      it "doesn't return a user who has never been seen" do
+        user.update(first_seen_at: nil)
+        expect(subject).to_not include user.id
+      end
+
+      it "doesn't return users with mailing list mode off" do
+        user_option.update(mailing_list_mode: false)
+        expect(subject).to_not include user.id
+      end
+
+      it "doesn't return users with mailing list mode set to 'individual'" do
+        user_option.update(mailing_list_mode_frequency: 1)
+        expect(subject).to_not include user.id
+      end
+
+      it "doesn't return a user who has received the digest earlier" do
+        user.update(first_seen_at: 5.hours.ago)
+        expect(subject).to_not include user.id
+      end
+
+      it "doesn't return a user who was first seen today" do
+        user.update(first_seen_at: 2.minutes.ago)
+        expect(subject).to_not include user.id
       end
     end
 
