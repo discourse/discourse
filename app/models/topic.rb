@@ -305,6 +305,7 @@ class Topic < ActiveRecord::Base
   # Returns hot topics since a date for display in email digest.
   def self.for_digest(user, since, opts=nil)
     opts = opts || {}
+    score = "#{ListController.best_period_for(since)}_score"
 
     topics = Topic
               .visible
@@ -322,7 +323,6 @@ class Topic < ActiveRecord::Base
     end
 
     if !!opts[:top_order]
-      score = "#{ListController.best_period_for(since)}_score"
       topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
                      .order(TopicQuerySQL.order_top_for(score))
     end

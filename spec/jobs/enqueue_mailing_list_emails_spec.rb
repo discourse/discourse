@@ -5,17 +5,8 @@ describe Jobs::EnqueueMailingListEmails do
 
   describe '#target_users' do
 
-    context 'disabled mailing list mode' do
-      before { SiteSetting.disable_mailing_list_mode = true }
-      let!(:user_no_digests) { Fabricate(:active_user) }
-
-      it "doesn't return users with email disabled" do
-        expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(user_no_digests.id)).to eq(false)
-      end
-    end
-
     context 'unapproved users' do
-      Given!(:unapproved_user) { Fabricate(:active_user, approved: false) }
+      Given!(:unapproved_user) { Fabricate(:active_user, approved: false, first_seen_at: 24.hours.ago) }
       When do
         SiteSetting.must_approve_users = true
         unapproved_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
@@ -91,7 +82,7 @@ describe Jobs::EnqueueMailingListEmails do
         expect(subject).to_not include user.id
       end
 
-      it "doesn't return a user who has received the digest earlier" do
+      it "doesn't return a user who has received the mailing list summary earlier" do
         user.update(first_seen_at: 5.hours.ago)
         expect(subject).to_not include user.id
       end
@@ -114,7 +105,6 @@ describe Jobs::EnqueueMailingListEmails do
       end
 
       it "enqueues the mailing list email job" do
-        SiteSetting.stubs(:disable_digest_emails?).returns(false)
         Jobs.expects(:enqueue).with(:user_email, type: :mailing_list, user_id: user.id)
         Jobs::EnqueueMailingListEmails.new.execute({})
       end
@@ -125,7 +115,7 @@ describe Jobs::EnqueueMailingListEmails do
         Jobs::EnqueueMailingListEmails.any_instance.expects(:target_user_ids).never
       end
 
-      it "does not enqueue the digest email job" do
+      it "does not enqueue the mailing list email job" do
         SiteSetting.disable_mailing_list_mode = true
         Jobs.expects(:enqueue).with(:user_email, type: :mailing_list, user_id: user.id).never
         Jobs::EnqueueMailingListEmails.new.execute({})
