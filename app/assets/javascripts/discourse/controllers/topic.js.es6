@@ -712,7 +712,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     const selectedPosts = this.get('selectedPosts');
     let canDelete = true;
     selectedPosts.forEach(function(p) {
-      if (!canDelete || !p.get('can_delete')) {
+      if (!p.get('can_delete')) {
         canDelete = false;
       }
     });

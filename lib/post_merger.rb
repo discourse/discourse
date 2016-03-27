@@ -15,7 +15,7 @@ class PostMerger
     post = @posts.last
     changes = {
       raw: postContent.join("\n\n"),
-      edit_reason: "Merging the posts"
+      edit_reason: "Merged #{@posts.length} posts by #{@posts.first.user.name}"
     }
     revisor = PostRevisor.new(post, post.topic)
     revisor.revise!(@user, changes, {})
