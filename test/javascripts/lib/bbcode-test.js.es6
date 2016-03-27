@@ -62,20 +62,6 @@ test('tags with arguments', function() {
   format("[b]first[/b] [b]second[/b]", "<span class=\"bbcode-b\">first</span> <span class=\"bbcode-b\">second</span>", "can bold two things on the same line");
 });
 
-test("size tags", function() {
-  format("[size=35]BIG [b]whoop[/b][/size]",
-         "<span class=\"bbcode-size-35\">BIG <span class=\"bbcode-b\">whoop</span></span>",
-         "supports [size=]");
-  format("[size=asdf]regular[/size]",
-         "<span class=\"bbcode-size-1\">regular</span>",
-         "it only supports numbers in bbcode");
-  format("[size=35]NEWLINE\n\ntest[/size]",
-         "<span class=\"bbcode-size-35\"><p>NEWLINE</p><p>test</p></span>",
-         "works with newlines");
-  format("[size=35][quote=\"user\"]quote[/quote][/size]",
-         "<span class=\"bbcode-size-35\"><aside class=\"quote\"><div class=\"title\"><div class=\"quote-controls\"></div>user:</div><blockquote><p>quote</p></blockquote></aside></span>",
-         "works with nested complex blocks");
-});
 
 test("quotes", function() {
 
