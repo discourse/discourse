@@ -158,16 +158,20 @@
       background-color: dark-light-diff($primary, $secondary, 92%, -60%);
       font-size: 3em;
 
+      img {
+        max-width: 80px;
+      }
+
       &.badge-type-gold .fa {
-        color: #ffd700 !important;
+        color: #ffd700;
       }
 
       &.badge-type-silver .fa {
-        color: #c0c0c0 !important;
+        color: #c0c0c0;
       }
 
       &.badge-type-bronze .fa {
-        color: #cd7f32 !important;
+        color: #cd7f32;
       }
     }
 
@@ -187,6 +191,7 @@
 
 .badge-card.medium {
   width: 350px;
+  vertical-align: top;
 }
 
 .badge-card.large {
