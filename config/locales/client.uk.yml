@@ -1404,28 +1404,3 @@ uk:
           name: Спільнота
         other:
           name: Інше
-      badge:
-        editor:
-          name: Редактор
-        basic_user:
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Надані</a> всі основні функції спільноти
-        welcome:
-          name: Ласкаво просимо
-        autobiographer:
-          name: Автобіографіст
-        anniversary:
-          name: Річниця
-        nice_topic:
-          name: Непогана тема
-        good_topic:
-          name: Хороша тема
-        great_topic:
-          name: Чудова тема
-        first_link:
-          name: Перше посилання
-        first_quote:
-          name: Перша цитата
-        read_guidelines:
-          name: Читати інструкції
-        reader:
-          name: Читач

@@ -724,7 +724,6 @@ es:
     too_few_topics_and_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
-    logs_error_rate_exceeded_notice: "%{timestamp}: La tasa actual de <a href='%{url}' target='_blank'>%{rate} errors/%{duration}</a> ha excedido el límite establecido en las opciones del sitio de %{siteSettingLimit} errors/%{duration}."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -2643,10 +2642,7 @@ es:
       earned_n_times:
         one: "Ganó este distintivo 1 vez"
         other: "Ganó este distintivo %{count} veces"
-      more_with_badge: "Otros con este distintivo"
       title: Distintivos
-      allow_title: "puede ser utilizado como título"
-      multiple_grant: "puede ser otorgado varias veces"
       badge_count:
         one: "1 distintivo"
         other: "%{count} distintivos"
@@ -2669,97 +2665,6 @@ es:
           name: Miscelánea
         posting:
           name: Escritura
-      badge:
-        editor:
-          name: Editor
-          description: Editó un post por primera vez
-        basic_user:
-          name: Básico
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Dispone</a> de todas las funciones esenciales de la comunidad
-        member:
-          name: Miembro
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Se le conceden</a> invitaciones
-        regular:
-          name: Habitual
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Se le concede</a> el poder recategorizar, renombrar, publicar enlacer sin el tag no-follow y acceso a sala vip
-        leader:
-          name: Líder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Se le concede</a> el poder editar, destacar, cerrar, archivar, dividir y combinar temas globalmente
-        welcome:
-          name: ¡Bienvenido/a!
-          description: Recibió un "me gusta"
-        autobiographer:
-          name: Autobiógrafo
-          description: Detalló información en su <a href="/my/preferences">perfil</a> de usuario
-        anniversary:
-          name: Aniversario
-          description: Miembro activo desde hace un año y ha publicado al menos una vez
-        nice_post:
-          name: Buen post
-          description: Recibió 10 "me gusta" en un post. Este distintivo puede ser concedido varias veces
-        good_post:
-          name: Gran post
-          description: Recibió 25 "me gusta" en un post. Este distintivo puede ser concedido varias veces
-        great_post:
-          name: Excelente post
-          description: Recibió 50 "me gusta" en un post. Este distintivo puede ser concedido varias veces
-        nice_topic:
-          name: Buen tema
-          description: Recibió 10 "me gusta" en un tema. Este distintivo puede ser concedido varias veces
-        good_topic:
-          name: Gran tema
-          description: Recibió 25 "me gusta" en un tema. Este distintivo puede ser concedido varias veces
-        great_topic:
-          name: Excelente tema
-          description: Recibió 50 "me gusta" en un tema. Este distintivo puede ser concedido varias veces
-        nice_share:
-          name: Buena contribución
-          description: Compartió un post con 25 visitantes únicos
-        good_share:
-          name: Gran contribución
-          description: Compartió un post con 300 visitantes únicos
-        great_share:
-          name: Excelente contribución
-          description: Compartió un post con 1000 visitantes únicos
-        first_like:
-          name: Primer "me gusta"
-          description: Le dio a "me gusta" a un post
-        first_flag:
-          name: Primer reporte
-          description: Reportó un post
-        promoter:
-          name: Promotor
-          description: Invitó a un usuario
-        campaigner:
-          name: Partidiario
-          description: Invitó a 3 usuarios básicos (nivel de confianza 1)
-        champion:
-          name: Campeón
-          description: Invitó a 5 miembros (nivel de confianza 2)
-        first_share:
-          name: Primer Compartido
-          description: Compartió un post
-        first_link:
-          name: Primer Enlace
-          description: Añadió un enlace interno a otro tema
-        first_quote:
-          name: Primera Cita
-          description: Citó a un usuario
-        read_guidelines:
-          name: Directrices leídas
-          description: Leyó las <a href="/guidelines">directrices de la comunidad</a>
-        reader:
-          name: Lector
-          description: Leyó todos los posts en un tema con más de 100
-        popular_link:
-          name: Enlace Popular
-          description: Publicó un enlace externo con al menos 50 clicks
-        hot_link:
-          name: Enlace popular
-          description: Publicó un enlace externo con al menos 300 clicks
-        famous_link:
-          name: Enlace Famoso
-          description: Publicó un enlace externo con al menos 1000 clicks
     google_search: |
       <h3>Buscar con Google</h3>
       <p>

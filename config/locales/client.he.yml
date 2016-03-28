@@ -2438,8 +2438,6 @@ he:
         mark_watching: '<b>m</b>, <b>w</b>צפייה בפוסט'
     badges:
       title: תגים
-      allow_title: "יכול לשמש ככותרת"
-      multiple_grant: "יכול להיות מוענק מספר פעמים"
       badge_count:
         one: "תג אחד"
         other: "%{count} תגים"
@@ -2462,97 +2460,6 @@ he:
           name: אחר
         posting:
           name: פרסום
-      badge:
-        editor:
-          name: עורך
-          description: עריכה ראשונה של פוסט
-        basic_user:
-          name: בסיסי
-          description: <a href="https://meta.d הפעולות הקהילתיות הבסיסיותiscourse.org/t/what-do-user-trust-levels-do/4924/4">מאושרות</a> כל
-        member:
-          name: חבר/ה
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">הענקת</a> הזמנות
-        regular:
-          name: רגיל/ה
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">הענקת</a> קטרוג מחודש, שינוי שם, קישורים עוקבים ולאונג'
-        leader:
-          name: מוביל/ה
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">הענקת</a> עריכה גלובלית, הצמדה, סגירה, ארכוב, פיצול ומיזוג
-        welcome:
-          name: ברוכים הבאים
-          description: קיבל לייק
-        autobiographer:
-          name: אוטוביוגרפר/ית?
-          description: פרופיל <a href="/my/preferences">מידע</a> משתמש
-        anniversary:
-          name: יום השנה
-          description: חבר/ה פעיל/ה במשך שנה, פרסמ/ה לפחות פעם אחת
-        nice_post:
-          name: פרסום נחמד
-          description: קיבל/ה 10 לייקים על הפוסט. תג זה ניתן להעניק שוב ושוב ללא הגבלה
-        good_post:
-          name: פרסום מוצלח
-          description: קיבל/ה 25 לייקים על הפוסט. תג זה ניתן להעניק שוב ושוב ללא הגבלה
-        great_post:
-          name: פרסום מצויין
-          description: קבלת 50 לייקים על פרסום. תג זה יכול להיות מוענק מספר פעמים
-        nice_topic:
-          name: פוסט נחמד
-          description: קיבל/ה 10 לייקים על פוסט. תג זה יכול להיות מוענק כמה פעמים
-        good_topic:
-          name: פוסט טוב
-          description: קיבל/ה 25 לייקים על הפוסט. תג זה יכול להיות מוענק כמה פעמים
-        great_topic:
-          name: פוסט מצויין
-          description: קיבל/ה 50 לייקים על הפוסט. תג זה יכול להיות מוענק מספר פעמים
-        nice_share:
-          name: שיתוף נחמד
-          description: שיתפ/ה פרסום עם 25 מבקרים ייחודיים
-        good_share:
-          name: שיתוף טוב
-          description: שיתפ/ה פרסום עם 300 מבקרים ייחודיים
-        great_share:
-          name: שיתוף מעולה
-          description: חלק/ה פרסום עם 1000 מבקרים ייחודיים
-        first_like:
-          name: לייק ראשון
-          description: חיבב/ה פרסום
-        first_flag:
-          name: סימון ראשון
-          description: סימן/סימנה פרסום
-        promoter:
-          name: מקדם
-          description: הזמן משתמש
-        campaigner:
-          name: קמפיינר
-          description: הזמן 3 משתמשים בסיסים (דרגת אמון 1)
-        champion:
-          name: אלוף
-          description: הזמן 5 משתמשים (דרגת אמון 2)
-        first_share:
-          name: שיתוף ראשון
-          description: שיתף/שיתפה פרסום
-        first_link:
-          name: קישור (link) ראשון
-          description: הוסיף/הוסיפה קישור פנימי לפוסט אחר
-        first_quote:
-          name: ציטוט ראשון
-          description: ציטוט משתמש
-        read_guidelines:
-          name: קריאת כללים מנחים
-          description: קראו את <a href="/guidelines">הכללים המנחים של הקהילה</a>
-        reader:
-          name: מקראה
-          description: קראו כל פרסום בפוסט עם יותר מ-100 פרסומים
-        popular_link:
-          name: לינק פופלארי
-          description: פרסם קישור חיצוני עם לפחות 50 לחיצות
-        hot_link:
-          name: קישור חם
-          description: פרסם קישור חיצוני עם לפחות 300 לחיצות
-        famous_link:
-          name: קישור מפורסם
-          description: פרסם קישור חיצוני עם לפחות 1000 לחיצות
     google_search: |
       <h3>חפש עם גוגל</h3>
       <p>

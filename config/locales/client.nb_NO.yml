@@ -2332,8 +2332,6 @@ nb_NO:
         mark_watching: '<b>m</b>, <b>w</b> Følg emne'
     badges:
       title: Merker
-      allow_title: "kan bli brukt som tittel"
-      multiple_grant: "kan bli belønnet mange ganger"
       badge_count:
         one: "1 Merke"
         other: "%{count} Merker"
@@ -2356,85 +2354,3 @@ nb_NO:
           name: Annet
         posting:
           name: Posting
-      badge:
-        editor:
-          name: Redaktør
-          description: Første redigering av innlegg
-        basic_user:
-          name: Basic
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Innvilget</a> alle essensielle forumfunksjoner
-        member:
-          name: Medlem
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Innvilget</a> invitasjonsmulighet
-        regular:
-          name: Aktivt Medlem
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Innvilget</a> omkategorisering, endring av navn, fulgte lenker og salong
-        leader:
-          name: Leder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Innvilget</a> global redigering, fastsetting, lukking, arkivering, splitting og sammenslåing
-        welcome:
-          name: Velkommen
-          description: Fått en liker
-        autobiographer:
-          name: Selvbiograf
-          description: Fylte ut informasjon om <a href="/my/preferences">brukerprofilen</a>
-        anniversary:
-          name: Jubileum
-          description: Aktivt medlem i over ett år, postet minst en gang
-        nice_post:
-          name: Fint innlegg
-          description: Fått 10 liker for et innlegg. Dette merket kan bli tildelt flere ganger
-        good_post:
-          name: Bra innlegg
-          description: Fått 25 liker for et innlegg. Dette merket kan bli tildelt flere ganger
-        great_post:
-          name: Flott Innlegg
-          description: Fått 50 liker for et innlegg. Dette merket kan bli tildelt flere ganger
-        nice_topic:
-          name: Fint emne
-          description: Fått 10 liker for et emne. Dette merket kan bli tildelt flere ganger
-        good_topic:
-          name: Godt emne
-          description: Fått 25 liker for et emne. Dette merket kan bli tildelt flere ganger
-        great_topic:
-          name: Fantastisk emne
-          description: Fått 50 liker for et emne. Dette merket kan bli tildelt flere ganger
-        nice_share:
-          name: Fin deling
-          description: Delt et innlegg med 25 unike besøkende
-        good_share:
-          name: God deling
-          description: Delt et innlegg med 300 unike besøkende
-        great_share:
-          name: Fantastisk Deling
-          description: Delt et innlegg med 1000 unike besøkende
-        first_like:
-          name: Første liker
-          description: Likt et innlegg
-        first_flag:
-          name: Første rapportering
-          description: Rapportert et innlegg
-        promoter:
-          name: Forfrem
-          description: Inviterte en bruker
-        campaigner:
-          name: Campaigner
-          description: Inviterte 3 medlemmer (tillitsnivå 1)
-        champion:
-          name: Mester
-          description: Inviterte 5 medlemmer (tillitsnivå 2)
-        first_share:
-          name: Første deling
-          description: Delt et innlegg
-        first_link:
-          name: Første lenke
-          description: Link til et eksisterende emne
-        first_quote:
-          name: Første sitat
-          description: Sitert en bruker
-        read_guidelines:
-          name: Leste retningslinjene
-          description: Lest <a href="/guidelines">forumets retningslinjer</a>
-        reader:
-          name: Leser
-          description: Leste hvert innlegg i et emne med mer enn 100 innlegg

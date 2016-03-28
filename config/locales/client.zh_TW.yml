@@ -2196,8 +2196,6 @@ zh_TW:
         mark_watching: '<b>m</b>, <b>w</b> 關注討論話題'
     badges:
       title: 徽章
-      allow_title: "允許使用它作為稱號"
-      multiple_grant: "可以多次授予"
       badge_count:
         other: "%{count} 徽章"
       more_badges:
@@ -2217,93 +2215,3 @@ zh_TW:
           name: 其他
         posting:
           name: 文章
-      badge:
-        editor:
-          name: 編輯
-          description: 首篇文章編輯
-        basic_user:
-          name: 初級
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">取得</a>所有基本社群功能
-        member:
-          name: 成員
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">取得</a>邀請功能
-        regular:
-          name: 常客
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">取得</a>重新分類、重新命名、連結跟隨（無 nofollow 屬性）、貴賓室功能
-        leader:
-          name: 領袖
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">取得</a>全域編輯、置頂、關閉、封存、分割、合併討論話題功能
-        welcome:
-          name: 歡迎
-          description: 收到一個讚
-        autobiographer:
-          name: 自我介紹
-          description: 填寫用戶<a href="/my/preferences">個人</a> 資料
-        anniversary:
-          name: 周年紀念日
-          description: 一年中的活躍使用者，至少發表一次
-        nice_post:
-          name: 好文章
-          description: 一篇文章收到 10 個讚。此徽章可多次獲得。
-        good_post:
-          name: 棒文章
-          description: 一篇文章收到 25 個讚。此徽章可多次獲得。
-        great_post:
-          name: 神文章
-          description: 一篇文章收到 50 個讚。此徽章可多次獲得。
-        nice_topic:
-          name: 好話題
-          description: 一篇討論話題獲得 10 個讚。本徽章可以多次取得。
-        good_topic:
-          name: 棒話題
-          description: 一篇討論話題獲得 25 個讚。本徽章可以多次取得。
-        great_topic:
-          name: 神話題
-          description: 一篇討論話題獲得 50 個讚。本徽章可以多次取得。
-        nice_share:
-          name: 好分享
-          description: 分享一篇文章給 25 位不同的訪客
-        good_share:
-          name: 棒分享
-          description: 分享一篇文章給 300 位不同的訪客
-        great_share:
-          name: 神分享
-          description: 分享一篇文章給 1000 位不同的訪客
-        first_like:
-          name: 首次讚好
-          description: 給此貼文按讚
-        first_flag:
-          name: 首次標記
-          description: 標記文章
-        promoter:
-          name: 推手
-          description: 已邀請一位用戶
-        campaigner:
-          name: 說客
-        champion:
-          name: 鬥士
-          description: 已邀請 5 位成員 ( 信任等級 2 )
-        first_share:
-          name: 首個分享
-          description: 分享文章
-        first_link:
-          name: 首次連結
-          description: 其他討論話題含內部連結
-        first_quote:
-          name: 首先引用
-          description: 標記使用者
-        read_guidelines:
-          name: 觀看守則
-          description: 觀看<a href="/guidelines">社群守則</a>
-        reader:
-          name: 讀者
-          description: 觀看每個超過100篇文章的討論話題
-        popular_link:
-          name: 熱門連結
-          description: 張貼的外部連結有最少 50 次的點擊
-        hot_link:
-          name: 熱門連結
-          description: 張貼的外部連結有最少 300 次的點擊
-        famous_link:
-          name: 出色連結
-          description: 張貼的外部連結有最少 1000 次的點擊

@@ -216,7 +216,6 @@ ja:
       uncategorized_parent: "未分類カテゴリは親カテゴリに設定出来ません。"
       self_parent: "自分自身がサブカテゴリの親になることはできません"
       depth: "他のサブカテゴリの下にサブカテゴリを作成することはできません"
-      email_in_already_exist: "受信メールアドレス '%{email_in}' は '%{category_name}' カテゴリですでに使用されています。"
     cannot_delete:
       uncategorized: "未分類カテゴリは削除出来ません"
       has_subcategories: "サブカテゴリを持っているため、このカテゴリを削除できません。"
@@ -551,7 +550,6 @@ ja:
     min_private_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
     allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
-    uncategorized_description: "未分類カテゴリについての説明。存在しない場合は空白のままにします"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
     unique_posts_mins: "同じ内容のポストを再投稿可能にする時間 (分)"
     educate_until_posts: "最初(または複数)の投稿でタイピングを開始したら、ポップアップでガイダンスを表示させるか"
@@ -725,15 +723,9 @@ ja:
     tl2_requires_likes_received: "トラストレベル2に昇格するためにもらわなければならない「いいね!」の数"
     tl2_requires_likes_given: "トラストレベル2に昇格するためにしなければならない「いいね!」の数"
     tl2_requires_topic_reply_count: "トラストレベル2に昇格するために回答しなければいけないトピックの数"
-    tl3_requires_topics_replied_to: "トラストレベル3に昇格するために必要な最後の100日の間に返信したトピックの数(0 or higher)"
-    tl3_requires_topics_viewed: "トラストレベル3に昇格するために必要な、最後の100日の間に作成されたトピックを閲覧した割合(0 to 100)"
-    tl3_requires_posts_read: "トラストレベル3に昇格するために必要な、最後の100日の間に作成されたポストを閲覧した割合(0 to 100)"
     tl3_requires_topics_viewed_all_time: "トラストレベル3に昇格するために必要な、トピックを閲覧した合計"
     tl3_requires_posts_read_all_time: "トラストレベル3に昇格するために必要なユーザが閲覧したポストの合計"
-    tl3_requires_max_flagged: "トラストレベル3に昇格するためには、 最後の100日の間に投稿がx個以上x人の違うユーザにフラグを立てられてはいけない。xが設定値です(0 or higher)"
     tl3_promotion_min_duration: "トラストレベル3に昇格したユーザが、トラストレベル2に降格しない日数"
-    tl3_requires_likes_given: "トラストレベル3に昇格するために、最後の100日の間にしなければならない「いいね!」の数"
-    tl3_requires_likes_received: "トラストレベル3に昇格するために、最後の100日の間にもらわなければならない「いいね!」の数"
     tl3_links_no_follow: "トラストレベル3のユーザのポスト内のrel=nofolowを削除しない"
     min_trust_to_create_topic: "新規にトピックを作成するために必要な最低トラストレベル。"
     min_trust_to_edit_wiki_post: "ポストをwikiにするために必要な最低トラストレベル"
@@ -821,7 +813,6 @@ ja:
     automatically_download_gravatars: "アカウントの生成時、メールアドレスの変更時にGravatarをダウンロード"
     digest_topics: "ダイジェストメールに表示されるトピックの最大数"
     digest_min_excerpt_length: "ダイジェストメール内の投稿の抜粋の最小文字数"
-    delete_digest_email_after_days: "(n)日以上ユーザが参照していなければダイジェストメールを抑制します"
     disable_digest_emails: "全てのユーザのダイジェストメールを無効にする"
     detect_custom_avatars: "ユーザがプロフィール画像をアップロードしたか確認する"
     max_daily_gravatar_crawls: "Discourseがプロフィール画像の確認をgravastarに行う回数の上限"
@@ -836,7 +827,6 @@ ja:
     dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
     daily_performance_report: "日別のNGINXのログを解析し、Staff Onlyトピックへ詳細を投稿する"
     suppress_uncategorized_badge: "トピック一覧でカテゴライズされていないトピックのバッジは表示しない"
-    permalink_normalizations: "パーマリンクをマッチングさせる前に正規表現を適用します。例えば、/(\\/topic.*)\\?.*/\\1  は、トピックURLのクエリ文字列を取り除きます。 フォーマットは、正規表現と \\1 のようなキャプチャにアクセスする文字列です"
     global_notice: "緊急の内容を表示します。全ての訪問者の緊急バナーで注意を行います。隠すには空白に変更してください(HTMLが許可されています)"
     disable_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
     full_name_required: "ユーザープロフィールのフルネームを必須にする"
@@ -866,7 +856,6 @@ ja:
     enable_emoji: "絵文字を有効にする"
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "絵文字のアスペクト比を強制的に揃える"
-    approve_post_count: "新規ユーザーの投稿に承認が必要になる投稿数"
     approve_unless_trust_level: "トラストレベル以下のユーザーの投稿には承認が必要"
     notify_about_queued_posts_after: "設定した時間よりも長い間レビュー待ちの状態になっている投稿があると、メールで通知します。0を設定するとこのメールは無効化されます"
     errors:
@@ -893,7 +882,6 @@ ja:
     moved_post: "%{display_username} があなたのポストを %{link} に移動しました"
     private_message: "%{display_username} があなたにメッセージを送信しました: %{link}"
     invited_to_private_message: "%{display_username} がメッセージにあなたを招待しました: %{link}"
-    invited_to_topic: "%{display_username} がトピックにあなたを招待しました: %{link}"
     invitee_accepted: "%{display_username} があなたの招待を受けました"
     linked: "%{display_username} は%{link}であなたをリンクしました"
     granted_badge: "あなたは%{link}を獲得しました"
@@ -903,11 +891,6 @@ ja:
       category: 'カテゴリ'
       topic: '結果'
       user: 'ユーザ'
-  sso:
-    not_found: "アカウントを検索、作成することができません。サイト管理者に連絡してください"
-    account_not_approved: "アカウントの承認は保留され、承認されると通知メールが届きます"
-    unknown_error: "情報の更新中にエラーが発生しました。サイト管理者に連絡してください"
-    timeout_expired: "ログインがタイムアウトしました。もう一度ログインを試してください"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
@@ -1024,85 +1007,10 @@ ja:
     text_body_template: "%{site_name} へようこそ\n\nこのリンクをクリックしてパスワードを設定してください:\n%{base_url}/users/password-reset/%{email_token}\n\n(リンクの有効期限が切れていた場合は、\"パスワードを忘れたました\"を選択しメールアドレスを入力してください) \n"
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
-    text_body_template: |
-      This is a test email from
-
-      [**%{base_url}**][0]
-
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-
-      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
-
-      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
-
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
-      We hope you received this email deliverability test OK!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
-    text_body_template: |
-      新しいバージョンの[Discourse](http://www.discourse.org)  が利用可能です。
-
-      あなたのバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      You may want to:
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
-    text_body_template: |
-      新しいバージョンの[Discourse](http://www.discourse.org)  が利用可能です。
-
-      あなたのバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      You may want to:
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
-
-      ### Release notes
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      other: "これらのフラグは%{count}時間以上前に作成されました"
-    please_review: "これを確認してください"
-    post_number: "投稿"
-    how_to_disable: ' "notify about flags after"設定でこのリマインダーを停止、頻度を変更することができます'
-    subject_template:
-      other: "%{count} 個のフラグが判断待ちです"
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 件の投稿がレビュー待ちです"
@@ -1193,10 +1101,6 @@ ja:
       text_body_template: "申し訳ありません。データ出力に失敗しました。ログを確認するかスタッフメンバーに連絡してください"
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- 不明なアカウント"
-      text_body_template: |
-        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
-
-        このメールアドレスを持つユーザーアカウントがありませんでした。違うメールアドレスから送信するか、スタッフメンバーに連絡してください。
     email_reject_empty:
       subject_template: "[%{site_name}] Email issue -- 本文なし"
     email_reject_parsing:
@@ -1206,7 +1110,6 @@ ja:
       subject_template: "[%{site_name}] Email issue -- 不正なアクセス"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Email issue -- 不明なReply Key"
-      text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n提供されたreply keyが無効または不明のため、このメールがどの返答なのかがわかりません。スタッフメンバーに連絡してください。\n"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}]  Email issue -- 存在しないトピック"
     email_reject_topic_closed:
@@ -1215,10 +1118,6 @@ ja:
       subject_template: "[%{site_name}] Email issue -- 自動生成された返信"
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP認証エラー"
-      text_body_template: |
-        メールをポーリングするPOPサーバで認証エラーが発生しました。
-
-        [the site settings](%{base_url}/admin/site_settings/category/email)で、POP認証の設定を確認してください。
     too_many_spam_flags:
       subject_template: "新規アカウントのブロック"
       text_body_template: |
@@ -1231,12 +1130,6 @@ ja:
         詳細については[コミュニティガイドライン](%{base_url}/guidelines)を参照してください。
     blocked_by_staff:
       subject_template: "アカウントのブロック"
-      text_body_template: |
-        こんにちは
-
-        スタッフメンバーによってブロックされたことをお知らせするために、%{site_name} から自動的に送信されています。
-
-        詳細については[コミュニティガイドライン](%{base_url}/guidelines)を参照してください。
     user_automatically_blocked:
       subject_template: "コミュニティフラッグによって新たにブロックされたユーザ%{username}"
     spam_post_blocked:
@@ -1269,9 +1162,6 @@ ja:
     posted_by: "%{post_date} に %{username} が投稿"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} がメッセージにあなたを招待しました '%{topic_title}'"
-      text_body_template: "\n{username} があなたをメッセージに招待しました \n\n> '%{topic_title}' \n>\n> %{topic_excerpt}\n\n> %{site_title} -- %{site_description}\n\nこのリンクからメッセージを参照してください: %{base_url}%{url}\n"
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} がトピックにあなたを招待しました '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}' 内のあなたのポストに新たな回答が投稿されました"
     user_quoted:
@@ -1322,12 +1212,6 @@ ja:
 
         以下のリンクをクリックしてパスワードを設定してください:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] メールアドレスの確認"
-      text_body_template: |
-        次のリンクをクリックして %{site_name} 用のメールアドレスを確認してください:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
     signup:
@@ -1340,7 +1224,6 @@ ja:
 
         もし上記リンクがクリックできない場合は、ブラウザのアドレスバーにリンクアドレスをコピー&ペーストしてください。
   page_not_found:
-    title: "リクエストしたページは存在しないかモデレータによって削除されました。"
     popular_topics: "人気"
     recent_topics: "最新"
     see_more: "もっと見る"

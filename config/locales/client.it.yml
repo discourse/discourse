@@ -2537,10 +2537,7 @@ it:
         mark_tracking: '<b>m</b>, <b>t</b> Segui argomento'
         mark_watching: '<b>m</b>, <b>w</b> Osserva argomento'
     badges:
-      more_with_badge: "Altri con questa targhetta"
       title: Targhette
-      allow_title: "può essere usata come titolo"
-      multiple_grant: "può essere assegnata più volte"
       badge_count:
         one: "1 Targhetta"
         other: "%{count} Targhette"
@@ -2563,97 +2560,6 @@ it:
           name: Altro
         posting:
           name: Pubblicazione
-      badge:
-        editor:
-          name: Editor
-          description: Prima modifica ad un messaggio
-        basic_user:
-          name: Base
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Assegnate</a> tutte le funzioni essenziali della comunità
-        member:
-          name: Assiduo
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Assegnata</a> inviti
-        regular:
-          name: Esperto
-          description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concessi</a> i permessi di: ricategorizzare, rinominare, collegamenti seguiti e accesso al Lounge'
-        leader:
-          name: Leader
-          description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concessi</a> i permessi di: modifica globale, evidenziare, chiudere, archiviare, separare e fondere'
-        welcome:
-          name: Benvenuto
-          description: Ricevuto un "Mi piace"
-        autobiographer:
-          name: Autobiografo
-          description: Completato le informazioni del tuo <a href="/my/preferences">profilo</a> utente
-        anniversary:
-          name: Compleanno
-          description: Membro attivo da un anno, ha scritto almeno una volta
-        nice_post:
-          name: Buon Messaggio
-          description: Ricevuto 10 "Mi piace" per un messaggio. Questa targhetta può essere assegnata più volte
-        good_post:
-          name: Ottimo Messaggio
-          description: Ricevuto 25 "Mi piace" per un messaggio. Questa targhetta può essere assegnata più volte.
-        great_post:
-          name: Fantastico Messaggio
-          description: Ricevuto 50 "Mi piace" per un messaggio. Questa targhetta può essere assegnata più volte.
-        nice_topic:
-          name: Argomento Buono
-          description: Ricevuti 10 "Mi piace" per un argomento. Questa targhetta può essere assegnata più volte
-        good_topic:
-          name: Argomento Ottimo
-          description: Ricevuti 25 "Mi piace" per un argomento. Questa targhetta può essere assegnata più volte
-        great_topic:
-          name: Argomento Eccellente
-          description: Ricevuti 50 "Mi piace" per un argomento. Questa targhetta può essere assegnata più volte
-        nice_share:
-          name: Condivisione Buona
-          description: Condiviso un messaggio con 25 visitatori unici
-        good_share:
-          name: Condivisione Ottima
-          description: Condiviso un messaggio con 300 visitatori unici
-        great_share:
-          name: Condivisione Eccellente
-          description: Condiviso un messaggio con 1000 visitatori unici
-        first_like:
-          name: Primo Mi Piace
-          description: Assegnato un "Mi piace" ad un messaggio
-        first_flag:
-          name: Prima Segnalazione
-          description: Segnalato un messaggio
-        promoter:
-          name: Promotore
-          description: Ha invitato un utente
-        campaigner:
-          name: Pubblicitario
-          description: Ha invitato 3 utenti Base (livello di esperienza 1)
-        champion:
-          name: Campione
-          description: Ha invitato 5 utenti Assiduo (livello di esperienza 2)
-        first_share:
-          name: Prima Condivisione
-          description: Condiviso un messaggio
-        first_link:
-          name: Primo Collegamento
-          description: Aggiunto un collegamento interno ad un altro argomento
-        first_quote:
-          name: Prima Citazione
-          description: Citato un utente
-        read_guidelines:
-          name: Linee Guida Lette
-          description: Letto le <a href="/guidelines">linee guida della comunità</a>
-        reader:
-          name: Lettore
-          description: Letto tutti i messaggi in un argomento con più di 100 messaggi
-        popular_link:
-          name: Collegamento Popolare
-          description: Ha pubblicato un collegamento esterno con almeno 50 clic
-        hot_link:
-          name: Collegamento Caldo
-          description: Pubblicato un collegamento esterno con almeno 300 clic
-        famous_link:
-          name: Collegamento Famoso
-          description: Ha pubblicato un collegamento esterno con almeno 1000 clic
     google_search: |
       <h3>Cerca con Google</h3>
       <p>

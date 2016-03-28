@@ -821,15 +821,9 @@ it:
     tl2_requires_likes_received: "Quanti \"Mi piace\" deve ricevere un utente per essere promosso al livello di esperienza 2."
     tl2_requires_likes_given: "Quanti \"Mi piace\" deve dare un utente per essere promosso al livello di esperienza 2."
     tl2_requires_topic_reply_count: "A quanti argomenti deve rispondere un utente per essere promosso al livello di esperienza 2."
-    tl3_requires_topics_replied_to: "Numero minimo di argomenti cui un utente deve aver risposto negli ultinmi 100 giorni per essere promosso al livello di esperienza 3 (0 o maggiore)."
-    tl3_requires_topics_viewed: "Percentuale di argomenti creati negli ultimi 100 giorni che un utente deve leggere per essere promosso al livello di esperienza 3 (da 0 a 100)."
-    tl3_requires_posts_read: "Percentuale di messaggi creati negli ultimi 100 giorni che un utente deve leggere per essere promosso al livello di esperienza 3 (da 0 a 100)."
     tl3_requires_topics_viewed_all_time: "Il numero minimo di argomenti che un utente deve aver letto per poter accedere al livello di esperienza 3."
     tl3_requires_posts_read_all_time: "Il numero minimo di messaggi che un utente deve aver letto per poter accedere al livello di esperienza 3."
-    tl3_requires_max_flagged: "L'utente non deve aver ricevuto più di x segnalazioni sui messaggi da x diversi utenti negli ultimi 100 giorni, per poter essere promosso al livello di esperienza 3, dove x è il valore di questa impostazione (0 o maggiore)."
     tl3_promotion_min_duration: "Per quanti giorni al minimo mantenere la promozione al livello di esperienza 3 prima che un utente venga degradato al livello di esperienza 2."
-    tl3_requires_likes_given: "Il minimo numero di Mi piace che devono essere dati negli ultimi 100 giorni per essere promossi al livello di esperienza 3."
-    tl3_requires_likes_received: "Il minimo numero di Mi piace che devono essere ricevuti negli ultimi 100 giorni per essere promossi al livello di esperienza 3."
     tl3_links_no_follow: "Non rimuovere rel=nofollow dai collegamenti pubblicati da utenti con livello di esperienza 3."
     min_trust_to_create_topic: "Livello minimo richiesto per creare un nuovo argomento."
     min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un argomento segnato come wiki."
@@ -953,11 +947,6 @@ it:
       category: 'Categorie'
       topic: 'Risultati'
       user: 'Utenti'
-  sso:
-    not_found: "Impossibile cercare o creare l'account, contatta l'amministratore del sito"
-    account_not_approved: "L'account è in attesa di approvazione, riceverai una notifica per email una volta approvato"
-    unknown_error: "Errore nell'aggiornamento delle informazioni, contatta l'amministratore del sito"
-    timeout_expired: "Il tempo di autenticazione di questo account è scaduto, prova ad autenticarti nuovamente"
   original_poster: "Autore Iniziale"
   most_posts: "Maggioranza Messaggi"
   most_recent_poster: "Autore Più Recente"
@@ -1123,12 +1112,6 @@ it:
       text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
     blocked_by_staff:
       subject_template: "Account bloccato"
-      text_body_template: |
-        Ciao,
-
-        questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato bloccato da un membro dello staff.
-
-        Per maggiori dettagli, fai riferimento alle nostre [linee guida della community](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Nuovo utente %{username} bloccato a causa delle segnalazioni"
     spam_post_blocked:
@@ -1159,21 +1142,6 @@ it:
     posted_by: "Pubblicato da %{username} il %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
-    user_invited_to_topic:
-      text_body_template: |2+
-
-        %{username} ti ha invitato a partecipare ad una discussione
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        su
-
-        > %{site_title} -- %{site_description}
-
-        Visita il seguente collegamento per vedere il messaggio: %{base_url}%{url}
-
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"

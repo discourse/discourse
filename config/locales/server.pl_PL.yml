@@ -783,8 +783,6 @@ pl_PL:
     tl2_requires_likes_received: "Ile lajków musi otrzymać użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
     tl2_requires_likes_given: "Ile lajków musi dać użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
     tl2_requires_topic_reply_count: "Na ile tematów musi odpowiedzieć użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
-    tl3_requires_topics_replied_to: "Minimalna liczba tematów, na które użytkownik musiał odpowiedzieć w ciągu ostatnich 100 dni, aby kwalifikować się do promocji na 3 poziom zaufania. (0 albo więcej)"
-    tl3_requires_likes_received: "Minimalna liczba lajków, jakie należało otrzymać w ciągu ostatnich 100 dni, by kwalifikować się do promocji na 3 stopień zaufania."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     newuser_max_links: "Ile linków może dodać nowy użytkownik do posta."
     newuser_max_images: "Ile obrazów może dodać nowy użytkownik do posta."
@@ -857,11 +855,6 @@ pl_PL:
       category: 'Kategorie'
       topic: 'Wyniki'
       user: 'Użytkownicy'
-  sso:
-    not_found: "Sprawdzenie lub stworzenie konta jest niemożliwe, skontaktuj się z administracją strony"
-    account_not_approved: "Konto czeka na zatwierdzenie. Dostaniesz powiadomienie emailem, kiedy to się stanie."
-    unknown_error: "Błąd aktualizowania informacji, skontaktuj się z administracją strony"
-    timeout_expired: "Zbyt długi czas logowania, spróbuj zalogować się ponownie"
   original_poster: "Autor pierwszego wpisu"
   most_posts: "Większość postów"
   most_recent_poster: "Autor najnowszego wpisu"
@@ -1209,56 +1202,6 @@ pl_PL:
     title: "Warunki użytkowania"
   privacy_topic:
     title: "Polityka prywatności"
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Ta odznaka jest przyznawana za wypełnienie <a href="/my/preferences">w twoim profilu i za wybranie zdjęcia profilowego. Pozwól lepiej się poznać i pokaż swoje zainteresowania, aby społeczność była jeszcze lepsza i silniej związana.
-      first_like: |+
-        Ta odznaka jest przyznawana, kiedy po raz pierwszy polubisz posta, posługując się przyciskiem :heart:. Dzięki lajkowaniu postów członkowie społeczności wiedzą, że ich wpisy były interesujące, użyteczne, fajne i zabawne. Dziel się miłością!
-
-      first_link: |
-        Ta odznaka jest przyznawana, kiedy po raz pierwszy podajesz link do innego tematu w odpowiedzi. Lajkowanie tematów pomaga innym czytającym w odnalezieniu powiązanych interesujących dyskusji, pokazując związki między tematami w obydwu kierunkach.
-      first_quote: |+
-        Ta odznaka jest przyznawana, kiedy po raz pierwszy cytujesz jakiś post w swojej odpowiedzi. Cytowanie powiązanych fragmentów wcześniejszych postów w odpowiedziach pozwala na prowadzenie dyskusji na temat.
-
-      first_share: |
-        Ta odznaka jest przyznawana, kiedy po raz pierwszy dzielisz się linkiem odpowiedzi albo tematu, posługując się przyciskiem "Prześlij". Dzielenie się linkami to znakomity sposób na pokazanie ciekawej dyskusji innym i na powiększenie grona znajomych.
-      read_guidelines: |
-        Ta odznaka jest przyznawana za <a href="/guidelines">przeczytanie przewodników społeczności</a>. Obserwowanie tych prostych przewodników i dzielenie się nimi pomaga zbudować bezpieczną, wesołą i trwałą społeczność.
-      reader: |
-        Ta odznaka jest przyznawana za przeczytanie długiego tematu. Czytanie jest podstawą. Uważne czytanie pozwoli ci śledzić dyskusję i komentować w lepszy, bardziej kompleksowy sposób.
-      editor: |
-        Ta odznaka jest przyznawana za edytowanie swojego postu. Nie wahaj się i edytuj swoje posty, by je ulepszać, poprawiać błędy oraz dodawać to, o czym wcześniej zapomniałeś.
-      first_flag: |
-        Ta odznaka jest przyznawana za oflagowanie posta. Flagowanie jest kluczowe dla dobrostanu naszej społeczności. Jeśli zauważysz post, który wymaga uwagi moderatora, prosimy,
-        oflaguj go bez wahania. Możesz także posłużyć się flagowaniem rozmowy, by wysłać </b>wiadomości</b> do innych użytkowników.
-      nice_share: |+
-        Ta odznaka jest przyznawana za podzielenie się linkiem do posta odwiedzonego przez 25 gości z zewnątrz. Dobra robota! Dzielenie się linkami do ciekawych rozmów z przyjaciółmi to wspaniały sposób na powiększenie naszej społeczności.
-
-      welcome: |
-        Ta odznaka jest przyznawana, kiedy dostajesz pierwszego lajka przy poście. Gratulacje, napisałeś coś, co inni użytkownicy uznali za interesujące, fajne lub użyteczne!
-      anniversary: |
-        Ta odznaka jest przyznawana, kiedy jesteś członkiem społeczności od roku z co najmniej jednym postem napisanym w tym roku. Dziękujemy, że się udzielasz w naszej społeczności!
-      good_share: |
-        Ta odznaka jest przyznawana za podzielenie się linkiem do posta odwiedzonego przez 300 gości z zewnątrz. Dobra robota! Pokazałeś interesującą dyskusję <i>wielu</i> nowym osobom i pomogłeś nam się rozwinąć.
-      great_share: |
-        Ta odznaka jest przyznawana za podzielenie się linkiem do posta odwiedzonego przez 100 gości z zewnątrz. Super! Pokazałeś interesującą dyskusję ogromnej ilości nowych osób i pomogłeś nam bardzo w rozwoju.
-      nice_post: |
-        Ta odznaka jest przyznawana za napisanie odpowiedzi, która otrzymała 10 lajków. Dobra robota!
-      nice_topic: "Ta odznaka jest przyznawana za utworzenie tematu, który otrzymał 10 lajków. Dobra robota! \n"
-      good_post: |
-        Ta odznaka jest przyznawana za napisanie odpowiedzi, która otrzymała 25 lajków. Wspaniała robota!
-      good_topic: "Ta odznaka jest przyznawana za utworzenie tematu, który otrzymał 25 lajków. Wspaniała robota! \n"
-      great_post: "Ta odznaka jest przyznawana za napisanie posta, który otrzymał 50 lajków. Super! \n"
-      great_topic: "Ta odznaka jest przyznawana za napisanie odpowiedzi, która otrzymała 50 lajków. Super! \n"
-      basic: |
-        Ta odznaka jest przyznawana, kiedy otrzymujesz 1 poziom zaufania. Dziękujemy, że tutaj jesteś i myszkujesz w tematach, by dowiedzieć się, o co nam chodzi. Zniesiono ograniczenia nałożone na ciebie jako na nowego użytkownika. Przyznano ci wszystkie podstawowe możliwości, takie jak pisanie prywatnych wiadomości, flagowanie, edytowanie Wikipedii, a także możliwość umieszczania zdjęć i linków.
-      member: |
-        Ta odznaka jest przyznawana, kiedy osiągasz 2 poziom zaufania. Dziękujemy, że od kilku tygodni udzielasz się w naszej społeczności. Możesz teraz wysyłać osobiste zaproszenia ze swojej strony użytkownika, tworzyć indywidualne tematy i wiadomości grupowe, a także masz kilka lajków na dzień więcej.
-      regular: |
-        Ta odznaka jest przyznawana, kiedy osiągasz 3 poziom zaufania. Dziękujemy, że od miesięcy udzielasz się tutaj regularnie, jesteś jednym z najaktywniejszych czytelników i rzetelnie przyczyniasz się do tego, że nasza społeczność jest wspaniała. Możesz teraz zmieniać kategorie i nazwy tematów, masz dostęp do prywatnego salonu, silniejsze flagi do oznaczania spamu oraz o wiele więcej lajków dziennie.
-      leader: |
-        Ta odznaka jest przyznawana, kiedy osiągasz 4 poziom zaufania. Jesteś liderem w tej społeczności, wybranym przez zespół, a twoje czyny i słowa dają pozytywny przykład. Możesz edytować wszystkie posty i zajmować się tematami z pozycji moderatora, tzn. przypinać, zamykać, odznaczać, archiwizować, dzielić, łączyć. Masz także setki lajków dziennie.
   admin_login:
     success: "Email wysłany"
     error: "Błąd!"

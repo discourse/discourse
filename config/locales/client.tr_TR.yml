@@ -2527,10 +2527,7 @@ tr_TR:
     badges:
       earned_n_times:
         other: "Bu rozet %{count} defa kazanılmış"
-      more_with_badge: "Bu rozete sahip diğer kişiler"
       title: Rozetler
-      allow_title: "ünvan olarak kullanılabilir"
-      multiple_grant: "birden fazla kez verilebilir"
       badge_count:
         other: "%{count} Rozet"
       more_badges:
@@ -2550,97 +2547,6 @@ tr_TR:
           name: Diğer
         posting:
           name: Gönderiler
-      badge:
-        editor:
-          name: Editör
-          description: İlk gönderi düzenleme
-        basic_user:
-          name: Acemi
-          description: Tüm temel topluluk işlevleri için <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">hak verildi</a>
-        member:
-          name: Üye
-          description: Davetiye gönderebilme <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">hakkı verildi</a>
-        regular:
-          name: Müdavim
-          description: Konuların isimlerini ve kategorilerini değiştirebilme, follow'lu bağlantı paylaşabilme ve lobiye girebilme <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">hakları verildi</a>
-        leader:
-          name: Lider
-          description: 'Tüm gönderileri düzenleyebilme, konuları başa tutturabilme, kapatabilme, arşivleyebilme, bölebilme ve birleştirebilme <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">hakları verildi</a> '
-        welcome:
-          name: Hoş geldiniz
-          description: Bir beğeni aldı
-        autobiographer:
-          name: Otobiyografi Yazarı
-          description: Kullanıcı <a href="/my/preferences">profil</a> bilgilerini doldurmuş
-        anniversary:
-          name: Yıldönümü
-          description: Bir yıldır aktif kullanıcı, en az bir kere gönderi oluşturmuş.
-        nice_post:
-          name: Güzel Gönderi
-          description: Bir gönderiden 10 beğeni alındı. Bu rozet birden fazla defa verilebilir.
-        good_post:
-          name: İyi Gönderi
-          description: Bir gönderiden 25 beğeni alındı. Bu rozet birden fazla defa verilebilir.
-        great_post:
-          name: Harika Gönderi
-          description: Bir gönderiden 50 beğeni alındı. Bu rozet birden fazla defa verilebilir.
-        nice_topic:
-          name: Güzel Konu
-          description: Bir konuda 10 beğeni almış. Bu rozet birden çok kez kazanılabilir.
-        good_topic:
-          name: İyi Konu
-          description: Bir konuda 25 beğeni almış. Bu rozet birden çok kez kazanılabilir.
-        great_topic:
-          name: Harika Konu
-          description: Bir konuda 50 beğeni almış. Bu rozet birden çok kez kazanılabilir.
-        nice_share:
-          name: Güzel Paylaşım
-          description: 25 tekil kullanıcı ile bir gönderiyi paylaşmış
-        good_share:
-          name: İyi Paylaşım
-          description: 300 tekil kullanıcı ile bir gönderiyi paylaşmış
-        great_share:
-          name: Harika Paylaşım
-          description: 1000 tekil kullanıcı ile bir gönderiyi paylaşmış
-        first_like:
-          name: İlk beğeni
-          description: Bir gönderi beğendi
-        first_flag:
-          name: İlk Bayrak
-          description: Bir gönderiyi bayrakladı
-        promoter:
-          name: Destekçi
-          description: Kullanıcı davet etti
-        campaigner:
-          name: Katılanlar
-          description: 3 normal kullanıcı davet etti (Güven seviyesi 1)
-        champion:
-          name: Şampiyon
-          description: 5 kullanıcı davet etti (Güven seviyesi 2)
-        first_share:
-          name: İlk paylaşım
-          description: Bir gönderi paylaştı
-        first_link:
-          name: İlk bağlantı
-          description: Başka bir konuya iç bağlantı eklendi
-        first_quote:
-          name: İlk alıntı
-          description: Bir kullanıcıyı alıntıladı
-        read_guidelines:
-          name: Yönergeler okundu
-          description: <a href="/guidelines">Topluluk yönergelerini</a> oku
-        reader:
-          name: Okuyucu
-          description: 100'den fazla gönderiye sahip bir konudaki tüm gönderileri oku
-        popular_link:
-          name: Gözde Bağlantı
-          description: En az 50 kere tıklanmış harici bir bağlantı gönderildi
-        hot_link:
-          name: Sıcak Bağlantı
-          description: En az 300 kere tıklanmış harici bir bağlantı gönderildi
-        famous_link:
-          name: Ünlü Bağlantı
-          description: En az 1000 kere tıklanmış harici bir bağlantı gönderildi
     google_search: |
       <h3>Google'la Ara</h3>
       <p>

@@ -131,6 +131,8 @@ pl_PL:
       email: 'wyślij ten odnośnik przez email'
     action_codes:
       split_topic: "podziel ten temat %{when}"
+      invited_user: "%{who} został zaproszony %{when}"
+      removed_user: "%{who} został usunięty %{when}"
       autoclosed:
         enabled: 'zamknięcie %{when}'
         disabled: 'otworzenie %{when}'
@@ -211,6 +213,7 @@ pl_PL:
       other: "{{count}} znaków"
     suggested_topics:
       title: "Sugerowane tematy"
+      pm_title: "sugerowane wiadomości"
     about:
       simple_title: "O stronie"
       title: "O %{title}"
@@ -338,6 +341,10 @@ pl_PL:
         few: "%{count} użytkownicy"
         other: "%{count} użytkowników"
     groups:
+      empty:
+        posts: "Członkowie tej grupy nie opublikowali żadnych postów."
+        members: "W tej grupie nie ma żadnych członków."
+        topics: "Członkowie tej grupy nie opublikowali żadnych postów."
       add: "Dodaj"
       selector_placeholder: "Dodaj członków"
       owner: "właściciel"
@@ -349,6 +356,7 @@ pl_PL:
       members: "Członkowie"
       topics: "Tematy"
       posts: "Wpisów"
+      mentions: "Wzmianki"
       messages: "Wiadomości"
       alias_levels:
         title: "Kto może wysyłać wiadomości i używać @aliasu tej grupy?"
@@ -365,6 +373,13 @@ pl_PL:
           title: "Obserwowanie"
         tracking:
           title: "Śledzenie"
+          description: "Dostaniesz powiadomienie, gdy ktoś ci odpowie lub wspomni twoją @nazwę, zobaczysz również liczbę odpowiedzi."
+        regular:
+          title: "Normalny"
+          description: "Dostaniesz powiadomienie, gdy ktoś ci odpowie lub wspomni twoją @nazwę."
+        muted:
+          title: "Wyciszony"
+          description: "Nie otrzymasz powiadomień o nowych tematach w tej grupie."
     user_action_groups:
       '1': "Przyznane polubienia"
       '2': "Otrzymane polubienia"
@@ -383,6 +398,7 @@ pl_PL:
       all_subcategories: "wszystkie"
       no_subcategory: "żadne"
       category: "Kategoria"
+      category_list: "Wyświetl listę kategorii"
       reorder:
         title: "Zmień kolejność kategorii"
         title_long: "Zmień kolejność listy kategorii"
@@ -441,6 +457,7 @@ pl_PL:
       invited_by: "Zaproszono przez"
       trust_level: "Poziom zaufania"
       notifications: "Powiadomienia"
+      statistics: "Statystyki"
       desktop_notifications:
         label: "Powiadomienia systemowe"
         not_supported: "Powiadomienia nie są wspierane przez tę przeglądarkę. Przepraszamy."
@@ -490,7 +507,15 @@ pl_PL:
         warnings_received: "otrzymanych ostrzeżeń"
       messages:
         all: "Wszystkie"
+        inbox: "Skrzynka odbiorcza"
+        sent: "Wysłane"
+        archive: "Archiwum"
         groups: "Moje grupy"
+        bulk_select: "Zaznacz wiadomości"
+        move_to_inbox: "Przenieś do skrzynki odbiorczej"
+        move_to_archive: "Archiwum"
+        failed_to_move: "Nie udało się przenieść zaznaczonych wiadomości (prawdopodobnie wystąpił problem z Twoim połączeniem)"
+        select_all: "Zaznacz wszystko"
       change_password:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
@@ -575,9 +600,16 @@ pl_PL:
         title: "Odznaka karty użytkownika"
       website: "Strona internetowa"
       email_settings: "Email"
+      like_notification_frequency:
+        always: "Zawsze"
+        never: "Nigdy"
+      email_previous_replies:
+        always: "zawsze"
+        never: "nigdy"
       email_digests:
         title: "Gdy nie odwiedzam strony, wysyłaj e-mail z podsumowaniem aktywności:"
         every_30_minutes: "co 30 minut"
+        every_hour: "co godzinę"
         daily: "codziennie"
         every_three_days: "co trzy dni"
         weekly: "co tydzień"
@@ -650,6 +682,21 @@ pl_PL:
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło jest poprawne."
         instructions: "Co najmniej %{count} znaków."
+      summary:
+        title: "Podsumowanie"
+        stats: "Statystyki"
+        topic_count: "Założone tematy"
+        post_count: "Napisane posty"
+        likes_given: "Polubione"
+        likes_received: "Otrzymane polubienia"
+        days_visited: "Dni odwiedzin"
+        posts_read_count: "Przeczytane wpisy"
+        top_replies: "Najlepsze odpowiedzi"
+        top_topics: "Najlepsze tematy"
+        top_badges: "Najlepsze odznaki"
+        more_topics: "Więcej tematów"
+        more_replies: "Więcej odpowiedzi"
+        more_badges: "Więcej odznak"
       associated_accounts: "Powiązane konta"
       ip_address:
         title: "Ostatni adres IP"
@@ -722,6 +769,7 @@ pl_PL:
       value_prop: "Jeśli stworzysz konto, zapamiętamy przeczytane przez Ciebie wpisy i tematy, dzięki czemu zawsze powrócisz do odpowiedniego miejsca.  Otrzymasz też powiadomienia o nowych wpisach. Dodatkowo możliwe będzie polubienie ciekawych wpisów  :heartbeat:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
+      description: "Jest  <b>{{replyCount}}</b> odpowiedzi."
       enable: 'Podsumuj ten temat'
       disable: 'Pokaż wszystkie wpisy'
     deleted_filter:
@@ -891,8 +939,13 @@ pl_PL:
       group_mentioned: "<i title='wywołanie grupy' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='cytat' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='odpowiedź' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edycja' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='polubienie' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} oraz 1 inna osoba</span> {{description}}</p>"
+        few: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}</p>"
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}</p>"
       private_message: "<i title='prywatna wiadomość' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='prywatna wiadomość' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='zaproszenie do tematu' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -900,6 +953,10 @@ pl_PL:
       moved_post: "<i title='przeniesienie wpisu' class='fa fa-sign-out'></i><p><span>{{username}}</span> przenosi {{description}}</p>"
       linked: "<i title='powiązany wpis' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='otrzymano odznakę' class='fa fa-certificate'></i><p>Otrzymujesz '{{description}}'</p>"
+      group_message_summary:
+        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> masz {{count}} wiadomość w skrzynce odbiorczej {{group_name}} </p>"
+        few: "<i title='messages in group inbox' class='fa fa-group'></i><p> masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}} </p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}</p>"
       alt:
         mentioned: "Wywołanie przez"
         quoted: "Cytowanie przez"
@@ -916,6 +973,7 @@ pl_PL:
         granted_badge: "Przyznanie odznaki"
       popup:
         mentioned: '{{username}} wspomina o tobie w "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} wspomniał o Tobie w "{{topic}}" - {{site_title}}'
         quoted: '{{username}} cytuje cie w "{{topic}}" - {{site_title}}'
         replied: '{{username}} odpowiada na twój wpis w "{{topic}}" - {{site_title}}'
         posted: '{{username}} pisze w "{{topic}}" - {{site_title}}'
@@ -996,6 +1054,8 @@ pl_PL:
         category: "Nie ma tematów w kategorii {{category}}."
         top: "Brak najlepszych tematów."
         search: "Brak wyników wyszukiwania."
+        educate:
+          new: '<p>Nowe tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nowe i będą oznaczone jako<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nowe</span> jeśli były stworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         hot: "Nie ma więcej gorących tematów."
@@ -1015,6 +1075,12 @@ pl_PL:
       create: 'Nowy temat'
       create_long: 'Utwórz nowy temat'
       private_message: 'Napisz wiadomość'
+      archive_message:
+        help: 'Przenieś wiadomość do archiwum'
+        title: 'Archiwum'
+      move_to_inbox:
+        title: 'Przenieś do skrzynki odbiorczej'
+        help: 'Przenieś wiadomość z powrotem do skrzynki odbiorczej'
       list: 'Tematy'
       new: 'nowy temat'
       unread: 'nieprzeczytane'
@@ -1070,6 +1136,7 @@ pl_PL:
       auto_close_title: 'Ustawienia automatycznego zamykania'
       auto_close_save: "Zapisz"
       auto_close_remove: "Nie zamykaj automatycznie tego tematu"
+      auto_close_immediate: "Ostatni wpis w tym temacie został zamieszczony %{hours} godzin temu, więc zostanie on natychmiastowo zamknięty."
       progress:
         title: postęp tematu
         go_top: "początek"
@@ -1369,6 +1436,13 @@ pl_PL:
           bookmark: "Cofnij zakładkę"
           like: "Cofnij"
           vote: "Cofnij głos"
+        people:
+          off_topic: "Oflagowano jako nie-na-temat"
+          spam: "oznacz jako spam"
+          inappropriate: "Oflagowano jako nieodpowiednie"
+          notify_moderators: "Powiadomiono moderatorów"
+          notify_user: "Wysłano wiadomość"
+          bookmark: "dodaj do zakładek"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
@@ -2049,6 +2123,8 @@ pl_PL:
         test_error: "Wystąpił problem podczas wysyłania testowego maila. Sprawdź ustawienia poczty, sprawdź czy Twój serwer nie blokuje połączeń pocztowych i spróbuj ponownie."
         sent: "Wysłane"
         skipped: "Pominięte"
+        received: "Otrzymane"
+        rejected: "Odrzucone"
         sent_at: "Wysłany na"
         time: "Czas"
         user: "Użytkownik"
@@ -2067,9 +2143,17 @@ pl_PL:
         reply_key: "Klucz odpowiedzi"
         skipped_reason: "Powód pominięcia"
         incoming_emails:
+          from_address: "Od"
+          to_addresses: "Do"
+          subject: "Temat"
           error: "Błąd"
           modal:
             error: "Błąd"
+            date: "Data"
+            from: "Od"
+            to: "Do"
+            subject: "Temat"
+            body: "Treść"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2137,6 +2221,8 @@ pl_PL:
             change_category_settings: "zmiana ustawień kategorii"
             delete_category: "Usuń kategorię"
             create_category: "Dodaj nową kategorię"
+            block_user: "zablokuj użytkownika"
+            unblock_user: "odblokuj użytkownika"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -2323,6 +2409,7 @@ pl_PL:
         unlock_trust_level: "Odblokuj poziom zaufania"
         tl3_requirements:
           title: "Wymagania dla osiągnięcia 3. poziomu zaufania"
+          table_title: "W ciągu ostatnich %{time_period} dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
           visits: "Odwiedziny"
@@ -2595,10 +2682,7 @@ pl_PL:
         one: "Otrzymano tą odznakę 1 raz"
         few: "Otrzymano tą odznakę %{count} razy"
         other: "Otrzymano tą odznakę %{count} razy"
-      more_with_badge: "Inni użytkownicy z tą odznaką"
       title: Odznaki
-      allow_title: "może być użyta jako tytuł"
-      multiple_grant: "może być przyznana wielokrotnie"
       badge_count:
         one: "1 odznaka"
         few: "%{count} odznaki"
@@ -2624,97 +2708,6 @@ pl_PL:
           name: Inne
         posting:
           name: Wpisy
-      badge:
-        editor:
-          name: Edytor
-          description: Pierwsza edycja
-        basic_user:
-          name: Podstawowy
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Przyznano</a> wszystkie podstawowe funkcje
-        member:
-          name: Zwykły
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Przyznano</a> zaproszenia
-        regular:
-          name: Regularny
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Przyznano</a> zmianę kategorii, tytułu, wyłączenie nofollow linków oraz Salon
-        leader:
-          name: Weteran
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Przyznano</a> możliwość edycji, przypinania, zamykania, archiwizacji, podziału i scalania
-        welcome:
-          name: Powitanie
-          description: Otrzymano polubienie
-        autobiographer:
-          name: Autobiograf
-          description: Wypełnienie <a href="/my/preferences">profilu</a> użytkownika
-        anniversary:
-          name: Rocznica
-          description: Aktywność przez rok, co najmniej jeden wpis
-        nice_post:
-          name: Niezły wpis
-          description: Otrzymano 10 polubień za wpis. Ta odznaka może być przyznawana wielokrotnie
-        good_post:
-          name: Dobry wpis
-          description: Otrzymano 25 polubień za wpis. Ta odznaka może być przyznawana wielokrotnie
-        great_post:
-          name: Wspaniały wpis
-          description: Otrzymano 50 polubień za wpis. Ta odznaka może być przyznawana wielokrotnie
-        nice_topic:
-          name: Niezły temat
-          description: Otrzymano 10 polubień w temacie. Ta odznaka może być przyznawana wielokrotnie.
-        good_topic:
-          name: Dobry temat
-          description: Otrzymano 25 polubień w temacie. Ta odznaka może być przyznawana wielokrotnie.
-        great_topic:
-          name: Świetny temat
-          description: Otrzymano 50 polubień w temacie. Ta odznaka może być przyznawana wielokrotnie.
-        nice_share:
-          name: Niezłe udostępnienie
-          description: Udostępniono wpis 25 unikalnym odwiedzającym.
-        good_share:
-          name: Dobre udostępnienie
-          description: Udostępniono wpis 300 unikalnym odwiedzającym.
-        great_share:
-          name: Świetne udostępnienie
-          description: Udostępniono wpis 1000 unikalnych odwiedzających.
-        first_like:
-          name: Pierwsze polubienie
-          description: Polubiono wpis
-        first_flag:
-          name: Pierwsza flaga
-          description: Zgłoszenie wpisu
-        promoter:
-          name: Promotor
-          description: Zaproszenie użytkownika
-        campaigner:
-          name: Działacz
-          description: Zaproszenie 3 użytkowników (poziom zaufania 1)
-        champion:
-          name: Czempion
-          description: Zaproszenie 5 użytkowników (poziom zaufania 2)
-        first_share:
-          name: Pierwsze udostępnienie
-          description: Udostępniono wpis
-        first_link:
-          name: Pierwszy link
-          description: Dodano wewnętrzny link do innego tematu
-        first_quote:
-          name: Pierwszy cytat
-          description: Zacytowano użytkownika
-        read_guidelines:
-          name: Przeczytany przewodnik
-          description: Przeczytanie <a href="/guidelines">wytycznych społeczności</a>
-        reader:
-          name: Czytelnik
-          description: Przeczytanie każdego wpisu w temacie z ponad 100 wpisami
-        popular_link:
-          name: Popularny link
-          description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 50 kliknięć
-        hot_link:
-          name: Gorący link
-          description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 300 kliknięć
-        famous_link:
-          name: Słynny link
-          description: Opublikowanie zewnętrznego linku, który otrzymał co najmniej 1000 kliknięć
     google_search: |
       <h3>Wyszukaj z Google</h3>
       <p>

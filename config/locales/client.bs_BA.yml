@@ -1757,8 +1757,6 @@ bs_BA:
         mark_watching: '<b>m</b>, <b>w</b> Motri temu'
     badges:
       title: Bedževi
-      allow_title: "allow badge as title?"
-      multiple_grant: "awarded multiple times?"
       select_badge_for_title: Izaveri bedž za svoj naslov
       none: "<nijedna>"
       badge_grouping:
@@ -1772,78 +1770,3 @@ bs_BA:
           name: Drugi
         posting:
           name: Postiranje
-      badge:
-        editor:
-          name: Urednik
-          description: Prvi post izmjenjen
-        basic_user:
-          name: Osnovni
-          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/4">Odobrene</a> sve osnovne funkcije foruma
-        member:
-          name: Član
-          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/5">Odobrene</a> pozivnice
-        regular:
-          name: Regularan
-          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
-        leader:
-          name: Vođa
-          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
-        welcome:
-          name: Dobrodošao
-          description: Dobio Lajk
-        autobiographer:
-          name: Autobiografičar
-          description: Popunio biografiju na svom <a href="/my/preferences">profilu</a>
-        anniversary:
-          name: Godišnjica
-          description: Aktivan član godinu dana, pisao najmanje jednom
-        nice_post:
-          name: Dobar Post
-          description: Dobio 10 lajkova na postu. Ovaj se bedž može dobiti više puta
-        good_post:
-          name: Odličan Post
-          description: Dobio 25 lajkova na postu. Ovaj se bedž može dobiti više puta
-        great_post:
-          name: Super Post
-          description: Dobio 50 lajkova na postu. Ovaj se bedž može dobiti više puta
-        nice_topic:
-          name: Dobra Tema
-          description: Dobio 10 lajkova na postu. Ovaj se bedž može dobiti više puta
-        good_topic:
-          name: Odlična Tema
-          description: Dobio 25 lajkova na postu. Ovaj se bedž može dobiti više puta
-        great_topic:
-          name: Super Tema
-          description: Dobio 50 lajkova na postu. Ovaj se bedž može dobiti više puta
-        nice_share:
-          name: Dobar Share
-          description: Podijelio je post sa više od 25 posjetilaca
-        good_share:
-          name: Good Share
-          description: Shared a post with 300 unique visitors
-        great_share:
-          name: Great Share
-          description: Shared a post with 1000 unique visitors
-        first_like:
-          name: Prvi Lajk
-          description: Lajkovao post
-        first_flag:
-          name: Prva Opomena
-          description: Opomenuo post
-        champion:
-          description: Pozvao 5 članova (trust level 2)
-        first_share:
-          name: Prvi Share
-          description: Podijelio post
-        first_link:
-          name: Prvi Link
-          description: Dodao interni link na drugu temu
-        first_quote:
-          name: Prvo Citiranje
-          description: Citirao korisnika
-        read_guidelines:
-          name: Pročitao Pravila
-          description: Pročitao <a href="/guidelines">naša pravila</a>
-        reader:
-          name: Čitač
-          description: Pročitao post na temi sa više od 100 postova

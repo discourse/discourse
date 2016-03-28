@@ -724,7 +724,6 @@ fr:
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
-    logs_error_rate_exceeded_notice: "%{timestamp}: Le taux actuel de <a href='%{url}' target='_blank'>%{rate} erreurs/%{duration}</a> a dépassé la limite des paramètres du site de %{siteSettingLimit} erreurs/%{duration}."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -2643,10 +2642,7 @@ fr:
       earned_n_times:
         one: "A reçu ce badge 1 fois"
         other: "A reçu ce badge %{count} fois"
-      more_with_badge: "Autres avec ce badge"
       title: Badges
-      allow_title: "peut être utilisé comme votre titre"
-      multiple_grant: "peut être décerné plusieurs fois"
       badge_count:
         one: "1 badge"
         other: "%{count} badges"
@@ -2669,97 +2665,6 @@ fr:
           name: Autre
         posting:
           name: Message
-      badge:
-        editor:
-          name: Editeur
-          description: A modifié un message pour la première fois
-        basic_user:
-          name: Actif
-          description: Toutes les fonctions communautaires essentielles sont accessibles
-        member:
-          name: Membre
-          description: Accorde les <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">invitations</a>.
-        regular:
-          name: Habitué
-          description: La re-catégorisation, le renommage, le suivi de lien et le salon sont accessibles
-        leader:
-          name: Meneur
-          description: L'édition, l'épinglage, la fermeture, l'archivage, la séparation et la fusion sont accessibles
-        welcome:
-          name: Bienvenue
-          description: A reçu un j'aime.
-        autobiographer:
-          name: Autobiographe
-          description: A rempli les informations de son <a href="/my/preferences">profil</a>
-        anniversary:
-          name: Jubilaire
-          description: Membres actif depuis un an, avec au moins un message
-        nice_post:
-          name: Joli message
-          description: A reçu 10 j'aime sur un message. Ce badge peut être décerné plusieurs fois
-        good_post:
-          name: Excellent message
-          description: A reçu 25 j'aime sur un message. Ce badge peut être décerné plusieurs fois
-        great_post:
-          name: Bon message
-          description: A reçu 50 j'aime sur un message. Ce badge peut être décerné plusieurs fois
-        nice_topic:
-          name: Sujet intéressant
-          description: A reçu 10 J'aime sur un sujet. Ce badge peut être décerné plusieurs fois
-        good_topic:
-          name: Bon sujet
-          description: A reçu 25 J'aime sur un sujet. Ce badge peut être décerné plusieurs fois
-        great_topic:
-          name: Super sujet
-          description: A reçu 50 J'aime sur un sujet. Ce badge peut être décerné plusieurs fois
-        nice_share:
-          name: Partage sympa
-          description: Message partagé avec 25 visiteurs uniques
-        good_share:
-          name: Bon partage
-          description: Message partagé avec 300 visiteurs uniques
-        great_share:
-          name: Super Partage
-          description: Message partagé avec 1000 visiteurs uniques
-        first_like:
-          name: Premier j'aime
-          description: A aimé un message
-        first_flag:
-          name: Premier signalement
-          description: A signalé un message
-        promoter:
-          name: Ambassadeur
-          description: A invité un utilisateur
-        campaigner:
-          name: Militant
-          description: A invité 3 utilisateurs basiques (Niveau de confiance 1)
-        champion:
-          name: Champion
-          description: A invité 5 membres (Niveau de confiance 2)
-        first_share:
-          name: Premier partage
-          description: A partagé un message
-        first_link:
-          name: Premier lien
-          description: A ajouté un lien interne vers un autre sujet
-        first_quote:
-          name: Première citation
-          description: A cité un utilisateur
-        read_guidelines:
-          name: Règlement lu
-          description: A lu le <a href="/guidelines">règlement de la communauté</a>
-        reader:
-          name: Lecteur
-          description: A lu tous les messages d'un sujet contenant plus de 100 messages
-        popular_link:
-          name: Lien populaire
-          description: A posté un lien externe avec au moins 50 clics
-        hot_link:
-          name: Lien tendance
-          description: A posté un lien externe avec au moins 300 clics
-        famous_link:
-          name: Lien célèbre
-          description: A posté un lien externe avec au moins 1000 clics
     google_search: |
       <h3>Rechercher avec Google</h3>
       <p>

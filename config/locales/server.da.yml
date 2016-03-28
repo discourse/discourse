@@ -611,8 +611,6 @@ da:
     purge_deleted_uploads_grace_period_days: "Grace-periode (i dage) før et slettet upload bliver fjernet."
     tl2_requires_likes_received: "Hvor mange likes en bruger skal modtage inden forfremmelse til tillidsniveau 2."
     tl2_requires_likes_given: "Hvor mange likes en bruger skal give inden forfremmelse til tillidsniveau 2."
-    tl3_requires_likes_given: "Det antal likes en bruger skal have givet i de seneste 100 dage for at kvalificere sig til forfremmelse til tillidsniveau 3."
-    tl3_requires_likes_received: "Det antal likes en bruger skal have modtaget i de seneste 100 dage for at kvalificere sig til forfremmelse til tillidsniveau 3."
     min_trust_to_create_topic: "Det mindste tillidsniveau der skal til for at oprette et nyt emne."
     title_fancy_entities: "Omdan almindelige ASCII-tegn i emnetitler til fancy HTML-entities, i stil med SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Undgå hyppige tastefejl i titlen, inklusive overforbrug af store bogstaver, første bogstav med småt, gentagne ! og ?, ekstra . i slutningen, etc."

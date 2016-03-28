@@ -2244,8 +2244,6 @@ sv:
         mark_watching: '<b>m</b>, <b>w</b> Bevaka ämne'
     badges:
       title: Utmärkelser
-      allow_title: "kan användas som titel"
-      multiple_grant: "kan tilldelas flera gånger"
       badge_count:
         one: "1 Utmärkelse"
         other: "%{count} Utmärkelser"
@@ -2268,75 +2266,3 @@ sv:
           name: Övrigt
         posting:
           name: Inlägg
-      badge:
-        basic_user:
-          name: Grundläggande
-        member:
-          name: Medlem
-        regular:
-          name: Vanligt
-        leader:
-          name: Ledare
-        welcome:
-          name: Välkommen
-          description: Fick en gilla
-        autobiographer:
-          name: Självbiograf
-          description: Fyllde ut sin <a href="/my/preferences">profilinformation</a>
-        anniversary:
-          name: Årsdag
-          description: Aktiv medlem ett år, har skrivit minst en gång
-        nice_post:
-          name: Bra inlägg
-          description: Fick 10 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
-        good_post:
-          name: Jättebra inlägg
-          description: Fick 25 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
-        great_post:
-          name: Fantastiskt inlägg
-          description: Fick 50 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
-        nice_topic:
-          name: Bra ämne
-          description: Fick 10 gilla på ett ämne. Denna utmärkelse kan utfärdas flera gånger.
-        good_topic:
-          name: Jättebra ämne
-          description: Fick 25 gilla på ett ämne. Denna utmärkelse kan utfärdas flera gånger.
-        great_topic:
-          name: Fantastiskt ämne
-          description: Fick 50 gilla på ett ämne. Denna utmärkelse kan utfärdas flera gånger.
-        nice_share:
-          name: Bra delning
-          description: Delade ett inlägg med 25 unika besökare
-        good_share:
-          name: Jättebra delning
-          description: Delade ett inlägg med 300 unika besökare
-        great_share:
-          name: Fantastisk delning
-          description: Delade ett inlägg med 1000 unika besökare
-        first_like:
-          name: Första gillning
-          description: Gillade ett inlägg
-        first_flag:
-          name: Första flaggning
-          description: Flaggade ett inlägg
-        promoter:
-          description: Bjöd in en användare
-        first_share:
-          name: Första delning
-          description: Delade ett inlägg
-        first_link:
-          name: Första länk
-          description: Länkade internt till ett annat ämne
-        first_quote:
-          name: Första citation
-          description: Citerade en användare
-        read_guidelines:
-          name: Läst riktlinjer
-          description: Läste <a href="/guidelines">forumets riktlinjer</a>
-        reader:
-          name: Läsare
-          description: Läs varje inlägg i en diskussion med över 100 inlägg
-        popular_link:
-          name: Populär länk
-        hot_link:
-          name: Het länk

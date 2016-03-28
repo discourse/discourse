@@ -2196,8 +2196,6 @@ ja:
         mark_watching: '<b>m</b>, <b>w</b> トピックを参加中にする'
     badges:
       title: バッジ
-      allow_title: "タイトルとして使用できる"
-      multiple_grant: "複数回受け取ることができる"
       badge_count:
         other: "%{count} バッジ"
       more_badges:
@@ -2217,85 +2215,3 @@ ja:
           name: その他
         posting:
           name: 投稿中
-      badge:
-        editor:
-          name: 編集者
-          description: 最初のポスト編集
-        basic_user:
-          name: ベーシックユーザ
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
-        member:
-          name: メンバー
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations
-        regular:
-          name: レギュラー
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
-        leader:
-          name: リーダー
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
-        welcome:
-          name: ようこそ
-          description: 「いいね！」を受けました
-        autobiographer:
-          name: Autobiographer
-          description: Filled user <a href="/my/preferences">profile</a> information
-        anniversary:
-          name: アニバーサリー
-          description: 今年一度でも投稿したアクティブメンバー
-        nice_post:
-          name: 良いポスト
-          description: 10人に「いいね！」をされました。このバッジは何度でももらえます。
-        good_post:
-          name: 良い投稿！
-          description: 25人に「いいね！」をされました。このバッジは何度でももらえます。
-        great_post:
-          name: 素晴らしい投稿！
-          description: 50人に「いいね！」をされました。このバッジは何度でももらえます。
-        nice_topic:
-          name: ナイストピック
-          description: トピックが10回「いいね！」されました。このバッジは何度でももらえます
-        good_topic:
-          name: グッドトピック
-          description: トピックが25回「いいね！」されました。このバッジは何度でももらえます
-        great_topic:
-          name: グレートトピック
-          description: トピックが50回「いいね！」されました。このバッジは何度でももらえます
-        nice_share:
-          name: ナイスシェア
-          description: 25人の訪問者にポストがシェアされました
-        good_share:
-          name: グッドシェア
-          description: 300人の訪問者にポストがシェアされました
-        great_share:
-          name: グレートシェア
-          description: 1000人の訪問者にポストがシェアされました
-        first_like:
-          name: 初めての「いいね！」
-          description: 投稿に「いいね！」した
-        first_flag:
-          name: 最初のフラグ
-          description: 投稿にフラグをつけた
-        promoter:
-          name: プロモーター
-          description: 招待したユーザ
-        campaigner:
-          name: キャンペイナー
-          description: 3人のベーシックユーザー(トラストレベル 1)を招待
-        champion:
-          name: チャンピオン
-          description: 5 メンバー(トラストレベル2)を招待
-        first_share:
-          name: 初めてのシェア
-          description: 投稿をシェアした
-        first_link:
-          name: 最初のリンク
-          description: サイト内投稿のリンクを挿入した
-        first_quote:
-          name: 最初の投稿
-          description: ユーザにタグを付けた
-        read_guidelines:
-          name: ガイドラインを読んだ
-          description: <a href="/guidelines">community guidelines</a>を読みました
-        reader:
-          name: 閲覧者
-          description: 100以上の投稿があるトピック内の投稿をすべて読みました。

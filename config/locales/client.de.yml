@@ -271,6 +271,7 @@ de:
         one: "Dieses Thema hat <b>einen</b> Beitrag, der genehmigt werden muss"
         other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
       confirm: "Änderungen speichern"
+      delete_prompt: "Möchtest du wirklich <b>%{username}</b> löschen? Damit werden alle ihre/seine Beiträge entfernt und ihre/seine E-Mail- und IP-Adresse geblockt."
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
@@ -472,6 +473,7 @@ de:
       muted_users: "Stummgeschaltet"
       muted_users_instructions: "Alle Benachrichtigungen von diesem Benutzer unterdrücken."
       muted_topics_link: "Zeige stummgeschaltete Themen"
+      automatically_unpin_topics: "Themen automatisch loslösen, wenn ich das Ende erreiche."
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -573,9 +575,14 @@ de:
       website: "Website"
       email_settings: "E-Mail"
       like_notification_frequency:
+        title: "Melde es wenn du es magst"
         always: "Immer"
+        first_time_and_daily: "Das erste mal das jemandem der  tägliche Beitrag gefällt"
+        first_time: "Das erste mal das der Beitrag jemandem gefällt"
         never: "Nie"
       email_previous_replies:
+        title: "Füge vorherige Antworten ans Ende der E-Mail an"
+        unless_emailed: "soweit nicht vorher gesendet"
         always: "immer"
         never: "nie"
       email_digests:
@@ -586,6 +593,8 @@ de:
         every_three_days: "alle drei Tage"
         weekly: "wöchentlich"
         every_two_weeks: "jede zweite Woche"
+      include_tl0_in_digests: "Füge Beiträge von neuen Benutzern in Zusammenfassungs-E-Mails an"
+      email_in_reply_to: "füge "
       email_direct: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet, meinen @Namen erwähnt oder mich zu einem Thema einlädt."
       email_private_messages: "Sende mir eine E-Mail, wenn mir jemand eine Nachricht sendet."
       email_always: "Benachrichtige mich per E-Mail auch während ich auf dieser Website aktiv bin"
@@ -712,6 +721,7 @@ de:
     read_only_mode:
       enabled: "Diese Seite ist im Nur-Lesen Modus. Du kannst weiterhin die Seite lesen, aber antworten, liken und andere Aktionen sind deaktiviert."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
+      logout_disabled: "Die Abmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
@@ -740,6 +750,8 @@ de:
       value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzten kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn neue Beiträge verfasst werden. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartbeat:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
+      description: "Es gibt <b>{{replyCount}}</b> Antworten."
+      description_time: "Es gibt <b>{{replyCount}}</b> Antworten mit einer geschätzten Lesezeit von <b>{{readingTime}} Minuten</b>."
       enable: 'Zusammenfassung vom Thema erstellen'
       disable: 'Alle Beiträge anzeigen'
     deleted_filter:
@@ -807,6 +819,7 @@ de:
         message: "Authentifiziere mit Twitter (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       instagram:
         title: "mit Instagram"
+        message: "Authentifiziere mit Instagram (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       facebook:
         title: "mit Facebook"
         message: "Authentifiziere mit Facebook (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
@@ -1383,6 +1396,8 @@ de:
           bookmark: "Lesezeichen entfernen"
           like: "Gefällt mir nicht mehr"
           vote: "Stimme widerrufen"
+        people:
+          spam: "Melde es als Spam"
         by_you:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
@@ -2147,6 +2162,7 @@ de:
             revoke_admin: "Administration entziehen"
             grant_moderation: "Moderation gewähren"
             revoke_moderation: "Moderation entziehen"
+            backup_operation: "Backup läuft"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -2600,10 +2616,7 @@ de:
       earned_n_times:
         one: "Einmal dieses Abzeichen erhalten"
         other: "%{count} mal dieses Abzeichen erhalten"
-      more_with_badge: "Andere mit diesem Abzeichen"
       title: Abzeichen
-      allow_title: "kann als Titel verwendet werden"
-      multiple_grant: "kann mehrfach verliehen werden"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"
@@ -2626,97 +2639,6 @@ de:
           name: Andere
         posting:
           name: Beiträge
-      badge:
-        editor:
-          name: Bearbeiter
-          description: Hat den ersten Beitrag bearbeitet
-        basic_user:
-          name: Anwärter
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Ermöglicht</a> das Nutzen alle wesentlichen Community-Funktionen
-        member:
-          name: Mitglied
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ermöglicht</a> Einladungen
-        regular:
-          name: Stammgast
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung von <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbaren Links</a> und den Zugang zur Lounge
-        leader:
-          name: Anführer
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ermöglicht</a> das Bearbeiten aller Beiträge und das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen
-        welcome:
-          name: Willkommen
-          description: Hat ein Like erhalten
-        autobiographer:
-          name: Autobiograf
-          description: Hat <a href="/my/preferences">Benutzerprofil</a> ausgefüllt
-        anniversary:
-          name: Jubiläum
-          description: Aktives Mitglied für ein Jahr und hat mindestens einen Beitrag verfasst
-        nice_post:
-          name: Schöner Beitrag
-          description: Hat 10 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        good_post:
-          name: Guter Beitrag
-          description: Hat 25 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        great_post:
-          name: Großartiger Beitrag
-          description: Hat 50 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        nice_topic:
-          name: Schönes Thema
-          description: Hat 10 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        good_topic:
-          name: Gutes Thema
-          description: Hat 25 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        great_topic:
-          name: Großartiges Thema
-          description: Hat 50 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        nice_share:
-          name: Schöne Weitergabe
-          description: Hat einen Beitrag mit 25 Besuchern geteilt
-        good_share:
-          name: Gute Weitergabe
-          description: Hat einen Beitrag mit 300 Besuchern geteilt
-        great_share:
-          name: Großartige Weitergabe
-          description: Hat einen Beitrag mit 1000 Besuchern geteilt
-        first_like:
-          name: Erster Like
-          description: Hat Gefallen an einem Beitrag gefunden
-        first_flag:
-          name: Erste Meldung
-          description: Hat einen Beitrag gemeldet
-        promoter:
-          name: Befürworter
-          description: Hat einen Benutzer eingeladen
-        campaigner:
-          name: Aktivist
-          description: Hat 3 Anwärter (Vertrauensstufe 1) eingeladen
-        champion:
-          name: Verfechter
-          description: Hat 5 Mitglieder (Vertrauensstufe 2) eingeladen
-        first_share:
-          name: Erste Weitergabe
-          description: Hat einen Beitrag geteilt
-        first_link:
-          name: Erster Link
-          description: Hat einen internen Link auf einen anderen Beitrag hinzugefügt
-        first_quote:
-          name: Erstes Zitat
-          description: Hat einen Benutzer zitiert
-        read_guidelines:
-          name: Richtlinien gelesen
-          description: Hat die <a href="/guidelines">Community-Richtlinien</a> gelesen
-        reader:
-          name: Leser
-          description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
-        popular_link:
-          name: Beliebter Link
-          description: Hat einen externen Link veröffentlicht, welcher mindestens 50 Klicks erhalten hat.
-        hot_link:
-          name: Angesagter Link
-          description: Hat einen externen Link veröffentlicht, welcher mindestens 300 Klicks erhalten hat.
-        famous_link:
-          name: Berühmter Link
-          description: Hat einen externen Link veröffentlicht, welcher mindestens 1000 Klicks erhalten hat.
     google_search: |
       <h3>Mit Google suchen</h3>
       <p>

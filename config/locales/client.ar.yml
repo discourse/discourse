@@ -215,6 +215,7 @@ ar:
         us_east_1: "الولايات المتحدة الشرقيه ( ولايه فيرجينيا )"
         us_west_1: "الولايات المتحدة الغربية (  كاليفورنيا )"
         us_west_2: "الولايات المتحدة الغربية ( ولاية أوريغون )"
+        us_gov_west_1: "إستضافة أمازون الحسابية الحكومية (الولايات المتحدة الأمريكية)"
         eu_west_1: "الاتحاد الأوروبي ( أيرلندا )"
         eu_central_1: "الاتحاد الأوروبي ( فرانكفورت )"
         ap_southeast_1: "آسيا والمحيط الهادئ ( سنغافورة )"
@@ -851,7 +852,6 @@ ar:
     too_few_topics_and_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة بدأت!</a> يوجد حاليا<strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع و <strong>%{currentPosts} / %{requiredPosts}</strong> المشاركات. الزوار الجدد بحاجة إلى بعض الأحاديث لقراءة والرد على."
     too_few_topics_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي!</a> وهناك حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
     too_few_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي بدأت!</a> يوجد حاليا <strong>%{currentPosts} / %{requiredPosts}</strong> مشاركات. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
-    logs_error_rate_exceeded_notice: "%{timestamp}: التقيم الي الخاص بــ  <a href='%{url}' target='_blank'>%{rate} errors/%{duration}</a> قد تجاوز اعدادت الموقع المحدده %{siteSettingLimit} errors/%{duration}."
     learn_more: "تعلم المزيد..."
     year: 'سنة'
     year_desc: 'المواضيع المكتوبة خلال 365 يوم الماضية'
@@ -3021,10 +3021,7 @@ ar:
         few: "استحق هذه الشاره  %{count} مرات"
         many: "استحق هذه الشاره  %{count} مرات"
         other: "استحق هذه الشاره  %{count} مرات"
-      more_with_badge: "اخرون بنفس الدرع"
       title: أوسمة
-      allow_title: "يمكن استخدامه كعنوان"
-      multiple_grant: "يمكن منحه عدة مرات. "
       badge_count:
         zero: "%{count} شاره"
         one: "%{count} شاره"
@@ -3059,97 +3056,6 @@ ar:
           name: الجميع
         posting:
           name: نشر
-      badge:
-        editor:
-          name: محرر
-          description: أول موضوع تم تحريره
-        basic_user:
-          name: أساسي
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">منح</a> جميع وظائف المجتمع الأساسية.
-        member:
-          name: عضو
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">مُنح</a> دعوات
-        regular:
-          name: منتظم
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">منح</a> اعادة تصنيف, اعادة تسمية, اتباع الروابط
-        leader:
-          name: قائد
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">منح</a> تحرير عام, تثبيت, اغلاق, ارشفة, تقسيم ودمج
-        welcome:
-          name: مرحباً
-          description: تلقيت إعجاب
-        autobiographer:
-          name: الكاتب سيرته بنفسه
-          description: تصفية عضو <a href="/my/preferences">ملف التعريف </a>معلومات
-        anniversary:
-          name: ذكرى
-          description: عضو نشط لمدة عام، شارك مرة واحدة على الأقل
-        nice_post:
-          name: منشور رائع
-          description: 'تلقيت 10 إعجاب لهذه المشاركة . هذا الاشعار يتم إرسالة مرات عديدة '
-        good_post:
-          name: منشور جيد
-          description: تلقيت 25 إعجاب لهذه المشاركة . هذا الاشعار يتم إرسالة مرات عديدة
-        great_post:
-          name: منشور ممتاز
-          description: تلقيت 50 إعجاب لهذه المشاركة . هذا الاشعار يتم إرسالة مرات عديدة
-        nice_topic:
-          name: 'موضوع رائع '
-          description: تلقيت 10 إعجاب لهذا الموضوع . هذا الاشعار يتم إرسالة مرات عديدة
-        good_topic:
-          name: موضوع جيد
-          description: تلقيت 25 إعجاب لهذا الموضوع . هذا الوسام يتم منحه عدة مرات
-        great_topic:
-          name: موضوع ممتاز
-          description: تلقيت 50 إعجاب لهذا الموضوع . هذا الوسام يتم منحه عدة مرات
-        nice_share:
-          name: مشاركة رائعة
-          description: تم مشاركة رد مع أكثر من 25 زائر
-        good_share:
-          name: مشاركة جيدة
-          description: تم مشاركة رد مع أكثر من 300 زائر
-        great_share:
-          name: مشاركة ممتازة
-          description: تم مشاركة رد مع أكثر من 1000 زائر
-        first_like:
-          name: اول اعجاب
-          description: أعجب في رد
-        first_flag:
-          name: اول بلاغ
-          description: مشاركة مبلغ عنها
-        promoter:
-          name: متعهد
-          description: دعوة مستخدم
-        campaigner:
-          name: ناشط
-          description: تم دعوة 3 أعضاء (مستوى الثقة 1)
-        champion:
-          name: بطل
-          description: تم دعوة 5 أعضاء (مستوى الثقة 2)
-        first_share:
-          name: اول مشاركة
-          description: مشاركة تعليق
-        first_link:
-          name: الرابط الأول
-          description: اضافة رابط لموضوع اخر
-        first_quote:
-          name: أول اقتباس
-          description: اقتبس من عضو
-        read_guidelines:
-          name: اقرأ التعليمات
-          description: اطلع على  <a href="/guidelines">توجيهات المجتمع</a>
-        reader:
-          name: قارئ
-          description: قراءة جميع المشاركات في موضوع فيه أكثر من 100 مشاركة
-        popular_link:
-          name: رابط مشهور
-          description: شارك رابط خارجي بـ  50 نقرة على الأقل.
-        hot_link:
-          name: الرابط الساخن
-          description: شارك رابط خارجي بـ 300 نقرة على الأقل.
-        famous_link:
-          name: رابط مشهور
-          description: شارك الرابط الخارجي بـ 1000 نقرة على الأقل
     google_search: |
       <h3>ابحث في قوقل</h3>
       <p>

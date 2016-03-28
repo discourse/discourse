@@ -2534,8 +2534,6 @@ cs:
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
     badges:
       title: Odznaky
-      allow_title: "může být použito jako titul"
-      multiple_grant: "může být přiděleno několikrát"
       badge_count:
         one: "1 odznak"
         few: "%{count} odznaky"
@@ -2561,93 +2559,3 @@ cs:
           name: Ostatní
         posting:
           name: Přispívání
-      badge:
-        editor:
-          name: Editor
-          description: První úprava příspěvku.
-        basic_user:
-          name: Základní
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
-        member:
-          name: Člen
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Povoleny</a> pozvánky
-        regular:
-          name: Normální
-        leader:
-          name: Vůdce
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Povoleno</a> globální editování, připínání, zavírání, archivace, rozdělení a spojení
-        welcome:
-          name: Vítejte
-          description: Obdrženo líbí se mi
-        autobiographer:
-          name: Autor vlastního životopisu
-          description: Vypněné informace v <a href="/my/preferences">profilu</a>.
-        anniversary:
-          name: Výročí
-          description: Aktivním členem přes rok, přispěl alespoň jednou
-        nice_post:
-          name: Zdařilý příspěvek
-          description: Obdrženo 10 líbí se na příspěvku. Tento odznak můžete získat opakovaně
-        good_post:
-          name: Dobrý příspěvek
-          description: Obdrženo 25 líbí se na příspěvku. Tento odznak můžete získat opakovaně
-        great_post:
-          name: Výborný příspěvek
-          description: Obdrženo 50 líbí se na příspěvku. Tento odznak můžete získat opakovaně
-        nice_topic:
-          name: Zdařilé téma
-          description: Obdrženo 10 líbí se v tématu. Tento odznak můžete získat opakovaně
-        good_topic:
-          name: Dobré téma
-          description: Obdrženo 25 líbí se v tématu. Tento odznak můžete získat opakovaně
-        great_topic:
-          name: Výborné téma
-          description: Obdrženo 50 líbí se v tématu. Tento odznak můžete získat opakovaně
-        nice_share:
-          name: Zdařilé sdílení
-          description: Sdílení příspěvku s 25 unikátními návštěvníky
-        good_share:
-          name: Dobré sdílení
-          description: Sdílení příspěvku s 300 unikátními návštěvníky
-        great_share:
-          name: Výborné sdílení
-          description: Sdílení příspěvku s 1000 unikátními návštěvníky
-        first_like:
-          name: První lajk
-          description: Líbil se příspěvek
-        first_flag:
-          name: První nahlášení
-          description: Nahlášen příspěvek
-        promoter:
-          name: Promotér
-          description: Pozval uživatele
-        campaigner:
-          name: Vede kampaň
-          description: Pozval 3 základní uživatele (důvěryhodnost 1)
-        champion:
-          name: Šampión
-          description: Pozval 5 uživatelů (důvěryhodnost 2)
-        first_share:
-          name: První sdílení
-          description: Sdílený příspěvek
-        first_link:
-          name: První odkaz
-          description: Vložen interní odkaz na jiné téma
-        first_quote:
-          name: První citace
-          description: Citovat uživatele
-        read_guidelines:
-          name: Přečíst pokyny
-          description: Přečíst <a href="/guidelines">komunitní pokyny</a>
-        reader:
-          name: Čtenář
-          description: Přečíst každý příspěvek v tématu s více než 100 příspěvky
-        popular_link:
-          name: Populární odkaz
-          description: Přidal externí odkaz s alespoň 50 kliky
-        hot_link:
-          name: Žhavý odkaz
-          description: Přidal externí odkaz s alespoň 300 kliky
-        famous_link:
-          name: Slavný odkaz
-          description: Přidal externí odkaz s alespoň 1000 kliky

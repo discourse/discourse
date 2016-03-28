@@ -100,6 +100,8 @@ sq:
         x_years:
           one: "1 year later"
           other: "%{count} years later"
+      previous_month: 'Muaji i Kaluar'
+      next_month: 'Muaji Tjetër'
     share:
       topic: 'shpërnda një lidhje tek kjo temë'
       post: 'postim #%{postNumber}'
@@ -109,12 +111,27 @@ sq:
       google+: 'shpërndaje këtë lidhje në Google+'
       email: 'dërgo këtë lidhje me email'
     action_codes:
+      split_topic: "ndaje këtë teme %{when}"
+      invited_user: "ftuar %{who} %{when}"
+      removed_user: "hequr %{who} %{when}"
       autoclosed:
         enabled: 'mbyllur %{when}'
         disabled: 'hapur %{when}'
       closed:
         enabled: 'mbyllur %{when}'
         disabled: 'hapur %{when}'
+      archived:
+        enabled: 'arkivuar %{when}'
+        disabled: 'ç''arkivuar %{when}'
+      pinned:
+        enabled: 'mbërthyer %{when}'
+        disabled: 'ç''mbërthyer %{when}'
+      pinned_globally:
+        enabled: 'mbërthyer globalisht %{when}'
+        disabled: 'ç''mbërthyer %{when}'
+      visible:
+        enabled: 'listuar %{when}'
+        disabled: 'ç''listuar %{when}'
     topic_admin_menu: "topic admin actions"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     s3:
@@ -158,6 +175,8 @@ sq:
     more: "Më shumë"
     less: "Më pak"
     never: "asnjëher"
+    every_30_minutes: "çdo 30 minuta"
+    every_hour: "çdo orë"
     daily: "ditore"
     weekly: "javore"
     every_two_weeks: "çdo dy javë"
@@ -169,6 +188,7 @@ sq:
       other: "{{count}} karakterë"
     suggested_topics:
       title: "Temat e Sugjeruara"
+      pm_title: "Mesazhet e Sygjeruara"
     about:
       simple_title: "Rreth"
       title: "Rreth %{title}"
@@ -216,6 +236,7 @@ sq:
     saved: "U ruajt!"
     upload: "Ngarko"
     uploading: "Duke nga ngarkuar..."
+    uploading_filename: "Duke Ngarkuar {{filename}}..."
     uploaded: "U ngarkua!"
     enable: "Aktivizo"
     disable: "Disaktivizo"
@@ -223,6 +244,7 @@ sq:
     revert: "Rikthe"
     failed: "Dështojë"
     switch_to_anon: "Mënyrë Anonime"
+    switch_from_anon: "Dalja e Anonimit"
     banner:
       close: "Hiq këtë reklamë."
       edit: "Edit this banner >>"
@@ -245,6 +267,7 @@ sq:
         one: "This topic has <b>1</b> post awaiting approval"
         other: "This topic has <b>{{count}}</b> posts awaiting approval"
       confirm: "Ruaj ndryshimet"
+      delete_prompt: "A jeni te sigurtë që doni të fshini <b>%{username}</b>? Ky veprim do të fshijë çdo shkrim të tyre dhe do bllokojë e-mailin dhe IP e tyre."
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -287,20 +310,47 @@ sq:
         one: "1 user"
         other: "%{count} users"
     groups:
+      empty:
+        posts: "Nuk ka postim nga anëtarët e këtij grupi."
+        members: "Nuk ka asnjë anëtar në këtë grup."
+        mentions: "Nuk ka përmendje në këtë grup."
+        messages: "Nuk ka mesazhe për këtë grup."
+        topics: "Nuk ka asnjë temë nga anëtarët e këtij grupi."
       add: "Shto"
       selector_placeholder: "Shto anëtarë"
+      owner: "pronar"
       visible: "Grupi është i dukshëm për të gjithë përdoruesit"
       title:
         one: "grupë"
         other: "grupet"
       members: "Anëtarë"
+      topics: "Tema"
       posts: "Postime"
+      mentions: "Përmendje"
+      messages: "Nesazhe"
       alias_levels:
+        title: "Kush mund ti bëjë mesazh dhe @permendje këtij grupi?"
         nobody: "Asnjëri"
         only_admins: "Vetëm adminët"
         mods_and_admins: "Vetëm moderatorët dhe Adminët"
         members_mods_and_admins: "Vetëm anëtarët e grupit, moderatorët dhe administratorët"
         everyone: "Të gjithë"
+      trust_levels:
+        title: "Niveli i besimit automatikisht shtohet për anëtarët e grupit:"
+        none: "Asnje"
+      notifications:
+        watching:
+          title: "Duke Parë"
+          description: "Ju do të njoftoheni në çdo postim të ri, dhe numburi i ri i përgjigjeve do të tregohet."
+        tracking:
+          title: "Ndjekje"
+          description: "Ju do të njoftoheni në qoftë se dikush ju pëmend me @emri ose ju përgjigjet, gjithashtu numbri i përgjigjeve do të tregohet."
+        regular:
+          title: "Normale"
+          description: "Ju do të njoftoheni në qoftë se dikush ju përmend me @emrin ose ju përgjigjet."
+        muted:
+          title: "Heshtur"
+          description: "Ju asnjëherë nuk do të njoftoheni për cdo gjë qe mund të ndodhë në këtë teme të këtij grupi."
     user_action_groups:
       '1': "Pëlqime të Dhëna"
       '2': "Pëlqime të marra"
@@ -319,8 +369,15 @@ sq:
       all_subcategories: "të gjitha"
       no_subcategory: "asnjë"
       category: "Kategori"
+      category_list: "Trego listen e kateogorive"
       reorder:
+        title: "Rendit Kategoritë"
+        title_long: "Ri-organizo listën e kategorive"
+        fix_order: "Rregullo Pozicionet"
+        fix_order_tooltip: "Jo të gjitha kategoritë kanë një numbë pozicioni unik, kjo mund të shkaktojë rezultate të pa vlefshme."
+        save: "Ruaje Renditjen"
         apply_all: "Apliko"
+        position: "Pozicioni"
       posts: "Postime"
       topics: "Tema"
       latest: "Të fundit"
@@ -369,6 +426,7 @@ sq:
       invited_by: "Të ftuar nga unë"
       trust_level: "Niveli Besimit"
       notifications: "Njoftimet"
+      statistics: "Statistikat"
       desktop_notifications:
         label: "Desktop Notifications"
         not_supported: "Notifications are not supported on this browser. Sorry."
@@ -497,6 +555,7 @@ sq:
       email_settings: "Email"
       email_digests:
         title: "When I don't visit here, send an email digest of what's new:"
+        every_30_minutes: "çdo 30 minuta"
         daily: "ditore"
         every_three_days: "çdo 3 ditë"
         weekly: "javore"
@@ -550,6 +609,8 @@ sq:
         same_as_email: "Your password is the same as your email."
         ok: "Fjalëkalimi është i pranueshëm."
         instructions: "Të paktën %{count} karaktere."
+      summary:
+        stats: "Statistikat"
       associated_accounts: "Logins"
       ip_address:
         title: "Adresa IP e Fundit"
@@ -2258,8 +2319,6 @@ sq:
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
     badges:
       title: Badges
-      allow_title: "can be used as a title"
-      multiple_grant: "can be awarded multiple times"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"
@@ -2282,85 +2341,3 @@ sq:
           name: Other
         posting:
           name: Posting
-      badge:
-        editor:
-          name: Editor
-          description: First post edit
-        basic_user:
-          name: Basic
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
-        member:
-          name: Member
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations
-        regular:
-          name: Regular
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
-        leader:
-          name: Leader
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
-        welcome:
-          name: Welcome
-          description: Received a like
-        autobiographer:
-          name: Autobiographer
-          description: Filled user <a href="/my/preferences">profile</a> information
-        anniversary:
-          name: Përvjetori
-          description: Active member for a year, posted at least once
-        nice_post:
-          name: Nice Post
-          description: Received 10 likes on a post. This badge can be granted multiple times
-        good_post:
-          name: Good Post
-          description: Received 25 likes on a post. This badge can be granted multiple times
-        great_post:
-          name: Great Post
-          description: Received 50 likes on a post. This badge can be granted multiple times
-        nice_topic:
-          name: Nice Topic
-          description: Received 10 likes on a topic. This badge can be granted multiple times
-        good_topic:
-          name: Good Topic
-          description: Received 25 likes on a topic. This badge can be granted multiple times
-        great_topic:
-          name: Great Topic
-          description: Received 50 likes on a topic. This badge can be granted multiple times
-        nice_share:
-          name: Nice Share
-          description: Shared a post with 25 unique visitors
-        good_share:
-          name: Good Share
-          description: Shared a post with 300 unique visitors
-        great_share:
-          name: Great Share
-          description: Shared a post with 1000 unique visitors
-        first_like:
-          name: Pëlqimi i Parë
-          description: Liked a post
-        first_flag:
-          name: First Flag
-          description: Flagged a post
-        promoter:
-          name: Promoter
-          description: Invited a user
-        campaigner:
-          name: Campaigner
-          description: Invited 3 basic users (trust level 1)
-        champion:
-          name: Champion
-          description: Invited 5 members (trust level 2)
-        first_share:
-          name: First Share
-          description: Shared a post
-        first_link:
-          name: First Link
-          description: Added an internal link to another topic
-        first_quote:
-          name: Citimi i Parë
-          description: Quoted a user
-        read_guidelines:
-          name: Read Guidelines
-          description: Read the <a href="/guidelines">community guidelines</a>
-        reader:
-          name: Lexues
-          description: Read every post in a topic with more than 100 posts
