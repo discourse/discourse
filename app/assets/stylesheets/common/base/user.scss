@@ -23,6 +23,15 @@
     a {
       color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
     }
+
+    a:hover i {
+      color: $quaternary;
+    }
+
+    a.active i {
+      color: $secondary;
+    }
+
     i {
       color: dark-light-choose(scale-color($primary, $lightness: 55%), scale-color($secondary, $lightness: 55%));
     }
