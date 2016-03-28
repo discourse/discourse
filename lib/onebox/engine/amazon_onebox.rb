@@ -54,11 +54,14 @@ module Onebox
         result[:by_info] = Onebox::Helpers.clean(result[:by_info].inner_html) if result[:by_info]
 
         # get item price (Amazon markup is inconsistent, deal with it)
-        if raw.css("#priceblock_ourprice .restOfPrice")[0] && raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text
-          result[:price] = "#{raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text}#{raw.css("#priceblock_ourprice .buyingPrice")[0].inner_text}.#{raw.css("#priceblock_ourprice .restOfPrice")[1].inner_text}"
-        else
-          result[:price] = raw.css("#priceblock_ourprice").inner_text
-        end
+        result[:price] =
+          if raw.css("#priceblock_ourprice .restOfPrice")[0] && raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text
+            "#{raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text}#{raw.css("#priceblock_ourprice .buyingPrice")[0].inner_text}.#{raw.css("#priceblock_ourprice .restOfPrice")[1].inner_text}"
+          elsif raw.css("#priceblock_dealprice") && (dealprice = raw.css("#priceblock_dealprice span")[0])
+            dealprice.inner_text
+          else
+            raw.css("#priceblock_ourprice").inner_text
+          end
 
         summary = raw.at("#productDescription")
         result[:description] = summary.inner_text if summary
