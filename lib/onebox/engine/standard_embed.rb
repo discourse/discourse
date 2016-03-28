@@ -19,7 +19,6 @@ module Onebox
       end
 
       # Some oembed providers (like meetup.com) don't provide links to themselves
-      add_oembed_provider /www\.flickr\.com\//, 'http://www.flickr.com/services/oembed.json'
       add_oembed_provider /(.*\.)?gfycat\.com\//, 'http://gfycat.com/cajax/oembed'
       add_oembed_provider /www\.kickstarter\.com\//, 'https://www.kickstarter.com/services/oembed'
       add_oembed_provider /www\.meetup\.com\//, 'http://api.meetup.com/oembed'
