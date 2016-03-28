@@ -144,11 +144,6 @@
 
 .user-main {
 
-  width: 100%;
-  float: left;
-  margin-bottom: 50px;
-
-
   table.group-members {
     width: 100%;
     p {
@@ -603,6 +598,26 @@
   width: 300px;
 }
 
+.show-badge-details {
+  margin-bottom: 1em;
+}
+
+.user-badges {
+  margin-bottom: 2em;
+}
+
 .show-badge-details .badge-grant-info {
   display: none;
+}
+
+.user-info.medium {
+  width: 300px;
+}
+
+.user-info.medium.user-detail {
+  width: 240px;
+}
+
+.user-info.medium.user-image {
+  width: 50px;
 }
