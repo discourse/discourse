@@ -58,6 +58,9 @@ log/
 # Ignore Eclipse .buildpath file
 /.buildpath
 
+# Ignore byebug history
+/.byebug_history
+
 # Ignore RubyMine settings
 /.idea
 

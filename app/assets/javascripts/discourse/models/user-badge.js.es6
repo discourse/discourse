@@ -6,13 +6,8 @@ const UserBadge = Discourse.Model.extend({
       return "/t/-/" + this.get('topic_id') + "/" + this.get('post_number');
     }
   }.property(), // avoid the extra bindings for now
-  /**
-    Revoke this badge.
 
-    @method revoke
-    @returns {Promise} a promise that resolves when the badge has been revoked.
-  **/
-  revoke: function() {
+  revoke() {
     return Discourse.ajax("/user_badges/" + this.get('id'), {
       type: "DELETE"
     });

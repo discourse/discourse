@@ -13,7 +13,7 @@
           {{#each ic in model itemController="directory-item"}}
             <div class="user {{if ic.me 'me'}}">
               {{#with ic.model as |it|}}
-                {{user-small user=it.user}}
+                {{user-info user=it.user}}
                 {{user-stat value=it.likes_received label="directory.likes_received" icon="heart"}}
                 {{user-stat value=it.likes_given label="directory.likes_given" icon="heart"}}
                 {{user-stat value=it.topic_count label="directory.topic_count"}}
