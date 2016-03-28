@@ -9,7 +9,7 @@
         </div>
 
         {{#each bg.badges as |b|}}
-          {{#link-to 'badges.show' b.id b.slug}}
+          {{#link-to 'badges.show' b.id b.slug (query-params username=null)}}
             {{badge-card badge=b}}
           {{/link-to}}
         {{/each}}
