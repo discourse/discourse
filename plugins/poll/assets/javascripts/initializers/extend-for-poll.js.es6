@@ -67,6 +67,7 @@ function initializePolls(api) {
     if (!$polls.length) { return; }
 
     const post = helper.getModel();
+    api.preventCloak(post.id);
     const votes = post.get('polls_votes') || {};
 
     post.pollsChanged();
@@ -82,11 +83,12 @@ function initializePolls(api) {
       const $poll = $(pollElem);
 
       const pollName = $poll.data("poll-name");
+      const pollId = `${pollName}-${post.id}`;
       const pollView = createPollView(helper.container, post, polls[pollName], votes[pollName]);
 
       $poll.replaceWith($div);
       Em.run.next(() => pollView.renderer.replaceIn(pollView, $div[0]));
-      postPollViews[pollName] = pollView;
+      postPollViews[pollId] = pollView;
     });
 
     _pollViews = postPollViews;
