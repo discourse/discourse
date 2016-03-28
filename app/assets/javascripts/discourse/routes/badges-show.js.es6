@@ -37,7 +37,7 @@ export default Discourse.Route.extend({
   titleToken() {
     const model = this.modelFor("badges.show");
     if (model) {
-      return model.get("displayName");
+      return model.get("name");
     }
   },
 

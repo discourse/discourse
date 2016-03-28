@@ -15,9 +15,12 @@ export default Ember.Component.extend({
   @computed('size')
   summary(size) {
     if (size === 'large') {
-      return Discourse.Emoji.unescape(this.get('badge.long_description') || '');
+      const longDescription = this.get('badge.long_description');
+      if (!_.isEmpty(longDescription)) {
+        return Discourse.Emoji.unescape(longDescription);
+      }
     }
-    return this.get('badge.displayDescriptionHtml');
+    return this.get('badge.description');
   }
 
 });

@@ -2761,86 +2761,201 @@ en:
       </p>
 
   badges:
-    long_descriptions:
-      autobiographer: |
-        This badge is granted for filling out <a href="/my/preferences">your user profile</a> and selecting a profile picture. Letting the community know a bit more about who you are and what you're interested in makes for a better, more connected community. Join us!
-      first_like: |
-        This badge is granted the first time you like a post using the :heart: button. Liking posts is a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun. Share the love!
-      first_link: |
-        This badge is granted the first time you add a link to another topic. Linking topics helps fellow readers find interesting related conversations, by showing the connections between topics in both directions. Link freely!
-      first_quote: |
-        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions focused and on topic. And it's easy: you can quickly quote by highlighting a section of any post and using the Quote Reply button that appears near the selection. Quote generously!
-      first_share: |
-        This badge is granted the first time you share a link to a reply or topic using the share button. Sharing links is a great way to show off interesting discussions with the rest of the world and grow your community.
-      read_guidelines: |
-        This badge is granted for <a href="/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community for everyone. Always remember there's another human being, one very much like yourself, on the other side of that screen. Be nice!
-      reader: |
-        This badge is granted the first time you read a long topic with more than 100 replies. Reading a conversation closely helps you follow the discussion, understand different viewpoints, and leads to more interesting conversations. The more you read, the better the conversation gets. As we like to say, Reading is Fundamental! :slight_smile:
-      editor: |
+    editor:
+      name: Editor
+      description: First post edit
+      long_description: |
         This badge is granted the first time you edit one of your posts. While you won't be able to edit your posts forever, editing is always a good idea — you can improve your posts, fix small mistakes, or add anything you missed when you originally posted. Edit to make your posts even better!
-      first_flag: |
-        This badge is granted the first time you flag a post. Flagging is how we all help keep this a clean, well lit place for everyone. If you notice any posts that require moderator attention for any reason please don't hesitate to flag. You can also flag to send <b>personal messages</b> to fellow users if you see an issue with their post. If you see a problem, :flag_black: flag it!
-      welcome: |
-        This badge is granted when you receive your first like on a post. Congratulations, you've posted something that your fellow community members found interesting, cool, or useful!
-      anniversary: |
-        This badge is granted when you've been a member for a year with at least one post in that year. Thank you for sticking around and contributing to our community. We couldn't do it without you.
-      nice_share: |
-        This badge is granted for sharing a link that was clicked by 25 outside visitors. Thanks for spreading the word about our discussions, and this community.
-      good_share: |
-        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You've shown off a great discussion to a bunch of new people and helped this community grow.
-      great_share: |
-        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You've promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
-      nice_topic: |
-        This badge is granted when your topic gets 10 likes. Hey, you started an interesting conversation that the community enjoyed!
-      nice_post: |
-        This badge is granted when your reply gets 10 likes. Your reply really made an impression on the community and helped move the conversation forward!
-      good_topic: |
-        This badge is granted when your topic gets 25 likes. You launched a vibrant conversation that the community rallied around and loved!
-      good_post: |
-        This badge is granted when your reply gets 25 likes. Your reply was exceptional and made the conversation a whole lot better for everyone!
-      great_topic: |
-        This badge is granted when your topic gets 50 likes. You kicked off a fascinating conversation and the community enjoyed the dynamic discussion that resulted!
-      great_post: |
-        This badge is granted when your reply gets 50 likes. Wow! Your reply was inspiring, fascinating, hilarious, or insightful and the community loved it.
-      appreciated: |
-        This badge is granted when you receive at least one like on 20 different posts. The community is enjoying your contributions to the conversations here!
-      respected: |
-        This badge is granted when you receive at least 2 likes on 100 different posts. The community is growing to respect your many contributions to the conversations here.
-      admired: |
-        This badge is granted when you receive at least 5 likes on 300 different posts. Wow! The community admires your frequent, high quality contributions to the conversations here.
-      out_of_love: |
-        This badge is granted when you use all 50 of your daily likes. Remembering to take a moment and like the posts you enjoy and appreciate encourages your fellow community members to create even more great discussions in the future.
-      higher_love: |
-        This badge is granted when you use all 50 of your daily likes for 5 days. Thanks for taking the time actively encouraging the best conversations every day!
-      crazy_in_love: |
-        This badge is granted when you use all 50 of your daily likes for 20 days. Wow! You're a model of regularly encouraging your fellow community members!
-      promoter: |
-        This badge is granted when you invite someone to join the community via the invite button on your user page, or at the bottom of a topic. Inviting friends who might be interested in specific discussions is an great way to introduce new people to our community, so thanks!
-      campaigner: |
-        This badge is granted when you've invited 3 people who subsequently spent enough time on the site to become basic users. A vibrant community needs a regular infusion of newcomers who regularly participate and add new voices to the conversationss.
-      champion: |
-        This badge is granted when you've invited 5 people who subsequently spent enough time on the site to become full members. Wow! Thanks for expanding the diversity of our community with new members!
-      thank_you: |
-        This badge is granted when you've received 20 likes on your posts and have given 10 or more likes in return. When someone likes your posts, you find the time to like what other people are posting in return.
-      gives_back: |
-        This badge is granted when you've received 100 likes and have given 100 or more likes in return. Thanks for paying it forward, and liking in return!
-      empathetic: |
-        This badge is granted when you've received 500 likes and have given 1000 or more likes in return. Wow! You're a model of generosity and mutual love :two_hearts:.
-      basic_user: |
+    basic_user:
+      name: Basic
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
+      long_description: |
         This badge is granted when you reach trust level 1. Thanks for sticking around a little while and reading a few topics to learn what our community is about. Your new user restrictions have been lifted; you've been granted all essential community abilities, such as personal messaging, flagging, wiki editing, and the ability to post multiple images and links.
-      member: |
+    member:
+      name: Member
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations, group messaging, more likes
+      long_description: |
         This badge is granted when you reach trust level 2. Thanks for participating over a period of weeks to truly join our community. You can now send invitations from your user page or individual topics, create group personal messages, and have a few more likes per day.
-      regular: |
+    regular:
+      name: Regular
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links, wiki, more likes
+      long_description: |
         This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You're now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, access a private lounge area, and you'll also get lots more likes per day.
-      leader: |
+    leader:
+      name: Leader
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge, more likes
+      long_description: |
         This badge is granted when you reach trust level 4. You're a leader in this community as selected by staff, and you set a positive example for the rest of the community in your actions and words here. You have the ability to edit all posts, take common topic moderator actions such as pin, close, unlist, archive, split, and merge, and you have tons of likes per day.
-      popular_link: |
+    welcome:
+      name: Welcome
+      description: Received a like
+      long_description: |
+        This badge is granted when you receive your first like on a post. Congratulations, you've posted something that your fellow community members found interesting, cool, or useful!
+    autobiographer:
+      name: Autobiographer
+      description: Filled out <a href="/my/preferences">profile</a> information
+      long_description: |
+        This badge is granted for filling out <a href="/my/preferences">your user profile</a> and selecting a profile picture. Letting the community know a bit more about who you are and what you're interested in makes for a better, more connected community. Join us!
+    anniversary:
+      name: Anniversary
+      description: Active member for a year, posted at least once
+      long_description: |
+        This badge is granted when you've been a member for a year with at least one post in that year. Thank you for sticking around and contributing to our community. We couldn't do it without you.
+    nice_post:
+      name: Nice Reply
+      description: Received 10 likes on a reply
+      long_description: |
+        This badge is granted when your reply gets 10 likes. Your reply really made an impression on the community and helped move the conversation forward!
+    good_post:
+      name: Good Reply
+      description: Received 25 likes on a reply
+      long_description: |
+        This badge is granted when your reply gets 25 likes. Your reply was exceptional and made the conversation a whole lot better for everyone!
+    great_post:
+      name: Great Reply
+      description: Received 50 likes on a reply
+      long_description: |
+        This badge is granted when your reply gets 50 likes. Wow! Your reply was inspiring, fascinating, hilarious, or insightful and the community loved it.
+    nice_topic:
+      name: Nice Topic
+      description: Received 10 likes on a topic
+      long_description: |
+        This badge is granted when your topic gets 10 likes. Hey, you started an interesting conversation that the community enjoyed!
+    good_topic:
+      name: Good Topic
+      description: Received 25 likes on a topic
+      long_description: |
+        This badge is granted when your topic gets 25 likes. You launched a vibrant conversation that the community rallied around and loved!
+    great_topic:
+      name: Great Topic
+      description: Received 50 likes on a topic
+      long_description: |
+        This badge is granted when your topic gets 50 likes. You kicked off a fascinating conversation and the community enjoyed the dynamic discussion that resulted!
+    nice_share:
+      name: Nice Share
+      description: Shared a post with 25 unique visitors
+      long_description: |
+        This badge is granted for sharing a link that was clicked by 25 outside visitors. Thanks for spreading the word about our discussions, and this community.
+    good_share:
+      name: Good Share
+      description: Shared a post with 300 unique visitors
+      long_description: |
+        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You've shown off a great discussion to a bunch of new people and helped this community grow.
+    great_share:
+      name: Great Share
+      description: Shared a post with 1000 unique visitors
+      long_description: |
+        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You've promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
+    first_like:
+      name: First Like
+      description: Liked a post
+      long_description: |
+        This badge is granted the first time you like a post using the :heart: button. Liking posts is a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun. Share the love!
+    first_flag:
+      name: First Flag
+      description: Flagged a post
+      long_description: |
+        This badge is granted the first time you flag a post. Flagging is how we all help keep this a clean, well lit place for everyone. If you notice any posts that require moderator attention for any reason please don't hesitate to flag. You can also flag to send <b>personal messages</b> to fellow users if you see an issue with their post. If you see a problem, :flag_black: flag it!
+    promoter:
+      name: Promoter
+      description: Invited a user
+      long_description: |
+        This badge is granted when you invite someone to join the community via the invite button on your user page, or at the bottom of a topic. Inviting friends who might be interested in specific discussions is an great way to introduce new people to our community, so thanks!
+    campaigner:
+      name: Campaigner
+      description: Invited 3 basic users
+      long_description: |
+        This badge is granted when you've invited 3 people who subsequently spent enough time on the site to become basic users. A vibrant community needs a regular infusion of newcomers who regularly participate and add new voices to the conversationss.
+    champion:
+      name: Champion
+      description: Invited 5 members
+      long_description: |
+        This badge is granted when you've invited 5 people who subsequently spent enough time on the site to become full members. Wow! Thanks for expanding the diversity of our community with new members!
+    first_share:
+      name: First Share
+      description: Shared a post
+      long_description: |
+        This badge is granted the first time you share a link to a reply or topic using the share button. Sharing links is a great way to show off interesting discussions with the rest of the world and grow your community.
+    first_link:
+      name: First Link
+      description: Added a link to another topic
+      long_description: |
+        This badge is granted the first time you add a link to another topic. Linking topics helps fellow readers find interesting related conversations, by showing the connections between topics in both directions. Link freely!
+    first_quote:
+      name: First Quote
+      description: Quoted a post
+      long_description: |
+        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions focused and on topic. And it's easy: you can quickly quote by highlighting a section of any post and using the Quote Reply button that appears near the selection. Quote generously!
+    read_guidelines:
+      name: Read Guidelines
+      description: Read the <a href="/guidelines">community guidelines</a>
+      long_description: |
+        This badge is granted for <a href="/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community for everyone. Always remember there's another human being, one very much like yourself, on the other side of that screen. Be nice!
+    reader:
+      name: Reader
+      description: Read every reply in a topic with more than 100 replies
+      long_description: |
+        This badge is granted the first time you read a long topic with more than 100 replies. Reading a conversation closely helps you follow the discussion, understand different viewpoints, and leads to more interesting conversations. The more you read, the better the conversation gets. As we like to say, Reading is Fundamental! :slight_smile:
+    popular_link:
+      name: Popular Link
+      description: Posted an external link with 50 clicks
+      long_description: |
         This badge is granted when a link you shared gets 50 clicks. Thanks for posting a useful link that added interesting context to the conversation!
-      hot_link: |
+    hot_link:
+      name: Hot Link
+      description: Posted an external link with 300 clicks
+      long_description: |
         This badge is granted when a link you shared gets 300 clicks. Thanks for posting a fascinating link that drove the conversation forward and illuminated the discussion!
-      famous_link: |
+    famous_link:
+      name: Famous Link
+      description: Posted an external link with 1000 clicks
+      long_description: |
         This badge is granted when a link you shared gets 1000 clicks. Wow! You posted a link that significantly improved the conversation by addding essential detail, context, and information. Great work!
-
+    appreciated:
+      name: Appreciated
+      description: Received 1 like on 20 posts
+      long_description: |
+        This badge is granted when you receive at least one like on 20 different posts. The community is enjoying your contributions to the conversations here!
+    respected:
+      name: Respected
+      description: Received 2 likes on 100 posts
+      long_description: |
+        This badge is granted when you receive at least 2 likes on 100 different posts. The community is growing to respect your many contributions to the conversations here.
+    admired:
+      name: Admired
+      description: Received 5 likes on 300 posts
+      long_description: |
+        This badge is granted when you receive at least 5 likes on 300 different posts. Wow! The community admires your frequent, high quality contributions to the conversations here.
+    out_of_love:
+      name: Out of Love
+      description: Used 50 likes in a day
+      long_description: |
+        This badge is granted when you use all 50 of your daily likes. Remembering to take a moment and like the posts you enjoy and appreciate encourages your fellow community members to create even more great discussions in the future.
+    higher_love:
+      name: Higher Love
+      description: Used 50 likes in a day 5 times
+      long_description: |
+        This badge is granted when you use all 50 of your daily likes for 5 days. Thanks for taking the time actively encouraging the best conversations every day!
+    crazy_in_love:
+      name: Crazy in Love
+      description: Used 50 likes in a day 20 times
+      long_description: |
+        This badge is granted when you use all 50 of your daily likes for 20 days. Wow! You're a model of regularly encouraging your fellow community members!
+    thank_you:
+      name: Thank You
+      description: Has 20 liked posts and gave 10 likes
+      long_description: |
+        This badge is granted when you've received 20 likes on your posts and have given 10 or more likes in return. When someone likes your posts, you find the time to like what other people are posting in return.
+    gives_back:
+      name: Gives Back
+      description: Has 100 liked posts and gave 100 likes
+      long_description: |
+        This badge is granted when you've received 100 likes and have given 100 or more likes in return. Thanks for paying it forward, and liking in return!
+    empathetic:
+      name: Empathetic
+      description: Has 500 liked posts and gave 1000 likes
+      long_description: |
+        This badge is granted when you've received 500 likes and have given 1000 or more likes in return. Wow! You're a model of generosity and mutual love :two_hearts:.
 
   admin_login:
     success: "Email Sent"
