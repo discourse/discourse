@@ -30,15 +30,18 @@ module Onebox
       end
 
       def image
-        case
-        when raw.css("#main-image").any?
-          ::JSON.parse(
-            raw.css("#main-image").first
-              .attributes["data-a-dynamic-image"]
-              .value
-          ).keys.first
-        when raw.css("#landingImage").any?
-          raw.css("#landingImage").first["src"]
+        if (main_image = raw.css("#main-image")) && main_image.any?
+          attributes = main_image.first.attributes
+
+          return attributes["data-a-hires"] if attributes["data-a-hires"]
+
+          if attributes["data-a-dynamic-image"]
+            return ::JSON.parse(attributes["data-a-dynamic-image"].value).keys.first
+          end
+        end
+
+        if (landing_image = raw.css("#landingImage")) && landing_image.any?
+          landing_image.first["src"]
         end
       end
 
