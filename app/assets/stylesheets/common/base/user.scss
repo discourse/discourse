@@ -19,6 +19,14 @@
   i.fa-heart {
     color: $love !important;
   }
+  .nav-pills {
+    a {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+    }
+    i {
+      color: dark-light-choose(scale-color($primary, $lightness: 55%), scale-color($secondary, $lightness: 55%));
+    }
+  }
 }
 
 .user-field {
@@ -92,10 +100,10 @@
   margin-bottom: 15px;
 }
 
-.user-small {
+.user-info {
   display: inline-block;
-  width: 333px;
   clear: both;
+  margin-bottom: 1em;
 
   .user-image {
     float: left;
@@ -128,7 +136,30 @@
       margin-top: 3px;
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
+  }
+}
 
+.user-info.small {
+  width: 333px;
+}
+
+.user-info.medium {
+  width: 480px;
+  min-height: 60px;
+
+  .user-image {
+    width: 55px;
+  }
+  .user-detail {
+    width: 380px;
+  }
+
+  .username, .name {
+    display: block;
+  }
+
+  .name {
+    margin-left: 0;
   }
 }
 

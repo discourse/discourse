@@ -3,7 +3,6 @@ class CategoryHashtagsController < ApplicationController
 
   def check
     category_slugs = params[:category_slugs]
-    category_slugs.each(&:downcase!)
 
     ids = category_slugs.map { |category_slug| Category.query_from_hashtag_slug(category_slug).try(:id) }
 

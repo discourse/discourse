@@ -22,5 +22,13 @@ describe CategoryHashtag do
     it "should return nil for incorrect parent and child category slug" do
       expect(Category.query_from_hashtag_slug("random-slug#{CategoryHashtag::SEPARATOR}random-slug")).to eq(nil)
     end
+
+    it "should be case sensitive" do
+      parent_category.update_attributes!(slug: "ApPlE")
+      child_category.update_attributes!(slug: "OraNGE")
+
+      expect(Category.query_from_hashtag_slug("apple")).to eq(nil)
+      expect(Category.query_from_hashtag_slug("apple:orange")).to eq(nil)
+    end
   end
 end

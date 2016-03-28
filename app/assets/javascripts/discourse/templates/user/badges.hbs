@@ -1,5 +1,7 @@
 <section class='user-content user-badges-list'>
-  {{#each ub in controller}}
-    {{user-badge badge=ub.badge count=ub.count user=user}}
+  {{#each controller as |ub|}}
+    {{#link-to 'badges.show' ub.badge.id ub.badge.slug (query-params username=user.username_lower)}}
+      {{badge-card badge=ub.badge count=ub.count}}
+    {{/link-to}}
   {{/each}}
 </section>
