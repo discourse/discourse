@@ -32,3 +32,18 @@ class GivenDailyLike < ActiveRecord::Base
             .update_all(limit_reached: false)
   end
 end
+
+# == Schema Information
+#
+# Table name: given_daily_likes
+#
+#  user_id       :integer          not null
+#  likes_given   :integer          not null
+#  given_date    :date             not null
+#  limit_reached :boolean          default(FALSE), not null
+#
+# Indexes
+#
+#  index_given_daily_likes_on_limit_reached_and_user_id  (limit_reached,user_id)
+#  index_given_daily_likes_on_user_id_and_given_date     (user_id,given_date) UNIQUE
+#

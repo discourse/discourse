@@ -160,5 +160,5 @@ end
 #
 # Indexes
 #
-#  index_directory_items_on_period_type  (period_type)
+#  index_directory_items_on_period_type_and_user_id  (period_type,user_id) UNIQUE
 #
