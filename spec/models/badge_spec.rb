@@ -14,5 +14,34 @@ describe Badge do
     expect(Badge.create!(name: "test", badge_type_id: 1).system?).to be false
   end
 
+  it 'auto translates name' do
+    badge = Badge.find_by_name("Basic User")
+    name_english = badge.name
+
+    I18n.locale = 'fr'
+
+    expect(badge.display_name).not_to eq(name_english)
+  end
+
+  it 'handles changes on badge description and long description correctly for system badges' do
+    badge = Badge.find_by_name("Basic User")
+    badge.description = badge.description.dup
+    badge.long_description = badge.long_description.dup
+    badge.save
+    badge.reload
+
+    expect(badge[:description]).to eq(nil)
+    expect(badge[:long_description]).to eq(nil)
+
+    badge.description = "testing"
+    badge.long_description = "testing it"
+
+    badge.save
+    badge.reload
+
+    expect(badge[:description]).to eq("testing")
+    expect(badge[:long_description]).to eq("testing it")
+  end
+
 end
 

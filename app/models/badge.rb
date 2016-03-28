@@ -322,7 +322,11 @@ SQL
 
   # fields that can not be edited on system badges
   def self.protected_system_fields
-    [:badge_type_id, :multiple_grant, :target_posts, :show_posts, :query, :trigger, :auto_revoke, :listable]
+    [
+      :badge_type_id, :multiple_grant,
+      :target_posts, :show_posts, :query,
+      :trigger, :auto_revoke, :listable
+    ]
   end
 
   def self.trust_level_badge_ids
@@ -386,10 +390,36 @@ SQL
     if self[:long_description].present?
       self[:long_description]
     else
-      key = "badges.long_descriptions.#{i18n_name}"
+      key = "badges.#{i18n_name}.long_description"
       I18n.t(key, default: '')
     end
   end
+
+  def long_description=(val)
+    if val != long_description
+      self[:long_description] = val
+    end
+
+    val
+  end
+
+  def description
+    if self[:description].present?
+      self[:description]
+    else
+      key = "badges.#{i18n_name}.description"
+      I18n.t(key, default: '')
+    end
+  end
+
+  def description=(val)
+    if val != description
+      self[:description] = val
+    end
+
+    val
+  end
+
 
   def slug
     Slug.for(self.display_name, '-')

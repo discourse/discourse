@@ -61,7 +61,7 @@ export default Ember.ArrayController.extend({
       }
     });
 
-    return _.sortBy(badges, badge => badge.get('displayName'));
+    return _.sortBy(badges, badge => badge.get('name'));
   }.property('badges.@each', 'model.@each'),
 
   /**

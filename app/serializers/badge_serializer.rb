@@ -12,4 +12,8 @@ class BadgeSerializer < ApplicationSerializer
   def include_long_description?
     options[:include_long_description]
   end
+
+  def name
+    object.display_name
+  end
 end
