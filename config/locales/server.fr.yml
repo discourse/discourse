@@ -2057,6 +2057,12 @@ fr:
       ## [Changements à notre politique de confidentialité](#changes)
 
       Si nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page. Ce document est soumis à la licence creative commons CC-BY-SA. Il a été mis à jour le 31 mai 2013.
+  badges:
+    basic_user:
+      name: Actif
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Accordé</a>  toutes les fonctions communautaires essentielles sont accessibles
+      long_description: |
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 1. Merci d'être resté dans le coin un petit moment et d'avoir lu quelques sujets pour en apprendre plus sur notre communauté. Vos restrictions "nouvel utilisateur" ont été levées, et vous avez accès aux fonctionnalités essentielles telles que la messagerie personnelle, le signalement, l'édition des wikis, et la possibilité de poster des images et de multiples liens.
   admin_login:
     success: "Courriel envoyé"
     error: "Erreur !"

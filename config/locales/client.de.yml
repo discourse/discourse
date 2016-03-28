@@ -271,7 +271,7 @@ de:
         one: "Dieses Thema hat <b>einen</b> Beitrag, der genehmigt werden muss"
         other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
       confirm: "Änderungen speichern"
-      delete_prompt: "Möchtest du wirklich <b>%{username}</b> löschen? Damit werden alle ihre/seine Beiträge entfernt und ihre/seine E-Mail- und IP-Adresse geblockt."
+      delete_prompt: "Möchtest du wirklich <b>%{username}</b> löschen? Damit werden alle Beiträge des Benutzers entfernt und dessen E-Mail- und IP-Adresse geblockt."
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
@@ -345,16 +345,16 @@ de:
       notifications:
         watching:
           title: "Beobachten"
-          description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
+          description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl der neuen Antworten wird angezeigt."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit Nachrichten in dieser Gruppe."
+          description: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Gruppe."
     user_action_groups:
       '1': "Abgegebene Likes"
       '2': "Erhaltene Likes"
@@ -436,7 +436,7 @@ de:
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_default: "Benachrichtigungen einschalten"
         perm_denied_btn: "Zugriff verweigert"
-        perm_denied_expl: "Du hast Benachrichtigungen blockiert. Aktiviere die Benachrichtigungen über deine Browser Einstellungen."
+        perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
@@ -473,7 +473,7 @@ de:
       muted_users: "Stummgeschaltet"
       muted_users_instructions: "Alle Benachrichtigungen von diesem Benutzer unterdrücken."
       muted_topics_link: "Zeige stummgeschaltete Themen"
-      automatically_unpin_topics: "Themen automatisch loslösen, wenn ich das Ende erreiche."
+      automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -489,7 +489,7 @@ de:
         bulk_select: "Nachrichten auswählen"
         move_to_inbox: "In Posteingang verschieben"
         move_to_archive: "Archivieren"
-        failed_to_move: "Die ausgewählten Nachrichten konnten nicht bewegt werden (vielleicht gibt es ein Netzwerkproblem)."
+        failed_to_move: "Die ausgewählten Nachrichten konnten nicht verschoben werden. Vielleicht gibt es ein Netzwerkproblem."
         select_all: "Alle auswählen"
       change_password:
         success: "(E-Mail gesendet)"
@@ -575,14 +575,14 @@ de:
       website: "Website"
       email_settings: "E-Mail"
       like_notification_frequency:
-        title: "Melde es wenn du es magst"
-        always: "Immer"
-        first_time_and_daily: "Das erste mal das jemandem der  tägliche Beitrag gefällt"
-        first_time: "Das erste mal das der Beitrag jemandem gefällt"
-        never: "Nie"
+        title: "Benachrichtigung für erhaltene Likes anzeigen"
+        always: "immer"
+        first_time_and_daily: "erster Like eines Beitrags und täglich"
+        first_time: "nur erster Like eines Beitrags"
+        never: "nie"
       email_previous_replies:
-        title: "Füge vorherige Antworten ans Ende der E-Mail an"
-        unless_emailed: "soweit nicht vorher gesendet"
+        title: "Füge vorherige Beiträge ans Ende von E-Mails an"
+        unless_emailed: "sofern noch nicht gesendet"
         always: "immer"
         never: "nie"
       email_digests:
@@ -610,7 +610,7 @@ de:
         after_2_weeks: "in den letzten 2 Wochen erstellt"
       auto_track_topics: "Betrachteten Themen automatisch folgen"
       auto_track_options:
-        never: "niemals"
+        never: "nie"
         immediately: "sofort"
         after_30_seconds: "nach 30 Sekunden"
         after_1_minute: "nach 1 Minute"
@@ -1130,8 +1130,8 @@ de:
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
           '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
-          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet.'
-          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet.'
+          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
           '0_2': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
           '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
@@ -1143,16 +1143,16 @@ de:
           description: "Du wirst über jeden neuen Beitrag in diesem Thema benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         tracking_pm:
           title: "Verfolgen"
-          description: "Die Anzahl der neuen Antworten wird bei dieser Unterhaltung angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Die Anzahl der neuen Antworten wird bei dieser Unterhaltung angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Nachricht antwortet."
         tracking:
           title: "Verfolgen"
-          description: "Die Anzahl der neuen Antworten wird bei diesem Thema angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Die Anzahl der neuen Antworten wird bei diesem Thema angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular_pm:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Nachricht antwortet."
         muted_pm:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit dieser Unterhaltung."
@@ -1540,10 +1540,10 @@ de:
           description: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über jeden neuen Beitrag in jedem Thema benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Du wirst benachrichtigt, wenn dich jemand mit @Name erwähnt oder dir antwortet, und die Anzahl neuer Antworten wird angezeigt."
+          description: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der letzten Themen erscheinen."

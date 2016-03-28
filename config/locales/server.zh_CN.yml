@@ -419,7 +419,7 @@ zh_CN:
     confirmed: "你的电子邮箱已被更新。"
     please_continue: "转入到 %{site_name}"
     error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
-    error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个用户占用了。"
+    error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
     already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
     authorizing_old:
       title: "感谢你确认你目前的邮箱地址"
@@ -977,6 +977,7 @@ zh_CN:
     unsubscribe_via_email_footer: "在发出的邮件底部包含退订链接"
     delete_email_logs_after_days: "在（N）天后删除邮件日志。设置为 0 无限期保留"
     max_emails_per_day_per_user: "每日发送给用户的最大帖子数量。设置为 0 禁止限制"
+    enable_staged_users: "处理进站邮件时自动创建暂存用户。"
     manual_polling_enabled: "用 API 推送邮件回复。"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
     pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
@@ -1005,6 +1006,7 @@ zh_CN:
     digest_topics: "邮件摘要中显示的最大主题数目。"
     digest_min_excerpt_length: "在邮件摘要中每个帖子最少显示的字符数量。"
     delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户"
+    digest_suppress_categories: "不在摘要邮件中显示关注这个分类的任何内容。"
     disable_digest_emails: "为所有用户禁用摘要邮件。"
     detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
@@ -1122,6 +1124,11 @@ zh_CN:
       category: '分类'
       topic: '结果'
       user: '用户'
+  sso:
+    not_found: "无法找到你的账户。请联系站点管理人员。"
+    account_not_approved: "你的帐号尚未被审核通过。一旦你的帐号获得批准，你就会收到一封电子邮件提醒。"
+    unknown_error: "你的账户发生了问题。请联系站点管理人员。"
+    timeout_expired: "账户登录超市，请重新尝试登录。"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
   most_recent_poster: "当前大部分帖子作者"
@@ -1537,6 +1544,12 @@ zh_CN:
         我们非常抱歉，你发送至 %{destination}（名为 %{former_title}）的邮件出问题了。
 
         你的账户没有足够的信任等级向该邮件地址发布新主题。如果你坚信这是错误，联系管理人员。
+    email_reject_user_not_found:
+      subject_template: "[%{site_name}] 邮件问题 -- 用户未找到"
+      text_body_template: |
+        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+
+        你发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_inactive_user:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未激活用户"
       text_body_template: |
@@ -1733,12 +1746,53 @@ zh_CN:
     visit_link_to_respond: "访问[Visit Topic](%{base_url}%{url})以回复"
     visit_link_to_respond_pm: "访问[Visit Message](%{base_url}%{url})以回复"
     posted_by: "%{username}发表于%{post_date}"
+    invited_to_private_message_body: |
+      %{username} 邀请你至消息交流：
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      论坛：
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} 邀请你参与讨论：
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      论坛：
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username}邀请你参与“%{topic_title}”"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -2215,6 +2269,205 @@ zh_CN:
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
   static:
     search_help: "<h3>小技巧</h3>\n<p>\n<ul>\n<li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li>\n<li>搜索独一无二且不常见的词可以找到最好的结果</li>\n<li>试试搜索特定的分类、用户或主题</li>\n</ul>\n</p>\n<h3>选项</h3>\n<p> \n<table>\n<tr><td><code>order:views（按照显示次数排序）</code></td><td><code>order:latest（按照更新时间排序）</code></td><td><code>order:likes（按照赞的次数排序）</code><td></td><td colspan=2></td></tr>\n<tr><td><code>status:open（搜索正常状态的主题）</code></td><td><code>status:closed（搜索已经关闭的主题）</code></td><td><code>status:archived（搜索已经存档的主题）</code></td><td><code>status:noreplies（搜索没有回复的主题）</code></td><td><code>status:single_user（搜索单个用户的主题）</code></td></tr>\n<tr><td><code>category:分类名</code></td><td><code>user:用户名</code></td><td><;code>group:群组名</code></td><;td><code>badge:徽章名</code></td><td></td></tr>\n<tr><td><code>in:likes（在已经赞的帖子里搜索）</code></td><td><code>in:posted（在发表的帖子里搜索）</code></td><td><code>in:watching（在关注的帖子里搜索）</code></td><td><code>in:tracking（在追踪的帖子里搜索）</code></td><td><code>in:private（在私密的帖子里搜索）</code></td></tr>\n<tr><td><code>in:bookmarks（在加书签的帖子里搜索）</code></td><td><code>in:first（在第一帖里搜索）</code></td><td colspan=3></td></tr>\n<tr><td><code>posts_count:数字（帖子数量）</code></td><td><code>before:天数或者日期</code></td><td><code>after:天数或者日期</code></td>\n<td colspan=2></td></tr>\n</table>\n</p>\n<h3>例子</h3>\n<p>\n<ul>\n<li><code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。</li>\n<li><code>彩虹 category:\"公园和花园\" in:bookmarks<;/code> 将搜索在“公园和花园”分类中已被你加过书签的且名字包含“彩虹”的主题。</li>\n</ul>\n</p>\n"
+  badges:
+    editor:
+      name: 编辑
+      description: 首次编辑帖子
+      long_description: |
+        该徽章授予给第一次编辑自己帖子的你。虽然你不能永远在编辑自己的帖子，但是编辑他们总是一个好办法——你可以改进你的帖子、修正小错误，或者是增补你原来没有写的内容。编辑能让你的帖子质量变得更好！
+    basic_user:
+      name: 初级用户
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社群功能
+      long_description: |
+        该徽章授予给用户等级达到 1 的成员。感谢你在社群里花了一些时间并且阅读了一些帖子，了解了我们的社群。你的新用户限制已经被取消；并且你已经被授予了所有基本的社群权限，必须个人消息、标记、维基编辑和发布多张图片和多个链接的能力。
+    member:
+      name: 成员
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a> 邀请、群组消息和更多的赞
+      long_description: |
+        该徽章授予给达到用户等级 2 的你。感谢你在社群待了几周，真正融入到了社群中。你现在可以在你的用户页或者主题中邀请他人或者创建群组消息了。每天你也可以点更多次赞了。
+    regular:
+      name: 活跃用户
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a> 重分类、重命名、跟踪链接、维基功能和更多的赞
+      long_description: |
+        该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社群。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社群。你现在可以社群待了几周，真正融入到了社群中。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
+    leader:
+      name: 资深
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a> 全局编辑、固定、关闭、存档、分割、合并和更多的赞
+      long_description: |
+        该徽章授予给达到用户等级 4 的你。你被管理人员选作了社群的领导力量，你用你的行动和言辞为社群树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、关闭、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
+    welcome:
+      name: 欢迎
+      description: 得到一个赞
+      long_description: |
+        该徽章授予给帖子收到了第一个赞的成员。恭喜，有社群成员发现你发表的内容有意思、酷炫或者有用！
+    autobiographer:
+      name: 自传作者
+      description: 已填写用户<a href="/my/preferences">资料</a>信息
+      long_description: |
+        该徽章授予给填写了<a href="/my/preferences">用户页面</a>并选择了用户头像的你。让社群成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社群。让我们一起努力！
+    anniversary:
+      name: 年度纪念日
+      description: 一年活跃用户，至少发了一个帖子
+      long_description: |
+        该徽章授予给在社群注册一年并超至少发布了一个帖子的你。感谢你的持续关注和对我们社群的贡献！我们希望你继续参与我们的社群。
+    nice_post:
+      name: 不错的回复
+      description: 回复被赞了 10 次
+      long_description: |
+        该徽章授予给回复被赞了 10 次的你。你的回复给社群成员们留下了印象，并且你推动了讨论的进程！
+    good_post:
+      name: 很好的回复
+      description: 回复被赞了 25 次
+      long_description: |
+        该徽章授予给回复被赞了 25 次的你。你的回复很杰出，这个讨论对每个人都变得更有意义了！
+    great_post:
+      name: 精彩的回复
+      description: 回复被赞了 50 次
+      long_description: |
+        该徽章授予给回复被赞了 50 次的你。哇！你的回复很有启发、引经据典、令人冷俊不禁或者十分有内涵，整个社群都喜欢它。
+    nice_topic:
+      name: 不错的主题
+      description: 主题被赞了 10 次
+      long_description: |
+        该徽章授予给主题获得 10 个赞的你。嗨，你开启了一个社群成员觉得有意思的讨论！
+    good_topic:
+      name: 很好的主题
+      description: 主题被赞了 25 次
+      long_description: |
+        该徽章授予给主题获得 25 个赞的你。你开启了一个有意义的主题，整个社群都在积极响应，而且大家喜欢你的主题！
+    great_topic:
+      name: 精彩的主题
+      description: 主题被赞了 50 次
+      long_description: |
+        该徽章授予给主题获得 50 个赞的你。你开启了一个引人入胜的主题，整个社群都沉浸于讨论之中。
+    nice_share:
+      name: 不错的分享
+      description: 分享了一个有 25 个独立访问者的帖子
+      long_description: |
+        该徽章授予给分享链接给 25 个其他访客的你。感谢你广而告之我们的讨论，和对这个社群的帮助。
+    good_share:
+      name: 很棒的分享
+      description: 分享了一个有 300 个独立访问者的帖子
+      long_description: |
+        该徽章授予给分享链接给 300 个其他访客的你。干得漂亮！你把一个有意思的讨论介绍给了许多新的朋友，并且帮助社群前进了一步。
+    great_share:
+      name: 精彩的分享
+      description: 分享了一个有 1000 个独立访问者的帖子
+      long_description: |+
+        该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社群前进了一大步！
+
+    first_like:
+      name: 首个赞
+      description: 已赞过了一个帖子
+      long_description: |
+        该徽章授予给第一次使用 :heart: 按钮赞了帖子的成员。给帖子点赞是一个极好的让社群成员知道他们的帖子有意思、有用、酷炫或者好玩的方法。分享爱！
+    first_flag:
+      name: 首个标记
+      description: 已标记过了一个帖子
+      long_description: |
+        该徽章授予给第一次标记帖子的你。标记是帮助我们帮助社群保持健康、合宜的工具。如果你注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果你注意到别人帖子里的某个问题，你也可用标记功能发送<b>私信</b>给该成员。如果你发现了问题，:flag_black: 标记吧！
+    promoter:
+      name: 推广者
+      description: 已邀请了 1 个用户
+      long_description: |
+        该徽章授予给邀请他人加入社群的你。你曾使用了用户页面的邀请按钮或主题底部的邀请按钮。邀请对某个讨论感兴趣的朋友是引介新人的好办法，非常感谢！
+    campaigner:
+      name: 活动家
+      description: 已邀请了 3 个初级用户
+      long_description: |
+        该徽章授予给邀请了 3 人加入社群的你，你的朋友在站点上度过了一段时间，已经成为了初级用户。一个活跃的社群需要不断有新鲜血液的参与，这样新观点才能推进讨论进程。
+    champion:
+      name: 外交官
+      description: 已邀请了 5 个成员
+      long_description: |
+        该徽章授予给邀请了 5 人加入社群的你，你的朋友在站点上度过了很长的时间，已经成为了成员。哇！感谢你帮助社群成长，社群因此变得更多元了！
+    first_share:
+      name: 首次分享
+      description: 已分享了一个帖子
+      long_description: |
+        该徽章授予给第一次用分享按钮分享了回复或者主题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社群增长。
+    first_link:
+      name: 首个链接
+      description: 已链接了另一个主题
+      long_description: |
+        该徽章授予给第一次链接到另一个主题的你。联结主题会在各个主题的右侧显示链接和标题，这可以帮助阅读者迅速地找到相关讨论。多链接一些主题吧！
+    first_quote:
+      name: 首次引用
+      description: 已引用过一个帖子
+      long_description: |
+        该徽章授予给第一次在回复中引用帖子的你。在你的回复中引用之前帖子中的相关的段落可以让讨论更有主题和重点。而且这很简单：你只要选中别的帖子中的任何文字，然后点击在旁边的“引用回复”按钮。多引用一些吧！
+    read_guidelines:
+      name: 阅读指引
+      description: 阅读<a href="/guidelines">社群指引</a>
+      long_description: |
+        该徽章授予给<a href="/guidelines">阅读了社群指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社群。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
+    reader:
+      name: 读者
+      description: 阅读了有至少 100 个回复的主题中的所有回复
+      long_description: |
+        该徽章授予给第一次阅读了超过 100 个回复的长主题的你。仔细地阅读对话内容能让你关注到讨论的中心，理解不同的观点，而且能帮助我们打造更有趣的对话情景。你读得越多，对话的效果就会越好。就如我们常说的那般，阅读是最重要的！ :slight_smile:
+    popular_link:
+      name: 流行链接
+      description: 分享的链接被点击了 50 次
+      long_description: |
+        该徽章授予给分享的链接被点击过 50 次的你。感谢你贴出了有用的链接，这让讨论的情节更形象了！
+    hot_link:
+      name: 热门链接
+      description: 分享的链接被点击了 300 次
+      long_description: |
+        该徽章授予给分享的链接被点击过 300 次的你。感谢你贴出了精彩的链接，这推进了讨论的进程，并且装点了讨论！
+    famous_link:
+      name: 著名链接
+      description: 分享的链接被点击了 1000 次
+      long_description: |
+        该徽章授予给分享的链接被点击过 1000 次的你。哇！感谢你贴出了推动讨论的重要链接，这让讨论更加具体，更有情节，并且传达了跟多的信息。干的好！
+    appreciated:
+      name: 感谢
+      description: 有 20 个帖子都被赞了 1 次
+      long_description: |
+        该徽章授予给 20 个不同的帖子都收到了至少 1 个赞的你。社群感谢你对讨论的贡献！
+    respected:
+      name: 尊敬
+      description: 有 100 个帖子都被赞了 2 次
+      long_description: |
+        该徽章授予给 100 个不同的帖子都收到了至少 2 个赞的你。社群越来越尊重你在讨论中的贡献了。
+    admired:
+      name: 敬仰
+      description: 有 300 个帖子都被赞了 5 次
+      long_description: |+
+        该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的你。哇！社群敬仰你在讨论中频繁和高质量的贡献。
+
+    out_of_love:
+      name: 热情
+      description: 1 天内赞了 50 次
+      long_description: |
+        该徽章授予给一天内赞了 50 次的你。别忘记休息一下。赞你喜欢的帖子能鼓励成员不断改进讨论的内容。
+    higher_love:
+      name: "激情\b"
+      description: 5 天都赞过 50 次
+      long_description: |
+        该徽章授予给 5 天赞过 50 次的你。感谢你每天都花点时间鼓励讨论的进行！
+    crazy_in_love:
+      name: 狂热
+      description: 20 天都赞过 50 次
+      long_description: |+
+        该徽章授予给 20 天赞过 50 次的你。哇！你为社群成员们树立了一个令人鼓舞的模范！
+
+    thank_you:
+      name: 感谢你
+      description: 有 20 个被赞的帖子，给出过 10 个赞
+      long_description: |
+        该徽章授予给收到了 20 个赞，且赞过别人 10 次的你。当别人感谢你的帖子时，你也感谢他们的帖子。
+    gives_back:
+      name: 回馈
+      description: 有 100 个被赞的帖子，给出过 100 个赞
+      long_description: |
+        该徽章授予给收到了 100 个赞，且赞过别人 100 次的你。感谢你回馈赞给社群！
+    empathetic:
+      name: 感性
+      description: 有 500 个被赞的帖子，给出过 1000 个赞
+      long_description: |
+        该徽章授予给收到了 500 个赞，且赞过别人 1000 次的你。哇！你是一个富有同情心且会换位思考的模范。 :two_hearts:
   admin_login:
     success: "邮件已发送"
     error: "错误！"
