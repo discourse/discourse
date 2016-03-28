@@ -181,7 +181,8 @@ input {
       bottom: 35px;
     }
     .submit-panel {
-      // don't specify width; needs to auto-size for smallest phones
+      // need minimum width that fits, or this'll wrap cancel under submit/create which is super bad
+      width: 180px;
       position: absolute;
       display: block;
       bottom: 0;
