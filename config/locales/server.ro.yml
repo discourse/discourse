@@ -73,6 +73,7 @@ ro:
   not_found: "Adresa URL sau resursă cerută nu pot fi găsite."
   invalid_access: "Nu aveţi permisiunea să vedeţi această resursă."
   read_only_mode_enabled: "Site-ul este în modul doar-citire. Interacțiunile sunt dezactivate."
+  likes: "Aprecieri"
   too_many_replies:
     one: "Ne pare rău, dar utilizatori noi sunt limitaţi la 1 răspuns pe discuţie."
     few: "Ne pare rău, dar utilizatori noi sunt limitaţi la %{count} răspunsuri pe discuţie."

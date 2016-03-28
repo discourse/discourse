@@ -220,7 +220,7 @@ ro:
         all_time: "Tot timpul"
         last_7_days: "Ultimele 7 zile"
         last_30_days: "Ultimele 30 de zile"
-      like_count: "Like-uri"
+      like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Postări"
       user_count: "Utilizatori noi"
@@ -346,6 +346,8 @@ ro:
         other: "grupuri"
       members: "Membri"
       posts: "Postări"
+      mentions: "Mențiuni"
+      messages: "Mesaje"
       alias_levels:
         nobody: "Nimeni"
         only_admins: "Doar Adminii"
@@ -353,8 +355,13 @@ ro:
         members_mods_and_admins: "Doar membri grupului, moderatorii și adminii"
         everyone: "Toată lumea"
       notifications:
+        watching:
+          title: "Urmărit"
+        tracking:
+          title: "Urmărit"
         regular:
           title: "Normal"
+          description: "Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
     user_action_groups:
       '1': "Aprecieri Date"
       '2': "Aprecieri Primite"
@@ -1021,30 +1028,39 @@ ro:
           '3_2': 'Veți primi notificări fiindcă citiți această discuție.'
           '3_1': 'Veți primi notificări fiindcă ați creat această discuție.'
           '3': 'Veți primi notificări fiindcă priviți această discuție.'
-          '2_8': 'Veți primi notificări fiindcă urmariți această categorie.'
+          '2_8': 'Veți primi notificări fiindcă urmăriți această categorie.'
           '2_4': 'Veți primi notificări fiindcă ați postat un răspuns în această discuție.'
-          '2_2': 'Veți primi notificări fiindcă urmariți această discuție.'
+          '2_2': 'Veți primi notificări fiindcă urmăriți această discuție.'
           '2': 'Veți primi notificări fiindcă citiți <a href="/users/{{username}}/preferences">această discuție</a>.'
+          '1_2': 'Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply.'
+          '1': 'Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply.'
           '0_7': 'Ignorați toate notificările din această categorie.'
           '0_2': 'Ignorați toate notificările din această discuție.'
           '0': 'Ignorați toate notificările din această discuție.'
         watching_pm:
-          title: "Privind"
+          title: "Urmărit Activ"
+          description: "Numărul postărilor noi va fi arătat pentru acest mesaj și veți fi notificat pentru orice reply scris."
         watching:
-          title: "Privind"
+          title: "Urmărit Activ"
+          description: "Numărul postărilor noi va fi arătat pentru acest topic și veți fi notificat pentru orice reply scris."
         tracking_pm:
-          title: "Urmărind"
+          title: "Urmărit"
+          description: "Numărul postărilor noi va fi arătat pentru acest mesaj. Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         tracking:
-          title: "Urmărind"
+          title: "Urmărit"
+          description: "Numărul postărilor noi va fi arătat pentru acest topic. Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         regular:
           title: "Normal"
+          description: "Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         regular_pm:
           title: "Normal"
+          description: "Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         muted_pm:
           title: "Silențios"
           description: "Nu veţi fi niciodată notificat despre acest mesaj."
         muted:
           title: "Silențios"
+          description: "Nu veți fi notificat de discuțiile noi din acest topic și nu vor apărea în tabul necitite."
       actions:
         recover: "Rescrie discuție"
         delete: "Șterge Discuție"
@@ -1185,6 +1201,15 @@ ro:
         other: "vedeţi {{count}} răspunsuri ascunse"
       more_links: "{{count}} mai multe..."
       unread: "postarea nu a fost citită"
+      has_likes:
+        one: "O Apreciere"
+        few: "{{count}} Aprecieri"
+        other: "{{count}} de Aprecieri"
+      has_likes_title_only_you: "Ai apreciat acest post"
+      has_likes_title_you:
+        one: "Ați apreciat acest post împreună cu un alt utilizator."
+        few: "Ați apreciat acest post împreună cu alți {{count}} utilizatori."
+        other: "Ați apreciat acest post împreună cu alți {{count}} utilizatori."
       errors:
         create: "Ne pare rău , s-a semnalat o eroare în creerea postării dumneavoastră.Vă rugăm încercati iar."
         edit: "Ne pare rău , s-a semnalat o eroare în editarea postării dumneavoastră . Vă rugăm încercati iar."
@@ -1207,7 +1232,7 @@ ro:
       controls:
         reply: "începe compunerea unui răspuns pentru această postare"
         like: "apreciează acestă postăre"
-        has_liked: "ai retras aprecierea acestei postări "
+        has_liked: "ai apreciat acest răspuns"
         undo_like: "anuleazaă aprecierea"
         edit: "editează această postare"
         edit_anonymous: "Ne pare rău, dar trebuie să fiţi autentificat pentru a edita."
@@ -1407,6 +1432,7 @@ ro:
           title: "Urmărire"
         regular:
           title: "Normal"
+          description: "Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         muted:
           title: "Silențios"
     flagging:

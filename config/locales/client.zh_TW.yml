@@ -272,7 +272,9 @@ zh_TW:
       title:
         other: "群組"
       members: "成員"
+      topics: "主題"
       posts: "文章"
+      messages: "訊息"
       alias_levels:
         title: "誰可以在這個群組發送訊息和使用@提到"
         nobody: "沒有"
@@ -283,6 +285,11 @@ zh_TW:
       trust_levels:
         title: "當這些成員加入時自動提升信任等級:"
         none: "無"
+      notifications:
+        watching:
+          title: "關注"
+        regular:
+          title: "一般"
     user_action_groups:
       '1': "已按讚"
       '2': "已收到的讚"
@@ -398,7 +405,9 @@ zh_TW:
         warnings_received: "警告"
       messages:
         all: "全部"
+        archive: "封存"
         groups: "我的群組"
+        move_to_archive: "封存"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"
@@ -839,6 +848,8 @@ zh_TW:
       create: '新討論話題'
       create_long: '建立新討論話題'
       private_message: '發送訊息'
+      archive_message:
+        title: '封存'
       list: '討論話題'
       new: '新討論話題'
       unread: '未讀'
@@ -887,6 +898,7 @@ zh_TW:
         go_top: "頂部"
         go_bottom: "底部"
         go: "前往"
+        jump_bottom: "跳至最後一則帖子"
         jump_bottom_with_number: "跳至第 %{post_number} 篇文章"
         total: 所有文章
         current: 目前的文章
@@ -1042,6 +1054,7 @@ zh_TW:
         other: "{{count}} 個讚"
       has_likes_title:
         other: "{{count}} 個使用者對此文章讚好"
+      has_likes_title_only_you: "你已按讚"
       errors:
         create: "抱歉，建立你的文章時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的文章時發生錯誤，請再試一次。"
@@ -1105,6 +1118,12 @@ zh_TW:
           bookmark: "移除書籤"
           like: "撤回讚"
           vote: "撤回投票"
+        people:
+          off_topic: "投訴為離題內容"
+          spam: "投訴為垃圾內容"
+          inappropriate: "投訴為不當內容"
+          notify_moderators: "已通知的版主"
+          notify_user: "已送出一則訊息"
         by_you:
           off_topic: "你已投訴此文章偏離討論話題"
           spam: "你已投訴此文章為垃圾"
@@ -1228,6 +1247,8 @@ zh_TW:
           title: "關注"
         tracking:
           title: "追蹤"
+        regular:
+          title: "一般"
         muted:
           title: "靜音"
     flagging:
@@ -1696,6 +1717,7 @@ zh_TW:
             name: '愛'
             description: "按讚按鈕的顏色"
       email:
+        title: "電子郵件"
         settings: "設定"
         preview_digest: "預覽文摘"
         sending_test: "傳送測試郵件"
@@ -1719,6 +1741,12 @@ zh_TW:
         last_seen_user: "最近出現的用戶:"
         reply_key: "回覆金鑰"
         skipped_reason: "跳過原因"
+        incoming_emails:
+          error: "錯誤"
+          modal:
+            error: "錯誤"
+          filters:
+            error_placeholder: "錯誤"
         logs:
           none: "找不到記錄。"
           filters:
@@ -1780,6 +1808,12 @@ zh_TW:
             change_category_settings: "變更分類設定"
             delete_category: "刪除分類"
             create_category: "建立分類"
+            block_user: "封鎖用戶"
+            unblock_user: "解除封鎖"
+            grant_admin: "授予管理員權限"
+            revoke_admin: "撤銷管理員權限"
+            grant_moderation: "授予板主權限"
+            revoke_moderation: "撤銷板主權限"
         screened_emails:
           title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新用戶。"

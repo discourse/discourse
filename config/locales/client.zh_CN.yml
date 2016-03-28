@@ -693,6 +693,11 @@ zh_CN:
     too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
     too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
+    logs_error_rate_notice:
+      reached: "%{timestamp}：目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已经达到了站点设置中的 %{siteSettingRate}。"
+      exceeded: "%{timestamp}：目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已经超出了站点设置中的 %{siteSettingRate}。"
+      rate:
+        other: "%{count} 错误/%{duration}"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -2198,7 +2203,7 @@ zh_CN:
         moderator: "版主？"
         admin: "管理员？"
         blocked: "已封?"
-        staged: "部分权限？"
+        staged: "暂存？"
         show_admin_profile: "管理员"
         edit_title: "编辑头衔"
         save_title: "保存头衔"
@@ -2265,7 +2270,7 @@ zh_CN:
         deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
         suspended_explanation: "一个被封禁的用户不能登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
-        stage_explanation: "部分访问权限的用户只能通过邮件在特定主题内发表帖子。"
+        stage_explanation: "暂存用户只能通过邮件在特定主题内发表帖子。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
         suspend_modal_title: "被禁用户"
         trust_level_2_users: "二级信任等级用户"
@@ -2385,6 +2390,7 @@ zh_CN:
         badge: 徽章
         display_name: 显示名称
         description: 描述
+        long_description: 详情
         badge_type: 徽章分类
         badge_grouping: 群组
         badge_groupings:
@@ -2545,7 +2551,11 @@ zh_CN:
     badges:
       earned_n_times:
         other: "授予徽章 %{count} 次"
+      granted_on: "授予于 %{date}"
+      others_count: "其他有该徽章的人（%{count}）"
       title: 徽章
+      allow_title: "能用作头衔"
+      multiple_grant: "能被授予多次"
       badge_count:
         other: "%{count} 个徽章"
       more_badges:
