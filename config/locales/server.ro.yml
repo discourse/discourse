@@ -870,12 +870,6 @@ ro:
         Pentru ajutor adițional, faceți referie la [regulile de comunitate](%{base_url}/).
     blocked_by_staff:
       subject_template: "Cont blocat"
-      text_body_template: |
-        Salut,
-
-        Acesta e un mesaj automat din partea %{site_name} pentru a vă informa de blocarea contului dvs de către un membru al personalului.
-
-        Pentru ajutor adițional, faceți referie la [regulile de comunitate](%{base_url})..
     user_automatically_blocked:
       subject_template: "Noul utilizator %{username} a fost blocat datorită marcajelor date de comunitate"
     spam_post_blocked:

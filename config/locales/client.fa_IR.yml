@@ -2406,8 +2406,6 @@ fa_IR:
         mark_watching: '<b>m</b>, <b>w</b> مشاهده موضوع'
     badges:
       title: مدال‌ها
-      allow_title: "می تواند برای یک عنوان استفاده شود"
-      multiple_grant: "می توان چندین بار اهدا کرد"
       badge_count:
         other: "%{count} مدال"
       more_badges:
@@ -2427,99 +2425,6 @@ fa_IR:
           name: دیگر
         posting:
           name: در حال نوشتن
-      badge:
-        editor:
-          name: ویرایشگر
-          description: نخستین ویرایش نوشته
-        basic_user:
-          name: اساسی
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">اعطا کردن</a> تمام عملکرد های ضروری برای انجمن
-        member:
-          name: عضو
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">اعطا کردن</a> دعوت نامه
-        regular:
-          name: منظم
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">a> دعوت نامه تغییر دسته بندی، تغییر نام دهید، به دنبال کردن لینک ها و سالن
-        leader:
-          name: رهبر
-          description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">اعطا کردن</a>
-
-            ویرایش سراسری، پین، بستن، بایگانی، تقسیم و ادغام'
-        welcome:
-          name: خوش آمدید
-          description: ' یک پسند دریافت شد'
-        autobiographer:
-          name: نویسندهء شرح حال
-          description: فیلد کاربر <a href="/my/preferences">نمایه </a>اطلاعات
-        anniversary:
-          name: سالگرد
-          description: عضو فعال به مدت یک سال،ارسال شده حداقل یک بار
-        nice_post:
-          name: نوشته‌ی دلپذیر
-          description: دریافت 10 پسند در یک نوشته. این نشان را می توان چندین بار اعطا کرد
-        good_post:
-          name: نوشته‌ی خوب
-          description: دریافت 25 پسند در یک نوشته. این نشان را می توان چندین بار اعطا کرد
-        great_post:
-          name: نوشته‌ی عالی
-          description: دریافت 50 پسند در یک نوشته. این نشان را می توان چندین بار اعطا کرد
-        nice_topic:
-          name: موضوع دلپذیر
-          description: دریافت 10 پسند در یک موضوع. این نشان را می توان چندین بار اعطا کرد
-        good_topic:
-          name: موضوع خوب
-          description: دریافت 25 پسند در یک موضوع. این نشان را می توان چندین بار اعطا کرد
-        great_topic:
-          name: موضوع عالی
-          description: دریافت 50 پسند در یک موضوع. این نشان را می توان چندین بار اعطا کرد
-        nice_share:
-          name: ا‌شتراک‌گذاری خوب
-          description: اشتراک گذاری نوشته با 25 بازدید کننده منحصر به فرد
-        good_share:
-          name: اشتراک‌گذاری خوب
-          description: اشتراک گذاری نوشته با 300 بازدید کننده منحصر به فرد
-        great_share:
-          name: اشتراک‌گذاری عالی
-          description: اشتراک گذاری نوشته با 1000 بازدید کننده منحصر به فرد
-        first_like:
-          name: نخستین پسند
-          description: نوشته ای را پسندید
-        first_flag:
-          name: پرچم نخست
-          description: نوشته را پرچم زد
-        promoter:
-          name: ترویج دهنده
-          description: دعوت کننده یک کاربر
-        campaigner:
-          name: فعال
-          description: دعوت کننده سه کاربر معمولی (سطح اعتماد ۱)
-        champion:
-          name: قهرمان
-          description: دعوت کننده پنج کاربر عضو (سطح اعتماد ۲)
-        first_share:
-          name: نخستین اشتراک‌گذاری
-          description: نوشته ای به اشتراک گذاشته شده
-        first_link:
-          name: پیوند نخست
-          description: لینک های داخلی اضافه شده به دیگر موضوعات
-        first_quote:
-          name: نقل‌قول نخست
-          description: نقل قول یک کاربر
-        read_guidelines:
-          name: خواندن دستورالعمل ها
-          description: خواندن <a href="/guidelines">دستورالعمل های انجمن</a>
-        reader:
-          name: خواننده
-          description: مطالعه تمام نوشته‌هایی در یک  موضوع  که بیش از 100 نوشته دارد.
-        popular_link:
-          name: پیوند محبوب
-          description: پیوندی به بیرون با حداقل 50 کلیک ارسال شد
-        hot_link:
-          name: پیوند داغ
-          description: پیوندی به بیرون با حداقل 300 کلیک ارسال شد
-        famous_link:
-          name: پیوند معروف
-          description: پیوندی به بیرون با حداقل 1000 کلیک ارسال شد
     google_search: |
       <h3>جستجو با گوگل</h3>
 

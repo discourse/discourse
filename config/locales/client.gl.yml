@@ -724,7 +724,6 @@ gl:
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comecemos a discusión!</a> Hai actualmente <strong>%{currentTopics} / %{requiredTopics}</strong> temas e <strong>%{currentPosts} / %{requiredPosts}</strong> publicacións. Os novos visitantes precisan algunhas conversas par ler e participar."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comecemos a discusión!</a> Hai actualmente <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Os novos visitantes precisan algunhas conversas par ler e participar."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Comecemos a discusión!</a> Hai actualmente <strong>%{currentPosts} / %{requiredPosts}</strong> publicacións. Os novos visitantes precisan algunhas conversas par ler e participar."
-    logs_error_rate_exceeded_notice: "%{timestamp}: A taxa actual de erros <a href='%{url}' target='_blank'>%{rate} errors/%{duration}</a> excedeu o límite do sitio de %{siteSettingLimit} erros/%{duration}."
     learn_more: "saber máis..."
     year: 'ano'
     year_desc: 'temas creados nos últimos 365 días'
@@ -2643,10 +2642,7 @@ gl:
       earned_n_times:
         one: "Conseguiu esta insignia unha vez"
         other: "Conseguiu esta insignia %{count} veces"
-      more_with_badge: "Máis con esta insignia"
       title: Insignias
-      allow_title: "pode usarse como título"
-      multiple_grant: "pode ser recompensado múltiples veces"
       badge_count:
         one: "1 insignia"
         other: "%{count} insignias"
@@ -2669,97 +2665,6 @@ gl:
           name: Outro
         posting:
           name: Publicación
-      badge:
-        editor:
-          name: Editor
-          description: Edición da publicación inicial
-        basic_user:
-          name: Básico
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Concedidas</a> todas as funcións esenciais da comunidade
-        member:
-          name: Membro
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Concedidos</a> convites
-        regular:
-          name: Normal
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concedido</a> recategorizar, renomear, publicar ligazóns computábeis para o posicionamento en motores de busca e acceso á Taberna
-        leader:
-          name: Líder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concedido</a> editar globalmente, pegar, pechar, arquivar, dividir e fusionar
-        welcome:
-          name: Benvido/a
-          description: Recibiu un gústame
-        autobiographer:
-          name: Autobiógrafo
-          description: Completou a información do <a href="/my/preferences">perfil</a> de usuario
-        anniversary:
-          name: Aniversario
-          description: Membro activo durante un ano, publicou cando menos unha vez
-        nice_post:
-          name: Publicación riquiña
-          description: Recibiu 10 gústames nunha publicación. Esta insignia pode concederse múltiples veces.
-        good_post:
-          name: Publicación boa
-          description: Recibiu 25 gústames nunha publicación. Esta insignia pode concederse múltiples veces.
-        great_post:
-          name: Gran publicación
-          description: Recibiu 50 gústames nunha publicación. Esta insignia pode concederse múltiples veces.
-        nice_topic:
-          name: Tema riquiño
-          description: Recibiu 10 gústames nun tema. Esta insignia pode concederse múltiples veces.
-        good_topic:
-          name: Tema bo
-          description: Recibiu 25 gústames nun tema. Esta insignia pode concederse múltiples veces.
-        great_topic:
-          name: Gran tema
-          description: Recibiu 50 gústames nun tema. Esta insignia pode concederse múltiples veces.
-        nice_share:
-          name: Compartición riquiña
-          description: Compartiu unha publicación con 25 visistantes únicos
-        good_share:
-          name: Compartición boa
-          description: Compartiu unha publicación con 300 visistantes únicos
-        great_share:
-          name: Gran compartición
-          description: Compartiu unha publicación con 1000 visistantes únicos
-        first_like:
-          name: Primeiro Gústame
-          description: Gustou unha publicación
-        first_flag:
-          name: Primeira denuncia
-          description: Denunciou unha publicación
-        promoter:
-          name: Promotor
-          description: Convidou un usuario
-        campaigner:
-          name: Padriño
-          description: Convidou 3 usuarios básicos (nivel de confianza 1)
-        champion:
-          name: Campión
-          description: Convidou 5 membros (nivel de confianza 2)
-        first_share:
-          name: Primeira compartición
-          description: Compartiu unha publicación
-        first_link:
-          name: Primeira ligazón
-          description: Engadiu unha ligazón interna a outro tema
-        first_quote:
-          name: Primeira cita
-          description: Citou un usuario
-        read_guidelines:
-          name: Ler as Directrices
-          description: Ler as <a href="/guidelines">directrices da comunidade</a>
-        reader:
-          name: Lector
-          description: Leu todas as publicación dun tema con máis de 100 publicacións
-        popular_link:
-          name: Ligazón popular
-          description: Publicou unha ligazón externa con máis de 50 clics
-        hot_link:
-          name: Ligazón quente
-          description: Publicou unha ligazón externa con máis de 300 clics
-        famous_link:
-          name: Ligazón popular
-          description: Publicou unha ligazón externa con máis de 1000 clics
     google_search: |
       <h3>Buscar no Google</h3>
       <p>

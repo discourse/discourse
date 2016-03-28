@@ -815,15 +815,9 @@ tr_TR:
     tl2_requires_likes_received: "Bir kullanıcının güven seviyesi 2'ye yükseltilmeden önce alması gereken beğeni sayısı."
     tl2_requires_likes_given: "Bir kullanıcının güven seviyesi 2'ye yükseltilmeden önce vermesi gereken beğeni sayısı."
     tl2_requires_topic_reply_count: "Bir kullanıcının güven seviyesi 2'ye yükseltilmeden önce cevaplaması gereken konu sayısı."
-    tl3_requires_topics_replied_to: "Bir kullanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için son 100 günde cevap yazması gereken en az konu sayısı. (0 ya da daha fazla)"
-    tl3_requires_topics_viewed: "Bir kulanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için, son 100 gün içinde oluşturulmuş konulardan görüntülemesi gereken yüzde oranı. (0 ile 100 arası)"
-    tl3_requires_posts_read: "Bir kulanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için, son 100 gün içinde oluşturulmuş gönderilerden görüntülemesi gereken yüzde oranı. (0 ile 100 arası)"
     tl3_requires_topics_viewed_all_time: "Bir kullanıcının güven seviyesi 3'e yükselmeye hak kazanması için görüntülemesi gereken toplam en az konu sayısı."
     tl3_requires_posts_read_all_time: "Bir kullanıcının güven seviyesi 3'e yükselmeye hak kazanması için görüntülemesi gereken toplam en az gönderi sayısı."
-    tl3_requires_max_flagged: "Bir kullanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için, son 100 gün içinde x farklı kullanıcı tarafından x adetten fazla gönderisinin bayraklanmamış olmaması gerekir. x bu ayara verilen değerdir. (0 ya da daha yüksek) "
     tl3_promotion_min_duration: "Bir kullanıcının güven seviyesi 2'ye düşürülebilmesi için güven seviyesi 3'te geçirmesi gereken en az gün sayısı."
-    tl3_requires_likes_given: "Bir kullanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için son 100 günde vermesi gereken en az beğeni sayısı. "
-    tl3_requires_likes_received: "Bir kullanıcının güven seviyesi 3'e yükseltilmeye hak kazanması için son 100 günde alması gereken en az beğeni sayısı. "
     tl3_links_no_follow: "Güven seviyesi 3'teki kullanıcılar tarafından paylaşılan linklerdeki rel=nofollow'u kaldırma."
     min_trust_to_create_topic: "Yeni bir konu oluşturmak için gereken en az güven seviyesi. "
     min_trust_to_edit_wiki_post: "Wiki olarak işaretlenmiş bir gönderiyi düzenleyebilmek için gereken en az güven seviyesi."
@@ -931,7 +925,6 @@ tr_TR:
     dominating_topic_minimum_percent: "Konuyu domine ettiğine dair uyarı almadan önce konudaki gönderilerin yüzde kaçının kullanıcıya ait olması gerekir."
     daily_performance_report: "NGINX kayıtlarını analiz edip detaylı bir şekilde günlük Yetkili kategorisinde bir konu içerisinde paylaş."
     suppress_uncategorized_badge: "Kategorisiz konular için olan rozeti konu listesinde gösterme."
-    permalink_normalizations: "Kalıcı bağlantıları eşleştirmeden önce aşağıdaki regex'i uygula, mesela: /(\\/topic.*)\\?.*/\\1 konu yönlendirmelerindeki sorgu dizelerini kaldırır. Formatlama regex+string, yakalamalara erişmek \\1 vs."
     global_notice: "Tüm ziyaretçilere İVEDİ ACİL DURUM global manşet uyarısı göster, saklamak için boş bırakın (HTML kullanılabilir)."
     disable_edit_notifications: " 'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
     automatically_unpin_topics: "Kullanıcı sayfa sonuna eriştiğinde tutturulmuş konuları otomatik olarak sayfadan ayır."
@@ -1016,11 +1009,6 @@ tr_TR:
       category: 'Kategoriler'
       topic: 'Sonuçlar'
       user: 'Kullanıcılar'
-  sso:
-    not_found: "Hesap aranamıyor ya da oluşturulamıyor, site admini ile iletişime geçin"
-    account_not_approved: "Hesap henüz onaylanmamış, onaylandığında e-posta ile haberdar edileceksiniz"
-    unknown_error: "Bilgi güncellenirken hata oluştu, site admini ile iletişime geçin"
-    timeout_expired: "Seansınız zaman aşımına uğradı, lütfen tekrar giriş yapmayı deneyin"
   original_poster: "Orjinal Poster"
   most_posts: "En Çok Gönderi"
   most_recent_poster: "En Son Gönderen"
@@ -1266,12 +1254,6 @@ tr_TR:
         Daha fazla bilgi için lütfen [topluluk yönergelerine](%{base_url}/guidelines) bakın.
     blocked_by_staff:
       subject_template: "Hesap engellendi"
-      text_body_template: |
-        Merhaba.
-
-        Bu, %{site_name} sitesinin, hesabınızın bir görevli tarafından engellendiğini bildirmek için gönderdiği otomatik bir mesajdır.
-
-        Daha fazla bilgi için lütfen [topluluk yönergelerine](%{base_url}/guidelines) bakın.
     user_automatically_blocked:
       subject_template: "Topluluk bayrakları nedeniyle yeni kullanıcı %{username} engellendi"
     spam_post_blocked:
@@ -1301,33 +1283,6 @@ tr_TR:
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} sizi bir mesaja davet etti '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} sizi bir mesaja davet etti
-
-        > %{site_title} -- %{site_description}
-
-        adresinde
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        Mesajı görüntülemek için lütfen bu bağlantıyı ziyaret edin: %{base_url}%{url}
-    user_invited_to_topic:
-      text_body_template: |2
-
-        %{username} sizi bir tartışmaya davet etti
-
-        > %{site_title} -- %{site_description}
-
-        adresinde
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        Mesajı görüntülemek için lütfen bu bağlantıyı ziyaret edin: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -1460,56 +1415,6 @@ tr_TR:
     title: "Üyelik Sözleşmesi"
   privacy_topic:
     title: "Gizlilik İlkeleri"
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Bu rozet <a href="/my/preferences">profilini</a> doldurduğunda ve profil resmini seçtiğinde verilir. Kim olduğun ve nelerle ilgilendiğin hakkında topluluğa daha fazla bilgi vermen daha iyi ve daha yakın bir topluluğun oluşmasına yardım eder.
-      first_like: |
-        Bu rozet :heart: tuşunu kullanarak bir gönderiyi ilk kez beğendiğinizde verilir. Gönderileri beğenmek hemcins topluluk üyelerinin ilgi çekici, faydalı, havalı ve eğlenceli nelerin gönderildiğini bilmelerini sağlamak için mükemmel bir yoldur. Sevgiyi paylaş!
-      first_link: |
-        Bu rozet bir cevapta başka bir konuya bir bağlantı verdiğinde verilir. Konuları bağlamak, her iki yönde konular arasındaki ilişkiyi göstererek, hemcins okuyucuların ilgi çekici ve ilgili konuşmaları bulmalarına yardım eder.
-      first_quote: |
-        Bu rozet bir cevapta ilk kez bir gönderiden alıntı yaptığınızda verilir. Cevabında önceki gönderilerin ilgili bölümlerinden alıntı yapmak tartışmaların odaklanmış halde ve konu içinde tutulmasına yardımcı olur.
-      first_share: |
-        Bu rozet paylaş tuşunu kullanarak bir cevaba ya da konuya ilk kez bir bağlantı paylaştığında verilir. Bağlantıları paylaşmak dünyanın geri kalanıyla yapılan ilginç tartışmalarla gösteriş yapmak ve topluluğunu büyütmek için mükemmel bir yoldur.
-      read_guidelines: |
-        Bu rozet <a href="/guidelines">topluluk kurallarını okunmasına</a> verilir. Bu basit kuralları benimsemek ve paylaşmak güvenli, eğlenceli ve sürdürülebilir bir topluluğun inşa edilmesine yardım eder.
-      reader: |
-        Bu rozet uzun bir konuyu okumaya verilir. Okumak temeldir. Yakından okumak tartışmayı takip etmene ve daha iyi, daha eksiksiz cevaplar yazmana yardım eder.
-      editor: |
-        Bu rozet gönderini değiştirmene verilir. Geliştirmek, küçük hataları gidermek ya da unuttuğun bir şeyi eklemek için gönderilerini değiştirmekten hiçbir zaman çekinme.
-      first_flag: |
-        Bu rozet bir gönderinin işaretlenmesine verilir. İşaretleme, topluluğunun sağlığı için çok önemlidir. Yönetici incelemesi gereken herhangi bir gönderi görürseniz lütfen işaretlemekten çekinmeyin. Ayrıca hemcins kullanıcılara <b>mesajlar</b> göndermek için işaretleme diyaloğunu da kullanabilirsiniz.
-      nice_share: |
-        Bu rozet bir gönderide paylaşılan bir bağlantının 25 yabancı ziyaretçi tarafından ziyaret edilmesine verilir. Tebrikler! İlginç tartışmalara bağlantıları arkadaşlarla paylaşmak  topluluğumuzu büyütmek için harika bir yoldur.
-      welcome: |
-        Bu rozet bir gönderide ilk beğeninizi aldığınızda verilir. Tebrikler, hemcins topluluk üyelerinin ilginç, havalı ya da kullanışlı bulduğu bir şeyler gönderdin.
-      anniversary: |
-        Bu rozet en az bir gönderiye sahip olunan bir yıllık üyeliğe verilir. Buralarda olup topluluğumuza katkıda bulunduğunuz için teşekkür ederiz.
-      good_share: |
-        Bu rozet bir gönderide paylaşılan bir bağlantı, 300 yabancı ziyaretçi tarafından ziyaret edildiğinde verilir. İyi iş! <i>Bir sürü</> yeni kişiye ilgi çekici bir tartışma gösterdin ve böylece büyümemize yardımcı oldun.
-      great_share: |
-        Bu rozet bir gönderide paylaşılan bir bağlantının 100 yabancı ziyaretçi tarafından ziyaret edilmesine verilir. Vay be! Bu topluluk için ilginç bir tartışmayı yeni kocaman bir izleyici kitlesine terfi ettirdin ve büyümemize önemli bir katkı sağladın.
-      nice_post: |
-        Bu rozet bir cevap 10 beğeni aldığında verilir. İyi iş!
-      nice_topic: |
-        Bu rozet bir konu 10 beğeni aldığında verilir. İyi iş!
-      good_post: |
-        Bu rozet bir cevap 25 beğeni aldığında verilir. İyi iş!
-      good_topic: |
-        Bu rozet bir konu 25 beğeni aldığında verilir. İyi iş!
-      great_post: |
-        Bu rozet bir gönderi 50 beğeni aldığında verilir. Vay be!
-      great_topic: |
-        Bu rozet bir cevap 50 beğeni aldığında verilir. Vay be!
-      basic: |
-        Bu rozet güven seviyesi 1'e ulaştığında verilir. Bir süredir buralarda olduğun ve topluluğumuzun ne hakkında olduğu konusunda birkaç konu okuduğun için teşekkür ederiz. Yeni kullanıcı kısıtlamaların kaldırıldı ve kişisel mesajlaşma, işaretleme, wiki düzenleme, resim ve birden çok bağlantı gönderme yeteneği gibi ana topluluk yeteneklerini aldın.
-      member: |
-        Bu rozet güven seviyesi 2'ye ulaştığında verilir. Haftalar boyunca buralarda olup katkıda bulunduğun için teşekkür ederiz. Artık kullanıcı sayfandan ya da konularından kişisel davetler gönderebilir, grup mesajları oluşturabilir ve günlük birkaç daha fazla beğeni ekleyebilirsin.
-      regular: |
-        Bu rozet güven seviyesi 3'e ulaştığında verilir. Aylardır topluluğumuzun düzenli bir parçası, bu topluluğu harika yapan en etkin okuyucu ve güvenilir katkıcılardan biri olduğun için teşekkür ederiz. Artık konuların kategorilerini ve isimlerini değiştirebilirsin, özel bir lobi alanına erişebilir, daha güçlü spam işaretleri koyabilir ve günlük çok daha fazla beğeni ekleyebilirsin.
-      leader: |
-        Bu rozet güven seviyesi 4'e ulaştığında verilir. Eylem ve kelimelerin ile topluluk için olumlu bir izlenim bırakman sebebiyle forum kadrosu tarafından bu topluluğun bir önderi seçildin. Artık tüm gönderileri düzenleyebilir, sabitleme, kapatma, listelememe, arşivleme, ayırma ve birleştirme gibi yönetici eylemlerini yapabilir ve günlük yığınca beğeni ekleyebilirsiniz.
   admin_login:
     success: "E-posta Gönderildi"
     error: "Hata!"

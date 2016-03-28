@@ -257,7 +257,6 @@ sq:
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
-      email_in_already_exist: "Incoming email address '%{email_in}' is already in use for '%{category_name}' category."
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -618,7 +617,6 @@ sq:
     min_private_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
-    uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
@@ -792,15 +790,9 @@ sq:
     tl2_requires_likes_received: "How many likes a user must receive before promotion to trust level 2."
     tl2_requires_likes_given: "How many likes a user must cast before promotion to trust level 2."
     tl2_requires_topic_reply_count: "How many topics user must reply to before promotion to trust level 2."
-    tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to trust level 3. (0 or higher)"
-    tl3_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
-    tl3_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_topics_viewed_all_time: "The minimum total number of topics a user must have viewed to qualify for trust level 3."
     tl3_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for trust level 3."
-    tl3_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to trust level 3, where x is this setting's value. (0 or higher)"
     tl3_promotion_min_duration: "The minimum number of days that a promotion to trust level 3 lasts before a user can be demoted back to trust level 2."
-    tl3_requires_likes_given: "The minimum number of likes that must be given in the last 100 days to qualify for promotion to trust level 3."
-    tl3_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
@@ -888,7 +880,6 @@ sq:
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
-    delete_digest_email_after_days: "Suppress digest emails for users not seen on the site for more than (n) days."
     disable_digest_emails: "Disable digest emails for all users."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
@@ -903,7 +894,6 @@ sq:
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(\\/topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     full_name_required: "Full name is a required field of a user's profile."
@@ -933,7 +923,6 @@ sq:
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "Force a square aspect ratio to all emojis."
-    approve_post_count: "The amount of posts from a new user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact email. Set to 0 to disable these emails."
     errors:
@@ -960,7 +949,6 @@ sq:
     moved_post: "%{display_username} moved your post to %{link}"
     private_message: "%{display_username} sent you a message: %{link}"
     invited_to_private_message: "%{display_username} invited you to a message: %{link}"
-    invited_to_topic: "%{display_username} invited you to a topic: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
     linked: "%{display_username} linked you in %{link}"
     granted_badge: "You earned %{link}"
@@ -970,11 +958,6 @@ sq:
       category: 'Categories'
       topic: 'Results'
       user: 'Users'
-  sso:
-    not_found: "Unable to lookup or create account, contact site admin"
-    account_not_approved: "Account is pending approval, you will receive an email notification once approved"
-    unknown_error: "Error updating information, contact site admin"
-    timeout_expired: "Account login timed out, please try logging in again"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
@@ -1110,87 +1093,10 @@ sq:
       (If the link above has expired, choose "I forgot my password" when logging in with your email address.)
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
-    text_body_template: |
-      This is a test email from
-
-      [**%{base_url}**][0]
-
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-
-      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
-
-      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
-
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
-      We hope you received this email deliverability test OK!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] verion i ri i Discourse, përditësoje!"
-    text_body_template: |
-      A new version of [Discourse](http://www.discourse.org) is available.
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      You may want to:
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] ka perditesime"
-    text_body_template: |
-      A new version of [Discourse](http://www.discourse.org) is available.
-
-      Your version: %{installed_version}
-      New version: **%{new_version}**
-
-      You may want to:
-
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
-
-      ### Release notes
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      one: "These flags were submitted over 1 hour ago."
-      other: "These flags were submitted over %{count} hours ago."
-    please_review: "Please review them."
-    post_number: "postim"
-    how_to_disable: 'You can disable or change the frequency of this email reminder via the "notify about flags after" setting.'
-    subject_template:
-      one: "1 flag waiting to be handled"
-      other: "%{count} flags waiting to be handled"
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 post waiting to be reviewed"
@@ -1314,10 +1220,6 @@ sq:
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        There is no known user account with this email address. Try sending from a different email address, or contact a staff member.
     email_reject_empty:
       subject_template: "[%{site_name}] Email issue -- No Content"
     email_reject_parsing:
@@ -1334,16 +1236,8 @@ sq:
         Your account does not have the privileges to post new topics in that category. If you believe this is in error, contact a staff member.
     email_reject_reply_key:
       subject_template: "[%{site_name}] Email issue -- Unknown Reply Key"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Email issue -- Topic Not Found"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        The topic you are replying to no longer exists, perhaps it was deleted? If you believe this is in error, contact a staff member.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Email issue -- Topic Closed"
       text_body_template: |
@@ -1352,16 +1246,8 @@ sq:
         The topic you are replying to is currently closed and no longer accepting replies. If you believe this is in error, contact a staff member.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Your email was marked as "auto generated", which we can't accept. If you believe this is in error, contact a staff member.
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP authentication error"
-      text_body_template: |
-        There has been an authentication error while polling mails from the POP server.
-
-        Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
     too_many_spam_flags:
       subject_template: "New account blocked"
       text_body_template: |
@@ -1374,12 +1260,6 @@ sq:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Account blocked"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
-
-        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "New user %{username} blocked due to community flags"
     spam_post_blocked:
@@ -1413,34 +1293,6 @@ sq:
     posted_by: "Posted by %{username} on %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} invited you to a message
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        at
-
-        > %{site_title} -- %{site_description}
-
-        Please visit this link to view the message: %{base_url}%{url}
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} invited you to a topic '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} invited you to a discussion
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        at
-
-        > %{site_title} -- %{site_description}
-
-        Please visit this link to view the message: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -1497,12 +1349,6 @@ sq:
 
         Click the following link to choose a password for your new account:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Confirm your new email address"
-      text_body_template: |
-        Confirm your new email address for %{site_name} by clicking on the following link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
@@ -1532,7 +1378,6 @@ sq:
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
   page_not_found:
-    title: "The page you requested doesn't exist or is private."
     popular_topics: "Popular"
     recent_topics: "Recent"
     see_more: "More"
@@ -1824,57 +1669,6 @@ sq:
       Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Politika e Privatësisë"
-  badges:
-    long_descriptions:
-      autobiographer: |
-        This badge is granted for filling out <a href="/my/preferences">your user profile</a> and selecting a profile picture. Letting the community know more about who you are and what you're interested in makes for a better, more connected community.
-      first_like: |
-        This badge is granted the first time you like a post using the :heart: button. Liking posts is a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun. Share the love!
-      first_link: |
-        This badge is granted the first time you place a link to another topic in a reply. Linking topics helps fellow readers find interesting related conversations, by showing connections between topics in both directions.
-      first_quote: |
-        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions focused and on topic.
-      first_share: |
-        This badge is granted the first time you share a link to a reply or topic using the share button. Sharing links is a great way to show off interesting discussions with the rest of the world and grow your community.
-      read_guidelines: |
-        This badge is granted for <a href="/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community.
-      reader: |
-        This badge is granted for reading a long topic. Reading is fundamental. Reading closely helps you follow the conversation and leads to better, more complete replies.
-      editor: |
-        This badge is granted for editing your post. Don't hesitate to edit your posts any time to improve them, fix small mistakes, or add anything you forgot.
-      first_flag: |
-        This badge is granted for flagging a post. Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
-        do not hesitate to flag. You may also use the flagging dialog to send <b>messages</b> to fellow users.
-      nice_share: |
-        This badge is granted for sharing a link to a post that's visited by 25 outside visitors. Nice job! Sharing links to interesting discussions with friends is an excellent way to grow our community.
-      welcome: |
-        This badge is granted when you receive your first like on a post. Congratulations, you've posted something that your fellow community members found interesting, cool, or useful!
-      anniversary: |
-        This badge is granted when you've been a member for a year with at least one post in that year. Thanks for sticking around and contributing to our community!
-      good_share: |
-        This badge is granted for sharing a link to a post that's visited by 300 outside visitors. Good work! You've shown off an interesting discussion to a <i>lot</i> of new people and helped us grow.
-      great_share: |
-        This badge is granted for sharing a link to a post that's visited by 100 outside visitors. Wow! You've promoted an interesting discussion to a huge new audience for this community, and helped us grow in a big way.
-      nice_post: |
-        This badge is granted for creating a reply that gets 10 likes. Nice job!
-      nice_topic: |
-        This badge is granted for creating a topic that gets 10 likes. Nice job!
-      good_post: |
-        This badge is granted for creating a reply that gets 25 likes. Good work!
-      good_topic: |
-        This badge is granted for creating a topic that gets 25 likes. Good work!
-      great_post: |
-        This badge is granted for creating a post that gets 50 likes. Wow!
-      great_topic: |
-        This badge is granted for creating a reply that gets 50 likes. Wow!
-      basic: |
-        This badge is granted when you reach trust level 1. Thanks for sticking around a little while and reading a few topics to learn what our community is about. Your new user restrictions have been lifted, and you've been granted all essential community abilities, such as personal messaging, flagging, wiki editing, and the ability to post images and multiple links.
-      member: |
-        This badge is granted when you reach trust level 2. Thanks for participating over a period of weeks to more join our community. You can now send personal invitations from your user page or individual topics, create group messages, and a few more likes per day.
-      regular: |
-        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months, one of the most active readers and a reliable contributor to what makes this community great. You can now recategorize and rename topics, access a private lounge area, more powerful spam flags, and lots more likes per day.
-      leader: |
-        This badge is granted when you reach trust level 4. You're a leader in this community as selected by staff, and set a positive example for the community in your deeds and words. You have the ability to edit all posts, take topic moderator actions such as pin, close, unlist, archive, split, and merge, and tons of likes per day.
   admin_login:
     success: "Email Sent"
     error: "Error!"

@@ -739,33 +739,6 @@ cs:
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} Vás pozval do konverzace '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} Vás pozval do konverzace
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        na
-
-        > %{site_title} -- %{site_description}
-
-        Prosíme klikněte na tento odkaz pro zobrazení konverzace: %{base_url}%{url}
-    user_invited_to_topic:
-      text_body_template: |2
-
-        %{username} Vás pozval do konverzace
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        na
-
-        > %{site_title} -- %{site_description}
-
-        Prosíme klikněte na tento odkaz pro zobrazení konverzace: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
     user_quoted:

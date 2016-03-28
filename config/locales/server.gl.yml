@@ -474,28 +474,6 @@ gl:
     title: "Termos do servizo"
   privacy_topic:
     title: "Política de intimidade"
-  badges:
-    long_descriptions:
-      first_like: |
-        Esta insignia concédese a primeira vez que che gusta unha publicación e usas o botón :heart:. Darlle Gústame a unha publicción e unha gran forma de dicirlles aos membros da comunidade que publicaron algo interesante, útil, riquiño ou divertido. Comparte o amor!
-      first_flag: |
-        Esta insignia concédese por marcar unha publicación. Marcar publicacións é fundamental para a saúde da comunidade. Se ves algunha publicación que
-
-        requira a atención dun moderador, non dubides en marcala. Tamén podes usar o diálogo de marcar para enviar <b>mensaxes</b> a outros usuarios.
-      welcome: |
-        Esta insignia concédese cando recibes o primeiro Gústame nunha publicación. Parabéns, publicaches algo que os membros da comunidade consideraron interesante, riquiño ou útil.
-      nice_post: |
-        Esta insignia concédese por crear unha resposta que recibe 10 gústames. Traballo riquiño.
-      nice_topic: |
-        Esta insignia concédese por crear un tema que recibe 10 gústames. Traballo riquiño.
-      good_post: |
-        Esta insignia concédese por crear unha resposta que recibe 25 gústames. Bo traballo.
-      good_topic: |
-        Esta insignia concédese por crear un tema que recibe 25 gústames. Bo traballo.
-      great_post: |
-        Esta insignia concédese por crear unha publicación que recibe 50 gústames. Moi ben!
-      great_topic: |
-        Esta insignia concédese por crear unha resposta que recibe 50 gústames. Moi ben!
   admin_login:
     error: "Erro!"
     submit_button: "Enviar correo-e"

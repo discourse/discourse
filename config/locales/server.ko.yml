@@ -763,15 +763,9 @@ ko:
     tl2_requires_likes_received: "회원등급-2가 되기 위해 받아야 하는 좋아요 횟수"
     tl2_requires_likes_given: "회원등급-2가 되기 위해 눌러야하는 좋아요 횟수"
     tl2_requires_topic_reply_count: "기회원등급-2가 되기 위해 달아야 하는 댓글 갯수"
-    tl3_requires_topics_replied_to: "VIP 사용자-3 이 되기 위해 지난 100일 동안 답글을 달아야하는 최소 글타래수(0 ~ )"
-    tl3_requires_topics_viewed: "VIP 사용자-3 이 되기 위해 지난 100일 동안 생성된 전체 글타래 중 본 글타래의 비율(%, 0 ~ 100)"
-    tl3_requires_posts_read: "VIP 사용자-3 이 되기 위해 지난 100일 동안 생성된 전체 글 중 본 글의 비율(%, 0 ~ 100)"
     tl3_requires_topics_viewed_all_time: "VIP 사용자-3 이 되기 위해 꼭 보아야 하는 글타래의 전체 개수"
     tl3_requires_posts_read_all_time: "VIP 사용자-3 이 되기 위해 꼭 보아야 하는 글타래의 전체 개수"
-    tl3_requires_max_flagged: "사용자가 VIP 사용자-3 이 되기 위해 지난 100일동안 서로 다른 사용자에게 최소한으로 받지 말아야하는 신고된 글 수(0 ~ )"
     tl3_promotion_min_duration: "회원등급이 2로 떨어진 후 다시 VIP 사용자-3 이 될 수 있는 최소 일 수"
-    tl3_requires_likes_given: "VIP 사용자-3 이 되기 위해 지난 100일 동안 해야 할 좋아요 수"
-    tl3_requires_likes_received: "VIP 사용자-3 이 되기 위해 지난 100일 동안 받아야 할 좋아요 수"
     tl3_links_no_follow: "VIP 사용자-3 의 글에 있는 링크에서 rel=nofollow 를 제거하지 마시오."
     min_trust_to_create_topic: "새로운 글타래를 생성하기 위한 최소 회원등급"
     min_trust_to_edit_wiki_post: "위키로 설정된 글 수정할 수 있는 최소 회원등급"
@@ -929,11 +923,6 @@ ko:
       category: '카테고리'
       topic: '검색 결과'
       user: '사용자'
-  sso:
-    not_found: "계정 생성 또는 찾기 불가, 관리자에게 문의하세요"
-    account_not_approved: "계정이 승인을 기다리고 있습니다, 승인 후 완료 이메일이 보내집니다."
-    unknown_error: "업데이트 정보에 오류가 있습니다. 사이트 관리자에게 문의해주세요."
-    timeout_expired: "로그인 연결 시간이 초과되었습니다. 다시한번 시도해주세요"
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
@@ -1301,12 +1290,6 @@ ko:
         추가적인 조언은 [커뮤니티 가이드라인](%{base_url}/guidelines)에서 확인하실 수 있습니다.
     blocked_by_staff:
       subject_template: "계정이 블락"
-      text_body_template: |
-        안녕하세요,
-
-        %{site_name}에서 이 계정이 스태프에 의해 블락되었음을 알리는 자동 메세지 입니다.
-
-        추가적인 조언은 [community guidelines](%{base_url}/guidelines)에서 확인하실 수 있습니다.
     user_automatically_blocked:
       subject_template: "%{username} 신규가입자가 커뮤니티 신고로 블락됨"
     spam_post_blocked:
@@ -1339,33 +1322,6 @@ ko:
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 회원님이 '%{topic_title}' 글타래에 초대했습니다"
-      text_body_template: |2
-
-        %{username} 회원님이 메세지에 초대했습니다.
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        사이트:
-
-        > %{site_title} -- %{site_description}
-
-        %{base_url}%{url} 로 들어가서 메세지를 확인하기
-    user_invited_to_topic:
-      text_body_template: |2
-
-        %{username} 회원님이 토의에 초대하였습니다.
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        사이트:
-
-        > %{site_title} -- %{site_description}
-
-        메세지 링크: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}'에 답글이 달렸습니다"
     user_quoted:

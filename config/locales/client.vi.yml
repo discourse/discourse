@@ -2477,10 +2477,7 @@ vi:
     badges:
       earned_n_times:
         other: "Đạt được huy hiệu này %{count} lần"
-      more_with_badge: "Others with this badge"
       title: Huy hiệu
-      allow_title: "có thể sử dụng như là tiêu đề"
-      multiple_grant: "có thể trao tặng nhiều lần"
       badge_count:
         other: "%{count} Huy hiệu"
       more_badges:
@@ -2500,97 +2497,6 @@ vi:
           name: Khác
         posting:
           name: Đang đăng bài
-      badge:
-        editor:
-          name: Biên tập
-          description: Chỉnh sửa bàn viết lần đầu
-        basic_user:
-          name: Cơ bản
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Các cấp</a> chức năng cần thiết của cộng đồng
-        member:
-          name: Thành viên
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Các cấp</a> lời mời
-        regular:
-          name: Thường xuyên
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Các cấp</a> phân hạng, đổi tên và theo đuôi liên kết
-        leader:
-          name: Lãnh đạo
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Các cấp</a> sửa tổng thể, ghim, đóng, lưu trữ, tách và hợp nhất
-        welcome:
-          name: Chào mừng
-          description: Đã nhận 1 lượt thích
-        autobiographer:
-          name: Tự truyện
-          description: Filled user <a href="/my/preferences">profile</a> information
-        anniversary:
-          name: Ngày kỷ niệm
-          description: Thành viên hoạt động trong năm, đăng bài ít nhất một lần
-        nice_post:
-          name: Bài viết hay
-          description: Được 10 like cho một bài viết, huy hiệu này có thể được cấp nhiều lần
-        good_post:
-          name: Bài viết tốt
-          description: Được 25 like cho một bài viết, huy hiệu này có thể được cấp nhiều lần
-        great_post:
-          name: Bài viết tuyệt vời
-          description: Được 50 like cho một bài viết, huy hiệu này có thể được cấp nhiều lần
-        nice_topic:
-          name: Bài viết hay
-          description: Được 10 like cho một chủ đề, huy hiệu này có thể được cấp nhiều lần
-        good_topic:
-          name: Chủ đề tốt
-          description: Được 25 like cho một chủ đề, huy hiệu này có thể được cấp nhiều lần
-        great_topic:
-          name: Chủ đề hay
-          description: Được 50 like cho một chủ đề, huy hiệu này có thể được cấp nhiều lần
-        nice_share:
-          name: Nice Share
-          description: Đã chia sẻ bài viết với 25 lượt người truy cập
-        good_share:
-          name: Good Share
-          description: Đã chia sẻ bài viết với 300 lượt người truy cập
-        great_share:
-          name: Great Share
-          description: Đã chia sẻ bài viết với 1000 lượt người truy cập
-        first_like:
-          name: Lượt thích đầu tiên
-          description: Đã thích một bài đăng
-        first_flag:
-          name: Đánh dấu đầu tiên
-          description: Đánh dấu bài viết
-        promoter:
-          name: Promoter
-          description: Đã mời một thành viên
-        campaigner:
-          name: Campaigner
-          description: Mời 3 thành viên (Độ tin cậy 1)
-        champion:
-          name: Champion
-          description: Mời 5 thành viên (Độ tin cậy 2)
-        first_share:
-          name: Chia sẽ đầu tiên
-          description: Chia sẽ bài viết
-        first_link:
-          name: Liên kết đầu tiên
-          description: Thêm một liên kết từ chủ để khác
-        first_quote:
-          name: Trích dẫn đầu tiên
-          description: Trích dẫn thành viên
-        read_guidelines:
-          name: Xem hướng dẫn
-          description: Xem <a href="/guidelines">nguyên tắc cộng đồng</a>
-        reader:
-          name: Người xem
-          description: Đọc tất cả bài viết trong các chủ để có hơn 100 bài
-        popular_link:
-          name: Liên kết phổ biến
-          description: Đăng một liên kết ngoài với ít nhất 50 click
-        hot_link:
-          name: Liên kết hấp dẫn
-          description: Đăng một liên kết ngoài với ít nhất 300 click
-        famous_link:
-          name: Liên kết phổ biến
-          description: Đăng một liên kết ngoài với ít nhất 1000 click
     google_search: |
       <h3>Tìm kiếm với Google</h3>
       <p>

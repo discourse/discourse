@@ -1890,8 +1890,6 @@ te:
         mark_watching: '<b>m</b>, <b>w</b> చూసిన విషయం'
     badges:
       title: బ్యాడ్జీలు
-      allow_title: "శీర్షికగా కూడా వాడవచ్చు"
-      multiple_grant: "పలుమార్లు బహూకరించవచ్చు"
       more_badges:
         one: "+%{count} కంటే"
         other: "+%{count} ఇంకా"
@@ -1911,74 +1909,3 @@ te:
           name: ఇతర
         posting:
           name: రాస్తున్నారు
-      badge:
-        editor:
-          name: ఎడిటరు
-          description: తొలి టపా సవరణ
-        basic_user:
-          name: ప్రాథమిక
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">మంజూరు చేసిన</a> అన్ని ఆవశ్యక సామాజిక చర్యలు
-        member:
-          name: సభ్యుడు
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">మంజూరు చేసిన </a> ఆహ్వానాలు
-        regular:
-          name: రెగ్యులరు
-        leader:
-          name: లీడరు
-        welcome:
-          name: సుస్వాగతం
-          description: ఒక ఇష్టాన్ని అందుకున్నారు
-        autobiographer:
-          name: ఆత్మకధావాది
-          description: వినియోగదారు నింపిన <a href="/my/preferences">ఫ్రొపైల్ </a> సమాచారం
-        anniversary:
-          name: వార్షికోత్సవం
-          description: ఒక సంవత్సరం నుండి చురుకైన సభ్యుడు, కనీసం ఒకసారి టపా చేశాడు
-        nice_post:
-          name: మంచి టపా
-          description: ఒక టపా 10 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        good_post:
-          name: చాలా మంచి టపా
-          description: ఒక టపా 25 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        great_post:
-          name: బహుమంచి టపా
-          description: ఒక టపా 50 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        nice_topic:
-          name: మంచి విషయం
-          description: ఒక విషయం 10 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        good_topic:
-          name: చాలా మంచి విషయం
-          description: ఒక విషయం 25 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        great_topic:
-          name: బహుమంచి విషయం
-          description: ఒక విషయం 50 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        nice_share:
-          name: మంచి పంపకం
-          description: ఒక టపాను 25మంది సభ్యులతో పంచుకున్నారు
-        good_share:
-          name: చాలామంచి పంపకం
-          description: ఒక టపాను 300మంది సభ్యులతో పంచుకున్నారు
-        great_share:
-          name: బహుమంచి పంపకం
-          description: ఒక టపాను 1000 మంది సభ్యులతో పంచుకున్నారు
-        first_like:
-          name: తొలి ఇష్టం
-          description: టపాను ఇష్టపడ్డారు
-        first_flag:
-          name: తొలి కేతనం
-          description: ఒక టపాను కేతనించారు
-        first_share:
-          name: తొలి పంపకం
-          description: ఒక టపాను పంచారు
-        first_link:
-          name: తొలి లంకె
-          description: వేరొక విషయానికి అంతర్గతంగా లంకె కలిపారు
-        first_quote:
-          name: తొలి కోట్
-          description: ఒక సభ్యుడిని కోట్ చేసారు
-        read_guidelines:
-          name: మార్గదర్శకాలు చదువు
-          description: <a href="/guidelines">కమ్యునిటీ మార్గదర్శకాలు</a> చదవండి
-        reader:
-          name: చదువరి
-          description: 100 టపాల కన్నా ఎక్కువ ఉన్న అంశంలో ప్రతి టపా చదవండి

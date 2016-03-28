@@ -838,17 +838,9 @@ vi:
     tl2_requires_likes_received: "Số like một thành viên phải nhận được trước khi được thăng lên bậc tin cậy cấp 2."
     tl2_requires_likes_given: "Số like một thành viên phải thực hiện trước khi được thăng lên bậc tin cậy cấp 2."
     tl2_requires_topic_reply_count: "Số chủ đề thành viên phải trả lời trước khi được thăng lên bậc tin cậy cấp 2."
-    tl3_time_period: "Khoảng thời gian độ tin cậy cấp 3 yêu cầu"
-    tl3_requires_days_visited: "Số ngày tối thiểu thành viên cần phải ghé thăm site trong khoảng 100 ngày gần đây trước khi được thăng lên độ tin cậy cấp 3. Đặt cao hơn khoảng thời gian tl3 để vô hiệu hóa thăng hạng tl3. (0 hoặc cao hơn)"
-    tl3_requires_topics_replied_to: "Số tối thiểu chủ đề thành viên phải trả lời trong 100 ngày gần đây trước khi được thăng lên bậc tin cậy cấp 3. (0 hoặc cao hơn)"
-    tl3_requires_topics_viewed: "Số phần trăm chủ đề được tạo trong khoảng 100 ngày gần đây mà thành viên cần phải xem trước khi được thăng lên độ tin cậy cấp 3. (từ 0 đến 100)"
-    tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong khoảng 100 ngày gần đây mà thành viên cần xem để được thăng lên độ tin cậy cấp 3. (từ 0 tới 100)"
     tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy cấp 3."
     tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy cấp 3."
-    tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn x bài viết bị đánh dấu bởi x thành viên khác trong khoảng 100 ngày gần đây để được thăng lên độ tin cậy cấp 3, với x là giá trị thiết lập. (0 hoặc cao hơn)"
     tl3_promotion_min_duration: "Số ngày tối thiểu chương trình thăng hạng cấp 3 kéo dài trước khi thành viên có thể bị giáng cấp xuống độ tin cậy cấp 2."
-    tl3_requires_likes_given: "Số like tối thiểu mà thành viên phải thực hiện trong khoảng 100 ngày gần đây để được thăng lên độ tin cậy cấp 3."
-    tl3_requires_likes_received: "Số like tối thiểu mà thành viên phải nhận được trong khoảng 100 ngày gần đây để được thăng lên độ tin cậy cấp 3."
     tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy cấp 3."
     min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
     min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
@@ -921,11 +913,6 @@ vi:
       category: 'Thư mục'
       topic: 'Kết quả'
       user: 'Thành viên'
-  sso:
-    not_found: "Không thể tìm hoặc tạo tài khoản, vui lòng liên hệ quản trị trang"
-    account_not_approved: "Tài khoản đang chờ duyệt, bạn sẽ nhận được email thông báo khi được duyệt"
-    unknown_error: "Có lỗi khi cập nhật thông tin, liên hệ quản trị trang"
-    timeout_expired: "Tài khoản đăng nhập bị quá thời gian, vui lòng đăng nhập lại"
   original_poster: "Người viết gốc"
   most_posts: "Bài viết Phỏ biến"
   redirected_to_top_reasons:
@@ -1161,16 +1148,6 @@ vi:
     title: "Điều khoản Dịch vụ"
   privacy_topic:
     title: "Chính sách Riêng tư"
-  badges:
-    long_descriptions:
-      good_post: |
-        Huy hiệu này được trao khi câu trả lời nhận được 24 lượt thích. Làm tốt lắm!
-      good_topic: |
-        Huy hiệu này được trao khi bài viết nhận được 25 lượt thích. Làm tốt lắm!
-      great_post: |
-        Huy hiệu này được trao khi bài viết nhận được 50 lượt thích. Wow!
-      great_topic: |
-        Huy hiệu này được trao khi câu trả lời nhận được 50 lượt thích. Wow!
   admin_login:
     success: "Gửi mail lỗi"
     error: "Lỗi!"

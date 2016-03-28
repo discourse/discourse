@@ -166,6 +166,8 @@ da:
     more: "Mere"
     less: "Mindre"
     never: "aldrig"
+    every_30_minutes: "hvert 30. minut"
+    every_hour: "hver time"
     daily: "dagligt"
     weekly: "ugentligt"
     every_two_weeks: "hver anden uge"
@@ -312,7 +314,10 @@ da:
         one: "gruppe"
         other: "grupper"
       members: "Medlemmer"
+      topics: "Emner"
       posts: "Indlæg"
+      mentions: "Omtaler"
+      messages: "Beskeder"
       alias_levels:
         title: "Hvem kan sende beskeder til og @nævne denne gruppe?"
         nobody: "Ingen"
@@ -554,12 +559,26 @@ da:
         title: "Brugerkort-Badge"
       website: "Site"
       email_settings: "E-mail"
+      like_notification_frequency:
+        title: "Giv besked når liked"
+        always: "Altid"
+        first_time_and_daily: "Første gang et indlæg likes og dagligt"
+        first_time: "Første gang et indlæg likes"
+        never: "Aldrig"
+      email_previous_replies:
+        title: "Inkluder tidligere svar i bunden af emails"
+        unless_emailed: "medmindre tidligere sendt"
+        always: "altid"
+        never: "aldrig"
       email_digests:
         title: "Når jeg ikke besøger her, send mig en email med nyheder."
+        every_30_minutes: "hvert 30. minut"
+        every_hour: "hver time"
         daily: "dagligt"
         every_three_days: "hver tredje dag"
         weekly: "ugenligt"
         every_two_weeks: "hver anden uge"
+      include_tl0_in_digests: "Inkluder indlæg fra nye brugere i opsummerings-mails"
       email_direct: "Send mig en email når nogen citerer mig, svarer på mit indlæg, nævner mit @brugernavn eller inviterer mig til et emne"
       email_private_messages: "Send mig en email når nogen sender mig en besked"
       email_always: "Send mig email-notifikationer, selv når jeg er aktiv på websitet"
@@ -1354,6 +1373,8 @@ da:
           bookmark: "Undo bookmark"
           like: "Undo like"
           vote: "Undo vote"
+        people:
+          vote: "stemte for dette"
         by_you:
           off_topic: "Du flagede dette som off-topic"
           spam: "Du flagede dette som spam"
@@ -2563,10 +2584,7 @@ da:
       earned_n_times:
         one: "Fortjente dette badge 1 gang"
         other: "Fortjente dette badge %{count} gange."
-      more_with_badge: "Andre med dette badge"
       title: Badges
-      allow_title: "kan bruges som titel"
-      multiple_grant: "kan gives flere gange"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"
@@ -2589,97 +2607,6 @@ da:
           name: Andre
         posting:
           name: Indlæg
-      badge:
-        editor:
-          name: Redigering
-          description: Første indlæg redigering
-        basic_user:
-          name: Basic
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Givet</a> alle vigtige fællesskab funktioner
-        member:
-          name: Medlem
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Givet</a> invitationer
-        regular:
-          name: Stamgæst
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Givet</a> re-kategoristering, omdøbning, følge links og loungen
-        leader:
-          name: Leder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Givet</a> global redigering, fastgøring, lukning, arkivering, del og sammensæt
-        welcome:
-          name: Velkommen
-          description: Modtaget et like
-        autobiographer:
-          name: Selvbiografi
-          description: Har udfyldt sin <a href="/my/preferences">profil</a> information
-        anniversary:
-          name: Jubilæum
-          description: Aktivt medlem i et år, som har skrevet mindst en gang
-        nice_post:
-          name: Fint indlæg
-          description: Har modtaget 10 "likes" på et indlæg. Denne badge kan modtages flere gange.
-        good_post:
-          name: Godt indlæg
-          description: Har modtaget 25 "likes" på et indlæg. Denne badge kan modtages flere gange.
-        great_post:
-          name: Rigtig godt indlæg
-          description: Har modtaget 50 "likes" på et indlæg. Denne badge kan modtages flere gange.
-        nice_topic:
-          name: Godt emne
-          description: Har modtaget 10 "likes" på et emne. Denne badge kan modtages flere gange.
-        good_topic:
-          name: Godt emne
-          description: Har modtaget 25 "likes" på et emne. Denne badge kan modtages flere gange.
-        great_topic:
-          name: Fantastisk emne
-          description: Har modtaget 50 "likes" på et emne. Denne badge kan modtages flere gange.
-        nice_share:
-          name: God deling
-          description: Delt et emne med 25 unikke besøgende
-        good_share:
-          name: God deling
-          description: Delt et indlæg med 300 unikke besøgende
-        great_share:
-          name: Fantastisk deling
-          description: Delt et indlæg med 1000 unikke besøgende
-        first_like:
-          name: Første like
-          description: Har liked et indlæg
-        first_flag:
-          name: Første markering
-          description: Markeret et indlæg
-        promoter:
-          name: Promoter
-          description: Inviterede en bruger
-        campaigner:
-          name: Kampagnechef
-          description: Inviterede 3 brugere (tillidsniveau 1)
-        champion:
-          name: Mester
-          description: Inviterede 5 medlemmer (tillidsniveau 2)
-        first_share:
-          name: Første deling
-          description: Delt et indlæg
-        first_link:
-          name: Første link
-          description: Internt link til et andet emne tilføjet
-        first_quote:
-          name: Første citering
-          description: Citeret en bruger
-        read_guidelines:
-          name: Læst retningslinierne
-          description: Har læst <a href="/guidelines">retningslinierne for forummet</a>
-        reader:
-          name: Læser
-          description: Har læst hver eneste indlæg i et emne med mere end 100 posts
-        popular_link:
-          name: Populært link
-          description: Postede et eksternt link med mindst 50 klik
-        hot_link:
-          name: Hot link
-          description: Postede et eksternt link med mindst 300 klik
-        famous_link:
-          name: Berømt link
-          description: Postede et eksternt link med mindst 1000 klik
     google_search: |
       <h3>Søg med Google</h3>
       <p>

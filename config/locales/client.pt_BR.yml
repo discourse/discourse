@@ -2512,8 +2512,6 @@ pt_BR:
         mark_watching: '<b>m</b>, <b>w</b> Acompanhar tópico'
     badges:
       title: Emblemas
-      allow_title: "pode  ser usado como um título"
-      multiple_grant: "pode ser recebido várias vezes"
       badge_count:
         one: "1 Emblema"
         other: "%{count} Emblemas"
@@ -2536,97 +2534,6 @@ pt_BR:
           name: Outro
         posting:
           name: Postando
-      badge:
-        editor:
-          name: Editor
-          description: Primeira edição da resposta
-        basic_user:
-          name: Básico
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Concedido</a> todas as funções essenciais da comunidade
-        member:
-          name: Membro
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Concedido</a> envio de convites
-        regular:
-          name: Regular
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concedido</a> recategorizar, renomear, seguir links e sala de lazer
-        leader:
-          name: Líder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concedido</a> edição global, fixar, fechar, arquivar, dividir e mesclar
-        welcome:
-          name: Bem-Vindo
-          description: Recebeu uma curtida
-        autobiographer:
-          name: Autobiógrafo
-          description: Preencher informações do <a href="/my/preferences">perfil</a>
-        anniversary:
-          name: Aniversário
-          description: Membro ativo por um ano, postou ao menos uma vez
-        nice_post:
-          name: Post Legal
-          description: Recebeu 10 curtidas em uma resposta. Esse emblema pode ser concedido várias vezes.
-        good_post:
-          name: Bom Post
-          description: Recebeu 25 curtidas em uma resposta. Esse emblema pode ser concedido várias vezes.
-        great_post:
-          name: Ótimo Post
-          description: Recebeu 50 curtidas em uma resposta. Esse emblema pode ser concedido várias vezes.
-        nice_topic:
-          name: Tópico Interessante
-          description: Recebeu 10 curtidas em um tópico. Esse emblema pode ser concedido várias vezes.
-        good_topic:
-          name: Tópico Bom
-          description: Recebeu 25 curtidas em um tópico. Esse emblema pode ser concedido várias vezes.
-        great_topic:
-          name: Tópico Excelente
-          description: Recebeu 50 curtidas em um tópico. Esse emblema pode ser concedido várias vezes.
-        nice_share:
-          name: Compartilhamento Interessante
-          description: Compartilhou uma postagem com 25 visitas únicas
-        good_share:
-          name: Compartilhamento Bom
-          description: Compartilhou uma postagem com 300 visitas únicas
-        great_share:
-          name: Compartilhamento Excelente
-          description: Compartilhou uma postagem com 1000 visitas únicas
-        first_like:
-          name: Primeiro Like
-          description: Curtiu uma resposta
-        first_flag:
-          name: Primeira Marcação
-          description: Sinalizar uma resposta
-        promoter:
-          name: Promotor
-          description: Convidou um usuário
-        campaigner:
-          name: Veterano
-          description: Convidou 3 usuários básicos (nível de confiança 1)
-        champion:
-          name: Campeão
-          description: Convidou 5 usuários básicos (nível de confiança 2)
-        first_share:
-          name: Primeiro Compartilhamento
-          description: Compartilhar uma resposta
-        first_link:
-          name: Primeiro Link
-          description: Adicionar um link interno em outro tópico
-        first_quote:
-          name: Primeira citação
-          description: Citado um usuário
-        read_guidelines:
-          name: Ler as regras
-          description: Leia as <a href="/guidelines">regras da comunidade</a>
-        reader:
-          name: Leitor
-          description: Leia cada resposta em um tópico com mais de 100 respostas
-        popular_link:
-          name: Link Popular
-          description: Postou um link externo com pelo menos 50 cliques
-        hot_link:
-          name: Link Quente
-          description: Postou um link externo com pelo menos 300 cliques
-        famous_link:
-          name: Link Famoso
-          description: Postou um link externo com pelo menos 1000 cliques
     google_search: |
       <h3>Buscar com o Google</h3>
       <p>
