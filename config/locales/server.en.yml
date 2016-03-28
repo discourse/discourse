@@ -2367,7 +2367,7 @@ en:
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
 
   avatar:
-    missing: "Sorry, but the avatar you have selected is not present on the server. Can you try uploading it again?"
+    missing: "Sorry, we can't find any avatar associated with that email address. Can you try uploading it again?"
 
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
