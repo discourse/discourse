@@ -111,6 +111,7 @@ Discourse::Application.routes.draw do
     end
     get "users/:id.json" => 'users#show', defaults: {format: 'json'}
     get 'users/:id/:username' => 'users#show'
+    get 'users/:id/:username/badges' => 'users#show'
 
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
