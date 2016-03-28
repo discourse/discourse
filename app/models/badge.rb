@@ -379,7 +379,7 @@ SQL
 
   def display_name
     if self.system?
-      key = "admin_js.badges.badge.#{i18n_name}.name"
+      key = "badges.#{i18n_name}.name"
       I18n.t(key, default: self.name)
     else
       self.name
