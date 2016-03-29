@@ -233,7 +233,7 @@ GEM
       pry (>= 0.9.10, < 0.11.0)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
-    puma (2.15.3)
+    puma (3.2.0)
     r2 (0.2.6)
     rack (1.6.4)
     rack-mini-profiler (0.9.9.2)
