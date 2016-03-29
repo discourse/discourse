@@ -451,6 +451,16 @@ class Post < ActiveRecord::Base
     PostCreator.before_create_tasks(self)
   end
 
+  def self.estimate_posts_per_day
+    val = $redis.get("estimated_posts_per_day")
+    return val.to_i if val
+
+    posts_per_day = Topic.listable_topics.secured.joins(:posts).merge(Post.created_since(30.days.ago)).count / 30
+    $redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
+    posts_per_day
+
+  end
+
   # This calculates the geometric mean of the post timings and stores it along with
   # each post.
   def self.calculate_avg_time(min_topic_age=nil)
