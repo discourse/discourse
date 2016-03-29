@@ -3,6 +3,7 @@
 database:
   type: MySQL # currently only MySQL is supported - more to come soon
   host: localhost
+  port: 3306
   username: root
   password:
   schema: phpbb
