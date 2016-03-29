@@ -374,6 +374,13 @@ SQL
   end
 
   def self.ensure_consistency!
+    exec_sql <<SQL
+    DELETE FROM user_badges
+    USING user_badges ub
+    LEFT JOIN users u ON u.id = ub.user_id
+    WHERE u.id IS NULL
+SQL
+
     Badge.find_each(&:reset_grant_count!)
   end
 
