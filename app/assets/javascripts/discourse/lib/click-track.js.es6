@@ -6,7 +6,7 @@ export function isValidLink($link) {
 };
 
 export default {
-  trackClick(e) {
+  trackClick(e, opts = {}) {
     // cancel click if triggered as part of selection.
     if (Discourse.Utilities.selectedText() !== "") { return false; }
 
@@ -15,8 +15,8 @@ export default {
 
     var href = $link.attr('href') || $link.data('href'),
         $article = $link.closest('article'),
-        postId = $article.data('post-id'),
-        topicId = $('#topic').data('topic-id'),
+        postId = $article.data('post-id') || opts.postId,
+        topicId = $('#topic').data('topic-id') || opts.topicId,
         userId = $link.data('user-id');
 
     if (!href || href.trim().length === 0) { return; }
