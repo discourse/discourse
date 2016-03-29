@@ -593,8 +593,8 @@ de:
         every_three_days: "alle drei Tage"
         weekly: "wöchentlich"
         every_two_weeks: "jede zweite Woche"
-      include_tl0_in_digests: "Füge Beiträge von neuen Benutzern in Zusammenfassungs-E-Mails an"
-      email_in_reply_to: "füge "
+      include_tl0_in_digests: "Beiträge von neuen Benutzern in E-Mail mit Neuigkeiten einfügen"
+      email_in_reply_to: "Einen Auszug aus dem beantworteten Beitrag in E-Mails einfügen."
       email_direct: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet, meinen @Namen erwähnt oder mich zu einem Thema einlädt."
       email_private_messages: "Sende mir eine E-Mail, wenn mir jemand eine Nachricht sendet."
       email_always: "Benachrichtige mich per E-Mail auch während ich auf dieser Website aktiv bin"
@@ -951,7 +951,7 @@ de:
         moved_post: "Dein Beitrag wurde verschoben von"
         linked: "Link zu deinem Beitrag"
         granted_badge: "Abzeichen erhalten"
-        group_message_summary: "Nachrichten in dem Gruppenpostfach"
+        group_message_summary: "Nachrichten im Gruppenpostfach"
       popup:
         mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
         group_mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
@@ -996,7 +996,7 @@ de:
         category: "Kategorie „{{category}}“ durchsuchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
-    hamburger_menu: "wechsel zu einem anderen Beitragsliste oder Kategorie"
+    hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     new_item: "neu"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
@@ -1850,9 +1850,9 @@ de:
         add: "Hinzufügen"
         add_members: "Mitglieder hinzufügen"
         custom: "Benutzerdefiniert"
-        bulk_complete: "Der Benutzer wurde der Gruppe hinzugefügt."
+        bulk_complete: "Die Benutzer wurden der Gruppe hinzugefügt."
         bulk: "Mehrere der Gruppe hinzufügen"
-        bulk_paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein, jeweils pro Zeile:"
+        bulk_paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein (ein Eintrag je Zeile):"
         bulk_select: "(wähle eine Gruppe aus)"
         automatic: "Automatisch"
         automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
@@ -2062,7 +2062,7 @@ de:
         send_test: "Test-E-Mail senden"
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
-        preview_digest_desc: "Vorschau der Zusammenfassung der letzten Aktivitäten, die als E-Mail an inaktive Nutzer gesendet wird."
+        preview_digest_desc: "Vorschau der Neuigkeiten, die als E-Mail an inaktive Nutzer gesendet werden."
         refresh: "Aktualisieren"
         format: "Format"
         html: "HTML"
@@ -2330,7 +2330,7 @@ de:
         unblock_failed: 'Beim Aufheben der Blockierung des Benutzers ist ein Fehler aufgetreten.'
         block_failed: 'Beim Blocken des Benutzers ist ein Fehler aufgetreten.'
         block_confirm: 'Bust du sicher, dass du diesen Benutzer blockieren willst? Sie werden keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen.'
-        block_accept: 'Ja, den Nutzer blockieren.'
+        block_accept: 'Ja, diesen Benutzer blockieren.'
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."

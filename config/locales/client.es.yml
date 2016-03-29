@@ -593,6 +593,7 @@ es:
         every_three_days: "cada tres días"
         weekly: "semanalmente"
         every_two_weeks: "cada dos semanas"
+      include_tl0_in_digests: "Incluir posts de nuevos usuarios en los resúmenes por email"
       email_in_reply_to: "Incluir un extracto del post al que se responde en los emails"
       email_direct: "Envíame un email cuando alguien me cite, responda a mis posts, mencione mi @usuario o me invite a un tema"
       email_private_messages: "Notifícame por email cuando alguien me envíe un mensaje"
@@ -724,6 +725,12 @@ es:
     too_few_topics_and_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: La tasa actual del <a href='%{url}' target='_blank'>%{rate}</a> ha alcanzado el límite establecido en las opciones del sitio en el %{siteSettingRate}."
+      exceeded: "%{timestamp}: La tasa actual del <a href='%{url}' target='_blank'>%{rate}</a> ha excedido el límite establecido en las opciones del sitio en el %{siteSettingRate}."
+      rate:
+        one: "1 error/%{duration}"
+        other: "%{count} errores/%{duration}"
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -1357,6 +1364,7 @@ es:
         about: "este post es tipo wiki"
       archetypes:
         save: 'Guardar opciones'
+      few_likes_left: "¡Gracias por compartir tu afecto! Te quedan solo unos pocos me gusta para hoy."
       controls:
         reply: "componer una respuesta para este post"
         like: "me gusta este post"
@@ -2480,6 +2488,7 @@ es:
         badge: Distintivo
         display_name: Nombre a mostrar
         description: Descripción
+        long_description: Descripción completa
         badge_type: Tipo de distintivo
         badge_grouping: Grupo
         badge_groupings:
@@ -2642,7 +2651,11 @@ es:
       earned_n_times:
         one: "Ganó este distintivo 1 vez"
         other: "Ganó este distintivo %{count} veces"
+      granted_on: "Concedido el %{date}"
+      others_count: "Otras personas con este distintivo (%{count})"
       title: Distintivos
+      allow_title: "título disponible"
+      multiple_grant: "puede ser concedido varias veces"
       badge_count:
         one: "1 distintivo"
         other: "%{count} distintivos"

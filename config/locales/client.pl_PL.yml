@@ -1443,6 +1443,8 @@ pl_PL:
           notify_moderators: "Powiadomiono moderatorów"
           notify_user: "Wysłano wiadomość"
           bookmark: "dodaj do zakładek"
+          like: "polubiło to"
+          vote: "zagłosowało"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
