@@ -43,5 +43,18 @@ describe Badge do
     expect(badge[:long_description]).to eq("testing it")
   end
 
+  it 'can ensure consistency' do
+    b = Badge.first
+    b.grant_count = 100
+    b.save
+
+    UserBadge.create!(user_id: -100, badge_id: b.id, granted_at: 1.minute.ago, granted_by_id: -1)
+
+    Badge.ensure_consistency!
+
+    b.reload
+    expect(b.grant_count).to eq(0)
+  end
+
 end
 
