@@ -111,7 +111,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return Discourse.InputValidation.create({
         ok: true,
         reason: I18n.t('user.email.authenticated', {
-          provider: this.get('authOptions.auth_provider')
+          provider: this.authProviderDisplayName(this.get('authOptions.auth_provider'))
         })
       });
     }
@@ -132,6 +132,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
   emailValidated: function() {
     return this.get('authOptions.email') === this.get("accountEmail") && this.get('authOptions.email_valid');
   }.property('accountEmail', 'authOptions.email', 'authOptions.email_valid'),
+
+  authProviderDisplayName(provider) {
+    switch(provider) {
+      case "Google_oauth2": return "Google";
+      default: return provider;
+    }
+  },
 
   prefillUsername: function() {
     if (this.get('prefilledUsername')) {
