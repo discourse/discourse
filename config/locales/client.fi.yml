@@ -593,6 +593,7 @@ fi:
         every_three_days: "joka kolmas päivä"
         weekly: "viikottain"
         every_two_weeks: "joka toinen viikko"
+      include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostitiivistelmiin oletuksena."
       email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
       email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni, tai kutsuu minut viestiketjuun"
       email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
@@ -1357,6 +1358,7 @@ fi:
         about: "tämä viesti on wiki"
       archetypes:
         save: 'Tallennusasetukset'
+      few_likes_left: "Kiitos hyvän mielen levittämisestä! Sinulla on enää muutama tykkäys jäljellä tälle päivälle."
       controls:
         reply: "aloita vastaamaan tähän viestiin"
         like: "tykkää viestistä"
@@ -2480,6 +2482,7 @@ fi:
         badge: Arvomerkki
         display_name: Nimi
         description: Kuvaus
+        long_description: Pitkä kuvaus
         badge_type: Arvomerkin tyyppi
         badge_grouping: Ryhmä
         badge_groupings:
@@ -2642,7 +2645,11 @@ fi:
       earned_n_times:
         one: "Ansaitsi tämän arvomerkin yhden kerran"
         other: "Ansaitsi tämän arvomerkin %{count} kertaa"
+      granted_on: "Myönnetty %{date}"
+      others_count: "Muita, joilla on tämä arvomerkki (%{count})"
       title: Arvomerkit
+      allow_title: "sallittu titteli"
+      multiple_grant: "myönnettävissä useaan kertaan"
       badge_count:
         one: "1 Arvomerkki"
         other: "%{count} Arvomerkkiä"
