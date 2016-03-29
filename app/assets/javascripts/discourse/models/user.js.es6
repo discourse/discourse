@@ -410,11 +410,13 @@ const User = RestModel.extend({
 
               summary.topics = summary.topic_ids.map(id => topicMap[id]);
 
-              summary.badges = summary.badges.map(ub => {
-                const badge = badgeMap[ub.badge_id];
-                badge.count = ub.count;
-                return badge;
-              });
+              if (summary.badges) {
+                summary.badges = summary.badges.map(ub => {
+                  const badge = badgeMap[ub.badge_id];
+                  badge.count = ub.count;
+                  return badge;
+                });
+              }
               return summary;
            });
   }

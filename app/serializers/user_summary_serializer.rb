@@ -15,4 +15,8 @@ class UserSummarySerializer < ApplicationSerializer
   attributes :likes_given, :likes_received, :posts_read_count,
              :days_visited, :topic_count, :post_count
 
+
+  def include_badges?
+    SiteSetting.enable_badges
+  end
 end
