@@ -10,16 +10,15 @@ module Onebox
       def to_html
         imgur_data = get_imgur_data
         return "<video width='#{imgur_data[:"player:width"]}' height='#{imgur_data[:"player:height"]}' controls autoplay loop><source src='#{imgur_data[:"player:stream"]}' type='video/mp4'><source src='#{imgur_data[:"player:stream"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"player:stream"]
+        return "<div class='onebox imgur-album'><a href='#{url}' target='_blank'><span class='outer-box'><span class='inner-box'><span class='album-title'>[Album] #{imgur_data[:title]}</span></span></span><img src='#{imgur_data[:image]}' alt='Imgur'></a></div>" if is_album?
         return "<a href='#{url}' target='_blank'><img src='#{imgur_data[:image]}' alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a>" if imgur_data[:image]
-        return "<div class='onebox imgur-album'><a href='#{url}' target='_blank'><span class='outer-box'><span class='inner-box'><span class='album-title'>[Album] #{imgur_data[:title]}</span></span></span><img src='#{imgur_data[:"image0:src"]}' alt='Imgur'></a></div>" if imgur_data[:"image0:src"]
         return nil
       end
 
       def placeholder_html
         imgur_data = get_imgur_data
         return "<video width='#{imgur_data[:"player:width"]}' height='#{imgur_data[:"player:height"]}' controls autoplay loop><source src='#{imgur_data[:"player:stream"]}' type='video/mp4'><source src='#{imgur_data[:"player:stream"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"player:stream"]
-        return "<img src='#{imgur_data[:image]}' alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'>" if imgur_data[:image]
-        return "<img src='#{imgur_data[:"image0:src"]}' alt='Imgur'>" if imgur_data[:"image0:src"]
+        return "<img src='#{imgur_data[:image]}' alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'>"
         return nil
       end
 
@@ -36,6 +35,12 @@ module Onebox
           end
         end
         return imgur_data
+      end
+
+      def is_album?
+        oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("http://api.imgur.com/oembed.json?url=#{url}").body))
+        imgur_data_id = Nokogiri::HTML(oembed_data[:html]).xpath("//blockquote").attr("data-id")
+        return !!(imgur_data_id.to_s =~ /a\//)
       end
     end
   end
