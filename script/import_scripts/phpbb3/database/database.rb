@@ -34,6 +34,7 @@ module ImportScripts::PhpBB3
     def create_database_client
       Mysql2::Client.new(
         host: @database_settings.host,
+        port: @database_settings.port,
         username: @database_settings.username,
         password: @database_settings.password,
         database: @database_settings.schema
