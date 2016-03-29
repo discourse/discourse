@@ -1,21 +1,36 @@
-languages:
-   Ruby: true
-   JavaScript: true
-   Python: false
-   PHP: false
-
+---
+engines:
+  brakeman:
+    enabled: true
+  bundler-audit:
+    enabled: true
+  csslint:
+    enabled: true
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  rubocop:
+    enabled: true
+ratings:
+  paths:
+  - Gemfile.lock
+  - "**.erb"
+  - "**.haml"
+  - "**.rb"
+  - "**.rhtml"
+  - "**.slim"
+  - "**.css"
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+  - "**.py"
 exclude_paths:
- - "app/assets/javascripts/defer/*"
- - "app/assets/javascripts/ember-addons/*"
- - "lib/autospec/*"
- - "lib/es6_module_transpiler/*"
- - "lib/highlight_js/*"
- - "lib/import/*"
- - "lib/javascripts/*"
- - "lib/tasks/*"
- - "lib/*.js"
- - "public/*"
- - "script/*"
- - "spec/*"
- - "test/*"
- - "vendor/*"
+- config/
+- db/
+- script/
+- spec/
+- test/
+- vendor/
