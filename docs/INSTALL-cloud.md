@@ -65,8 +65,6 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
-- Set `LETSENCRYPT_ACCOUNT_EMAIL` to your email address  to register a free Lets Encrypt SSL certificate.
-
 <img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1" width="600px">
 
 Please be careful while editing and double check your work; YAML is _very_ sensitive to incorrect spacing and misplaced characters. After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
@@ -145,6 +143,8 @@ Options:
 # Add More Discourse Features
 
 Do you want...
+
+* Lets Encrypt support for your Discourse install [Configure Lets Encrypt] (https://meta.discourse.org/t/setting-up-lets-encrypt-cert-with-discourse-docker/40709)
 
 * Users to log in *only* via your pre-existing website's registration system? [Configure Single-Sign-On](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045).
 
