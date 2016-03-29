@@ -661,6 +661,10 @@ en:
       other_settings: "Other"
       categories_settings: "Categories"
 
+      enable_mailing_list:
+        one: "Are you sure you want to be emailed for every new post?"
+        other: "Are you sure you want to be emailed for every new post?<br><br>This will result in approximately <b>{{count}} emails</b> per day."
+
       new_topic_duration:
         label: "Consider topics new when"
         not_viewed: "I haven't viewed them yet"

@@ -186,7 +186,7 @@
       {{preference-checkbox labelKey="user.email_private_messages" checked=model.user_option.email_private_messages}}
       {{preference-checkbox labelKey="user.email_direct" checked=model.user_option.email_direct}}
       {{#unless siteSettings.disable_mailing_list_mode}}
-        {{preference-checkbox labelKey="user.mailing_list_mode" checked=model.user_option.mailing_list_mode}}
+        {{preference-checkbox warning="checkMailingList" labelKey="user.mailing_list_mode" checked=model.user_option.mailing_list_mode}}
       {{/unless}}
       {{preference-checkbox labelKey="user.email_always" checked=model.user_option.email_always}}
       {{#unless model.user_option.email_always}}
