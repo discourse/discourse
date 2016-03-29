@@ -39,6 +39,16 @@ describe RateLimiter do
       end
     end
 
+    context "remaining" do
+      it "updates correctly" do
+        expect(rate_limiter.remaining).to eq(2)
+        rate_limiter.performed!
+        expect(rate_limiter.remaining).to eq(1)
+        rate_limiter.performed!
+        expect(rate_limiter.remaining).to eq(0)
+      end
+    end
+
     context "multiple calls" do
       before do
         rate_limiter.performed!
@@ -47,6 +57,7 @@ describe RateLimiter do
 
       it "returns false for can_perform when the limit has been hit" do
         expect(rate_limiter.can_perform?).to eq(false)
+        expect(rate_limiter.remaining).to eq(0)
       end
 
       it "raises an error the third time called" do
@@ -54,10 +65,10 @@ describe RateLimiter do
       end
 
       context "as an admin/moderator" do
-
         it "returns true for can_perform if the user is an admin" do
           user.admin = true
           expect(rate_limiter.can_perform?).to eq(true)
+          expect(rate_limiter.remaining).to eq(2)
         end
 
         it "doesn't raise an error when an admin performs the task" do
@@ -74,8 +85,6 @@ describe RateLimiter do
           user.moderator = true
           expect { rate_limiter.performed! }.not_to raise_error
         end
-
-
       end
 
       context "rollback!" do
@@ -90,7 +99,6 @@ describe RateLimiter do
         it "raises no error now that there is room" do
           expect { rate_limiter.performed! }.not_to raise_error
         end
-
       end
 
     end

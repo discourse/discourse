@@ -652,10 +652,8 @@ sv:
     tl2_requires_likes_received: "Antalet gillningar en användare måste mottaga innan en befordran till förtroendenivå 2."
     tl2_requires_likes_given: "Antalet gillningar en användare måste ge innan en befordran till förtroendenivå 2."
     tl2_requires_topic_reply_count: "Antalet ämnen en användare måste svara på innan en befordran till förtroendenivå 2."
-    tl3_requires_topics_replied_to: "Minsta antalet ämnen en användare behöver ha svarat på de senaste 100 dagarna för att bli kvalificerad till en befordran till förtroendenivå 3. (0 eller högre)"
     tl3_requires_topics_viewed_all_time: "Minsta antalet ämnen en användare måste ha tittat på för att bli kvalificerad för förtroendenivå 3."
     tl3_requires_posts_read_all_time: "Minsta antalet inlägg en användare måste ha läst för att bli kvalificerad för förtroendenivå 3."
-    tl3_requires_likes_received: "Minsta antalet mottagna gillningar under de senaste 100 dagarna för att bli kvalificerad för en befordran till förtroendenivå 3."
     min_trust_to_create_topic: "Lägsta förtroendenivå som krävs för att skapa ett nytt ämne."
     newuser_max_links: "Antalet länkar en ny användare kan lägga till i ett inlägg."
     newuser_max_images: "Antalet bilder en ny användare kan lägga till i ett inlägg."
@@ -715,7 +713,6 @@ sv:
     moved_post: "%{display_username} flyttade ditt inlägg till %{link}"
     private_message: "%{display_username} har skickat ett meddelande till dig: %{link}"
     invited_to_private_message: "%{display_username} har bjudit in dig till en privat konversation: %{link}"
-    invited_to_topic: "%{display_username} har bjudit in dig till ett ämne: %{link}"
     invitee_accepted: "%{display_username} accepterade din inbjudan"
     linked: "%{display_username} länkade dig i %{link}"
     granted_badge: "Du förtjänade %{link}"
@@ -725,8 +722,6 @@ sv:
       category: 'Kategorier'
       topic: 'Resultat'
       user: 'Användare'
-  sso:
-    account_not_approved: "Konto inväntar godkännande. Du kommer att få ett e-postmeddelande när kontot väl är godkänt."
   original_poster: "Ursprunglig skribent"
   most_posts: "Mest inlägg"
   most_recent_poster: "Senaste skribent"
@@ -830,47 +825,8 @@ sv:
     subject_template: "[%{site_name}] Email Deliverability Test"
   new_version_mailer:
     subject_template: "[%{site_name}] Ny version av Discourse, uppdatering tillgänglig"
-    text_body_template: |
-      En ny version av [Discourse](http://www.discourse.org) finns tillgängligt.
-
-      Din version: %{installed_version}
-      Ny version: **%{new_version}**
-
-      Du kanske vill:
-
-      - Se vad som är nytt i [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Uppgradera från din webbläsare på [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Besöka [meta.discourse.org](http://meta.discourse.org) för nyheter, diskussioner och support för Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] uppdatering tillgänglig"
-    text_body_template: |
-      En ny version av [Discourse](http://www.discourse.org) finns tillgängligt.
-
-      Din version: %{installed_version}
-      Ny version: **%{new_version}**
-
-      Du kanske vill:
-
-      - Se vad som är nytt i [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Uppgradera från din webbläsare på  [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Besöka [meta.discourse.org](http://meta.discourse.org) för nyheter, diskussioner och support för Discourse.
-
-      ### Release notes
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      one: "Dessa flaggor skickades in för mer än 1 timme sedan."
-      other: "Dessa flaggor skickades in för mer än %{count} timmar sedan."
-    please_review: "Var god och granska dessa."
-    post_number: "inlägg"
-    subject_template:
-      one: "1 flagga väntar på att bli hanterad"
-      other: "%{count} flaggor väntar på att bli hanterade"
   flag_reasons:
     off_topic: "Ditt inlägg blev flaggat som **off-topic**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av titeln och det första inlägget."
     inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](/guidelines)."
@@ -954,8 +910,6 @@ sv:
     posted_by: "Postat av %{username} den %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} har bjudit in dig till en privat konversation '%{topic_title}'"
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} har bjudit in dig till ett ämne '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -987,18 +941,11 @@ sv:
       subject_template: "[%{site_name}] Logga in"
     account_created:
       subject_template: "[%{site_name}] Ditt nya konto"
-    confirm_new_email:
-      subject_template: "[%{site_name}] Confirm your new email address"
-      text_body_template: |
-        Confirm your new email address for %{site_name} by clicking on the following link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Du har blivit godkänd på %{site_name}!"
     signup:
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
   page_not_found:
-    title: "Sidan du sökte existerar inte eller är privat."
     popular_topics: "Populära"
     recent_topics: "Senaste"
     see_more: "Mer"

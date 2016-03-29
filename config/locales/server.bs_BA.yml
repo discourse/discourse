@@ -542,15 +542,9 @@ bs_BA:
     tl2_requires_likes_received: "How many likes a user must receive before promotion to trust level 2."
     tl2_requires_likes_given: "How many likes a user must cast before promotion to trust level 2."
     tl2_requires_topic_reply_count: "How many topics user must reply to before promotion to trust level 2."
-    tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to trust level 3. (0 or higher)"
-    tl3_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
-    tl3_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
     tl3_requires_topics_viewed_all_time: "The minimum total number of topics a user must have viewed to qualify for trust level 3."
     tl3_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for trust level 3."
-    tl3_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to trust level 3, where x is this setting's value. (0 or higher)"
     tl3_promotion_min_duration: "The minimum number of days that a promotion to trust level 3 lasts before a user can be demoted back to trust level 2."
-    tl3_requires_likes_given: "The minimum number of likes that must be given in the last 100 days to qualify for promotion to trust level 3."
-    tl3_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
@@ -761,56 +755,10 @@ bs_BA:
     subject_template: "Set password for your %{site_name} account"
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
-    text_body_template: |
-      This is a test email from
-
-      [**%{base_url}**][0]
-
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-
-      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
-
-      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
-
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
-      We hope you received this email deliverability test OK!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: http://www.mailjet.com/pricing
-
-      ----
-
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
-  flags_reminder:
-    please_review: "Please review them."
-    post_number: "post"
-    how_to_disable: 'Disable this email by changing the <pre>notify_about_flags_after</pre> setting to 0.'
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](/guidelines)."
@@ -942,12 +890,6 @@ bs_BA:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Account blocked"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
-
-        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "New user %{username} blocked due to community flags"
     spam_post_blocked:
@@ -978,10 +920,6 @@ bs_BA:
     posted_by: "Odgovoreno %{username} dana %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-      text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
-
-        Please visit this link to view the topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -1029,12 +967,6 @@ bs_BA:
 
         Kliknite na link ispod da kreirate šifru za vaš nalog:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Potvrdite vaš novi email"
-      text_body_template: |
-        Confirm your new email address for %{site_name} by clicking on the following link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
@@ -1061,7 +993,6 @@ bs_BA:
 
         Ako link iznad ne može da se klikne onda ga kopirajte i ubacite u vaš internet pretraživač.
   page_not_found:
-    title: "Strana koju tražite je nepostojeća ili privatna."
     popular_topics: "Popularne"
     recent_topics: "Nove"
     see_more: "Više"

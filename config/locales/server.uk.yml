@@ -383,9 +383,6 @@ uk:
     subject_template: "[%{site_name}] Тест доставки електронної пошти"
   new_version_mailer_with_notes:
     subject_template: "оновлення [%{site_name}] доступно"
-  flags_reminder:
-    please_review: "Будь ласка, перегляньте його."
-    post_number: "допис"
   system_messages:
     post_hidden:
       subject_template: "Допис приховано через скарги спільноти"
@@ -457,12 +454,6 @@ uk:
 
         Перейдіть за посиланням, щоб обрати пароль:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Підтвердіть свою електронну скриньку"
-      text_body_template: |
-        Підтвердіть свою нову електронну скриньку для сайта %{site_name}, перейшовши за посиланням:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Вас було схвалено на сайті %{site_name}!"
     signup:
@@ -474,7 +465,6 @@ uk:
 
         Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
   page_not_found:
-    title: "Сторінка, яку Ви запитали, не існує або є приватною."
     popular_topics: "Популярні"
     recent_topics: "Останні"
     see_more: "Більше"

@@ -75,6 +75,9 @@ class DiscourseRedis
     end
 
     def resolve
+
+      return @options unless @slave_options[:host]
+
       begin
         options = @options.dup
         options.delete(:connector)

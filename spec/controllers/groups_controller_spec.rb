@@ -228,4 +228,20 @@ describe GroupsController do
 
   end
 
+  describe '.posts_feed' do
+    it 'renders RSS' do
+      get :posts_feed, group_id: group.name, format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+  end
+
+  describe '.mentions_feed' do
+    it 'renders RSS' do
+      get :mentions_feed, group_id: group.name, format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+  end
+
 end

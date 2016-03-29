@@ -62,6 +62,9 @@ export default Ember.Controller.extend({
     markerElement.appendChild(document.createTextNode("\ufeff"));
 
     const isMobileDevice = this.site.isMobileDevice;
+    const capabilities = this.capabilities,
+          isIOS = capabilities.isIOS,
+          isAndroid = capabilities.isAndroid;
 
     // collapse the range at the beginning/end of the selection
     range.collapse(!isMobileDevice);
@@ -85,7 +88,7 @@ export default Ember.Controller.extend({
       let topOff = markerOffset.top;
       let leftOff = markerOffset.left;
 
-      if (isMobileDevice) {
+      if (isMobileDevice || isIOS || isAndroid) {
         topOff = topOff + 20;
         leftOff = Math.min(leftOff + 10, $(window).width() - $quoteButton.outerWidth());
       } else {

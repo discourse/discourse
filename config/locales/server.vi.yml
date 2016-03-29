@@ -151,7 +151,6 @@ vi:
       can_not_modify_automatic: "Bạn không thể sửa đổi một nhóm tự động"
       member_already_exist: "'%{username}' đã là thành viên của nhóm"
       invalid_domain: "'%{domain}' không phải là tên miền hợp lệ."
-      invalid_incoming_email: "'%{incoming_email}' không phải là một địa chỉ mail hợp lệ."
     default_names:
       everyone: "Mọi người"
       admins: "quản trị"
@@ -280,7 +279,6 @@ vi:
       uncategorized_parent: "Mục \"Chưa được phân loại\" không thể có một chuyên mục chính"
       self_parent: "Cha của chủ đề phụ không thể nào là chính nó"
       depth: "Bạn không thể để một chuyên mục con trong một chuyên mục con khác."
-      email_in_already_exist: "Địa chỉ thư đến '%{email_in}' đã được sử dụng cho danh mục '%{category_name}'"
     cannot_delete:
       uncategorized: "Không thể xoá mục Chưa phân loại"
       has_subcategories: "Không thể xoá chuyên mục này được vì nó có chuyên mục con."
@@ -732,7 +730,6 @@ vi:
     suppress_reply_directly_above: "Không hiện trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên trên bài viết này."
     suppress_reply_when_quoting: "Không hiện trả lời mở rộng cho bài viết chỉ trích dẫn trả lời."
     max_reply_history: "Số tối đa trả lời được mở rộng khi trả lời mở rộng"
-    experimental_reply_expansion: "Ẩn các trả lời trung gian khi mở rộng trả lời (thử nghiệm)"
     topics_per_period_in_top_summary: "Số lượng chủ đề top hiển thị trong tóm tắt các chủ đề top theo mặc định."
     topics_per_period_in_top_page: "Số lượng chủ đề top hiển thị khi click 'Xem thêm'."
     redirect_users_to_top_page: "Tự động chuyển thành viên mới và vắng mặt lâu ngày lên trên cùng trang."
@@ -841,17 +838,9 @@ vi:
     tl2_requires_likes_received: "Số like một thành viên phải nhận được trước khi được thăng lên bậc tin cậy cấp 2."
     tl2_requires_likes_given: "Số like một thành viên phải thực hiện trước khi được thăng lên bậc tin cậy cấp 2."
     tl2_requires_topic_reply_count: "Số chủ đề thành viên phải trả lời trước khi được thăng lên bậc tin cậy cấp 2."
-    tl3_time_period: "Khoảng thời gian độ tin cậy cấp 3 yêu cầu"
-    tl3_requires_days_visited: "Số ngày tối thiểu thành viên cần phải ghé thăm site trong khoảng 100 ngày gần đây trước khi được thăng lên độ tin cậy cấp 3. Đặt cao hơn khoảng thời gian tl3 để vô hiệu hóa thăng hạng tl3. (0 hoặc cao hơn)"
-    tl3_requires_topics_replied_to: "Số tối thiểu chủ đề thành viên phải trả lời trong 100 ngày gần đây trước khi được thăng lên bậc tin cậy cấp 3. (0 hoặc cao hơn)"
-    tl3_requires_topics_viewed: "Số phần trăm chủ đề được tạo trong khoảng 100 ngày gần đây mà thành viên cần phải xem trước khi được thăng lên độ tin cậy cấp 3. (từ 0 đến 100)"
-    tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong khoảng 100 ngày gần đây mà thành viên cần xem để được thăng lên độ tin cậy cấp 3. (từ 0 tới 100)"
     tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy cấp 3."
     tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy cấp 3."
-    tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn x bài viết bị đánh dấu bởi x thành viên khác trong khoảng 100 ngày gần đây để được thăng lên độ tin cậy cấp 3, với x là giá trị thiết lập. (0 hoặc cao hơn)"
     tl3_promotion_min_duration: "Số ngày tối thiểu chương trình thăng hạng cấp 3 kéo dài trước khi thành viên có thể bị giáng cấp xuống độ tin cậy cấp 2."
-    tl3_requires_likes_given: "Số like tối thiểu mà thành viên phải thực hiện trong khoảng 100 ngày gần đây để được thăng lên độ tin cậy cấp 3."
-    tl3_requires_likes_received: "Số like tối thiểu mà thành viên phải nhận được trong khoảng 100 ngày gần đây để được thăng lên độ tin cậy cấp 3."
     tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy cấp 3."
     min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
     min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
@@ -915,7 +904,6 @@ vi:
     moved_post: "%{display_username} di chuyển bài viết của bạn tới %{link}"
     private_message: "%{display_username} gửi bạn một tin nhắn: %{link}"
     invited_to_private_message: "%{display_username} mời bạn xem tin nhắn: %{link}"
-    invited_to_topic: "%{display_username} mời bạn xem chủ đề: %{link}"
     invitee_accepted: "%{display_username} chấp nhận lời mời của bạn"
     linked: "%{display_username} kết nối với bạn ở %{link}"
     granted_badge: "Bạn kiếm được %{link}"
@@ -925,11 +913,6 @@ vi:
       category: 'Thư mục'
       topic: 'Kết quả'
       user: 'Thành viên'
-  sso:
-    not_found: "Không thể tìm hoặc tạo tài khoản, vui lòng liên hệ quản trị trang"
-    account_not_approved: "Tài khoản đang chờ duyệt, bạn sẽ nhận được email thông báo khi được duyệt"
-    unknown_error: "Có lỗi khi cập nhật thông tin, liên hệ quản trị trang"
-    timeout_expired: "Tài khoản đăng nhập bị quá thời gian, vui lòng đăng nhập lại"
   original_poster: "Người viết gốc"
   most_posts: "Bài viết Phỏ biến"
   redirected_to_top_reasons:
@@ -973,8 +956,6 @@ vi:
       characters: "chỉ bao gồm số, ký tự và dấu gạch dưới"
       unique: "phải độc nhất"
       blank: "phải hiện hành"
-      must_begin_with_alphanumeric: "phải bắt đầu bằng ký tự hoặc số hoặc gạch dưới"
-      must_end_with_alphanumeric: "phải kết thúc bằng ký tự hoặc số hoặc gạch dưới"
     email:
       not_allowed: "không được chấp nhận từ nhà cung cấp email đó. Vui long sử dụng địa chỉ email khác."
       blocked: "không được chấp nhận."
@@ -1000,9 +981,6 @@ vi:
     subject_template: "[%{site_name}] Phiên bạn Discourse mới, cập nhật đã sẵn sàng"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] cập nhật đã sẵn sàng"
-  flags_reminder:
-    please_review: "Vui lòng xem lại chúng."
-    post_number: "bài đăng"
   flags_dispositions:
     agreed: "Cảm ơn đã cho chúng tôi biết. Chúng thôi đồng ý nó là một vấn đề và chúng tôi sẽ xem xét nó."
     agreed_and_deleted: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đồng ý đây là một vấn đề và chúng tôi đã xóa bài viết này."
@@ -1080,8 +1058,6 @@ vi:
     posted_by: "Đăng bởi %{{username} ngày %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} mời bạn trả lời thông điệp '%{topic_title}'"
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} mời bạn trả lời chủ đề '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -1111,14 +1087,11 @@ vi:
       subject_template: "[%{site_name}] Đăng nhập"
     account_created:
       subject_template: "[%{site_name}] Tài khoản mới"
-    confirm_new_email:
-      subject_template: "[%{site_name}] Xác nhận địa chỉ email mới của bạn"
     signup_after_approval:
       subject_template: "Bạn đã được kiểm duyệt ở %{site_name}!"
     signup:
       subject_template: "[%{site_name}] Xác nhận tài khoản mới của bạn"
   page_not_found:
-    title: "Trang bạn yêu cầu không tồn tại hoặc riêng tư."
     popular_topics: "Phổ biến"
     recent_topics: "Gân đây"
     see_more: "Thêm"
@@ -1175,16 +1148,6 @@ vi:
     title: "Điều khoản Dịch vụ"
   privacy_topic:
     title: "Chính sách Riêng tư"
-  badges:
-    long_descriptions:
-      good_post: |
-        Huy hiệu này được trao khi câu trả lời nhận được 24 lượt thích. Làm tốt lắm!
-      good_topic: |
-        Huy hiệu này được trao khi bài viết nhận được 25 lượt thích. Làm tốt lắm!
-      great_post: |
-        Huy hiệu này được trao khi bài viết nhận được 50 lượt thích. Wow!
-      great_topic: |
-        Huy hiệu này được trao khi câu trả lời nhận được 50 lượt thích. Wow!
   admin_login:
     success: "Gửi mail lỗi"
     error: "Lỗi!"

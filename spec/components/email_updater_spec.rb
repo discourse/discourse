@@ -5,6 +5,17 @@ describe EmailUpdater do
   let(:old_email) { 'old.email@example.com' }
   let(:new_email) { 'new.email@example.com' }
 
+  it "provides better error message when a staged user has the same email" do
+    Fabricate(:user, staged: true, email: new_email)
+
+    user = Fabricate(:user, email: old_email)
+    updater = EmailUpdater.new(user.guardian, user)
+    updater.change_to(new_email)
+
+    expect(updater.errors).to be_present
+    expect(updater.errors.messages[:base].first).to be I18n.t("change_email.error_staged")
+  end
+
   context 'as a regular user' do
     let(:user) { Fabricate(:user, email: old_email) }
     let(:updater) { EmailUpdater.new(user.guardian, user) }

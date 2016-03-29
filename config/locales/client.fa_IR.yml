@@ -420,7 +420,6 @@ fa_IR:
       muted_users: "بی صدا شده"
       muted_users_instructions: "متفوقف کردن تمام اطلاعیه ها از طرف این کاربران."
       muted_topics_link: "نمایش مباحث قطع شده"
-      automatically_unpin_topics: "از سنجاق خارج کردن خودکار مباحث وقتی که به پایین میرسید."
       staff_counters:
         flags_given: "پرچم گذاری های مفید"
         flagged_posts: "نوشته های پرچم گذاری شده"
@@ -830,7 +829,6 @@ fa_IR:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1401,7 +1399,6 @@ fa_IR:
           description: "شما هیچ وقت از مبحث های تازه در این دسته بندی ها مطلع نمیشوید, و آن ها در آخرین ها نمایش داده نمیشوند."
     flagging:
       title: 'تشکر برای کمک به نگه داشتن جامعه ما  بصورت مدنی !'
-      private_reminder: 'پرچم های خصوصی, <b>فقط</b> قابل مشاهده برای مدیران'
       action: 'پرچم‌گذاری نوشته'
       take_action: "اقدام"
       notify_action: 'پیام'
@@ -1413,7 +1410,6 @@ fa_IR:
       submit_tooltip: "ایجاد پرچم خصوصی"
       take_action_tooltip: "رسیدن سریع به آستانه پرچم، بلافاصله به جای انتظار برای پرچم انجمن"
       cant: "متأسفیم، در این زمان نمی‌توانید  روی این نوشته پرچم بگذارید."
-      notify_staff: 'مطلع کردن مدیران'
       formatted_name:
         off_topic: "آن موضوع قدیمی است"
         inappropriate: "این نامناسب است"
@@ -2410,8 +2406,6 @@ fa_IR:
         mark_watching: '<b>m</b>, <b>w</b> مشاهده موضوع'
     badges:
       title: مدال‌ها
-      allow_title: "می تواند برای یک عنوان استفاده شود"
-      multiple_grant: "می توان چندین بار اهدا کرد"
       badge_count:
         other: "%{count} مدال"
       more_badges:
@@ -2431,99 +2425,6 @@ fa_IR:
           name: دیگر
         posting:
           name: در حال نوشتن
-      badge:
-        editor:
-          name: ویرایشگر
-          description: نخستین ویرایش نوشته
-        basic_user:
-          name: اساسی
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">اعطا کردن</a> تمام عملکرد های ضروری برای انجمن
-        member:
-          name: عضو
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">اعطا کردن</a> دعوت نامه
-        regular:
-          name: منظم
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">a> دعوت نامه تغییر دسته بندی، تغییر نام دهید، به دنبال کردن لینک ها و سالن
-        leader:
-          name: رهبر
-          description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">اعطا کردن</a>
-
-            ویرایش سراسری، پین، بستن، بایگانی، تقسیم و ادغام'
-        welcome:
-          name: خوش آمدید
-          description: ' یک پسند دریافت شد'
-        autobiographer:
-          name: نویسندهء شرح حال
-          description: فیلد کاربر <a href="/my/preferences">نمایه </a>اطلاعات
-        anniversary:
-          name: سالگرد
-          description: عضو فعال به مدت یک سال،ارسال شده حداقل یک بار
-        nice_post:
-          name: نوشته‌ی دلپذیر
-          description: دریافت 10 پسند در یک نوشته. این نشان را می توان چندین بار اعطا کرد
-        good_post:
-          name: نوشته‌ی خوب
-          description: دریافت 25 پسند در یک نوشته. این نشان را می توان چندین بار اعطا کرد
-        great_post:
-          name: نوشته‌ی عالی
-          description: دریافت 50 پسند در یک نوشته. این نشان را می توان چندین بار اعطا کرد
-        nice_topic:
-          name: موضوع دلپذیر
-          description: دریافت 10 پسند در یک موضوع. این نشان را می توان چندین بار اعطا کرد
-        good_topic:
-          name: موضوع خوب
-          description: دریافت 25 پسند در یک موضوع. این نشان را می توان چندین بار اعطا کرد
-        great_topic:
-          name: موضوع عالی
-          description: دریافت 50 پسند در یک موضوع. این نشان را می توان چندین بار اعطا کرد
-        nice_share:
-          name: ا‌شتراک‌گذاری خوب
-          description: اشتراک گذاری نوشته با 25 بازدید کننده منحصر به فرد
-        good_share:
-          name: اشتراک‌گذاری خوب
-          description: اشتراک گذاری نوشته با 300 بازدید کننده منحصر به فرد
-        great_share:
-          name: اشتراک‌گذاری عالی
-          description: اشتراک گذاری نوشته با 1000 بازدید کننده منحصر به فرد
-        first_like:
-          name: نخستین پسند
-          description: نوشته ای را پسندید
-        first_flag:
-          name: پرچم نخست
-          description: نوشته را پرچم زد
-        promoter:
-          name: ترویج دهنده
-          description: دعوت کننده یک کاربر
-        campaigner:
-          name: فعال
-          description: دعوت کننده سه کاربر معمولی (سطح اعتماد ۱)
-        champion:
-          name: قهرمان
-          description: دعوت کننده پنج کاربر عضو (سطح اعتماد ۲)
-        first_share:
-          name: نخستین اشتراک‌گذاری
-          description: نوشته ای به اشتراک گذاشته شده
-        first_link:
-          name: پیوند نخست
-          description: لینک های داخلی اضافه شده به دیگر موضوعات
-        first_quote:
-          name: نقل‌قول نخست
-          description: نقل قول یک کاربر
-        read_guidelines:
-          name: خواندن دستورالعمل ها
-          description: خواندن <a href="/guidelines">دستورالعمل های انجمن</a>
-        reader:
-          name: خواننده
-          description: مطالعه تمام نوشته‌هایی در یک  موضوع  که بیش از 100 نوشته دارد.
-        popular_link:
-          name: پیوند محبوب
-          description: پیوندی به بیرون با حداقل 50 کلیک ارسال شد
-        hot_link:
-          name: پیوند داغ
-          description: پیوندی به بیرون با حداقل 300 کلیک ارسال شد
-        famous_link:
-          name: پیوند معروف
-          description: پیوندی به بیرون با حداقل 1000 کلیک ارسال شد
     google_search: |
       <h3>جستجو با گوگل</h3>
 

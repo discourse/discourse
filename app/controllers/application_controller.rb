@@ -100,7 +100,16 @@ class ApplicationController < ActionController::Base
 
   class PluginDisabled < StandardError; end
 
-  rescue_from Discourse::NotFound, PluginDisabled do
+  # Handles requests for giant IDs that throw pg exceptions
+  rescue_from RangeError do |e|
+    if e.message =~ /ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Integer/
+      rescue_discourse_actions(:not_found, 404)
+    else
+      raise e
+    end
+  end
+
+  rescue_from Discourse::NotFound, PluginDisabled  do
     rescue_discourse_actions(:not_found, 404)
   end
 

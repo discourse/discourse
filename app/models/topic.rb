@@ -314,10 +314,13 @@ class Topic < ActiveRecord::Base
               .joins("LEFT OUTER JOIN users ON users.id = topics.user_id")
               .where(closed: false, archived: false)
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
-              .where("COALESCE(users.trust_level, 0) > 0")
               .created_since(since)
               .listable_topics
               .includes(:category)
+
+    unless user.user_option.try(:include_tl0_in_digests)
+      topics = topics.where("COALESCE(users.trust_level, 0) > 0")
+    end
 
     if !!opts[:top_order]
       topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
@@ -336,6 +339,10 @@ class Topic < ActiveRecord::Base
 
     # Remove muted categories
     muted_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
+    if SiteSetting.digest_suppress_categories.present?
+      muted_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
+      muted_category_ids = muted_category_ids.uniq
+    end
     if muted_category_ids.present?
       topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
     end

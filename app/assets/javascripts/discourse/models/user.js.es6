@@ -168,7 +168,8 @@ const User = RestModel.extend({
             'digest_after_minutes',
             'new_topic_duration_minutes',
             'auto_track_topics_after_msecs',
-            'like_notification_frequency'
+            'like_notification_frequency',
+            'include_tl0_in_digests'
     ].forEach(s => {
       data[s] = this.get(`user_option.${s}`);
     });
@@ -409,11 +410,13 @@ const User = RestModel.extend({
 
               summary.topics = summary.topic_ids.map(id => topicMap[id]);
 
-              summary.badges = summary.badges.map(ub => {
-                const badge = badgeMap[ub.badge_id];
-                badge.count = ub.count;
-                return badge;
-              });
+              if (summary.badges) {
+                summary.badges = summary.badges.map(ub => {
+                  const badge = badgeMap[ub.badge_id];
+                  badge.count = ub.count;
+                  return badge;
+                });
+              }
               return summary;
            });
   }

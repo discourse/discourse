@@ -177,7 +177,6 @@ nl:
       can_not_modify_automatic: "Je kunt automatische groepen niet wijzigen"
       member_already_exist: "'%{username}' is al lid van deze groep."
       invalid_domain: "%{domain}' is geen geldig domein."
-      invalid_incoming_email: "%{incoming_email}' is geen geldig E-mail adres."
     default_names:
       everyone: "iedereen"
       admins: "admins"
@@ -310,8 +309,6 @@ nl:
       uncategorized_parent: "Ongecategoriseerd kan geen bovenliggende categorie hebben"
       self_parent: "Een categorie kan niet zijn eigen bovenliggende categorie zijn"
       depth: "Je kan een subcategorie niet onder een andere subcategorie plaatsen"
-      email_in_already_exist: "Inkomend e-mailadres '%{email_in}' is al in gebruik voor '%{category_name}' categorie."
-      invalid_email_in: "%{email_in}' is geen geldig E-mail adres."
     cannot_delete:
       uncategorized: "De categorie Ongecategoriseerd kan niet verwijderd worden"
       has_subcategories: "Deze categorie kan niet verwijderd worden, omdat deze subcategorieën bevat"
@@ -901,17 +898,9 @@ nl:
     tl2_requires_likes_received: "Hoeveel likes een lid moet ontvangen voordat deze naar trustlevel 2 gepromoveerd wordt."
     tl2_requires_likes_given: "Hoeveel likes een lid moet geven voordat deze naar trustlevel 2 gepromoveerd wordt."
     tl2_requires_topic_reply_count: "Op hoeveel topics een lid moet reageren voordat deze naar trustlevel 2 gepromoveerd wordt."
-    tl3_time_period: "Benodigde periode voor Vertrouwensniveau 3"
-    tl3_requires_days_visited: "Het minimum aantal dagen waarop een gebruiker de site in de afgelopen 100 dagen heeft bezocht om in aanmerking te komen voor promotie naar Vertrouwensniveau 3. Om promoties naar dit niveau uit te schakelen, kan je het aantal dagen hoger zetten dan de periode voor vertrouwensniveau 3."
-    tl3_requires_topics_replied_to: "Minimum aantal topics waarop een lid moet hebben gereageerd in de laatste 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3 (0 of hoger)"
-    tl3_requires_topics_viewed: "Het percentage van topics gemaakt in de afgelopen 100 dagen dat een lid bekeken moet hebben om in aanmerking te komen voor promotie naar trustlevel 3. (0 to 100)"
-    tl3_requires_posts_read: "Het percentage van berichten gemaakt in de afgelopen 100 dagen dat een lid bekeken moet hebben om in aanmerking te komen voor promotie naar trustlevel 3. (0 to 100)"
     tl3_requires_topics_viewed_all_time: "Het minimum totaal aantal topics dat een lid moet hebben bekeken om te kwalificeren voor trustlevel 3."
     tl3_requires_posts_read_all_time: "Het minimum totaal aantal berichten dat een lid moet hebben bekeken om te kwalificeren voor trustlevel 3."
-    tl3_requires_max_flagged: "Van leden moeten minder dan x berichten gemarkeerd zijn door x verschillende leden in de afgelopen 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3, waarbij x de waarde van deze instelling is. (0 of hoger)"
     tl3_promotion_min_duration: "Het minimum aantal dagen van de duur van een promotie naar trustlevel 3 voordat een lid kan worden gedegradeerd naar trustlevel 2."
-    tl3_requires_likes_given: "Het minimum aantal likes dat een lid moet hebben gegeven in de afgelopen 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3."
-    tl3_requires_likes_received: "Het minimum aantal likes dat een lid moet hebben gekregen in de afgelopen 100 dagen om in aanmerking te komen voor promotie naar trustlevel 3."
     tl3_links_no_follow: "rel=nofollow niet verwijderen van links geplaatst door leden met trustlevel 3."
     min_trust_to_create_topic: "Het minimale trust level dat nodig is om een topic te mogen maken."
     min_trust_to_edit_wiki_post: "Het minimale trust level dat nodig is om een bericht te wijzigen dat als wiki gemarkeerd is."
@@ -925,7 +914,6 @@ nl:
     max_users_notified_per_group_mention: "Maximum aantal gebruikers dat een notificatie kan krijgen als een groep genoemd wordt (boven dit aantal worden er geen notificaties verstuurd)."
     create_thumbnails: "Maak miniaturen en lightbox afbeeldingen die te groot zijn en niet in een post passen."
     email_time_window_mins: "Wacht (n) minuten met verzenden van notificaties, geef gebruikers de kans om hun berichten te bewerken en af te ronden."
-    private_email_time_window_seconds: "Wacht (n) minuten met het verzenden van e-mails met notificaties, om gebruikers de kans te geven om hun berichten te bewerken en af te ronden."
     email_posts_context: "Hoeveel voorgaande antwoorden bijvoegen als context in de notificatie e-mails."
     flush_timings_secs: "Hoe frequent we de timing data naar de server sturen, in seconden. "
     title_max_word_length: "De maximum toegestane woordlengte, in letters, in een topic titel."
@@ -1024,7 +1012,6 @@ nl:
     dominating_topic_minimum_percent: "Welk percentage van de berichten een gebruiker moet maken in een onderwerp voordat ze worden herinnerd aan het te veel domineren van een topic."
     daily_performance_report: "Analyseer elke dag NGINX logs en post een Alleen Voor Medewerkers topic met de details"
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie in de topiclijsten."
-    permalink_normalizations: "Pas de volgende reguliere expressie toe voordat permalinks worden gematched, bijvoorbeeld: /(\\/topic.*)\\?.*/\\1 zal queryreeksen verwijderen uit de onderwerp routes. Het formaat is regex+strings gebruik \\1 etc. voor toegang tot de resultaten."
     global_notice: "Laat een LET OP, BELANGRIJK-banner zien aan alle gebruikers. Laat leeg om niet te tonen (HTML is toegestaan)."
     disable_edit_notifications: "Schakelt bewerkingsnotificaties van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
     automatically_unpin_topics: "Automatisch ont-pinnen van topics als de gebruiker onderaan de pagina komt."
@@ -1109,11 +1096,6 @@ nl:
       category: 'Categorieën'
       topic: 'Resultaten'
       user: 'Leden'
-  sso:
-    not_found: "Kan het account niet vinden of aanmaken, neem contact op met site admin"
-    account_not_approved: "Account is in afwachting van goedkeuring, je ontvangt een e-mailbericht na goedkeuring."
-    unknown_error: "Fout bij informatie bijwerken, neem contact op met website admin"
-    timeout_expired: "Account login time-out, probeer opnieuw in te loggen"
   original_poster: "Oorspronkelijk geplaatst door"
   most_posts: "Meer berichten"
   most_recent_poster: "Meest recente schrijver"
@@ -1384,12 +1366,6 @@ nl:
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         Je reactie werd verstuurd van een ander e-mailadres dan we verwacht hadden, dus we weten niet zeker of dit dezelfde persoon is. Probeer de e-mail vanaf een ander adres te sturen, of neem contact op met de staf.
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] E-mailprobleem -- Geen message-id"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        We konden geen ‘message-id’ in de e-mail vinden. Probeer de e-mail vanaf een ander adres te sturen, of neem contact op met de staf.
     email_reject_no_account:
       subject_template: "[%{site_name}] E-mailprobleem -- Onbekende account"
       text_body_template: |
@@ -1496,12 +1472,6 @@ nl:
         Kijk voor verdere uitleg in de [community richtlijnen](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Account geblokkeerd"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te informeren dat je account geblokkeerd is door de staf.
-
-        Kijk voor verdere uitleg in de [regels](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Nieuwe gebruiker %{username} geblokkeerd wegens meldingen van andere gebruikers"
     spam_post_blocked:
@@ -1591,12 +1561,6 @@ nl:
 
         Klik op deze link om een wachtwoord in te stellen voor je nieuwe account:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] Bevestig je nieuwe e-mailadres"
-      text_body_template: |
-        Bevestig je nieuwe e-mailadres voor %{site_name} door op de volgende link te klikken:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Je inschrijving op %{site_name} is geaccepteerd!"
       text_body_template: |
@@ -1688,28 +1652,6 @@ nl:
     title: "Algemene Voorwaarden"
   privacy_topic:
     title: "Privacy Voorwaarden"
-  badges:
-    long_descriptions:
-      nice_post: |
-        Deze badge wordt toegekend voor het gevn van een antwoord dat 10 likes krijgt. Mooi gedaan!
-      nice_topic: |
-        Deze badge wordt toegekend voor het aanmaken van topic dat 10 likes krijgt. Mooi gedaan!
-      good_post: |
-        Deze badge wordt toegekend voor het geven van een antwoord dat 25 likes krijgt. Goed bezig!
-      good_topic: |
-        Deze badge wordt toegekend voor het plaatsen van een topic dat 25 likes krijgt. Goed bezig!
-      great_post: |
-        Deze badge wordt toegekend voor het aanmaken van post die 50 likes krijgt. Wow!
-      great_topic: |
-        Deze badge wordt toegekend voor het geven van een antwoord dat 50 likes krijgt. Wow!
-      basic: |
-        Deze badge is aan je toegekend met het bereiken van trustlevel 1. Bedankt dat je een tijdje hebt rondgekeken, wat topics hebt gelezen en wat meer te weten bent gekomen over bedoeling van dit forum. De restricties voor nieuwe gebruikers gelden nu niet meer voor jou, en je kunt nu gebruik maken van alle basis communicatie mogelijkheden, zoals persoonlijke berichten, markeren, wijzigen van wiki's en de mogelijkheid om afbeeldingen en meerdere links in één bericht te plaatsen.
-      member: |
-        Deze badge is aan je toegekend met het bereiken van trustlevel 2. Bedankt voor je deelname gedurende enkele weken om op het forum actief te zijn. Je kunt nu persoonlijke uitnodigingen versturen vanuit je gebruikerspagina of een bepaalde topic, groepsberichten versturen en je hebt per dag meer likes tot je beschikking.
-      regular: |
-        Deze badge is aan je toegekend met het bereiken van trustlevel 3. Bedankt dat je al meerdere maanden deel uit maakt van ons forum, behoort tot de meest actieve lezers en regelmatig bijdraagt aan wat dit forum zo goed maakt. Je kunt nu de naam en categorie van topics aanpassen en gebruik maken van een speciale "lounge",  krachtiger spam markeringen en nog veel meer likes per dag.
-      leader: |
-        Deze badge is aan je toegekend met het bereiken van trustlevel 4. Je bent door de staf uitgekozen voor een voortrekkersrol, om op dit forum een positief voorbeeld te geven in woord en gedrag. Je kunt nu alle berichten aanpassen, topics modereren door bijvoorbeeld pinnen, sluiten, verbergen, archiveren, splitsen en samenvoegen en je hebt een  vrijwel onbeperkt aantal likes per dag.
   admin_login:
     success: "E-mail verstuurd"
     error: "Fout!"

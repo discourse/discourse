@@ -16,7 +16,7 @@
 
 .topic-post article {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 6px 0;
+  padding: 8px 0;
 }
 
 .post-stream {
@@ -287,7 +287,7 @@ a.star {
     .btn {
       border: 0;
       padding: 0 15px;
-      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
       background: blend-primary-secondary(5%);
       border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
@@ -486,8 +486,12 @@ span.highlighted {
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
-    span {
+    span.full-name, span.user-title, span.username {
       display: block;
+    }
+
+    .poster-icon {
+      float: right;
     }
   }
   .post-info {

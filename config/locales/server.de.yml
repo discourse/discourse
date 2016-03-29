@@ -30,6 +30,20 @@ de:
   emails:
     incoming:
       default_subject: "Eingehende E-Mail von %{email}"
+      show_trimmed_content: "Zeige gekürzten Inhalt"
+      errors:
+        empty_email_error: "Passiert wenn die empfangene E-Mail leer war."
+        no_message_id_error: "Passiert wenn in der E-Mail die Kopfzeile 'Message-Id' fehlt."
+        auto_generated_email_error: "Passiert wenn die Kopfzeile 'precedence' folgendes enthält: list, junk, bulk oder auto_reply, oder eine der anderen Kopfzeilen enthält: auto-submitted, auto-replied oder auto-generated."
+        no_body_detected_error: "Passiert wenn kein Inhalt extrahiert werden konnte und keine Anhänge vorhanden waren."
+        inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
+        blocked_user_error: "Passiert wenn der Sender geblockt wurde."
+        bad_destination_address: "Passiert wenn keine der E-Mail Adressen in den Feldern To/Cc/Bcc zu einer konfigurierten eingehenden E-Mail Adresse passt."
+        strangers_not_allowed_error: "Passiert wenn ein Nutzer versuchte ein neues Thema in einer Kategorie ohne Mitgliedschaft zu erstellen."
+        insufficient_trust_level_error: "Passiert wenn ein Nutzer versuchte ein neues Thema in einer Kategorie zu erstellen, ohne die erforderliche Vertrauensstufe dafür zu haben."
+        reply_user_not_matching_error: "Passiert wenn die Adresse der Antwort E-Mail von der Adresse abweicht, an die gesendet wurde."
+        topic_not_found_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema gelöscht wurde."
+        topic_closed_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema geschlossen wurde."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -153,8 +167,12 @@ de:
   rss_description:
     latest: "Aktuelle Themen"
     hot: "Beliebte Themen"
+    top: "Die besten Themen"
     posts: "Letzte Beiträge"
+    private_posts: "Neueste private Nachricht"
+    group_posts: "Letzte Beiträge von %(Gruppen_name)"
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
+  revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
   excerpt_image: "Bild"
   queue:
     delete_reason: "Aus der Moderations-Warteschlange für Beiträge gelöscht"
@@ -163,7 +181,9 @@ de:
       can_not_modify_automatic: "Du kannst eine automatisch verwaltete Gruppe nicht verändern."
       member_already_exist: "'%{username}' ist bereits Mitglied dieser Gruppe."
       invalid_domain: "'%{domain}' ist keine gültige Domain."
-      invalid_incoming_email: "'%{incoming_email}' ist keine gültige E-Mail-Adresse."
+      invalid_incoming_email: "'%{email}' ist keine gültige E-Mail Adresse."
+      email_already_used_in_group: "'%{email}' wird bereits von der Gruppe '%{group_name}' verwendet."
+      email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
     default_names:
       everyone: "jeder"
       admins: "admins"
@@ -283,7 +303,9 @@ de:
       uncategorized_parent: "Die \"unkategorisiert\" Kategorie kann keine Elternkategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
       depth: "Unterkategorien können nicht ineinander verschachtelt werden."
-      email_in_already_exist: "Die E-Mail-Adresse '%{email_in}' für eingehende Themen wird bereits von der Kategorie '%{category_name}' verwendet."
+      invalid_email_in: "'%{email}' ist keine gültige E-Mail Adresse."
+      email_already_used_in_group: "'%{email}' wird bereits von der Gruppe '%{group_name}' verwendet."
+      email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
     cannot_delete:
       uncategorized: "Die \"unkategorisiert\" Kategorie kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien besitzt."
@@ -867,17 +889,9 @@ de:
     tl2_requires_likes_received: "Die Anzahl der Likes, die ein Benutzer erhalten muss, bevor er in die Vertrauensstufe 2 befördert wird."
     tl2_requires_likes_given: "Die Anzahl der Likes, die ein Benutzer vergeben muss, bevor er in die Vertrauensstufe 2 befördert wird."
     tl2_requires_topic_reply_count: "Die Anzahl der Beiträge, auf die ein Benutzer antworten muss, bevor er in die Vertrauensstufe 2 befördert wird."
-    tl3_time_period: "Zeitraum für die Bedingungen für Vertrauensstufe 3"
-    tl3_requires_days_visited: "Minimale Anzahl an Tagen, an denen der Nutzer die Seite besuchen haben muss, in den letzten 100 Tagen, um sich für eine Beförderung zu Vertrauenslevel 3 zu qualifizieren. Setze tl3 höher als die Zeitperiode um Beförderungen zu Vertrauenslevel 3 zu deaktivieren. (0 oder höher)"
-    tl3_requires_topics_replied_to: "Die Mindestanzahl an Themen, auf die ein Benutzer in den letzten 100 Tagen geantwortet haben muss, um die Vertrauensstufe 3 erreichen zu können. (0 oder mehr)"
-    tl3_requires_topics_viewed: "Prozentualer Anteil aller Themen der letzten 100 Tage, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können. (0 bis 100)"
-    tl3_requires_posts_read: "Prozentualer Anteil aller Beiträge der letzten 100 Tage, die ein Nutzer mindestens gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können. (0 bis 100)"
     tl3_requires_topics_viewed_all_time: "Mindestanzahl Themen, die ein Nutzer gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können."
     tl3_requires_posts_read_all_time: "Mindestanzahl Beiträge, die ein Nutzer gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können."
-    tl3_requires_max_flagged: "Um die Vertrauensstufe 3 erhalten zu können dürfen in den letzten 100 Tagen höchstens X Beiträge eines Nutzers von X verschiedenen anderen Nutzern gemeldet worden sein, wobei X diesem Wert entspricht. (0 oder mehr)"
     tl3_promotion_min_duration: "Mindestanzahl an Tagen, die ein Benutzer auf Vertrauensstufe 3 beförderter Nutzer auf dieser Stufe verbleibt, bevor er automatisch wieder auf Vertrauensstufe 2 heruntergestuft werden kann."
-    tl3_requires_likes_given: "Die Mindestanzahl an \"Likes\" die Sie in den letzten 100 Tagen gegeben haben müssen um für Vertrauenslevel 3 zu qualifizieren."
-    tl3_requires_likes_received: "Die Mindestanzahl an \"Likes\" die Sie in den letzten 100 Tagen erhalten haben müssen um für Vertrauenslevel 3 zu qualifizieren."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
@@ -892,7 +906,6 @@ de:
     max_users_notified_per_group_mention: "Maximale Anzahl an Nutzern die benachrichtigt werden wenn eine Gruppe erwähnt wird (wird die Grenze erreicht, werden keine Nutzer benachrichtigt)"
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor Nutzern eine Hinweis-E-Mail geschickt wird, um ihnen Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
-    private_email_time_window_seconds: "Warte (n) Sekunden, bevor irgendwelche private E-Mail Benachrichtigungen gesendet werden, um den Nutzer die Möglichkeit zu geben, den Beitrag zu bearbeiten und finalisieren."
     email_posts_context: "Anzahl der Antworten welche als Konext einer Notifikations-Mail hinzugefügt werden."
     flush_timings_secs: "Sekunden, nach denen Zeiteinstellungen auf den Server übertragen werden."
     title_max_word_length: "Maximal erlaubte Wortlänge in Thementiteln, in Zeichen."
@@ -994,7 +1007,6 @@ de:
     disable_avatar_education_message: "Weise Benutzer nicht darauf hin, dass sie ihren Avatar ändern können"
     daily_performance_report: "Analysiere die NGINX-Logs täglich. Poste anschließend eine Zusammenfassung als Beitrag, welcher nur für Moderatoren oder Administratoren zugänglich ist."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
-    permalink_normalizations: "Wende den folgenden regulären Ausdruck an, bevor Permanentlinks überprüft werden, beispielsweise wird /(\\/topic.*)\\?.*/\\1 Query Strings aus Themen-Routen entfernen. Format: RegEx+String, benutze \\1 usw. um auf Gruppierungen zuzugreifen."
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-NACHRICHT als global sichtbares Banner an. Deaktiviert bei leerer Nachricht. (HTML ist erlaubt.)"
     disable_edit_notifications: "Unterdrückt Bearbeitungshinweise durch den System-Nutzer, wenn die 'download_remote_images_to_local' Einstellung aktiviert ist."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Nutzer das Ende erreicht."
@@ -1028,7 +1040,6 @@ de:
     enable_emoji: "Aktiviere emoji"
     emoji_set: "Wie magst du dein emoji?"
     enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
-    approve_post_count: "Anzahl Beiträge eines neuen Nutzers, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Nutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, welche seit mehreren Stunden auf Ihre Freischaltung warten, sende eine E-Mail an die Kontaktemailadresse. Setze diesen Wert auf 0 um das zu deaktivieren."
     default_email_digest_frequency: "Lege fest, wie oft die Benutzer eine Zusammenfassung per E-Mail erhalten."
@@ -1085,11 +1096,6 @@ de:
       category: 'Kategorien'
       topic: 'Ergebnisse'
       user: 'Benutzer'
-  sso:
-    not_found: "Konto kann nicht gefunden oder erstellt werden, kontaktiere den Administrator."
-    account_not_approved: "Das Konto wartet auf seine Überprüfung. Du bekommst eine E-Mail Benachrichtigung, wenn es überprüft wurde."
-    unknown_error: "Die Informationen konnten nicht aktualisiert werden, kontaktiere den Administrator."
-    timeout_expired: "Zeitüberschreitung beim Login. Bitte versuche dich erneut einzuloggen."
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
@@ -1379,12 +1385,6 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
 
         Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absenderadresse oder wende dich an einen Mitarbeiter.
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}] E-Mail-Problem -- Keine Message-Id"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
-
-        Wir konnten keinen `Message-Id`-Header in der E-Mail finden. Probiere eine andere Absenderadresse oder wende dich an einen Mitarbeiter.
     email_reject_no_account:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
       text_body_template: |
@@ -1451,12 +1451,6 @@ de:
         Weitere Hilfe findest du in unserer [Richtlinien](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Benutzerkonto gesperrt"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Benutzerkonto durch einen Mitarbeiter gesperrt wurde.
-
-        Weitere Informationen hierzu findest du in unseren [Richtlinien](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Neuer Benutzer %{username} wegen Gemeinschaftsrichtlinien blockiert."
     spam_post_blocked:
@@ -1490,33 +1484,6 @@ de:
     posted_by: "Erstellt von %{username} am %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
-      text_body_template: |2
-
-        %{username} hat dich zur Unterhaltung
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        bei
-
-        > %{site_title} -- %{site_description}
-
-        eingeladen. Bitte besuche diesen Link um die Unterhaltung zu lesen: %{base_url}%{url}
-    user_invited_to_topic:
-      text_body_template: |2
-
-        %{username} hat dich zum Thema
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        bei
-
-        > %{site_title} -- %{site_description}
-
-        eingeladen. Bitte besuche diesen Link um das Thema zu lesen: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
     user_quoted:
@@ -1573,12 +1540,6 @@ de:
 
         Klicke auf den folgenden Link, um ein Passwort für dein neues Konto festzulegen:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Bestätige deine neue Mailadresse"
-      text_body_template: |
-        Um deine Mailadresse auf %{site_name} zu bestätigen, klicke auf den folgenden Link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
@@ -1669,55 +1630,6 @@ de:
     title: "Nutzungsbedingungen"
   privacy_topic:
     title: "Datenschutzrichtlinie"
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Dieses Abzeichen erhältst du für das Ausfüllen von deinem <a href="/my/preferences">Benutzerprofil</a> und für das Hochladen eines Profilbildes erhalten. Die Community mehr über dich wissen zu lassen, und mehr darüber wissen zu lassen, was du gerne tust, macht die gesamte Community besser.
-      first_like: |
-        Dieses Abzeichen erhältst du, wenn du das erste mal auf den :heart: Knopf unter einem Beitrag klickst. Beiträge zu liken ist eine tolle Art dem Beitragsersteller zu zeigen, dass sein Beitrag interessant, nützlich, cool oder witzig war. Share the love!
-      first_link: |
-        Dieses Abzeichen erhältst du, sobald du das erste mal einen Link zu einem anderen Beitrag in eine Antwort schreibst. Bestehende Beiträge zu verlinken hilft den anderen Nutzern dabei, bereits geklärte oder relevante Fragen zu finden.
-      first_quote: |
-        Dieses Abzeichen erhältst du, sobald du das erste mal ein Zitat in einer Antwort verwendest. Relevante Bereiche zu zitieren und diese in deiner Antwort zu erwähnen hilft allen bei der Übersichtlichkeit.
-      first_share: |
-        Dieses Abzeichen erhältst du, sobald du das erste mal einen Link mit anderen über den "Teilen"-Button teilst. Links zu teilen ist eine tolle Möglichkeit andere auf interessante Diskussionen hinzuweisen und die Community zu vergrößern.
-      read_guidelines: |
-        Dieses Abzeichen erhältst du, sobald du die <a href="/guidelines">Regeln</a> gelesen hast. Teilen der Regeln hilft allen für einen sicheren, witzigen und nachhaltigen Umgang miteinander.
-      reader: |
-        Dieses Abzeichen erhältst du, sobald du einen sehr langen Beitrag gelesen hast. Beiträge ausführlich zu lesen hilft der gesamten Konversation und führt zu besseren, vollständigeren Antworten.
-      editor: "Dieses Abzeichen erhältst du für das Bearbeiten einer deiner Beiträge. Zögere nicht, deine Beiträge so lange zu editieren, bis sie in deinen Augen perfekt sind. \n"
-      first_flag: |
-        Dieses Abzeichen wird verliehen, wenn ein Beitrag gemeldet wird. Wenn du einen Beitrag siehst den ein Moderator prüfen sollte, zögere bitte nicht, ihn zu melden. Mit dem Melden-Dialog kannst du auch <b>Nachrichten</b> an andere Nutzer senden.
-      nice_share: |
-        Dieses Abzeichen wird für das Teilen eines Links zu einem Beitrag verliehen, dem 25 externe Besucher folgen. Großartig! Links zu interessanten Diskussionen mit deinen Freunden zu teilen ist ein exzellenter Weg, unsere Community wachsen zu lassen.
-      welcome: |
-        Dieses Abzeichen wird verliehen, wenn du den ersten Like auf einen Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
-      anniversary: |
-        Dieses Abzeichen wird verliehen, wenn du ein Jahr lang Mitglied warst und in diesem Jahr mindestens einen Beitrag geschrieben hast. Danke, dass du hier geblieben bist und zu unserer Community beiträgst!
-      good_share: |
-        Dieses Abzeichen wird für das Teilen eines Links zu einem Beitrag verliehen, dem 300 externe Besucher folgen. Gute Arbeit! Du hast eine interessante Diskussion <i>vielen</i> neuen Benutzern gezeigt und uns geholfen zu wachsen.
-      great_share: |
-        Dieses Abzeichen wird für das Teilen eines Links zu einem Beitrag verliehen, dem 100 externe Besucher folgen. Wow! Du hast einer interessante Diskussion zu einer großen Leserschaft verholfen und uns sehr geholfen!
-      nice_post: |
-        Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 10 Likes erhalten hat. Gut gemacht!
-      nice_topic: |
-        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welches 10 Likes erhalten hat. Gut gemacht!
-      good_post: |
-        Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 25 Likes erhalten hat. Gute Arbeit!
-      good_topic: |
-        Dieses Abzeichen hast du erhalten, weil du ein Thema erstellt hast, welches 25 Likes erhalten hat. Gute Arbeit!
-      great_post: |
-        Dieses Abzeichen hast du erhalten, weil du einen Beitrag erstellt hast, welcher 50 Likes erhalten hat. Wow!
-      great_topic: |
-        Dieses Abzeichen hast du erhalten, weil du eine Antwort erstellt hast, welche 50 Likes erhalten hat. Wow!
-      basic: |
-        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 1 erreichst. Danke dass du eine Weile dageblieben bist und ein paar Themen gelesen hast um zu lernen, worum es in unserer Community geht. Für dich gelten die Einschränkungen für neue Nutzer nicht mehr und du hast nun Zugriff auf alle wichtigen Funktionen, beispielsweise persönliche Nachrichten, die Melden-Funktion, das Bearbeiten von Wiki-Beiträgen und die Fähigkeit, Bilder und mehrere Links in Beiträgen zu verwenden.
-      member: |
-        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 2 erreichst. Danke dass du einige Wochen mitgemacht hast, um unserer Community mehr beizutreten. Du kannst nun von deiner Benutzerseite und den Themen-Seiten aus persönliche Einladungen versenden, Gruppennachrichten erstellen und ein paar mehr Likes pro Tag vergeben.
-      regular: |
-        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 3 erreicht. Danke dass du über mehrere Monate in unserer Community ein Stammgast, einer unserer aktivsten Leser und ein zuverlässiges Mitglied geworden bist, das diese Community stark macht. Du kannst nun Themen neu kategorisieren und umbenennen, auf eine private Lounge für Stammgäste zugreifen, hast mächtigere Werkzeuge um Spam zu bekämpfen und kannst viel mehr Likes pro Tag vergeben.
-      leader: |
-        Dieses Abzeichen wird verliehen wenn du Vertrauensstufe 4 erreichst. Du bist ein von den Mitarbeitern ausgezeichneter Anführer in dieser Community und hast durch deine Taten und Worte ein positives Beispiel abgegeben. Du kannst alle Beiträge bearbeiten, Moderator-Aktionen wir das Anpinnen, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen und viel mehr Likes pro Tag vergeben.
   admin_login:
     success: "E-Mail gesendet"
     error: "Fehler!"

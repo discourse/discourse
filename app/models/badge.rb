@@ -286,25 +286,22 @@ SQL
 
     def self.like_rate_limit(count)
       <<-SQL
-        SELECT uh.target_user_id AS user_id, MAX(uh.created_at) AS granted_at
-        FROM user_histories AS uh
-        WHERE uh.action = #{UserHistory.actions[:rate_limited_like]}
-          AND (:backfill OR uh.target_user_id IN (:user_ids))
-        GROUP BY uh.target_user_id
+        SELECT gdl.user_id, current_timestamp AS granted_at
+        FROM given_daily_likes AS gdl
+        WHERE gdl.limit_reached
+          AND (:backfill OR gdl.user_id IN (:user_ids))
+        GROUP BY gdl.user_id
         HAVING COUNT(*) >= #{count}
       SQL
     end
 
-    def self.liked_back(min_posts, ratio)
+    def self.liked_back(likes_received, likes_given)
       <<-SQL
-        SELECT p.user_id, current_timestamp AS granted_at
-        FROM posts AS p
-        INNER JOIN user_stats AS us ON us.user_id = p.user_id
-        WHERE p.like_count > 0
-          AND (:backfill OR p.user_id IN (:user_ids))
-        GROUP BY p.user_id, us.likes_given
-        HAVING count(*) > #{min_posts}
-          AND (us.likes_given / count(*)::float) > #{ratio}
+        SELECT us.user_id, current_timestamp AS granted_at
+        FROM user_stats AS us
+        WHERE us.likes_received >= #{likes_received}
+          AND us.likes_given >= #{likes_given}
+          AND (:backfill OR us.user_id IN (:user_ids))
       SQL
     end
   end
@@ -325,7 +322,11 @@ SQL
 
   # fields that can not be edited on system badges
   def self.protected_system_fields
-    [:badge_type_id, :multiple_grant, :target_posts, :show_posts, :query, :trigger, :auto_revoke, :listable]
+    [
+      :badge_type_id, :multiple_grant,
+      :target_posts, :show_posts, :query,
+      :trigger, :auto_revoke, :listable
+    ]
   end
 
   def self.trust_level_badge_ids
@@ -373,12 +374,19 @@ SQL
   end
 
   def self.ensure_consistency!
+    exec_sql <<SQL
+    DELETE FROM user_badges
+    USING user_badges ub
+    LEFT JOIN users u ON u.id = ub.user_id
+    WHERE u.id IS NULL AND user_badges.id = ub.id
+SQL
+
     Badge.find_each(&:reset_grant_count!)
   end
 
   def display_name
     if self.system?
-      key = "admin_js.badges.badge.#{i18n_name}.name"
+      key = "badges.#{i18n_name}.name"
       I18n.t(key, default: self.name)
     else
       self.name
@@ -389,10 +397,36 @@ SQL
     if self[:long_description].present?
       self[:long_description]
     else
-      key = "badges.long_descriptions.#{i18n_name}"
+      key = "badges.#{i18n_name}.long_description"
       I18n.t(key, default: '')
     end
   end
+
+  def long_description=(val)
+    if val != long_description
+      self[:long_description] = val
+    end
+
+    val
+  end
+
+  def description
+    if self[:description].present?
+      self[:description]
+    else
+      key = "badges.#{i18n_name}.description"
+      I18n.t(key, default: '')
+    end
+  end
+
+  def description=(val)
+    if val != description
+      self[:description] = val
+    end
+
+    val
+  end
+
 
   def slug
     Slug.for(self.display_name, '-')

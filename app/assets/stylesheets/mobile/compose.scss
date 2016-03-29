@@ -181,10 +181,11 @@ input {
       bottom: 35px;
     }
     .submit-panel {
-      width: 50%;
+      // need minimum width that fits, or this'll wrap cancel under submit/create which is super bad
+      width: 180px;
       position: absolute;
       display: block;
-      bottom: 2px;
+      bottom: 0;
     }
   }
   .category-input {

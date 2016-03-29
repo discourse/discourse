@@ -119,6 +119,7 @@ export default class Widget {
     this.currentUser = container.lookup('current-user:main');
     this.store = container.lookup('store:main');
     this.appEvents = container.lookup('app-events:main');
+    this.keyValueStore = container.lookup('key-value-store:main');
 
     if (this.name) {
       const custom = _customSettings[this.name];

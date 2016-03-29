@@ -25,6 +25,14 @@ class Search
       @users = []
     end
 
+    def find_user_data(guardian)
+      if user = guardian.user
+        topics = @posts.map(&:topic)
+        topic_lookup = TopicUser.lookup_for(user, topics)
+        topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
+      end
+    end
+
     def blurb(post)
       GroupedSearchResults.blurb_for(post.cooked, @term, @blurb_length)
     end

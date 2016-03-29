@@ -134,7 +134,8 @@ Badge.seed do |b|
   b.target_posts = true
   b.show_posts = false
   b.query = Badge::Queries::FirstFlag
-  b.default_badge_grouping_id = BadgeGrouping::Community
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
+  b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostAction
   b.auto_revoke = false
   b.system = true
@@ -228,7 +229,8 @@ Badge.seed do |b|
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = Badge::Queries::Editor
-  b.default_badge_grouping_id = BadgeGrouping::Community
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
+  b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
   b.system = true
 end
@@ -285,7 +287,8 @@ end
     b.target_posts = true
     b.show_posts = true
     b.query = Badge::Queries.linking_badge(count)
-    b.default_badge_grouping_id = BadgeGrouping::Community
+    b.badge_grouping_id = BadgeGrouping::Posting
+    b.default_badge_grouping_id = BadgeGrouping::Posting
     # don't trigger for now, its too expensive
     b.trigger = Badge::Trigger::None
     b.system = true
@@ -314,9 +317,9 @@ end
 
 
 [
-  [Badge::ThankYou,   "Thank You",  BadgeType::Bronze, 20, 0.00],
-  [Badge::GivesBack,  "Gives Back", BadgeType::Silver, 100, 1.0],
-  [Badge::Empathetic, "Empathetic", BadgeType::Gold,   500, 2.0],
+  [Badge::ThankYou,   "Thank You",  BadgeType::Bronze, 20, 10],
+  [Badge::GivesBack,  "Gives Back", BadgeType::Silver, 100, 100],
+  [Badge::Empathetic, "Empathetic", BadgeType::Gold,   500, 1000]
 ].each do |spec|
   id, name, level, count, ratio = spec
   Badge.seed do |b|

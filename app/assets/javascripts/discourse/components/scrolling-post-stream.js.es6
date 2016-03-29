@@ -2,6 +2,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { keyDirty } from 'discourse/widgets/widget';
 import MountWidget from 'discourse/components/mount-widget';
 import { cloak, uncloak } from 'discourse/widgets/post-stream';
+import { isWorkaroundActive } from 'discourse/lib/safari-hacks';
 
 function findTopView($posts, viewportTop, min, max) {
   if (max < min) { return min; }
@@ -38,6 +39,7 @@ export default MountWidget.extend({
 
   scrolled() {
     if (this.isDestroyed || this.isDestroying) { return; }
+    if (isWorkaroundActive()) { return; }
 
     const $w = $(window);
     const windowHeight = window.innerHeight ? window.innerHeight : $w.height();

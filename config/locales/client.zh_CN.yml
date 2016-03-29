@@ -445,9 +445,9 @@ zh_CN:
       muted_topics_link: "显示已忽略的主题"
       automatically_unpin_topics: "当我完整阅读了主题时自动解除置顶。"
       staff_counters:
-        flags_given: "有效标记"
-        flagged_posts: "被报告的帖子"
-        deleted_posts: "删除的帖子"
+        flags_given: "有用的标记"
+        flagged_posts: "被标记的帖子"
+        deleted_posts: "已删除的帖子"
         suspensions: "禁用的"
         warnings_received: "警告"
       messages:
@@ -518,7 +518,7 @@ zh_CN:
         title: "用户名"
         instructions: "唯一，没有空格，简短"
         short_instructions: "其他人可以用 @{{username}} 来提及你"
-        available: "你的用户名可用"
+        available: "你可以用这个用户名"
         global_match: "电子邮箱与注册用户名相匹配"
         global_mismatch: "已被注册。试试 {{suggestion}} ？"
         not_available: "不可用。试试 {{suggestion}} ？"
@@ -562,6 +562,7 @@ zh_CN:
         every_three_days: "每三天"
         weekly: "每周"
         every_two_weeks: "每两周"
+      include_tl0_in_digests: "在摘要邮件中包含新用户的帖子"
       email_in_reply_to: "在邮件中包含回复的摘要文本"
       email_direct: "当有人引用我、回复我的帖子，@提及你或邀请你至主题时发送一封邮件给我"
       email_private_messages: "当有人给发消息给我时发送一封邮件给我"
@@ -682,17 +683,21 @@ zh_CN:
         again: "再试一次"
         fixed: "载入页面"
     close: "关闭"
-    assets_changed_confirm: "此网页刚刚更新. 刷新查看新版本?"
+    assets_changed_confirm: "网站刚刚更新了。刷新使用新版本？"
     logout: "你已登出。"
     refresh: "刷新"
     read_only_mode:
-      enabled: "这个站点正处于只读模式。请继续浏览，但是回复、赞和其他操作暂时被禁用。"
+      enabled: "站点正处于只读模式。你可以继续浏览，但是回复、赞和其他操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
       logout_disabled: "站点在只读模式下无法登出。"
     too_few_topics_and_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题和 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
     too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
-    logs_error_rate_exceeded_notice: "%{timestamp}：目前的错误率 <a href='%{url}' target='_blank'>%{rate}/%{duration}</a>已经超出了站点设置中设置的 %{siteSettingLimit}/%{duration}。"
+    logs_error_rate_notice:
+      reached: "%{timestamp}：目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已经达到了站点设置中的 %{siteSettingRate}。"
+      exceeded: "%{timestamp}：目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已经超出了站点设置中的 %{siteSettingRate}。"
+      rate:
+        other: "%{count} 错误/%{duration}"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -723,7 +728,7 @@ zh_CN:
       disable: '显示所有帖子'
     deleted_filter:
       enabled_description: "这个主题包含已删除的帖子，他们已经被隐藏。"
-      disabled_description: "主题中被删除的帖子已显示。"
+      disabled_description: "显示了主题中已删除的帖子。"
       enable: "隐藏已删除的帖子"
       disable: "显示已删除的帖子"
     private_message_info:
@@ -887,7 +892,7 @@ zh_CN:
       title: "使用@名字提及到你，回复你的帖子和主题，消息等等的通知消息"
       none: "现在无法载入通知"
       more: "浏览以前的通知"
-      total_flagged: "被报告帖子的总数"
+      total_flagged: "被标记帖子的总数"
       mentioned: "<i title='被提及' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='引用' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1002,8 +1007,8 @@ zh_CN:
         top: "没有最佳主题。"
         search: "没有搜索结果。"
         educate:
-          new: '<p>这里显示了对于你的近期主题。</p><p>默认情况下，下述主题将被认为是近期发表的，如果他们在这 2 天内才创建，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>访问你的<a href="%{userPrefsUrl}">用户设置</a>修改。</p>'
-          unread: '<p>这里显示了你的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>访问你的<a href="%{userPrefsUrl}">用户设置</a>修改</p>'
+          new: '<p>这里显示了对于你的近期主题。</p><p>默认情况下，下述主题将被放在近期中。如果他们是这 2 天内创建的，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>访问你的<a href="%{userPrefsUrl}">用户设置</a>修改。</p>'
+          unread: '<p>这里显示了你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>访问你的<a href="%{userPrefsUrl}">用户设置</a>修改未读设置。</p>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -1154,9 +1159,9 @@ zh_CN:
         title: '分享'
         help: '分享一个到本帖的链接'
       flag_topic:
-        title: '报告'
-        help: '私下报告本帖以引起注意或者发送一条匿名通知'
-        success_message: '你已成功报告本帖。'
+        title: '标记'
+        help: '私下标记本帖以引起注意或者发送一条匿名通知'
+        success_message: '你已经成功标记该主题。'
       feature_topic:
         title: "聚焦该主题"
         pin: "将该主题置于{{categoryLink}}分类最上方至"
@@ -1265,7 +1270,7 @@ zh_CN:
       show_full: "显示所有帖子"
       show_hidden: '查看隐蔽内容'
       deleted_by_author:
-        other: "（帖子被作者撤销，如无标记，将在 %{count} 小时后被自动删除）"
+        other: "（帖子被作者撤销，如过没有标记，将在 %{count} 小时后被自动删除）"
       expand_collapse: "展开/折叠"
       gap:
         other: "查看 {{count}} 个隐藏回复"
@@ -1302,6 +1307,7 @@ zh_CN:
         about: "这个帖子是维基"
       archetypes:
         save: '保存选项'
+      few_likes_left: "感谢你的赞！你今天只能再多赞几次了。"
       controls:
         reply: "开始给本帖撰写回复"
         like: "点个赞"
@@ -1309,7 +1315,7 @@ zh_CN:
         undo_like: "撤销赞"
         edit: "编辑本帖"
         edit_anonymous: "抱歉，但是你需要登录后才能编辑该贴。"
-        flag: "私下报告本帖以提醒管理人员关注或发送私信通知"
+        flag: "私下标记本帖以提醒管理人员关注或发送私信通知"
         delete: "删除本帖"
         undelete: "恢复本帖"
         share: "分享一个到本帖的链接"
@@ -1322,27 +1328,27 @@ zh_CN:
         admin: "帖子管理"
         wiki: "使其成为维基帖子"
         unwiki: "使其成为普通帖子"
-        convert_to_moderator: "添加管理人员颜色标记"
-        revert_to_regular: "移除管理人员颜色标记"
+        convert_to_moderator: "添加管理人员颜色标识"
+        revert_to_regular: "移除管理人员颜色标识"
         rebake: "重建 HTML"
         unhide: "显示"
         change_owner: "更改所有权"
       actions:
-        flag: '报告'
+        flag: '标记'
         defer_flags:
-          other: "推迟的标记"
+          other: "推迟处理标记"
         it_too:
-          off_topic: "同时报告"
-          spam: "同时报告"
-          inappropriate: "同时报告"
-          custom_flag: "同时报告"
+          off_topic: "一起标记"
+          spam: "一起标记"
+          inappropriate: "一起标记"
+          custom_flag: "一起标记"
           bookmark: "同时添加书签"
           like: "赞"
           vote: "同时投票支持"
         undo:
-          off_topic: "撤销报告"
-          spam: "撤销报告"
-          inappropriate: "撤销报告"
+          off_topic: "撤回标记"
+          spam: "撤回报告"
+          inappropriate: "撤回报告"
           bookmark: "撤销书签"
           like: "撤销赞"
           vote: "撤销投票"
@@ -1356,23 +1362,23 @@ zh_CN:
           like: "赞了它"
           vote: "已给本帖投票"
         by_you:
-          off_topic: "你报告它偏离主题"
-          spam: "你报告它为垃圾信息"
-          inappropriate: "你报告它为不当内容"
-          notify_moderators: "你向版主报告了它"
+          off_topic: "你标记其偏离了主题"
+          spam: "你标记其为垃圾信息"
+          inappropriate: "你标记其为不当内容"
+          notify_moderators: "你标记了本帖要求管理人员处理"
           notify_user: "你已经发了一个消息给该用户"
           bookmark: "你对该帖做了书签"
           like: "你赞了它"
           vote: "你对该帖投票支持"
         by_you_and_others:
           off_topic:
-            other: "你和其他 {{count}} 人报告它偏离主题"
+            other: "你和其他 {{count}} 人标记其偏离主题"
           spam:
-            other: "你和其他 {{count}} 人报告它为垃圾信息"
+            other: "你和其他 {{count}} 人标记其为垃圾信息"
           inappropriate:
-            other: "你和其他 {{count}} 人报告它为不当内容"
+            other: "你和其他 {{count}} 人标记其为不当内容"
           notify_moderators:
-            other: "你和其他 {{count}} 人报告它需要审核"
+            other: "你和其他 {{count}} 人标记了本帖要求管理人员处理"
           notify_user:
             other: "你和 {{count}} 个其他用户发了一个消息给该用户"
           bookmark:
@@ -1383,13 +1389,13 @@ zh_CN:
             other: "你和其他 {{count}} 人支持这个帖子"
         by_others:
           off_topic:
-            other: "{{count}} 人报告它偏离主题"
+            other: "{{count}} 人标记其偏离主题"
           spam:
-            other: "{{count}} 人报告它为垃圾信息"
+            other: "{{count}} 人标记其为垃圾信息"
           inappropriate:
-            other: "{{count}} 人报告它为不当内容"
+            other: "{{count}} 人标记其为不当内容"
           notify_moderators:
-            other: "{{count}} 人报告它需要修改"
+            other: "{{count}} 人标记本帖要求管理人员处理"
           notify_user:
             other: "{{count}} 人给这个用户发送了消息"
           bookmark:
@@ -1489,8 +1495,8 @@ zh_CN:
           title: "免打扰"
           description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在最新列表中。"
     flagging:
-      title: '感谢帮助社群远离邪恶！'
-      action: '报告帖子'
+      title: '感谢你帮助我们建设文明社群！'
+      action: '标记帖子'
       take_action: "立即执行"
       notify_action: '消息'
       delete_spammer: "删除垃圾发布者"
@@ -1500,7 +1506,7 @@ zh_CN:
       hidden_email_address: "（隐藏）"
       submit_tooltip: "提交私有标记"
       take_action_tooltip: "立即采取标记到达限制值时的措施，而不是等待更多的社群标记"
-      cant: "抱歉，当前你不能报告本帖。"
+      cant: "抱歉，现在你不能标记本帖。"
       notify_staff: '私下通知管理人员'
       formatted_name:
         off_topic: "偏题"
@@ -1513,8 +1519,8 @@ zh_CN:
         more: "还差 {{n}} 个..."
         left: "还剩下 {{n}}"
     flagging_topic:
-      title: "感谢帮助社群远离邪恶！"
-      action: "报告帖子"
+      title: "感谢你帮助我们建设文明社群！"
+      action: "标记帖子"
       notify_action: "消息"
     topic_map:
       title: "主题概要"
@@ -1705,48 +1711,48 @@ zh_CN:
         latest_changes: "最近的更新：请经常升级！"
         by: "来自"
       flags:
-        title: "报告"
-        old: "旧的"
+        title: "标记"
+        old: "历史"
         active: "待处理"
-        agree: "已批准"
+        agree: "确认标记"
         agree_title: "确认这个标记有效且正确"
-        agree_flag_modal_title: "批准并..."
-        agree_flag_hide_post: "批准（隐藏并发送私信）"
+        agree_flag_modal_title: "确认标记并执行..."
+        agree_flag_hide_post: "确认标记（隐藏帖子并发送私信）"
         agree_flag_hide_post_title: "隐藏帖子并自动发送消息要求用户修改"
         agree_flag_restore_post: "同意 (还原帖子)"
         agree_flag_restore_post_title: "还原这篇帖子"
-        agree_flag: "批准这个标记"
-        agree_flag_title: "批准这个标记并且保持帖子不变"
-        defer_flag: "推迟"
+        agree_flag: "确认标记"
+        agree_flag_title: "确认标记，不对帖子进行操作"
+        defer_flag: "推迟处理"
         defer_flag_title: "移除标记；这次不处理。"
         delete: "删除"
         delete_title: "删除标记指向的帖子。"
-        delete_post_defer_flag: "删除帖子并推迟标记"
+        delete_post_defer_flag: "删除帖子并推迟处理标记"
         delete_post_defer_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
-        delete_post_agree_flag: "删除帖子并批准此标记"
+        delete_post_agree_flag: "删除帖子并确认标记"
         delete_post_agree_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
         delete_flag_modal_title: "删除并..."
         delete_spammer: "删除垃圾发布者"
         delete_spammer_title: "移除该用户及其的所有帖子和主题。"
-        disagree_flag_unhide_post: "不批准（不隐藏帖子）"
-        disagree_flag_unhide_post_title: "清除此帖的任何报告，并使其重新可见"
-        disagree_flag: "不批准"
-        disagree_flag_title: "拒绝这个报告，无效或不正确"
+        disagree_flag_unhide_post: "否决（显示帖子）"
+        disagree_flag_unhide_post_title: "删除此帖的所有标记并使其重新可见"
+        disagree_flag: "否决"
+        disagree_flag_title: "否却该标记（该标记无效或不正确）"
         clear_topic_flags: "完成"
-        clear_topic_flags_title: "这个主题已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
+        clear_topic_flags_title: "主题的问题已经已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
         more: "（更多回复...）"
         dispositions:
-          agreed: "已批准"
-          disagreed: "未批准"
-          deferred: "推迟"
-        flagged_by: "报告者为"
+          agreed: "已确认"
+          disagreed: "被否决"
+          deferred: "已推迟"
+        flagged_by: "标记者"
         resolved_by: "已解决，被"
         took_action: "立即执行"
         system: "系统"
         error: "出错了"
         reply_message: "回复"
-        no_results: "没有报告"
-        topic_flagged: "这个<strong>主题</strong>已被报告。"
+        no_results: "当前没有标记。"
+        topic_flagged: "<strong>主题</strong>已经被标记。"
         visit_topic: "浏览主题才能操作"
         was_edited: "帖子在第一次标记后被编辑"
         previous_flags_count: "这篇帖子已经被标示了 {{count}} 次。"
@@ -2197,7 +2203,7 @@ zh_CN:
         moderator: "版主？"
         admin: "管理员？"
         blocked: "已封?"
-        staged: "部分权限？"
+        staged: "暂存？"
         show_admin_profile: "管理员"
         edit_title: "编辑头衔"
         save_title: "保存头衔"
@@ -2223,8 +2229,8 @@ zh_CN:
         posts_read_count: 已阅帖子数量
         post_count: 创建的帖子数量
         topics_entered: 已查看的主题数量
-        flags_given_count: 所做报告数量
-        flags_received_count: 收到报告数量
+        flags_given_count: 提交标记数量
+        flags_received_count: 被他人标记数量
         warnings_received_count: 收到警告
         flags_given_received_count: '给出的标记 / 收到的标记'
         approve: '批准'
@@ -2264,7 +2270,7 @@ zh_CN:
         deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
         suspended_explanation: "一个被封禁的用户不能登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
-        stage_explanation: "部分访问权限的用户只能通过邮件在特定主题内发表帖子。"
+        stage_explanation: "暂存用户只能通过邮件在特定主题内发表帖子。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
         suspend_modal_title: "被禁用户"
         trust_level_2_users: "二级信任等级用户"
@@ -2276,7 +2282,7 @@ zh_CN:
         tl3_requirements:
           title: "信任等级 3 的要求"
           table_title: "在最近%{time_period}天："
-          value_heading: "价值"
+          value_heading: "当前"
           requirement_heading: "要求"
           visits: "访问"
           days: "天数"
@@ -2285,17 +2291,17 @@ zh_CN:
           topics_viewed_all_time: "已阅的主题 (全部)"
           posts_read: "已读帖子"
           posts_read_all_time: "已读的帖子 (全部)"
-          flagged_posts: "被报告的帖子"
-          flagged_by_users: "标记的用户"
+          flagged_posts: "被标记的帖子"
+          flagged_by_users: "标记其的用户"
           likes_given: "给出的赞"
           likes_received: "收到的赞"
           likes_received_days: "收到的赞：独立天数"
           likes_received_users: "收到的赞：每用户"
-          qualifies: "符合等级3的信用度"
-          does_not_qualify: "未符合等级3的信用度"
+          qualifies: "符合信任等级3要求"
+          does_not_qualify: "不符合信任等级3要求"
           will_be_promoted: "将在近期被提升。"
           will_be_demoted: "将在近期被降级。"
-          on_grace_period: "目前在升级优惠阶段，将不会被降级。"
+          on_grace_period: "目前在升级宽限期，不会被降级。"
           locked_will_not_be_promoted: "信任等级被锁定。将不再被提升。"
           locked_will_not_be_demoted: "信任等级被锁定。将不再被降级。"
         sso:
@@ -2384,6 +2390,7 @@ zh_CN:
         badge: 徽章
         display_name: 显示名称
         description: 描述
+        long_description: 详情
         badge_type: 徽章分类
         badge_grouping: 群组
         badge_groupings:
@@ -2533,7 +2540,7 @@ zh_CN:
         reply_post: '<b>r</b> 回复帖子'
         quote_post: '<b>q</b> 引用帖子'
         like: '<b>l</b> 赞帖子'
-        flag: '<b>!</b> 报告帖子'
+        flag: '<b>!</b> 标记帖子'
         bookmark: '<b>b</b> 给帖子添加书签'
         edit: '<b>e</b> 编辑帖子'
         delete: '<b>d</b> 删除帖子'
@@ -2544,7 +2551,8 @@ zh_CN:
     badges:
       earned_n_times:
         other: "授予徽章 %{count} 次"
-      more_with_badge: "其他有这些徽章的人"
+      granted_on: "授予于 %{date}"
+      others_count: "其他有该徽章的人（%{count}）"
       title: 徽章
       allow_title: "能用作头衔"
       multiple_grant: "能被授予多次"
@@ -2567,97 +2575,6 @@ zh_CN:
           name: 其它
         posting:
           name: 发帖
-      badge:
-        editor:
-          name: 编辑
-          description: 首个帖子编辑
-        basic_user:
-          name: 基础
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社群功能
-        member:
-          name: 成员
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">已授予</a>邀请权限
-        regular:
-          name: 活跃用户
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">已授予</a>重分类、重命名、跟踪链接和贵宾室
-        leader:
-          name: 资深
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">已授予</a> 全局编辑、固定、关闭、存档、分割和合并
-        welcome:
-          name: 欢迎
-          description: 得到一个赞
-        autobiographer:
-          name: 自传作者
-          description: 已填写用户<a href="/my/preferences">资料</a>信息
-        anniversary:
-          name: 年度纪念日
-          description: 一年活跃用户，至少发了一个帖子
-        nice_post:
-          name: 不错的帖子
-          description: 一个帖子收到 10 个赞。这个徽章可以被授予多次
-        good_post:
-          name: 实用的帖子
-          description: 一个帖子收到 25 个赞。这个徽章可以被授予多次
-        great_post:
-          name: 非常棒的帖子
-          description: 一个帖子收到 50 个赞。这个徽章可以被授予多次
-        nice_topic:
-          name: 好的主题
-          description: 一个帖子收到 10 个赞。这个徽章可以被授予多次
-        good_topic:
-          name: 不错的主题
-          description: 一个帖子收到 25 个赞。这个徽章可以被授予多次
-        great_topic:
-          name: 很棒的主题
-          description: 一个帖子收到 50 个赞。这个徽章可以被授予多次
-        nice_share:
-          name: 分享得很好
-          description: 分享了一个有 25 个独立访问者的帖子
-        good_share:
-          name: 分享得不错
-          description: 分享了一个有 300 个独立访问者的帖子
-        great_share:
-          name: 分享得很好
-          description: 分享了一个有 1000 个独立访问者的帖子
-        first_like:
-          name: 首个赞
-          description: 已赞了一个帖子
-        first_flag:
-          name: 首个标记
-          description: 标记帖子
-        promoter:
-          name: 推广
-          description: 已邀请了 1 个用户
-        campaigner:
-          name: 资深推广
-          description: 邀请3个基础用户（信任等级1）
-        champion:
-          name: 元老推广
-          description: 邀请5个会员（信任等级2）
-        first_share:
-          name: 首次分享
-          description: 已分享了一个帖子
-        first_link:
-          name: 首个链接
-          description: 已经添加了一个内部链接至另一个主题
-        first_quote:
-          name: 第一次引用
-          description: 引用了一个用户
-        read_guidelines:
-          name: 阅读指引
-          description: 阅读<a href="/guidelines">社群指引</a>
-        reader:
-          name: 读者
-          description: 阅读一个超过 100 个帖子的主题中的每一个帖子
-        popular_link:
-          name: 流行链接
-          description: 发布了超过 50 次点击的外部链接
-        hot_link:
-          name: 热门链接
-          description: 发布了超过 300 次点击的外部链接
-        famous_link:
-          name: 著名链接
-          description: 发布了超过 1000 次点击的外部链接
     google_search: |
       <h3>用 Google 搜索</h3>
       <p>

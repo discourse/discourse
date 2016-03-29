@@ -220,7 +220,7 @@ ro:
         all_time: "Tot timpul"
         last_7_days: "Ultimele 7 zile"
         last_30_days: "Ultimele 30 de zile"
-      like_count: "Like-uri"
+      like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Postări"
       user_count: "Utilizatori noi"
@@ -292,7 +292,6 @@ ro:
         few: "Această discuție are <b>1</b> postare în așteptare"
         other: "Această discuţie are <b>{{count}}</b> postări în aşteptare."
       confirm: "Salvează Schimbările"
-      delete_prompt: "Sunteţi sigur că vreţi să ştergeţi  <b>%{username}</b>? Această operaţiune va şterge toate postările, va bloca adresa de email şi adresa de IP."
       approval:
         title: "Necesită aprobare"
         description: "Am primit nouă postare dar trebuie să fie aprobată de un moderator înainte că ea să apară pe site. Va rugăm să aveţi răbdare."
@@ -347,6 +346,8 @@ ro:
         other: "grupuri"
       members: "Membri"
       posts: "Postări"
+      mentions: "Mențiuni"
+      messages: "Mesaje"
       alias_levels:
         nobody: "Nimeni"
         only_admins: "Doar Adminii"
@@ -354,8 +355,13 @@ ro:
         members_mods_and_admins: "Doar membri grupului, moderatorii și adminii"
         everyone: "Toată lumea"
       notifications:
+        watching:
+          title: "Urmărit"
+        tracking:
+          title: "Urmărit"
         regular:
           title: "Normal"
+          description: "Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
     user_action_groups:
       '1': "Aprecieri Date"
       '2': "Aprecieri Primite"
@@ -438,9 +444,7 @@ ro:
         perm_default: "Activeaza notificarile"
         perm_denied_btn: "Nu se permite accesul"
         disable: "Dezactiveaza notificarile"
-        currently_enabled: "(acum activat)"
         enable: "Activeaza Notificarile"
-        currently_disabled: "(acum dezactivate)"
         each_browser_note: "Notati: Setarile vor fi modificate pe orice alt browser."
       dismiss_notifications: "Marchează toate ca citite"
       dismiss_notifications_tooltip: "Marchează cu citit toate notificările necitite"
@@ -698,8 +702,6 @@ ro:
       value_prop: "Cand creati un cont nou, vom retine exact ce ati citit, astfel continuati intotdeauna de unde ati ramas. Deasemenea primiti notificari, aici sau prin email atunci se posteaza ceva nou. Puteti \"aprecia\" postari pentru a impartasi iubire :heartbeat:"
     summary:
       enabled_description: "Vizualizați sumarul discuției: cea mai interesantă postare, așa cum a fost determinată de comunitate. Pentru toate postările, faceți click dedesubt."
-      description: "Există <b>{{replyCount}}</b> de răspunsuri."
-      description_time: "Există <b>{{replyCount}}</b> de răspunsuri cu timp de citit estimat la <b>{{readingTime}} de minute</b>."
       enable: 'Fă sumarul discuției'
       disable: 'Arată toate postările'
     deleted_filter:
@@ -719,15 +721,15 @@ ro:
     trust_level: 'Nivel de încredere'
     search_hint: 'Numele de utilizator sau email'
     create_account:
-      title: "Crează cont"
+      title: "Creează cont"
       failed: "Ceva a decurs greșit, poate că acest email e deja înregistrat, încearcă linkul parolă uitată "
     forgot_password:
       title: "Resetare parolă"
       action: "Mi-am uitat parola"
       invite: "Introduce-ți numele de utilizator sau adresa de email și vă vom trimite un email pentru resetarea parolei."
       reset: "Resetare Parolă"
-      complete_username: "Dacă contul se potrivește numelui de utilizator <b>%{username}</b>, ar trebuii să primiți un email cu instrucțiunile de resetare a parolei, în scurt timp."
-      complete_email: "dacă un cont se potrivește <b>%{email}</b>, ar trebuii să primiți un email cu instrucțiunile de resetare a parolei, în scurt timp."
+      complete_username: "Dacă contul se potrivește numelui de utilizator <b>%{username}</b>, ar trebui să primiți în scurt timp un email cu instrucțiunile de resetare a parolei."
+      complete_email: "Dacă un cont se potrivește cu <b>%{email}</b>, ar trebui să primiți un email în cel mai scurt timp cu instrucțiunile de resetare a parolei."
       complete_username_found: "Am găsit un cont care se potriveşte cu utilizatorul <b>%{username}</b>, veţi primi un email cu instrucţiunile cum să resetati parolă în cel mai scurt timp."
       complete_email_found: "Am găsit un cont care se potriveşte cu adresa <b>%{email}</b>, veţi primi un email cu instrucţiunile cum să resetati parolă în cel mai scurt timp."
       complete_username_not_found: "Nici un cont nu se potriveşte cu utilizatorul <b>%{username}</b>"
@@ -805,7 +807,7 @@ ro:
       reply_here: "Răspunde aici"
       reply: "Răspunde"
       cancel: "Anulează"
-      create_topic: "Crează o Discuţie"
+      create_topic: "Creează o Discuţie"
       create_pm: "Mesaj"
       title: "sau apasă Ctrl+Enter"
       users_placeholder: "adaugă un utilizator"
@@ -865,7 +867,6 @@ ro:
       mentioned: "<i title='a menționat' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='a citat' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='a răspuns' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='a răspuns' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='a editat' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='a apreciat' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='Mesaj privat' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -937,8 +938,6 @@ ro:
         category: "Nu există nicio discuție din categoria {{category}}."
         top: "Nu exită nicio discuție de top."
         search: "Nu sunt rezulate la căutare."
-        educate:
-          new: '<p>Discuţiile noi vor apărea aici.</p><p>Implicit, discuţiile sunt considerate noi şi vor afişa indicatorul <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> dacă au fost create în ultimele 2 zile.</p><p>Puteţi schimba aceasta în <a href="%{userPrefsUrl}">preferinţele</a> dvs.</p>'
       bottom:
         latest: "Nu există nicio ultimă discuție."
         hot: "Nu mai există discuții importante."
@@ -952,8 +951,8 @@ ro:
         search: "Nu mai sunt rezultate."
     topic:
       filter_to: "{{post_count}} de postări în discuție"
-      create: 'Crează discuție'
-      create_long: 'Crează discuție nouă'
+      create: 'Creează discuție'
+      create_long: 'Creează discuție nouă'
       private_message: 'Scrie un mesaj.'
       archive_message:
         title: 'Arhivează'
@@ -1024,35 +1023,44 @@ ro:
         position: "postarea %{current} din %{total}"
       notifications:
         reasons:
-          '3_6': 'Veți primii notificări fiindcă priviți această categorie.'
-          '3_5': 'Veți primii notificări fiindcă ați început să citiți această discuție automat.'
-          '3_2': 'Veți primii notificări fiindcă citiți această discuție.'
-          '3_1': 'Veți primii notificări fiindcă ați creat această discuție.'
-          '3': 'Veți primii notificări fiindcă priviți această discuție.'
-          '2_8': 'Veți primii notificări fiindcă urmariți această categorie.'
-          '2_4': 'Veți primii notificări fiindcă ați postat un răspuns în această discuție.'
-          '2_2': 'Veți primii notificări fiindcă urmariți această discuție.'
-          '2': 'Veți primii notificări fiindcă  citiți <a href="/users/{{username}}/preferences">această discuție</a>.'
+          '3_6': 'Veți primi notificări deoarece priviți această categorie.'
+          '3_5': 'Veți primi notificări deoarece ați început să citiți această discuție automat.'
+          '3_2': 'Veți primi notificări fiindcă citiți această discuție.'
+          '3_1': 'Veți primi notificări fiindcă ați creat această discuție.'
+          '3': 'Veți primi notificări fiindcă priviți această discuție.'
+          '2_8': 'Veți primi notificări fiindcă urmăriți această categorie.'
+          '2_4': 'Veți primi notificări fiindcă ați postat un răspuns în această discuție.'
+          '2_2': 'Veți primi notificări fiindcă urmăriți această discuție.'
+          '2': 'Veți primi notificări fiindcă citiți <a href="/users/{{username}}/preferences">această discuție</a>.'
+          '1_2': 'Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply.'
+          '1': 'Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply.'
           '0_7': 'Ignorați toate notificările din această categorie.'
           '0_2': 'Ignorați toate notificările din această discuție.'
           '0': 'Ignorați toate notificările din această discuție.'
         watching_pm:
-          title: "Privind"
+          title: "Urmărit Activ"
+          description: "Numărul postărilor noi va fi arătat pentru acest mesaj și veți fi notificat pentru orice reply scris."
         watching:
-          title: "Privind"
+          title: "Urmărit Activ"
+          description: "Numărul postărilor noi va fi arătat pentru acest topic și veți fi notificat pentru orice reply scris."
         tracking_pm:
-          title: "Urmărind"
+          title: "Urmărit"
+          description: "Numărul postărilor noi va fi arătat pentru acest mesaj. Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         tracking:
-          title: "Urmărind"
+          title: "Urmărit"
+          description: "Numărul postărilor noi va fi arătat pentru acest topic. Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         regular:
           title: "Normal"
+          description: "Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         regular_pm:
           title: "Normal"
+          description: "Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         muted_pm:
           title: "Silențios"
           description: "Nu veţi fi niciodată notificat despre acest mesaj."
         muted:
           title: "Silențios"
+          description: "Nu veți fi notificat de discuțiile noi din acest topic și nu vor apărea în tabul necitite."
       actions:
         recover: "Rescrie discuție"
         delete: "Șterge Discuție"
@@ -1193,6 +1201,15 @@ ro:
         other: "vedeţi {{count}} răspunsuri ascunse"
       more_links: "{{count}} mai multe..."
       unread: "postarea nu a fost citită"
+      has_likes:
+        one: "O Apreciere"
+        few: "{{count}} Aprecieri"
+        other: "{{count}} de Aprecieri"
+      has_likes_title_only_you: "Ai apreciat acest post"
+      has_likes_title_you:
+        one: "Ați apreciat acest post împreună cu un alt utilizator."
+        few: "Ați apreciat acest post împreună cu alți {{count}} utilizatori."
+        other: "Ați apreciat acest post împreună cu alți {{count}} utilizatori."
       errors:
         create: "Ne pare rău , s-a semnalat o eroare în creerea postării dumneavoastră.Vă rugăm încercati iar."
         edit: "Ne pare rău , s-a semnalat o eroare în editarea postării dumneavoastră . Vă rugăm încercati iar."
@@ -1215,7 +1232,7 @@ ro:
       controls:
         reply: "începe compunerea unui răspuns pentru această postare"
         like: "apreciează acestă postăre"
-        has_liked: "ai retras aprecierea acestei postări "
+        has_liked: "ai apreciat acest răspuns"
         undo_like: "anuleazaă aprecierea"
         edit: "editează această postare"
         edit_anonymous: "Ne pare rău, dar trebuie să fiţi autentificat pentru a edita."
@@ -1259,18 +1276,6 @@ ro:
           bookmark: "Retrage marcare"
           like: "Retrage apreciere"
           vote: "Retrage vot"
-        people:
-          off_topic: "{{icons}} Semnalază asta ca în afara discuției"
-          spam: "{{icons}} Semnalează asta ca spam"
-          spam_with_url: "{{icons}} semnalează <a href='{{postUrl}}'>ca spam</a>"
-          inappropriate: "{{icons}} Semnalează asta ca necorespunzator"
-          notify_moderators: "{{icons}} moderatorii notificați"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'> moderatori notificați</a>"
-          notify_user: "{{icons}} a trimis un mesaj"
-          notify_user_with_url: "{{icons}} a trimis un <a href='{{postUrl}}'>mesaj</a>"
-          bookmark: "{{icons}} marchează asta"
-          like: "{{icons}} apreciat"
-          vote: "{{icons}} votat"
         by_you:
           off_topic: "Ați marcat ca fiind în afara discutiei"
           spam: "Ați marcat ca fiind spam"
@@ -1381,7 +1386,7 @@ ro:
       general: 'General'
       settings: 'Setări'
       delete: 'Șterge categorie'
-      create: 'Crează categorie'
+      create: 'Creează categorie'
       save: 'Salvează categorie'
       slug: 'Slug Categorie'
       slug_placeholder: '(Opțional) cuvinte-punctate pentru url'
@@ -1427,11 +1432,11 @@ ro:
           title: "Urmărire"
         regular:
           title: "Normal"
+          description: "Veți fi notificat dacă cineva vă menționează @numele sau vă scrie un reply."
         muted:
           title: "Silențios"
     flagging:
       title: 'De ce marcați această postare ca fiind privată?'
-      private_reminder: 'steagurile sunt private, vizibile  <b>numai</ b> personalului'
       action: 'Marcare'
       take_action: "Actionează"
       notify_action: 'Mesaj'
@@ -1443,7 +1448,6 @@ ro:
       submit_tooltip: "Acceptă marcarea privată"
       take_action_tooltip: "Accesati permisiunea marcarii imediat, nu mai asteptati alte marcaje comune"
       cant: "Ne pare rău nu puteți marca această postare deocamdată."
-      notify_staff: 'Anunță moderatorii'
       formatted_name:
         off_topic: "În afară discuției"
         inappropriate: "Inadecvat"
@@ -1582,7 +1586,7 @@ ro:
         other_periods: "vezi topul"
     browser_update: 'Din nefericire, <a href="http://www.discourse.org/faq/#browser"> browserul dumneavoastră este prea vechi pentru a funcționa pe acest forum </a>. Va rugăm <a href="http://browsehappy.com"> reânoiți browserul</a>.'
     permission_types:
-      full: "Crează / Răspunde / Vizualizează"
+      full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizaează"
       readonly: "Vizualizaează"
   admin_js:
@@ -1812,11 +1816,9 @@ ro:
             is_disabled: "Restabilirea este dezactivată din setările siteului."
             label: "Restaurează"
             title: "Restabilește rezervă"
-            confirm: "Sunteți sigur că doriți restabilirea acestei rezerve?"
           rollback:
             label: "Revenire la situaţia anterioară"
             title: "Restabilește baza de date în stadiul anterior"
-            confirm: "Sunteți sigur că doriți restabilirea bazei de date în stadul precedent?"
       export_csv:
         user_archive_confirm: "Sunteţi sigur că doriţi să descărcaţi mesajele dvs.?"
         success: "Exportul a fost iniţiat. Veţi primi un mesaj de notificare când procesul se va termina."
@@ -1919,9 +1921,6 @@ ro:
           love:
             name: 'Iubire'
             description: "Culoarea butonului de apreciere."
-          wiki:
-            name: 'wiki'
-            description: "Culoarea de bază folosită pentru fundalul postărilor pe wiki."
       email:
         title: "Emails"
         settings: "Opțiuni"
@@ -2023,7 +2022,7 @@ ro:
             anonymize_user: "fă userul anonim"
             change_category_settings: "schimbă setările categoriei"
             delete_category: "șterge categorie"
-            create_category: "crează categorie"
+            create_category: "creează categorie"
             block_user: "blochează utilizator"
             unblock_user: "deblochează utilizator"
             grant_admin: "Acordă titlul de Admin"
@@ -2199,9 +2198,9 @@ ro:
         unblock_failed: 'S-a semnalat o problemă la deblocarea utlizatorului.'
         block_failed: 'S-a semnalat o problemă la blocarea utilizatorului.'
         block_accept: 'Blochează utilizatorul'
-        deactivate_explanation: "Un utilizator dezactivat va trebuii sa-și reactvieze emailul."
+        deactivate_explanation: "Un utilizator dezactivat va trebui să-și revalideze email-ul."
         suspended_explanation: "Un utilizator suspendat nu se poate autentifica"
-        block_explanation: "Un utilizator blocat nu poate posta sau pornii o discuție."
+        block_explanation: "Un utilizator blocat nu poate posta sau porni o discuție."
         trust_level_change_failed: "S-a semnalat o problemă la schimbarea nivelului de încredere al utilizatorului."
         suspend_modal_title: "Suspendă utilizator"
         trust_level_2_users: "utilizatori de nivel de încredere 2 "
@@ -2244,7 +2243,7 @@ ro:
       user_fields:
         title: "Câmpuri utilizator"
         help: "Adăugaţi câmpuri pe care utilizatorii le pot completa."
-        create: "Crează un câmp utilizator"
+        create: "Creează un câmp utilizator"
         untitled: "Fără titlu"
         name: "Nume câmp"
         type: "Tip câmp"
@@ -2352,7 +2351,7 @@ ro:
         trigger_type:
           none: "reinprospatează zilnic"
           post_action: "Când un utilizator reacționează la un mesaj"
-          post_revision: "Când un utlizator crează sau editează un mesaj"
+          post_revision: "Când un utlizator creează sau editează un mesaj"
           trust_level_change: "Când un utilizator schimbă nivelul de încredere"
           user_change: "Când un utilizator este editat sau creat"
         preview:
@@ -2428,7 +2427,7 @@ ro:
         next_prev: '<b>`</b>/<b>~</b> selecția Urmatoare/Precedentă'
       application:
         title: 'Applicația'
-        create: '<b>c</b> Crează discuție nouă'
+        create: '<b>c</b> Creează discuție nouă'
         notifications: '<b>n</b> Deschide notificare'
         hamburger_menu: '<b>=</b> Deschide meniul hamburger'
         user_profile_menu: '<b>p</b> Deschide meniu utilizator'
@@ -2458,10 +2457,7 @@ ro:
         mark_tracking: '<b>m</b>, <b>t</b> Urmăriți discuția'
         mark_watching: '<b>m</b>, <b>w</b> Urmăriți discuția îndeaproape'
     badges:
-      more_with_badge: "Alții cu această insignă"
       title: Insigne
-      allow_title: "poate fi folosit ca titlu"
-      multiple_grant: "pot fi acordate de mai multe ori"
       badge_count:
         one: "1 Insignă"
         few: "%{count} Insigne"
@@ -2487,97 +2483,6 @@ ro:
           name: Altele
         posting:
           name: Postând
-      badge:
-        editor:
-          name: Editor
-          description: Prima postare editată
-        basic_user:
-          name: De baza
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Vi se permite acces</a> la toate funcțiile esențiale ale comunității
-        member:
-          name: Membru
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Permisiuni</a> invitații
-        regular:
-          name: Obișnuit
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Vi se permit</a> recategorisirea, redenumirea, link-urile urmărite și acces lounge
-        leader:
-          name: Lider
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Vi se permit</a> editarea globală, fixarea, arhivarea, despărțirea și combinarea
-        welcome:
-          name: Bine ai venit
-          description: A primit o apreceiere
-        autobiographer:
-          name: Autobiograf
-          description: Informația de <a href="/my/preferences">profil</a> completă a utilizatorului
-        anniversary:
-          name: Aniversare
-          description: Membru activ pentru un an, a scris măcar un mesaj
-        nice_post:
-          name: Mesaj drăguţ
-          description: A primit 10 aprecieri pentru o postare. Această insignă poate fi acordată de multiple ori
-        good_post:
-          name: Mesaj bun
-          description: A primit 25 de aprecieri pentru un mesaj. Această insignă poate fi acordată de mai multe ori
-        great_post:
-          name: Mesaj foarte bun
-          description: A primit 50 de aprecieri pentru un mesaj. Această insignă poate fi acordată de mai multe ori
-        nice_topic:
-          name: Discuţie Drăguţă
-          description: A primit 10 de aprecieri pentru o discuţie. Această insignă poate fi acordată de mai multe ori
-        good_topic:
-          name: Discuţie Bună
-          description: A primit 25 de aprecieri pentru o discuţie. Această insignă poate fi acordată de mai multe ori
-        great_topic:
-          name: Discuţie Foarte Bună
-          description: A primit 50 de aprecieri pentru o discuţie. Această insignă poate fi acordată de mai multe ori
-        nice_share:
-          name: Distribuire drăguță
-          description: A împărţit un mesaj cu 25 utilizatori unici
-        good_share:
-          name: Distribuire bună
-          description: A distribuit un mesaj către 300 utilizatori unici
-        great_share:
-          name: Super distribuire
-          description: A distribuit un mesaj către 1000 utilizatori unici
-        first_like:
-          name: Prima apreciere
-          description: A apreciat un mesaj
-        first_flag:
-          name: Prima reclamație
-          description: A reclamat un mesaj
-        promoter:
-          name: Promotor
-          description: A invitat un utilizator
-        campaigner:
-          name: Combatant
-          description: A invitat 3 membri simpli (nivel de incredere 1)
-        champion:
-          name: Campion
-          description: A invitat 5 membri (nivel de incredere 2)
-        first_share:
-          name: Primul
-          description: A distribuit un mesaj
-        first_link:
-          name: Primul link
-          description: A adăugat o adresă internă catre altă discuție
-        first_quote:
-          name: Primul citat
-          description: A citat un alt utilizator
-        read_guidelines:
-          name: Citește ghidul comunității
-          description: Citește <a href="/guidelines">ghidul comunității</a>
-        reader:
-          name: Cititor
-          description: A citit fiecare mesaj dintr-o discuție cu mai mult de 100 de mesaje
-        popular_link:
-          name: Link popular
-          description: A postat un link extern cu cel puțin 50 de accesări
-        hot_link:
-          name: Link interesant
-          description: A postat un link extern cu cel puțin 300 de accesări
-        famous_link:
-          name: Link foarte popular
-          description: A postat un link extern cu cel puțin 1000 de accesări
     google_search: |
       <h3>Căutați cu Google</h3>
       <p>

@@ -1,21 +1,17 @@
 <div class='container badges'>
   <h1>{{i18n 'badges.title'}}</h1>
 
-  <table class='badges-listing'>
-    <tbody>
-      {{#each bg in badgeGroups}}
-        <tr class='title'>
-          <td colspan=4><h3>{{bg.badgeGrouping.displayName}}</h3></td>
-        </tr>
-        {{#each b in bg.badges}}
-          <tr>
-            <td class='granted'>{{#if b.has_badge}}<i class='fa fa-check'></i>{{/if}}</td>
-            <td class='badge'>{{user-badge badge=b}}</td>
-            <td class='description'>{{{b.displayDescriptionHtml}}}</td>
-            <td class='grant-count'><span title="{{i18n 'badges.granted' count=b.grant_count}}">{{b.grant_count}}</span></td>
-          </tr>
+  <div class='badge-groups'>
+    {{#each bg in badgeGroups}}
+      <div class='badge-grouping'>
+        <div class='title'>
+          <h3>{{bg.badgeGrouping.displayName}}</h3>
+        </div>
+
+        {{#each bg.badges as |b|}}
+          {{badge-card badge=b navigateOnClick="true"}}
         {{/each}}
-      {{/each}}
-    </tbody>
-  </table>
+      </div>
+    {{/each}}
+  </div>
 </div>

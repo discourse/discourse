@@ -157,6 +157,9 @@ zh_CN:
     hot: "最热主题"
     top: "热门主题"
     posts: "最新帖子"
+    private_posts: "最近的私信"
+    group_posts: "%{group_name}组最近的帖子"
+    group_mentions: "%{group_name}组最近的提及"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
@@ -416,6 +419,7 @@ zh_CN:
     confirmed: "你的电子邮箱已被更新。"
     please_continue: "转入到 %{site_name}"
     error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
+    error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
     already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
     authorizing_old:
       title: "感谢你确认你目前的邮箱地址"
@@ -670,11 +674,14 @@ zh_CN:
     site_contact_username_warning: "输入一个友善的管理人员账户名，并以他的名义发送重要的自动消息。在<a href='/admin/site_settings'>站点设置</a>中更新 site_contact_username。"
     notification_email_warning: "通知邮件不是从你域名的一个有效地址发出的；邮件分发将会变得危险和不可靠。请在<a href='/admin/site_settings'>站点设置</a>中将 notification_email 设置为一个有效的本地邮件地址。"
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
+    email_polling_errored_recently:
+      other: "邮件轮询在过去的 24 小时内发生了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。"
   site_settings:
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
     default_locale: "此论坛的缺省语言（ISO 639-1 代码）"
     allow_user_locale: "允许用户选择他们自己的语言界面"
+    set_locale_from_accept_language_header: "为未登录用户按照他们的浏览器发送的请求头部设置界面语言。（实验性，无法和匿名缓存共同使用）"
     min_post_length: "帖子允许的最少字符数"
     min_first_post_length: "第一帖（主题内容）允许的最少字符数"
     min_private_message_post_length: "消息允许的最小字符数"
@@ -770,7 +777,6 @@ zh_CN:
     suppress_reply_directly_above: "当一个帖子只有一个回复时，不显示回复到该贴的回复。"
     suppress_reply_when_quoting: "当帖子引用回复时，不显示可展开的回复到某贴的标记。"
     max_reply_history: "扩展回复至时显示的最大回复数量"
-    experimental_reply_expansion: "当展开回复至内容时隐藏直接回复（实验性）"
     topics_per_period_in_top_summary: "在一个主题底部显示的默认推荐主题的数量。"
     topics_per_period_in_top_page: "在展开“显示更多”推荐主题列表显示的主题数量。"
     redirect_users_to_top_page: "自动重定向至新用户或者长时间未登入的用户至热门页面。"
@@ -823,7 +829,7 @@ zh_CN:
     instagram_consumer_secret: "Instagram 验证的 Consumer secret"
     enable_facebook_logins: "启用 Facebook 帐号验证登录，需要 facebook_app_id 和 facebook_app_secret"
     facebook_app_id: "Facebook 帐号验证的应用帐号（App id），到 https://developers.facebook.com/apps 来注册获取"
-    facebook_app_secret: "脸书帐号验证的应用密码（App secret），到 https://developers.facebook.com/apps 来注册获取"
+    facebook_app_secret: "Facebook 帐号验证的应用密码（App secret），到 https://developers.facebook.com/apps 来注册获取"
     enable_github_logins: "启用 Github 帐号验证登录，需要 github_client_id 和 github_client_secret"
     github_client_id: "Github 帐号验证的客户端帐号（Client id），到 https://github.com/settings/applications 来注册获取"
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
@@ -887,17 +893,17 @@ zh_CN:
     tl2_requires_likes_received: "一个初级用户升级到信任等级2所需要获得的赞数。"
     tl2_requires_likes_given: "一个初级用户升级到信任等级2所需要给出的赞数。"
     tl2_requires_topic_reply_count: "一个初级用户升级到信任等级2所需要回复的主题数量。"
-    tl3_time_period: "3级信任等级时间期"
-    tl3_requires_days_visited: "要维持信任等级 3 升级的用户，需要在最近 100 天内访问的最低次数。将其设置为高于信任等级 3 的评估时间来禁用升级至信任等级 3 功能。（设置为 0 或比那个值更高）"
-    tl3_requires_topics_replied_to: "在最近 100 天内升至信任等级3所需的回复主题的最小数量。（0或更高）"
-    tl3_requires_topics_viewed: "升至信任等级 3 所需阅读的最近 100 天内新创建主题的百分比。（0到100）"
-    tl3_requires_posts_read: "升至信任等级 3 所需阅读的最近 100 天内新创建帖子的百分比。（0到100）"
+    tl3_time_period: "信任等级 3 考察期限（天数）"
+    tl3_requires_days_visited: "要升到信任等级 3 所需要的，在最近考察时间段内访问的最低天数。将其设置为高于信任等级 3 的考察时间可禁用信任等级 3。（设置为 0 或比考察期更长）"
+    tl3_requires_topics_replied_to: "要升到信任等级 3 所需要的，在最近考察时间段内回复的主题数量。（设置为 0 或更高）"
+    tl3_requires_topics_viewed: "要升到信任等级 3 所需要的，在最近考察时间段内所查看的新主题的百分比。将其设置为高于信任等级 3 的考察时间可禁用信任等级 3。（设置为 0 到 100）"
+    tl3_requires_posts_read: "要升到信任等级 3 所需要的，在最近考察时间段内所查看的新主题的百分比。将其设置为高于信任等级 3 的考察时间可禁用信任等级 3。（设置为 0 或比考察期更长）"
     tl3_requires_topics_viewed_all_time: "用户升至信任等级 3 所需查看的最小主题数量。"
     tl3_requires_posts_read_all_time: "用户升至信任等级 3 所需查看的最小帖子数量。"
-    tl3_requires_max_flagged: "用户在最近 100 天内升至信任等级3所需的必须没有超过 x 个帖子被 x 个不同的用户标记数量，x为数量。（0或更高）"
+    tl3_requires_max_flagged: "要升到信任等级 3 所需要的，在最近考察时间段内，用户不得被 x 个不同用户标记 x 篇帖子的 x 值。（设置为 0 或更高）"
     tl3_promotion_min_duration: "信任等级3的用户可被降级至信任等级2前最小持续天数。"
-    tl3_requires_likes_given: "在最近 100 天内升至信任等级3所需给出的赞。"
-    tl3_requires_likes_received: "在最近 100 天内升至信任等级3所需收到的赞。"
+    tl3_requires_likes_given: "要升到信任等级 3 所需要的，在最近考察时间段内用户必须要给出的赞（设置为 0 或更高）"
+    tl3_requires_likes_received: "要升到信任等级 3 所需要的，在最近考察时间段内用户必须要收到的赞（设置为 0 或更高）"
     tl3_links_no_follow: "不移除信任等级3用户帖子中的链接中的 rel=nofollow 属性。"
     min_trust_to_create_topic: "创建主题所需的最低信任等级。"
     min_trust_to_edit_wiki_post: "能编辑维基模式帖子的最小信任等级"
@@ -912,7 +918,7 @@ zh_CN:
     max_users_notified_per_group_mention: "当整个群组被提及，用户可能收到的最多提醒数量（超过阈值后将不会有更多新提醒）"
     create_thumbnails: "为太大而无法恰当地显示在帖子里的图片创建 lightbox 缩略图。"
     email_time_window_mins: "等待多少（n）分钟才给用户发送通知电子邮件，好让他们有机会自己来编辑和完善他们的帖子。"
-    private_email_time_window_seconds: "等待多少（n）秒后再给用户发送通知私人通知邮件，这让用户有机会编辑和完善他们的帖子。"
+    private_email_time_window_seconds: "等待多少（n）秒再给用户发送通知电子邮件，这可以让用户有时间来编辑和完善他们的消息。"
     email_posts_context: "在通知邮件中包含的作为上下文的回复数量。"
     flush_timings_secs: "向服务器刷新时间数据的频率，以秒为单位。"
     title_max_word_length: "在主题的标题中，允许的词语长度的最大字符数。"
@@ -970,6 +976,9 @@ zh_CN:
     unsubscribe_via_email: "允许用户在发送的邮件的主题或正文中包含“unsubscribe”（未知中文版用什么）来退订邮件"
     unsubscribe_via_email_footer: "在发出的邮件底部包含退订链接"
     delete_email_logs_after_days: "在（N）天后删除邮件日志。设置为 0 无限期保留"
+    max_emails_per_day_per_user: "每日发送给用户的最大帖子数量。设置为 0 禁止限制"
+    enable_staged_users: "处理进站邮件时自动创建暂存用户。"
+    manual_polling_enabled: "用 API 推送邮件回复。"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
     pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
     pop3_polling_period_mins: "查询用于邮件的 POP3 账户的间隔（以分钟计）。注意：需要重新启动。"
@@ -997,6 +1006,7 @@ zh_CN:
     digest_topics: "邮件摘要中显示的最大主题数目。"
     digest_min_excerpt_length: "在邮件摘要中每个帖子最少显示的字符数量。"
     delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户"
+    digest_suppress_categories: "不在摘要邮件中显示关注这个分类的任何内容。"
     disable_digest_emails: "为所有用户禁用摘要邮件。"
     detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
@@ -1014,7 +1024,7 @@ zh_CN:
     disable_avatar_education_message: "禁用更改头像操作的教育消息。"
     daily_performance_report: "每日分析 NGINX 日志并且发布详情主题到管理人员才能看到的主题"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章。"
-    permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(\\/topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式，以及在字符串使用 \\1 等等来访问捕获内容"
+    permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式+使用 \\1 等字符串来访问捕获内容"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
     disable_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
     automatically_unpin_topics: "当用户到达底部时自动解除主题置顶。"
@@ -1052,6 +1062,7 @@ zh_CN:
     approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
     notify_about_queued_posts_after: "如果有帖子等待了设定的小时数后仍在等候处理，发送一封邮件给联络邮件地址。设为 0 将禁用这些邮件。"
     default_email_digest_frequency: "用户默认收到摘要邮件的默认频率。"
+    default_include_tl0_in_digests: "用户在摘要邮件中是否收到新用户帖子的默认设置。用户可以在参数设置中更改这个设置。"
     default_email_private_messages: "默认在有人发消息给用户时发送一封邮件通知。"
     default_email_direct: "默认在有人引用、回复、提及或者邀请用户时发送一封邮件通知。"
     default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
@@ -1090,7 +1101,8 @@ zh_CN:
       pop3_polling_password_is_empty: "在启用 POP3 轮询前，你必须设置 'pop3 polling password'。"
       pop3_polling_authentication_failed: "POP3 验证失败。请验证你的 pop3 账户信息。"
       reply_by_email_address_is_empty: "在启用邮件回复之前，你必须设置“reply by email address”。"
-      pop3_polling_disabled: "在启用邮件回复之前，你必须先启用 POP3 轮询。"
+      email_polling_disabled: "在启用邮件回复功能前，你必须启用手动或者 POP3 轮询。"
+      user_locale_not_enabled: "你必须先设置 'allow user locale' 再启用该设置。"
   notification_types:
     group_mentioned: "%{group_name} 在 %{link} @ 了你"
     mentioned: "%{display_username} 在 %{link} @ 了你"
@@ -1113,10 +1125,10 @@ zh_CN:
       topic: '结果'
       user: '用户'
   sso:
-    not_found: "无法找到或创建账户，联系站点管理员"
-    account_not_approved: "账户正在等待验证，完成后你将收到一封邮件提醒"
-    unknown_error: "更新信息时错误，联系站点管理员"
-    timeout_expired: "账户登录超时，请重试登录"
+    not_found: "无法找到你的账户。请联系站点管理人员。"
+    account_not_approved: "你的帐号尚未被审核通过。一旦你的帐号获得批准，你就会收到一封电子邮件提醒。"
+    unknown_error: "你的账户发生了问题。请联系站点管理人员。"
+    timeout_expired: "账户登录超市，请重新尝试登录。"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
   most_recent_poster: "当前大部分帖子作者"
@@ -1332,14 +1344,6 @@ zh_CN:
       ### 发行注记
 
       %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      other: "这些标记在过去 %{count} 内被提交。"
-    please_review: "请核查他们。"
-    post_number: "帖子"
-    how_to_disable: '你可以通过修改“notify about flags after”设置项以禁用或改变邮件提醒设置。'
-    subject_template:
-      other: "%{count} 个标记需要被处理"
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 个帖子等待审核"
@@ -1353,9 +1357,9 @@ zh_CN:
     spam: "你的帖子被标记为 **广告**：社群成员觉得它是广告，像是在过度地推广着什么，而不是预期中与主题有关的内容。"
     notify_moderators: "你的帖子被标记为 **需要版主关注**：社群成员认为帖子需要管理人员介入。"
   flags_dispositions:
-    agreed: "感谢通知我们。我们认为这是一个问题，并且我们正在了解情况。"
+    agreed: "谢谢你的消息。我们认为这是个问题。我们正在进行处理。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
-    disagreed: "感谢通知我们。我们正在了解情况。"
+    disagreed: "谢谢你的消息。我们正在进行处理。"
     deferred: "感谢通知我们。我们正在调查情况。"
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   temporarily_closed_due_to_flags: "主题因为大量的社群标记暂时关闭"
@@ -1365,7 +1369,7 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是一封从%{site_name}自动发出的邮件，通知你的帖子已被隐藏。
+        这是%{site_name}自动发出的邮件，通知你的帖子已被隐藏。
 
         %{base_url}%{url}
 
@@ -1540,6 +1544,12 @@ zh_CN:
         我们非常抱歉，你发送至 %{destination}（名为 %{former_title}）的邮件出问题了。
 
         你的账户没有足够的信任等级向该邮件地址发布新主题。如果你坚信这是错误，联系管理人员。
+    email_reject_user_not_found:
+      subject_template: "[%{site_name}] 邮件问题 -- 用户未找到"
+      text_body_template: |
+        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+
+        你发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_inactive_user:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未激活用户"
       text_body_template: |
@@ -1661,7 +1671,7 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是一封自 %{site_name} 自动发出的邮件，以告知你的帖子已因被社群多次标记而被自动隐藏。
+        这是%{site_name}自动发出的邮件，以告知你的帖子已因被社群多次标记而被自动隐藏。
 
         处于谨慎的考虑，你的新账户被禁止创建新回复或主题。除非一个管理人员能复核你的账户。
 
@@ -1671,13 +1681,17 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是一封自 %{site_name} 自动发出的邮件，以告知你的账户被管理人员封禁。
+        这是%{site_name}自动发出的邮件。你的账户已经被管理人员封禁。
+
+        请知晓在管理人员解封你之前，你不能够再创建新的回复或者主题。
+
+        如果你对封禁有异议，请联系我们的[管理人员](%{base_url}/about)。
 
         欲查看额外的指导，请查看我们的[社群指引](%{base_url}/guidelines)。
     user_automatically_blocked:
       subject_template: "因标记而被封禁的新用户 %{username}"
       text_body_template: |
-        这是一封自动发出的邮件。
+        这是自动发出的邮件。
 
         因多位用户标记%{username}的帖子，新用户[%{username}](%{base_url}%{user_url})已被自动封禁。
 
@@ -1687,7 +1701,7 @@ zh_CN:
     spam_post_blocked:
       subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
       text_body_template: |
-        这是一封自动发出的邮件。
+        这是自动发出的邮件。
 
         新用户[%{username}](%{base_url}%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
 
@@ -1699,7 +1713,7 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是一封自 %{site_name} 自动发出的邮件，以告知你的账户已经在管理人员审核后被解封。
+        这是%{site_name}自动发出的邮件，以告知你的账户已经在管理人员审核后被解封。
 
         你现在又可以创建新的回复和主题了。
     pending_users_reminder:
@@ -1720,6 +1734,8 @@ zh_CN:
   subject_pm: "[私信]"
   user_notifications:
     previous_discussion: "之前的回复"
+    reached_limit:
+      other: "警告：你达到了每日邮件限额（%{count}）。之后邮件通知将被禁用。"
     in_reply_to: "回复给"
     unsubscribe:
       title: "取消订阅"
@@ -1730,51 +1746,53 @@ zh_CN:
     visit_link_to_respond: "访问[Visit Topic](%{base_url}%{url})以回复"
     visit_link_to_respond_pm: "访问[Visit Message](%{base_url}%{url})以回复"
     posted_by: "%{username}发表于%{post_date}"
+    invited_to_private_message_body: |
+      %{username} 邀请你至消息交流：
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      论坛：
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} 邀请你参与讨论：
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      论坛：
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
-      text_body_template: |2
+      text_body_template: |
+        %{header_instructions}
 
-        %{username} 邀请你至消息交流：
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        论坛：
-
-        > %{site_title} -- %{site_description}
-
-        请访问 %{base_url}%{url} 来查看该主题。
+        ---
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
-      text_body_template: |2
+      text_body_template: |
+        %{header_instructions}
 
-        %{username} 邀请你至消息交流：
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        论坛：
-
-        > %{site_title} -- %{site_description}
-
-        请访问 %{base_url}%{url} 来查看该主题。
+        ---
+        %{respond_instructions}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username}邀请你参与“%{topic_title}”"
-      text_body_template: |2
+      text_body_template: |
+        %{header_instructions}
 
-        %{username} 邀请你参与讨论：
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        论坛：
-
-        > %{site_title} -- %{site_description}
-
-        请访问 %{base_url}%{url} 来查看该主题。
+        ---
+        %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1895,9 +1913,9 @@ zh_CN:
     set_password:
       subject_template: "[%{site_name}] 设置密码"
       text_body_template: |
-        有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证邮件地址的在线服务商（Google、Facebook等等）登录。
+        有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证过你邮件地址的在线服务商登录。
 
-        如果不是你请求添加密码，你可以直接忽略本邮件。
+        如果不是你在请求添加密码，你可以直接忽略本邮件。
 
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
@@ -1934,7 +1952,7 @@ zh_CN:
     notify_old_email:
       subject_template: "[%{site_name}] 你的邮箱地址已经修改成功"
       text_body_template: |
-        这是一封自 %{site_name} 自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
+        这是%{site_name}自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
 
         你的邮箱地址被修改为：
 
@@ -2009,6 +2027,7 @@ zh_CN:
     post_deleted: "主题被作者删除"
     user_suspended: "用户被封禁"
     already_read: "用户已经阅读了主题"
+    exceeded_limit: "超过 max_emails_per_day_per_user"
     message_blank: "消息为空"
     message_to_blank: "message.to 为空"
     text_part_body_blank: "text_part.body 为空"
@@ -2249,86 +2268,206 @@ zh_CN:
 
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
   static:
-    search_help: |
-      <h3>小技巧</h3>
-      <p>
-      <ul>
-        <li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li>
-        <li>搜索独一无二且不常见的词可以找到最好的结果</li>
-        <li>试试搜索特定的分类、用户或主题</li>
-      </ul>
-      </p>
-      <h3>选项</h3>
-      <p>
-        <table>
-        <tr><td><code>order:views（按照显示次数排序）</code></td><td><code>order:latest（按照更新时间排序）</code></td><td><code>order:likes（按照赞的次数排序）</code><td></td><td colspan=2></td></tr>
-        <tr><td><code>status:open（搜索正常状态的主题）</code></td><td><code>status:closed（搜索已经关闭的主题）</code></td><td><code>status:archived（搜索已经存档的主题）</code></td><td><code>status:noreplies（搜索没有回复的主题）</code></td><td><code>status:single_user（搜索单个用户的主题）</code></td></tr>
-        <tr><td><code>category:分类名</code></td><td><code>user:用户名</code></td><td><code>group:群组名</code></td><td><code>badge:徽章名</code></td><td></td></tr>
-        <tr><td><code>in:likes（在已经赞的帖子里搜索）</code></td><td><code>in:posted（在发表的帖子里搜索）</code></td><td><code>in:watching（在关注的帖子里搜索）</code></td><td><code>in:tracking（在追踪的帖子里搜索）</code></td><td><code>in:private（在私密的帖子里搜索）</code></td></tr>
-        <tr><td><code>in:bookmarks（在加书签的帖子里搜索）</code></td><td><code>in:first（在第一帖里搜索）</code></td><td colspan=3></td></tr>
-        <tr><td><code>posts_count:数字（帖子数量）</code></td><td><code>before:天数或者日期</code></td><td><code>after:天数或者日期</code></td> <td colspan=2></td></tr>
-        </table>
-      </p>
-      <h3>例子</h3>
-      <p>
-        <ul>
-          <li><code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。</li>
-          <li><code>彩虹 category:"公园和花园" in:bookmarks</code> 将搜索在“公园和花园”分类中已被你加过书签的且名字包含“彩虹”的主题。</li>
-        </ul>
-      </p>
+    search_help: "<h3>小技巧</h3>\n<p>\n<ul>\n<li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li>\n<li>搜索独一无二且不常见的词可以找到最好的结果</li>\n<li>试试搜索特定的分类、用户或主题</li>\n</ul>\n</p>\n<h3>选项</h3>\n<p> \n<table>\n<tr><td><code>order:views（按照显示次数排序）</code></td><td><code>order:latest（按照更新时间排序）</code></td><td><code>order:likes（按照赞的次数排序）</code><td></td><td colspan=2></td></tr>\n<tr><td><code>status:open（搜索正常状态的主题）</code></td><td><code>status:closed（搜索已经关闭的主题）</code></td><td><code>status:archived（搜索已经存档的主题）</code></td><td><code>status:noreplies（搜索没有回复的主题）</code></td><td><code>status:single_user（搜索单个用户的主题）</code></td></tr>\n<tr><td><code>category:分类名</code></td><td><code>user:用户名</code></td><td><;code>group:群组名</code></td><;td><code>badge:徽章名</code></td><td></td></tr>\n<tr><td><code>in:likes（在已经赞的帖子里搜索）</code></td><td><code>in:posted（在发表的帖子里搜索）</code></td><td><code>in:watching（在关注的帖子里搜索）</code></td><td><code>in:tracking（在追踪的帖子里搜索）</code></td><td><code>in:private（在私密的帖子里搜索）</code></td></tr>\n<tr><td><code>in:bookmarks（在加书签的帖子里搜索）</code></td><td><code>in:first（在第一帖里搜索）</code></td><td colspan=3></td></tr>\n<tr><td><code>posts_count:数字（帖子数量）</code></td><td><code>before:天数或者日期</code></td><td><code>after:天数或者日期</code></td>\n<td colspan=2></td></tr>\n</table>\n</p>\n<h3>例子</h3>\n<p>\n<ul>\n<li><code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。</li>\n<li><code>彩虹 category:\"公园和花园\" in:bookmarks<;/code> 将搜索在“公园和花园”分类中已被你加过书签的且名字包含“彩虹”的主题。</li>\n</ul>\n</p>\n"
   badges:
-    long_descriptions:
-      autobiographer: |
-        该徽章授予给填写了<a href="/my/preferences">用户页面</a>并选择了用户头像的成员。让社群更多地了解你是谁以及你感兴趣的内容能帮助创造一个更好的更团结的社群。
-      first_like: |
-        该徽章授予给第一次使用 :heart: 按钮赞了帖子的成员。给帖子点赞是一个极好的让社群成员知道他们的帖子有意思、有用、酷炫或者好玩的方法。分享爱！
-      first_link: |+
-        该徽章授予给第一次在回复中包含了到另一个主题的链接。链接主题在两个主题的右侧显示连接，可以帮助阅读者迅速地找到相关讨论。
-
-      first_quote: |
-        该徽章授予给第一次在回复中包含了到另一个主题的链接。链接主题在两个主题的右侧显示连接，可以帮助阅读者迅速地找到相关讨论。
-      first_share: |
-        该徽章授予给第一次用分享按钮分享了回复或者主题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社群增长。
-      read_guidelines: |+
-        该徽章授予给<a href="/guidelines">阅读了社群指引</a>的成员。遵守和分享简单的指引能帮助打造一个安全、有趣和可持续的社群。
-
-      reader: |
-        该徽章授予给阅读了一个较长的主题的成员。阅读是最基础的。详细阅读帮助你更好地了解讨论并帮助你编写更好的、更完整的回复。
-      editor: |
-        该徽章授予给编辑自己帖子的成员。任何时候都不要犹豫编辑你的帖子以改善他们、改正小错误或者增加你忘记的内容。
-      first_flag: |
-        该徽章授予给标记过帖子的用户。标记对社群的健康很重要。如果你注意到了任何需要版主注意的帖子，请不要犹豫，直接标记 它。你可能也使用了标记对话框向用户发送了<b>消息</b>。
-      nice_share: |
-        该徽章授予给分享帖子的链接至超过 25 个外部访客的成员。干得好！分享有趣的讨论给朋友是一个帮助社群成长的极好方式。
-      welcome: |
+    editor:
+      name: 编辑
+      description: 首次编辑帖子
+      long_description: |
+        该徽章授予给第一次编辑自己帖子的你。虽然你不能永远在编辑自己的帖子，但是编辑他们总是一个好办法——你可以改进你的帖子、修正小错误，或者是增补你原来没有写的内容。编辑能让你的帖子质量变得更好！
+    basic_user:
+      name: 初级用户
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">授予</a>所有常用社群功能
+      long_description: |
+        该徽章授予给用户等级达到 1 的成员。感谢你在社群里花了一些时间并且阅读了一些帖子，了解了我们的社群。你的新用户限制已经被取消；并且你已经被授予了所有基本的社群权限，必须个人消息、标记、维基编辑和发布多张图片和多个链接的能力。
+    member:
+      name: 成员
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a> 邀请、群组消息和更多的赞
+      long_description: |
+        该徽章授予给达到用户等级 2 的你。感谢你在社群待了几周，真正融入到了社群中。你现在可以在你的用户页或者主题中邀请他人或者创建群组消息了。每天你也可以点更多次赞了。
+    regular:
+      name: 活跃用户
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a> 重分类、重命名、跟踪链接、维基功能和更多的赞
+      long_description: |
+        该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社群。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社群。你现在可以社群待了几周，真正融入到了社群中。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
+    leader:
+      name: 资深
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a> 全局编辑、固定、关闭、存档、分割、合并和更多的赞
+      long_description: |
+        该徽章授予给达到用户等级 4 的你。你被管理人员选作了社群的领导力量，你用你的行动和言辞为社群树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、关闭、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
+    welcome:
+      name: 欢迎
+      description: 得到一个赞
+      long_description: |
         该徽章授予给帖子收到了第一个赞的成员。恭喜，有社群成员发现你发表的内容有意思、酷炫或者有用！
-      anniversary: |
-        该徽章授予给在社群超过一年并且这一年中至少发布了一个帖子的成员。谢谢你的关注和对我们社群的贡献！
-      good_share: |
-        该徽章授予给分享帖子的链接至超过 300 个外部访客的成员。做得真棒！你已经把一个有意思的讨论分享给了许多新人，并且帮助了社群成长。
-      great_share: |
-        该徽章授予给分享帖子的链接至超过 100 个外部访客的成员。哇！你已经把一个有趣的主题分享给了许多新读者，并且帮助了社群成长。
-      nice_post: |+
-        该徽章授予给创建了得到 10 个赞的回复的成员。干得好！
+    autobiographer:
+      name: 自传作者
+      description: 已填写用户<a href="/my/preferences">资料</a>信息
+      long_description: |
+        该徽章授予给填写了<a href="/my/preferences">用户页面</a>并选择了用户头像的你。让社群成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社群。让我们一起努力！
+    anniversary:
+      name: 年度纪念日
+      description: 一年活跃用户，至少发了一个帖子
+      long_description: |
+        该徽章授予给在社群注册一年并超至少发布了一个帖子的你。感谢你的持续关注和对我们社群的贡献！我们希望你继续参与我们的社群。
+    nice_post:
+      name: 不错的回复
+      description: 回复被赞了 10 次
+      long_description: |
+        该徽章授予给回复被赞了 10 次的你。你的回复给社群成员们留下了印象，并且你推动了讨论的进程！
+    good_post:
+      name: 很好的回复
+      description: 回复被赞了 25 次
+      long_description: |
+        该徽章授予给回复被赞了 25 次的你。你的回复很杰出，这个讨论对每个人都变得更有意义了！
+    great_post:
+      name: 精彩的回复
+      description: 回复被赞了 50 次
+      long_description: |
+        该徽章授予给回复被赞了 50 次的你。哇！你的回复很有启发、引经据典、令人冷俊不禁或者十分有内涵，整个社群都喜欢它。
+    nice_topic:
+      name: 不错的主题
+      description: 主题被赞了 10 次
+      long_description: |
+        该徽章授予给主题获得 10 个赞的你。嗨，你开启了一个社群成员觉得有意思的讨论！
+    good_topic:
+      name: 很好的主题
+      description: 主题被赞了 25 次
+      long_description: |
+        该徽章授予给主题获得 25 个赞的你。你开启了一个有意义的主题，整个社群都在积极响应，而且大家喜欢你的主题！
+    great_topic:
+      name: 精彩的主题
+      description: 主题被赞了 50 次
+      long_description: |
+        该徽章授予给主题获得 50 个赞的你。你开启了一个引人入胜的主题，整个社群都沉浸于讨论之中。
+    nice_share:
+      name: 不错的分享
+      description: 分享了一个有 25 个独立访问者的帖子
+      long_description: |
+        该徽章授予给分享链接给 25 个其他访客的你。感谢你广而告之我们的讨论，和对这个社群的帮助。
+    good_share:
+      name: 很棒的分享
+      description: 分享了一个有 300 个独立访问者的帖子
+      long_description: |
+        该徽章授予给分享链接给 300 个其他访客的你。干得漂亮！你把一个有意思的讨论介绍给了许多新的朋友，并且帮助社群前进了一步。
+    great_share:
+      name: 精彩的分享
+      description: 分享了一个有 1000 个独立访问者的帖子
+      long_description: |+
+        该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社群前进了一大步！
 
-      nice_topic: |
-        该徽章授予给创建了得到 10 个赞的主题的成员。干得好！
-      good_post: |
-        该徽章授予给创建了得到 25 个赞的回复的成员。干得好！
-      good_topic: |
-        该徽章授予给创建了得到 25 个赞的主题的成员。干得好！
-      great_post: |
-        该徽章授予给创建了得到 50 个赞的帖子的成员。哇！
-      great_topic: |
-        该徽章授予给创建了得到 50 个赞的回复的成员。哇！
-      basic: |
-        该徽章授予给用户等级达到 1 的成员。感谢你在社群里花了一些时间并且阅读了一些帖子，了解了我们的社群。你的新用户限制已经被取消，并且你已经被授予了所有基本的社群权限，必须个人消息、标记、维基编辑和发布图片和多个链接的能力。
-      member: |
-        该徽章授予给用户等级达到 2 的成员。感谢你在社群的这几周时间。你现在已经可以在你的用户页或者主题中发送私人邀请、创建群组消息，以及每天可以赞更多次了。
-      regular: |
-        该徽章授予给用户等级达到 3 的成员。感谢你在社群的这几月的活跃参与，并且是我们最活跃的读者质疑，也是社群中的可靠贡献者。你现在可以重新分类和重命名主题、访问隐藏的贵宾分类、使用更多强大的防骚扰标记功能，以及每天可以赞更多次了。
-      leader: |
-        该徽章授予给用户等级达到 4 的成员。你是由管理人员选择的社群领袖，鉴于你在社群的话语和贡献，你为社群树立了一个正面的例子。你有权限编辑所有的帖子，使用主题管理操作，例如置顶、关闭、不在列表中显示、存档、分割和合并，并且可以每天点赞非常多次。
+    first_like:
+      name: 首个赞
+      description: 已赞过了一个帖子
+      long_description: |
+        该徽章授予给第一次使用 :heart: 按钮赞了帖子的成员。给帖子点赞是一个极好的让社群成员知道他们的帖子有意思、有用、酷炫或者好玩的方法。分享爱！
+    first_flag:
+      name: 首个标记
+      description: 已标记过了一个帖子
+      long_description: |
+        该徽章授予给第一次标记帖子的你。标记是帮助我们帮助社群保持健康、合宜的工具。如果你注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果你注意到别人帖子里的某个问题，你也可用标记功能发送<b>私信</b>给该成员。如果你发现了问题，:flag_black: 标记吧！
+    promoter:
+      name: 推广者
+      description: 已邀请了 1 个用户
+      long_description: |
+        该徽章授予给邀请他人加入社群的你。你曾使用了用户页面的邀请按钮或主题底部的邀请按钮。邀请对某个讨论感兴趣的朋友是引介新人的好办法，非常感谢！
+    campaigner:
+      name: 活动家
+      description: 已邀请了 3 个初级用户
+      long_description: |
+        该徽章授予给邀请了 3 人加入社群的你，你的朋友在站点上度过了一段时间，已经成为了初级用户。一个活跃的社群需要不断有新鲜血液的参与，这样新观点才能推进讨论进程。
+    champion:
+      name: 外交官
+      description: 已邀请了 5 个成员
+      long_description: |
+        该徽章授予给邀请了 5 人加入社群的你，你的朋友在站点上度过了很长的时间，已经成为了成员。哇！感谢你帮助社群成长，社群因此变得更多元了！
+    first_share:
+      name: 首次分享
+      description: 已分享了一个帖子
+      long_description: |
+        该徽章授予给第一次用分享按钮分享了回复或者主题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社群增长。
+    first_link:
+      name: 首个链接
+      description: 已链接了另一个主题
+      long_description: |
+        该徽章授予给第一次链接到另一个主题的你。联结主题会在各个主题的右侧显示链接和标题，这可以帮助阅读者迅速地找到相关讨论。多链接一些主题吧！
+    first_quote:
+      name: 首次引用
+      description: 已引用过一个帖子
+      long_description: |
+        该徽章授予给第一次在回复中引用帖子的你。在你的回复中引用之前帖子中的相关的段落可以让讨论更有主题和重点。而且这很简单：你只要选中别的帖子中的任何文字，然后点击在旁边的“引用回复”按钮。多引用一些吧！
+    read_guidelines:
+      name: 阅读指引
+      description: 阅读<a href="/guidelines">社群指引</a>
+      long_description: |
+        该徽章授予给<a href="/guidelines">阅读了社群指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社群。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
+    reader:
+      name: 读者
+      description: 阅读了有至少 100 个回复的主题中的所有回复
+      long_description: |
+        该徽章授予给第一次阅读了超过 100 个回复的长主题的你。仔细地阅读对话内容能让你关注到讨论的中心，理解不同的观点，而且能帮助我们打造更有趣的对话情景。你读得越多，对话的效果就会越好。就如我们常说的那般，阅读是最重要的！ :slight_smile:
+    popular_link:
+      name: 流行链接
+      description: 分享的链接被点击了 50 次
+      long_description: |
+        该徽章授予给分享的链接被点击过 50 次的你。感谢你贴出了有用的链接，这让讨论的情节更形象了！
+    hot_link:
+      name: 热门链接
+      description: 分享的链接被点击了 300 次
+      long_description: |
+        该徽章授予给分享的链接被点击过 300 次的你。感谢你贴出了精彩的链接，这推进了讨论的进程，并且装点了讨论！
+    famous_link:
+      name: 著名链接
+      description: 分享的链接被点击了 1000 次
+      long_description: |
+        该徽章授予给分享的链接被点击过 1000 次的你。哇！感谢你贴出了推动讨论的重要链接，这让讨论更加具体，更有情节，并且传达了跟多的信息。干的好！
+    appreciated:
+      name: 感谢
+      description: 有 20 个帖子都被赞了 1 次
+      long_description: |
+        该徽章授予给 20 个不同的帖子都收到了至少 1 个赞的你。社群感谢你对讨论的贡献！
+    respected:
+      name: 尊敬
+      description: 有 100 个帖子都被赞了 2 次
+      long_description: |
+        该徽章授予给 100 个不同的帖子都收到了至少 2 个赞的你。社群越来越尊重你在讨论中的贡献了。
+    admired:
+      name: 敬仰
+      description: 有 300 个帖子都被赞了 5 次
+      long_description: |+
+        该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的你。哇！社群敬仰你在讨论中频繁和高质量的贡献。
+
+    out_of_love:
+      name: 热情
+      description: 1 天内赞了 50 次
+      long_description: |
+        该徽章授予给一天内赞了 50 次的你。别忘记休息一下。赞你喜欢的帖子能鼓励成员不断改进讨论的内容。
+    higher_love:
+      name: "激情\b"
+      description: 5 天都赞过 50 次
+      long_description: |
+        该徽章授予给 5 天赞过 50 次的你。感谢你每天都花点时间鼓励讨论的进行！
+    crazy_in_love:
+      name: 狂热
+      description: 20 天都赞过 50 次
+      long_description: |+
+        该徽章授予给 20 天赞过 50 次的你。哇！你为社群成员们树立了一个令人鼓舞的模范！
+
+    thank_you:
+      name: 感谢你
+      description: 有 20 个被赞的帖子，给出过 10 个赞
+      long_description: |
+        该徽章授予给收到了 20 个赞，且赞过别人 10 次的你。当别人感谢你的帖子时，你也感谢他们的帖子。
+    gives_back:
+      name: 回馈
+      description: 有 100 个被赞的帖子，给出过 100 个赞
+      long_description: |
+        该徽章授予给收到了 100 个赞，且赞过别人 100 次的你。感谢你回馈赞给社群！
+    empathetic:
+      name: 感性
+      description: 有 500 个被赞的帖子，给出过 1000 个赞
+      long_description: |
+        该徽章授予给收到了 500 个赞，且赞过别人 1000 次的你。哇！你是一个富有同情心且会换位思考的模范。 :two_hearts:
   admin_login:
     success: "邮件已发送"
     error: "错误！"

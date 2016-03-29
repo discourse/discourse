@@ -66,6 +66,10 @@ Discourse.Ajax = Em.Mixin.create({
           });
         }
 
+        if (args.returnXHR) {
+          data = { result: data, xhr: xhr };
+        }
+
         Ember.run(null, resolve, data);
       };
 

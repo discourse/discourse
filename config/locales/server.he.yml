@@ -264,7 +264,6 @@ he:
       uncategorized_parent: "נטול קטגוריה לא יכול להיות עם קטגוריית אם"
       self_parent: "קטגוריית אם לא יכולה להיות הקטגוריה עצמה"
       depth: "לא ניתן להניח תת-קטגוריה תחת תת-קטגוריה אחרת"
-      email_in_already_exist: "דוא\"ל '%{email_in}'  כבר בשימוש עבור קטגוריה '%{category_name}' ."
     cannot_delete:
       uncategorized: "לא ניתן למחוק תוכן ללא קטגוריה"
       has_subcategories: "לא ניתן למחוק קטגוריה זו משום שיש בה תת-קטגוריות."
@@ -646,7 +645,6 @@ he:
     min_private_message_title_length: "אורך הכותרת המנימילי המותר להודעה בתווים"
     min_search_term_length: "מספר התווים המינמלי התקין כאורך מונח לחיפוש"
     allow_uncategorized_topics: "הרשה לפתוח נושאים ללא קטגוריה.\nאזהרה: אם יש נושאים ללא קטגוריה, יש לסדר אותם לפני שמבטלים את האופציה. "
-    uncategorized_description: "תיאור הקבוצה \"ללא קטגוריה\". השאירו ריק אם אין צורך בתיאור."
     allow_duplicate_topic_titles: "אשר/י נושאים עם כותרות זהות או משוכפלות."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) ההודעות הראשונות שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור ההודעות."
@@ -829,15 +827,9 @@ he:
     tl2_requires_likes_received: "כמה \"לייקים\" משתמש צריך לקבל לפני שישודרג לרמת אמון 2."
     tl2_requires_likes_given: "כמה לייקים משתמש צריך לתת לפני שישודרג לרמת אמון 2."
     tl2_requires_topic_reply_count: "בכמה נושאים משתמש צריך לענות לפני שישודרג לרמת אמון 2."
-    tl3_requires_topics_replied_to: "מספר נושאים מינימלי שמשתמש צריך היה לענות להם ב-100 הימים האחרונים על מנת שיתאפשר לו להיות משודרג לרמת אמון 3 (ערך בין 0 ל-100)."
-    tl3_requires_topics_viewed: "אחוז הנושאים שנוספו שמשתמש צריך היה לעיין בהם ב-100 הימים האחרונים על מנת שיתאפשר לו להיות משודרג לרמת אמון 3 (ערך בין 0 ל-100)."
-    tl3_requires_posts_read: "מספר הפרסומים שמשתמש פרסם ב-100 הימים האחרונים על מנת שיתאפשר לו להיות משודרג לרמת אמון 3 (ערך בין 0 ל-100)."
     tl3_requires_topics_viewed_all_time: "מספר מינימלי של נושאים שמשתמש צריך לעיין בהם על מנת שיתאפשר לו להיות משודרג לרמת אמון 3."
     tl3_requires_posts_read_all_time: "מספר מינימלי של פרסומים שמשתמש קרא על מנת שיוכל להיות משודרג לרמת אמון 3."
-    tl3_requires_max_flagged: "משתמש לא פרסם יותר מ-X פרסומים שסומנו (flagged) ע\"י משתמשים ב-100 הימים האחרונים, על מנת שיוכל להיות משודרג לרמת אמון 3, כאשר X הוא הערך הזה (0 או גבוה יותר)."
     tl3_promotion_min_duration: "מספר הימים המינימלי ששדרוג לרמת אמון 3 תארך לפני שמשתמש יורד בדרגה לרמת אמון 2."
-    tl3_requires_likes_given: "מינימום הלייקים הנדרשים ב-100 הימים האחרונים כדי להכשיר קידום לרמת אמון 3."
-    tl3_requires_likes_received: "מינימום הלייקים הנדרש ב-100 הימים האחרונים כדי לאפשר קידום לרמת אמון 3."
     tl3_links_no_follow: "מניעת הסרת rel=nofollow מקישורים שמפורסמים על ידי משתמשים ברמת אמון 3."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     min_trust_to_edit_wiki_post: "דרגת האמון המינימלי הנדרשת כדי לערוך פרסום שמסומן כ-wiki."
@@ -925,7 +917,6 @@ he:
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
     digest_topics: "מספר הנושאים המקסימלי להצגה במייל סיכום."
     digest_min_excerpt_length: "מספר התווים המינימלי למובאות מתוך הפרסום במייל הסיכום."
-    delete_digest_email_after_days: "השהיית מיילים מסכמים עבור משתמשים שלא נראו באתר במשך יותר מ(n) ימים."
     disable_digest_emails: "נטרול דוא\"ל סיכום לכל המשתמשים."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
@@ -940,7 +931,6 @@ he:
     dominating_topic_minimum_percent: "איזה אחוז מהפרסומים משתמש צריך לייצר בנושא לפני שיקבל תזכורת לגבי שליטת/שתלטנות יתר על הנושא."
     daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
     suppress_uncategorized_badge: "אל תציגו את התג (badge) לנושאים נטולי קטגוריה ברשימת הנושאים."
-    permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(\\/topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
     global_notice: "הציגו הודעת אזהרה דחופה כללית לכל המבקרים, החליפו לריק כדי להסתיר אותה (ניתן להשתמש ב-HTML)."
     disable_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
     full_name_required: "שם מלא הוא שדה נדרש לפרופיל משתמש/ת."
@@ -971,7 +961,6 @@ he:
     enable_emoji: "אפשרו emoji"
     emoji_set: "איך אתם אוהבים את ה-emoji שלכם?"
     enforce_square_emoji: "חובת מימדי ריבועיים בכל ה-emojis."
-    approve_post_count: "The amount of posts from a new user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact email. Set to 0 to disable these emails."
     default_email_digest_frequency: "באיזה תדירות משתמשים מקבלים מייל עדכון בתור ברירת מחדל. "
@@ -1013,7 +1002,6 @@ he:
     moved_post: "%{display_username} העביר את ההודעה שלך ל %{link}"
     private_message: "%{display_username}  שלח/ה לך הודעה: %{link}"
     invited_to_private_message: "%{display_username}  הזמין אותך להודעה:  %{link}"
-    invited_to_topic: "%{display_username} הזמין אותך לנושא: %{link}"
     invitee_accepted: "%{display_username} קיבל את הזמנתך"
     linked: "%{display_username} קישר אליך ב %{link}"
     granted_badge: "הרווחת %{link}"
@@ -1023,11 +1011,6 @@ he:
       category: 'קטגוריות'
       topic: 'תוצאות'
       user: 'משתמשים'
-  sso:
-    not_found: "לא ניתן לאתר או ליצור חשבון, צרו קשר עם אדמין."
-    account_not_approved: "החשבון ממתין לאישור, תקבל/י הודעת דוא\"ל ברגע שיאושר."
-    unknown_error: "שגיאה בעדכון המידע, צרו קשר עם האדמין"
-    timeout_expired: "תם זמן החיבור לחשבון, אנא נסו להתחבר שוב"
   original_poster: "מפרסם מקורים"
   most_posts: "מירב ההודעות"
   most_recent_poster: "המפרסם האחרון"
@@ -1110,8 +1093,6 @@ he:
       characters: "חייב לכלול מספרים, אותיות ומקפים תחתונים בלבד."
       unique: "חייב להיות ייחודי"
       blank: "חייב להיות מלא"
-      must_begin_with_alphanumeric: "חייב להתחיל עם אות, מספר או קו תחתון"
-      must_end_with_alphanumeric: "חייב להסתיים עם אות, מספר, או קו תחתון"
       must_not_contain_two_special_chars_in_seq: "לא יכול להכיל רצף של 2 או יותר תווים מיוחדים  (.-_)"
     email:
       not_allowed: "לא מורשה מכתובת הדואר האלקטרוני הזו. בבקשה השתמש בכתובת אחרת."
@@ -1164,83 +1145,10 @@ he:
       (אם הקישור פג תוקף, בחר ב"שכחתי אץ הסיסמא שלי" בהתחברות.)
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
-    text_body_template: |
-      This is a test email from
-      [**%{base_url}**][0]
-
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-
-      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
-
-      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
-       If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-
-      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
-      We hope you received this email deliverability test OK!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] גרסת Discourse חדשה, עדכון זמין."
-    text_body_template: |+
-      גרסה חדש של [Discourse](http://www.discourse.org) זמינה.
-
-      הגרסה שלכם:  %{installed_version}
-      הגרסה החדשה:  **%{new_version}**
-
-      ייתכן ותרצו:
-
-      - לראות מה חדש ב- [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - לעדכן דרך הדפדפן ב [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - לבקר ב-[meta.discourse.org](http://meta.discourse.org) לחדשות, דיונים ותמיכה ב-Discourse.
-
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
-    text_body_template: |
-      גרסא חדש של [Discourse] (http://www.discourse.org) זמינה.
-      הגרסא שלכם: %{installed_version}
-      גרסא חדשה: **%{new_version}**
-
-      ייתכן שתרצו:
-
-      - לראות מה חדש ב[יומן השינויים בגיטהאב](https://github.com/discourse/discourse/commits/master).
-
-      - לעדכן דרך הדפדפן ב- [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)
-
-      - לבקר ב[meta.discourse.org](http://meta.discourse.org) לחדשות, דיונים ותמיכה ב-Discourse.
-       ### Release notes
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      one: "סימונים אלו נשלחו לפני כשעה."
-      other: "סימונים אלה נשלחו לפני %{count} שעות."
-    please_review: "Please review them."
-    post_number: "post"
-    how_to_disable: 'תוכל/י לבטל או לשנות את תדירות תזכורת דוא"ל באמצעות ההגדרה "הודעה על סימונים אחרי...".'
-    subject_template:
-      one: "סימון אחד ממתין לטיפול"
-      other: "%{count} סימונים ממתינים לטיפול"
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] תגובה אחת מחכה לבדיקה"
@@ -1326,10 +1234,6 @@ he:
       text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."
     email_reject_no_account:
       subject_template: "[%{site_name}]  בעיית מייל -- חשבון לא מזוהה"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל שלכם אל %{destination} (titled %{former_title}) לא עברה.
-
-        לא ידוע לנו על חשבון משתמש/ת עם כתובת כזו. נסו לשלוח מכתובת דוא"ל אחרת, או צרו קשר עם אנשי הצוות שלנו.
     email_reject_empty:
       subject_template: "[%{site_name}]  בעיית מייל -- ללא תוכן"
     email_reject_parsing:
@@ -1343,16 +1247,8 @@ he:
         אין לחשבון שלך את רמון האמון הנדרשת כדי לפרסם נושאים חדשים  בקטגוריה הזו.  אם אתם חושבים שזוהי שגיאה, צרו קשר עם אחד מאנשי הצוות.
     email_reject_reply_key:
       subject_template: "[%{site_name}]  בעיית מייל -- תו תגובה לא מוכר"
-      text_body_template: |
-        אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
-
-        מפתח התגובה לא קיים או לא מוכר, כך שאיננו יודעים לאיזה פרסום המייל הזה אמור להגיב. אנא צרו קשר עם אנשי הצוות.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}]  בעיית מייל -- לא נמצא נושא"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל ששלחת אל %{destination} (בנושא %{former_title}) לא עברה.
-
-        הנושאחושבים שהגבתם אליו כבר לא קיים, אולי הוא נמחק? אם אתם  שמדובר בתקלה, צרו קשר עם איש/אשת צוות.
     email_reject_topic_closed:
       subject_template: "[%{site_name}]  בעיית מייל -- נושא נסגר"
       text_body_template: |
@@ -1361,16 +1257,8 @@ he:
         הנושא שהשבתם אליו נסגר ולכן לא ניתן להשיב לו יותר.  אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
     email_reject_auto_generated:
       subject_template: "[%{site_name}]  בעיית מייל -- תגובה נוצרה אוטומטית"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל ששלחת אל %{destination} (בנושא %{former_title}) לא עברה.
-
-        המייל שלך סומן כ"נוצר אוטומטית", ולכן לא ניתן לקבל אותו. אם אתם מאמינים שמדובר בתקלה, צרו קשר עם איש/אשת צוות.
     email_error_notification:
       subject_template: "[%{site_name}]  בעיית מייל -- בעיית אימות POP"
-      text_body_template: |
-        התרחשה תקלת אימות בזמן שבדקנו הודעות מייל בשרת ה-POP.
-
-        אנא וודאו שכיוונים נכון את הרשאות ה-POP ב[הגדרות האתר](%{base_url}/admin/site_settings/category/email).
     too_many_spam_flags:
       subject_template: "New account blocked"
       text_body_template: |
@@ -1383,12 +1271,6 @@ he:
         לפרטים נוספים, אנא פנו אל [כללי ההתנהלות הקהילתיים] [community guidelines](%{base_url}/guidelines) שלנו.
     blocked_by_staff:
       subject_template: "Account blocked"
-      text_body_template: |
-        שלום.
-
-        זוהי הודעה אוטומטית שנשלחה אליך מ%{site_name} כדי לעדכן אותך שהחשבון שלך נחסם על ידי איש/אשת צוות.
-
-        להדרכה נוספת, אנא פנו ל[כללי ההתנהגות הקהיליתיים](%{base_url}/guidelines) שלנו.
     user_automatically_blocked:
       subject_template: "המשתמש/ת החדשים %{username} נחסמו בשל התראות מהקהילה."
     spam_post_blocked:
@@ -1422,10 +1304,6 @@ he:
     posted_by: "Posted by %{username} on %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} הזמין אותך להודעה '%{topic_title}'"
-      text_body_template: "\n%{username} הזמינ/ה אותך להודעה. \n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nב\n\n> %{site_title} -- %{site_description}\n\nתלחץ על הלינק בשביל לראות את ההודעה %{base_url}%{url}\n"
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} הזמין אותך לנושא '%{topic_title}'"
-      text_body_template: "\n%{username} הזמינ/ה אותך לשיחה. \n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nב\n\n> %{site_title} -- %{site_description}\n\nתלחץ על הלינק בשביל לראות את ההודעה %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -1476,12 +1354,6 @@ he:
 
         הקישו על הקישור המצורף כדי להגדיר סיסמא לחשבונך החדש:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Confirm your new email address"
-      text_body_template: |
-        Confirm your new email address for %{site_name} by clicking on the following link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: "ברוכים הבאים ל%{site_name}!\n\nחבר צוות אישר את החשבון שלך ב %{site_name}. \n\nלחץ על הקישור הבא לאשר והפעיל את החשבון החדש שלך:\n%{base_url}/users/activate-account/%{email_token}\n\nאם הלינק לא לחיץ, נסה להעתיק ולהדביק אותו לסרגל הכתובת בראש הדפדפן. \n\n%{new_user_tips}\n\nאנו מאמינים ב  [civilized community behavior](%{base_url}/guidelines)  בכל זמן.\n\nתהנה מהביקור!\n\n(אם אתה צריך ליצור קשר עם [staff members](%{base_url}/about)  כחבר חדש, רק השב להודעה זאת. )\n\n"
@@ -1495,7 +1367,6 @@ he:
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
   page_not_found:
-    title: "The page you requested doesn't exist or is private."
     popular_topics: "פופלארי"
     recent_topics: "לאחרונה"
     see_more: "עוד"
@@ -1557,22 +1428,6 @@ he:
     title: "תנאי השימוש"
   privacy_topic:
     title: "מדיניות פרטיות"
-  badges:
-    long_descriptions:
-      autobiographer: "אות יוענק לך כשתמלא את  <a href=\"/my/preferences\">פרופיל המשתמש שלך</a> ותבחר תמונת פרופיל. לשתף את הקהילה לגבי מי אתה ובמה אתה מעוניין עוזר ליצור קהילה יותר טובה ומחוברת. \n"
-      first_like: |
-        אות מוענק בפעם הראשונה שאתה עושה "לייק" לפרסום בעזרת כפתור ה :heart: . לעשות לייק לפרסומים היא דרך מעולה לידע את חברך בקהילה שמה שהם פרסמו היה מעניין, שימושי או מגניב. חלוק את האהבה!
-      first_link: |
-        תג זה מוענק בפעם הראשונה ששמים קישור לנושא אחר בתגובה. קישור נושאים עוזר לקוראים למצוא שיחות מעניינות קשורות לנושא.
-      first_quote: |
-        תג זה מוענק בפעם הראשונה שמצטטים פרסום בתגובה. ציטוט חלקים רלוונטים של פרסומים קודמים בתגובתך עוזר לשמור על דיונים מפוקסים.
-      first_share: |
-        תג זה מוענק בפעם הראשונה שמשתפים קישור לתגובה או נושא באמצעות כפתור השיתוף. שיתוף קישורים היא דרך מעולה להראות דיונים מעניינים עם שאר העולם ולהגדיל את הקהילה.
-      read_guidelines: |
-        תג זה מוענק על  <a href="/guidelines">קריאת נהלי הקהילה</a>. מעקב ושיתוף של הקוים המנחים עוזר ליצור קהילה בטוחה, כיפית ובת קימא.
-      basic: "הגעתם לשלב 1! תודה על כך שהפכתם לחלק מהקהילה, וקראתם קצת פוסטים כדי להכיר אותנו. \nכל ההגבלות של חשבון חדש הוסרו ואתם יכולים להשתמש עכשיו בכל האפשרויות בקהילה כמו: הודעות פרטיות, סימון פוסטים, עריכת ה-Wiki, העלאת תמונות וקישורים. \n"
-      member: |
-        הגעתם לשלב 2! תודה על ההשתתפות שלכם בקהילה במשך מספר שבועות. אתם יכולים לשלוח עכשיו הזמנות אישיות מדף המשתמש שלכם או מפוסטים אישיים, ליצור הודעות קבוצתיות, ולעשות עוד כמה לייקים ביום.
   admin_login:
     success: "דוא\"ל נשלח"
     error: "שגיאה!"

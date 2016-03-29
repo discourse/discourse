@@ -21,17 +21,14 @@ class PostActionsController < ApplicationController
     else
       # We need to reload or otherwise we are showing the old values on the front end
       @post.reload
+
+      if @post_action_type_id == PostActionType.types[:like]
+        limiter = post_action.post_action_rate_limiter
+        response.headers['Discourse-Actions-Remaining'] = limiter.remaining.to_s
+        response.headers['Discourse-Actions-Max'] = limiter.max.to_s
+      end
       render_post_json(@post, _add_raw = false)
     end
-  rescue RateLimiter::LimitExceeded => e
-    # Special case: if we hit the create like rate limit, record it in user history
-    # so we can award a badge
-    if e.type == "create_like"
-      UserHistory.create!(action: UserHistory.actions[:rate_limited_like],
-                          target_user_id: current_user.id,
-                          post_id: @post.id)
-    end
-    render_rate_limit_error(e)
   end
 
   def destroy

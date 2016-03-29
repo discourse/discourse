@@ -3,6 +3,8 @@ module Jobs
   class NotifyMailingListSubscribers < Jobs::Base
 
     def execute(args)
+      return if SiteSetting.disable_mailing_list_mode
+
       post_id = args[:post_id]
       post = post_id ? Post.with_deleted.find_by(id: post_id) : nil
 
@@ -33,8 +35,19 @@ module Jobs
       users.each do |user|
         if Guardian.new(user).can_see?(post)
           begin
-            message = UserNotifications.mailing_list_notify(user, post)
-            Email::Sender.new(message, :mailing_list, user).send if message
+            if EmailLog.reached_max_emails?(user)
+              EmailLog.create!(
+                email_type: 'mailing_list',
+                to_address: user.email,
+                user_id: user.id,
+                post_id: post.id,
+                skipped: true,
+                skipped_reason: "[MailingList] #{I18n.t('email_log.exceeded_limit')}"
+              )
+            else
+              message = UserNotifications.mailing_list_notify(user, post)
+              Email::Sender.new(message, :mailing_list, user).send if message
+            end
           rescue => e
             Discourse.handle_job_exception(e, error_context(args, "Sending post to mailing list subscribers", { user_id: user.id, user_email: user.email }))
           end

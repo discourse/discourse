@@ -18,7 +18,7 @@
     {{#each model.members as |m|}}
       <tr>
         <td class='avatar'>
-          {{user-small user=m}}
+          {{user-info user=m}}
           {{#if m.owner}}<span class='is-owner'>{{i18n "groups.owner"}}</span>{{/if}}
         </td>
         <td>

@@ -75,7 +75,9 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
-    decorateWidget('poster-name:after', dec => {
+    const mobileView = this.container.lookup('site:main').mobileView;
+    const loc = mobileView ? 'before' : 'after';
+    decorateWidget(`poster-name:${loc}`, dec => {
       const attrs = dec.attrs;
 
       const result = cb(attrs.userCustomFields || {}, attrs);
@@ -102,7 +104,7 @@ class PluginApi {
         }
 
 
-        return dec.h('span',
+        return dec.h('span.poster-icon',
                      { className: result.className, attributes: { title: result.title } },
                      iconBody);
       }

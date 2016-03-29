@@ -8,4 +8,11 @@
     <span class="name">{{unbound name}}</span>
   </div>
   <div class="title">{{unbound user.title}}</div>
+
+  {{#if hasBlock}}
+    <div class='details'>
+      {{yield}}
+    </div>
+  {{/if}}
+
 </div>

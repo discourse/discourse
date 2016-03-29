@@ -126,7 +126,6 @@ zh_TW:
       can_not_modify_automatic: "你無法修改自動群組"
       member_already_exist: "'%{username}' 已經是群組成員了。"
       invalid_domain: "'%{domain}' 不是有效的域名."
-      invalid_incoming_email: "'%{incoming_email}' 不是有效的電子郵件地址."
     default_names:
       everyone: "所有人"
       admins: "管理員"
@@ -520,7 +519,6 @@ zh_TW:
     max_topic_title_length: "標題允許的最大文字數"
     min_private_message_title_length: "標題允許的最小文字數"
     min_search_term_length: "搜尋條件允許的最小文字數"
-    uncategorized_description: "\"未分類\"的分類的描述，留空則無描述"
     allow_duplicate_topic_titles: "允許話題有相同，重複的標題"
     unique_posts_mins: "使用者再次發表包含相同內容文章的間隔時間"
     educate_until_posts: "當用戶開始鍵入他們的前幾個 (n) 新帖子時，在編輯器上顯示教育面板視窗。"
@@ -671,15 +669,9 @@ zh_TW:
     tl2_requires_likes_received: "一個初級用戶升級到信任等級2所需要獲得的讚賞數。"
     tl2_requires_likes_given: "初級用戶升級到信任等級2所需要付出的讚賞數。"
     tl2_requires_topic_reply_count: "一個初級用戶升級到信任等級2所需要回覆的主題數量。"
-    tl3_requires_topics_replied_to: "在最近 100 天內升至信任等級3所需的回覆主題的最少數量。（0或更高）"
-    tl3_requires_topics_viewed: "在最近 100 天內升至信任等級3所需的創建主題的百分比。（0到100）"
-    tl3_requires_posts_read: "在最近 100 天內升信任等級3所需的創建帖子的百分比。（0到100）"
     tl3_requires_topics_viewed_all_time: "用戶升至信任等級3所需查看的最少主題數量。"
     tl3_requires_posts_read_all_time: "用戶升至信任等級3所需查看的最少帖子數量。"
-    tl3_requires_max_flagged: "用戶在最近 100 天內升至信任等級3所需的必須沒有超過 x 個帖子被 x 個不同的用戶標記數量，x為數量。（0或更高）"
     tl3_promotion_min_duration: "信任等級3的用戶可被降級至信任等級2前最少持續天數。"
-    tl3_requires_likes_given: "升至信任等級3需要在最近 100 天內所給出最少的讚。"
-    tl3_requires_likes_received: "升至信任等級3需要在最近 100 天內所收到最少的讚。"
     tl3_links_no_follow: "禁止從信任等級 3 之用戶所發表的連結中刪除 rel=nofollow 標籤"
     min_trust_to_create_topic: "建立話題最低所需的信任等級"
     min_trust_to_edit_wiki_post: "編輯被標示為維基的文章所需之最低信任等級。"
@@ -737,7 +729,6 @@ zh_TW:
     automatically_download_gravatars: "當用戶註冊或更改EMail時下載 Gravatars 圖片"
     digest_topics: "EMail 摘要中顯示的最大話題數量"
     digest_min_excerpt_length: "EMail 摘要中每篇文章最少顯示的字元數量"
-    delete_digest_email_after_days: "不發送摘要郵件給超過 (n) 天閒置的用戶。"
     disable_digest_emails: "禁用發送摘要郵件給所有用戶。"
     max_daily_gravatar_crawls: "一天內 Discourse 將自動檢查 Gravatar 自訂個人圖示的次數"
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單。"
@@ -784,8 +775,6 @@ zh_TW:
       category: '分類'
       topic: '結果'
       user: '用戶'
-  sso:
-    account_not_approved: "帳戶正在等待驗證，完成後你將收到一封電郵提醒"
   original_poster: "原始作者"
   most_posts: "大部分文章"
   most_recent_poster: "當前大部分文章作者"
@@ -852,11 +841,6 @@ zh_TW:
     subject_template: "[%{site_name}] 有可用的新版 Discourse 更新"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升級"
-  flags_reminder:
-    flags_were_submitted:
-      other: "這些標記在過去 %{count} 小時內被提交。"
-    please_review: "請再次確認。"
-    post_number: "文章"
   flags_dispositions:
     disagreed: "感謝你讓我們知道。我們正在調查。"
     deferred: "感謝你讓我們知道。我們正在調查。"
@@ -944,12 +928,6 @@ zh_TW:
       subject_template: "[%{site_name}] 設定密碼"
     account_created:
       subject_template: "[%{site_name}] 你的新帳號"
-    confirm_new_email:
-      subject_template: "[%{site_name}] 確認你的新電子郵箱位址"
-      text_body_template: |
-        點擊下面的連結來確認你在 %{site_name} 上的新電子郵箱位址：
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "你已受到 %{site_name} 的認可！"
     signup:
@@ -961,7 +939,6 @@ zh_TW:
 
         如果上面的連結無法點擊，請拷貝該連結並粘貼到你的流覽器的地址欄裡。
   page_not_found:
-    title: "你請求的頁面在本論壇不存在。可能我們能幫助你找到它，或者類似的其它討論話題："
     popular_topics: "熱門"
     recent_topics: "最近"
     see_more: "更多"
@@ -1011,20 +988,6 @@ zh_TW:
     title: "服務條款"
   privacy_topic:
     title: "隱私政策"
-  badges:
-    long_descriptions:
-      nice_post: |
-        此徽章授予創建一個能獲取10個讚的回應。幹得不錯！
-      nice_topic: |
-        此徽章授予創建一個能獲取10個讚的話題。幹得不錯！
-      good_post: |
-        此徽章授予創建一個能獲取25個讚的回應。幹得好！
-      good_topic: |
-        此徽章授予創建一個能獲取25個讚的話題。幹得好！
-      great_post: |
-        此徽章授予創建一個能獲取50個讚的又章。勁！
-      great_topic: |
-        此徽章授予創建一個能獲取50個讚的回應。勁！
   admin_login:
     success: "已發送郵件"
     error: "錯誤"

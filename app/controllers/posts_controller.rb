@@ -37,14 +37,29 @@ class PostsController < ApplicationController
     last_post_id = params[:before].to_i
     last_post_id = Post.last.id if last_post_id <= 0
 
-    # last 50 post IDs only, to avoid counting deleted posts in security check
-    posts = Post.order(created_at: :desc)
-                .where('posts.id <= ?', last_post_id)
-                .where('posts.id > ?', last_post_id - 50)
-                .includes(topic: :category)
-                .includes(user: :primary_group)
-                .includes(:reply_to_user)
-                .limit(50)
+    if params[:id] == "private_posts"
+      raise Discourse::NotFound if current_user.nil?
+      posts = Post.private_posts
+                  .order(created_at: :desc)
+                  .where('posts.id <= ?', last_post_id)
+                  .where('posts.id > ?', last_post_id - 50)
+                  .includes(topic: :category)
+                  .includes(user: :primary_group)
+                  .includes(:reply_to_user)
+                  .limit(50)
+      rss_description = I18n.t("rss_description.private_posts")
+    else
+      posts = Post.public_posts
+                  .order(created_at: :desc)
+                  .where('posts.id <= ?', last_post_id)
+                  .where('posts.id > ?', last_post_id - 50)
+                  .includes(topic: :category)
+                  .includes(user: :primary_group)
+                  .includes(:reply_to_user)
+                  .limit(50)
+      rss_description = I18n.t("rss_description.posts")
+    end
+
     # Remove posts the user doesn't have permission to see
     # This isn't leaking any information we weren't already through the post ID numbers
     posts = posts.reject { |post| !guardian.can_see?(post) || post.topic.blank? }
@@ -53,16 +68,16 @@ class PostsController < ApplicationController
     respond_to do |format|
       format.rss do
         @posts = posts
-        @title = "#{SiteSetting.title} - #{I18n.t("rss_description.posts")}"
+        @title = "#{SiteSetting.title} - #{rss_description}"
         @link = Discourse.base_url
-        @description = I18n.t("rss_description.posts")
+        @description = rss_description
         render 'posts/latest', formats: [:rss]
       end
       format.json do
         render_json_dump(serialize_data(posts,
                                         PostSerializer,
                                         scope: guardian,
-                                        root: 'latest_posts',
+                                        root: params[:id],
                                         add_raw: true,
                                         add_title: true,
                                         all_post_actions: counts)
