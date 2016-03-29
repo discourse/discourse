@@ -378,7 +378,7 @@ SQL
     DELETE FROM user_badges
     USING user_badges ub
     LEFT JOIN users u ON u.id = ub.user_id
-    WHERE u.id IS NULL
+    WHERE u.id IS NULL AND user_badges.id = ub.id
 SQL
 
     Badge.find_each(&:reset_grant_count!)
