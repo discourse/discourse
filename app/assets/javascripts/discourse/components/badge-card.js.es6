@@ -1,8 +1,27 @@
 import computed from 'ember-addons/ember-computed-decorators';
+import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Component.extend({
   size: 'medium',
-  classNameBindings: [':badge-card', 'size'],
+  classNameBindings: [':badge-card', 'size', 'navigateOnClick:hyperlink'],
+
+  click(e){
+    if (e.target && e.target.nodeName === "A") {
+      return true;
+    }
+
+    if (!this.get('navigateOnClick')) {
+      return false;
+    }
+
+    var url = this.get('badge.url');
+    const username = this.get('username');
+    if (username) {
+      url = url + "?username=" + encodeURIComponent(username);
+    }
+    DiscourseURL.routeTo(url);
+    return true;
+  },
 
   @computed('count', 'badge.grant_count')
   displayCount(count, grantCount) {

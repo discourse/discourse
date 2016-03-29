@@ -9,9 +9,7 @@
         </div>
 
         {{#each bg.badges as |b|}}
-          {{#link-to 'badges.show' b.id b.slug (query-params username=null)}}
-            {{badge-card badge=b}}
-          {{/link-to}}
+          {{badge-card badge=b navigateOnClick="true"}}
         {{/each}}
       </div>
     {{/each}}
