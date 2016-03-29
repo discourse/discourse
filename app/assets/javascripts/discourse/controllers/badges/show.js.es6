@@ -21,6 +21,11 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore() {
+      if (this.get('loadingMore')) {
+        return;
+      }
+      this.set('loadingMore', true);
+
       const userBadges = this.get('userBadges');
 
       UserBadge.findByBadgeId(this.get('model.id'), {
@@ -31,6 +36,8 @@ export default Ember.Controller.extend({
         if (userBadges.length === 0){
           this.set('noMoreBadges', true);
         }
+      }).finally(()=>{
+        this.set('loadingMore', false);
       });
     }
   },
