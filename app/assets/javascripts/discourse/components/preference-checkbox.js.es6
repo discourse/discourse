@@ -9,7 +9,6 @@ export default Em.Component.extend({
     const warning = this.get('warning');
 
     if (warning && !this.get('checked')) {
-      debugger;
       this.sendAction('warning');
       return false;
     }
