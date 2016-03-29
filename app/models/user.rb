@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
   before_validation :strip_downcase_email
 
   validates_presence_of :username
-  validate :username_validator
+  validate :username_validator, if: :username_changed?
   validates :email, presence: true, uniqueness: true
   validates :email, email: true, if: :email_changed?
   validate :password_validator
