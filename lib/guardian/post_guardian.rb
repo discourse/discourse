@@ -90,7 +90,7 @@ module PostGuardian
       return true
     end
 
-    if post.topic.archived? || post.user_deleted || post.deleted_at
+    if post.topic.archived? || post.user_deleted || post.deleted_at || post.has_active_flag?
       return false
     end
 

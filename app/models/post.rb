@@ -356,6 +356,10 @@ class Post < ActiveRecord::Base
     post_actions.where(post_action_type_id: PostActionType.flag_types.values, deleted_at: nil).count != 0
   end
 
+  def has_active_flag?
+    post_actions.active.where(post_action_type_id: PostActionType.flag_types.values).count != 0
+  end
+
   def unhide!
     self.update_attributes(hidden: false)
     self.topic.update_attributes(visible: true) if is_first_post?
