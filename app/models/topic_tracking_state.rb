@@ -27,7 +27,8 @@ class TopicTrackingState
         highest_post_number: 1,
         created_at: topic.created_at,
         topic_id: topic.id,
-        category_id: topic.category_id
+        category_id: topic.category_id,
+        archetype: topic.archetype
       }
     }
 
@@ -46,7 +47,8 @@ class TopicTrackingState
       payload: {
         bumped_at: topic.bumped_at,
         topic_id: topic.id,
-        category_id: topic.category_id
+        category_id: topic.category_id,
+        archetype: topic.archetype
       }
     }
 
@@ -74,13 +76,43 @@ class TopicTrackingState
           created_at: post.created_at,
           topic_id: post.topic_id,
           category_id: post.topic.category_id,
-          notification_level: tu.notification_level
+          notification_level: tu.notification_level,
+          archetype: post.topic.archetype
         }
       }
 
       MessageBus.publish("/unread/#{tu.user_id}", message.as_json, group_ids: group_ids)
     end
 
+  end
+
+  def self.publish_recover(topic)
+    group_ids = topic.category && topic.category.secure_group_ids
+
+    message = {
+      topic_id: topic.id,
+      message_type: "recover",
+      payload: {
+        topic_id: topic.id,
+      }
+    }
+
+    MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
+
+  end
+
+  def self.publish_delete(topic)
+    group_ids = topic.category && topic.category.secure_group_ids
+
+    message = {
+      topic_id: topic.id,
+      message_type: "delete",
+      payload: {
+        topic_id: topic.id,
+      }
+    }
+
+    MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level=nil)
