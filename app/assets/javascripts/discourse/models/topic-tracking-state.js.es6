@@ -75,7 +75,6 @@ const TopicTrackingState = Discourse.Model.extend({
 
     this.messageBus.subscribe("/delete", msg => {
       const old = tracker.states["t" + msg.topic_id];
-      debugger
       if (old) {
         old.deleted = true;
       }
@@ -84,7 +83,6 @@ const TopicTrackingState = Discourse.Model.extend({
 
     this.messageBus.subscribe("/recover", msg => {
       const old = tracker.states["t" + msg.topic_id];
-      debugger
       if (old) {
         delete old.deleted;
       }
