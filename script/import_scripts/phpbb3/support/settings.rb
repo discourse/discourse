@@ -61,6 +61,7 @@ module ImportScripts::PhpBB3
   class DatabaseSettings
     attr_reader :type
     attr_reader :host
+    attr_reader :port
     attr_reader :username
     attr_reader :password
     attr_reader :schema
@@ -70,6 +71,7 @@ module ImportScripts::PhpBB3
     def initialize(yaml)
       @type = yaml['type']
       @host = yaml['host']
+      @port = yaml['port']
       @username = yaml['username']
       @password = yaml['password']
       @schema = yaml['schema']
