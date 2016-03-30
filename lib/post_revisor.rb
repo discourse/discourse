@@ -175,6 +175,7 @@ class PostRevisor
   end
 
   def ninja_edit?
+    return false if @post.has_active_flag?
     @revised_at - @last_version_at <= SiteSetting.editing_grace_period.to_i
   end
 
