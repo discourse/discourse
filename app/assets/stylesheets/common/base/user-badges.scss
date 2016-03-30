@@ -57,6 +57,7 @@
     }
   }
 }
+
 .user-info.medium.badge-info {
   min-height: 80px;
 
@@ -192,6 +193,12 @@
 .badge-card.medium {
   width: 350px;
   vertical-align: top;
+}
+
+@media all and (max-width: 320px) {
+  .badge-card.medium {
+    width: 100%;
+  }
 }
 
 .badge-card.large {

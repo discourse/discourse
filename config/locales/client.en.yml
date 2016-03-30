@@ -734,17 +734,33 @@ en:
       summary:
         title: "Summary"
         stats: "Stats"
-        topic_count: "Topics Created"
-        post_count: "Posts Created"
-        likes_given: "Likes Given"
-        likes_received: "Likes Received"
-        days_visited: "Days Visited"
-        posts_read_count: "Posts Read"
+        time_read: "read time"
+        topic_count:
+          one: "topic created"
+          other: "topics created"
+        post_count:
+          one: "post created"
+          other: "posts created"
+        likes_given:
+          one: "like given"
+          other: "likes given"
+        likes_received:
+          one: "like received"
+          other: "likes received"
+        days_visited:
+          one: "day visited"
+          other: "days visited"
+        posts_read:
+          one: "post read"
+          other: "posts read"
         top_replies: "Top Replies"
-        top_topics: "Top Topics"
-        top_badges: "Top Badges"
-        more_topics: "More Topics"
+        no_replies: "No replies yet."
         more_replies: "More Replies"
+        top_topics: "Top Topics"
+        no_topics: "No topics yet."
+        more_topics: "More Topics"
+        top_badges: "Top Badges"
+        no_badges: "No badges yet."
         more_badges: "More Badges"
 
 
