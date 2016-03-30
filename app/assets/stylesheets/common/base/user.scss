@@ -190,59 +190,82 @@
 }
 
 .top-section {
-  display: inline-block;
-  width: 45%;
-  max-width: 500px;
-  padding-right: 20px;
-  vertical-align: top;
-  margin-bottom: 30px;
-  .more {
-    display: block;
-    margin-top: 10px;
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
-  }
-  h3 {
-    margin-bottom: 15px;
-  }
-  .relative-date {
-    color: lighten($primary, 40%);
-    font-size: 0.8em;
-    margin-left: 5px;
-  }
-  .like-count {
-    margin-left: 5px;
-  }
   ul {
-    list-style-type: none;
-    padding: 0;
+    list-style: none;
     margin: 0;
-    li {
-      margin: 0;
-      padding: 8px 0;
-      .fa-heart {
-        margin-left: 3px;
-      }
-    }
+  }
+}
+
+.top-section,
+.replies-section,
+.topics-section {
+  margin-bottom: 20px;
+}
+
+.stats-title {
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.stats-section {
+  ul {
+    margin: 10px 0;
   }
 
-  dt,dd {
-    float:left;
+  li {
+    display: inline-block;
+    padding: 10px 14px;
+    margin: 0 5px 10px 0;
+    background: dark-light-diff($primary, $secondary, 90%, -65%);
   }
-  dd {
-    min-width: 80px;
-    text-align: right;
+
+  li:last-of-type {
+    margin: 0;
   }
-  dt {
-    clear: left;
-    min-width: 100px;
-    color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
+
+  .value {
+    font-weight: bold;
+    font-size: 1.2em;
   }
+}
+
+.replies-section,
+.topics-section {
+  width: 50%;
+
+  ul {
+    max-width: 95%;
+  }
+
+  li {
+    border-left: dark-light-diff($primary, $secondary, 90%, -65%) solid 2px;
+    padding: 5px 8px;
+    margin: 10px 0;
+  }
+
+  .topic-info {
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+  }
+}
+
+.replies-section {
+  float: left;
+}
+
+.topics-section {
+  float: right;
+}
+
+.badges-section {
+  clear: both;
 }
 
 @media all
 and (max-width : 600px) {
-  .top-section {
-    width: 90%;
+  .replies-section,
+  .topics-section {
+    float: none;
+    width: 100%;
   }
 }
 
