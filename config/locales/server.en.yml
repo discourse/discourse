@@ -1562,7 +1562,7 @@ en:
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
     text_body_template: |
-      Hooray, a new version of [Discourse](http://www.discourse.org) is available! :)
+      Hooray, a new version of [Discourse](http://www.discourse.org) is available!
 
       Your version: %{installed_version}
       New version: **%{new_version}**
@@ -1576,7 +1576,7 @@ en:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
     text_body_template: |
-      Hooray, a new version of [Discourse](http://www.discourse.org) is available! :)
+      Hooray, a new version of [Discourse](http://www.discourse.org) is available!
 
       Your version: %{installed_version}
       New version: **%{new_version}**
