@@ -162,12 +162,13 @@ module Email
         return fixed if fixed.present?
       end
 
-      # 2) default to UTF-8
-      try_to_encode(string, "UTF-8")
+      # 2) try most used encodings
+      try_to_encode(string, "UTF-8") || try_to_encode(string, "ISO-8859-1")
     end
 
     def try_to_encode(string, encoding)
-      string.encode("UTF-8", encoding)
+      encoded = string.encode("UTF-8", encoding)
+      encoded.present? && encoded.valid_encoding? ? encoded : nil
     rescue Encoding::InvalidByteSequenceError,
            Encoding::UndefinedConversionError,
            Encoding::ConverterNotFoundError
