@@ -1008,29 +1008,6 @@ describe Guardian do
           expect(Guardian.new(admin).can_edit?(tos_first_post)).to be_truthy
         end
       end
-
-      context "flagged post" do
-        let(:user) { Fabricate(:user) }
-        let(:post) { Fabricate(:post) }
-        before { PostAction.act(user, post, PostActionType.types[:off_topic]) }
-
-        it 'returns false when post owner tries to edit active flagged post' do
-          expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
-        end
-
-        it 'returns true when trust level 4 user tries to edit active flagged post' do
-          expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
-        end
-
-        it 'returns true when staff tries to edit active flagged post' do
-          expect(Guardian.new(moderator).can_edit?(post)).to be_truthy
-        end
-
-        it 'returns true when post owner tries to edit post with inactive flag' do
-          PostAction.defer_flags!(post, admin)
-          expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
-        end
-      end
     end
 
     describe 'a Topic' do
