@@ -662,19 +662,25 @@ class User < ActiveRecord::Base
 
   def featured_user_badges(limit=3)
     user_badges
+        .group(:badge_id)
+        .select(UserBadge.attribute_names.map { |x| "MAX(user_badges.#{x}) AS #{x}" },
+                'COUNT(*) AS "count"',
+                'MAX(badges.badge_type_id) AS badges_badge_type_id',
+                'MAX(badges.grant_count) AS badges_grant_count')
         .joins(:badge)
-        .order("CASE WHEN badges.id = (SELECT MAX(ub2.badge_id) FROM user_badges ub2
-                              WHERE ub2.badge_id IN (#{Badge.trust_level_badge_ids.join(",")}) AND
-                                    ub2.user_id = #{self.id}) THEN 1 ELSE 0 END DESC")
-        .order('badges.badge_type_id ASC, badges.grant_count ASC')
-        .includes(:user, :granted_by, badge: :badge_type)
-        .where("user_badges.id in (select min(u2.id)
-                  from user_badges u2 where u2.user_id = ? group by u2.badge_id)", id)
+        .order("CASE WHEN user_badges.badge_id = (
+                  SELECT MAX(ub2.badge_id)
+                    FROM user_badges ub2
+                   WHERE ub2.badge_id IN (#{Badge.trust_level_badge_ids.join(",")})
+                     AND ub2.user_id = #{self.id}
+                ) THEN 1 ELSE 0 END DESC")
+        .order('badges_badge_type_id ASC, badges_grant_count ASC')
+        .includes(:user, :granted_by, { badge: :badge_type }, { post: :topic })
         .limit(limit)
   end
 
   def self.count_by_signup_date(start_date, end_date, group_id=nil)
-    result = where('users.created_at >= ? and users.created_at <= ?', start_date, end_date)
+    result = where('users.created_at >= ? AND users.created_at <= ?', start_date, end_date)
 
     if group_id
       result = result.joins("INNER JOIN group_users ON group_users.user_id = users.id")
