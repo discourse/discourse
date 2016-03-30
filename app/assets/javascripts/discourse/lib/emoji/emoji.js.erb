@@ -8,10 +8,12 @@ var emoji = <%= Emoji.standard.map(&:name).flatten.inspect %>;
 var aliases = <%= Emoji.aliases.inspect.gsub("=>", ":") %>;
 
 var extendedEmoji = {};
-Discourse.Dialect.registerEmoji = function(code, url) {
-  code = code.toLowerCase();
-  extendedEmoji[code] = url;
-};
+if (Discourse.Dialect) {
+  Discourse.Dialect.registerEmoji = function(code, url) {
+    code = code.toLowerCase();
+    extendedEmoji[code] = url;
+  };
+}
 
 var _unicodeReplacements;
 var _unicodeRegexp;
