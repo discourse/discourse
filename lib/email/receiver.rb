@@ -118,8 +118,9 @@ module Email
     end
 
     def is_auto_generated?
-      @mail[:precedence].to_s[/list|junk|bulk|auto_reply/] ||
-      @mail.header.to_s[/auto-(submitted|replied|generated)/]
+      @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
+      @mail[:from].to_s[/(mailer-?daemon|postmaster|noreply)@/i] ||
+      @mail.header.to_s[/auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i]
     end
 
     def select_body
