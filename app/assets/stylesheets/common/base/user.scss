@@ -227,6 +227,10 @@
     font-weight: bold;
     font-size: 1.2em;
   }
+
+  .label {
+    color: dark-light-diff($primary, $secondary, 50%, -50%);
+  }
 }
 
 .replies-section,
