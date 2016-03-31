@@ -397,6 +397,11 @@ describe UsersController do
         post_user
         expect(User.find_by(username: @user.username).locale).to eq('fr')
       end
+
+      it 'fires the user_created event hook' do
+        DiscourseEvent.expects(:trigger).with(:user_created, anything).once
+        post_user
+      end
     end
 
     context 'when creating a non active user (unconfirmed email)' do

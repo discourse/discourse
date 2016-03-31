@@ -86,6 +86,10 @@ class User < ActiveRecord::Base
   after_create :automatic_group_membership
   after_create :set_default_categories_preferences
 
+  after_create do
+    DiscourseEvent.trigger(:user_created, self)
+  end
+
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
