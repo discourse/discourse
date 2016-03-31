@@ -1,6 +1,11 @@
 <div class="search row clearfix">
   {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
   {{d-button action="search" icon="search" class="btn-primary" disabled=searchButtonDisabled}}
+  {{#if currentUser}}
+    {{#unless site.mobileView}}
+      <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
+    {{/unless}}
+  {{/if}}
   {{#if canBulkSelect}}
     {{#if model.posts}}
       {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}

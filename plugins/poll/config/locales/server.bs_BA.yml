@@ -5,4 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-bs_BA: {}
+bs_BA:
+  site_settings:
+    poll_enabled: "Dozvolite korisnicima da kreiraju ankete?"
+    poll_maximum_options: "Najveći broj dopuštenih izbora u anketi."

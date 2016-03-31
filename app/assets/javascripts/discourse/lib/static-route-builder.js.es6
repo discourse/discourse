@@ -6,7 +6,7 @@ const configs = {
   "privacy": "privacy_policy_url"
 };
 
-export default (page) => {
+export default function(page) {
   return Discourse.Route.extend({
     renderTemplate() {
       this.render("static");

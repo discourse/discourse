@@ -4,6 +4,7 @@ import { propertyEqual } from 'discourse/lib/computed';
 export default Ember.Controller.extend({
   needs: ['adminGroupsType'],
   disableSave: false,
+  savingStatus: '',
 
   currentPage: function() {
     if (this.get("model.user_count") === 0) { return 0; }
@@ -67,6 +68,22 @@ export default Ember.Controller.extend({
       });
     },
 
+    removeOwner(member) {
+      const self = this,
+            message = I18n.t("admin.groups.delete_owner_confirm", { username: member.get("username"), group: this.get("model.name") });
+      return bootbox.confirm(message, I18n.t("no_value"), I18n.t("yes_value"), function(confirm) {
+        if (confirm) {
+          self.get("model").removeOwner(member);
+        }
+      });
+    },
+
+    addOwners() {
+      if (Em.isEmpty(this.get("model.ownerUsernames"))) { return; }
+      this.get("model").addOwners(this.get("model.ownerUsernames")).catch(popupAjaxError);
+      this.set("model.ownerUsernames", null);
+    },
+
     addMembers() {
       if (Em.isEmpty(this.get("model.usernames"))) { return; }
       this.get("model").addMembers(this.get("model.usernames")).catch(popupAjaxError);
@@ -79,12 +96,15 @@ export default Ember.Controller.extend({
             groupType = groupsController.get("type");
 
       this.set('disableSave', true);
+      this.set('savingStatus', I18n.t('saving'));
 
       let promise = group.get("id") ? group.save() : group.create().then(() => groupsController.addObject(group));
 
-      promise.then(() => this.transitionToRoute("adminGroup", groupType, group.get('name')))
-             .catch(popupAjaxError)
-             .finally(() => this.set('disableSave', false));
+      promise.then(() => {
+        this.transitionToRoute("adminGroup", groupType, group.get('name'));
+        this.set('savingStatus', I18n.t('saved'));
+      }).catch(popupAjaxError)
+        .finally(() => this.set('disableSave', false));
     },
 
     destroy() {

@@ -9,6 +9,10 @@
     padding: 0;
     margin: 0;
     li {
+      .fa-users {
+        color: lighten($primary, 40%);
+        padding: 0 2px;
+      }
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       a[href] {
         padding: 5px;
@@ -38,6 +42,34 @@
   }
 }
 
+#reply-control {
+  .d-editor-textarea-wrapper .spinner {
+    z-index: 1000;
+    margin-top: 5em;
+  }
+
+  .d-editor-button-bar {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    margin: 0px;
+    padding: 5px;
+    border-bottom: 2px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    height: 33px;
+  }
+
+  textarea {
+    box-shadow: none;
+  }
+}
+
+
+.saving-text .spinner {
+  display: inline-block;
+  left: 5px;
+  top: 4px;
+}
+
 div.ac-wrap.disabled {
   input {
     display:none;
@@ -47,6 +79,22 @@ div.ac-wrap.disabled {
   }
 }
 
+div.ac-wrap div.item a.remove, .remove-link {
+  margin-left: 4px;
+  font-size: 11px;
+  line-height: 10px;
+  padding: 1.5px 1.5px 1.5px 2.5px;
+  border-radius: 12px;
+  width: 10px;
+  display: inline-block;
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  &:hover {
+    background-color: scale-color($danger, $lightness: 75%);
+    border: 1px solid scale-color($danger, $lightness: 30%);
+    text-decoration: none;
+    color: $danger;
+  }
+}
 
 div.ac-wrap {
   background-color: $secondary;
@@ -61,22 +109,6 @@ div.ac-wrap {
       display: inline-block;
       line-height: 20px;
     }
-    a.remove {
-      margin-left: 4px;
-      font-size: 11px;
-      line-height: 10px;
-      padding: 1.5px 1.5px 1.5px 2.5px;
-      border-radius: 12px;
-      width: 10px;
-      display: inline-block;
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      &:hover {
-        background-color: scale-color($danger, $lightness: 75%);
-        border: 1px solid scale-color($danger, $lightness: 30%);
-        text-decoration: none;
-        color: $danger;
-      }
-    }
   }
   input[type="text"] {
     float: left;
@@ -87,10 +119,6 @@ div.ac-wrap {
     padding: 0;
     box-shadow: none;
   }
-}
-
-#reply-control.topic #wmd-quote-post {
-  display: none;
 }
 
 .auto-close-fields {
@@ -165,7 +193,7 @@ div.ac-wrap {
 
 // this removes the topmost margin from the first element in the topic post
 // if we don't do this, all posts would have extra space at the top
-.wmd-preview > *:first-child {
+.d-editor-preview > *:first-child {
   margin-top: 0;
 }
 .cooked > *:first-child {

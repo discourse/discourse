@@ -1,9 +1,10 @@
 import DiscourseURL from 'discourse/lib/url';
+import Composer from 'discourse/models/composer';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
   '#':               {handler: 'toggleProgress', anonymous: true},
-  '/':               {handler: 'showSearch', anonymous: true},
+  '/':               {handler: 'toggleSearch', anonymous: true},
   '=':               {handler: 'toggleHamburgerMenu', anonymous: true},
   '?':               {handler: 'showHelpModal', anonymous: true},
   '.':               {click: '.alert.alert-info.clickable', anonymous: true}, // show incoming/updated topics
@@ -27,7 +28,7 @@ const bindings = {
   'home':            {handler: 'goToFirstPost', anonymous: true},
   'j':               {handler: 'selectDown', anonymous: true},
   'k':               {handler: 'selectUp', anonymous: true},
-  'l':               {click: '.topic-post.selected button[data-action="like"]'},
+  'l':               {click: '.topic-post.selected button.toggle-like'},
   'm m':             {click: 'div.notification-options li[data-id="0"] a'}, // mark topic as muted
   'm r':             {click: 'div.notification-options li[data-id="1"] a'}, // mark topic as regular
   'm t':             {click: 'div.notification-options li[data-id="2"] a'}, // mark topic as tracking
@@ -96,10 +97,10 @@ export default {
   },
 
   quoteReply() {
-    $('.topic-post.selected button.create').click();
+    this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
     setTimeout(function() {
-      $('#wmd-quote-post').click();
+      $('.d-editor .quote').click();
     }, 500);
   },
 
@@ -118,7 +119,7 @@ export default {
   },
 
   replyToTopic() {
-    this.container.lookup('controller:topic').send('replyToPost');
+    this._replyToPost();
   },
 
   selectDown() {
@@ -142,6 +143,11 @@ export default {
   },
 
   showBuiltinSearch() {
+    if (this.container.lookup('controller:header').get('searchVisible')) {
+      this.toggleSearch();
+      return true;
+    }
+
     this.searchService.set('searchContextEnabled', false);
 
     const currentPath = this.container.lookup('controller:application').get('currentPath'),
@@ -157,7 +163,7 @@ export default {
 
     if (showSearch) {
       this.searchService.set('searchContextEnabled', true);
-      this.showSearch();
+      this.toggleSearch();
       return false;
     }
 
@@ -165,7 +171,7 @@ export default {
   },
 
   createTopic() {
-    this.container.lookup('controller:composer').open({action: Discourse.Composer.CREATE_TOPIC, draftKey: Discourse.Composer.CREATE_TOPIC});
+    this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
   },
 
   pinUnpinTopic() {
@@ -176,7 +182,7 @@ export default {
     this.container.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
   },
 
-  showSearch() {
+  toggleSearch() {
     this.container.lookup('controller:header').send('toggleSearch');
     return false;
   },
@@ -216,10 +222,14 @@ export default {
     // TODO: We should keep track of the post without a CSS class
     const selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
     if (selectedPostId) {
-      const topicController = container.lookup('controller:topic'),
-          post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
+      const topicController = container.lookup('controller:topic');
+      const post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
       if (post) {
-        topicController.send(action, post);
+        // TODO: Use ember closure actions
+        const result = topicController._actions[action].call(topicController, post);
+        if (result && result.then) {
+          this.appEvents.trigger('post-stream:refresh', { id: selectedPostId });
+        }
       }
     }
   },
@@ -281,7 +291,7 @@ export default {
       index = 0;
       $articles.each(function() {
         const top = $(this).position().top;
-        if (top > scrollTop) {
+        if (top >= scrollTop) {
           return false;
         }
         index += 1;
@@ -306,12 +316,7 @@ export default {
       }
 
       if ($article.is('.topic-post')) {
-        let tabLoc = $article.find('a.tabLoc');
-        if (tabLoc.length === 0) {
-          tabLoc = $('<a href class="tabLoc"></a>');
-          $article.prepend(tabLoc);
-        }
-        tabLoc.focus();
+        $('a.tabLoc', $article).focus();
       }
 
       this._scrollList($article, direction);
@@ -353,8 +358,8 @@ export default {
   },
 
   _changeSection(direction) {
-    const $sections = $('#navigation-bar li'),
-        active = $('#navigation-bar li.active'),
+    const $sections = $('.nav.nav-pills li'),
+        active = $('.nav.nav-pills li.active'),
         index = $sections.index(active) + direction;
 
     if (index >= 0 && index < $sections.length) {
@@ -363,14 +368,17 @@ export default {
   },
 
   _stopCallback() {
-    const oldStopCallback = this.keyTrapper.stopCallback;
+    const oldStopCallback = this.keyTrapper.prototype.stopCallback;
 
-    this.keyTrapper.stopCallback = function(e, element, combo) {
+    this.keyTrapper.prototype.stopCallback = function(e, element, combo, sequence) {
       if ((combo === 'ctrl+f' || combo === 'command+f') && element.id === 'search-term') {
         return false;
       }
-
-      return oldStopCallback(e, element, combo);
+      return oldStopCallback.call(this, e, element, combo, sequence);
     };
+  },
+
+  _replyToPost() {
+    this.container.lookup('controller:topic').send('replyToPost');
   }
 };

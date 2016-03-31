@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe EmailController do
 
@@ -21,7 +21,11 @@ describe EmailController do
 
   context '.resubscribe' do
 
-    let(:user) { Fabricate(:user, email_digests: false) }
+    let(:user) {
+      user = Fabricate(:user)
+      user.user_option.update_columns(email_digests: false)
+      user
+    }
     let(:key) { DigestUnsubscribeKey.create_key_for(user) }
 
     context 'with a valid key' do
@@ -31,7 +35,7 @@ describe EmailController do
       end
 
       it 'subscribes the user' do
-        expect(user.email_digests).to eq(true)
+        expect(user.user_option.email_digests).to eq(true)
       end
     end
 
@@ -39,8 +43,27 @@ describe EmailController do
 
   context '.unsubscribe' do
 
-    let(:user) { Fabricate(:user) }
+    let(:user) {
+      user = Fabricate(:user)
+      user.user_option.update_columns(email_always: true, email_digests: true, email_direct: true, email_private_messages: true)
+      user
+    }
     let(:key) { DigestUnsubscribeKey.create_key_for(user) }
+
+    context 'from confirm unsubscribe email' do
+      before do
+        get :unsubscribe, key: key, from_all: true
+        user.reload
+      end
+
+      it 'unsubscribes from all emails' do
+        options = user.user_option
+        expect(options.email_digests).to eq false
+        expect(options.email_direct).to eq false
+        expect(options.email_private_messages).to eq false
+        expect(options.email_always).to eq false
+      end
+    end
 
     context 'with a valid key' do
       before do
@@ -49,7 +72,7 @@ describe EmailController do
       end
 
       it 'unsubscribes the user' do
-        expect(user.email_digests).to eq(false)
+        expect(user.user_option.email_digests).to eq(false)
       end
 
       it "sets the appropriate instance variables" do
@@ -76,7 +99,7 @@ describe EmailController do
       end
 
       it 'does not unsubscribe the user' do
-        expect(user.email_digests).to eq(true)
+        expect(user.user_option.email_digests).to eq(true)
       end
 
       it 'sets the appropriate instance variables' do
@@ -94,7 +117,7 @@ describe EmailController do
       end
 
       it 'unsubscribes the user' do
-        expect(user.email_digests).to eq(false)
+        expect(user.user_option.email_digests).to eq(false)
       end
 
       it 'sets the appropriate instance variables' do

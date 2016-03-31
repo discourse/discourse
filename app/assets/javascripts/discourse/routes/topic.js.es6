@@ -1,4 +1,3 @@
-import ScreenTrack from 'discourse/lib/screen-track';
 import DiscourseURL from 'discourse/lib/url';
 
 let isTransitioning = false,
@@ -43,7 +42,7 @@ const TopicRoute = Discourse.Route.extend({
 
     showFlags(model) {
       showModal('flag', { model });
-      this.controllerFor('flag').setProperties({ selected: null });
+      this.controllerFor('flag').setProperties({ selected: null, flagTopic: false });
     },
 
     showFlagTopic(model) {
@@ -74,6 +73,7 @@ const TopicRoute = Discourse.Route.extend({
     showHistory(model) {
       showModal('history', { model });
       this.controllerFor('history').refresh(model.get("id"), "latest");
+      this.controllerFor('history').set('post', model);
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
@@ -97,7 +97,7 @@ const TopicRoute = Discourse.Route.extend({
     // Use replaceState to update the URL once it changes
     postChangedRoute(currentPost) {
       // do nothing if we are transitioning to another route
-      if (isTransitioning || Discourse.TopicRoute.disableReplaceState) { return; }
+      if (isTransitioning || TopicRoute.disableReplaceState) { return; }
 
       const topic = this.modelFor('topic');
       if (topic && currentPost) {
@@ -186,7 +186,7 @@ const TopicRoute = Discourse.Route.extend({
     topicController.set('multiSelect', false);
     topicController.unsubscribe();
     this.controllerFor('composer').set('topic', null);
-    ScreenTrack.current().stop();
+    this.screenTrack.stop();
 
     const headerController = this.controllerFor('header');
     if (headerController) {
@@ -205,7 +205,7 @@ const TopicRoute = Discourse.Route.extend({
       firstPostExpanded: false
     });
 
-    Discourse.TopicRoute.trigger('setupTopicController', this);
+    TopicRoute.trigger('setupTopicController', this);
 
     this.controllerFor('header').setProperties({ topic: model, showExtraInfo: false });
     this.searchService.set('searchContext', model.get('searchContext'));
@@ -215,8 +215,9 @@ const TopicRoute = Discourse.Route.extend({
     controller.subscribe();
 
     this.controllerFor('topic-progress').set('model', model);
+
     // We reset screen tracking every time a topic is entered
-    ScreenTrack.current().start(model.get('id'), controller);
+    this.screenTrack.start(model.get('id'), controller);
   }
 
 });

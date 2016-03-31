@@ -57,9 +57,12 @@ const TopicTrackingState = Discourse.Model.extend({
         tracker.notify(data);
         const old = tracker.states["t" + data.topic_id];
 
-        if (!_.isEqual(old, data.payload)) {
-          tracker.states["t" + data.topic_id] = data.payload;
-          tracker.incrementMessageCount();
+        // don't add tracking state for read stuff that was not tracked in first place
+        if (old || data.message_type !== "read") {
+          if (!_.isEqual(old, data.payload)) {
+            tracker.states["t" + data.topic_id] = data.payload;
+            tracker.incrementMessageCount();
+          }
         }
       }
     };
@@ -69,6 +72,22 @@ const TopicTrackingState = Discourse.Model.extend({
     if (this.currentUser) {
       this.messageBus.subscribe("/unread/" + this.currentUser.get('id'), process);
     }
+
+    this.messageBus.subscribe("/delete", msg => {
+      const old = tracker.states["t" + msg.topic_id];
+      if (old) {
+        old.deleted = true;
+      }
+      tracker.incrementMessageCount();
+    });
+
+    this.messageBus.subscribe("/recover", msg => {
+      const old = tracker.states["t" + msg.topic_id];
+      if (old) {
+        delete old.deleted;
+      }
+      tracker.incrementMessageCount();
+    });
   },
 
   updateSeen(topicId, highestSeen) {
@@ -82,6 +101,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   notify(data) {
     if (!this.newIncoming) { return; }
+    if (data.archetype === "private_message") { return; }
 
     const filter = this.get("filter");
     const filterCategory = this.get("filterCategory");
@@ -267,7 +287,13 @@ const TopicTrackingState = Discourse.Model.extend({
   countNew(category_id) {
     return _.chain(this.states)
             .where(isNew)
-            .where(topic => topic.category_id === category_id || topic.parent_category_id === category_id || !category_id)
+            .where(topic =>
+                    topic.archetype !== "private_message" &&
+                    !topic.deleted && (
+                    topic.category_id === category_id ||
+                    topic.parent_category_id === category_id ||
+                    !category_id)
+                  )
             .value()
             .length;
   },
@@ -283,7 +309,13 @@ const TopicTrackingState = Discourse.Model.extend({
   countUnread(category_id) {
     return _.chain(this.states)
             .where(isUnread)
-            .where(topic => topic.category_id === category_id || topic.parent_category_id === category_id || !category_id)
+            .where(topic =>
+                  topic.archetype !== "private_message" &&
+                  !topic.deleted && (
+                  topic.category_id === category_id ||
+                  topic.parent_category_id === category_id ||
+                  !category_id)
+                )
             .value()
             .length;
   },
@@ -291,7 +323,7 @@ const TopicTrackingState = Discourse.Model.extend({
   countCategory(category_id) {
     let sum = 0;
     _.each(this.states, function(topic){
-      if (topic.category_id === category_id) {
+      if (topic.category_id === category_id && !topic.deleted) {
         sum += (topic.last_read_post_number === null ||
                   topic.last_read_post_number < topic.highest_post_number) ? 1 : 0;
       }

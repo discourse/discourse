@@ -151,8 +151,7 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
         @threads.delete(id)
       else
         # Normalize titles
-        t[:title].gsub!(@strip, '') if @strip.present?
-        t[:title].strip!
+        t[:title] = [:title].gsub(@strip, '').strip if @strip.present?
       end
     end
 

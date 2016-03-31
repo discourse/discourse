@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe DraftSequence do
   it 'should produce next sequence for a key' do

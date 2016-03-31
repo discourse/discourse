@@ -1,11 +1,13 @@
 <section class="details {{unless model.active 'not-activated'}}">
 
   <div class='user-controls'>
-    {{#if model.active}}
+    {{#if model.canViewProfile}}
       {{#link-to 'user' model class="btn"}}
         {{fa-icon "user"}}
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
+    {{/if}}
+    {{#if model.active}}
       {{#if model.can_impersonate}}
         <button class='btn btn-danger' {{action "impersonate" target="content"}} title="{{i18n 'admin.impersonate.help'}}">
           {{fa-icon "crosshairs"}}
@@ -327,14 +329,28 @@
     <div class='field'>{{i18n 'admin.user.blocked'}}</div>
     <div class='value'>{{model.blocked}}</div>
     <div class='controls'>
-      {{#if model.blocked}}
-        <button class='btn' {{action "unblock" target="content"}}>
-          {{fa-icon "thumbs-o-up"}}
-          {{i18n 'admin.user.unblock'}}
-        </button>
-        {{i18n 'admin.user.block_explanation'}}
-      {{/if}}
+      {{#conditional-loading-spinner size="small" condition=model.blockingUser}}
+        {{#if model.blocked}}
+          <button class='btn' {{action "unblock" target="content"}}>
+            {{fa-icon "thumbs-o-up"}}
+            {{i18n 'admin.user.unblock'}}
+          </button>
+          {{i18n 'admin.user.block_explanation'}}
+        {{else}}
+          <button class='btn' {{action "block" target="content"}}>
+            {{fa-icon "ban"}}
+            {{i18n 'admin.user.block'}}
+          </button>
+          {{i18n 'admin.user.block_explanation'}}
+        {{/if}}
+      {{/conditional-loading-spinner}}
     </div>
+  </div>
+
+  <div class="display-row">
+    <div class='field'>{{i18n 'admin.user.staged'}}</div>
+    <div class='value'>{{model.staged}}</div>
+    <div class='controls'>{{i18n 'admin.user.stage_explanation'}}</div>
   </div>
 </section>
 
@@ -370,15 +386,15 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'created'}}</div>
-    <div class='value'>{{{model.created_at_age}}}</div>
+    <div class='value'>{{format-date model.created_at leaveAgo="true"}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.users.last_emailed'}}</div>
-    <div class='value'>{{{model.last_emailed_age}}}</div>
+    <div class='value'>{{format-date model.last_emailed_at leaveAgo="true"}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'last_seen'}}</div>
-    <div class='value'>{{{model.last_seen_age}}}</div>
+    <div class='value'>{{format-date model.last_seen_at leaveAgo="true"}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.like_count'}}</div>
@@ -434,26 +450,26 @@
 <section class='details'>
   <h1>{{i18n 'admin.user.sso.title'}}</h1>
 
-  {{#with model.single_sign_on_record}}
+  {{#with model.single_sign_on_record as |sso|}}
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_id'}}</div>
-      <div class='value'>{{external_id}}</div>
+      <div class='value'>{{sso.external_id}}</div>
     </div>
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_username'}}</div>
-      <div class='value'>{{external_username}}</div>
+      <div class='value'>{{sso.external_username}}</div>
     </div>
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_name'}}</div>
-      <div class='value'>{{external_name}}</div>
+      <div class='value'>{{sso.external_name}}</div>
     </div>
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_email'}}</div>
-      <div class='value'>{{external_email}}</div>
+      <div class='value'>{{sso.external_email}}</div>
     </div>
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.user.sso.external_avatar_url'}}</div>
-      <div class='value'>{{external_avatar_url}}</div>
+      <div class='value'>{{sso.external_avatar_url}}</div>
     </div>
   {{/with}}
 </section>

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UploadsController do
 
@@ -16,6 +16,13 @@ describe UploadsController do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'logo.png',
           tempfile: file_from_fixtures("logo.png")
+        })
+      end
+
+      let(:fake_jpg) do
+        ActionDispatch::Http::UploadedFile.new({
+          filename: 'fake.jpg',
+          tempfile: file_from_fixtures("fake.jpg")
         })
       end
 
@@ -104,6 +111,32 @@ describe UploadsController do
 
         expect(response.status).to eq 200
         expect(message.data["errors"]).to be
+      end
+
+      it 'ensures allow_uploaded_avatars is enabled when uploading an avatar' do
+        SiteSetting.stubs(:allow_uploaded_avatars).returns(false)
+        xhr :post, :create, file: logo, type: "avatar"
+        expect(response).to_not be_success
+      end
+
+      it 'ensures sso_overrides_avatar is not enabled when uploading an avatar' do
+        SiteSetting.stubs(:sso_overrides_avatar).returns(true)
+        xhr :post, :create, file: logo, type: "avatar"
+        expect(response).to_not be_success
+      end
+
+      it 'returns an error when it could not determine the dimensions of an image' do
+        Jobs.expects(:enqueue).with(:create_thumbnails, anything).never
+
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: fake_jpg, type: "composer"
+        end.first
+
+        expect(response.status).to eq 200
+
+        expect(message.channel).to eq("/uploads/composer")
+        expect(message.data["errors"]).to be
+        expect(message.data["errors"][0]).to eq(I18n.t("upload.images.size_not_found"))
       end
 
     end

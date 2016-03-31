@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe TopicTrackingState do
 
@@ -41,8 +41,6 @@ describe TopicTrackingState do
 
 
   it "correctly handles capping" do
-    $redis.del TopicUser.unread_cap_key
-
     user = Fabricate(:user)
 
     post1 = create_post
@@ -66,20 +64,6 @@ describe TopicTrackingState do
 
     report = TopicTrackingState.report(user.id)
     expect(report.length).to eq(3)
-
-    SiteSetting.max_tracked_new_unread = 5
-    # business logic, we allow for 2/5th new .. 2/5th unread ... 1/5th buffer
-
-    TopicUser.cap_unread_backlog!
-
-    report = TopicTrackingState.report(user.id)
-    expect(report.length).to eq(3)
-
-    TopicUser.cap_unread_later(user.id)
-    TopicUser.cap_unread_backlog!
-
-    report = TopicTrackingState.report(user.id)
-    expect(report.length).to eq(2)
 
   end
 

@@ -3,7 +3,7 @@ class UserSearch
 
   def initialize(term, opts={})
     @term = term
-    @term_like = "#{term.downcase}%"
+    @term_like = "#{term.downcase.gsub("_", "\\_")}%"
     @topic_id = opts[:topic_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
@@ -11,7 +11,7 @@ class UserSearch
   end
 
   def scoped_users
-    users = User.where("active")
+    users = User.where(active: true, staged: false)
 
     unless @searching_user && @searching_user.staff?
       users = users.not_suspended
@@ -35,13 +35,14 @@ class UserSearch
     users = scoped_users
 
     if @term.present?
-      if SiteSetting.enable_names?
+      if SiteSetting.enable_names? && @term !~ /[_\.-]/
         query = Search.ts_query(@term, "simple")
+
         users = users.includes(:user_search_data)
                      .references(:user_search_data)
-                     .where("username_lower LIKE :term_like OR user_search_data.search_data @@ #{query}",
-                            term: @term, term_like: @term_like)
+                     .where("user_search_data.search_data @@ #{query}")
                      .order(User.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
+
       else
         users = users.where("username_lower LIKE :term_like", term_like: @term_like)
       end
@@ -56,36 +57,35 @@ class UserSearch
     # 1. exact username matches
     if @term.present?
       scoped_users.where(username_lower: @term.downcase)
+                  .limit(@limit)
                   .pluck(:id)
-                  .each{|id| users << id}
+                  .each { |id| users << id }
 
     end
 
-    return users.to_a if users.length == @limit
+    return users.to_a if users.length >= @limit
 
     # 2. in topic
     if @topic_id
-      filtered_by_term_users.where('users.id in (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
+      filtered_by_term_users.where('users.id IN (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
                             .order('last_seen_at DESC')
                             .limit(@limit - users.length)
                             .pluck(:id)
-                            .each{|id| users << id}
+                            .each { |id| users << id }
     end
 
-    return users.to_a if users.length == @limit
+    return users.to_a if users.length >= @limit
 
     # 3. global matches
     filtered_by_term_users.order('last_seen_at DESC')
                             .limit(@limit - users.length)
                             .pluck(:id)
-                            .each{|id| users << id}
+                            .each { |id| users << id }
 
     users.to_a
-
   end
 
   def search
-
     ids = search_ids
     return User.where("0=1") if ids.empty?
 
@@ -93,7 +93,6 @@ class UserSearch
       FROM unnest('{#{ids.join(",")}}'::int[])
     ) x on uid = users.id")
         .order("rn")
-
   end
 
 end

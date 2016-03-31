@@ -2,6 +2,7 @@
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
 require_dependency 'url_helper'
+require_dependency 'pretty_text'
 
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
@@ -11,7 +12,12 @@ class CookedPostProcessor
     @opts = opts
     @post = post
     @previous_cooked = (@post.cooked || "").dup
-    @doc = Nokogiri::HTML::fragment(post.cooked)
+    # NOTE: we re-cook the post here in order to prevent timing issues with edits
+    # cf. https://meta.discourse.org/t/edit-of-rebaked-post-doesnt-show-in-html-only-in-raw/33815/6
+    @cooking_options = post.cooking_options || opts[:cooking_options] || {}
+    @cooking_options[:topic_id] = post.topic_id
+    @cooking_options = @cooking_options.symbolize_keys
+    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
     @size_cache = {}
   end
 
@@ -60,7 +66,7 @@ class CookedPostProcessor
       convert_to_link!(img)
     end
 
-    update_topic_image(images)
+    update_topic_image
   end
 
   def extract_images
@@ -68,6 +74,17 @@ class CookedPostProcessor
     @doc.css("img[src]") -
     # minus, data images
     @doc.css("img[src^='data']") -
+    # minus, emojis
+    @doc.css("img.emoji") -
+    # minus, image inside oneboxes
+    oneboxed_images -
+    # minus, images inside quotes
+    @doc.css(".quote img")
+  end
+
+  def extract_images_for_topic
+    # all image with a src attribute
+    @doc.css("img[src]") -
     # minus, emojis
     @doc.css("img.emoji") -
     # minus, image inside oneboxes
@@ -99,13 +116,16 @@ class CookedPostProcessor
     if w > 0 || h > 0
       w = w.to_f
       h = h.to_f
-      original_width, original_height = get_size(img["src"]).map {|integer| integer.to_f}
+
+      return unless original_image_size = get_size(img["src"])
+      original_width, original_height = original_image_size.map(&:to_f)
+
       if w > 0
         ratio = w/original_width
-        return [w.floor, (original_height*ratio).floor]
+        [w.floor, (original_height*ratio).floor]
       else
         ratio = h/original_height
-        return [(original_width*ratio).floor, h.floor]
+        [(original_width*ratio).floor, h.floor]
       end
     end
   end
@@ -231,9 +251,9 @@ class CookedPostProcessor
     span
   end
 
-  def update_topic_image(images)
+  def update_topic_image
     if @post.is_first_post?
-      img = images.first
+      img = extract_images_for_topic.first
       @post.topic.update_column(:image_url, img["src"][0...255]) if img["src"].present?
     end
   end
@@ -245,13 +265,28 @@ class CookedPostProcessor
     }
 
     # apply oneboxes
-    Oneboxer.apply(@doc) { |url| Oneboxer.onebox(url, args) }
+    Oneboxer.apply(@doc, topic_id: @post.topic_id) { |url|
+      Oneboxer.onebox(url, args)
+    }
 
     # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }
+
+    # respect nofollow admin settings
+    if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+      PrettyText.add_rel_nofollow_to_user_content(@doc)
+    end
   end
 
   def optimize_urls
+    # when login is required, attachments can't be on the CDN
+    if SiteSetting.login_required
+      @doc.css("a.attachment[href]").each do |a|
+        href = a["href"].to_s
+        a["href"] = UrlHelper.schemaless UrlHelper.absolute(href, nil) if UrlHelper.is_local(href)
+      end
+    end
+
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
         href = a["#{selector}"].to_s
@@ -275,7 +310,7 @@ class CookedPostProcessor
     # make sure no other job is scheduled
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job
-    delay = SiteSetting.ninja_edit_window + 1
+    delay = SiteSetting.editing_grace_period + 1
     Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id, bypass_bump: bypass_bump)
   end
 

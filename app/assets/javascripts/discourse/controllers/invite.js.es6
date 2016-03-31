@@ -1,5 +1,4 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import Invite from 'discourse/models/invite';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   needs: ['user-invited-show'],
@@ -7,6 +6,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   // If this isn't defined, it will proxy to the user model on the preferences
   // page which is wrong.
   emailOrUsername: null,
+  inviteIcon: "envelope",
 
   isAdmin: function(){
     return Discourse.User.currentProp("admin");
@@ -68,12 +68,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   // Show Groups? (add invited user to private group)
   showGroups: function() {
-    return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic')) && !Discourse.SiteSettings.enable_sso && !this.get('isMessage');
+    return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic')) && !Discourse.SiteSettings.enable_sso && Discourse.SiteSettings.enable_local_logins && !this.get('isMessage');
   }.property('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'isMessage', 'invitingToTopic'),
 
   // Instructional text for the modal.
   inviteInstructions: function() {
-    if (Discourse.SiteSettings.enable_sso) {
+    if (Discourse.SiteSettings.enable_sso || !Discourse.SiteSettings.enable_local_logins) {
       // inviting existing user when SSO enabled
       return I18n.t('topic.invite_reply.sso_enabled');
     } else if (this.get('isMessage')) {
@@ -89,8 +89,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (Ember.isEmpty(this.get('emailOrUsername'))) {
           return I18n.t('topic.invite_reply.to_topic_blank');
         } else if (Discourse.Utilities.emailValid(this.get('emailOrUsername'))) {
+          this.set("inviteIcon", "envelope");
           return I18n.t('topic.invite_reply.to_topic_email');
         } else {
+          this.set("inviteIcon", "hand-o-right");
           return I18n.t('topic.invite_reply.to_topic_username');
         }
       }
@@ -108,7 +110,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('isPrivateTopic'),
 
   groupFinder(term) {
-    return Discourse.Group.findAll({search: term, ignore_automatic: true});
+    const Group = require('discourse/models/group').default;
+    return Group.findAll({search: term, ignore_automatic: true});
   },
 
   successMessage: function() {
@@ -128,7 +131,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('isMessage'),
 
   placeholderKey: function() {
-    return Discourse.SiteSettings.enable_sso ?
+    return (Discourse.SiteSettings.enable_sso || !Discourse.SiteSettings.enable_local_logins) ?
             'topic.invite_reply.username_placeholder' :
             'topic.invite_private.email_or_username_placeholder';
   }.property(),
@@ -148,6 +151,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
 
     createInvite() {
+      const Invite = require('discourse/models/invite').default;
+      const self = this;
+
       if (this.get('disabled')) { return; }
 
       const groupNames = this.get('model.groupNames'),
@@ -164,12 +170,22 @@ export default Ember.Controller.extend(ModalFunctionality, {
                   userInvitedController.set('totalInvites', invite_model.invites.length);
                 });
               } else if (this.get('isMessage') && result && result.user) {
-                this.get('model.details.allowed_users').pushObject(result.user);
+                this.get('model.details.allowed_users').pushObject(Ember.Object.create(result.user));
               }
-            }).catch(() => model.setProperties({ saving: false, error: true }));
+            }).catch(function(e) {
+              if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+                self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+              } else {
+                self.set("errorMessage", self.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error'));
+              }
+              model.setProperties({ saving: false, error: true });
+            });
     },
 
     generateInvitelink() {
+      const Invite = require('discourse/models/invite').default;
+      const self = this;
+
       if (this.get('disabled')) { return; }
 
       const groupNames = this.get('model.groupNames'),
@@ -189,7 +205,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 userInvitedController.set('model', invite_model);
                 userInvitedController.set('totalInvites', invite_model.invites.length);
               });
-            }).catch(() => model.setProperties({ saving: false, error: true }));
+            }).catch(function(e) {
+              if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+                self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+              } else {
+                self.set("errorMessage", self.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error'));
+              }
+              model.setProperties({ saving: false, error: true });
+            });
     }
   }
 

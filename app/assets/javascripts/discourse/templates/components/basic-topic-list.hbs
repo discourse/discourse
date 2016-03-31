@@ -1,14 +1,18 @@
 {{#conditional-loading-spinner condition=loading}}
   {{#if topics}}
-    {{topic-list
-        showParticipants=showParticipants
-        hideCategory=hideCategory
-        topics=topics
-        expandExcerpts=expandExcerpts
-    }}
+    {{topic-list showParticipants=showParticipants
+                 showPosters=showPosters
+                 hideCategory=hideCategory
+                 topics=topics
+                 expandExcerpts=expandExcerpts
+                 bulkSelectEnabled=bulkSelectEnabled
+                 canBulkSelect=canBulkSelect
+                 selected=selected}}
   {{else}}
+    {{#unless loadingMore}}
     <div class='alert alert-info'>
       {{i18n 'choose_topic.none_found'}}
     </div>
+    {{/unless}}
   {{/if}}
 {{/conditional-loading-spinner}}

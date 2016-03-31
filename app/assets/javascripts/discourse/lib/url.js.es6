@@ -11,24 +11,19 @@ const DiscourseURL = Ember.Object.createWithMixins({
     return _jumpScheduled;
   },
 
-  /**
-    Jumps to a particular post in the stream
-  **/
-  jumpToPost: function(postNumber, opts) {
-    const holderId = '#post-cloak-' + postNumber;
-
-    const offset = function(){
-
-      const $header = $('header'),
-          $title = $('#topic-title'),
-          windowHeight = $(window).height() - $title.height(),
-          expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
+  // Jumps to a particular post in the stream
+  jumpToPost(postNumber, opts) {
+    const holderId = `#post_${postNumber}`;
+    const offset = () => {
+      const $header = $('header');
+      const $title = $('#topic-title');
+      const windowHeight = $(window).height() - $title.height();
+      const expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
 
       return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
     };
 
-
-    Em.run.schedule('afterRender', function() {
+    Em.run.schedule('afterRender', () => {
       if (postNumber === 1) {
         $(window).scrollTop(0);
         return;
@@ -38,21 +33,18 @@ const DiscourseURL = Ember.Object.createWithMixins({
       const holder = $(holderId);
 
       if (holder.length > 0 && opts && opts.skipIfOnScreen){
-
         // if we are on screen skip
         const elementTop = lockon.elementTop(),
-            scrollTop = $(window).scrollTop(),
-            windowHeight = $(window).height()-offset(),
-            height = holder.height();
+              scrollTop = $(window).scrollTop(),
+              windowHeight = $(window).height()-offset(),
+              height = holder.height();
 
-        if (elementTop > scrollTop &&
-            (elementTop + height) < (scrollTop + windowHeight)) {
+        if (elementTop > scrollTop && (elementTop + height) < (scrollTop + windowHeight)) {
           return;
         }
       }
 
       lockon.lock();
-
     });
   },
 
@@ -82,7 +74,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
   },
 
   // Scroll to the same page, different anchor
-  scrollToId: function(id) {
+  scrollToId(id) {
     if (Em.isEmpty(id)) { return; }
 
     _jumpScheduled = true;
@@ -122,7 +114,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
     // Scroll to the same page, different anchor
     if (path.indexOf('#') === 0) {
       this.scrollToId(path);
-      history.replaceState(undefined, undefined, path);
+      this.replaceState(path);
       return;
     }
 
@@ -203,40 +195,40 @@ const DiscourseURL = Ember.Object.createWithMixins({
     @param {String} oldPath the previous path we were on
     @param {String} path the path we're navigating to
   **/
-  navigatedToPost: function(oldPath, path) {
-    const newMatches = this.TOPIC_REGEXP.exec(path),
-        newTopicId = newMatches ? newMatches[2] : null;
+  navigatedToPost(oldPath, path) {
+    const newMatches = this.TOPIC_REGEXP.exec(path);
+    const newTopicId = newMatches ? newMatches[2] : null;
 
     if (newTopicId) {
-      const oldMatches = this.TOPIC_REGEXP.exec(oldPath),
-          oldTopicId = oldMatches ? oldMatches[2] : null;
+      const oldMatches = this.TOPIC_REGEXP.exec(oldPath);
+      const oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
         DiscourseURL.replaceState(path);
 
-        const container = Discourse.__container__,
-            topicController = container.lookup('controller:topic'),
-            opts = {},
-            postStream = topicController.get('model.postStream');
+        const container = Discourse.__container__;
+        const topicController = container.lookup('controller:topic');
+        const opts = {};
+        const postStream = topicController.get('model.postStream');
 
-        if (newMatches[3]) opts.nearPost = newMatches[3];
+        if (newMatches[3]) { opts.nearPost = newMatches[3]; }
         if (path.match(/last$/)) { opts.nearPost = topicController.get('model.highest_post_number'); }
         const closest = opts.nearPost || 1;
 
-        const self = this;
-        postStream.refresh(opts).then(function() {
+        postStream.refresh(opts).then(() => {
           topicController.setProperties({
             'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
-          const closestPost = postStream.closestPostForPostNumber(closest),
-              progress = postStream.progressIndexOfPost(closestPost),
-              progressController = container.lookup('controller:topic-progress');
+
+          const closestPost = postStream.closestPostForPostNumber(closest);
+          const progress = postStream.progressIndexOfPost(closestPost);
+          const progressController = container.lookup('controller:topic-progress');
 
           progressController.set('progressPosition', progress);
-          self.appEvents.trigger('post:highlight', closest);
-        }).then(function() {
+          this.appEvents.trigger('post:highlight', closest);
+        }).then(() => {
           DiscourseURL.jumpToPost(closest, {skipIfOnScreen: true});
         });
 

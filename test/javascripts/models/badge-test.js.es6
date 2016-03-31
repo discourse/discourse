@@ -9,32 +9,6 @@ test('newBadge', function() {
   ok(!badge2.get('newBadge'), "badges with ids are not new");
 });
 
-test('displayName', function() {
-  const badge1 = Badge.create({id: 1, name: "Test Badge 1"});
-  equal(badge1.get('displayName'), "Test Badge 1", "falls back to the original name in the absence of a translation");
-
-  sandbox.stub(I18n, "t").returnsArg(0);
-  const badge2 = Badge.create({id: 2, name: "Test Badge 2"});
-  equal(badge2.get('displayName'), "badges.badge.test_badge_2.name", "uses translation when available");
-});
-
-test('translatedDescription', function() {
-  const badge1 = Badge.create({id: 1, name: "Test Badge 1", description: "TEST"});
-  equal(badge1.get('translatedDescription'), null, "returns null when no translation exists");
-
-  const badge2 = Badge.create({id: 2, name: "Test Badge 2 **"});
-  sandbox.stub(I18n, "t").returns("description translation");
-  equal(badge2.get('translatedDescription'), "description translation", "users translated description");
-});
-
-test('displayDescription', function() {
-  const badge1 = Badge.create({id: 1, name: "Test Badge 1", description: "TEST"});
-  equal(badge1.get('displayDescription'), "TEST", "returns original description when no translation exists");
-
-  const badge2 = Badge.create({id: 2, name: "Test Badge 2 **"});
-  sandbox.stub(I18n, "t").returns("description translation");
-  equal(badge2.get('displayDescription'), "description translation", "users translated description");
-});
 
 test('createFromJson array', function() {
   const badgesJson = {"badge_types":[{"id":6,"name":"Silver 1"}],"badges":[{"id":1126,"name":"Badge 1","description":null,"badge_type_id":6}]};

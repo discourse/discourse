@@ -1,0 +1,84 @@
+<div class='top-section stats-section'>
+  <h3 class='stats-title'>{{i18n "user.summary.stats"}}</h3>
+  <ul>
+    <li>
+      <span class='value'>{{model.time_read}}</span>
+      <span class='label'>{{{i18n "user.summary.time_read"}}}</span>
+    </li>
+    <li>{{user-stat value=model.topic_count label="user.summary.topic_count"}}</li>
+    <li>{{user-stat value=model.post_count label="user.summary.post_count"}}</li>
+    <li>{{user-stat value=model.likes_received label="user.summary.likes_received"}}</li>
+    <li>{{user-stat value=model.likes_given label="user.summary.likes_given"}}</li>
+    <li>{{user-stat value=model.days_visited label="user.summary.days_visited"}}</li>
+    <li>{{user-stat value=model.posts_read_count label="user.summary.posts_read"}}</li>
+  </ul>
+</div>
+
+<div class='top-section'>
+  <div class='replies-section'>
+    <h3 class='stats-title'>{{i18n "user.summary.top_replies"}}</h3>
+    {{#if model.replies.length}}
+      <ul>
+        {{#each reply in model.replies}}
+          <li>
+            <span class='topic-info'>
+              {{format-date reply.createdAt format="tiny" noTitle="true"}}
+              {{#if reply.like_count}}
+                &middot;
+                <span class='like-count'>{{number reply.like_count}}&nbsp;{{fa-icon 'heart'}}</span>
+              {{/if}}
+            </span>
+            <br>
+            <span>
+              <a href="{{reply.url}}">{{{reply.topic.fancyTitle}}}</a>
+            </span>
+          </li>
+        {{/each}}
+      </ul>
+      {{#if moreReplies}}
+        <p>{{#link-to "userActivity.replies" user class="more"}}{{i18n "user.summary.more_replies"}}{{/link-to}}</p>
+      {{/if}}
+    {{else}}
+      <p>{{i18n "user.summary.no_replies"}}</p>
+    {{/if}}
+  </div>
+  <div class='topics-section'>
+    <h3 class='stats-title'>{{i18n "user.summary.top_topics"}}</h3>
+    {{#if model.topics.length}}
+      <ul>
+        {{#each topic in model.topics}}
+          <li>
+            <span class='topic-info'>
+              {{format-date topic.createdAt format="tiny" noTitle="true"}}
+              {{#if topic.like_count}}
+                &middot;
+                <span class='like-count'>{{number topic.like_count}}&nbsp;{{fa-icon 'heart'}}</span>
+              {{/if}}
+            </span>
+            <br>
+            <span>
+              <a href="{{topic.url}}">{{{topic.fancyTitle}}}</a>
+            </span>
+          </li>
+        {{/each}}
+      </ul>
+      {{#if moreTopics}}
+        <p>{{#link-to "userActivity.topics" user class="more"}}{{i18n "user.summary.more_topics"}}{{/link-to}}</p>
+      {{/if}}
+    {{else}}
+      <p>{{i18n "user.summary.no_topics"}}</p>
+    {{/if}}
+  </div>
+</div>
+
+<div class='top-section badges-section'>
+  <h3 class='stats-title'>{{i18n "user.summary.top_badges"}}</h3>
+  {{#each badge in model.badges}}
+    {{badge-card badge=badge count=badge.count navigateOnClick="true" username=user.username_lower}}
+  {{else}}
+    <p>{{i18n "user.summary.no_badges"}}</p>
+  {{/each}}
+  {{#if moreBadges}}
+    <p>{{#link-to "user.badges" user class="more"}}{{i18n "user.summary.more_badges"}}{{/link-to}}</p>
+  {{/if}}
+</div>

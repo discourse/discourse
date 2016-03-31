@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 def topics_controller_show_gen_perm_tests(expected, ctx)
   expected.each do |sym, status|
@@ -563,6 +563,11 @@ describe TopicsController do
       expect(response).to redirect_to(topic.relative_url + "/42?page=123")
     end
 
+    it 'does not accept page params as an array' do
+      xhr :get, :show, id: topic.slug, post_number: 42, page: [2]
+      expect(response).to redirect_to("#{topic.relative_url}/42?page=1")
+    end
+
     it 'returns 404 when an invalid slug is given and no id' do
       xhr :get, :show, id: 'nope-nope'
       expect(response.status).to eq(404)
@@ -570,6 +575,11 @@ describe TopicsController do
 
     it 'returns a 404 when slug and topic id do not match a topic' do
       xhr :get, :show, topic_id: 123123, slug: 'topic-that-is-made-up'
+      expect(response.status).to eq(404)
+    end
+
+    it 'returns a 404 for an ID that is larger than postgres limits' do
+      xhr :get, :show, topic_id: 50142173232201640412, slug: 'topic-that-is-made-up'
       expect(response.status).to eq(404)
     end
 
@@ -939,7 +949,7 @@ describe TopicsController do
 
     describe 'when logged in as group manager' do
       let(:group_manager) { log_in }
-      let(:group) { Fabricate(:group).tap { |g| g.add(group_manager); g.appoint_manager(group_manager) } }
+      let(:group) { Fabricate(:group).tap { |g| g.add_owner(group_manager) } }
       let(:private_category)  { Fabricate(:private_category, group: group) }
       let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
       let(:recipient) { 'jake@adventuretime.ooo' }
@@ -1024,6 +1034,46 @@ describe TopicsController do
         Topic.any_instance.expects(:set_auto_close).with(nil, anything)
         xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: nil, auto_close_based_on_last_post: false, timezone_offset: -240
       end
+
+      it "will close a topic when the time expires" do
+        topic = Fabricate(:topic)
+        Timecop.freeze(20.hours.ago) do
+          create_post(topic: topic, raw: "This is the body of my cool post in the topic, but it's a bit old now")
+        end
+        topic.save
+
+        Jobs.expects(:enqueue_at).at_least_once
+        xhr :put, :autoclose, topic_id: topic.id, auto_close_time: 24, auto_close_based_on_last_post: true
+
+        topic.reload
+        expect(topic.closed).to eq(false)
+        expect(topic.posts.last.raw).to match(/cool post/)
+
+        Timecop.freeze(5.hours.from_now) do
+          Jobs::CloseTopic.new.execute({topic_id: topic.id, user_id: @admin.id})
+        end
+
+        topic.reload
+        expect(topic.closed).to eq(true)
+        expect(topic.posts.last.raw).to match(/automatically closed/)
+      end
+
+      it "will immediately close if the last post is old enough" do
+        topic = Fabricate(:topic)
+        Timecop.freeze(20.hours.ago) do
+          create_post(topic: topic)
+        end
+        topic.save
+        Topic.reset_highest(topic.id)
+        topic.reload
+
+        xhr :put, :autoclose, topic_id: topic.id, auto_close_time: 10, auto_close_based_on_last_post: true
+
+        topic.reload
+        expect(topic.closed).to eq(true)
+        expect(topic.posts.last.raw).to match(/after the last reply/)
+        expect(topic.posts.last.raw).to match(/10 hours/)
+      end
     end
 
   end
@@ -1096,7 +1146,7 @@ describe TopicsController do
 
       it "delegates work to `TopicsBulkAction`" do
         topics_bulk_action = mock
-        TopicsBulkAction.expects(:new).with(user, topic_ids, operation).returns(topics_bulk_action)
+        TopicsBulkAction.expects(:new).with(user, topic_ids, operation, group: nil).returns(topics_bulk_action)
         topics_bulk_action.expects(:perform!)
         xhr :put, :bulk, topic_ids: topic_ids, operation: operation
       end

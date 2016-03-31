@@ -20,15 +20,19 @@ class UserAnonymizer
       @user.reload
       @user.password = SecureRandom.hex
       @user.email = "#{@user.username}@example.com"
-      @user.name = nil
+      @user.name = SiteSetting.full_name_required ? @user.username : nil
       @user.date_of_birth = nil
       @user.title = nil
-      @user.email_digests = false
-      @user.email_private_messages = false
-      @user.email_direct = false
-      @user.email_always = false
-      @user.mailing_list_mode = false
+      @user.uploaded_avatar_id = nil
       @user.save
+
+      options = @user.user_option
+      options.email_always = false
+      options.mailing_list_mode = false
+      options.email_digests = false
+      options.email_private_messages = false
+      options.email_direct = false
+      options.save
 
       profile = @user.user_profile
       profile.destroy if profile

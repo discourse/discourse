@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe SessionController do
 
@@ -264,40 +264,61 @@ describe SessionController do
       expect(response.code).to eq('419')
     end
 
-    it 'can act as an SSO provider' do
-      SiteSetting.enable_sso_provider = true
-      SiteSetting.enable_sso = false
-      SiteSetting.enable_local_logins = true
-      SiteSetting.sso_secret = "topsecret"
+    describe 'can act as an SSO provider' do
+      before do
+        SiteSetting.enable_sso_provider = true
+        SiteSetting.enable_sso = false
+        SiteSetting.enable_local_logins = true
+        SiteSetting.sso_secret = "topsecret"
 
-      sso = SingleSignOn.new
-      sso.nonce = "mynonce"
-      sso.sso_secret = SiteSetting.sso_secret
-      sso.return_sso_url = "http://somewhere.over.rainbow/sso"
+        @sso = SingleSignOn.new
+        @sso.nonce = "mynonce"
+        @sso.sso_secret = SiteSetting.sso_secret
+        @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
 
-      get :sso_provider, Rack::Utils.parse_query(sso.payload)
+        @user = Fabricate(:user, password: "frogs", active: true, admin: true)
+        EmailToken.update_all(confirmed: true)
+      end
 
-      expect(response).to redirect_to("/login")
+      it "successfully logs in and redirects user to return_sso_url when the user is not logged in" do
+        get :sso_provider, Rack::Utils.parse_query(@sso.payload)
+        expect(response).to redirect_to("/login")
 
-      user = Fabricate(:user, password: "frogs", active: true, admin: true)
-      EmailToken.update_all(confirmed: true)
+        xhr :post, :create, login: @user.username, password: "frogs", format: :json
 
-      xhr :post, :create, login: user.username, password: "frogs", format: :json
+        location = cookies[:sso_destination_url]
+        # javascript code will handle redirection of user to return_sso_url
+        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
-      location = response.header["Location"]
-      expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+        payload = location.split("?")[1]
+        sso2 = SingleSignOn.parse(payload, "topsecret")
 
-      payload = location.split("?")[1]
+        expect(sso2.email).to eq(@user.email)
+        expect(sso2.name).to eq(@user.name)
+        expect(sso2.username).to eq(@user.username)
+        expect(sso2.external_id).to eq(@user.id.to_s)
+        expect(sso2.admin).to eq(true)
+        expect(sso2.moderator).to eq(false)
+      end
 
-      sso2 = SingleSignOn.parse(payload, "topsecret")
+      it "successfully redirects user to return_sso_url when the user is logged in" do
+        log_in_user(@user)
 
-      expect(sso2.email).to eq(user.email)
-      expect(sso2.name).to eq(user.name)
-      expect(sso2.username).to eq(user.username)
-      expect(sso2.external_id).to eq(user.id.to_s)
-      expect(sso2.admin).to eq(true)
-      expect(sso2.moderator).to eq(false)
+        get :sso_provider, Rack::Utils.parse_query(@sso.payload)
 
+        location = response.header["Location"]
+        expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
+
+        payload = location.split("?")[1]
+        sso2 = SingleSignOn.parse(payload, "topsecret")
+
+        expect(sso2.email).to eq(@user.email)
+        expect(sso2.name).to eq(@user.name)
+        expect(sso2.username).to eq(@user.username)
+        expect(sso2.external_id).to eq(@user.id.to_s)
+        expect(sso2.admin).to eq(true)
+        expect(sso2.moderator).to eq(false)
+      end
     end
 
     describe 'local attribute override from SSO payload' do
@@ -507,6 +528,7 @@ describe SessionController do
         let(:permitted_ip_address) { '111.234.23.11' }
         before do
           Fabricate(:screened_ip_address, ip_address: permitted_ip_address, action_type: ScreenedIpAddress.actions[:allow_admin])
+          SiteSetting.stubs(:use_admin_ip_whitelist).returns(true)
         end
 
         it 'is successful for admin at the ip address' do
@@ -616,15 +638,28 @@ describe SessionController do
     end
 
     context 'do nothing to system username' do
-      let(:user) { Discourse.system_user }
+      let(:system) { Discourse.system_user }
 
       it 'generates no token for system username' do
-        expect { xhr :post, :forgot_password, login: user.username}.not_to change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: system.username}.not_to change(EmailToken, :count)
       end
 
       it 'enqueues no email' do
         Jobs.expects(:enqueue).never
-        xhr :post, :forgot_password, login: user.username
+        xhr :post, :forgot_password, login: system.username
+      end
+    end
+
+    context 'for a staged account' do
+      let!(:staged) { Fabricate(:staged) }
+
+      it 'generates no token for staged username' do
+        expect { xhr :post, :forgot_password, login: staged.username}.not_to change(EmailToken, :count)
+      end
+
+      it 'enqueues no email' do
+        Jobs.expects(:enqueue).never
+        xhr :post, :forgot_password, login: staged.username
       end
     end
   end

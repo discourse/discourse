@@ -4,9 +4,9 @@ export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: [':header-dropdown-toggle', 'active'],
 
-  @computed('showUser')
-  href(showUser) {
-    return showUser ? this.currentUser.get('path') : '';
+  @computed('showUser', 'path')
+  href(showUser, path) {
+    return showUser ? this.currentUser.get('path') : Discourse.getURL(path);
   },
 
   active: Ember.computed.alias('toggleVisible'),
@@ -14,14 +14,14 @@ export default Ember.Component.extend({
   actions: {
     toggle() {
 
-      if (Discourse.Mobile.mobileView && this.get('mobileAction')) {
-        this.sendAction('mobileAction');
-        return;
-      }
-
       if (this.siteSettings.login_required && !this.currentUser) {
         this.sendAction('loginAction');
       } else {
+        if (this.site.mobileView && this.get('mobileAction')) {
+          this.sendAction('mobileAction');
+          return;
+        }
+
         if (this.get('action')) {
           this.sendAction('action');
         } else {

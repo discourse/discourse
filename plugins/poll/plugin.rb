@@ -22,9 +22,17 @@ DEFAULT_POLL_NAME ||= "poll".freeze
 
 after_initialize do
 
-  # remove "Vote Now!" & "Show Results" links in emails
-  Email::Styles.register_plugin_style do |fragment|
-    fragment.css(".poll a.cast-votes, .poll a.toggle-results").each(&:remove)
+  # turn polls into a link in emails
+  Email::Styles.register_plugin_style do |fragment, opts|
+    post = Post.find_by(id: opts[:post_id]) rescue nil
+    if post.nil? || post.trashed?
+      fragment.css(".poll").each(&:remove)
+    else
+      post_url = "#{Discourse.base_url}#{post.url}"
+      fragment.css(".poll").each do |poll|
+        poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+      end
+    end
   end
 
   module ::DiscoursePoll
@@ -46,8 +54,8 @@ after_initialize do
             raise StandardError.new I18n.t("poll.post_is_deleted")
           end
 
-          # topic must be open
-          if post.topic.try(:closed) || post.topic.try(:archived)
+          # topic must not be archived
+          if post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
           end
 
@@ -66,24 +74,25 @@ after_initialize do
 
           raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty?
 
-          votes = post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] || {}
-          vote = votes[poll_name] || []
+          poll["voters"] = 0
+          all_options = Hash.new(0)
 
-          # increment counters only when the user hasn't casted a vote yet
-          poll["voters"] += 1 if vote.size == 0
+          post.custom_fields[VOTES_CUSTOM_FIELD] ||= {}
+          post.custom_fields[VOTES_CUSTOM_FIELD]["#{user_id}"] ||= {}
+          post.custom_fields[VOTES_CUSTOM_FIELD]["#{user_id}"][poll_name] = options
 
-          poll["options"].each do |option|
-            option["votes"] -= 1 if vote.include?(option["id"])
-            option["votes"] += 1 if options.include?(option["id"])
+          post.custom_fields[VOTES_CUSTOM_FIELD].each do |_, user_votes|
+            next unless votes = user_votes[poll_name]
+            votes.each { |option| all_options[option] += 1 }
+            poll["voters"] += 1 if (available_options & votes.to_set).size > 0
           end
 
-          votes[poll_name] = options
+          poll["options"].each { |o| o["votes"] = all_options[o["id"]] }
 
           post.custom_fields[POLLS_CUSTOM_FIELD] = polls
-          post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] = votes
           post.save_custom_fields(true)
 
-          MessageBus.publish("/polls/#{post_id}", { polls: polls })
+          MessageBus.publish("/polls/#{post.topic_id}", { post_id: post_id, polls: polls })
 
           return [poll, options]
         end
@@ -98,8 +107,8 @@ after_initialize do
             raise StandardError.new I18n.t("poll.post_is_deleted")
           end
 
-          # topic must be open
-          if post.topic.try(:closed) || post.topic.try(:archived)
+          # topic must not be archived
+          if post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_toggle_status")
           end
 
@@ -119,7 +128,7 @@ after_initialize do
 
           post.save_custom_fields(true)
 
-          MessageBus.publish("/polls/#{post_id}", { polls: polls })
+          MessageBus.publish("/polls/#{post.topic_id}", {post_id: post.id, polls: polls })
 
           polls[poll_name]
         end
@@ -257,8 +266,8 @@ after_initialize do
       # maximum # of options
       if poll["options"].size > SiteSetting.poll_maximum_options
         poll["name"] == DEFAULT_POLL_NAME ?
-          self.errors.add(:base, I18n.t("poll.default_poll_must_have_less_options", max: SiteSetting.poll_maximum_options)) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_less_options", name: poll["name"], max: SiteSetting.poll_maximum_options))
+          self.errors.add(:base, I18n.t("poll.default_poll_must_have_less_options", count: SiteSetting.poll_maximum_options)) :
+          self.errors.add(:base, I18n.t("poll.named_poll_must_have_less_options", name: poll["name"], count: SiteSetting.poll_maximum_options))
         return
       end
 
@@ -293,8 +302,10 @@ after_initialize do
         # are the polls different?
         if polls.keys != previous_polls.keys || current_options != previous_options
 
+          has_votes = previous_polls.keys.map { |p| previous_polls[p]["voters"].to_i }.sum > 0
+
           # outside of the 5-minute edit window?
-          if post.created_at < 5.minutes.ago
+          if post.created_at < 5.minutes.ago && has_votes
             # cannot add/remove/rename polls
             if polls.keys.sort != previous_polls.keys.sort
               post.errors.add(:base, I18n.t("poll.cannot_change_polls_after_5_minutes"))
@@ -305,7 +316,7 @@ after_initialize do
             if User.staff.pluck(:id).include?(post.last_editor_id)
               # staff can only edit options
               polls.each_key do |poll_name|
-                if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size
+                if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size && previous_polls[poll_name]["voters"].to_i > 0
                   post.errors.add(:base, I18n.t("poll.staff_cannot_add_or_remove_options_after_5_minutes"))
                   return
                 end
@@ -323,9 +334,7 @@ after_initialize do
 
             # when the # of options has changed, reset all the votes
             if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size
-              PostCustomField.where(post_id: post.id)
-                             .where("name LIKE '#{VOTES_CUSTOM_FIELD}-%'")
-                             .destroy_all
+              PostCustomField.where(post_id: post.id, name: VOTES_CUSTOM_FIELD).destroy_all
               post.clear_custom_fields
               next
             end
@@ -341,7 +350,7 @@ after_initialize do
           post.save_custom_fields(true)
 
           # publish the changes
-          MessageBus.publish("/polls/#{post.id}", { polls: polls })
+          MessageBus.publish("/polls/#{post.topic_id}", { post_id: post.id, polls: polls })
         end
       end
     else
@@ -352,23 +361,28 @@ after_initialize do
   end
 
   Post.register_custom_field_type(POLLS_CUSTOM_FIELD, :json)
-  Post.register_custom_field_type("#{VOTES_CUSTOM_FIELD}-*", :json)
+  Post.register_custom_field_type(VOTES_CUSTOM_FIELD, :json)
 
   TopicView.add_post_custom_fields_whitelister do |user|
-    whitelisted = [POLLS_CUSTOM_FIELD]
-    whitelisted << "#{VOTES_CUSTOM_FIELD}-#{user.id}" if user
-    whitelisted
+    user ? [POLLS_CUSTOM_FIELD, VOTES_CUSTOM_FIELD] : [POLLS_CUSTOM_FIELD]
   end
 
   # tells the front-end we have a poll for that post
   on(:post_created) do |post|
     next if post.is_first_post? || post.custom_fields[POLLS_CUSTOM_FIELD].blank?
-    MessageBus.publish("/polls", { post_id: post.id })
+    MessageBus.publish("/polls/#{post.topic_id}", {
+                         post_id: post.id,
+                         polls: post.custom_fields[POLLS_CUSTOM_FIELD]})
   end
 
   add_to_serializer(:post, :polls, false) { post_custom_fields[POLLS_CUSTOM_FIELD] }
   add_to_serializer(:post, :include_polls?) { post_custom_fields.present? && post_custom_fields[POLLS_CUSTOM_FIELD].present? }
 
-  add_to_serializer(:post, :polls_votes, false) { post_custom_fields["#{VOTES_CUSTOM_FIELD}-#{scope.user.id}"] }
-  add_to_serializer(:post, :include_polls_votes?) { scope.user && post_custom_fields.present? && post_custom_fields["#{VOTES_CUSTOM_FIELD}-#{scope.user.id}"].present? }
+  add_to_serializer(:post, :polls_votes, false) { post_custom_fields[VOTES_CUSTOM_FIELD]["#{scope.user.id}"] }
+  add_to_serializer(:post, :include_polls_votes?) do
+    return unless scope.user
+    return unless post_custom_fields.present?
+    return unless post_custom_fields[VOTES_CUSTOM_FIELD].present?
+    post_custom_fields[VOTES_CUSTOM_FIELD].has_key?("#{scope.user.id}")
+  end
 end

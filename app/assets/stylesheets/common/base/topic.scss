@@ -9,9 +9,6 @@
 
     .badge-wrapper {
       float: left;
-      &.bullet {
-        margin-top: 5px;
-      }
     }
   }
 
@@ -49,12 +46,12 @@
 #suggested-topics h3 .badge-wrapper.box span,
 #suggested-topics h3 .badge-wrapper.bar span {
   display: inline;
-  overflow: inherit;
 }
 
 #suggested-topics h3 .badge-wrapper.bullet span.badge-category, {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
+  line-height: 1.2;
 }
 
 #suggested-topics h3 .badge-wrapper.bullet,
@@ -62,6 +59,11 @@
 #suggested-topics h3 .badge-wrapper.bullet span.badge-category-bg {
   // Top of bullet aligns with top of line - adjust line height to vertically align bullet.
   line-height: 0.8;
+}
+
+#suggested-topics .badge-wrapper.bullet span.badge-category,
+#suggested-topics .badge-wrapper.bar span.badge-category {
+  max-width: 150px;
 }
 
 .topic-unsubscribe {

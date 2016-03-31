@@ -14,8 +14,12 @@ he:
     multiple_polls_with_same_name: "יש מספר סקרים עם אותו שם <strong>%{name}</strong>. השתמש במאפיין '<code>name</code>'  לזהות באופן יחודי את הסקרים שלך. "
     default_poll_must_have_at_least_2_options: "לסקר צריך להיות לפחות שתי אפשרויות."
     named_poll_must_have_at_least_2_options: "לסקר בשם <strong>%{name}</strong>  צריך שיהיה לפחות שתי אפשרויות."
-    default_poll_must_have_less_options: "לסקר צריך שיהיו פחות מ %{max} אפשרויות. "
-    named_poll_must_have_less_options: "לסקר בשם <strong>%{name}</strong> צריך שיהיו פחות מ %{max}  אפשרויות. "
+    default_poll_must_have_less_options:
+      one: "לסקר חייב להיות פחות מאפשרות אחת."
+      other: "לסקר חייב להיות פחות מ-%{count} אפשרויות."
+    named_poll_must_have_less_options:
+      one: "לסקר בשם <strong>%{name}</strong> צריך להיות פחות מאפשרות אחת."
+      other: "לסקר בשם <strong>%{name}</strong> צריך להיות פחות מ-%{count} אפשרויות."
     default_poll_must_have_different_options: "לסקר צריך שיהיה אפשרויות שונות. "
     named_poll_must_have_different_options: "לסקר בשם <strong>%{name}</strong>  צריך שיהיו אפשרויות שונות. "
     default_poll_with_multiple_choices_has_invalid_parameters: "לסקר עם  בחירה מרובה יש פרמטרים לא תקינים. "
@@ -31,3 +35,5 @@ he:
     poll_must_be_open_to_vote: "הסקר צריך להיות פתוח להזמנות."
     topic_must_be_open_to_toggle_status: "הנושא צריך להיות פתוח לשינויים בסטטוס."
     only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכול לשנות סטטוס של סקר. "
+    email:
+      link_to_poll: "לחץ כדיל לצפות בסקר."

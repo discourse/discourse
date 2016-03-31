@@ -14,8 +14,12 @@ fi:
     multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määreellä."
     default_poll_must_have_at_least_2_options: "Äänestyksessä pitää olla vähintään 2 vaihtoehtoa."
     named_poll_must_have_at_least_2_options: "Äänestyksessä nimeltä <strong>%{name}</strong> pitää olla vähintään 2 vaihtoehtoa."
-    default_poll_must_have_less_options: "Äänestyksessä pitää olla vähemmän, kuin %{max} vaihtoehtoa."
-    named_poll_must_have_less_options: "Äänestyksen nimeltä <strong>%{name}</strong> pitää sisältää vähemmän, kuin %{max} vaihtoehtoa."
+    default_poll_must_have_less_options:
+      one: "Äänestyksessä pitää olla vähemmän, kuin yksi vaihtoehto."
+      other: "Äänestyksessä pitää olla vähemmän, kuin %{count} vaihtoehtoa."
+    named_poll_must_have_less_options:
+      one: "Äänestyksessä <strong>%{name}</strong> pitää olla vähemmän kuin yksi vaihtoehto."
+      other: "Äänestyksessä <strong>%{name}</strong> pitää olla vähemmän kuin %{count} vaihtoehtoa."
     default_poll_must_have_different_options: "Äänestysvaihtoehtojen on erottava toisistaan."
     named_poll_must_have_different_options: "Äänestyksen nimeltä <strong>%{name}</strong> vaihtoehtojen on erottava toisistaan."
     default_poll_with_multiple_choices_has_invalid_parameters: "Kysely, jossa on useita vaihtoehtoja sisältää epäkelpoja parametreja."
@@ -23,7 +27,7 @@ fi:
     requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
     cannot_change_polls_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen."
     op_cannot_edit_options_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen. Ota yhteyttä valvojaan, jos sinun täytyy muokata kyselyn vaihtoehtoja."
-    staff_cannot_add_or_remove_options_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen. Sinun tulee poistaa tämä ketju ja avata uusi sen sijaan."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen. Sinun tulee poistaa tämä ketju ja luoda uusi sen sijaan."
     no_polls_associated_with_this_post: "Tämä viesti ei sisällä äänestyskyselyä."
     no_poll_with_this_name: "Tämä viesti ei sisällä äänestyskyselyä nimeltä <strong>%{name}</strong>."
     post_is_deleted: "Ei voi tehdä poistetulle viestille"
@@ -31,3 +35,5 @@ fi:
     poll_must_be_open_to_vote: "Vain avoimessa kyselyssä voi äänestää."
     topic_must_be_open_to_toggle_status: "Vain avoimessa ketjussa voi muuttaa äänestyksen tilaa."
     only_staff_or_op_can_toggle_status: "Vain henkilökunta tai kyselyn laatija voi muuttaa äänestyksen tilaa."
+    email:
+      link_to_poll: "Siirry äänestykseen klikkaamalla tästä"

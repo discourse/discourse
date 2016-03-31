@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'email/sender'
 
 describe Email::Sender do
@@ -7,7 +7,13 @@ describe Email::Sender do
     SiteSetting.expects(:disable_emails).returns(true)
     Mail::Message.any_instance.expects(:deliver_now).never
     message = Mail::Message.new(to: "hello@world.com" , body: "hello")
-    Email::Sender.new(message, :hello).send
+    expect(Email::Sender.new(message, :hello).send).to eq(nil)
+  end
+
+  it "doesn't deliver mail when the message is of type NullMail" do
+    Mail::Message.any_instance.expects(:deliver_now).never
+    message = ActionMailer::Base::NullMail.new
+    expect(Email::Sender.new(message, :hello).send).to eq(nil)
   end
 
   it "doesn't deliver mail when the message is nil" do
@@ -66,11 +72,14 @@ describe Email::Sender do
 
     context "adds a List-ID header to identify the forum" do
       before do
-        message.header['X-Discourse-Topic-Id'] = 5577
+        category =  Fabricate(:category, name: 'Name With Space')
+        topic = Fabricate(:topic, category_id: category.id)
+        message.header['X-Discourse-Topic-Id'] = topic.id
       end
 
       When { email_sender.send }
       Then { expect(message.header['List-ID']).to be_present }
+      Then { expect(message.header['List-ID'].to_s).to match('name-with-space') }
     end
 
     context "adds a Message-ID header even when topic id is not present" do

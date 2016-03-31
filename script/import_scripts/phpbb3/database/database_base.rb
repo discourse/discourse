@@ -13,7 +13,7 @@ module ImportScripts::PhpBB3
 
     # Executes a database query.
     def query(sql)
-      @database_client.query(sql, cache_rows: false, symbolize_keys: true)
+      @database_client.query(sql, cache_rows: true, symbolize_keys: true)
     end
 
     # Executes a database query and returns the value of the 'count' column.

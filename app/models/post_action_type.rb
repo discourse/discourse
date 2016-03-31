@@ -1,20 +1,30 @@
 require_dependency 'enum'
+require_dependency 'distributed_cache'
 
 class PostActionType < ActiveRecord::Base
+  after_save :expire_cache
+  after_destroy :expire_cache
+
+  def expire_cache
+    ApplicationSerializer.expire_cache_fragment!("post_action_types")
+    ApplicationSerializer.expire_cache_fragment!("post_action_flag_types")
+  end
+
   class << self
+
     def ordered
       order('position asc')
     end
 
     def types
-      @types ||= Enum.new(:bookmark,
-                          :like,
-                          :off_topic,
-                          :inappropriate,
-                          :vote,
-                          :notify_user,
-                          :notify_moderators,
-                          :spam)
+      @types ||= Enum.new(bookmark: 1,
+                          like: 2,
+                          off_topic: 3,
+                          inappropriate: 4,
+                          vote: 5,
+                          notify_user: 6,
+                          notify_moderators: 7,
+                          spam: 8)
     end
 
     def auto_action_flag_types

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ListController do
 
@@ -81,6 +81,26 @@ describe ListController do
         end
 
         it { is_expected.to respond_with(:success) }
+      end
+
+      context 'with a link that has a parent slug, slug and id in its path' do
+        let(:child_category) { Fabricate(:category, parent_category: category) }
+
+        context "with valid slug" do
+          before do
+            xhr :get, :category_latest, parent_category: category.slug, category: child_category.slug, id: child_category.id
+          end
+
+          it { is_expected.to redirect_to(child_category.url) }
+        end
+
+        context "with invalid slug" do
+          before do
+            xhr :get, :category_latest, parent_category: 'random slug', category: 'random slug', id: child_category.id
+          end
+
+          it { is_expected.to redirect_to(child_category.url) }
+        end
       end
 
       context 'another category exists with a number at the beginning of its name' do
@@ -224,6 +244,32 @@ describe ListController do
       (0...8).each do |date|
         expect(ListController.best_periods_for(date.days.ago)).to eq([:daily, :weekly, :monthly, :yearly])
       end
+    end
+
+  end
+
+  describe "categories suppression" do
+    let(:category_one) { Fabricate(:category) }
+    let(:sub_category) { Fabricate(:category, parent_category: category_one, suppress_from_homepage: true) }
+    let!(:topic_in_sub_category) { Fabricate(:topic, category: sub_category) }
+
+    let(:category_two) { Fabricate(:category, suppress_from_homepage: true) }
+    let!(:topic_in_category_two) { Fabricate(:topic, category: category_two) }
+
+    it "suppresses categories from the homepage" do
+      get SiteSetting.homepage, format: :json
+      expect(response).to be_success
+
+      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
+      expect(topic_titles).not_to include(topic_in_sub_category.title, topic_in_category_two.title)
+    end
+
+    it "does not suppress" do
+      get SiteSetting.homepage, category: category_one.id, format: :json
+      expect(response).to be_success
+
+      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
+      expect(topic_titles).to include(topic_in_sub_category.title)
     end
 
   end

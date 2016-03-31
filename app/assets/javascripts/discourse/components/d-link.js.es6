@@ -21,17 +21,16 @@ export default Ember.Component.extend({
           params.push(model);
         }
 
-        return router.router.generate.apply(router.router, params);
+        return Discourse.getURL(router.router.generate.apply(router.router, params));
       }
     }
 
     return '';
   },
 
-  @computed("title", "label")
-  translatedTitle(title, label) {
-    const text = title || label;
-    if (text) return I18n.t(text);
+  @computed("title")
+  translatedTitle(title) {
+    if (title) return I18n.t(title);
   },
 
   click(e) {
@@ -58,8 +57,12 @@ export default Ember.Component.extend({
     if (label) {
       if (icon) { buffer.push(" "); }
 
-      const count = this.get('count');
-      buffer.push(I18n.t(label, { count }));
+      if (this.get('translateLabel') === "false") {
+        buffer.push(label);
+      } else {
+        const count = this.get('count');
+        buffer.push(I18n.t(label, { count }));
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 {{#if filteredContent}}
   <div class='form-horizontal settings'>
-    {{#each setting in filteredContent}}
+    {{#each filteredContent as |setting|}}
       {{site-setting setting=setting saveAction="saveSetting"}}
     {{/each}}
   </div>

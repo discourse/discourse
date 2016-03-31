@@ -1,0 +1,10 @@
+<div class='container'>
+  <h2>{{i18n "login.to_continue"}}</h2>
+
+  <p style='margin-top: 1em'>{{i18n "login.preferences"}}</p>
+
+  {{d-button class="btn-primary" action="showLogin" label="log_in"}}
+  {{#unless siteSettings.enable_sso}}
+    {{d-button action="showForgotPassword" label="login.forgot"}}
+  {{/unless}}
+</div>

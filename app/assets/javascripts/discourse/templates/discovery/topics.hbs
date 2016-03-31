@@ -5,8 +5,7 @@
 {{#if showDismissAtTop}}
   <div class="row">
     {{#if showDismissRead}}
-      <button title="{{i18n 'topics.bulk.dismiss_topics_tooltip'}}" id='dismiss-topics-top' class='btn dismiss-read' {{action "dismissRead" "topics"}}>{{i18n 'topics.bulk.dismiss_topics'}}</button>
-      <button title="{{i18n 'topics.bulk.dismiss_posts_tooltip'}}" id='dismiss-posts-top' class='btn dismiss-read' {{action "dismissRead" "posts"}}>{{i18n 'topics.bulk.dismiss_posts'}}</button>
+      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics-top' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
       <button id='dismiss-new-top' class='btn dismiss-read' {{action "resetNew"}}>{{i18n 'topics.bulk.dismiss_new'}}</button>
@@ -21,14 +20,15 @@
     <div class='top-lists'>
       {{period-chooser period=period action="changePeriod"}}
     </div>
-  {{/if}}
-  {{#if topicTrackingState.hasIncoming}}
-    <div class="show-more {{if hasTopics 'has-topics'}}">
-      <div class='alert alert-info clickable' {{action "showInserted"}}>
-        {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
-        {{i18n 'click_to_show'}}
+  {{else}}
+    {{#if topicTrackingState.hasIncoming}}
+      <div class="show-more {{if hasTopics 'has-topics'}}">
+        <div class='alert alert-info clickable' {{action "showInserted"}}>
+          {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+          {{i18n 'click_to_show'}}
+        </div>
       </div>
-    </div>
+    {{/if}}
   {{/if}}
 
   {{#if hasTopics}}
@@ -54,8 +54,7 @@
   {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
-      <button title="{{i18n 'topics.bulk.dismiss_topics_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissRead" "topics"}}>{{i18n 'topics.bulk.dismiss_topics'}}</button>
-      <button title="{{i18n 'topics.bulk.dismiss_posts_tooltip'}}" id='dismiss-posts' class='btn dismiss-read' {{action "dismissRead" "posts"}}>{{i18n 'topics.bulk.dismiss_posts'}}</button>
+      <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
       <button id='dismiss-new' class='btn dismiss-read' {{action "resetNew"}}>{{i18n 'topics.bulk.dismiss_new'}}</button>
@@ -67,7 +66,7 @@
       </div>
       <h3>
         {{footerMessage}}
-        {{#if model.can_create_topic}}<a href {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>{{/if}}
+        {{#if canCreateTopicOnCategory}}<a href {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>{{/if}}
       </h3>
     {{else}}
       {{#if top}}

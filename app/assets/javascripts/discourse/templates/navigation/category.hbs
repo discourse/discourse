@@ -3,7 +3,6 @@
                noSubcategories=noSubcategories
                hideSubcategories=showingSubcategoryList}}
 
-
 {{navigation-bar navItems=navItems filterMode=filterMode}}
 
 {{#if currentUser}}
@@ -11,7 +10,12 @@
 {{/if}}
 
 {{#if canCreateTopic}}
-  {{d-button id="create-topic" class="btn-default" action="createTopic" icon="plus" label="topic.create"}}
+  {{d-button  id="create-topic"
+              class="btn-default"
+              action="createTopic"
+              icon="plus"
+              label="topic.create"
+              disabled=cannotCreateTopicOnCategory}}
 {{/if}}
 
 {{#if canEditCategory}}

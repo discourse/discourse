@@ -16,7 +16,7 @@ export default Ember.Component.extend({
   checked: {
     get(value) { return !!value; },
     set(value) {
-      this.set('value', value); 
+      this.set('value', value);
       return value;
     }
   }

@@ -1,5 +1,7 @@
+import ApiKey from 'admin/models/api-key';
+
 export default Ember.Route.extend({
   model() {
-    return Discourse.ApiKey.find();
+    return ApiKey.find();
   }
 });

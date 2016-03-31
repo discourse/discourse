@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe TopicsController do
   before do
@@ -11,6 +11,10 @@ describe TopicsController do
 
   def set_referer(ref)
     request.env['HTTP_REFERER'] = ref
+  end
+
+  def set_accept_language(locale)
+    request.env['HTTP_ACCEPT_LANGUAGE'] = locale
   end
 
   it "doesn't store an incoming link when there's no referer" do
@@ -33,7 +37,7 @@ describe TopicsController do
       end
 
       it "uses the application layout even with an escaped fragment param" do
-        get :show, {'topic_id' => topic.id, 'slug' => topic.slug,  '_escaped_fragment_' => 'true'}
+        get :show, {'topic_id' => topic.id, 'slug' => topic.slug, '_escaped_fragment_' => 'true'}
         expect(response).to render_template(layout: 'application')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
@@ -51,7 +55,7 @@ describe TopicsController do
       end
 
       it "uses the crawler layout when there's an _escaped_fragment_ param" do
-        get :show, topic_id: topic.id, slug: topic.slug,  _escaped_fragment_: 'true'
+        get :show, topic_id: topic.id, slug: topic.slug, _escaped_fragment_: 'true'
         expect(response).to render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
@@ -62,9 +66,6 @@ describe TopicsController do
     render_views
 
     context "when not a crawler" do
-      before do
-        CrawlerDetection.expects(:crawler?).returns(false)
-      end
       it "renders with the application layout" do
         get :show, topic_id: topic.id, slug: topic.slug
         expect(response).to render_template(layout: 'application')
@@ -73,10 +74,8 @@ describe TopicsController do
     end
 
     context "when a crawler" do
-      before do
-        CrawlerDetection.expects(:crawler?).returns(true)
-      end
       it "renders with the crawler layout" do
+        request.env["HTTP_USER_AGENT"] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
         get :show, topic_id: topic.id, slug: topic.slug
         expect(response).to render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
@@ -85,25 +84,117 @@ describe TopicsController do
 
   end
 
-  describe 'set_locale' do
-    it 'sets the one the user prefers' do
-      SiteSetting.stubs(:allow_user_locale).returns(true)
+  describe 'clear_notifications' do
+    it 'correctly clears notifications if specified via cookie' do
+      notification = Fabricate(:notification)
+      log_in_user(notification.user)
 
-      user = Fabricate(:user, locale: :fr)
-      log_in_user(user)
+      request.cookies['cn'] = "2828,100,#{notification.id}"
 
-      get :show, {topic_id: topic.id}
+      get :show, {topic_id: 100}
 
-      expect(I18n.locale).to eq(:fr)
+      expect(response.cookies['cn']).to eq nil
+
+      notification.reload
+      expect(notification.read).to eq true
+
     end
 
-    it 'is sets the default locale when the setting not enabled' do
-      user = Fabricate(:user, locale: :fr)
-      log_in_user(user)
+    it 'correctly clears notifications if specified via header' do
+      notification = Fabricate(:notification)
+      log_in_user(notification.user)
 
-      get :show, {topic_id: topic.id}
+      request.headers['Discourse-Clear-Notifications'] = "2828,100,#{notification.id}"
 
-      expect(I18n.locale).to eq(:en)
+      get :show, {topic_id: 100}
+
+      notification.reload
+      expect(notification.read).to eq true
+    end
+  end
+
+  describe "set_locale" do
+    context "allow_user_locale disabled" do
+      context "accept-language header differs from default locale" do
+        before do
+          SiteSetting.stubs(:allow_user_locale).returns(false)
+          SiteSetting.stubs(:default_locale).returns("en")
+          set_accept_language("fr")
+        end
+
+        context "with an anonymous user" do
+          it "uses the default locale" do
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:en)
+          end
+        end
+
+        context "with a logged in user" do
+          it "it uses the default locale" do
+            user = Fabricate(:user, locale: :fr)
+            log_in_user(user)
+
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:en)
+          end
+        end
+      end
+    end
+
+    context "set_locale_from_accept_language_header enabled" do
+      context "accept-language header differs from default locale" do
+        before do
+          SiteSetting.stubs(:allow_user_locale).returns(true)
+          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(true)
+          SiteSetting.stubs(:default_locale).returns("en")
+          set_accept_language("fr")
+        end
+
+        context "with an anonymous user" do
+          it "uses the locale from the headers" do
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:fr)
+          end
+        end
+
+        context "with a logged in user" do
+          it "uses the user's preferred locale" do
+            user = Fabricate(:user, locale: :fr)
+            log_in_user(user)
+
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:fr)
+          end
+        end
+      end
+
+      context "the preferred locale includes a region" do
+        it "returns the locale and region separated by an underscore" do
+          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(true)
+          SiteSetting.stubs(:default_locale).returns("en")
+          set_accept_language("zh-CN")
+
+          get :show, {topic_id: topic.id}
+
+          expect(I18n.locale).to eq(:zh_CN)
+        end
+      end
+
+      context 'accept-language header is not set' do
+        it 'uses the site default locale' do
+          SiteSetting.stubs(:allow_user_locale).returns(true)
+          SiteSetting.stubs(:default_locale).returns('en')
+          set_accept_language('')
+
+          get :show, {topic_id: topic.id}
+
+          expect(I18n.locale).to eq(:en)
+        end
+      end
     end
   end
 

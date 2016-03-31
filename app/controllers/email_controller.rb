@@ -11,6 +11,7 @@ class EmailController < ApplicationController
 
   def unsubscribe
     @user = DigestUnsubscribeKey.user_for_key(params[:key])
+    RateLimiter.new(@user, "unsubscribe_via_email", 3, 1.day).performed! unless @user && @user.staff?
 
     # Don't allow the use of a key while logged in as a different user
     if current_user.present? && (@user != current_user)
@@ -23,14 +24,22 @@ class EmailController < ApplicationController
       return
     end
 
-    @user.update_column(:email_digests, false)
+    if params[:from_all]
+      @user.user_option.update_columns(email_always: false,
+                                       email_digests: false,
+                                       email_direct: false,
+                                       email_private_messages: false)
+    else
+      @user.user_option.update_column(:email_digests, false)
+    end
+
     @success = true
   end
 
   def resubscribe
     @user = DigestUnsubscribeKey.user_for_key(params[:key])
     raise Discourse::NotFound unless @user.present?
-    @user.update_column(:email_digests, true)
+    @user.user_option.update_column(:email_digests, true)
   end
 
 end

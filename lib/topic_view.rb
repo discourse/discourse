@@ -16,6 +16,10 @@ class TopicView
     20
   end
 
+  def self.default_post_custom_fields
+    @default_post_custom_fields ||= ["action_code_who"]
+  end
+
   def self.post_custom_fields_whitelisters
     @post_custom_fields_whitelisters ||= Set.new
   end
@@ -25,7 +29,8 @@ class TopicView
   end
 
   def self.whitelisted_post_custom_fields(user)
-    post_custom_fields_whitelisters.map { |w| w.call(user) }.flatten.uniq
+    wpcf = default_post_custom_fields + post_custom_fields_whitelisters.map { |w| w.call(user) }
+    wpcf.flatten.uniq
   end
 
   def initialize(topic_id, user=nil, options={})
@@ -38,10 +43,7 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
-    # work around people somehow sending in arrays,
-    # arrays are not supported
-    @page = @page.to_i rescue 1
-    @page = 1 if @page.zero?
+    @page = 1 if (!@page || @page.zero?)
     @chunk_size = options[:slow_platform] ? TopicView.slow_chunk_size : TopicView.chunk_size
     @limit ||= @chunk_size
 
@@ -52,13 +54,11 @@ class TopicView
 
     filter_posts(options)
 
-    if SiteSetting.public_user_custom_fields.present? && @posts
-      @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), SiteSetting.public_user_custom_fields.split('|'))
-    end
-
-    if @guardian.is_staff? && SiteSetting.staff_user_custom_fields.present? && @posts
-      @user_custom_fields ||= {}
-      @user_custom_fields.deep_merge!(User.custom_fields_for_ids(@posts.map(&:user_id), SiteSetting.staff_user_custom_fields.split('|')))
+    if @posts
+      added_fields = User.whitelisted_user_custom_fields(@guardian)
+      if added_fields.present?
+        @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
+      end
     end
 
     whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)
@@ -159,9 +159,18 @@ class TopicView
     (excerpt || "").gsub(/\n/, ' ').strip
   end
 
+  def read_time
+    return nil if @post_number.present? && @post_number.to_i != 1 # only show for topic URLs
+    (@topic.word_count/SiteSetting.read_time_word_count).floor if @topic.word_count
+  end
+
+  def like_count
+    return nil if @post_number.present? && @post_number.to_i != 1 # only show for topic URLs
+    @topic.like_count
+  end
+
   def image_url
-    return nil if desired_post.blank?
-    desired_post.user.try(:small_avatar_url)
+    @topic.image_url || SiteSetting.default_opengraph_image_url
   end
 
   def filter_posts(opts = {})
@@ -169,7 +178,7 @@ class TopicView
     return filter_posts_by_ids(opts[:post_ids]) if opts[:post_ids].present?
     return filter_best(opts[:best], opts) if opts[:best].present?
 
-    filter_posts_paged(opts[:page].to_i)
+    filter_posts_paged(@page)
   end
 
   def primary_group_names
@@ -186,7 +195,8 @@ class TopicView
         result[g[0]] = g[1]
       end
     end
-    result
+
+    @group_names = result
   end
 
   # Find the sort order for a post in the topic
@@ -280,7 +290,6 @@ class TopicView
   end
 
   def suggested_topics
-    return nil if topic.private_message?
     @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic)
   end
 

@@ -20,12 +20,26 @@ class Badge < ActiveRecord::Base
   GoodShare = 22
   GreatShare = 23
   OneYearAnniversary = 24
+
   Promoter = 25
   Campaigner = 26
   Champion = 27
+
   PopularLink = 28
   HotLink = 29
   FamousLink = 30
+
+  Appreciated = 36
+  Respected = 37
+  Admired = 31
+
+  OutOfLove = 33
+  HigherLove = 34
+  CrazyInLove = 35
+
+  ThankYou = 38
+  GivesBack = 32
+  Empathetic = 39
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -205,7 +219,7 @@ SQL
       JOIN users u2 ON u2.id = i.user_id
       WHERE i.deleted_at IS NULL AND u2.active AND u2.trust_level >= #{trust_level.to_i} AND not u2.blocked
       GROUP BY invited_by_id
-      HAVING COUNT(*) > #{count.to_i}
+      HAVING COUNT(*) >= #{count.to_i}
     ) AND u.active AND NOT u.blocked AND u.id > 0 AND
       (:backfill OR u.id IN (:user_ids) )
 "
@@ -233,7 +247,7 @@ SQL
 
     def self.sharing_badge(count)
 <<SQL
-    SELECT views.user_id, i2.post_id, i2.created_at granted_at
+    SELECT views.user_id, i2.post_id, current_timestamp granted_at
     FROM
     (
       SELECT i.user_id, MIN(i.id) i_id
@@ -249,7 +263,7 @@ SQL
 
     def self.linking_badge(count)
       <<-SQL
-          SELECT tl.user_id, post_id, MIN(tl.created_at) granted_at
+          SELECT tl.user_id, post_id, current_timestamp granted_at
             FROM topic_links tl
             JOIN posts p  ON p.id = post_id    AND p.deleted_at IS NULL
             JOIN topics t ON t.id = p.topic_id AND t.deleted_at IS NULL AND t.archetype <> 'private_message'
@@ -259,6 +273,37 @@ SQL
       SQL
     end
 
+    def self.liked_posts(post_count, like_count)
+      <<-SQL
+        SELECT p.user_id, current_timestamp AS granted_at
+        FROM posts AS p
+        WHERE p.like_count >= #{like_count}
+          AND (:backfill OR p.user_id IN (:user_ids))
+        GROUP BY p.user_id
+        HAVING count(*) > #{post_count}
+      SQL
+    end
+
+    def self.like_rate_limit(count)
+      <<-SQL
+        SELECT gdl.user_id, current_timestamp AS granted_at
+        FROM given_daily_likes AS gdl
+        WHERE gdl.limit_reached
+          AND (:backfill OR gdl.user_id IN (:user_ids))
+        GROUP BY gdl.user_id
+        HAVING COUNT(*) >= #{count}
+      SQL
+    end
+
+    def self.liked_back(likes_received, likes_given)
+      <<-SQL
+        SELECT us.user_id, current_timestamp AS granted_at
+        FROM user_stats AS us
+        WHERE us.likes_received >= #{likes_received}
+          AND us.likes_given >= #{likes_given}
+          AND (:backfill OR us.user_id IN (:user_ids))
+      SQL
+    end
   end
 
   belongs_to :badge_type
@@ -277,9 +322,12 @@ SQL
 
   # fields that can not be edited on system badges
   def self.protected_system_fields
-    [:badge_type_id, :multiple_grant, :target_posts, :show_posts, :query, :trigger, :auto_revoke, :listable]
+    [
+      :badge_type_id, :multiple_grant,
+      :target_posts, :show_posts, :query,
+      :trigger, :auto_revoke, :listable
+    ]
   end
-
 
   def self.trust_level_badge_ids
     (1..4).to_a
@@ -326,7 +374,62 @@ SQL
   end
 
   def self.ensure_consistency!
+    exec_sql <<SQL
+    DELETE FROM user_badges
+    USING user_badges ub
+    LEFT JOIN users u ON u.id = ub.user_id
+    WHERE u.id IS NULL AND user_badges.id = ub.id
+SQL
+
     Badge.find_each(&:reset_grant_count!)
+  end
+
+  def display_name
+    if self.system?
+      key = "badges.#{i18n_name}.name"
+      I18n.t(key, default: self.name)
+    else
+      self.name
+    end
+  end
+
+  def long_description
+    if self[:long_description].present?
+      self[:long_description]
+    else
+      key = "badges.#{i18n_name}.long_description"
+      I18n.t(key, default: '')
+    end
+  end
+
+  def long_description=(val)
+    if val != long_description
+      self[:long_description] = val
+    end
+
+    val
+  end
+
+  def description
+    if self[:description].present?
+      self[:description]
+    else
+      key = "badges.#{i18n_name}.description"
+      I18n.t(key, default: '')
+    end
+  end
+
+  def description=(val)
+    if val != description
+      self[:description] = val
+    end
+
+    val
+  end
+
+
+  def slug
+    Slug.for(self.display_name, '-')
   end
 
   protected
@@ -335,6 +438,10 @@ SQL
       self.id = [Badge.maximum(:id) + 1, 100].max
     end
   end
+
+  def i18n_name
+    self.name.downcase.gsub(' ', '_')
+  end
 end
 
 # == Schema Information
@@ -342,7 +449,7 @@ end
 # Table name: badges
 #
 #  id                :integer          not null, primary key
-#  name              :string(255)      not null
+#  name              :string           not null
 #  description       :text
 #  badge_type_id     :integer          not null
 #  grant_count       :integer          default(0), not null
@@ -350,7 +457,7 @@ end
 #  updated_at        :datetime         not null
 #  allow_title       :boolean          default(FALSE), not null
 #  multiple_grant    :boolean          default(FALSE), not null
-#  icon              :string(255)      default("fa-certificate")
+#  icon              :string           default("fa-certificate")
 #  listable          :boolean          default(TRUE)
 #  target_posts      :boolean          default(FALSE)
 #  query             :text
@@ -365,5 +472,6 @@ end
 #
 # Indexes
 #
-#  index_badges_on_name  (name) UNIQUE
+#  index_badges_on_badge_type_id  (badge_type_id)
+#  index_badges_on_name           (name) UNIQUE
 #

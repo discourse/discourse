@@ -8,6 +8,24 @@ task 'posts:refresh_oneboxes' => :environment do
   ENV['RAILS_DB'] ? rebake_posts(invalidate_oneboxes: true) : rebake_posts_all_sites(invalidate_oneboxes: true)
 end
 
+desc 'Rebake all posts with a quote using a letter_avatar'
+task 'posts:fix_letter_avatars' => :environment do
+  return unless SiteSetting.external_system_avatars_enabled
+
+  search = Post.where("user_id <> -1")
+               .where("raw LIKE '%/letter\_avatar/%' OR cooked LIKE '%/letter\_avatar/%'")
+
+  rebaked = 0
+  total = search.count
+
+  search.order(updated_at: :asc).find_each do |post|
+    rebake_post(post)
+    print_status(rebaked += 1, total)
+  end
+
+  puts "", "#{rebaked} posts done!", ""
+end
+
 def rebake_posts_all_sites(opts = {})
   RailsMultisite::ConnectionManagement.each_connection do |db|
     rebake_posts(opts)
@@ -33,7 +51,7 @@ def rebake_posts(opts = {})
   puts "", "#{rebaked} posts done!", "-" * 50
 end
 
-def rebake_post(post, opts)
+def rebake_post(post, opts = {})
   post.rebake!(opts)
 rescue => e
   puts "", "Failed to rebake (topic_id: #{post.topic_id}, post_id: #{post.id})", e, e.backtrace.join("\n")

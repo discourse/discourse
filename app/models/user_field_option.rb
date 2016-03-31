@@ -7,7 +7,7 @@ end
 #
 #  id            :integer          not null, primary key
 #  user_field_id :integer          not null
-#  value         :string(255)      not null
+#  value         :string           not null
 #  created_at    :datetime
 #  updated_at    :datetime
 #

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'site_settings/db_provider'
 
 describe SiteSettings::DbProvider do

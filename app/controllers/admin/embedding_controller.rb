@@ -9,6 +9,10 @@ class Admin::EmbeddingController < Admin::AdminController
   end
 
   def update
+    if params[:embedding][:embed_by_username].blank?
+      return render_json_error(I18n.t('site_settings.embed_username_required'))
+    end
+
     Embedding.settings.each do |s|
       @embedding.send("#{s}=", params[:embedding][s])
     end

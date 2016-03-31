@@ -13,7 +13,7 @@ Discourse::Application.configure do
   config.action_controller.perform_caching = true
 
   # in profile mode we serve static assets
-  config.serve_static_assets = true
+  config.serve_static_files = true
 
   # Compress JavaScripts and CSS
   config.assets.compress = true

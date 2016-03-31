@@ -1,0 +1,14 @@
+#!/bin/bash
+
+pushd `dirname $0` > /dev/null
+SCRIPTPATH=`pwd -P`
+popd > /dev/null
+
+
+SOURCE_DIR=`(cd $SCRIPTPATH && cd ../../ && pwd)`
+DATA_DIR=$SOURCE_DIR/tmp/postgres
+
+echo $SOURCE_DIR
+echo $DATA_DIR
+
+docker run -d -p 3000:3000 -v $DATA_DIR:/shared/postgres_data -v $SOURCE_DIR:/src --hostname=discourse_dev --name=discourse_dev --restart=always discourse/dev /sbin/boot

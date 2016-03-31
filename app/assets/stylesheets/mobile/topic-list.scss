@@ -63,6 +63,10 @@
 
 .topic-list {
 
+  .right {
+    margin-left: 55px;
+  }
+
   > tbody > tr {
     &.highlighted {
       background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), scale-color($tertiary, $lightness: -55%));
@@ -73,6 +77,7 @@
   td {
     padding: 7px 0;
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    max-width: 300px;
   }
 
   a.title {color: $primary;}
@@ -88,8 +93,8 @@
       margin-right: 0;
     }
     &.new-topic {
-      padding-right: 0;
-      top: -3px;
+      padding: 0;
+      top: -2px;
     }
   }
 
@@ -112,15 +117,13 @@
     }
   }
 
-  .num.posts {
-    font-weight: bold;
-    text-align: right;
-  }
 
   .age {
     white-space: nowrap;
     a {
-      padding: 15px 10px 15px 5px;
+      // let's make all ages dim on mobile so we're not
+      // overwhelming people with info about each topic
+      color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
     }
   }
 }
@@ -140,6 +143,7 @@
 
   .posts {
     width: 10%;
+    vertical-align: top;
   }
 
   .age {
@@ -236,10 +240,15 @@ tr.category-topic-link {
     font-size: 110%;
   }
 
-  .category-topic-link .num {
-    white-space: nowrap;
-    .number {
-      font-size: 1.071em;
+  .category-topic-link {
+    .num {
+      white-space: nowrap;
+      .number {
+        font-size: 1.071em;
+      }
+    }
+    .topic-excerpt {
+      width: 110%;
     }
   }
 
@@ -396,12 +405,17 @@ td .main-link {
   display: inline-block;
   a.title {
     padding: 5px 10px 5px 0;
+    word-wrap: break-word;
   }
 }
 .topic-list {
   .posts-map {
-    display: inline;
-    font-size: 1.071em;
-    padding-top: 2px;
+    font-size: 1.15em;
+  }
+  // so the topic excerpt is full width
+  // as the containing div is 80%
+  .topic-excerpt {
+    padding-right: 0;
+    width: 120%;
   }
 }

@@ -1,8 +1,7 @@
 require_dependency 'discourse'
 
 class PostActionsController < ApplicationController
-
-  before_filter :ensure_logged_in, except: :users
+  before_filter :ensure_logged_in
   before_filter :fetch_post_from_params
   before_filter :fetch_post_action_type_id_from_params
 
@@ -22,18 +21,14 @@ class PostActionsController < ApplicationController
     else
       # We need to reload or otherwise we are showing the old values on the front end
       @post.reload
+
+      if @post_action_type_id == PostActionType.types[:like]
+        limiter = post_action.post_action_rate_limiter
+        response.headers['Discourse-Actions-Remaining'] = limiter.remaining.to_s
+        response.headers['Discourse-Actions-Max'] = limiter.max.to_s
+      end
       render_post_json(@post, _add_raw = false)
     end
-  end
-
-  def users
-    guardian.ensure_can_see_post_actors!(@post.topic, @post_action_type_id)
-
-    post_actions = @post.post_actions.where(post_action_type_id: @post_action_type_id)
-                        .includes(:user)
-                        .order('post_actions.created_at asc')
-
-    render_serialized(post_actions.to_a, PostActionUserSerializer)
   end
 
   def destroy

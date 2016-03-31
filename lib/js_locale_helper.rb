@@ -123,7 +123,16 @@ module JsLocaleHelper
   end
 
   def self.moment_locale(locale_str)
+    # moment.js uses a different naming scheme for locale files
+    locale_str = locale_str.tr('_', '-').downcase
     filename = Rails.root + "lib/javascripts/moment_locale/#{locale_str}.js"
+
+    unless File.exists?(filename)
+      # try the language without the territory
+      locale_str = locale_str.partition('-').first
+      filename = Rails.root + "lib/javascripts/moment_locale/#{locale_str}.js"
+    end
+
     if File.exists?(filename)
       File.read(filename) << "\n"
     end || ""

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'pretty_text'
 
 describe PrettyText do
@@ -8,10 +8,23 @@ describe PrettyText do
 
   describe "Cooking" do
 
+    describe "off topic quoting" do
+      it "can correctly populate topic title" do
+        topic = Fabricate(:topic, title: "this is a test topic")
+        expected = <<HTML
+<aside class="quote" data-post="2" data-topic="#{topic.id}"><div class="title">
+<div class="quote-controls"></div><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
+</div>
+<blockquote><p>ddd</p></blockquote></aside>
+HTML
+        expect(PrettyText.cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]ddd\n[/quote]", topic_id: 1)).to match_html expected
+      end
+    end
+
     describe "with avatar" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
 
-      before(:each) do
+      before do
         eviltrout = User.new
         User.stubs(:default_template).returns(default_avatar)
         User.expects(:find_by).with(username_lower: "eviltrout").returns(eviltrout)
@@ -34,6 +47,11 @@ describe PrettyText do
     it "should handle 3 mentions in a row" do
       expect(PrettyText.cook('@hello @hello @hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
+
+    it "should handle group mentions with a hyphen and without" do
+      expect(PrettyText.cook('@hello @hello-hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello-hello</span></p>"
+    end
+
 
     it "should sanitize the html" do
       expect(PrettyText.cook("<script>alert(42)</script>")).to match_html "<p></p>"
@@ -170,6 +188,10 @@ describe PrettyText do
       expect(PrettyText.extract_links("<aside class='quote'>not a linked quote</aside>\n").to_a).to be_empty
     end
 
+    it "doesn't extract links from elided parts" do
+      expect(PrettyText.extract_links("<details class='elided'><a href='http://cnn.com'>cnn</a></details>\n").to_a).to be_empty
+    end
+
     def extract_urls(text)
       PrettyText.extract_links(text).map(&:url).to_a
     end
@@ -230,9 +252,14 @@ describe PrettyText do
       expect(PrettyText.excerpt("&#39;", 500, text_entities: true)).to eq("'")
     end
 
-    it "should have an option to preserve emojis" do
-      emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=0' title=':heart:' class='emoji' alt='heart'>"
-      expect(PrettyText.excerpt(emoji_image, 100, { keep_emojis: true })).to match_html(emoji_image)
+    it "should have an option to preserve emoji images" do
+      emoji_image = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
+      expect(PrettyText.excerpt(emoji_image, 100, { keep_emoji_images: true })).to match_html(emoji_image)
+    end
+
+    it "should have an option to preserve emoji codes" do
+      emoji_code = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
+      expect(PrettyText.excerpt(emoji_code, 100, { keep_emoji_codes: true })).to eq(":heart:")
     end
 
   end
@@ -365,7 +392,29 @@ describe PrettyText do
       table = "<table><thead><tr><th>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       expect(PrettyText.cook(table)).to match_html("")
     end
+  end
 
+  describe "emoji" do
+    it "replaces unicode emoji with our emoji sets if emoji is enabled" do
+      expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
+    end
+
+    it "doesn't replace emoji in inline code blocks with our emoji sets if emoji is enabled" do
+      expect(PrettyText.cook("`💣`")).not_to match(/\:bomb\:/)
+    end
+
+    it "doesn't replace emoji in code blocks with our emoji sets if emoji is enabled" do
+      expect(PrettyText.cook("```\n💣`\n```\n")).not_to match(/\:bomb\:/)
+    end
+
+    it "replaces some glyphs that are not in the emoji range" do
+      expect(PrettyText.cook("☺")).to match(/\:slight_smile\:/)
+    end
+
+    it "doesn't replace unicode emoji if emoji is disabled" do
+      SiteSetting.enable_emoji = false
+      expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
+    end
   end
 
 end

@@ -23,7 +23,7 @@ class CategoryUser < ActiveRecord::Base
         # we want to apply default of the new category
         category_id = new_category.id
         # remove defaults from previous category
-        remove_default_from_topic(topic.id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
+        remove_default_from_topic(topic.id, category_id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
       end
 
       apply_default_to_topic(topic.id, category_id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
@@ -76,24 +76,33 @@ class CategoryUser < ActiveRecord::Base
     )
   end
 
-  def self.remove_default_from_topic(topic_id, level, reason)
+  def self.remove_default_from_topic(topic_id, category_id, level, reason)
     sql = <<-SQL
       DELETE FROM topic_users
             WHERE topic_id = :topic_id
               AND notifications_changed_at IS NULL
               AND notification_level = :level
               AND notifications_reason_id = :reason
+              AND NOT EXISTS(SELECT 1 FROM category_users WHERE category_users.category_id = :category_id AND category_users.notification_level = :level AND category_users.user_id = topic_users.user_id)
     SQL
 
     exec_sql(sql,
       topic_id: topic_id,
+      category_id: category_id,
       level: level,
       reason: reason
     )
   end
 
   def self.ensure_consistency!
-    exec_sql("DELETE FROM category_users WHERE user_id NOT IN (SELECT id FROM users)")
+    exec_sql <<SQL
+    DELETE FROM category_users
+      WHERE user_id IN (
+        SELECT cu.user_id FROM category_users cu
+        LEFT JOIN users u ON u.id = cu.user_id
+        WHERE u.id IS NULL
+      )
+SQL
   end
 
   private_class_method :apply_default_to_topic, :remove_default_from_topic
@@ -107,4 +116,9 @@ end
 #  category_id        :integer          not null
 #  user_id            :integer          not null
 #  notification_level :integer          not null
+#
+# Indexes
+#
+#  idx_category_users_u1  (user_id,category_id,notification_level) UNIQUE
+#  idx_category_users_u2  (category_id,user_id,notification_level) UNIQUE
 #

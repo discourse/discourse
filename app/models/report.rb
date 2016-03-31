@@ -2,7 +2,7 @@ require_dependency 'topic_subtype'
 
 class Report
 
-  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id
+  attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id, :group_id
 
   def self.default_days
     30
@@ -25,6 +25,7 @@ class Report
      start_date: start_date,
      end_date: end_date,
      category_id: category_id,
+     group_id: group_id,
      prev30Days: self.prev30Days
     }
   end
@@ -35,11 +36,13 @@ class Report
 
   def self.find(type, opts=nil)
     opts ||= {}
+
     # Load the report
     report = Report.new(type)
     report.start_date = opts[:start_date] if opts[:start_date]
     report.end_date = opts[:end_date] if opts[:end_date]
     report.category_id = opts[:category_id] if opts[:category_id]
+    report.group_id = opts[:group_id] if opts[:group_id]
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
@@ -58,7 +61,7 @@ class Report
       if filter == :page_view_total
         ApplicationRequest.where(req_type: [
           ApplicationRequest.req_types.reject{|k,v| k =~ /mobile/}.map{|k,v| v if k =~ /page_view/}.compact
-        ])
+        ].flatten)
       else
         ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
       end
@@ -84,7 +87,8 @@ class Report
 
 
   def self.report_visits(report)
-    basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date
+    basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date, report.group_id
+
     add_counts report, UserVisit, 'visited_at'
   end
 
@@ -95,7 +99,21 @@ class Report
   end
 
   def self.report_signups(report)
-    report_about report, User.real, :count_by_signup_date
+    if report.group_id
+      basic_report_about report, User.real, :count_by_signup_date, report.start_date, report.end_date, report.group_id
+      add_counts report, User.real, 'users.created_at'
+    else
+      report_about report, User.real, :count_by_signup_date
+    end
+  end
+
+  def self.report_profile_views(report)
+    start_date = report.start_date.to_date
+    end_date = report.end_date.to_date
+    basic_report_about report, UserProfileView, :profile_views_by_day, start_date, end_date, report.group_id
+
+    report.total = UserProfile.sum(:views)
+    report.prev30Days = UserProfileView.where("viewed_at >= ? AND viewed_at < ?", start_date - 30.days, start_date + 1).count
   end
 
   def self.report_topics(report)
@@ -176,7 +194,7 @@ class Report
 
   def self.post_action_report(report, post_action_type)
     report.data = []
-    PostAction.count_per_day_for_type(post_action_type, category_id: report.category_id).each do |date, count|
+    PostAction.count_per_day_for_type(post_action_type, category_id: report.category_id, start_date: report.start_date, end_date: report.end_date).each do |date, count|
       report.data << { x: date, y: count }
     end
     countable = PostAction.unscoped.where(post_action_type_id: post_action_type)

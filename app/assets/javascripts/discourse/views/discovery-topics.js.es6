@@ -27,7 +27,7 @@ export default Ember.View.extend(LoadMore, UrlRefresh, {
     if (scrollTo && scrollTo >= 0) {
       Ember.run.schedule('afterRender', () => $(window).scrollTop(scrollTo + 1));
     } else {
-      this.loadMoreUnlessFull();
+      Ember.run.scheduleOnce('afterRender', this, this.loadMoreUnlessFull);
     }
   },
 

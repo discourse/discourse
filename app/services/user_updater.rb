@@ -6,17 +6,25 @@ class UserUpdater
     muted_category_ids: :muted
   }
 
-  USER_ATTR = [
-    :email_digests,
+  OPTION_ATTR = [
     :email_always,
+    :mailing_list_mode,
+    :email_digests,
     :email_direct,
     :email_private_messages,
     :external_links_in_new_tab,
     :enable_quoting,
     :dynamic_favicon,
-    :mailing_list_mode,
     :disable_jump_reply,
-    :edit_history_public
+    :edit_history_public,
+    :automatically_unpin_topics,
+    :digest_after_minutes,
+    :new_topic_duration_minutes,
+    :auto_track_topics_after_msecs,
+    :email_previous_replies,
+    :email_in_reply_to,
+    :like_notification_frequency,
+    :include_tl0_in_digests
   ]
 
   def initialize(actor, user)
@@ -35,15 +43,6 @@ class UserUpdater
 
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }
-    user.digest_after_days = attributes.fetch(:digest_after_days) { user.digest_after_days }
-
-    if attributes[:auto_track_topics_after_msecs]
-      user.auto_track_topics_after_msecs = attributes[:auto_track_topics_after_msecs].to_i
-    end
-
-    if attributes[:new_topic_duration_minutes]
-      user.new_topic_duration_minutes = attributes[:new_topic_duration_minutes].to_i
-    end
 
     if guardian.can_grant_title?(user)
       user.title = attributes.fetch(:title) { user.title }
@@ -55,9 +54,19 @@ class UserUpdater
       end
     end
 
-    USER_ATTR.each do |attribute|
-      if attributes[attribute].present?
-        user.send("#{attribute}=", attributes[attribute] == 'true')
+
+    save_options = false
+
+    OPTION_ATTR.each do |attribute|
+      if attributes.key?(attribute)
+        save_options = true
+
+        if [true,false].include?(user.user_option.send(attribute))
+          val = attributes[attribute].to_s == 'true'
+          user.user_option.send("#{attribute}=", val)
+        else
+          user.user_option.send("#{attribute}=", attributes[attribute])
+        end
       end
     end
 
@@ -71,7 +80,7 @@ class UserUpdater
         update_muted_users(attributes[:muted_usernames])
       end
 
-      user_profile.save && user.save
+      (!save_options || user.user_option.save) && user_profile.save && user.save
     end
   end
 
@@ -103,6 +112,7 @@ class UserUpdater
   attr_reader :user, :guardian
 
   def format_url(website)
+    return nil if website.blank?
     website =~ /^http/ ? website : "http://#{website}"
   end
 end

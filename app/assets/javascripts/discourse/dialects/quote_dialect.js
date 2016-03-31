@@ -23,11 +23,11 @@ Discourse.BBCode.register('quote', {noWrap: true, singlePara: true}, function(co
   }
 
   var avatarImg;
+  var postNumber = parseInt(params['data-post'], 10);
+  var topicId = parseInt(params['data-topic'], 10);
+
   if (options.lookupAvatarByPostNumber) {
     // client-side, we can retrieve the avatar from the post
-    var postNumber = parseInt(params['data-post'], 10);
-    var topicId = parseInt(params['data-topic'], 10);
-
     avatarImg = options.lookupAvatarByPostNumber(postNumber, topicId);
   } else if (options.lookupAvatar) {
     // server-side, we need to lookup the avatar from the username
@@ -39,12 +39,23 @@ Discourse.BBCode.register('quote', {noWrap: true, singlePara: true}, function(co
     return ['p', ['aside', params, ['blockquote'].concat(contents)]];
   }
 
-  return ['aside', params,
-             ['div', {'class': 'title'},
-               ['div', {'class': 'quote-controls'}],
-               avatarImg ? ['__RAW', avatarImg] : "",
-               username ? I18n.t('user.said', {username: username}) : ""
-             ],
-             ['blockquote'].concat(contents)
-          ];
+  var header = [ 'div', {'class': 'title'},
+                 ['div', {'class': 'quote-controls'}],
+                 avatarImg ? ['__RAW', avatarImg] : "",
+                 username ? I18n.t('user.said', {username: username}) : ""
+               ];
+
+  if (options.topicId && postNumber && options.getTopicInfo && topicId !== options.topicId) {
+    var topicInfo = options.getTopicInfo(topicId);
+    if (topicInfo) {
+      var href = topicInfo.href;
+      if (postNumber > 0) { href += "/" + postNumber; }
+      // get rid of username said stuff
+      header.pop();
+      header.push(['a', {'href': href}, topicInfo.title]);
+    }
+  }
+
+
+  return ['aside', params, header, ['blockquote'].concat(contents)];
 });

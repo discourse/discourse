@@ -22,7 +22,7 @@ module ImportScripts::PhpBB3
         filename = CGI.unescapeHTML(row[:real_filename])
         upload = @uploader.create_upload(user_id, path, filename)
 
-        if upload.nil? || !upload.valid?
+        if upload.nil? || !upload.persisted?
           puts "Failed to upload #{path}"
           puts upload.errors.inspect if upload
         else

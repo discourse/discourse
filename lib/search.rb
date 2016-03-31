@@ -76,7 +76,7 @@ class Search
   def self.prepare_data(search_data)
     data = search_data.squish
     # TODO rmmseg is designed for chinese, we need something else for Korean / Japanese
-    if ['zh_TW', 'zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale)
+    if ['zh_TW', 'zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
       unless defined? RMMSeg
         require 'rmmseg'
         RMMSeg::Dictionary.load_dictionaries
@@ -92,6 +92,40 @@ class Search
 
     data.force_encoding("UTF-8")
     data
+  end
+
+  def self.word_to_date(str)
+
+    if str =~ /^[0-9]{1,3}$/
+      return Time.zone.now.beginning_of_day.days_ago(str.to_i)
+    end
+
+    if str =~ /^([12][0-9]{3})(-([0-1]?[0-9]))?(-([0-3]?[0-9]))?$/
+      year = $1.to_i
+      month = $2 ? $3.to_i : 1
+      day = $4 ? $5.to_i : 1
+
+      return if day==0 || month==0 || day > 31 || month > 12
+
+      return Time.zone.parse("#{year}-#{month}-#{day}") rescue nil
+    end
+
+    if str.downcase == "yesterday"
+      return Time.zone.now.beginning_of_day.yesterday
+    end
+
+    titlecase = str.downcase.titlecase
+
+    if Date::DAYNAMES.include?(titlecase)
+      return Time.zone.now.beginning_of_week(str.downcase.to_sym)
+    end
+
+    if idx = (Date::MONTHNAMES.find_index(titlecase) ||
+              Date::ABBR_MONTHNAMES.find_index(titlecase))
+      delta = Time.zone.now.month - idx
+      delta += 12 if delta < 0
+      Time.zone.now.beginning_of_month.months_ago(delta)
+    end
   end
 
   def initialize(term, opts=nil)
@@ -185,6 +219,18 @@ class Search
     posts.where("posts.post_number = 1")
   end
 
+  advanced_filter(/in:pinned/) do |posts|
+    posts.where("topics.pinned_at IS NOT NULL")
+  end
+
+  advanced_filter(/in:unpinned/) do |posts|
+    if @guardian.user
+      posts.where("topics.pinned_at IS NOT NULL AND topics.id IN (
+                  SELECT topic_id FROM topic_users WHERE user_id = ? AND cleared_pinned_at IS NOT NULL
+                 )", @guardian.user.id)
+    end
+  end
+
   advanced_filter(/badge:(.*)/) do |posts,match|
     badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
     if badge_id
@@ -243,7 +289,7 @@ class Search
   end
 
   advanced_filter(/user:(.+)/) do |posts,match|
-    user_id = User.where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
+    user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
@@ -251,14 +297,20 @@ class Search
     end
   end
 
-  advanced_filter(/min_age:(\d+)/) do |posts,match|
-    n = match.to_i
-    posts.where("topics.created_at > ?", n.days.ago)
+  advanced_filter(/before:(.*)/) do |posts,match|
+    if date = Search.word_to_date(match)
+      posts.where("posts.created_at < ?", date)
+    else
+      posts
+    end
   end
 
-  advanced_filter(/max_age:(\d+)/) do |posts,match|
-    n = match.to_i
-    posts.where("topics.created_at < ?", n.days.ago)
+  advanced_filter(/after:(.*)/) do |posts,match|
+    if date = Search.word_to_date(match)
+      posts.where("posts.created_at > ?", date)
+    else
+      posts
+    end
   end
 
   private
@@ -379,12 +431,16 @@ class Search
     end
 
     def user_search
+      return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
+
       users = User.includes(:user_search_data)
-                  .where("active = true AND user_search_data.search_data @@ #{ts_query("simple")}")
+                  .references(:user_search_data)
+                  .where(active: true)
+                  .where(staged: false)
+                  .where("user_search_data.search_data @@ #{ts_query("simple")}")
                   .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
                   .order("last_posted_at DESC")
                   .limit(@limit)
-                  .references(:user_search_data)
 
       users.each do |user|
         @results.add(user)
@@ -438,7 +494,15 @@ class Search
         if @search_context.is_a?(User)
 
           if opts[:private_messages]
-            posts = posts.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = ?)", @search_context.id)
+            posts = posts.where("topics.id IN (SELECT topic_id
+                                               FROM topic_allowed_users
+                                               WHERE user_id = :user_id
+                                               UNION ALL
+                                               SELECT tg.topic_id
+                                               FROM topic_allowed_groups tg
+                                               JOIN group_users gu ON gu.user_id = :user_id AND
+                                                                        gu.group_id = tg.group_id)",
+                                              user_id: @search_context.id)
           else
             posts = posts.where("posts.user_id = #{@search_context.id}")
           end

@@ -28,7 +28,7 @@ module ImportScripts::PhpBB3
     def add_default_smilies
       {
         [':D', ':-D', ':grin:'] => ':smiley:',
-        [':)', ':-)', ':smile:'] => ':smile:',
+        [':)', ':-)', ':smile:'] => ':slight_smile:',
         [';)', ';-)', ':wink:'] => ':wink:',
         [':(', ':-(', ':sad:'] => ':frowning:',
         [':o', ':-o', ':eek:'] => ':astonished:',
@@ -65,7 +65,7 @@ module ImportScripts::PhpBB3
       filename = File.basename(path)
       upload = @uploader.create_upload(Discourse::SYSTEM_USER_ID, path, filename)
 
-      if upload.nil? || !upload.valid?
+      if upload.nil? || !upload.persisted?
         puts "Failed to upload #{path}"
         puts upload.errors.inspect if upload
         html = nil

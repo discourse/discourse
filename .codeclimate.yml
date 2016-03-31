@@ -6,7 +6,6 @@ languages:
 
 exclude_paths:
  - "app/assets/javascripts/defer/*"
- - "app/assets/javascripts/discourse/lib/Markdown.Editor.js"
  - "app/assets/javascripts/ember-addons/*"
  - "lib/autospec/*"
  - "lib/es6_module_transpiler/*"

@@ -10,17 +10,24 @@ cs:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM, YYYY"
     long_date: "D. MMMM YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%-d. %-m. %Y"
+      short_no_year: "%-d. %B"
+      date_only: "%-d %B %Y"
+  date:
+    month_names: [null, ledna, února, března, dubna, května, června, července, srpna, září, října, listopadu, prosince]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Témata"
   posts: "příspěvky"
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
-  via: "%{username} přes %{site_name}"
-  is_reserved: "je rezervováno"
+  purge_reason: "Automaticky smazán jako opuštěný, neaktivovaný účet"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
@@ -36,8 +43,10 @@ cs:
       exclusion: je rezervováno
       greater_than: musí být větší než %{count}
       greater_than_or_equal_to: musí být větší nebo rovno %{count}
+      has_already_been_used: "již byl použit"
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
+      is_invalid: "je neplatný; zkus být trochu více popisný"
       less_than: musí být menší než %{count}
       less_than_or_equal_to: musí být menší nebo roven %{count}
       not_a_number: není číslo
@@ -45,6 +54,7 @@ cs:
       odd: musí být lichý
       record_invalid: 'Ověření selhalo: %{errors}'
       restrict_dependent_destroy:
+        one: "Nelze odstranit záznam, protože závisející %{record} existuje"
         many: "Nemůžu smazat záznam protože na něm závisí %{record}."
       too_long:
         one: je příliš dlouhý ( maximálně %{count} znak)
@@ -61,8 +71,18 @@ cs:
       other_than: "musí být jiný než %{count}"
     template:
       body: 'Nastaly problémy s následujícími poli: '
+      header:
+        one: 1 chyba zamezila uložení modelu %{model}
+        few: '%{count} chyb zamezilo uložení modelu %{model}'
+        other: '%{count} chyb zamezilo uložení modelu %{model}'
     embed:
       load_from_remote: "Při načítání příspěvku nastala chyba."
+    site_settings:
+      min_username_length_exists: "Nemůžeš nastavit minimální délku uživatelského jména delší než je nejkratší uživatelské jméno."
+      min_username_length_range: "Nemůžeš nastavit minimum nad maximum."
+      max_username_length_exists: "Nemůžeš nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
+      max_username_length_range: "Nemůžeš nastavit maximum pod minimum."
+      default_categories_already_selected: "Nemůžeš vybrat kategorii používanou v jiném seznamu."
   bulk_invite:
     file_should_be_csv: "Nahraný soubrou by měl být ve formátu csv nebo txt."
   backup:
@@ -91,26 +111,6 @@ cs:
       one: "1 reakce"
       few: "%{count} reakce"
       other: "%{count} reakcí"
-  too_many_mentions:
-    zero: "Bohužel, nemůžete zmiňovat ostatní uživatele."
-    one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
-    other: "Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku."
-  too_many_mentions_newuser:
-    zero: "Bohužel, návštěvníci nemohou zmiňovat ostatní uživatele."
-    one: "Bohužel, návštěvníci mohou zmínit jen jednoho uživatele v jednom příspěvku."
-    other: "Bohužel, návštěvníci mohou zmínit jen %{count} uživatelů v jednom příspěvku."
-  too_many_images:
-    zero: "Bohužel, návštěvníci nemohou vkládat obrázky do příspěvků."
-    one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden obrázek."
-    other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} obrázků."
-  too_many_attachments:
-    zero: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
-    one: "Bohužel, noví uživatelé smějí do příspěvku vložit jen jednu přílohu."
-    other: "Bohužel, noví uživatelé smějí do příspěvku vložit jen %{count} příloh."
-  too_many_links:
-    zero: "Bohužel, návštěvníci nemohou vkládat odkazy do příspěvků."
-    one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden odkaz."
-    other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazů."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
@@ -189,9 +189,6 @@ cs:
       user_profile:
         bio_raw: "O mně"
     errors:
-      messages:
-        is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
-        has_already_been_used: "je již použito"
       models:
         topic:
           attributes:
@@ -212,6 +209,7 @@ cs:
           attributes:
             hex:
               invalid: "není platná barva"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
@@ -225,8 +223,6 @@ cs:
     title: "Vítejte v Redakci"
   category:
     topic_prefix: "Definice kategorie pro %{category}"
-    replace_paragraph: "[Nahraďte tento první odstavec krátkých popisem nové kategorie. Zkuste se vejít do 200 znaků.]"
-    post_template: "%{replace_paragraph}\\\n\\\nPoužijte toto místo níže pro delší popis a stanovení pravidel diskuze!\n"
     errors:
       uncategorized_parent: "„Bez kategorie“ nemůže mít nadřazenou kategorii"
       self_parent: "Nadřazená kategorie nemůže zároveň být podkategorie"
@@ -244,14 +240,9 @@ cs:
       title: "nový uživatel"
     basic:
       title: "základní uživatel"
-    regular:
+    member:
       title: "člen"
-    leader:
-      title: "normální"
-    elder:
-      title: "vůdce"
   rate_limiter:
-    slow_down: "Provedli jste tuhle akci moooockrát, zkuste to později"
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
     hours:
       one: "1 hodina"
@@ -392,15 +383,10 @@ cs:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
-      title: 'Zpráva @{{username}}'
-      description: 'Tato zpráva obsahuje něco o čem bych s autorem rád mluvil přímo a soukromě. Nevytvoří varování moderátorům.'
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
       title: "Něco jiného"
-      description: 'Tento příspěvek vyžaduje pozornost moderátor z důvodů nevypsaných výše.'
-      long_form: 'nahlášeno moderátorům'
-      email_title: 'Příspěvek v tématu "%{title}" vyžaduje pozornost moderátora'
       email_body: "%{link}\\\n\\\n%{message}\n"
     bookmark:
       title: 'Záložka'
@@ -425,7 +411,6 @@ cs:
       long_form: 'nahlášeno jako nevhodné'
     notify_moderators:
       title: "Něco jiného"
-      description: 'Toto téma vyžaduje pozornost moderátorů na základě <a href="/guidelines">pravidel komunity</a>, <a href="%{tos_url}">pravidel použítí</a>, nebo z jiného výše neuvedeného důvodu.'
       long_form: 'nahlášeno moderátorům'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\\n\\\n%{message}\n"
@@ -456,6 +441,8 @@ cs:
       title: "Noví uživatelé"
       xaxis: "Den"
       yaxis: "Počet nových uživatelů"
+    profile_views:
+      xaxis: "Den"
     topics:
       title: "Témata"
       xaxis: "Den"
@@ -536,6 +523,10 @@ cs:
       title: "Celkem"
       xaxis: "Den"
       yaxis: "Celkem API požadavků"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Den"
+    page_view_anon_mobile_reqs:
+      xaxis: "Den"
     http_background_reqs:
       title: "Pozadí"
       xaxis: "Den"
@@ -559,6 +550,14 @@ cs:
       title: "Celkem"
       xaxis: "Den"
       yaxis: "Celkem požadavků"
+    time_to_first_response:
+      xaxis: "Den"
+    topics_with_no_response:
+      xaxis: "Den"
+      yaxis: "Celkem"
+    mobile_visits:
+      xaxis: "Den"
+      yaxis: "Počet návštěv"
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
     ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
@@ -573,34 +572,6 @@ cs:
     image_magick_warning: 'Server je nakonfigurován, aby vytvářel náhledy velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí vašeho oblíbeného balíčkovače, nebo navštivte <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">web ImageMagick pro stažení aktuální verze</a>.'
     contact_email_invalid: "Kontaktní email je neplatný. Prosím, aktualizujte položku contact_email v <a href='/admin/site_settings'>Nastavení webu</a>."
     consumer_email_warning: "Váš web je nastaven, aby používal Gmail (nebo jinou uživatelskou emailovou službu) k odesílání emailů. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limituje počet emailů, které můžete odeslat</a>. Zvažte použití jiného emailového poskytovatele, jako je třeba mandrill.com k zajištění doručitelnosti emailů."
-  content_types:
-    education_new_reply:
-      title: "Školení nového uživatele: První odpovědi"
-      description: "Návod, který se automaticky zobrazí ve vyskakovacím okně nad editorem zpráv, když uživatelé píšou první dvě nové odpovědi."
-    education_new_topic:
-      title: "Školení nového uživatele: První témata"
-      description: "Návod, který se automaticky zobrazí ve vyskakovacím okně nad editorem zpráv, když uživatelé zakládají první dvě nová témata."
-    usage_tips:
-      title: "Příručka pro nové uživatele"
-    welcome_user:
-      title: "Uvítání: Nový uživatel"
-    welcome_invite:
-      title: "Uvítání: Pozvaný uživatel"
-    login_required_welcome_message:
-      title: "Vyžadováno přihlášení: Uvítací zpráva"
-      description: "Uvítací zpráva, která je zobrazena nepřihlášeným uživatelům, je-li zapnuto nastavení 'vyžadovat přihlášení'."
-    login_required:
-      title: "Vyžadováno přihlášení: Úvodní stránka"
-      description: "Text, který se zobrazí nepřihlášených uživatelům na webu, je-li přihlášení vyžadováno."
-    head:
-      title: "HTML hlavička"
-      description: "HTML that will be inserted inside the <head></head> tags."
-    top:
-      title: "Vršek stránky"
-      description: "HTML přidané na vršek každé stránky (za hlavičku, ale před navigaci a před název tématu)."
-    bottom:
-      title: "Patička stránky"
-      description: "HTML, které bude přidáno před tag </body>"
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
@@ -737,6 +708,8 @@ cs:
       subject_template: "Zálohování selhalo."
     csv_export_succeeded:
       subject_template: "Exportování dat dokončeno"
+    csv_export_failed:
+      subject_template: "Exportování dat selhalo"
     too_many_spam_flags:
       subject_template: "Účet zablokován"
     blocked_by_staff:
@@ -763,64 +736,27 @@ cs:
     unsubscribe:
       title: "Odhlásit z odběru emailů"
       description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
-    reply_by_email: "Pro odpověd stačí odepsat na tento email, nebo navštivte %{base_url}%{url} ve vašem prohlížeči."
-    visit_link_to_respond: "Pro odpověď navštive %{base_url}%{url} ve vašem prohlížeči."
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} Vás pozval do konverzace '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     user_quoted:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     user_mentioned:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     user_posted:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{username} vás citoval v '%{topic_title}' na %{site_name}:
-
-        ---
-        %{message}
-
-        ---
-        Prosím navšivte tento odkaz, chcete-li odpovědět: %{base_url}%{url}
     digest:
       new_activity: "Nová aktivita ve vašich tématech a příspěvcích:"
+      top_topics: "Populární příspěvky"
+      other_new_topics: "Populární témata"
       click_here: "klikněte zde"
       from: "souhrn z %{site_name}"
       read_more: "Číst dále"
+      more_topics_category: "Více nových témat:"
     forgot_password:
       subject_template: "[%{site_name}] Obnovení hesla"
       text_body_template: |
@@ -839,12 +775,8 @@ cs:
 
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] Potvrďte vaši novou emailovou adresu"
-      text_body_template: |
-        Potvrďte vaši novou emailovou adresu pro %{site_name} kliknutím na následující odkaz:
-
-        %{base_url}/users/authorize-email/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] Přihlášení"
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
     signup:
@@ -856,7 +788,6 @@ cs:
 
         Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
   page_not_found:
-    title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
     popular_topics: "Populární"
     recent_topics: "Nedávné"
     see_more: "Více"
@@ -901,3 +832,12 @@ cs:
     title: "Podmínky používání"
   privacy_topic:
     title: "Ochrana soukromí"
+  admin_login:
+    success: "E-mail odeslán"
+    error: "Chyba!"
+    submit_button: "Odeslat e-mail"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

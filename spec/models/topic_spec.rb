@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'post_destroyer'
 
 describe Topic do
@@ -214,7 +214,7 @@ describe Topic do
 
     context 'title_fancy_entities disabled' do
       before do
-        SiteSetting.stubs(:title_fancy_entities).returns(false)
+        SiteSetting.title_fancy_entities = false
       end
 
       it "doesn't add entities to the title" do
@@ -224,11 +224,26 @@ describe Topic do
 
     context 'title_fancy_entities enabled' do
       before do
-        SiteSetting.stubs(:title_fancy_entities).returns(true)
+        SiteSetting.title_fancy_entities = true
       end
 
-      it "converts the title to have fancy entities" do
+      it "converts the title to have fancy entities and updates" do
         expect(topic.fancy_title).to eq("&ldquo;this topic&rdquo; &ndash; has &ldquo;fancy stuff&rdquo;")
+        topic.title = "this is my test hello world... yay"
+        topic.user.save!
+        topic.save!
+        topic.reload
+        expect(topic.fancy_title).to eq("This is my test hello world&hellip; yay")
+
+        topic.title = "I made a change to the title"
+        topic.save!
+
+        topic.reload
+        expect(topic.fancy_title).to eq("I made a change to the title")
+
+        # another edge case
+        topic.title = "this is another edge case"
+        expect(topic.fancy_title).to eq("this is another edge case")
       end
     end
   end
@@ -363,13 +378,18 @@ describe Topic do
             expect(topic.invite(topic.user, walter.username)).to eq(true)
             expect(topic.allowed_users.include?(walter)).to eq(true)
 
-            expect(topic.remove_allowed_user(walter.username)).to eq(true)
+            expect(topic.remove_allowed_user(topic.user, walter.username)).to eq(true)
             topic.reload
             expect(topic.allowed_users.include?(walter)).to eq(false)
           end
 
           it 'creates a notification' do
             expect { topic.invite(topic.user, walter.username) }.to change(Notification, :count)
+          end
+
+          it 'creates a small action post' do
+            expect { topic.invite(topic.user, walter.username) }.to change(Post, :count)
+            expect { topic.remove_allowed_user(topic.user, walter.username) }.to change(Post, :count)
           end
         end
 
@@ -449,7 +469,7 @@ describe Topic do
 
       it "doesn't bump the topic on an edit to the last post that doesn't result in a new version" do
         expect {
-          SiteSetting.expects(:ninja_edit_window).returns(5.minutes)
+          SiteSetting.expects(:editing_grace_period).returns(5.minutes)
           @last_post.revise(@last_post.user, { raw: 'updated contents' }, revised_at: @last_post.created_at + 10.seconds)
           @topic.reload
         }.not_to change(@topic, :bumped_at)
@@ -1276,11 +1296,31 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "doesn't return topics from suppressed categories" do
+      user = Fabricate(:user)
+      category = Fabricate(:category)
+      Fabricate(:topic, category: category)
+
+      SiteSetting.digest_suppress_categories = "#{category.id}"
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+    end
+
     it "doesn't return topics from TL0 users" do
       new_user = Fabricate(:user, trust_level: 0)
       Fabricate(:topic, user_id: new_user.id)
 
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+    end
+
+    it "returns topics from TL0 users if enabled in preferences" do
+      new_user = Fabricate(:user, trust_level: 0)
+      topic = Fabricate(:topic, user_id: new_user.id)
+
+      u = Fabricate(:user)
+      u.user_option.include_tl0_in_digests = true
+
+      expect(Topic.for_digest(u, 1.year.ago, top_order: true)).to eq([topic])
     end
 
   end
@@ -1297,6 +1337,47 @@ describe Topic do
 
       expect(Topic.for_digest(Fabricate(:user), 1.year.ago).count).to eq(0)
       expect(Topic.for_digest(Fabricate(:admin), 1.year.ago).count).to eq(1)
+    end
+  end
+
+  describe 'all_allowed_users' do
+    let(:group) { Fabricate(:group) }
+    let(:topic) { Fabricate(:topic, allowed_groups: [group]) }
+    let!(:allowed_user) { Fabricate(:user) }
+    let!(:allowed_group_user) { Fabricate(:user) }
+    let!(:moderator) { Fabricate(:user, moderator: true) }
+    let!(:rando) { Fabricate(:user) }
+
+    before do
+      topic.allowed_users << allowed_user
+      group.users << allowed_group_user
+    end
+
+    it 'includes allowed_users' do
+      expect(topic.all_allowed_users).to include allowed_user
+    end
+
+    it 'includes allowed_group_users' do
+      expect(topic.all_allowed_users).to include allowed_group_user
+    end
+
+    it 'includes moderators if flagged and a pm' do
+      topic.stubs(:has_flags?).returns(true)
+      topic.stubs(:private_message?).returns(true)
+      expect(topic.all_allowed_users).to include moderator
+    end
+
+    it 'does not include moderators if pm without flags' do
+      topic.stubs(:private_message?).returns(true)
+      expect(topic.all_allowed_users).not_to include moderator
+    end
+
+    it 'does not include moderators for regular topic' do
+      expect(topic.all_allowed_users).not_to include moderator
+    end
+
+    it 'does not include randos' do
+      expect(topic.all_allowed_users).not_to include rando
     end
   end
 
@@ -1482,7 +1563,7 @@ describe Topic do
 
   context 'invite by group manager' do
     let(:group_manager) { Fabricate(:user) }
-    let(:group) { Fabricate(:group).tap { |g| g.add(group_manager); g.appoint_manager(group_manager) } }
+    let(:group) { Fabricate(:group).tap { |g| g.add_owner(group_manager) } }
     let(:private_category)  { Fabricate(:private_category, group: group) }
     let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
 
@@ -1507,9 +1588,36 @@ describe Topic do
         expect(Guardian.new(walter).can_see?(group_private_topic)).to be_truthy
       end
     end
+  end
 
-    context 'to a previously-invited user' do
+  it "Correctly sets #message_archived?" do
+    topic = Fabricate(:private_message_topic)
+    user = topic.user
 
+    expect(topic.message_archived?(user)).to eq(false)
+
+    group = Fabricate(:group)
+    group.add(user)
+
+    TopicAllowedGroup.create!(topic_id: topic.id, group_id: group.id)
+    GroupArchivedMessage.create!(topic_id: topic.id, group_id: group.id)
+
+    expect(topic.message_archived?(user)).to eq(true)
+  end
+
+  it 'will trigger :topic_status_updated' do
+    topic = Fabricate(:topic)
+    user = topic.user
+    user.admin = true
+    @topic_status_event_triggered = false
+
+    DiscourseEvent.on(:topic_status_updated) do
+      @topic_status_event_triggered = true
     end
+
+    topic.update_status('closed', true, user)
+    topic.reload
+
+    expect(@topic_status_event_triggered).to eq(true)
   end
 end

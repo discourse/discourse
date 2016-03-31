@@ -10,6 +10,23 @@
   </div>
 
   {{#if model.id}}
+    {{#unless model.automatic}}
+      {{#if model.hasOwners}}
+      <div>
+        <label for='owner-list'>{{i18n 'admin.groups.group_owners'}}</label>
+        <div class="ac-wrap clearfix" id='owner-list'>
+          {{#each model.owners as |member|}}
+            {{group-member member=member removeAction="removeOwner"}}
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+      <div>
+        <label for="owner-selector">{{i18n 'admin.groups.add_owners'}}</label>
+        {{user-selector usernames=model.ownerUsernames placeholderKey="admin.groups.selector_placeholder" id="owner-selector"}}
+        {{d-button action="addOwners" class="add" icon="plus" label="admin.groups.add"}}
+      </div>
+    {{/unless}}
     <div>
       <label>{{i18n 'admin.groups.group_members'}} ({{model.user_count}})</label>
       <div>
@@ -75,6 +92,13 @@
       <label for="grant_trust_level">{{i18n 'groups.trust_levels.title'}}</label>
       {{combo-box name="grant_trust_level" valueAttribute="value" value=model.grant_trust_level content=trustLevelOptions}}
     </div>
+
+    {{#if siteSettings.email_in}}
+      <div>
+        <label for="incoming_email">{{i18n 'admin.groups.incoming_email'}}</label>
+        {{text-field name="incoming_email" value=model.incoming_email placeholderKey="admin.groups.incoming_email_placeholder"}}
+      </div>
+    {{/if}}
   {{/unless}}
 
   <div class='buttons'>
@@ -82,6 +106,7 @@
     {{#unless model.automatic}}
       <button {{action "destroy"}} class='btn btn-danger'>{{fa-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
     {{/unless}}
+    <span {{bind-attr class=":saving savingStatus::hidden"}}>{{savingStatus}}</span>
   </div>
 
 </form>

@@ -1,5 +1,3 @@
-/*global Markdown, console */
-
 /**
   Contains methods to help us with markdown formatting.
 
@@ -152,58 +150,6 @@ Discourse.Markdown = {
     return this.markdownConverter(opts).makeHtml(raw);
   },
 
-  createEditor: function(options) {
-    options = options || {};
-
-    // By default we always sanitize content in the editor
-    options.sanitize = true;
-
-    var markdownConverter = Discourse.Markdown.markdownConverter(options);
-
-    var editorOptions = {
-      containerElement: options.containerElement,
-      strings: {
-        bold: I18n.t("composer.bold_title") + " <strong> Ctrl+B",
-        boldexample: I18n.t("composer.bold_text"),
-
-        italic: I18n.t("composer.italic_title") + " <em> Ctrl+I",
-        italicexample: I18n.t("composer.italic_text"),
-
-        link: I18n.t("composer.link_title") + " <a> Ctrl+L",
-        linkdescription: I18n.t("composer.link_description"),
-        linkdialog: "<p><b>" + I18n.t("composer.link_dialog_title") + "</b></p><p>http://example.com/ \"" +
-            I18n.t("composer.link_optional_text") + "\"</p>",
-
-        quote: I18n.t("composer.quote_title") + " <blockquote> Ctrl+Q",
-        quoteexample: I18n.t("composer.quote_text"),
-
-        code: I18n.t("composer.code_title") + " <pre><code> Ctrl+K",
-        codeexample: I18n.t("composer.code_text"),
-
-        image: I18n.t("composer.upload_title") + " - Ctrl+G",
-        imagedescription: I18n.t("composer.upload_description"),
-
-        olist: I18n.t("composer.olist_title") + " <ol> Ctrl+O",
-        ulist: I18n.t("composer.ulist_title") + " <ul> Ctrl+U",
-        litem: I18n.t("composer.list_item"),
-
-        heading: I18n.t("composer.heading_title") + " <h1>/<h2> Ctrl+H",
-        headingexample: I18n.t("composer.heading_text"),
-
-        hr: I18n.t("composer.hr_title") + " <hr> Ctrl+R",
-
-        undo: I18n.t("composer.undo_title") + " - Ctrl+Z",
-        redo: I18n.t("composer.redo_title") + " - Ctrl+Y",
-        redomac: I18n.t("composer.redo_title") + " - Ctrl+Shift+Z",
-
-        help: I18n.t("composer.help")
-      },
-      appendButtons: options.appendButtons
-    };
-
-    return new Markdown.Editor(markdownConverter, undefined, editorOptions);
-  },
-
   /**
     Checks to see if a URL is allowed in the cooked content
 
@@ -292,6 +238,8 @@ RSVP.EventTarget.mixin(Discourse.Markdown);
 Discourse.Markdown.whiteListTag('a', 'class', 'attachment');
 Discourse.Markdown.whiteListTag('a', 'class', 'onebox');
 Discourse.Markdown.whiteListTag('a', 'class', 'mention');
+Discourse.Markdown.whiteListTag('a', 'class', 'mention-group');
+Discourse.Markdown.whiteListTag('a', 'class', 'hashtag');
 
 Discourse.Markdown.whiteListTag('a', 'target', '_blank');
 Discourse.Markdown.whiteListTag('a', 'rel', 'nofollow');
@@ -304,8 +252,7 @@ Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
 
 Discourse.Markdown.whiteListTag('span', 'class', 'mention');
-Discourse.Markdown.whiteListTag('span', 'class', 'spoiler');
-Discourse.Markdown.whiteListTag('div', 'class', 'spoiler');
+Discourse.Markdown.whiteListTag('span', 'class', 'hashtag');
 Discourse.Markdown.whiteListTag('aside', 'class', 'quote');
 Discourse.Markdown.whiteListTag('aside', 'data-*');
 

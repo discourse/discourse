@@ -7,17 +7,18 @@ const NavItem = Discourse.Model.extend({
         name = this.get('name'),
         count = this.get('count') || 0;
 
-    if (name === 'latest' && !Discourse.Mobile.mobileView) {
+    if (name === 'latest' && !Discourse.Site.currentProp('mobileView')) {
       count = 0;
     }
 
     var extra = { count: count };
+    var titleKey = count === 0 ? '.title' : '.title_with_count';
 
     if (categoryName) {
       name = 'category';
       extra.categoryName = toTitleCase(categoryName);
     }
-    return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
+    return I18n.t("filters." + name.replace("/", ".") + titleKey, extra);
   }.property('categoryName', 'name', 'count'),
 
   categoryName: function() {

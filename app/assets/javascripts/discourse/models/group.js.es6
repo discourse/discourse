@@ -1,41 +1,66 @@
+import computed from 'ember-addons/ember-computed-decorators';
+
 const Group = Discourse.Model.extend({
   limit: 50,
   offset: 0,
   user_count: 0,
+  owners: [],
 
-  emailDomains: function() {
-    var value = this.get("automatic_membership_email_domains");
+  hasOwners: Ember.computed.notEmpty('owners'),
+
+  @computed("automatic_membership_email_domains")
+  emailDomains(value) {
     return Em.isEmpty(value) ? "" : value;
-  }.property("automatic_membership_email_domains"),
+  },
 
   type: function() {
     return this.get("automatic") ? "automatic" : "custom";
   }.property("automatic"),
 
-  userCountDisplay: function(){
-    var c = this.get('user_count');
+  @computed('user_count')
+  userCountDisplay(userCount) {
     // don't display zero its ugly
-    if (c > 0) { return c; }
-  }.property('user_count'),
+    if (userCount > 0) { return userCount; }
+  },
 
   findMembers() {
     if (Em.isEmpty(this.get('name'))) { return ; }
 
     const self = this, offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
 
-    return Discourse.Group.loadMembers(this.get("name"), offset, this.get("limit")).then(function (result) {
+    return Group.loadMembers(this.get("name"), offset, this.get("limit")).then(function (result) {
+      var ownerIds = {};
+      result.owners.forEach(owner => ownerIds[owner.id] = true);
+
       self.setProperties({
         user_count: result.meta.total,
         limit: result.meta.limit,
         offset: result.meta.offset,
-        members: result.members.map(member => Discourse.User.create(member))
+        members: result.members.map(member => {
+          if (ownerIds[member.id]) {
+            member.owner = true;
+          }
+          return Discourse.User.create(member);
+        }),
+        owners: result.owners.map(owner => Discourse.User.create(owner)),
       });
+    });
+  },
+
+  removeOwner(member) {
+    var self = this;
+    return Discourse.ajax('/admin/groups/' + this.get('id') + '/owners.json', {
+      type: "DELETE",
+      data: { user_id: member.get("id") }
+    }).then(function() {
+      // reload member list
+      self.findMembers();
     });
   },
 
   removeMember(member) {
     var self = this;
-    return Discourse.ajax('/admin/groups/' + this.get('id') + '/members.json', {
+    return Discourse.ajax('/groups/' + this.get('id') + '/members.json', {
       type: "DELETE",
       data: { user_id: member.get("id") }
     }).then(function() {
@@ -46,7 +71,17 @@ const Group = Discourse.Model.extend({
 
   addMembers(usernames) {
     var self = this;
-    return Discourse.ajax('/admin/groups/' + this.get('id') + '/members.json', {
+    return Discourse.ajax('/groups/' + this.get('id') + '/members.json', {
+      type: "PUT",
+      data: { usernames: usernames }
+    }).then(function() {
+      self.findMembers();
+    });
+  },
+
+  addOwners(usernames) {
+    var self = this;
+    return Discourse.ajax('/admin/groups/' + this.get('id') + '/owners.json', {
       type: "PUT",
       data: { usernames: usernames }
     }).then(function() {
@@ -63,7 +98,8 @@ const Group = Discourse.Model.extend({
       automatic_membership_retroactive: !!this.get('automatic_membership_retroactive'),
       title: this.get('title'),
       primary_group: !!this.get('primary_group'),
-      grant_trust_level: this.get('grant_trust_level')
+      grant_trust_level: this.get('grant_trust_level'),
+      incoming_email: this.get("incoming_email"),
     };
   },
 
@@ -86,22 +122,33 @@ const Group = Discourse.Model.extend({
   findPosts(opts) {
     opts = opts || {};
 
+    const type = opts['type'] || 'posts';
+
     var data = {};
     if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
 
-    return Discourse.ajax("/groups/" + this.get('name') + "/posts.json", { data: data }).then(function (posts) {
-      return posts.map(function (p) {
+    return Discourse.ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
+      return posts.map(p => {
         p.user = Discourse.User.create(p.user);
+        p.topic = Discourse.Topic.create(p.topic);
         return Em.Object.create(p);
       });
     });
-  }
+  },
+
+  setNotification(notification_level) {
+    this.set("notification_level", notification_level);
+    return Discourse.ajax(`/groups/${this.get("name")}/notifications`, {
+      data: { notification_level },
+      type: "POST"
+    });
+  },
 });
 
 Group.reopenClass({
   findAll(opts) {
     return Discourse.ajax("/admin/groups.json", { data: opts }).then(function (groups){
-      return groups.map(g => Discourse.Group.create(g));
+      return groups.map(g => Group.create(g));
     });
   },
 
@@ -110,7 +157,7 @@ Group.reopenClass({
   },
 
   find(name) {
-    return Discourse.ajax("/groups/" + name + ".json").then(result => Discourse.Group.create(result.basic_group));
+    return Discourse.ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
   },
 
   loadMembers(name, offset, limit) {

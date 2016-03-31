@@ -105,6 +105,10 @@ class SiteSetting < ActiveRecord::Base
     nil
   end
 
+  def self.email_polling_enabled?
+    SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
+  end
+
 end
 
 # == Schema Information
@@ -112,7 +116,7 @@ end
 # Table name: site_settings
 #
 #  id         :integer          not null, primary key
-#  name       :string(255)      not null
+#  name       :string           not null
 #  data_type  :integer          not null
 #  value      :text
 #  created_at :datetime         not null

@@ -1,25 +1,23 @@
-import ScreenTrack from 'discourse/lib/screen-track';
 import Session from 'discourse/models/session';
 
-const ANON_TOPIC_IDS = 3,
-  ANON_PROMPT_READ_TIME = 5 * 60 * 1000,
-  ONE_DAY = 24 * 60 * 60 * 1000,
-  PROMPT_HIDE_DURATION = ONE_DAY;
+const ANON_TOPIC_IDS = 2;
+const ANON_PROMPT_READ_TIME = 2 * 60 * 1000;
+const ONE_DAY = 24 * 60 * 60 * 1000;
+const PROMPT_HIDE_DURATION = ONE_DAY;
 
 export default {
   name: "signup-cta",
 
   initialize(container) {
-    const screenTrack = ScreenTrack.current(),
-      session = Session.current(),
-      siteSettings = container.lookup('site-settings:main'),
-      keyValueStore = container.lookup('key-value-store:main'),
-      user = container.lookup('current-user:main');
+    const screenTrack = container.lookup('screen-track:main');
+    const session = Session.current();
+    const siteSettings = container.lookup('site-settings:main');
+    const keyValueStore = container.lookup('key-value-store:main');
+    const user = container.lookup('current-user:main');
 
-    screenTrack.set('keyValueStore', keyValueStore);
+    screenTrack.keyValueStore = keyValueStore;
 
     // Preconditions
-
     if (user) return; // must not be logged in
     if (keyValueStore.get('anon-cta-never')) return; // "never show again"
     if (!siteSettings.allow_new_registrations) return;
@@ -63,7 +61,7 @@ export default {
       session.set('showSignupCta', true);
     }
 
-    screenTrack.set('anonFlushCallback', checkSignupCtaRequirements);
+    screenTrack.registerAnonCallback(checkSignupCtaRequirements);
 
     checkSignupCtaRequirements();
   }

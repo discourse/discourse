@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'file_store/local_store'
 
 describe FileStore::LocalStore do

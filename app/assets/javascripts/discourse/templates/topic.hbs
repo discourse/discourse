@@ -15,9 +15,10 @@
           {{#if editingTopic}}
             {{#if model.isPrivateMessage}}
               <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-              {{autofocus-text-field id="edit-title" value=buffered.title maxLength=maxTitleLength}}
-            {{else}}
-              {{autofocus-text-field id="edit-title" value=buffered.title maxLength=maxTitleLength}}
+            {{/if}}
+
+            {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+            {{#if showCategoryChooser}}
               <br>
               {{category-chooser valueAttribute="id" value=buffered.category_id source=buffered.category_id}}
             {{/if}}
@@ -29,7 +30,9 @@
           {{else}}
             <h1>
               {{#unless model.is_warning}}
-                <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+                <a href="{{view.pmPath}}">
+                  <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+                </a>
               {{/unless}}
 
               {{#if model.details.loaded}}
@@ -66,19 +69,40 @@
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
           {{#unless model.postStream.loadingFilter}}
-            {{cloaked-collection itemViewClass="post"
-                                 idProperty="post_number"
-                                 defaultHeight="200"
-                                 content=model.postStream.posts
-                                 slackRatio="15"
-                                 loadingHTML=""
-                                 preservesContext="true"
-                                 uncloakDefault="true"
-                                 offsetFixedTop="header"
-                                 offsetFixedBottom="#reply-control"}}
+            {{scrolling-post-stream
+              posts=postsToRender
+              canCreatePost=model.details.can_create_post
+              multiSelect=multiSelect
+              selectedPostsCount=selectedPostsCount
+              selectedQuery=selectedQuery
+              gaps=model.postStream.gaps
+              showFlags="showFlags"
+              editPost="editPost"
+              showHistory="showHistory"
+              showRawEmail="showRawEmail"
+              deletePost="deletePost"
+              recoverPost="recoverPost"
+              expandHidden="expandHidden"
+              newTopicAction="replyAsNewTopic"
+              expandFirstPost="expandFirstPost"
+              toggleBookmark="toggleBookmark"
+              togglePostType="togglePostType"
+              rebakePost="rebakePost"
+              changePostOwner="changePostOwner"
+              unhidePost="unhidePost"
+              replyToPost="replyToPost"
+              toggleWiki="toggleWiki"
+              toggleParticipant="toggleParticipant"
+              toggleSummary="toggleSummary"
+              removeAllowedUser="removeAllowedUser"
+              showInvite="showInvite"
+              topVisibleChanged="topVisibleChanged"
+              bottomVisibleChanged="bottomVisibleChanged"
+              selectPost="toggledSelectedPost"
+              selectReplies="toggledSelectedPostReplies"
+              fillGapBefore="fillGapBefore"
+              fillGapAfter="fillGapAfter"}}
           {{/unless}}
-
-          {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
         </div>
         <div id="topic-bottom"></div>
 
@@ -110,9 +134,16 @@
 
             {{#if model.details.suggested_topics.length}}
               <div id="suggested-topics">
-                <h3>{{i18n "suggested_topics.title"}}</h3>
+                <h3>{{{view.suggestedTitle}}}</h3>
                 <div class="topics">
-                  {{basic-topic-list topics=model.details.suggested_topics postsAction="showTopicEntrance"}}
+                  {{#if model.isPrivateMessage}}
+                    {{basic-topic-list hideCategory="true"
+                                       showPosters="true"
+                                       topics=model.details.suggested_topics
+                                       postsAction="showTopicEntrance"}}
+                  {{else}}
+                    {{basic-topic-list topics=model.details.suggested_topics postsAction="showTopicEntrance"}}
+                  {{/if}}
                 </div>
                 <h3>{{{view.browseMoreMessage}}}</h3>
               </div>
@@ -155,24 +186,24 @@
 
 {{#if currentUser.canManageTopic}}
   {{show-popup-button action="showTopicAdminMenu" class="show-topic-admin" title="topic_admin_menu" icon="wrench"}}
-  {{#popup-menu visible=adminMenuVisible hide="hideTopicAdminMenu" title="admin_title"}}
-    <li>
+  {{#popup-menu visible=adminMenuVisible hide="hideTopicAdminMenu" title="admin_title" extraClasses="topic-admin-popup-menu"}}
+    <li class="topic-admin-multi-select">
       {{d-button action="toggleMultiSelect" icon="tasks" label="topic.actions.multi_select"}}
     </li>
 
     {{#if model.details.can_delete}}
-      <li>
+      <li class="topic-admin-delete">
         {{d-button action="deleteTopic" icon="trash-o" label="topic.actions.delete" class="btn-danger"}}
       </li>
     {{/if}}
 
     {{#if showRecover}}
-      <li>
+      <li class="topic-admin-recover">
         {{d-button action="recoverTopic" icon="undo" label="topic.actions.recover"}}
       </li>
     {{/if}}
 
-    <li>
+    <li class="topic-admin-autoclose">
       {{#if model.closed}}
         {{d-button action="toggleClosed" icon="unlock" label="topic.actions.open"}}
       {{else}}
@@ -183,7 +214,7 @@
 
     {{#unless model.isPrivateMessage}}
       {{#if model.visible}}
-        <li>
+        <li class="topic-admin-pin">
           {{#if isFeatured}}
             {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.unpin"}}
           {{else}}
@@ -193,19 +224,21 @@
       {{/if}}
     {{/unless}}
 
-    <li>
+    <li class="topic-admin-change-timestamp">
       {{d-button action="showChangeTimestamp" icon="calendar" label="topic.change_timestamp.title"}}
     </li>
 
-    <li>
+    <li class="topic-admin-archive">
       {{#if model.archived}}
         {{d-button action="toggleArchived" icon="folder" label="topic.actions.unarchive"}}
       {{else}}
+        {{#unless model.isPrivateMessage}}
         {{d-button action="toggleArchived" icon="folder" label="topic.actions.archive"}}
+        {{/unless}}
       {{/if}}
     </li>
 
-    <li>
+    <li class="topic-admin-visible">
       {{#if model.visible}}
         {{d-button action="toggleVisibility" icon="eye-slash" label="topic.actions.invisible"}}
       {{else}}

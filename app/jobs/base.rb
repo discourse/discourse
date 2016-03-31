@@ -149,7 +149,7 @@ module Jobs
             begin
               RailsMultisite::ConnectionManagement.establish_connection(db: db)
               I18n.locale = SiteSetting.default_locale
-              I18n.fallbacks.ensure_loaded!
+              I18n.ensure_all_loaded!
               begin
                 execute(opts)
               rescue => e
@@ -197,6 +197,11 @@ module Jobs
 
   class Scheduled < Base
     extend Scheduler::Schedule
+
+    def perform(*args)
+      return if Discourse.readonly_mode?
+      super
+    end
   end
 
   def self.enqueue(job_name, opts={})
@@ -210,7 +215,7 @@ module Jobs
     # If we are able to queue a job, do it
     if SiteSetting.queue_jobs?
       if opts[:delay_for].present?
-        klass.delay_for(opts.delete(:delay_for)).delayed_perform(opts)
+        klass.perform_in(opts.delete(:delay_for), opts)
       else
         Sidekiq::Client.enqueue(klass, opts)
       end
@@ -233,30 +238,23 @@ module Jobs
   end
 
   def self.cancel_scheduled_job(job_name, params={})
-    jobs = scheduled_for(job_name, params)
-    return false if jobs.empty?
-    jobs.each { |job| job.delete }
-    true
+    scheduled_for(job_name, params).each(&:delete)
   end
 
   def self.scheduled_for(job_name, params={})
+    params = params.with_indifferent_access
     job_class = "Jobs::#{job_name.to_s.camelcase}"
     Sidekiq::ScheduledSet.new.select do |scheduled_job|
-      if scheduled_job.klass == 'Sidekiq::Extensions::DelayedClass'
-        job_args = YAML.load(scheduled_job.args[0])
-        job_args_class, _, (job_args_params, *) = job_args
-        if job_args_class.to_s == job_class && job_args_params
-          matched = true
-          params.each do |key, value|
-            unless job_args_params[key] == value
-              matched = false
-              break
-            end
+      if scheduled_job.klass.to_s == job_class
+        matched = true
+        job_params = scheduled_job.item["args"][0].with_indifferent_access
+        params.each do |key, value|
+          if job_params[key] != value
+            matched = false
+            break
           end
-          matched
-        else
-          false
         end
+        matched
       else
         false
       end

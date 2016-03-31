@@ -1,37 +1,34 @@
-import Singleton from 'discourse/mixins/singleton';
+const PageTracker = Ember.Object.extend(Ember.Evented);
+let _pageTracker = PageTracker.create();
 
-/**
-  Called whenever the "page" changes. This allows us to set up analytics
-  and other tracking.
+let _started = false;
+export function startPageTracking(router) {
+  if (_started) { return; }
 
-  To get notified when the page changes, you can install a hook like so:
+  router.on('didTransition', function() {
+    this.send('refreshTitle');
+    const url = Discourse.getURL(this.get('url'));
 
-  ```javascript
-    PageTracker.current().on('change', function(url, title) {
-      console.log('the page changed to: ' + url + ' and title ' + title);
+    // Refreshing the title is debounced, so we need to trigger this in the
+    // next runloop to have the correct title.
+    Em.run.next(() => {
+      _pageTracker.trigger('change', url, Discourse.get('_docTitle'));
     });
-  ```
-**/
-const PageTracker = Ember.Object.extend(Ember.Evented, {
-  start: function() {
-    if (this.get('started')) { return; }
+  });
+  _started = true;
+}
 
-    var router = Discourse.__container__.lookup('router:main'),
-        self = this;
+export function onPageChange(fn) {
+  _pageTracker.on('change', fn);
+}
 
-    router.on('didTransition', function() {
-      this.send('refreshTitle');
-      var url = this.get('url');
-
-      // Refreshing the title is debounced, so we need to trigger this in the
-      // next runloop to have the correct title.
-      Em.run.next(function() {
-        self.trigger('change', url, Discourse.get('_docTitle'));
-      });
-    });
-    this.set('started', true);
+// backwards compatibility
+const BackwardsCompat = {
+  current() {
+    console.warn(`Using PageTracker.current() is deprecated. Your plugin should use the PluginAPI`);
+    return _pageTracker;
   }
-});
-PageTracker.reopenClass(Singleton);
+};
 
-export default PageTracker;
+Discourse.PageTracker = BackwardsCompat;
+export default BackwardsCompat;

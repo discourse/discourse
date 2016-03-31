@@ -76,7 +76,7 @@ export default Ember.View.extend({
   _focusWhenOpened: function() {
 
     // Don't focus on mobile or touch
-    if (Discourse.Mobile.mobileView || this.capabilities.get('touch')) {
+    if (this.site.mobileView || this.capabilities.isIOS) {
       return;
     }
 
@@ -98,6 +98,7 @@ export default Ember.View.extend({
     const controller = this.get('controller');
     if (controller.get('expanded')) {
       if (e.keyCode === 13) {
+        this.$('input').blur();
         controller.send('jumpPost');
       } else if (e.keyCode === 27) {
         controller.send('toggleExpansion');

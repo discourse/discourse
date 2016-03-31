@@ -11,7 +11,8 @@ var ButtonBackBright = {
     ButtonTryAgain = {
       classes: "btn-primary",
       action: "tryLoading",
-      key: "errors.buttons.again"
+      key: "errors.buttons.again",
+      icon: "refresh"
     },
     ButtonLoadPage = {
       classes: "btn-primary",

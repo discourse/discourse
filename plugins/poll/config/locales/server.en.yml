@@ -26,8 +26,12 @@ en:
     default_poll_must_have_at_least_2_options: "Poll must have at least 2 options."
     named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
 
-    default_poll_must_have_less_options: "Poll must have less than %{max} options."
-    named_poll_must_have_less_options: "Poll named <strong>%{name}</strong> must have less than %{max} options."
+    default_poll_must_have_less_options:
+      one: "Poll must have less than 1 option."
+      other: "Poll must have less than %{count} options."
+    named_poll_must_have_less_options:
+      one: "Poll named <strong>%{name}</strong> must have less than 1 option."
+      other: "Poll named <strong>%{name}</strong> must have less than %{count} options."
 
     default_poll_must_have_different_options: "Poll must have different options."
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
@@ -51,3 +55,6 @@ en:
 
     topic_must_be_open_to_toggle_status: "The topic must be open to toggle status."
     only_staff_or_op_can_toggle_status: "Only a staff member or the original poster can toggle a poll status."
+
+    email:
+      link_to_poll: "Click to view the poll."

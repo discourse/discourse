@@ -1,0 +1,57 @@
+{{#load-more selector=".email-list tr" action="loadMore"}}
+  <table class='table email-list'>
+    <thead>
+      <tr>
+        <th>{{i18n 'admin.email.time'}}</th>
+        <th>{{i18n 'admin.email.incoming_emails.from_address'}}</th>
+        <th>{{i18n 'admin.email.incoming_emails.to_addresses'}}</th>
+        <th>{{i18n 'admin.email.incoming_emails.subject'}}</th>
+      </tr>
+    </thead>
+
+    <tr class="filters">
+      <td>{{i18n 'admin.email.logs.filters.title'}}</td>
+      <td>{{text-field value=filter.from placeholderKey="admin.email.incoming_emails.filters.from_placeholder"}}</td>
+      <td>{{text-field value=filter.to placeholderKey="admin.email.incoming_emails.filters.to_placeholder"}}</td>
+      <td>{{text-field value=filter.subject placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"}}</td>
+    </tr>
+
+    {{#each email in model}}
+      <tr>
+        <td class="time">{{format-date email.created_at}}</td>
+        <td class="username">
+          <div>
+            {{#if email.user}}
+              {{#link-to 'adminUser' email.user}}
+                {{avatar email.user imageSize="tiny"}}
+                {{email.from_address}}
+              {{/link-to}}
+            {{else}}
+              &mdash;
+            {{/if}}
+          </div>
+        </td>
+        <td class="addresses">
+          {{#each to in email.to_addresses}}
+            <p><a href="mailto:{{unbound to}}" title="TO">{{unbound to}}</a></p>
+          {{/each}}
+          {{#each cc in email.cc_addresses}}
+            <p><a href="mailto:{{unbound cc}}" title="CC">{{unbound cc}}</a></p>
+          {{/each}}
+        </td>
+        <td>
+          {{#if email.post_url}}
+            <a href="{{email.post_url}}">{{email.subject}}</a>
+          {{else}}
+            {{email.subject}}
+          {{/if}}
+        </td>
+      </tr>
+    {{else}}
+      <tr><td colspan="4">{{i18n 'admin.email.incoming_emails.none'}}</td></tr>
+    {{/each}}
+
+  </table>
+{{/load-more}}
+
+{{conditional-loading-spinner condition=loading}}

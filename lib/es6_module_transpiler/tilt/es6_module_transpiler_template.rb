@@ -29,7 +29,7 @@ module Tilt
     end
 
     def self.create_new_context
-      ctx = V8::Context.new(timeout: 5000)
+      ctx = V8::Context.new(timeout: 10000)
       ctx.eval("var self = this; #{File.read(Babel::Transpiler.script_path)}")
       ctx.eval("module = {}; exports = {};");
       ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
@@ -74,6 +74,34 @@ module Tilt
       rval
     end
 
+    def whitelisted?(path)
+
+      @@whitelisted ||= Set.new(
+        ["discourse/models/nav-item",
+         "discourse/models/user-action",
+         "discourse/routes/discourse",
+         "discourse/models/category",
+         "discourse/models/trust-level",
+         "discourse/models/site",
+         "discourse/models/user",
+         "discourse/models/session",
+         "discourse/models/model",
+         "discourse/models/topic",
+         "discourse/models/post",
+         "discourse/views/grouped"]
+      )
+
+      @@whitelisted.include?(path) || path =~ /discourse\/mixins/
+    end
+
+    def babel_transpile(source)
+      klass = self.class
+      klass.protect do
+        klass.v8['console'] = Console.new("BABEL: babel-eval: ")
+        @output = klass.v8.eval(babel_source(source))
+      end
+    end
+
     def evaluate(scope, locals, &block)
       return @output if @output
 
@@ -86,7 +114,7 @@ module Tilt
       # For backwards compatibility with plugins, for now export the Global format too.
       # We should eventually have an upgrade system for plugins to use ES6 or some other
       # resolve based API.
-      if ENV['DISCOURSE_NO_CONSTANTS'].nil? &&
+      if whitelisted?(scope.logical_path) &&
         scope.logical_path =~ /(discourse|admin)\/(controllers|components|views|routes|mixins|models)\/(.*)/
 
         type = Regexp.last_match[2]
@@ -119,11 +147,15 @@ module Tilt
       @output
     end
 
+    def babel_source(source)
+      js_source = ::JSON.generate(source, quirks_mode: true)
+      "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping', 'es6.destructuring', 'es6.spread', 'es6.parameters', 'es6.templateLiterals', 'es6.regex.unicode', 'es7.decorators', 'es6.classes']})['code']"
+    end
+
     private
 
     def generate_source(scope)
-      js_source = ::JSON.generate(data, quirks_mode: true)
-      js_source = "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping', 'es6.destructuring', 'es6.spread', 'es6.parameters', 'es6.templateLiterals', 'es6.regex.unicode', 'es7.decorators']})['code']"
+      js_source = babel_source(data)
       "new module.exports.Compiler(#{js_source}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
     end
 

@@ -10,18 +10,27 @@ pl_PL:
     short_date_no_year: "D MMM"
     short_date: "D MMM RRRR"
     long_date: "D MMMM YYYY H:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d.%m.%Y"
+      short_no_year: "%-d %B"
+      date_only: "%-d %b %Y"
+  date:
+    month_names: [null, Styczeń, Luty, Marzec, Kwiecień, Maj, Czerwiec, Lipiec, Sierpień, Wrzesień, Październik, Listopad, Grudzień]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tematy"
   posts: "wpisy"
   loading: "Ładowanie"
   powered_by_html: 'Zasilane przez <a href="http://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
   log_in: "Logowanie"
-  via: "%{username} z %{site_name}"
-  is_reserved: "jest zarezerwowana"
   purge_reason: "Automatycznie usunięto jako porzucone, nieaktywne konto"
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   anonymous: "Anonim"
-  errors:
+  emails:
+    incoming:
+      default_subject: "Przychodzący email od %{email}"
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
@@ -69,6 +78,13 @@ pl_PL:
         other: '%{count} błędów uniemożliwiło zapisanie %{model}'
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
+    site_settings:
+      min_username_length_exists: "Nie możesz ustawić najkrótszej długości nazwy użytkownika powyżej najkrótszej nazwy użytkownika."
+      min_username_length_range: "Nie możesz ustawić minimum powyżej maksimum."
+      max_username_length_exists: "Nie możesz ustawić maksymalnej długości nazwy użytkownika poniżej najdłuższej nazwy użytkownika."
+      max_username_length_range: "Nie możesz ustawić maksimum poniżej minimum."
+      default_categories_already_selected: "Nie możesz wybrać kategorii użytej w innej liście."
+      s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "Wysłany plik powinien być w formacie CSV lub TXT."
   backup:
@@ -77,7 +93,7 @@ pl_PL:
     not_enough_space_on_disk: "Nie ma wystarczającej ilości wolnego miejsca, aby wczytać tę kopię zapasową."
   not_logged_in: "Aby to zrobić musisz się zalogować."
   not_found: "Żądany URL lub źródło nie mógł zostać znaleziony."
-  invalid_access: "Nie jesteś uprawniony by zobaczyć żądane źródło."
+  invalid_access: "Nie jesteś uprawniony, by zobaczyć żądane źródło."
   read_only_mode_enabled: "Strona jest w trybie tylko do odczytu. Możliwość interakcji jest wyłączona."
   too_many_replies:
     one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do 1 odpowiedzi w ramach  jednego tematu."
@@ -98,26 +114,6 @@ pl_PL:
       one: "1 odpowiedź"
       few: "%{count} odpowiedzi"
       other: "%{count} odpowiedzi"
-  too_many_mentions:
-    zero: "Przepraszamy, nie możesz odwoływać się do innych użytkowników."
-    one: "Przepraszamy, możesz odwołać się tylko do jednego użytkownika we wpisie."
-    other: "Przepraszamy, możesz odwołać się tylko do %{count} użytkowników we wpisie."
-  too_many_mentions_newuser:
-    zero: "Przepraszamy, nowi użytkownicy nie mogą odwoływać się do innych użytkowników."
-    one: "Przepraszamy, nowi użytkownicy mogą odwołać się tylko do jednego użytkownika we wpisie."
-    other: "Przepraszamy, nowi użytkownicy mogą odwołać się tylko do %{count} użytkowników we wpisie."
-  too_many_images:
-    zero: "Przepraszamy, nowi użytkownicy nie mogą dodawać zdjęć do wpisów."
-    one: "Przepraszamy, nowi użytkownicy mogą umieścić tylko jedno zdjęcie we wpisie."
-    other: "Przepraszamy, nowi użytkownicy mogą umieścić tylko %{count} zdjęć we wpisie."
-  too_many_attachments:
-    zero: "Nowi użytkownicy nie mogą dodawać załączników do postów."
-    one: "Nowi użytkownicy mogą dodać tylko jeden załącznik do posta."
-    other: "Nowi użytkownicy mogą dodać %{count} załączników do wpisu."
-  too_many_links:
-    zero: "Przepraszamy, nowi użytkownicy nie mogą umieszczać linków we wpisach."
-    one: "Przepraszamy, nowi użytkownicy mogą dodać tylko jeden link we wpisie."
-    other: "Przepraszamy, nowi użytkownicy mogą dodać tylko %{count} linków we wpisie."
   spamming_host: "Przepraszamy, nie możesz umieścić linka do tej strony."
   user_is_suspended: "Zawieszeni użytkownicy nie mogą wysyłać wiadomości."
   topic_not_found: "Coś poszło nie tak. Być może temat został zamknięty lub usunięty w międzyczasie?"
@@ -128,6 +124,7 @@ pl_PL:
   next_page: "następna strona →"
   prev_page: "← poprzednia strona"
   page_num: "Strona %{num}"
+  home_title: "Strona główna"
   topics_in_category: "Tematy w kategorii '%{category}'"
   rss_posts_in_topic: "Kanał RSS tematu '%{topic}'"
   rss_topics_in_category: "Kanał RSS tematów z kategorii '%{category}'"
@@ -165,6 +162,22 @@ pl_PL:
       other: "%{count} wpisów"
     new-topic: "Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowej dyskusji!**\n\n- Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?\n\n- Kto będzie tym zainteresowany? Dlaczego temat jest istotny?  Jakiego rodzaju odpowiedzi oczekujesz? \n\n- Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii o pokrewnej tematyce. \n\nAby dowiedzieć się więcej, [zobacz przewodnik społeczności](/guidelines). Ten panel pojawi się tylko przy pierwszym %{education_posts_text}.\n\n\n"
     new-reply: "Witaj na %{site_name} &mdash; **dziękujemy za zaangażowanie!**\n\n- Czy twoja odpowiedź wnosi coś pozytywnego do dyskusji?\n\n- Zachowuj się przyjaźnie w stosunku do innych.\n\n- Konstruktywna krytyka jest mile widziana, ale krytykujemy *pomysły*, a nie ludzi.\n\nWięcej informacji znajdziesz [w przewodniku społeczności](/guidelines). \nTen panel pojawi się tylko przy pisaniu pierwszych %{education_posts_text}.\n"
+    avatar: |
+      ### A może dodasz zdjęcie profilowe do swojego konta?
+
+      Otworzyłeś kilka tematów i napisałeś kilka odpowiedzi, ale twoje zdjęcie profilowe nie jest tak niezwykłe jak ty - to tylko litera.
+
+      Myślałeś o **[odwiedzeniu swojego profilu użytkownika](%{profile_path})** i załączeniu przedstawiającego cię zdjęcia?
+
+      Kiedy każdy ma unikatowe zdjęcie profilowe, łatwiej jest obserwować dyskusje i znaleźć interesujących ludzi do rozmów!
+    sequential_replies: |
+      ### Pomyśl o odpowiadaniu na kilka postów jednocześnie
+
+      Zamiast kilku kolejnych odpowiedzi do tematu, pomyśl o pojedynczej odpowiedzi, która zawierałaby cytaty z wcześniejszych postów lub wzmianki @imię.
+
+      Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>quote reply</b>.
+
+      Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych replik.
     dominating_topic: |
       ### Pozwól innym dołączyć do rozmowy
 
@@ -192,9 +205,6 @@ pl_PL:
       user_profile:
         bio_raw: "O mnie"
     errors:
-      messages:
-        is_invalid: "jest niewystarczająca – spróbuj ją rozwinąć"
-        has_already_been_used: "jest już użyty"
       models:
         topic:
           attributes:
@@ -215,6 +225,7 @@ pl_PL:
           attributes:
             hex:
               invalid: "nie jest poprawnym kolorem"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole O mnie w Twoim profilu jest obecnie puste, <a href='/users/%{username_lower}/preferences/about-me'>czy chcesz je wypełnić?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
@@ -250,13 +261,10 @@ pl_PL:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
-    replace_paragraph: "[Zamień ten pierwszy paragraf na krórki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go poniżej 200 znaków. Póki nie zmienisz tego tekstu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.]"
-    post_template: "%{replace_paragraph}\n\nW kolejnych paragrafach możesz umieścić dłuższy opis, oraz opisać zasady i zwyczaje jakie będą obowiązywać w tej kategorii. \n\nKilka rzeczy do rozważenia:\n\n- Czemu ma służyć ta kategoria? Dlaczego inni powinni wybierać tę kategorię dla swoich tematów?\n\n- Czym się różni od innych kategorii, które już mamy?\n\n- Czy potrzebujemy tej kategorii?\n\n- Czy powinniśmy ją połączyć z jakąś inną kategorią, lub podzielić na więcej kategorii?\n"
     errors:
       uncategorized_parent: "Inne nie mogą być podkategorią innej kategorii."
       self_parent: "Podkategoria nie może być swoim rodzicem"
       depth: "Nie możesz umieścić subkategorii w innej subkategorii"
-      email_in_already_exist: "Przychodzący adres email '%{email_in}' jest teraz używany w tej '%{category_name}' kategorii. "
     cannot_delete:
       uncategorized: "Nie można usunąć kategorii Inne"
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
@@ -270,16 +278,20 @@ pl_PL:
       title: "nowy"
     basic:
       title: "początkujący"
-    regular:
-      title: "zwykły"
-    leader:
-      title: "regularny"
-    elder:
-      title: "starszyzna"
     change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}' - jeśli chcesz to zmienić, najpierw zablokuj poziom zaufania temu użytkownikowi."
   rate_limiter:
-    slow_down: "Ta akcja została wykonana zbyt wiele razy, próbuj ponownie za jakiś czas"
+    slow_down: "Powtórzyłeś to działanie zbyt wiele razy, spróbuj ponownie później."
     too_many_requests: "Liczba wykonań tej czynności w ciągu dnia jest ograniczona. Odczekaj %{time_left} przed ponowną próbą."
+    by_type:
+      first_day_replies_per_day: "Osiągnąłeś maksymalną liczbę odpowiedzi, jakie może napisać nowy użytkownik pierwszego dnia. Musisz odczekać %{time_left} zanim znów spróbujesz."
+      first_day_topics_per_day: "Osiągnąłeś maksymalną liczbę tematów, jakie może napisać nowy użytkownik pierwszego dnia. Musisz odczekać %{time_left}, zanim znów spróbujesz."
+      create_topic: "Zbyt szybko tworzysz tematy. Musisz poczekać %{time_left}, zanim znów spróbujesz."
+      create_post: "Odpowiadasz zbyt szybko. Musisz poczekać %{time_left}, zanim znów spróbujesz."
+      topics_per_day: "Osiągnąłeś maksymalną liczbę nowych tematów na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
+      pms_per_day: "Osiągnąłeś maksymalną liczbę wiadomości na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
+      create_like: "Osiągnąłeś maksymalną liczbę lajków na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
+      create_bookmark: "Wyczerpałeś na dziś możliwość dodawania zakładek. Musisz poczekać %{time_left}, zanim znów spróbujesz."
+      edit_post: "Wyczerpałeś na dziś możliwość edytowania. Musisz poczekać %{time_left}, zanim znów spróbujesz."
     hours:
       one: "1 godzina"
       few: "%{count} godziny"
@@ -386,6 +398,7 @@ pl_PL:
         few: "prawie %{count} lata temu"
         other: "prawie %{count} lat temu"
   password_reset:
+    no_token: "Przepraszamy, ten link do zmiany hasła jest zbyt stary. Wybierz przycisk \"Zaloguj\", a następnie \"Zapomniałem hasła\", by uzyskać nowy link."
     choose_new: "Wybierz nowe hasło"
     choose: "Wprowadź hasło"
     update: 'Zmień hasło'
@@ -399,6 +412,7 @@ pl_PL:
     please_continue: "Przejdź do %{site_name}"
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
   activation:
+    action: "Kliknij, by aktywować swoje konto."
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne ?"
     please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
     continue_button: "Przejdź do %{site_name}"
@@ -421,16 +435,11 @@ pl_PL:
       description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
-      title: 'Powiadom @{{username}}'
-      description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
       long_form: 'użytkownik został powiadomiony'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Coś innego"
-      description: 'Ten post wymaga uwagi moderatora z powodu nie uwzględnionego na liście powyżej.'
-      long_form: 'oznaczył to dla uwagi moderatora'
-      email_title: 'Wpis w "%{title}" wymaga uwagi moderatorów'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Zakładka'
@@ -455,7 +464,6 @@ pl_PL:
       long_form: 'oflagowano jako niewłaściwe'
     notify_moderators:
       title: "Coś innego"
-      description: 'Ten temat wymaga interwencji moderatora z uwagi na niezgodność z <a href="/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a> lub z innego, niewymienionego tu powodu.'
       long_form: 'oznaczył to dla uwagi moderatora'
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
@@ -466,6 +474,7 @@ pl_PL:
     regular:
       title: "Zwykły temat"
     banner:
+      title: "Ustaw jako baner"
       message:
         make: "Ten temat został ustawiony jako baner. Będzie pojawiać się na górze każdej strony do czasu zamknięcia przez użytkownika."
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
@@ -490,6 +499,10 @@ pl_PL:
       title: "Nowi Użytkownicy"
       xaxis: "Dzień"
       yaxis: "Liczba nowych użytkowników"
+    profile_views:
+      title: "Wyświetlenia profilu użytkownika"
+      xaxis: "Dzień"
+      yaxis: "Liczba wyświetleń profilów użytkowników"
     topics:
       title: "Tematy"
       xaxis: "Dzień"
@@ -574,9 +587,13 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Razem żądań API"
     page_view_logged_in_mobile_reqs:
+      title: "Zalogowany w zapytaniach API "
       xaxis: "Dzień"
+      yaxis: "Urządzenie zalogowane w zapytaniach API"
     page_view_anon_mobile_reqs:
+      title: "Anonimowe zapytania do API"
       xaxis: "Dzień"
+      yaxis: "Mobilne anonimowe zapytania do API"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
@@ -619,6 +636,7 @@ pl_PL:
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
     gc_warning: 'Twój serwer wykorzystuje domyślne ustawienia odśmiecacza ruby, który nie da Ci optymalnej wydajności. Przeczytaj ten temat o optymalizacji wydajności: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
+    queue_size_warning: 'Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq.'
     memory_warning: 'Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany.'
     google_oauth2_config_warning: 'Serwis umożliwia rejestrację i logowanie poprzez Google OAuth2 (enable_google_oauth2_logins), ale ''client id'' oraz ''client secret'' nie są jeszcze ustawione. Przejdź do <a href="/admin/site_settings">Ustawień</a> i wprowadź te wartości. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
     facebook_config_warning: 'Serwer jest skonfigurowany by pozwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator i sekret aplikacji nie są ustawione. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
@@ -635,37 +653,6 @@ pl_PL:
     consumer_email_warning: "Twój serwis jest skonfigurowany by używać Gmaila (lub innego konsumenckiego serwisu poczty) do wysyłania emaili. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ogranicza jak dużo wiadomości możesz wysłać</a>. Rozważ wykorzystanie dostawcy serwisu pocztowego jak mandrill.com by zagwarantować dostarczanie poczty."
     site_contact_username_warning: "Wprowadź nazwę użytkownika zespołu, aby wysłać ważny szablon automatycznej wiadomości. Zaktualizuj site_contact_username w <a href='/admin/site_settings'> Ustawieniach Strony </a>"
     notification_email_warning: "Emaile z powiadomieniami nie zostały wysłane z prawidłowego adresu email na twojej domenie; dostawca usługi email może być niekonsekwentny i nierzetelny. Ustaw prawidłowy email w notification_email w <a href='/admin/site_settings'>Ustawieniach Strony</a>."
-  content_types:
-    education_new_reply:
-      title: "Edukacja nowych użytkowników: Pierwsze odpowiedzi"
-      description: "Okienko z wskazówkami automatycznie wyświetlane nad panelem pisania gdy nowi użytkownicy zaczynają pisać swoje pierwsze 2 odpowiedzi."
-    education_new_topic:
-      title: "Edukacja nowych użytkowników: Pierwsze tematy"
-      description: "Okienko z wskazówkami automatycznie wyświetlane nad panelem pisania gdy nowi użytkownicy rozpoczynają swoje pierwsze 2 tematy."
-    usage_tips:
-      title: "Wiadomość powitalna"
-      description: "Przewodnik i inne informacje dla nowych użytkowników."
-    welcome_user:
-      title: "Przywitanie: Nowy użytkownik"
-      description: "Wiadomość wysyłana automatycznie do wszystkich nowych użytkowników zaraz po ich rejestracji."
-    welcome_invite:
-      title: "Przywitanie: Zaproszony użytkownik"
-      description: "Wiadomość wysyłana automatycznie do nowych użytkowników po zaakceptowaniu zaproszenia od innego użytkownika."
-    login_required_welcome_message:
-      title: "Wymagane logowanie: wiadomość powitalna"
-      description: "Wiadomość powitalna wyświetlana niezalogowanym użytkownikom, gdy ustawienie 'login required' jest włączone."
-    login_required:
-      title: "Login Required: Homepage"
-      description: "The text displayed for unauthorized users when login is required on the site."
-    head:
-      title: "Nagłówki HTML"
-      description: "Kod HTML jaki zostanie umieszczony między tagami <head></head>."
-    top:
-      title: "Nagłówek każdej strony"
-      description: "Kod HTML jaki zostanie dołączony na górze każdej strony (po nagłówku, przed nawigacją lub tytułem tematu)."
-    bottom:
-      title: "Stopka każdej strony"
-      description: "Kod HTML, który zostanie załączony przed tagiem </body>."
   site_settings:
     censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
@@ -679,7 +666,7 @@ pl_PL:
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
     min_private_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
-    uncategorized_description: "Znajdują się tu wątki którym jeszcze nie przypisano odpowiedniej kategorii."
+    allow_uncategorized_topics: "Zezwól na tworzenie tematów bez kategorii. UWAGA: jeśli jest jakiś nieskategoryzowany temat, musisz go przypisać do kategorii, zanim wyłączysz tę opcję."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania  dopóki nowy użytkownik nie napisze tylu wpisów."
@@ -692,7 +679,6 @@ pl_PL:
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
     disabled_image_download_domains: "Zdalne grafiki z tych domen nie będą pobierane."
-    ninja_edit_window: "Przez tyle sekund po utworzeniu nowego wpisu jego kolejne edycje nie będą tworzyć nowych wersji w historii wpisu."
     post_edit_time_limit: "Autor może edytować lub usunąć swój wpis przez tyle minut po jego utworzeniu. Ustawienie 0 oznacza 'zawsze'."
     edit_history_visible_to_public: "Pozwól wszystkim przeglądać poprzednie wersje edytowanych wpisów. Gdy wyłączone, jedynie obsługa/staff może."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
@@ -705,6 +691,7 @@ pl_PL:
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
     onebox_domains_whitelist: "Lista domen dla których włączony jest oneboxing; te domeny powinny wspierać OpenGraph lub oEmbed. Można to sprawdzić na  http://iframely.com/debug"
+    logo_url: "Zdjęcie logo w lewym górnym rogu twojej strony powinno mieć kształt szerokiego prostokąta. Jeśli zostawisz miejsce puste, wyświetlany będzie tytuł strony."
     apple_touch_icon_url: "Ikona używana przez urządzenia Apple. Rekomendowany wymiar to 144px na 144px."
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -713,11 +700,18 @@ pl_PL:
     summary_likes_required: "Minimalna liczba polubień w temacie zanim 'Podsumowanie tematu' jest dostępne"
     summary_percent_filter: "Gdy użytkownik kliknie na 'Podsumowaniu tematu', pokaż % najlepszych wpisów"
     summary_max_results: "Maksymalna liczba wpisów w 'Podsumowaniu tematu'"
-    enable_private_messages: "Zezwalaj użytkownikom o 1 poziomie zaufania na tworzenie wiadomości i odpowiadanie na nie."
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
+    cooldown_minutes_after_hiding_posts: "Liczba minut, ile musi odczekać użytkownik, zanim będzie mógł edytować post ukryty w wyniku oflagowania przez społeczność"
+    max_topics_in_first_day: "Maksymalna liczba tematów, jakie może stworzyć użytkownik pierwszego dnia na tej stronie."
+    max_replies_in_first_day: "Maksymalna liczba odpowiedzi, jakie może napisać użytkownik pierwszego dnia na tej stronie."
+    tl2_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl2 (członek), mnożąc przez tę liczbę"
+    tl3_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl3 (użytkownik stały), mnożąc przez tę liczbę"
+    tl4_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl4 (lider), mnożąc przez tę liczbę"
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
+    flag_sockpuppets: "Jeśli nowy użytkownik odpowiada na dany temat z tego samego adresu IP co nowy użytkownik, który założył temat, oznacz ich posty jako potencjalny spam."
+    post_undo_action_window_mins: "Przez tyle minut użytkownicy mogą cofnąć swoje ostatnie działania przy danym poście (lajki, flagowanie, itd.)."
     ga_tracking_code: "Identyfikator Google analytics (ga.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
@@ -727,17 +721,26 @@ pl_PL:
     post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     track_external_right_clicks: "Śledź zewnętrzne linki kliknięte prawym klawiszem (np. otwierane w nowej zakładce). Domyślnie wyłączone, gdyż wymaga nadpisywania URLi."
+    send_welcome_message: "Wyślij wszystkim nowym użytkownikom powitalną wiadomość z krótkim przewodnikiem."
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych wątków"
     topics_per_period_in_top_page: "Liczba tematów wyświetlanych w widoku 'Pokaż więcej'  na ekranie popularnych wątków."
+    redirect_users_to_top_page: "Automatycznie kieruj nowych i długo nieobecnych użytkowników na stronę główną."
+    show_email_on_profile: "Pokazuj email użytkownika w jego profilu (widoczny jedynie dla użytkownika i personelu)."
     email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak"
+    log_out_strict: "Po wylogowaniu wyloguj WSZYSTKIE sesje użytkownika na wszystkich urządzeniach."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_only: "Publiczna rejestracja jest wyłączona: wszyscy nowi użytkownicy muszą zostać zaproszeni przez innych użytkowników lub zespół."
     login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
+    min_username_length: "Minimalna długość nazwy użytkownika w znakach."
+    max_username_length: "Maksymalna długość nazwy użytkownika w znakach."
+    reserved_usernames: "Niedozwolone nazwy użytkowników."
     min_password_length: "Minimalna długość hasła."
+    block_common_passwords: "Nie zezwalaj na hasła znajdujące się w grupie 10 000 najpopularniejszych haseł."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
+    enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
     enable_yahoo_logins: "Enable Yahoo authentication"
     google_oauth2_client_id: "Client ID twojej aplikacji w Google"
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
@@ -754,6 +757,10 @@ pl_PL:
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Wyświetlaj dodatkowe identyfikatory tłumaczeń w treści etykiet"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
+    rate_limit_create_topic: "Po otworzeniu tematu użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
+    rate_limit_create_post: "Po napisaniu posta użytkownicy muszą odczekać (n) sekund, zanim napiszą inny post."
+    rate_limit_new_user_create_topic: "Po otworzeniu tematu nowi użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
+    rate_limit_new_user_create_post: "Po napisaniu posta nowi użytkownicy muszą odczekać (n) sekund, zanim napiszą inny post."
     max_likes_per_day: "Maksymalna liczba polubień per użytkownik per dzień"
     max_flags_per_day: "Maksymalna liczba oflagowań per użytkownik per dzień."
     max_bookmarks_per_day: "Maksymalna liczba zakładek per użytkownik per dzień."
@@ -761,6 +768,7 @@ pl_PL:
     max_topics_per_day: "Maksymalna liczba tematów jakie użytkownik może stworzyć jednego dnia."
     max_private_messages_per_day: "Maksymalna liczba wiadomości jakie użytkownik może wysłać jednego dnia."
     max_invites_per_day: "Maksymalna liczba zaproszeń jakie użytkownik może wysłać jednego dnia."
+    max_topic_invitations_per_day: "Maksymalna dzienna liczba zaproszeń do tematu, jakie może wysłać użytkownik."
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
     avatar_sizes: "Lista automatycznie wygenerowanych rozmiarów awatarów."
@@ -771,10 +779,21 @@ pl_PL:
     tl2_requires_topics_entered: "Jak wiele tematów musi odwiedzić użytkownik, przed promocją na 2-gi poziom zaufania."
     tl2_requires_read_posts: "Jak wiele postów musi przeczytać użytkownik, przed promocją na 2-gi poziom zaufania."
     tl2_requires_time_spent_mins: "Jak wiele minut musi spędzić użytkownik czytając posty, przed promocją na 2-gi poziom zaufania."
+    tl2_requires_days_visited: "Ile dni użytkownik musi odwiedzać stronę, zanim otrzyma promocję na 2 poziom zaufania. "
+    tl2_requires_likes_received: "Ile lajków musi otrzymać użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
+    tl2_requires_likes_given: "Ile lajków musi dać użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
+    tl2_requires_topic_reply_count: "Na ile tematów musi odpowiedzieć użytkownik, zanim otrzyma promocję na 2 poziom zaufania."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    newuser_max_links: "Ile linków może dodać nowy użytkownik do posta."
+    newuser_max_images: "Ile obrazów może dodać nowy użytkownik do posta."
+    newuser_max_attachments: "Ile załączników może dodać nowy użytkownik do posta."
     newuser_max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla nowych użytkowników)."
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
+    email_time_window_mins: "Odczekaj (n) minut przed wysłaniem maila z powiadomieniem, aby dać użytkownikom szansę na edytowanie i ukończenie postów."
+    title_max_word_length: "Maksymalna dozwolona długość słowa, w znakach, jako tytuł tematu."
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
+    min_title_similar_length: "Minimalna długość tytułu zanim zostanie sprawdzony z podobnymi tematami."
+    min_body_similar_length: "Minimalna długość treści posta zanim zostanie sprawdzony z podobnymi tematami."
     category_colors: "Lista kolorów w formacie hex do użycia w etykietach kategorii."
     category_style: "Styl etykiet kategorii"
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
@@ -791,20 +810,32 @@ pl_PL:
     email_editable: "Allow users to change their e-mail address after registration."
     digest_topics: "Maksymalna liczba tematów w podsumowaniu e-mail."
     digest_min_excerpt_length: "Minimalny wycinek wpisu (liczba znaków) w podsumowaniu e-mail."
-    suppress_digest_email_after_days: "Nie wysyłaj podsumowań e-mail użytkownikom, którzy nie odwiedzili serwisu dłużej niż (n) dni."
     disable_digest_emails: "Wyłącz wysyłanie podsumowania e-mail wszystkim uzytkownikom. "
+    allow_anonymous_posting: "Zezwól użytkownikom na przechodzenie w tryb anonimowości."
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
+    full_name_required: "Pełne imię i nazwisko to wymagane pole w profilu użytkownika."
+    display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego postach, a także jego @nazwę użytkownika."
     enable_emoji: "Włącz obsługę emoji"
     emoji_set: "Jaki jest twój preferowany styl emoji?"
+    approve_unless_trust_level: "Posty użytkowników poniżej tego poziomu zaufania muszą być zatwierdzane"
+    default_categories_watching: "Lista kategorii obserwowanych domyślnie."
+    default_categories_tracking: "Lista kategorii śledzonych domyślnie."
     errors:
       invalid_email: "Nieprawidłowy adres email."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
+      invalid_integer_min_max: "Wartość musi być między %{min} i %{max}."
+      invalid_integer_min: "Wartość musi wynosić %{min} albo więcej."
+      invalid_integer_max: "Wartość nie może być wyższa niż %{max}."
       invalid_integer: "Wartość musi być liczbą całkowitą."
       regex_mismatch: "Wartość nie jest zgodna z wymaganym formatem."
       must_include_latest: "Górne menu musi zawierać zakładkę 'aktualne'."
       invalid_string: "Nieprawidłowa wartość."
+      invalid_string_min_max: "Musi być między %{min} i %{max} znaków."
+      invalid_string_min: "Musi być co najmniej %{min} znaków."
+      invalid_string_max: "Musi być nie więcej niż %{max} znaków."
+      invalid_reply_by_email_address: "Wartość musi zawierać '%{reply_key}' i musi być inna niż mail z powiadomieniem."
   notification_types:
     mentioned: "%{display_username} wspomina o Tobie w %{link}"
     liked: "%{display_username} polubił(-a) Twój wpis w %{link}"
@@ -813,7 +844,10 @@ pl_PL:
     edited: "%{display_username} edytuje Twój wpis w %{link}"
     posted: "%{display_username} pisze w %{link}"
     moved_post: "%{display_username} przenosi twój wpis do %{link}"
+    private_message: "%{display_username} wysłał ci wiadomość: %{link}"
+    invited_to_private_message: "%{display_username} zaprosił cię do wiadomości: %{link}"
     invitee_accepted: "%{display_username} przyjął(-ęła) Twoje zaproszenie"
+    linked: "%{display_username} powiązał cię z %{link}"
     granted_badge: "Zdobywasz %{link}"
   search:
     within_post: "#%{post_number} przez %{username}"
@@ -821,12 +855,15 @@ pl_PL:
       category: 'Kategorie'
       topic: 'Wyniki'
       user: 'Użytkownicy'
-  sso:
-    account_not_approved: "Konto czeka na zatwierdzenie. Dostaniesz powiadomienie emailem, kiedy to się stanie."
   original_poster: "Autor pierwszego wpisu"
   most_posts: "Większość postów"
   most_recent_poster: "Autor najnowszego wpisu"
   frequent_poster: "Aktywny uczestnik"
+  redirected_to_top_reasons:
+    new_user: "Witamy w naszej społeczności! Oto najpopularniejsze najnowsze tematy."
+    not_seen_in_a_month: "Witamy ponownie! Długo tu nie zaglądałeś. Oto najpopularniejsze tematy z czasów, kiedy cię tu nie było."
+  change_owner:
+    deleted_user: "usunięty użytkownik"
   topic_statuses:
     archived_enabled: "Temat został zarchiwizowany. Został zablokowany i nie może być zmieniany. "
     archived_disabled: "Temat został przywrócony z archiwum. Został odblokowany i może ponownie być zmieniany."
@@ -857,6 +894,7 @@ pl_PL:
       few: "Ten temat został automatycznie zamknięty %{count} minuty po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
       other: "Ten temat został automatycznie zamknięty %{count} minut po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
     autoclosed_disabled: "Temat został otwarty. Dodawanie odpowiedzi jest ponownie możliwe."
+    autoclosed_disabled_lastpost: "Temat został otwarty. Pisanie odpowiedzi jest możliwe."
     pinned_enabled: "Temat został przypięty. Będzie pojawiać się na początku swojej kategorii dopóki nie zostanie odpięty przez obsługę lub prywatnie przez użytkownika."
     pinned_disabled: "Temat został odpięty. Już nie będzie pojawiać się na początku swojej kategorii."
     pinned_globally_enabled: "Temat został przypięty globalnie. Będzie pojawiać się na początku swojej kategorii i wszystkich list dopóki nie zostanie odpięty przez obsługę lub prywatnie przez użytkownika."
@@ -870,11 +908,19 @@ pl_PL:
     active: "Twoje konto zostało aktywowane i jest gotowe do użycia."
     activate_email: "<p>Prawie gotowe! Wysłaliśmy email aktywacyjny na adres <b>%{email}</b>. Postępuj zgodnie z instrukcją z tego emaila, żeby dokończyć ten proces.</p><p>Jeśli email nie dotrze do Ciebie, sprawdź folder ze spamem, lub zaloguj sie jeszcze raz, żeby wysłać go ponownie.</p>"
     not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy do Ciebie email aktywacyjny. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
+    not_allowed_from_ip_address: "Nie możesz się zalogować jako %{username} z tego adresu IP."
+    admin_not_allowed_from_ip_address: "Nie możesz zalogować się jako administrator z tego adresu IP."
+    suspended: "Nie możesz się zalogować aż do %{date}."
+    suspended_with_reason: "Konto zawieszone do %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
+    omniauth_error: "Przepraszamy, pojawił się błąd autoryzacji twojego konta. Sprawdź, czy zatwierdziłeś autoryzację."
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
+    new_registrations_disabled: "Aktualnie nie jest możliwe zarejestrowanie nowego konta."
     password_too_long: "Hasła są ograniczone do 200 znaków."
+    email_too_long: "Podałeś zbyt długi adres email. Nazwa skrzynki pocztowej nie może być dłuższa niż 254 znaki, a nazwa domeny nie może zawierać więcej niż 253 znaki."
+    reserved_username: "Niedozwolona nazwa użytkownika."
     missing_user_field: "Nie wypełniłeś wszystkich pól użytkownika"
     close_window: "Uwierzytelnianie zakończone. Aby kontynuować, zamknij to okno."
   user:
@@ -885,10 +931,22 @@ pl_PL:
       characters: "może zawierać tylko litery, cyfry i podkreślenia"
       unique: "musi być unikalna"
       blank: "musi zostać podana"
+      must_not_contain_two_special_chars_in_seq: "nie może zawierać sekwencji 2 lub więcej znaków specjalnych (.-_)"
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "is not allowed."
+    ip_address:
+      blocked: "Z twojego adresu IP nowe rejestracje nie są możliwe."
+      max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
+  flags_reminder:
+    subject_template:
+      one: "1 flaga oczekuje na reakcję"
+      few: "%{count} flagi oczekują na reakcję"
+      other: "%{count} flagi oczekują na reakcję"
+  invite_mailer:
+    subject_template: "%{invitee_name} zaprosił cię do '%{topic_title}' na %{site_domain_name}"
   invite_forum_mailer:
+    subject_template: "%{invitee_name} zaprosił cię do dołączenia do %{site_domain_name}"
     text_body_template: |
       %{invitee_name} wysłał Tobie zaproszenie
 
@@ -903,25 +961,32 @@ pl_PL:
       To zaproszenie zostało wysłane przez zaufanego użytkownika, nie musisz się logować.
   invite_password_instructions:
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
+    text_body_template: |+
+      Dziękujemy za zaakceptowanie zaproszenia do %{site_name} -- witamy!
+
+
+
+      Kliknij ten link, by wybrać hasło:
+
+      %{base_url}/users/password-reset/%{email_token}
+
+
+
+      (Jeśli powyższy link wygasł, wybierz "Zapomniałem hasła", logując się za pomocą adresu email.)
+
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   new_version_mailer:
     subject_template: "[%{site_name}] Aktualizacja do nowej wersji Discourse jest dostępna."
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] dostępna aktualizacja"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Flagi dodane godzinę temu."
-      few: "Flagi dodane ponad %{count} godziny temu."
-      other: "Flagi dodane ponad %{count} godzin temu."
-    post_number: "wpis"
-    subject_template:
-      one: "1 flaga oczekuje na reakcję"
-      few: "%{count} flagi oczekują na reakcję"
-      other: "%{count} flagi oczekują na reakcję"
   flag_reasons:
     inappropriate: "Twój wpis został oznaczony jako  **nieodpowiedni**: społeczność uznała, że zbyt agresywny lub niezgodny z [jej wytycznymi](/guidelines)."
+    spam: "Twój post został oznaczony jako **spam**: społeczność czuje, że jest to reklama, czyli coś nadmiernie promującego, a nie użytecznego czy odnoszącego się do tematu."
+    notify_moderators: "Twój post został oznaczony jako **do uwagi moderatora**: społeczność czuje, że post wymaga ręcznej interwencji członka personelu."
   flags_dispositions:
+    agreed: "Dziękujemy za zwrócenie uwagi. Zgadzamy się, że jest to problem i przyjrzymy się temu. "
+    agreed_and_deleted: "Dziękujemy za zwrócenie uwagi. Zgadzamy się, że jest to problem i post został usunięty. "
     disagreed: "Dziękujemy za zwrócenie uwagi. Zajmiemy się tym wkrótce."
     deferred: "Dziękujemy za zwrócenie uwagi. Zajmiemy się tym wkrótce."
     deferred_and_deleted: "Dziękujemy za zwrócenie uwagi. Wpis został usunięty."
@@ -929,6 +994,20 @@ pl_PL:
   system_messages:
     post_hidden:
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
+      text_body_template: |
+        Witamy,
+
+        To automatyczna wiadomość od %{site_name}, by poinformować Cię, że Twój post został ukryty.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Wielu członków społeczności oznaczyło ten post przed jego ukryciem, zatem prosimy Cię, byś zastanowił się, jak możesz zrewidować swoje stanowisko, uwzględniając ich opinię. **Możesz edytować post po %{edit_delay} minutach, po czym będzie on znów widoczny.
+
+        Jednakże jeśli post został ukryty przez społeczność po raz drugi, pozostanie taki, dopóki nie zajmie się nim personel - za tym mogą iść dalsze działania, jak możliwe zawieszenie Twojego konta.
+
+        Aby uzyskać informacje na temat dalszego postępowania, przeczytaj [wytyczne dla społeczności] (%{base_url}/guidelines).
     welcome_user:
       subject_template: "Witaj na %{site_name}!"
     welcome_invite:
@@ -1011,54 +1090,17 @@ pl_PL:
     unsubscribe:
       title: "Wypisz"
       description: "Nie chcesz otrzymywać tych emaili? Nie ma problemu! Kliknij poniżej by wypisać się natychmiast:"
-    reply_by_email: "Aby odpowiedzieć odpisz na ten email lub otwórz %{base_url}%{url} w swojej przeglądarce."
-    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PW] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       subject_template: "[%{site_name}] Podsumowanie"
       new_activity: "Nowa aktywność w twoich tematach i wpisach:"
@@ -1092,15 +1134,28 @@ pl_PL:
 
         Kliknij na linku poniżej, aby ustawić swoje hasło:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] Potwierdź nowy adres email"
-      text_body_template: |
-        Potwierdź Twój nowy adres email na forum %{site_name} przez kliknięcie na poniższy link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
+      text_body_template: |+
+        Witamy na %{site_name}!
+
+        Nasz personel zatwierdził twoje konto na %{site_name}.
+
+        Kliknij na podany link, aby potwierdzić i aktywować swoje nowe konto:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Jeśli podany link nie działa, spróbuj skopiować go i przykleić w pasku adresów swojej wyszukiwarki.
+
+        %{new_user_tips}
+
+        Wierzymy, że [cywilizowana dyskusja](%{base_url}/guidelines) jest zawsze możliwa.
+
+        Baw się dobrze!
+
+        (Jeśli potrzebujesz skontaktować się z [członkiem zespołu](%{base_url}/about) jako nowy użytkownik, odpowiedz na tę wiadomość.)
+
     signup:
+      subject_template: "[%{site_name}] Potwierdź swoje nowe konto"
       text_body_template: |
         Witaj na %{site_name}!
 
@@ -1109,13 +1164,13 @@ pl_PL:
 
         Jeśli powyższy link nie jest klikalny, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
   page_not_found:
-    title: "Strona, którą chciałeś odwiedzić, nie istnieje lub jest prywatna."
     popular_topics: "Popularne"
     recent_topics: "Ostatnie"
     see_more: "Więcej"
     search_title: "Szukaj w serwisie"
     search_google: "Google"
   terms_of_service:
+    title: "Warunki użytkowania"
     signup_form_message: 'Przeczytałem i zgadzam się z <a href="/tos" target="_blank">Regulaminem Serwisu</a>.'
   deleted: 'usunięte'
   upload:
@@ -1130,6 +1185,7 @@ pl_PL:
     no_user: "Nie można znaleźć użytkownika z ID %{user_id}"
     post_deleted: "Wpis został usunięty przez autora"
     user_suspended: "użytkownik został zawieszony"
+    already_read: "użytkownik przeczytał ten post"
   color_schemes:
     base_theme_name: "Podstawa"
   guidelines: "Przewodnik"
@@ -1156,3 +1212,8 @@ pl_PL:
   performance_report:
     initial_post_raw: 'Ten temat zawiera codzienne raporty wydajności dla twojej witryny. '
     initial_topic_title: 'Testy wydajności witryny. '
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

@@ -16,12 +16,10 @@ nb_NO:
   loading: "Laster"
   powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript på'
   log_in: "Logg inn"
-  via: "%{username} via %{site_name}"
-  is_reserved: "er reservert"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "er begrenset til %{max} karakterer; du brukte %{length}."
@@ -37,8 +35,10 @@ nb_NO:
       exclusion: er reservert
       greater_than: må være større enn %{count}
       greater_than_or_equal_to: må være lik eller større enn %{count}
+      has_already_been_used: "har allerede blitt brukt"
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
+      is_invalid: "er ugyldig; prøv å være litt mer beskrivende"
       less_than: må være mindre enn %{count}
       less_than_or_equal_to: må være lik eller mindre enn %{count}
       not_a_number: er ikke et nummer
@@ -65,6 +65,8 @@ nb_NO:
         other: '%{count} feil forhindret lagring av %{model}'
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
+    site_settings:
+      min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
   bulk_invite:
     file_should_be_csv: "Den opplastede filen må være i .csv eller .txt format."
   backup:
@@ -75,6 +77,7 @@ nb_NO:
   not_found: "Den etterspurte URL eller ressurs ble ikke funnet"
   invalid_access: "Du har ingen tilgang til denne resurssen."
   read_only_mode_enabled: "Siden er i skrivebeskyttet modus. Alle interaksjoner er utilgjengelige."
+  likes: "Likes"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme emnet."
     other: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme emnet."
@@ -91,26 +94,6 @@ nb_NO:
     replies:
       one: "1 svar"
       other: "%{count} svar"
-  too_many_mentions:
-    zero: "Beklager, du kan ikke nevne andre brukere."
-    one: "Beklager, du kan bare nevne én annen bruker i et innlegg."
-    other: "Beklager, du kan bare nevne %{count} brukere i et innlegg."
-  too_many_mentions_newuser:
-    zero: "Beklager, nye brukere kan ikke nevne andre brukere."
-    one: "Beklager, nye brukere kan bare nevne én annen bruker i et innlegg."
-    other: "Beklager, nye brukere kan bare nevne %{count} brukere i et innlegg."
-  too_many_images:
-    zero: "Beklager, nye brukere kan ikke legge til bilder i et innlegg."
-    one: "Beklager, nye brukere kan bare legge til 1 bilde i et innlegg."
-    other: "Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg."
-  too_many_attachments:
-    zero: "Beklager, nye brukere kan ikke laste opp vedlegg til et innlegg."
-    one: "Beklager, nye brukere kan bare laste opp 1 vedlegg til et innlegg."
-    other: "Beklager, nye brukere kan bare laste opp %{count} vedlegg til et innlegg."
-  too_many_links:
-    zero: "Beklager, nye brukere kan ikke legge til lenker i et innlegg."
-    one: "Beklager, nye brukere kan bare legge inn en lenke per innlegg."
-    other: "Beklager, nye brukere kan bare legge til %{count} lenker i et innlegg."
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utviste brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet har blitt lukket eller slettet samtidig som du har sett på det?"
@@ -156,6 +139,16 @@ nb_NO:
     until_posts:
       one: "1 innlegg"
       other: "%{count} innlegg"
+    new-topic: |
+      Velkommen til %{site_name} &mdash; **takk for at du startet et nytt innlegg!**
+
+      - Høres tittelen på innlegget interessant ut hvis du leser det høyt? Er det en god oppsummering?
+
+      - Hvem vil være interessert i dette? Hvorfor betyr det noe? Hva slags respons er du ute etter?
+
+      - Bruk relevante begreper i emnet så andre kan *finne* det. Venligst velg en kategori for å gruppere emnet ditt med andre liknende emner.
+
+      [Se våre retningslinjer](/guidelines) for mer informasjon. Denne meldingen vises kun for ditt første %{education_posts_text}.
     new-reply: |
       Velkommen til %{site_name} &mdash; **takk for bidraget!**
 
@@ -201,9 +194,6 @@ nb_NO:
       user_profile:
         bio_raw: "Om meg"
     errors:
-      messages:
-        is_invalid: "er ugyldig; prøv å være litt mer beskrivende"
-        has_already_been_used: "har allerede blitt brukt"
       models:
         topic:
           attributes:
@@ -224,6 +214,7 @@ nb_NO:
           attributes:
             hex:
               invalid: "er ikke en gyldig farge"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Om meg-feltet på din profil er for øyeblikket blankt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
@@ -259,7 +250,6 @@ nb_NO:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorien %{category} "
-    replace_paragraph: "[Erstatt dette første avsnittet med en kort beskrivelse av din nye kategori. Denne veiledningen vil vises i kategorivelgeren så prøv å hold den kortere enn 200 tegn. Frem til du redigerer denne teksten eller oppretter emner vil ikke denne kategorien vises på kategorisiden.]"
     errors:
       uncategorized_parent: "Ukategorisert kan ikke ha en foreldrekategori"
       self_parent: "En underkategori kan ikke være underlagt seg selv"
@@ -276,14 +266,9 @@ nb_NO:
       title: "ny bruker"
     basic:
       title: " bruker"
-    regular:
+    member:
       title: "medlem"
-    leader:
-      title: "trofast"
-    elder:
-      title: "leder"
   rate_limiter:
-    slow_down: "Du har utført denne handlingen for mange ganger. Prøv igjen senere."
     too_many_requests: "Vi har en daglig begrensning for hvor mange ganger den handlingen kan utføres. Venligst vent %{time_left} før du prøver igjen."
     hours:
       one: "1 time"
@@ -401,16 +386,11 @@ nb_NO:
       description: 'Dette innlegget har innhold som for en fornuftig person vil kunne være fornærmende, nedverdigende eller brudd på <a href="/guidelines">retningslinjene til dette nettsamfunnet</a>.'
       long_form: 'markerte dette som upassende'
     notify_user:
-      title: 'Send melding til @{{username}}'
-      description: 'Dette innlegget inneholder noe jeg ønsker å ta opp med vedkommende direkte på privaten. Oppretter ikke en markering.'
       long_form: 'sendt melding til bruker'
       email_title: 'Ditt innlegg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noe annet"
-      description: 'Dette innlegget trenger moderator oppmerksomhet for en annen grunn enn listet over.'
-      long_form: 'merket for moderators oppmerksomhet'
-      email_title: 'Et innlegg i "%{title}" krever moderator oppmerksomhet'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bokmerke'
@@ -435,7 +415,6 @@ nb_NO:
       long_form: 'markerte dette som upassende'
     notify_moderators:
       title: "Noe annet"
-      description: 'Dette emnet krever moderators oppmerksomhet basert på  <a href="/guidelines">retningslinjene</a>, <a href="%{tos_url}">TOS</a>, eller en annen grunn ikke listet over. '
       long_form: 'Markert for mederering'
       email_title: 'Emne "%{title}" krever moderator oppmerksomhet'
       email_body: "%{link}\n\n%{message}"
@@ -471,6 +450,8 @@ nb_NO:
       title: "nye brukere"
       xaxis: "Dag"
       yaxis: "Antall nye brukere"
+    profile_views:
+      xaxis: "Dag"
     topics:
       title: "Emner"
       xaxis: "Dag"
@@ -602,32 +583,6 @@ nb_NO:
     host_names_warning: "Din config/database.yml fil bruker standard localhost hostnavn. Venligst legg inn ditt ønskede hostnavn"
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
     title_nag: "Oppgi navnet på nettstedet. Oppdater tittelen under <a href='/admin/site_settings'>Nettstedinstillinger</a>."
-  content_types:
-    education_new_reply:
-      title: "Ny bruker utdanning: Første svar"
-    education_new_topic:
-      title: "Ny bruker utdanning: Første Emne"
-    usage_tips:
-      title: "Ny Bruker Guide"
-      description: "Brukerveiledning og nyttig informasjon for nye brukere"
-    welcome_user:
-      title: "Velkommen: Ny Bruker"
-      description: "En melding som automatisk sendes til alle nye brukere når de oppretter konto."
-    welcome_invite:
-      title: "Velkommen: Invitert Bruker"
-    login_required_welcome_message:
-      title: "Pålogging påkrevd: Velkommen Melding"
-    login_required:
-      title: "Pålogging påkrevd: Hjemmeside"
-      description: "Tekst som vil bli vist uautoriserte brukere når logg inn er påkrevd."
-    head:
-      title: "HTML head"
-      description: "HTML som vil bli satt inn i <head></head> klammene. "
-    top:
-      title: "Toppen av siden"
-    bottom:
-      title: "Bunnen av siden"
-      description: "HTML som vil bli lagt til før </body> tag. "
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-slett skjulte innlegg som er skjult i mer enn 30 dager."
@@ -639,7 +594,6 @@ nb_NO:
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
-    uncategorized_description: "Beskrivelsen av denne ukategoriserte kategorien. La stå tom for ingen beskrivelse."
     allow_duplicate_topic_titles: "Tillat emner med lik, duplikat tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage en post med det samme innholdet igjen"
     educate_until_posts: "Når bruker begynner å skrive på de første (n) innleggene, vis pop-up med opplæringspanelet for nye brukere i editoren."
@@ -652,7 +606,6 @@ nb_NO:
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
     disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
-    ninja_edit_window: "Endring innen (n) sekunder etter oppretting av innlegg vil ikke lage ny versjon av innlegget."
     post_edit_time_limit: "Forfattere kan redigere eller slette innleggene sine (n) minutter etter opprettelse. Sett 0 for uendelig."
     edit_history_visible_to_public: "Alle kan se tidligere versjoner av et redigert innlegg. Hvis det er slått av kan kun stab se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
@@ -744,9 +697,6 @@ nb_NO:
       blank: "Må være til stede"
     email:
       blocked: "er ikke tillatt."
-  flags_reminder:
-    please_review: "Vennligst vurder dem."
-    post_number: "innlegg"
   flags_dispositions:
     agreed: "Takk for at du sier ifra. Vi er enig at det er et problem her og vi ser på saken."
     disagreed: "Takk for at du sier ifra. Vi skal se på det. "
@@ -769,7 +719,15 @@ nb_NO:
       click_here: "trykk her"
       read_more: "Les Mer"
       more_topics_category: "Flere nye emner:"
+    account_created:
+      subject_template: "[%{site_name}] Din Nye Konto"
+      text_body_template: |
+        En ny konto ble registrert for deg på %{site_name}
+
+        Trykk på følgende link for å velge et passord for kontoen din:
+        %{base_url}/users/password-reset/%{email_token}
     signup:
+      subject_template: "[%{site_name}] Bekreft din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
 
@@ -806,3 +764,6 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
+  activemodel:
+    errors:
+      <<: *errors

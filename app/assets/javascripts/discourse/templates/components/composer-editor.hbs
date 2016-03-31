@@ -1,0 +1,32 @@
+{{d-editor tabindex="4"
+           value=composer.reply
+           placeholder="composer.reply_placeholder"
+           previewUpdated="previewUpdated"
+           markdownOptions=markdownOptions
+           extraButtons="extraButtons"
+           importQuote="importQuote"
+           showOptions="showOptions"
+           showUploadModal="showUploadModal"
+           validation=validation
+           loading=composer.loading}}
+
+<div class="composer-bottom-right">
+  {{#if site.mobileView}}
+    <input type="file" id="mobile-uploader" />
+    <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
+  {{else}}
+    <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
+  {{/if}}
+  {{#if isUploading}}
+    <div id="file-uploading">
+      {{loading-spinner size="small"}} {{i18n 'upload_selector.uploading'}}
+      {{uploadProgress}}%
+      {{#if isCancellable}}
+        <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{fa-icon "times"}}</a>
+      {{/if}}
+    </div>
+  {{/if}}
+  <div id='draft-status' class="{{if isUploading 'hidden'}}">
+    {{draftStatus}}
+  </div>
+</div>

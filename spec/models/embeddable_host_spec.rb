@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe EmbeddableHost do
 
@@ -18,6 +18,12 @@ describe EmbeddableHost do
     eh = EmbeddableHost.new(host: 'https://example.com/1234/45')
     expect(eh).to be_valid
     expect(eh.host).to eq('example.com')
+  end
+
+  it "supports ip addresses" do
+    eh = EmbeddableHost.new(host: '192.168.0.1')
+    expect(eh).to be_valid
+    expect(eh.host).to eq('192.168.0.1')
   end
 
   describe "allows_embeddable_host" do

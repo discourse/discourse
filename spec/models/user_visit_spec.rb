@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UserVisit do
   let(:user) { Fabricate(:user) }

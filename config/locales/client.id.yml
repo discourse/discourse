@@ -8,22 +8,30 @@
 id:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
           units:
             byte:
-              other: Bytes
+              other: Bit
             gb: GB
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "j:mm a"
       long_no_year: "BBB H j:mm a"
       long_no_year_no_time: "BBB H"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "BBB H, TTTT j:mm a"
       long_with_year_no_time: "BBB H, TTTT"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "BBB H, 'TT LT"
       long_date_without_year: "BBB H, LT"
       long_date_with_year_without_time: "BBB H, 'TT"
@@ -66,6 +74,13 @@ id:
           other: "%{count} jam yang lalu"
         x_days:
           other: "%{count} hari yang lalu"
+      later:
+        x_days:
+          other: "%{count} hari kemudian"
+        x_months:
+          other: "%{count} bulan kemudian"
+        x_years:
+          other: "%{count} bulan kemudian"
     share:
       topic: 'share link ke topik ini'
       post: 'post #%{postNumber}'
@@ -74,6 +89,27 @@ id:
       facebook: 'share link ini di Facebook'
       google+: 'share link ini di Google+'
       email: 'kirim link ini melalui email'
+    action_codes:
+      split_topic: "pisahkan topik ini %{when}"
+      autoclosed:
+        enabled: 'ditutup %{when}'
+        disabled: 'dibuka %{when}'
+      closed:
+        enabled: 'ditutup %{when}'
+        disabled: 'dibuka %{when}'
+      archived:
+        enabled: 'diarsipkan %{when}'
+        disabled: 'tidak diarsipkan %{when}'
+      pinned:
+        enabled: 'disematkan %{when}'
+        disabled: 'tidak disematkan %{when}'
+      pinned_globally:
+        enabled: 'disematkan secara global %{when}'
+        disabled: 'tidak disematkan %{when}'
+      visible:
+        enabled: 'terdaftar %{when}'
+        disabled: 'tidak terdaftar %{when}'
+    topic_admin_menu: "topik aksi admin"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
     edit: 'Ubah judul dan kategori topik ini'
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
@@ -84,56 +120,68 @@ id:
     sign_up: "Daftar"
     log_in: "Log In"
     age: "Umur"
-    joined: "Joined"
+    joined: "Bergabung"
     admin_title: "Admin"
     flags_title: "Flags"
-    show_more: "show more"
-    links: "Links"
+    show_more: "tampilkan lebih banyak"
+    show_help: "pilihan"
+    links: "Tautan"
+    links_lowercase:
+      other: "tautan"
     faq: "FAQ"
-    guidelines: "Guidelines"
-    privacy_policy: "Privacy Policy"
-    privacy: "Privacy"
-    terms_of_service: "Terms of Service"
-    mobile_view: "Mobile View"
-    desktop_view: "Desktop View"
-    you: "Kamu"
+    guidelines: "Petunjuk"
+    privacy_policy: "Kebijakan Privasi"
+    privacy: "Privasi"
+    terms_of_service: "Ketentuan Layanan"
+    mobile_view: "Tampilan Mobile"
+    desktop_view: "Tampilan Desktop"
+    you: "Anda"
     or: "atau"
-    now: "just now"
-    read_more: 'read more'
-    more: "Selebihnya"
+    now: "baru saja"
+    read_more: 'baca selengkapnya'
+    more: "Selengkapnya"
     less: "Lebih Singkat"
-    never: "Tidak pernah"
-    daily: "Harian"
-    weekly: "Mingguan"
-    every_two_weeks: "Setiap dua minggu"
-    max_of_count: "Maksimal {{count}}"
+    never: "tidak pernah"
+    daily: "harian"
+    weekly: "mingguan"
+    every_two_weeks: "setiap dua minggu"
+    every_three_days: "setiap tiga hari"
+    max_of_count: "maksimal dari {{count}}"
+    alternation: "atau"
     character_count:
       other: "{{count}} karakter"
     suggested_topics:
-      title: "Suggested Topics"
+      title: "Topik Yang Disarankan"
     about:
       simple_title: "Tentang"
       title: "Tentang %{title}"
-      stats: "Statistik situs"
+      stats: "Statistik Situs"
       our_admins: "Admin Kami"
       our_moderators: "Moderator Kami"
       stat:
-        all_time: "Setiap Waktu"
-        last_7_days: "Selama 7 Hari"
-        last_30_days: "30 hari terakhir"
+        all_time: "Sepanjang Waktu"
+        last_7_days: "7 Hari Terakhir"
+        last_30_days: "30 Hari Terakhir"
+      like_count: "Suka"
       topic_count: "Topik"
-      post_count: "Post"
+      post_count: "Pos"
       user_count: "Pengguna Baru"
       active_user_count: "Pengguna Aktif"
       contact: "Kontak kami"
+      contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
     bookmarked:
-      title: "Markah"
+      title: "Penandaan"
+      clear_bookmarks: "Bersihkan Penandaan"
+      help:
+        bookmark: "Klik untuk membuat penandaan pos pertama di topik ini"
+        unbookmark: "Klik untuk menghapus semua penandaan di topik ini"
     bookmarks:
       not_logged_in: "Maaf, anda harus masuk untuk menandai post"
       created: "Anda telah menandai post ini"
       not_bookmarked: "Anda telah membaca post ini; klik untuk menandainya"
       last_read: "Ini adalah post terakhir yang anda baca; klik untuk menandainya"
       remove: "Hilangkan penandaan"
+      confirm_clear: "Apakah anda yakin ingin membersihkan semua penandaan dari topik ini?"
     topic_count_latest:
       other: "{{count}} topik baru atau diperbarui."
     topic_count_unread:
@@ -141,26 +189,39 @@ id:
     topic_count_new:
       other: "{{count}} topik baru."
     click_to_show: "Klik untuk menampilkan"
-    preview: "preview"
-    cancel: "cancel"
+    preview: "pratinjau"
+    cancel: "batal"
     save: "Simpan Perubahan"
     saving: "Menyimpan..."
     saved: "Tersimpan!"
     upload: "Unggah"
     uploading: "Mengunggah..."
+    uploading_filename: "Sedang Mengunggah {{filename}}..."
     uploaded: "Sudah Diunggah!"
     enable: "Aktifkan"
     disable: "Nonaktifkan"
     undo: "Batalkan perintah"
     revert: "Kembali ke awal"
     failed: "Gagal"
+    switch_to_anon: "Mode Anonim"
+    switch_from_anon: "Keluar Anonim"
     banner:
-      close: "Abaikan Banner ini."
+      close: "Abaikan banner ini."
+      edit: "Ubah banner ini >>"
     choose_topic:
-      none_found: "Tidak ada topik."
+      none_found: "Tidak ada topik ditemukan."
       title:
         search: "Cari Topik berdasarkan nama, url atau id:"
         placeholder: "tulis judul topik disini"
+    queue:
+      topic: "Topik:"
+      approve: 'Terima'
+      reject: 'Tolak'
+      delete_user: 'Hapus Pengguna'
+      title: "Membutuhan Persetujuan"
+      none: "Tidak ada pos untuk di pratinjau."
+      edit: "Ubah"
+      cancel: "Batal"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> memposting <a href='{{topicUrl}}'>topik</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Anda</a> memposting <a href='{{topicUrl}}'>the topic</a>"
@@ -182,7 +243,6 @@ id:
       members: "Anggota"
       posts: "Post"
       alias_levels:
-        title: "Siapa yang dapat menggunakan grup ini sebagai alias?"
         nobody: "Tak seorangpun"
         only_admins: "Hanya admin"
         mods_and_admins: "Hanya moderator dan Admin"
@@ -195,7 +255,6 @@ id:
       '4': "Topik"
       '7': "Disebutkan"
       '9': "Kutipan"
-      '10': "Bertanda Bintang"
       '11': "Edit"
       '12': "Item Terkirim"
       '13': "Kotak masuk"
@@ -260,7 +319,6 @@ id:
         warnings_received: "peringatan"
       messages:
         all: "Semua"
-        unread: "Belum dibaca"
       change_password:
         success: "(surel terkirim)"
         in_progress: "(mengirimkan surel)"
@@ -280,7 +338,9 @@ id:
       email_settings: "Email"
       email_digests:
         daily: "harian"
+        every_three_days: "setiap tiga hari"
         weekly: "mingguan"
+        every_two_weeks: "setiap dua minggu"
       auto_track_options:
         never: "tidak pernah"
       password:
@@ -297,6 +357,7 @@ id:
     forgot_password:
       action: "Saya lupa password"
     login:
+      title: "Log In"
       email_placeholder: "email atau username"
       twitter:
         title: "dengan Twitter"
@@ -310,6 +371,7 @@ id:
       bold_title: "Strong"
       italic_title: "Emphasis"
       link_title: "Hyperlink"
+      modal_cancel: "Batal"
     notifications:
       more: "lihat notifikasi sebelumnya"
     topic:
@@ -331,28 +393,26 @@ id:
         attachment_too_large: "Maaf, file yang kamu unggah terlalu besar (ukuran maksimal {{max_size_kb}}kb)."
         image_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah gambar."
         attachment_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah lampiran."
+      controls:
+        more: "Selengkapnya"
       revisions:
         controls:
           first: "Revisi pertama"
     category:
+      edit_long: "Ubah"
       auto_close_units: "jam"
+    posts: "Pos"
+    likes: "Suka"
     users: "Pengguna"
     filters:
       new:
-        lower_title_with_count:
-          one: "1 baru"
-          other: "{{count}} baru"
         lower_title: "baru"
-        title:
-          zero: "Baru"
-          one: "Baru(1)"
-          other: "Baru ({{count}})"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "topik terakhir di kategori {{categoryName}}"
+      top:
+        all:
+          title: "Sepanjang Waktu"
+        all_time: "Sepanjang Waktu"
   admin_js:
     admin:
       title: 'Admin Discourse'
@@ -360,12 +420,21 @@ id:
       dashboard:
         latest_version: "Terbaru"
         last_checked: "Terakhir dicek"
+        reports:
+          last_7_days: "7 Hari Terakhir"
+          last_30_days: "30 Hari Terakhir"
+          all_time: "Sepanjang Waktu"
       flags:
         system: "Sistem"
       groups:
         delete: "Hapus"
         delete_confirm: "Hapus grup ini?"
+      backups:
+        operations:
+          cancel:
+            label: "Batal"
       customize:
+        preview: "pratinjau"
         new: "New"
         new_style: "preview"
         delete: "Hapus"
@@ -374,12 +443,23 @@ id:
         sent_test: "terkirim!"
         delivery_method: "Metode Pengiriman"
         html: "html"
+      logs:
+        edit: 'Ubah'
       users:
         not_found: "Maaf, username tersebut tidak ada ditemukan."
         active: "Aktif"
+        nav:
+          staff: 'Staf'
+        titles:
+          staff: "Staf"
       user:
         suspend_duration_units: "(hari)"
         suspend_reason: "Alasan"
+        approve: 'Terima'
+        delete: "Hapus Pengguna"
+      user_fields:
+        edit: "Ubah"
+        cancel: "Batal"
       site_settings:
         categories:
           users: 'Pengguna'
@@ -395,3 +475,12 @@ id:
         search: '<b>/</b> Cari'
       actions:
         title: 'Aksi'
+    google_search: |
+      <h3>Cari dengan Google</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

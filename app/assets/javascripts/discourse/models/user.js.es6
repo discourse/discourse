@@ -7,6 +7,10 @@ import { longDate } from 'discourse/lib/formatter';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Badge from 'discourse/models/badge';
 import UserBadge from 'discourse/models/user-badge';
+import UserActionStat from 'discourse/models/user-action-stat';
+import UserAction from 'discourse/models/user-action';
+import Group from 'discourse/models/group';
+import Topic from 'discourse/models/topic';
 
 const User = RestModel.extend({
 
@@ -16,6 +20,10 @@ const User = RestModel.extend({
   hasPosted: Em.computed.gt("post_count", 0),
   hasNotPosted: Em.computed.not("hasPosted"),
   canBeDeleted: Em.computed.and("can_be_deleted", "hasNotPosted"),
+
+  redirected_to_top: {
+    reason: null,
+  },
 
   @computed()
   stream() {
@@ -62,7 +70,29 @@ const User = RestModel.extend({
     return Discourse.getURL(`/users/${this.get('username_lower')}`);
   },
 
-  adminPath: url('username_lower', "/admin/users/%@"),
+  pmPath(topic) {
+    const userId = this.get('id');
+    const username = this.get('username_lower');
+
+    const details = topic && topic.get('details');
+    const allowedUsers = details && details.get('allowed_users');
+    const groups = details && details.get('allowed_groups');
+
+    // directly targetted so go to inbox
+    if (!groups || (allowedUsers && allowedUsers.findBy("id", userId))) {
+      return Discourse.getURL(`/users/${username}/messages`);
+    } else {
+      if (groups && groups[0])
+      {
+        return Discourse.getURL(`/users/${username}/messages/group/${groups[0].name}`);
+      }
+    }
+
+  },
+
+  adminPath: url('id', 'username_lower', "/admin/users/%@1/%@2"),
+
+  mutedTopicsPath: url('/latest?state=muted'),
 
   @computed("username")
   username_lower(username) {
@@ -111,29 +141,38 @@ const User = RestModel.extend({
 
   save() {
     const data = this.getProperties(
-            'auto_track_topics_after_msecs',
             'bio_raw',
             'website',
             'location',
             'name',
             'locale',
-            'email_digests',
-            'email_direct',
-            'email_always',
-            'email_private_messages',
-            'dynamic_favicon',
-            'digest_after_days',
-            'new_topic_duration_minutes',
-            'external_links_in_new_tab',
-            'mailing_list_mode',
-            'enable_quoting',
-            'disable_jump_reply',
             'custom_fields',
             'user_fields',
             'muted_usernames',
             'profile_background',
             'card_background'
           );
+
+    [       'email_always',
+            'mailing_list_mode',
+            'external_links_in_new_tab',
+            'email_digests',
+            'email_direct',
+            'email_in_reply_to',
+            'email_private_messages',
+            'email_previous_replies',
+            'dynamic_favicon',
+            'enable_quoting',
+            'disable_jump_reply',
+            'automatically_unpin_topics',
+            'digest_after_minutes',
+            'new_topic_duration_minutes',
+            'auto_track_topics_after_msecs',
+            'like_notification_frequency',
+            'include_tl0_in_digests'
+    ].forEach(s => {
+      data[s] = this.get(`user_option.${s}`);
+    });
 
     ['muted','watched','tracked'].forEach(s => {
       let cats = this.get(s + 'Categories').map(c => c.get('id'));
@@ -143,7 +182,7 @@ const User = RestModel.extend({
     });
 
     if (!Discourse.SiteSettings.edit_history_visible_to_public) {
-      data['edit_history_public'] = this.get('edit_history_public');
+      data['edit_history_public'] = this.get('user_option.edit_history_public');
     }
 
     // TODO: We can remove this when migrated fully to rest model.
@@ -153,7 +192,7 @@ const User = RestModel.extend({
       type: 'PUT'
     }).then(result => {
       this.set('bio_excerpt', result.user.bio_excerpt);
-      const userProps = this.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
+      const userProps = Em.getProperties(this.get('user_option'),'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
     }).finally(() => {
       this.set('isSaving', false);
@@ -179,7 +218,6 @@ const User = RestModel.extend({
 
         ua.title = Discourse.Emoji.unescape(Handlebars.Utils.escapeExpression(ua.title));
         const action = UserAction.collapseStream([UserAction.create(ua)]);
-
         stream.set('itemsLoaded', stream.get('itemsLoaded') + 1);
         stream.get('content').insertAt(0, action[0]);
       }
@@ -187,8 +225,17 @@ const User = RestModel.extend({
   },
 
   inAllStream(ua) {
-    return ua.action_type === Discourse.UserAction.TYPES.posts ||
-           ua.action_type === Discourse.UserAction.TYPES.topics;
+    return ua.action_type === UserAction.TYPES.posts ||
+           ua.action_type === UserAction.TYPES.topics;
+  },
+
+  @computed("groups.@each")
+  displayGroups() {
+    const groups = this.get('groups');
+    const filtered = groups.filter(group => {
+      return !group.automatic || group.name === "moderators";
+    });
+    return filtered.length === 0 ? null : filtered;
   },
 
   // The user's stat count, excluding PMs.
@@ -221,12 +268,12 @@ const User = RestModel.extend({
       if (!Em.isEmpty(json.user.stats)) {
         json.user.stats = Discourse.User.groupStats(_.map(json.user.stats, s => {
           if (s.count) s.count = parseInt(s.count, 10);
-          return Discourse.UserActionStat.create(s);
+          return UserActionStat.create(s);
         }));
       }
 
-      if (!Em.isEmpty(json.user.custom_groups)) {
-        json.user.custom_groups = json.user.custom_groups.map(g => Discourse.Group.create(g));
+      if (!Em.isEmpty(json.user.groups)) {
+        json.user.groups = json.user.groups.map(g => Group.create(g));
       }
 
       if (json.user.invited_by) {
@@ -338,6 +385,40 @@ const User = RestModel.extend({
         });
       }
     });
+  },
+
+  summary() {
+    return Discourse.ajax(`/users/${this.get("username_lower")}/summary.json`)
+           .then(json => {
+              const topicMap = {};
+
+              json.topics.forEach(t => {
+                topicMap[t.id] = Topic.create(t);
+              });
+
+              const badgeMap = {};
+              Badge.createFromJson(json).forEach(b => {
+                badgeMap[b.id] = b;
+              });
+              const summary = json["user_summary"];
+
+              summary.replies.forEach(r => {
+                r.topic = topicMap[r.topic_id];
+                r.url = r.topic.urlForPostNumber(r.post_number);
+                r.createdAt = new Date(r.created_at);
+              });
+
+              summary.topics = summary.topic_ids.map(id => topicMap[id]);
+
+              if (summary.badges) {
+                summary.badges = summary.badges.map(ub => {
+                  const badge = badgeMap[ub.badge_id];
+                  badge.count = ub.count;
+                  return badge;
+                });
+              }
+              return summary;
+           });
   }
 
 });
@@ -367,9 +448,9 @@ User.reopenClass(Singleton, {
   },
 
   groupStats(stats) {
-    const responses = Discourse.UserActionStat.create({
+    const responses = UserActionStat.create({
       count: 0,
-      action_type: Discourse.UserAction.TYPES.replies
+      action_type: UserAction.TYPES.replies
     });
 
     stats.filterProperty('isResponse').forEach(stat => {
@@ -381,7 +462,7 @@ User.reopenClass(Singleton, {
 
     let insertAt = 0;
     result.forEach((item, index) => {
-     if (item.action_type === Discourse.UserAction.TYPES.topics || item.action_type === Discourse.UserAction.TYPES.posts) {
+     if (item.action_type === UserAction.TYPES.topics || item.action_type === UserAction.TYPES.posts) {
        insertAt = index + 1;
      }
     });

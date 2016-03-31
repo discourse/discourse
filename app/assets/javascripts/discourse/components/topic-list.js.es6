@@ -19,7 +19,7 @@ export default Ember.Component.extend({
   }.property(),
 
   skipHeader: function() {
-    return Discourse.Mobile.mobileView;
+    return this.site.mobileView;
   }.property(),
 
   showLikes: function(){
@@ -30,7 +30,7 @@ export default Ember.Component.extend({
     return this.get('order') === "op_likes";
   }.property('order'),
 
-  click: function(e){
+  click(e) {
     var self = this;
     var on = function(sel, callback){
       var target = $(e.target).closest(sel);

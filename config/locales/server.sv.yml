@@ -10,18 +10,24 @@ sv:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+  date:
+    month_names: [null, Januari, Februari, Mars, April, Maj, Juni, Juli, Augusti, September, Oktober, November, December]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Ämnen"
   posts: "inlägg"
   loading: "Laddar"
   powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript påslaget'
   log_in: "Logga in"
-  via: "%{username} via %{site_name}"
-  is_reserved: "är reserverat"
   purge_reason: "Automatiskt raderat i och med att kontot var övergivet och icke-aktiverat"
   disable_remote_images_download_reason: "Fjärrbilds nedladdning är inaktiverad eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   anonymous: "Anonym"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "är begränsad till %{max} karaktärer; du skrev in %{length}. "
@@ -37,8 +43,10 @@ sv:
       exclusion: är reserverad
       greater_than: måste vara större än %{count}
       greater_than_or_equal_to: måste vara större eller lika med %{count}
+      has_already_been_used: "har redan använts"
       inclusion: är inte inkluderad i listan
       invalid: är ogiltig
+      is_invalid: "är ogiltig; försök att skriva lite mer detaljerad"
       less_than: måste vara mindre än %{count}
       less_than_or_equal_to: måste vara mindre eller lika med %{count}
       not_a_number: är inte ett nummer
@@ -62,6 +70,9 @@ sv:
         other: '%{count} stycken fel förhindrade %{model} från att sparas'
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av artikeln."
+    site_settings:
+      min_username_length_range: "Du kan inte sätta minimum högre än maximum"
+      s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "Den uppladdade filen ska vara i csv eller txt format."
   backup:
@@ -72,6 +83,7 @@ sv:
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   read_only_mode_enabled: "Webbplatsen är i read only läge. Interaktioner är inaktiverade."
+  reading_time: "Lästid"
   too_many_replies:
     one: "Vi är ledsna men nya användare är tillfälligt begränsade till 1 svar i samma diskussion."
     other: "Vi är ledsna men nya användare är tillfälligt begränsade till &{count} svar i samma ämne."
@@ -88,33 +100,21 @@ sv:
     replies:
       one: "1 svar"
       other: "%{count} svar"
-  too_many_mentions:
-    zero: "Tyvärr, du kan inte omnämna andra användare."
-    one: "Tyvärr, du kan bara omnämna en annan användare i ett inlägg."
-    other: "Tyvärr, du kan bara omnämna %{count} användare i ett inlägg."
-  too_many_mentions_newuser:
-    zero: "Tyvärr, besökare kan inte omnämna andra användare."
-    one: "Tyvärr, besökare kan bara omnämna en annan användare i ett inlägg."
-    other: "Tyvärr, besökare kan bara omnämna %{count} användare i ett inlägg."
+  no_images_allowed: "Tyvärr, nya användare kan inte infoga bilder i inlägg."
   too_many_images:
-    zero: "Tyvärr, besökare kan inte ha bilder i inlägg."
-    one: "Tyvärr, besökare kan bara ha en bild i ett inlägg."
-    other: "Tyvärr, besökare kan bara ha %{count} bilder i ett inlägg."
+    one: "Tyvärr, nya användare kan bara infoga en bild i ett inlägg."
+    other: "Tyvärr, nya användare kan bara infoga %{count} bilder i ett inlägg."
+  no_attachments_allowed: "Tyvärr, nya användare kan inte bifoga filer i inlägg."
   too_many_attachments:
-    zero: "Tyvärr, nya användare kan inte bifoga filer i inlägg."
-    one: "Tyvärr, nya användare kan bara bifoga en fil i ett inlägg."
-    other: "Tyvärr, nya användare kan bara lägga till %{count} bifogade filer i ett inlägg."
-  too_many_links:
-    zero: "Tyvärr, besökare kan inte ha länkar i inlägg."
-    one: "Tyvärr, besökare kan bara ha en länk i ett inlägg."
-    other: "Tyvärr, besökare kan bara ha %{count} länkar i ett inlägg."
+    one: "Tyvärr, nya användare kan bara bifoga en filer i ett inlägg."
+    other: "Tyvärr, nya användare kan bara bifoga %{count} filer i ett inlägg."
   spamming_host: "Tyvärr, du kan inte posta en länk till det värdnamnet."
   user_is_suspended: "Avstängda användare är inte tillåtna att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske ämnet stängts eller raderats medan du tittade på det?"
   just_posted_that: "är för likt det du nyligen postade"
   has_already_been_used: "har redan använts"
   invalid_characters: "innehåller otillåtna tecken"
-  is_invalid: "är otillåtet; försök att vara lite mer beskrivande"
+  is_invalid: "är ogiltig; försök att skriva lite mer detaljerad"
   next_page: "nästa sida →"
   prev_page: "← föregående sida"
   page_num: "Sida %{num}"
@@ -126,6 +126,7 @@ sv:
   num_posts: "Inlägg:"
   num_participants: "Deltagare"
   read_full_topic: "Läs hela ämnet"
+  private_message_abbrev: "Meddelande"
   rss_description:
     latest: "Aktuella ämnen"
     hot: "Heta ämnen"
@@ -207,9 +208,6 @@ sv:
       user_profile:
         bio_raw: "Om mig"
     errors:
-      messages:
-        is_invalid: "är ogiltig; försök att vara lite mer beskrivande"
-        has_already_been_used: "har redan använts"
       models:
         topic:
           attributes:
@@ -230,6 +228,7 @@ sv:
           attributes:
             hex:
               invalid: "är inte en giltig färg"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Din profils Om Mig-fält är för närvarande tomt, <a href='/users/%{username_lower}/preferences/about-me'>skulle du vilja fylla i det?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har inte skrivit någonting i dess profils Om Mig-fält ännu</div>"
@@ -243,7 +242,6 @@ sv:
     title: "Välkommen till loungen"
   category:
     topic_prefix: "Om kategorin %{category}"
-    post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
     errors:
       uncategorized_parent: "Kategorin \"Okategoriserat\" kan inte ha en föräldrar kategori."
       self_parent: "En underkategori kan inte ha sig själv som förälder."
@@ -260,15 +258,15 @@ sv:
       title: "besökare"
     basic:
       title: "vanlig användare"
-    regular:
+    member:
       title: "medlem"
-    leader:
+    regular:
       title: "vanlig"
-    elder:
+    leader:
       title: "ledare"
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
-    slow_down: "Du har utfört den här handlingen för många gånger, var vänligen och försök igen senare."
+    slow_down: "Du har utfört den här handlingen för många gånger, försök igen senare."
     too_many_requests: "Du gör det där för ofta. Var god vänta %{time_left} innan du försöker igen."
     hours:
       one: "1 timme"
@@ -364,6 +362,7 @@ sv:
     please_continue: "Fortsätt till %{site_name}"
     error: "Det uppstod ett fel med ändringen av din e-postadress. Adressen kanske redan används?"
   activation:
+    action: "Klicka här för att aktivera ditt konto"
     already_done: "Tyvärr, denna kontoaktiveringslänk är inte längre giltig. Kanske är ditt konto redan aktiverat?"
     please_continue: "Ditt nya konto är verifierat; du kommer att skickas till startsidan."
     continue_button: "Fortsätt till %{site_name}"
@@ -386,15 +385,10 @@ sv:
       description: 'Detta inläggs innehåll är inkluderar saker som som en förnuftig person skulle betrakta som stötande, kränkande eller överträdelse av <a href="/guidelines"> våra community riktlinjer</a>r.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
-      title: 'Meddela @{{username}}'
-      description: 'Detta inlägg innehåller något som jag, direkt och privat, vill tala med denna person om. Detta ger ingen flagga.'
       email_title: 'Du postade i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Övrigt"
-      description: 'Detta inlägg kräver en moderators uppmärksamhet av ett annat skäl än de som nämns ovan.'
-      long_form: 'flaggade det här för granskning av moderator'
-      email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från en moderator'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bokmärk'
@@ -419,7 +413,6 @@ sv:
       long_form: 'flaggad som olämplig'
     notify_moderators:
       title: "Annat"
-      description: 'Detta ämne kräver en moderators uppmärksamhet baserat på <a href="/guidelines">riktlinjerna</a>, <a href="%{tos_url}">användarvillkoren</a>, eller an annat skäl som inte nämns ovan.'
       long_form: 'flaggade det här för granskning av moderator'
       email_title: 'Ämnet "%{title}" kräver moderators uppmärksamhet'
       email_body: "%{link}\n\n%{message}"
@@ -453,6 +446,9 @@ sv:
       title: "Nya användare"
       xaxis: "Dag"
       yaxis: "Antalet nya användare"
+    profile_views:
+      title: "Användarprofilvisningar"
+      xaxis: "Dag"
     topics:
       title: "Ämnen"
       xaxis: "Dag"
@@ -546,10 +542,12 @@ sv:
       title: "Status 2xx (OK)"
       xaxis: "Dag"
     http_3xx_reqs:
+      title: "HTTP 3xx (omdirigera)"
       xaxis: "Dag"
     http_4xx_reqs:
       xaxis: "Dag"
     http_5xx_reqs:
+      title: "HTTP 5xx (Serverfel)"
       xaxis: "Dag"
     http_total_reqs:
       title: "Totala"
@@ -561,6 +559,10 @@ sv:
       title: "Ämnen med ingen respons"
       xaxis: "Dag"
       yaxis: "Totalt"
+    mobile_visits:
+      title: "Användarbesök"
+      xaxis: "Dag"
+      yaxis: "Antal besök"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     ruby_version_warning: "Du använder en version av Ruby 2.0.0 som är känd för att ha problem. Uppgradera till patch-nivå 247 eller senare."
@@ -575,36 +577,6 @@ sv:
     title_nag: "Ange namnet på webbplatsen. Uppdatera titel i <a href='/admin/site_settings'>Inställningar</a>."
     site_description_missing: "Ange en beskrivning om din webbplats i en mening, som dyker upp i sökresultat. Uppdatera site_description i <a href='/admin/site_settings'>Inställningar</a>."
     consumer_email_warning: "Din sida är konfigurerad till att använda Gmail (eller någon annan konsumenttjänst) för att skicka email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-  content_types:
-    education_new_reply:
-      title: "New User Education: First Replies"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
-    education_new_topic:
-      title: "New User Education: First Topics"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
-    usage_tips:
-      description: "Guidning och viktig information för nya användare."
-    welcome_user:
-      title: "Välkommen: Ny användare"
-      description: "Ett meddelande som skickas automatiskt till alla nya användare vid registrering."
-    welcome_invite:
-      title: "Välkommen: Inbjuden användare"
-      description: "Ett meddelande som skickas automatiskt till alla nya inbjudna användare när de accepterar inbjudan från en annan användare."
-    login_required_welcome_message:
-      title: "Inloggning krävs: Välkomstmeddelande"
-      description: "Välkomstmeddelande som visas för utloggade användare när inställningen för 'inloggning krävs' är aktiv. "
-    login_required:
-      title: "Inloggning krävs: Huvudsida"
-      description: "Texten som visas för obehöriga användare när inloggning krävs på webbplatsen."
-    head:
-      title: "HTML-sidhuvud"
-      description: "HTML som kommer infogas mellan taggarna <head> och </head>."
-    top:
-      title: "Längst upp på sidorna"
-      description: "HTML som läggs till i toppen på varje sida (efter sidhuvudet, före navigeringen av ämnets titel)."
-    bottom:
-      title: "Botten av sidorna"
-      description: "HTML som läggs till före taggen </body>."
   site_settings:
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
@@ -614,7 +586,6 @@ sv:
     min_first_post_length: "Minst antal tillåtna tecken i första inlägget (ämnestext)"
     min_private_message_post_length: "Minst antal tillåtna tecken i inlägg för meddelanden"
     min_search_term_length: "Minsta giltiga teckenlängd på sökterm"
-    uncategorized_description: "Beskrivningen av den okategoriserade kategorin. Lämna tomt för ingen beskrivning."
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     title: "Namnet på denna webbplats som används i titel-taggen."
@@ -681,11 +652,8 @@ sv:
     tl2_requires_likes_received: "Antalet gillningar en användare måste mottaga innan en befordran till förtroendenivå 2."
     tl2_requires_likes_given: "Antalet gillningar en användare måste ge innan en befordran till förtroendenivå 2."
     tl2_requires_topic_reply_count: "Antalet ämnen en användare måste svara på innan en befordran till förtroendenivå 2."
-    tl3_requires_days_visited: "Minsta antal dagar en användare måste ha besökt webbplatsen de senaste 100 dagarna för att bli kvalificerad till en befordran till förtroendenivå 3. (0 till 100)"
-    tl3_requires_topics_replied_to: "Minsta antalet ämnen en användare behöver ha svarat på de senaste 100 dagarna för att bli kvalificerad till en befordran till förtroendenivå 3. (0 eller högre)"
     tl3_requires_topics_viewed_all_time: "Minsta antalet ämnen en användare måste ha tittat på för att bli kvalificerad för förtroendenivå 3."
     tl3_requires_posts_read_all_time: "Minsta antalet inlägg en användare måste ha läst för att bli kvalificerad för förtroendenivå 3."
-    tl3_requires_likes_received: "Minsta antalet mottagna gillningar under de senaste 100 dagarna för att bli kvalificerad för en befordran till förtroendenivå 3."
     min_trust_to_create_topic: "Lägsta förtroendenivå som krävs för att skapa ett nytt ämne."
     newuser_max_links: "Antalet länkar en ny användare kan lägga till i ett inlägg."
     newuser_max_images: "Antalet bilder en ny användare kan lägga till i ett inlägg."
@@ -745,7 +713,6 @@ sv:
     moved_post: "%{display_username} flyttade ditt inlägg till %{link}"
     private_message: "%{display_username} har skickat ett meddelande till dig: %{link}"
     invited_to_private_message: "%{display_username} har bjudit in dig till en privat konversation: %{link}"
-    invited_to_topic: "%{display_username} har bjudit in dig till ett ämne: %{link}"
     invitee_accepted: "%{display_username} accepterade din inbjudan"
     linked: "%{display_username} länkade dig i %{link}"
     granted_badge: "Du förtjänade %{link}"
@@ -755,8 +722,6 @@ sv:
       category: 'Kategorier'
       topic: 'Resultat'
       user: 'Användare'
-  sso:
-    account_not_approved: "Konto inväntar godkännande. Du kommer att få ett e-postmeddelande när kontot väl är godkänt."
   original_poster: "Ursprunglig skribent"
   most_posts: "Mest inlägg"
   most_recent_poster: "Senaste skribent"
@@ -818,6 +783,10 @@ sv:
     ip_address:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtet från din IP-adress (maxgräns uppnådd). Kontakta personal."
+  flags_reminder:
+    subject_template:
+      one: "1 flagga väntar på att bli hanterad"
+      other: "%{count} flaggor väntar på att bli hanterade"
   invite_mailer:
     subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
     text_body_template: |
@@ -856,47 +825,8 @@ sv:
     subject_template: "[%{site_name}] Email Deliverability Test"
   new_version_mailer:
     subject_template: "[%{site_name}] Ny version av Discourse, uppdatering tillgänglig"
-    text_body_template: |
-      En ny version av [Discourse](http://www.discourse.org) finns tillgängligt.
-
-      Din version: %{installed_version}
-      Ny version: **%{new_version}**
-
-      Du kanske vill:
-
-      - Se vad som är nytt i [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Uppgradera från din webbläsare på [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Besöka [meta.discourse.org](http://meta.discourse.org) för nyheter, diskussioner och support för Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] uppdatering tillgänglig"
-    text_body_template: |
-      En ny version av [Discourse](http://www.discourse.org) finns tillgängligt.
-
-      Din version: %{installed_version}
-      Ny version: **%{new_version}**
-
-      Du kanske vill:
-
-      - Se vad som är nytt i [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Uppgradera från din webbläsare på  [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Besöka [meta.discourse.org](http://meta.discourse.org) för nyheter, diskussioner och support för Discourse.
-
-      ### Release notes
-
-      %{notes}
-  flags_reminder:
-    flags_were_submitted:
-      one: "Dessa flaggor skickades in för mer än 1 timme sedan."
-      other: "Dessa flaggor skickades in för mer än %{count} timmar sedan."
-    please_review: "Var god och granska dessa."
-    post_number: "inlägg"
-    subject_template:
-      one: "1 flagga väntar på att bli hanterad"
-      other: "%{count} flaggor väntar på att bli hanterade"
   flag_reasons:
     off_topic: "Ditt inlägg blev flaggat som **off-topic**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av titeln och det första inlägget."
     inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](/guidelines)."
@@ -977,49 +907,17 @@ sv:
     unsubscribe:
       title: "Unsubscribe"
       description: "Inte intresserad av att få dessa mejl? Inga problem! Klicka nedan för att avprenumerera."
-    reply_by_email: "För att svara, svara på detta mejl eller besök %{base_url}%{url} i din webbläsare."
-    visit_link_to_respond: "För att svara, besök %{base_url}%{url} i din webbläsare."
     posted_by: "Postat av %{username} den %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} har bjudit in dig till en privat konversation '%{topic_title}'"
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} har bjudit in dig till ett ämne '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       new_activity: "Ny aktivitet i dina ämnen och inlägg:"
       top_topics: "Populära inlägg"
@@ -1043,18 +941,11 @@ sv:
       subject_template: "[%{site_name}] Logga in"
     account_created:
       subject_template: "[%{site_name}] Ditt nya konto"
-    authorize_email:
-      subject_template: "[%{site_name}] Confirm your new email address"
-      text_body_template: |
-        Confirm your new email address for %{site_name} by clicking on the following link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Du har blivit godkänd på %{site_name}!"
     signup:
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
   page_not_found:
-    title: "Sidan du sökte existerar inte eller är privat."
     popular_topics: "Populära"
     recent_topics: "Senaste"
     see_more: "Mer"
@@ -1099,3 +990,8 @@ sv:
     error: "Fel!"
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

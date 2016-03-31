@@ -11,7 +11,39 @@
     <%= render_google_universal_analytics_code %>
     <%= yield :head %>
     <style>
-        img { max-width: 100%; width: auto; height: auto; }
+      header img {
+        max-width: 90% !important;
+        padding-bottom: 10px;
+      }
+
+      img { max-width: 100%; width: auto; height: auto; }
+
+      #main-outlet > div {
+        margin-bottom: 15px;
+      }
+
+      footer nav a {
+        margin-right: 15px;
+      }
+
+      footer nav {
+        line-height: 30px;
+      }
+
+      body {
+        max-width: 98%;
+        padding-left: 1%;
+      }
+      .topic-list > div > a {
+        margin-right: 10px;
+      }
+      .topic-list > div .posts {
+          margin-left: 10px;
+      }
+      .topic-list > div {
+        margin-bottom: 15px;
+      }
+
     </style>
   </head>
   <body>
@@ -19,7 +51,7 @@
       <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
     <%- end %>
     <header>
-      <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+      <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo" style="max-width: 400px;"></a>
     </header>
     <div id="main-outlet" class="wrap">
       <%= yield %>
@@ -27,10 +59,10 @@
     <footer class="container">
       <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
         <a href='<%= path "/" %>'><%= t 'home_title' %></a>
-        <%= link_to t('js.filters.categories.title'), main_app.categories_path %>
-        <%= link_to t('guidelines_topic.title'), main_app.guidelines_path %>
-        <%= link_to t('tos_topic.title'), main_app.tos_path %>
-        <%= link_to t('privacy_topic.title'), main_app.privacy_path %>
+        <%= link_to t('js.filters.categories.title'), path("/categories") %>
+        <%= link_to t('guidelines_topic.title'), path("/guidelines") %>
+        <%= link_to t('tos_topic.title'), path("/tos") %>
+        <%= link_to t('privacy_topic.title'), path("/privacy") %>
       </nav>
       <p><%= t 'powered_by_html' %></p>
     </footer>

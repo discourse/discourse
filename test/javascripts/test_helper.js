@@ -1,17 +1,13 @@
 /*global document, sinon, QUnit, Logster */
 
 //= require env
-
 //= require ../../app/assets/javascripts/preload_store
-
-// probe framework first
 //= require probes
-
-// Externals we need to load first
 //= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
 //= require ember.debug
+//= require ember-template-compiler
 //= require message-bus
 //= require ember-qunit
 //= require fake_xml_http_request
@@ -20,9 +16,6 @@
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/locales/en
-
-// Pagedown customizations
-//= require ../../app/assets/javascripts/pagedown_custom.js
 
 //= require vendor
 
@@ -47,6 +40,8 @@
 //= require_self
 //
 //= require ../../public/javascripts/jquery.magnific-popup-min.js
+
+window.inTestEnv = true;
 
 window.assetPath = function(url) {
   if (url.indexOf('defer') === 0) {
@@ -91,7 +86,7 @@ QUnit.testStart(function(ctx) {
 
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
-  Discourse.BaseUri = "/";
+  Discourse.BaseUri = "";
   Discourse.BaseUrl = "localhost";
   Discourse.Session.resetCurrent();
   Discourse.User.resetCurrent();
@@ -109,14 +104,14 @@ QUnit.testStart(function(ctx) {
   window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
   window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
 
+  // Unless we ever need to test this, let's leave it off.
+  $.fn.autocomplete = Ember.K;
+
   // Don't debounce in test unless we're testing debouncing
   if (ctx.module.indexOf('debounce') === -1) {
     Ember.run.debounce = Ember.run;
   }
 });
-
-// Don't cloak in testing
-Ember.CloakedCollectionView = Ember.CollectionView;
 
 QUnit.testDone(function() {
   Ember.run.debounce = origDebounce;

@@ -81,14 +81,7 @@ function findOutlets(collection, callback) {
         }
       }
 
-      const dashedName = outletName.replace(/_/g, '-');
-      if (dashedName !== outletName) {
-        Ember.warn("DEPRECATION: You need to use dashes in outlet names, not underscores");
-        callback(dashedName, res, uniqueName);
-      } else {
-        callback(outletName, res, uniqueName);
-      }
-
+      callback(outletName, res, uniqueName);
     }
   });
 }
@@ -117,7 +110,7 @@ function buildConnectorCache() {
       _connectorCache[outletName].removeObject(viewClass);
     } else {
       if (!/\.raw$/.test(uniqueName)) {
-        viewClass = Em.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
+        viewClass = Ember.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
       }
     }
 
@@ -179,8 +172,11 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
     // just shove it in.
     const viewClass = (childViews.length > 1) ? Ember.ContainerView : childViews[0];
 
+    const newHash = $.extend({}, viewInjections(env.data.view.container));
+    if (hash.tagName) { newHash.tagName = hash.tagName; }
+
     delete options.fn;  // we don't need the default template since we have a connector
-    env.helpers.view.helperFunction.call(this, [viewClass], viewInjections(env.data.view.container), options, env);
+    env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
 
     const cvs = env.data.view._childViews;
     if (childViews.length > 1 && cvs && cvs.length) {

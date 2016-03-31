@@ -6,9 +6,12 @@
 * Contributors: https://github.com/tylerpearson/lazyYT/graphs/contributors || https://github.com/daugilas/lazyYT/graphs/contributors
 *
 * Usage: <div class="lazyYT" data-youtube-id="laknj093n" data-parameters="rel=0">loading...</div>
+*
+* Note: Discourse has forked this from the original, beware when updating the file.
+*
 */
 
-;(function ($) {
+(function ($) {
   'use strict';
 
   function setUp($el, settings) {
@@ -100,9 +103,14 @@
     .addClass('lazyYT-image-loaded')
     .on('click', function (e) {
       e.preventDefault();
+
       if (!$el.hasClass('lazyYT-video-loaded') && $thumb.hasClass('lazyYT-image-loaded')) {
         $el.html('<iframe src="//www.youtube.com/embed/' + id + '?autoplay=1&' + youtube_parameters + '" frameborder="0" allowfullscreen></iframe>')
         .addClass('lazyYT-video-loaded');
+      }
+
+      if (settings.onPlay) {
+        settings.onPlay(e, $el);
       }
     });
 
@@ -122,4 +130,4 @@
     });
   };
 
-}(jQuery));
+})(jQuery);

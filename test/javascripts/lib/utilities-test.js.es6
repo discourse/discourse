@@ -1,3 +1,4 @@
+/* global Int8Array:true */
 import { blank } from 'helpers/qunit-helpers';
 
 module("Discourse.Utilities");
@@ -95,7 +96,7 @@ test("getUploadMarkdown", function() {
 });
 
 test("isAnImage", function() {
-  _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff"], function(extension) {
+  _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "ico"], function(extension) {
     var image = "image." + extension;
     ok(utils.isAnImage(image), image + " is recognized as an image");
     ok(utils.isAnImage("http://foo.bar/path/to/" + image), image + " is recognized as an image");
@@ -157,4 +158,27 @@ test("allowsAttachments", function() {
 test("defaultHomepage", function() {
   Discourse.SiteSettings.top_menu = "latest|top|hot";
   equal(utils.defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
+});
+
+test("caretRowCol", () => {
+  var textarea = document.createElement('textarea');
+  const content = document.createTextNode("01234\n56789\n012345");
+  textarea.appendChild(content);
+  document.body.appendChild(textarea);
+
+  const assertResult = (setCaretPos, expectedRowNum, expectedColNum) => {
+    Discourse.Utilities.setCaretPosition(textarea, setCaretPos);
+
+    const result = Discourse.Utilities.caretRowCol(textarea);
+    equal(result.rowNum, expectedRowNum, "returns the right row of the caret");
+    equal(result.colNum, expectedColNum,  "returns the right col of the caret");
+  };
+
+  assertResult(0, 1, 0);
+  assertResult(5, 1, 5);
+  assertResult(6, 2, 0);
+  assertResult(11, 2, 5);
+  assertResult(14, 3, 2);
+
+  document.body.removeChild(textarea);
 });

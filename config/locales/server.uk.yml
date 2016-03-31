@@ -15,8 +15,6 @@ uk:
   posts: "дописи"
   loading: "Завантаження"
   powered_by_html: 'Створено за допомогою технології <a href="http://www.discourse.org">Discourse</a>, бажано переглядати з увімкненим JavaScript'
-  via: "%{username} через %{site_name}"
-  is_reserved: "is reserved"
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -29,21 +27,6 @@ uk:
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
-  too_many_mentions:
-    one: "Даруйте, Ви можете згадувати тільки одного іншого користувача у дописі."
-    other: "Даруйте, Ви можете згадувати %{count} користувачів у дописі."
-  too_many_mentions_newuser:
-    one: "Даруйте, нові користувачі можуть згадувати в дописі тільки одного користувача."
-    other: "Даруйте, нові користувачі можуть згадувати %{count} інших користувачів у дописі."
-  too_many_images:
-    one: "Даруйте, нові користувачі можуть вставляти в допис тільки одне зображення."
-    other: "Даруйте, нові користувачі можуть вставляти %{count} зображень у допис."
-  too_many_attachments:
-    one: "Даруйте, нові користувачі можуть вставляти в допис тільки одне  прикріплення."
-    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
-  too_many_links:
-    one: "Даруйте, нові користувачі можуть вставляти в допис тільки одне посилання."
-    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
   spamming_host: "Даруйте, Ви не можете вставити посилання на цей хост."
   just_posted_that: "це дуже схоже на те, що ви нещодавно дописували"
   has_already_been_used: "вже було використано"
@@ -100,9 +83,6 @@ uk:
       post:
         raw: "Тіло"
     errors:
-      messages:
-        is_invalid: "is invalid; try to be a little more descriptive"
-        has_already_been_used: "вже було використано"
       models:
         user:
           attributes:
@@ -115,8 +95,6 @@ uk:
   staff_category_description: "Закрита категорія для обговорень між персоналом. Теми бачать тільки адміністратори та модератори."
   category:
     topic_prefix: "Про категорію %{category}"
-    replace_paragraph: "[Замініть цей перший абзац коротким описом Вашої нової категорії. Він з'являтиметься в області вибору категорій, тому намагайтеся, щоб він був коротшим за 200 символів. Поки Ви не відредагуєте цей текст або не створите тем, ця категорія не з'явиться на сторінці категорій.]"
-    post_template: "%{replace_paragraph}\n\nВикористовуйте наступні абзаци для довшого опису, а також для того, щоб встановити якісь правила категорії.\n\nДеякі речі, які можна обговорити у відповідях на цей допис:\n\n- Для чого потрібна ця категорія? Чому людям слід обирати цю категорію для своїх тем?\n\n- Чим вона відрізняється від інших категорій, що в нас є?\n\n- Чи потрібна нам ця категорія?\n\n- Чи потрібно об'єднати цю категорію з якоюсь іншою, або розбити її на декілька?\n"
     errors:
       depth: "Ви не можете вкладати підкатегорію під іншу"
   trust_levels:
@@ -160,7 +138,6 @@ uk:
     notify_user:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      email_title: 'Допис у темі "%{title}" потребує уваги модератора'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Лишити закладку'
@@ -281,31 +258,6 @@ uk:
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-  content_types:
-    education_new_reply:
-      title: "Навчання новачка: Перші відповіді"
-      description: "Спливні настанови, що одразу автоматично відображаються над редактором, коли новий користувач починає вводити свої перші дві нові відповіді."
-    education_new_topic:
-      title: "Навчання новачка: Перші теми"
-      description: "Спливні настанови, що одразу автоматично відображаються над редактором, коли новий користувач починає вводити свої перші дві нові теми."
-    welcome_user:
-      title: "Вітання: Новий користувач"
-    welcome_invite:
-      title: "Вітання: Запрошений користувач"
-    login_required_welcome_message:
-      title: "Потрібно увійти: Вітальне повідомлення"
-      description: "Вітальне повідомлення, що відображається для користувачів, що вийшли, коли налаштування 'потрібен вхід' увімкнено."
-    login_required:
-      title: "Потрібно увійти: Головна сторінка"
-      description: "Текст, що відображається для неавторизованих користувачів, коли потрібен вхід на сайт."
-    head:
-      title: "HTML head"
-      description: "HTML-код, що буде вставлятися всередину теґів <head></head>."
-    top:
-      title: "Верхній колонтитул сторінок"
-      description: "HTML-код, що буде додаватися на початку кожної сторінки (після заголовка, перед навігацією або назвою теми)."
-    bottom:
-      title: "Нижній колонтитул сторінок"
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
@@ -431,9 +383,6 @@ uk:
     subject_template: "[%{site_name}] Тест доставки електронної пошти"
   new_version_mailer_with_notes:
     subject_template: "оновлення [%{site_name}] доступно"
-  flags_reminder:
-    please_review: "Будь ласка, перегляньте його."
-    post_number: "допис"
   system_messages:
     post_hidden:
       subject_template: "Допис приховано через скарги спільноти"
@@ -469,54 +418,17 @@ uk:
     unsubscribe:
       title: "Відпісатися"
       description: "Не зацікавлені в отриманні цих листів? Немає проблем! Натисніть нижче, щоб відписатися назавжди:"
-    reply_by_email: "Щоб відповісти, надішліть відповідь на цей лист або відвідайте %{base_url}%{url} у своєму веб-оглядачі."
-    visit_link_to_respond: "Щоб відповісти, відвідайте %{base_url}%{url} у своєму веб-оглядачі."
     posted_by: "Опубліковано %{username} %{post_date}"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [ПП] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       new_activity: "Нова активність у ваших темах та дописах:"
       top_topics: "Популярні дописи"
@@ -542,12 +454,6 @@ uk:
 
         Перейдіть за посиланням, щоб обрати пароль:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] Підтвердіть свою електронну скриньку"
-      text_body_template: |
-        Підтвердіть свою нову електронну скриньку для сайта %{site_name}, перейшовши за посиланням:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Вас було схвалено на сайті %{site_name}!"
     signup:
@@ -559,7 +465,6 @@ uk:
 
         Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
   page_not_found:
-    title: "Сторінка, яку Ви запитали, не існує або є приватною."
     popular_topics: "Популярні"
     recent_topics: "Останні"
     see_more: "Більше"

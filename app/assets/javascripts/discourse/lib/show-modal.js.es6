@@ -1,11 +1,5 @@
-export default (name, opts) => {
+export default function(name, opts) {
   opts = opts || {};
-
-  if (opts.__type) {
-    Ember.warn("showModal now takes `opts` as a second param instead of a model");
-    opts = {model: opts};
-  }
-
   const container = Discourse.__container__;
 
   // We use the container here because modals are like singletons

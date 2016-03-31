@@ -1,4 +1,5 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
+import UserAction from "discourse/models/user-action";
 
 export default Ember.Component.extend(StringBuffer, {
   tagName: 'li',
@@ -27,9 +28,9 @@ export default Ember.Component.extend(StringBuffer, {
 
   typeKey: function() {
     const actionType = this.get('content.action_type');
-    if (actionType === Discourse.UserAction.TYPES.messages_received) { return ""; }
+    if (actionType === UserAction.TYPES.messages_received) { return ""; }
 
-    const result = Discourse.UserAction.TYPES_INVERTED[actionType];
+    const result = UserAction.TYPES_INVERTED[actionType];
     if (!result) { return ""; }
 
     // We like our URLS to have hyphens, not underscores
@@ -55,11 +56,11 @@ export default Ember.Component.extend(StringBuffer, {
 
   icon: function() {
     switch(parseInt(this.get('content.action_type'), 10)) {
-      case Discourse.UserAction.TYPES.likes_received: return "heart";
-      case Discourse.UserAction.TYPES.bookmarks: return "bookmark";
-      case Discourse.UserAction.TYPES.edits: return "pencil";
-      case Discourse.UserAction.TYPES.replies: return "reply";
-      case Discourse.UserAction.TYPES.mentions: return "at";
+      case UserAction.TYPES.likes_received: return "heart";
+      case UserAction.TYPES.bookmarks: return "bookmark";
+      case UserAction.TYPES.edits: return "pencil";
+      case UserAction.TYPES.replies: return "reply";
+      case UserAction.TYPES.mentions: return "at";
     }
   }.property("content.action_type")
 });

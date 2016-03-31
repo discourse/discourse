@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PARAMS="$@"
+CMD="cd /src && HOME=/home/discourse RAILS_ENV=${RAILS_ENV:=development} chpst -u discourse:discourse rake $PARAMS"
+docker exec -it discourse_dev /bin/bash -c "$CMD"

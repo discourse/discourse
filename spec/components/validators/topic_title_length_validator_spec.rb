@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require 'spec_helper'
+require 'rails_helper'
 require 'validators/topic_title_length_validator'
 
 describe TopicTitleLengthValidator do

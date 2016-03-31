@@ -22,6 +22,7 @@ class Guardian
     def staff?; false; end
     def moderator?; false; end
     def approved?; false; end
+    def staged?; false; end
     def secure_category_ids; []; end
     def topic_create_allowed_category_ids; []; end
     def has_trust_level?(level); false; end
@@ -212,7 +213,7 @@ class Guardian
 
   def can_invite_to?(object, group_ids=nil)
     return false if ! authenticated?
-    return false unless ( SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?) )
+    return false unless (!SiteSetting.must_approve_users? || is_staff?)
     return true if is_admin?
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
     return false if ! can_see?(object)
@@ -250,13 +251,15 @@ class Guardian
     # Can't send message to yourself
     is_not_me?(target) &&
     # Have to be a basic level at least
-    @user.has_trust_level?(TrustLevel[1]) &&
+    @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) &&
     # PMs are enabled
     (SiteSetting.enable_private_messages ||
       @user.username == SiteSetting.site_contact_username ||
       @user == Discourse.system_user) &&
     # Can't send PMs to suspended users
-    (is_staff? || target.is_a?(Group) || !target.suspended?)
+    (is_staff? || target.is_a?(Group) || !target.suspended?) &&
+    # Blocked users can only send PM to staff
+    (!@user.blocked? || target.staff?)
   end
 
   def can_see_emails?

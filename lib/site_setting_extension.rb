@@ -21,18 +21,18 @@ module SiteSettingExtension
   end
 
   def types
-    @types ||= Enum.new(:string,
-                        :time,
-                        :fixnum,
-                        :float,
-                        :bool,
-                        :null,
-                        :enum,
-                        :list,
-                        :url_list,
-                        :host_list,
-                        :category_list,
-                        :value_list)
+    @types ||= Enum.new(string: 1,
+                        time: 2,
+                        fixnum: 3,
+                        float: 4,
+                        bool: 5,
+                        null: 6,
+                        enum: 7,
+                        list: 8,
+                        url_list: 9,
+                        host_list: 10,
+                        category_list: 11,
+                        value_list: 12)
   end
 
   def mutex
@@ -121,9 +121,11 @@ module SiteSettingExtension
       # exists it will be used instead of the setting and the setting will be hidden.
       # Useful for things like API keys on multisite.
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
-        hidden_settings << name
-        shadowed_settings << name
-        current_value = GlobalSetting.send(name)
+        unless (val = GlobalSetting.send(name)) == ''.freeze
+          hidden_settings << name
+          shadowed_settings << name
+          current_value = val
+        end
       end
 
       if opts[:refresh]
@@ -149,7 +151,7 @@ module SiteSettingExtension
   # just like a setting, except that it is available in javascript via DiscourseSession
   def client_setting(name, default = nil, opts = {})
     setting(name, default, opts)
-    client_settings << name
+    client_settings << name.to_sym
   end
 
   def settings_hash
@@ -371,8 +373,8 @@ module SiteSettingExtension
   protected
 
   def clear_cache!
-    SiteText.text_for_cache.clear
     Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
+    Site.clear_anon_cache!
   end
 
   def diff_hash(new_hash, old)

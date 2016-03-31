@@ -10,18 +10,41 @@ pt:
     short_date_no_year: "DD MMM"
     short_date: "DD MMM, YYYY"
     long_date: "DD de MMMM de YYYY hh:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+  date:
+    month_names: [null, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tópicos"
   posts: "mensagens"
   loading: "A carregar"
   powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, e melhor visualizado com o JavaScript ativo'
   log_in: "Iniciar Sessão"
-  via: "%{username} através de %{site_name}"
-  is_reserved: "está reservado"
   purge_reason: "Automaticamente eliminado devido a abandono, conta inativada"
   disable_remote_images_download_reason: "O download remoto de imagens foi desativado por não haver espaço disponível no disco."
   anonymous: "Anónimo"
-  errors:
+  emails:
+    incoming:
+      default_subject: "Email recebido de %{email}"
+      show_trimmed_content: "Mostrar conteúdo aparado"
+      errors:
+        empty_email_error: "Acontece quando, a informação não processada, do email recebido veio em branco."
+        no_message_id_error: "Acontece quando o email recebido não tem 'Message-Id' no cabeçalho da mensagem."
+        auto_generated_email_error: "Acontece quando o cabeçalho 'precedence' é definida como: 'list', 'junk' ou 'auto_reply', ou quando algum cabeçalho contém: 'auto-submitted', 'auto-replied' ou 'auto-generated'."
+        no_body_detected_error: "Acontece quando não conseguimos extrair o corpo da mensagem e não existem anexos."
+        inactive_user_error: "Acontece quando o remetente não está activo."
+        blocked_user_error: "Acontece quando o remetente está bloqueado."
+        bad_destination_address: "Acontece quando nenhum dos endereços de email nos campos para/cc/bcc coincide com um endereço de email configurado."
+        strangers_not_allowed_error: "Acontece quando um utilizador tenta criar um tópico numa categoria em que não é membro."
+        insufficient_trust_level_error: "Acontece quando um utilizador tentar criar um tópico numa categoria para a qual não tem o nível de confiança necessário."
+        reply_user_not_matching_error: "Acontece quando uma resposta veio de um endereço de email diferente do destinatário da notificação."
+        topic_not_found_error: "Acontece quando a resposta veio de um tópico relacionado mas o tópico relacionado foi apagado."
+        topic_closed_error: "Acontece quando uma resposta chegou mas o tópico relacionado foi fechado."
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "está limitado a %{max} caracteres; inseriu %{length}."
@@ -37,8 +60,10 @@ pt:
       exclusion: está reservado
       greater_than: tem que ser maior que %{count}
       greater_than_or_equal_to: tem que ser maior ou igual a %{count}
+      has_already_been_used: "já foi usado"
       inclusion: não está incluído na lista
       invalid: é inválido
+      is_invalid: "é inválido; tente ser um pouco mais descritivo"
       less_than: tem que ser menos que %{count}
       less_than_or_equal_to: tem que ser menos ou igual a %{count}
       not_a_number: não é um número
@@ -82,6 +107,8 @@ pt:
   not_found: "O URL ou recurso pedido não foi encontrado."
   invalid_access: "Não tem permissões para visualizar o recurso pedido."
   read_only_mode_enabled: "Este sítio encontra-se no modo só de leitura. As interações estão desativadas."
+  reading_time: "Tempo de leitura"
+  likes: "Gostos"
   too_many_replies:
     one: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a 1 resposta no mesmo tópico."
     other: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} respostas no mesmo tópico."
@@ -98,26 +125,26 @@ pt:
     replies:
       one: "1 resposta"
       other: "%{count} respostas"
+  no_mentions_allowed: "Pedimos desculpa, não pode mencionar outros utilizadores."
   too_many_mentions:
-    zero: "Pedimos desculpa, não pode mencionar outros utilizadores."
-    one: "Pedimos desculpa, pode mencionar apenas um outro utilizador numa mensagem."
-    other: "Pedimos desculpa, pode mencionar apenas %{count} utilizadores numa mensagem."
+    one: "Pedimos desculpa, pode mencionar apenas 1 outro utilizador numa mensagem."
+    other: "Pedimos desculpa, pode mencionar apenas %{count} outros utilizadores numa mensagem."
+  no_mentions_allowed_newuser: "Pedimos desculpa, novos utilizadores não podem mencionar outros utilizadores."
   too_many_mentions_newuser:
-    zero: "Pedimos desculpa, utilizadores novos não podem mencionar outros utilizadores."
-    one: "Pedimos desculpa, utilizadores novos podem mencionar apenas um outro utilizador numa mensagem."
-    other: "Pedimos desculpa, utilizadores novos podem mencionar apenas %{count} utilizadores numa mensagem."
+    one: "Pedimos desculpa, novos utilizadores podem mencionar apenas 1 outro utilizador numa mensagem."
+    other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
+  no_images_allowed: "Pedimos desculpa, novos utilizadores não podem colocar imagens nas mensagens."
   too_many_images:
-    zero: "Pedimos desculpa, utilizadores novos não podem colocar imagens nas mensagens."
-    one: "Pedimos desculpa, utilizadores novos podem colocar apenas uma imagem nas mensagens."
-    other: "Pedimos desculpa, utilizadores novos podem colocar apenas %{count} imagens numa mensagem."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 imagem numa mensagem."
+    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} imagens numa mensagem."
+  no_attachments_allowed: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
   too_many_attachments:
-    zero: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas um anexo nas suas mensagens."
-    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexos nas suas mensagens."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 anexo numa mensagem."
+    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexos numa mensagem."
+  no_links_allowed: "Pedimos desculpa, novos utilizadores não podem colocar hiperligações nas mensagens."
   too_many_links:
-    zero: "Pedimos desculpa, utilizadores novos não podem colocar hiperligações nas mensagens."
-    one: "Pedimos desculpa, utilizadores novos podem colocar apenas uma hiperligação nas mensagens."
-    other: "Pedimos desculpa, utilizadores novos podem colocar apenas %{count} hiperligações nas mensagens."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 hiperligação numa mensagem."
+    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
@@ -140,8 +167,13 @@ pt:
   rss_description:
     latest: "Tópicos recentes"
     hot: "Tópicos quentes"
+    top: "Melhores tópicos"
     posts: "Últimas mensagens"
+    private_posts: "Últimas mensagens privadas"
+    group_posts: "Últimas mensagens em %{group_name}"
+    group_mentions: "Últimas menções em %{group_name}"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
+  revert_version_same: "A versão atual é o mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
   queue:
     delete_reason: "Eliminado através da fila de moderação de mensagens"
@@ -149,6 +181,10 @@ pt:
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
       member_already_exist: "'%{username}' já é membro deste grupo."
+      invalid_domain: "'%{domain}' não é um domínio válido."
+      invalid_incoming_email: "'%{email}' não é um endereço de email válido."
+      email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -228,9 +264,6 @@ pt:
       user_profile:
         bio_raw: "Sobre Mim"
     errors:
-      messages:
-        is_invalid: "é inválido; tente ser um pouco mais descritivo"
-        has_already_been_used: "já está sendo usado"
       models:
         topic:
           attributes:
@@ -251,6 +284,7 @@ pt:
           attributes:
             hex:
               invalid: "não é uma cor válida"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>o campo Sobre Mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer preenchê-lo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
@@ -287,13 +321,15 @@ pt:
 
   category:
     topic_prefix: "Acerca da categoria %{category}"
-    replace_paragraph: "[Substituir este primeiro parágrafo, com uma breve descrição de sua nova categoria. Esta orientação será exibida na área de seleção de categoria, por isso tente mantê-la abaixo de 200 caracteres. Até  editar este texto ou criar tópicos, esta categoria não aparece na página de categorias.]"
-    post_template: "%{replace_paragraph}\n\nUse os seguintes parágrados para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlguns pontos a ter em consideração em qualquer resposta a uma discussão:\n\n- Para que serve esta categoria? Porque alguém usaria esta categoria no seu tópico?\n\n- Como é que esta categoria se difere das demais categorias já existentes?\n\n- Precisamos desta categoria?\n\n- Deveríamos juntar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
+    replace_paragraph: "(Substitua este primeiro parágrafo com uma breve descrição da sua nova categoria. Este guia irá aparecer na área de seleção da categoria, por isso tente mantê-lo abaixo dos 200 caracteres. **Até editar esta descrição ou criar tópicos, esta categoria não irá aparecer na página das categorias.**)"
+    post_template: "%{replace_paragraph}\n\nUtilize os seguintes parágrafos para uma descrição mais longa, ou para estabelecer diretrizes ou regras da categoria:\n\n- Porque devem as pessoas utilizar esta categoria? Para que serve?\n\n- No que difere ao certo em relação às outras categorias que já temos?\n\n- O que devem conter, de maneira geral, os tópicos desta categoria?\n\n- Precisamos desta categoria? Podemos juntá-la com outra categoria, ou subcategoria?\n"
     errors:
       uncategorized_parent: "Sem categoria não podem ter categorias de nível superior"
       self_parent: "Uma subcategoria não pode ser superior a ela própria"
       depth: "Não pode juntar uma subcategoria dentro de outra"
-      email_in_already_exist: "Endereço de email de recepção %{email_in}' já está a ser utilizado pela categoria %{category_name}'."
+      invalid_email_in: "'%{email}' não é um endereço de email válido."
+      email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Não é possível eliminar Sem Categoria"
       has_subcategories: "Não é possível eliminar esta categoria porque contém sub-categorias."
@@ -301,21 +337,36 @@ pt:
         one: "Não é possível eliminar esta categoria porque contém 1 tópico. O tópico mais antigo é  %{topic_link}."
         other: "Não é possível eliminar esta categoria porque contém %{count} tópicos. O tópico mais antigo é  %{topic_link}."
       topic_exists_no_oldest: "Não é possível eliminar esta categoria porque a contagem de tópicos é de %{count}."
+    uncategorized_description: "Tópicos que não precisam de uma categoria ou que não se encaixam em nenhuma outra categoria existente."
   trust_levels:
     newuser:
       title: "novo utilizador"
     basic:
       title: "utilizador básico"
-    regular:
+    member:
       title: "membro"
-    leader:
+    regular:
       title: "habitual"
-    elder:
+    leader:
       title: "líder"
     change_failed_explanation: "Tentou despromover %{user_name} para '%{new_trust_level}'. Contudo o Nível de Confiança é atualmente '%{current_trust_level}'. %{user_name} irá permanecer em '%{current_trust_level}' - se deseja despromover o utilizador, bloqueie o Nível de Confiança primeiro"
   rate_limiter:
-    slow_down: "Realizou esta ação demasiadas vezes, tente novamente mais tarde"
+    slow_down: "Realizou esta ação demasiadas vezes, tente novamente mais tarde."
     too_many_requests: "Possuímos um limite diário de número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
+    by_type:
+      first_day_replies_per_day: "Atingiu o número máximo de respostas que um novo utilizador pode criar no seu primeiro dia. Por favor espere %{time_left} antes de tentar novamente."
+      first_day_topics_per_day: "Atingiu o número máximo de tópicos que um novo utilizador pode criar no seu primeiro dia. Por favor espere %{time_left} antes de tentar novamente."
+      create_topic: "Está a criar tópicos demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
+      create_post: "Está a responder demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
+      delete_post: "Está a apagar mensagens demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
+      topics_per_day: "Atingiu o número máximo de novos tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
+      pms_per_day: "Atingiu o número máximo de mensagens de hoje. Por favor espere %{time_left} antes de tentar novamente."
+      create_like: "Atingiu o número máximo de gostos de hoje. Por favor espere %{time_left} antes de tentar novamente."
+      create_bookmark: "Atingiu o número máximo de marcações de hoje. Por favor espere %{time_left} antes de tentar novamente."
+      edit_post: "Atingiu o número máximo de edições de hoje. Por favor espere %{time_left} antes de tentar novamente."
+      live_post_counts: "Tem estado a pedir contagens de mensagens em directo demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
+      unsubscribe_via_email: "Atingiu o número máximo de cancelamentos de subscrições por email de hoje. Por favor espere %{time_left} antes de tentar novamente."
+      topic_invitations_per_day: "Atingiu o número máximo de convites para tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -410,6 +461,11 @@ pt:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja a ser utilizado?"
+    error_staged: "Ocorreu um erro ao alterar o seu endereço de email. O endereço de email já está a ser utilizado por um utilizador temporário."
+    already_done: "Pedimos desculpa, esta hiperligação de confirmação já não é valida. Talvez o seu email já foi alterado?"
+    authorizing_old:
+      title: "Obrigado por confirmar o seu endereço de email atual."
+      description: "Estamos a enviar um email, para o seu novo endereço de email, para confirmação."
   activation:
     action: "Clique aqui para ativar a sua conta"
     already_done: "Pedimos desculpa, esta hiperligação de confirmação já não está válida. Talvez a sua conta já esteja ativa?"
@@ -434,16 +490,16 @@ pt:
       description: 'Esta mensagem contém conteúdo que uma pessoa sensata iria considerar ofensivo, abusivo, ou como uma violação das <a href="/guidelines"> diretrizes da nossa comunidade</a>.'
       long_form: 'sinalizou isto como inapropriado'
     notify_user:
-      title: 'Mensagem @{{username}}'
-      description: 'Esta mensagem contém algo sobre o qual quero falar com esta pessoa diretamente e em privado. Não representa motivo para ter alguma sinalização.'
+      title: 'Enviar uma mensagem a @{{username}}'
+      description: 'Quero falar com esta pessoa diretamente e em privado acerca da sua mensagem.'
       long_form: 'utilizador com mensagens'
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Algo Mais"
-      description: 'Esta mensagem requer a atenção do moderador por outro motivo não mencionado acima.'
-      long_form: 'sinalizou isto para obter a atenção do moderador.'
-      email_title: 'Uma mensagem em "%{title}" requer a atenção do moderador'
+      description: 'Esta mensagem requer a atenção do pessoal por outra razão não listada acima.'
+      long_form: 'marcou isto para ser alvo da atenção do pessoal'
+      email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Adicionar Marcador'
@@ -468,7 +524,7 @@ pt:
       long_form: 'sinalizou isto como inapropriado'
     notify_moderators:
       title: "Algo Mais"
-      description: 'Este tópico requer a atenção geral do moderador baseado nas <a href="/guidelines">diretrizes</a>, <a href="%{tos_url}">TDS</a>, ou por outro motivo não mencionado acima.'
+      description: 'Este tópico requer a atenção geral do pessoal baseado nas <a href="/guidelines">diretrizes</a>, <a href="%{tos_url}">TDS</a>, ou por outra razão não listada acima.'
       long_form: 'sinalizou isto para obter a atenção do moderador'
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
       email_body: "%{link}\n\n%{message}"
@@ -504,6 +560,10 @@ pt:
       title: "Novos Utilizadores"
       xaxis: "Dia"
       yaxis: "Número de novos utilizadores"
+    profile_views:
+      title: "Visualizações do Perfil de Utilizador"
+      xaxis: "Dia"
+      yaxis: "Número de perfis de utilizador vistos"
     topics:
       title: "Tópicos"
       xaxis: "Dia"
@@ -655,42 +715,16 @@ pt:
     consumer_email_warning: "O seu sítio está configurado para usar Gmail (ou outro serviço de email)<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>O Gmail limita a quantidade de emails que pode enviar</a>. Considere usar um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
     site_contact_username_warning: "Introduza o nome de uma conta de utilizador de um membro do pessoal de onde possam ser enviadas mensagens importantes automatizadas. Atualize sítio_contacto_nomedeutilizador nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     notification_email_warning: "Não estão a ser enviados emails de notificação a partir de um endereço de email válido no seu domínio; a entrega do email será errática e não fiável. Por favor configure notificaçao_email para um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
-  content_types:
-    education_new_reply:
-      title: "Educação do Novo Utilizador: Primeiras Respostas"
-      description: "Pop up de orientação automaticamente exibido em cima do compositor quando novos utilizadores começam a escrever as suas duas primeiras respostas."
-    education_new_topic:
-      title: "Educação do Novo Utilizador: Primeiros Tópicos"
-      description: "Pop up de orientação automaticamente exibido em cima do compositor quando novos utilizadores começam a escrever os seus dois primeiros tópicos."
-    usage_tips:
-      title: "Orientação para o Novo Utilizador"
-      description: "Orientação e informação essencial para novos utilizadores."
-    welcome_user:
-      title: "Bem-vindo: Novo Utilizador"
-      description: "Uma mensagem enviada automaticamente para todos os novos utilizadores quando estes se inscrevem."
-    welcome_invite:
-      title: "Bem-vindo: Utilizador Convidado"
-      description: "Uma mensagem enviada automaticamente para todos os novos utilizadores assim que aceitam o convite de outro utilizador para participar."
-    login_required_welcome_message:
-      title: "Início de Sessão Obrigatório: Mensagem de Boas-vindas"
-      description: "Mensagem de boas-vindas exibida a utilizadores que não têm sessão iniciada quando a configuração 'início de sessão obrigatório' está ativa."
-    login_required:
-      title: "Início de Sessão Obrigatório: Página Principal"
-      description: "Texto exibido a utilizadores não autorizados quando se exige início de sessão no sítio."
-    head:
-      title: "Cabeçalho HTML"
-      description: "HTML que será inserido dentro do código <head></head>."
-    top:
-      title: "Topo das páginas"
-      description: "HTML que será adicionado no topo de cada página (depois do cabeçalho, antes da navegação ou do título do tópico)."
-    bottom:
-      title: "Final das páginas"
-      description: "HTML que será adicionado antes do código </body>."
+    subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
+    email_polling_errored_recently:
+      one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
+      other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
   site_settings:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
+    set_locale_from_accept_language_header: "defina a língua de interface para utilizadores anónimos com base nos cabeçalhos de língua dos seus navegadores. (EXPERIMENTAL, não funciona com cache anónima)"
     min_post_length: "Tamanho mínimo permitido por mensagem, em caracteres"
     min_first_post_length: "Tamanho mínimo permitido para a primeira mensagem (corpo do tópico), em caracteres"
     min_private_message_post_length: "Tamanho mínimo permitido para mensagens, em caracteres"
@@ -699,8 +733,8 @@ pt:
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
     min_private_message_title_length: "Tamanho mínimo permitido por título nas mensagens, em caracteres"
     min_search_term_length: "Tamanho mínimo válido para termos de pesquisa, em caracteres"
+    search_tokenize_chinese_japanese_korean: "Forçar pesquisa para atomizar Chinês/Japonês/Coreano mesmo em sites que não sejam CJC"
     allow_uncategorized_topics: "Permitir a criação de tópicos sem categoria. AVISO: Se houver quaisquer tópicos não categorizados, tem que re-categorizá-los antes de desligar isto."
-    uncategorized_description: "Descrição da categoria sem classificação. Deixar em branco para nenhuma descrição."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes que um utilizador possa criar uma mensagem com o mesmo conteúdo outra vez?"
     educate_until_posts: "Quando um utilizador começar a escrever as primeiras (n) novas mensagens, mostrar o painel pop-up de educação do novo utilizador no editor."
@@ -713,7 +747,7 @@ pt:
     download_remote_images_to_local: "Converter imagens remotas em imagens locais ao descarregá-las; isto previne imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para descarregar imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "Imagens remotas não serão descarregadas destes domínios. "
-    ninja_edit_window: "Durante (n) segundos após a publicação da mensagem, editá-la não irá criar uma nova versão no histórico de mensagens."
+    editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     post_edit_time_limit: "O autor pode editar ou eliminar a sua mensagem por um período de (n) minutos após a publicação da mesma. Definir a 0 para ser para sempre."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
@@ -722,7 +756,7 @@ pt:
     category_featured_topics: "Número de tópicos visíveis por categoria na página de /categorias. Após a alteração deste valor, irá demorar até 15 minutos para que a página de categorias fique atualizada."
     show_subcategory_list: "Mostrar lista de subcategorias em vez de lista de tópicos quando inserida uma categoria."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
-    fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requere fixed_category_positions)"
+    fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Uma lista de domínios em que nofollow não deve ser adicionado a linkls.tld.com irá permitir automaticamente sub.tld.com. Como mínimo, deve adicionar o domínio de alto nível deste sítio para ajudar os rastreadores da internet a encontrarem todo o conteúdo. Se outras partes do seu sítio estão em outros domínicios, adicione-os também."
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
@@ -743,7 +777,7 @@ pt:
     summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores %  de mensagens"
     summary_max_results: "Número máximo de mensagens devolvidas por 'Resumo deste Tópico'"
-    enable_private_messages: "Permitir que utilizadores de nível de confiança 1 possam criar e responder a mensagens"
+    enable_private_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base usada para solicitação ao servidor (quando um CDN serve conteúdo dinâmico, certifique-se de configurá-lo para a 'pull' original) ex: http://origem.sítio.com"
     long_polling_interval: "Quantidade de tempo que um servidor deve esperar antes de notificar os clientes quando não há dados para serem enviados (apenas utilizadores ligados)"
@@ -762,9 +796,10 @@ pt:
     notify_mods_when_user_blocked: "Se um utilizador for bloqueado de forma automática, enviar uma mensagem a todos os moderadores."
     flag_sockpuppets: "Se um novo utilizador responde a um tópico a partir do mesmo endereço IP do novo utilizador que iniciou o tópico, sinalizar ambas as mensagens como potencial spam."
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
-    allow_html_tables: "Permitir inserção de tabelas em Markdown utilizando tags HTML, TABLE,THEAD, TD, TR,TH fazem parte da lista branca (requer que todas as mensagens antigas que contém tabelas sejam refeitas)"
+    allow_html_tables: "Permitir inserção de tabelas em Markdown utilizando tags HTML. TABLE,THEAD, TD, TR,TH fazem parte da lista branca (requer que todas as mensagens antigas que contém tabelas sejam refeitas)"
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
     must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
+    pending_users_reminder_delay: "Notificar moderadores se novos utilizadores estiverem à espera de aprovação por mais que esta quantidade de horas. Configurar com -1 para desativar notificações."
     ga_tracking_code: "Código de acompanhamento do Google Analytics (ga.js), ex: UA-12345678-9; ver http://google.com/analytics"
     ga_domain_name: "Nome de domínio da Google Analytics (ga.js), ex: omeusitio.com; ver http://google.com/analytics"
     ga_universal_tracking_code: "Código de acompanhamento do Google Universal Analytics (analytics.js), ex: UA-12345678-9; ver http://google.com/analytics"
@@ -773,6 +808,7 @@ pt:
     enable_noscript_support: "Ativar o suporte básico para pesquisas em motores de pesquisa através da etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir que os moderadores criem novas categorias"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
+    use_admin_ip_whitelist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     top_menu: "Determinar que elementos aparecem na navegação da página principal, e em que ordem. Exemplo últimos|novos|não lidos|categorias|topo|lidos|publicados|marcadores"
     post_menu: "Determine que itens irão aparecer no menu de mensagens, e em que ordem. Exemplo\ngostar|editar|sinalizar|eliminar|partilhar|marcar|responder"
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
@@ -784,15 +820,15 @@ pt:
     suppress_reply_directly_above: "Não mostrar em-resposta-a expansível quando há apenas uma única resposta diretamente acima desta publicação."
     suppress_reply_when_quoting: "Não mostraR em-resposta-a expansível numa mensagem quando esta cita uma resposta."
     max_reply_history: "Número máximo de respostas a serem expandidas quando se expande em-resposta-a"
-    experimental_reply_expansion: "Esconder respostas intermédias ao expandir uma resposta-a (experimental)"
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em  'Mostrar Mais' tópicos principais expandido."
     redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
+    top_page_default_timeframe: "Intervalo de tempo por defeito para a página de visualizações do topo."
     show_email_on_profile: "Mostrar o email do utilizador no seu perfil (apenas visível para si próprio e para o pessoal)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     email_token_grace_period_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por um período de carência de (n) horas após serem recuperados"
     enable_badges: "Ativar o sistema de distintivos"
-    enable_whispers: "Permitir que os utilizadores sussurrem ao pessoal"
+    enable_whispers: "Permitir comunicação privada do pessoal dentro de tópico (experimental)"
     allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
     email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
@@ -810,6 +846,7 @@ pt:
     max_username_length: "Comprimento máximo do nome de utilizador, em caracteres."
     reserved_usernames: "Nomes de utilizadores para os quais o registo não é permitido."
     min_password_length: "Tamanho mínimo da palavra-passe."
+    min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
     enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
     enable_sso_provider: "Implementar o protocolo do provedor SSO do Discourse no caminho /session/sso_provider, requer que sso_secret seja configurado"
@@ -830,6 +867,9 @@ pt:
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
     twitter_consumer_key: "Chave de consumidor para autenticação pelo Twitter, registada em http://dev.twitter.com"
     twitter_consumer_secret: "Chave do Consumidor para a autenticação pelo Twitter, registada em http://dev.twitter.com"
+    enable_instagram_logins: "Ativar autenticação pelo Instagram, requer instagram_consumer_key e instagram_consumer_secret"
+    instagram_consumer_key: "Chave de cliente para a autenticação via Instagram"
+    instagram_consumer_secret: "Segredo de cliente para a autenticação via Instagram"
     enable_facebook_logins: "Ativar autenticação pelo Facebook, requer facebook_app_id e facebook_app_secret"
     facebook_app_id: "Id App usado para autenticação pelo Facebook, registado em https://developers.facebook.com/apps"
     facebook_app_secret: "Chave da App para autenticação com o Facebook, registado em https://developers.facebook.com/apps"
@@ -842,9 +882,15 @@ pt:
     backup_frequency: "Com que frequência criamos cópias de segurança do sítio, em dias."
     enable_s3_backups: "Carregar cópias de segurança para S3 quando completo. IMPORTANTE: requer credenciais S3 válidas inseridas nas configurações dos ficheiros."
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
+    s3_disable_cleanup: "Desative a remoção das cópias de segurança do S3 quando removidas localmente."
+    backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
+    backup_with_uploads: "Incluir carregamentos em cópias de segurança agendadas. Desativar isto irá salvaguardar apenas a base de dados."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
     verbose_localization: "Mostrar extensas dicas de localização na IU"
     previous_visit_timeout_hours: "Quanto tempo dura uma visita antes de a considerarmos como 'visita anterior', em horas."
+    top_topics_formula_log_views_multiplier: "fórmula do multiplicador (n) de visualizações logarítmica nos melhores tópicos: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_first_post_likes_multiplier: "fórmula do multiplicador (n) de primeiros gostos nos melhores tópicos: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
+    top_topics_formula_least_likes_per_post_multiplier: "fórmula do multiplicador (n) de menos gostos nos melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Após a criação de um tópico, os utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_create_post: "Após a publicação, os utilizadores devem esperar (n) segundos antes de criarem outra mensagem."
     rate_limit_new_user_create_topic: "Após a criação de um tópico, os novos utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
@@ -857,6 +903,8 @@ pt:
     max_private_messages_per_day: "Número máximo de mensagens que os utilizadores podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um utilizador pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
+    alert_admins_if_errors_per_minute: "O número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
+    alert_admins_if_errors_per_hour: "O número de erros por hora necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Apenas mostrar tópicos da categoria atual nos tópicos sugeridos."
     clean_up_uploads: "Remover carregamentos orfãos não referenciados para prevenir alojamento ilegal. AVISO: poderá querer criar uma cópia de segurança da diretoria /uploads antes de ativar esta configuração."
@@ -873,6 +921,8 @@ pt:
     avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
     external_system_avatars_enabled: "Utilize o serviço do sistema externo de avatars."
     external_system_avatars_url: "URL do serviço do sistema externo de avatars. Substituições permitidas são  {nome_de_utilizador} {primeira_letra} {cor} {tamanho}"
+    default_opengraph_image_url: "URL da imagem opengraph por defeito."
+    allow_all_attachments_for_group_messages: "Permitir qualquer anexo de email nas mensagens de grupo."
     enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
     default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
@@ -886,32 +936,38 @@ pt:
     tl2_requires_likes_received: "Quantos gostos um utilizador deve receber antes de ser promovido para o Nível de Confiança 2."
     tl2_requires_likes_given: "Quantos gostos um utilizador deve atribuir antes de ser promovido para o Nível de Confiança 2."
     tl2_requires_topic_reply_count: "Quantos tópicos um utilizador deve responder antes de ser promovido para o Nível de Confiança 2."
-    tl3_requires_days_visited: "Número mínimo de dias que o utilizador necessita de ter visitado o sítio nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
-    tl3_requires_topics_replied_to: "Número mínimo de tópicos que o utilizador necessita de ter respondido nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3. (0 ou mais)"
-    tl3_requires_topics_viewed: "Percentagem de tópicos criados nos últimos 100 dias que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
-    tl3_requires_posts_read: "Percentagem de mensagens criadas nos últimos 100 dias que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
+    tl3_time_period: "Período de tempo (em dias) dos requisitos do nível de confiança 3"
+    tl3_requires_days_visited: "Número mínimo de dias que o utilizador necessita de ter visitado o sítio nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3. Configure um período de tempo maior que nc3 para desativar promoções para nc3. (0 ou maior)"
+    tl3_requires_topics_replied_to: "Número mínimo de tópicos que o utilizador necessita de ter respondido nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3. (0 ou mais)"
+    tl3_requires_topics_viewed: "Percentagem de tópicos criados nos últimos dias (perídio nc3) que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
+    tl3_requires_posts_read: "Percentagem de mensagens criadas nos últimos dias (perídio nc3) que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
     tl3_requires_topics_viewed_all_time: "Número mínimo total de tópicos que o utilizador deve ter visto para se qualificar ao Nível de Confiança 3."
     tl3_requires_posts_read_all_time: "Número mínimo total de mensagens que o utilizador deve ter lido para se qualificar ao Nível de Confiança 3."
-    tl3_requires_max_flagged: "O utilizador não deverá ter mais do que x mensagens marcadas por x diferentes utilizadores nos últimos 100 dias para se qualificar à promoção para o nível de confiança 3, onde x é o valor definido. (0 ou superior)"
+    tl3_requires_max_flagged: "O utilizador não deverá ter mais do que x mensagens marcadas por x diferentes utilizadores nos últimos dias (período nc3) para se qualificar à promoção para o nível de confiança 3, onde x é o valor definido. (0 ou superior)"
     tl3_promotion_min_duration: "Número mínimo de dias em que a promoção para Nível de Confiança 3 dura antes que o utilizador possa ser despromovido para o Nível de Confiança 2."
-    tl3_requires_likes_given: "Número mínimo de gostos que o utilizador deve ter atribuído nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3."
-    tl3_requires_likes_received: "Número mínimo de gostos que o utilizador deve ter recebido nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3."
+    tl3_requires_likes_given: "Número mínimo de gostos que o utilizador deve ter atribuído nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3."
+    tl3_requires_likes_received: "Número mínimo de gostos que o utilizador deve ter recebido nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3."
     tl3_links_no_follow: "Não remover rel=nofollow das hiperligações publicadas por utilizadores com Nível de Confiança 3."
     min_trust_to_create_topic: "O Nível de Confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível mínimo de confiança necessário para editar mensagens marcadas como wiki."
+    min_trust_to_allow_self_wiki: "O nível mínimo de confiança necessário para criar mensagens wiki próprias."
+    min_trust_to_send_messages: "O nível de confiança mínimo necessário para criar mensagens privadas."
     newuser_max_links: "Quantas hiperligações um novo utilizador pode adicionar a uma mensagem."
     newuser_max_images: "Quantas imagens um novo utilizador pode adicionar a uma mensagem."
     newuser_max_attachments: "Quantos anexos um novo utilizador pode adicionar a uma mensagem."
     newuser_max_mentions_per_post: "Número máximo de notificações @nome que um novo utilizador pode usar numa mensagem."
     newuser_max_replies_per_topic: "Número máximo de respostas que um novo utilizador pode fazer num único tópico até alguém lhe responder."
     max_mentions_per_post: "Número máximo de notificações @nome que qualquer pessoa pode usar numa mensagem."
+    max_users_notified_per_group_mention: "Número máximo de utilizadores que podem receber uma notificação se um grupo é mencionado (se o limite é atingido, nenhuma notificação será levantada)"
     create_thumbnails: "Criar imagens miniatura e lightbox que são demasiado largas para caber numa mensagem."
     email_time_window_mins: "Esperar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos utilizadores a hipótese de editarem e finalizarem as suas mensagens."
+    private_email_time_window_seconds: "Espere (n) segundos antes de enviar emails de notificação privados, para dar aos utilizadores a oportunidade de editar e finalizar as suas mensagens."
     email_posts_context: "Quantas respostas prévias a serem incluídas como contexto em emails de notificação."
     flush_timings_secs: "Com que frequência o servidor é alimentado com dados de sincronização, em segundos."
     title_max_word_length: "Tamanho máximo permitido de comprimento de palavras, em caracteres, no título de um tópico."
     title_min_entropy: "Entropia mínima (caracteres únicos, contagem não-inglesa para mais) necessária para o título de um tópico."
     body_min_entropy: "Entropia mínima (caracteres únicos, contagem não-inglesa para mais) necessária para o corpo de uma mensagem."
+    allow_uppercase_posts: "Permitir tudo em maiúsculas num título de tópico ou corpo de mensagem."
     title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Tamanho mínimo do título antes de ser verificado por tópicos semelhantes."
     min_body_similar_length: "Tamanho mínimo do corpo de uma mensagem antes de ser verificado por tópicos semelhantes."
@@ -941,6 +997,7 @@ pt:
     white_listed_spam_host_domains: "Lista de domínios excluídos dos testes de spam. Novos utilizadores nunca irão ser restritos da criação de mensagens com hiperligações a esses domínios."
     staff_like_weight: "Quanto é o fator de ponderação extra a dar aos gostos provenientes do pessoal."
     topic_view_duration_hours: "Contar uma nova visualização do tópico uma vez por IP/Utilizador a cada N horas"
+    user_profile_view_duration_hours: "Contar visualização de novo perfil de utilizador uma vez por IP/utilizador a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer a correspondência de e-mails de spam, o número de caracteres de diferença que ainda permitirá uma correspondência difusa."
     max_new_accounts_per_registration_ip: "Se já há (n) contas com nível de confiança 0 a partir deste IP (e nenhum é um membro do pessoal ou em nível de confiança 2 ou superior), parar de aceitar novos registos a partir desse IP."
     min_ban_entries_for_roll_up: "Ao clicar no botão Agrupar, irá criar uma nova entrada de sub-rede banida se houver pelo menos (N) entradas."
@@ -958,6 +1015,12 @@ pt:
     disable_emails: "Impedir que Discourse envie qualquer tipo de emails"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
     short_email_length: "Comprimento de email curto, em Bytes"
+    display_name_on_email_from: "Exibir nomes completos em campos do formulário de email"
+    unsubscribe_via_email: "Permitir aos utilizadores cancelar a subscrição de emails enviando um email com \"unsubscribe\" no assunto ou no corpo do email"
+    unsubscribe_via_email_footer: "Adicionar uma hiperligação de cancelamento de subscrição ao rodapé de emails enviados"
+    delete_email_logs_after_days: "Apagar registos de email após (N) dias. 0 para os manter indefinidamente"
+    max_emails_per_day_per_user: "Número máximo de emails para enviar aos utilizadores. 0 para desligar o limite"
+    manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
     pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
     pop3_polling_ssl: "Utilize SSL ao ligar a um servidor POP3. (Recomendado)"
     pop3_polling_period_mins: "Período em minutos entre a verificação da conta POP3 para o email. NOTA: requer reinicialização."
@@ -984,7 +1047,7 @@ pt:
     automatically_download_gravatars: "Descarregar Gravatars para os utilizadores após criação de conta ou mudança de email."
     digest_topics: "Número máximo de tópicos a serem apresentados no resumo do email."
     digest_min_excerpt_length: "Tamanho mínimo do excerto da mensagem no resumo do email, em caracteres."
-    suppress_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
+    delete_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
     disable_digest_emails: "Desativar os emails de resumo para todos os utilizadores."
     detect_custom_avatars: "Se deve ou não verificar que os utilizadores carregaram fotografias de perfil personalizadas."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá verificar o Gravatar para avatars personalizados, por dia"
@@ -994,15 +1057,19 @@ pt:
     allow_anonymous_posting: "Permitir que os utilizadores alterem para o modo anónimo"
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar publicações anónimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato crie uma nova conta anónima a cada N minutos para cada utilizador. Exemplo: se configurado para 600, assim que passarem 600 minutos desde a última mensagem E o utilizador altere para anónimo, uma nova conta anónima é criada."
+    hide_user_profiles_from_public: "Desativar cartões de utilizador, perfis de utilizador e diretoria de utilizadores para utilizadores anónimos."
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
-    sequential_replies_threshold: "Número de mensagens que um utilizador tem que fazer em linha num tópico antes de ser relembrado acerca de demasiadas respostas sequenciais."
+    sequential_replies_threshold: "Número de mensagens que um utilizador tem que fazer em linha num tópico antes de ser lembrado acerca de demasiadas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Que percentagem de mensagens um utilizador tem que fazer num tópico antes de ser relembrado sobre dominar demasiado um tópico."
+    disable_avatar_education_message: "Desativar mensagem educativa para alteração de avatar."
     daily_performance_report: "Analise os logs diários NGINX e publique um tópico visível apenas para o pessoal com detalhes"
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
-    permalink_normalizations: "Utilize a seguinte expressão regular antes de combinar hiperligações permanentes, por exemplo: /(\\/topic.*)\\?.*/\\1 irá retirar sequências de consulta de rotas de tópicos. O formato é regex+sequência utilize \\1 etc. para aceder a capturas."
+    permalink_normalizations: "Aplicar a seguinte expressão regular antes de igualar hiperligações permanentes, por exemplo: /(topic.*)\\?.*/\\1 irá remover parâmetros de roteamento para tópicos. O formato é regex+sequência utilize \\1 etc. para aceder a capturas.O formato é regex+string utilize \\1 etc. para aceder a capturas."
     global_notice: "Exibir um banner global URGENTE, EMERGÊNCIA a todos os visitantes, mudar para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desativa notificações de edição do sistema quando 'download_remote_images_to_local' está ativo."
+    automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
+    read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
     full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
@@ -1019,27 +1086,31 @@ pt:
     embed_username_key_from_feed: "Chave para recuperar o nome de utilizador discourse do feed."
     embed_truncate: "Truncar mensagens incorporadas."
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
+    embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
     embed_whitelist_selector: "Seletor CSS para elementos permitidos em incorporações."
     embed_blacklist_selector: "Seletor CSS para elementos que foram removidos de incorporações."
     notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para 'contact_email'. Configurar a 0 para desativar."
     enable_cdn_js_debugging: "Permitir que /logs exiba erros próprios ao adicionar permissões de origem-cruzada em todos os js incluídos."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
-    show_logout_in_header: "Mostrar Terminar Sessão no menu suspenso do utilizador no cabeçalho"
-    vacuum_db_days: "Executar VACUUM FULL ANALYZE para reclamar espaço na Base de Dados após a migração (configurar a 0 para desativar)"
+    vacuum_db_days: "Executar VACUUM ANALYZE para reclamar espaço na BD após as migrações (configurar a 0 para desativar)"
     prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
     enforce_square_emoji: "Forçar uma relação de aspecto quadrado para todos os emojis."
-    approve_post_count: "A quantidade de mensagens de um novo utilizador que devem ser aprovadas"
+    approve_post_count: "A quantidade de mensagens de um novo utilizador ou utilizador básico que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
     notify_about_queued_posts_after: "Se não houver mensagens que estiveram à espera de revisão por mais do que estas horas, um email será enviado para o email de contacto. Configure para 0 para desativar estes emails."
     default_email_digest_frequency: "Por defeito, quantas vezes os utilizadores recebem emails de resumo."
+    default_include_tl0_in_digests: "Incluir mensagens de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
     default_email_private_messages: "Por defeito, enviar um email quando alguém envia mensagens ao utilizador."
     default_email_direct: "Por defeito, enviar um email quando alguém cita/responde a/menciona ou convida o utilizador."
     default_email_mailing_list_mode: "Por defeito, enviar um email por cada nova mensagem."
+    disable_mailing_list_mode: "Não permitir aos utilizadores habilitar o modo de lista de distribuição."
     default_email_always: "Por defeito, enviar notificações por email mesmo quando o utilizador está ativo."
+    default_email_previous_replies: "Incluir respostas previas nos emails por defeito."
+    default_email_in_reply_to: "Por defeito Incluir excerto de mensagem de resposta nos email."
     default_other_new_topic_duration_minutes: "Condição global por defeito para o qual um tópico é considerado novo."
     default_other_auto_track_topics_after_msecs: "Tempo global por defeito antes de um tópico ser automaticamente acompanhado."
     default_other_external_links_in_new_tab: "Por defeito, abrir hiperligações externas num novo separador."
@@ -1047,6 +1118,8 @@ pt:
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
     default_other_disable_jump_reply: "Por defeito, não saltar para a mensagem do utilizador após ter respondido."
     default_other_edit_history_public: "Por defeito, realizar revisões públicas das mensagens."
+    default_other_like_notification_frequency: "Notificar por defeito os utilizadores quando alguém gostar"
+    default_topics_automatic_unpin: "Desafixar automaticamente tópicos quando um utilizador chega ao final, por defeito."
     default_categories_watching: "Lista de categorias que por defeito são vigiadas."
     default_categories_tracking: "Lista de categorias que por defeito são acompanhadas."
     default_categories_muted: "Lista de categorias que por defeito são mudas."
@@ -1064,7 +1137,15 @@ pt:
       invalid_string_min: "Deve ser pelo menos %{min} caracteres."
       invalid_string_max: "Não deve ser mais que %{max} caracteres."
       invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
+      pop3_polling_host_is_empty: "Deve configurar um 'pop3 polling host' antes de ativar o polling POP3."
+      pop3_polling_username_is_empty: "Deve configurar um 'nome de utilizador de polling pop3' antes de ativar o polling POP3."
+      pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
+      pop3_polling_authentication_failed: "Autenticação POP3 falhada. Por favor verifique as suas credenciais pop3."
+      reply_by_email_address_is_empty: "Tem que definir um 'respostas por endereço de email' antes de habilitar a reposta por email."
+      email_polling_disabled: "Tem de habilitar a consulta manual ou automática de emails via POP antes de habilitar a reposta por email."
+      user_locale_not_enabled: "Tem de habilitar 'permitir definições regionais do utilizador' antes de habilitar esta configuração."
   notification_types:
+    group_mentioned: "%{group_name} foi mencionado em %{link}"
     mentioned: "%{display_username} mencionou-o em %{link}"
     liked: "%{display_username} gostou da sua mensagem %{link}"
     replied: "%{display_username} repondeu à sua mensagem em %{link}"
@@ -1074,7 +1155,7 @@ pt:
     moved_post: "%{display_username} moveu a sua mensagem para %{link}"
     private_message: "%{display_username} enviou-lhe uma mensagem: %{link}"
     invited_to_private_message: "%{display_username} convidou-o para uma mensagem: %{link}"
-    invited_to_topic: "%{display_username} convidou-o para um tópico: %{link}"
+    invited_to_topic: "%{display_username} convidou-o para %{link}"
     invitee_accepted: "%{display_username} aceitou o seu convite"
     linked: "%{display_username} hiperligou-o em %{link}"
     granted_badge: "Ganhou %{link}"
@@ -1084,11 +1165,6 @@ pt:
       category: 'Categorias'
       topic: 'Resultados'
       user: 'Utilizadores'
-  sso:
-    not_found: "Não foi possível encontrar ou criar uma conta, contacte a administração do sítio"
-    account_not_approved: "A conta está pendente de aprovação, irá receber uma notificação por email assim que for aprovada."
-    unknown_error: "Erro ao atualizar a informação, contacte a administração do sítio"
-    timeout_expired: "Tempo para início de sessão de conta expirado, por favor tente entrar novamente"
   original_poster: "Participante Original"
   most_posts: "Maior parte das mensagens"
   most_recent_poster: "Participante Mais Recente"
@@ -1163,6 +1239,7 @@ pt:
     reserved_username: "Esse nome de utilizador não é permitido."
     missing_user_field: "Não completou todos os campos de utilizador."
     close_window: "A autenticação está completa. Feche esta janela para continuar."
+    already_logged_in: "Oops, parece que tentou aceitar um convite para outro utilizador. Se não é o %{current_user}, por favor saia e tente novamente."
   user:
     no_accounts_associated: "Sem contas associadas"
     username:
@@ -1171,16 +1248,33 @@ pt:
       characters: "pode incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que estar preenchido"
-      must_begin_with_alphanumeric: "tem que começar com uma letra ou número ou um sublinhado"
-      must_end_with_alphanumeric: "tem que terminar com uma letra ou número ou um sublinhado"
+      must_begin_with_alphanumeric_or_underscore: "tem de começar por uma letra, um número ou o carácter sublinhado"
+      must_end_with_alphanumeric: "tem de terminar com uma letra ou um número"
       must_not_contain_two_special_chars_in_seq: "não deve conter uma sequência de 2 ou mais caracteres especiais (.-_)"
-      must_not_contain_confusing_suffix: "não deve conter um sufixo confuso tal como .json ou .png etc."
+      must_not_end_with_confusing_suffix: "não deve terminar com um sufixo confuso tal como .json ou .png etc."
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
     ip_address:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
+  flags_reminder:
+    flags_were_submitted:
+      one: "Sinalizações foram submetidas há 1 hora atrás. Por favor analise-as. "
+      other: "Sinalizações foram submetidas há %{count} horas atrás. Por favor analise-as. "
+    subject_template:
+      one: "1 sinalização à espera de ser tratada"
+      other: "%{count} sinalizações à espera de serem tratadas"
+  unsubscribe_mailer:
+    subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
+    text_body_template: |
+      Alguém (possivelmente você?) pediu para não receber mais emails com com actualizações de %{site_domain_name} neste endereço.
+      Se confirma este pedido por favor carregue nesta hiperligação:
+
+      %{confirm_unsubscribe_link}
+
+
+      Se quiser continuar a receber emails com actualizações pode ignorar este email.
   invite_mailer:
     subject_template: "%{invitee_name} convidou-o a juntar-se a '%{topic_title}' em %{site_domain_name}"
     text_body_template: |
@@ -1224,24 +1318,11 @@ pt:
       (Se a hiperligação acima tiver expirado, escolha "Esqueci a minha palavra-passe" ao iniciar sessão com o seu endereço de email.)
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
-    text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n - *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**. \n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF. \n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n(A maneira *fácil* é criar uma conta gratuita em [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], que tem vários planos de email gratuitos e será bom para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!) \n\nEsperamos que tenha recebido este teste de entrega de email sem problemas! \n\nBoa sorte, \n\nOs seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n\
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[md]: http://mandrill.com\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n"
+    text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n- *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**.\n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF.\n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n- Recomendamos vivamente que **envie um email de teste para [mail-tester.com][mt]** para verificar que tudo mencionado em cima está a funcionar correctamente.\n\n(A maneira *fácil* é criar uma conta grátis em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que fornecem grátis, generosamente grátis, pacotes de envio de emails  e será suficiente para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!)\n\nEsperamos que tenha recebido este teste de entrega de email sem problemas!\n\nBoa sorte, \n\nDos seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://sendgrid.com/\n[sp]: https://www.sparkpost.com/\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n[mt]: http://www.mail-tester.com/\n"
   new_version_mailer:
     subject_template: "[%{site_name}]  Nova versão Discourse, atualização disponível"
-    text_body_template: "Uma nova versão de [Discourse](http://www.discourse.org) está disponível. \n\nA sua versão: %{installed_version}\nNova versão: **%{new_version}**\n\nPode desejar: \n\n- Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).\n\n- Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.\n"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: "Uma nova versão de [Discourse](http://www.discourse.org) está disponível. \n\nA sua versão: %{installed_version}\nNova versão: **%{new_version}**\n\nPode desejar: \n\n- Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).\n\n- Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).\n\n- Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.\n\n### Release notes\n\n%{notes}\n"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Estas sinalizações foram submetidas há 1 hora atrás."
-      other: "Estas sinalizações foram submetidas há %{count} horas atrás."
-    please_review: "Por favor examine-os."
-    post_number: "mensagem"
-    how_to_disable: 'Pode desativar ou mudar a frequência deste email notificativo através de "notify about flags after" nas configurações.'
-    subject_template:
-      one: "1 sinalização à espera de ser tratada"
-      other: "%{count} sinalizações à espera de serem tratadas"
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 mensagem à espera de revisão"
@@ -1267,9 +1348,7 @@ pt:
       subject_template: "Mensagem oculta devido a sinalizações da comunidade"
       text_body_template: "Olá,\n\nEsta é uma mensagem automática de %{site_name} para informá-lo que a sua mensagem foi oculta. \n\n%{base_url}%{url} \n\n%{flag_reason}\n\nMúltiplos membros da comunidade sinalizaram esta mensagem antes de ser escondida, por isso considere como poderá rever a sua mensagem para refletir o seu feedback. **Pode editar a sua mensagem após %{edit_delay} minutos, e esta será automaticamente exibida.**\n\nContudo, se a mensagem for escondida pela comunidade uma segunda vez, irá manter-se escondida até ser tratada pelo pessoal – e poderão ainda ocorrer ações, incluindo uma possível suspensão da sua conta.\n\nPara orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).\n"
     usage_tips:
-      text_body_template: "Aqui ficam algumas dicas para que possa começar: \n\n## Leitura\n\nPara ler mais, **simplesmente continue a arrastar para baixo!**\n\nÀ medida que novas mensagens ou novos tópicos vão chegando, estes irão surgir automaticamente – não é necessário atualizar a página. \n\n## Navegação \n\n- Para pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**. \n\n- Selecionar o título de um tópico irá levá-lo sempre à **próxima mensagem não lida** no tópico. Para inserir no início ou no final, selecione a contagem de respostas ou alternativamente, a data da última resposta. \n\n<img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n - Ao ler um tópico, selecione a barra de progresso no canto inferior direito para controlos de navegação completos. Salte rapidamente para o topo ao selecionar o título do tópico. Pressione <kbd>?</kbd> para uma lista rápida de atalhos do teclado. \n\n<img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Responder \n\n– Para responder ao **tópico em geral**, utilize <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\">  no final de cada tópico. \n\n- Para responder a uma **pessoa específica**, utilize <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> nas suas mensagens. \n\n- Para responder com um **novo tópico**, utilize <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> à direita desta mensagem. Tanto os tópicos antigos como os novos serão ligados automaticamente. \n\nPara inserir uma citação, selecione o texto que deseja citar e de seguida pressione qualquer botão de Resposta. Repetir para múltiplas citações! \n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar alguém da sua resposta, mencione o seu nome. Digite `@` para começar a selecionar um nome de utilizador. \n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"\
-        125\">\n\nPara utilizar [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` para encontrar por nome, ou os tradicionais risonhos `;)` \n\n<img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\nPara gerar um sumário para uma hiperligação, cole-o numa linha por si só:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n## Ações \n\nExistem botões de ação no final de cada mensagem. \n\n<img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara deixar alguém saber que gostou e apreciou as suas mensagens, utilize o botão **gosto**. Partilhe o amor! \n\nSe vir um problema com uma mensagem de alguém, avise a pessoa em privado, ou avise [o nosso pessoal](%{base_url}/about), sobre a mesma utilizando o botão **sinalizar**. Pode também **partilhar** uma hiperligação para uma mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador. \n\n## Notificações \n\nQuando alguém lhe responde, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o para aceder às suas **notificações**. \n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\n Não se preocupe em falhar uma resposta – irá receber notificações por email que chegam quando está ausente. \n\n## As Suas Preferências \n\n- Todos os tópicos com menos de **dois dias** são considerados novos. \n\n- Qualquer tópico em que tenha **participado ativamente** (respondido, criado, ou lido por um extenso período) será acompanhado automaticamente. \n\nVerá o indicador numérico e o indicador azul (novo) junto desses tópicos: \n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\"> \n\nPode alterar as suas notificações para qualquer tópico através do controlo de notificações no final do tópico.\n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nPode também configurar\
-        \ estados de notificação por categoria, se quer observar cada novo tópico numa categoria específica. \n\nPara alterar qualquer uma destas configurações, consulte [as suas preferências] (%{base_url}/my/preferences). \n\n##Confiança da Comunidade \n\nÀ medida que for participando aqui, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e limitações de novos utilizadores serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar novas capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
+      text_body_template: "Aqui ficam algumas dicas para que possa começar:\n\n## Leitura \n\nPara ler mais, **simplesmente continue a arrastar para baixo!** \n\nÀ medida que novas mensagens ou novos tópicos surgem, estes irão surgir automaticamente – não é necessário actualizar a página.\n\n## Navegação\n\nPara pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**.\n\n- A selecção de um título do tópico leva-o sempre para a **próxima resposta não lida** no tópico. Para entrar na parte superior ou inferior, seleccione a contagem de resposta ou última data de resposta em seu lugar.\n\n    <img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Ao ler um tópico, selecione a barra de progresso no canto inferior direito para controlos de navegação completos. Salte rapidamente para o topo ao selecionar o título do tópico. Pressione <kbd>?</kbd> para uma lista rápida de atalhos do teclado.\n\n    <img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Responder\n\n- Para responder ao **tópico em geral**, utilize <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> no final de cada tópico.\n\n- Para responder a uma **pessoa específica**, utilize <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> nas suas mensagens.\n\n- Para responder com um **novo tópico**, utilize <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> à direita desta mensagem. Tanto os tópicos antigos como os novos serão ligados automaticamente.\n\nA sua resposta pode ser formatada com HTML simplificado, BBCode ou [Markdown](http://commonmark.org/help/):\n\n    Isto é **negrito**.\n    Isto é <b>negrito</b>.\n    Isto é [b]negrito[/b].\n\nQuer aprender Markdown [Faça o nosso curso interactivo de 10 minutos!](http://commonmark.org/help/tutorial/)\n\nPara inserir uma citação, seleccione o texto que deseja citar e de seguida pressione qualquer botão de Resposta. Repetir para múltiplas citações.\n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar alguém da sua resposta, mencione o seu nome. Digite `@` para começar a seleccionar um nome de utilizador.\n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\nPara utilizar [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` para encontrar por nome, ou os tradicionais risonhos `;)`\n\n<img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\nPara gerar um sumário para uma hiperligação, cole-o numa linha por si só:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n## Acções\n\nExistem botões de acção no final de cada mensagem:\n\n<img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara deixar alguém saber que gostou e apreciou as suas mensagens, utilize o botão **gosto**. Partilhe o amor!\n\nSe vir um problema com uma mensagem de alguém, avise a pessoa em privado, ou avise [o nosso pessoal](%{base_url}/about), sobre a mesma utilizando o botão **sinalizar**. Pode também **partilhar** uma hiperligação para uma mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.\n\n## Notificações\n\nQuando alguém lhe responde, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o para aceder às suas **notificações**.\n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nNão se preocupe em falhar uma resposta – irá receber notificações por email que chegam quando está ausente.\n\n## As Suas Preferências\n\n  - Todos os tópicos com menos de **dois dias** são considerados novos.\n\n  - Qualquer tópico em que tenha **participado activamente** (respondido, criado, ou lido por um extenso período) será acompanhado automaticamente.\n\nVerá o indicador numérico e o indicador azul novo junto desses tópicos:\n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nPode alterar as suas notificações para qualquer tópico através do controlo de notificações no final do tópico.\n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nPode também configurar estados de notificação por categoria, se quer observar cada novo tópico numa categoria específica.\n\nTo change any of these settings, see [your user preferences](%{base_url}/my/preferences).\n\n## Confiança da Comunidade\n\nÀ medida que for participando aqui, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e limitações de novos utilizadores serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar novas capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |
@@ -1285,7 +1364,7 @@ pt:
     welcome_invite:
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |
-        Obrigado por ter aceite o convite para %{site_name} -- bem-vindo!
+        Obrigado por ter aceitado o convite para %{site_name} -- bem-vindo!
 
         Criámos uma nova conta **%{username}** para si, e neste momento encontra-se com sessão iniciada. Pode mudar o seu nome ao visitar [o seu perfil de utilizador][prefs].
 
@@ -1354,18 +1433,39 @@ pt:
     csv_export_failed:
       subject_template: "A exportação dos dados falhou"
       text_body_template: "Pedimos desculpa mas a sua exportação de dados falhou. Por favor verifique os registos do log ou contacte um membro do pessoal."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}]  Problema de email -- Nível de Confiança Insuficiente"
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] Problema com Email -- Insuficiente nível de confiança"
       text_body_template: |
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
+        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) falhou.
 
-        A sua conta não tem o nível de confiança necessário para publicar novos tópicos para este endereço de email. Se acredita que isto é um erro, contacte um membro do pessoal.
-    email_reject_no_account:
-      subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
+        A sua conta não possui o nível de confiança necessário para criar novos tópicos para este endereço de email. Se acredita que isto é um erro contacte alguém do pessoal.
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Problema de email -- Utilizador inactivo"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
-        Não há nenhuma conta de utilizador conhecida com este endereço de email. Tente enviar a partir de um endereço de email diferente, ou contacte um membro do pessoal.
+        A sua conta associada com este email não está activa. Por favor active a sua conta antes de enviar emails.
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Problema de email -- Utilizador bloqueado"
+      text_body_template: |+
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        A sua conta associada com este endereço de email foi bloqueada.
+
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] Problema de email -- Utilizador de resposta não encontrado"
+      text_body_template: |+
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        A sua resposta foi enviada de um email diferente daquele que esperávamos, por esta razão não temos a certeza que seja a mesma pessoa. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
+
+    email_reject_no_account:
+      subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
+      text_body_template: |+
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        Não conseguimos encontrar nenhuma conta com combine com o seu endereço de email. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
+
     email_reject_empty:
       subject_template: "[%{site_name}]  Problema de email -- Sem Conteúdo"
       text_body_template: |
@@ -1386,13 +1486,20 @@ pt:
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 
         A sua conta não tem privilégios para publicar novos tópicos nessa categoria. Se acredita que isto é um erro, contacte um membro do pessoal.
-    email_reject_post_error:
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] Problema de email -- Acesso Inválido"
+      text_body_template: |+
+        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
+
+        A categoria que enviou neste email apenas permite respostas de utilizadores com contas validadas e endereços de email conhecidos. Se acredita ser um erro contacto um membro do pessoal.
+
+    email_reject_invalid_post:
       subject_template: "[%{site_name}] Problema de email -- Erro de publicação"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         Algumas causas possíveis são: formatação complexa, mensagem demasiado grande, mensagem demasiado pequena. Por favor tente novamente, ou publique através do sítio se isto continuar.
-    email_reject_post_error_specified:
+    email_reject_invalid_post_specified:
       subject_template: "[%{site_name}] Problema de email -- Erro de publicação"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
@@ -1402,24 +1509,36 @@ pt:
         %{post_error}
 
         Se conseguir corrigir o problema, tente novamente.
-    email_reject_reply_key:
-      subject_template: "[%{site_name}] Problema de email -- Chave de Resposta Desconhecida"
+    email_reject_rate_limit_specified:
+      subject_template: "[%{site_name}] Problema de email -- Envios limitados"
+      text_body_template: |
+        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
+
+        Razão: %{rate_limit_description}
+    email_reject_invalid_post_action:
+      subject_template: "[%{site_name}] Problema de email -- Acção de Post inválida"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
-        A chave de resposta fornecida é inválida ou desconhecida, por isso não sabemos a que resposta corresponde este email. Contacte um membro do pessoal.
-    email_reject_destination:
+        A acção Post não foi reconhecida. Por favor tente novamente, ou publique através do sítio se isto continuar.
+    email_reject_reply_key:
+      subject_template: "[%{site_name}] Problema de email -- Chave de Resposta Desconhecida"
+      text_body_template: |
+        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
+
+        A chave de resposta no email é inválida ou desconhecida e por isso não conseguimos determinar a que email estava a responder. Contacte um membro do pessoal.
+    email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Problema de email -- Endereço Para: Desconhecido"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
-        Nenhum dos endereços de destino é reconhecido. Por favor, certifique-se que o endereço do sítio está na linha Para: (não em Cc: ou em Bcc:), e que está a enviar para o endereço de email correto fornecido pelo pessoal.
+        Nenhum dos endereços de destino é reconhecido. Por favor, certifique-se que está a enviar o endereço de email correcto fornecido pelo pessoal.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema de email -- Tópico Não Encontrado"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 
-        O tópico ao qual está a responder já não existe, talvez tenha sido eliminado? Se acredita que isto é um erro, contacte um membro do pessoal.
+        O tópico ao qual está a responder já não existe -- talvez tenha sido apagado. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problema de email -- Tópico Encerrado"
       text_body_template: |
@@ -1431,13 +1550,15 @@ pt:
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 
-        O seu email foi marcado como "auto gerado", o qual não podemos aceitar. Se acredita que isto é um erro, contacte um membro do pessoal.
+        O seu email foi marcado como "gerado automaticamente", o que quer dizer que foi automaticamente criado por um computador em vez de ser escrito por uma pessoa; não podemos aceitar esse tipo de emails. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_error_notification:
       subject_template: "[%{site_name}] Problema de email -- Erro de autenticação POP"
       text_body_template: |
-        Ocorreu um erro de autenticação  ao recuperar emails do servidor POP.
+        Ocorreu um erro de autenticação ao recuperar emails do servidor POP.
 
-        Por favor certifique-se que configurou corretamente as credenciais POP em [configurações do sítio](%{base_url}/admin/site_settings/category/email).
+        Por favor certifique-se que configurou correctamente as credenciais POP em [configurações do sítio](%{base_url}/admin/site_settings/category/email).
+
+        Se existe uma interface web para a sua conta de POP de email pode necessitar se iniciar sessão na interface web e verificar a suas configurações aí.
     too_many_spam_flags:
       subject_template: "Nova conta bloqueada"
       text_body_template: |
@@ -1455,27 +1576,24 @@ pt:
 
         Esta é uma mensagem automática de %{site_name} para informá-lo de que a sua conta foi bloqueada por um membro do pessoal.
 
+        Por favor tome atenção que não poderá criar novas respostas ou tópicos até um membro do pessoal desbloquear a sua conta.
+
+        Se tem questões sobre este bloqueio, por favor contacte um [membro do pessoal](%{base_url}/about)
+
         Para orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Novo utilizador %{username}  bloqueado devido a sinalizações da comunidade."
       text_body_template: |
         Esta é uma mensagem automática.
 
-        O novo utilizador [%{username}](%{base_url}%{user_url}) foi automaticamente bloqueado devido a múltiplos utilizadores terem sinalizado a(s) mensagen(s) de %{username}.
+        O novo utilizador [%{username}](%{user_url}) foi automaticamente bloqueado porque múltiplos utilizadores marcaram mensagem(ns) de %{username}.
 
-        Por favor [reveja as sinalizações](%{base_url}/admin/flags). Se %{username} foi incorretamente bloqueado de publicar, carregue no botão de desbloqueio em [a página de administração para este utilizador](%{base_url}%{user_url}).
+        Por favor [reveja as sinalizações](%{base_url}/admin/flags). Se %{username} foi incorretamente bloqueado de publicar, carregue no botão de desbloqueio em [a página de administração para este utilizador](%{user_url})
 
         Este limite pode ser alterado através de `block_new_user` nas configurações do sítio.
     spam_post_blocked:
       subject_template: "Novas mensagens do novo utilizador %{username} foram bloqueadas devido a hiperligações repetidas"
-      text_body_template: |
-        Esta é uma mensagem automática.
-
-        O novo utilizador [%{username}](%{base_url}%{user_url}) tentou criar múltiplas mensagens com hiperligações para %{domains}, mas estas foram bloqueadas para evitar spam. O utilizador ainda pode criar novas mensagens sem hiperligação a %{domains}.
-
-        Por favor [reveja o utilizador](%{base_url}%{user_url}).
-
-        Isto pode ser modificado através de `newuser_spam_host_threshold` e `white_listed_spam_host_domains`nas configurações do sítio.
+      text_body_template: "Esta é uma mensagem automática.\n\nO novo utilizador [%{username}](%{user_url}) tentou criar múltiplas mensagens com hiperligações para %{domains}, mas estas foram bloqueadas para evitar spam. O utilizador ainda pode criar novas mensagens sem hiperligação a %{domains}. \n\nPor favor [reveja o utilizador](%{user_url}).\n\nIsto pode ser modificado através de `newuser_spam_host_threshold` e `white_listed_spam_host_domains` nas configurações do sítio.\n"
     unblocked:
       subject_template: "Conta desbloqueada"
       text_body_template: |
@@ -1496,52 +1614,48 @@ pt:
       subject_template: "Descarregamento de imagens remotas desativado"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
   unsubscribe_link: |
-    Para cancelar a subscrição destes emails, visite as suas [preferências de utilizador](%{user_preferences_url}).
-
-    Para parar de receber notificações acerca deste tópico específico, [clique aqui](%{unsubscribe_url}).
+    Para parar de receber notificações para este tópico em particular, [clique aqui](%{unsubscribe_url}). Para cancelar a subscrição destes emails, altere as suas [preferências de utilizador](%{user_preferences_url}).
+  unsubscribe_via_email_link: |
+    ou, [carregue aqui](mailto:reply@%{hostname}?subject=unsubscribe) para cancelar a subscrição via email.
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Respostas Anteriores"
+    reached_limit:
+      one: "AVISO: atingiu o número máximo de emails por dia. Próximas notificações será suprimidas."
+      other: "AVISO: atingiu o número máximo de %{count} emails por dia. Próximas notificações será suprimidas."
+    in_reply_to: "Em Resposta A"
     unsubscribe:
       title: "Cancelar a Subscrição"
       description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
-    reply_by_email: "Para responder, responda a este email ou visite %{base_url}%{url} no seu navegador."
-    visit_link_to_respond: "Para responder visite %{base_url}%{url} no seu navegador."
+    reply_by_email: "[Consultar Tópico](%{base_url}%{url}) ou responda a este email para responder"
+    reply_by_email_pm: "[Consultar Mensagem](%{base_url}%{url}) ou responda a este email para responder"
+    only_reply_by_email: "Responda a este email para responder"
+    visit_link_to_respond: "[Consultar Tópico](%{base_url}%{url}) para responder"
+    visit_link_to_respond_pm: "[Consultar Mensagem](%{base_url}%{url}) para responder"
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} convidou-o para uma mensagem
-
-        >%{username}
-        >
-        > %{topic_excerpt}
-
-        at
-
-        > %{site_title} -- %{site_description}
-
-        Por favor visite esta hiperligação para visualizar a mensagem: %{base_url}%{url}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} convidou-o para um tópico '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} convidou-o para uma discussão
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        em
-
-        > %{site_title} -- %{site_description}
-
-        Por favor visite esta hiperligação para visualizar a mensagem: %{base_url}%{url}
+      subject_template: "[%{site_name}] %{username} convidou-o para '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [MP] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1551,6 +1665,19 @@ pt:
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_linked:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1560,6 +1687,19 @@ pt:
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1569,6 +1709,8 @@ pt:
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
@@ -1578,9 +1720,19 @@ pt:
     user_posted_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
+        %{header_instructions}
+
         %{message}
 
         %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
 
         ---
         %{respond_instructions}
@@ -1630,12 +1782,32 @@ pt:
 
         Clique na hiperligação seguinte para escolher uma palavra-passe para a sua nova conta.
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
+    confirm_new_email:
       subject_template: "[%{site_name}] Confirme o seu novo endereço de email"
       text_body_template: |
         Confirme o seu novo endereço de email para %{site_name} ao clicar na seguinte hiperligação:
 
         %{base_url}/users/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] Confirme o seu endereço de email atual"
+      text_body_template: |
+        Antes de podermos alterar o seu endereço de email precisámos de confirmar que
+        controla a conta de email atual. Após completar este passo, iremos confirmar
+        o seu novo endereço de email.
+
+        Confirme o seu endereço de email para o %{site_name} ao clicar na seguinte hiperligação:
+
+        %{base_url}/users/authorize-email/%{email_token}
+    notify_old_email:
+      subject_template: "[%{site_name}] O seu endereço de email foi alterado"
+      text_body_template: |
+        Isto é uma mensagem automática para o informar que o seu endereço de email para
+        %{site_name} foi alterado. Se isto foi feito em erro, por favor contacte
+        o administração do sítio.
+
+        O seu endereço de email foi alterado para:
+
+        %{new_email}
     signup_after_approval:
       subject_template: "Foi aprovado no %{site_name}!"
       text_body_template: |
@@ -1665,7 +1837,7 @@ pt:
 
         Se a hiperligação não for clicável, tente copiá-la e colá-la na barra de endereço do seu navegador de internet.
   page_not_found:
-    title: "A página que solicitou não existe ou é privada."
+    title: "Oops! Essa página não existe or é privada."
     popular_topics: "Popular"
     recent_topics: "Recente"
     see_more: "Mais"
@@ -1690,8 +1862,6 @@ pt:
     images:
       too_large: "Pedimos desculpa, a imagem que está a tentar carregar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor redimensione-a e tente novamente."
       size_not_found: "Pedimos desculpa, mas não conseguimos determinar o tamanho da imagem. É possível que seu ficheiro de imagem esteja corrompido?"
-  avatar:
-    missing: "Desculpe, mas o avatar que selecionou não está presente no servidor. Pode tentar carregá-lo novamente?"
   flag_reason:
     sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP respondeu. Veja as configurações de flag_sockpuppets"
     spam_hosts: "Este novo utilizador tentou criar múltiplas mensagens com hiperligações ao mesmo domínio. Verifique as configurações do sítio em newuser_spam_host_threshold."
@@ -1706,6 +1876,7 @@ pt:
     post_deleted: "a mensagem foi eliminada pelo autor"
     user_suspended: "o utilizador foi suspenso"
     already_read: "o utilizador já leu esta mensagem"
+    exceeded_limit: "Excedeu max_emails_per_day_per_user"
     message_blank: "a mensagem está em branco"
     message_to_blank: "message.to está em branco"
     text_part_body_blank: "text_part.body está em branco"
@@ -1723,101 +1894,41 @@ pt:
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
   guidelines_topic:
     title: "FAQ/Diretrizes"
-    body: "<a name=\"civilized\"></a>\n\n## [Este é um Local Civilizado para Discussão Pública](#civilizado) \n\nPor favor trate este fórum de discussão com o mesmo respeito com que trataria um parque público. Nós somos também uma comunidade de partilha de recursos &mdash; um local para partilhar habilidades, conhecimento e interesses através de conversações. \n\nEstas não são regras rígidas e rápidas, meramente ajuda para o julgamento humano da nossa comunidade. Utilize estas diretrizes para manter este local limpo e iluminado para discussões públicas civilizadas. \n\n<a name=\"improve\"></a>\n\n## [Melhorar a Discussão](#melhorar) \n\nAjude-nos a fazer deste um óptimo local para debates ao trabalhar constantemente para melhorar esses debates de alguma maneira, mesmo que pequena. Se não tem a certeza que a sua mensagem adiciona algo à conversação, pense novamente no que quer dizer e tente novamente mais tarde. \n\nOs tópicos discutidos aqui têm importância para nós, e queremos agir como se também fossem importantes para si. Seja respeitador dos tópicos e das pessoas que o debatem, mesmo que discorde do que está a ser dito. \n\nUma maneira de melhorar o debate é descobrindo os que já estão a ocorrer. Por favor perca algum tempo a pesquisar os tópicos existentes aqui antes de responder ou começar um novo, e terá melhores hipóteses de conhecer outros que partilhem os mesmos interesses que você. \n\n<a name=\"agreeable\"></a>\n\n ## [Seja Agradável, Mesmo Que Discorde](#agradável) \n\nPode desejar responder a algo ao discordar do mesmo. Não há qualquer problema nisso. Mas lembre-se de _criticar ideias, não pessoas_. Por favor, evite: \n\n*Chamar Nomes. \n*Adicionar ataques pessoais. \n* Responder ao tom de uma mensagem e não ao seu conteúdo. \n*Contradições instintivas \n\nPelo contrário, forneça contra-argumentos que melhorem a conversação. \n\n<a name=\"participate\"></a>\n\n## [A Sua Participação Conta](#participe) \n\nAs conversações que temos aqui definem o tom para toda a gente. Ajude-nos a influenciar o futuro desta comunidade ao escolher comprometer-se nos debates que tornam este fórum um local interessante\
-      \ para se estar &mdash; e evite os que não o fazem. \n\nO Discourse fornece ferramentas que permitem que a comunidade identifique as melhores (e piores) contribuições: favoritos, marcadores, gostos, sinalizações, respostas, edições, e por aí em diante. Utilize estas ferramentas para melhorar a sua própria experiência e de todos os outros também.\n\nVamos tentar deixar o nosso parque melhor do que quando o encontrámos. \n\n<a name=\"flag-problems\"></a>\n\n ## [Se vir um Problema, Sinalize-o](#sinalize-problemas) \n\nOs moderadores têm uma autoridade especial; estes são responsáveis por este fórum. Assim como você o é. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, não apenas zeladores ou polícias. \n\nQuando vir mau comportamento, não responda. O reconhecimento encoraja o mau comportamento, consome a sua energia e gasta o tempo de todos. Apenas sinalize-o. Se houver sinalizações suficientes, ações irão ser tomadas, seja automaticamente ou por intervenção dos moderadores.\n\nDe maneira a manter a ordem da comunidade, os moderadores reservam-se ao direito de remover qualquer conteúdo e qualquer conta de utilizador por qualquer razão em qualquer altura. Os moderadores não prevêem novas mensagens em qualquer maneira; os moderadores e os operadores do sítio não têm qualquer responsabilidade por qualquer conteúdo publicado pela comunidade. \n\n<a name=\"be-civil\"></a>\n\n## [Seja sempre civilizado](#seja-civilizado) \n\nNada estraga mais uma conversação saudável do que insolências: \n\n*Seja civilizado. Não publique nada que uma pessoa sensata consideraria ofensiva, abusiva ou de ódio. \n*Mantenha-o limpo. Não publique nada obsceno ou sexualmente explicito.\n*Respeite os outros. Não assedie ou magoe ninguém, não personifique pessoas, e não exponha as suas informações pessoais. \n*Respeite o fórum. Não publique spam ou qualquer outra coisa que vandalize o fórum. \n\nEstes não são termos concretos com definições precisas &mdash; evite até a _aparência_ de qualquer uma destas coisas. Se não tem certeza, pergunte-se a si próprio como se sentiria se a sua mensagem fosse capa do New York Times.\
-      \ \n\nEste é um fórum público, e motores de pesquisa indexam estes debates. Mantenha a linguagem, hiperligações e imagens seguras para família e amigos. \n\n<a name=\"keep-tidy\"></a>\n\n## [Mantenha-o Organizado](#manter-organizado) \n\nFaça o esforço para colocar as coisas no local certo, para que possamos passar mais tempo a debater e menos a limpar. Por isso: \n\n*Não comece um tópico na categoria errada. \n*Não cruze mensagens sobre o mesmo tema em múltiplos tópicos. \n*Não publique respostas sem conteúdo. \n*Não desvie um tópico ao mudar o seu centro de atenção. \n*Não assine as suas mensagens &mdash; qualquer mensagem tem a sua informação de perfil anexada à mesma. \n\nEm vez de publicar “+1” ou “Concordo”, utilize o botão Gosto. Em vez de levar um tópico existente para uma direção completamente diferente, utilize Responder como Novo Tópico. \n\n<a name=\"stealing\"></a>\n \n## [Publique Apenas As Suas Próprias Coisas](#roubo) \n\nNão pode publicar nada digital que pertença a qualquer outra pessoa, sem a sua permissão. Não pode publicar descrições de, hiperligações a, ou métodos para roubar propriedade intelectual de outras pessoas (software, vídeo, áudio, imagens), ou para quebrar qualquer outra lei. \n\n<a name=\"power\"></a>\n## [Patrocinado Por Si](#poder) \n\nEste sítio é operado pelos seus [membros locais amigáveis](/sobre) e por *si*, a comunidade. Se tem alguma questão adicional sobre como as coisas funcionam por aqui, abra um novo tópico em [site feedbackcategory](/c/site-feedback) e iremos debatê-lo. Se ocorrer algum assunto crítico ou urgente que pode ser tratado por um tópico meta ou por uma sinalização, contacte-nos através do [página do pessoal](/sobre). \n\n<a name=\"tos\"></a> \n\n## [Termos de Serviço](#tds) \n\nSim, a legalidade é chata, mas temos que nos proteger &ndash; e por extensão, protegê-lo a si e aos seus dados &ndash; contra companheiros inimigos. Temos os [Termos de Serviço](/tds) que descrevem o seu (e o nosso) comportamento e direitos relativamente a conteúdo, privacidade e leis. Para usar este serviço tem que concordar em cumprir os nossos [TDS](/tds).\n"
+    body: "<a name=\"civilized\"></a>\n\n## [Este é um Local Civilizado para Discussão Pública](#civilizado) \n\nPor favor trate este fórum de discussão com o mesmo respeito com que trataria um parque público. Nós somos também uma comunidade de partilha de recursos &mdash; um local para partilhar habilidades, conhecimento e interesses através de conversações. \n\nEstas não são regras rígidas e rápidas, meramente ajuda para o julgamento humano da nossa comunidade. Utilize estas diretrizes para manter este local limpo e iluminado para discussões públicas civilizadas. \n\n<a name=\"improve\"></a>\n\n## [Melhorar a Discussão](#melhorar) \n\nAjude-nos a fazer deste um óptimo local para debates ao trabalhar constantemente para melhorar esses debates de alguma maneira, mesmo que pequena. Se não tem a certeza que a sua mensagem adiciona algo à conversação, pense novamente no que quer dizer e tente novamente mais tarde. \n\nOs tópicos discutidos aqui têm importância para nós, e queremos agir como se também fossem importantes para si. Seja respeitador dos tópicos e das pessoas que o debatem, mesmo que discorde do que está a ser dito. \n\nUma maneira de melhorar o debate é descobrindo os que já estão a ocorrer. Por favor perca algum tempo a pesquisar os tópicos existentes aqui antes de responder ou começar um novo, e terá melhores hipóteses de conhecer outros que partilhem os mesmos interesses que você. \n\n<a name=\"agreeable\"></a>\n\n ## [Seja Agradável, Mesmo Que Discorde](#agradável) \n\nPode desejar responder a algo ao discordar do mesmo. Não há qualquer problema nisso. Mas lembre-se de _criticar ideias, não pessoas_. Por favor, evite: \n\n*Chamar Nomes. \n*Adicionar ataques pessoais. \n* Responder ao tom de uma mensagem e não ao seu conteúdo. \n*Contradições instintivas \n\nPelo contrário, forneça contra-argumentos que melhorem a conversação. \n\n<a name=\"participate\"></a>\n\n## [A Sua Participação Conta](#participe) \n\nAs conversações que temos aqui definem o tom para toda a gente. Ajude-nos a influenciar o futuro desta comunidade ao escolher comprometer-se nos debates que tornam este fórum um local interessante para se estar &mdash; e evite os que não o fazem. \n\nO Discourse fornece ferramentas que permitem que a comunidade identifique as melhores (e piores) contribuições: favoritos, marcadores, gostos, sinalizações, respostas, edições, e por aí em diante. Utilize estas ferramentas para melhorar a sua própria experiência e de todos os outros também.\n\nVamos tentar deixar o nosso parque melhor do que quando o encontrámos. \n\n<a name=\"flag-problems\"></a>\n\n ## [Se vir um Problema, Sinalize-o](#sinalize-problemas) \n\nOs moderadores têm uma autoridade especial; estes são responsáveis por este fórum. Assim como você o é. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, não apenas zeladores ou polícias. \n\nQuando vir mau comportamento, não responda. O reconhecimento encoraja o mau comportamento, consome a sua energia e gasta o tempo de todos. Apenas sinalize-o. Se houver sinalizações suficientes, ações irão ser tomadas, seja automaticamente ou por intervenção dos moderadores.\n\nDe maneira a manter a ordem da comunidade, os moderadores reservam-se ao direito de remover qualquer conteúdo e qualquer conta de utilizador por qualquer razão em qualquer altura. Os moderadores não prevêem novas mensagens em qualquer maneira; os moderadores e os operadores do sítio não têm qualquer responsabilidade por qualquer conteúdo publicado pela comunidade. \n\n<a name=\"be-civil\"></a>\n\n## [Seja sempre civilizado](#seja-civilizado) \n\nNada estraga mais uma conversação saudável do que insolências: \n\n*Seja civilizado. Não publique nada que uma pessoa sensata consideraria ofensiva, abusiva ou de ódio. \n*Mantenha-o limpo. Não publique nada obsceno ou sexualmente explicito.\n*Respeite os outros. Não assedie ou magoe ninguém, não personifique pessoas, e não exponha as suas informações pessoais. \n*Respeite o fórum. Não publique spam ou qualquer outra coisa que vandalize o fórum. \n\nEstes não são termos concretos com definições precisas &mdash; evite até a _aparência_ de qualquer uma destas coisas. Se não tem certeza, pergunte-se a si próprio como se sentiria se a sua mensagem fosse capa do New York Times. \n\nEste é um fórum público, e motores de pesquisa indexam estes debates. Mantenha a linguagem, hiperligações e imagens seguras para família e amigos. \n\n<a name=\"keep-tidy\"></a>\n\n## [Mantenha-o Organizado](#manter-organizado) \n\nFaça o esforço para colocar as coisas no local certo, para que possamos passar mais tempo a debater e menos a limpar. Por isso: \n\n*Não comece um tópico na categoria errada. \n*Não cruze mensagens sobre o mesmo tema em múltiplos tópicos. \n*Não publique respostas sem conteúdo. \n*Não desvie um tópico ao mudar o seu centro de atenção. \n*Não assine as suas mensagens &mdash; qualquer mensagem tem a sua informação de perfil anexada à mesma. \n\nEm vez de publicar “+1” ou “Concordo”, utilize o botão Gosto. Em vez de levar um tópico existente para uma direção completamente diferente, utilize Responder como Novo Tópico. \n\n<a name=\"stealing\"></a>\n \n## [Publique Apenas As Suas Próprias Coisas](#roubo) \n\nNão pode publicar nada digital que pertença a qualquer outra pessoa, sem a sua permissão. Não pode publicar descrições de, hiperligações a, ou métodos para roubar propriedade intelectual de outras pessoas (software, vídeo, áudio, imagens), ou para quebrar qualquer outra lei. \n\n<a name=\"power\"></a>\n## [Patrocinado Por Si](#poder) \n\nEste sítio é operado pelos seus [membros locais amigáveis](/sobre) e por *si*, a comunidade. Se tem alguma questão adicional sobre como as coisas funcionam por aqui, abra um novo tópico em [site feedbackcategory](/c/site-feedback) e iremos debatê-lo. Se ocorrer algum assunto crítico ou urgente que pode ser tratado por um tópico meta ou por uma sinalização, contacte-nos através do [página do pessoal](/sobre). \n\n<a name=\"tos\"></a> \n\n## [Termos de Serviço](#tds) \n\nSim, a legalidade é chata, mas temos que nos proteger &ndash; e por extensão, protegê-lo a si e aos seus dados &ndash; contra companheiros inimigos. Temos os [Termos de Serviço](/tds) que descrevem o seu (e o nosso) comportamento e direitos relativamente a conteúdo, privacidade e leis. Para usar este serviço tem que concordar em cumprir os nossos [TDS](/tds).\n"
   tos_topic:
     title: "Termos de Serviço"
-    body: "Os seguintes termos e condições governam todo o uso do sítio %{company_domain} e todo o conteúdo, serviços e produtos disponíveis no ou através do sítio, incluindo mas não limitado a, %{company_domain} Software do Fórum, %{company_domain} Fóruns de Suporte e serviço de alojamento %{company_domain} (\"Alojamento\"), (em conjunto, o Sítio). O Sítio é propriedade e operado por %{company_full_name} (\"%{company_name}\"). O Sítio oferecido está sujeito à sua aprovação sem nenhuma modificação de todos os termos e condições contidos aqui e todas as outras regras de operação políticas (incluindo, sem limitação, %{company_domain}’s [Política de Privacidade](/privacy) e [Diretrizes da Comunidade](/faq)) e procedimentos que possam ser publicados de tempos em tempos neste Sítio por %{company_name} (coletivamente, the \"Acordo\"). \n\nPor favor leia este Acordo com cuidado antes de aceder ou usar o Sítio. Ao aceder ou usar qualquer parte do Sítio, concorda em estar limitado pelos termos e condições deste acordo. Se não concorda com todos os termos e condições deste acordo, então não deve aceder ao Sítio ou usar qualquer um dos serviços. Se estes termos e condições são considerados uma oferta de %{company_name}, a sua aceitação é expressamente limitada a estes termos. O Sítio está disponível apenas a indíviduos que têm pelo menos 13 anos de idade. \n\n<a name=\"1\"></a> \n\n## [1. A Sua Conta %{company_domain} ](#1) \n\nSe criar uma conta no Sítio, será responsável por manter a segurança da sua conta e será totalmente responsável por todas as atividades que ocorrerem sob a sua conta. Deve notificar imediatamente %{company_name} de qualquer uso não autorizado da sua conta ou qualquer outra falha de segurança. %{company_name} não será passível de quaisquer atos ou omissões da sua parte, incluindo danos de qualquer tipo que incorram como resultado de tais atos ou omissões. \n\n<a name=\"2\"></a> \n\n## [2.Responsabilidade dos Participantes](#2) \n\nSe publicar material no Sítio, publicar hiperligações no Sítio, ou de outra maneira disponibilizar (ou permitir que qualquer terceira parte o faça) material no Sítio (qualquer\
-      \ material, “Conteúdo”), será inteiramente responsável pelo conteúdo de, e qualquer dano resultante de tal Conteúdo. Esse é o caso independentemente de o Conteúdo em questão constituir texto, gráficos, ficheiros áudio, ou programas de computadores. Ao tornar o Conteúdo disponível, está a representar e garantir que: \n\n* o descarregamento, cópia e uso do Conteúdo não irá infringir os direitos do proprietário, incluindo mas não limitado aos direitos de autor, patentes, marcas registadas ou direitos de segredos de troca, de qualquer terceira parte; \n* se o seu empregado tem direitos sob a propriedade intelectual que criou, terá que (i) ou ter recebido permissões do seu empregado para publicar ou tornar o Conteúdo disponível, incluindo mas não limitado a qualquer software, ou (ii) ter garantido uma renúncia do seu empregado a todos os direitos no e para o Conteúdo; \n* está de acordo com licenças de qualquer terceira-parte relacionada com o Conteúdo, e fez todas as coisas necessárias para passar corretamente quaisquer termos requeridos aos utilizadores finais; \n* o Conteúdo não contém ou instala quaisquer vírus, minhocas ou malware, cavalos de Tróia ou outro conteúdo destrutivo; \n* o Conteúdo não é spam, não é gerado por máquina, e não contém conteúdo indesejado sem ética ou comercial com intuito de conduzir o tráfico de sítios terceiros ou aumentar a posição de sítios terceiros em motores de pesquisa, ou ainda outros atos ilegais (tais como phishing) ou destinatários enganadores relativamente à origem do material (tais como spoofing); \n* o Conteúdo não é pornográfico, nem contém ameaças ou incita violência, e não viola os direitos de privacidade ou publicidade de qualquer terceira parte; \n* o conteúdo não está a ser anunciado através de quaisquer mensagens eletrónicas tais como hiperligações de spam ou grupos de notícias, listas de email, blogs e sítios, e similares métodos promocionais não solicitados; \n* o seu conteúdo não está nomeado de nenhuma maneira que leve os seus leitores a pensarem que é outra pessoa ou empresa; e \n* terá, no caso do Conteúdo incluir código de computador, categorizado e/ou\
-      \ descrito o tipo, natureza, uso e efeito dos materiais, quer tenha sido pedido para fazê-lo por %{company_name} ou pelo contrário. \n\n<a name=\"3\"></a> \n\n## [3. Licença do Conteúdo do Utilizador](#3) \n\nAs contribuições dos utilizadores estão licenciadas sob a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sem qualquer limitação de qualquer dessas representações ou garantias, %{company_name} tem o direito (embora não tenha a obrigação) de, em critério exclusivo de %{company_name} (i) recusar ou remover qualquer conteúdo que, na sensata opinião de %{company_name} viola qualquer política de %{company_name} ou é de alguma maneira prejudicial ou censurável, ou (ii) terminar ou negar acesso ao Sítio e ao uso do mesmo a qualquer indivíduo ou entidade por alguma razão, em critério exclusivo de %{company_name}. %{company_name} não terá obrigação de fornecer uma compensação de quaisquer montantes previamente pagos. \n\n<a name=\"4\"></a> \n\n## [4. Pagamento e Renovação](#4) \n\n### Termos Gerais \n\nAtualizações ou serviços opcionais pagos podem estar disponíveis no Sítio. Ao utilizar uma atualização ou serviço opcional pago, está a concordar em pagar a %{company_name} as taxas de subscrição mensais ou anuais indicadas. Os pagamentos serão cobrados numa base pré-paga no dia em que utilizar o serviço ou a atualização e irá cobrir o uso desse serviço ou atualização por um período de subscrição mensal ou anual tal como indicado. Estas taxas não são reembolsáveis. \n\n### Renovação Automática \n\nA não ser que notifique %{company_name} antes do final do período da subscrição que quer cancelar, a sua subscrição será automaticamente renovada e você autoriza-nos a colecionar as taxas anuais ou mensais (assim como outras taxas) usando qualquer cartão de crédito ou outro mecanismo de pagamento que tivermos no seu registo. As subscrições podem ser canceladas em qualquer altura. \n\n<a name=\"5\"></a> \n\n## [5. Serviços](#5) \n\n### Serviços de Alojamento, Suporte \n\nServiços opcionais de Alojamento e Suporte podem ser fornecidos\
-      \ por %{company_name} sob os termos e condições para cada serviço. Ao inscrever-se numa conta com serviços de Alojamento ou Suporte, irá concordar e agir sob tais termos e condições. \n\n<a name=\"6\"></a> \n\n## [6. Responsabilidade dos Visitantes do Sítio](#6) \n\n%{company_name} não reviu, nem pode rever, todo o material, incluindo programas de computador, publicado no Sítio, e não pode portanto ser responsável pelo conteúdo do mesmo, pelo seu uso ou efeitos. Ao operar o Sítio, %{company_name} não representa ou implica que corrobora com o material publicado, ou que acredita que o material seja preciso, útil e não prejudicial. Será responsável por tomar as precauções necessárias para proteger-se a si próprio e o seu sistema computacional de vírus, minhocas, cavalos de Tróia e outros conteúdos destrutivos. O Sítio pode ter conteúdo ofensivo, indecente assim como também imprecisões técnicas, erros tipográficos entre outros erros. O Sítio pode também ter material que viola os direitos de privacidade e publicidade, ou que infringe a propriedade intelectual e outros direitos do proprietário, de terceiras partes, ou o descarregamento, cópia ou uso que é sujeito a termos e condições adicionais, estabelecidos ou não. %{company_name} está isenta de qualquer responsabilidade de qualquer dano resultante do uso por parte dos visitantes do Sítio, ou de qualquer descarregamento feito por esses visitantes do conteúdo lá publicado. \n\n<a name=\"7\"></a> \n\n## [7. Conteúdo Publicado Noutros Sítios](#7) \n\nNão revimos nem podemos rever todo o material, incluindo programas de computador, disponibilizado através de sítios e páginas em %{company_domain} no qual existem hiperligações e que se hiperligam a %{company_domain}. %{company_name} não tem qualquer controlo dos sítios e páginas não-%{company_domain}, e não é responsável pelo seu conteúdo ou o seu uso. Ao clicar num sítio ou página não--%{company_domain}, %{company_name} não representa ou implica que corrobora com tais sítios ou páginas. Você é responsável por tomar ações necessárias para proteger-se a si próprio ou o seu sistema computacional de vírus, minhocas,\
-      \ cavalos de Tróia e outros conteúdos destrutivos. %{company_name} renuncia qualquer responsabilidade por qualquer dano resultante do uso de sítios e páginas não-%{company_domain}. \n\n<a name=\"8\"></a> \n\n## [8. Violação de Direitos de Autor e Política DCMA](#8) \n\nAssim como %{company_name} pede aos outros para respeitarem os direitos de propriedade intelectual, a mesma respeita os direitos de propriedade intelectual dos outros. Se acredita que material localizado em ou com hiperligação para, por %{company_domain} viola os seus direitos de autor, e se este sítio reside nos EUA, encorajamo-lo a notificar a %{company_name} em concordância com a Política (“DMCA”) [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) da %{company_name}. %{company_name} irá responder por tais notícias, incluindo tal como requerido ou apropriado por remover o material ilícito ou desativando as hiperligações para o material ilícito. %{company_name} irá terminar o acesso a e o uso do Sítio se, sob circunstâncias apropriadas, o visitante é determinado como sendo um infrator repetido dos direitos de autor e de outros direitos de propriedade intelectual de %{company_name} ou outros. No caso de tal terminação, %{company_name} não terá qualquer obrigação de fornecer uma compensação de qualquer valor previamente pago a %{company_name}. \n\n<a name=\"9\"></a> \n\n## [9. Propriedade Intelectual](#9) \n\nEste Acordo não transfere totalmente de %{company_name} para si qualquer propriedade intelectual de %{company_name} ou de terceiras partes, e todos os direitos, títulos e interesse na e para a propriedade irá permanecer (entre as partes) apenas com %{company_name}. %{company_name}, %{company_domain}, o logótipo %{company_domain} e todos as outras marcas, marcas de serviço, gráficos, logótipos usados na ligação com %{company_domain}, ou o Sítio é marca registada de %{company_name} ou licenciadores de %{company_name}. Outras marcas, marcas de serviço, gráficos e logótipos usados na hiperligação com o Sítio podem ser marcas de terceiras partes. O seu uso do Sítio não lhe concede direitos ou\
-      \ licença para reproduzir ou de outra forma usar quaisquer marcas de %{company_name} ou de terceiras partes. \n\n<a name=\"10\"></a> \n\n## [10. Anúncios](#10) \n\n%{company_name} reserva-se ao direito de mostrar anúncios no seu conteúdo a não ser que tenha comprado a Atualização Ad-free ou uma conta de Serviços. \n\n<a name=\"11\"></a> \n\n## [11. Atribuição](#11) \n\n%{company_name} reserva-se ao direito de mostrar hiperligações de atribuição tais como ‘Patrocinado por %{company_domain},’ e atribuição de fontes ao conteúdo do rodapé ou da sua ferramenta. Os créditos do rodapé e a ferramenta de %{company_domain} não poderão ser removidas independentemente das atualizações compradas. \n\n<a name=\"12\"></a> \n\n## [12. Alterações](#12) \n\n%{company_name} reserva-se ao direito, por critério exclusivo, de modificar ou substituir qualquer parte deste Acordo. É sua responsabilidade verificar periodicamente o Acordo e verificar as suas alterações. O seu uso ou acesso contínuo ao Sítio seguido da publicação de qualquer alteração a este Acordo constitui aceitação a essas mudanças. %{company_name} pode também, no futuro, oferecer novos serviços e/ou funcionalidades através do Sítio (incluindo, o lançamento de novas ferramentas e recursos). Estas novas funcionalidades e/ou serviços devem ser sujeitos aos termos e condições deste Acordo. \n\n<a name=\"13\"></a> \n\n## [13. Terminação](#13) \n\n%{company_name} pode terminar o seu acesso a todas ou alguma parte do Sítio em qualquer altura, com ou sem motivo, com ou sem aviso, com efeitos imediatos. Se desejar terminar este Acordo ou a sua conta %{company_domain} (se tiver uma), pode simplesmente deixar de usar o Sítio. Todas as provisões para este Acordo que pela sua natureza deverão sobreviver à terminação, incluindo, sem limitações, provisões de propriedade, isenções de garantia, indemnizações e limitações de responsabilidade. \n\n<a name=\"14\"></a> \n\n## [14. Isenção de Garantias](#14) \n\nO Sítio é fornecido “tal como está”. %{company_name} e os seus fornecedores e licenciadores ficam aqui isentos de garantias de qualquer tipo, expressas ou implícitas, sem\
-      \ limitação, as garantias de comerciabilidade, adequadas a uma finalidade específica. Nem %{company_name} nem os seus fornecedores e licenciadores, fazem garantias de que o Sítio está livre de erros ou que o acesso seja contínuo e ininterrupto. Se está a ler isto, aqui está [uma ajuda] (http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). Compreende que descarregou de, ou de outra maneira obteve conteúdo ou serviços através do Sítio a seu próprio risco e descrição. \n\n<a name=\"15\"></a> \n\n## [15. Limitação da Responsabilidade](#15) \n\nEm nenhum evento %{company_name} ou os seus fornecedores ou licenciadores, serão responsáveis em respeito a qualquer assunto deste acordo sob qualquer contrato, negligência, estrita responsabilidade ou outras teorias legais para: (i) quaisquer danos especiais, de incidentes ou consequenciais; (ii) o custo de procura de produtos ou serviços substitutos; (iii) por interrupção do uso, perda ou corrupção dos dados; ou (iv) por quaisquer valores que excedem as taxas pagas por si a %{company_name} sob este acordo durante um período doze (12) meses anterior à causa da ação. %{company_name} não deverá ter qualquer responsabilidade de qualquer falha ou atraso devido a matérias para além do seu razoável controlo. O disposto neste artigo não se aplica nas medidas proibidas pela lei aplicável. \n\n<a name=\"16\"></a> \n\n## [16. Representações Gerais e Garantia](#16) \n\nRepresenta e garante que (i) o seu uso do Sítio irá estar em estrita concordância com a [Política de Privacidade](/privacy) e das [Diretrizes da Comunidade](/diretrizes) da %{company_name}, com este Acordo e com as leis e regulações aplicáveis (incluindo sem limitação de quaisquer leis ou regulações locais no seu país, estado, cidade ou outras áreas governamentais, relativamente à conduta online e ao conteúdo aceitável, e incluindo quaisquer leis aplicáveis relativamente à transmissão de dados técnicos exportados de qualquer país em que o sítio reside ou do país em que você reside) e (ii) o seu uso do Sítio não irá infringir os direitos de propriedade intelectual de qualquer\
-      \ terceira parte. \n\n<a name=\"17\"></a> \n\n## [17. Indemnização](#17) \n\nConcorda em indemnizar e não prejudicar %{company_name}, os seus contratados, e os seus licenciadores, os seus respetivos diretores, empregados e agentes de e contra quaisquer reivindicações e despesas, incluindo taxas de advogados, decorrentes do seu uso do Sítio, incluindo mas não limitado à sua violação deste Acordo. \n\n<a name=\"18\"></a> \n\n## [18. Diversos](#18) \n\nEste Acordo constitui o acordo integral entre si e %{company_name} em relação ao assunto em questão, e poderá ser modificado apenas por uma emenda escrita assinada por um executivo autorizado da %{company_name}, ou pela publicação por parte da %{company_name}, de uma versão revista. Excepto o definido na lei, se houver, disposição em contrário, o presente Acordo, qualquer acesso ou uso do sítio será governado pelas leis do estado da Califórnia, E.U.A, excluindo aos conflitos das disposições da lei, e a receita própria por qualquer disputa emergente de ou relativa a qualquer do mesmo será o tribunal federal e estatal localizado em São Francisco, Califórnia. Exceto para os pedidos de medida cautelar ou equitativa ou reclamações relativas aos direitos de propriedade intelectual (que podem ser introduzidos em qualquer tribunal competente, sem a prestação de uma caução), qualquer litígio decorrente do presente acordo será resolvido de acordo com as Regras de Arbitragem de \"Judicial Arbitration and Mediation Service, Inc.” (“JAMS”) por três árbitros apontados em concordância com tais Regras. A arbitragem deverá ter lugar em São Francisco, Califórnia, em língua Inglesa e a decisão arbitral pode ser forçada em qualquer tribunal. A parte prevalecente em qualquer ação ou processo para executar este Acordo terá direito a custos e honorários dos advogados. Se qualquer parte deste Acordo for considerada inválida ou inexequível, essa parte será interpretada de forma a refletir a intenção original das partes e as porções restantes permanecerão em pleno vigor e efeito. A renúncia por qualquer das partes de qualquer termo ou condição deste Acordo ou qualquer violação dos mesmos,\
-      \ em qualquer instância, não vai renunciar a tal termo ou condição ou qualquer violação subsequente. Pode atribuir os seus direitos sob este acordo a qualquer parte que consente a, e concorda em ficar vinculado pelos seus termos e condições; %{company_name} pode assignar os seus direitos sob este Acordo sem condição. O presente Acordo será vinculativo e reverterá em benefício das partes, dos seus sucessores e signatários autorizados. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013. \n\nOriginalmente adaptado de [Termos de Serviço WordPress](http://en.wordpress.com/tos/).\n"
+    body: "Os seguintes termos e condições governam todo o uso do sítio %{company_domain} e todo o conteúdo, serviços e produtos disponíveis no ou através do sítio, incluindo mas não limitado a, %{company_domain} Software do Fórum, %{company_domain} Fóruns de Suporte e serviço de alojamento %{company_domain} (\"Alojamento\"), (em conjunto, o Sítio). O Sítio é propriedade e operado por %{company_full_name} (\"%{company_name}\"). O Sítio oferecido está sujeito à sua aprovação sem nenhuma modificação de todos os termos e condições contidos aqui e todas as outras regras de operação políticas (incluindo, sem limitação, %{company_domain}’s [Política de Privacidade](/privacy) e [Diretrizes da Comunidade](/faq)) e procedimentos que possam ser publicados de tempos em tempos neste Sítio por %{company_name} (coletivamente, the \"Acordo\"). \n\nPor favor leia este Acordo com cuidado antes de aceder ou usar o Sítio. Ao aceder ou usar qualquer parte do Sítio, concorda em estar limitado pelos termos e condições deste acordo. Se não concorda com todos os termos e condições deste acordo, então não deve aceder ao Sítio ou usar qualquer um dos serviços. Se estes termos e condições são considerados uma oferta de %{company_name}, a sua aceitação é expressamente limitada a estes termos. O Sítio está disponível apenas a indíviduos que têm pelo menos 13 anos de idade. \n\n<a name=\"1\"></a> \n\n## [1. A Sua Conta %{company_domain} ](#1) \n\nSe criar uma conta no Sítio, será responsável por manter a segurança da sua conta e será totalmente responsável por todas as atividades que ocorrerem sob a sua conta. Deve notificar imediatamente %{company_name} de qualquer uso não autorizado da sua conta ou qualquer outra falha de segurança. %{company_name} não será passível de quaisquer atos ou omissões da sua parte, incluindo danos de qualquer tipo que incorram como resultado de tais atos ou omissões. \n\n<a name=\"2\"></a> \n\n## [2.Responsabilidade dos Participantes](#2) \n\nSe publicar material no Sítio, publicar hiperligações no Sítio, ou de outra maneira disponibilizar (ou permitir que qualquer terceira parte o faça) material no Sítio (qualquer material, “Conteúdo”), será inteiramente responsável pelo conteúdo de, e qualquer dano resultante de tal Conteúdo. Esse é o caso independentemente de o Conteúdo em questão constituir texto, gráficos, ficheiros áudio, ou programas de computadores. Ao tornar o Conteúdo disponível, está a representar e garantir que: \n\n* o descarregamento, cópia e uso do Conteúdo não irá infringir os direitos do proprietário, incluindo mas não limitado aos direitos de autor, patentes, marcas registadas ou direitos de segredos de troca, de qualquer terceira parte; \n* se o seu empregado tem direitos sob a propriedade intelectual que criou, terá que (i) ou ter recebido permissões do seu empregado para publicar ou tornar o Conteúdo disponível, incluindo mas não limitado a qualquer software, ou (ii) ter garantido uma renúncia do seu empregado a todos os direitos no e para o Conteúdo; \n* está de acordo com licenças de qualquer terceira-parte relacionada com o Conteúdo, e fez todas as coisas necessárias para passar corretamente quaisquer termos requeridos aos utilizadores finais; \n* o Conteúdo não contém ou instala quaisquer vírus, minhocas ou malware, cavalos de Tróia ou outro conteúdo destrutivo; \n* o Conteúdo não é spam, não é gerado por máquina, e não contém conteúdo indesejado sem ética ou comercial com intuito de conduzir o tráfico de sítios terceiros ou aumentar a posição de sítios terceiros em motores de pesquisa, ou ainda outros atos ilegais (tais como phishing) ou destinatários enganadores relativamente à origem do material (tais como spoofing); \n* o Conteúdo não é pornográfico, nem contém ameaças ou incita violência, e não viola os direitos de privacidade ou publicidade de qualquer terceira parte; \n* o conteúdo não está a ser anunciado através de quaisquer mensagens eletrónicas tais como hiperligações de spam ou grupos de notícias, listas de email, blogs e sítios, e similares métodos promocionais não solicitados; \n* o seu conteúdo não está nomeado de nenhuma maneira que leve os seus leitores a pensarem que é outra pessoa ou empresa; e \n* terá, no caso do Conteúdo incluir código de computador, categorizado e/ou descrito o tipo, natureza, uso e efeito dos materiais, quer tenha sido pedido para fazê-lo por %{company_name} ou pelo contrário. \n\n<a name=\"3\"></a> \n\n## [3. Licença do Conteúdo do Utilizador](#3) \n\nAs contribuições dos utilizadores estão licenciadas sob a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sem qualquer limitação de qualquer dessas representações ou garantias, %{company_name} tem o direito (embora não tenha a obrigação) de, em critério exclusivo de %{company_name} (i) recusar ou remover qualquer conteúdo que, na sensata opinião de %{company_name} viola qualquer política de %{company_name} ou é de alguma maneira prejudicial ou censurável, ou (ii) terminar ou negar acesso ao Sítio e ao uso do mesmo a qualquer indivíduo ou entidade por alguma razão, em critério exclusivo de %{company_name}. %{company_name} não terá obrigação de fornecer uma compensação de quaisquer montantes previamente pagos. \n\n<a name=\"4\"></a> \n\n## [4. Pagamento e Renovação](#4) \n\n### Termos Gerais \n\nAtualizações ou serviços opcionais pagos podem estar disponíveis no Sítio. Ao utilizar uma atualização ou serviço opcional pago, está a concordar em pagar a %{company_name} as taxas de subscrição mensais ou anuais indicadas. Os pagamentos serão cobrados numa base pré-paga no dia em que utilizar o serviço ou a atualização e irá cobrir o uso desse serviço ou atualização por um período de subscrição mensal ou anual tal como indicado. Estas taxas não são reembolsáveis. \n\n### Renovação Automática \n\nA não ser que notifique %{company_name} antes do final do período da subscrição que quer cancelar, a sua subscrição será automaticamente renovada e você autoriza-nos a colecionar as taxas anuais ou mensais (assim como outras taxas) usando qualquer cartão de crédito ou outro mecanismo de pagamento que tivermos no seu registo. As subscrições podem ser canceladas em qualquer altura. \n\n<a name=\"5\"></a> \n\n## [5. Serviços](#5) \n\n### Serviços de Alojamento, Suporte \n\nServiços opcionais de Alojamento e Suporte podem ser fornecidos por %{company_name} sob os termos e condições para cada serviço. Ao inscrever-se numa conta com serviços de Alojamento ou Suporte, irá concordar e agir sob tais termos e condições. \n\n<a name=\"6\"></a> \n\n## [6. Responsabilidade dos Visitantes do Sítio](#6) \n\n%{company_name} não reviu, nem pode rever, todo o material, incluindo programas de computador, publicado no Sítio, e não pode portanto ser responsável pelo conteúdo do mesmo, pelo seu uso ou efeitos. Ao operar o Sítio, %{company_name} não representa ou implica que corrobora com o material publicado, ou que acredita que o material seja preciso, útil e não prejudicial. Será responsável por tomar as precauções necessárias para proteger-se a si próprio e o seu sistema computacional de vírus, minhocas, cavalos de Tróia e outros conteúdos destrutivos. O Sítio pode ter conteúdo ofensivo, indecente assim como também imprecisões técnicas, erros tipográficos entre outros erros. O Sítio pode também ter material que viola os direitos de privacidade e publicidade, ou que infringe a propriedade intelectual e outros direitos do proprietário, de terceiras partes, ou o descarregamento, cópia ou uso que é sujeito a termos e condições adicionais, estabelecidos ou não. %{company_name} está isenta de qualquer responsabilidade de qualquer dano resultante do uso por parte dos visitantes do Sítio, ou de qualquer descarregamento feito por esses visitantes do conteúdo lá publicado. \n\n<a name=\"7\"></a> \n\n## [7. Conteúdo Publicado Noutros Sítios](#7) \n\nNão revimos nem podemos rever todo o material, incluindo programas de computador, disponibilizado através de sítios e páginas em %{company_domain} no qual existem hiperligações e que se hiperligam a %{company_domain}. %{company_name} não tem qualquer controlo dos sítios e páginas não-%{company_domain}, e não é responsável pelo seu conteúdo ou o seu uso. Ao clicar num sítio ou página não--%{company_domain}, %{company_name} não representa ou implica que corrobora com tais sítios ou páginas. Você é responsável por tomar ações necessárias para proteger-se a si próprio ou o seu sistema computacional de vírus, minhocas, cavalos de Tróia e outros conteúdos destrutivos. %{company_name} renuncia qualquer responsabilidade por qualquer dano resultante do uso de sítios e páginas não-%{company_domain}. \n\n<a name=\"8\"></a> \n\n## [8. Violação de Direitos de Autor e Política DCMA](#8) \n\nAssim como %{company_name} pede aos outros para respeitarem os direitos de propriedade intelectual, a mesma respeita os direitos de propriedade intelectual dos outros. Se acredita que material localizado em ou com hiperligação para, por %{company_domain} viola os seus direitos de autor, e se este sítio reside nos EUA, encorajamo-lo a notificar a %{company_name} em concordância com a Política (“DMCA”) [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) da %{company_name}. %{company_name} irá responder por tais notícias, incluindo tal como requerido ou apropriado por remover o material ilícito ou desativando as hiperligações para o material ilícito. %{company_name} irá terminar o acesso a e o uso do Sítio se, sob circunstâncias apropriadas, o visitante é determinado como sendo um infrator repetido dos direitos de autor e de outros direitos de propriedade intelectual de %{company_name} ou outros. No caso de tal terminação, %{company_name} não terá qualquer obrigação de fornecer uma compensação de qualquer valor previamente pago a %{company_name}. \n\n<a name=\"9\"></a> \n\n## [9. Propriedade Intelectual](#9) \n\nEste Acordo não transfere totalmente de %{company_name} para si qualquer propriedade intelectual de %{company_name} ou de terceiras partes, e todos os direitos, títulos e interesse na e para a propriedade irá permanecer (entre as partes) apenas com %{company_name}. %{company_name}, %{company_domain}, o logótipo %{company_domain} e todos as outras marcas, marcas de serviço, gráficos, logótipos usados na ligação com %{company_domain}, ou o Sítio é marca registada de %{company_name} ou licenciadores de %{company_name}. Outras marcas, marcas de serviço, gráficos e logótipos usados na hiperligação com o Sítio podem ser marcas de terceiras partes. O seu uso do Sítio não lhe concede direitos ou licença para reproduzir ou de outra forma usar quaisquer marcas de %{company_name} ou de terceiras partes. \n\n<a name=\"10\"></a> \n\n## [10. Anúncios](#10) \n\n%{company_name} reserva-se ao direito de mostrar anúncios no seu conteúdo a não ser que tenha comprado a Atualização Ad-free ou uma conta de Serviços. \n\n<a name=\"11\"></a> \n\n## [11. Atribuição](#11) \n\n%{company_name} reserva-se ao direito de mostrar hiperligações de atribuição tais como ‘Patrocinado por %{company_domain},’ e atribuição de fontes ao conteúdo do rodapé ou da sua ferramenta. Os créditos do rodapé e a ferramenta de %{company_domain} não poderão ser removidas independentemente das atualizações compradas. \n\n<a name=\"12\"></a> \n\n## [12. Alterações](#12) \n\n%{company_name} reserva-se ao direito, por critério exclusivo, de modificar ou substituir qualquer parte deste Acordo. É sua responsabilidade verificar periodicamente o Acordo e verificar as suas alterações. O seu uso ou acesso contínuo ao Sítio seguido da publicação de qualquer alteração a este Acordo constitui aceitação a essas mudanças. %{company_name} pode também, no futuro, oferecer novos serviços e/ou funcionalidades através do Sítio (incluindo, o lançamento de novas ferramentas e recursos). Estas novas funcionalidades e/ou serviços devem ser sujeitos aos termos e condições deste Acordo. \n\n<a name=\"13\"></a> \n\n## [13. Terminação](#13) \n\n%{company_name} pode terminar o seu acesso a todas ou alguma parte do Sítio em qualquer altura, com ou sem motivo, com ou sem aviso, com efeitos imediatos. Se desejar terminar este Acordo ou a sua conta %{company_domain} (se tiver uma), pode simplesmente deixar de usar o Sítio. Todas as provisões para este Acordo que pela sua natureza deverão sobreviver à terminação, incluindo, sem limitações, provisões de propriedade, isenções de garantia, indemnizações e limitações de responsabilidade. \n\n<a name=\"14\"></a> \n\n## [14. Isenção de Garantias](#14) \n\nO Sítio é fornecido “tal como está”. %{company_name} e os seus fornecedores e licenciadores ficam aqui isentos de garantias de qualquer tipo, expressas ou implícitas, sem limitação, as garantias de comerciabilidade, adequadas a uma finalidade específica. Nem %{company_name} nem os seus fornecedores e licenciadores, fazem garantias de que o Sítio está livre de erros ou que o acesso seja contínuo e ininterrupto. Se está a ler isto, aqui está [uma ajuda] (http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). Compreende que descarregou de, ou de outra maneira obteve conteúdo ou serviços através do Sítio a seu próprio risco e descrição. \n\n<a name=\"15\"></a> \n\n## [15. Limitação da Responsabilidade](#15) \n\nEm nenhum evento %{company_name} ou os seus fornecedores ou licenciadores, serão responsáveis em respeito a qualquer assunto deste acordo sob qualquer contrato, negligência, estrita responsabilidade ou outras teorias legais para: (i) quaisquer danos especiais, de incidentes ou consequenciais; (ii) o custo de procura de produtos ou serviços substitutos; (iii) por interrupção do uso, perda ou corrupção dos dados; ou (iv) por quaisquer valores que excedem as taxas pagas por si a %{company_name} sob este acordo durante um período doze (12) meses anterior à causa da ação. %{company_name} não deverá ter qualquer responsabilidade de qualquer falha ou atraso devido a matérias para além do seu razoável controlo. O disposto neste artigo não se aplica nas medidas proibidas pela lei aplicável. \n\n<a name=\"16\"></a> \n\n## [16. Representações Gerais e Garantia](#16) \n\nRepresenta e garante que (i) o seu uso do Sítio irá estar em estrita concordância com a [Política de Privacidade](/privacy) e das [Diretrizes da Comunidade](/diretrizes) da %{company_name}, com este Acordo e com as leis e regulações aplicáveis (incluindo sem limitação de quaisquer leis ou regulações locais no seu país, estado, cidade ou outras áreas governamentais, relativamente à conduta online e ao conteúdo aceitável, e incluindo quaisquer leis aplicáveis relativamente à transmissão de dados técnicos exportados de qualquer país em que o sítio reside ou do país em que você reside) e (ii) o seu uso do Sítio não irá infringir os direitos de propriedade intelectual de qualquer terceira parte. \n\n<a name=\"17\"></a> \n\n## [17. Indemnização](#17) \n\nConcorda em indemnizar e não prejudicar %{company_name}, os seus contratados, e os seus licenciadores, os seus respetivos diretores, empregados e agentes de e contra quaisquer reivindicações e despesas, incluindo taxas de advogados, decorrentes do seu uso do Sítio, incluindo mas não limitado à sua violação deste Acordo. \n\n<a name=\"18\"></a> \n\n## [18. Diversos](#18) \n\nEste Acordo constitui o acordo integral entre si e %{company_name} em relação ao assunto em questão, e poderá ser modificado apenas por uma emenda escrita assinada por um executivo autorizado da %{company_name}, ou pela publicação por parte da %{company_name}, de uma versão revista. Excepto o definido na lei, se houver, disposição em contrário, o presente Acordo, qualquer acesso ou uso do sítio será governado pelas leis do estado da Califórnia, E.U.A, excluindo aos conflitos das disposições da lei, e a receita própria por qualquer disputa emergente de ou relativa a qualquer do mesmo será o tribunal federal e estatal localizado em São Francisco, Califórnia. Exceto para os pedidos de medida cautelar ou equitativa ou reclamações relativas aos direitos de propriedade intelectual (que podem ser introduzidos em qualquer tribunal competente, sem a prestação de uma caução), qualquer litígio decorrente do presente acordo será resolvido de acordo com as Regras de Arbitragem de \"Judicial Arbitration and Mediation Service, Inc.” (“JAMS”) por três árbitros apontados em concordância com tais Regras. A arbitragem deverá ter lugar em São Francisco, Califórnia, em língua Inglesa e a decisão arbitral pode ser forçada em qualquer tribunal. A parte prevalecente em qualquer ação ou processo para executar este Acordo terá direito a custos e honorários dos advogados. Se qualquer parte deste Acordo for considerada inválida ou inexequível, essa parte será interpretada de forma a refletir a intenção original das partes e as porções restantes permanecerão em pleno vigor e efeito. A renúncia por qualquer das partes de qualquer termo ou condição deste Acordo ou qualquer violação dos mesmos, em qualquer instância, não vai renunciar a tal termo ou condição ou qualquer violação subsequente. Pode atribuir os seus direitos sob este acordo a qualquer parte que consente a, e concorda em ficar vinculado pelos seus termos e condições; %{company_name} pode assignar os seus direitos sob este Acordo sem condição. O presente Acordo será vinculativo e reverterá em benefício das partes, dos seus sucessores e signatários autorizados. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013. \n\nOriginalmente adaptado de [Termos de Serviço WordPress](http://en.wordpress.com/tos/).\n"
   privacy_topic:
     title: "Política de Privacidade"
-    body: "<a name=\"collect\"></a> \n\n## [Que informações reunimos?](#reunião) \n\nReunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado. \n\nAo inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email. \n\nAo inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor. \n\n<a name=\"use\"></a> \n\n## [Para que usamos as suas informações?](#usar) \n\nTodas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras: \n\n* Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si. \n* Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte. \n* Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões. \n\n<a name=\"protect\"></a> \n\n## [Como protegemos a sua informação?](#protect)\n\nImplementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal. \n\n<a name=\"data-retention\"></a> \n\n## [Qual é a sua política de retenção de dados?](#retenção-dados)\n\nIremos fazer um esforço de boa fé para: \n\n* Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor\
-      \ não mais que 90 dias. \n* Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos. \n\n<a name=\"cookies\"></a> \n\n## [Usamos cookies?](#cookies) \n\nSim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa. \n\nUsamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio. \n\n<a name=\"disclose\"></a> \n\n## [Divulgamos informação com partes exteriores?](#divulgar) \n\nNão vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos. \n\n<a name=\"third-party\"></a> \n\n## [Hiperligações de Terceiras Partes](#terceira-parte) \n\nOcasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos\
-      \ proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios. \n\n<a name=\"coppa\"></a> \n\n## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa) \n\nO nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio. \n\n<a name=\"online\"></a> \n\n## [Política de Privacidade Online](#online) \n\nEstas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline. \n\n<a name=\"consent\"></a> \n\n## [O seu consentimento](#consentimento) \n\nAo utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio. \n\n<a name=\"changes\"></a> \n\n## [Mudanças à nossa Política de Privacidade](#mudanças) \n\nSe decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.\n"
+    body: "<a name=\"collect\"></a> \n\n## [Que informações reunimos?](#reunião) \n\nReunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado. \n\nAo inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email. \n\nAo inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor. \n\n<a name=\"use\"></a> \n\n## [Para que usamos as suas informações?](#usar) \n\nTodas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras: \n\n* Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si. \n* Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte. \n* Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões. \n\n<a name=\"protect\"></a> \n\n## [Como protegemos a sua informação?](#protect)\n\nImplementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal. \n\n<a name=\"data-retention\"></a> \n\n## [Qual é a sua política de retenção de dados?](#retenção-dados)\n\nIremos fazer um esforço de boa fé para: \n\n* Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias. \n* Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos. \n\n<a name=\"cookies\"></a> \n\n## [Usamos cookies?](#cookies) \n\nSim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa. \n\nUsamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio. \n\n<a name=\"disclose\"></a> \n\n## [Divulgamos informação com partes exteriores?](#divulgar) \n\nNão vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos. \n\n<a name=\"third-party\"></a> \n\n## [Hiperligações de Terceiras Partes](#terceira-parte) \n\nOcasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios. \n\n<a name=\"coppa\"></a> \n\n## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa) \n\nO nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio. \n\n<a name=\"online\"></a> \n\n## [Política de Privacidade Online](#online) \n\nEstas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline. \n\n<a name=\"consent\"></a> \n\n## [O seu consentimento](#consentimento) \n\nAo utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio. \n\n<a name=\"changes\"></a> \n\n## [Mudanças à nossa Política de Privacidade](#mudanças) \n\nSe decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.\n"
   static:
     search_help: |
       <h3>Dicas</h3>
       <p>
       <ul>
-      <li>A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
-      <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
-      <li>Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
+        <li>A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
+        <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
+        <li>Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
       </ul>
       </p>
       <h3>Opções</h3>
       <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
-      </table>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td></td></tr>
+        <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
+        </table>
       </p>
+      <h3>Exemplos</h3>
       <p>
-      <code>rainbows category:parks status:open order:latest </code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.
+        <ul>
+          <li><code>rainbows category:parks status:open order:latest</code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.</li>
+          <li><code>rainbows category:"parks and gardens" in:bookmarks</code> irá retornar uma pesquisa de tópicos que contêm a palavra “rainbows” na categoria “parks and gardens” e que estão marcados por si.</li>
+        </ul>
       </p>
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Este distintivo é concedido por preencher <a href="/my/preferences">o seu perfil de utilizador</a> e por selecionar uma imagem de perfil. Deixar a comunidade saber mais sobre quem você é e no que está interessado torna a comunidade melhor e mais ligada.
-      first_like: |
-        Este distintivo é concedido na primeira vez que gosta de uma mensagem utilizando o botão :heart:. Gostar de mensagens é uma excelente maneira de deixar os seus companheiros membros da comunidade saberem que o que eles postaram foi interessante, útil, giro, ou divertido. Partilhe o amor!
-      first_link: |
-        Este distintivo é concedido na primeira vez que coloca uma hiperligação para outro tópico numa resposta. Ligar tópicos ajuda os leitores a encontrarem conversas relacionadas interessantes, ao exibir ligação entre tópicos em ambas as direções.
-      first_quote: |
-        Este distintivo é concedido na primeira vez que cita uma mensagem na sua resposta. Citar secções relevantes de mensagens anteriores na sua resposta ajuda a manter as discussões focadas e no tópico.
-      first_share: |
-        Este distintivo é concedido na primeira vez que partilha uma hiperligação para uma mensagem ou tópico utilizando o botão de partilha. Partilhar hiperligações é uma excelente maneira de mostrar discussões interessantes com o resto do mundo e de fazer crescer a sua comunidade.
-      read_guidelines: |
-        Este distintivo é concedido por <a href="/guidelines">ler as diretrizes da comunidade</a>. Seguir e partilhar estas simples diretrizes ajuda a construir uma comunidade segura, divertida e sustentável.
-      reader: |
-        Este distintivo é concedido ao ler um tópico longo. Ler é fundamental. Ler atentamente ajuda-o a seguir a conversação e leva-o a respostas melhores e mais completas.
-      editor: |
-        Este distintivo é concedido ao editar a sua mensagem. Não hesite em editar as suas mensagens em qualquer altura para melhorá-las, corrigir pequenos erros, ou adicionar algo que se tenha esquecido.
-      first_flag: |
-        Este distintivo é concedido ao sinalizar uma mensagem. Sinalizar é  crítico para a saúde da sua comunidade. Se notar em alguma mensagem que necessite de atenção do moderador por favor
-        não hesite em sinalizá-la. Pode também utilizar o diálogo de sinalização para enviar <b>mensagens</b> para colegas utilizadores.
-      nice_share: |
-        Este distintivo é concedido ao partilhar uma hiperligação para uma mensagem que seja visitada por 25 visitantes externos. Bom trabalho! Partilhar hiperligações para discussões interessantes com amigos é uma excelente maneira de fazer crescer a nossa comunidade.
-      welcome: |
-        Este distintivo é concedido quando recebe o seu primeiro gosto numa mensagem. Parabéns, publicou algo que os colegas membros da comunidade acham interessante, giro, ou útil!
-      anniversary: |
-        Este distintivo é concedido quando tiver sido membro por um ano com pelo menos uma mensagem nesse ano. Obrigado por ficar por cá e por contribuir para a nossa comunidade!
-      good_share: |
-        Este distintivo é concedido por partilhar uma hiperligação para uma mensagem que seja visitada por 300 visitantes externos. Bom trabalho! Mostrou uma discussão interessante a <i>lot</i>novas pessoas e ajudou-nos a crescer.
-      great_share: |
-        Este distintivo é concedido por partilhar uma hiperligação para uma mensagem que seja visitada por 100 visitantes externos. Uau! Promoveu uma discussão interessante junto de uma enorme nova audiência para esta comunidade, e ajudou-nos a crescer de uma forma exponencial.
-      nice_post: |
-        Este distintivo é concedido ao criar uma resposta que obtém 10 gostos. Bom trabalho!
-      nice_topic: |
-        Este distintivo é concedido ao criar um tópico que obtém 10 gostos. Bom trabalho!
-      good_post: |
-        Este distintivo é concedido ao criar uma resposta que obtém 25 gostos. Bom trabalho!
-      good_topic: |+
-        Este distintivo é concedido ao criar um tópico que obtém 25 gostos. Bom trabalho!
-
-      great_post: |
-        Este distintivo é concedido ao criar uma mensagem que obtém 50 gostos. Uau!
-      great_topic: |
-        Este distintivo é concedido ao criar uma resposta que obtém 50 gostos. Uau!
-      basic: |
-        Este distintivo é concedido quando atinge o nível de confiança 1. Obrigado por ficar por cá durante algum tempo e por ler alguns tópicos para aprender do que se trata a nossa comunidade. As suas restrições de novo utilizador foram removidas, e foram-lhe atribuídas habilidades essenciais da comunidade, tais como mensagens pessoais, sinalização, edição da wiki, e a habilidade de publicar imagens e múltiplas hiperligações.
-      member: |
-        Este distintivo é concedido quando atinge o nível de confiança 2. Obrigado por participar durante um período de semanas para se juntar à nossa comunidade. Agora pode enviar convites pessoais da sua página de utilizador ou tópicos individuais, criar mensagens de grupo, e mais alguns gostos por dia!
-      regular: |
-        Este distintivo é concedido quando atingir o nível de confiança 3. Obrigado por ser uma parte regular da nossa comunidade por um período de meses, um dos leitores mais ativos e um contribuinte fiável no que torna a comunidade fantástica. Agora pode recategorizar e renomear tópicos, aceder à área do salão privado, sinalizações de spam mais poderosas, e muitos mais gostos por dia.
-      leader: |
-        Este distintivo é concedido quando atinge o nível de confiança 4. É um líder nesta comunidade, selecionado pelo pessoal, e define um exemplo positivo para a comunidade nos seus trabalhos e palavras. Tem a habilidade de editar todas as mensagens, realizar ações de moderador de tópicos tais como fixar, fechar, arquivar, dividir e unir, e toneladas de gostos por dia.
   admin_login:
     success: "Email Enviado"
     error: "Erro!"
@@ -1828,3 +1939,10 @@ pt:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios diários de desempenho para o seu sítio.
     initial_topic_title: Relatórios de desempenho do sítio
+  topic_invite:
+    user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode apenas convidar um utilizador para um tópico uma vez."
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

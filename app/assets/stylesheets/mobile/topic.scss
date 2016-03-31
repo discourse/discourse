@@ -23,6 +23,7 @@
     a {
       color: $primary;
       vertical-align: middle;
+      word-wrap: break-word;
     }
   }
   .title-category-wrapper {
@@ -37,10 +38,10 @@
 
 /* both blocks that appear under the standard post control buttons */
 .notification-options, .pinned-options {
-  clear: both;
   float: left;
   margin-top: 0px;
   padding-top: 1px;
+  clear: both;
 }
 
 #topic-closing-info {
@@ -56,7 +57,7 @@
   width: 0;
   right: 0;
   bottom: 0;
-  z-index: 500;
+  z-index: 950;
   margin-right: 148px;
 }
 
@@ -64,11 +65,10 @@
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px;
   background: $secondary;
-  box-shadow: 0 0px 2px rgba(0,0,0, .2);
 
   position: absolute;
   bottom: 34px;
-  width: 133px;
+  width: 135px;
 
   button.full {
     width: 100%;
@@ -163,7 +163,7 @@
   position: absolute;
 }
 
-.post-cloak:last-of-type {padding-bottom: 40px;}
+.topic-post:last-of-type {padding-bottom: 40px;}
 
 .heatmap-high {color: scale-color($danger, $lightness: -25%) !important;}
 .heatmap-med {color: $danger !important;}

@@ -6,6 +6,7 @@ class InvitesController < ApplicationController
 
   before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :check_csv_chunk, :upload_csv_chunk]
   before_filter :ensure_new_registrations_allowed, only: [:show, :redeem_disposable_invite]
+  before_filter :ensure_not_logged_in, only: [:show, :redeem_disposable_invite]
 
   def show
     invite = Invite.find_by(invite_key: params[:id])
@@ -41,10 +42,14 @@ class InvitesController < ApplicationController
       guardian.ensure_can_send_multiple_invites!(current_user)
     end
 
-    if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids)
-      render json: success_json
-    else
-      render json: failed_json, status: 422
+    begin
+      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids)
+        render json: success_json
+      else
+        render json: failed_json, status: 422
+      end
+    rescue => e
+      render json: {errors: [e.message]}, status: 422
     end
   end
 
@@ -59,11 +64,15 @@ class InvitesController < ApplicationController
       guardian.ensure_can_send_multiple_invites!(current_user)
     end
 
-    # generate invite link
-    if invite_link = Invite.generate_invite_link(params[:email], current_user, topic, group_ids)
-      render_json_dump(invite_link)
-    else
-      render json: failed_json, status: 422
+    begin
+      # generate invite link
+      if invite_link = Invite.generate_invite_link(params[:email], current_user, topic, group_ids)
+        render_json_dump(invite_link)
+      else
+        render json: failed_json, status: 422
+      end
+    rescue => e
+      render json: {errors: [e.message]}, status: 422
     end
   end
 
@@ -183,6 +192,14 @@ class InvitesController < ApplicationController
   def ensure_new_registrations_allowed
     unless SiteSetting.allow_new_registrations
       flash[:error] = I18n.t('login.new_registrations_disabled')
+      render layout: 'no_ember'
+      false
+    end
+  end
+
+  def ensure_not_logged_in
+    if current_user
+      flash[:error] = I18n.t("login.already_logged_in", current_user: current_user.username)
       render layout: 'no_ember'
       false
     end

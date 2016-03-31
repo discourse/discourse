@@ -1,5 +1,9 @@
-export default Discourse.Route.extend({
+export default Ember.Route.extend({
   model(params) {
-    return this.store.find('site-text', params.text_type);
+    return this.store.find('site-text', params.id);
+  },
+
+  setupController(controller, siteText) {
+    controller.setProperties({ siteText, saved: false });
   }
 });

@@ -6,6 +6,7 @@ class AdminDashboardData
   GLOBAL_REPORTS ||= [
     'visits',
     'signups',
+    'profile_views',
     'topics',
     'posts',
     'time_to_first_response',
@@ -61,7 +62,8 @@ class AdminDashboardData
                       :failing_emails_check, :default_logo_check, :contact_email_check,
                       :send_consumer_email_check, :title_check,
                       :site_description_check, :site_contact_username_check,
-                      :notification_email_check
+                      :notification_email_check, :subfolder_ends_in_slash_check,
+                      :pop3_polling_configuration, :email_polling_errored_recently
 
     add_problem_check do
       sidekiq_check || queue_size_check
@@ -198,6 +200,19 @@ class AdminDashboardData
 
   def ruby_version_check
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
+  end
+
+  def subfolder_ends_in_slash_check
+    I18n.t('dashboard.subfolder_ends_in_slash') if Discourse.base_uri =~ /\/$/
+  end
+
+  def pop3_polling_configuration
+    POP3PollingEnabledSettingValidator.new.error_message if SiteSetting.pop3_polling_enabled
+  end
+
+  def email_polling_errored_recently
+    errors = Jobs::PollMailbox.errors_in_past_24_hours
+    I18n.t('dashboard.email_polling_errored_recently', count: errors) if errors > 0
   end
 
 end

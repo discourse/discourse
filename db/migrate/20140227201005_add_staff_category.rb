@@ -1,6 +1,8 @@
 class AddStaffCategory < ActiveRecord::Migration
   def up
-    unless Rails.env.test?
+    return if Rails.env.test?
+
+    I18n.overrides_disabled do
       result = Category.exec_sql "SELECT 1 FROM site_settings where name = 'staff_category_id'"
       if result.count == 0
         description = I18n.t('staff_category_description')

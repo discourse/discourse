@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe SimilarTopicsController do
   context 'similar_to' do

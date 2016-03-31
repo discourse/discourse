@@ -4,10 +4,17 @@
                       autoCloseValid=auto_close_valid
                       autoCloseBasedOnLastPost=model.details.auto_close_based_on_last_post
                       limited=model.details.auto_close_based_on_last_post }}
+    {{#if willCloseImmediately}}
+      <div class="warning">
+        {{fa-icon "warning"}}
+        {{willCloseI18n}}
+      </div>
+    {{/if}}
   </div>
   <div class="modal-footer">
-    {{d-button class="btn-primary" disabled=auto_close_invalid label="topic.auto_close_save" action="saveAutoClose"}}
+    {{d-button class="btn-primary" disabled=disable_submit label="topic.auto_close_save" action="saveAutoClose"}}
     <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+    {{conditional-loading-spinner size="small" condition=loading}}
     {{d-button class="pull-right" action="removeAutoClose" label="topic.auto_close_remove"}}
   </div>
 </form>

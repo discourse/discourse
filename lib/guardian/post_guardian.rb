@@ -30,7 +30,7 @@ module PostGuardian
       not(action_key == :like && is_my_own?(post)) &&
 
       # new users can't notify_user because they are not allowed to send private messages
-      not(action_key == :notify_user && !@user.has_trust_level?(TrustLevel[1])) &&
+      not(action_key == :notify_user && !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
 
       # can't send private messages if they're disabled globally
       not(action_key == :notify_user && !SiteSetting.enable_private_messages) &&
@@ -73,7 +73,7 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
-    !SpamRule::AutoBlock.block?(@user) && (
+    (!SpamRule::AutoBlock.block?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
       Category.post_create_allowed(self).where(:id => parent.category.id).count == 1
@@ -157,7 +157,7 @@ module PostGuardian
     return false unless post
 
     if !post.hidden
-      return true if post.wiki || SiteSetting.edit_history_visible_to_public || post.user.try(:edit_history_public)
+      return true if post.wiki || SiteSetting.edit_history_visible_to_public || (post.user && post.user.user_option.edit_history_public)
     end
 
     authenticated? &&
@@ -173,8 +173,16 @@ module PostGuardian
     is_admin?
   end
 
-  def can_wiki?
-    is_staff? || @user.has_trust_level?(TrustLevel[4])
+  def can_wiki?(post)
+    return false unless authenticated?
+    return true if is_staff? || @user.has_trust_level?(TrustLevel[4])
+
+    if @user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post)
+      return false if post.hidden?
+      return !post.edit_time_limit_expired?
+    end
+
+    false
   end
 
   def can_change_post_type?

@@ -2,9 +2,7 @@
 //= require ./env
 //= require probes.js
 
-//= require handlebars.js
-//= require jquery_include.js
-//= require ember_include.js
+//= require template_include.js
 //= require i18n-patches
 
 //= require loader
@@ -40,4 +38,7 @@
 //= require break_string
 //= require buffered-proxy
 //= require jquery.autoellipsis-1.0.10.min.js
+//= require virtual-dom
+//= require virtual-dom-amd
+//= require highlight.js
 //= require_tree ./discourse/ember

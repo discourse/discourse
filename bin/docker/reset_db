@@ -1,0 +1,12 @@
+#!/bin/bash
+
+pushd `dirname $0` > /dev/null
+SCRIPTPATH=`pwd -P`
+popd > /dev/null
+
+
+SOURCE_DIR=`(cd $SCRIPTPATH && cd ../../ && pwd)`
+DATA_DIR=$SOURCE_DIR/tmp/postgres
+
+
+docker run -it -v $DATA_DIR:/shared/postgres_data samsaffron/discourse_dev:1.0.13 /bin/bash -c "rm -fr /shared/postgres_data/*"

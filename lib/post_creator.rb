@@ -57,6 +57,7 @@ class PostCreator
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
+    @guardian = opts[:guardian] if opts[:guardian]
 
     @spam = false
   end
@@ -133,6 +134,7 @@ class PostCreator
         create_embedded_topic
 
         ensure_in_allowed_users if guardian.is_staff?
+        unarchive_message
         @post.advance_draft_sequence
         @post.save_reply_relationships
       end
@@ -170,13 +172,13 @@ class PostCreator
   def self.before_create_tasks(post)
     set_reply_info(post)
 
-    post.word_count = post.raw.scan(/\w+/).size
+    post.word_count = post.raw.scan(/[[:word:]]+/).size
     post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?)
 
     cooking_options = post.cooking_options || {}
     cooking_options[:topic_id] = post.topic_id
 
-    post.cooked ||= post.cook(post.raw, cooking_options)
+    post.cooked ||= post.cook(post.raw, cooking_options.symbolize_keys)
     post.sort_order = post.post_number
     post.last_version_at ||= Time.now
   end
@@ -260,10 +262,26 @@ class PostCreator
   end
 
   def ensure_in_allowed_users
-    return unless @topic.private_message?
+    return unless @topic.private_message? && @topic.id
 
     unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
-      @topic.topic_allowed_users.create!(user_id: @user.id)
+      unless @topic.topic_allowed_groups.where('group_id IN (
+                                              SELECT group_id FROM group_users where user_id = ?
+                                           )',@user.id).exists?
+        @topic.topic_allowed_users.create!(user_id: @user.id)
+      end
+    end
+  end
+
+  def unarchive_message
+    return unless @topic.private_message? && @topic.id
+
+    UserArchivedMessage.where(topic_id: @topic.id).pluck(:user_id).each do |user_id|
+      UserArchivedMessage.move_to_inbox!(user_id, @topic.id)
+    end
+
+    GroupArchivedMessage.where(topic_id: @topic.id).pluck(:group_id).each do |group_id|
+      GroupArchivedMessage.move_to_inbox!(group_id, @topic.id)
     end
   end
 
@@ -341,8 +359,10 @@ class PostCreator
       @user.user_stat.first_post_created_at = @post.created_at
     end
 
-    @user.user_stat.post_count += 1
-    @user.user_stat.topic_count += 1 if @post.is_first_post?
+    unless @post.topic.private_message?
+      @user.user_stat.post_count += 1
+      @user.user_stat.topic_count += 1 if @post.is_first_post?
+    end
 
     # We don't count replies to your own topics
     if !@opts[:import_mode] && @user.id != @topic.user_id
@@ -382,8 +402,11 @@ class PostCreator
                              post_number: @post.post_number,
                              msecs: 5000)
 
-
-    TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
+    if @user.staged
+      TopicUser.auto_watch(@user.id, @topic.id)
+    else
+      TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
+    end
   end
 
   def enqueue_jobs

@@ -5,9 +5,9 @@ require_dependency 'rate_limiter'
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
+  before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -21,22 +21,29 @@ class UsersController < ApplicationController
                                                             :activate_account,
                                                             :perform_account_activation,
                                                             :send_activation_email,
-                                                            :authorize_email,
                                                             :password_reset,
+                                                            :confirm_email_token,
                                                             :admin_login]
 
   def index
   end
 
   def show
-    @user = fetch_user_from_params
+    raise Discourse::InvalidAccess if SiteSetting.hide_user_profiles_from_public && !current_user
+
+    @user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
-    if params[:stats].to_s == "false"
-      user_serializer.omit_stats = true
-    end
+
+    # TODO remove this options from serializer
+    user_serializer.omit_stats = true
+
     topic_id = params[:include_post_count_for].to_i
     if topic_id != 0
       user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
+    end
+
+    if !params[:skip_track_visit] && (@user != current_user)
+      track_visit_to_user_profile
     end
 
     # This is a hack to get around a Rails issue where values with periods aren't handled correctly
@@ -158,11 +165,21 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    if current_user.present? && params[:path] =~ /^[a-z\-\/]+$/
-      redirect_to path("/users/#{current_user.username}/#{params[:path]}")
-      return
+    raise Discourse::NotFound if params[:path] !~ /^[a-z_\-\/]+$/
+
+    if current_user.blank?
+      cookies[:destination_url] = "/my/#{params[:path]}"
+      redirect_to "/login-preferences"
+    else
+      redirect_to(path("/users/#{current_user.username}/#{params[:path]}"))
     end
-    raise Discourse::NotFound
+  end
+
+  def summary
+    user = fetch_user_from_params
+    summary = UserSummary.new(user, guardian)
+    serializer = UserSummarySerializer.new(summary, scope: guardian)
+    render_json_dump(serializer)
   end
 
   def invited
@@ -192,12 +209,26 @@ class UsersController < ApplicationController
   end
 
   def is_local_username
-    users = params[:usernames]
-    users = [params[:username]] if users.blank?
-    users.each(&:downcase!)
+    usernames = params[:usernames]
+    usernames = [params[:username]] if usernames.blank?
+    usernames.each(&:downcase!)
 
-    result = User.where(username_lower: users).pluck(:username_lower)
-    render json: {valid: result}
+    groups = Group.where(name: usernames).pluck(:name)
+    mentionable_groups =
+      if current_user
+        Group.mentionable(current_user)
+          .where(name: usernames)
+          .pluck(:name, :user_count)
+          .map{ |name,user_count| {name: name, user_count: user_count} }
+      end
+
+    usernames -= groups
+
+    result = User.where(staged: false)
+                 .where(username_lower: usernames)
+                 .pluck(:username_lower)
+
+    render json: {valid: result, valid_groups: groups, mentionable_groups: mentionable_groups}
   end
 
   def render_available_true
@@ -250,7 +281,12 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    user = User.new(user_params)
+    if user = User.where(staged: true).find_by(email: params[:email].strip.downcase)
+      user_params.each { |k, v| user.send("#{k}=", v) }
+      user.staged = false
+    else
+      user = User.new(user_params)
+    end
 
     # Handle custom fields
     user_fields = UserField.all
@@ -306,7 +342,8 @@ class UsersController < ApplicationController
           errors: user.errors.full_messages.join("\n")
         ),
         errors: user.errors.to_hash,
-        values: user.attributes.slice('name', 'username', 'email')
+        values: user.attributes.slice('name', 'username', 'email'),
+        is_developer: UsernameCheckerService.new.is_developer?(user.email)
       }
     end
   rescue ActiveRecord::StatementInvalid
@@ -326,7 +363,12 @@ class UsersController < ApplicationController
     expires_now
 
     if EmailToken.valid_token_format?(params[:token])
-      @user = EmailToken.confirm(params[:token])
+      if request.put?
+        @user = EmailToken.confirm(params[:token])
+      else
+        email_token = EmailToken.confirmable(params[:token])
+        @user = email_token.try(:user)
+      end
 
       if @user
         session["password-#{params[:token]}"] = @user.id
@@ -356,6 +398,12 @@ class UsersController < ApplicationController
       end
     end
     render layout: 'no_ember'
+  end
+
+  def confirm_email_token
+    expires_now
+    EmailToken.confirm(params[:token])
+    render json: success_json
   end
 
   def logon_after_password_reset
@@ -422,44 +470,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def change_email
-    params.require(:email)
-    user = fetch_user_from_params
-    guardian.ensure_can_edit_email!(user)
-    lower_email = Email.downcase(params[:email]).strip
-
-    RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour).performed!
-    RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
-
-    # Raise an error if the email is already in use
-    if User.find_by_email(lower_email)
-      raise Discourse::InvalidParameters.new(:email)
-    end
-
-    email_token = user.email_tokens.create(email: lower_email)
-    Jobs.enqueue(
-      :user_email,
-      to_address: lower_email,
-      type: :authorize_email,
-      user_id: user.id,
-      email_token: email_token.token
-    )
-
-    render nothing: true
-  rescue RateLimiter::LimitExceeded
-    render_json_error(I18n.t("rate_limiter.slow_down"))
-  end
-
-  def authorize_email
-    expires_now()
-    if @user = EmailToken.confirm(params[:token])
-      log_on_user(@user)
-    else
-      flash[:error] = I18n.t('change_email.error')
-    end
-    render layout: 'no_ember'
-  end
-
   def account_created
     @message = session['user_created_message'] || I18n.t('activation.missing_session')
     expires_now
@@ -490,8 +500,10 @@ class UsersController < ApplicationController
   end
 
   def send_activation_email
-    RateLimiter.new(nil, "activate-hr-#{request.remote_ip}", 30, 1.hour).performed!
-    RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
+    if current_user.blank? || !current_user.staff?
+      RateLimiter.new(nil, "activate-hr-#{request.remote_ip}", 30, 1.hour).performed!
+      RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
+    end
 
     @user = User.find_by_username_or_email(params[:username].to_s)
 
@@ -521,7 +533,17 @@ class UsersController < ApplicationController
     to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
     if params[:include_groups] == "true"
-      to_render[:groups] = Group.search_group(term, current_user).map { |m| { name: m.name, usernames: m.usernames.split(",") } }
+      to_render[:groups] = Group.search_group(term).map do |m|
+        {name: m.name, usernames: []}
+      end
+    end
+
+    if params[:include_mentionable_groups] == "true" && current_user
+      to_render[:groups] = Group.mentionable(current_user)
+                                .where("name ILIKE :term_like", term_like: "#{term}%")
+                                .map do |m|
+        {name: m.name, usernames: []}
+      end
     end
 
     render json: to_render
@@ -535,6 +557,16 @@ class UsersController < ApplicationController
 
     type = params[:type]
     upload_id = params[:upload_id]
+
+    if SiteSetting.sso_overrides_avatar
+      return render json: failed_json, status: 422
+    end
+
+    if !SiteSetting.allow_uploaded_avatars
+      if type == "uploaded" || type == "custom"
+        return render json: failed_json, status: 422
+      end
+    end
 
     user.uploaded_avatar_id = upload_id
 
@@ -592,7 +624,7 @@ class UsersController < ApplicationController
   end
 
   def staff_info
-    @user = fetch_user_from_params
+    @user = fetch_user_from_params(include_inactive: true)
     guardian.ensure_can_see_staff_info!(@user)
 
     result = {}
@@ -643,11 +675,26 @@ class UsersController < ApplicationController
 
     def user_params
       params.permit(:name, :email, :password, :username, :active)
-            .merge(ip_address: request.remote_ip, registration_ip_address: request.remote_ip)
+            .merge(ip_address: request.remote_ip, registration_ip_address: request.remote_ip,
+                   locale: user_locale)
+    end
+
+    def user_locale
+      I18n.locale
     end
 
     def fail_with(key)
       render json: { success: false, message: I18n.t(key) }
+    end
+
+    def track_visit_to_user_profile
+      user_profile_id = @user.user_profile.id
+      ip = request.remote_ip
+      user_id = (current_user.id if current_user)
+
+      Scheduler::Defer.later 'Track profile view visit' do
+        UserProfileView.add(user_profile_id, ip, user_id)
+      end
     end
 
 end

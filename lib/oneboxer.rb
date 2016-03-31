@@ -76,12 +76,30 @@ module Oneboxer
     doc
   end
 
-  def self.apply(string_or_doc)
+  def self.append_source_topic_id(url, topic_id)
+    # hack urls to create proper expansions
+    if url =~ Regexp.new("^#{Discourse.base_url.gsub(".","\\.")}.*$", true)
+      uri = URI.parse(url) rescue nil
+      if uri && uri.path
+        route = Rails.application.routes.recognize_path(uri.path) rescue nil
+        if route && route[:controller] == 'topics'
+          url += (url =~ /\?/ ? "&" : "?") + "source_topic_id=#{topic_id}"
+        end
+      end
+    end
+    url
+  end
+
+  def self.apply(string_or_doc, args=nil)
     doc = string_or_doc
     doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
     changed = false
 
     Oneboxer.each_onebox_link(doc) do |url, element|
+
+      if args && args[:topic_id]
+        url = append_source_topic_id(url, args[:topic_id])
+      end
       onebox, _preview = yield(url,element)
       if onebox
         parsed_onebox = Nokogiri::HTML::fragment(onebox)
@@ -138,4 +156,3 @@ module Oneboxer
   end
 
 end
-

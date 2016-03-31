@@ -5,7 +5,7 @@
 class PostDestroyer
 
   def self.destroy_old_hidden_posts
-    Post.where(deleted_at: nil)
+    Post.where(deleted_at: nil, hidden: true)
         .where("hidden_at < ?", 30.days.ago)
         .find_each do |post|
         PostDestroyer.new(Discourse.system_user, post).destroy
@@ -65,6 +65,7 @@ class PostDestroyer
   def staff_recovered
     @post.recover!
     @post.publish_change_to_clients! :recovered
+    TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.post_number == 1
   end
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
@@ -96,6 +97,7 @@ class PostDestroyer
 
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients! :deleted if @post.topic
+    TopicTrackingState.publish_delete(@post.topic) if @post.topic && @post.post_number == 1
   end
 
   # When a user 'deletes' their own post. We just change the text.

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'topics_bulk_action'
 
 describe TopicsBulkAction do
@@ -150,6 +150,33 @@ describe TopicsBulkAction do
         expect(topic_ids).to be_blank
         topic.reload
         expect(topic).not_to be_archived
+      end
+    end
+  end
+
+  describe "unlist" do
+    let(:topic) { Fabricate(:topic) }
+
+    context "when the user can moderate the topic" do
+      it "unlists the topic and returns the topic_id" do
+        Guardian.any_instance.expects(:can_moderate?).returns(true)
+        Guardian.any_instance.expects(:can_create?).returns(true)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'unlist')
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([topic.id])
+        topic.reload
+        expect(topic).not_to be_visible
+      end
+    end
+
+    context "when the user can't edit the topic" do
+      it "doesn't unlist the topic" do
+        Guardian.any_instance.expects(:can_moderate?).returns(false)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'unlist')
+        topic_ids = tba.perform!
+        expect(topic_ids).to be_blank
+        topic.reload
+        expect(topic).to be_visible
       end
     end
   end

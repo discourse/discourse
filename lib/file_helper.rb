@@ -6,7 +6,7 @@ class FileHelper
     filename =~ images_regexp
   end
 
-  def self.download(url, max_file_size, tmp_file_name, follow_redirect=false)
+  def self.download(url, max_file_size, tmp_file_name, follow_redirect=false, read_timeout=5)
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
     uri = parse_url(url)
@@ -14,7 +14,7 @@ class FileHelper
     tmp = Tempfile.new([tmp_file_name, extension])
 
     File.open(tmp.path, "wb") do |f|
-      downloaded = uri.open("rb", read_timeout: 5, redirect: follow_redirect, allow_redirections: :all)
+      downloaded = uri.open("rb", read_timeout: read_timeout, redirect: follow_redirect, allow_redirections: :all)
       while f.size <= max_file_size && data = downloaded.read(512.kilobytes)
         f.write(data)
       end
@@ -28,7 +28,7 @@ class FileHelper
   private
 
   def self.images
-    @@images ||= Set.new ["jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp", "svg", "webp"]
+    @@images ||= Set.new ["jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp", "svg", "webp", "ico"]
   end
 
   def self.images_regexp

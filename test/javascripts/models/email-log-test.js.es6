@@ -1,5 +1,7 @@
+import EmailLog from 'admin/models/email-log';
+
 module("Discourse.EmailLog");
 
 test("create", function() {
-  ok(Discourse.EmailLog.create(), "it can be created without arguments");
+  ok(EmailLog.create(), "it can be created without arguments");
 });

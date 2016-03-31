@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UserStat do
 
@@ -102,6 +102,4 @@ describe UserStat do
     end
 
   end
-
-
 end

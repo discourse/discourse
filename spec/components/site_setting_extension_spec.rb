@@ -1,8 +1,25 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'site_setting_extension'
 require_dependency 'site_settings/local_process_provider'
 
 describe SiteSettingExtension do
+
+  describe '#types' do
+    context "verify enum sequence" do
+      before do
+        @types = SiteSetting.types
+      end
+
+      it "'string' should be at 1st position" do
+        expect(@types[:string]).to eq(1)
+      end
+
+      it "'value_list' should be at 12th position" do
+        expect(@types[:value_list]).to eq(12)
+      end
+    end
+  end
+
   let :provider_local do
     SiteSettings::LocalProcessProvider.new
   end
@@ -122,6 +139,17 @@ describe SiteSettingExtension do
       it "can be overridden with set" do
         settings.set("test_setting", 12)
         expect(settings.test_setting).to eq(12)
+      end
+
+      it "should publish changes to clients" do
+        settings.setting("test_setting", 100)
+        settings.client_setting("test_setting")
+
+        messages = MessageBus.track_publish do
+          settings.test_setting = 88
+        end
+
+        expect(messages.map(&:channel).include?('/client_settings')).to eq(true)
       end
     end
   end
@@ -427,6 +455,30 @@ describe SiteSettingExtension do
         settings.trout_api_key = 'tophat'
         settings.refresh!
         expect(settings.trout_api_key).to eq('tophat')
+      end
+    end
+
+    context "with blank global setting" do
+      before do
+        GlobalSetting.stubs(:nada).returns('')
+        settings.setting(:nada, 'nothing', shadowed_by_global: true)
+        settings.refresh!
+      end
+
+      it "should return default cause nothing is set" do
+        expect(settings.nada).to eq('nothing')
+      end
+    end
+
+    context "with a false override" do
+      before do
+        GlobalSetting.stubs(:bool).returns(false)
+        settings.setting(:bool, true, shadowed_by_global: true)
+        settings.refresh!
+      end
+
+      it "should return default cause nothing is set" do
+        expect(settings.bool).to eq(false)
       end
     end
 

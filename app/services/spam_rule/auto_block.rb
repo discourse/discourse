@@ -18,7 +18,8 @@ class SpamRule::AutoBlock
 
   def block?
     @user.blocked? or
-      (!@user.has_trust_level?(TrustLevel[1]) and
+      (!@user.staged? and
+       !@user.has_trust_level?(TrustLevel[1]) and
         SiteSetting.num_flags_to_block_new_user > 0 and
         SiteSetting.num_users_to_block_new_user > 0 and
         num_spam_flags_against_user >= SiteSetting.num_flags_to_block_new_user and
@@ -37,7 +38,7 @@ class SpamRule::AutoBlock
 
   def block_user
     Post.transaction do
-      if UserBlocker.block(@user, nil, {message: :too_many_spam_flags}) and SiteSetting.notify_mods_when_user_blocked
+      if UserBlocker.block(@user, Discourse.system_user, message: :too_many_spam_flags) && SiteSetting.notify_mods_when_user_blocked
         GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, {user: @user, limit_once_per: false})
       end
     end

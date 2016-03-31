@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'score_calculator'
 
 describe ScoreCalculator do

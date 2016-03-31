@@ -14,8 +14,10 @@ module Onebox
         if other.kind_of?(URI)
           uri = other
           begin
-            route = Rails.application.routes.recognize_path(uri.path)
+            route = Rails.application.routes.recognize_path(uri.path.sub(Discourse.base_uri, ""))
             case route[:controller]
+            when 'uploads'
+              super
             when 'topics'
               # super will use matches_regexp to match the domain name
               super
@@ -32,14 +34,25 @@ module Onebox
 
       def to_html
         uri = URI::parse(@url)
-        route = Rails.application.routes.recognize_path(uri.path)
-
+        route = Rails.application.routes.recognize_path(uri.path.sub(Discourse.base_uri, ""))
+        url = @url.sub(/[&?]source_topic_id=(\d+)/, "")
+        source_topic_id = $1.to_i
 
         # Figure out what kind of onebox to show based on the URL
         case route[:controller]
+        when 'uploads'
+
+          url.gsub!("http:", "https:") if SiteSetting.use_https
+          if File.extname(uri.path) =~ /^.(mov|mp4|webm|ogv)$/
+            return "<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>"
+          elsif File.extname(uri.path) =~ /^.(mp3|ogg|wav)$/
+            return "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+          else
+            return false
+          end
         when 'topics'
 
-          linked = "<a href='#{@url}'>#{@url}</a>"
+          linked = "<a href='#{url}'>#{url}</a>"
           if route[:post_number].present? && route[:post_number].to_i > 1
             # Post Link
             post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number].to_i)
@@ -50,13 +63,15 @@ module Onebox
             topic = post.topic
             slug = Slug.for(topic.title)
 
-            excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
+            excerpt = post.excerpt(SiteSetting.post_onebox_maxlength, { keep_emoji_codes: true })
             excerpt.gsub!("\n"," ")
             # hack to make it render for now
             excerpt.gsub!("[/quote]", "[quote]")
             quote = "[quote=\"#{post.user.username}, topic:#{topic.id}, slug:#{slug}, post:#{post.post_number}\"]#{excerpt}[/quote]"
 
-            cooked = PrettyText.cook(quote)
+            args = {}
+            args[:topic_id] = source_topic_id if source_topic_id > 0
+            cooked = PrettyText.cook(quote, args)
             return cooked
 
           else
@@ -77,8 +92,8 @@ module Onebox
             end
 
             quote = post.excerpt(SiteSetting.post_onebox_maxlength)
-            args = { original_url: @url,
-                     title: topic.title,
+            args = { original_url: url,
+                     title: PrettyText.unescape_emoji(topic.title),
                      avatar: PrettyText.avatar_img(topic.user.avatar_template, 'tiny'),
                      posts_count: topic.posts_count,
                      last_post: FreedomPatches::Rails4.time_ago_in_words(topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose'),

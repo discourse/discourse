@@ -7,6 +7,7 @@ class UserHistory < ActiveRecord::Base
 
   belongs_to :post
   belongs_to :topic
+  belongs_to :category
 
   validates_presence_of :action
 
@@ -15,31 +16,44 @@ class UserHistory < ActiveRecord::Base
   before_save :set_admin_only
 
   def self.actions
-    @actions ||= Enum.new(:delete_user,
-                          :change_trust_level,
-                          :change_site_setting,
-                          :change_site_customization,
-                          :delete_site_customization,
-                          :checked_for_custom_avatar, # not used anymore
-                          :notified_about_avatar,
-                          :notified_about_sequential_replies,
-                          :notified_about_dominating_topic,
-                          :suspend_user,
-                          :unsuspend_user,
-                          :facebook_no_email,
-                          :grant_badge,
-                          :revoke_badge,
-                          :auto_trust_level_change,
-                          :check_email,
-                          :delete_post,
-                          :delete_topic,
-                          :impersonate,
-                          :roll_up,
-                          :change_username,
-                          :custom,
-                          :custom_staff,
-                          :anonymize_user,
-                          :reviewed_post)
+    @actions ||= Enum.new(delete_user: 1,
+                          change_trust_level: 2,
+                          change_site_setting: 3,
+                          change_site_customization: 4,
+                          delete_site_customization: 5,
+                          checked_for_custom_avatar: 6, # not used anymore
+                          notified_about_avatar: 7,
+                          notified_about_sequential_replies: 8,
+                          notified_about_dominating_topic: 9,
+                          suspend_user: 10,
+                          unsuspend_user: 11,
+                          facebook_no_email: 12,
+                          grant_badge: 13,
+                          revoke_badge: 14,
+                          auto_trust_level_change: 15,
+                          check_email: 16,
+                          delete_post: 17,
+                          delete_topic: 18,
+                          impersonate: 19,
+                          roll_up: 20,
+                          change_username: 21,
+                          custom: 22,
+                          custom_staff: 23,
+                          anonymize_user: 24,
+                          reviewed_post: 25,
+                          change_category_settings: 26,
+                          delete_category: 27,
+                          create_category: 28,
+                          change_site_text: 29,
+                          block_user: 30,
+                          unblock_user: 31,
+                          grant_admin: 32,
+                          revoke_admin: 33,
+                          grant_moderation: 34,
+                          revoke_moderation: 35,
+                          backup_operation: 36,
+                          rate_limited_like: 37 # not used anymore
+                         )
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -49,6 +63,7 @@ class UserHistory < ActiveRecord::Base
                         :change_site_setting,
                         :change_site_customization,
                         :delete_site_customization,
+                        :change_site_text,
                         :suspend_user,
                         :unsuspend_user,
                         :grant_badge,
@@ -61,7 +76,17 @@ class UserHistory < ActiveRecord::Base
                         :change_username,
                         :custom_staff,
                         :anonymize_user,
-                        :reviewed_post]
+                        :reviewed_post,
+                        :change_category_settings,
+                        :delete_category,
+                        :create_category,
+                        :block_user,
+                        :unblock_user,
+                        :grant_admin,
+                        :revoke_admin,
+                        :grant_moderation,
+                        :revoke_moderation,
+                        :backup_operation]
   end
 
   def self.staff_action_ids
@@ -134,21 +159,23 @@ end
 #  details        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  context        :string(255)
-#  ip_address     :string(255)
-#  email          :string(255)
+#  context        :string
+#  ip_address     :string
+#  email          :string
 #  subject        :text
 #  previous_value :text
 #  new_value      :text
 #  topic_id       :integer
 #  admin_only     :boolean          default(FALSE)
 #  post_id        :integer
-#  custom_type    :string(255)
+#  custom_type    :string
+#  category_id    :integer
 #
 # Indexes
 #
 #  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
 #  index_user_histories_on_action_and_id                     (action,id)
+#  index_user_histories_on_category_id                       (category_id)
 #  index_user_histories_on_subject_and_id                    (subject,id)
 #  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
 #

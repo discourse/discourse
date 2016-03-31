@@ -69,6 +69,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
               sentTo: result.sent_to_email,
               currentEmail: result.current_email
             });
+          } else if (result.reason === 'suspended' ) {
+            self.send("closeModal");
+            bootbox.alert(result.error);
           } else {
             self.flash(result.error, 'error');
           }
@@ -78,9 +81,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
           const $hidden_login_form = $('#hidden-login-form');
           const destinationUrl = $.cookie('destination_url');
           const shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
+          const ssoDestinationUrl = $.cookie('sso_destination_url');
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
-          if (self.get('loginRequired') && destinationUrl) {
+
+          if (ssoDestinationUrl) {
+            $.cookie('sso_destination_url', null);
+            window.location.assign(ssoDestinationUrl);
+            return;
+          } else if (destinationUrl) {
             // redirect client to the original URL
             $.cookie('destination_url', null);
             $hidden_login_form.find('input[name=redirect]').val(destinationUrl);
@@ -90,7 +99,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
           } else {
             $hidden_login_form.find('input[name=redirect]').val(window.location.href);
           }
-          $hidden_login_form.submit();
+
+          if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) && navigator.userAgent.match(/Safari/g)) {
+            // In case of Safari on iOS do not submit hidden login form
+            window.location.href = $hidden_login_form.find('input[name=redirect]').val();
+          } else {
+            $hidden_login_form.submit();
+          }
+          return;
         }
 
       }, function(e) {
@@ -113,21 +129,26 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if(customLogin){
         customLogin();
       } else {
-        this.set('authenticate', name);
-        const left = this.get('lastX') - 400;
-        const top = this.get('lastY') - 200;
+        var authUrl = Discourse.getURL("/auth/" + name);
+        if (loginMethod.get("fullScreenLogin")) {
+          window.location = authUrl;
+        } else {
+          this.set('authenticate', name);
+          const left = this.get('lastX') - 400;
+          const top = this.get('lastY') - 200;
 
-        const height = loginMethod.get("frameHeight") || 400;
-        const width = loginMethod.get("frameWidth") || 800;
-        const w = window.open(Discourse.getURL("/auth/" + name), "_blank",
-            "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
-        const self = this;
-        const timer = setInterval(function() {
-          if(!w || w.closed) {
-            clearInterval(timer);
-            self.set('authenticate', null);
-          }
-        }, 1000);
+          const height = loginMethod.get("frameHeight") || 400;
+          const width = loginMethod.get("frameWidth") || 800;
+          const w = window.open(authUrl, "_blank",
+              "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
+          const self = this;
+          const timer = setInterval(function() {
+            if(!w || w.closed) {
+              clearInterval(timer);
+              self.set('authenticate', null);
+            }
+          }, 1000);
+        }
       }
     },
 
@@ -185,10 +206,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     // Reload the page if we're authenticated
     if (options.authenticated) {
       const destinationUrl = $.cookie('destination_url');
+      const shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
       if (self.get('loginRequired') && destinationUrl) {
         // redirect client to the original URL
         $.cookie('destination_url', null);
         window.location.href = destinationUrl;
+      } else if (shouldRedirectToUrl) {
+        self.session.set("shouldRedirectToUrl", null);
+        window.location.href = shouldRedirectToUrl;
       } else if (window.location.pathname === Discourse.getURL('/login')) {
         window.location.pathname = Discourse.getURL('/');
       } else {

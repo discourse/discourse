@@ -33,9 +33,21 @@
 </script>
 
 <script>
+  <%- if !current_user && flash[:authentication_data] %>
+    require('discourse/routes/application').default.reopen({
+      actions: {
+        didTransition: function() {
+          Em.run.next(function(){
+            Discourse.authenticationComplete(<%=flash[:authentication_data].html_safe%>);
+          });
+          return this._super();
+        }
+      }
+    });
+  <%- end %>
   Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host %>';
   Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname %>'.replace(/:[\d]*$/,"");
-  Discourse.BaseUri = '<%= Discourse::base_uri "/" %>';
+  Discourse.BaseUri = '<%= Discourse::base_uri %>';
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
   Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';

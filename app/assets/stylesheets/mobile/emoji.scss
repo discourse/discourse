@@ -1,0 +1,10 @@
+.emoji-table-wrapper {
+  min-width: 320px;
+}
+
+.emoji-modal {
+  width: 340px;
+  margin-top: -132px;
+  margin-left: -170px;
+  background-color: dark-light-choose(#dadada, blend-primary-secondary(5%));
+}

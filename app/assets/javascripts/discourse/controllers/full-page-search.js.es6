@@ -111,7 +111,6 @@ export default Ember.Controller.extend({
 
   @computed('q')
   showLikeCount(q) {
-    console.log(q);
     return q && q.indexOf("order:likes") > -1;
   },
 

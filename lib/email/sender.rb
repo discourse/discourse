@@ -23,7 +23,11 @@ module Email
 
     def send
       return if SiteSetting.disable_emails
-      return skip(I18n.t('email_log.message_blank')) if @message.blank?
+
+      return if ActionMailer::Base::NullMail === @message
+      return if ActionMailer::Base::NullMail === (@message.message rescue nil)
+
+      return skip(I18n.t('email_log.message_blank'))    if @message.blank?
       return skip(I18n.t('email_log.message_to_blank')) if @message.to.blank?
 
       if @message.text_part
@@ -59,10 +63,7 @@ module Email
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
 
       # Set up the email log
-      email_log = EmailLog.new(email_type: @email_type,
-                               to_address: to_address,
-                               user_id: @user.try(:id))
-
+      email_log = EmailLog.new(email_type: @email_type, to_address: to_address, user_id: @user.try(:id))
 
       host = Email::Sender.host_for(Discourse.base_url)
 
@@ -87,42 +88,40 @@ module Email
 
         # http://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
-          list_id = "<#{topic.category.name.downcase}.#{host}>"
+          list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{host}>"
 
           # subcategory case
           if !topic.category.parent_category_id.nil?
             parent_category_name = Category.find_by(id: topic.category.parent_category_id).name
-            list_id = "<#{topic.category.name.downcase}.#{parent_category_name.downcase}.#{host}>"
+            list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{parent_category_name.downcase.gsub(' ', '-')}.#{host}>"
           end
         else
           list_id = "<#{host}>"
         end
-        @message.header['List-ID'] = list_id
-
-        @message.header['List-Archive'] = topic.url if topic
 
         # http://www.ietf.org/rfc/rfc3834.txt
-        @message.header['Precedence'] = 'list'
+        @message.header['Precedence']   = 'list'
+        @message.header['List-ID']      = list_id
+        @message.header['List-Archive'] = topic.url if topic
       end
 
-      if reply_key.present?
-
-        if @message.header['Reply-To'] =~ /\<([^\>]+)\>/
-          email = Regexp.last_match[1]
-          @message.header['List-Post'] = "<mailto:#{email}>"
-        end
+      if reply_key.present? && @message.header['Reply-To'] =~ /\<([^\>]+)\>/
+        email = Regexp.last_match[1]
+        @message.header['List-Post'] = "<mailto:#{email}>"
       end
 
       email_log.post_id = post_id if post_id.present?
       email_log.reply_key = reply_key if reply_key.present?
 
       # Remove headers we don't need anymore
-      @message.header['X-Discourse-Topic-Id'] = nil if topic_id.present?
-      @message.header['X-Discourse-Post-Id'] = nil if post_id.present?
+      @message.header['X-Discourse-Topic-Id']  = nil if topic_id.present?
+      @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
       @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
       # Suppress images from short emails
-      if SiteSetting.strip_images_from_short_emails && @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length && @message.html_part.body =~ /<img[^>]+>/
+      if SiteSetting.strip_images_from_short_emails &&
+         @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
+         @message.html_part.body =~ /<img[^>]+>/
         style = Email::Styles.new(@message.html_part.body.to_s)
         @message.html_part.body = style.strip_avatars_and_emojis
       end
@@ -140,8 +139,9 @@ module Email
 
     def to_address
       @to_address ||= begin
-        to = @message ? @message.to : nil
-        to.is_a?(Array) ? to.first : to
+        to = @message.try(:to)
+        to = to.first if Array === to
+        to.presence || "no_email_found"
       end
     end
 
@@ -166,11 +166,13 @@ module Email
     end
 
     def skip(reason)
-      EmailLog.create(email_type: @email_type,
-                      to_address: to_address,
-                      user_id: @user.try(:id),
-                      skipped: true,
-                      skipped_reason: reason)
+      EmailLog.create!(
+        email_type: @email_type,
+        to_address: to_address,
+        user_id: @user.try(:id),
+        skipped: true,
+        skipped_reason: "[Sender] #{reason}"
+      )
     end
 
   end

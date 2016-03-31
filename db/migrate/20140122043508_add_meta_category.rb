@@ -1,6 +1,8 @@
 class AddMetaCategory < ActiveRecord::Migration
   def up
-    unless Rails.env.test?
+    return if Rails.env.test?
+
+    I18n.overrides_disabled do
       result = Category.exec_sql "SELECT 1 FROM site_settings where name = 'meta_category_id'"
       if result.count == 0
         description = I18n.t('meta_category_description')

@@ -2,6 +2,7 @@ import DiscoveryController from 'discourse/controllers/discovery';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 import BulkTopicSelection from 'discourse/mixins/bulk-topic-selection';
 import { endWith } from 'discourse/lib/computed';
+import showModal from 'discourse/lib/show-modal';
 
 const controllerOpts = {
   needs: ['discovery'],
@@ -25,6 +26,7 @@ const controllerOpts = {
       } else {
         this.setProperties({ order: sortBy, ascending: false });
       }
+
       this.get('model').refreshSort(sortBy, this.get('ascending'));
     },
 
@@ -41,7 +43,7 @@ const controllerOpts = {
     refresh() {
       const filter = this.get('model.filter');
 
-      this.setProperties({ order: 'default', ascending: false });
+      this.setProperties({ order: "default", ascending: false });
 
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
@@ -51,8 +53,9 @@ const controllerOpts = {
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
 
-      this.store.findFiltered('topicList', {filter}).then((list) => {
-        Discourse.TopicList.hideUniformCategory(list, this.get('category'));
+      this.store.findFiltered('topicList', {filter}).then(list => {
+        const TopicList = require('discourse/models/topic-list').default;
+        TopicList.hideUniformCategory(list, this.get('category'));
 
         this.setProperties({ model: list });
         this.resetSelected();
@@ -65,10 +68,13 @@ const controllerOpts = {
       });
     },
 
-
     resetNew() {
       this.topicTrackingState.resetNew();
       Discourse.Topic.resetNew().then(() => this.send('refresh'));
+    },
+
+    dismissReadPosts() {
+      showModal('dismiss-read', { title: 'topics.bulk.dismiss_read' });
     }
   },
 

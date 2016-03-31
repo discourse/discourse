@@ -1,3 +1,5 @@
+{{plugin-outlet "admin-dashboard-top"}}
+
 <div class="dashboard-left">
   {{#if showVersionChecks}}
     {{partial 'admin/templates/version-checks'}}
@@ -145,7 +147,7 @@
           <tr>
             <td>{{i18n 'admin.dashboard.uploads'}}</td>
             <td>{{disk_space.uploads_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.uploads_free}})</td>
-            <td><a href="/admin/backups">{{i18n 'admin.dashboard.backups'}}</a></td>
+            <td>{{#if currentUser.admin}}<a href="/admin/backups">{{i18n 'admin.dashboard.backups'}}</a>{{/if}}</td>
             <td>{{disk_space.backups_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.backups_free}})</td>
           </tr>
         {{/unless}}
@@ -283,7 +285,7 @@
         {{#each r in top_referrers.data}}
           <tbody>
             <tr>
-              <td class="title">{{#link-to 'adminUser' r}}{{unbound r.username}}{{/link-to}}</td>
+              <td class="title">{{#link-to 'adminUser' r.user_id r.username}}{{unbound r.username}}{{/link-to}}</td>
               <td class="value">{{r.num_clicks}}</td>
               <td class="value">{{r.num_topics}}</td>
             </tr>

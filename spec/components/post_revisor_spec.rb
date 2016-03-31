@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'post_revisor'
 
 describe PostRevisor do
@@ -74,7 +74,7 @@ describe PostRevisor do
 
     describe 'ninja editing' do
       it 'correctly applies edits' do
-        SiteSetting.stubs(:ninja_edit_window).returns(1.minute)
+        SiteSetting.stubs(:editing_grace_period).returns(1.minute)
 
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
         post.reload
@@ -87,12 +87,12 @@ describe PostRevisor do
       end
 
       it "doesn't create a new version" do
-        SiteSetting.stubs(:ninja_edit_window).returns(1.minute)
+        SiteSetting.stubs(:editing_grace_period).returns(1.minute)
 
         # making a revision
-        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.ninja_edit_window + 1.seconds)
+        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
         # "roll back"
-        subject.revise!(post.user, { raw: 'Hello world' }, revised_at: post.updated_at + SiteSetting.ninja_edit_window + 2.seconds)
+        subject.revise!(post.user, { raw: 'Hello world' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 2.seconds)
 
         post.reload
 
@@ -107,7 +107,7 @@ describe PostRevisor do
       let!(:revised_at) { post.updated_at + 2.minutes }
 
       before do
-        SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
+        SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i)
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: revised_at)
         post.reload
       end
@@ -278,14 +278,14 @@ describe PostRevisor do
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      let!(:result) { subject.revise!(changed_by, { raw: "lets update the body" }) }
+      let!(:result) { subject.revise!(changed_by, { raw: "lets update the body. Здравствуйте" }) }
 
       it 'returns true' do
         expect(result).to eq(true)
       end
 
       it 'updates the body' do
-        expect(post.raw).to eq("lets update the body")
+        expect(post.raw).to eq("lets update the body. Здравствуйте")
       end
 
       it 'sets the invalidate oneboxes attribute' do
@@ -306,14 +306,14 @@ describe PostRevisor do
       end
 
       it "updates the word count" do
-        expect(post.word_count).to eq(4)
+        expect(post.word_count).to eq(5)
         post.topic.reload
-        expect(post.topic.word_count).to eq(4)
+        expect(post.topic.word_count).to eq(5)
       end
 
       context 'second poster posts again quickly' do
         before do
-          SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
+          SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i)
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
         end

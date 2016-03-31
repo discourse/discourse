@@ -16,11 +16,11 @@ module Email
 
     def html
       if @message.html_part
-        style = Email::Styles.new(@message.html_part.body.to_s)
+        style = Email::Styles.new(@message.html_part.body.to_s, @opts)
         style.format_basic
         style.format_html
       else
-        style = Email::Styles.new(PrettyText.cook(text))
+        style = Email::Styles.new(PrettyText.cook(text), @opts)
         style.format_basic
       end
 

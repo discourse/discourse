@@ -19,7 +19,7 @@ const ScrollingDOMMethods = {
   },
 
   screenNotFull() {
-    return $(window).height() > $(document).height();
+    return $(window).height() > $("#main").height();
   }
 };
 

@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe CategoriesController do
   describe "create" do
@@ -64,6 +64,7 @@ describe CategoriesController do
           expect(category.slug).to eq("hello-cat")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
+          expect(UserHistory.count).to eq(1)
         end
       end
     end
@@ -90,6 +91,7 @@ describe CategoriesController do
       it "deletes the record" do
         Guardian.any_instance.expects(:can_delete_category?).returns(true)
         expect { xhr :delete, :destroy, id: @category.slug}.to change(Category, :count).by(-1)
+        expect(UserHistory.count).to eq(1)
       end
     end
 
@@ -214,6 +216,19 @@ describe CategoriesController do
           expect(@category.color).to eq("ff0")
           expect(@category.auto_close_hours).to eq(72)
           expect(@category.custom_fields).to eq({"dancing" => "frogs"})
+        end
+
+        it 'logs the changes correctly' do
+          @category.update!(permissions: { "admins" => CategoryGroup.permission_types[:create_post] })
+
+          xhr :put , :update, id: @category.id, name: 'new name',
+            color: @category.color, text_color: @category.text_color,
+            slug: @category.slug,
+            permissions: {
+              "everyone" => CategoryGroup.permission_types[:create_post]
+            }
+
+          expect(UserHistory.count).to eq(2)
         end
       end
     end

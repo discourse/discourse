@@ -10,6 +10,10 @@ class SiteCustomization < ActiveRecord::Base
     %w(stylesheet mobile_stylesheet embedded_css)
   end
 
+  def self.html_fields
+    %w(body_tag head_tag header mobile_header footer mobile_footer)
+  end
+
   before_create do
     self.enabled ||= false
     self.key ||= SecureRandom.uuid
@@ -23,7 +27,54 @@ class SiteCustomization < ActiveRecord::Base
     raise e
   end
 
+  def transpile(es6_source, version)
+    template  = Tilt::ES6ModuleTranspilerTemplate.new {}
+    wrapped = <<PLUGIN_API_JS
+Discourse._registerPluginCode('#{version}', api => {
+  #{es6_source}
+});
+PLUGIN_API_JS
+
+    template.babel_transpile(wrapped)
+  end
+
+  def process_html(html)
+    doc = Nokogiri::HTML.fragment(html)
+    doc.css('script[type="text/x-handlebars"]').each do |node|
+      name = node["name"] || node["data-template-name"] || "broken"
+      precompiled =
+        if name =~ /\.raw$/
+          "Discourse.EmberCompatHandlebars.template(#{Barber::EmberCompatPrecompiler.compile(node.inner_html)})"
+        else
+          "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(node.inner_html)})"
+        end
+      compiled = <<SCRIPT
+  Ember.TEMPLATES[#{name.inspect}] = #{precompiled};
+SCRIPT
+      node.replace("<script>#{compiled}</script>")
+    end
+
+    doc.css('script[type="text/discourse-plugin"]').each do |node|
+      if node['version'].present?
+        begin
+          code = transpile(node.inner_html, node['version'])
+          node.replace("<script>#{code}</script>")
+        rescue Tilt::ES6ModuleTranspilerTemplate::JavaScriptError => ex
+          node.replace("<script type='text/discourse-js-error'>#{ex.message}</script>")
+        end
+      end
+    end
+
+    doc.to_s
+  end
+
   before_save do
+    SiteCustomization.html_fields.each do |html_attr|
+      if self.send("#{html_attr}_changed?")
+        self.send("#{html_attr}_baked=", process_html(self.send(html_attr)))
+      end
+    end
+
     SiteCustomization.css_fields.each do |stylesheet_attr|
       if self.send("#{stylesheet_attr}_changed?")
         begin
@@ -126,7 +177,12 @@ class SiteCustomization < ActiveRecord::Base
     val = if styles.present?
       styles.map do |style|
         lookup = target == :mobile ? "mobile_#{field}" : field
-        style.send(lookup)
+        if html_fields.include?(lookup.to_s)
+          style.ensure_baked!(lookup)
+          style.send("#{lookup}_baked")
+        else
+          style.send(lookup)
+        end
       end.compact.join("\n")
     end
 
@@ -140,6 +196,15 @@ class SiteCustomization < ActiveRecord::Base
 
   def self.clear_cache!
     @cache.clear
+  end
+
+  def ensure_baked!(field)
+    unless self.send("#{field}_baked")
+      if val = self.send(field)
+        val = process_html(val) rescue ""
+        self.update_columns("#{field}_baked" => val)
+      end
+    end
   end
 
   def remove_from_cache!
@@ -174,12 +239,12 @@ end
 # Table name: site_customizations
 #
 #  id                      :integer          not null, primary key
-#  name                    :string(255)      not null
+#  name                    :string           not null
 #  stylesheet              :text
 #  header                  :text
 #  user_id                 :integer          not null
 #  enabled                 :boolean          not null
-#  key                     :string(255)      not null
+#  key                     :string           not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  stylesheet_baked        :text             default(""), not null
@@ -194,6 +259,12 @@ end
 #  mobile_top              :text
 #  embedded_css            :text
 #  embedded_css_baked      :text
+#  head_tag_baked          :text
+#  body_tag_baked          :text
+#  header_baked            :text
+#  mobile_header_baked     :text
+#  footer_baked            :text
+#  mobile_footer_baked     :text
 #
 # Indexes
 #

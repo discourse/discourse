@@ -6,9 +6,8 @@ app/assets/javascripts/pagedown_custom.js
 app/assets/javascripts/vendor.js
 app/assets/javascripts/locales/i18n.js
 app/assets/javascripts/defer/html-sanitizer-bundle.js
-app/assets/javascripts/discourse/lib/Markdown.Editor.js
 app/assets/javascripts/ember-addons/
-jsapp/lib/Markdown.Editor.js
+app/assets/javascripts/discourse/lib/autosize.js.es6
 lib/javascripts/locale/
 lib/javascripts/messageformat.js
 lib/javascripts/moment.js
@@ -18,8 +17,8 @@ lib/es6_module_transpiler/support/es6-module-transpiler.js
 public/javascripts/
 spec/phantom_js/smoke_test.js
 vendor/
-test/javascripts/helpers/
 test/javascripts/test_helper.js
 test/javascripts/test_helper.js
 test/javascripts/fixtures
+test/javascripts/helpers/assertions.js
 app/assets/javascripts/ember-addons/

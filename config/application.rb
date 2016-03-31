@@ -69,7 +69,9 @@ module Discourse
       path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
     end]
 
-    config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css', 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'browser-update.js', 'embed.css', 'break_string.js']
+    config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css',
+                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js',
+                                 'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js']
 
     # Precompile all defer
     Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
@@ -122,10 +124,7 @@ module Discourse
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
 
-    if Rails.version >= "4.2.0" && Rails.version < "5.0.0"
-      # Opt-into the default behavior in Rails 5
-      config.active_record.raise_in_transactional_callbacks = false
-    end
+    config.active_record.raise_in_transactional_callbacks = true
 
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     config.pbkdf2_iterations = 64000
@@ -148,6 +147,7 @@ module Discourse
 
     require 'discourse_redis'
     require 'logster/redis_store'
+    require 'freedom_patches/redis'
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
     $redis = DiscourseRedis.new

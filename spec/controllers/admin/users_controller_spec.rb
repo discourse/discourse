@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'single_sign_on'
 
 describe Admin::UsersController do
@@ -37,7 +37,6 @@ describe Admin::UsersController do
           expect(UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count).to eq(0)
 
           xhr :get, :index, show_emails: "true"
-          data = ::JSON.parse(response.body)
 
           expect(UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count).to eq(1)
         end
@@ -48,14 +47,14 @@ describe Admin::UsersController do
     describe '.show' do
       context 'an existing user' do
         it 'returns success' do
-          xhr :get, :show, id: @user.username
+          xhr :get, :show, id: @user.id
           expect(response).to be_success
         end
       end
 
       context 'an existing user' do
         it 'returns success' do
-          xhr :get, :show, id: 'foobar'
+          xhr :get, :show, id: 0
           expect(response).not_to be_success
         end
       end
@@ -170,6 +169,22 @@ describe Admin::UsersController do
         xhr :put, :grant_admin, user_id: @another_user.id
         @another_user.reload
         expect(@another_user).to be_admin
+      end
+    end
+
+    context '.add_group' do
+      let(:user) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
+
+      it 'adds the user to the group' do
+        xhr :post, :add_group, group_id: group.id, user_id: user.id
+        expect(response).to be_success
+
+        expect(GroupUser.where(user_id: user.id, group_id: group.id).exists?).to eq(true)
+
+        # Doing it again doesn't raise an error
+        xhr :post, :add_group, group_id: group.id, user_id: user.id
+        expect(response).to be_success
       end
     end
 
@@ -492,52 +507,66 @@ describe Admin::UsersController do
 
   end
 
-  it 'can sync up sso' do
-    log_in(:admin)
 
-    SiteSetting.enable_sso = true
-    SiteSetting.sso_overrides_email = true
-    SiteSetting.sso_overrides_name = true
-    SiteSetting.sso_overrides_username = true
+  context '#sync_sso' do
+    let(:sso) { SingleSignOn.new }
+    let(:sso_secret) { "sso secret" }
 
-    SiteSetting.sso_secret = "sso secret"
+    before do
+      log_in(:admin)
 
-    sso = SingleSignOn.new
-    sso.sso_secret = "sso secret"
-    sso.name = "Bob The Bob"
-    sso.username = "bob"
-    sso.email = "bob@bob.com"
-    sso.external_id = "1"
+      SiteSetting.enable_sso = true
+      SiteSetting.sso_overrides_email = true
+      SiteSetting.sso_overrides_name = true
+      SiteSetting.sso_overrides_username = true
+      SiteSetting.sso_secret = sso_secret
+      sso.sso_secret = sso_secret
+    end
 
-    user = DiscourseSingleSignOn.parse(sso.payload)
-                                .lookup_or_create_user
 
-    sso.name = "Bill"
-    sso.username = "Hokli$$!!"
-    sso.email = "bob2@bob.com"
+    it 'can sync up with the sso' do
+      sso.name = "Bob The Bob"
+      sso.username = "bob"
+      sso.email = "bob@bob.com"
+      sso.external_id = "1"
 
-    xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
-    expect(response).to be_success
+      user = DiscourseSingleSignOn.parse(sso.payload)
+                                  .lookup_or_create_user
 
-    user.reload
-    expect(user.email).to eq("bob2@bob.com")
-    expect(user.name).to eq("Bill")
-    expect(user.username).to eq("Hokli")
+      sso.name = "Bill"
+      sso.username = "Hokli$$!!"
+      sso.email = "bob2@bob.com"
 
-    # It can also create new users
-    sso = SingleSignOn.new
-    sso.sso_secret = "sso secret"
-    sso.name = "Dr. Claw"
-    sso.username = "dr_claw"
-    sso.email = "dr@claw.com"
-    sso.external_id = "2"
-    xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
-    expect(response).to be_success
+      xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+      expect(response).to be_success
 
-    user = User.where(email: 'dr@claw.com').first
-    expect(user).to be_present
-    expect(user.ip_address).to be_blank
+      user.reload
+      expect(user.email).to eq("bob2@bob.com")
+      expect(user.name).to eq("Bill")
+      expect(user.username).to eq("Hokli")
+    end
 
+    it 'should create new users' do
+      sso.name = "Dr. Claw"
+      sso.username = "dr_claw"
+      sso.email = "dr@claw.com"
+      sso.external_id = "2"
+      xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+      expect(response).to be_success
+
+      user = User.where(email: 'dr@claw.com').first
+      expect(user).to be_present
+      expect(user.ip_address).to be_blank
+    end
+
+    it 'should return the right message if the record is invalid' do
+      sso.email = ""
+      sso.name = ""
+      sso.external_id = "1"
+
+      xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+      expect(response.status).to eq(403)
+      expect(JSON.parse(response.body)["message"]).to include("Email can't be blank")
+    end
   end
-
 end

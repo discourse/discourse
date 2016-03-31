@@ -3,6 +3,7 @@
 database:
   type: MySQL # currently only MySQL is supported - more to come soon
   host: localhost
+  port: 3306
   username: root
   password:
   schema: phpbb
@@ -16,8 +17,9 @@ import:
 
   # This is the path to the root directory of your current phpBB installation (or a copy of it).
   # The importer expects to find the /files and /images directories within the base directory.
+  # You need to change this to something like /var/www/phpbb if you are not using the Docker based importer.
   # This is only needed if you want to import avatars, attachments or custom smilies.
-  phpbb_base_dir: /var/www/phpbb
+  phpbb_base_dir: /shared/import/data
 
   site_prefix:
     # this is needed for rewriting internal links in posts

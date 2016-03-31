@@ -25,8 +25,9 @@ class TopicsController < ApplicationController
                                           :reset_new,
                                           :change_post_owners,
                                           :change_timestamps,
-                                          :bookmark,
-                                          :unsubscribe]
+                                          :archive_message,
+                                          :move_to_inbox,
+                                          :bookmark]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -48,6 +49,10 @@ class TopicsController < ApplicationController
     # existing installs.
     return wordpress if params[:best].present?
 
+    # work around people somehow sending in arrays,
+    # arrays are not supported
+    params[:page] = params[:page].to_i rescue 1
+
     opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted)
     username_filters = opts[:username_filters]
 
@@ -64,7 +69,7 @@ class TopicsController < ApplicationController
       raise Discourse::NotFound
     end
 
-    page = params[:page].to_i
+    page = params[:page]
     if (page < 0) || ((page - 1) * @topic_view.chunk_size > @topic_view.topic.highest_post_number)
       raise Discourse::NotFound
     end
@@ -83,7 +88,7 @@ class TopicsController < ApplicationController
       response.headers['X-Robots-Tag'] = 'noindex'
     end
 
-    canonical_url UrlHelper.absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
+    canonical_url UrlHelper.absolute_without_cdn(@topic_view.canonical_path)
 
     perform_show_response
 
@@ -103,6 +108,11 @@ class TopicsController < ApplicationController
   end
 
   def unsubscribe
+    if current_user.blank?
+      cookies[:destination_url] = request.fullpath
+      return redirect_to "/login-preferences"
+    end
+
     @topic_view = TopicView.new(params[:topic_id], current_user)
 
     if slugs_do_not_match || (!request.format.json? && params[:slug].blank?)
@@ -265,6 +275,49 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
+  def archive_message
+    toggle_archive_message(true)
+  end
+
+  def move_to_inbox
+    toggle_archive_message(false)
+  end
+
+  def toggle_archive_message(archive)
+    topic = Topic.find(params[:id].to_i)
+
+    group_id = nil
+
+    group_ids = current_user.groups.pluck(:id)
+    if group_ids.present?
+      allowed_groups = topic.allowed_groups
+                          .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
+      allowed_groups.each do |id|
+        if archive
+          GroupArchivedMessage.archive!(id, topic.id)
+          group_id = id
+        else
+          GroupArchivedMessage.move_to_inbox!(id, topic.id)
+        end
+      end
+    end
+
+    if topic.allowed_users.include?(current_user)
+      if archive
+        UserArchivedMessage.archive!(current_user.id, topic.id)
+      else
+        UserArchivedMessage.move_to_inbox!(current_user.id, topic.id)
+      end
+    end
+
+    if group_id
+      name = Group.find_by(id: group_id).try(:name)
+      render_json_dump(group_name: name)
+    else
+      render nothing: true
+    end
+  end
+
   def bookmark
     topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
@@ -307,7 +360,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_remove_allowed_users!(topic)
 
-    if topic.remove_allowed_user(params[:username])
+    if topic.remove_allowed_user(current_user, params[:username])
       render json: success_json
     else
       render json: failed_json, status: 422
@@ -322,15 +375,19 @@ class TopicsController < ApplicationController
     group_ids = Group.lookup_group_ids(params)
     guardian.ensure_can_invite_to!(topic,group_ids)
 
-    if topic.invite(current_user, username_or_email, group_ids)
-      user = User.find_by_username_or_email(username_or_email)
-      if user
-        render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
+    begin
+      if topic.invite(current_user, username_or_email, group_ids)
+        user = User.find_by_username_or_email(username_or_email)
+        if user
+          render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
+        else
+          render json: success_json
+        end
       else
-        render json: success_json
+        render json: failed_json, status: 422
       end
-    else
-      render json: failed_json, status: 422
+    rescue => e
+      render json: {errors: [e.message]}, status: 422
     end
   end
 
@@ -443,7 +500,7 @@ class TopicsController < ApplicationController
 
     operation = params.require(:operation).symbolize_keys
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
-    operator = TopicsBulkAction.new(current_user, topic_ids, operation)
+    operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
     changed_topic_ids = operator.perform!
     render_json_dump topic_ids: changed_topic_ids
   end
@@ -476,7 +533,7 @@ class TopicsController < ApplicationController
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
 
-    page = params[:page].to_i
+    page = params[:page]
     url << "?page=#{page}" if page != 0
 
     redirect_to url, status: 301

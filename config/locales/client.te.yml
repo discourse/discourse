@@ -220,7 +220,6 @@ te:
       members: "సభ్యులు"
       posts: "టపాలు"
       alias_levels:
-        title: "ఈ గుంపును మారుపేరుతో ఎవరు వాడవచ్చు?"
         nobody: "ఎవరూకాదు"
         only_admins: "కేవలం అధికారులే"
         mods_and_admins: "కేవలం అధికారులు మరియు నిర్వాహకులు మాత్రమే"
@@ -233,7 +232,6 @@ te:
       '4': "విషయాలు"
       '7': "ప్రస్తావనలు"
       '9': "కోట్ లు"
-      '10': "నక్షత్రపు"
       '11': "సవరణలు"
       '12': "పంపిన అంశాలు"
       '13': "ఇన్ బాక్స్"
@@ -303,7 +301,6 @@ te:
       watched_categories: "ఒకకన్నేసారు"
       tracked_categories: "గమనించారు"
       muted_categories: "నిశ్శబ్దం"
-      muted_categories_instructions: "ఈ వర్గాలలోని ఏ కొత్త విషయాల గురించీ మీకు ప్రకటనలు రావు. ఇంకా అవి చదవని ట్యాబులో కనిపించవు."
       delete_account: "నా ఖాతా తొలగించు"
       delete_account_confirm: "నిజ్జంగా మీరు మీ ఖాతాను శాస్వతంగా తొలగించాలనుకుంటున్నారా? ఈ చర్య రద్దుచేయలేరు సుమా! "
       deleted_yourself: "మీ ఖాతా విజయవంతంగా తొలగించబడింది. "
@@ -319,8 +316,6 @@ te:
         warnings_received: "హెచ్చరికలు"
       messages:
         all: "అన్నీ"
-        mine: "నావి"
-        unread: "చదవని"
       change_password:
         success: "(ఈమెయిల్ పంపిన)"
         in_progress: "(ఈమెయిల్ పంపుతోన్నాం)"
@@ -361,10 +356,6 @@ te:
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
         authenticated: "మీ ఈమెయిల్  {{provider}} చేత ద్రువీకరించబడింది"
-        frequency:
-          zero: "మీకు వెంటనే ఈమెయిల్ చేసాము, మీరు ఈమెయిల్ విషయం చదవకపోతే. "
-          one: "గత నిమిషంలో మీరు కనిపించకపోతే మేము ఈమెయిల్ చేస్తాము"
-          other: "గత {{count}} నిమిషాల్లో మీరు ఇక్కడ కనిపించకపోతేనే మేము ఈమెయిల్ చేస్తాము."
       name:
         title: "పేరు"
         instructions: "మీ పూర్తి పేరు (ఐచ్చికం)"
@@ -418,7 +409,6 @@ te:
         search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         title: "ఆహ్వానాలు"
         user: "ఆహ్వానించిన సభ్యుడు"
-        truncated: "తొలి {{count}}  ఆహ్వానాలను చూపుతున్నాము."
         redeemed: "మన్నించిన ఆహ్వానాలు"
         redeemed_at: "మన్నించిన"
         pending: "పెండింగులోని ఆహ్వానాలు"
@@ -499,8 +489,6 @@ te:
     last_post: చివరి టపా
     summary:
       enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
-      description: "అక్కడ మొత్తం <b>{{count}}</b> జవాబులు ఉన్నాయి"
-      description_time: "అక్కడ మొత్తం <b>{{count}}</b> జవాబులు ఉన్నాయి. వీటిని చదవడానికి సుమారుగా <b>{{readingTime}} నిమిషాలు</b> పడ్తాయి."
       enable: 'ఈ విషయాన్ని సంగ్రహించు'
       disable: 'అన్ని టపాలూ చూపు'
     deleted_filter:
@@ -573,7 +561,6 @@ te:
     twitter: "ట్విట్టరు"
     emoji_one: "ఇమెజి వన్"
     composer:
-      emoji: "Emoji :smile:"
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       posting_not_on_topic: "ఏ విషయానికి మీరు జవాబివ్వాలనుకుంటున్నారు? "
       saved_draft_tip: "భద్రం"
@@ -598,7 +585,6 @@ te:
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
       show_edit_reason: "(సవరణ కారణం రాయండి)"
       view_new_post: "మీ కొత్త టపా చూడండి"
-      saving: "భద్రమవుతోంది..."
       saved: "భద్రం!"
       saved_draft: "టపా చిత్తుప్రతి నడుస్తోంది. కొనసాగించుటకు ఎంచుకోండి."
       uploading: "ఎగుమతవుతోంది..."
@@ -625,8 +611,6 @@ te:
       heading_title: "తలకట్టు"
       heading_text: "తలకట్టు"
       hr_title: "అడ్డు గీత"
-      undo_title: "రద్దు"
-      redo_title: "తిద్దు"
       help: "మార్క్ డైన్ సవరణ సహాయం"
       toggler: "దాచు లేదా చూపు కంపోజరు ఫలకం"
       admin_options_title: "ఈ విషయానికి ఐచ్చిక సిబ్బంది అమరికలు"
@@ -645,7 +629,6 @@ te:
       total_flagged: "మొత్తం కేతనించిన టపాలు"
       quoted: "<i title='కోట్ చేసారు' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='జవాబిచ్చారు' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='జవాబిచ్చారు' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title=' సవరించారు' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='ఇష్టపడ్డారు' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -660,7 +643,6 @@ te:
       from_my_computer: "నా పరికరం నుండి"
       from_the_web: "జాలం నుండి"
       remote_tip: "బొమ్మకు లంకె"
-      remote_tip_with_attachments: "బొమ్మకు లేదా దస్త్రానికి లంకె ({{authorized_extensions}})"
       hint: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
       uploading: "ఎగుమతవుతోంది"
       image_link: "మీ బొమ్మ చూపే లంకె"
@@ -680,10 +662,6 @@ te:
       bulk:
         reset_read: "రీలోడ్ రీసెట్"
         delete: "విషయాలు తొలగించు"
-        dismiss_posts: "టపాలు తుడువు"
-        dismiss_posts_tooltip: "ఈ విషయాలపే చదవని సంఖ్యను తుడువు, కానీ కొత్తగా వచ్చే టపాలను నా చదవని సంఖ్యలో చూపుటు కొనసాగించు"
-        dismiss_topics: "విషయాలు తుడువు"
-        dismiss_topics_tooltip: "కొత్త టపాలు వచ్చినా, నా చదవని జాబితాలో ఈ విషయాలు నుండి చూపుటు ఆపు. "
         dismiss_new: "కొత్తవి తుడువు"
         toggle: "విషయాల బహుళ ఎంపికలు అటుఇటుచేయి"
         actions: "బహుళ చర్యలు"
@@ -705,9 +683,6 @@ te:
         bookmarks: "మీకింకా ఎట్టి పేజీక విషయాలూ లేవు."
         category: "ఎట్టి {{category}}  విషయాలూ లేవు"
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
-        educate:
-          new: '<p>మీ కొత్త విషయాలు ఇక్కడ వస్తాయి.</p><p>అప్రమేయంగా 2 రోజులలోపు సృష్టించిన అన్ని విషయాలూ కొత్తగా భావించబడతాయి మరియు  <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">కొత్త</span> ఇండికేటరు తో చూపబడతాయి.</p><p>మీరు దీన్ని మీ <a href="%{userPrefsUrl}">అభీష్టాలులో</a> మార్చుకోవచ్చు.</p>'
-          unread: '<p>మీరు చదవని విషయాలు ఇక్కడ కనబడుతాయి.</p><p>అప్రమేయంగా, విషయాలు చదవని వాటిగా పరిశీలించబడతాయి మరియు చదవని వాటి సంఖ్య మీకు చూపబడతాయి <span class="badge new-posts badge-notification">1</span> మీరు:</p><ul><li>విషయం సృష్టించినట్లయితే</li><li>విషయానికి సమాధానం ఇచ్చినట్లయితే</li><li>విషయం 4 నిమిషాల కంటే ఎక్కువ చదివినట్లయితే</li></ul><p>లేదా మీరు స్పష్టముగా విషయం అమర్చినట్లయితే ప్రతి విషయానికి క్రింది భాగంలో నియంత్రణ ప్రకటన ద్వారా గమనించబడుతుంది లేదా కనిపెడుతూ ఉంటుంది  .</p><p>మీరు ఇది మార్చగలరు <a href="%{userPrefsUrl}"> మీ preferences లో</a>.</p>'
       bottom:
         latest: "ఇంకా కొత్త విషయాలు లేవు."
         hot: "ఇంకా వేడివేడి విషయాలు లేవు."
@@ -806,7 +781,6 @@ te:
           title: "నిశ్శబ్దం"
         muted:
           title: "నిశ్శబ్దం"
-          description: "ఈ ప్రైవేటు సందేశం నుండి మీకు అస్సలు ప్రకటనలు రావు. ఇంకా చదవని సంఖ్య కనిపించదు."
       actions:
         recover: "విషయం తొలగింపు రద్దుచేయి"
         delete: "విషయం తొలగించు"
@@ -919,8 +893,6 @@ te:
         no_value: "లేదు, ఉంచండి"
         yes_value: "అవును. వదిలేయండి"
       via_email: "ఈ టపా ఈమెయిల్ ద్వారా వచ్చింది"
-      wiki:
-        about: "ఈ టపా వికీ: ప్రాథమిక సభ్యులు దీన్ని సవరించలేరు"
       archetypes:
         save: 'భద్రపరుచు ఐచ్చికాలు'
       controls:
@@ -968,16 +940,6 @@ te:
           bookmark: "పేజీక రద్దు"
           like: "ఇష్టం రద్దు"
           vote: "ఓటు రద్దు"
-        people:
-          off_topic: "{{icons}} దీన్ని విషయాంతరంగా కేతనించాయి"
-          spam: "{{icons}} దీన్ని స్పాముగా కేతనించాయి"
-          spam_with_url: "{{ప్రతీకలు}} స్పామ్ లా <a href='{{postUrl}}'>కేతనించు</a>"
-          inappropriate: "{{icons}} దీన్ని అసమంజసంగా కేతనించాయి"
-          notify_moderators: "{{icons}} దీన్ని నిర్వాహకుల దృష్టికి తెచ్చాయి"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>నిర్వాహకుల దృష్టికి తెచ్చారు</a>"
-          bookmark: "{{icons}} పేజీక ఉంచారు"
-          like: "{{icons}} ఇష్టపడ్డారు"
-          vote: "{{icons}}  దీనికి ఓటు వేసారు"
         by_you:
           off_topic: "మీరు దీన్ని విషయాంతరంగా కేతనించారు"
           spam: "మీరు దీన్ని స్పాముగా కేతనించారు"
@@ -1030,10 +992,6 @@ te:
           vote:
             one: "ఒకరు దీనికి ఓటు వేశారు"
             other: "{{count}} గురు దీనికి ఓటు వేసారు"
-      edits:
-        one: 1 సవరణ
-        other: "{{count}} సవరణలు"
-        zero: ఎట్టి సవరణలూ లేవు
       delete:
         confirm:
           one: "మీరు నిజ్జంగా ఈ టపాను తొలగించాలనుకుంటున్నారా?"
@@ -1110,14 +1068,10 @@ te:
           title: "కన్నేసారు"
         tracking:
           title: "గమనిస్తున్నారు"
-        regular:
-          title: "రెగ్యులర్"
         muted:
           title: "నిశ్శబ్దం"
-          description: "ఈ వర్గాల్లో కొత్త విషయాల గురించి మీకు ప్రకటన రాదు. ఇంకా చదవి సంఖ్యలు కనిపించవు."
     flagging:
       title: 'మా కమ్యునిటీని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు'
-      private_reminder: 'కేతనాలు ప్రైవేటు. <b>కేవలం</b> సిబ్బందికి మాత్రమే కనిపిస్తాయి'
       action: 'టపాను కేతనించు'
       take_action: "చర్య తీసుకో"
       delete_spammer: "స్పామరును తొలగించు"
@@ -1161,7 +1115,6 @@ te:
         help: "ఈ విషయం మీకు అగ్గుచ్చబడింది. ఇది ఇహ క్రమ వరుసలోనే కనిపిస్తుంది"
       pinned_globally:
         title: "సార్వత్రికంగా గుచ్చారు"
-        help: "ఈ విషయం సార్వత్రికంగా గుచ్చారు; అన్ని వరుసల్లోనూ ఇది అగ్రభాగాన కనిపిస్తుంది."
       pinned:
         title: "గుచ్చారు"
         help: "ఈ విషయం మీకు గుచ్చబడింది. దాని వర్గంలో అది అగ్రభాగాన కనిపిస్తుంది."
@@ -1201,23 +1154,9 @@ te:
         title_in: "వర్గం - {{categoryName}}"
         help: "వర్గాల వారీగా జట్టు కట్టిన అన్ని విషయాలూ"
       unread:
-        title:
-          zero: "చదవని"
-          one: "చదవని (1)"
-          other: "చదవని ({{count}})"
         help: "మీరు ప్రస్తుతం కన్నేసిన లేదా గమనిస్తున్న చదవని టపాలతో ఉన్న  విషయాలు "
-        lower_title_with_count:
-          one: "1 చదవని"
-          other: "{{count}} చదవని"
       new:
-        lower_title_with_count:
-          one: "1 కొత్త "
-          other: "{{count}} కొత్త"
         lower_title: "కొత్త"
-        title:
-          zero: "కొత్త"
-          one: "కొత్త (1)"
-          other: "కొత్త ({{count}})"
         help: "గత కొద్ది రోజులలో సృష్టించిన టపాలు"
       posted:
         title: "నా టపాలు"
@@ -1226,10 +1165,6 @@ te:
         title: "పేజీకలు"
         help: "మీరు పేజీక ఉంచిన విషయాలు"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "{{categoryName}} వర్గంలోని కొత్త విషయాలు"
       top:
         title: "అగ్ర"
@@ -1433,10 +1368,8 @@ te:
           restore:
             is_disabled: "సైటు అమరికల్లో రీస్టోరు అచేతనమైంది. "
             title: "బ్యాకప్ ను రీస్టోరు చేయి"
-            confirm: "మీరు నిజంగానే ఈ బ్యాకప్ ను రీస్టోరు చేయాలనుకుంటున్నారా?"
           rollback:
             title: "డాటాబేసును గత పనిచేసే స్థితికి రోల్ బ్యాక్ చేయి"
-            confirm: "మీరు నిజంగానే డాటాబేసును గత పనిచేసే స్థితికి రోల్ బ్యాక్ చేయాలనుకుంటున్నారా?"
       export_csv:
         user_archive_confirm: "మీరు నిజంగా మీ టపాల దిగుమతి కోరుకుంటున్నారా ?"
         failed: "ఎగుమతి విఫలమైంది. దయచేసి లాగులు చూడంది. "
@@ -1525,13 +1458,9 @@ te:
           love:
             name: 'ప్రేమ'
             description: "ఇష్ఠ బటను రంగు."
-          wiki:
-            name: 'వికీ'
-            description: "వికీ టపాలు వెనుతలంకు ప్రాథమిక రంగు"
       email:
-        title: "ఈమెయిల్"
         settings: "అమరికలు"
-        all: "అన్నీ"
+        preview_digest: "డైజెస్టు మునుజూపు"
         sending_test: "పరీక్షా ఈమెయిల్ పంపుతున్నామ్..."
         error: "<b>దోషం</b> - %{server_error}"
         test_error: "టెస్ట్ మెయిల్ పంపడంలో  ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
@@ -1546,7 +1475,6 @@ te:
         send_test: "పరీక్షా  మెయిల్ పంపారు"
         sent_test: "పంపారు!"
         delivery_method: "డెలివరీ పద్దతి"
-        preview_digest: "డైజెస్టు మునుజూపు"
         refresh: "తాజాపరుచు"
         format: "రూపు"
         html: "హెచ్ టీయంయల్"
@@ -1672,9 +1600,6 @@ te:
           pending: 'రివ్యూ పెండింగులో ఉన్న సభ్యులు'
           newuser: 'నమ్మకం స్థాయి 0 సభ్యులు (కొత్త సభ్యుడు)'
           basic: 'నమ్మకపు స్థాయి 1 వినియోగదారులు (ప్రాధమిక వినియోగదారు)'
-          regular: 'నమ్మకపు స్థాయి 2 వినియోగదారులు (సభ్యులు)'
-          leader: 'నమ్మకపు స్థాయి 3 వినియోగదారులు (నిత్యం)'
-          elder: 'నమ్మకపు స్థాయి 4 వినియోగదారులు (నాయకుడు)'
           staff: "సిబ్బంది"
           admins: 'అధికారి సభ్యులు'
           moderators: 'నిర్వాహకులు'
@@ -1770,7 +1695,6 @@ te:
         unlock_trust_level: "నమ్మకపు స్థాయిని వదిలేయి"
         tl3_requirements:
           title: "నమ్మకపు స్థాయి 3 అవసరాలు"
-          table_title: "గత 100 రోజుల్లో:"
           value_heading: "విలువ"
           requirement_heading: "అవసరం"
           visits: "సందర్శనాలు"
@@ -1829,7 +1753,6 @@ te:
           text: 'పాఠ్య క్షేత్రం'
           confirm: 'ఖాయము'
       site_text:
-        none: "సవరణను ప్రారంభించడానికి విషయం రకాన్ని ఎంచుకోండి."
         title: 'పాఠ్య కాంటెంటు'
       site_settings:
         show_overriden: 'ప్రాబల్యం ఉన్న వాటిని మాత్రమే చూపించు'
@@ -1908,10 +1831,6 @@ te:
           sql_error_header: "ప్రశ్నతో దోషం ఉంది."
           bad_count_warning:
             header: "హెచ్చరిక!"
-          grant_count:
-            zero: "ఏ చిహ్నాలు కేటాయించలేదు."
-            one: "<b>1</b> కేటాయించిన చిహ్నం."
-            other: "<b>%{లెక్క}</b> కేటాయించిన చిహ్నాలు."
           sample: "నమూనా:"
           grant:
             with: <span class="username">%{వినియోగదారు పేరు}</span>
@@ -1971,8 +1890,6 @@ te:
         mark_watching: '<b>m</b>, <b>w</b> చూసిన విషయం'
     badges:
       title: బ్యాడ్జీలు
-      allow_title: "శీర్షికగా కూడా వాడవచ్చు"
-      multiple_grant: "పలుమార్లు బహూకరించవచ్చు"
       more_badges:
         one: "+%{count} కంటే"
         other: "+%{count} ఇంకా"
@@ -1992,74 +1909,3 @@ te:
           name: ఇతర
         posting:
           name: రాస్తున్నారు
-      badge:
-        editor:
-          name: ఎడిటరు
-          description: తొలి టపా సవరణ
-        basic_user:
-          name: ప్రాథమిక
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">మంజూరు చేసిన</a> అన్ని ఆవశ్యక సామాజిక చర్యలు
-        member:
-          name: సభ్యుడు
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">మంజూరు చేసిన </a> ఆహ్వానాలు
-        regular:
-          name: రెగ్యులరు
-        leader:
-          name: లీడరు
-        welcome:
-          name: సుస్వాగతం
-          description: ఒక ఇష్టాన్ని అందుకున్నారు
-        autobiographer:
-          name: ఆత్మకధావాది
-          description: వినియోగదారు నింపిన <a href="/my/preferences">ఫ్రొపైల్ </a> సమాచారం
-        anniversary:
-          name: వార్షికోత్సవం
-          description: ఒక సంవత్సరం నుండి చురుకైన సభ్యుడు, కనీసం ఒకసారి టపా చేశాడు
-        nice_post:
-          name: మంచి టపా
-          description: ఒక టపా 10 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        good_post:
-          name: చాలా మంచి టపా
-          description: ఒక టపా 25 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        great_post:
-          name: బహుమంచి టపా
-          description: ఒక టపా 50 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        nice_topic:
-          name: మంచి విషయం
-          description: ఒక విషయం 10 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        good_topic:
-          name: చాలా మంచి విషయం
-          description: ఒక విషయం 25 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        great_topic:
-          name: బహుమంచి విషయం
-          description: ఒక విషయం 50 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
-        nice_share:
-          name: మంచి పంపకం
-          description: ఒక టపాను 25మంది సభ్యులతో పంచుకున్నారు
-        good_share:
-          name: చాలామంచి పంపకం
-          description: ఒక టపాను 300మంది సభ్యులతో పంచుకున్నారు
-        great_share:
-          name: బహుమంచి పంపకం
-          description: ఒక టపాను 1000 మంది సభ్యులతో పంచుకున్నారు
-        first_like:
-          name: తొలి ఇష్టం
-          description: టపాను ఇష్టపడ్డారు
-        first_flag:
-          name: తొలి కేతనం
-          description: ఒక టపాను కేతనించారు
-        first_share:
-          name: తొలి పంపకం
-          description: ఒక టపాను పంచారు
-        first_link:
-          name: తొలి లంకె
-          description: వేరొక విషయానికి అంతర్గతంగా లంకె కలిపారు
-        first_quote:
-          name: తొలి కోట్
-          description: ఒక సభ్యుడిని కోట్ చేసారు
-        read_guidelines:
-          name: మార్గదర్శకాలు చదువు
-          description: <a href="/guidelines">కమ్యునిటీ మార్గదర్శకాలు</a> చదవండి
-        reader:
-          name: చదువరి
-          description: 100 టపాల కన్నా ఎక్కువ ఉన్న అంశంలో ప్రతి టపా చదవండి

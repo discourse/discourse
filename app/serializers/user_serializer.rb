@@ -61,38 +61,31 @@ class UserSerializer < BasicUserSerializer
              :uploaded_avatar_id,
              :badge_count,
              :has_title_badges,
-             :edit_history_public,
              :custom_fields,
              :user_fields,
              :topic_post_count,
-             :pending_count
+             :pending_count,
+             :profile_view_count
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
-  has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
+  has_many :groups, embed: :object, serializer: BasicGroupSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
   has_one  :card_badge, embed: :object, serializer: BadgeSerializer
+  has_one :user_option, embed: :object, serializer: UserOptionSerializer
+
+  def include_user_option?
+    can_edit
+  end
 
   staff_attributes :post_count,
                    :can_be_deleted,
                    :can_delete_all_posts
 
   private_attributes :locale,
-                     :email_digests,
-                     :email_private_messages,
-                     :email_direct,
-                     :email_always,
-                     :digest_after_days,
-                     :mailing_list_mode,
-                     :auto_track_topics_after_msecs,
-                     :new_topic_duration_minutes,
-                     :external_links_in_new_tab,
-                     :dynamic_favicon,
-                     :enable_quoting,
                      :muted_category_ids,
                      :tracked_category_ids,
                      :watched_category_ids,
                      :private_messages_stats,
-                     :disable_jump_reply,
                      :system_avatar_upload_id,
                      :system_avatar_template,
                      :gravatar_avatar_upload_id,
@@ -102,7 +95,8 @@ class UserSerializer < BasicUserSerializer
                      :has_title_badges,
                      :card_image_badge,
                      :card_image_badge_id,
-                     :muted_usernames
+                     :muted_usernames,
+                     :mailing_list_posts_per_day
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -115,6 +109,19 @@ class UserSerializer < BasicUserSerializer
   ###
   ### ATTRIBUTES
   ###
+
+  def mailing_list_posts_per_day
+    val = Post.estimate_posts_per_day
+    [val,SiteSetting.max_emails_per_day_per_user].min
+  end
+
+  def groups
+    if scope.is_admin? || object.id == scope.user.try(:id)
+      object.groups
+    else
+      object.groups.where(visible: true)
+    end
+  end
 
   def include_email?
     object.id && object.id == scope.user.try(:id)
@@ -219,7 +226,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_excerpt
-    object.user_profile.bio_excerpt(350 , { keep_newlines: true, keep_emojis: true })
+    object.user_profile.bio_excerpt(350 , { keep_newlines: true, keep_emoji_images: true })
   end
 
   def include_suspend_reason?
@@ -249,14 +256,6 @@ class UserSerializer < BasicUserSerializer
   ###
   ### PRIVATE ATTRIBUTES
   ###
-
-  def auto_track_topics_after_msecs
-    object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
-  end
-
-  def new_topic_duration_minutes
-    object.new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes
-  end
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
@@ -312,10 +311,6 @@ class UserSerializer < BasicUserSerializer
     object.badges.where(allow_title: true).count > 0
   end
 
-  def include_edit_history_public?
-    can_edit && !SiteSetting.edit_history_visible_to_public
-  end
-
   def user_fields
     object.user_fields
   end
@@ -329,10 +324,10 @@ class UserSerializer < BasicUserSerializer
   end
 
   def custom_fields
-    fields = nil
+    fields = User.whitelisted_user_custom_fields(scope)
 
-    if SiteSetting.public_user_custom_fields.present?
-      fields = SiteSetting.public_user_custom_fields.split('|')
+    if scope.can_edit?(object)
+      fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a
     end
 
     if fields.present?
@@ -344,6 +339,10 @@ class UserSerializer < BasicUserSerializer
 
   def pending_count
     0
+  end
+
+  def profile_view_count
+    object.user_profile.views
   end
 
 end

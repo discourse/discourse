@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UserProfile do
   it 'is created automatically when a user is created' do
@@ -35,6 +35,18 @@ describe UserProfile do
     it "doesn't support really long bios" do
       user_profile = Fabricate.build(:user_profile_long)
       expect(user_profile).not_to be_valid
+    end
+
+    it "doesn't support invalid website" do
+      user_profile = Fabricate.build(:user_profile, website: "http://https://google.com")
+      user_profile.user = Fabricate.build(:user)
+      expect(user_profile).not_to be_valid
+    end
+
+    it "supports valid website" do
+      user_profile = Fabricate.build(:user_profile, website: "https://google.com")
+      user_profile.user = Fabricate.build(:user)
+      expect(user_profile.valid?).to be true
     end
 
     describe 'after save' do

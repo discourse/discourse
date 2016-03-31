@@ -112,17 +112,22 @@ module Discourse
     end
   end
 
+  def self.last_read_only
+    @last_read_only ||= {}
+  end
+
   def self.recently_readonly?
-    return false unless @last_read_only
-    @last_read_only > 15.seconds.ago
+    read_only = last_read_only[$redis.namespace]
+    return false unless read_only
+    read_only > 15.seconds.ago
   end
 
   def self.received_readonly!
-    @last_read_only = Time.now
+    last_read_only[$redis.namespace] = Time.zone.now
   end
 
   def self.clear_readonly!
-    @last_read_only = nil
+    last_read_only[$redis.namespace] = nil
   end
 
   def self.disabled_plugin_names
@@ -272,7 +277,7 @@ module Discourse
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
     user = User.find_by(username_lower: SiteSetting.site_contact_username.downcase) if SiteSetting.site_contact_username.present?
-    user ||= User.admins.real.order(:id).first
+    user ||= (system_user || User.admins.real.order(:id).first)
   end
 
   SYSTEM_USER_ID ||= -1
@@ -340,7 +345,7 @@ module Discourse
       while true
         begin
           sleep GlobalSetting.connection_reaper_interval
-          reap_connections(GlobalSetting.connection_reaper_age)
+          reap_connections(GlobalSetting.connection_reaper_age, GlobalSetting.connection_reaper_max_age)
         rescue => e
           Discourse.handle_exception(e, {message: "Error reaping connections"})
         end
@@ -348,12 +353,12 @@ module Discourse
     end
   end
 
-  def self.reap_connections(age)
+  def self.reap_connections(idle, max_age)
     pools = []
     ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
 
     pools.each do |pool|
-      pool.drain(age.seconds)
+      pool.drain(idle.seconds, max_age.seconds)
     end
   end
 

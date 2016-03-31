@@ -29,9 +29,15 @@ en:
 
       multiple:
         help:
-          at_least_min_options: "You must choose at least <strong>%{count}</strong> options."
-          up_to_max_options: "You may choose up to <strong>%{count}</strong> options."
-          x_options: "You must choose <strong>%{count}</strong> options."
+          at_least_min_options:
+            one: "You must choose at least <strong>1</strong> option."
+            other: "You must choose at least <strong>%{count}</strong> options."
+          up_to_max_options:
+            one: "You may choose up to <strong>1</strong> option."
+            other: "You may choose up to <strong>%{count}</strong> options."
+          x_options:
+            one: "You must choose <strong>1</strong> option."
+            other: "You must choose <strong>%{count}</strong> options."
           between_min_and_max_options: "You may choose between <strong>%{min}</strong> and <strong>%{max}</strong> options."
 
       cast-votes:

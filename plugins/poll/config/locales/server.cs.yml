@@ -14,8 +14,6 @@ cs:
     multiple_polls_with_same_name: "Víc hlasování má stejné jméno: <strong>%{name}</strong>.  Použijte atribut '<code>name</code>' pro jednoznačnou identifikaci vašich hlasování."
     default_poll_must_have_at_least_2_options: "Hlasování musí mít alespoň 2 odpovědi."
     named_poll_must_have_at_least_2_options: "Hlasování <strong>%{name}</strong> musí mít alespoň 2 odpovědi."
-    default_poll_must_have_less_options: "Hlasování nesmí mít víc než %{max} odpovědí."
-    named_poll_must_have_less_options: "Hlasování <strong>%{name}</strong> nesmí mít víc než %{max} odpovědí."
     default_poll_must_have_different_options: "Hlasování musí mít různé odpovědi."
     named_poll_must_have_different_options: "Hlasování <strong>%{name}</strong> musí mít různé odpovědi."
     requires_at_least_1_valid_option: "Musíte vybrat alespoň jednu platnou odpověď."

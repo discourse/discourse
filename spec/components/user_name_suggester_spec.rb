@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'user_name_suggester'
 
 describe UserNameSuggester do
@@ -50,21 +50,31 @@ describe UserNameSuggester do
     end
 
     it "doesn't suggest reserved usernames" do
-      SiteSetting.reserved_usernames = 'admin|steve|steve1'
-      expect(UserNameSuggester.suggest("admin@hissite.com")).to eq('admin1')
+      SiteSetting.reserved_usernames = 'myadmin|steve|steve1'
+      expect(UserNameSuggester.suggest("myadmin@hissite.com")).to eq('myadmin1')
       expect(UserNameSuggester.suggest("steve")).to eq('steve2')
     end
 
+    it "doesn't suggest generic usernames" do
+      UserNameSuggester::GENERIC_NAMES.each do |name|
+        expect(UserNameSuggester.suggest("#{name}@apple.org")).to eq('apple')
+      end
+    end
+
     it "removes leading character if it is not alphanumeric" do
-      expect(UserNameSuggester.suggest("_myname")).to eq('myname')
+      expect(UserNameSuggester.suggest(".myname")).to eq('myname')
+    end
+
+    it "allows leading _" do
+      expect(UserNameSuggester.suggest("_myname")).to eq('_myname')
     end
 
     it "removes trailing characters if they are invalid" do
       expect(UserNameSuggester.suggest("myname!^$=")).to eq('myname')
     end
 
-    it "replace dots" do
-      expect(UserNameSuggester.suggest("my.name")).to eq('my_name')
+    it "allows dots in the middle" do
+      expect(UserNameSuggester.suggest("my.name")).to eq('my.name')
     end
 
     it "remove leading dots" do
@@ -81,7 +91,16 @@ describe UserNameSuggester do
     end
 
     it 'should handle typical facebook usernames' do
-      expect(UserNameSuggester.suggest('roger.nelson.3344913')).to eq('roger_nelson_33')
+      expect(UserNameSuggester.suggest('roger.nelson.3344913')).to eq('roger.nelson.33')
+    end
+
+    it 'removes underscore at the end of long usernames that get truncated' do
+      expect(UserNameSuggester.suggest('uuuuuuuuuuuuuu_u')).to_not end_with('_')
+    end
+
+    it "adds number if it's too short after removing trailing underscore" do
+      User.stubs(:username_length).returns(8..8)
+      expect(UserNameSuggester.suggest('uuuuuuu_u')).to eq('uuuuuuu1')
     end
   end
 

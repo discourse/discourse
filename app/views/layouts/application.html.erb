@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<!--[if IE 9]><html lang="<%= SiteSetting.default_locale %>" class="ie9 <%= html_classes %>"><![endif]-->
-<!--[if (!IE 9) | (!IE)]><!--><html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>"><!--<![endif]-->
+<html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>">
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
@@ -18,8 +17,14 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
+    <script>
+      window.EmberENV = window.EmberENV || {};
+      window.EmberENV['FORCE_JQUERY'] = true;
+    </script>
+
     <%= script "preload_store" %>
     <%= script "locales/#{I18n.locale}" %>
+    <%= script "ember_jquery" %>
     <%= script "vendor" %>
     <%= script "application" %>
     <%- if staff? %>
@@ -31,6 +36,7 @@
     <%- end %>
 
     <%= render_google_universal_analytics_code %>
+    <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.json">
 
     <%= yield :head %>
   </head>
@@ -45,10 +51,10 @@
         <footer>
           <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
             <a href='<%= path "/" %>'><%= t 'home_title' %></a>
-            <%= link_to t('js.filters.categories.title'), main_app.categories_path %>
-            <%= link_to t('guidelines_topic.title'), main_app.guidelines_path %>
-            <%= link_to t('tos_topic.title'), main_app.tos_path %>
-            <%= link_to t('privacy_topic.title'), main_app.privacy_path %>
+            <%= link_to t('js.filters.categories.title'), path("/categories") %>
+            <%= link_to t('guidelines_topic.title'), path("/guidelines") %>
+            <%= link_to t('tos_topic.title'), path("/tos") %>
+            <%= link_to t('privacy_topic.title'), path("/privacy") %>
           </nav>
         </footer>
       </div>
@@ -57,8 +63,6 @@
         <p><%= t 'powered_by_html' %></p>
       </footer>
     </noscript>
-
-    <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
     <%- unless customization_disabled? || loading_admin? %>
       <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>

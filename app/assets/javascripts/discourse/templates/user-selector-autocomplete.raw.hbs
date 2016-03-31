@@ -10,11 +10,10 @@
       </li>
     {{/each}}
     {{#if options.groups}}
-      {{#if options.users}}<hr>{{/if}}
       {{#each group in options.groups}}
         <li>
           <a href>
-            <i class='icon-group'></i>
+            <i class='fa fa-users'></i>
             <span class='username'>{{group.name}}</span>
             <span class='name'>{{max-usernames group.usernames max="3"}}</span>
           </a>

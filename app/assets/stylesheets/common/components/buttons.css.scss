@@ -53,7 +53,7 @@
   }
   &:hover {
     background: dark-light-diff($primary, $secondary, 65%, -75%);
-    color: #fff;
+    color: $secondary;
   }
   &[disabled], &.disabled {
     background: dark-light-diff($primary, $secondary, 90%, -60%);
@@ -80,7 +80,7 @@
   }
   &:active {
     @include linear-gradient(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -10%));
-    color: #fff;
+    color: $secondary;
   }
   &[disabled], &.disabled {
     background: $tertiary;
@@ -127,6 +127,12 @@
     background: $google;
     &:before {
       content: $fa-var-google;
+    }
+  }
+  &.instagram {
+    background: $instagram;
+    &:before {
+      content: $fa-var-instagram;
     }
   }
   &.facebook {

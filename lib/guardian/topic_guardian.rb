@@ -30,7 +30,10 @@ module TopicGuardian
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
     return false unless can_see?(topic)
     return true if is_staff?
-    return true if (!topic.private_message? && user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic))
+    # TL4 users can edit archived topics, but can not edit private messages
+    return true if (topic.archived && !topic.private_message? && user.has_trust_level?(TrustLevel[4]) && can_create_post?(topic))
+    # TL3 users can not edit archived topics and private messages
+    return true if (!topic.archived && !topic.private_message? && user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic))
 
     return false if topic.archived
     is_my_own?(topic) && !topic.edit_time_limit_expired?

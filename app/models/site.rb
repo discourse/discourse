@@ -13,24 +13,12 @@ class Site
     SiteSetting
   end
 
-  def post_action_types
-    PostActionType.ordered
-  end
-
-  def topic_flag_types
-    post_action_types.where(name_key: ['inappropriate', 'spam', 'notify_moderators'])
-  end
-
   def notification_types
     Notification.types
   end
 
   def trust_levels
     TrustLevel.all
-  end
-
-  def groups
-    @groups ||= Group.order(:name).map { |g| { id: g.id, name: g.name } }
   end
 
   def user_fields
@@ -41,16 +29,22 @@ class Site
     @categories ||= begin
       categories = Category
         .secured(@guardian)
-        .includes(:topic_only_relative_url, :subcategories)
+        .joins('LEFT JOIN topics t on t.id = categories.topic_id')
+        .select('categories.*, t.slug topic_slug')
         .order(:position)
-
-      unless SiteSetting.allow_uncategorized_topics
-        categories = categories.where('categories.id <> ?', SiteSetting.uncategorized_category_id)
-      end
 
       categories = categories.to_a
 
-      allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
+      with_children = Set.new
+      categories.each do |c|
+        if c.parent_category_id
+          with_children << c.parent_category_id
+        end
+      end
+
+      allowed_topic_create_ids =
+        @guardian.anonymous? ? [] : Category.topic_create_allowed(@guardian).pluck(:id)
+      allowed_topic_create = Set.new(allowed_topic_create_ids)
 
       by_id = {}
 
@@ -59,10 +53,12 @@ class Site
         category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
       end
 
+      regular = CategoryUser.notification_levels[:regular]
+
       categories.each do |category|
-        category.notification_level = category_user[category.id]
+        category.notification_level = category_user[category.id] || regular
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
-        category.has_children = category.subcategories.present?
+        category.has_children = with_children.include?(category.id)
         by_id[category.id] = category
       end
 
@@ -91,8 +87,37 @@ class Site
       }.to_json
     end
 
+    seq = nil
+
+    if guardian.anonymous?
+      seq = MessageBus.last_id('/site_json')
+
+      cached_json, cached_seq, cached_version = $redis.mget('site_json', 'site_json_seq', 'site_json_version')
+
+      if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
+        return cached_json
+      end
+
+    end
+
     site = Site.new(guardian)
-    MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
+    json = MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
+
+    if guardian.anonymous?
+      $redis.multi do
+        $redis.setex 'site_json', 1800, json
+        $redis.set 'site_json_seq', seq
+        $redis.set 'site_json_version', Discourse.git_version
+      end
+    end
+
+    json
+  end
+
+  def self.clear_anon_cache!
+    # publishing forces the sequence up
+    # the cache is validated based on the sequence
+    MessageBus.publish('/site_json','')
   end
 
 end

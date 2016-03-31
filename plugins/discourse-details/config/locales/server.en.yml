@@ -1,0 +1,3 @@
+en:
+  site_settings:
+    details_enabled: "Enable the details plugin. If you change this, you must rebake all posts with: \"rake posts:rebake\"."

@@ -1,6 +1,6 @@
-{{#each row in buttonRows}}
+{{#each buttonRows as |row|}}
   <p>
-    {{#each button in row}}
+    {{#each row as |button|}}
       {{d-button action=button.action label=button.label}}
     {{/each}}
   </p>

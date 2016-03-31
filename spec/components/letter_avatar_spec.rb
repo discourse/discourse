@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'letter_avatar'
 
 describe LetterAvatar do

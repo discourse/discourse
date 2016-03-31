@@ -1,0 +1,39 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+gl:
+  site_settings:
+    poll_enabled: "Queres permitir os usuarios crear enquisas?"
+    poll_maximum_options: "Número máximo de opcións permitidas nunha enquisa."
+  poll:
+    multiple_polls_without_name: "Hai múltiples enquisas sen nome. Utiliza o atributo '<code>nome</code>' para singularizar as túas enquisas."
+    multiple_polls_with_same_name: "Hai múltiples enquisas co mesmo nome: <strong>%{name}</strong>. Utiliza o atributo '<code>nome</code>' para singularizar as túas enquisas."
+    default_poll_must_have_at_least_2_options: "A enquisa debe ter alomenos 2 opcións."
+    named_poll_must_have_at_least_2_options: "A enquisa chamada <strong>%{name}</strong> debe ter alomenos 2 opcións."
+    default_poll_must_have_less_options:
+      one: "A enquisa debe ter cando menos 1 opción."
+      other: "A enquisa debe ter alomenos %{count} opcións."
+    named_poll_must_have_less_options:
+      one: "A enquisa chamada <strong>%{name}</strong> debe ter menos de 1 opción."
+      other: "A enquisa chamada <strong>%{name}</strong> debe ter menos de %{count} opcións."
+    default_poll_must_have_different_options: "A enquisa debe ter diferentes opcións."
+    named_poll_must_have_different_options: "A enquisa chamada strong>%{name}</strong> debe ter diferentes opcións."
+    default_poll_with_multiple_choices_has_invalid_parameters: "A enquisa con varios apartados ten parámetros incorrectos."
+    named_poll_with_multiple_choices_has_invalid_parameters: "A enquisa chamada <strong>%{name}</strong> con varios apartados ten parámetros incorrectos."
+    requires_at_least_1_valid_option: "Debes seleccionar alomenos 1 opción válida."
+    cannot_change_polls_after_5_minutes: "Non podes engadir, retirar ou renomear enquisas despois dos primeiros 5 minutos."
+    op_cannot_edit_options_after_5_minutes: "Non podes engadir nin retirar opcións da enquisa despois de 5 minutos. Contacta cun moderador se precisas editar unha opción da enquisa."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Non podes engadir nin retirar opcións da enquisa despois de 5 minutos. Deberías pechar este tema e crear outro novo para substituílo."
+    no_polls_associated_with_this_post: "Non hai enquisas asociadas con esta publicación."
+    no_poll_with_this_name: "Non hai ningunha enquisa chamada <strong>%{name}</strong> asociada con esta publicación."
+    post_is_deleted: "Non se pode actuar sobre unha publicación eliminada."
+    topic_must_be_open_to_vote: "O tema debe estar aberto para votalo."
+    poll_must_be_open_to_vote: "A enquisa debe estar aberta para votala."
+    topic_must_be_open_to_toggle_status: "O tema debe estar aberto para cambiarlle o estado."
+    only_staff_or_op_can_toggle_status: "Soamente un membro do equipo ou o publicador orixinal poden trocar o estado dunha enquisa."
+    email:
+      link_to_poll: "Preme para ver a enquisa."

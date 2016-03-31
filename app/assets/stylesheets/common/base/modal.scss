@@ -103,10 +103,6 @@
 
 .modal.edit-category-modal {
   .modal-body {
-    .pagedown-editor {
-      width: 98%;
-    }
-
     textarea {
       height: 10em;
     }
@@ -140,7 +136,7 @@
       color: $primary;
     }
     p {
-      color: darken($primary, 40%);;
+      color: darken($primary, 40%);
       font-size: 0.929em;
     }
     .archetype-option {

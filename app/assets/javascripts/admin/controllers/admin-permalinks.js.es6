@@ -1,4 +1,5 @@
 import debounce from 'discourse/lib/debounce';
+import Permalink from 'admin/models/permalink';
 
 export default Ember.ArrayController.extend({
   loading: false,
@@ -7,7 +8,7 @@ export default Ember.ArrayController.extend({
   show: debounce(function() {
     var self = this;
     self.set('loading', true);
-    Discourse.Permalink.findAll(self.get("filter")).then(function(result) {
+    Permalink.findAll(self.get("filter")).then(function(result) {
       self.set('model', result);
       self.set('loading', false);
     });

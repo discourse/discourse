@@ -1,13 +1,30 @@
+import evenRound from "discourse/plugins/poll/lib/even-round";
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Em.Component.extend({
   tagName: "ul",
   classNames: ["results"],
 
-  options: function() {
-    const voters = this.get("poll.voters");
+  @computed("poll.voters", "poll.type", "poll.options.[]")
+  options(voters, type) {
+    const options = this.get("poll.options");
 
-    this.get("poll.options").forEach(option => {
-      const percentage = voters === 0 ? 0 : Math.floor(100 * option.get("votes") / voters),
-            style = "width: " + percentage + "%".htmlSafe();
+    let percentages = voters === 0 ?
+      Array(options.length).fill(0) :
+      _.map(options, o => 100 * o.get("votes") / voters);
+
+    // properly round percentages
+    if (type === "multiple") {
+      // when the poll is multiple choices, just "round down"
+      percentages = percentages.map(p => Math.floor(p));
+    } else {
+      // when the poll is single choice, adds up to 100%
+      percentages = evenRound(percentages);
+    }
+
+    options.forEach((option, i) => {
+      const percentage = percentages[i];
+      const style = new Ember.Handlebars.SafeString(`width: ${percentage}%`);
 
       option.setProperties({
         percentage,
@@ -16,7 +33,7 @@ export default Em.Component.extend({
       });
     });
 
-    return this.get("poll.options");
-  }.property("poll.voters", "poll.options.[]")
+    return options;
+  }
 
 });

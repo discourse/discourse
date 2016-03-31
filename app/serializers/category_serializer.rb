@@ -71,4 +71,10 @@ class CategorySerializer < BasicCategorySerializer
     scope && scope.can_edit?(object)
   end
 
+  def notification_level
+   user = scope && scope.user
+   object.notification_level ||
+     (user && CategoryUser.where(user: user, category: object).first.try(:notification_level))
+  end
+
 end

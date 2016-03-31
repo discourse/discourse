@@ -34,8 +34,8 @@ end
 # Table name: stylesheet_cache
 #
 #  id         :integer          not null, primary key
-#  target     :string(255)      not null
-#  digest     :string(255)      not null
+#  target     :string           not null
+#  digest     :string           not null
 #  content    :text             not null
 #  created_at :datetime
 #  updated_at :datetime

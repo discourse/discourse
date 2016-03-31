@@ -6,7 +6,6 @@ env:
     - RUBY_GC_MALLOC_LIMIT=50000000
   matrix:
     - "RAILS_MASTER=0"
-    - "RAILS42=1"
     - "RAILS_MASTER=1"
 
 addons:
@@ -21,7 +20,6 @@ addons:
 matrix:
   allow_failures:
     - env: "RAILS_MASTER=1"
-    - env: "RAILS42=1"
     - rvm: rbx-2
   fast_finish: true
 
@@ -29,6 +27,7 @@ rvm:
   - 2.0.0
   - 2.1
   - 2.2
+  - 2.3.0
 
 services:
   - redis-server
@@ -41,7 +40,7 @@ cache:
 
 before_install:
   - gem install bundler
-  - npm i -g eslint babel-eslint
+  - npm i -g eslint@2.2 babel-eslint
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
   - eslint --ext .es6 test/javascripts
@@ -51,7 +50,6 @@ before_script:
   - bundle exec rake db:create db:migrate
 
 install:
-  - bash -c "if [ '$RAILS42' == '1' ]; then bundle update --retry=3 --jobs=3 rails rails-observers; fi"
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails rails-observers seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
 

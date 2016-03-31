@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'rails_helper'
+require 'stringio'
 
 describe TopicEmbed do
 
@@ -30,7 +31,8 @@ describe TopicEmbed do
         expect(post.cooked).to eq(post.raw)
 
         # It converts relative URLs to absolute
-        expect(post.cooked.start_with?("hello world new post <a href=\"http://eviltrout.com/hello\">hello</a> <img src=\"http://eviltrout.com/images/wat.jpg\">")).to eq(true)
+        expect(post.cooked).to have_tag('a', with: { href: 'http://eviltrout.com/hello' })
+        expect(post.cooked).to have_tag('img', with: { src: 'http://eviltrout.com/images/wat.jpg' })
 
         expect(post.topic.has_topic_embed?).to eq(true)
         expect(TopicEmbed.where(topic_id: post.topic_id)).to be_present
@@ -54,6 +56,80 @@ describe TopicEmbed do
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
       end
+    end
+
+  end
+
+  describe '.find_remote' do
+
+    context 'post with allowed classes "foo" and "emoji"' do
+
+      let(:user) { Fabricate(:user) }
+      let(:url) { 'http://eviltrout.com/123' }
+      let(:contents) { "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>" }
+      let!(:embeddable_host) { Fabricate(:embeddable_host) }
+      let!(:file) { StringIO.new }
+
+      content = ''
+
+      before(:each) do
+        SiteSetting.stubs(:embed_classname_whitelist).returns 'emoji , foo'
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open).returns file
+        title, content = TopicEmbed.find_remote(url)
+      end
+
+      it 'img node has emoji class' do
+        expect(content).to have_tag('img', with: { class: 'emoji' })
+      end
+
+      it 'img node has foo class' do
+        expect(content).to have_tag('img', with: { class: 'foo' })
+      end
+
+      it 'p node has foo class' do
+        expect(content).to have_tag('p', with: { class: 'foo' })
+      end
+
+      it 'nodes removes classes other than emoji' do
+        expect(content).to have_tag('img', without: { class: 'other' })
+      end
+
+    end
+
+    context 'post with no allowed classes' do
+
+      let(:user) { Fabricate(:user) }
+      let(:url) { 'http://eviltrout.com/123' }
+      let(:contents) { "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>" }
+      let!(:embeddable_host) { Fabricate(:embeddable_host) }
+      let!(:file) { StringIO.new }
+
+      content = ''
+
+      before(:each) do
+        SiteSetting.stubs(:embed_classname_whitelist).returns ' '
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open).returns file
+        title, content = TopicEmbed.find_remote(url)
+      end
+
+      it 'img node doesn\'t have emoji class' do
+        expect(content).to have_tag('img', without: { class: 'emoji' })
+      end
+
+      it 'img node doesn\'t have foo class' do
+        expect(content).to have_tag('img', without: { class: 'foo' })
+      end
+
+      it 'p node doesn\'t foo class' do
+        expect(content).to have_tag('p', without: { class: 'foo' })
+      end
+
+      it 'img node doesn\'t have other class' do
+        expect(content).to have_tag('img', without: { class: 'other' })
+      end
+
     end
 
   end

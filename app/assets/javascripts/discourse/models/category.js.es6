@@ -1,5 +1,6 @@
 import RestModel from 'discourse/models/rest';
 import { on } from 'ember-addons/ember-computed-decorators';
+import PermissionType from 'discourse/models/permission-type';
 
 const Category = RestModel.extend({
 
@@ -15,16 +16,16 @@ const Category = RestModel.extend({
         availableGroups.removeObject(elem.group_name);
         return {
           group_name: elem.group_name,
-          permission: Discourse.PermissionType.create({id: elem.permission_type})
+          permission: PermissionType.create({id: elem.permission_type})
         };
       }));
     }
   },
 
   availablePermissions: function(){
-    return [  Discourse.PermissionType.create({id: Discourse.PermissionType.FULL}),
-              Discourse.PermissionType.create({id: Discourse.PermissionType.CREATE_POST}),
-              Discourse.PermissionType.create({id: Discourse.PermissionType.READONLY})
+    return [  PermissionType.create({id: PermissionType.FULL}),
+              PermissionType.create({id: PermissionType.CREATE_POST}),
+              PermissionType.create({id: PermissionType.READONLY})
            ];
   }.property(),
 
@@ -85,7 +86,7 @@ const Category = RestModel.extend({
         allow_badges: this.get('allow_badges'),
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
-        suppress_from_homepage: this.get('suppress_from_homepage'),
+        suppress_from_homepage: this.get('suppress_from_homepage')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });
@@ -116,9 +117,9 @@ const Category = RestModel.extend({
 
   permissions: function(){
     return Em.A([
-      {group_name: "everyone", permission: Discourse.PermissionType.create({id: 1})},
-      {group_name: "admins", permission: Discourse.PermissionType.create({id: 2}) },
-      {group_name: "crap", permission: Discourse.PermissionType.create({id: 3}) }
+      {group_name: "everyone", permission: PermissionType.create({id: 1})},
+      {group_name: "admins", permission: PermissionType.create({id: 2}) },
+      {group_name: "crap", permission: PermissionType.create({id: 3}) }
     ]);
   }.property(),
 
@@ -203,14 +204,14 @@ Category.reopenClass({
     return _uncategorized;
   },
 
-  slugFor(category) {
+  slugFor(category, separator = "/") {
     if (!category) return "";
 
     const parentCategory = Em.get(category, 'parentCategory');
     let result = "";
 
     if (parentCategory) {
-      result = Category.slugFor(parentCategory) + "/";
+      result = Category.slugFor(parentCategory) + separator;
     }
 
     const id = Em.get(category, 'id'),
@@ -283,6 +284,68 @@ Category.reopenClass({
 
   reloadById(id) {
     return Discourse.ajax(`/c/${id}/show.json`);
+  },
+
+  reloadBySlug(slug, parentSlug) {
+    return parentSlug ? Discourse.ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`) : Discourse.ajax(`/c/${slug}/find_by_slug.json`);
+  },
+
+  search(term, opts) {
+    var limit = 5;
+
+    if (opts) {
+      if (opts.limit === 0) {
+        return [];
+      } else if (opts.limit) {
+        limit = opts.limit;
+      }
+    }
+
+    const emptyTerm = (term === "");
+    let slugTerm = term;
+
+    if (!emptyTerm) {
+      term = term.toLowerCase();
+      slugTerm = term;
+      term = term.replace(/-/g, " ");
+    }
+
+    const categories = Category.listByActivity();
+    const length = categories.length;
+    var i;
+    var data = [];
+
+    const done = () => {
+      return data.length === limit;
+    };
+
+    for (i = 0; i < length && !done(); i++) {
+      const category = categories[i];
+      if ((emptyTerm && !category.get('parent_category_id')) ||
+          (!emptyTerm &&
+           (category.get('name').toLowerCase().indexOf(term) === 0 ||
+            category.get('slug').toLowerCase().indexOf(slugTerm) === 0))) {
+
+        data.push(category);
+      }
+    }
+
+    if (!done()) {
+      for (i = 0; i < length && !done(); i++) {
+        const category = categories[i];
+
+        if (!emptyTerm &&
+            (category.get('name').toLowerCase().indexOf(term) > 0 ||
+             category.get('slug').toLowerCase().indexOf(slugTerm) > 0)) {
+
+          if (data.indexOf(category) === -1) data.push(category);
+        }
+      }
+    }
+
+    return _.sortBy(data, (category) => {
+      return category.get('read_restricted');
+    });
   }
 });
 

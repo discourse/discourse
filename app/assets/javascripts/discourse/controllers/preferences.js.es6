@@ -5,12 +5,6 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(CanCheckEmails, {
 
-  allowAvatarUpload: setting('allow_uploaded_avatars'),
-  allowUserLocale: setting('allow_user_locale'),
-  ssoOverridesAvatar: setting('sso_overrides_avatar'),
-  allowBackgrounds: setting('allow_profile_backgrounds'),
-  editHistoryVisible: setting('edit_history_visible_to_public'),
-
   @computed("model.watchedCategories", "model.trackedCategories", "model.mutedCategories")
   selectedCategories(watched, tracked, muted) {
     return [].concat(watched, tracked, muted);
@@ -38,14 +32,14 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
   },
 
-  cannotDeleteAccount: Em.computed.not('can_delete_account'),
-  deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
+  cannotDeleteAccount: Em.computed.not('currentUser.can_delete_account'),
+  deleteDisabled: Em.computed.or('model.isSaving', 'deleting', 'cannotDeleteAccount'),
 
   canEditName: setting('enable_names'),
 
   @computed()
   nameInstructions() {
-    return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
+    return I18n.t(this.siteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
   },
 
   @computed("model.has_title_badges")
@@ -68,10 +62,23 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
   },
 
-  digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
-                      { name: I18n.t('user.email_digests.every_three_days'), value: 3 },
-                      { name: I18n.t('user.email_digests.weekly'), value: 7 },
-                      { name: I18n.t('user.email_digests.every_two_weeks'), value: 14 }],
+  previousRepliesOptions: [
+    {name: I18n.t('user.email_previous_replies.always'), value: 0},
+    {name: I18n.t('user.email_previous_replies.unless_emailed'), value: 1},
+    {name: I18n.t('user.email_previous_replies.never'), value: 2}
+  ],
+
+  digestFrequencies: [{ name: I18n.t('user.email_digests.every_30_minutes'), value: 30 },
+                      { name: I18n.t('user.email_digests.every_hour'), value: 60 },
+                      { name: I18n.t('user.email_digests.daily'), value: 1440 },
+                      { name: I18n.t('user.email_digests.every_three_days'), value: 4320 },
+                      { name: I18n.t('user.email_digests.weekly'), value: 10080 },
+                      { name: I18n.t('user.email_digests.every_two_weeks'), value: 20160 }],
+
+  likeNotificationFrequencies: [{ name: I18n.t('user.like_notification_frequency.always'), value: 0 },
+                      { name: I18n.t('user.like_notification_frequency.first_time_and_daily'), value: 1 },
+                      { name: I18n.t('user.like_notification_frequency.first_time'), value: 2 },
+                      { name: I18n.t('user.like_notification_frequency.never'), value: 3 }],
 
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
                        { name: I18n.t('user.auto_track_options.immediately'), value: 0 },
@@ -98,6 +105,22 @@ export default Ember.Controller.extend(CanCheckEmails, {
   passwordProgress: null,
 
   actions: {
+
+    checkMailingList(){
+      Em.run.next(()=>{
+        const postsPerDay = this.get('model.mailing_list_posts_per_day');
+        if (!postsPerDay || postsPerDay < 2) {
+          this.set('model.user_option.mailing_list_mode', true);
+          return;
+        }
+
+        bootbox.confirm(I18n.t("user.enable_mailing_list", {count: postsPerDay}), I18n.t("no_value"), I18n.t("yes_value"), (success) => {
+          if (success) {
+            this.set('model.user_option.mailing_list_mode', true);
+          }
+        });
+      });
+    },
 
     save() {
       this.set('saved', false);

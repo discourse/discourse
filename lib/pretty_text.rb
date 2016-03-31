@@ -34,19 +34,43 @@ module PrettyText
       UrlHelper.schemaless UrlHelper.absolute avatar_template
     end
 
-    def is_username_valid(username)
+    def mention_lookup(username)
       return false unless username
-      username = username.downcase
-      User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
+      if Group.exec_sql('SELECT 1 FROM groups WHERE name = ?', username).values.length == 1
+        "group"
+      else
+        username = username.downcase
+        if User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
+          "user"
+        else
+          nil
+        end
+      end
+    end
+
+    def category_hashtag_lookup(category_slug)
+      if category = Category.query_from_hashtag_slug(category_slug)
+        [category.url_with_id, category_slug]
+      else
+        nil
+      end
+    end
+
+    def get_topic_info(topic_id)
+      return unless Fixnum === topic_id
+      # TODO this only handles public topics, secured one do not get this
+      topic = Topic.find_by(id: topic_id)
+      if topic && Guardian.new.can_see?(topic)
+        {
+          title: topic.title,
+          href: topic.url
+        }
+      end
     end
   end
 
   @mutex = Mutex.new
   @ctx_init = Mutex.new
-
-  def self.mention_matcher
-    Regexp.new("(\@[a-zA-Z0-9_]{#{User.username_length.begin},#{User.username_length.end}})")
-  end
 
   def self.app_root
     Rails.root
@@ -54,7 +78,7 @@ module PrettyText
 
   def self.create_new_context
     # timeout any eval that takes longer that 5 seconds
-    ctx = V8::Context.new(timeout: 5000)
+    ctx = V8::Context.new(timeout: 10000)
 
     ctx["helpers"] = Helpers.new
 
@@ -129,7 +153,7 @@ module PrettyText
   def self.decorate_context(context)
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
     context.eval("Discourse.BaseUrl = '#{RailsMultisite::ConnectionManagement.current_hostname}'.replace(/:[\d]*$/,'');")
-    context.eval("Discourse.BaseUri = '#{Discourse::base_uri("/")}';")
+    context.eval("Discourse.BaseUri = '#{Discourse::base_uri}';")
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
 
     context.eval("Discourse.getURL = function(url) {
@@ -167,7 +191,7 @@ module PrettyText
       decorate_context(context)
 
       context_opts = opts || {}
-      context_opts[:sanitize] ||= true
+      context_opts[:sanitize] = true unless context_opts[:sanitize] == false
       context['opts'] = context_opts
       context['raw'] = text
 
@@ -177,13 +201,26 @@ module PrettyText
         end
       end
 
+      if SiteSetting.enable_emoji?
+        context.eval("Discourse.Dialect.setUnicodeReplacements(#{Emoji.unicode_replacements_json})");
+      else
+        context.eval("Discourse.Dialect.setUnicodeReplacements(null)");
+      end
+
+      # reset emojis (v8 context is shared amongst multisites)
+      context.eval("Discourse.Dialect.resetEmojis();")
       # custom emojis
       Emoji.custom.each do |emoji|
         context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
       end
+      # plugin emojis
+      context.eval("Discourse.Emoji.applyCustomEmojis();")
 
-      context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
+      context.eval('opts["mentionLookup"] = function(u){return helpers.mention_lookup(u);}')
+      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_hashtag_lookup(c);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
+      context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
+      DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
@@ -227,7 +264,8 @@ module PrettyText
     # we have a minor inconsistency
     options[:topicId] = opts[:topic_id]
 
-    sanitized = markdown(text.dup, options)
+    working_text = text.dup
+    sanitized = markdown(working_text, options)
 
     doc = Nokogiri::HTML.fragment(sanitized)
 
@@ -290,8 +328,8 @@ module PrettyText
   def self.extract_links(html)
     links = []
     doc = Nokogiri::HTML.fragment(html)
-    # remove href inside quotes
-    doc.css("aside.quote a").each { |l| l["href"] = "" }
+    # remove href inside quotes & elided part
+    doc.css("aside.quote a, .elided a").each { |l| l["href"] = "" }
 
     # extract all links from the post
     doc.css("a").each { |l|

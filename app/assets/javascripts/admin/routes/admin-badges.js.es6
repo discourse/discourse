@@ -1,4 +1,5 @@
 import Badge from 'discourse/models/badge';
+import BadgeGrouping from 'discourse/models/badge-grouping';
 
 export default Discourse.Route.extend({
   _json: null,
@@ -13,14 +14,19 @@ export default Discourse.Route.extend({
 
   setupController: function(controller, model) {
     var json = this._json,
-        triggers = [];
+        triggers = [],
+        badgeGroupings = [];
 
     _.each(json.admin_badges.triggers,function(v,k){
       triggers.push({id: v, name: I18n.t('admin.badges.trigger_type.'+k)});
     });
 
+    json.badge_groupings.forEach(function(badgeGroupingJson) {
+      badgeGroupings.push(BadgeGrouping.create(badgeGroupingJson));
+    });
+
     controller.setProperties({
-      badgeGroupings: json.badge_groupings,
+      badgeGroupings: badgeGroupings,
       badgeTypes: json.badge_types,
       protectedSystemFields: json.admin_badges.protected_system_fields,
       badgeTriggers: triggers,

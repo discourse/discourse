@@ -12,14 +12,34 @@ class SiteSerializer < ApplicationSerializer
              :is_readonly,
              :disabled_plugins,
              :user_field_max_length,
-             :suppressed_from_homepage_category_ids
+             :suppressed_from_homepage_category_ids,
+             :post_action_types,
+             :topic_flag_types
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
-  has_many :post_action_types, embed: :objects
-  has_many :topic_flag_types, serializer: TopicFlagTypeSerializer, embed: :objects
   has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
   has_many :user_fields, embed: :objects, serialzer: UserFieldSerializer
+
+  def groups
+    cache_fragment("group_names") do
+      Group.order(:name).pluck(:id,:name).map { |id,name| { id: id, name: name } }.as_json
+    end
+  end
+
+  def post_action_types
+    cache_fragment("post_action_types_#{I18n.locale}") do
+      ActiveModel::ArraySerializer.new(PostActionType.ordered).as_json
+    end
+  end
+
+  def topic_flag_types
+    cache_fragment("post_action_flag_types_#{I18n.locale}") do
+      flags = PostActionType.ordered.where(name_key: ['inappropriate', 'spam', 'notify_moderators'])
+      ActiveModel::ArraySerializer.new(flags, each_serializer: TopicFlagTypeSerializer).as_json
+    end
+
+  end
 
   def default_archetype
     Archetype.default

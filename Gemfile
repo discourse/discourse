@@ -6,48 +6,56 @@ def rails_master?
   ENV["RAILS_MASTER"] == '1'
 end
 
-def rails_42?
-  ENV["RAILS42"] == '1'
-end
-
 if rails_master?
   gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
-elsif rails_42?
-  gem 'rails', '~> 4.2.1'
-  gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
-  gem 'seed-fu', '~> 2.3.5'
 else
-  gem 'rails', '~> 4.1.10'
+  # Rails 5 is going to ship with Action Cable, we have no use for it as
+  # we already ship MessageBus, AC introduces dependencies on Event Machine,
+  # Celluloid and Faye Web Sockets.
+  #
+  # Note this means upgrading Rails is more annoying, to do so, comment out the
+  # explicit dependencies, and add gem 'rails', bundle update rails and then
+  # comment back the explicit dependencies. Leaving this in a comment till we
+  # upgrade to Rails 5
+  #
+  # gem 'activesupport'
+  # gem 'actionpack'
+  # gem 'activerecord'
+  # gem 'actionmailer'
+  # gem 'activejob'
+  # gem 'railties'
+  # gem 'sprockets-rails'
+  gem 'rails', '~> 4.2'
+
   gem 'rails-observers'
-  gem 'seed-fu', '~> 2.3.3'
+  gem 'seed-fu', '~> 2.3.5'
 end
 
-# Rails 4.1.6+ will relax the mail gem version requirement to `~> 2.5, >= 2.5.4`.
-# However, mail gem 2.6.x currently does not work with discourse because of the
-# reference to `Mail::RFC2822Parser` in `lib/email.rb`. This ensure discourse
-# would continue to work with Rails 4.1.6+ when it is released.
-gem 'mail', '~> 2.5.4'
+gem 'mail'
+gem 'mime-types', require: 'mime/types/columnar'
 
-#gem 'redis-rails'
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
+gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
 gem 'onebox'
+
+gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails'
 gem 'ember-source', '1.12.2'
 gem 'barber'
 gem 'babel-transpiler'
 
-gem 'message_bus'
-gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
+gem 'message_bus', '2.0.0.beta.5'
 
-gem 'redcarpet', require: false
+gem 'rails_multisite'
+
 gem 'fast_xs'
 
 gem 'fast_xor'
@@ -58,7 +66,7 @@ gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_parser'
+gem 'email_reply_trimmer', '0.1.3'
 
 # note: for image_optim to correctly work you need to follow
 # https://github.com/toy/image_optim
@@ -72,11 +80,13 @@ gem 'omniauth-openid'
 gem 'openid-redis-store'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+gem 'omniauth-instagram'
 
 # forked while https://github.com/intridea/omniauth-github/pull/41 is being upstreamd
 gem 'omniauth-github-discourse', require: 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
+
 gem 'omniauth-google-oauth2'
 gem 'oj'
 gem 'pg'
@@ -130,9 +140,10 @@ group :test, :development do
   gem 'simplecov', require: false
   gem 'timecop'
   gem 'rspec-given'
-  gem 'pry-nav'
+  gem 'rspec-html-matchers'
   gem 'spork-rails'
-  gem 'byebug'
+  gem 'pry-nav'
+  gem 'byebug', require: ENV['RM_INFO'].nil?
 end
 
 group :development do
@@ -173,12 +184,17 @@ gem 'simple-rss', require: false
 gem 'gctools', require: false, platform: :mri_21
 
 begin
-  gem 'stackprof', require: false, platform: [:mri_21, :mri_22]
-  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22]
+  gem 'stackprof', require: false, platform: [:mri_21, :mri_22, :mri_23]
+  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22, :mri_23]
 rescue Bundler::GemfileError
-  STDERR.puts "You are running an old version of bundler, please upgrade bundler ASAP, if you are using Discourse docker, rebuild your container."
-  gem 'stackprof', require: false, platform: [:mri_21]
-  gem 'memory_profiler', require: false, platform: [:mri_21]
+  begin
+    STDERR.puts "You are running an old version of bundler, please upgrade bundler ASAP, if you are using Discourse docker, rebuild your container."
+    gem 'stackprof', require: false, platform: [:mri_21, :mri_22]
+    gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22]
+  rescue Bundler::GemfileError
+     gem 'stackprof', require: false, platform: [:mri_21]
+     gem 'memory_profiler', require: false, platform: [:mri_21]
+  end
 end
 
 gem 'rmmseg-cpp', require: false

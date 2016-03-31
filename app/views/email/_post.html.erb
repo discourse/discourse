@@ -1,23 +1,29 @@
-<table class='post-wrapper'>
+<table class='post-wrapper <%= post.whisper? ? "whisper" : "" %> <%= use_excerpt ? "excerpt" : ""%>'>
   <tbody>
     <tr>
-      <td class='user-avatar'>
-        <img src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
-      </td>
       <td>
-        <a class="username" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a>
-        <%- if show_name_on_post(post) %>
-          <a class="user-name" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.name %></a>
-        <% end %>
-        <%- if post.user.title.present? %>
-          <span class='user-title'><%= post.user.title %></span>
-        <% end %>
-        <br>
-        <span class='notification-date'><%= l post.created_at, format: :short_no_year %></span>
+        <table>
+          <tr>
+            <td class='user-avatar'>
+              <img src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
+            </td>
+            <td>
+              <a class="username" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a>
+              <%- if show_name_on_post(post) %>
+                <a class="user-name" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.name %></a>
+              <% end %>
+              <%- if post.user.title.present? %>
+                <span class='user-title'><%= post.user.title %></span>
+              <% end %>
+              <br>
+              <span class='notification-date'><%= l post.created_at, format: :short_no_year %></span>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
     <tr>
-      <td class='body'><%= format_for_email(post.cooked) %></td>
+      <td class='body'><%= format_for_email(use_excerpt ? post.excerpt :  post.cooked) %></td>
     </tr>
   </tbody>
 </table>

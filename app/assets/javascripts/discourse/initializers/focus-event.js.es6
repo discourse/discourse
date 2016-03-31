@@ -58,10 +58,6 @@ export default {
     else if ((hidden = 'msHidden') in document) {
         document.addEventListener('msvisibilitychange', onchange);
     }
-    // IE 9 and lower:
-    else if ('onfocusin' in document) {
-        document.onfocusin = document.onfocusout = onchange;
-    }
     // All others (including iPad which is a bit weird and gives onpageshow / hide
     else {
         window.onpageshow = window.onpagehide = window.onfocus = window.onblur = onchange;

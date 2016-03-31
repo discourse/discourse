@@ -1,1 +1,40 @@
+<section class='user-navigation'>
+  {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=currentPath}}
+    <li class='no-glyph'>
+      {{#link-to 'userActivity.index'}}{{i18n 'user.filters.all'}}{{/link-to}}
+    </li>
+    <li class='no-glyph'>
+      {{#link-to 'userActivity.topics'}}{{i18n 'user_action_groups.4'}}{{/link-to}}
+    </li>
+    <li>
+      {{#link-to 'userActivity.replies'}}
+        <i class="glyph fa fa-reply"></i>{{i18n 'user_action_groups.5'}}
+      {{/link-to}}
+    </li>
+    <li>
+      {{#link-to 'userActivity.likesGiven'}}
+        <i class="glyph fa fa-heart"></i>{{i18n 'user_action_groups.1'}}
+      {{/link-to}}
+    </li>
+    {{#if showBookmarks}}
+    <li>
+      {{#link-to 'userActivity.bookmarks'}}
+        <i class="glyph fa fa-bookmark"></i>{{i18n 'user_action_groups.3'}}
+      {{/link-to}}
+    </li>
+    {{/if}}
+    {{plugin-outlet "user-activity-bottom"}}
+  {{/mobile-nav}}
+
+  {{#if viewingSelf}}
+    <div class='user-archive'>
+      {{d-button action="exportUserArchive" label="user.download_archive" icon="download"}}
+    </div>
+  {{/if}}
+
+</section>
+
+<section class='user-right'>
 {{outlet}}
+</section>
+

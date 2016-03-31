@@ -19,6 +19,23 @@
   i.fa-heart {
     color: $love !important;
   }
+  .nav-pills {
+    a {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+    }
+
+    a:hover i {
+      color: $quaternary;
+    }
+
+    a.active i {
+      color: $secondary;
+    }
+
+    i {
+      color: dark-light-choose(scale-color($primary, $lightness: 55%), scale-color($secondary, $lightness: 55%));
+    }
+  }
 }
 
 .user-field {
@@ -66,7 +83,7 @@
   h2 {
     a {
       font-size: 1em;
-      color: scale-color($tertiary, $lightness: -10%);;
+      color: scale-color($tertiary, $lightness: -10%);
       cursor: pointer;
     }
   }
@@ -92,10 +109,10 @@
   margin-bottom: 15px;
 }
 
-.user-small {
+.user-info {
   display: inline-block;
-  width: 333px;
   clear: both;
+  margin-bottom: 1em;
 
   .user-image {
     float: left;
@@ -128,6 +145,132 @@
       margin-top: 3px;
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
-
   }
 }
+
+.user-info.small {
+  width: 333px;
+}
+
+.user-info.medium {
+  width: 480px;
+  min-height: 60px;
+
+  .user-image {
+    width: 55px;
+  }
+  .user-detail {
+    width: 380px;
+  }
+
+  .username, .name {
+    display: block;
+  }
+
+  .name {
+    margin-left: 0;
+  }
+}
+
+.user-nav {
+  margin: 5px 0px;
+  .fa {
+    margin-right: 5px;
+  }
+  .fa.fa-comment {
+    margin-right: 2px;
+  }
+}
+
+.user-right .list-actions {
+  margin-bottom: 10px;
+  .btn {
+    margin-right: 10px;
+  }
+}
+
+.top-section {
+  ul {
+    list-style: none;
+    margin: 0;
+  }
+}
+
+.top-section,
+.replies-section,
+.topics-section {
+  margin-bottom: 20px;
+}
+
+.stats-title {
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.stats-section {
+  ul {
+    margin: 10px 0;
+  }
+
+  li {
+    display: inline-block;
+    padding: 10px 14px;
+    margin: 0 5px 10px 0;
+    background: dark-light-diff($primary, $secondary, 90%, -65%);
+  }
+
+  li:last-of-type {
+    margin: 0;
+  }
+
+  .value {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  .label {
+    color: dark-light-diff($primary, $secondary, 50%, -50%);
+  }
+}
+
+.replies-section,
+.topics-section {
+  width: 50%;
+
+  ul {
+    max-width: 95%;
+  }
+
+  li {
+    border-left: dark-light-diff($primary, $secondary, 90%, -65%) solid 2px;
+    padding: 5px 8px;
+    margin: 10px 0;
+  }
+
+  .topic-info {
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+  }
+}
+
+.replies-section {
+  float: left;
+}
+
+.topics-section {
+  float: right;
+}
+
+.badges-section {
+  clear: both;
+}
+
+@media all
+and (max-width : 600px) {
+  .replies-section,
+  .topics-section {
+    float: none;
+    width: 100%;
+  }
+}
+
+

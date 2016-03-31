@@ -75,6 +75,7 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.block_admin_login?(user, ip_address)
+    return false unless SiteSetting.use_admin_ip_whitelist
     return false if user.nil?
     return false if !user.admin?
     return false if ScreenedIpAddress.where(action_type: actions[:allow_admin]).count == 0

@@ -108,6 +108,7 @@ class OptimizedImage < ActiveRecord::Base
       -interpolate bicubic
       -unsharp 2x0.5+0.7+0
       -quality 98
+      -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     }
   end
@@ -130,6 +131,7 @@ class OptimizedImage < ActiveRecord::Base
       -gravity center
       -background transparent
       -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     }
   end
@@ -140,10 +142,6 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.resize(from, to, width, height, opts={})
     optimize("resize", from, to, "#{width}x#{height}", opts)
-  end
-
-  def self.downsize(from, to, max_width, max_height, opts={})
-    optimize("downsize", from, to, "#{max_width}x#{max_height}", opts)
   end
 
   def self.downsize(from, to, dimensions, opts={})
@@ -240,7 +238,7 @@ end
 #  width     :integer          not null
 #  height    :integer          not null
 #  upload_id :integer          not null
-#  url       :string(255)      not null
+#  url       :string           not null
 #
 # Indexes
 #

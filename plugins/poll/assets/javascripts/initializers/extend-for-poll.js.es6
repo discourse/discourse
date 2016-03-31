@@ -1,81 +1,107 @@
-import PostView from "discourse/views/post";
-import { on } from "ember-addons/ember-computed-decorators";
+import { withPluginApi } from 'discourse/lib/plugin-api';
 
 function createPollView(container, post, poll, vote) {
-  const controller = container.lookup("controller:poll", { singleton: false }),
-        view = container.lookup("view:poll");
+  const controller = container.lookup("controller:poll", { singleton: false });
+  const view = container.lookup("view:poll");
 
   controller.set("vote", vote);
-  controller.setProperties({ model: Em.Object.create(poll), post });
+  controller.setProperties({ model: poll, post });
   view.set("controller", controller);
 
   return view;
 }
 
+let _pollViews;
+
+function initializePolls(api) {
+
+  const TopicController = api.container.lookupFactory('controller:topic');
+  TopicController.reopen({
+    subscribe(){
+      this._super();
+      this.messageBus.subscribe("/polls/" + this.get("model.id"), msg => {
+        const post = this.get('model.postStream').findLoadedPost(msg.post_id);
+        if (post) {
+          post.set('polls', msg.polls);
+        }
+      });
+    },
+    unsubscribe(){
+      this.messageBus.unsubscribe('/polls/*');
+      this._super();
+    }
+  });
+
+  const Post = api.container.lookupFactory('model:post');
+  Post.reopen({
+    _polls: null,
+    pollsObject: null,
+
+    // we need a proper ember object so it is bindable
+    pollsChanged: function(){
+      const polls = this.get("polls");
+      if (polls) {
+        this._polls = this._polls || {};
+        _.map(polls, (v,k) => {
+          const existing = this._polls[k];
+          if (existing) {
+            this._polls[k].setProperties(v);
+          } else {
+            this._polls[k] = Em.Object.create(v);
+          }
+        });
+        this.set("pollsObject", this._polls);
+      }
+    }.observes("polls")
+  });
+
+  function cleanUpPollViews() {
+    if (_pollViews) {
+      Object.keys(_pollViews).forEach(pollName => _pollViews[pollName].destroy());
+    }
+    _pollViews = null;
+  }
+
+  function createPollViews($elem, helper) {
+    const $polls = $('.poll', $elem);
+    if (!$polls.length) { return; }
+
+    const post = helper.getModel();
+    api.preventCloak(post.id);
+    const votes = post.get('polls_votes') || {};
+
+    post.pollsChanged();
+
+    const polls = post.get("pollsObject");
+    if (!polls) { return; }
+
+    cleanUpPollViews();
+    const postPollViews = {};
+
+    $polls.each((idx, pollElem) => {
+      const $div = $("<div>");
+      const $poll = $(pollElem);
+
+      const pollName = $poll.data("poll-name");
+      const pollId = `${pollName}-${post.id}`;
+      const pollView = createPollView(helper.container, post, polls[pollName], votes[pollName]);
+
+      $poll.replaceWith($div);
+      Em.run.next(() => pollView.renderer.replaceIn(pollView, $div[0]));
+      postPollViews[pollId] = pollView;
+    });
+
+    _pollViews = postPollViews;
+  }
+
+  api.decorateCooked(createPollViews, { onlyStream: true });
+  api.cleanupStream(cleanUpPollViews);
+}
+
 export default {
   name: "extend-for-poll",
 
-  initialize(container) {
-
-    const messageBus = container.lookup("message-bus:main");
-
-    // listen for back-end to tell us when a post has a poll
-    messageBus.subscribe("/polls", data => {
-      const post = container.lookup("controller:topic").get('model.postStream').findLoadedPost(data.post_id);
-      // HACK to trigger the "postViewUpdated" event
-      Em.run.next(() => post.set("cooked", post.get("cooked") + " "));
-    });
-
-    // overwrite polls
-    PostView.reopen({
-
-      @on("postViewInserted", "postViewUpdated")
-      _createPollViews($post) {
-        const post = this.get("post"),
-              polls = post.get("polls"),
-              votes = post.get("polls_votes") || {};
-
-        // don't even bother when there's no poll
-        if (!polls) { return; }
-
-        // clean-up if needed
-        this._cleanUpPollViews();
-
-        const pollViews = {};
-
-        // iterate over all polls
-        $(".poll", $post).each(function() {
-          const $div = $("<div>"),
-                $poll = $(this),
-                pollName = $poll.data("poll-name"),
-                pollView = createPollView(container, post, polls[pollName], votes[pollName]);
-
-          $poll.replaceWith($div);
-          Em.run.next(() => pollView.renderer.replaceIn(pollView, $div[0]));
-          pollViews[pollName] = pollView;
-        });
-
-        messageBus.subscribe(`/polls/${this.get("post.id")}`, results => {
-          if (results && results.polls) {
-            _.forEach(results.polls, poll => {
-              if (pollViews[poll.name]) {
-                pollViews[poll.name].get("controller").set("model", Em.Object.create(poll));
-              }
-            });
-          }
-        });
-
-        this.set("pollViews", pollViews);
-      },
-
-      @on("willClearRender")
-      _cleanUpPollViews() {
-        messageBus.unsubscribe(`/polls/${this.get("post.id")}`);
-
-        if (this.get("pollViews")) {
-          _.forEach(this.get("pollViews"), v => v.destroy());
-        }
-      }
-    });
+  initialize() {
+    withPluginApi('0.1', initializePolls);
   }
 };

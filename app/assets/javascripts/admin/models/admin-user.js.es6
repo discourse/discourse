@@ -1,17 +1,22 @@
 import { propertyNotEqual } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import ApiKey from 'admin/models/api-key';
+import Group from 'discourse/models/group';
+import TL3Requirements from 'admin/models/tl3-requirements';
 
 const AdminUser = Discourse.User.extend({
 
-  customGroups: Em.computed.filter("groups", (g) => !g.automatic && Discourse.Group.create(g)),
-  automaticGroups: Em.computed.filter("groups", (g) => g.automatic && Discourse.Group.create(g)),
+  customGroups: Em.computed.filter("groups", (g) => !g.automatic && Group.create(g)),
+  automaticGroups: Em.computed.filter("groups", (g) => g.automatic && Group.create(g)),
+
+  canViewProfile: Ember.computed.or("active", "staged"),
 
   generateApiKey() {
     const self = this;
     return Discourse.ajax("/admin/users/" + this.get('id') + "/generate_api_key", {
       type: 'POST'
     }).then(function (result) {
-      const apiKey = Discourse.ApiKey.create(result.api_key);
+      const apiKey = ApiKey.create(result.api_key);
       self.set('api_key', apiKey);
       return apiKey;
     });
@@ -261,6 +266,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   unblock() {
+    this.set('blockingUser', true);
     return Discourse.ajax('/admin/users/' + this.id + '/unblock', {
       type: 'PUT'
     }).then(function() {
@@ -272,14 +278,33 @@ const AdminUser = Discourse.User.extend({
   },
 
   block() {
-    return Discourse.ajax('/admin/users/' + this.id + '/block', {
-      type: 'PUT'
-    }).then(function() {
-      window.location.reload();
-    }).catch(function(e) {
-      var error = I18n.t('admin.user.block_failed', { error: "http: " + e.status + " - " + e.body });
-      bootbox.alert(error);
-    });
+    const user = this,
+          message = I18n.t("admin.user.block_confirm");
+
+    const performBlock = function() {
+      user.set('blockingUser', true);
+      return Discourse.ajax('/admin/users/' + user.id + '/block', {
+        type: 'PUT'
+      }).then(function() {
+        window.location.reload();
+      }).catch(function(e) {
+        var error = I18n.t('admin.user.block_failed', { error: "http: " + e.status + " - " + e.body });
+        bootbox.alert(error);
+        user.set('blockingUser', false);
+      });
+    };
+
+    const buttons = [{
+      "label": I18n.t("composer.cancel"),
+      "class": "cancel",
+      "link":  true
+    }, {
+      "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.block_accept'),
+      "class": "btn btn-danger",
+      "callback": function() { performBlock(); }
+    }];
+
+    bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
   },
 
   sendActivationEmail() {
@@ -288,10 +313,7 @@ const AdminUser = Discourse.User.extend({
       data: { username: this.get('username') }
     }).then(function() {
       bootbox.alert( I18n.t('admin.user.activation_email_sent') );
-    }).catch(function(e) {
-      var error = I18n.t('admin.user.send_activation_email_failed', { error: "http: " + e.status + " - " + e.body });
-      bootbox.alert(error);
-    });
+    }).catch(popupAjaxError);
   },
 
   anonymizeForbidden: Em.computed.not("can_be_anonymized"),
@@ -306,7 +328,7 @@ const AdminUser = Discourse.User.extend({
       }).then(function(data) {
         if (data.success) {
           if (data.username) {
-            document.location = Discourse.getURL("/admin/users/" + data.username);
+            document.location = Discourse.getURL("/admin/users/" + user.get('id') + "/" + data.username);
           } else {
             document.location = Discourse.getURL("/admin/users/list/active");
           }
@@ -380,23 +402,23 @@ const AdminUser = Discourse.User.extend({
           }
         }
       }).catch(function() {
-        Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.setProperties(u); });
+        AdminUser.find(user.get('id')).then(u => user.setProperties(u));
         bootbox.alert(I18n.t("admin.user.delete_failed"));
       });
     };
 
     const buttons = [{
       "label": I18n.t("composer.cancel"),
-      "class": "cancel",
-      "link":  true
-    }, {
-      "label": I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
-      "callback": function(){ performDestroy(false); }
+      "link":  true
     }, {
       "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.delete_and_block'),
       "class": "btn btn-danger",
       "callback": function(){ performDestroy(true); }
+    }, {
+      "label": I18n.t('admin.user.delete_dont_block'),
+      "class": "btn btn-primary",
+      "callback": function(){ performDestroy(false); }
     }];
 
     bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
@@ -453,7 +475,7 @@ const AdminUser = Discourse.User.extend({
 
     if (user.get('loadedDetails')) { return Ember.RSVP.resolve(user); }
 
-    return Discourse.AdminUser.find(user.get('username_lower')).then(function (result) {
+    return AdminUser.find(user.get('id')).then(result => {
       user.setProperties(result);
       user.set('loadedDetails', true);
     });
@@ -461,19 +483,19 @@ const AdminUser = Discourse.User.extend({
 
   tl3Requirements: function() {
     if (this.get('tl3_requirements')) {
-      return Discourse.TL3Requirements.create(this.get('tl3_requirements'));
+      return TL3Requirements.create(this.get('tl3_requirements'));
     }
   }.property('tl3_requirements'),
 
   suspendedBy: function() {
     if (this.get('suspended_by')) {
-      return Discourse.AdminUser.create(this.get('suspended_by'));
+      return AdminUser.create(this.get('suspended_by'));
     }
   }.property('suspended_by'),
 
   approvedBy: function() {
     if (this.get('approved_by')) {
-      return Discourse.AdminUser.create(this.get('approved_by'));
+      return AdminUser.create(this.get('approved_by'));
     }
   }.property('approved_by')
 
@@ -511,10 +533,10 @@ AdminUser.reopenClass({
     });
   },
 
-  find(username) {
-    return Discourse.ajax("/admin/users/" + username + ".json").then(function (result) {
+  find(user_id) {
+    return Discourse.ajax("/admin/users/" + user_id + ".json").then(result => {
       result.loadedDetails = true;
-      return Discourse.AdminUser.create(result);
+      return AdminUser.create(result);
     });
   },
 
@@ -522,7 +544,7 @@ AdminUser.reopenClass({
     return Discourse.ajax("/admin/users/list/" + query + ".json", {
       data: filter
     }).then(function(users) {
-      return users.map((u) => Discourse.AdminUser.create(u));
+      return users.map((u) => AdminUser.create(u));
     });
   }
 });

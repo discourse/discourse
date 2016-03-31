@@ -99,3 +99,7 @@ Fabricator(:anonymous, from: :user) do
     user.save!
   end
 end
+
+Fabricator(:staged, from: :user) do
+  staged true
+end

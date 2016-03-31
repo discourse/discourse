@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'search'
 
 describe Search do
@@ -85,11 +85,35 @@ describe Search do
       expect(result.users.length).to eq(1)
       expect(result.users[0].id).to eq(user.id)
     end
+
+    context 'hiding user profiles' do
+      before { SiteSetting.stubs(:hide_user_profiles_from_public).returns(true) }
+
+      it 'returns no result for anon' do
+        expect(result.users.length).to eq(0)
+      end
+
+      it 'returns a result for logged in users' do
+        result = Search.execute('bruce', type_filter: 'user', guardian: Guardian.new(user))
+        expect(result.users.length).to eq(1)
+      end
+
+    end
+
   end
 
   context 'inactive users' do
     let!(:inactive_user) { Fabricate(:inactive_user, active: false) }
     let(:result) { Search.execute('bruce') }
+
+    it 'does not return a result' do
+      expect(result.users.length).to eq(0)
+    end
+  end
+
+  context 'staged users' do
+    let(:staged) { Fabricate(:staged) }
+    let(:result) { Search.execute(staged.username) }
 
     it 'does not return a result' do
       expect(result.users.length).to eq(0)
@@ -118,7 +142,6 @@ describe Search do
 
        TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
        TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
-
 
        results = Search.execute('mars',
                                 type_filter: 'private_messages',
@@ -369,19 +392,55 @@ describe Search do
       expect(Search.execute('社區指南').posts.first.id).to eq(post.id)
       expect(Search.execute('指南').posts.first.id).to eq(post.id)
     end
+
+    it 'finds chinese topic based on title if tokenization is forced' do
+      skip("skipped until pg app installs the db correctly") if RbConfig::CONFIG["arch"] =~ /darwin/
+
+      SiteSetting.search_tokenize_chinese_japanese_korean = true
+
+      topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
+      post = Fabricate(:post, topic: topic)
+
+      expect(Search.execute('社區指南').posts.first.id).to eq(post.id)
+      expect(Search.execute('指南').posts.first.id).to eq(post.id)
+    end
   end
 
   describe 'Advanced search' do
 
-    it 'supports min_age and max_age in:first user:' do
-      topic = Fabricate(:topic, created_at: 3.months.ago)
+    it 'supports pinned and unpinned' do
+      topic = Fabricate(:topic)
       Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
       _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
 
-      expect(Search.execute('test min_age:100').posts.length).to eq(1)
-      expect(Search.execute('test min_age:10').posts.length).to eq(0)
-      expect(Search.execute('test max_age:10').posts.length).to eq(1)
-      expect(Search.execute('test max_age:100').posts.length).to eq(0)
+      topic.update_pinned(true)
+
+      user = Fabricate(:user)
+      guardian = Guardian.new(user)
+
+      expect(Search.execute('boom in:pinned').posts.length).to eq(1)
+      expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(0)
+
+      topic.clear_pin_for(user)
+
+      expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(1)
+    end
+
+    it 'supports before and after in:first user:' do
+
+      time = Time.zone.parse('2001-05-20 2:55')
+      freeze_time(time)
+
+      topic = Fabricate(:topic)
+      Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic, created_at: time.months_ago(2))
+      _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
+
+      expect(Search.execute('test before:1').posts.length).to eq(1)
+      expect(Search.execute('test before:2001-04-20').posts.length).to eq(1)
+      expect(Search.execute('test before:2001').posts.length).to eq(0)
+      expect(Search.execute('test before:monday').posts.length).to eq(1)
+
+      expect(Search.execute('test after:jan').posts.length).to eq(1)
 
       expect(Search.execute('test in:first').posts.length).to eq(1)
       expect(Search.execute('boom').posts.length).to eq(1)
@@ -389,6 +448,7 @@ describe Search do
 
       expect(Search.execute('user:nobody').posts.length).to eq(0)
       expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
+      expect(Search.execute("user:#{_post.user_id}").posts.length).to eq(1)
     end
 
     it 'supports group' do
@@ -474,6 +534,35 @@ describe Search do
 
     ts_query = Search.ts_query(str, "simple")
     Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
+  end
+
+  context '#word_to_date' do
+    it 'parses relative dates correctly' do
+      time = Time.zone.parse('2001-02-20 2:55')
+      freeze_time(time)
+
+      expect(Search.word_to_date('yesterday')).to eq(time.beginning_of_day.yesterday)
+      expect(Search.word_to_date('suNday')).to eq(Time.zone.parse('2001-02-18'))
+      expect(Search.word_to_date('thursday')).to eq(Time.zone.parse('2001-02-15'))
+      expect(Search.word_to_date('deCember')).to eq(Time.zone.parse('2000-12-01'))
+      expect(Search.word_to_date('deC')).to eq(Time.zone.parse('2000-12-01'))
+      expect(Search.word_to_date('january')).to eq(Time.zone.parse('2001-01-01'))
+      expect(Search.word_to_date('jan')).to eq(Time.zone.parse('2001-01-01'))
+
+
+      expect(Search.word_to_date('100')).to eq(time.beginning_of_day.days_ago(100))
+
+      expect(Search.word_to_date('invalid')).to eq(nil)
+    end
+
+    it 'parses absolute dates correctly' do
+      expect(Search.word_to_date('2001-1-20')).to eq(Time.zone.parse('2001-01-20'))
+      expect(Search.word_to_date('2030-10-2')).to eq(Time.zone.parse('2030-10-02'))
+      expect(Search.word_to_date('2030-10')).to eq(Time.zone.parse('2030-10-01'))
+      expect(Search.word_to_date('2030')).to eq(Time.zone.parse('2030-01-01'))
+      expect(Search.word_to_date('2030-01-32')).to eq(nil)
+      expect(Search.word_to_date('10000')).to eq(nil)
+    end
   end
 
 end

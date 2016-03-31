@@ -11,6 +11,10 @@
 
   {{render "composer-messages"}}
   <div class='control'>
+
+    {{#if site.mobileView}}
+    <a href class='toggle-toolbar' {{action "toggleToolbar" bubbles=false}}></a>
+    {{/if}}
     <a href class='toggler' {{action "toggle" bubbles=false}} title={{i18n 'composer.toggler'}}></a>
 
     {{#if model.viewOpen}}
@@ -20,9 +24,11 @@
 
           <div class='reply-to'>
             {{{model.actionTitle}}}
+            {{#unless site.mobileView}}
             {{#if model.whisper}}
               <span class='whisper'>({{i18n "composer.whisper"}})</span>
             {{/if}}
+            {{/unless}}
 
             {{#if canEdit}}
               {{#if showEditReason}}
@@ -41,11 +47,13 @@
                 {{user-selector topicId=controller.controllers.topic.model.id
                                 excludeCurrentUser="true"
                                 id="private-message-users"
-                                includeGroups="true"
+                                includeMentionableGroups="true"
                                 class="span8"
                                 placeholderKey="composer.users_placeholder"
                                 tabindex="1"
-                                usernames=model.targetUsernames}}
+                                usernames=model.targetUsernames
+                                hasGroups=model.hasTargetGroups
+                                }}
                 {{#if showWarning}}
                   <div class='add-warning'>
                     <label>
@@ -56,15 +64,12 @@
                 {{/if}}
               {{/if}}
 
-              <div class="title-input">
-                {{text-field value=model.title tabindex="2" id="reply-title" maxLength=maxTitleLength placeholderKey="composer.title_placeholder"}}
-                {{popup-input-tip validation=view.titleValidation shownAt=view.showTitleTip}}
-              </div>
+              {{composer-title composer=model lastValidatedAt=lastValidatedAt}}
 
               {{#if model.showCategoryChooser}}
                 <div class="category-input">
                   {{category-chooser valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
-                  {{popup-input-tip validation=view.categoryValidation shownAt=view.showCategoryTip}}
+                  {{popup-input-tip validation=categoryValidation}}
                 </div>
                 {{#if model.archetype.hasOptions}}
                   <button class='btn' {{action "showOptions"}}>{{i18n 'topic.options'}}</button>
@@ -77,43 +82,31 @@
           {{plugin-outlet "composer-fields"}}
         </div>
 
-        <div class='wmd-controls'>
-          <div class='textarea-wrapper'>
-            <div class='wmd-button-bar'></div>
-            <div class='wmd-preview-scroller'></div>
-            {{composer-text-area tabindex="4" value=model.reply}}
-            {{popup-input-tip validation=view.replyValidation shownAt=view.showReplyTip}}
-          </div>
-          <!-- keep the classes here in sync with post.hbs -->
-          <div class='preview-wrapper regular'>
-            <div class="wmd-preview cooked {{if model.hidePreview 'hidden'}}"></div>
-          </div>
-          <div class="composer-bottom-right">
-            {{#if site.mobileView}}
-              <input type="file" id="mobile-uploader" />
-              <a class="mobile-file-upload {{if view.isUploading 'hidden'}}">{{i18n 'upload'}}</a>
-            {{else}}
-              <a href {{action "togglePreview"}} class='toggle-preview'>{{{model.toggleText}}}</a>
-            {{/if}}
-            {{#if view.isUploading}}
-              <div id="file-uploading">
-                {{loading-spinner size="small"}} {{i18n 'upload_selector.uploading'}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{fa-icon "times"}}</a>
-              </div>
-            {{/if}}
-            <div id='draft-status' class="{{if view.isUploading 'hidden'}}">
-              {{model.draftStatus}}
-            </div>
-          </div>
-        </div>
+        {{composer-editor topic=topic
+                          composer=model
+                          lastValidatedAt=lastValidatedAt
+                          canWhisper=canWhisper
+                          draftStatus=model.draftStatus
+                          isUploading=isUploading
+                          groupsMentioned="groupsMentioned"
+                          importQuote="importQuote"
+                          showOptions="showOptions"
+                          showToolbar=showToolbar
+                          showUploadSelector="showUploadSelector"}}
 
         {{#if currentUser}}
           <div class='submit-panel'>
             {{plugin-outlet "composer-fields-below"}}
             <button {{action "save"}} tabindex="5" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n 'composer.title'}}">{{{model.saveIcon}}}{{model.saveText}}</button>
             <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
+
+            {{#if site.mobileView}}
+            {{#if model.whisper}}
+            <span class='whisper'><i class='fa fa-eye-slash'></i></span>
+            {{/if}}
+            {{/if}}
           </div>
         {{/if}}
-
       </div>
     {{else}}
       <div class='row'>
@@ -122,7 +115,7 @@
             {{#if model.createdPost}}
               {{i18n 'composer.saved'}} <a class='permalink' href="{{unbound createdPost.url}}" {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
             {{else}}
-              {{i18n 'composer.saving'}}
+              {{i18n 'composer.saving'}} {{loading-spinner size="small"}}
             {{/if}}
           </div>
           <div class='draft-text'>

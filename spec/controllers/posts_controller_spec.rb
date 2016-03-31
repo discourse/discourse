@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 shared_examples 'finding and showing post' do
   let(:user) { log_in }
@@ -52,6 +52,79 @@ shared_examples 'action requires login' do |method, action, params|
 end
 
 describe PostsController do
+
+  describe 'latest' do
+    let(:user) { log_in }
+    let!(:public_topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, user: user, topic: public_topic) }
+    let!(:private_topic) { Fabricate(:topic, archetype: Archetype.private_message, category: nil) }
+    let!(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
+    let!(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
+
+    context "public posts" do
+      before do
+        topicless_post.update topic_id: -100
+      end
+
+      it 'returns public posts with topic for json' do
+        xhr :get, :latest, id: "latest_posts", format: :json
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        post_ids = json['latest_posts'].map { |p| p['id'] }
+        expect(post_ids).to include post.id
+        expect(post_ids).to_not include private_post.id
+        expect(post_ids).to_not include topicless_post.id
+      end
+
+      it 'returns public posts with topic for rss' do
+        xhr :get, :latest, id: "latest_posts", format: :rss
+        expect(response).to be_success
+        expect(assigns(:posts)).to include post
+        expect(assigns(:posts)).to_not include private_post
+        expect(assigns(:posts)).to_not include topicless_post
+      end
+    end
+
+    context 'private posts' do
+      before do
+        Guardian.any_instance.expects(:can_see?).with(private_post).returns(true)
+      end
+
+      it 'returns private posts for json' do
+        xhr :get, :latest, id: "private_posts", format: :json
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        post_ids = json['private_posts'].map { |p| p['id'] }
+        expect(post_ids).to include private_post.id
+        expect(post_ids).to_not include post.id
+      end
+
+      it 'returns private posts for rss' do
+        xhr :get, :latest, id: "private_posts", format: :rss
+        expect(response).to be_success
+        expect(assigns(:posts)).to include private_post
+        expect(assigns(:posts)).to_not include post
+      end
+    end
+  end
+
+  describe 'user_posts_feed' do
+    let(:user) { log_in }
+    let!(:public_topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, user: user, topic: public_topic) }
+    let!(:private_topic) { Fabricate(:topic, archetype: Archetype.private_message, category: nil) }
+    let!(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
+    let!(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
+
+    it 'returns public posts with topic for rss' do
+      topicless_post.update topic_id: -100
+      xhr :get, :user_posts_feed, username: user.username, format: :rss
+      expect(response).to be_success
+      expect(assigns(:posts)).to include post
+      expect(assigns(:posts)).to_not include private_post
+      expect(assigns(:posts)).to_not include topicless_post
+    end
+  end
 
   describe 'cooked' do
     before do
@@ -262,16 +335,18 @@ describe PostsController do
 
     include_examples 'action requires login', :put, :update, id: 2
 
-    describe 'when logged in' do
+    let(:post) { Fabricate(:post, user: logged_in_as) }
+    let(:update_params) do
+      {
+        id: post.id,
+        post: { raw: 'edited body', edit_reason: 'typo' },
+        image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
+      }
+    end
+    let(:moderator) { Fabricate(:moderator) }
 
-      let(:post) { Fabricate(:post, user: log_in) }
-      let(:update_params) do
-        {
-          id: post.id,
-          post: { raw: 'edited body', edit_reason: 'typo' },
-          image_sizes: { 'http://image.com/image.jpg' => {'width' => 123, 'height' => 456} },
-        }
-      end
+    describe 'when logged in as a regular user' do
+      let(:logged_in_as) { log_in }
 
       it 'does not allow to update when edit time limit expired' do
         Guardian.any_instance.stubs(:can_edit?).with(post).returns(false)
@@ -316,6 +391,28 @@ describe PostsController do
         xhr :put, :update, update_params
       end
 
+      it "doesn't allow updating of deleted posts" do
+        first_post = post.topic.ordered_posts.first
+        PostDestroyer.new(moderator, first_post).destroy
+
+        xhr :put, :update, update_params
+        expect(response).not_to be_success
+      end
+    end
+
+    describe "when logged in as staff" do
+      let(:logged_in_as) { log_in(:moderator) }
+
+      it "supports updating posts in deleted topics" do
+        first_post = post.topic.ordered_posts.first
+        PostDestroyer.new(moderator, first_post).destroy
+
+        xhr :put, :update, update_params
+        expect(response).to be_success
+
+        post.reload
+        expect(post.raw).to eq('edited body')
+      end
     end
 
   end
@@ -358,7 +455,7 @@ describe PostsController do
       let(:post) {Fabricate(:post, user: user)}
 
       it "raises an error if the user doesn't have permission to wiki the post" do
-        Guardian.any_instance.expects(:can_wiki?).returns(false)
+        Guardian.any_instance.expects(:can_wiki?).with(post).returns(false)
 
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
 
@@ -366,7 +463,7 @@ describe PostsController do
       end
 
       it "can wiki a post" do
-        Guardian.any_instance.expects(:can_wiki?).returns(true)
+        Guardian.any_instance.expects(:can_wiki?).with(post).returns(true)
 
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
 
@@ -376,7 +473,7 @@ describe PostsController do
 
       it "can unwiki a post" do
         wikied_post = Fabricate(:post, user: user, wiki: true)
-        Guardian.any_instance.expects(:can_wiki?).returns(true)
+        Guardian.any_instance.expects(:can_wiki?).with(wikied_post).returns(true)
 
         xhr :put, :wiki, post_id: wikied_post.id, wiki: 'false'
 
@@ -531,6 +628,40 @@ describe PostsController do
         # Deprecated structure
         expect(parsed['post']).to be_blank
         expect(parsed['cooked']).to be_present
+      end
+
+      it "can send a message to a group" do
+
+        group = Group.create(name: 'test_group', alias_level: Group::ALIAS_LEVELS[:nobody])
+        user1 = Fabricate(:user)
+        group.add(user1)
+
+        xhr :post, :create, {
+          raw: 'I can haz a test',
+          title: 'I loves my test',
+          target_usernames: group.name,
+          archetype: Archetype.private_message
+        }
+
+        expect(response).not_to be_success
+
+        # allow pm to this group
+        group.update_columns(alias_level: Group::ALIAS_LEVELS[:everyone])
+
+        xhr :post, :create, {
+          raw: 'I can haz a test',
+          title: 'I loves my test',
+          target_usernames: group.name,
+          archetype: Archetype.private_message
+        }
+
+        expect(response).to be_success
+
+        parsed = ::JSON.parse(response.body)
+        post = Post.find(parsed['id'])
+
+        expect(post.topic.topic_allowed_users.length).to eq(1)
+        expect(post.topic.topic_allowed_groups.length).to eq(1)
       end
 
       it "returns the nested post with a param" do
@@ -746,6 +877,79 @@ describe PostsController do
 
   end
 
+  describe 'revert post to a specific revision' do
+    include_examples 'action requires login', :put, :revert, post_id: 123, revision: 2
+
+    let(:post) { Fabricate(:post, user: logged_in_as, raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex") }
+    let(:post_revision) { Fabricate(:post_revision, post: post, modifications: {"raw" => ["this is original post body.", "this is edited post body."]}) }
+    let(:blank_post_revision) { Fabricate(:post_revision, post: post, modifications: {"edit_reason" => ["edit reason #1", "edit reason #2"]}) }
+    let(:same_post_revision) { Fabricate(:post_revision, post: post, modifications: {"raw" => ["Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex", "this is edited post body."]}) }
+
+    let(:revert_params) do
+      {
+        post_id: post.id,
+        revision: post_revision.number
+      }
+    end
+    let(:moderator) { Fabricate(:moderator) }
+
+    describe 'when logged in as a regular user' do
+      let(:logged_in_as) { log_in }
+
+      it "does not work" do
+        xhr :put, :revert, revert_params
+        expect(response).to_not be_success
+      end
+    end
+
+    describe "when logged in as staff" do
+      let(:logged_in_as) { log_in(:moderator) }
+
+      it "throws an exception when revision is < 2" do
+        expect {
+          xhr :put, :revert, post_id: post.id, revision: 1
+        }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "fails when post_revision record is not found" do
+        xhr :put, :revert, post_id: post.id, revision: post_revision.number + 1
+        expect(response).to_not be_success
+      end
+
+      it "fails when post record is not found" do
+        xhr :put, :revert, post_id: post.id + 1, revision: post_revision.number
+        expect(response).to_not be_success
+      end
+
+      it "fails when revision is blank" do
+        xhr :put, :revert, post_id: post.id, revision: blank_post_revision.number
+
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('revert_version_same'))
+      end
+
+      it "fails when revised version is same as current version" do
+        xhr :put, :revert, post_id: post.id, revision: same_post_revision.number
+
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('revert_version_same'))
+      end
+
+      it "works!" do
+        xhr :put, :revert, revert_params
+        expect(response).to be_success
+      end
+
+      it "supports reverting posts in deleted topics" do
+        first_post = post.topic.ordered_posts.first
+        PostDestroyer.new(moderator, first_post).destroy
+
+        xhr :put, :revert, revert_params
+        expect(response).to be_success
+      end
+    end
+  end
+
   describe 'expandable embedded posts' do
     let(:post) { Fabricate(:post) }
 
@@ -835,8 +1039,7 @@ describe PostsController do
         Fabricate(:moderator)
 
         group = Fabricate(:group)
-        group.add(user)
-        group.appoint_manager(user)
+        group.add_owner(user)
 
         secured_category = Fabricate(:private_category, group: group)
         secured_post = create_post(user: user, category: secured_category)

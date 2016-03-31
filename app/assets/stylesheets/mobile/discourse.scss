@@ -65,7 +65,6 @@ blockquote {
 
 .topic-statuses {
   display: inline-block;
-  vertical-align: middle;
   .topic-status {
     i {
       color: dark-light-diff($secondary, $primary, 40%, -20%);
@@ -93,4 +92,96 @@ h2#site-text-logo
 // categories should not be bold on mobile; they fight with the topic title too much
 .badge-wrapper {
   font-weight: normal;
+}
+
+.user-table {
+  position: relative;
+}
+
+.mobile-view .mobile-nav {
+  &.messages-nav, &.notifications-nav, &.activity-nav {
+    position: absolute;
+    right: 0px;
+    top: -55px;
+  }
+}
+
+
+.mobile-view .mobile-nav {
+  a .fa {
+    margin-right: 8px;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  }
+  a {
+    color: $primary;
+  }
+  margin: 0;
+  padding: 0;
+  background: dark-light-diff($primary, $secondary, 90%, -65%);
+  list-style: none;
+  overflow: visible;
+  position: relative;
+  width: 45%;
+
+  > li > a {
+    padding: 8px 10px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+  }
+  .fa-caret-down {
+    position: absolute;
+    right: 0px;
+  }
+
+  .drop {
+    display: none;
+  }
+  .drop.expanded {
+    left: 0;
+    display: block;
+    position: absolute;
+    z-index: 10000000;
+    background-color: $secondary;
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+    border: 1px solid #eaeaea;
+    box-sizing: border-box;
+    li {
+      margin: 5px 0;
+      padding: 0;
+      a {
+        height: 100%;
+        display: block;
+        padding: 5px 8px;
+      }
+    }
+  }
+}
+
+/* page not found styles */
+h1.page-not-found {
+  line-height: 24px;
+  margin: 5px 0 -5px 0;
+}
+
+.page-not-found-topics a.badge-wrapper {
+  margin-left: 8px;
+}
+
+h2.popular-topics-title {
+  margin-bottom: 6px;
+  font-size: 1.2em;
+}
+
+h2.recent-topics-title {
+  margin-bottom: 6px;
+  font-size: 1.2em;
+}
+
+.page-not-found-search h2 {
+  font-size: 1.2em;
 }

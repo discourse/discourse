@@ -1,5 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
-import PageTracker from 'discourse/lib/page-tracker';
+import KeyValueStore from 'discourse/lib/key-value-store';
+import { onPageChange } from 'discourse/lib/page-tracker';
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -9,6 +10,9 @@ let lastAction = -1;
 
 const focusTrackerKey = "focus-tracker";
 const idleThresholdTime = 1000 * 10; // 10 seconds
+
+const context = "discourse_desktop_notifications_";
+const keyValueStore = new KeyValueStore(context);
 
 // Called from an initializer
 function init(messageBus) {
@@ -20,7 +24,7 @@ function init(messageBus) {
   }
 
   try {
-    localStorage.getItem(focusTrackerKey);
+    keyValueStore.getItem(focusTrackerKey);
   } catch (e) {
     Em.Logger.info('Discourse desktop notifications are disabled - localStorage denied.');
     return;
@@ -57,7 +61,7 @@ function setupNotifications() {
   window.addEventListener("storage", function(e) {
     // note: This event only fires when other tabs setItem()
     const key = e.key;
-    if (key !== focusTrackerKey) {
+    if (key !== `${context}${focusTrackerKey}`) {
       return true;
     }
     primaryTab = false;
@@ -66,7 +70,7 @@ function setupNotifications() {
   window.addEventListener("focus", function() {
     if (!primaryTab) {
       primaryTab = true;
-      localStorage.setItem(focusTrackerKey, mbClientId);
+      keyValueStore.setItem(focusTrackerKey, mbClientId);
     }
   });
 
@@ -74,13 +78,14 @@ function setupNotifications() {
     primaryTab = false;
   } else {
     primaryTab = true;
-    localStorage.setItem(focusTrackerKey, mbClientId);
+    keyValueStore.setItem(focusTrackerKey, mbClientId);
   }
 
   if (document) {
     document.addEventListener("scroll", resetIdle);
   }
-  PageTracker.on("change", resetIdle);
+
+  onPageChange(resetIdle);
 }
 
 function resetIdle() {
@@ -95,7 +100,7 @@ function onNotification(data) {
   if (!liveEnabled) { return; }
   if (!primaryTab) { return; }
   if (!isIdle()) { return; }
-  if (localStorage.getItem('notifications-disabled')) { return; }
+  if (keyValueStore.getItem('notifications-disabled')) { return; }
 
   const notificationTitle = I18n.t(i18nKey(data.notification_type), {
      site_title: Discourse.SiteSettings.title,

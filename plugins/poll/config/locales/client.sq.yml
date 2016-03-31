@@ -17,9 +17,6 @@ sq:
       average_rating: "Vlerësimi mesatar: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Ju duhet të zgjidhni të paktën <strong>%{count}</strong> opsionet."
-          up_to_max_options: "You may choose up to <strong>%{count}</strong> options."
-          x_options: "You must choose <strong>%{count}</strong> options."
           between_min_and_max_options: "You may choose between <strong>%{min}</strong> and <strong>%{max}</strong> options."
       cast-votes:
         title: "Cast your votes"

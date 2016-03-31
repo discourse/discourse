@@ -5,6 +5,8 @@ module Validators; end
 class Validators::UploadValidator < ActiveModel::Validator
 
   def validate(upload)
+    return true if upload.is_attachment_for_group_message && SiteSetting.allow_all_attachments_for_group_messages
+
     extension = File.extname(upload.original_filename)[1..-1] || ""
 
     if is_authorized?(upload, extension)

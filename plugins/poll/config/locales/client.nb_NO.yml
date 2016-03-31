@@ -17,9 +17,6 @@ nb_NO:
       average_rating: "Gjennomsnitt: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Du må velge minst <strong>%{count}</strong> alternativer."
-          up_to_max_options: "Du kan velge opptil <strong>%{count}</strong> alternativer."
-          x_options: "Du må velge <strong>%{count}</strong> alternativer."
           between_min_and_max_options: "Du kan velge mellom <strong>%{min}</strong> og <strong>%{max}</strong> alternativer."
       cast-votes:
         title: "Stem nå"

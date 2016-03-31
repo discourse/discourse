@@ -60,7 +60,7 @@ module ApplicationHelper
   end
 
   def rtl_class
-    RTL.new(current_user).css_class
+    rtl? ? 'rtl' : ''
   end
 
   def escape_unicode(javascript)
@@ -112,7 +112,7 @@ module ApplicationHelper
   end
 
   def rtl?
-    ["ar", "fa_IR", "he"].include?(user_locale)
+    ["ar", "fa_IR", "he"].include? I18n.locale.to_s
   end
 
   def user_locale
@@ -123,45 +123,38 @@ module ApplicationHelper
 
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts=nil)
-
     opts ||= {}
-    opts[:image] ||= "#{Discourse.base_url}#{SiteSetting.logo_small_url}"
-    opts[:url] ||= "#{Discourse.base_url}#{request.fullpath}"
+    opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
     # Use the correct scheme for open graph
     if opts[:image].present? && opts[:image].start_with?("//")
       uri = URI(Discourse.base_url)
       opts[:image] = "#{uri.scheme}:#{opts[:image]}"
+    elsif opts[:image].present? && opts[:image].start_with?("/uploads/")
+      opts[:image] = "#{Discourse.base_url}#{opts[:image]}"
     end
 
     # Add opengraph tags
-    result =  tag(:meta, property: 'og:site_name', content: SiteSetting.title) << "\n"
-
+    result = []
+    result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
     result << tag(:meta, name: 'twitter:card', content: "summary")
 
-    # I removed image related opengraph tags from here for now due to
-    # https://meta.discourse.org/t/x/22744/18
-    [:url, :title, :description].each do |property|
+    [:url, :title, :description, :image].each do |property|
       if opts[property].present?
         escape = (property != :image)
-        result << tag(:meta, {property: "og:#{property}", content: opts[property]}, nil, escape) << "\n"
-        result << tag(:meta, {name: "twitter:#{property}", content: opts[property]}, nil, escape) << "\n"
+        result << tag(:meta, { property: "og:#{property}", content: opts[property] }, nil, escape)
+        result << tag(:meta, { name: "twitter:#{property}", content: opts[property] }, nil, escape)
       end
     end
 
-    result
-  end
-
-  # Look up site content for a key. If the key is blank, you can supply a block and that
-  # will be rendered instead.
-  def markdown_content(key, replacements=nil)
-    result = PrettyText.cook(SiteText.text_for(key, replacements || {})).html_safe
-    if result.blank? && block_given?
-      yield
-      nil
-    else
-      result
+    if opts[:read_time] && opts[:read_time] > 0 && opts[:like_count] && opts[:like_count] > 0
+      result << tag(:meta, name: 'twitter:label1', value: I18n.t("reading_time"))
+      result << tag(:meta, name: 'twitter:data1', value: "#{opts[:read_time]} mins 🕑")
+      result << tag(:meta, name: 'twitter:label2', value: I18n.t("likes"))
+      result << tag(:meta, name: 'twitter:data2', value: "#{opts[:like_count]} ❤")
     end
+
+    result.join("\n")
   end
 
   def application_logo_url
@@ -174,6 +167,10 @@ module ApplicationHelper
 
   def mobile_view?
     MobileDetection.resolve_mobile_view!(request.user_agent,params,session)
+  end
+
+  def include_crawler_content?
+    controller.try(:use_crawler_layout?) || !mobile_view?
   end
 
   def mobile_device?

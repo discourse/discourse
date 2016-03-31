@@ -68,15 +68,13 @@ end
 # server middleware that will reschedule work whenever Sidekiq is paused
 class Sidekiq::Pausable
 
-  attr_reader :delay
-
   def initialize(delay = 5.seconds)
     @delay = delay
   end
 
   def call(worker, msg, queue)
     if Sidekiq.paused?
-      worker.class.perform_in(delay, *msg['args'])
+      worker.class.perform_in(@delay, *msg['args'])
     else
       yield
     end

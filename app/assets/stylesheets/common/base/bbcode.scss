@@ -13,10 +13,4 @@ span {
   &.bbcode-s {
     text-decoration: line-through;
   }
-  // Font sizes
-  @for $i from 4 through 40 {
-    &.bbcode-size-#{$i} {
-      font-size: #{$i}px;
-    }
-  }
 }

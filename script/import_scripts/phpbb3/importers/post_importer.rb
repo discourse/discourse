@@ -13,6 +13,10 @@ module ImportScripts::PhpBB3
       @settings = settings
     end
 
+    def map_to_import_ids(rows)
+      rows.map { |row| row[:post_id] }
+    end
+
     def map_post(row)
       imported_user_id = row[:post_username].blank? ? row[:poster_id] : row[:post_username]
       user_id = @lookup.user_id_from_imported_user_id(imported_user_id) || Discourse.system_user.id
@@ -24,7 +28,8 @@ module ImportScripts::PhpBB3
         id: row[:post_id],
         user_id: user_id,
         created_at: Time.zone.at(row[:post_time]),
-        raw: @text_processor.process_post(row[:post_text], attachments)
+        raw: @text_processor.process_post(row[:post_text], attachments),
+        import_topic_id: row[:topic_id]
       }
 
       if is_first_post

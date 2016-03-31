@@ -9,6 +9,7 @@ export default function highlightSyntax($elem) {
   if (!path) { return; }
 
   $(selector, $elem).each(function(i, e) {
+    $(e).removeClass('lang-auto');
     loadScript(path).then(() => hljs.highlightBlock(e));
   });
 }

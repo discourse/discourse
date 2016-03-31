@@ -40,15 +40,22 @@ class RandomTopicSelector
 
     results = []
 
-    left = count
+    return results if count < 1
 
-    while left > 0
-      id = $redis.lpop key
-      break unless id
-
-      results << id.to_i
-      left -= 1
+    results = $redis.multi do
+      $redis.lrange(key, 0, count-1)
+      $redis.ltrim(key, count, -1)
     end
+
+    if !results.is_a?(Array) # Redis is in readonly mode
+      results = $redis.lrange(key, 0, count-1)
+    else
+      results = results[0]
+    end
+
+    results.map!(&:to_i)
+
+    left = count - results.length
 
     backfilled = false
     if left > 0

@@ -1,6 +1,6 @@
 [main]
 host = https://www.transifex.com
-lang_map = es_ES: es, fr_FR: fr, ko_KR: ko, pt_PT: pt
+lang_map = es_ES: es, fr_FR: fr, ko_KR: ko, pt_PT: pt, sk_SK: sk, vi_VN: vi
 
 [discourse-org.clientenyml]
 file_filter = config/locales/client.<lang>.yml

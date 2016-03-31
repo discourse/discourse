@@ -1,5 +1,6 @@
 import loadScript from 'discourse/lib/load-script';
 import Quote from 'discourse/lib/quote';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   needs: ['topic', 'composer'],
@@ -8,10 +9,15 @@ export default Ember.Controller.extend({
     loadScript('defer/html-sanitizer-bundle');
   }.on('init'),
 
-  //  If the buffer is cleared, clear out other state (post)
-  bufferChanged: function() {
-    if (Ember.isEmpty(this.get('buffer'))) this.set('post', null);
-  }.observes('buffer'),
+  @computed('buffer', 'postId')
+  post(buffer, postId) {
+    if (!postId || Ember.isEmpty(buffer)) { return null; }
+
+    const postStream = this.get('controllers.topic.model.postStream');
+    const post = postStream.findLoadedPost(postId);
+
+    return post;
+  },
 
   // Save the currently selected text and displays the
   //  "quote reply" button
@@ -26,8 +32,12 @@ export default Ember.Controller.extend({
     }
 
     const selection = window.getSelection();
-    // no selections
-    if (selection.isCollapsed) return;
+
+     // no selections
+    if (selection.isCollapsed) {
+      this.set('buffer', '');
+      return;
+    }
 
     // retrieve the selected range
     const range = selection.getRangeAt(0),
@@ -51,8 +61,13 @@ export default Ember.Controller.extend({
     // containing a single invisible character
     markerElement.appendChild(document.createTextNode("\ufeff"));
 
+    const isMobileDevice = this.site.isMobileDevice;
+    const capabilities = this.capabilities,
+          isIOS = capabilities.isIOS,
+          isAndroid = capabilities.isAndroid;
+
     // collapse the range at the beginning/end of the selection
-    range.collapse(!Discourse.Mobile.isMobileDevice);
+    range.collapse(!isMobileDevice);
     // and insert it at the start of our selection range
     range.insertNode(markerElement);
 
@@ -73,7 +88,7 @@ export default Ember.Controller.extend({
       let topOff = markerOffset.top;
       let leftOff = markerOffset.left;
 
-      if (Discourse.Mobile.isMobileDevice) {
+      if (isMobileDevice || isIOS || isAndroid) {
         topOff = topOff + 20;
         leftOff = Math.min(leftOff + 10, $(window).width() - $quoteButton.outerWidth());
       } else {
@@ -85,17 +100,17 @@ export default Ember.Controller.extend({
   },
 
   quoteText() {
-
-    const postStream = this.get('controllers.topic.model.postStream');
+    const Composer = require('discourse/models/composer').default;
     const postId = this.get('postId');
-    const post = postStream.findLoadedPost(postId);
+    const post = this.get('post');
 
     // defer load if needed, if in an expanded replies section
     if (!post) {
-      postStream.loadPost(postId).then(() => {
-        this.quoteText();
+      const postStream = this.get('controllers.topic.model.postStream');
+      return postStream.loadPost(postId).then(p => {
+        this.set('post', p);
+        return this.quoteText();
       });
-      return;
     }
 
     // If we can't create a post, delegate to reply as new topic
@@ -106,11 +121,11 @@ export default Ember.Controller.extend({
 
     const composerController = this.get('controllers.composer');
     const composerOpts = {
-      action: Discourse.Composer.REPLY,
+      action: Composer.REPLY,
       draftKey: post.get('topic.draft_key')
     };
 
-    if(post.get('post_number') === 1) {
+    if (post.get('post_number') === 1) {
       composerOpts.topic = post.get("topic");
     } else {
       composerOpts.post = post;
@@ -126,7 +141,7 @@ export default Ember.Controller.extend({
     const quotedText = Quote.build(post, buffer);
     composerOpts.quote = quotedText;
     if (composerController.get('content.viewOpen') || composerController.get('content.viewDraft')) {
-      composerController.appendBlockAtCursor(quotedText.trim());
+      this.appEvents.trigger('composer:insert-text', quotedText);
     } else {
       composerController.open(composerOpts);
     }

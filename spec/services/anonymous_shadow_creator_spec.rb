@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe AnonymousShadowCreator do
 
@@ -29,6 +29,9 @@ describe AnonymousShadowCreator do
 
       freeze_time 4.minutes.from_now
       shadow3 = AnonymousShadowCreator.get(user)
+
+      expect(shadow3.user_option.email_digests).to eq(false)
+      expect(shadow3.user_option.email_private_messages).to eq(false)
 
       expect(shadow2.id).not_to eq(shadow3.id)
 

@@ -39,18 +39,6 @@
     }
   }
 
-  .pagedown-editor {
-    width: 450px;
-
-    textarea {
-      width: 440px;
-    }
-  }
-
-  .bio-composer #wmd-quote-post {
-    display: none;
-  }
-
   .static {
     color: $primary;
     display: inline-block;
@@ -91,11 +79,27 @@
   margin-top: 18px;
 }
 
+.user-table {
+  margin-top: 30px;
+  width: 100%;
+  display: table;
+  .wrapper {
+    display: table-row;
+  }
+}
+
+.user-navigation .nav-stacked .glyph {
+  display: none;
+  // float: right;
+  // display: block;
+  // position: static;
+}
+
 .user-navigation {
-  width: 21.62%;
-  margin-right: 1.8018%;
-  float: left;
-  margin-top: 20px;
+  display: table-cell;
+  vertical-align: top;
+  width: 170px;
+  padding-right: 30px;
 
   h3 {
     color: $primary;
@@ -113,6 +117,21 @@
 .user-main {
   margin-bottom: 50px;
 
+  // name hacky so lastpass does not freak out
+  // -search- means it is bypassed
+  #add-user-to-group {
+      button, .ac-wrap {
+        float: left;
+      }
+      button {
+        margin-top: 3px;
+        margin-left: 10px;
+      }
+      #user-search-selector {
+        width: 400px;
+      }
+   }
+
   table.group-members {
     width: 100%;
     p {
@@ -128,6 +147,16 @@
     }
     td.avatar {
       width: 60px;
+      position: relative;
+      .is-owner {
+        position: absolute;
+        right: 0;
+        top: 20px;
+        color: dark-light-diff($primary, $secondary, 50%, -50%);
+      }
+    }
+    td.remove-user {
+      text-align: right;
     }
     td {
       padding: 0.5em;
@@ -148,9 +177,9 @@
   }
 
   .user-right {
-    width: 75%;
-    float: right;
+    max-width: 700px;
     margin-top: 20px;
+    display: table-cell;
   }
 
   .user-content {
@@ -168,9 +197,9 @@
       margin-bottom: 10px;
     }
 
-    table {
+    .user-invite-list {
       width: 100%;
-      margin-top: 10px;
+      margin-top: 15px;
 
       th {
         text-align: left;
@@ -191,10 +220,6 @@
         max-width: 45px;
         max-height: 45px;
       }
-    }
-
-    .user-invite-list {
-      margin-top: 15px;
     }
 
     .user-invite-controls {
@@ -218,7 +243,6 @@
     background-position: center center;
     background-size: cover;
     width: 100%;
-    margin-bottom: 10px;
     overflow: hidden;
 
     &.group {
@@ -277,6 +301,11 @@
       margin-top: -200px;
       background: dark-light-choose(rgba($primary, .85), rgba($secondary, .85));
       transition: margin .15s linear;
+
+      blockquote {
+        background-color: dark-light-diff($secondary, $primary, 30%, -70%);
+        border-left-color: dark-light-diff($secondary, $primary, 50%, -50%);
+      }
 
       h1 {
         font-size: 2.143em;
@@ -617,6 +646,10 @@
     clear: both;
     margin-bottom: 10px;
   }
+  .group-notification-menu .dropdown-menu {
+    top: 30px;
+    bottom: auto;
+  }
 }
 
 .paginated-topics-list {
@@ -625,3 +658,48 @@
     margin-top: 0;
   }
 }
+
+
+.user-right .group-notification-menu {
+  float: right;
+  margin-bottom: 5px;
+}
+.user-right.messages .topic-list {
+  thead, th.views, td.views {
+    display: none;
+  }
+}
+
+.user-main .nav-stacked {
+  &.notification-list {
+    padding-top: 40px;
+  }
+  &.activity-list {
+    padding-top: 20px;
+  }
+  background-color: transparent;
+
+  > li {
+    border-bottom: none;
+    > a {
+      padding: 8px 13px;
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+    }
+  }
+
+  li > a.active {
+    color: $primary;
+    font-weight: bold;
+    background-color: transparent;
+  }
+  li > a.active:after {
+    display: none;
+  }
+
+  li.archive {
+    padding-left: 15px;
+  }
+}
+
+
+

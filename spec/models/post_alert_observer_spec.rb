@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'post_destroyer'
 
 describe PostAlertObserver do
@@ -21,11 +21,8 @@ describe PostAlertObserver do
     end
 
     context 'when removing a liked post' do
-      before do
-        PostAction.act(evil_trout, post, PostActionType.types[:like])
-      end
-
       it 'removes a notification' do
+        PostAction.act(evil_trout, post, PostActionType.types[:like])
         expect {
           PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
         }.to change(Notification, :count).by(-1)
@@ -74,8 +71,7 @@ describe PostAlertObserver do
       expect {
         Guardian.any_instance.expects(:can_see?).with(instance_of(Post)).returns(false)
         mention_post
-        PostAlerter.new.after_create_post(mention_post)
-        PostAlerter.new.after_save_post(mention_post)
+        PostAlerter.post_created(mention_post)
       }.not_to change(evil_trout.notifications, :count)
     end
 

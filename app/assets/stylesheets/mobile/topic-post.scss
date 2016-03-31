@@ -2,22 +2,31 @@
   /* may not need this */
 }
 
-.time-gap {
-  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+.small-action {
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   color: lighten($primary, 50%);
   padding-bottom: 3px;
-  margin-bottom: 10px;
   text-transform: uppercase;
   font-weight: bold;
+
   .topic-avatar {
-    margin: 0 5px 0 10px;
+    margin-top: 5px;
+  }
+
+  .small-action-desc {
+    padding-top: 1em;
   }
 }
 
-.topic-post {
+.topic-post article {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 6px 0;
+  padding: 8px 0;
 }
+
+.post-stream {
+  padding-bottom: 30px;
+}
+
 
 span.badge-posts {
   margin-right: 5px;
@@ -46,7 +55,7 @@ button {
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
   float: left;
   &.hidden {
     display: none;
@@ -58,6 +67,7 @@ button {
     margin:10px 0 10px 0;
   }
   &.has-like {color: $love;}
+  &.wikied { color: green; }
   .read-icon {
     &:before {
       font-family: "FontAwesome";
@@ -80,7 +90,7 @@ button {
 /* shift post reply button to the right and make it black */
 .post-controls button.create {
   float: right;
-  color: $primary;
+  color: dark-light-choose(scale-color($primary, $lightness: 20%), scale-color($secondary, $lightness: 80%));
 }
 
 
@@ -94,7 +104,6 @@ button {
   bottom: 0;
   left: 135px;
   z-index: 1000;
-  display: none;
 
   h3 {
     margin-top: 0;
@@ -282,7 +291,7 @@ a.star {
     .btn {
       border: 0;
       padding: 0 15px;
-      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
       background: blend-primary-secondary(5%);
       border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
@@ -300,6 +309,13 @@ a.star {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 20px 0 0 0;
   .fa-bookmark.bookmarked { color: $tertiary; }
+
+  .combobox {
+    float: left;
+    margin-right: 1em;
+    width: 160px;
+    margin-bottom: 0.5em;
+  }
 }
 
 /* this is to force the drop-down notification state description para below the button */
@@ -344,10 +360,19 @@ span.post-count {
   padding: 15px 0;
 }
 
-.topic-post {
-  &.moderator {
-    background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
-  }
+// mobile has no fixed width on topic-body so overflow: hidden causes problems
+.topic-body {
+  overflow:inherit;
+}
+
+// instead, for mobile we set overflow hidden on the cooked part of post body
+// this prevents image overflow on deeply nested blockquotes, lists, etc
+.cooked {
+  overflow: hidden;
+}
+
+.moderator .topic-body {
+  background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
 }
 
 .quote-button.visible {
@@ -461,16 +486,16 @@ span.highlighted {
 }
 
 .topic-meta-data {
-  white-space: nowrap;
-  position: absolute;
-  width: 100%;
-  left: 0px;
+  margin-left: 50px;
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
-    padding-left: 50px;
-    span {
+    span.full-name, span.user-title, span.username {
       display: block;
+    }
+
+    .poster-icon {
+      float: right;
     }
   }
   .post-info {
@@ -510,20 +535,7 @@ span.highlighted {
   }
 }
 
-.small-action .small-action-desc {
-  p {
-    padding-top: 0;
-  }
-  .custom-message {
-    margin-left: -40px;
-  }
-}
-
-.small-action .topic-avatar {
-  padding: 0;
-  margin: 0;
-}
-
-.small-action.time-gap .topic-avatar {
-  margin-top: -5px;
+.gap.jagged-border {
+  margin-left: -10px;
+  margin-right: -10px;
 }

@@ -1,0 +1,18 @@
+<div class="user-image">
+  <a href="{{unbound userPath}}" data-user-card="{{unbound user.username}}">{{avatar user imageSize="large"}}</a>
+</div>
+
+<div class="user-detail">
+  <div class='name-line'>
+    <span class="username"><a href="{{unbound userPath}}" data-user-card="{{unbound user.username}}">{{unbound user.username}}</a></span>
+    <span class="name">{{unbound name}}</span>
+  </div>
+  <div class="title">{{unbound user.title}}</div>
+
+  {{#if hasBlock}}
+    <div class='details'>
+      {{yield}}
+    </div>
+  {{/if}}
+
+</div>

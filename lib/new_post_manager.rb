@@ -69,9 +69,9 @@ class NewPostManager
   def self.user_needs_approval?(manager)
     user = manager.user
 
-    return false if user.staff?
+    return false if user.staff? || user.staged
 
-    (user.post_count < SiteSetting.approve_post_count) ||
+    (user.trust_level <= TrustLevel.levels[:basic] && user.post_count < SiteSetting.approve_post_count) ||
     (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
     is_fast_typer?(manager) ||
     matches_auto_block_regex?(manager)
@@ -82,14 +82,11 @@ class NewPostManager
 
       result = manager.enqueue('default')
 
-      block = is_fast_typer?(manager)
-
-      block ||= matches_auto_block_regex?(manager)
-
-      manager.user.update_columns(blocked: true) if block
+      if is_fast_typer?(manager) || matches_auto_block_regex?(manager)
+        UserBlocker.block(manager.user, Discourse.system_user, keep_posts: true)
+      end
 
       result
-
     end
   end
 
@@ -105,7 +102,6 @@ class NewPostManager
   end
 
   def perform
-
     # We never queue private messages
     return perform_create_post if @args[:archetype] == Archetype.private_message
     if args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
@@ -145,7 +141,6 @@ class NewPostManager
 
   def perform_create_post
     result = NewPostResult.new(:create_post)
-
     creator = PostCreator.new(@user, @args)
     post = creator.create
     result.check_errors_from(creator)

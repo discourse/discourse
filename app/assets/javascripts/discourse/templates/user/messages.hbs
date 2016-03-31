@@ -1,0 +1,81 @@
+<section class='user-navigation'>
+  {{#unless site.mobileView}}
+    {{#if showNewPM}}
+      {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+    {{/if}}
+  {{/unless}}
+
+  {{#mobile-nav class='messages-nav' desktopClass='nav-stacked action-list' currentPath=currentPath}}
+    <li class="noGlyph">
+      {{#link-to 'userPrivateMessages.index' model}}
+        {{i18n 'user.messages.inbox'}}
+      {{/link-to}}
+    </li>
+    <li class="noGlyph">
+      {{#link-to 'userPrivateMessages.sent' model}}
+        {{i18n 'user.messages.sent'}}
+      {{/link-to}}
+    </li>
+    <li class="noGlyph">
+      {{#link-to 'userPrivateMessages.archive' model}}
+        {{i18n 'user.messages.archive'}}
+      {{/link-to}}
+    </li>
+    {{#each model.groups as |group|}}
+    {{#if group.has_messages}}
+    <li>
+      {{#link-to 'userPrivateMessages.group' group.name}}
+        <i class='glyph fa fa-group'></i>
+        {{capitalize group.name}}
+      {{/link-to}}
+    </li>
+    <li class='archive'>
+      {{#link-to 'userPrivateMessages.groupArchive' group.name}}
+        {{i18n 'user.messages.archive'}}
+      {{/link-to}}
+    </li>
+    {{/if}}
+    {{/each}}
+  {{/mobile-nav}}
+
+</section>
+
+<section class='user-right messages'>
+
+<div class="clearfix list-actions">
+    <button {{action "toggleBulkSelect"}} class="btn bulk-select" title="{{i18n "user.messages.bulk_select"}}">
+      <i class="fa fa-list"></i>
+    </button>
+
+    {{#if site.mobileView}}
+      {{#if showNewPM}}
+        {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+      {{/if}}
+    {{/if}}
+
+    {{#if canArchive}}
+    <button {{action "archive"}} class="btn btn-archive">
+      {{i18n "user.messages.move_to_archive"}}
+    </button>
+    {{/if}}
+
+    {{#if canMoveToInbox}}
+    <button {{action "toInbox"}} class="btn btn-to-inbox">
+      {{i18n "user.messages.move_to_inbox"}}
+    </button>
+    {{/if}}
+
+
+    {{#if bulkSelectEnabled}}
+    <button {{action "selectAll"}} class="btn btn-select-all">
+      {{i18n "user.messages.select_all"}}
+    </button>
+    {{/if}}
+
+    {{#if isGroup}}
+      {{group-notifications-button group=group}}
+    {{/if}}
+</div>
+
+{{outlet}}
+</section>

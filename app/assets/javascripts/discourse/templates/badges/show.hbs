@@ -1,45 +1,44 @@
 <div class='container show-badge'>
   <h1>
     {{#link-to 'badges.index'}}{{i18n 'badges.title'}}{{/link-to}}
-    {{fa-icon "angle-right"}}
-    {{model.displayName}}
+     /
+    {{model.name}}
   </h1>
 
-  <table class='badges-listing'>
-    <tbody>
-      <tr>
-        <td class='badge'>{{user-badge badge=model}}</td>
-        <td class='description'>{{{model.displayDescriptionHtml}}}</td>
-        <td class='grant-count'>{{i18n 'badges.granted' count=model.grant_count}}</td>
-        <td class='info'>{{i18n 'badges.allow_title'}} {{{view.allowTitle}}}<br>{{i18n 'badges.multiple_grant'}} {{{view.multipleGrant}}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  {{#if showLongDescription}}
-  <div class='long-description banner'>
-    {{{long_description}}}
+  <div class='show-badge-details'>
+    {{badge-card badge=model size="large" count=userBadges.grant_count}}
+    <div class='badge-grant-info'>
+      <div>
+        <div class='grant-info-item'>
+          {{check-mark checked=model.allow_title}} {{i18n 'badges.allow_title'}}
+        </div>
+        <div class='grant-info-item'>
+          {{check-mark checked=model.multiple_grant}} {{i18n 'badges.multiple_grant'}}
+        </div>
+      </div>
+    </div>
   </div>
-  {{/if}}
 
   {{#if userBadges}}
-    <div class={{unbound layoutClass}}>
-    {{#each ub in userBadges}}
-        <div class="badge-user">
-          {{#link-to 'user' ub.user classNames="badge-info"}}
-              {{avatar ub.user imageSize="large"}}
-              <div class="details">
-                <span class="username">{{ub.user.username}}</span>
-                {{format-date ub.granted_at}}
-              </div>
-          {{/link-to}}
+    <div class="user-badges">
+      {{#load-more selector=".badge-info" action="loadMore"}}
+        {{#each userBadges as |ub|}}
+          {{#user-info user=ub.user size="medium" class="badge-info" date=ub.granted_at}}
+            <div class="granted-on">{{i18n 'badges.granted_on' date=(inline-date ub.granted_at)}}</div>
+            {{#if ub.post_number}}
+              <a class="post-link" href="{{unbound ub.topic.url}}/{{unbound ub.post_number}}">{{{ub.topic.fancyTitle}}}</a>
+            {{/if}}
+          {{/user-info}}
+        {{/each}}
+      {{/load-more}}
 
-          {{#if ub.post_number}}
-            <a class="post-link" href="{{unbound ub.topic.url}}/{{unbound ub.post_number}}">{{{ub.topic.fancyTitle}}}</a>
-          {{/if}}
+      {{#unless canLoadMore}}
+        {{#if user}}
+        <div class='clearfix'>
+          <a class='btn' href='{{model.url}}'>{{i18n 'badges.others_count' count=model.grant_count}}</a>
         </div>
-      {{/each}}
+        {{/if}}
+      {{/unless}}
     </div>
 
     {{conditional-loading-spinner condition=canLoadMore}}

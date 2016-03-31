@@ -67,15 +67,16 @@ const Composer = RestModel.extend({
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
 
-  showCategoryChooser: function(){
+  @computed("privateMessage", "archetype.hasOptions")
+  showCategoryChooser(isPrivateMessage, hasOptions) {
     const manyCategories = Discourse.Category.list().length > 1;
-    const hasOptions = this.get('archetype.hasOptions');
-    return !this.get('privateMessage') && (hasOptions || manyCategories);
-  }.property('privateMessage'),
+    return !isPrivateMessage && (hasOptions || manyCategories);
+  },
 
-  privateMessage: function(){
-    return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
-  }.property('creatingPrivateMessage', 'topic'),
+  @computed("creatingPrivateMessage", "topic")
+  privateMessage(creatingPrivateMessage, topic) {
+    return creatingPrivateMessage || (topic && topic.get('archetype') === 'private_message');
+  },
 
   topicFirstPost: Em.computed.or('creatingTopic', 'editingFirstPost'),
 
@@ -153,7 +154,7 @@ const Composer = RestModel.extend({
         usernameLink
       });
 
-      if (!Discourse.Mobile.mobileView) {
+      if (!this.site.mobileView) {
         const replyUsername = post.get('reply_to_user.username');
         const replyAvatarTemplate = post.get('reply_to_user.avatar_template');
         if (replyUsername && replyAvatarTemplate && this.get('action') === EDIT) {
@@ -173,11 +174,6 @@ const Composer = RestModel.extend({
 
   }.property('action', 'post', 'topic', 'topic.title'),
 
-  toggleText: function() {
-    return this.get('showPreview') ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
-  }.property('showPreview'),
-
-  hidePreview: Em.computed.not('showPreview'),
 
   // whether to disable the post button
   cantSubmitPost: function() {
@@ -201,7 +197,7 @@ const Composer = RestModel.extend({
       return this.get('canCategorize') &&
             !this.siteSettings.allow_uncategorized_topics &&
             !this.get('categoryId') &&
-            !this.user.get('staff');
+            !this.user.get('admin');
     }
   }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
 
@@ -311,8 +307,6 @@ const Composer = RestModel.extend({
   }.property('reply'),
 
   _setupComposer: function() {
-    const val = (Discourse.Mobile.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
-    this.set('showPreview', val === 'true');
     this.set('archetypeId', this.site.get('default_archetype'));
   }.on('init'),
 
@@ -362,11 +356,6 @@ const Composer = RestModel.extend({
     this.set('reply', before + text + after);
 
     return before.length + text.length;
-  },
-
-  togglePreview() {
-    this.toggleProperty('showPreview');
-    this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
   applyTopicTemplate(oldCategoryId, categoryId) {
@@ -680,7 +669,7 @@ const Composer = RestModel.extend({
   },
 
   getCookedHtml() {
-    return $('#reply-control .wmd-preview').html().replace(/<span class="marker"><\/span>/g, '');
+    return $('#reply-control .d-editor-preview').html().replace(/<span class="marker"><\/span>/g, '');
   },
 
   saveDraft() {

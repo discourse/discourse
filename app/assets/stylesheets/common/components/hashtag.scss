@@ -1,0 +1,14 @@
+a.hashtag {
+  color: dark-light-choose($primary, scale-color($primary, $lightness: 70%));
+  font-weight: bold;
+
+  &:visited, &:hover {
+    color: dark-light-choose($primary, scale-color($primary, $lightness: 70%));
+  }
+
+  &:hover {
+    span {
+      text-decoration: underline;
+    }
+  }
+}

@@ -41,7 +41,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed("categoryLink", "pinnedInCategoryCount")
   alreadyPinnedMessage(categoryLink, count) {
-    return I18n.t("topic.feature_topic.already_pinned", { categoryLink, count });
+    const key = count === 0 ? "topic.feature_topic.not_pinned" : "topic.feature_topic.already_pinned";
+    return I18n.t(key, { categoryLink, count });
   },
 
   @computed("parsedPinnedInCategoryUntil")

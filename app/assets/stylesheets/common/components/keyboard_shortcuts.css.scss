@@ -3,8 +3,7 @@
 }
 
 .topic-list tr.selected td:first-child, .topic-list-item.selected td:first-child, .topic-post.selected {
-  box-shadow: -2px 0 0 $danger;
-  border-left: 1px solid $danger;
+  box-shadow: -3px 0 0 $danger;
 }
 
 .topic-list-item.selected {

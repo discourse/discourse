@@ -22,11 +22,15 @@ class PostMover
   def to_new_topic(title, category_id=nil)
     @move_type = PostMover.move_types[:new_topic]
 
+    post = Post.find_by(id: post_ids.first)
+    raise Discourse::InvalidParameters unless post
+
     Topic.transaction do
       move_posts_to Topic.create!(
-        user: user,
+        user: post.user,
         title: title,
-        category_id: category_id
+        category_id: category_id,
+        created_at: post.created_at
       )
     end
   end
@@ -37,11 +41,17 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
+    moving_all_posts = (@original_topic.posts.pluck(:id).sort == @post_ids.sort)
+
     move_each_post
     notify_users_that_posts_have_moved
     update_statistics
     update_user_actions
     set_last_post_user_id(destination_topic)
+
+    if moving_all_posts
+      @original_topic.update_status('closed', true, @user)
+    end
 
     destination_topic.reload
     destination_topic
@@ -103,6 +113,8 @@ class PostMover
   def update_statistics
     destination_topic.update_statistics
     original_topic.update_statistics
+    TopicUser.update_post_action_cache(topic_id: original_topic.id, post_action_type: :bookmark)
+    TopicUser.update_post_action_cache(topic_id: destination_topic.id, post_action_type: :bookmark)
   end
 
   def update_user_actions

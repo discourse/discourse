@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'jobs/base'
 
 describe Jobs::EnqueueDigestEmails do
@@ -30,6 +30,14 @@ describe Jobs::EnqueueDigestEmails do
       # As an approved user
       And { unapproved_user.update_attributes(admin: false, moderator: false, approved: true ) }
       And { expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true) }
+    end
+
+    context 'staged users' do
+      let!(:staged_user) { Fabricate(:active_user, staged: true, last_emailed_at: 1.year.ago, last_seen_at: 1.year.ago) }
+
+      it "doesn't return staged users" do
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(staged_user.id)).to eq(false)
+      end
     end
 
     context 'recently emailed' do

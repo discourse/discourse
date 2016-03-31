@@ -14,7 +14,13 @@
     </ul>
     -->
   {{else}}
-    <p class="grant-count">{{{i18n 'admin.badges.preview.grant_count' count=count}}}</p>
+    <p class="grant-count">
+      {{#if count}}
+        {{{i18n 'admin.badges.preview.grant_count' count=count}}}
+      {{else}}
+        {{{i18n 'admin.badges.preview.no_grant_count'}}}
+      {{/if}}
+    </p>
 
     {{#if count_warning}}
       <div class="count-warning">

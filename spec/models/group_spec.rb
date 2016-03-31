@@ -1,6 +1,22 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Group do
+
+  describe '#builtin' do
+    context "verify enum sequence" do
+      before do
+        @builtin = Group.builtin
+      end
+
+      it "'moderators' should be at 1st position" do
+        expect(@builtin[:moderators]).to eq(1)
+      end
+
+      it "'trust_level_2' should be at 4th position" do
+        expect(@builtin[:trust_level_2]).to eq(4)
+      end
+    end
+  end
 
   # UGLY but perf is horrible with this callback
   before do
@@ -32,6 +48,26 @@ describe Group do
       build(:group, name: 'this_is_a_name').save
       group.name = 'This_Is_A_Name'
       expect(group.valid?).to eq false
+    end
+
+    it "is invalid for poorly formatted domains" do
+      group.automatic_membership_email_domains = "wikipedia.org|*@example.com"
+      expect(group.valid?).to eq false
+    end
+
+    it "is valid for proper domains" do
+      group.automatic_membership_email_domains = "discourse.org|wikipedia.org"
+      expect(group.valid?).to eq true
+    end
+
+    it "is invalid for bad incoming email" do
+      group.incoming_email = "foo.bar.org"
+      expect(group.valid?).to eq(false)
+    end
+
+    it "is valid for proper incoming email" do
+      group.incoming_email = "foo@bar.org"
+      expect(group.valid?).to eq(true)
     end
   end
 
@@ -292,21 +328,21 @@ describe Group do
     let(:group) {Fabricate(:group)}
 
     it "by default has no managers" do
-      expect(group.managers).to be_empty
+      expect(group.group_users.where('group_users.owner')).to be_empty
     end
 
     it "multiple managers can be appointed" do
       2.times do |i|
         u = Fabricate(:user)
-        group.appoint_manager(u)
+        group.add_owner(u)
       end
-      expect(group.managers.count).to eq(2)
+      expect(group.group_users.where('group_users.owner').count).to eq(2)
     end
 
     it "manager has authority to edit membership" do
       u = Fabricate(:user)
       expect(Guardian.new(u).can_edit?(group)).to be_falsy
-      group.appoint_manager(u)
+      group.add_owner(u)
       expect(Guardian.new(u).can_edit?(group)).to be_truthy
     end
   end

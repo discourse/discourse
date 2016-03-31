@@ -138,6 +138,29 @@ aside.onebox {
   }
 }
 
+@mixin gdocs-logo($type) {
+  &.g-#{$type}-logo {
+    background: image-url("favicons/google_branding/logo_#{$type}_128px.png") no-repeat;
+  }
+}
+
+.gdocs-onebox-splash {
+  background-color: blend-primary-secondary(30%);
+  color: $primary;
+  border: 1px inset $primary;
+  .gdocs-onebox-logo {
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+    @include gdocs-logo('docs');
+    @include gdocs-logo('forms');
+    @include gdocs-logo('sheets');
+    @include gdocs-logo('slides');
+    @include gdocs-logo('calendar');
+    @include gdocs-logo('drive');
+  }
+}
+
 aside.onebox .onebox-body .onebox-avatar {
   max-height: none;
   max-width: none;
@@ -248,7 +271,7 @@ aside.onebox.twitterstatus .onebox-body {
   .thumbnail {
     float: left;
   }
-  .tweet {
+  p, .tweet {
     float: left;
     display: inline-block;
     white-space: pre-wrap;
@@ -259,4 +282,41 @@ aside.onebox.twitterstatus .onebox-body {
     clear: left;
     padding-top: 5px;
   }
+}
+
+// Onebox - Imgur - Album
+.onebox.imgur-album {
+  .outer-box {
+    position: absolute;
+    z-index: 935;
+    height: 30px;
+    overflow: hidden;
+    font-size: 12px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+    text-overflow: ellipsis;
+
+    .inner-box {
+      padding-left: 10px;
+      padding-right: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: normal;
+      white-space: nowrap;
+
+      .album-title {
+        width: 100%;
+        font-size: 13px;
+        line-height: 30px;
+        color: #ccc;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+// resize stackexchange onebox image
+aside.onebox.stackexchange .onebox-body img {
+  max-height: 60%;
+  max-width: 10%;
 }

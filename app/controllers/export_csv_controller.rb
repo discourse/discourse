@@ -30,7 +30,7 @@ class ExportCsvController < ApplicationController
       @_export_params ||= begin
         params.require(:entity)
         params.require(:entity_type)
-        params.permit(:entity, :entity_type, args: [:name, :start_date, :end_date, :category_id])
+        params.permit(:entity, :entity_type, args: [:name, :start_date, :end_date, :category_id, :group_id, :trust_level])
       end
     end
 end

@@ -14,7 +14,6 @@ export default Ember.Controller.extend(BufferedContent, {
 
   readOnly: Ember.computed.alias('buffered.system'),
   showDisplayName: propertyNotEqual('name', 'displayName'),
-  canEditDescription: Em.computed.none('buffered.translatedDescription'),
 
   hasQuery: function() {
     const bQuery = this.get('buffered.query');
@@ -37,6 +36,7 @@ export default Ember.Controller.extend(BufferedContent, {
                      'listable', 'auto_revoke',
                      'enabled', 'show_posts',
                      'target_posts', 'name', 'description',
+                     'long_description',
                      'icon', 'image', 'query', 'badge_grouping_id',
                      'trigger', 'badge_type_id'],
             self = this;
@@ -68,7 +68,8 @@ export default Ember.Controller.extend(BufferedContent, {
             model = this.get('model');
         this.get('model').save(data).then(function() {
           if (newBadge) {
-            self.get('controllers.admin-badges').pushObject(model);
+            var adminBadgesController = self.get('controllers.admin-badges');
+            if (!adminBadgesController.contains(model)) adminBadgesController.pushObject(model);
             self.transitionToRoute('adminBadges.show', model.get('id'));
           } else {
             self.commitBuffer();

@@ -2,8 +2,14 @@ require 'uri'
 require_dependency 'slug'
 
 class TopicLink < ActiveRecord::Base
-  MAX_DOMAIN_LENGTH = 100 unless defined? MAX_DOMAIN_LENGTH
-  MAX_URL_LENGTH = 500 unless defined? MAX_URL_LENGTH
+
+  def self.max_domain_length
+    100
+  end
+
+  def self.max_url_length
+    500
+  end
 
   belongs_to :topic
   belongs_to :user
@@ -147,8 +153,8 @@ class TopicLink < ActiveRecord::Base
             reflected_post = Post.find_by(topic_id: topic_id, post_number: post_number.to_i)
           end
 
-          next if url && url.length > MAX_URL_LENGTH
-          next if parsed && parsed.host && parsed.host.length > MAX_DOMAIN_LENGTH
+          url = url[0...TopicLink.max_url_length]
+          next if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
 
           added_urls << url
           TopicLink.create(post_id: post.id,
@@ -225,7 +231,7 @@ end
 #  reflection    :boolean          default(FALSE)
 #  clicks        :integer          default(0), not null
 #  link_post_id  :integer
-#  title         :string(255)
+#  title         :string
 #  crawled_at    :datetime
 #  quote         :boolean          default(FALSE), not null
 #

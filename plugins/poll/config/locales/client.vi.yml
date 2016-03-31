@@ -1,0 +1,43 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+vi:
+  js:
+    poll:
+      voters:
+        other: "Người bầu chọn"
+      total_votes:
+        other: "tổng số bình chọn"
+      average_rating: "Đánh giá trung bình: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            other: "Bạn phải chọn ít nhất <strong>%{count}</strong> tùy chọn."
+          up_to_max_options:
+            other: "Bạn có thể chọn lên tới <strong>%{count}</strong> tùy chọn."
+          x_options:
+            other: "Bạn phải chọn <strong>%{count}</strong> tùy chọn."
+          between_min_and_max_options: "Bạn có thể chọn giữa <strong>%{min}</strong> và <strong>%{max}</strong>."
+      cast-votes:
+        title: "Bỏ phiếu của bạn"
+        label: "Bình chọn ngay!"
+      show-results:
+        title: "Hiển thị kết quả cuộc thăm dò"
+        label: "Hiện kết quả"
+      hide-results:
+        title: "Trở lại bầu chọn của bạn"
+        label: "Ẩn kết quả"
+      open:
+        title: "Mở bình chọn"
+        label: "Mở"
+        confirm: "Bạn có chắc mở bình chọn này?"
+      close:
+        title: "Đóng bình chọn"
+        label: "Đóng lại"
+        confirm: "Bạn có chắc chắn muốn đóng bình chọn này?"
+      error_while_toggling_status: "Có lỗi trong khi chuyển đổi qua lại các trạng thái của bình chọn này."
+      error_while_casting_votes: "Có lỗi trong khi tạo mãu bầu chọn của bạn"

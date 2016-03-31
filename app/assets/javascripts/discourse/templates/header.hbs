@@ -22,7 +22,7 @@
                            mobileAction="fullPageSearch"
                            loginAction="showLogin"
                            title="search.title"
-                           href="search"}}
+                           path="/search"}}
         {{/header-dropdown}}
 
         {{#header-dropdown iconId="toggle-hamburger-menu"
@@ -48,6 +48,7 @@
             {{#if currentUser.unread_private_messages}}
               <a href {{action "showUserMenu"}} class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
+            {{plugin-outlet "header-notifications"}}
           {{/header-dropdown}}
         {{/if}}
       </ul>
@@ -62,3 +63,4 @@
     {{/if}}
   </div>
 </div>
+{{plugin-outlet "header-under-content"}}

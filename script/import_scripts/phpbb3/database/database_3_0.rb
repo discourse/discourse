@@ -86,7 +86,7 @@ module ImportScripts::PhpBB3
     end
 
     def get_first_post_id(topic_id)
-      query(<<-SQL).first[:topic_first_post_id]
+      query(<<-SQL).try(:first).try(:[], :topic_first_post_id)
         SELECT topic_first_post_id
         FROM #{@table_prefix}_topics
         WHERE topic_id = #{topic_id}

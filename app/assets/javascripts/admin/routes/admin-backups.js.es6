@@ -1,4 +1,6 @@
 import showModal from 'discourse/lib/show-modal';
+import BackupStatus from 'admin/models/backup-status';
+import Backup from 'admin/models/backup';
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
@@ -31,7 +33,7 @@ export default Discourse.Route.extend({
     return PreloadStore.getAndRemove("operations_status", function() {
       return Discourse.ajax("/admin/backups/status.json");
     }).then(status => {
-      return Discourse.BackupStatus.create({
+      return BackupStatus.create({
         isOperationRunning: status.is_operation_running,
         canRollback: status.can_rollback,
         allowRestore: status.allow_restore
@@ -98,7 +100,7 @@ export default Discourse.Route.extend({
         I18n.t("yes_value"),
         function(confirmed) {
           if (confirmed) {
-            Discourse.Backup.cancel().then(function() {
+            Backup.cancel().then(function() {
               self.controllerFor("adminBackups").set("model.isOperationRunning", false);
             });
           }
@@ -112,7 +114,7 @@ export default Discourse.Route.extend({
         I18n.t("no_value"),
         I18n.t("yes_value"),
         function(confirmed) {
-          if (confirmed) { Discourse.Backup.rollback(); }
+          if (confirmed) { Backup.rollback(); }
         }
       );
     },
@@ -120,7 +122,7 @@ export default Discourse.Route.extend({
     uploadSuccess(filename) {
       const self = this;
       bootbox.alert(I18n.t("admin.backups.upload.success", { filename: filename }), function() {
-        Discourse.Backup.find().then(function (backups) {
+        Backup.find().then(function (backups) {
           self.controllerFor("adminBackupsIndex").set("model", backups);
         });
       });

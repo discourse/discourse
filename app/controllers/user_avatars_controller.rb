@@ -1,9 +1,8 @@
 require_dependency 'letter_avatar'
 
 class UserAvatarsController < ApplicationController
-  DOT = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
 
-  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter]
+  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]
 
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
@@ -22,6 +21,26 @@ class UserAvatarsController < ApplicationController
     end
   end
 
+  # mainly used in development for backwards compat
+  def show_proxy_letter
+    params.require(:letter)
+    params.require(:color)
+    params.require(:version)
+    params.require(:size)
+
+    no_cookies
+
+    identity = LetterAvatar::Identity.new
+    identity.letter = params[:letter].to_s[0].upcase
+    identity.color = params[:color].scan(/../).map(&:hex)
+    image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
+
+    response.headers["Last-Modified"] = File.ctime(image).httpdate
+    response.headers["Content-Length"] = File.size(image).to_s
+    expires_in 1.year, public: true
+    send_file image, disposition: nil
+  end
+
   def show_letter
     params.require(:username)
     params.require(:version)
@@ -29,7 +48,7 @@ class UserAvatarsController < ApplicationController
 
     no_cookies
 
-    return render_dot if params[:version] != LetterAvatar.version
+    return render_blank if params[:version] != LetterAvatar.version
 
     image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
 
@@ -51,19 +70,20 @@ class UserAvatarsController < ApplicationController
   protected
 
   def show_in_site(hostname)
+
     username = params[:username].to_s
-    return render_dot unless user = User.find_by(username_lower: username.downcase)
+    return render_blank unless user = User.find_by(username_lower: username.downcase)
 
     upload_id, version = params[:version].split("_")
 
     version = (version || OptimizedImage::VERSION).to_i
-    return render_dot if version != OptimizedImage::VERSION
+    return render_blank if version != OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
-    return render_dot unless upload_id > 0 && user_avatar = user.user_avatar
+    return render_blank unless upload_id > 0 && user_avatar = user.user_avatar
 
     size = params[:size].to_i
-    return render_dot if size < 8 || size > 500
+    return render_blank if size < 8 || size > 500
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a,b| (size-a).abs <=> (size-b).abs }
@@ -82,8 +102,7 @@ class UserAvatarsController < ApplicationController
         optimized_path = Discourse.store.path_for(optimized)
         image = optimized_path if File.exists?(optimized_path)
       else
-        expires_in 1.day, public: true
-        return redirect_to Discourse.store.cdn_url(optimized.url)
+        return proxy_avatar(Discourse.store.cdn_url(optimized.url))
       end
     end
 
@@ -93,14 +112,41 @@ class UserAvatarsController < ApplicationController
       expires_in 1.year, public: true
       send_file image, disposition: nil
     else
-      render_dot
+      render_blank
     end
   end
 
+  PROXY_PATH = Rails.root + "tmp/avatar_proxy"
+  def proxy_avatar(url)
+
+    if url[0..1] == "//"
+      url = (SiteSetting.use_https ? "https:" : "http:") + url
+    end
+
+    sha = Digest::SHA1.hexdigest(url)
+    filename = "#{sha}#{File.extname(url)}"
+    path = "#{PROXY_PATH}/#{filename}"
+
+    unless File.exist? path
+      FileUtils.mkdir_p PROXY_PATH
+      tmp = FileHelper.download(url, 1.megabyte, filename, true, 10)
+      FileUtils.mv tmp.path, path
+    end
+
+    # putting a bogus date cause download is not retaining the data
+    response.headers["Last-Modified"] = DateTime.parse("1-1-2000").httpdate
+    response.headers["Content-Length"] = File.size(path).to_s
+    expires_in 1.year, public: true
+    send_file path, disposition: nil
+  end
+
   # this protects us from a DoS
-  def render_dot
+  def render_blank
+    path = Rails.root + "public/images/avatar.png"
     expires_in 10.minutes, public: true
-    render text: DOT, content_type: "image/png"
+    response.headers["Last-Modified"] = DateTime.parse("1-1-2000").httpdate
+    response.headers["Content-Length"] = File.size(path).to_s
+    send_file path, disposition: nil
   end
 
   def get_optimized_image(upload, size)

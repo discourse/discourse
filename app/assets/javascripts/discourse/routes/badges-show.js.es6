@@ -2,6 +2,11 @@ import UserBadge from 'discourse/models/user-badge';
 import Badge from 'discourse/models/badge';
 
 export default Discourse.Route.extend({
+  queryParams: {
+    username: {
+      refreshModel: true
+    }
+  },
   actions: {
     didTransition() {
       this.controllerFor("badges/show")._showFooter();
@@ -10,10 +15,7 @@ export default Discourse.Route.extend({
   },
 
   serialize(model) {
-    return {
-      id: model.get("id"),
-      slug: model.get("name").replace(/[^A-Za-z0-9_]+/g, "-").toLowerCase()
-    };
+    return model.getProperties('id', 'slug');
   },
 
   model(params) {
@@ -24,8 +26,10 @@ export default Discourse.Route.extend({
     }
   },
 
-  afterModel(model) {
-    return UserBadge.findByBadgeId(model.get("id")).then(userBadges => {
+  afterModel(model, transition) {
+    const username = transition.queryParams && transition.queryParams.username;
+
+    return UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
       this.userBadges = userBadges;
     });
   },
@@ -33,7 +37,7 @@ export default Discourse.Route.extend({
   titleToken() {
     const model = this.modelFor("badges.show");
     if (model) {
-      return model.get("displayName");
+      return model.get("name");
     }
   },
 

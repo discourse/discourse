@@ -39,8 +39,13 @@ export default Ember.Controller.extend({
     // XSS protection (should be encapsulated)
     username = username.toString().replace(/[^A-Za-z0-9_\.\-]/g, "");
 
+    // No user card for anon
+    if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
+      return;
+    }
+
     // Don't show on mobile
-    if (Discourse.Mobile.mobileView) {
+    if (this.site.mobileView) {
       const url = "/users/" + username;
       DiscourseURL.routeTo(url);
       return;
@@ -67,6 +72,7 @@ export default Ember.Controller.extend({
 
     const args = { stats: false };
     args.include_post_count_for = this.get('controllers.topic.model.id');
+    args.skip_track_visit = true;
 
     return Discourse.User.findByUsername(username, args).then((user) => {
       if (user.topic_post_count) {

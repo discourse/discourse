@@ -42,7 +42,7 @@ module DiscourseHub
 
   def self.hub_base_url
     if Rails.env.production?
-      'http://api.discourse.org/api'
+      'https://api.discourse.org/api'
     else
       ENV['HUB_BASE_URL'] || 'http://local.hub:3000/api'
     end

@@ -27,7 +27,8 @@ class TopicTrackingState
         highest_post_number: 1,
         created_at: topic.created_at,
         topic_id: topic.id,
-        category_id: topic.category_id
+        category_id: topic.category_id,
+        archetype: topic.archetype
       }
     }
 
@@ -46,7 +47,8 @@ class TopicTrackingState
       payload: {
         bumped_at: topic.bumped_at,
         topic_id: topic.id,
-        category_id: topic.category_id
+        category_id: topic.category_id,
+        archetype: topic.archetype
       }
     }
 
@@ -74,13 +76,43 @@ class TopicTrackingState
           created_at: post.created_at,
           topic_id: post.topic_id,
           category_id: post.topic.category_id,
-          notification_level: tu.notification_level
+          notification_level: tu.notification_level,
+          archetype: post.topic.archetype
         }
       }
 
       MessageBus.publish("/unread/#{tu.user_id}", message.as_json, group_ids: group_ids)
     end
 
+  end
+
+  def self.publish_recover(topic)
+    group_ids = topic.category && topic.category.secure_group_ids
+
+    message = {
+      topic_id: topic.id,
+      message_type: "recover",
+      payload: {
+        topic_id: topic.id,
+      }
+    }
+
+    MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
+
+  end
+
+  def self.publish_delete(topic)
+    group_ids = topic.category && topic.category.secure_group_ids
+
+    message = {
+      topic_id: topic.id,
+      message_type: "delete",
+      payload: {
+        topic_id: topic.id,
+      }
+    }
+
+    MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level=nil)
@@ -104,9 +136,9 @@ class TopicTrackingState
 
   def self.treat_as_new_topic_clause
     User.where("GREATEST(CASE
-                  WHEN COALESCE(u.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
-                  WHEN COALESCE(u.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
-                  ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(u.new_topic_duration_minutes, :default_duration))
+                  WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
+                  WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
+                  ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
                END, us.new_since, :min_date)",
                 now: DateTime.now,
                 last_visit: User::NewTopicDuration::LAST_VISIT,
@@ -128,13 +160,9 @@ class TopicTrackingState
     #  cycles from usual requests
     #
     #
-    sql = report_raw_sql(topic_id: topic_id)
-
-    sql = <<SQL
-    WITH x AS (
-      #{sql}
-    ) SELECT * FROM x LIMIT #{SiteSetting.max_tracked_new_unread.to_i}
-SQL
+    sql = report_raw_sql(topic_id: topic_id, skip_unread: true, skip_order: true)
+    sql << "\nUNION ALL\n\n"
+    sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true)
 
     SqlBuilder.new(sql)
       .map_exec(TopicTrackingState, user_id: user_id, topic_id: topic_id)
@@ -173,6 +201,7 @@ SQL
     FROM topics
     JOIN users u on u.id = :user_id
     JOIN user_stats AS us ON us.user_id = u.id
+    JOIN user_options AS uo ON uo.user_id = u.id
     JOIN categories c ON c.id = topics.category_id
     LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
     WHERE u.id = :user_id AND
@@ -198,7 +227,11 @@ SQL
       sql << " AND topics.id = :topic_id"
     end
 
-    sql << " ORDER BY topics.bumped_at DESC"
+    unless opts && opts[:skip_order]
+      sql << " ORDER BY topics.bumped_at DESC"
+    end
+
+    sql
   end
 
 end

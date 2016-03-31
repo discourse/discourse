@@ -1,12 +1,16 @@
 class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
 
+  WEBSITE_REGEXP = /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,9}(([0-9]{1,5})?\/.*)?$)/ix
+
   validates :bio_raw, length: { maximum: 3000 }
+  validates :website, format: { with: WEBSITE_REGEXP }, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
 
   belongs_to :card_image_badge, class_name: 'Badge'
+  has_many :user_profile_views, dependent: :destroy
 
   BAKED_VERSION = 1
 
@@ -102,8 +106,8 @@ end
 # Table name: user_profiles
 #
 #  user_id              :integer          not null, primary key
-#  location             :string(255)
-#  website              :string(255)
+#  location             :string
+#  website              :string
 #  bio_raw              :text
 #  bio_cooked           :text
 #  profile_background   :string(255)
@@ -112,6 +116,7 @@ end
 #  badge_granted_title  :boolean          default(FALSE)
 #  card_background      :string(255)
 #  card_image_badge_id  :integer
+#  views                :integer          default(0), not null
 #
 # Indexes
 #

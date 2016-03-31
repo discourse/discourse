@@ -197,18 +197,20 @@ class ImportScripts::Base
   def all_records_exist?(type, import_ids)
     return false if import_ids.empty?
 
-    existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
+    Post.exec_sql('CREATE TEMP TABLE import_ids(val varchar(200) PRIMARY KEY)')
 
-    if Fixnum === import_ids.first
-      existing = existing.where('cast(value as int) in (?)', import_ids)
-    else
-      existing = existing.where('value in (?)', import_ids)
-    end
+    import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
+    Post.exec_sql("INSERT INTO import_ids VALUES #{import_id_clause}")
+
+    existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
+    existing = existing.joins('JOIN import_ids ON val = value')
 
     if existing.count == import_ids.length
-      # puts "Skipping #{import_ids.length} already imported #{type}"
-      true
+      puts "Skipping #{import_ids.length} already imported #{type}"
+      return true
     end
+  ensure
+    Post.exec_sql('DROP TABLE import_ids')
   end
 
   # Iterate through a list of user records to be imported.
@@ -237,14 +239,18 @@ class ImportScripts::Base
         elsif u[:email].present?
           new_user = create_user(u, import_id)
 
-          if new_user.valid? && new_user.user_profile.valid?
+          if new_user && new_user.valid? && new_user.user_profile && new_user.user_profile.valid?
             @lookup.add_user(import_id.to_s, new_user)
             created += 1
           else
             failed += 1
-            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}"
-            puts "user errors: #{new_user.errors.full_messages}"
-            puts "user_profile errors: #{new_user.user_profiler.errors.full_messages}"
+            puts "Failed to create user id: #{import_id}, username: #{new_user.try(:username)}, email: #{new_user.try(:email)}"
+            if new_user.try(:errors)
+              puts "user errors: #{new_user.errors.full_messages}"
+              if new_user.try(:user_profile).try(:errors)
+                puts "user_profile errors: #{new_user.user_profile.errors.full_messages}"
+              end
+            end
           end
         else
           failed += 1
@@ -271,13 +277,17 @@ class ImportScripts::Base
     location = opts.delete(:location)
     avatar_url = opts.delete(:avatar_url)
 
+    # Allow the || operations to work with empty strings ''
+    opts[:username] = nil if opts[:username].blank?
+
     opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
     if opts[:username].blank? ||
       opts[:username].length < User.username_length.begin ||
       opts[:username].length > User.username_length.end ||
       !User.username_available?(opts[:username]) ||
       !UsernameValidator.new(opts[:username]).valid_format?
-      opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
+
+      opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
     end
     opts[:email] = opts[:email].downcase
     opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
@@ -286,6 +296,7 @@ class ImportScripts::Base
     opts[:last_emailed_at] = opts.fetch(:last_emailed_at, Time.now)
 
     u = User.new(opts)
+    (opts[:custom_fields] || {}).each { |k, v| u.custom_fields[k] = v }
     u.custom_fields["import_id"] = import_id
     u.custom_fields["import_username"] = opts[:username] if opts[:username].present?
     u.custom_fields["import_avatar_url"] = avatar_url if avatar_url.present?
@@ -295,8 +306,8 @@ class ImportScripts::Base
       User.transaction do
         u.save!
         if bio_raw.present? || website.present? || location.present?
-          u.user_profile.bio_raw = bio_raw if bio_raw.present?
-          u.user_profile.website = website if website.present?
+          u.user_profile.bio_raw = bio_raw[0..2999] if bio_raw.present?
+          u.user_profile.website = website unless website.blank? || website !~ UserProfile::WEBSITE_REGEXP
           u.user_profile.location = location if location.present?
           u.user_profile.save!
         end
@@ -307,18 +318,18 @@ class ImportScripts::Base
       end
     rescue => e
       # try based on email
-      if e.record.errors.messages[:email].present?
-        existing = User.find_by(email: opts[:email].downcase)
-        if existing
+      if e.try(:record).try(:errors).try(:messages).try(:[], :email).present?
+        if existing = User.find_by(email: opts[:email].downcase)
           existing.custom_fields["import_id"] = import_id
           existing.save!
           u = existing
         end
       else
-        puts "Error on record: #{opts}"
+        puts "Error on record: #{opts.inspect}"
         raise e
       end
     end
+
     post_create_action.try(:call, u) if u.persisted?
 
     u # If there was an error creating the user, u.errors has the messages
@@ -355,7 +366,6 @@ class ImportScripts::Base
         end
 
         new_category = create_category(params, params[:id])
-        @lookup.add_category(params[:id], new_category)
 
         created += 1
       end
@@ -384,6 +394,8 @@ class ImportScripts::Base
 
     new_category.custom_fields["import_id"] = import_id if import_id
     new_category.save!
+
+    @lookup.add_category(import_id, new_category)
 
     post_create_action.try(:call, new_category)
 
@@ -449,6 +461,8 @@ class ImportScripts::Base
     [created, skipped]
   end
 
+  STAFF_GUARDIAN = Guardian.new(User.find(-1))
+
   def create_post(opts, import_id)
     user = User.find(opts[:user_id])
     post_create_action = opts.delete(:post_create_action)
@@ -457,6 +471,7 @@ class ImportScripts::Base
     opts[:custom_fields] ||= {}
     opts[:custom_fields]['import_id'] = import_id
 
+    opts[:guardian] = STAFF_GUARDIAN
     if @bbcode_to_md
       opts[:raw] = opts[:raw].bbcode_to_md(false) rescue opts[:raw]
     end
@@ -625,6 +640,23 @@ class ImportScripts::Base
         user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
       rescue Discourse::InvalidAccess
         nil
+      end
+      progress_count += 1
+      print_status(progress_count, total_count)
+    end
+  end
+
+  def update_user_signup_date_based_on_first_post
+    puts "", "setting users' signup date based on the date of their first post"
+
+    total_count = User.count
+    progress_count = 0
+
+    User.find_each do |user|
+      first = user.posts.order('created_at ASC').first
+      if first
+        user.created_at = first.created_at
+        user.save!
       end
       progress_count += 1
       print_status(progress_count, total_count)

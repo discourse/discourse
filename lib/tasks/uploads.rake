@@ -134,7 +134,7 @@ def migrate_to_s3
     # retrieve the path to the local file
     path = local.path_for(upload)
     # make sure the file exists locally
-    if !File.exists?(path)
+    if !path or !File.exists?(path)
       putc "X"
       next
     end

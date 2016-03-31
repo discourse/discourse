@@ -1,3 +1,4 @@
+
 export default Ember.Component.extend({
   classNames: ["ip-lookup"],
 
@@ -42,7 +43,8 @@ export default Ember.Component.extend({
           self.set("totalOthersWithSameIP", result.total);
         });
 
-        Discourse.AdminUser.findAll("active", data).then(function (users) {
+        const AdminUser = require('admin/models/admin-user').default;
+        AdminUser.findAll("active", data).then(function (users) {
           self.setProperties({
             other_accounts: users,
             otherAccountsLoading: false,

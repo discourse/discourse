@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'site_settings/yaml_loader'
 
 describe SiteSettings::YamlLoader do
@@ -41,7 +41,7 @@ describe SiteSettings::YamlLoader do
   it "loads simple settings" do
     receiver.expects(:setting).with('category1', 'title', 'My Site', {}).once
     receiver.expects(:setting).with('category1', 'contact_email', 'webmaster@example.com', {}).once
-    receiver.expects(:setting).with('category2', 'ninja_edit_window', true, {}).once
+    receiver.expects(:setting).with('category2', 'editing_grace_period', true, {}).once
     receiver.expects(:setting).with('category3', 'reply_by_email_address', '', {}).once
     receiver.load_yaml(simple)
   end

@@ -1,5 +1,7 @@
 # CommonPasswords will check a given password against a list of the most commonly used passwords.
-# The list comes from https://xato.net/passwords/more-top-worst-passwords/#.UrR1AHmpxs4
+# The list comes from https://github.com/danielmiessler/SecLists/tree/master/Passwords
+# specifically the list of 10 million passwords, top 100k, filtered by length
+#
 # The list is stored in Redis at a key that is shared by all sites in a multisite config.
 #
 # If the password file is changed, you need to add a migration that deletes the list from redis
@@ -9,7 +11,7 @@
 
 class CommonPasswords
 
-  PASSWORD_FILE = File.join(Rails.root, 'lib', 'common_passwords', 'long-common-passwords.txt')
+  PASSWORD_FILE = File.join(Rails.root, 'lib', 'common_passwords', '10-char-common-passwords.txt')
   LIST_KEY = 'discourse-common-passwords'
 
   @mutex = Mutex.new
@@ -18,7 +20,6 @@ class CommonPasswords
     return false unless password.present?
     password_list.include?(password)
   end
-
 
   private
 

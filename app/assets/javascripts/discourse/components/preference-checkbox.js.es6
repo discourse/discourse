@@ -3,5 +3,16 @@ export default Em.Component.extend({
 
   label: function() {
     return I18n.t(this.get('labelKey'));
-  }.property('labelKey')
+  }.property('labelKey'),
+
+  click() {
+    const warning = this.get('warning');
+
+    if (warning && !this.get('checked')) {
+      this.sendAction('warning');
+      return false;
+    }
+
+    return true;
+  }
 });

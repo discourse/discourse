@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe ExportCsvController do
   let(:export_filename) { "user-archive-codinghorror-150115-234817-999.csv.gz" }

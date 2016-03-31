@@ -1,0 +1,47 @@
+<div class="modal-body">
+  <div class="radios">
+    <input type="radio" id="local" value="local" name="upload" {{action "useLocal"}}>
+    <label class="radio" for="local">{{i18n 'upload_selector.from_my_computer'}}</label>
+    {{#if local}}
+      <div class="inputs">
+        <input type="file" id="filename-input" multiple><br>
+        <span class="description">{{tip}}</span>
+      </div>
+    {{/if}}
+  </div>
+  <div class="radios">
+    <input type="radio" id="remote" value="remote" name="upload" {{action "useRemote"}}>
+    <label class="radio" for="remote">{{i18n 'upload_selector.from_the_web'}}</label>
+    {{#if remote}}
+      <div class="inputs">
+        {{input value=imageUrl placeholder="http://example.com/image.png"}}
+        <span class="description">{{tip}}</span>
+      </div>
+    {{/if}}
+  </div>
+  {{#if showMore}}
+    <div class="radios">
+      <div class="inputs">
+        {{input value=imageLink laceholder="http://example.com"}}
+        <span class="description">{{i18n 'upload_selector.image_link'}}</span>
+      </div>
+    </div>
+  {{/if}}
+  <div class="radios">
+    <div class="inputs">
+      <p class="hint">
+        {{#if capabilities.canPasteImages}}
+          {{i18n 'upload_selector.hint'}}
+        {{else}}
+          {{i18n 'upload_selector.hint_for_supported_browsers'}}
+        {{/if}}
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  {{d-button action="upload" class='btn-primary' icon=uploadIcon label='upload'}}
+  <a href {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+  {{#if remote}}<a {{action "toggleShowMore"}} class="pull-right">{{i18n 'show_more'}}</a>{{/if}}
+</div>

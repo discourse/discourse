@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_dependency 'js_locale_helper'
 
 describe JsLocaleHelper do
@@ -172,6 +172,16 @@ describe JsLocaleHelper do
       ctx.eval('var window = this;')
       ctx.load(Rails.root + 'app/assets/javascripts/locales/i18n.js')
       ctx.eval(js)
+    end
+
+    it "finds moment.js locale file for #{locale[:value]}" do
+      content = JsLocaleHelper.moment_locale(locale[:value])
+
+      if (locale[:value] == 'en')
+        expect(content).to eq('')
+      else
+        expect(content).to_not eq('')
+      end
     end
   end
 

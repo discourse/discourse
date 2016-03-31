@@ -8,15 +8,19 @@ class PostTimestampChanger
 
   def change!
     ActiveRecord::Base.transaction do
-      update_topic
+      last_posted_at = @timestamp
 
       @posts.each do |post|
         if post.is_first_post?
           update_post(post, @timestamp)
         else
-          update_post(post, Time.at(post.created_at.to_f + @time_difference))
+          new_created_at = Time.at(post.created_at.to_f + @time_difference)
+          last_posted_at = new_created_at if new_created_at > last_posted_at
+          update_post(post, new_created_at)
         end
       end
+
+      update_topic(last_posted_at)
     end
 
     # Burst the cache for stats
@@ -29,11 +33,12 @@ class PostTimestampChanger
     @timestamp - @topic.created_at
   end
 
-  def update_topic
+  def update_topic(last_posted_at)
     @topic.update_attributes(
       created_at: @timestamp,
       updated_at: @timestamp,
-      bumped_at: @timestamp
+      bumped_at: @timestamp,
+      last_posted_at: last_posted_at
     )
   end
 

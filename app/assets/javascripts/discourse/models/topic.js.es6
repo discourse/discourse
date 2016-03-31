@@ -3,10 +3,44 @@ import RestModel from 'discourse/models/rest';
 import { propertyEqual } from 'discourse/lib/computed';
 import { longDate } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
+import ActionSummary from 'discourse/models/action-summary';
+
+export function loadTopicView(topic, args) {
+  const topicId = topic.get('id');
+  const data = _.merge({}, args);
+  const url = Discourse.getURL("/t/") + topicId;
+  const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + '.json';
+
+  delete data.nearPost;
+  delete data.__type;
+  delete data.store;
+
+  return PreloadStore.getAndRemove(`topic_${topicId}`, () => {
+    return Discourse.ajax(jsonUrl, {data});
+  }).then(json => {
+    topic.updateFromJson(json);
+    return json;
+  });
+}
 
 const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
+
+  @computed('posters.firstObject')
+  creator(poster){
+    return poster && poster.user;
+  },
+
+  @computed('posters.@each')
+  lastPoster(posters) {
+    var user;
+    if (posters && posters.length > 0) {
+      const latest = posters.filter(p => p.extras && p.extras.indexOf("latest") >= 0)[0];
+      user = latest && latest.user;
+    }
+    return user || this.get("creator");
+  },
 
   @computed('fancy_title')
   fancyTitle(title) {
@@ -190,35 +224,37 @@ const Topic = RestModel.extend({
            .then(function () { self.set('archetype', 'regular'); });
   },
 
-  estimatedReadingTime: function() {
-    const wordCount = this.get('word_count');
-    if (!wordCount) return;
-
-    // Avg for 500 words per minute when you account for skimming
-    return Math.floor(wordCount / 500.0);
-  }.property('word_count'),
-
   toggleBookmark() {
-    if (this.get("bookmarking")) { return; }
+    if (this.get('bookmarking')) { return Ember.RSVP.Promise.resolve(); }
     this.set("bookmarking", true);
 
-    const self = this,
-          stream = this.get('postStream'),
-          posts = Em.get(stream, 'posts'),
-          firstPost = posts && posts[0] && posts[0].get('post_number') === 1 && posts[0],
-          bookmark = !this.get('bookmarked'),
-          path = bookmark ? '/bookmark' : '/remove_bookmarks';
+    const stream = this.get('postStream');
+    const posts = Em.get(stream, 'posts');
+    const firstPost = posts && posts[0] && posts[0].get('post_number') === 1 && posts[0];
+    const bookmark = !this.get('bookmarked');
+    const path = bookmark ? '/bookmark' : '/remove_bookmarks';
 
-    const toggleBookmarkOnServer = function() {
-      return Discourse.ajax('/t/' + self.get('id') + path, {
-        type: 'PUT',
-      }).then(function() {
-        self.toggleProperty('bookmarked');
-        if (bookmark && firstPost) { firstPost.set('bookmarked', true); }
-        if (!bookmark && posts) {
-          posts.forEach((post) => post.get('bookmarked') && post.set('bookmarked', false));
+    const toggleBookmarkOnServer = () => {
+      return Discourse.ajax(`/t/${this.get('id')}${path}`, { type: 'PUT' }).then(() => {
+        this.toggleProperty('bookmarked');
+        if (bookmark && firstPost) {
+          firstPost.set('bookmarked', true);
+          return [firstPost.id];
         }
-      }).catch(function(error) {
+        if (!bookmark && posts) {
+
+          const updated = [];
+          posts.forEach(post => {
+            if (post.get('bookmarked')) {
+              post.set('bookmarked', false);
+              updated.push(post.get('id'));
+            }
+          });
+          return updated;
+        }
+
+        return [];
+      }).catch(error => {
         let showGenericError = true;
         if (error && error.responseText) {
           try {
@@ -232,28 +268,26 @@ const Topic = RestModel.extend({
         }
 
         throw error;
-      }).finally(function() {
-        self.set("bookmarking", false);
-      });
+      }).finally(() => this.set('bookmarking', false));
     };
 
-    let unbookmarkedPosts = [];
+    const unbookmarkedPosts = [];
     if (!bookmark && posts) {
-      posts.forEach((post) => post.get('bookmarked') && unbookmarkedPosts.push(post));
+      posts.forEach(post => post.get('bookmarked') && unbookmarkedPosts.push(post));
     }
 
-    if (unbookmarkedPosts.length > 1) {
-      return bootbox.confirm(
-        I18n.t("bookmarks.confirm_clear"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        function (confirmed) {
-          if (confirmed) { return toggleBookmarkOnServer(); }
-        }
-      );
-    } else {
-      return toggleBookmarkOnServer();
-    }
+    return new Ember.RSVP.Promise(resolve => {
+      if (unbookmarkedPosts.length > 1) {
+        bootbox.confirm(
+          I18n.t("bookmarks.confirm_clear"),
+          I18n.t("no_value"),
+          I18n.t("yes_value"),
+          confirmed => confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
+        );
+      } else {
+        toggleBookmarkOnServer().then(resolve);
+      }
+    });
   },
 
   createInvite(emailOrUsername, groupNames) {
@@ -303,11 +337,14 @@ const Topic = RestModel.extend({
     keys.removeObject('details');
     keys.removeObject('post_stream');
 
-    const topic = this;
-    keys.forEach(function (key) {
-      topic.set(key, json[key]);
-    });
+    keys.forEach(key => this.set(key, json[key]));
+  },
 
+  reload() {
+    const self = this;
+    return Discourse.ajax('/t/' + this.get('id'), { type: 'GET' }).then(function(topic_json) {
+      self.updateFromJson(topic_json);
+    });
   },
 
   isPinnedUncategorized: function() {
@@ -354,25 +391,6 @@ const Topic = RestModel.extend({
     });
   },
 
-  // Is the reply to a post directly below it?
-  isReplyDirectlyBelow(post) {
-    const posts = this.get('postStream.posts');
-    const postNumber = post.get('post_number');
-    if (!posts) return;
-
-    const postBelow = posts[posts.indexOf(post) + 1];
-
-    // If the post directly below's reply_to_post_number is our post number or we are quoted,
-    // it's considered directly below.
-    //
-    // TODO: we don't carry information about quoting, this leaves this code fairly fragile
-    //  instead we should start shipping quote meta data with posts, but this will add at least
-    //  1 query to the topics page
-    //
-    return postBelow && (postBelow.get('reply_to_post_number') === postNumber ||
-        postBelow.get('cooked').indexOf('data-post="'+ postNumber + '"') >= 0
-    );
-  },
 
   hasExcerpt: Em.computed.notEmpty('excerpt'),
 
@@ -382,7 +400,35 @@ const Topic = RestModel.extend({
   }.property('excerpt'),
 
   readLastPost: propertyEqual('last_read_post_number', 'highest_post_number'),
-  canClearPin: Em.computed.and('pinned', 'readLastPost')
+  canClearPin: Em.computed.and('pinned', 'readLastPost'),
+
+  archiveMessage() {
+    this.set("archiving", true);
+    var promise = Discourse.ajax(`/t/${this.get('id')}/archive-message`, {type: 'PUT'});
+
+    promise.then((msg)=> {
+      this.set('message_archived', true);
+      if (msg && msg.group_name) {
+        this.set('inboxGroupName', msg.group_name);
+      }
+    }).finally(()=>this.set('archiving', false));
+
+    return promise;
+  },
+
+  moveToInbox() {
+    this.set("archiving", true);
+    var promise = Discourse.ajax(`/t/${this.get('id')}/move-to-inbox`, {type: 'PUT'});
+
+    promise.then((msg)=> {
+      this.set('message_archived', false);
+      if (msg && msg.group_name) {
+        this.set('inboxGroupName', msg.group_name);
+      }
+    }).finally(()=>this.set('archiving', false));
+
+    return promise;
+  }
 
 });
 
@@ -400,7 +446,7 @@ Topic.reopenClass({
       result.actions_summary = result.actions_summary.map(function(a) {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
-        const actionSummary = Discourse.ActionSummary.create(a);
+        const actionSummary = ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
         return actionSummary;
       });

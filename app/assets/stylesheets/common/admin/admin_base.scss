@@ -38,9 +38,80 @@ $mobile-breakpoint: 700px;
   .filters input { margin-bottom: 0; }
 }
 
+.admin-contents .admin-reports-filter {
+  input[type="date"] {
+    width: 140px;
+  }
+}
+
 td.flaggers td {
   border-bottom: none;
   border-top: none;
+}
+
+.site-texts {
+  .search-area {
+    margin-bottom: 2em;
+    p {
+      margin-top: 0;
+    }
+
+    .site-text-search {
+      padding: 0.5em;
+      font-size: 1em;
+      width: 50%;
+    }
+
+    .extra-options {
+      float: right;
+      input[type=checkbox] {
+        margin-right: 0.5em;
+      }
+    }
+
+  }
+  .text-highlight {
+    font-weight: bold;
+  }
+
+  .site-text {
+    cursor: pointer;
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    margin-bottom: 0.5em;
+
+    &.overridden {
+      background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
+    }
+
+    h3 {
+      font-weight: normal;
+      font-size: 1.1em;
+    }
+
+    button.edit {
+      float: right;
+    }
+    .site-text-value {
+      margin: 0.5em 5em 0.5em 0;
+      max-height: 100px;
+      color: dark-light-diff($primary, $secondary, 40%, -10%);
+    }
+
+  }
+
+  .edit-site-text {
+    textarea {
+      width: 80%;
+    }
+
+    .save-messages, .title {
+      margin-bottom: 1em;
+    }
+
+    .go-back {
+      margin-top: 1em;
+    }
+  }
 }
 
 .content-list li a span.count {
@@ -122,6 +193,10 @@ td.flaggers td {
 
 .admin-container .controls {
   @include clearfix;
+
+  .save-messages {
+    margin-top: 1em;
+  }
 }
 
 .admin-title {
@@ -180,7 +255,6 @@ td.flaggers td {
   .result-message {
     display: inline-block;
     padding-left: 10px;
-    padding-top: 5px;
   }
   .username {
     input[type=text] {
@@ -214,6 +288,19 @@ td.flaggers td {
     display: inline-block;
     margin-right: 5px;
   }
+  #last-seen {
+    float: none;
+  }
+  .ac-wrap {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+  }
+}
+
+.paste-users {
+  width: 400px;
+  height: 150px;
 }
 
 .groups, .badges {
@@ -579,8 +666,7 @@ section.details {
     width: 100% !important;
     border-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
     .item {
-      width: 190px;
-      margin-right: 0 !important;
+      margin-right: 10px;
     }
   }
   .next, .previous {
@@ -1016,6 +1102,11 @@ table.api-keys {
   }
 }
 
+.groups-bulk {
+  .control {
+    margin-bottom: 1em;
+  }
+}
 
 .commits-widget {
   border: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
@@ -1166,16 +1257,12 @@ table.api-keys {
     margin-top: 10px;
   }
 
-  .pagedown-editor {
-    width: 98%;
-  }
-
   textarea.plain {
     width: 98%;
     height: 200px;
   }
 
-  .wmd-input {
+  .d-editor-input {
     width: 98%;
     height: 200px;
   }
@@ -1193,6 +1280,16 @@ table.api-keys {
     bottom: 0;
   }
 
+}
+
+.email-template {
+  input {
+    width: 100%;
+  }
+
+  label {
+    font-weight: bold;
+  }
 }
 
 .row.groups {
@@ -1441,7 +1538,7 @@ button.ru {
 
 @media all
 and (max-width : 850px) {
-  .nav-stacked {
+  html:not(.mobile-view) .admin-content .nav-stacked {
     .glyph {width: auto; position: relative;}
     > li > a {padding: 13px}
   }
@@ -1479,9 +1576,6 @@ and (max-width : 500px) {
 
   .content-editor {
     width: 100%;
-      .pagedown-editor {
-        box-sizing: border-box;
-      }
   }
 
   div.ac-wrap {
@@ -1518,10 +1612,9 @@ and (max-width : 500px) {
     border-bottom: 1px solid #dfdfdf;
   }
   .actions {
-    font-size: 1.214em;
     float: right;
-    a {
-      margin-left: 5px;
+    .btn {
+      padding: 3px 6px;
     }
   }
 }
@@ -1681,6 +1774,66 @@ table#user-badges {
   }
 }
 
+// Emails
+
+.email-list {
+  .filters input {
+    width: 100%;
+  }
+  .time {
+    width: 50px;
+  }
+  .username div {
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .addresses p {
+    margin: 2px 0;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.incoming-emails {
+  .control-group {
+    margin: 8px 0;
+  }
+  .controls {
+    margin-left: 110px;
+  }
+  p {
+    margin: 5px 10px;
+  }
+  .error-description {
+    color: #919191;
+    font-size: 90%;
+  }
+  hr {
+    margin: 0;
+  }
+  label {
+    font-weight: bold;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin: 0 10px;
+  }
+  ul {
+    list-style: none;
+    margin: 0 10px;
+  }
+  textarea {
+    width: 95%;
+    height: 150px;
+    font-family: monospace;
+    box-shadow: none;
+  }
+}
+
 // Mobile specific styles
 // Mobile view text-inputs need some padding
 .mobile-view .admin-contents {
@@ -1695,6 +1848,12 @@ table#user-badges {
 
 .mobile-view .full-width {
   margin: 0;
+}
+
+// Mobile specific style for Admin IP Lookup box
+.mobile-view .admin-contents .ip-lookup .location-box {
+  width: 300px;
+  left: 20px;
 }
 
 .cboxcontainer {

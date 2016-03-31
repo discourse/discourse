@@ -3,9 +3,10 @@ import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
 import Quote from 'discourse/lib/quote';
-import { setting } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
+import Composer from 'discourse/models/composer';
+import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   needs: ['header', 'modal', 'composer', 'quote-button', 'topic-progress', 'application'],
@@ -15,16 +16,13 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
-  loadedAllPosts: false,
+  loadedAllPosts: Em.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
   enteredAt: null,
-  firstPostExpanded: false,
   retrying: false,
   adminMenuVisible: false,
 
   showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
   isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
-
-  maxTitleLength: setting('max_topic_title_length'),
 
   _titleChanged: function() {
     const title = this.get('model.title');
@@ -36,21 +34,16 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   }.observes('model.title', 'category'),
 
-  postStreamLoadedAllPostsChanged: function() {
-    // semantics of loaded all posts are slightly diff at topic level,
-    // it just means that we "once" loaded all posts, this means we don't
-    // keep re-rendering the suggested topics when new posts zoom in
-    let loaded = this.get('model.postStream.loadedAllPosts');
+  @computed('model.postStream.posts')
+  postsToRender() {
+    return this.capabilities.isAndroid ? this.get('model.postStream.posts')
+                                       : this.get('model.postStream.postsWithPlaceholders');
+  },
 
-    if (loaded) {
-      this.set('model.loadedTopicId', this.get('model.id'));
-    } else {
-      loaded = this.get('model.loadedTopicId') === this.get('model.id');
-    }
-
-    this.set('loadedAllPosts', loaded);
-
-  }.observes('model.postStream', 'model.postStream.loadedAllPosts'),
+  @computed('model.postStream.loadingFilter')
+  androidLoading(loading) {
+    return this.capabilities.isAndroid && loading;
+  },
 
   @computed('model.postStream.summary')
   show_deleted: {
@@ -96,7 +89,74 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     this.set('selectedReplies', []);
   }.on('init'),
 
+  showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
+
+  gotoInbox(name) {
+    var url = '/users/' + this.get('currentUser.username_lower') + '/messages';
+    if (name) {
+      url = url + '/group/' + name;
+    }
+    DiscourseURL.routeTo(url);
+  },
+
+  selectedQuery: function() {
+    return post => this.postSelected(post);
+  }.property(),
+
   actions: {
+
+    fillGapBefore(args) {
+      return this.get('model.postStream').fillGapBefore(args.post, args.gap);
+    },
+
+    fillGapAfter(args) {
+      return this.get('model.postStream').fillGapAfter(args.post, args.gap);
+    },
+
+    // Called the the topmost visible post on the page changes.
+    topVisibleChanged(event) {
+      const { post, refresh } = event;
+
+      if (!post) { return; }
+
+      const postStream = this.get('model.postStream');
+      const firstLoadedPost = postStream.get('posts.firstObject');
+
+      const currentPostNumber = post.get('post_number');
+      this.set('model.currentPost', currentPostNumber);
+      this.send('postChangedRoute', currentPostNumber);
+
+      if (post.get('post_number') === 1) { return; }
+
+      if (firstLoadedPost && firstLoadedPost === post) {
+        postStream.prependMore().then(() => refresh());
+      }
+    },
+
+    //  Called the the bottommost visible post on the page changes.
+    bottomVisibleChanged(event) {
+      const { post, refresh } = event;
+
+      const postStream = this.get('model.postStream');
+      const lastLoadedPost = postStream.get('posts.lastObject');
+
+      this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
+
+      if (lastLoadedPost && lastLoadedPost === post && postStream.get('canAppendMore')) {
+        postStream.appendMore().then(() => refresh());
+        // show loading stuff
+        refresh();
+      }
+    },
+
+    toggleSummary() {
+      return this.get('model.postStream').toggleSummary();
+    },
+
+    removeAllowedUser(user) {
+      return this.get('model.details').removeAllowedUser(user);
+    },
+
     showTopicAdminMenu() {
       this.set('adminMenuVisible', true);
     },
@@ -109,6 +169,20 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.deleteTopic();
     },
 
+    archiveMessage() {
+      const topic = this.get('model');
+      topic.archiveMessage().then(()=>{
+        this.gotoInbox(topic.get("inboxGroupName"));
+      });
+    },
+
+    moveToInbox() {
+      const topic = this.get('model');
+      topic.moveToInbox().then(()=>{
+        this.gotoInbox(topic.get("inboxGroupName"));
+      });
+    },
+
     // Post related methods
     replyToPost(post) {
       const composerController = this.get('controllers.composer'),
@@ -119,17 +193,19 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       quoteController.set('buffer', '');
 
       if (composerController.get('content.topic.id') === topic.get('id') &&
-          composerController.get('content.action') === Discourse.Composer.REPLY) {
+          composerController.get('content.action') === Composer.REPLY) {
         composerController.set('content.post', post);
-        composerController.set('content.composeState', Discourse.Composer.OPEN);
-        composerController.appendText(quotedText);
+        composerController.set('content.composeState', Composer.OPEN);
+        this.appEvents.trigger('composer:insert-text', quotedText.trim());
       } else {
 
         const opts = {
-          action: Discourse.Composer.REPLY,
+          action: Composer.REPLY,
           draftKey: topic.get('draft_key'),
           draftSequence: topic.get('draft_sequence')
         };
+
+        if (quotedText) { opts.quote = quotedText; }
 
         if(post && post.get("post_number") !== 1){
           opts.post = post;
@@ -137,9 +213,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           opts.topic = topic;
         }
 
-        composerController.open(opts).then(function() {
-          composerController.appendText(quotedText);
-        });
+        composerController.open(opts);
       }
       return false;
     },
@@ -157,8 +231,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       // Deleting the first post deletes the topic
       if (post.get('post_number') === 1) {
-        this.deleteTopic();
-        return;
+        return this.deleteTopic();
+      } else if (!post.can_delete) {
+        // check if current user can delete post
+        return false;
       }
 
       const user = Discourse.User.current(),
@@ -169,7 +245,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (user.get('staff') && replyCount > 0) {
         bootbox.dialog(I18n.t("post.controls.delete_replies.confirm", {count: replyCount}), [
           {label: I18n.t("cancel"),
-           'class': 'btn-danger rightg'},
+           'class': 'btn-danger right'},
           {label: I18n.t("post.controls.delete_replies.no_value"),
             callback() {
               post.destroy(user);
@@ -188,7 +264,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           }
         ]);
       } else {
-        post.destroy(user).catch(function(error) {
+        return post.destroy(user).then(() => {
+          this.appEvents.trigger('post-stream:refresh');
+        }).catch(error => {
           popupAjaxError(error);
           post.undoDeleteState();
         });
@@ -200,11 +278,16 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return bootbox.alert(I18n.t('post.controls.edit_anonymous'));
       }
 
+      // check if current user can edit post
+      if (!post.can_edit) {
+        return false;
+      }
+
       const composer = this.get('controllers.composer'),
             composerModel = composer.get('model'),
             opts = {
               post: post,
-              action: Discourse.Composer.EDIT,
+              action: Composer.EDIT,
               draftKey: post.get('topic.draft_key'),
               draftSequence: post.get('topic.draft_sequence')
             };
@@ -218,14 +301,17 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleBookmark(post) {
-      if (!Discourse.User.current()) {
+      if (!this.currentUser) {
         alert(I18n.t("bookmarks.not_bookmarked"));
         return;
       }
       if (post) {
         return post.toggleBookmark().catch(popupAjaxError);
       } else {
-        return this.get("model").toggleBookmark();
+        return this.get("model").toggleBookmark().then(changedIds => {
+          if (!changedIds) { return; }
+          changedIds.forEach(id => this.appEvents.trigger('post-stream:refresh', { id }));
+        });
       }
     },
 
@@ -234,18 +320,20 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     selectAll() {
-      const posts = this.get('model.postStream.posts'),
-          selectedPosts = this.get('selectedPosts');
+      const posts = this.get('model.postStream.posts');
+      const selectedPosts = this.get('selectedPosts');
       if (posts) {
         selectedPosts.addObjects(posts);
       }
       this.set('allPostsSelected', true);
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     deselectAll() {
       this.get('selectedPosts').clear();
       this.get('selectedReplies').clear();
       this.set('allPostsSelected', false);
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     toggleParticipant(user) {
@@ -266,6 +354,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     toggleMultiSelect() {
       this.toggleProperty('multiSelect');
+      this.appEvents.trigger('post-stream:refresh', { force: true });
     },
 
     finishedEditingTopic() {
@@ -297,27 +386,26 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     deleteSelected() {
-      const self = this;
-      bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
+      bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), result => {
         if (result) {
 
           // If all posts are selected, it's the same thing as deleting the topic
-          if (self.get('allPostsSelected')) {
-            return self.deleteTopic();
+          if (this.get('allPostsSelected')) {
+            return this.deleteTopic();
           }
 
-          const selectedPosts = self.get('selectedPosts'),
-              selectedReplies = self.get('selectedReplies'),
-              postStream = self.get('model.postStream'),
-              toRemove = [];
+          const selectedPosts = this.get('selectedPosts');
+          const selectedReplies = this.get('selectedReplies');
+          const postStream = this.get('model.postStream');
 
           Discourse.Post.deleteMany(selectedPosts, selectedReplies);
-          postStream.get('posts').forEach(function (p) {
-            if (self.postSelected(p)) { toRemove.addObject(p); }
+          postStream.get('posts').forEach(p => {
+            if (this.postSelected(p)) {
+              p.set('deleted_at', new Date());
+            }
           });
 
-          postStream.removePosts(toRemove);
-          self.send('toggleMultiSelect');
+          this.send('toggleMultiSelect');
         }
       });
     },
@@ -390,10 +478,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     togglePinnedForUser() {
       if (this.get('model.pinned_at')) {
-        if (this.get('pinned')) {
-          this.get('content').clearPin();
+        const topic = this.get('content');
+        if (topic.get('pinned')) {
+          topic.clearPin();
         } else {
-          this.get('content').rePin();
+          topic.rePin();
         }
       }
     },
@@ -407,27 +496,15 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       quoteController.deselectText();
 
       composerController.open({
-        action: Discourse.Composer.CREATE_TOPIC,
-        draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY,
-        categoryId: this.get('category.id')
-      }).then(function() {
-        return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;
-      }).then(function(q) {
-        const postUrl = "" + location.protocol + "//" + location.host + post.get('url'),
-              postLink = "[" + Handlebars.escapeExpression(self.get('model.title')) + "](" + postUrl + ")";
-        composerController.appendText(I18n.t("post.continue_discussion", { postLink: postLink }) + "\n\n" + q);
-      });
-    },
-
-    expandFirstPost(post) {
-      const self = this;
-      this.set('loadingExpanded', true);
-      post.expand().then(function() {
-        self.set('firstPostExpanded', true);
-      }).catch(function(error) {
-        bootbox.alert($.parseJSON(error.responseText).errors);
-      }).finally(function() {
-        self.set('loadingExpanded', false);
+        action: Composer.CREATE_TOPIC,
+        draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
+        categoryId: this.get('model.category.id')
+      }).then(() => {
+        return Em.isEmpty(quotedText) ? "" : quotedText;
+      }).then(q => {
+        const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
+        const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
+        composerController.get('model').appendText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
       });
     },
 
@@ -442,33 +519,33 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleWiki(post) {
-      post.updatePostField('wiki', !post.get('wiki'));
+      return post.updatePostField('wiki', !post.get('wiki'));
     },
 
     togglePostType(post) {
       const regular = this.site.get('post_types.regular');
       const moderator = this.site.get('post_types.moderator_action');
 
-      post.updatePostField('post_type', post.get('post_type') === moderator ? regular : moderator);
+      return post.updatePostField('post_type', post.get('post_type') === moderator ? regular : moderator);
     },
 
     rebakePost(post) {
-      post.rebake();
+      return post.rebake();
     },
 
     unhidePost(post) {
-      post.unhide();
+      return post.unhide();
+    },
+
+    changePostOwner(post) {
+      this.get('selectedPosts').addObject(post);
+      this.send('changeOwner');
     }
   },
 
   togglePinnedState() {
     this.send('togglePinnedForUser');
   },
-
-  showExpandButton: function() {
-    const post = this.get('post');
-    return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
-  }.property(),
 
   canMergeTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
@@ -565,9 +642,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     // Unsubscribe before subscribing again
     this.unsubscribe();
 
-    const self = this;
-    this.messageBus.subscribe("/topic/" + this.get('model.id'), function(data) {
-      const topic = self.get('model');
+    const refresh = (args) => this.appEvents.trigger('post-stream:refresh', args);
+
+    this.messageBus.subscribe("/topic/" + this.get('model.id'), data => {
+      const topic = this.get('model');
 
       if (data.notification_level_change) {
         topic.set('details.notification_level', data.notification_level_change);
@@ -575,26 +653,37 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return;
       }
 
-      const postStream = self.get('model.postStream');
+      const postStream = this.get('model.postStream');
       switch (data.type) {
-        case "revised":
         case "acted":
+          postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id, refreshLikes: true }));
+          break;
+        case "revised":
         case "rebaked": {
-          // TODO we could update less data for "acted" (only post actions)
-          postStream.triggerChangedPost(data.id, data.updated_at);
+          postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id }));
           return;
         }
         case "deleted": {
-          postStream.triggerDeletedPost(data.id, data.post_number);
+          postStream.triggerDeletedPost(data.id, data.post_number).then(() => refresh({ id: data.id }));
           return;
         }
         case "recovered": {
-          postStream.triggerRecoveredPost(data.id, data.post_number);
+          postStream.triggerRecoveredPost(data.id, data.post_number).then(() => refresh({ id: data.id }));
           return;
         }
         case "created": {
-          postStream.triggerNewPostInStream(data.id);
-          Discourse.notifyBackgroundCountIncrement();
+          postStream.triggerNewPostInStream(data.id).then(() => refresh());
+          if (this.get('currentUser.id') !== data.user_id) {
+            Discourse.notifyBackgroundCountIncrement();
+          }
+          return;
+        }
+        case "move_to_inbox": {
+          topic.set("message_archived",false);
+          return;
+        }
+        case "archived": {
+          topic.set("message_archived",true);
           return;
         }
         default: {
@@ -630,84 +719,36 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   },
 
-  // If our current post is changed, notify the router
-  _currentPostChanged: function() {
-    const currentPost = this.get('model.currentPost');
-    if (currentPost) {
-      this.send('postChangedRoute', currentPost);
-    }
-  }.observes('model.currentPost'),
-
   readPosts(topicId, postNumbers) {
-    const postStream = this.get('model.postStream');
+    const topic = this.get("model");
+    const postStream = topic.get("postStream");
 
-    if (postStream.get('topic.id') === topicId){
-      _.each(postStream.get('posts'), function(post){
-        // optimise heavy loop
-        // TODO identity map for postNumber
-        if(_.include(postNumbers,post.post_number) && !post.read){
-          post.set("read", true);
+    if (topic.get('id') === topicId) {
+
+      // TODO identity map for postNumber
+      postStream.get('posts').forEach(post => {
+        if (!post.read && postNumbers.indexOf(post.post_number) !== -1) {
+          post.set('read', true);
+          this.appEvents.trigger('post-stream:refresh', { id: post.id });
         }
       });
 
       const max = _.max(postNumbers);
-      if(max > this.get('model.last_read_post_number')){
-        this.set('model.last_read_post_number', max);
+      if (max > topic.get("last_read_post_number")) {
+        topic.set("last_read_post_number", max);
+      }
+
+      if (this.siteSettings.automatically_unpin_topics &&
+          this.currentUser &&
+          this.currentUser.automatically_unpin_topics) {
+        // automatically unpin topics when the user reaches the bottom
+        if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
+          Em.run.next(() => topic.clearPin());
+        }
       }
     }
   },
 
-  // Called the the topmost visible post on the page changes.
-  topVisibleChanged(post) {
-    if (!post) { return; }
-
-    const postStream = this.get('model.postStream'),
-          firstLoadedPost = postStream.get('firstLoadedPost');
-
-    this.set('model.currentPost', post.get('post_number'));
-
-    if (post.get('post_number') === 1) { return; }
-
-    if (firstLoadedPost && firstLoadedPost === post) {
-      // Note: jQuery shouldn't be done in a controller, but how else can we
-      // trigger a scroll after a promise resolves in a controller? We need
-      // to do this to preserve upwards infinte scrolling.
-      const $body = $('body');
-      let $elem = $('#post-cloak-' + post.get('post_number'));
-      const distToElement = $body.scrollTop() - $elem.position().top;
-
-      postStream.prependMore().then(function() {
-        Em.run.next(function () {
-          $elem = $('#post-cloak-' + post.get('post_number'));
-
-          // Quickly going back might mean the element is destroyed
-          const position = $elem.position();
-          if (position && position.top) {
-            $('html, body').scrollTop(position.top + distToElement);
-          }
-        });
-      });
-    }
-  },
-
-  /**
-    Called the the bottommost visible post on the page changes.
-
-    @method bottomVisibleChanged
-    @params {Discourse.Post} post that is at the bottom
-  **/
-  bottomVisibleChanged(post) {
-    if (!post) { return; }
-
-    const postStream = this.get('model.postStream'),
-        lastLoadedPost = postStream.get('lastLoadedPost');
-
-    this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
-
-    if (lastLoadedPost && lastLoadedPost === post) {
-      postStream.appendMore();
-    }
-  },
 
   _showFooter: function() {
     const showFooter = this.get("model.postStream.loaded") && this.get("model.postStream.loadedAllPosts");

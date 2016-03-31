@@ -5,6 +5,8 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 export default Ember.Controller.extend(ModalFunctionality, {
   auto_close_valid: true,
   auto_close_invalid: Em.computed.not('auto_close_valid'),
+  disable_submit: Em.computed.or('auto_close_invalid', 'loading'),
+  loading: false,
 
   @observes("model.details.auto_close_at", "model.details.auto_close_hours")
   setAutoCloseTime() {
@@ -29,7 +31,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   setAutoClose(time) {
     const self = this;
-    this.send('hideModal');
+    this.set('loading', true);
     Discourse.ajax({
       url: `/t/${this.get('model.id')}/autoclose`,
       type: 'PUT',
@@ -40,16 +42,34 @@ export default Ember.Controller.extend(ModalFunctionality, {
         timezone_offset: (new Date().getTimezoneOffset())
       }
     }).then(result => {
+      self.set('loading', false);
       if (result.success) {
         this.send('closeModal');
         this.set('model.details.auto_close_at', result.auto_close_at);
         this.set('model.details.auto_close_hours', result.auto_close_hours);
       } else {
-        bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('reopenModal'); } );
+        bootbox.alert(I18n.t('composer.auto_close.error'));
       }
     }).catch(() => {
-      bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('reopenModal'); } );
+      // TODO - incorrectly responds to network errors as bad input
+      bootbox.alert(I18n.t('composer.auto_close.error'));
+      self.set('loading', false);
     });
-  }
+  },
+
+  willCloseImmediately: function() {
+    if (!this.get('model.details.auto_close_based_on_last_post')) {
+      return false;
+    }
+    let closeDate = new Date(this.get('model.last_posted_at'));
+    closeDate.setHours(closeDate.getHours() + this.get('model.auto_close_time'));
+    return closeDate < new Date();
+  }.property('model.details.auto_close_based_on_last_post', 'model.auto_close_time', 'model.last_posted_at'),
+
+  willCloseI18n: function() {
+    if (this.get('model.details.auto_close_based_on_last_post')) {
+      return I18n.t('topic.auto_close_immediate', {hours: this.get('model.auto_close_time')});
+    }
+  }.property('model.details.auto_close_based_on_last_post', 'model.auto_close_time')
 
 });

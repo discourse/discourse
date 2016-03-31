@@ -4,14 +4,6 @@ export default {
   name: 'sharing-sources',
 
   initialize: function() {
-    // Backwards compatibility
-    Discourse.ShareLink = {};
-    Discourse.ShareLink.addTarget = function(id, source) {
-      Ember.warn('Discourse.ShareLink.addTarget is deprecated. Import `Sharing` and call `addSource` instead.');
-      source.id = id;
-      Sharing.addSource(source);
-    };
-
     Sharing.addSource({
       id: 'twitter',
       faIcon: 'fa-twitter-square',

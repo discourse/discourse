@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe VersionMailer do
   subject { VersionMailer.send_notice }

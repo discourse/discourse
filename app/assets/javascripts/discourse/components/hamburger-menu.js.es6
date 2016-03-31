@@ -1,4 +1,6 @@
 import computed from 'ember-addons/ember-computed-decorators';
+import mobile from 'discourse/lib/mobile';
+
 export default Ember.Component.extend({
   classNames: ['hamburger-panel'],
 
@@ -10,17 +12,17 @@ export default Ember.Component.extend({
 
   @computed()
   showKeyboardShortcuts() {
-    return !Discourse.Mobile.mobileView && !this.capabilities.touch;
+    return !this.site.mobileView && !this.capabilities.touch;
   },
 
   @computed()
   showMobileToggle() {
-    return Discourse.Mobile.mobileView || (this.siteSettings.enable_mobile_theme && this.capabilities.touch);
+    return this.site.mobileView || (this.siteSettings.enable_mobile_theme && this.capabilities.touch);
   },
 
   @computed()
   mobileViewLinkTextKey() {
-    return Discourse.Mobile.mobileView ? "desktop_view" : "mobile_view";
+    return this.site.mobileView ? "desktop_view" : "mobile_view";
   },
 
   @computed()
@@ -56,12 +58,19 @@ export default Ember.Component.extend({
     });
   },
 
+  @computed()
+  showUserDirectoryLink() {
+    if (!this.siteSettings.enable_user_directory) return false;
+    if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) return false;
+    return true;
+  },
+
   actions: {
     keyboardShortcuts() {
       this.sendAction('showKeyboardAction');
     },
     toggleMobileView() {
-      Discourse.Mobile.toggleMobileView();
+      mobile.toggleMobileView();
     }
   }
 });

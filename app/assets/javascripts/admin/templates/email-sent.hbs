@@ -1,0 +1,49 @@
+{{#load-more selector=".email-list tr" action="loadMore"}}
+  <table class='table email-list'>
+    <thead>
+      <tr>
+        <th>{{i18n 'admin.email.sent_at'}}</th>
+        <th>{{i18n 'admin.email.user'}}</th>
+        <th>{{i18n 'admin.email.to_address'}}</th>
+        <th>{{i18n 'admin.email.email_type'}}</th>
+        <th>{{i18n 'admin.email.reply_key'}}</th>
+      </tr>
+    </thead>
+
+    <tr class="filters">
+      <td>{{i18n 'admin.email.logs.filters.title'}}</td>
+      <td>{{text-field value=filter.user placeholderKey="admin.email.logs.filters.user_placeholder"}}</td>
+      <td>{{text-field value=filter.address placeholderKey="admin.email.logs.filters.address_placeholder"}}</td>
+      <td>{{text-field value=filter.type placeholderKey="admin.email.logs.filters.type_placeholder"}}</td>
+      <td>{{text-field value=filter.reply_key placeholderKey="admin.email.logs.filters.reply_key_placeholder"}}</td>
+    </tr>
+
+    {{#each l in model}}
+      <tr>
+        <td>{{format-date l.created_at}}</td>
+        <td>
+          {{#if l.user}}
+            {{#link-to 'adminUser' l.user}}{{avatar l.user imageSize="tiny"}}{{/link-to}}
+            {{#link-to 'adminUser' l.user}}{{l.user.username}}{{/link-to}}
+          {{else}}
+            &mdash;
+          {{/if}}
+        </td>
+        <td><a href='mailto:{{unbound l.to_address}}'>{{l.to_address}}</a></td>
+        <td>{{l.email_type}}</td>
+        <td>
+          {{#if l.post_url}}
+            <a href="{{l.post_url}}">{{l.reply_key}}</a>
+          {{else}}
+            {{l.reply_key}}
+          {{/if}}
+        </td>
+      </tr>
+    {{else}}
+      <tr><td colspan="5">{{i18n 'admin.email.logs.none'}}</td></tr>
+    {{/each}}
+
+  </table>
+{{/load-more}}
+
+{{conditional-loading-spinner condition=loading}}

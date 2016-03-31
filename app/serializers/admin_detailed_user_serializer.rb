@@ -56,10 +56,6 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     scope.can_anonymize_user?(object)
   end
 
-  def moderator
-    object.moderator
-  end
-
   def topic_count
     object.topics.count
   end
@@ -72,16 +68,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     object.suspend_record.try(:acting_user)
   end
 
-  def tl3_requirements
-    object.tl3_requirements
-  end
-
   def include_tl3_requirements?
     object.has_trust_level?(TrustLevel[2])
-  end
-
-  def user_fields
-    object.user_fields
   end
 
   def include_user_fields?

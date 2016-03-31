@@ -4,6 +4,11 @@ const TopicCategoryComponent = Ember.Component.extend({
   needsSecondRow: Ember.computed.gt('secondRowItems.length', 0),
   secondRowItems: function() { return []; }.property(),
 
+  pmPath: function() {
+    var currentUser = this.get('currentUser');
+    return currentUser && currentUser.pmPath(this.get('topic'));
+  }.property('topic'),
+
   showPrivateMessageGlyph: function() {
     return !this.get('topic.is_warning') && this.get('topic.isPrivateMessage');
   }.property('topic.is_warning', 'topic.isPrivateMessage'),

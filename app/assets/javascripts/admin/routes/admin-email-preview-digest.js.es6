@@ -1,7 +1,9 @@
+import EmailPreview from 'admin/models/email-preview';
+
 export default Discourse.Route.extend({
 
   model() {
-    return Discourse.EmailPreview.findDigest();
+    return EmailPreview.findDigest();
   },
 
   afterModel(model) {

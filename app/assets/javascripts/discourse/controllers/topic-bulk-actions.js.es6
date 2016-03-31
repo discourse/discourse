@@ -13,12 +13,13 @@ addBulkButton('closeTopics', 'close_topics');
 addBulkButton('archiveTopics', 'archive_topics');
 addBulkButton('showNotificationLevel', 'notification_level');
 addBulkButton('resetRead', 'reset_read');
+addBulkButton('unlistTopics', 'unlist_topics');
 
 // Modal for performing bulk actions on topics
 export default Ember.ArrayController.extend(ModalFunctionality, {
   buttonRows: null,
 
-  onShow: function() {
+  onShow() {
     this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal small');
 
     const buttonRows = [];
@@ -36,87 +37,80 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     this.send('changeBulkTemplate', 'modal/bulk_actions_buttons');
   },
 
-  perform: function(operation) {
+  perform(operation) {
     this.set('loading', true);
 
-    var self = this,
-        topics = this.get('model');
-    return Discourse.Topic.bulkOperation(this.get('model'), operation).then(function(result) {
-      self.set('loading', false);
+    const topics = this.get('model');
+    return Discourse.Topic.bulkOperation(this.get('model'), operation).then(result => {
+      this.set('loading', false);
       if (result && result.topic_ids) {
-        return result.topic_ids.map(function (t) {
-          return topics.findBy('id', t);
-        });
+        return result.topic_ids.map(t => topics.findBy('id', t));
       }
       return result;
-    }).catch(function() {
+    }).catch(() => {
       bootbox.alert(I18n.t('generic_error'));
-      self.set('loading', false);
+      this.set('loading', false);
     });
   },
 
-  forEachPerformed: function(operation, cb) {
-    var self = this;
-    this.perform(operation).then(function (topics) {
+  forEachPerformed(operation, cb) {
+    this.perform(operation).then(topics => {
       if (topics) {
         topics.forEach(cb);
-        const refreshTarget = self.get('refreshTarget');
+        const refreshTarget = this.get('refreshTarget');
         if (refreshTarget) { refreshTarget.send('refresh'); }
-        self.send('closeModal');
+        this.send('closeModal');
       }
     });
   },
 
-  performAndRefresh: function(operation) {
-    const self = this;
-    return this.perform(operation).then(function() {
-      const refreshTarget = self.get('refreshTarget');
+  performAndRefresh(operation) {
+    return this.perform(operation).then(() => {
+      const refreshTarget = this.get('refreshTarget');
       if (refreshTarget) { refreshTarget.send('refresh'); }
-      self.send('closeModal');
+      this.send('closeModal');
     });
   },
 
   actions: {
-    showChangeCategory: function() {
+    showChangeCategory() {
       this.send('changeBulkTemplate', 'modal/bulk_change_category');
       this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal full');
     },
 
-    showNotificationLevel: function() {
+    showNotificationLevel() {
       this.send('changeBulkTemplate', 'modal/bulk_notification_level');
     },
 
-    deleteTopics: function() {
+    deleteTopics() {
       this.performAndRefresh({type: 'delete'});
     },
 
-    closeTopics: function() {
-      this.forEachPerformed({type: 'close'}, function(t) {
-        t.set('closed', true);
-      });
+    closeTopics() {
+      this.forEachPerformed({type: 'close'}, t => t.set('closed', true));
     },
 
-    archiveTopics: function() {
-      this.forEachPerformed({type: 'archive'}, function(t) {
-        t.set('archived', true);
-      });
+    archiveTopics() {
+      this.forEachPerformed({type: 'archive'}, t => t.set('archived', true));
     },
 
-    changeCategory: function() {
-      var categoryId = parseInt(this.get('newCategoryId'), 10) || 0,
-          category = Discourse.Category.findById(categoryId),
-          self = this;
-      this.perform({type: 'change_category', category_id: categoryId}).then(function(topics) {
-        topics.forEach(function(t) {
-          t.set('category', category);
-        });
-        const refreshTarget = self.get('refreshTarget');
+    unlistTopics() {
+      this.forEachPerformed({type: 'unlist'}, t => t.set('visible', false));
+    },
+
+    changeCategory() {
+      const categoryId = parseInt(this.get('newCategoryId'), 10) || 0;
+      const category = Discourse.Category.findById(categoryId);
+
+      this.perform({type: 'change_category', category_id: categoryId}).then(topics => {
+        topics.forEach(t => t.set('category', category));
+        const refreshTarget = this.get('refreshTarget');
         if (refreshTarget) { refreshTarget.send('refresh'); }
-        self.send('closeModal');
+        this.send('closeModal');
       });
     },
 
-    resetRead: function() {
+    resetRead() {
       this.performAndRefresh({ type: 'reset_read' });
     }
   }

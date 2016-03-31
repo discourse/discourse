@@ -131,12 +131,13 @@ const Report = Discourse.Model.extend({
 
 Report.reopenClass({
 
-  find(type, startDate, endDate, categoryId) {
+  find(type, startDate, endDate, categoryId, groupId) {
     return Discourse.ajax("/admin/reports/" + type, {
       data: {
         start_date: startDate,
         end_date: endDate,
-        category_id: categoryId
+        category_id: categoryId,
+        group_id: groupId
       }
     }).then(json => {
       // Add a percent field to each tuple
@@ -147,7 +148,7 @@ Report.reopenClass({
       if (maxY > 0) {
         json.report.data.forEach(row => row.percentage = Math.round((row.y / maxY) * 100));
       }
-      const model = Discourse.Report.create({ type: type });
+      const model = Report.create({ type: type });
       model.setProperties(json.report);
       return model;
     });

@@ -1,12 +1,9 @@
 import { blank } from 'helpers/qunit-helpers';
 import { currentUser } from 'helpers/qunit-helpers';
-import KeyValueStore from 'discourse/lib/key-value-store';
 import Composer from 'discourse/models/composer';
 import createStore from 'helpers/create-store';
 
 module("model:composer");
-
-const keyValueStore = new KeyValueStore("_test_composer");
 
 function createComposer(opts) {
   opts = opts || {};
@@ -185,26 +182,10 @@ test('initial category when uncategorized is not allowed', function() {
   ok(!composer.get('categoryId'), "Uncategorized by default. Must choose a category.");
 });
 
-test('showPreview', function() {
-  const newComposer = function() {
-    return openComposer({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
-  };
-
-  Discourse.Mobile.mobileView = true;
-  equal(newComposer().get('showPreview'), false, "Don't show preview in mobile view");
-
-  keyValueStore.set({ key: 'composer.showPreview', value: 'true' });
-  equal(newComposer().get('showPreview'), false, "Don't show preview in mobile view even if KeyValueStore wants to");
-  keyValueStore.remove('composer.showPreview');
-
-  Discourse.Mobile.mobileView = false;
-  equal(newComposer().get('showPreview'), true, "Show preview by default in desktop view");
-});
-
 test('open with a quote', function() {
   const quote = '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
   const newComposer = function() {
-    return openComposer({action: Discourse.Composer.REPLY, draftKey: 'asfd', draftSequence: 1, quote: quote});
+    return openComposer({action: Composer.REPLY, draftKey: 'asfd', draftSequence: 1, quote: quote});
   };
 
   equal(newComposer().get('originalText'), quote, "originalText is the quote" );

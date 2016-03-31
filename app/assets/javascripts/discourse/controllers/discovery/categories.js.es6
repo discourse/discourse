@@ -12,7 +12,6 @@ export default DiscoveryController.extend({
   actions: {
 
     refresh() {
-
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
 
@@ -21,9 +20,10 @@ export default DiscoveryController.extend({
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
 
+      const CategoryList = require('discourse/models/category-list').default;
       const parentCategory = this.get('model.parentCategory');
-      const promise = parentCategory ? Discourse.CategoryList.listForParent(this.store, parentCategory) :
-                                       Discourse.CategoryList.list(this.store);
+      const promise = parentCategory ? CategoryList.listForParent(this.store, parentCategory) :
+                                       CategoryList.list(this.store);
 
       const self = this;
       promise.then(function(list) {
@@ -38,7 +38,7 @@ export default DiscoveryController.extend({
   }.property(),
 
   latestTopicOnly: function() {
-    return this.get('model.categories').find(function(c) { return c.get('featuredTopics.length') > 1; }) === undefined;
+    return this.get('model.categories').find(c => c.get('featuredTopics.length') > 1) === undefined;
   }.property('model.categories.@each.featuredTopics.length')
 
 });

@@ -11,25 +11,18 @@ export default Discourse.Route.extend({
   },
 
   actions: {
-    composePrivateMessage(user, post) {
-      const recipient = user ? user.get('username') : '',
-          reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
-
-      return this.controllerFor('composer').open({
-        action: Discourse.Composer.PRIVATE_MESSAGE,
-        usernames: recipient,
-        archetypeId: 'private_message',
-        draftKey: 'new_private_message',
-        reply: reply
-      });
-    },
-
     willTransition(transition) {
       // will reset the indexStream when transitioning to routes that aren't "indexStream"
       // otherwise the "header" will jump
       const isIndexStream = INDEX_STREAM_ROUTES.indexOf(transition.targetName) !== -1;
       this.controllerFor('user').set('indexStream', isIndexStream);
       return true;
+    }
+  },
+
+  beforeModel() {
+    if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
+      this.replaceWith("discovery");
     }
   },
 

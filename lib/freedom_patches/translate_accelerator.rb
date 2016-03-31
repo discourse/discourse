@@ -9,37 +9,26 @@
 # This patch depends on the convention that locale yml files must be named [locale_name].yml
 
 module I18n
-  module Backend
 
-    class Simple
-      def available_locales
-        # in case you are wondering this is:
-        # Dir.glob( File.join(Rails.root, 'config', 'locales', 'client.*.yml') )
-        #    .map {|x| x.split('.')[-2]}.sort
-        LocaleSiteSetting.supported_locales.map(&:to_sym)
-      end
-    end
-
-    module Base
-      # force explicit loading
-      def load_translations(*filenames)
-        unless filenames.empty?
-          filenames.flatten.each { |filename| load_file(filename) }
-        end
-      end
-
-    end
-  end
   # this accelerates translation a tiny bit (halves the time it takes)
   class << self
     alias_method :translate_no_cache, :translate
+    alias_method :exists_no_cache?, :exists?
     alias_method :reload_no_cache!, :reload!
     LRU_CACHE_SIZE = 300
+
+    def init_accelerator!
+      @overrides_enabled = true
+      reload!
+    end
 
     def reload!
       @loaded_locales = []
       @cache = nil
+      @overrides_by_site = {}
+
       reload_no_cache!
+      ensure_all_loaded!
     end
 
     LOAD_MUTEX = Mutex.new
@@ -59,23 +48,123 @@ module I18n
       end
     end
 
-    def ensure_loaded!(locale)
-      @loaded_locales ||= []
-      load_locale locale unless @loaded_locales.include?(locale)
+    def ensure_all_loaded!
+      backend.fallbacks(locale).each {|l| ensure_loaded!(l) }
     end
 
-    def translate(key, *args)
-      load_locale(config.locale) unless @loaded_locales.include?(config.locale)
-      return translate_no_cache(key, *args) if args.length > 0
+    def search(query, opts=nil)
+      locale = opts[:locale] || config.locale
+
+      load_locale(locale) unless @loaded_locales.include?(locale)
+      opts ||= {}
+
+      target = opts[:backend] || backend
+      results = opts[:overridden] ? {} : target.search(config.locale, query)
+
+      regexp = /#{query}/i
+      (overrides_by_locale(locale) || {}).each do |k, v|
+        results.delete(k)
+        results[k] = v if (k =~ regexp || v =~ regexp)
+      end
+      results
+    end
+
+    def ensure_loaded!(locale)
+      @loaded_locales ||= []
+      load_locale(locale) unless @loaded_locales.include?(locale)
+    end
+
+    # In some environments such as migrations we don't want to use overrides.
+    # Use this to disable them over a block of ruby code
+    def overrides_disabled
+      @overrides_enabled = false
+      yield
+    ensure
+      @overrides_enabled = true
+    end
+
+    def translate_no_override(*args)
+      return translate_no_cache(*args) if args.length > 1 && args[1].present?
+
+      options  = args.last.is_a?(Hash) ? args.pop.dup : {}
+      key      = args.shift
+      locale   = options[:locale] || config.locale
+
 
       @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
-      k = "#{key}#{config.locale}#{config.backend.object_id}"
+      k = "#{key}#{locale}#{config.backend.object_id}"
 
       @cache.getset(k) do
-        translate_no_cache(key).freeze
+        translate_no_cache(key, options).freeze
       end
     end
 
+    def overrides_by_locale(locale)
+      return unless @overrides_enabled
+
+      site = RailsMultisite::ConnectionManagement.current_db
+
+      by_site = @overrides_by_site[site]
+
+      if by_site.nil? || !by_site.has_key?(locale)
+        by_site = @overrides_by_site[site] = {}
+
+        # Load overrides
+        translations_overrides = TranslationOverride.where(locale: locale).pluck(:translation_key, :value)
+
+        if translations_overrides.empty?
+          by_site[locale] = {}
+        else
+          translations_overrides.each do |tuple|
+            by_locale = by_site[locale] ||= {}
+            by_locale[tuple[0]] = tuple[1]
+          end
+        end
+      end
+
+      by_site[locale]
+    end
+
+    def client_overrides_json(locale)
+      client_json = (overrides_by_locale(locale) || {}).select {|k, _| k.starts_with?('js.') || k.starts_with?('admin_js.')}
+      MultiJson.dump(client_json)
+    end
+
+    def translate(*args)
+      options  = args.last.is_a?(Hash) ? args.pop.dup : {}
+      key      = args.shift
+      locale   = options[:locale] || config.locale
+
+      load_locale(locale) unless @loaded_locales.include?(locale)
+
+      if @overrides_enabled
+        by_locale = overrides_by_locale(locale)
+        if by_locale
+          if options.present?
+            options[:overrides] = by_locale
+
+            # I18n likes to use throw...
+            catch(:exception) do
+              return backend.translate(locale, key, options)
+            end
+          else
+            if result = by_locale[key]
+              return result
+            end
+          end
+
+        end
+      end
+      translate_no_override(key, options)
+    end
+
     alias_method :t, :translate
+
+    def exists?(key, locale=nil)
+      locale ||= config.locale
+      load_locale(locale) unless @loaded_locales.include?(locale)
+      exists_no_cache?(key, locale)
+    end
+
   end
 end

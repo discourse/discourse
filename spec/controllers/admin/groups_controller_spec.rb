@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Admin::GroupsController do
 
@@ -30,10 +30,34 @@ describe Admin::GroupsController do
         "automatic_membership_retroactive"=>false,
         "title"=>nil,
         "primary_group"=>false,
-        "grant_trust_level"=>nil
+        "grant_trust_level"=>nil,
+        "incoming_email"=>nil,
+        "notification_level"=>2,
+        "has_messages"=>false,
+        "mentionable"=>false
       }])
     end
 
+  end
+
+  context ".bulk" do
+    it "can assign users to a group by email or username" do
+      group = Fabricate(:group, name: "test", primary_group: true, title: 'WAT')
+      user = Fabricate(:user)
+      user2 = Fabricate(:user)
+
+      xhr :put, :bulk_perform, group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']
+
+      expect(response).to be_success
+
+      user.reload
+      expect(user.primary_group).to eq(group)
+      expect(user.title).to eq("WAT")
+
+      user2.reload
+      expect(user2.primary_group).to eq(group)
+
+    end
   end
 
   context ".create" do
@@ -107,92 +131,6 @@ describe Admin::GroupsController do
 
   end
 
-  context ".add_members" do
 
-    it "cannot add members to automatic groups" do
-      xhr :put, :add_members, id: 1, usernames: "l77t"
-      expect(response.status).to eq(422)
-    end
-
-    context "is able to add several members to a group" do
-
-      let(:user1) { Fabricate(:user) }
-      let(:user2) { Fabricate(:user) }
-      let(:group) { Fabricate(:group) }
-
-      it "adds by username" do
-        xhr :put, :add_members, id: group.id, usernames: [user1.username, user2.username].join(",")
-
-        expect(response).to be_success
-        group.reload
-        expect(group.users.count).to eq(2)
-      end
-
-      it "adds by id" do
-        xhr :put, :add_members, id: group.id, user_ids: [user1.id, user2.id].join(",")
-
-        expect(response).to be_success
-        group.reload
-        expect(group.users.count).to eq(2)
-      end
-    end
-
-    it "returns 422 if member already exists" do
-      group = Fabricate(:group)
-      existing_member = Fabricate(:user)
-      group.add(existing_member)
-      group.save
-
-      xhr :put, :add_members, id: group.id, usernames: existing_member.username
-      expect(response.status).to eq(422)
-    end
-
-  end
-
-  context ".remove_member" do
-
-    it "cannot remove members from automatic groups" do
-      xhr :put, :remove_member, id: 1, user_id: 42
-      expect(response.status).to eq(422)
-    end
-
-    context "is able to remove a member" do
-
-      let(:user) { Fabricate(:user) }
-      let(:group) { Fabricate(:group) }
-
-      before do
-        group.add(user)
-        group.save
-      end
-
-      it "removes by id" do
-        xhr :delete, :remove_member, id: group.id, user_id: user.id
-
-        expect(response).to be_success
-        group.reload
-        expect(group.users.count).to eq(0)
-      end
-
-      it "removes by username" do
-        xhr :delete, :remove_member, id: group.id, username: user.username
-
-        expect(response).to be_success
-        group.reload
-        expect(group.users.count).to eq(0)
-      end
-
-      it "removes user.primary_group_id when user is removed from group" do
-        user.primary_group_id = group.id
-        user.save
-
-        xhr :delete, :remove_member, id: group.id, username: user.username
-
-        user.reload
-        expect(user.primary_group_id).to eq(nil)
-      end
-    end
-
-  end
 
 end

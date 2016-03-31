@@ -19,9 +19,18 @@ pl_PL:
       average_rating: "Średnia ocena: <strong>%{average}</strong>."
       multiple:
         help:
-          at_least_min_options: "Musisz wybrać co najmniej <strong>%{count}</strong> pozycje."
-          up_to_max_options: "Możesz wybrać co najwyżej <strong>%{count}</strong> pozycje."
-          x_options: "Musisz wybrać <strong>%{count}</strong> pozycje."
+          at_least_min_options:
+            one: "Musisz wybrać <strong>przynajmniej jedną</strong> pozycje."
+            few: "Musisz wybrać co najmniej <strong>%{count}</strong> pozycje."
+            other: "Musisz wybrać co najmniej <strong>%{count}</strong> pozycje."
+          up_to_max_options:
+            one: "Możesz wybrać maksymalnie <strong>1</strong> opcję."
+            few: "Możesz wybrać maksymalnie <strong>%{count}</strong> opcje."
+            other: "Możesz wybrać maksymalnie <strong>%{count}</strong> opcji."
+          x_options:
+            one: "Musisz wybrać <strong>jedną</strong> opcję."
+            few: "Musisz wybrać <strong>%{count}</strong> opcje."
+            other: "Musisz wybrać <strong>%{count}</strong> opcji."
           between_min_and_max_options: "Możesz wybrać pomiędzy <strong>%{min}</strong> a <strong>%{max}</strong> pozycjami."
       cast-votes:
         title: "Oddaj głos"

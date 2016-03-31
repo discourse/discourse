@@ -3,7 +3,7 @@ export default Ember.Controller.extend({
     var sorted = _.sortBy(this.get('model'), function(badge){
       var pos = badge.get('badge_grouping.position');
       var type = badge.get('badge_type_id');
-      var name = badge.get('displayName');
+      var name = badge.get('name');
 
       return ("000" + pos).slice(-4) + (10-type) + name;
     });

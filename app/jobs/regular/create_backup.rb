@@ -5,7 +5,7 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      BackupRestore.backup!(Discourse.system_user.id, publish_to_message_bus: false)
+      BackupRestore.backup!(Discourse.system_user.id, publish_to_message_bus: false, with_uploads: SiteSetting.backup_with_uploads)
     end
   end
 end

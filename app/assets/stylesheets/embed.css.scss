@@ -4,7 +4,6 @@
 @import "./common/foundation/variables";
 @import "./common/foundation/colors";
 @import "./common/foundation/mixins";
-@import "./common/base/onebox";
 
 article.post {
   border-bottom: 1px solid #ddd;
@@ -29,7 +28,6 @@ article.post {
     margin: 0 0 10px 0;
     background-color: dark-light-diff($primary, $secondary, 97%, -45%);
     border-left: 5px solid darken(dark-light-diff($primary, $secondary, 97%, -45%), 10%);
-    overflow: hidden;
     p {
       margin: 0 0 10px 0;
     }
@@ -140,3 +138,6 @@ footer {
   float: right;
   max-height: 30px;
 }
+
+// load onebox CSS at the end
+@import "./common/base/onebox";

@@ -1,4 +1,5 @@
 import createStore from 'helpers/create-store';
+import Category from 'discourse/models/category';
 
 module("model:category");
 
@@ -50,6 +51,8 @@ test('findBySlug', function() {
   deepEqual(Discourse.Category.findBySlug('뉴스피드', '熱帶風暴畫眉'), newsFeed, 'we can find a category with CJK slug whose parent slug is also CJK');
   deepEqual(Discourse.Category.findBySlug('时间', 'darth'), time, 'we can find a category with CJK slug whose parent slug is english');
   deepEqual(Discourse.Category.findBySlug('bah', '熱帶風暴畫眉'), bah, 'we can find a category with english slug whose parent slug is CJK');
+
+  sandbox.restore();
 });
 
 test('findSingleBySlug', function() {
@@ -121,4 +124,61 @@ test('postCountStats', function() {
 
   result = category5.get('postCountStats');
   equal(result.length, 0, "should show nothing");
+});
+
+test('search with category name', () => {
+  const store = createStore(),
+        category1 = store.createRecord('category', { id: 1, name: 'middle term', slug: 'different-slug' }),
+        category2 = store.createRecord('category', { id: 2, name: 'middle term', slug: 'another-different-slug' });
+
+  sandbox.stub(Category, "listByActivity").returns([category1, category2]);
+
+  deepEqual(Category.search('term', { limit: 0 }), [], "returns an empty array when limit is 0");
+  deepEqual(Category.search(''), [category1, category2], "orders by activity if no term is matched");
+  deepEqual(Category.search('term'), [category1, category2], "orders by activity");
+
+  category2.set('name', 'TeRm start');
+  deepEqual(Category.search('tErM'), [category2, category1], "ignores case of category name and search term");
+
+  category2.set('name', 'term start');
+  deepEqual(Category.search('term'), [category2, category1], "orders matching begin with and then contains");
+
+  sandbox.restore();
+
+  const child_category1 = store.createRecord('category', { id: 3, name: 'term start', parent_category_id: category1.get('id') }),
+        read_restricted_category = store.createRecord('category', { id: 4, name: 'some term', read_restricted: true });
+
+  sandbox.stub(Category, "listByActivity").returns([read_restricted_category, category1, child_category1, category2]);
+
+  deepEqual(Category.search(''),
+            [category1, category2, read_restricted_category],
+            "prioritize non read_restricted and does not include child categories when term is blank");
+
+  deepEqual(Category.search('', { limit: 3 }),
+            [category1, category2, read_restricted_category],
+            "prioritize non read_restricted and does not include child categories categories when term is blank with limit");
+
+  deepEqual(Category.search('term'),
+            [child_category1, category2, category1, read_restricted_category],
+            "prioritize non read_restricted");
+
+  deepEqual(Category.search('term', { limit: 3 }),
+            [child_category1, category2, read_restricted_category],
+            "prioritize non read_restricted with limit");
+
+  sandbox.restore();
+});
+
+test('search with category slug', () => {
+  const store = createStore(),
+        category1 = store.createRecord('category', { id: 1, name: 'middle term', slug: 'different-slug' }),
+        category2 = store.createRecord('category', { id: 2, name: 'middle term', slug: 'another-different-slug' });
+
+  sandbox.stub(Category, "listByActivity").returns([category1, category2]);
+
+  deepEqual(Category.search('different-slug'), [category1, category2], "returns the right categories");
+  deepEqual(Category.search('another-different'), [category2], "returns the right categories");
+
+  category2.set('slug', 'ANOTher-DIFfereNT');
+  deepEqual(Category.search('anOtHer-dIfFeREnt'), [category2], "ignores case of category slug and search term");
 });

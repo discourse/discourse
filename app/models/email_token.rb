@@ -41,29 +41,47 @@ class EmailToken < ActiveRecord::Base
     return token.present? && token =~ /[a-f0-9]{#{token.length/2}}/i
   end
 
-  def self.confirm(token)
-    return unless valid_token_format?(token)
+  def self.atomic_confirm(token)
+    failure = { success: false }
+    return failure unless valid_token_format?(token)
 
-    email_token = EmailToken.where("token = ? and expired = FALSE AND ((NOT confirmed AND created_at >= ?) OR (confirmed AND created_at >= ?))", token, EmailToken.valid_after, EmailToken.confirm_valid_after).includes(:user).first
-    return if email_token.blank?
+    email_token = confirmable(token)
+    return failure if email_token.blank?
 
     user = email_token.user
+    failure[:user] = user
+    row_count = EmailToken.where(id: email_token.id, expired: false).update_all 'confirmed = true'
+    if row_count == 1
+      return { success: true, user: user, email_token: email_token }
+    end
+
+    return failure
+  end
+
+  def self.confirm(token)
     User.transaction do
-      row_count = EmailToken.where(id: email_token.id, expired: false).update_all 'confirmed = true'
-      if row_count == 1
+      result = atomic_confirm(token)
+      user = result[:user]
+      if result[:success]
         # If we are activating the user, send the welcome message
         user.send_welcome_message = !user.active?
 
         user.active = true
-        user.email = email_token.email
+        user.email = result[:email_token].email
         user.save!
       end
+
+      if user
+        return User.find_by(email: Email.downcase(user.email)) if Invite.redeem_from_email(user.email).present?
+        user
+      end
     end
-    # redeem invite, if available
-    return User.find_by(email: Email.downcase(user.email)) if Invite.redeem_from_email(user.email).present?
-    user
   rescue ActiveRecord::RecordInvalid
     # If the user's email is already taken, just return nil (failure)
+  end
+
+  def self.confirmable(token)
+    EmailToken.where("token = ? and expired = FALSE AND ((NOT confirmed AND created_at >= ?) OR (confirmed AND created_at >= ?))", token, EmailToken.valid_after, EmailToken.confirm_valid_after).includes(:user).first
   end
 end
 
@@ -73,8 +91,8 @@ end
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
-#  email      :string(255)      not null
-#  token      :string(255)      not null
+#  email      :string           not null
+#  token      :string           not null
 #  confirmed  :boolean          default(FALSE), not null
 #  expired    :boolean          default(FALSE), not null
 #  created_at :datetime         not null

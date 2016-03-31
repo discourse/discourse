@@ -13,7 +13,7 @@ class TopicLinkClick < ActiveRecord::Base
 
   # Create a click from a URL and post_id
   def self.create_from(args={})
-    url = args[:url]
+    url = args[:url][0...TopicLink.max_url_length]
     return nil if url.blank?
 
     uri = URI.parse(url) rescue nil

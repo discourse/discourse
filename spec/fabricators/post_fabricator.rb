@@ -12,6 +12,7 @@ Fabricator(:post_with_long_raw_content, from: :post) do
 end
 
 Fabricator(:post_with_youtube, from: :post) do
+  raw 'http://www.youtube.com/watch?v=9bZkp7q19f0'
   cooked '<p><a href="http://www.youtube.com/watch?v=9bZkp7q19f0" class="onebox" target="_blank">http://www.youtube.com/watch?v=9bZkp7q19f0</a></p>'
 end
 
@@ -48,53 +49,54 @@ Fabricator(:post_with_plenty_of_images, from: :post) do
 <aside class="quote"><img src="/uploads/default/1/1234567890123456.jpg"></aside>
 <div class="onebox-result"><img src="/uploads/default/1/1234567890123456.jpg"></div>
 <div class="onebox"><img src="/uploads/default/1/1234567890123456.jpg"></div>
-<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=0" title=":smile:" class="emoji" alt="smile" width="72" height="72"></p>
+<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=1" title=":smile:" class="emoji" alt="smile" width="72" height="72"></p>
 '
 end
 
 Fabricator(:post_with_uploaded_image, from: :post) do
-  cooked '<img src="/uploads/default/2/3456789012345678.png" width="1500" height="2000">'
+  raw '<img src="/uploads/default/2/3456789012345678.png" width="1500" height="2000">'
 end
 
 Fabricator(:post_with_an_attachment, from: :post) do
-  cooked '<a class="attachment" href="/uploads/default/186/66b3ed1503efc936.zip">archive.zip</a>'
+  raw '<a class="attachment" href="/uploads/default/186/66b3ed1503efc936.zip">archive.zip</a>'
 end
 
 Fabricator(:post_with_unsized_images, from: :post) do
-  cooked '
+  raw '
 <img src="http://foo.bar/image.png">
 <img src="/uploads/default/1/1234567890123456.jpg">
 '
 end
 
 Fabricator(:post_with_image_urls, from: :post) do
-  cooked '
+  raw '
 <img src="http://foo.bar/image.png">
 <img src="http://domain.com/picture.jpg" width="50" height="42">
 '
 end
 
 Fabricator(:post_with_large_image, from: :post) do
-  cooked '<img src="/uploads/default/1/1234567890123456.jpg">'
+  raw '<img src="/uploads/default/1/1234567890123456.jpg">'
 end
 
 Fabricator(:post_with_large_image_and_title, from: :post) do
-  cooked '<img src="/uploads/default/1/1234567890123456.jpg" title="WAT">'
+  raw '<img src="/uploads/default/1/1234567890123456.jpg" title="WAT">'
 end
 
 Fabricator(:post_with_uploads, from: :post) do
-  cooked '
+  raw '
 <a href="/uploads/default/2/2345678901234567.jpg">Link</a>
 <img src="/uploads/default/1/1234567890123456.jpg">
 '
 end
 
 Fabricator(:post_with_uploads_and_links, from: :post) do
-  cooked '
+  raw '
 <a href="/uploads/default/2/2345678901234567.jpg">Link</a>
 <img src="/uploads/default/1/1234567890123456.jpg">
 <a href="http://www.google.com">Google</a>
 <img src="http://foo.bar/image.png">
+<a class="attachment" href="/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)
 '
 end
 

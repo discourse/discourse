@@ -1,12 +1,29 @@
-import { queryParams, filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
+import { filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
+import { queryParams } from 'discourse/controllers/discovery-sortable';
+import TopicList from 'discourse/models/topic-list';
+import PermissionType from 'discourse/models/permission-type';
+import CategoryList from 'discourse/models/category-list';
+import Category from 'discourse/models/category';
 
 // A helper function to create a category route with parameters
 export default (filter, params) => {
   return Discourse.Route.extend({
-    queryParams: queryParams,
+    queryParams,
 
     model(modelParams) {
-      return Discourse.Category.findBySlug(modelParams.slug, modelParams.parentSlug);
+      const category = Category.findBySlug(modelParams.slug, modelParams.parentSlug);
+      if (!category) {
+        return Category.reloadBySlug(modelParams.slug, modelParams.parentSlug).then((atts) => {
+          if (modelParams.parentSlug) {
+            atts.category.parentCategory = Category.findBySlug(modelParams.parentSlug);
+          }
+          const record = this.store.createRecord('category', atts.category);
+          record.setupGroupsAndPermissions();
+          this.site.updateCategory(record);
+          return { category: Category.findBySlug(modelParams.slug, modelParams.parentSlug) };
+        });
+      };
+      return { category };
     },
 
     afterModel(model, transition) {
@@ -15,69 +32,87 @@ export default (filter, params) => {
         return;
       }
 
-      this._setupNavigation(model);
-      return Em.RSVP.all([this._createSubcategoryList(model),
-                          this._retrieveTopicList(model, transition)]);
+      this._setupNavigation(model.category);
+      return Em.RSVP.all([this._createSubcategoryList(model.category),
+                          this._retrieveTopicList(model.category, transition)]);
     },
 
-    _setupNavigation(model) {
+    _setupNavigation(category) {
       const noSubcategories = params && !!params.no_subcategories,
-            filterMode = `c/${Discourse.Category.slugFor(model)}${noSubcategories ? "/none" : ""}/l/${filter}`;
+            filterMode = `c/${Discourse.Category.slugFor(category)}${noSubcategories ? "/none" : ""}/l/${filter}`;
 
       this.controllerFor('navigation/category').setProperties({
-        category: model,
+        category,
         filterMode: filterMode,
         noSubcategories: params && params.no_subcategories,
-        canEditCategory: model.get('can_edit')
+        canEditCategory: category.get('can_edit')
       });
     },
 
-    _createSubcategoryList(model) {
+    _createSubcategoryList(category) {
       this._categoryList = null;
-      if (Em.isNone(model.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
-        return Discourse.CategoryList.listForParent(this.store, model)
-                                     .then(list => this._categoryList = list);
+      if (Em.isNone(category.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
+        return CategoryList.listForParent(this.store, category).then(list => this._categoryList = list);
       }
 
       // If we're not loading a subcategory list just resolve
       return Em.RSVP.resolve();
     },
 
-    _retrieveTopicList(model, transition) {
-      const listFilter = `c/${Discourse.Category.slugFor(model)}/l/${filter}`,
+    _retrieveTopicList(category, transition) {
+      const listFilter = `c/${Discourse.Category.slugFor(category)}/l/${filter}`,
             findOpts = filterQueryParams(transition.queryParams, params),
              extras = { cached: this.isPoppedState(transition) };
 
       return findTopicList(this.store, this.topicTrackingState, listFilter, findOpts, extras).then(list => {
-        Discourse.TopicList.hideUniformCategory(list, model);
+        TopicList.hideUniformCategory(list, category);
         this.set('topics', list);
+        return list;
       });
     },
 
     titleToken() {
-      const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', { count: 0 }),
-            model = this.currentModel;
+      const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title'),
+            category = this.currentModel.category;
 
-      return I18n.t('filters.with_category', { filter: filterText, category: model.get('name') });
+      return I18n.t('filters.with_category', { filter: filterText, category: category.get('name') });
     },
 
     setupController(controller, model) {
       const topics = this.get('topics'),
-            periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
+            category = model.category,
+            canCreateTopic = topics.get('can_create_topic'),
+            canCreateTopicOnCategory = category.get('permission') === PermissionType.FULL;
 
-      this.controllerFor('navigation/category').set('canCreateTopic', topics.get('can_create_topic'));
-      this.controllerFor('discovery/topics').setProperties({
-        model: topics,
-        category: model,
-        period: periodId,
-        selected: [],
-        noSubcategories: params && !!params.no_subcategories,
-        order: topics.get('params.order'),
-        ascending: topics.get('params.ascending'),
-        expandAllPinned: true
+      this.controllerFor('navigation/category').setProperties({
+        canCreateTopicOnCategory: canCreateTopicOnCategory,
+        cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
+        canCreateTopic: canCreateTopic
       });
 
-      this.searchService.set('searchContext', model.get('searchContext'));
+      var topicOpts = {
+        model: topics,
+        category,
+        period: topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
+        selected: [],
+        noSubcategories: params && !!params.no_subcategories,
+        expandAllPinned: true,
+        canCreateTopic: canCreateTopic,
+        canCreateTopicOnCategory: canCreateTopicOnCategory
+      };
+
+      const p = category.get('params');
+      if (p && Object.keys(p).length) {
+        if (p.order !== undefined) {
+          topicOpts.order = p.order;
+        }
+        if (p.ascending !== undefined) {
+          topicOpts.ascending = p.ascending;
+        }
+      }
+
+      this.controllerFor('discovery/topics').setProperties(topicOpts);
+      this.searchService.set('searchContext', category.get('searchContext'));
       this.set('topics', null);
 
       this.openTopicDraft(topics);
@@ -90,6 +125,12 @@ export default (filter, params) => {
         this.render('discovery/categories', { outlet: 'header-list-container', model: this._categoryList });
       }
       this.render('discovery/topics', { controller: 'discovery/topics', outlet: 'list-container' });
+    },
+
+    resetController(controller, isExiting) {
+      if (isExiting) {
+        controller.setProperties({ order: "default", ascending: false });
+      }
     },
 
     deactivate() {

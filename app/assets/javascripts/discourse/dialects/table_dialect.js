@@ -49,4 +49,3 @@ if (Discourse.SiteSettings) {
 } else {
   Discourse.initializer({initialize: init, name: 'enable-html-tables'});
 }
-

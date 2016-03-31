@@ -6,6 +6,7 @@
 require_dependency 'topic_list'
 require_dependency 'suggested_topics_builder'
 require_dependency 'topic_query_sql'
+require_dependency 'avatar_lookup'
 
 class TopicQuery
   # Could be rewritten to %i if Ruby 1.9 is no longer supported
@@ -28,6 +29,7 @@ class TopicQuery
                      search
                      slow_platform
                      filter
+                     group_name
                      q)
 
   # Maps `order` to a columns in `topics`
@@ -42,10 +44,14 @@ class TopicQuery
     'created' => 'created_at'
   }
 
+  cattr_accessor :results_filter_callbacks
+  self.results_filter_callbacks = []
+
   def initialize(user=nil, options={})
     options.assert_valid_keys(VALID_OPTIONS)
     @options = options.dup
     @user = user
+    @guardian = Guardian.new(@user)
   end
 
   def joined_topic_user(list=nil)
@@ -54,16 +60,62 @@ class TopicQuery
 
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic)
+    return if topic.private_message? && !@user
+
     builder = SuggestedTopicsBuilder.new(topic)
+
+    pm_params =
+      if topic.private_message?
+
+        group_ids = topic.topic_allowed_groups
+                      .where('group_id IN (SELECT group_id FROM group_users WHERE user_id = :user_id)', user_id: @user.id)
+                      .pluck(:group_id)
+        {
+          topic: topic,
+          my_group_ids: group_ids,
+          target_group_ids: topic.topic_allowed_groups.pluck(:group_id),
+          target_user_ids: topic.topic_allowed_users.pluck(:user_id) - [@user.id]
+        }
+      end
 
     # When logged in we start with different results
     if @user
-      builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
-      builder.add_results(new_results(topic: topic, per_page: builder.category_results_left)) unless builder.full?
-    end
-    builder.add_results(random_suggested(topic, builder.results_left, builder.excluded_topic_ids)) unless builder.full?
+      if topic.private_message?
 
-    create_list(:suggested, {unordered: true}, builder.results)
+        builder.add_results(new_messages(
+          pm_params.merge(count: builder.results_left)
+        )) unless builder.full?
+
+        builder.add_results(unread_messages(
+          pm_params.merge(count: builder.results_left)
+        )) unless builder.full?
+
+      else
+        builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
+        builder.add_results(new_results(topic: topic, per_page: builder.category_results_left)) unless builder.full?
+      end
+    end
+
+    if topic.private_message?
+
+      builder.add_results(related_messages_group(
+        pm_params.merge(count: [3, builder.results_left].max,
+                        exclude: builder.excluded_topic_ids)
+      )) if pm_params[:my_group_ids].present?
+
+      builder.add_results(related_messages_user(
+        pm_params.merge(count: [3, builder.results_left].max,
+                        exclude: builder.excluded_topic_ids)
+      ))
+    else
+      builder.add_results(random_suggested(topic, builder.results_left, builder.excluded_topic_ids)) unless builder.full?
+    end
+
+    params = {unordered: true}
+    if topic.private_message?
+      params[:preload_posters] = true
+    end
+    create_list(:suggested, params, builder.results)
   end
 
   # The latest view of topics
@@ -112,20 +164,58 @@ class TopicQuery
     end
   end
 
+  def not_archived(list, user)
+    list.joins("LEFT JOIN user_archived_messages um
+                       ON um.user_id = #{user.id.to_i} AND um.topic_id = topics.id")
+               .where('um.user_id IS NULL')
+  end
+
   def list_private_messages(user)
-    list = private_messages_for(user)
+    list = private_messages_for(user, :user)
+
+    list = not_archived(list, user)
+            .where('NOT (topics.participant_count = 1 AND topics.user_id = ?)', user.id)
+
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_archive(user)
+    list = private_messages_for(user, :user)
+    list = list.joins(:user_archived_messages).where('user_archived_messages.user_id = ?', user.id)
     create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_sent(user)
-    list = private_messages_for(user)
-    list = list.where(user_id: user.id)
+    list = private_messages_for(user, :user)
+    list = list.where('EXISTS (
+                      SELECT 1 FROM posts
+                      WHERE posts.topic_id = topics.id AND
+                            posts.user_id = ?
+                     )', user.id)
+    list = not_archived(list, user)
     create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_unread(user)
-    list = private_messages_for(user)
+    list = private_messages_for(user, :user)
     list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_group(user)
+    list = private_messages_for(user, :group)
+    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    list = list.joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
+                      gm.group_id = #{group_id.to_i}")
+    list = list.where("gm.id IS NULL")
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_group_archive(user)
+    list = private_messages_for(user, :group)
+    group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
+    list = list.joins("JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
+                      gm.group_id = #{group_id.to_i}")
     create_list(:private_messages, {}, list)
   end
 
@@ -156,7 +246,6 @@ class TopicQuery
   end
 
   def prioritize_pinned_topics(topics, options)
-
     pinned_clause = options[:category_id] ? "topics.category_id = #{options[:category_id].to_i} AND" : "pinned_globally AND "
     pinned_clause << " pinned_at IS NOT NULL "
     if @user
@@ -185,36 +274,71 @@ class TopicQuery
     topics = yield(topics) if block_given?
 
     options = options.merge(@options)
-    if (options[:order] || "activity") == "activity" && !options[:unordered]
+    if ["activity","default"].include?(options[:order] || "activity") &&
+        !options[:unordered] &&
+        filter != :private_messages
       topics = prioritize_pinned_topics(topics, options)
     end
 
-    topics = topics.to_a.each do |t|
+    topics = topics.to_a
+
+    if options[:preload_posters]
+      user_ids = []
+      topics.each do |ft|
+        user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
+      end
+
+      avatar_lookup = AvatarLookup.new(user_ids)
+      topics.each do |t|
+        t.posters = t.posters_summary(avatar_lookup: avatar_lookup)
+      end
+    end
+
+    topics.each do |t|
+
       t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map{|u| u.id} : []
     end
 
-    list = TopicList.new(filter, @user, topics.to_a, options.merge(@options))
+    list = TopicList.new(filter, @user, topics, options.merge(@options))
     list.per_page = per_page_setting
     list
   end
 
   def latest_results(options={})
     result = default_results(options)
+    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
     result = remove_muted_categories(result, @user, exclude: options[:category])
+
+    # plugins can remove topics here:
+    self.class.results_filter_callbacks.each do |filter_callback|
+      result = filter_callback.call(:latest, result, @user, options)
+    end
+
     result
   end
 
   def unread_results(options={})
     result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
     .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
+
+    self.class.results_filter_callbacks.each do |filter_callback|
+      result = filter_callback.call(:unread, result, @user, options)
+    end
+
     suggested_ordering(result, options)
   end
 
   def new_results(options={})
     # TODO does this make sense or should it be ordered on created_at
     #  it is ordering on bumped_at now
-    result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
+    result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.user_option.treat_as_new_topic_start_date)
+    result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
+
+    self.class.results_filter_callbacks.each do |filter_callback|
+      result = filter_callback.call(:new, result, @user, options)
+    end
+
     suggested_ordering(result, options)
   end
 
@@ -224,17 +348,27 @@ class TopicQuery
       @options[:slow_platform] ? 15 : 30
     end
 
-
-    def private_messages_for(user)
+    def private_messages_for(user, type)
       options = @options
       options.reverse_merge!(per_page: per_page_setting)
 
-      # Start with a list of all topics
-      result = Topic.includes(:allowed_users)
-                    .where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
-                    .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
-                    .order("topics.bumped_at DESC")
-                    .private_messages
+      result = Topic
+
+      if type == :group
+        result = result.includes(:allowed_groups)
+        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_groups
+                                              WHERE group_id IN (
+                                                  SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}) AND
+                                                         group_id IN (SELECT id FROM groups WHERE name ilike ?)
+                                             )", @options[:group_name])
+      elsif type == :user
+        result = result.includes(:allowed_users)
+        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
+      end
+
+      result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
+                     .order("topics.bumped_at DESC")
+                     .private_messages
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
@@ -265,6 +399,11 @@ class TopicQuery
 
       if sort_column == 'op_likes'
         return result.includes(:first_post).order("(SELECT like_count FROM posts p3 WHERE p3.topic_id = topics.id AND p3.post_number = 1) #{sort_dir}")
+      end
+
+      if sort_column.start_with?('custom_fields')
+        field = sort_column.split('.')[1]
+        return result.order("(SELECT CASE WHEN EXISTS (SELECT true FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') THEN (SELECT value::integer FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') ELSE 0 END) #{sort_dir}")
       end
 
       result.order("topics.#{sort_column} #{sort_dir}")
@@ -359,7 +498,7 @@ class TopicQuery
         when 'unlisted'
           result = result.where('NOT topics.visible')
         when 'deleted'
-          guardian = Guardian.new(@user)
+          guardian = @guardian
           if guardian.is_staff?
             result = result.where('topics.deleted_at IS NOT NULL')
             require_deleted_clause = false
@@ -391,9 +530,16 @@ class TopicQuery
       result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
       result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
-      Guardian.new(@user).filter_allowed_categories(result)
+      @guardian.filter_allowed_categories(result)
     end
 
+    def remove_muted_topics(list, user)
+      if user
+        list = list.where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
+      end
+
+      list
+    end
     def remove_muted_categories(list, user, opts=nil)
       category_id = get_category_id(opts[:exclude]) if opts
 
@@ -407,14 +553,92 @@ class TopicQuery
                AND cu.category_id = topics.category_id
                AND cu.notification_level = :muted
                AND cu.category_id <> :category_id
+               AND (tu.notification_level IS NULL OR tu.notification_level < :tracking)
           )", user_id: user.id,
               muted: CategoryUser.notification_levels[:muted],
+              tracking: TopicUser.notification_levels[:tracking],
               category_id: category_id || -1)
       end
 
       list
     end
 
+    def new_messages(params)
+
+      TopicQuery.new_filter(messages_for_groups_or_user(params[:my_group_ids]), 10.years.ago)
+                .limit(params[:count])
+
+    end
+
+    def unread_messages(params)
+      TopicQuery.unread_filter(messages_for_groups_or_user(params[:my_group_ids]))
+                .limit(params[:count])
+    end
+
+    def related_messages_user(params)
+      messages_for_user
+        .limit(params[:count])
+        .where('topics.id IN (
+                SELECT ta.topic_id
+                FROM topic_allowed_users ta
+                WHERE ta.user_id IN (:user_ids)
+              ) OR
+                topics.id IN (
+                  SELECT tg.topic_id
+                  FROM topic_allowed_groups tg
+                  WHERE tg.group_id IN (:group_ids)
+              )
+              ', user_ids: (params[:target_user_ids] || []) + [-10],
+                 group_ids: ((params[:target_group_ids] - params[:my_group_ids]) || []) + [-10])
+
+    end
+
+    def related_messages_group(params)
+      messages_for_groups_or_user(params[:my_group_ids])
+        .limit(params[:count])
+        .where('topics.id IN (
+                SELECT ta.topic_id
+                FROM topic_allowed_users ta
+                WHERE ta.user_id IN (:user_ids)
+              ) OR
+                topics.id IN (
+                  SELECT tg.topic_id
+                  FROM topic_allowed_groups tg
+                  WHERE tg.group_id IN (:group_ids)
+              )
+              ', user_ids: (params[:target_user_ids] || []) + [-10],
+                 group_ids: ((params[:target_group_ids] - params[:my_group_ids]) || []) + [-10])
+
+    end
+
+    def messages_for_groups_or_user(group_ids)
+      if group_ids.present?
+        base_messages
+          .where('topics.id IN (
+                                  SELECT topic_id
+                                    FROM topic_allowed_groups tg
+                                    JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
+                                    WHERE gu.group_id IN (:group_ids)
+                 )', user_id: @user.id, group_ids: group_ids)
+      else
+        messages_for_user
+      end
+    end
+
+    def messages_for_user
+      base_messages.where('topics.id IN (
+                                  SELECT topic_id
+                                    FROM topic_allowed_users
+                                    WHERE user_id = :user_id
+                 )', user_id: @user.id)
+    end
+
+    def base_messages
+      Topic
+        .where('topics.archetype = ?', Archetype.private_message)
+        .joins("LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i}")
+        .order('topics.bumped_at DESC')
+    end
 
     def random_suggested(topic, count, excluded_topic_ids=[])
       result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)

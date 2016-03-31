@@ -1,19 +1,28 @@
 class Enum < Hash
   # Public: Initialize an enum.
   #
-  # members - the array of enum members. May contain a hash of options:
-  #           :start   - the number of first enum member. Defaults to 1.
+  # members - Array of enum members or Hash of enum members.
+  #           Array of enum members may also contain a hash of options:
+  #           :start - the number of first enum member. Defaults to 1.
   #
   # Examples
   #
-  #   FRUITS = Enum.new(:apple, :orange, :kiwi)
+  #   FRUITS = Enum.new(:apple, :orange, :kiwi) # array
+  #   FRUITS = Enum.new(:apple, :orange, :kiwi, start: 0) # array
+  #   FRUITS = Enum.new(apple: 1, orange: 2, kiwi: 3) # hash
+
   def initialize(*members)
     super({})
 
-    options = members.extract_options!
-    start = options.fetch(:start) { 1 }
-
-    update Hash[members.zip(start..members.count + start)]
+    if members[0].is_a?(Hash)
+      # hash
+      update Hash[members[0]]
+    else
+      # array
+      options = members.extract_options!
+      start = options.fetch(:start) { 1 }
+      update Hash[members.zip(start..members.count + start)]
+    end
   end
 
   # Public: Access the number/value of member.

@@ -24,6 +24,7 @@ export default Ember.Controller.extend({
 
   showMessageInput: Em.computed.and('model.is_custom_flag', 'selected'),
   showDescription: Em.computed.not('showMessageInput'),
+  isNotifyUser: Em.computed.equal('model.name_key', 'notify_user'),
 
   customMessageLengthClasses: function() {
     return (this.get('message.length') < Discourse.SiteSettings.min_private_message_post_length) ? "too-short" : "ok";
@@ -44,4 +45,3 @@ export default Ember.Controller.extend({
   }.property('message.length')
 
 });
-

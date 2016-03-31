@@ -134,10 +134,55 @@ class DiscourseCLI < Thor
     puts 'Requests sent. Clients will refresh on next navigation.'
   end
 
+  desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
+  def export_category(category_id, filename=nil)
+    raise "Category id argument is missing!" unless category_id
+
+    load_rails
+    load_import_export
+    ImportExport.export_category(category_id, filename)
+    puts "", "Done", ""
+  end
+
+  desc "import_category", "Import a category, its topics and the users from the output of the export_category command"
+  def import_category(filename)
+    raise "File name argument missing!" unless filename
+
+    puts "Starting import from #{filename}..."
+    load_rails
+    load_import_export
+    ImportExport.import_category(filename)
+    puts "", "Done", ""
+  end
+
+  desc "export_topics", "Export topics and all users who posted in that topic. Accepts multiple topic id's"
+  def export_topics(*topic_ids)
+    puts "Starting export of topics...", ""
+    load_rails
+    load_import_export
+    ImportExport.export_topics(topic_ids)
+    puts "", "Done", ""
+  end
+
+  desc "import_topics", "Import topics and their users from the output of the export_topic command"
+  def import_topics(filename)
+    raise "File name argument missing!" unless filename
+
+    puts "Starting import from #{filename}..."
+    load_rails
+    load_import_export
+    ImportExport.import_topics(filename)
+    puts "", "Done", ""
+  end
+
   private
 
   def load_rails
     require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+  end
+
+  def load_import_export
+    require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export/import_export")
   end
 
   def do_remap(from, to)

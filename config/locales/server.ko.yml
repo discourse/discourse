@@ -10,18 +10,27 @@ ko:
     short_date_no_year: "M월 D일"
     short_date: "YYYY-M-D"
     long_date: "YYYY-M-D a h:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%Y-%m-%d"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+  date:
+    month_names: []
+    <<: *datetime_formats
   title: "Discourse"
   topics: "글타래"
   posts: "글"
   loading: "로딩중"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "로그인"
-  via: "%{site_name}의 %{username}"
-  is_reserved: "예약됨"
   purge_reason: "비활성화된 계정은 자동적으로 삭제됩니다."
   disable_remote_images_download_reason: "디스크저장공간이 부족하여 원격 이미지 다운로드 기능이 비활성화 되었습니다."
   anonymous: "익명"
-  errors:
+  emails:
+    incoming:
+      default_subject: "%{email} 으로부터 받은 이메일"
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "%{length}자를 입력하셨습니다. 최대 %{max}자까지 입력 가능합니다. "
@@ -37,8 +46,10 @@ ko:
       exclusion: 예약됨
       greater_than: '%{count}보다 커야 함'
       greater_than_or_equal_to: '%{count}보다 크거나 같아야 함'
+      has_already_been_used: "이미 사용되었음"
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
+      is_invalid: "유효하지 않음; 좀더 자세하게 서술해주세요"
       less_than: '%{count}보다 작아야 함'
       less_than_or_equal_to: '%{count}보다 작거나 같아야 함'
       not_a_number: 숫자가 아님
@@ -71,6 +82,8 @@ ko:
   not_found: "요청한 URL이나 리소스를 찾지 못했습니다."
   invalid_access: "요청한 리소스를 볼 권한이 없습니다."
   read_only_mode_enabled: "현재 읽기 전용 모드입니다."
+  reading_time: "읽은 시간"
+  likes: "좋아요"
   too_many_replies:
     other: "죄송합니다. 신규 가입자는 글 하나에 %{count}개까지만 댓글을 달 수 있습니다."
   embed:
@@ -84,26 +97,10 @@ ko:
     in_reply_to: "▶ %{username}"
     replies:
       other: "댓글 %{count}개"
+  no_mentions_allowed: "죄송합니다, 다른 사용자를 언급할 수 없습니다."
   too_many_mentions:
-    zero: "죄송합니다. 회원님은 다른 사용자를 언급할 수 없습니다."
-    one: "죄송합니다. 회원님은 한 댓글에서 한 사용자만 언급할 수 있습니다."
-    other: "죄송합니다. 회원님은 한 댓글에서 %{count}명의 사용자만 언급할 수 있습니다."
-  too_many_mentions_newuser:
-    zero: "죄송합니다. 신규회원은 다른 사용자를 언급할 수 없습니다."
-    one: "죄송합니다. 신규회원은 글 하나에 한 사용자만 언급할 수 있습니다."
-    other: "죄송합니다. 신규회원은 글 하나에 %{count}명의 사용자만 언급할 수 있습니다."
-  too_many_images:
-    zero: "죄송합니다. 신규회원은 글에 이미지를 넣을 수 없습니다."
-    one: "죄송합니다. 신규회원은 글 하나에 이미지 한 개만 넣을 수 있습니다."
-    other: "죄송합니다. 신규회원은 글 하나에 이미지 %{count}개만 넣을 수 있습니다."
-  too_many_attachments:
-    zero: "죄송합니다. 신규회원은 글에 파일을 첨부 할 수 없습니다."
-    one: "죄송합니다. 신규회원은 글 하나에 파일 한 개만 첨부할 수 있습니다."
-    other: "죄송합니다. 신규회원은 글 하나에 파일 %{count}개만 첨부한 수 있습니다."
-  too_many_links:
-    zero: "죄송합니다. 신규회원은 글에 링크를 넣을 수 없습니다."
-    one: "죄송합니다. 신규회원은 글 하나에 링크 한 개만 넣을 수 있습니다."
-    other: "죄송합니다. 신규회원은 글 하나에 링크 %{count}개까지만 넣을 수 있습니다."
+    other: "죄송합니다, 이 포스트에서 %{count}명의 사용자만 언급할 수 있습니다."
+  no_mentions_allowed_newuser: "죄송합니다. 새로운 사용자는 다른 사용자를 언급할 수 없습니다."
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 글 보려는 도중에 글타래가 닫혔거나 지워진 건 아닐까요?"
@@ -122,10 +119,11 @@ ko:
   num_posts: "글 수:"
   num_participants: "참여자:"
   read_full_topic: "전체 글타래 읽기"
-  private_message_abbrev: "MSG"
+  private_message_abbrev: "메시지"
   rss_description:
     latest: "최신 글타래"
     hot: "인기 글타래"
+    top: "인기 토픽"
     posts: "최근 글"
   too_late_to_edit: "이 글은 작성된 지 너무 오랜 기간이 지났습니다. 수정 또는 삭제할 수 없습니다."
   excerpt_image: "이미지"
@@ -135,6 +133,7 @@ ko:
     errors:
       can_not_modify_automatic: "자동 그룹은 수정 하실 수 없습니다."
       member_already_exist: "'%{username}'은 이미 이 그룹의 멤버입니다."
+      invalid_domain: "'%{domain}'은 유효한 도메인이 아닙니다."
     default_names:
       everyone: "모든 사람"
       admins: "관리자"
@@ -159,7 +158,7 @@ ko:
 
       이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](/guidelines)을 참조하세요.
     new-reply: |
-      %{site_name}에 오신것을 환영합니다!
+      %{site_name}에 오신것을 환영합니다! &mdash; **참여해주셔서 감사합니다!**
 
       - 당신의 댓글이 어떤 식으로든 토론을 발전시키나요?
 
@@ -200,11 +199,8 @@ ko:
       post:
         raw: "본문"
       user_profile:
-        bio_raw: "About Me"
+        bio_raw: "내 소개"
     errors:
-      messages:
-        is_invalid: "사용할 수 없습니다. 조금 더 자세하게 적어주세요."
-        has_already_been_used: "이미 사용 중."
       models:
         topic:
           attributes:
@@ -216,7 +212,7 @@ ko:
         user:
           attributes:
             password:
-              common: "가장 자주 사용되는 10000개의 비밀번호 중 하나압니다. 보다 안전한 비밀번호를 사용하세요."
+              common: "가장 자주 사용되는 10000개의 비밀번호 중 하나입니다. 보다 안전한 비밀번호를 사용하세요."
               same_as_username: "는 아이디랑 같음. 제발 좀 더 안전한 비밀번호를 사용해주세요."
               same_as_email: "는 이메일 주소랑 같음. 좀 더 안전한 비밀번호를 사용해주세요."
             ip_address:
@@ -225,6 +221,7 @@ ko:
           attributes:
             hex:
               invalid: "유효한 색상이 아닙니다."
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>프로필이 현재 비어있습니다. <a href='/users/%{username_lower}/preferences/about-me'>지금 작성하시겠습니까?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name}님께서는 아직 프로필을 작성하지 않으셨습니다</div>"
@@ -242,13 +239,10 @@ ko:
       축하합니다! :confetti_ball: 당신의 회원등급이 **지도자** (회원등급 3등급)로 올라갔기 때문에 이 글타래를 볼 수 있게 되었습니다. 이제부터 아래의 행동들을 할 수 있습니다 &hellip; * 글타래를 제목을 수정할 수 있습니다 * 글타래의 카테고리를 수정할 수 있습니다 * 링크가 follow로 처리됩니다 ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) 가 제거됩니다) * 회원등급 3 이상인 사용자가 접근할 수 있는 비공개 카테고리인 라운지에 접근할 수 있습니다 * 좋아요와 신고의 가중치가 높아집니다 [정규 멤버 목록](&#x2F;badges/3/regular)을 확인할 수 있습니다. 인사하는 것을 잊지마세요. 이 커뮤니티의 중요한 역할을 해주신 것에 감사드립니다! (회원등급에 관한 더 자세한 정보를 보시려면, [이 글타래를 확인하세요][trust]. 기준에 맞는 사람만 정규 회원으로 자격이 유지됩니다.) [trust]:  https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
-    replace_paragraph: "[이 첫번째 문단을 당신의 새로운 카테고리의 짧은 설명으로 바꿔주세요. 이 지침은 카테고리 선택 화면에 나타날 것입니다. 200자 이하로 적어주세요.]"
-    post_template: "%{replace_paragraph}\n\n이 공간은 긴 설명을 사용하여 주세요. 또한 카테고리 가이드라인이나 룰도 이 공간을 이용해주세요.\n\n몇 가지 답글에 관련하여 고려해봐야 할 것들:\n\n- 무엇을 위한 카테고리인가? 왜 사용자들이 이 카테고리를 필요로 하겠는가?\n\n- 이미 가지고있는 다른 카테고리와 어떻게 다른가?\n\n- 정말 이 카테고리가 필요한가?\n\n- 다른 카테고리와 합병이 필요한가 아니면 더욱 자세한 카테고리로 나눌 필요가 있는가?\n"
     errors:
       uncategorized_parent: "Uncategorized 카테고리는 부모 카테고리를 가질 수 없습니다."
       self_parent: "하위 카테고리의 부모는 자신이 될 수 없습니다."
       depth: "하위 카테고리는 계층 구조로 사용할 수 없습니다."
-      email_in_already_exist: "'%{email_in}' 수신용 이메일 주소는 '%{category_name}' 카테고리 에서 사용 중입니다."
     cannot_delete:
       uncategorized: "Uncategorized는 삭제할 수 없습니다."
       has_subcategories: "하위 카테고리가 있어, 삭제할 수 없습니다."
@@ -260,16 +254,21 @@ ko:
       title: "새로운 사용자"
     basic:
       title: "기본 사용자"
+    member:
+      title: "멤버"
     regular:
-      title: "회원"
+      title: "일반"
     leader:
-      title: "정규 회원"
-    elder:
-      title: "지도자"
+      title: "리더"
     change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
   rate_limiter:
-    slow_down: "해당 작업을 너무 많이 수행했습니다. 잠시 뒤에 다시 시도해보세요."
+    slow_down: "해당 작업을 너무 많이 수행했습니다. 잠시후 다시 시도해보세요. "
     too_many_requests: "지금 하시려는 행동에는 하루 제한이 있습니다. %{time_left} 동안 기다리시고 다시 시도해 주세요."
+    by_type:
+      first_day_replies_per_day: "새 유저가 가입한 첫 날에 작성할 수 있는 댓글의 최대 갯수에 도달했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
+      first_day_topics_per_day: "새 유저가 가입한 첫 날에 작성할 수 있는 토픽의 최대 갯수에 도달했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
+      create_topic: "너무 빨리 토픽을 작성했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
+      create_post: "너무 빨리 댓글을 작성했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
     hours:
       other: "%{count}시간"
     minutes:
@@ -280,11 +279,11 @@ ko:
     distance_in_words:
       half_a_minute: "<1분"
       less_than_x_seconds:
-        other: "%{count}초 전"
+        other: "< %{count}초"
       x_seconds:
         other: "%{count}초"
       less_than_x_minutes:
-        other: "%{count}분 전"
+        other: "< %{count}분"
       x_minutes:
         other: "%{count}분"
       about_x_hours:
@@ -339,6 +338,7 @@ ko:
     please_continue: "%{site_name}으로 가기"
     error: "이메일 주소를 변경하는데 문제가 있습니다. 주소가 이미 사용되고 있나요?"
   activation:
+    action: "여기를 눌러 계정을 활성화하세요."
     already_done: "죄송합니다. 이 계정 확인 링크는 더 이상 유효하지 않습니다."
     please_continue: "계정이 활성화 되었습니다; 홈페이지로 이동합니다."
     continue_button: "%{site_name}으로 가기"
@@ -361,16 +361,13 @@ ko:
       description: '이 글은 다른 사용자들에게 공격적이나 모욕적 또는 침해적인 글을 담고 있습니다.'
       long_form: '부적절함으로 신고하기'
     notify_user:
-      title: '메세지 @{{username}}'
-      description: '이 글에 내가 작성자와 직접 대화하고 싶은 내용이 있습니다. 신고에서 제외해주세요.'
+      title: '@{{username}} 님에게 메시지를 보냅니다'
       long_form: '메세지한 유저'
       email_title: '"%{title}" 내의 당신의 글'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "뭔가 다른것"
-      description: '이 글은 리스트에 없는 이유로 관리자의 주의가 필요합니다.'
-      long_form: '관리자의 주의를 위해 신고'
-      email_title: '"%{title}" 글에 대한 운영자의 확인이 필요합니다'
+      long_form: '주의를 위해 운영진에게 신고했습니다'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: '북마크'
@@ -397,7 +394,6 @@ ko:
       long_form: '부적절함으로 신고하였습니다.'
     notify_moderators:
       title: "뭔가 다른것"
-      description: '이 글은 <a href="/guidelines">가이드라인</a>, <a href="%{tos_url}">이용약관</a>, 또는 다른 이유와 관련해서 운영자의 주의가 필요합니다.'
       long_form: '관리자의 주의를 위해 신고'
       email_title: '글타래 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
@@ -433,6 +429,10 @@ ko:
       title: "새 사용자"
       xaxis: "일"
       yaxis: "새로운 사용자 수"
+    profile_views:
+      title: "회원 프로필 조회수"
+      xaxis: "일"
+      yaxis: "회원 프로필 조회된 횟수"
     topics:
       title: "글타래들"
       xaxis: "일"
@@ -516,6 +516,10 @@ ko:
       title: "총"
       xaxis: "일"
       yaxis: "총 API 요청"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "일"
+    page_view_anon_mobile_reqs:
+      xaxis: "일"
     http_background_reqs:
       title: "백그라운드"
       xaxis: "일"
@@ -548,6 +552,10 @@ ko:
       title: "답글 없는 주제"
       xaxis: "일"
       yaxis: "총"
+    mobile_visits:
+      title: "사용자 방문횟수"
+      xaxis: "일"
+      yaxis: "방문 횟수"
   dashboard:
     rails_env_warning: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."
     ruby_version_warning: "당신은 문제가 자주 발생하는 루비 버전 2.0.0을 사용하시고 있습니다. 247 또는 이후 패치 레벨로 업그레이드를 해주세요."
@@ -570,37 +578,6 @@ ko:
     consumer_email_warning: "이메일 전송을 위해 Gmail(또는 다른 커스텀 이메일 서비스)을 사용하고 있습니다. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail의 이메일 전송 제한</a> 을 읽어보세요. mandrill.com을 이메일 서비스로 설정하는 것을 고려해보세요."
     site_contact_username_warning: "중요 자동 메세지를 보낼 스태프 사용자 계정의 이름을 적으세요. <a href='/admin/site_settings'>사이트 설정</a>에서 site_contact_username을 업데이트하세요."
     notification_email_warning: "알람 메일이 올바른 이 사이트의 도메인 내 이메일 주소로 전송되지 않고 있습니다; 이메일 전송이 안정적이지 않을 것입니다. <a href='/admin/site_settings'>사이트 설정</a>에서 올바른 도메인의 이메일 주소로 정해주세요."
-  content_types:
-    education_new_reply:
-      title: "새로운 사용자 교육: 첫번째 답글들"
-      description: "새로운 사용자가 첫 두개의 답글을 작성하면 자동 팝업됩니다."
-    education_new_topic:
-      title: "새로운 사용자 교육: 첫번째 글타래들"
-      description: "새로운 사용자가 첫 두개의 글타래를 작성하면 자동 팝업됩니다."
-    usage_tips:
-      title: "새로운 사용자 가이드"
-      description: "새로운 사용자를 위한 가이드와  팁."
-    welcome_user:
-      title: "환영: 새로운 사용자"
-      description: "새 가입자에게 전달할 자동 메세지"
-    welcome_invite:
-      title: "환영: 초대된 사용자"
-      description: "사용자가 다른 사람이 보낸 초대장에 승인했을 때 에게 전달 될 자동 메세지"
-    login_required_welcome_message:
-      title: "로그인 필요: Welcome Message"
-      description: "'login required' 설정이 활성화 되어있으면 웰컴 메시지가 로그인 되지 않은 사용자들에게 보여집니다."
-    login_required:
-      title: "로그인 필요: 홈페이지"
-      description: "이 텍스트는 로그인이 필요하지만 인증되지 않은 사용자들에게 보여집니다."
-    head:
-      title: "HTML head"
-      description: "<head></head> 태그 사이에 추가할 HTML"
-    top:
-      title: "페이지 상단"
-      description: "모든 페이지 상단에 추가할 HTML(헤더 아래, 네비게이션이나 글타래 제목 위)."
-    bottom:
-      title: "페이지 하단"
-      description: "모든 페이지 하단에 추가할 HTML"
   site_settings:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
@@ -615,7 +592,6 @@ ko:
     min_private_message_title_length: "메세지 제목의 최소 길이"
     min_search_term_length: "검색을 하기 위한 최소 글자 수"
     allow_uncategorized_topics: "카테고리 없이 게시 허용. 주의: 카테고리 없는 글은 이 항목을 비활성화에 하기전에 카테고리 설정을 해야 합니다."
-    uncategorized_description: "'카테고리 없음' 카테고리의 설명, 설명을 쓰지 않으려면 빈칸으로 놔둔다."
     allow_duplicate_topic_titles: "같은 제목의 동일한 글타래 허용"
     unique_posts_mins: "같은 컨텐츠를 다시 글 할 수 있는 기간(분)"
     educate_until_posts: "새로운 사용자가 글를 작성할 시 글 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 글 개수"
@@ -628,7 +604,6 @@ ko:
     download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경. 이미지가 깨지는 것을 막을 수 있습니다."
     download_remote_images_threshold: "원격의 이미지를 로컬에 다운받기 위한 최소 디스크 공간(%)"
     disabled_image_download_domains: "이 도메인을 통해서 원격 이미지를 다운로드 하지 않는다. ` | `를 구분자로 한 리스트"
-    ninja_edit_window: "편집을 결과가 새로운 버전을 생성하지 않는 포스팅 이후에 경과할 시간(초)"
     post_edit_time_limit: "글 작성자가 해당 글을 편집하거나 삭제할 수 있도록 허용되는 시간(분). 0으로 설정하면 언제든지 편집이나 삭제가 허용됨."
     edit_history_visible_to_public: "모든 사용자가 글의 수정 내역을 볼 수 있도록 허용. 비활성화시 스태프 맴버만 수정 내역을 볼 수 있음."
     delete_removed_posts_after: "작성자에 의해 삭제된 글은 (n) 시간 뒤 자동으로 삭제됩니다. 0으로 설정 시, 즉시 삭제됩니다."
@@ -653,7 +628,6 @@ ko:
     summary_likes_required: "하나의 글타래에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 좋아요 수"
     summary_percent_filter: "요약본 보기를 클릭시, 글 중에 몇 %의 상위 글을 보여줄 것인가?"
     summary_max_results: "이 주제에 대한 요약 글 최대 갯수"
-    enable_private_messages: "회원등급 1인 유저들에게 메세지 작성과 메세지 답변을 허용하기"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "long polling에 사용 될 Base URL (CDN이 동적 콘텐트를 제공할 시에는 origin pull로 설정) eg: http://origin.site.com"
     long_polling_interval: "보낼 데이터가 없을 때 응답 전에 서버가 기다려야하는 시간 (로그인된 유저 전용)"
@@ -674,6 +648,7 @@ ko:
     traditional_markdown_linebreaks: "Markdown에서 전통적인 linebreak를 사용, linebreak시 두개의 trailing space를 사용하는 것."
     post_undo_action_window_mins: "사용자가 어떤 글에 대해서 수행한 작업(신고 등)을 취소하는 것이 허용되는 시간(초)"
     must_approve_users: "스태프는 반드시 사이트 엑세스권한을 허용하기 전에 모든 신규가입계정을 승인해야 합니다. 경고: 이것을 활성화하면 기존 스태프 아닌 회원들의 엑세스권한이 회수됩니다."
+    pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     ga_tracking_code: "Google analytics (ga.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
@@ -693,7 +668,6 @@ ko:
     suppress_reply_directly_above: "단 하나의 댓글 위의 글이 하나 있는 상황에서 '~에 대한 댓글'을 보여주지 않음."
     suppress_reply_when_quoting: "글안에 답글이 인용될 때 in-reply-to를 보여주지 않습니다."
     max_reply_history: "덧글 확장해서 보여지는 최대 갯수"
-    experimental_reply_expansion: "답글을 펼쳤을 때 중간 답글을 숨깁니다(실험 중)"
     topics_per_period_in_top_summary: "인기 글타래 요약에 기본으로 보여질 글타래 수"
     topics_per_period_in_top_page: "인기 글타래에서 '더 보기'를 요청할 시 보여질 글타래 수"
     redirect_users_to_top_page: "자동으로 신규 사용자와 오래간만에 들어온 사용자를 탑 페이지로 리다이렉트 시킴"
@@ -714,6 +688,9 @@ ko:
     invite_passthrough_hours: "사용되어진 방문키를 로그인하는데 재사용할 수 있는 기간, 시간"
     invite_only: "공개 가입은 불가하도록 설정됨. 초대를 받아야만 신규 가입 가능함."
     login_required: "글을 읽으려면 인증(로그인)이 필요함"
+    min_username_length: "아이디 최소길이 (문자 갯수)"
+    max_username_length: "아이디 최대길이 (문자 갯수)"
+    reserved_usernames: "회원가입 금지된 아이디 목록"
     min_password_length: "비밀번호 최소 글자수."
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
     enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
@@ -786,16 +763,9 @@ ko:
     tl2_requires_likes_received: "회원등급-2가 되기 위해 받아야 하는 좋아요 횟수"
     tl2_requires_likes_given: "회원등급-2가 되기 위해 눌러야하는 좋아요 횟수"
     tl2_requires_topic_reply_count: "기회원등급-2가 되기 위해 달아야 하는 댓글 갯수"
-    tl3_requires_days_visited: "VIP 사용자-3 이 되기 위해 지난 100일 동안 최소한 사이트에 방문해야 하는 수 (0 ~ 100)"
-    tl3_requires_topics_replied_to: "VIP 사용자-3 이 되기 위해 지난 100일 동안 답글을 달아야하는 최소 글타래수(0 ~ )"
-    tl3_requires_topics_viewed: "VIP 사용자-3 이 되기 위해 지난 100일 동안 생성된 전체 글타래 중 본 글타래의 비율(%, 0 ~ 100)"
-    tl3_requires_posts_read: "VIP 사용자-3 이 되기 위해 지난 100일 동안 생성된 전체 글 중 본 글의 비율(%, 0 ~ 100)"
     tl3_requires_topics_viewed_all_time: "VIP 사용자-3 이 되기 위해 꼭 보아야 하는 글타래의 전체 개수"
     tl3_requires_posts_read_all_time: "VIP 사용자-3 이 되기 위해 꼭 보아야 하는 글타래의 전체 개수"
-    tl3_requires_max_flagged: "사용자가 VIP 사용자-3 이 되기 위해 지난 100일동안 서로 다른 사용자에게 최소한으로 받지 말아야하는 신고된 글 수(0 ~ )"
     tl3_promotion_min_duration: "회원등급이 2로 떨어진 후 다시 VIP 사용자-3 이 될 수 있는 최소 일 수"
-    tl3_requires_likes_given: "VIP 사용자-3 이 되기 위해 지난 100일 동안 해야 할 좋아요 수"
-    tl3_requires_likes_received: "VIP 사용자-3 이 되기 위해 지난 100일 동안 받아야 할 좋아요 수"
     tl3_links_no_follow: "VIP 사용자-3 의 글에 있는 링크에서 rel=nofollow 를 제거하지 마시오."
     min_trust_to_create_topic: "새로운 글타래를 생성하기 위한 최소 회원등급"
     min_trust_to_edit_wiki_post: "위키로 설정된 글 수정할 수 있는 최소 회원등급"
@@ -876,7 +846,6 @@ ko:
     automatically_download_gravatars: "사용자가 계정을 만들거나 이메일을 변경하자마자 Gravatar를 다운로드합니다."
     digest_topics: "요약 이메일에서 보여질 최대 글타래 개수"
     digest_min_excerpt_length: "요약 이메일에서 최소 글 발췌 수"
-    suppress_digest_email_after_days: "(n)일동안 사이트에서 보지 못한 사용자에게는 이메일 요약을 보내지 않습니다."
     disable_digest_emails: "모든 유저들 이메일 다이제스트 못하게 하기"
     max_daily_gravatar_crawls: "하루에 Discourse가 커스텀 아파타를 위해 Gravatar를 체크하는 최대 횟수"
     public_user_custom_fields: "유저가 쓸 수 있는 공개 커스텀 필드 목록"
@@ -886,7 +855,6 @@ ko:
     anonymous_posting_min_trust_level: "익명 게시 할 수 있는 최소 회원등급"
     anonymous_account_duration_minutes: "한 익명이 익명계정을 만들 때 빨리 만드는 걸 막을 분 단위 시간 예: 600으로 정해놓으면 마지막 게시하고 익명 전환 후로 600분이 지나는 즉시 새 계정이 만들어 집니다."
     allow_profile_backgrounds: "사용자에게 프로필 배경 이미지 업로드를 허용합니다."
-    sequential_replies_threshold: "한 유저가 한 글타래에 너무 연속으로 답글 달았다고 알리게 될 연속 글 수"
     enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용합니다, 그리고 PC용 화면으로 전환할 수 있습니다. 만약 커스텀 스타일 시트를 사용한다면 이것을 비활성화 시키세요."
     dominating_topic_minimum_percent: "한 글타래에서 한 사용자의 영향력을 결정하는 글 수의 퍼센트"
     daily_performance_report: "NGINX 일별 로그를 분석하고 상세정보를 스태프들에게 글타래 게시"
@@ -915,13 +883,11 @@ ko:
     enable_cdn_js_debugging: "/logs에서 적절한 모든 js를 포함해 crossorigin 권한 오류가 뜨도록 합니다."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: (n) 일지난 임시 보관글 삭제하기
-    vacuum_db_days: "VACUUM FULL ANALYZE를 실행해서 통합 후 DB 공간 재확인  (0으로 설정하면 비활성화)"
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
     slug_generation_method: "slug 생성 방식. 'encoded'는 퍼센트 기호로 인코딩해서 생성합니다. 'none'은 slug 자체를 비활성화합니다.."
     enable_emoji: "emoji 활성화"
     emoji_set: "어떤 emoji가 좋은가요?"
     enforce_square_emoji: "모든 emoji를 정사각형 비율로 강제로 바꿉니다."
-    approve_post_count: "신규가입자가 올릴 수 있는 글 수"
     approve_unless_trust_level: "허가 받고 글 올려야 하는 유저들 최저 회원등급"
     notify_about_queued_posts_after: "글이 리뷰가 되길 기다리면서 이 시간이 지나면 문의처 메일로 연락을 보냅니다. 0으로 두면 보내지 않습니다."
     errors:
@@ -948,7 +914,6 @@ ko:
     moved_post: "%{display_username} 사용자가 %{link} 에 당신의 글을 이동하였습니다."
     private_message: "%{display_username} 회원님이 메세지를 보냈습니다: %{link}"
     invited_to_private_message: "%{display_username} 회원님이 메세지에 초대했습니다: %{link}"
-    invited_to_topic: "%{display_username} 회원님이 글타래에 초대했습니다: %{link}"
     invitee_accepted: "%{display_username} 사용자가 당신의 초대를 수락하였습니다."
     linked: "%{display_username} 사용자가 %{link} 에서 당신을 링크했습니다."
     granted_badge: "당신은 %{link}를 획득했습니다."
@@ -958,11 +923,6 @@ ko:
       category: '카테고리'
       topic: '검색 결과'
       user: '사용자'
-  sso:
-    not_found: "계정 생성 또는 찾기 불가, 관리자에게 문의하세요"
-    account_not_approved: "계정이 승인을 기다리고 있습니다, 승인 후 완료 이메일이 보내집니다."
-    unknown_error: "업데이트 정보에 오류가 있습니다. 사이트 관리자에게 문의해주세요."
-    timeout_expired: "로그인 연결 시간이 초과되었습니다. 다시한번 시도해주세요"
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
@@ -1035,6 +995,9 @@ ko:
     ip_address:
       blocked: "이 IP주소에서는 가입이 안됩니다."
       max_new_accounts_per_registration_ip: "이 IP에서는 가입이 더이상 되지 않습니다(최대 가입 제한 도달). 스태프에게 연락주세요."
+  flags_reminder:
+    subject_template:
+      other: "%{count}개의 신고가 접수 대기 중"
   invite_mailer:
     subject_template: "%{invitee_name} 회원님이 %{site_domain_name} 에 '%{topic_title}'에 초대하였습니다."
     text_body_template: |
@@ -1071,86 +1034,10 @@ ko:
     subject_template: "%{site_name} 계정을 위해 비밀번호 설정"
   test_mailer:
     subject_template: "[%{site_name}] 이메일 발송 테스트"
-    text_body_template: |
-      이것은 테스트 이메일 양식입니다.
-
-      [**%{base_url}**][0]
-
-      이메일 발송은 어렵습니다. 먼저 체크해야 할 몇가지 사항을 알려드립니다:
-
-      - `알림 이메일` 발신지 주소가 사이트 설정에 적었는지 *확실히* 보세요. **발신지 이메일 주소에 적힌 도메인은 받는 곳에서 검사하게 될 도메인입니다**.
-
-      - 이메일 raw source를 이메일 클라이언트에서 보는 방법을 알아두고 이메일 헤더에서 중요한 단서를 찾도록 합니다. Gmail에서는, 각 메일의 오른쪽 위에 있는 드롭다운 메뉴의 "원본보기" 옵션입니다.
-
-      - **중요:** 당신의 ISP회사가 도메인네임과 IP주소를 연결시켜주러 들어오는 a reverse DNS record 갖고 있나요? [Reverse PTR record 테스트][2]해보세요. ISP회사가 적절한 reverse DNS pointer record를 안 넣었다면, 어떤 이메일도 발송이 안될 수 있습니다.
-
-      - 이메일 도메인의 [SPF record][8]가 제대로 설정됐나요? [SPF record 테스트][1]해보세요. 참고로 TXT가 제대로된 공식 SPF 타입입니다.
-
-      - 이메일 도메인의 [DKIM record][3]가 제대로 설정됐나요? 이게 이메일 전송에 큰 영향을 줍니다. [your DKIM record 테스트][7]해보세요.
-
-      - 스스로 이메일서버를 운영중이라면, 메일서버 IP가 [블랙리스트][4]에 안들어 가있는지 확실히 봐야합니다. 또 DNS의 HELO 메세지로 resolve가 되는 완벽히 인증된 호스트네임으로 제대로 보내고 있는지 확인해야 합니다. 아니라면 대부분의 받는 쪽 메일 서비스에서 거절 받을 겁니다.
-
-      (한 가지 *쉬운* 방법은 [Mandrill][md]이나 [Mailgun][mg]이나 [Mailjet][mj]에 가입해 메일링 서비스를 받는 것이고 작은 커뮤니티에서는 괜찮을 겁니다. 그래도 SPF레코드 DKIM레코드는 DNS에 등록해줘야합니다!)
-
-      우리도 이 이메일 전송 테스트를 제대로 받았기를 바랍니다.
-
-      행운을 빕니다.
-
-      당신의 친구 [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] 새 Discourse 버전으로 업데이트 가능."
-    text_body_template: |
-      [Discourse](http://www.discourse.org) 새 버전이 나왔습니다.
-
-      현재 이 Discourse 버전: %{installed_version}
-      새 버전: **%{new_version}**
-
-      제안:
-
-      - [GitHub changelog](https://github.com/discourse/discourse/commits/master)에 뭐가 바뀌었는지 확인해보세요.
-
-      - 브라우저 상에서 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)로 들어가 업그레이드가 가능합니다.
-
-      - [meta.discourse.org](http://meta.discourse.org) 포럼에서 Discourse 관련 지원, 토의, 뉴스를 보실 수 있습니다.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 업데이트 가능."
-    text_body_template: |+
-      [Discourse](http://www.discourse.org) 새 버전이 나왔습니다.
-
-      현재 이 Discourse 버전: %{installed_version}
-      새 버전: **%{new_version}**
-
-      제안:
-
-      - [GitHub changelog](https://github.com/discourse/discourse/commits/master)에 뭐가 바뀌었는지 확인해보세요.
-
-      - 브라우저 상에서 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)로 들어가 업그레이드가 가능합니다.
-
-      - [meta.discourse.org](http://meta.discourse.org) 포럼에서 Discourse 관련 지원, 토의, 뉴스를 보실 수 있습니다.
-
-      ### 릴리즈 노트
-
-      %{notes}
-
-  flags_reminder:
-    flags_were_submitted:
-      other: "이 신고들은 %{count}시간 전에 접수 됐습니다."
-    please_review: "후기를 써주세요."
-    post_number: "글"
-    how_to_disable: '"notify about flags after" 설정을 통해 이메일 알림의 빈도를 변경하거나 비활성화할 수 있습니다.'
-    subject_template:
-      other: "%{count}개의 신고가 접수 대기 중"
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}]의 %{count}개의 글이 검토를 기다리고 있습니다."
@@ -1187,6 +1074,99 @@ ko:
         하지만 글이 한번 더 커뮤니티에서 숨김이 된 경우 스태프가 풀어주기 전까지 숨김해제가 안되며 계정 정지 등의 조치가 취해질 수 있습니다.
 
         조언을 얻기 위해, [커뮤니티 가이드라인](%{base_url}/guidelines)을 참고해 주세요.
+    usage_tips:
+      text_body_template: |
+        시작하기 위한 몇 가지 간단한 팁을 알려드릴께요:
+
+        ## 읽기
+
+        더 읽으시려면, **그냥 계속해서 스크롤다운 하세요!**
+
+        새 댓글이나 새 포픽이 올라오면 자동으로 나타나기 때문에 페이지 새로고침할 필요가 없습니다.
+
+        ## 탐색
+
+        - 검색 또는 <kbd>☰</kbd> 메뉴, 사용자페이지는 **화면 우상단에 있는 아이콘 버튼**을 사용하세요.
+
+        - 토픽을 선택하면 항상 당신이 그 토픽에서 **읽지 않은 다음 댓글**로 바로 갑니다. 제일 위나 아래로 가려면, 댓글 카운트 또는 마지막 댓글 날짜를 선택하세요.
+
+          <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - 토픽을 읽는 도중에는, 우하단에 있는 프로그레스 바를 이용해서 전체 탐색하세요. 토픽 제목을 선택하면 제일 위로 바로 갈 수 있답니다. 초스피드 키보드 단축키 목록이 궁금하면 <kbd>?</kbd>키를 누르세요.
+
+          <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        ## 댓글달기
+
+        - 토픽에 **평범하게 댓글 달때**는, 토픽 맨 밑에 있는 <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> 버튼을 이용하세요.
+
+        - **특정 사람**에게 댓글 달때는, 그 글에 딸린 <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> 버튼을 이용하세요.
+
+        - **새로운 토픽으로** 댓글 달때는, 글 오른쪽에 있는 <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> 버튼을 이용하세요. 오래된 토픽과 새 토픽 모두 자동적으로 함께 링크됩니다.
+
+        댓글은 간단한 HTML 또는 BBCode, [마크다운 (Markdown)](http://commonmark.org/help/) 형식으로 쓸 수 있습니다.
+
+          이건 **볼드체**입니다.
+          이건 <b>볼드체</b>입니다.
+          이건 [b]볼드체[/b]입니다.
+
+        마크다운을 배우고 싶으시다면? [저희의 10분짜리 재밌는 인터랙티브 튜토리얼을 해보세요!](http://commonmark.org/help/tutorial/)
+
+        인용문을 삽입하려면, 인용하고 싶은 텍스트를 선택한 다음에 댓글달기(응답하기) 버튼 아무거나 누르세요. 인용문이 여러개면 앞 동작을 반복하세요.
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        댓을을 누군가에게 알리고 싶을 때는 그 사람 이름을 언급하세요. `@` 키를 쳐서 사용자이름 선택하기를 시작할 수 있답니다.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        [표준 이모지(Emoji)](http://www.emoji.codes/)를 사용하려면, 그냥 `:`키를 눌러서 매칭되는 이름을 찾거나 예전부터 써온 `;)` 웃음표시를 이용하세요.
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        링크 요약을 생성하려면, 편집기 화면에 그 링크를 그냥 아래처럼 붙여넣기 하세요:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        ## 액션
+
+        각각의 글 밑에는 액션 버튼들이 있습니다:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        누군가의 글이 마음에 쏙 들어서 감사표시를 하고 싶으면 **좋아요** 버튼을 이용하세요. 애정을 공유하는 거에요!
+
+        누군가의 글에 문제가 있으면, **신고** 버튼으로 글쓴이에게 또는 [우리 운영진](%{base_url}/about)에게 개인적으로 조용히 알려주세요. 그 글로 가는 링크를 **공유**하거나 **북마크**해서 당신의 사용자 페이지에서 나중에 참고할 수도 있습니다.
+
+        ## 알림
+
+        누군가 당신에게 댓글달거나 당신의 글을 인용, 또는 당신의 `@아이디`를 언급하면, 페이지 우상단에 숫자가 즉시 나타납니다. **알림**으로 접근할 때 그걸 이용하세요.
+
+          <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        댓글 놓칠까봐 걱정하지 마세요 - 당신이 없는 사이에 온 알림은 이메일로 보내드릴 꺼에요.
+
+        ## 환경설정
+
+          - **쓴지 이틀이 안 된** 모든 토픽은 새글로 간주합니다.
+
+          - **당신이 활동적으로 참여한** (글쓰기, 댓글달기, 일정시간 이상 읽기 등) 토픽은 자동적으로 추적됩니다.
+
+        이 토픽들 바로 옆에는 파란색 new 또는 읽지 않는 댓글수가 표시됩니다:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        토픽 맨 밑에 있는 알림제어판을 통해 어떤 토픽이든지 알림설정을 바꿀 수 있습니다.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        그리고 만일 특정 카테고리의 모든 새토픽을 지켜보고 싶으면, 카테고리 별로 알림설정 할 수 있습니다.
+
+        설정을 바꾸려면 [당신의 사용자 환경설정](%{base_url}/my/preferences)을 참고하세요.
+
+        ## 커뮤니티 신뢰
+
+        이곳에 참여하시면, 시간이 지남에 따라 커뮤니티의 신뢰를 받게 되고 정회원이 되어 신규회원 제한은 사라질 꺼에요. 충분이 높은 [회원등급이 되면](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), 우리 커뮤니티를 함께 꾸려나가는 걸 도와줄 새능력을 얻을 껍니다.
     welcome_user:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
       text_body_template: |
@@ -1271,18 +1251,8 @@ ko:
     csv_export_failed:
       subject_template: "데이터 추출 실패"
       text_body_template: "죄송합니다. 데이터 추출에 실패하였습니다. 로그를 확인하시거나 관리자에게 문의해주세요."
-    email_reject_trust_level:
-      subject_template: "[%{site_name}] 이메일 문제 -- 회원등급 충족 안됨."
-      text_body_template: |
-        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        새 글타래를 작성하는 데 필요한 회원등급이 없습니다. 오류라고 생각되면 스태프에게 연락주세요.
     email_reject_no_account:
       subject_template: "[%{site_name}]  이메일 문제 -- 모르는 계정"
-      text_body_template: |
-        죄송합니다 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        이 이메일 주소로 되어있는 사용자 계정이 없습니다. 다른 이메일 주소로 보내거나 스태프에게 연락 주세요.
     email_reject_empty:
       subject_template: "[%{site_name}]  이메일 문제 -- 내용 없음"
     email_reject_parsing:
@@ -1297,42 +1267,17 @@ ko:
         죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
 
         이 카테고리에서 새 글타래를 작성하는 데 필요한 회원등급이 없습니다. 오류라고 생각되면 스태프에게 연락주세요.
-    email_reject_post_error:
-      subject_template: "[%{site_name}] 이메일 문제 -- 게시 오류"
-      text_body_template: |
-        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        복잡한 포매팅, 대용량 메세지, 너무 짧은 메세지가 문제일 수 있습니다. 다시 시도 해보고 계속 문제 된다면 웹사이트를 통해 글을 올리세요.
-    email_reject_post_error_specified:
-      subject_template: "[%{site_name}] 이메일 문제 -- 게시 오류"
-      text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n이유:\n\n%{post_error}\n\n문제를 고치고 다시 시도해 보세요.\n"
     email_reject_reply_key:
       subject_template: "[%{site_name}] 이메일 문제 -- 잘못된 답글 Key"
-      text_body_template: |
-        죄송합니다 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        받은 답글 key가 올바르지 않거나 모르는 key여서 어디에 답글을 달아야 하는지 모르겠스빈다. 스태프에게 연락주세요.
-    email_reject_destination:
-      subject_template: "[%{site_name}] 이메일 문제 -- 모르는 주소"
-      text_body_template: |
-        죄송합니다 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        목적지 이메일 주소 전부가 식별되지 않습니다. 사이트 주소가 To: 줄(Cc:나 Bcc:는 안됨)에 들어 있는지 스태프에게 받은 올바른 이메일 주소로 보내고 있는지 확인해주세요.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] 이메일 문제 -- 글타래 못 찾음"
-      text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n답글하려는 글타래가 더이상 존재하지 않습니다, 아마 지워졌을 수도 있습니다. 오류라고 생각되면 스태프에게 연락주세요.\n"
     email_reject_topic_closed:
       subject_template: "[%{site_name}] 이메일 문제 -- 글타래 닫힘"
-      text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n답글하려는 글타래가 닫혔거나 더이상 답글을 받지 않스빈다. 오류라고 생각되면 스태프에게 연락 주세요.\n"
+      text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n답글하려는 글타래가 닫혔거나 더이상 답글을 받지 않습니다. 오류라고 생각되면 스태프에게 연락 주세요.\n"
     email_reject_auto_generated:
       subject_template: "[%{site_name}] 이메일 문제 -- 자동 생성된 답글"
-      text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n이메일이 \"자동 생성\"으로 확인 되어 받을 수 없습니다. 오류라고 생각되면 스태프에게 연락주세요.\n"
     email_error_notification:
       subject_template: "[%{site_name}] 이메일 문제 -- POP 인증 오류"
-      text_body_template: |
-        POP서버에서 메일을 가져오는데 인증 오류가 발생했습니다.
-
-        POP 인증정보를 제대로 입력했는지 확인해주세요. [사이트 설정](%{base_url}/admin/site_settings/category/email).
     too_many_spam_flags:
       subject_template: "새로운 계정은 블락되었습니다."
       text_body_template: |
@@ -1345,32 +1290,10 @@ ko:
         추가적인 조언은 [커뮤니티 가이드라인](%{base_url}/guidelines)에서 확인하실 수 있습니다.
     blocked_by_staff:
       subject_template: "계정이 블락"
-      text_body_template: |
-        안녕하세요,
-
-        %{site_name}에서 이 계정이 스태프에 의해 블락되었음을 알리는 자동 메세지 입니다.
-
-        추가적인 조언은 [community guidelines](%{base_url}/guidelines)에서 확인하실 수 있습니다.
     user_automatically_blocked:
       subject_template: "%{username} 신규가입자가 커뮤니티 신고로 블락됨"
-      text_body_template: |
-        자동 생성 메세지입니다.
-
-        새 사용자 [%{username}](%{base_url}%{user_url})님이 여러 사용자가 %{username}님의 글(들)을 신고하여 자동으로 블락되었습니다.
-
-        [신고 접수](%{base_url}/admin/flags) 확인 바랍니다. %{username}님이 잘못 블락 되었으면, [사용자 관리 페이지](%{base_url}%{user_url})에서 블락해제해 주세요.
-
-        `block_new_user` 사이트 설정을 변경해 쓰레솔드를 바꿀 수 있습니다.
     spam_post_blocked:
       subject_template: "%{username} 신규가입자가 연속 링크로 블락됨"
-      text_body_template: |
-        자동 생성 메세지입니다.
-
-        새 사용자 [%{username}](%{base_url}%{user_url})님이 %{domains} 링크로 여러 글을 올려서 스팸이 의심되어 블락되었습니다. 다만, 이 사용자는 %{domains} 링크가 없는 글은 계속 올릴 수 있습니다.
-
-        [사용자 관리 페이지](%{base_url}%{user_url})에서 확인 바랍니다.
-
-        이는 `newuser_spam_host_threshold`와 `white_listed_spam_host_domains` 사이트 설정으로 변경할 수 있습니다.
     unblocked:
       subject_template: "계정 블락 해제"
       text_body_template: |
@@ -1396,84 +1319,19 @@ ko:
     unsubscribe:
       title: "구독해지"
       description: "이메일들에 관심이 없나요? 아래 구독해지를 눌러서 바로 구독을 해지할 수 있습니다:"
-    reply_by_email: "응답하시려면 %{base_url}%{url} 를 방문하시거나 이메일에 답장하세요."
-    visit_link_to_respond: "응답하시려면 %{base_url}%{url} 를 방문하세요."
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 회원님이 '%{topic_title}' 글타래에 초대했습니다"
-      text_body_template: |2
-
-        %{username} 회원님이 메세지에 초대했습니다.
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        사이트:
-
-        > %{site_title} -- %{site_description}
-
-        %{base_url}%{url} 로 들어가서 메세지를 확인하기
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} 회원님이 '%{topic_title}' 글타래에 초대했습니다."
-      text_body_template: |2
-
-        %{username} 회원님이 토의에 초대하였습니다.
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        사이트:
-
-        > %{site_title} -- %{site_description}
-
-        메세지 링크: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}'에 답글이 달렸습니다"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{username}님께서 '%{topic_title}' 글타래에 당신을 인용하였습니다"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{username}님께서 '%{topic_title}'에서 당신을 언급하였습니다"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix} '%{topic_title}'에 새로운 글이 등록되었습니다"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       subject_template: "[%{site_name}] 근황"
@@ -1518,12 +1376,6 @@ ko:
 
         비밀번호 설정 페이지:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] 이메일 확인"
-      text_body_template: |
-        %{site_name} 사이트에서 사용할 새로운 이메일을 아래 링크를 클릭하여 확인하세요:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "당신은 %{site_name} 가입이 승인되었습니다!"
       text_body_template: |
@@ -1552,7 +1404,6 @@ ko:
 
         만약 위의 링크를 클릭 할 수 없으면 주소를 복사하여 당신의 웹브라우저에 붙여넣으세요.
   page_not_found:
-    title: "당신이 요청한 페이지를 찾을 수 없습니다. 혹시 아래와 같은 글타래를 찾으신 것은 아닌가요?"
     popular_topics: "인기"
     recent_topics: "최근"
     see_more: "더"
@@ -1622,3 +1473,8 @@ ko:
   performance_report:
     initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
     initial_topic_title: 웹사이트 성능 보고
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

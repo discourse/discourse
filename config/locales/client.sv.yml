@@ -8,6 +8,9 @@
 sv:
   js:
     number:
+      format:
+        separator: "."
+        delimiter: ","
       human:
         storage_units:
           format: '%n %u'
@@ -19,12 +22,17 @@ sv:
             kb: KB
             mb: MB
             tb: TB
+      short:
+        thousands: "{{number}}k"
+        millions: "{{number}}M"
     dates:
       time: "h:mm a"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
+      full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM, YYYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
@@ -75,10 +83,10 @@ sv:
       medium_with_ago:
         x_minutes:
           one: "1 min sedan"
-          other: "%{count} min sedan"
+          other: "%{count} minuter sedan"
         x_hours:
           one: "1 timme sedan"
-          other: "%{count} tim sedan"
+          other: "%{count} timmar sedan"
         x_days:
           one: "1 dag sedan"
           other: "%{count} dagar sedan"
@@ -101,6 +109,7 @@ sv:
       google+: 'dela denna länk på Google+'
       email: 'skicka denna länk i ett email'
     action_codes:
+      split_topic: "Dela den här tråden %{when}"
       autoclosed:
         enabled: 'stängdes %{when}'
         disabled: 'öppnades %{when}'
@@ -112,7 +121,7 @@ sv:
         disabled: 'avarkiverades %{when}'
       pinned:
         enabled: 'klistrades %{when}'
-    topic_admin_menu: "ämne admin åtgärder"
+    topic_admin_menu: "ämne administratörs åtgärder"
     emails_are_disabled: "All utgående e-post har blivit globalt deaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
     edit: 'redigera titel och kategori för denna tråd'
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
@@ -127,6 +136,7 @@ sv:
     admin_title: "Admin"
     flags_title: "Flaggningar"
     show_more: "visa mer"
+    show_help: "alternativ"
     links: "Länkar"
     links_lowercase:
       one: "länk"
@@ -203,6 +213,7 @@ sv:
     saved: "Sparat!"
     upload: "Ladda upp"
     uploading: "Laddar upp..."
+    uploading_filename: "Laddar upp {{filename}}..."
     uploaded: "Uppladdad!"
     enable: "Aktivera"
     disable: "Avaktivera"
@@ -232,7 +243,6 @@ sv:
         one: "Detta ämne har <b>1</b> ämne som inväntar godkännande"
         other: "Detta ämne har <b>{{count}}</b> inlägg som inväntar godkännande"
       confirm: "Spara ändringar"
-      delete_prompt: "Är du säker på att du vill ta bort <b>%{username}</b>? Detta kommer ta bort all deras poster och blockera deras epostadresser samt IP-adresser."
       approval:
         title: "Inlägget behöver godkännande"
         description: "Vi har mottagit ditt nya inlägg men det behöver bli godkänt av en moderator innan det kan visas. Ha tålamod."
@@ -275,6 +285,9 @@ sv:
         one: "1 användare"
         other: "%{count} användare"
     groups:
+      add: "Lägg till"
+      selector_placeholder: "Lägg till medlemmar"
+      owner: "ägare"
       visible: "Gruppen är synlig för alla användare"
       title:
         one: "grupp"
@@ -282,7 +295,6 @@ sv:
       members: "Medlemmar"
       posts: "Inlägg"
       alias_levels:
-        title: "Vem kan använda denna grupp som ett alias?"
         nobody: "Ingen"
         only_admins: "Bara administratörer"
         mods_and_admins: "Bara moderatorer och administratörer"
@@ -290,6 +302,11 @@ sv:
         everyone: "Alla"
       trust_levels:
         none: "Inga"
+      notifications:
+        regular:
+          title: "Normal"
+        muted:
+          title: "Tystad"
     user_action_groups:
       '1': "Gillningar givna"
       '2': "Gillningar mottagna"
@@ -299,7 +316,6 @@ sv:
       '6': "Svar"
       '7': "Omnämnanden"
       '9': "Citat"
-      '10': "Stjärnmärkt"
       '11': "Redigeringar"
       '12': "Skickade föremål"
       '13': "Inkorg"
@@ -309,6 +325,7 @@ sv:
       all_subcategories: "alla"
       no_subcategory: "ingen"
       category: "Kategori"
+      category_list: "Visa kategori-lista"
       reorder:
         title: "Sortera kategorier"
         title_long: "Sortera litan av katergorier"
@@ -343,6 +360,8 @@ sv:
       topics_entered: "besökta ämnen"
       post_count: "# inlägg"
       confirm_delete_other_accounts: "Är du säker på att du vill ta bort dessa här konton?"
+    user_fields:
+      none: "(välj ett alternativ)"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -354,11 +373,14 @@ sv:
       private_messages: "Meddelanden"
       activity_stream: "Aktivitet"
       preferences: "Inställningar"
+      expand_profile: "Expandera"
       bookmarks: "Bokmärken"
       bio: "Om mig"
       invited_by: "Inbjuden Av"
       trust_level: "Förtroendenivå"
       notifications: "Notifieringar"
+      desktop_notifications:
+        perm_denied_btn: "Behörighet saknas"
       dismiss_notifications: "Markera alla som lästa"
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       disable_jump_reply: "Hoppa inte till mitt inlägg efter att jag har svarat"
@@ -381,7 +403,6 @@ sv:
       tracked_categories: "Bevakade"
       tracked_categories_instructions: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet nya inlägg visas bredvid ämnet."
       muted_categories: "Tystad"
-      muted_categories_instructions: "Du kommer inte att få notifieringar om nya ämnen inom dessa kategorier, och de kommer inte att visas under din \"oläst\"-flik."
       delete_account: "Radera mitt konto"
       delete_account_confirm: "Är du säker på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har tagits bort."
@@ -399,8 +420,13 @@ sv:
         warnings_received: "varningar"
       messages:
         all: "Alla"
-        mine: "Mina"
-        unread: "Olästa"
+        inbox: "Inkorg"
+        sent: "Skickat"
+        archive: "Arkiv"
+        groups: "Mina Grupper"
+        bulk_select: "Välj meddelanden"
+        move_to_inbox: "Flytta till inkorg"
+        select_all: "Markera alla"
       change_password:
         success: "(e-brev skickat)"
         in_progress: "(skickar e-brev)"
@@ -444,8 +470,8 @@ sv:
         ok: "Vi skickar e-post till dig för bekräftelse"
         invalid: "Vänligen ange en giltig e-postadress"
         authenticated: "Din e-postadress har blivit verifierad av {{provider}}"
+        frequency_immediately: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
         frequency:
-          zero: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
           one: "Vi skickar bara e-post om du inte synts till den senaste minuten."
           other: "Vi skickar bara e-post om du inte synts till de senaste {{count}} minuterna."
       name:
@@ -500,15 +526,23 @@ sv:
         after_1_day: "skapade de senaste dagarna"
         after_2_days: "skapade de senaste 2 dagarna"
         after_1_week: "skapade den senaste veckan"
+        after_2_weeks: "skapade de senaste 2 veckorna"
       auto_track_topics: "Följ automatiskt nya ämnen jag går in i"
       auto_track_options:
         never: "aldrig"
         immediately: "genast"
+        after_30_seconds: "efter 30 sekunder"
+        after_1_minute: "efter 1 minut"
+        after_2_minutes: "efter 2 minuter"
+        after_3_minutes: "efter 3 minuter"
+        after_4_minutes: "efter 4 minuter"
+        after_5_minutes: "efter 5 minuter"
+        after_10_minutes: "efter 10 minuter"
       invited:
         search: "sök efter inbjudningar..."
         title: "Inbjudningar"
         user: "Inbjuden Användare"
-        truncated: "Visar de första {{count}} inbjudningarna."
+        sent: "skickat"
         redeemed: "Inlösta Inbjudnignar"
         redeemed_at: "Inlöst"
         pending: "Avvaktande Inbjudningar"
@@ -577,7 +611,6 @@ sv:
     logout: "Du loggades ut."
     refresh: "Uppdatera"
     read_only_mode:
-      enabled: "Skrivskyddat läge är aktiverat. Du kan fortsätta visa sidan men interaktioner kanske inte fungerar."
       login_disabled: "Det går inte att logga in medan siten är i skrivskyddat läge."
     learn_more: "lär dig mer..."
     year: 'år'
@@ -595,10 +628,10 @@ sv:
     replies_lowercase:
       one: svar
       other: svar
+    signup_cta:
+      hide_forever: "Nej tack"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
-      description: "Det finns <b>{{count}}</b> svar."
-      description_time: "Det finns <b>{{count}}</b> svar med en uppskattad lästid på <b>{{readingTime}} minuter</b>."
       enable: 'Sammanfatta detta ämne'
       disable: 'Visa alla inlägg'
     deleted_filter:
@@ -651,6 +684,7 @@ sv:
       admin_not_allowed_from_ip_address: "Du kan inte logga in som admin från den IP-adressen."
       resend_activation_email: "Klicka här för att skicka aktiveringsmailet igen."
       sent_activation_email_again: "Vi har skickat ännu ett aktiveringsmail till dig via <b>{{currentEmail}}</b>. Det kan ta ett par minuter för det att komma fram; var noga med att kolla din skräppost."
+      to_continue: "Var vänligen och logga in"
       google:
         title: "med Google"
         message: "Autentiserar med Google (kolla så att pop up-blockare inte är aktiverade)"
@@ -673,8 +707,12 @@ sv:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji Ett"
+    shortcut_modifier_key:
+      shift: 'Shift'
+      ctrl: 'Ctrl'
+      alt: 'Alt'
     composer:
-      emoji: "Emoji :smile:"
+      more_emoji: "mer..."
       add_warning: "Det här är en officiell varning"
       posting_not_on_topic: "Vilket ämne vill du svara på?"
       saving_draft_tip: "sparar…"
@@ -703,7 +741,7 @@ sv:
       edit_reason_placeholder: "varför redigerar du?"
       show_edit_reason: "(lägg till anledningar för redigering)"
       view_new_post: "Visa ditt nya inlägg."
-      saving: "Sparar..."
+      saving: "sparar"
       saved: "Sparat!"
       saved_draft: "Utkast för inlägg. Välj för att fortsätta."
       uploading: "Laddar upp..."
@@ -718,6 +756,7 @@ sv:
       link_description: "skriv en länkbeskrivning här"
       link_dialog_title: "Infoga Hyperlänk"
       link_optional_text: "valfri titel"
+      link_placeholder: "http://example.com \"valfri text\""
       quote_title: "Citat"
       quote_text: "Citat"
       code_title: "Förformaterad text"
@@ -730,10 +769,10 @@ sv:
       heading_title: "Rubrik"
       heading_text: "Rubrik"
       hr_title: "Horisontell linje"
-      undo_title: "Ångra"
-      redo_title: "Återställ"
       help: "Markdown Redigeringshjälp"
       toggler: "Dölj eller visa composer-panelen"
+      modal_ok: "OK"
+      modal_cancel: "Avbryt"
       admin_options_title: "Valfria personalinställningar för detta ämne"
       auto_close:
         label: "Stäng automatiskt ämnet efter:"
@@ -752,7 +791,6 @@ sv:
       mentioned: "<i title='omnämnd' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -762,6 +800,13 @@ sv:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> flyttade {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Fötjänade '{{description}}'</p>"
+      alt:
+        posted: "Postat av"
+        liked: "Gillade ditt inlägg"
+        private_message: "Privat meddelande från"
+        invitee_accepted: "Inbjudan accepterades av"
+        moved_post: "Ditt inlägg blev flyttad av"
+        linked: "Länk till ditt inlägg"
       popup:
         mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
         quoted: '{{username}} citerade dig i "{{topic}}" - {{site_title}}'
@@ -775,14 +820,20 @@ sv:
       from_my_computer: "Från min enhet"
       from_the_web: "Från webben"
       remote_tip: "länk till bild"
-      remote_tip_with_attachments: "länk till bild eller fil ({{authorized_extensions}})"
+      remote_tip_with_attachments: "länk till bild eller fil {{authorized_extensions}}"
+      local_tip: "välj bilder från din enhet"
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
       select_file: "Välj fil"
       image_link: "länk dit din bild ska peka"
     search:
+      sort_by: "Sortera efter"
+      latest_post: "Senaste inlägg"
+      select_all: "Markera Alla"
       title: "sök efter ämnen, inlägg, användare, eller kategorier"
       no_results: "Inga resultat hittades."
+      no_more_results: "Inga fler resultat hittades."
+      search_help: Sökhjälp
       searching: "Söker ..."
       post_format: "#{{post_number}} av {{username}}"
       context:
@@ -790,6 +841,7 @@ sv:
         category: "Sök i kategorin \"{{category}}\""
         topic: "Sök i denna diskussion"
         private_messages: "Sök meddelanden"
+    new_item: "ny"
     go_back: 'gå tillbaka'
     not_logged_in_user: 'användarsida med sammanställning av aktuell aktivitet och inställningar'
     current_user: 'gå till din användarsida'
@@ -797,10 +849,6 @@ sv:
       bulk:
         reset_read: "Återställ Lästa"
         delete: "Ta bort diskussioner"
-        dismiss_posts: "Avfärda inlägg"
-        dismiss_posts_tooltip: "Nollställ räknaren för olästa i dessa diskussioner men fortsätt visa mig dem på min olästalista när nya inlägg har gjorts. "
-        dismiss_topics: "Avfärda Diskussioner"
-        dismiss_topics_tooltip: "Sluta visa mig dessa diskussioner i min olästalista när nya inlägg har gjorts"
         dismiss_new: "Avfärda Nya"
         toggle: "toggla val av multipla ämnen"
         actions: "Massändringar"
@@ -823,9 +871,6 @@ sv:
         category: "Det finns inga ämnen i {{category}}."
         top: "Det finns inga toppämnen."
         search: "Inga sökresultat hittades."
-        educate:
-          new: '<p>Dina nya ämnen hamnar här.</p><p>Som standard är ämnen sedda som nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator om de skapats de senaste 2 dagarna.</p><p>Du kan ändra detta i dina <a href="%{userPrefsUrl}">inställningar</a>.</p>'
-          unread: '<p>Dina olästa ämnen hamnar här</p><p>Som standard är ämnen sedda som olästa och kommer att visa antal olästa <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade ämnet</li><li>Svarade på ämnet</li><li>Läst ämnet längre än 4 minuter</li></ul><p>Eller om du explicit har satt ämnet till Följd eller Sedd via notifieringspanelen längst ned i varje ämne.</p><p>Du kan ändra detta i dina <a href="%{userPrefsUrl}">inställningar</a>.</p>'
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         hot: "Det finns inga fler heta ämnen."
@@ -931,15 +976,16 @@ sv:
           title: "Följer"
           description: "En räknare över antal nya svar visas för detta ämne. Du notifieras om någon nämner ditt @namn eller svarar dig."
         regular:
+          title: "Normal"
           description: "Du kommer att få en notifiering om någon nämner ditt @namn eller svarar dig."
         regular_pm:
+          title: "Normal"
           description: "Du kommer att notifieras om någon nämner ditt @namn eller svarar dig."
         muted_pm:
           title: "tystade"
           description: "Du kommer aldrig bli notifierad om något gällande detta meddelande."
         muted:
           title: "Dämpad"
-          description: "Du kommer aldrig meddelas om detta ämne alls, och den kommer inte visas i din \"oläst\"-flik."
       actions:
         recover: "Återställ ämne"
         delete: "Radera ämne"
@@ -978,23 +1024,12 @@ sv:
         confirm_pin: "Du har redan {{count}} klistrade ämnen. För många klistrade ämnen kan vara störande för nya och anonyma användare. Är du säker på att du vill klistra ytterligare ett ämne i denna kategori?"
         unpin: "Ta bort detta ämne från toppen av kategorin {{categoryLink}}."
         pin_note: "Användare kan avklistra ämnet individuellt för sig själva."
-        already_pinned:
-          zero: "Det finns inga klistrade ämnen i {{categoryLink}}."
-          one: "Klistrade ämnen i {{categoryLink}} just nu: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Klistrade ämnen i {{categoryLink}} just nu: <strong class='badge badge-notification unread'>{{count}}</strong>."
         confirm_pin_globally: "Du har redan {{count}} globalt klistrade ämnen. För många klistrade ämnen kan vara störande för nya och anonyma användare. Är du säker på att du vill klistra ytterligare ett ämne globalt?"
         unpin_globally: "Ta bort detta ämne från toppen av alla ämneslistor."
         global_pin_note: "Användare kan avklistra ämnet individuellt för sig själva."
-        already_pinned_globally:
-          zero: "Det finns inga globalt klistrade ämnen."
-          one: "Globalt klistrade ämnen just nu: <strong class='badge badge-notification unread'>1</strong>."
-          other: "Globalt klistrade ämnen just nu: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Gör detta ämne till en banner som dyker upp i toppen av alla sidor."
         remove_banner: "Ta bort bannern som dyker upp i toppen av alla sidor."
         banner_note: "Användare kan avfärda bannern genom att stänga det. Endast ett ämne kan agera banner åt gången."
-        already_banner:
-          zero: "Inget ämne är banner."
-          one: "Det <strong class='badge badge-notification unread'>är</strong> förnärvarande ett ämne som banner."
       inviting: "Bjuder in..."
       automatically_add_to_groups_optional: "Denna inbjudan inkluderar även tillgång till dessa grupper: (valfritt, enbart för administratörer)"
       automatically_add_to_groups_required: "Denna inbjudan inkluderar även tillgång till dessa grupper: (<b>Krävs</b>, enbart för admninistörer)"
@@ -1091,10 +1126,6 @@ sv:
       has_likes_title:
         one: "1 person gillade detta inlägg"
         other: "{{count}} personer gillade detta inlägg"
-      has_likes_title_you:
-        zero: "Du gillade detta inlägg"
-        one: "du och 1 annan person gillade detta inlägg"
-        other: "du och {{count}} andra personer gillade detta inlägg"
       errors:
         create: "Tyvärr, det uppstod ett fel under skapandet av ditt inlägg. Var god försök igen."
         edit: "Tyvärr, det uppstod ett fel under ändringen av ditt inlägg. Var god försök igen."
@@ -1112,8 +1143,6 @@ sv:
         no_value: "nej, behåll"
         yes_value: "Ja, överge"
       via_email: "det här inlägget har gjorts via epost"
-      wiki:
-        about: "det här inlägget är en wiki; vanliga användare kan redigera det"
       archetypes:
         save: 'Spara Inställningar'
       controls:
@@ -1161,18 +1190,6 @@ sv:
           bookmark: "Ångra bokmärkning"
           like: "Ångra gillning"
           vote: "Ångra röstning"
-        people:
-          off_topic: "{{icons}} flaggade det här som off-topic"
-          spam: "{{icons}} flaggade det här som spam"
-          spam_with_url: "{{icons}} flaggade <a href='{{postUrl}}'>detta som skräp</a>"
-          inappropriate: "{{icons}} flaggade det här som olämpligt"
-          notify_moderators: "{{icons}} notifierade moderatorer"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notifierade moderatorer</a>"
-          notify_user: "{{icons}} skickade ett meddelande"
-          notify_user_with_url: "{{icons}} skickade ett <a href='{{postUrl}}'>meddelande</a>"
-          bookmark: "{{icons}} bokmärkte detta"
-          like: "{{icons}} gillade detta"
-          vote: "{{icons}} röstade för detta"
         by_you:
           off_topic: "Du flaggade detta som off-topic"
           spam: "Du flaggade detta som spam"
@@ -1232,10 +1249,6 @@ sv:
           vote:
             one: "1 person röstade för detta inlägg"
             other: "{{count}} personer röstade för detta inlägg"
-      edits:
-        one: 1 ändring
-        other: "{{count}} ändringar"
-        zero: inga ändringar
       delete:
         confirm:
           one: "Är du säker på att du vill radera detta inlägg?"
@@ -1311,19 +1324,15 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
-          description: "Du kommer automatiskt bevaka alla nya ämnen i dessa kategorier. Du notifieras om alla nya inlägg och ämnen, och en räknare över antalet nya svar visas för dessa ämnen."
         tracking:
           title: "Följer"
-          description: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet olästa inlägg kommer att synas för dessa ämnen."
         regular:
-          title: "Vanlig"
+          title: "Normal"
           description: "Du notifieras om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
-          description: "Du kommer inte att notifieras om något som rör nya ämnen i de här kategorierna, och de kommer inte att dyka upp i din olästa tabb."
     flagging:
       title: 'Tack för att du hjälper till att hålla vår gemenskap civiliserad!'
-      private_reminder: 'flaggor är privata, <b>endast</b> synliga för funktionärer'
       action: 'Flagga Inlägg'
       take_action: "Åtgärda"
       notify_action: 'Meddelande'
@@ -1371,7 +1380,6 @@ sv:
         help: "Detta ämne är oklistrat för dig. Det visas i vanlig ordning"
       pinned_globally:
         title: "Klistrat Globalt"
-        help: "Det här ämnet är klistrat globalt; det kommer att visas högst upp i alla listor"
       pinned:
         title: "Klistrat"
         help: "Detta ämne är klistrat för dig. Det visas i toppen av dess kategori"
@@ -1414,10 +1422,6 @@ sv:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
       latest:
-        title:
-          zero: "Senaste"
-          one: "Senaste (1)"
-          other: "Senaste ({{count}})"
         help: "ämnen med nya inlägg"
       hot:
         title: "Hett"
@@ -1433,23 +1437,9 @@ sv:
         title_in: "Kategori - {{categoryName}}"
         help: "alla ämnen grupperade efter kategori"
       unread:
-        title:
-          zero: "Olästa"
-          one: "Olästa (1)"
-          other: "Olästa ({{count}})"
         help: "ämnen som du bevakar eller följer med olästa inlägg"
-        lower_title_with_count:
-          one: "1 oläst"
-          other: "{{count}} olästa"
       new:
-        lower_title_with_count:
-          one: "1 ny"
-          other: "{{count}} nya"
         lower_title: "ny"
-        title:
-          zero: "Nya"
-          one: "Nya (1)"
-          other: "Nya ({{count}})"
         help: "ämnen skapade de senaste dagarna"
       posted:
         title: "Mina Inlägg"
@@ -1458,10 +1448,6 @@ sv:
         title: "Bokmärken"
         help: "Ämnen du har bokmärkt"
       category:
-        title:
-          zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
         help: "senaste ämnena i kategorin {{categoryName}}"
       top:
         title: "Topp"
@@ -1694,11 +1680,9 @@ sv:
             is_disabled: "Återställ är inaktiverat i sidans inställningar."
             label: "Återställ"
             title: "återställ säkerhetskopian"
-            confirm: "Är du säker på att du vill återställa denna säkerhetskopia?"
           rollback:
             label: "Tillbakarullning"
             title: "Gör rollback på databasen till ett tidigare fungerande tillstånd."
-            confirm: "Är du säker på att du vill göra rollback på databasen till det tidigare fungerande tillståndet?"
       export_csv:
         user_archive_confirm: "Är du säker på att du vill ladda ner dina inlägg?"
         success: "Export påbörjad, du får en notis via meddelande när processen är genomförd."
@@ -1792,13 +1776,9 @@ sv:
           love:
             name: 'älska'
             description: "Gillaknappens färg."
-          wiki:
-            name: 'wiki'
-            description: "Huvudfärg som används som bakgrund till wikiinlägg."
       email:
-        title: "E-postloggar"
         settings: "Inställningar"
-        all: "alla"
+        preview_digest: "Sammandrag"
         sending_test: "Skickar testmail..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Det uppstod ett problem med att skicka test meddelandet. Dubbelkolla dina e-postinställningar, verifiera att din host inte blockerar e-postkopplingar, och försök igen."
@@ -1813,7 +1793,6 @@ sv:
         send_test: "Skicka Test Mail"
         sent_test: "skickat!"
         delivery_method: "Leveransmetod"
-        preview_digest: "Sammandrag"
         refresh: "Uppdatera"
         format: "Format"
         html: "html"
@@ -1839,6 +1818,7 @@ sv:
         ip_address: "IP"
         topic_id: "Ämnes-ID"
         post_id: "Inlägg ID"
+        category_id: "Kategori ID"
         delete: 'Radera'
         edit: 'Redigera'
         save: 'Spara'
@@ -1878,6 +1858,8 @@ sv:
             delete_post: "ta bort inlägg"
             impersonate: "imitera"
             anonymize_user: "Anonymisera användare"
+            delete_category: "radera kategori"
+            create_category: "skapa kategori"
         screened_emails:
           title: "Kontrollerade email"
           description: "När någon försöker skapa ett nytt konto, kommer följande emailadresser att kontrolleras och registrationen blockeras, eller någon annan åtgärd vidtas."
@@ -1940,9 +1922,6 @@ sv:
           pending: 'Användare under granskning'
           newuser: 'Användare på Förtroendenivå 0 (ny användare)'
           basic: 'Användare på Förtroendenivå 1 (grundnivå)'
-          regular: 'Användare på förtroendenivå 2 (Medlem)'
-          leader: 'Användare på förtroendenivå 3 (Stammis)'
-          elder: 'Användare på förtroendenivå 4 (ledare)'
           staff: "Medarbetare"
           admins: 'Admin-användare'
           moderators: 'Moderatorer'
@@ -2052,7 +2031,6 @@ sv:
         unlock_trust_level: "Lås upp förtroendenivå"
         tl3_requirements:
           title: "Krav för Förtroendenivå 3"
-          table_title: "Under de senaste 100 dagarna:"
           value_heading: "värde"
           requirement_heading: "krav"
           visits: "besök"
@@ -2109,7 +2087,6 @@ sv:
           text: 'Textfält'
           confirm: 'Bekräftelse'
       site_text:
-        none: "Välj typ av innehåll för att börja redigera."
         title: 'Textinnehåll'
       site_settings:
         show_overriden: 'Visa bara överskrivna'
@@ -2130,6 +2107,7 @@ sv:
           files: 'Filer'
           trust: 'Förtroendenivå'
           security: 'Säkerhet'
+          onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
           rate_limits: 'Begränsningar'
@@ -2185,10 +2163,6 @@ sv:
           link_text: "Förhandsvisa utfärdade utmärkelser"
           bad_count_warning:
             header: "VARNING!"
-          grant_count:
-            zero: "Inga utmärkelser som ska tilldelas."
-            one: "<b>1</b> utmärkelse som ska tilldelas."
-            other: "<b>%{count}</b> utmärkelser som ska tilldelas."
           sample: "Exempel:"
           grant:
             with: <span class="username">%{username}</span>
@@ -2202,6 +2176,20 @@ sv:
         name: "Namn"
         image: "Bild"
         delete_confirm: "Är du säker på att du vill radera emoji-ikonen :%{name}:?"
+      embedding:
+        edit: "ändra"
+      permalink:
+        url: "URL"
+        topic_id: "Ämnes ID"
+        post_id: "Inlägg ID"
+        post_title: "Publicera"
+        category_id: "Kategori ID"
+        category_title: "Kategori"
+        external_url: "Extern URL"
+        form:
+          label: "Ny:"
+          add: "Lägg till"
+          filter: "Sök (URL eller Extern URL)"
     lightbox:
       download: "ladda ned"
     search_help:
@@ -2217,6 +2205,8 @@ sv:
         categories: '<b>g</b>, <b>c</b> Kategorier'
         top: '<b>g</b>, <b>t</b> Upp till toppen'
         bookmarks: '<b>g</b>, <b>b</b> Bokmärken'
+        profile: '<b>g</b>, <b>p</b> Profil'
+        messages: '<b>g</b>, <b>m</b> Meddelande'
       navigation:
         title: 'Navigering'
         jump: '<b>#</b> Gå till inlägg #'
@@ -2225,6 +2215,7 @@ sv:
         open: '<b>ö</b> eller <b>Välj</b> Öppna valt ämne'
         next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Nästa/föregående avsnitt'
       application:
+        title: 'Applikation'
         create: '<b>s</b> Skapa ett nytt ämne'
         notifications: '<b>n</b> Öppna notifikationer'
         user_profile_menu: '<b>p</b> Öppna användarmeny'
@@ -2253,8 +2244,6 @@ sv:
         mark_watching: '<b>m</b>, <b>w</b> Bevaka ämne'
     badges:
       title: Utmärkelser
-      allow_title: "kan användas som titel"
-      multiple_grant: "kan tilldelas flera gånger"
       badge_count:
         one: "1 Utmärkelse"
         other: "%{count} Utmärkelser"
@@ -2269,81 +2258,11 @@ sv:
       badge_grouping:
         getting_started:
           name: Komma igång
+        community:
+          name: Community
         trust_level:
           name: Förtroendenivå
         other:
           name: Övrigt
         posting:
           name: Inlägg
-      badge:
-        basic_user:
-          name: Grundläggande
-        member:
-          name: Medlem
-        regular:
-          name: Vanligt
-        leader:
-          name: Ledare
-        welcome:
-          name: Välkommen
-          description: Fick en gilla
-        autobiographer:
-          name: Självbiograf
-          description: Fyllde ut sin <a href="/my/preferences">profilinformation</a>
-        anniversary:
-          name: Årsdag
-          description: Aktiv medlem ett år, har skrivit minst en gång
-        nice_post:
-          name: Bra inlägg
-          description: Fick 10 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
-        good_post:
-          name: Jättebra inlägg
-          description: Fick 25 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
-        great_post:
-          name: Fantastiskt inlägg
-          description: Fick 50 gilla på ett inlägg. Denna utmärkelse kan utfärdas flera gånger.
-        nice_topic:
-          name: Bra ämne
-          description: Fick 10 gilla på ett ämne. Denna utmärkelse kan utfärdas flera gånger.
-        good_topic:
-          name: Jättebra ämne
-          description: Fick 25 gilla på ett ämne. Denna utmärkelse kan utfärdas flera gånger.
-        great_topic:
-          name: Fantastiskt ämne
-          description: Fick 50 gilla på ett ämne. Denna utmärkelse kan utfärdas flera gånger.
-        nice_share:
-          name: Bra delning
-          description: Delade ett inlägg med 25 unika besökare
-        good_share:
-          name: Jättebra delning
-          description: Delade ett inlägg med 300 unika besökare
-        great_share:
-          name: Fantastisk delning
-          description: Delade ett inlägg med 1000 unika besökare
-        first_like:
-          name: Första gillning
-          description: Gillade ett inlägg
-        first_flag:
-          name: Första flaggning
-          description: Flaggade ett inlägg
-        promoter:
-          description: Bjöd in en användare
-        first_share:
-          name: Första delning
-          description: Delade ett inlägg
-        first_link:
-          name: Första länk
-          description: Länkade internt till ett annat ämne
-        first_quote:
-          name: Första citation
-          description: Citerade en användare
-        read_guidelines:
-          name: Läst riktlinjer
-          description: Läste <a href="/guidelines">forumets riktlinjer</a>
-        reader:
-          name: Läsare
-          description: Läs varje inlägg i en diskussion med över 100 inlägg
-        popular_link:
-          name: Populär länk
-        hot_link:
-          name: Het länk
