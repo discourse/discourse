@@ -7,9 +7,9 @@ require_dependency 'new_post_result_serializer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest, :user_posts_feed]
 
-  skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest]
+  skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest, :user_posts_feed]
 
   def markdown_id
     markdown Post.find(params[:id].to_i)
@@ -84,6 +84,26 @@ class PostsController < ApplicationController
                                       )
       end
     end
+  end
+
+  def user_posts_feed
+    params.require(:username)
+    user = fetch_user_from_params
+
+    posts = Post.public_posts
+                .where(user_id: user.id)
+                .order(created_at: :desc)
+                .includes(:user)
+                .includes(topic: :category)
+                .limit(50)
+
+    posts = posts.reject { |post| !guardian.can_see?(post) || post.topic.blank? }
+
+    @posts = posts
+    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_posts", username: user.username)}"
+    @link = "#{Discourse.base_url}/users/#{user.username}/activity"
+    @description = I18n.t("rss_description.user_posts", username: user.username)
+    render 'posts/latest', formats: [:rss]
   end
 
   def cooked

@@ -108,6 +108,24 @@ describe PostsController do
     end
   end
 
+  describe 'user_posts_feed' do
+    let(:user) { log_in }
+    let!(:public_topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, user: user, topic: public_topic) }
+    let!(:private_topic) { Fabricate(:topic, archetype: Archetype.private_message, category: nil) }
+    let!(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
+    let!(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
+
+    it 'returns public posts with topic for rss' do
+      topicless_post.update topic_id: -100
+      xhr :get, :user_posts_feed, username: user.username, format: :rss
+      expect(response).to be_success
+      expect(assigns(:posts)).to include post
+      expect(assigns(:posts)).to_not include private_post
+      expect(assigns(:posts)).to_not include topicless_post
+    end
+  end
+
   describe 'cooked' do
     before do
       post = Post.new(cooked: 'wat')
