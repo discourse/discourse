@@ -258,6 +258,7 @@ da:
         one: "Det emne har <b>1</b> indlæg der afventer godkendelse"
         other: "Dette emne har <b>{{count}}</b> indlæg der afventer godkendelse"
       confirm: "Gem ændringer"
+      delete_prompt: "Er du sikker på at du vil slette <b>%{username}</b>? Det fjerner alle indlæg og blokerer email og IP-adresse."
       approval:
         title: "Indlæg afventer godkendelse"
         description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
@@ -579,6 +580,7 @@ da:
         weekly: "ugenligt"
         every_two_weeks: "hver anden uge"
       include_tl0_in_digests: "Inkluder indlæg fra nye brugere i opsummerings-mails"
+      email_in_reply_to: "Inkluder et uddrag af svaret indlæg i emails"
       email_direct: "Send mig en email når nogen citerer mig, svarer på mit indlæg, nævner mit @brugernavn eller inviterer mig til et emne"
       email_private_messages: "Send mig en email når nogen sender mig en besked"
       email_always: "Send mig email-notifikationer, selv når jeg er aktiv på websitet"
@@ -649,17 +651,11 @@ da:
       summary:
         title: "Resume"
         stats: "Statistik"
-        topic_count: "Emner oprettet"
-        post_count: "Indlæg oprettet"
-        likes_given: "Likes givet"
-        likes_received: "Likes modtaget"
-        days_visited: "Dage besøgt"
-        posts_read_count: "Indlæg læst"
         top_replies: "Top svar"
-        top_topics: "Top emner"
-        top_badges: "Top badges"
-        more_topics: "Flere emner"
         more_replies: "Flere svar"
+        top_topics: "Top emner"
+        more_topics: "Flere emner"
+        top_badges: "Top badges"
         more_badges: "Flere badges"
       associated_accounts: "Logins"
       ip_address:
@@ -703,10 +699,15 @@ da:
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
     read_only_mode:
+      enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
+      logout_disabled: "Log ud er deaktivere mens websitet kun kan læses."
     too_few_topics_and_posts_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion!</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner og <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg. Nye besøgende har brug for samtaler at læse og svare på."
     too_few_topics_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøgende har brug for samtaler at læse og svare på."
     too_few_posts_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg. Nye besøgende har brug for samtaler at læse og svare på."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: Aktuelle mængde på <a href='%{url}' target='_blank'>%{rate}</a> har nået websitets begrænsning på %{siteSettingRate}."
+      exceeded: "%{timestamp}: Aktuelle mængde på <a href='%{url}' target='_blank'>%{rate}</a> har overskredet websitets begrænsning på %{siteSettingRate}."
     learn_more: "Læs mere…"
     year: 'år'
     year_desc: 'Indlæg oprettet i de seneste 365 dage'
@@ -732,6 +733,8 @@ da:
       value_prop: "Når du opretter en konto, så kan vi huske hvad du har læst, så du altid kan fortsætte, hvor du er kommet til. Du får også notifikationer - her og på email - når nye interessante indlæg postes. Og du kan like indlæg og dele begejstringen. :heartbeat:"
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
+      description: "Der er <b>{{replyCount}}</b> svar."
+      description_time: "Der er <b>{{replyCount}}</b> svar med en estimeret læsetid på <b>{{readingTime}} minutter</b>."
       enable: 'Opsummér dette emne'
       disable: 'Vis alle indlæg'
     deleted_filter:
@@ -797,6 +800,9 @@ da:
       twitter:
         title: "med Twitter"
         message: "Logger ind med Twitter (kontrollér at pop-op-blokering ikke er aktiv)"
+      instagram:
+        title: "med Instagram"
+        message: "Validering med Instagram (vær sikker på at pop-up blokering ikke er slået til)"
       facebook:
         title: "med Facebook"
         message: "Logger ind med Facebook (kontrollér at pop-op-blokering ikke er aktiv)"
@@ -902,8 +908,10 @@ da:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='citeret' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='svaret' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='redigeret' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
       private_message: "<i title='privat besked' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='privat besked' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='inviteret til emne' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1327,6 +1335,7 @@ da:
         about: "dette indlæg er en wiki"
       archetypes:
         save: 'Gem indstillinger'
+      few_likes_left: "Tak fordi du liker! Du har kun få likes tilbage i dag."
       controls:
         reply: "begynd at skrive et svar på dette indlæg"
         like: "like dette indlæg"
@@ -1374,6 +1383,13 @@ da:
           like: "Undo like"
           vote: "Undo vote"
         people:
+          off_topic: "markerede dette som off-topic"
+          spam: "markerede dette som spam"
+          inappropriate: "markerede dette som upassende"
+          notify_moderators: "informerede moderatorer"
+          notify_user: "sendte en besked"
+          bookmark: "bogmærkede dette"
+          like: "likede dette"
           vote: "stemte for dette"
         by_you:
           off_topic: "Du flagede dette som off-topic"
@@ -1446,6 +1462,7 @@ da:
           last: "Sidste udgave"
           hide: "Skjul udgave"
           show: "Vis udgave"
+          revert: "Gå tilbage til denne udgave"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1537,6 +1554,7 @@ da:
       submit_tooltip: "Send privat markeringen"
       take_action_tooltip: "Nå til markerings niveauer med det samme, i stedet for at vente på flere markeringer fra fælleskabet"
       cant: "Beklager, du kan i øjeblikket ikke flage dette indlæg."
+      notify_staff: 'Informer staff privat'
       formatted_name:
         off_topic: "Det holder sig ikke til emnet"
         inappropriate: "Det er upassende"
@@ -2058,6 +2076,9 @@ da:
           subject: "Emne"
           error: "Fejl"
           none: "Ingen indkommende emails fundet"
+          modal:
+            error: "Fejl"
+            subject: "Emne"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2422,6 +2443,7 @@ da:
         badge: Badge
         display_name: Vist navn
         description: Beskrivelse
+        long_description: Lang beskrivelse
         badge_type: Badge Type
         badge_grouping: Gruppe
         badge_groupings:
@@ -2584,7 +2606,11 @@ da:
       earned_n_times:
         one: "Fortjente dette badge 1 gang"
         other: "Fortjente dette badge %{count} gange."
+      granted_on: "Tildelt %{date}"
+      others_count: "Andre med dette badge (%{count})"
       title: Badges
+      allow_title: "tilgængelig titel"
+      multiple_grant: "tildelt flere gange"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"

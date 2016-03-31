@@ -231,7 +231,7 @@ zh_CN:
     choose_topic:
       none_found: "没有找到主题。"
       title:
-        search: "通过名称、URL 或者 ID，搜索主题："
+        search: "通过名称、URL 或者 ID 搜索主题："
         placeholder: "在此输入主题标题"
     queue:
       topic: "主题："
@@ -569,6 +569,8 @@ zh_CN:
       email_always: "即使我在论坛中活跃时也发送电子邮件提醒给我"
       other_settings: "其它"
       categories_settings: "分类"
+      enable_mailing_list:
+        other: "你确定你想收到每一个新帖子的邮件吗？<br><br>每天你大约会收到 <b>{{count}} 封邮件</b>。"
       new_topic_duration:
         label: "近期主题的条件："
         not_viewed: "我还没有浏览它们"
@@ -633,17 +635,27 @@ zh_CN:
       summary:
         title: "概要"
         stats: "统计"
-        topic_count: "创建的主题"
-        post_count: "创建的帖子"
-        likes_given: "给出的赞"
-        likes_received: "收到的赞"
-        days_visited: "访问天数"
-        posts_read_count: "已读帖子"
+        time_read: "阅读时间"
+        topic_count:
+          other: "创建的主题"
+        post_count:
+          other: "创建的帖子"
+        likes_given:
+          other: "给赞"
+        likes_received:
+          other: "被赞"
+        days_visited:
+          other: "访问天数"
+        posts_read:
+          other: "阅读过的帖子"
         top_replies: "热门回复"
-        top_topics: "热门帖子"
-        top_badges: "热门勋章"
-        more_topics: "更多主题"
+        no_replies: "暂无回复。"
         more_replies: "更多回复"
+        top_topics: "热门帖子"
+        no_topics: "暂无主题。"
+        more_topics: "更多主题"
+        top_badges: "热门勋章"
+        no_badges: "暂无徽章。"
         more_badges: "更多徽章"
       associated_accounts: "登录"
       ip_address:
@@ -1064,7 +1076,7 @@ zh_CN:
       options: "主题选项"
       show_links: "显示此主题中的链接"
       toggle_information: "切换主题详细"
-      read_more_in_category: "想阅读更多内容？浏览 {{catLink}} 或 {{latestLink}} 里的其它主题。"
+      read_more_in_category: "想阅读更多内容？浏览 {{catLink}}或{{latestLink}}里的其它主题。"
       read_more: "想阅读更多内容？{{catLink}} 或 {{latestLink}}。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个新</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
@@ -1099,7 +1111,7 @@ zh_CN:
           '2_8': '因为你在追踪此分类，所以你将收到相关通知。'
           '2_4': '因为你在此主题内发表了回复，所以你将收到相关通知。'
           '2_2': '因为你在追踪此主题，所以你将收到相关通知。'
-          '2': '因为你<a href="/users/{{username}}/preferences">阅读了此主题</a>，所以你将收到相关通知。'
+          '2': '因为你<a href="/users/{{username}}/preferences">阅读了该主题</a>，所以你将收到相关通知。'
           '1_2': '如果某人@你或者回复你，你将收到通知。'
           '1': '如果某人@你或者回复你，你将收到通知。'
           '0_7': '你将忽略关于此分类的所有通知。'
@@ -1124,10 +1136,10 @@ zh_CN:
           title: "普通"
           description: "如果某人@你或者回复你，你将收到通知。"
         muted_pm:
-          title: "防打扰"
+          title: "忽略"
           description: "你不会收到关于此消息的任何通知。"
         muted:
-          title: "防打扰"
+          title: "忽略"
           description: "你将不会再收到这个主题的任何通知，也不会出现在最新列表中。"
       actions:
         recover: "撤销删除主题"
@@ -2019,14 +2031,7 @@ zh_CN:
           modal:
             title: "进站邮件详情"
             error: "错误"
-            return_path: "Return-Path"
-            message_id: "Message-Id"
-            in_reply_to: "In-Reply-To"
-            references: "References"
-            date: "日期"
-            from: "来自"
-            to: "发至"
-            cc: "抄送"
+            headers: "头部"
             subject: "主题"
             body: "内容"
             rejection_message: "拒绝邮件"
@@ -2409,7 +2414,7 @@ zh_CN:
         grant_badge: 授予徽章
         granted_badges: 已授予的徽章
         grant: 授予
-        no_user_badges: "%{name} 尚未被授予徽章。"
+        no_user_badges: "%{name}尚未被授予任何徽章。"
         no_badges: 没有可供授予的徽章。
         none_selected: "选择一个徽章开始"
         allow_title: 允许将徽章用作头衔
@@ -2431,7 +2436,7 @@ zh_CN:
           trust_level_change: "当用户信任等级改变时"
           user_change: "当用户被编辑或创建时"
         preview:
-          link_text: "预览授予的徽章"
+          link_text: "预览将授予的徽章"
           plan_text: "预览查询计划"
           modal_title: "徽章查询预览"
           sql_error_header: "查询时出错。"
@@ -2551,7 +2556,7 @@ zh_CN:
     badges:
       earned_n_times:
         other: "授予徽章 %{count} 次"
-      granted_on: "授予于 %{date}"
+      granted_on: "授予于%{date}"
       others_count: "其他有该徽章的人（%{count}）"
       title: 徽章
       allow_title: "能用作头衔"

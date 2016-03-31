@@ -1709,8 +1709,6 @@ sk:
     images:
       too_large: "Ľutujeme, obrázok, ktorý sa pokúšate nahrať, je príliš veľký (maximálna veľkosť je %{max_size_kb}KB), prosím zmenšite ho a skúste znovu. "
       size_not_found: "Ľutujeme, ale nepodarilo sa nám zistiť veľkosť obrázku. Nie je nahodou poškodený?"
-  avatar:
-    missing: "Ľutujeme, ale Vami vybraný avatar sa nenachádza na serveri. Môžte ho skúsiť znova nahrať?"
   flag_reason:
     sockpuppet: "Nový užívateľ vytvoril tému, a iný nový užívateľ odpovedal z tej istej adresy. Pozrite flag_sockpuppets v nastaveniach stránky."
     spam_hosts: "Tento nový užívateľ sa pokúsil vytvoriť viacero príspevkov s odkazom na rovnakú doménu. Pozrite newuser_spam_host_threshold v nastaveniach stránky."

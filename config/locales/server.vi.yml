@@ -1116,8 +1116,6 @@ vi:
     images:
       too_large: "Xin lỗi, hình bạn tải lên quá lớn (kích thước tối đa %{max_size_kb}KB), Vui lòng chỉnh lại kích thước và thử lại."
       size_not_found: "Xin lỗi, không thể xác định kích thước hình. Có thể hình của bạn bị lỗi?"
-  avatar:
-    missing: "Xin lỗi, hình đại diện bạn chọn không có sãn trên máy chủ. Bạn có thể tải lên lại?"
   email_log:
     no_user: "không tìm thấy người dùng với id %{user_id}"
     anonymous_user: "Người dùng là nặc danh"

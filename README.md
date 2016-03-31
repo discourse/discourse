@@ -15,8 +15,8 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 <a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/14/how-to-geek-discourse.png" width="720px"></a>
 <a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/14/turtle-rock-discourse.jpg" width="720px"></a>
 
-<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/14/nexus-7-mobile-discourse.png" alt="Atom" width="410px"></a> &nbsp;
-<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/14/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
+<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/15/nexus-7-mobile-discourse.png" alt="Atom" width="410px"></a> &nbsp;
+<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/15/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
 
 Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
@@ -40,8 +40,8 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
 
 | Browsers | Tablets |  Smartphones |
 | -------- | ------- | ----------- |
-| Safari 5.1+| iPad 2+ |  iOS 7+ |
-| Google Chrome 23+ |  Android 4.1+ | Android 4.1+ |
+| Safari 6.1+| iPad 2+ |  iOS 7+ |
+| Google Chrome 23+ |  Android 4.3+ | Android 4.3+ |
 | Internet Explorer 10+ | Windows 8 | Windows Phone 8 |
 | Firefox 16+ | |
 

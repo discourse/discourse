@@ -1427,8 +1427,6 @@ pt_BR:
     images:
       too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor a redimensione e tente novamente."
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
-  avatar:
-    missing: "Desculpe, mas o avatar que você selecionou não está presente no servidor. Você pode tentar carregá-lo novamente?"
   flag_reason:
     sockpuppet: "Um novo usuário criou um tópico e outro novo usuário no mesmo endereço IP respondeu. Veja a configuração flag_sockpuppets."
     spam_hosts: "Esse novo usuário tentou criar múltiplas postagens com links do mesmo domínio. Veja a configuração newuser_spam_host_threshold do site."

@@ -1391,8 +1391,6 @@ he:
     images:
       too_large: "סליחה, אך התמונה שאתה מנסה להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנה את הגודל ונסה שנית."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
-  avatar:
-    missing: "אנו מתנצלים, אך הסמל שבחרת לא נמצא על השרת. תוכל לנסות להעלותו שוב?"
   flag_reason:
     sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
     spam_hosts: "המשתמש/ת החדשים ניסו ליצור כמה פרסומים עם קישורים לאותו מתחם (domain)ץ ראו את הגדרות האתר (newuser_spam_host_threshold)."

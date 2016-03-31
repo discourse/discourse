@@ -1246,34 +1246,8 @@ nl:
     subject_template: "[%{site_name}] E-mail Bezorgtest"
   new_version_mailer:
     subject_template: "[%{site_name}] Nieuwe Discourse-versie, update beschikbaar"
-    text_body_template: |
-      Hoera! Er is een nieuwe versie van [Discourse](http://www.discourse.org) beschikbaar! :)
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      -Kijk wat er nieuw is in de [lijst met veranderingen op GitHub ](https://github.com/discourse/discourse/commits/master).
-
-      - Werk Discourse bij door naar [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) te gaan.
-
-      - Bezoek [meta.discourse.org](http://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update beschikbaar"
-    text_body_template: |
-      Hoera! Er is een nieuwe versie van [Discourse](http://www.discourse.org) beschikbaar! :)
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      -Kijk wat er nieuw is in de [lijst met veranderingen op GitHub ](https://github.com/discourse/discourse/commits/master).
-
-      - Werk Discourse bij door naar [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) te gaan.
-
-      - Bezoek [meta.discourse.org](http://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse.
-
-      ### Uitgaveopmerkingen
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 bericht wacht op beoordeling"
@@ -1615,8 +1589,6 @@ nl:
     images:
       too_large: "De afbeelding die je wil uploaden is te groot (maximum grootte is %{max_size_kb}%KB). Verklein de afbeelding en probeer het opnieuw."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
-  avatar:
-    missing: "Sorry, maar de avatar die je hebt geselecteerd, staat niet op de server. Kan je hem nog een keer proberen te uploaden?"
   flag_reason:
     sockpuppet: "Een nieuwe gebruiker maakte een nieuwe topic en een andere gebruiker reageerde - vanaf hetzelfde IP-adres. Zie de flag_sockpuppets instelling."
     spam_hosts: "Deze nieuwe gebruiker probeerde om meerdere berichten met links naar hetzelfde domein te plaatsen. Zie de newuser_spam_host_threshold instelling."

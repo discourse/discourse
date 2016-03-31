@@ -78,7 +78,7 @@ module PrettyText
 
   def self.create_new_context
     # timeout any eval that takes longer that 5 seconds
-    ctx = V8::Context.new(timeout: 5000)
+    ctx = V8::Context.new(timeout: 10000)
 
     ctx["helpers"] = Helpers.new
 
