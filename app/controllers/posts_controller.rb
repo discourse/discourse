@@ -92,6 +92,7 @@ class PostsController < ApplicationController
 
     posts = Post.public_posts
                 .where(user_id: user.id)
+                .where(post_type: Post.types[:regular])
                 .order(created_at: :desc)
                 .includes(:user)
                 .includes(topic: :category)
