@@ -314,6 +314,11 @@ Discourse::Application.routes.draw do
   get "users/:username/invited/:filter" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/action/send_activation_email" => "users#send_activation_email"
   get "users/:username/summary" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  # user activity RSS feed
+  get "users/:username/activity/topics.rss" => "list#user_topics_feed", format: :rss, constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/activity.rss" => "posts#user_posts_feed", format: :rss, constraints: {username: USERNAME_ROUTE_FORMAT}
+
   get "users/:username/activity" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}

@@ -35,6 +35,8 @@ class ListController < ApplicationController
     Discourse.anonymous_filters.map { |f| :"parent_category_category_none_#{f}" },
     # category feeds
     :category_feed,
+    # user topics feed
+    :user_topics_feed,
     # top summaries
     :top,
     :category_top,
@@ -150,6 +152,19 @@ class ListController < ApplicationController
     @atom_link = "#{Discourse.base_url}#{@category.url}.rss"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
     @topic_list = TopicQuery.new.list_new_in_category(@category)
+
+    render 'list', formats: [:rss]
+  end
+
+  def user_topics_feed
+    discourse_expires_in 1.minute
+    target_user = fetch_user_from_params
+
+    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
+    @link = "#{Discourse.base_url}/users/#{target_user.username}/activity/topics"
+    @atom_link = "#{Discourse.base_url}/users/#{target_user.username}/activity/topics.rss"
+    @description = I18n.t("rss_description.user_topics", username: target_user.username)
+    @topic_list = TopicQuery.new(nil, order: 'created').send("list_topics_by", target_user)
 
     render 'list', formats: [:rss]
   end
