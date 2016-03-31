@@ -685,17 +685,11 @@ pl_PL:
       summary:
         title: "Podsumowanie"
         stats: "Statystyki"
-        topic_count: "Założone tematy"
-        post_count: "Napisane posty"
-        likes_given: "Polubione"
-        likes_received: "Otrzymane polubienia"
-        days_visited: "Dni odwiedzin"
-        posts_read_count: "Przeczytane wpisy"
         top_replies: "Najlepsze odpowiedzi"
-        top_topics: "Najlepsze tematy"
-        top_badges: "Najlepsze odznaki"
-        more_topics: "Więcej tematów"
         more_replies: "Więcej odpowiedzi"
+        top_topics: "Najlepsze tematy"
+        more_topics: "Więcej tematów"
+        top_badges: "Najlepsze odznaki"
         more_badges: "Więcej odznak"
       associated_accounts: "Powiązane konta"
       ip_address:
@@ -2151,9 +2145,6 @@ pl_PL:
           error: "Błąd"
           modal:
             error: "Błąd"
-            date: "Data"
-            from: "Od"
-            to: "Do"
             subject: "Temat"
             body: "Treść"
           filters:

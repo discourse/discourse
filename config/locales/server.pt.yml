@@ -1321,34 +1321,8 @@ pt:
     text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n- *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**.\n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF.\n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n- Recomendamos vivamente que **envie um email de teste para [mail-tester.com][mt]** para verificar que tudo mencionado em cima está a funcionar correctamente.\n\n(A maneira *fácil* é criar uma conta grátis em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que fornecem grátis, generosamente grátis, pacotes de envio de emails  e será suficiente para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!)\n\nEsperamos que tenha recebido este teste de entrega de email sem problemas!\n\nBoa sorte, \n\nDos seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://sendgrid.com/\n[sp]: https://www.sparkpost.com/\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n[mt]: http://www.mail-tester.com/\n"
   new_version_mailer:
     subject_template: "[%{site_name}]  Nova versão Discourse, atualização disponível"
-    text_body_template: |
-      Hurra, uma nova versão do [Discourse](http://www.discourse.org) está disponível :)
-
-      A sua versão: %{installed_version}
-      A nova versão: **%{new_version}**
-
-      - Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: |
-      Hurra, uma nova versão do [Discourse](http://www.discourse.org) está disponível :)
-
-      A sua versão: %{installed_version}
-      A nova versão: **%{new_version}**
-
-      - Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
-
-      ### Notas da versão
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 mensagem à espera de revisão"
@@ -1888,8 +1862,6 @@ pt:
     images:
       too_large: "Pedimos desculpa, a imagem que está a tentar carregar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor redimensione-a e tente novamente."
       size_not_found: "Pedimos desculpa, mas não conseguimos determinar o tamanho da imagem. É possível que seu ficheiro de imagem esteja corrompido?"
-  avatar:
-    missing: "Desculpe, mas o avatar que selecionou não está presente no servidor. Pode tentar carregá-lo novamente?"
   flag_reason:
     sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP respondeu. Veja as configurações de flag_sockpuppets"
     spam_hosts: "Este novo utilizador tentou criar múltiplas mensagens com hiperligações ao mesmo domínio. Verifique as configurações do sítio em newuser_spam_host_threshold."

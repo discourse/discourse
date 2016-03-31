@@ -160,6 +160,8 @@ zh_CN:
     private_posts: "最近的私信"
     group_posts: "%{group_name}组最近的帖子"
     group_mentions: "%{group_name}组最近的提及"
+    user_posts: "最新贴子由@%{username}发表"
+    user_topics: "最新主题由@%{username}发表"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
@@ -1317,7 +1319,7 @@ zh_CN:
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
     text_body_template: |
-      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！ :)
+      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！
 
       你的版本：%{installed_version}
       新的版本：**%{new_version}**
@@ -1330,7 +1332,7 @@ zh_CN:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
     text_body_template: |
-      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！ :)
+      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！
 
       你的版本：%{installed_version}
       新的版本：**%{new_version}**
@@ -1340,10 +1342,6 @@ zh_CN:
       - 浏览器访问 [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade)  升级。
 
       - 访问 [meta.discourse.org（英文）](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](http://meta.discoursecn.org) 获得支持。
-
-      ### 发行注记
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 个帖子等待审核"
@@ -1557,7 +1555,7 @@ zh_CN:
 
         与你账户关联的邮件地址没有激活，请先激活你的账号再发送邮件。
     email_reject_blocked_user:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 封禁的用户"
+      subject_template: "[%{site_name}] 电子邮件错误 -- 被封禁的用户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
@@ -1601,13 +1599,13 @@ zh_CN:
 
         你发邮件到的分类只接受已知邮件的合法账户。如果你坚信这是错误，联系管理人员。
     email_reject_invalid_post:
-      subject_template: "[%{site_name}] 邮件问题 -- 发表错误"
+      subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         可能的原因是：复杂的格式、消息超长、消息太短。请再试一次，如果还不行，使用网站发表。
     email_reject_invalid_post_specified:
-      subject_template: "[%{site_name}] 邮件问题 -- 发表错误"
+      subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
@@ -1740,8 +1738,8 @@ zh_CN:
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
-    reply_by_email: "访问[visit the topic](%{base_url}%{url})或回复邮件以回复"
-    reply_by_email_pm: "[访问消息](%{base_url}%{url})或者用邮件回复"
+    reply_by_email: "[访问主题](%{base_url}%{url})或者发邮件回复"
+    reply_by_email_pm: "[访问消息](%{base_url}%{url})或者发邮件回复"
     only_reply_by_email: "用邮件回复"
     visit_link_to_respond: "访问[Visit Topic](%{base_url}%{url})以回复"
     visit_link_to_respond_pm: "访问[Visit Message](%{base_url}%{url})以回复"
@@ -2012,7 +2010,7 @@ zh_CN:
       too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"
   avatar:
-    missing: "抱歉，但是你选用的头像没有存储在服务器上。你能再重新上传一次么？"
+    missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
   flag_reason:
     sockpuppet: "新用户创建了主题，而另外一个新用户以同一个 IP 在该主题回复。查看站点设置的 flag_sockpuppets。"
     spam_hosts: "新用户试图创建链接到同一个域名的多个帖子。查看站点设置的 newuser_spam_host_threshold。"
@@ -2282,17 +2280,17 @@ zh_CN:
         该徽章授予给用户等级达到 1 的成员。感谢你在社群里花了一些时间并且阅读了一些帖子，了解了我们的社群。你的新用户限制已经被取消；并且你已经被授予了所有基本的社群权限，必须个人消息、标记、维基编辑和发布多张图片和多个链接的能力。
     member:
       name: 成员
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a> 邀请、群组消息和更多的赞
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀请、群组消息和更多的赞
       long_description: |
         该徽章授予给达到用户等级 2 的你。感谢你在社群待了几周，真正融入到了社群中。你现在可以在你的用户页或者主题中邀请他人或者创建群组消息了。每天你也可以点更多次赞了。
     regular:
       name: 活跃用户
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a> 重分类、重命名、跟踪链接、维基功能和更多的赞
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a>重分类、重命名、跟踪链接、维基功能和更多的赞
       long_description: |
         该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社群。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社群。你现在可以社群待了几周，真正融入到了社群中。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
     leader:
       name: 资深
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a> 全局编辑、固定、关闭、存档、分割、合并和更多的赞
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a>全局编辑、固定、关闭、存档、分割、合并和更多的赞
       long_description: |
         该徽章授予给达到用户等级 4 的你。你被管理人员选作了社群的领导力量，你用你的行动和言辞为社群树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、关闭、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
     welcome:
@@ -2434,9 +2432,8 @@ zh_CN:
     admired:
       name: 敬仰
       description: 有 300 个帖子都被赞了 5 次
-      long_description: |+
+      long_description: |
         该徽章授予给 300 个不同的帖子都收到了至少 5 个赞的你。哇！社群敬仰你在讨论中频繁和高质量的贡献。
-
     out_of_love:
       name: 热情
       description: 1 天内赞了 50 次
@@ -2450,9 +2447,8 @@ zh_CN:
     crazy_in_love:
       name: 狂热
       description: 20 天都赞过 50 次
-      long_description: |+
+      long_description: |
         该徽章授予给 20 天赞过 50 次的你。哇！你为社群成员们树立了一个令人鼓舞的模范！
-
     thank_you:
       name: 感谢你
       description: 有 20 个被赞的帖子，给出过 10 个赞
