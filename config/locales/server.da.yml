@@ -832,6 +832,47 @@ da:
     title: "FAQ/Retningslinjer"
   tos_topic:
     title: "Vilkår"
+  badges:
+    editor:
+      name: Redaktør
+      description: Rettet første indlæg
+    basic_user:
+      name: Basis
+    member:
+      name: Medlem
+    regular:
+      name: Regulær
+    leader:
+      name: Leder
+    welcome:
+      name: Velkommen
+      description: Modtog et like
+    autobiographer:
+      name: Selvbiograf
+    anniversary:
+      name: Jubilæum
+    nice_post:
+      name: Fint svar
+      description: Modtog 10 likes på et svar
+    good_post:
+      name: Godt svar
+    great_post:
+      name: Rigtigt godt svar
+    nice_topic:
+      name: Fint emne
+    good_topic:
+      name: Godt emne
+    admired:
+      name: Beundret
+    crazy_in_love:
+      name: Vildt forelsket
+    thank_you:
+      name: Tak
+    gives_back:
+      name: Giver tilbage
+    empathetic:
+      name: Empatisk
+      description: Har 500 likede indlæg og givet 1000 likes
   admin_login:
     success: "Email sendt"
     error: "Fejl!"

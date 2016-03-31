@@ -565,12 +565,6 @@ nb_NO:
       summary:
         title: "Oppsummering"
         stats: "Statistikk"
-        topic_count: "Emner Startet"
-        post_count: "Innlegg Opprettet"
-        likes_given: "Likes Gitt"
-        likes_received: "Likes Mottatt"
-        days_visited: "Dager Besøkt"
-        posts_read_count: "Innlegg Lest"
         top_replies: "Mest Populære Svar"
         top_topics: "Mest Populære Emner"
         more_topics: "Flere Emner"

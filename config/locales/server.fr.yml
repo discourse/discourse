@@ -1328,34 +1328,8 @@ fr:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible ! :)
-
-      Votre version: %{installed_version}
-      Nouvelle version: **%{new_version}**
-
-      - Consultez les nouveautés sur le [changelog GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible ! :)
-
-      Votre version: %{installed_version}
-      Nouvelle version: **%{new_version}**
-
-      - Consultez les nouveautés sur le [changelog GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
-
-      ### Notes de version
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 message en attente de modération"
@@ -1940,8 +1914,6 @@ fr:
     images:
       too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximum de %{max_size_kb}Ko), merci de le redimensionner et de réessayer."
       size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
-  avatar:
-    missing: "Désolé, l'avatar que vous avez séléctionné n'est pas sur le serveur. Veuillez ressayer de le télécharger."
   flag_reason:
     sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP a répondu. Voir le paramétrage flag_sockpuppets."
     spam_hosts: "Cet utilisateur a essayé de créer plusieurs messages avec des liens vers le même domaine. Voir le paramétrage du site newuser_spam_host_threshold."

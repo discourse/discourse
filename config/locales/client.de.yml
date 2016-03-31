@@ -600,6 +600,9 @@ de:
       email_always: "Benachrichtige mich per E-Mail auch während ich auf dieser Website aktiv bin"
       other_settings: "Andere"
       categories_settings: "Kategorien"
+      enable_mailing_list:
+        one: "Bist du dir sicher, dass du jeden neuen Post per E-Mail erhalten willst?"
+        other: "Bist du dir sicher, dass du jeden neuen Post per E-Mail erhalten willst?<br><br>Du wirst ungefähr <b>{{count}} E-Mails</b> pro Tag erhalten."
       new_topic_duration:
         label: "Themen als neu ansehen, wenn"
         not_viewed: "ich diese noch nicht betrachtet habe"
@@ -665,17 +668,33 @@ de:
       summary:
         title: "Übersicht"
         stats: "Statistiken"
-        topic_count: "Erstellte Themen"
-        post_count: "Erstelle Beiträge"
-        likes_given: "Abgegebene Likes"
-        likes_received: "Erhaltene Likes"
-        days_visited: "Besuchstage"
-        posts_read_count: "Gelesene Beiträge"
+        time_read: "Lesezeit"
+        topic_count:
+          one: "Thema erstellt"
+          other: "Themen erstellt"
+        post_count:
+          one: "Beitrag erstellt"
+          other: "Beiträge erstellt"
+        likes_given:
+          one: "Like gegeben"
+          other: "Likes gegeben"
+        likes_received:
+          one: "Like bekommen"
+          other: "Likes bekommen"
+        days_visited:
+          one: "Tag vorbeigekommen"
+          other: "Tage vorbeigekommen"
+        posts_read:
+          one: "Beitrag gelesen"
+          other: "Beiträge gelesen"
         top_replies: "Die besten Beiträge"
-        top_topics: "Die besten Themen"
-        top_badges: "Die besten Abzeichen"
-        more_topics: "weitere Themen"
+        no_replies: "Noch keine Antworten."
         more_replies: "weitere Beiträge"
+        top_topics: "Die besten Themen"
+        no_topics: "Noch keine Themen."
+        more_topics: "weitere Themen"
+        top_badges: "Die besten Abzeichen"
+        no_badges: "Noch keine Abzeichen."
         more_badges: "weitere Abzeichen"
       associated_accounts: "Anmeldeinformationen"
       ip_address:
@@ -725,6 +744,12 @@ de:
     too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die Begrenzung von %{siteSettingRate} in den Website-Einstellungen erreicht."
+      exceeded: "%{timestamp}: Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die Begrenzung von %{siteSettingRate} in den Website-Einstellungen überschritten."
+      rate:
+        one: "1 Fehler/%{duration}"
+        other: "%{count} Fehler/%{duration}"
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
@@ -925,8 +950,13 @@ de:
       group_mentioned: "<i title='Gruppe erwähnt' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='zitiert' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='bearbeitet' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} und 1 anderer</span> {{description}}</p>"
+        other: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} und {{count}} andere</span> {{description}}</p>"
       private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='zu Thema eingeladen' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1936,6 +1966,7 @@ de:
             is_disabled: "Wiederherstellung ist in den Website-Einstellungen deaktiviert."
             label: "Wiederherstellen"
             title: "Das Backup wiederherstellen"
+            confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
           rollback:
             label: "Zurücksetzen"
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
@@ -2080,11 +2111,6 @@ de:
           modal:
             title: "Details der eingehenden E-Mail"
             error: "Fehler"
-            references: "Referenzen"
-            date: "Datum"
-            from: "Von"
-            to: "An"
-            cc: "Cc"
             subject: "Betreff"
             body: "Nachrichtentext"
           filters:
@@ -2334,7 +2360,7 @@ de:
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
-        stage_explanation: "Ein vorbereiteter Nutzer kann nur via E-Mail zu gewissen Themen beitragen."
+        stage_explanation: "Ein vorbereiteter Nutzer kann nur via E-Mail zu bestimmten Themen beitragen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
@@ -2414,9 +2440,9 @@ de:
         revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
         go_back: "Zurück zur Suche"
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
-        show_overriden: 'Nur geänderterte Texte anzeigen'
+        show_overriden: 'Nur geänderte Texte anzeigen'
       site_settings:
-        show_overriden: 'Nur geänderterte Einstellungen anzeigen'
+        show_overriden: 'Nur geänderte Einstellungen anzeigen'
         title: 'Einstellungen'
         reset: 'zurücksetzen'
         none: 'keine'

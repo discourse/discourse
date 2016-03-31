@@ -1316,32 +1316,9 @@ fi:
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
   new_version_mailer:
-    subject_template: "[%{site_name}] Uusi Discourse versio, päivitys saatavilla"
-    text_body_template: |
-      Uusi versio [Discoursesta](http://www.discourse.org) on saatavilla :)
-
-      Sinun versiosi: %{installed_version}
-      Uusin versio: **%{new_version}**
-
-      - Tarkastele, mitä uutta on [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master).
-
-      - Asenna päivitys vierailemalla osoitteessa [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) englanninkielisten uutisten, keskustelun ja tuen Discourselle vuoksi.
+    subject_template: "[%{site_name}] Uusi Discourse-versio, päivitys saatavilla"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] päivitys saatavilla"
-    text_body_template: |+
-      Uusi versio [Discoursesta](http://www.discourse.org) on saatavilla
-
-      Sinun versiosi: %{installed_version}
-      Uusin versio: **%{new_version}**
-
-      - Tarkastele, mitä uutta on [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master).
-
-      - Asenna päivitys vierailemalla osoitteessa [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) englanninkielisten uutisten, keskustelun ja tuen Discourselle vuoksi.
-
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 viesti odottaa hyväksyntää"
@@ -2007,8 +1984,6 @@ fi:
     images:
       too_large: "Pahoittelut, kuva jonka yritit ladata on liian suuri (suurin sallittu kuvakoko on %{max_size_kb}KB), pienennä kuvaa ja yritä uudestaan."
       size_not_found: "Pahoittelut, mutta emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
-  avatar:
-    missing: "Pahoittelut, mutta profiilikuvaa, jonka yritit valita ei ole palvelimella. Voitko yrittää ladata sen uudestaan?"
   flag_reason:
     sockpuppet: "Uusi käyttäjä loi ketjun ja toinen uusi käyttäjä samasta IP osoitteesta vastasi siihen. Katso asetus flag_sockpuppets."
     spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, joissa oli linkkejä samaan verkkotunnukseen. Katso asetus newuser_spam_host_threshold."
@@ -2190,30 +2165,48 @@ fi:
     regular:
       name: Mestari
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Myönnetty</a> ketjujen siirto toiselle alueelle ja uudelleen nimeäminen, hakukoneiden seuraamat linkit, wiki-viestit ja lisää tykkäyksiä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 3. Kiitos kun olet ollut tärkeä osa yhteisöä kuukausien ajan. Olet yksi innokkaimmista lukijoista ja luotettava sisällön tuottaja, ja olet tekemässä yhteisöstä niin hienoa kuin se on. Voit nyt siirtää alueelta toiselle ja uudelleennimetä ketjuja, roskapostiliputuksesi ovat tehokkaampia, pääset lounge-alueelle ja käytössäsi on selvästi enemmän tykkäyksiä päivää kohden.
     leader:
       name: Johtaja
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Myönnetty</a> minkä tahansa viestin muokkaaminen, kiinnittäminen, sulkeminen, arkistoiminen, pilkkominen ja yhdistäminen ja lisää tykkäyksiä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 4. Palstan henkilökunta on valinnut sinut johtajaksi. Näytät muille positiivista esimerkkiä sanoin ja teoin. Voit nyt muokata mitä tahansa viestiä ja käytössäsi on yleiset valvojatyökalut, joilla voit hallita ketjuja kuten kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistäminen, ja käytössäsi on paljon enemmän tykkäyksiä päivää kohden.
     welcome:
       name: Tervetuloa
       description: Sai tykkäyksen
+      long_description: |
+        Tämä arvomerkki myönnetään, kun viestistäsi tykätään ensi kertaa. Onnittelut, olet tuottanut jotakin, mitä toinen käyttäjä on pitänyt mielenkiintoisena, hauskana tai hyödyllisenä!
     autobiographer:
       name: Omaelämäkerta
       description: Täytti <a href="/my/preferences">käyttäjätiedot</a>
+      long_description: |
+        Tämä arvomerkki myönnetään , kun täytät <a href="/my/preferences">käyttäjätiedot</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
     anniversary:
       name: Vuosipäivä
       description: Aktiivinen jäsen vuoden ajan, kirjoittanut ainakin yhden viestin
+      long_description: |
+        Tämä arvomerkki myönnetään, kun olet ollut jäsen vuoden ajan ja kirjoittanut sinä aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja antanut panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
     nice_post:
       name: Hyvä vastaus
       description: Vastaus sai 10 tykkäystä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun vastauksesi saa 10 tykkäykstä. Teit sillä todellisen vaikutuksen yhteisöön ja edistit keskustelua!
     good_post:
       name: Erinomainen vastaus
       description: Vastaus sai 25 tykkäystä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Vastauksesi oli poikkeuksellinen ja teki keskustelusta todella paljon paremman!
     great_post:
       name: Loistava vastaus
       description: Vastaus sai 50 tykkäystä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun vastauksesi saa 50 tykkäystä. Vau! Vastauksesi oli innoittava, hulvaton tai oivaltava, ja yhteisö rakasti sitä.
     nice_topic:
       name: Hyvä ketju
       description: Ketjunavaus sai 10 tykkäystä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun luomasi ketju saa 10 tykkäystä. Aloitit kiintoisan keskustelun, josta yhteisö nautti!
     good_topic:
       name: Erinomainen ketju
       description: Ketjunavaus sai 25 tykkäystä

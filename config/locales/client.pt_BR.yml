@@ -635,12 +635,6 @@ pt_BR:
         instructions: "Deve ter pelo menos %{count} caracteres."
       summary:
         stats: "Estatísticas"
-        topic_count: "Tópicos Criados"
-        post_count: "Postagens Criadas"
-        likes_given: "Curtidas Dadas"
-        likes_received: "Curtidas Recebidas"
-        days_visited: "Dias Visitados"
-        posts_read_count: "Postagens Lidas"
         top_replies: "Mais Respondidos"
         more_topics: "Mais Tópicos"
       associated_accounts: "Logins"

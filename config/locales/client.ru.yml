@@ -702,17 +702,11 @@ ru:
       summary:
         title: "Сводка"
         stats: "Статистика"
-        topic_count: "Создал тем"
-        post_count: "Написал сообщений"
-        likes_given: "Выразил симпатий"
-        likes_received: "Получил симпатий"
-        days_visited: "Заходил на форум дней"
-        posts_read_count: "Прочитал сообщений"
         top_replies: "Лучшие сообщения"
-        top_topics: "Лучшие темы"
-        top_badges: "Самые престижные награды"
-        more_topics: "... другие темы"
         more_replies: "... другие сообщения"
+        top_topics: "Лучшие темы"
+        more_topics: "... другие темы"
+        top_badges: "Самые престижные награды"
         more_badges: "... другие награды"
       associated_accounts: "Связанные аккаунты"
       ip_address:
@@ -2181,12 +2175,6 @@ ru:
           modal:
             title: "Подробности Входящего Email"
             error: "Ошибка"
-            return_path: "Return-Path"
-            message_id: "Message-Id"
-            in_reply_to: "In-Reply-To"
-            from: "От"
-            to: "Кому"
-            cc: "Скрытая копия"
             subject: "Тема"
           filters:
             from_placeholder: "from@example.com"

@@ -1378,8 +1378,6 @@ tr_TR:
     images:
       too_large: "Üzgünüz, yüklemeye çalıştığınız resim çok büyük (en fazla %{max_size_kb}KB olabilir), lütfen küçültüp tekrar deneyin."
       size_not_found: "Üzgünüz, resminizin büyüklüğünü tespit edemedik. Dosya bozuk olabilir mi?"
-  avatar:
-    missing: "Üzgünüz, fakat seçmiş olduğunuz avatar sunucuda bulunamadı. Tekrar yüklemeyi deneyebilir misiniz?"
   flag_reason:
     sockpuppet: "Yeni bir kullanıcı bir konu oluşturdu ve aynı IP adresinden başka bir yeni kullanıcı cevap yazdı. Site ayarları sayfasında flag_sockpuppets değerine göz atın."
     spam_hosts: "Bu yeni kullanıcı aynı alan adına bağlantı içeren birden fazla gönderi oluşturmaya çalıştı. Site ayarları sayfasındaki newuser_spam_host_threshold değerine göz atın."

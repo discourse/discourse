@@ -687,17 +687,11 @@ sk:
       summary:
         title: "Sumarizácia"
         stats: "Štatistiky"
-        topic_count: "Vytvorené témy"
-        post_count: "Vytvorené príspevky"
-        likes_given: "Udelené Páči sa mi"
-        likes_received: "Obdržané Páči sa mi"
-        days_visited: "Navštívených dní"
-        posts_read_count: "Prečítaných príspevkov"
         top_replies: "Najvýznamnejšie odpovede"
-        top_topics: "Najvýznamnejšie témy"
-        top_badges: "Najvýznamnejšie odznaky"
-        more_topics: "Viac tém"
         more_replies: "Viac odpovedí"
+        top_topics: "Najvýznamnejšie témy"
+        more_topics: "Viac tém"
+        top_badges: "Najvýznamnejšie odznaky"
         more_badges: "Viac odznakov"
       associated_accounts: "Prihlásenia"
       ip_address:
@@ -2160,7 +2154,6 @@ sk:
           none: "Nenájdené žiadne ďalšie emaily."
           modal:
             error: "Chyba"
-            date: "Dátum"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
