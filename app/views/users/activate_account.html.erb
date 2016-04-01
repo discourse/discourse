@@ -12,6 +12,7 @@
 <%- content_for(:no_ember_head) do %>
   <%= script "ember_jquery" %>
   <%= script "vendor" %>
+  <%= render_google_universal_analytics_code %>
 <%- end %>
 
 <script language="javascript">
@@ -39,3 +40,5 @@
     });
   })();
 </script>
+
+<%= render_google_analytics_code %>
