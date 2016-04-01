@@ -27,8 +27,10 @@ class DiscourseRedis
     def initiate_fallback_to_master
       begin
         slave_client = ::Redis::Client.new(@slave_config)
+        logger.warn "#{log_prefix}: Checking connection to master server..."
 
         if slave_client.call([:info]).split("\r\n").include?(MASTER_LINK_STATUS)
+          logger.warn "#{log_prefix}: Master server is active, killing all connections to slave..."
           slave_client.call([:client, [:kill, 'type', 'normal']])
           Discourse.clear_readonly!
           Discourse.request_refresh!
@@ -61,6 +63,14 @@ class DiscourseRedis
 
     def synchronize
       @mutex.synchronize { yield }
+    end
+
+    def logger
+      Rails.logger
+    end
+
+    def log_prefix
+      "#{self.class}"
     end
   end
 
