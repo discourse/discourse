@@ -7,7 +7,7 @@ class ImportScripts::Disqus < ImportScripts::Base
     verify_file(options[:file])
     @post_as_user = get_post_as_user(options[:post_as])
     @dry_run = options[:dry_run]
-    @parser = DisqusSAX.new(options[:strip])
+    @parser = DisqusSAX.new(options[:strip], options[:no_deleted])
     doc = Nokogiri::XML::SAX::Parser.new(@parser)
     doc.parse_file(options[:file])
     @parser.normalize
@@ -71,10 +71,11 @@ end
 class DisqusSAX < Nokogiri::XML::SAX::Document
   attr_accessor :posts, :threads
 
-  def initialize(strip)
+  def initialize(strip, no_deleted = false)
     @inside = {}
     @posts = {}
     @threads = {}
+    @no_deleted = no_deleted
     @strip = strip
   end
 
@@ -86,6 +87,8 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
     when 'thread'
       id = Hash[attrs]['dsq:id']
       if @post
+        # Skip this post if it's deleted and no_deleted is true
+        return if @no_deleted && @post[:is_deleted].to_s == 'true'
         thread = @threads[id]
         thread[:posts] << @post
       else
@@ -121,6 +124,7 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
     record(@post, :author_name, str, 'author', 'name')
     record(@post, :author_anonymous, str, 'author', 'isAnonymous')
     record(@post, :created_at, str, 'createdAt')
+    record(@post, :is_deleted, str, 'isDeleted')
 
     record(@thread, :link, str, 'link')
     record(@thread, :title, str, 'title')
@@ -187,6 +191,10 @@ OptionParser.new do |opts|
 
   opts.on('-p', '--post_as=USERNAME', 'The Discourse username to post as') do |value|
     options[:post_as] = value
+  end
+
+  opts.on('-D', '--no_deleted', 'Do not post deleted comments') do
+    options[:no_deleted] = true
   end
 
   opts.on('-s', '--strip=TEXT', 'Text to strip from titles') do |value|
