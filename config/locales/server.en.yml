@@ -837,7 +837,7 @@ en:
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
 
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
-    digest_logo_url: "The alternate logo image used at the top of your site's email digest. Should be a wide rectangle shape. If left blank `logo_url` will be used."
+    digest_logo_url: "The alternate logo image used at the top of your site's email digest. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
     logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon, to work correctly over a CDN it must be a png"
     mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. Should be a square shape. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
