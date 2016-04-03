@@ -8,6 +8,7 @@ class PostActionsController < ApplicationController
   def create
     taken = PostAction.counts_for([@post], current_user)[@post.id]
     guardian.ensure_post_can_act!(@post, PostActionType.types[@post_action_type_id], taken_actions: taken)
+    guardian.ensure_post_can_act!(@post, PostActionType.types[@post_action_type_id], is_warning: params[:is_warning])
 
     args = {}
     args[:message] = params[:message] if params[:message].present?
