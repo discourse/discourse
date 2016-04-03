@@ -5,6 +5,7 @@ export default Ember.Controller.extend({
   needs: ['flag'],
 
   message: Em.computed.alias('controllers.flag.message'),
+  isWarning: Em.computed.alias('controllers.flag.isWarning'),
 
   customPlaceholder: function(){
     return I18n.t("flagging.custom_placeholder_" + this.get('model.name_key'));

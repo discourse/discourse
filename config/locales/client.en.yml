@@ -1753,6 +1753,7 @@ en:
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Message'
+      official_warning: 'Official Warning'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
