@@ -11,6 +11,7 @@ class PostActionsController < ApplicationController
 
     args = {}
     args[:message] = params[:message] if params[:message].present?
+    args[:is_warning] = params[:is_warning] if params[:is_warning].present? && guardian.is_staff?
     args[:take_action] = true if guardian.is_staff? && params[:take_action] == 'true'
     args[:flag_topic] = true if params[:flag_topic] == 'true'
 

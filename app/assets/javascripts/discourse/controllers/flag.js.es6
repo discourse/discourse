@@ -7,6 +7,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   selected: null,
   flagTopic: null,
   message: null,
+  isWarning: false,
   topicActionByName: null,
 
   onShow() {
@@ -97,7 +98,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         postAction = this.get('topicActionByName.' + this.get('selected.name_key'));
       }
 
-      let params = this.get('selected.is_custom_flag') ? {message: this.get('message')} : {};
+      let params = this.get('selected.is_custom_flag') ? {message: this.get('message') } : {};
       if (opts) { params = $.extend(params, opts); }
 
       this.send('hideModal');
@@ -118,6 +119,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
       });
     },
 
+    createFlagAsWarning() {
+      this.send('createFlag', {isWarning: true});
+      this.set('model.hidden', true);
+    },
+
     changePostActionType(action) {
       this.set('selected', action);
     },
@@ -132,6 +138,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return false;
     }
   }.property('selected.name_key', 'userDetails.can_be_deleted', 'userDetails.can_delete_all_posts'),
+
+  canSendWarning: function() {
+    if (this.get("flagTopic")) return false;
+
+    return (Discourse.User.currentProp('staff') && this.get('selected.name_key') === 'notify_user');
+  }.property('selected.name_key'),
 
   usernameChanged: function() {
     this.set('userDetails', null);
