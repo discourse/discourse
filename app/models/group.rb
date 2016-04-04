@@ -218,11 +218,11 @@ class Group < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    reset_all_counters
-    refresh_automatic_groups
+    reset_all_counters!
+    refresh_automatic_groups!
   end
 
-  def self.reset_all_counters
+  def self.reset_all_counters!
     Group.pluck(:id).each do |group_id|
       Group.reset_counters(group_id, :group_users)
     end
