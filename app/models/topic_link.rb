@@ -123,8 +123,10 @@ class TopicLink < ActiveRecord::Base
 
           if Discourse.store.has_been_uploaded?(url)
             internal = Discourse.store.internal?
-          elsif parsed.host == Discourse.current_hostname || !parsed.host
+          elsif (parsed.host == Discourse.current_hostname && parsed.path.start_with?(Discourse.base_uri)) || !parsed.host
             internal = true
+
+            parsed.path.slice!(Discourse.base_uri)
 
             route = Rails.application.routes.recognize_path(parsed.path)
 
