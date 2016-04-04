@@ -164,6 +164,15 @@ http://b.com/#{'a'*500}
       end
     end
 
+    context "mail link" do
+      let(:post) { topic.posts.create(user: user, raw: "[email]bar@example.com[/email]") }
+
+      it 'does not extract a link' do
+        TopicLink.extract_from(post)
+        expect(topic.topic_links).to be_blank
+      end
+    end
+
     context "quote links" do
       it "sets quote correctly" do
         linked_post = topic.posts.create(user: user, raw: "my test post")

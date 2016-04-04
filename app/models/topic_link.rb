@@ -110,25 +110,25 @@ class TopicLink < ActiveRecord::Base
 
       PrettyText
         .extract_links(post.cooked)
-        .map{|u| [u, URI.parse(u.url)] rescue nil}
-        .reject{|_, p| p.nil?}
-        .uniq{|_, p| p}
+        .map { |u| [u, URI.parse(u.url)] rescue nil }
+        .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
+        .uniq { |_, p| p }
         .each do |link, parsed|
         begin
-
           url = link.url
           internal = false
           topic_id = nil
           post_number = nil
+          parsed_path = parsed.path || ""
 
           if Discourse.store.has_been_uploaded?(url)
             internal = Discourse.store.internal?
-          elsif (parsed.host == Discourse.current_hostname && parsed.path.start_with?(Discourse.base_uri)) || !parsed.host
+          elsif (parsed.host == Discourse.current_hostname && parsed_path.start_with?(Discourse.base_uri)) || !parsed.host
             internal = true
 
-            parsed.path.slice!(Discourse.base_uri)
+            parsed_path.slice!(Discourse.base_uri)
 
-            route = Rails.application.routes.recognize_path(parsed.path)
+            route = Rails.application.routes.recognize_path(parsed_path)
 
             # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'
