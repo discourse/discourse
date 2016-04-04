@@ -546,7 +546,7 @@ en:
 
       change_about:
         title: "Change About Me"
-        error: "There was an error changing ths value."
+        error: "There was an error changing this value."
 
       change_username:
         title: "Change Username"
