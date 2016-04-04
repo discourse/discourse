@@ -8,7 +8,6 @@ describe PostRevisor do
   let(:post_args) { { user: newuser, topic: topic } }
 
   context 'TopicChanges' do
-    let(:topic) { Fabricate(:topic) }
     let(:tc) {
       topic.reload
       PostRevisor::TopicChanges.new(topic, topic.user)
@@ -348,5 +347,20 @@ describe PostRevisor do
       expect(post.raw).to eq("    <-- whitespaces -->")
     end
 
+    context "#publish_changes" do
+      let!(:post) { Fabricate(:post, topic_id: topic.id) }
+
+      it "should publish topic changes to clients" do
+        revisor = described_class.new(topic.ordered_posts.first, topic)
+
+        messages = MessageBus.track_publish do
+          revisor.revise!(newuser, { title: 'this is a test topic' })
+        end
+
+        message = messages.find { |message| message.channel == "/topic/#{topic.id}" }
+        payload = message.data
+        expect(payload[:reload_topic]).to eq(true)
+      end
+    end
   end
 end

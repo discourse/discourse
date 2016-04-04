@@ -433,7 +433,14 @@ class PostRevisor
   end
 
   def publish_changes
-    @post.publish_change_to_clients!(:revised)
+    options =
+      if !@topic_changes.diff.empty? && !@topic_changes.errored?
+        { reload_topic: true }
+      else
+        {}
+      end
+
+    @post.publish_change_to_clients!(:revised, options)
   end
 
   def grant_badge
