@@ -9,7 +9,7 @@ require_dependency "permalink_constraint"
 # and makes Guard not work properly.
 USERNAME_ROUTE_FORMAT = /[\w.\-]+/ unless defined? USERNAME_ROUTE_FORMAT
 
-BACKUP_ROUTE_FORMAT = /[\w.\-]+\.(tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
+BACKUP_ROUTE_FORMAT = /.+\.(tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
 

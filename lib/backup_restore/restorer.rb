@@ -157,17 +157,17 @@ module BackupRestore
     def copy_archive_to_tmp_directory
       log "Copying archive to tmp directory..."
       source = File.join(Backup.base_directory, @filename)
-      `cp #{source} #{@archive_filename}`
+      `cp '#{source}' '#{@archive_filename}'`
     end
 
     def unzip_archive
       log "Unzipping archive..."
-      FileUtils.cd(@tmp_directory) { `gzip --decompress #{@archive_filename}` }
+      FileUtils.cd(@tmp_directory) { `gzip --decompress '#{@archive_filename}'` }
     end
 
     def extract_metadata
       log "Extracting metadata file..."
-      FileUtils.cd(@tmp_directory) { `tar --extract --file #{@tar_filename} #{BackupRestore::METADATA_FILE}` }
+      FileUtils.cd(@tmp_directory) { `tar --extract --file '#{@tar_filename}' #{BackupRestore::METADATA_FILE}` }
       @metadata = Oj.load_file(@meta_filename)
     end
 
@@ -182,7 +182,7 @@ module BackupRestore
 
     def extract_dump
       log "Extracting dump file..."
-      FileUtils.cd(@tmp_directory) { `tar --extract --file #{@tar_filename} #{BackupRestore::DUMP_FILE}` }
+      FileUtils.cd(@tmp_directory) { `tar --extract --file '#{@tar_filename}' #{BackupRestore::DUMP_FILE}` }
     end
 
     def restore_dump
@@ -275,10 +275,10 @@ module BackupRestore
     end
 
     def extract_uploads
-      if `tar --list --file #{@tar_filename} | grep 'uploads/'`.present?
+      if `tar --list --file '#{@tar_filename}' | grep 'uploads/'`.present?
         log "Extracting uploads..."
         FileUtils.cd(File.join(Rails.root, "public")) do
-          `tar --extract --keep-newer-files --file #{@tar_filename} uploads/`
+          `tar --extract --keep-newer-files --file '#{@tar_filename}' uploads/`
         end
       end
     end
