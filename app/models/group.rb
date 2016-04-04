@@ -217,6 +217,17 @@ class Group < ActiveRecord::Base
     group
   end
 
+  def self.ensure_consistency!
+    reset_all_counters
+    refresh_automatic_groups
+  end
+
+  def self.reset_all_counters
+    Group.pluck(:id).each do |group_id|
+      Group.reset_counters(group_id, :group_users)
+    end
+  end
+
   def self.refresh_automatic_groups!(*args)
     if args.length == 0
       args = AUTO_GROUPS.keys

@@ -5,7 +5,7 @@ module Jobs
 
     def execute(args)
       UserVisit.ensure_consistency!
-      Group.refresh_automatic_groups!
+      Group.ensure_consistency!
       Notification.ensure_consistency!
       UserAction.ensure_consistency!
       TopicFeaturedUsers.ensure_consistency!
