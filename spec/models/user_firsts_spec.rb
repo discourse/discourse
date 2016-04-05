@@ -30,4 +30,17 @@ describe UserFirst do
     end
   end
 
+  context "privacy" do
+    let(:codinghorror) { Fabricate(:codinghorror) }
+
+    it "doesn't create the userfirst on private posts" do
+      post = PostCreator.create(user,
+                                target_usernames: ['codinghorror'],
+                                title: "this topic is about candy",
+                                raw: "time to eat some sweet :candy: mmmm")
+
+      uf = UserFirst.where(user_id: user.id, first_type: UserFirst.types[:used_emoji]).first
+      expect(uf).to be_blank
+    end
+  end
 end
