@@ -13,6 +13,16 @@ class EmailLog < ActiveRecord::Base
     User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present? && !skipped
   end
 
+  def self.reached_max_emails?(user)
+    return false if SiteSetting.max_emails_per_day_per_user == 0
+
+    count = sent.where('created_at > ?', 1.day.ago)
+        .where(user_id: user.id)
+        .count
+
+    count >= SiteSetting.max_emails_per_day_per_user
+  end
+
   def self.count_per_day(start_date, end_date)
     sent.where("created_at BETWEEN ? AND ?", start_date, end_date)
         .group("DATE(created_at)")

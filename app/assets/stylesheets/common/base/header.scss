@@ -17,6 +17,9 @@
 
     .title {
       float: left;
+      a, a:visited {
+        color: $header_primary;
+      }
     }
 
     #site-logo {

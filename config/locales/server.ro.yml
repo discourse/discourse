@@ -73,6 +73,7 @@ ro:
   not_found: "Adresa URL sau resursă cerută nu pot fi găsite."
   invalid_access: "Nu aveţi permisiunea să vedeţi această resursă."
   read_only_mode_enabled: "Site-ul este în modul doar-citire. Interacțiunile sunt dezactivate."
+  likes: "Aprecieri"
   too_many_replies:
     one: "Ne pare rău, dar utilizatori noi sunt limitaţi la 1 răspuns pe discuţie."
     few: "Ne pare rău, dar utilizatori noi sunt limitaţi la %{count} răspunsuri pe discuţie."
@@ -657,7 +658,7 @@ ro:
     newuser_max_mentions_per_post: "Numărul maxim de notificări de @nume poate folosii un utilizator nou într-o postare."
     newuser_max_replies_per_topic: "Numărul maxim de răspunsuri un utilizator nou poate adăuga într-o singură discuție până când cineva le răspunde."
     max_mentions_per_post: "Numărul maxim de notificări de @nume oricine poate folosii într-o postare."
-    create_thumbnails: "Crează previzualizari de tipul thumbnail și lightbox ale imaginilor ce sunt prea mari să încapă într-o postare."
+    create_thumbnails: "Creează previzualizari de tipul thumbnail și lightbox ale imaginilor ce sunt prea mari să încapă într-o postare."
     email_time_window_mins: "Așteaptă (n) minute până să trimiți orice email de notificare, pentru a da utilizatorilor șansa să-și editeze și să-și finalizeze postările."
     email_posts_context: "Câte răspunsuri precedente să fie incluse ca context în email-urile de notificare."
     flush_timings_secs: "Cât de frecvent se resetează timpul de pe server, în secunde."
@@ -710,7 +711,7 @@ ro:
     autohighlight_all_code: "Forțează aplicarea de iluminat cod către toate preformatările de blocări de cod chiar când este explicit specificată limba."
     feed_polling_enabled: "DOAR ÎNCORPOREAZĂ: Să încorporeze un RSS/ATOM ca postare."
     feed_polling_url: "DOAR ÎNCORPOREAZĂ: URL de RSS/ATOM să încorporeze."
-    embed_by_username: "Numele de utilizator Discourse al utilizatorului ce crează discuții încorporate."
+    embed_by_username: "Numele de utilizator Discourse al utilizatorului ce creează discuții încorporate."
     embed_username_key_from_feed: "Discourse username of the user who creates the embedded topics.."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Numărul maxim de postări de încorporat."
@@ -830,10 +831,6 @@ ro:
     subject_template: "[%{site_name}] O nouă versiune de Discourse, reactializare valabilă"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update Actualizare valabilă"
-  flags_reminder:
-    please_review: "Vă rugăm revizionați-le."
-    post_number: "postarea"
-    how_to_disable: 'Arata acest email schimbând setarea notify_about_flags_after la valoarea 0.'
   flags_dispositions:
     agreed: "Mulțumim pentru avertizare. Suntem de acord că există o problemă și ne vom interesa."
     agreed_and_deleted: "Mulțumim pentru avertizare. Suntem de acord că este o problemă și postarea v-a fi eliminată."
@@ -874,12 +871,6 @@ ro:
         Pentru ajutor adițional, faceți referie la [regulile de comunitate](%{base_url}/).
     blocked_by_staff:
       subject_template: "Cont blocat"
-      text_body_template: |
-        Salut,
-
-        Acesta e un mesaj automat din partea %{site_name} pentru a vă informa de blocarea contului dvs de către un membru al personalului.
-
-        Pentru ajutor adițional, faceți referie la [regulile de comunitate](%{base_url})..
     user_automatically_blocked:
       subject_template: "Noul utilizator %{username} a fost blocat datorită marcajelor date de comunitate"
     spam_post_blocked:
@@ -950,12 +941,6 @@ ro:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Autentificare"
-    confirm_new_email:
-      subject_template: "[%{site_name}] Confirmă noua adresă de email"
-      text_body_template: |
-        Confirmă noua adresă de email pentru %{site_name} făcând click pe următoarea adresă:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Ați fost aprobat pe site-ul %{site_name}!"
     signup:
@@ -967,7 +952,6 @@ ro:
 
         Dacă adresa de mai sus nu e accesibilă, încercați să o copiați și să o lipiți în bară de adrese a propriului browser.
   page_not_found:
-    title: "Pagina cerută nu există sau este privată."
     popular_topics: "Populare"
     recent_topics: "Recente"
     see_more: "Mai multe"

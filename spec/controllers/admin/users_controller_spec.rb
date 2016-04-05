@@ -507,52 +507,66 @@ describe Admin::UsersController do
 
   end
 
-  it 'can sync up sso' do
-    log_in(:admin)
 
-    SiteSetting.enable_sso = true
-    SiteSetting.sso_overrides_email = true
-    SiteSetting.sso_overrides_name = true
-    SiteSetting.sso_overrides_username = true
+  context '#sync_sso' do
+    let(:sso) { SingleSignOn.new }
+    let(:sso_secret) { "sso secret" }
 
-    SiteSetting.sso_secret = "sso secret"
+    before do
+      log_in(:admin)
 
-    sso = SingleSignOn.new
-    sso.sso_secret = "sso secret"
-    sso.name = "Bob The Bob"
-    sso.username = "bob"
-    sso.email = "bob@bob.com"
-    sso.external_id = "1"
+      SiteSetting.enable_sso = true
+      SiteSetting.sso_overrides_email = true
+      SiteSetting.sso_overrides_name = true
+      SiteSetting.sso_overrides_username = true
+      SiteSetting.sso_secret = sso_secret
+      sso.sso_secret = sso_secret
+    end
 
-    user = DiscourseSingleSignOn.parse(sso.payload)
-                                .lookup_or_create_user
 
-    sso.name = "Bill"
-    sso.username = "Hokli$$!!"
-    sso.email = "bob2@bob.com"
+    it 'can sync up with the sso' do
+      sso.name = "Bob The Bob"
+      sso.username = "bob"
+      sso.email = "bob@bob.com"
+      sso.external_id = "1"
 
-    xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
-    expect(response).to be_success
+      user = DiscourseSingleSignOn.parse(sso.payload)
+                                  .lookup_or_create_user
 
-    user.reload
-    expect(user.email).to eq("bob2@bob.com")
-    expect(user.name).to eq("Bill")
-    expect(user.username).to eq("Hokli")
+      sso.name = "Bill"
+      sso.username = "Hokli$$!!"
+      sso.email = "bob2@bob.com"
 
-    # It can also create new users
-    sso = SingleSignOn.new
-    sso.sso_secret = "sso secret"
-    sso.name = "Dr. Claw"
-    sso.username = "dr_claw"
-    sso.email = "dr@claw.com"
-    sso.external_id = "2"
-    xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
-    expect(response).to be_success
+      xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+      expect(response).to be_success
 
-    user = User.where(email: 'dr@claw.com').first
-    expect(user).to be_present
-    expect(user.ip_address).to be_blank
+      user.reload
+      expect(user.email).to eq("bob2@bob.com")
+      expect(user.name).to eq("Bill")
+      expect(user.username).to eq("Hokli")
+    end
 
+    it 'should create new users' do
+      sso.name = "Dr. Claw"
+      sso.username = "dr_claw"
+      sso.email = "dr@claw.com"
+      sso.external_id = "2"
+      xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+      expect(response).to be_success
+
+      user = User.where(email: 'dr@claw.com').first
+      expect(user).to be_present
+      expect(user.ip_address).to be_blank
+    end
+
+    it 'should return the right message if the record is invalid' do
+      sso.email = ""
+      sso.name = ""
+      sso.external_id = "1"
+
+      xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+      expect(response.status).to eq(403)
+      expect(JSON.parse(response.body)["message"]).to include("Email can't be blank")
+    end
   end
-
 end

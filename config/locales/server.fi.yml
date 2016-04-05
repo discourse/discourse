@@ -169,6 +169,9 @@ fi:
     hot: "Kuumat ketjut"
     top: "Huippuketjut"
     posts: "Uusimmat viestit"
+    private_posts: "Uusimmat yksityisviestit"
+    group_posts: "Uusimmat viestit ryhmässä %{group_name}"
+    group_mentions: "Uusimmat maininnat ryhmässä %{group_name}"
   too_late_to_edit: "Tämä viesti luotiin liian kauan sitten. Sitä ei voi enää muokata tai poistaa."
   revert_version_same: "Nykyinen revisio on sama, kuin jonka yrität palauttaa."
   excerpt_image: "kuva"
@@ -709,11 +712,15 @@ fi:
     site_contact_username_warning: "Aseta käyttäjänimi, jonka nimissä palsta automaattiset viestit lähetetään. Muokkaa asetusta site_contact <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     notification_email_warning: "Palstan sähköpostien lähettäjäosoite ei ole kelvollinen, josta johtuen sähköpostit eivät mene perille luotettavasti. Aseta toimiva sähköpostiosoite kohtaan notification_email <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
+    email_polling_errored_recently:
+      one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
+      other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
   site_settings:
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Sivuston oletuskieli (ISO 639-1 koodi)"
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
+    set_locale_from_accept_language_header: "Aseta sivuston kieli kirjautumattomille käyttäjille selaimen kielivalinnan perusteella. (KOKEELLINEN, ei toimi anonyymin välimuistin kanssa)"
     min_post_length: "Viestin merkkien minimimäärä"
     min_first_post_length: "Ketjun aloitusviestin (leipätekstin) merkkien minimimäärä"
     min_private_message_post_length: "Viestin merkkien minimimäärä viesteille"
@@ -722,7 +729,7 @@ fi:
     max_topic_title_length: "Viestin otsikon merkkien maksimimäärä"
     min_private_message_title_length: "Viestin otsikon merkkien minimimäärä viestille"
     min_search_term_length: "Haun merkkien minimimäärä"
-    allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta. VAROITUS: Sinun täytyy siirtää alueettomat ketjut jollekin alueelle, ennen tämän asetuksen poistamista käytöstä."
+    allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun luominen identtisellä otsikolla."
     unique_posts_mins: "Kuinka monta minuuttia, kunnes käyttäjä voi luoda uudestaan saman sisältöisen viestin"
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
@@ -924,17 +931,17 @@ fi:
     tl2_requires_likes_received: "Kuinka monta tykkäystä käyttäjän täytyy saada ennen ylentämistä luottamustasolle 2."
     tl2_requires_likes_given: "Kuinka monta tykkäystä käyttäjän täytyy antaa ennen ylentämistä luottamustasolle 2."
     tl2_requires_topic_reply_count: "Kuinka moneen ketjuun käyttäjän täytyy vastata ennen ylentämistä luottamustasolle 2."
-    tl3_time_period: "Luottamustason 3 vaatimuksiin liittyvän ajanjakson pituus"
-    tl3_requires_days_visited: "Minimimäärä päiviä, joina käyttäjän täytyy olla vieraillut sivustolla viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3. Poistaaksesi ylennykset aseta arvo korkeammaksi, kuin lt3 aikaraja,  (0 tai korkeampi)"
-    tl3_requires_topics_replied_to: "Moneenko ketjuun vähintään käyttäjän täytyy olla vastannut viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3. (0 tai korkeampi)"
-    tl3_requires_topics_viewed: "Montako prosenttia viimeisen 100 päivän aikana luoduista ketjuista käyttäjän täytyy olla katsellut voidakseen saavuttaa luottamustason 3. (asteikko 0-100)"
-    tl3_requires_posts_read: "Montako prosenttia viimeisen 100 päivän aikana luoduista viesteistä käyttäjän täytyy olla katsellut voidakseen saavuttaa luottamustason 3. (asteikko 0-100)"
+    tl3_time_period: "Luottamustason 3 vaatimuksiin liittyvän ajanjakson pituus (päivissä)"
+    tl3_requires_days_visited: "Monenako päivänä vähintään käyttäjän täytyy olla vieraillut sivustolla viimeisen (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3. Ota ylennykset käytöstä asettamalla arvo korkeammaksi kuin lt3 aikaraja, (0 tai korkeampi)"
+    tl3_requires_topics_replied_to: "Moneenko ketjuun vähintään käyttäjän täytyy olla vastannut viimeisen (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3. (0 tai korkeampi)"
+    tl3_requires_topics_viewed: "Montako prosenttia viimeisen (tl3 time period) päivän aikana luoduista ketjuista käyttäjän täytyy olla katsellut voidakseen saavuttaa luottamustason 3. (asteikko 0-100)"
+    tl3_requires_posts_read: "Montako prosenttia viimeisen (tl3 time period) päivän aikana luoduista viesteistä käyttäjän täytyy olla katsellut voidakseen saavuttaa luottamustason 3. (asteikko 0-100)"
     tl3_requires_topics_viewed_all_time: "Montako ketjua käyttäjän täytyy olla katsonut voidakseen saavuttaa luottamustason 3."
     tl3_requires_posts_read_all_time: "Montako viestiä käyttäjän täytyy olla katsonut voidakseen saavuttaa luottamustason 3."
-    tl3_requires_max_flagged: "Käyttäjällä ei saa olla enempää kuin x viestiä liputettuna x eri käyttäjältä viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3. (0 tai korkeampi)"
+    tl3_requires_max_flagged: "Käyttäjällä ei saa olla enempää kuin x viestiä liputettuna x eri käyttäjältä viimeisen (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3. (0 tai korkeampi)"
     tl3_promotion_min_duration: "Kuinka montaa päivää luottamustasolle 3 ylennyksen jälkeen käyttäjä voidaa jälleen alentaa luottamustasolle 2."
-    tl3_requires_likes_given: "Montako tykkäystä käyttäjän täytyy olla vähintään antanut viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3."
-    tl3_requires_likes_received: "Montako tykkäystä käyttäjän täytyy olla vähintään saanut viimeisen 100 päivän aikana voidakseen saavuttaa luottamustason 3."
+    tl3_requires_likes_given: "Montako tykkäystä käyttäjän täytyy olla vähintään antanut viimeisen (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3."
+    tl3_requires_likes_received: "Montako tykkäystä käyttäjän täytyy olla vähintään saanut viimeisen (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3."
     tl3_links_no_follow: "Älä poista rel=nofollow -attribuuttia linkeistä luottamustason 3 käyttäjiltä."
     min_trust_to_create_topic: "Ketjun luomiseksi vaadittava luottamustaso."
     min_trust_to_edit_wiki_post: "Wikiviestin muokkaamiseen vaadittava luottamustaso."
@@ -949,7 +956,7 @@ fi:
     max_users_notified_per_group_mention: "Kuinka moni voi saada ilmoituksen, kun ryhmään viitataan (jos raja ylittyy, kukaan ei saa ilmoitusta)"
     create_thumbnails: "Luo esikatselu- ja lightbox-kuvia, jotka ovat liian suuria mahtuakseen viestiin."
     email_time_window_mins: "Odota (n) minuuttia ennen ilmoitussähköpostien lähettämistä, jotta käyttäjällä on aikaa muokata ja viimeistellä viestinsä."
-    private_email_time_window_seconds: "Odota (n) sekuntia ennen ilmoitusten lähettämistä käyttäjille, jotta kirjoittajalla on mahdollisuus muokata ja viimeistellä viestinsä."
+    private_email_time_window_seconds: "Odota (n) sekuntia ennen sähköposti-ilmoitusten lähettämistä käyttäjille, jotta kirjoittajalla on mahdollisuus tehdä muokkaukset ja viimeistellä viestinsä."
     email_posts_context: "Kuinka monta edellistä vastausta liitetään kontekstiksi sähköposti-ilmoituksessa."
     flush_timings_secs: "Kuinka usein timing data päivitetään palvelimelle, sekunneissa."
     title_max_word_length: "Sanan enimmäispituus merkkeinä ketjun otsikossa"
@@ -1007,6 +1014,7 @@ fi:
     unsubscribe_via_email: "Salli käyttäjän lakkauttaa sähköposti-ilmoitukset lähettämällä sähköpostiviesti, jonka otsikossa tai leipätekstissä esiintyy sana \"unsubscribe\""
     unsubscribe_via_email_footer: "Liitä sähköpostiviestien alaosaan linkki, jonka avulla saaja voi lakkauttaa sähköposti-ilmoitukset"
     delete_email_logs_after_days: "Poista sähköpostilokit (N) päivän jälkeen. Aseta 0 säilyttääksesi ikuisesti."
+    max_emails_per_day_per_user: "Käyttäjälle päivässä lähetettävien sähköpostien enimmäismäärä. Aseta 0, jos et halua rajoittaa."
     pop3_polling_enabled: "Pollaa sähköpostivastaukset POP3:lla."
     pop3_polling_ssl: "Käytä SSL-salausta yhdistettäessä POP3-palvelimeen. (Suositellaan)"
     pop3_polling_period_mins: "Tiheys minuuteissa kuinka usein POP3 tililtä tarkastetaan uudet sähköpostit. HUOM: vaatii uudelleenkäynnistyksen."
@@ -1034,6 +1042,7 @@ fi:
     digest_topics: "Sähköpostitiivistelmässä näytettävien ketjujen maksimimäärä."
     digest_min_excerpt_length: "Viestin katkelman vähimmäispituus sähköpostitiivistelmässä, merkeissä"
     delete_digest_email_after_days: "Jätä lähettämättä tiivistelmäsähköpostit käyttäjille, joita ei ole nähty (n) päivän aikana."
+    digest_suppress_categories: "Älä liitä näiden alueiden viestejä sähköpostitiivistelmiin."
     disable_digest_emails: "Ota tiivistelmäsähköpostit pois käytöstä kaikilta käyttäjiltä."
     detect_custom_avatars: "Tarkistetaanko, ovatko käyttäjät ladanneet oman profiilikuvan."
     max_daily_gravatar_crawls: "Korkeintaan kuinka monta kertaa Discourse tarkistaa avatarit Gravatarista päivässä"
@@ -1088,6 +1097,7 @@ fi:
     approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit tarkastetaan"
     notify_about_queued_posts_after: "Jos hyväksyntää odottavia viestejä on odottanut näin monta tuntia, lähetä sähköposti contact_email osoitteeseen. Aseta 0 ottaaksesi pois käytöstä."
     default_email_digest_frequency: "Kuinka usein käyttäjille lähetetään tiivistelmäsähköposti oletuksena."
+    default_include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostitiivistelmiin oletuksena. Tätä voi muuttaa käyttäjäasetuksissa."
     default_email_private_messages: "Lähetä oletuksena sähköposti, kun joku lähettää käyttäjälle viestin."
     default_email_direct: "Lähetä oletuksena sähköposti, kun joku lainaa/vastaa/mainitsee tai kutsuu käyttäjän."
     default_email_mailing_list_mode: "Lähetä oletuksena sähköposti jokaisesta uudesta viestistä."
@@ -1126,7 +1136,7 @@ fi:
       pop3_polling_password_is_empty: "Sinun täytyy asettaa 'pop3 polling password' ennen POP3-pollauksen ottamista käyttöön."
       pop3_polling_authentication_failed: "POP3 autentikaatio epäonnistui. Tarkasta pop3 kirjautumistiedot."
       reply_by_email_address_is_empty: "'reply by email address' täytyy olla asetettuna ennen sähköpostivastausten ottamista käyttöön."
-      pop3_polling_disabled: "POP3 polling täytyy olla asetettuna ennen sähköpostivastausten ottamista käyttöön."
+      user_locale_not_enabled: "'allow user locale' täytyy olla asetettuna ennen tämän asetuksen ottamista käyttöön."
   notification_types:
     group_mentioned: "%{group_name} mainittiin täällä %{link}"
     mentioned: "%{display_username} viittasi sinuun viestissä %{link}"
@@ -1149,10 +1159,10 @@ fi:
       topic: 'Tulokset'
       user: 'Käyttäjät'
   sso:
-    not_found: "Käyttäjätilin hakeminen tai luominen ei onnistunut, ota yhteys järjestelmävalvojaan."
-    account_not_approved: "Tili odottaa hyväksyntää, saat sähköpostiin ilmoituksen kun hyväksyntä on valmis"
-    unknown_error: "Virhe tietojen päivittämisessä, ota yhteyttä järjestelmävalvojaan"
-    timeout_expired: "Kirjautuminen on vanhentunut, ole hyvä ja kirjaudu uudestaan"
+    not_found: "Tiliäsi ei löydetty. Ota yhteyttä sivuston ylläpitäjään."
+    account_not_approved: "Tilisi odottaa hyväksyntää. Saat sähköpostin, kun tunnuksesi on hyväksytty."
+    unknown_error: "Tiliisi liittyen on tapahtunut virhe. Ota yhteyttä sivuston ylläpitäjään."
+    timeout_expired: "Kirjautuminen on vanhentunut, yritä kirjautua sisään uudestaan."
   original_poster: "Alkuperäinen kirjoittaja"
   most_posts: "Eniten viestejä"
   most_recent_poster: "Uusin kirjoittaja"
@@ -1306,32 +1316,9 @@ fi:
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
   new_version_mailer:
-    subject_template: "[%{site_name}] Uusi Discourse versio, päivitys saatavilla"
-    text_body_template: |
-      Uusi versio [Discoursesta](http://www.discourse.org) on saatavilla :)
-
-      Sinun versiosi: %{installed_version}
-      Uusin versio: **%{new_version}**
-
-      - Tarkastele, mitä uutta on [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master).
-
-      - Asenna päivitys vierailemalla osoitteessa [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) englanninkielisten uutisten, keskustelun ja tuen Discourselle vuoksi.
+    subject_template: "[%{site_name}] Uusi Discourse-versio, päivitys saatavilla"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] päivitys saatavilla"
-    text_body_template: |+
-      Uusi versio [Discoursesta](http://www.discourse.org) on saatavilla
-
-      Sinun versiosi: %{installed_version}
-      Uusin versio: **%{new_version}**
-
-      - Tarkastele, mitä uutta on [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master).
-
-      - Asenna päivitys vierailemalla osoitteessa [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) englanninkielisten uutisten, keskustelun ja tuen Discourselle vuoksi.
-
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 viesti odottaa hyväksyntää"
@@ -1671,12 +1658,6 @@ fi:
         Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Tili estetty"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on estetty henkilökunnan toimesta.
-
-        Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Uusi käyttäjä %{username} on estetty muiden käyttäjien liputuksen perusteella"
       text_body_template: |
@@ -1724,6 +1705,9 @@ fi:
   subject_pm: "[YV]"
   user_notifications:
     previous_discussion: "Edelliset vastaukset"
+    reached_limit:
+      one: "VAROITUS: Olet saavuttanut päivittäisen rajan sähköpostien määrälle. Seuraavia sähköposti-ilmoituksia ei lähetetä."
+      other: "VAROITUS: Sinulle on lähetetty tänään %{count} sähköpostia, joka on päivittäinen raja sähköpostien määrälle. Seuraavia sähköposti-ilmoituksia ei lähetetä."
     in_reply_to: "Vastauksena"
     unsubscribe:
       title: "Peru tilaus"
@@ -1734,51 +1718,53 @@ fi:
     visit_link_to_respond: "Vastaa [vierailemalla ketjussa](%{base_url}%{url})"
     visit_link_to_respond_pm: "Vastaa [vierailemalla ketjussa](%{base_url}%{url})."
     posted_by: "Käyttäjältä %{username} %{post_date}"
+    invited_to_private_message_body: |
+      %{username} kutsui sinut viestiketjuun
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      sivustolla
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} kutsui sinut keskusteluun
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      sivustolla
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} kutsui sinut viestiin '%{topic_title}'"
-      text_body_template: |2
+      text_body_template: |
+        %{header_instructions}
 
-        %{username} kutsui sinut viestiin
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        sivustolla
-
-        > %{site_title} -- %{site_description}
-
-        Seuraa tätä linkkiä nähdäksesi viestin: %{base_url}%{url}
+        ---
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} kutsui sinut yksityiseen keskusteluun '%{topic_title}'"
-      text_body_template: |2
+      text_body_template: |
+        %{header_instructions}
 
-        %{username} kutsui sinut yksityiseen keskusteluun
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        sivustolla
-
-        > %{site_title} -- %{site_description}
-
-        Klikkaa tätä linkkiä nähdäksesi viestin: %{base_url}%{url}
+        ---
+        %{respond_instructions}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} kutsui sinut ketjuun '%{topic_title}'"
-      text_body_template: |2
+      text_body_template: |
+        %{header_instructions}
 
-        %{username} kutsui sinut keskusteluun
+        %{message}
 
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        sivustolla
-
-        > %{site_title} -- %{site_description}
-
-        Seuraa tätä linkkiä nähdäksesi keskustelun: %{base_url}%{url}
+        ---
+        %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1998,8 +1984,6 @@ fi:
     images:
       too_large: "Pahoittelut, kuva jonka yritit ladata on liian suuri (suurin sallittu kuvakoko on %{max_size_kb}KB), pienennä kuvaa ja yritä uudestaan."
       size_not_found: "Pahoittelut, mutta emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
-  avatar:
-    missing: "Pahoittelut, mutta profiilikuvaa, jonka yritit valita ei ole palvelimella. Voitko yrittää ladata sen uudestaan?"
   flag_reason:
     sockpuppet: "Uusi käyttäjä loi ketjun ja toinen uusi käyttäjä samasta IP osoitteesta vastasi siihen. Katso asetus flag_sockpuppets."
     spam_hosts: "Tämä uusi käyttäjä yritti luoda useita viestejä, joissa oli linkkejä samaan verkkotunnukseen. Katso asetus newuser_spam_host_threshold."
@@ -2014,6 +1998,7 @@ fi:
     post_deleted: "kirjoittaja poisti viestin"
     user_suspended: "käyttäjä hyllytettiin"
     already_read: "käyttäjä on jo lukenut tämän viestin"
+    exceeded_limit: "Ylitti max_emails_per_day_per_user"
     message_blank: "viesti on tyhjä"
     message_to_blank: "message.to on tyhjä"
     text_part_body_blank: "text_part.body on tyhjä"
@@ -2139,7 +2124,7 @@ fi:
       <p>
       <ul>
       <li>Otsikon vastaavuudet ovat etusijalla &ndash; jos olet epävarma, etsi otsikkoa</li>
-      <li>Parhaat tulokset saa uniikeilla ja epätavallisilla sanoilla</li>
+      <li>Parhaat tulokset saa uniikeilla ja harvinaisilla sanoilla</li>
       <li>Voit kokeilla etsiä tietyn alueen, ketjun tai käyttäjän viesteistä</li>
       </ul>
       </p>
@@ -2150,8 +2135,8 @@ fi:
       <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
       <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
       <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>min_age:days</code></td><td><code>max_age:days</code></td> <td colspan=2></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
       </table>
       </p>
       <h3>Esimerkkejä</h3>
@@ -2162,56 +2147,141 @@ fi:
       </ul>
       </p>
   badges:
-    long_descriptions:
-      autobiographer: |
-        Tämä arvomerkki myönnetään, kun täytät käyttäjätietosi ja valitset profiilikuvan. Kertomalla yhteisölle itsestäsi ja mielenkiinnon kohteistasi edistät yhteisöllisyyttä.
-      first_like: |
-        Tämä arvomerkki myönnetään, kun ensimmäistä kertaa tykkäät viestistä klikkaamalla sydänkuvaketta. Tykkääminen on hyvä tapa viestittää yhteisön toiselle jäsenelle, että hänen viestinsä oli kiinnostava, hyödyllinen, osuva tai hauska.  Jakakaa rakkautta!
-      first_link: |
-        Tämä arvomerkki myönnetään, kun ensimmäistä kertaa laitat viestiisi linkin toiseen ketjuun. Linkittämällä autat kanssaihmisiä löytämään kiintoisia keskusteluita osoittamalla aiheiden välisiä yhteyksiä.
-      first_quote: |
-        Tämä arvomerkki myönnetään, kun ensimmäistä kertaa lainaat toista viestiä vastauksessasi. Lainaamalla aiempien viestien olennaiset osat autat pitämään keskustelua raiteillaan.
-      first_share: |
-        Tämä arvomerkki myönnetään, kun ensimmäistä kertaa jaat linkin viestiin tai ketjuun käyttämällä jakokuvaketta. Jakaminen on hyvä tapa esitellä mielenkiintoisia keskusteluja muulle maailmalle ja kasvattaa yhteisöä.
-      read_guidelines: |
-        Tämä arvomerkki myönnetään, kun <a href="/guidelines">luet yhteisön ohjeet</a>. Noudattamalla ja jakamalla näitä yksinkertaisia ohjeita edistät yhteisön turvallisuutta, viihtyisyyttä ja jatkuvuutta.
-      reader: |
-        Tämä arvomerkki myönnetään, kun selaat läpi pitkän keskustelun. Lukeminen on tärkeää. Huolellinen lukeminen auttaa seuraamaan keskustelua ja johdattaa parempiin, kattavampiin vastauksiin.
-      editor: |
-        Tämä arvomerkki myönnetään, kun ensimmäistä kertaa muokkaat viestiäsi. Älä epäröi muokata viestiäsi, jos haluat parannella sitä, korjata pieniä virheitä tai unohdit siitä jotain.
-      first_flag: |
-        Tämä arvomerkki myönnetään, kun liputat viestin. Liputus on tärkeää yhteisön kannalta. Jos havaitset jotakin, mitä valvojien tulisi huomioida
-        älä epäröi liputtaa. Liputuskuvakkeen kautta voi myös lähettää <b>yksityisviestejä</b> toisille käyttäjille.
-      nice_share: |
-        Tämä arvomerkki myönnnetään, kun jaat linkin viestiin ja sen kautta saapuu 25 ulkopuolista vierailijaa. Hienoa työtä! Linkkien jakaminen kiintoisiin keskusteluihin on erinomainen tapa kasvattaa yhteisöä.
-      welcome: |
-        Tämä arvomerkki myönnetään, kun viestisi saa tykkäyksen ensimmäistä kertaa. Onnittelut, olet kirjoittanut jotakin, mitä toinen yhteisön jäsen piti kiinnostavana, osuvana tai hyödyllisenä.
-      anniversary: |
-        Tämä arvomerkki myönnetään, kun olet ollut yhteisömme jäsen vuoden ajan ja lähettänyt sinä aikana ainakin yhden viestin. Kiitos kun olet täällä ja annat panoksesi yhteisön hyväksi!
-      good_share: |
-        Tämä arvomerkki myönnetään, kun jaat linkin viestiin ja sen kautta saapuu 300 ulkopuolista vierailijaa. Hienoa työtä! Olet esitellyt kiintoisan keskustelun <i>suurelle</i> joukolle uusia ihmisiä ja auttanut yhteisöä kasvamaan.
-      great_share: |
-        Tämä arvomerkki myönnetään, kun jaat linkin viestiin ja sen kautta saapuu 100 ulkopuolista vierailijaa. Vau! Olet esitellyt kiintoisan keskustelun <i>valtaisalle</i> joukolle uusia potentiaalisia yhteisön jäseniä ja auttanut suuresti yhteisöä kasvamaan.
-      nice_post: |
-        Tämä arvomerkki myönnetään, kun vastauksesi saa 10 tykkäystä. Hyvää työtä!
-      nice_topic: |
-        Tämä arvomerkki myönnetään, kun avaamasi ketju saa 10 tykkäystä. Hyvää työtä!
-      good_post: |
-        Tämä arvomerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Hienoa työtä!
-      good_topic: |
-        Tämä arvomerkki myönnetään, kun avaamasi ketju saa 25 tykkäystä. Hienoa työtä!
-      great_post: |
-        Tämä arvomerkki myönnetään, kun vastauksesi saa 50 tykkäystä. Vau!
-      great_topic: |
-        Tämä arvomerkki myönnetään, kun avaamasi ketju saa 50 tykkäystä. Vau!
-      basic: |
-        Tämä arvomerkki myönnetään, kun saavutat luottamustason 1. Kiitos kun olet ollut täällä hetken ja lukenut muutamaa ketjua oppiaksesi yhteisöstämme. Uuden käyttäjän rajoituksia on löysätty ja sinulla on käytössäsi kaikki perustoiminnot kuten yksityisviestit, liputtaminen, wiki-viestien muokkaaminen, kuvien liittäminen ja useamman linkin laittaminen.
-      member: |
-        Tämä arvomerkki myönnetään, kun saavutat luottamustason 2. Kiitos, kun olet ollut täällä useamman viikon ajan ja kasvanut yhteisömme jäseneksi. Voit nyt lähettää henkilökohtaisia kutsuja käyttäjäsivultasi ja yksittäisistä ketjuista, lähettää ryhmäviestejä ja tykätä muutaman kerran enemmän päivää kohden.
-      regular: |
-        Tämä arvomerkki myönnetään, kun saavutat luottamustason 3. Kiitos kun olet ollut iso osa yhteisöä viimeisten kuukausien ajan: olet yksi aktiivisimmasta lukijoista ja myötävaikuttanut yhteisön tilaan. Voit nyt siirtää alueelta toiselle ja uudelleennimetä ketjuja, pääset lounge-alueelle, liputuksiesi painoarvo on korkeampi ja voit tykätä monta kertaa enemmän päivää kohden.
-      leader: |
-        Tämä arvomerkki myönnetään, kun saavutat luottamustason 4. Olet palstan henkilökunnan valitsema luottohenkilö. Näytät myönteistä esimerkkiä teollasi ja sanoillasi. Sinulla on nyt oikeudet muokata mitä tahansa viestiä ja muitakin valvojan valtuuksia kuten ketjujen kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistely. Käytössäsi on myös runsaasti tykkäyksiä päivää kohden.
+    editor:
+      name: Muokkaaja
+      description: Ensimmäinen viestin muokkaus
+      long_description: |
+        Tämä arvomerkki myönnetään, kun ensimmäistä kertaa muokkaat viestiäsi. Viestiä ei voi muokata kuin määrätyn ajan viestin lähettämisen jälkeen, mutta sinä aikana muokkaaminen on aina hyvä ajatus. Voit parannella viestiä, korjata pieniä virheitä tai lisätä jotakin, mikä pääsi unohtumaan viestin kirjoittamisen hetkellä. Muokkaa viesteistäsi entistäkin parempia!
+    basic_user:
+      name: Haastaja
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Myönnetty</a> kaikki palstan välttämättömimmät toiminnot
+      long_description: |
+        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 1. Kiitos siitä, että olet päättänyt antaa palstalle mahdollisuuden ja lukenut muutamaa ketjua ottaaksesi selvää, mistä yhteisössä on kyse. Uuden käyttäjän rajoituksia on nyt poistettu; sait käyttöösi välttämättömimmät palstan toiminnot kuten yksityisviestit, liputtamisen, wiki-viestien muokkaamisen ja oikeuden laittaa viestiin useampia kuvia ja linkkejä.
+    member:
+      name: Konkari
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Myönnetty</a> kutsut, ryhmäviestit ja lisää tykkäyksiä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 2. Kiitos siitä, että olet ollut keskuudessamme viikkojen ajan ja tullut osaksi yhteisöä. Voit nyt lähettää kutsuja käyttäjäsivultasi ja ketjuista, luoda ryhmäviestejä ja käytössäsi on muutama tykkäys enemmän päivää kohden.
+    regular:
+      name: Mestari
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Myönnetty</a> ketjujen siirto toiselle alueelle ja uudelleen nimeäminen, hakukoneiden seuraamat linkit, wiki-viestit ja lisää tykkäyksiä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 3. Kiitos kun olet ollut tärkeä osa yhteisöä kuukausien ajan. Olet yksi innokkaimmista lukijoista ja luotettava sisällön tuottaja, ja olet tekemässä yhteisöstä niin hienoa kuin se on. Voit nyt siirtää alueelta toiselle ja uudelleennimetä ketjuja, roskapostiliputuksesi ovat tehokkaampia, pääset lounge-alueelle ja käytössäsi on selvästi enemmän tykkäyksiä päivää kohden.
+    leader:
+      name: Johtaja
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Myönnetty</a> minkä tahansa viestin muokkaaminen, kiinnittäminen, sulkeminen, arkistoiminen, pilkkominen ja yhdistäminen ja lisää tykkäyksiä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 4. Palstan henkilökunta on valinnut sinut johtajaksi. Näytät muille positiivista esimerkkiä sanoin ja teoin. Voit nyt muokata mitä tahansa viestiä ja käytössäsi on yleiset valvojatyökalut, joilla voit hallita ketjuja kuten kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistäminen, ja käytössäsi on paljon enemmän tykkäyksiä päivää kohden.
+    welcome:
+      name: Tervetuloa
+      description: Sai tykkäyksen
+      long_description: |
+        Tämä arvomerkki myönnetään, kun viestistäsi tykätään ensi kertaa. Onnittelut, olet tuottanut jotakin, mitä toinen käyttäjä on pitänyt mielenkiintoisena, hauskana tai hyödyllisenä!
+    autobiographer:
+      name: Omaelämäkerta
+      description: Täytti <a href="/my/preferences">käyttäjätiedot</a>
+      long_description: |
+        Tämä arvomerkki myönnetään , kun täytät <a href="/my/preferences">käyttäjätiedot</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
+    anniversary:
+      name: Vuosipäivä
+      description: Aktiivinen jäsen vuoden ajan, kirjoittanut ainakin yhden viestin
+      long_description: |
+        Tämä arvomerkki myönnetään, kun olet ollut jäsen vuoden ajan ja kirjoittanut sinä aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja antanut panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
+    nice_post:
+      name: Hyvä vastaus
+      description: Vastaus sai 10 tykkäystä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun vastauksesi saa 10 tykkäykstä. Teit sillä todellisen vaikutuksen yhteisöön ja edistit keskustelua!
+    good_post:
+      name: Erinomainen vastaus
+      description: Vastaus sai 25 tykkäystä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Vastauksesi oli poikkeuksellinen ja teki keskustelusta todella paljon paremman!
+    great_post:
+      name: Loistava vastaus
+      description: Vastaus sai 50 tykkäystä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun vastauksesi saa 50 tykkäystä. Vau! Vastauksesi oli innoittava, hulvaton tai oivaltava, ja yhteisö rakasti sitä.
+    nice_topic:
+      name: Hyvä ketju
+      description: Ketjunavaus sai 10 tykkäystä
+      long_description: |
+        Tämä arvomerkki myönnetään, kun luomasi ketju saa 10 tykkäystä. Aloitit kiintoisan keskustelun, josta yhteisö nautti!
+    good_topic:
+      name: Erinomainen ketju
+      description: Ketjunavaus sai 25 tykkäystä
+    great_topic:
+      name: Loistava ketju
+      description: Ketjunavaus sai 50 tykkäystä
+    nice_share:
+      name: Hyvä jako
+      description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
+    good_share:
+      name: Erinomainen jako
+      description: Jakoi viestin, ja linkin kautta saapui 300 vierailijaa
+    great_share:
+      name: Loistava jako
+      description: Jakoi viestin, ja linkin kautta saapui 1000 vierailijaa
+    first_like:
+      name: Ensimmäinen tykkäys
+      description: Tykkäsi viestistä
+    first_flag:
+      name: Ensimmäinen liputus
+      description: Liputti viestin
+    promoter:
+      name: Markkinoija
+      description: Kutsui käyttäjän
+    campaigner:
+      name: Kampanjoija
+      description: Kutsui kolme haastajaa (luottamustaso 1)
+    champion:
+      name: Kampanjapäällikkö
+      description: Kutsui viisi konkaria (luottamustaso 2)
+    first_share:
+      name: Ensimmäinen jako
+      description: Jakoi viestin
+    first_link:
+      name: Ensimmäinen linkki
+      description: Linkitti toiseen ketjuun
+    first_quote:
+      name: Ensimmäinen lainaus
+      description: Lainasi viestiä
+    read_guidelines:
+      name: Luki ohjeet
+      description: Luki <a href="/guidelines">palstan säännöt</a>
+    reader:
+      name: Lukutoukka
+      description: Luki jokaisen viestin ketjusta, jossa on enemmän kuin 100 vastausta
+    popular_link:
+      name: Suosittu linkki
+      description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 50 kertaa
+    hot_link:
+      name: Kuuma linkki
+      description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 300 kertaa
+    famous_link:
+      name: Kuuluisa linkki
+      description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 1000 kertaa
+    appreciated:
+      name: Arvostettu
+      description: 20 viestiä sai tykkäyksen
+    respected:
+      name: Kunnioitettu
+      description: 100 viestiä sai ainakin 2 tykkäystä
+    admired:
+      name: Ihailtu
+      description: 300 viestiä sai ainakin 5 tykkäystä
+    out_of_love:
+      name: Rakkauden rajat
+      description: Tykkäsi 50 kertaa päivän aikana
+    thank_you:
+      name: Kiitos
+      description: 20 viestistä on tykätty ja on tykännyt 10 viestistä
+    gives_back:
+      name: Vastavuoroinen
+      description: 100 viestistä on tykätty ja on tykännyt 100 viestistä
+    empathetic:
+      name: Empaattinen
+      description: 500 viestistä on tykätty ja on tykännyt 1000 viestistä
   admin_login:
     success: "Sähköposti lähetetty"
     error: "Virhe!"

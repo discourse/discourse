@@ -85,8 +85,11 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
 
   const postAtts = transformBasicPost(post);
 
+  const createdBy = details.created_by || {};
+
   postAtts.topicId = topic.id;
-  postAtts.topicOwner = details.created_by.id === post.user_id;
+  postAtts.topicOwner = createdBy.id === post.user_id;
+  postAtts.topicCreatedById = createdBy.id;
   postAtts.post_type = postType;
   postAtts.via_email = post.via_email;
   postAtts.isModeratorAction = postType === postTypes.moderator_action;
@@ -119,8 +122,8 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
   if (showTopicMap) {
     postAtts.showTopicMap = true;
     postAtts.topicCreatedAt = topic.created_at;
-    postAtts.createdByUsername = details.created_by.username;
-    postAtts.createdByAvatarTemplate = details.created_by.avatar_template;
+    postAtts.createdByUsername = createdBy.username;
+    postAtts.createdByAvatarTemplate = createdBy.avatar_template;
 
     postAtts.lastPostUrl = topic.get('lastPostUrl');
     postAtts.lastPostUsername = details.last_poster.username;

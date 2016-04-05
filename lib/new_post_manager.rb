@@ -82,14 +82,11 @@ class NewPostManager
 
       result = manager.enqueue('default')
 
-      block = is_fast_typer?(manager)
-
-      block ||= matches_auto_block_regex?(manager)
-
-      manager.user.update_columns(blocked: true) if block
+      if is_fast_typer?(manager) || matches_auto_block_regex?(manager)
+        UserBlocker.block(manager.user, Discourse.system_user, keep_posts: true)
+      end
 
       result
-
     end
   end
 

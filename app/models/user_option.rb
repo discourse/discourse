@@ -147,7 +147,10 @@ end
 #  auto_track_topics_after_msecs :integer
 #  new_topic_duration_minutes    :integer
 #  last_redirected_to_top_at     :datetime
-#  email_previous_replies        :integer          default(1), not null
+#  email_previous_replies        :integer          default(2), not null
+#  email_in_reply_to             :boolean          default(TRUE), not null
+#  like_notification_frequency   :integer          default(1), not null
+#  include_tl0_in_digests        :boolean          default(FALSE)
 #
 # Indexes
 #

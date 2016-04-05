@@ -671,6 +671,10 @@ en:
       other_settings: "Other"
       categories_settings: "Categories"
 
+      enable_mailing_list:
+        one: "Are you sure you want to be emailed for every new post?"
+        other: "Are you sure you want to be emailed for every new post?<br><br>This will result in approximately <b>{{count}} emails</b> per day."
+
       new_topic_duration:
         label: "Consider topics new when"
         not_viewed: "I haven't viewed them yet"
@@ -740,17 +744,33 @@ en:
       summary:
         title: "Summary"
         stats: "Stats"
-        topic_count: "Topics Created"
-        post_count: "Posts Created"
-        likes_given: "Likes Given"
-        likes_received: "Likes Received"
-        days_visited: "Days Visited"
-        posts_read_count: "Posts Read"
+        time_read: "read time"
+        topic_count:
+          one: "topic created"
+          other: "topics created"
+        post_count:
+          one: "post created"
+          other: "posts created"
+        likes_given:
+          one: "like given"
+          other: "likes given"
+        likes_received:
+          one: "like received"
+          other: "likes received"
+        days_visited:
+          one: "day visited"
+          other: "days visited"
+        posts_read:
+          one: "post read"
+          other: "posts read"
         top_replies: "Top Replies"
-        top_topics: "Top Topics"
-        top_badges: "Top Badges"
-        more_topics: "More Topics"
+        no_replies: "No replies yet."
         more_replies: "More Replies"
+        top_topics: "Top Topics"
+        no_topics: "No topics yet."
+        more_topics: "More Topics"
+        top_badges: "Top Badges"
+        no_badges: "No badges yet."
         more_badges: "More Badges"
 
 
@@ -805,7 +825,12 @@ en:
     too_few_topics_and_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
     too_few_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
-    logs_error_rate_exceeded_notice: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate} errors/%{duration}</a> has exceeded site settings's limit of %{siteSettingLimit} errors/%{duration}."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has reached site settings's limit of %{siteSettingRate}."
+      exceeded: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has exceeded site settings's limit of %{siteSettingRate}."
+      rate:
+        one: "1 error/%{duration}"
+        other: "%{count} errors/%{duration}"
 
     learn_more: "learn more..."
 
@@ -1521,6 +1546,8 @@ en:
       archetypes:
         save: 'Save Options'
 
+      few_likes_left: "Thanks for sharing the love! You only have a few likes left for today."
+
       controls:
         reply: "begin composing a reply to this post"
         like: "like this post"
@@ -2111,12 +2138,12 @@ en:
         none: "No backup available."
         read_only:
           enable:
-            title: "Enable the read-only mode"
-            label: "Enable read-only mode"
-            confirm: "Are you sure you want to enable the read-only mode?"
+            title: "Enable read-only mode"
+            label: "Enable read-only"
+            confirm: "Are you sure you want to enable read-only mode?"
           disable:
-            title: "Disable the read-only mode"
-            label: "Disable read-only mode"
+            title: "Disable read-only mode"
+            label: "Disable read-only"
         logs:
           none: "No logs yet..."
         columns:
@@ -2301,14 +2328,7 @@ en:
           modal:
             title: "Incoming Email Details"
             error: "Error"
-            return_path: "Return-Path"
-            message_id: "Message-Id"
-            in_reply_to: "In-Reply-To"
-            references: "References"
-            date: "Date"
-            from: "From"
-            to: "To"
-            cc: "Cc"
+            headers: "Headers"
             subject: "Subject"
             body: "Body"
             rejection_message: "Rejection Mail"
@@ -2688,6 +2708,7 @@ en:
         badge: Badge
         display_name: Display Name
         description: Description
+        long_description: Long Description
         badge_type: Badge Type
         badge_grouping: Group
         badge_groupings:
@@ -2858,10 +2879,11 @@ en:
       earned_n_times:
         one: "Earned this badge 1 time"
         other: "Earned this badge %{count} times"
-      more_with_badge: "Others with this badge"
+      granted_on: "Granted %{date}"
+      others_count: "Others with this badge (%{count})"
       title: Badges
-      allow_title: "can be used as a title"
-      multiple_grant: "can be awarded multiple times"
+      allow_title: "available title"
+      multiple_grant: "awarded multiple times"
       badge_count:
         one:   "1 Badge"
         other: "%{count} Badges"
@@ -2884,124 +2906,6 @@ en:
           name: Other
         posting:
           name: Posting
-      badge:
-        editor:
-          name: Editor
-          description: First post edit
-        basic_user:
-          name: Basic
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Granted</a> all essential community functions
-        member:
-          name: Member
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Granted</a> invitations
-        regular:
-          name: Regular
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
-        leader:
-          name: Leader
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
-        welcome:
-          name: Welcome
-          description: Received a like
-        autobiographer:
-          name: Autobiographer
-          description: Filled user <a href="/my/preferences">profile</a> information
-        anniversary:
-          name: Anniversary
-          description: Active member for a year, posted at least once
-        nice_post:
-          name: Nice Post
-          description: Received 10 likes on a post. This badge can be granted multiple times
-        good_post:
-          name: Good Post
-          description: Received 25 likes on a post. This badge can be granted multiple times
-        great_post:
-          name: Great Post
-          description: Received 50 likes on a post. This badge can be granted multiple times
-        nice_topic:
-          name: Nice Topic
-          description: Received 10 likes on a topic. This badge can be granted multiple times
-        good_topic:
-          name: Good Topic
-          description: Received 25 likes on a topic. This badge can be granted multiple times
-        great_topic:
-          name: Great Topic
-          description: Received 50 likes on a topic. This badge can be granted multiple times
-        nice_share:
-          name: Nice Share
-          description: Shared a post with 25 unique visitors
-        good_share:
-          name: Good Share
-          description: Shared a post with 300 unique visitors
-        great_share:
-          name: Great Share
-          description: Shared a post with 1000 unique visitors
-        first_like:
-          name: First Like
-          description: Liked a post
-        first_flag:
-          name: First Flag
-          description: Flagged a post
-        promoter:
-          name: Promoter
-          description: Invited a user
-        campaigner:
-          name: Campaigner
-          description: Invited 3 basic users (trust level 1)
-        champion:
-          name: Champion
-          description: Invited 5 members (trust level 2)
-        first_share:
-          name: First Share
-          description: Shared a post
-        first_link:
-          name: First Link
-          description: Added an internal link to another topic
-        first_quote:
-          name: First Quote
-          description: Quoted a user
-        read_guidelines:
-          name: Read Guidelines
-          description: Read the <a href="/guidelines">community guidelines</a>
-        reader:
-          name: Reader
-          description: Read every post in a topic with more than 100 posts
-        popular_link:
-          name: Popular Link
-          description: Posted an external link with at least 50 clicks
-        hot_link:
-          name: Hot Link
-          description: Posted an external link with at least 300 clicks
-        famous_link:
-          name: Famous Link
-          description: Posted an external link with at least 1000 clicks
-        appreciated:
-          name: Appreciated
-          description: Has received at least 1 like on 20 posts
-        respected:
-          name: Respected
-          description: Has received at least 2 likes on 100 posts
-        admired:
-          name: Admired
-          description: Has received at least 5 likes on 300 posts
-        out_of_love:
-          name: Out of Love
-          description: Used the maximum amount of likes in a day
-        higher_love:
-          name: Higher Love
-          description: Used the maximum amount of likes in a day 5 times
-        crazy_in_love:
-          name: Crazy in Love
-          description: Used the maximum amount of likes in a day 20 times
-        thank_you:
-          name: Thank You
-          description: Has at least 20 liked posts
-        gives_back:
-          name: Gives Back
-          description: Has at least 100 liked posts and a very high like ratio
-        empathetic:
-          name: Empathetic
-          description: Has at least 500 liked posts and a superlative like ratio
 
     google_search: |
       <h3>Search with Google</h3>

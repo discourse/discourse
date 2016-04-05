@@ -143,7 +143,6 @@ fa_IR:
       can_not_modify_automatic: "شما امکان تغییر یک گروه خودکار را ندارید."
       member_already_exist: "%{username}' در حال حاضر عضو این گروه است."
       invalid_domain: "'%{domain}' یک دامنه معتبر نیست."
-      invalid_incoming_email: "'%{incoming_email}' یک آدرس ایمیل معتبر نیست."
     default_names:
       everyone: "همه"
       admins: "مدیران"
@@ -263,7 +262,6 @@ fa_IR:
       uncategorized_parent: "بدون دسته بندی نمی تواند طبقه خانواده داشته باشد"
       self_parent: "والد زیر شاخه نمی تواند خودش باشد."
       depth: "شما نمی توانید یک زیر شاخه را به آشیانه تبدیل کنید تحت دیگری "
-      email_in_already_exist: "ایمیل آدرس های ورودی '%{email_in}' که در حال حاضر استفاده می شوند برای '%{category_name}' دسته بندی. "
     cannot_delete:
       uncategorized: "بدون دسته بندی را نمی توان حذف کرد"
       has_subcategories: "این دسته بندی به دلیل داشتن زیردسته قابل پاک شدن نیست."
@@ -623,7 +621,6 @@ fa_IR:
     min_private_message_title_length: "حداقل طول مجاز عنوان برای پیام در کاراکتر"
     min_search_term_length: "حداقل طول واژه جستجوی معتبر در کاراکتر"
     allow_uncategorized_topics: "اجازه ایجاد عناوین فاقد دسته‌بندی را بده. <strong>هشدار</strong>: درصورتی که عناوین فاقد دسته‌بندی وجود داشته باشد، بایستی قبل از غیر فعال کردن این قابلیت آن‌ها را دسته‌بندی کنید."
-    uncategorized_description: "شرح دسته بندی های دسته بندی نشده. خالی بگذارید برای بدون شرح. "
     allow_duplicate_topic_titles: "جستارها را با عناوین یکسان و تکراری اجازه بده "
     unique_posts_mins: "چند دقیقه قبل از اینکه کاربر بتواند دوباره نوشته ای با محتویات یکسان را بگذارد."
     educate_until_posts: "وقتی کاربر شروع کرد به نوشتن اولین (n)  پست جدید٬ آموزش ها را برای کاربران جدید بصورت بالاپر در قسمت نویسنده نشان بدهو"
@@ -792,15 +789,9 @@ fa_IR:
     tl2_requires_likes_received: "کاربر چندین پسند باید دریافت کند قبل از اینکه به سطح اعتماد  2 برسد."
     tl2_requires_likes_given: "کاربر چندین لایک باید بزند تا بتواند به سطح اعتماد 2 برسد. "
     tl2_requires_topic_reply_count: "کاربرچندین پاسخ باید بدهد قبل از اینکه به سطح اعتماد 2 برسد."
-    tl3_requires_topics_replied_to: "حداقل تعداد جستارهایی که کاربر نیاز به پاسخ دارد در 100 روز گذشته تا بتواند سطح اعتماد 3 را بدست آورد.  (0 to 100)"
-    tl3_requires_topics_viewed: "درصد جستارهای ساخته شده در 100 روز گذشته  که کاربر نیاز به دیده شدن دارد برای ارتقا به سطح اعتماد 3. (0 to 100)"
-    tl3_requires_posts_read: "درصد نوشته های ساخته شده در 100 روز گذشته  که کاربر نیاز به دیده شدن دارد برای ارتقا به سطح اعتماد 3. (0 to 100)"
     tl3_requires_topics_viewed_all_time: "حداقل تعداد جستار ها که کاربر نیاز به بازدید دارد تا بتواند به سطح اعتماد  3 برسد."
     tl3_requires_posts_read_all_time: "حداقل تعداد نوشته ها که کاربر نیاز به خواندن دارد تا بتواند به سطح اعتماد  3 برسد."
-    tl3_requires_max_flagged: "کاربر نباید بیشتر از X نوشته های پرچم گزاری شده توسط X کاربران متفاوت در 100 روز گذشته داشته باشد برای ارتقا به سطح اعتماد 3 ٬ که  در آن X  مقدار این تنظیمات است. (0 یا بیشتر)"
     tl3_promotion_min_duration: "حداقل تعداد روزهایی که ارتقا به سطح اعتماد 3 باقی می ماند قبل از اینکه کاربر تنزل پیدا کنه به سطح اعتماد 2. "
-    tl3_requires_likes_given: "حداقل تعداد پسندهای که باید داده شود در 100 روز گذشته تا بتواند به سطح اعتماد 3 ارتقا پیدا کند."
-    tl3_requires_likes_received: "حداقل تعداد پسندهایی که باید دریافت شود در 100 روز گذشته تا به سطح اعتماد 3 ارتقا پیدا کند. "
     tl3_links_no_follow: "rel=nofollow را از پیوند های پست شده توسط کاربران با سطح اعتماد 3 حذف نکن. "
     min_trust_to_create_topic: "حداقل سطح اعتمادی که برای  ساخت جستار جدید مورد نیاز است. "
     min_trust_to_edit_wiki_post: "حداقل سطح اعتمادی  برای ویرایش نوشته ای که بعنوان ویکی نشانه گزاری شده است. "
@@ -881,7 +872,6 @@ fa_IR:
     automatically_download_gravatars: "آواتار را برای کاربران دریافت کن برای ساختن حساب کاربری یا ایمیل. "
     digest_topics: "حداکثر تعداد جستارهایی که در دایجست ایمیل نشان داده می شود "
     digest_min_excerpt_length: "حداقل نوشته های گزیده در ایمیل دایجست٬‌ در کاراکتر."
-    delete_digest_email_after_days: "ایمیل های خلاصه را مهار کن برای کاربرانی که در وب سایت دیده نشده اند بیشتر از (n) روز  "
     disable_digest_emails: "ایمیل های دایجست را برای تمام کاربران غیر فعال کن. "
     max_daily_gravatar_crawls: "حداکثرتعداد زمانی که دیسکورس Gravatar را چک می کند برای آواتار سفارشی در هر روز. "
     public_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به همه نشان داده شود."
@@ -924,7 +914,6 @@ fa_IR:
     enable_emoji: "فعالسازی ایموجی"
     emoji_set: "می‌خواهید ایموجی شما چطور باشد؟"
     enforce_square_emoji: "تحمیل نسبت ابعاد مربع به تمام شکلک ها emojis . "
-    approve_post_count: "تعداد پست ها برای کاربران جدید باید تایید شود"
     approve_unless_trust_level: "نوشته ها برای کاربران پایین ت از این سطح اعتماد نیاز به تایید دارد. "
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
@@ -950,7 +939,6 @@ fa_IR:
     moved_post: "%{display_username} نوشته شما منتقل شد به %{link}"
     private_message: "%{display_username} یک پیام ارسال کنید: %{link}"
     invited_to_private_message: "%{display_username}  شما را به این پیام دعوت کرده : %{link}"
-    invited_to_topic: "%{display_username}  شما را به این جستار دعوت کرده:  %{link}"
     invitee_accepted: " %{display_username} دعوت نامه شما را پذیرفته شد "
     linked: "%{display_username} شما پیوند خوردید در %{link}"
     granted_badge: "شما وارد شدید %{link}"
@@ -960,11 +948,6 @@ fa_IR:
       category: 'دسته‌ها'
       topic: 'درخواست ها'
       user: 'کاربران'
-  sso:
-    not_found: "نمی توانی مراجعه کنی یا حساب کاربری بسازی٬ با مدیر سایت تماس بگیر "
-    account_not_approved: "حساب کاربری در انتظار تایید است٬ شما ایمیلی دریافت خواهید کرد زمانی که تایید شد"
-    unknown_error: "ایراد به روز رسانی اطلاعات٬ با مدیر سایت تماس بگیرید"
-    timeout_expired: "ورود حساب کاربری از زمان خارج شد است. لطفا دوباره وارد سیستم شوید"
   original_poster: "نویسنده اصلی"
   most_posts: "بیشترین نوشته ها"
   most_recent_poster: "جدیدترین نویسنده ها"
@@ -1052,68 +1035,10 @@ fa_IR:
     subject_template: "تنظیم رمز عبور برای حساب کاربری {site_name}%"
   test_mailer:
     subject_template: "[%{site_name}] ایمیل تست دهش"
-    text_body_template: |
-      This is a test email from
-
-      [**%{base_url}**][0]
-
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-
-      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
-
-      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
-
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
-      We hope you received this email deliverability test OK!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] نسخه جدید Discourse برای به روز رسانی موجود است"
-    text_body_template: |
-      نسخه‌ جدیدی از [دیسکورس](http://www.discourse.org) موجود است.
-
-      نسخه کنونی: %{installed_version}
-      نسخه جدید: **%{new_version}**
-
-      شما می‌توانید:
-
-      - تغییرات جدید را در  [GitHub changelog](https://github.com/discourse/discourse/commits/master) ببینید.
-
-      - از طریق مروگر خود به‌روزرسانی را انجام دهید [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - از [meta.discourse.org](http://meta.discourse.org) برای دسترسی به اخبار و پشتیبانی دیسکورس استفاده کنید.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] بروزرسانی در دسترس"
-  flags_reminder:
-    flags_were_submitted:
-      other: "این پرچم گزاری ها  در %{count} ساعت پیش ارسال شده است."
-    please_review: "لطفا بازبینی کن."
-    post_number: "نوشته"
-    how_to_disable: 'شما می توانید تکرار یاد توسط این ایمیل را عوض کنید یا از کار بیندازید از طریق اعلام کردت بعد ازتنظیم پرچم گزاری .'
-    subject_template:
-      other: "%{count} نشانه ها منتظر استفاده"
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} نوشته منتظر بررسی است"
@@ -1196,7 +1121,6 @@ fa_IR:
       text_body_template: "ما متاسفیم٬ ولی خارج کردن اطلاعات ناموفق شد. لطفا سیستم را چک کنید یا با یکی از مدیران تماس بگیرید. "
     email_reject_no_account:
       subject_template: "[%{site_name}]  مشکل ایمیل  -- حساب کاربری ناشناس "
-      text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\n\nحساب کاربری با این ایمیل شناخته نمی شود. دوباره برای ارسال تلاش کنید با ایمیل دیگری٬ یا با یکی از مدیران تماس بگیرید.\n"
     email_reject_empty:
       subject_template: "[%{site_name}] مشکل ایمیل -- بدون محتوا"
     email_reject_parsing:
@@ -1206,11 +1130,6 @@ fa_IR:
       text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\nحساب کاربری شما دارای سطح اعتماد کافی برای ارسال نوشته جدید به این ایمیل نیست. اگر این مشکل را قبول دارید٬ با یکی از مدیران تماس بگیرید.\n"
     email_reject_reply_key:
       subject_template: "[%{site_name}] مشکل ایمیل  -- کلید پاسخ ناشناس"
-      text_body_template: |+
-        ما متاسفیم٬ ولی پیام  ایمیل شما به  %{destination} (titled %{former_title}) کار نکرد.
-
-        کلید پاسخ وارد شده خراب یا ناشناس است٬ پس ما نمی دانیم این ایمیل در پاسخ چی هست. با یکی از مدیران تماس بگیرید.
-
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] مشکل ایمیل  -- جستار یافت نشد"
     email_reject_topic_closed:
@@ -1219,13 +1138,11 @@ fa_IR:
       subject_template: "[%{site_name}] مشکل ایمیل  -- پاسخ خودکار"
     email_error_notification:
       subject_template: "[%{site_name}] مشکل ایمیل  -- ایراد تصدیق POP "
-      text_body_template: "ایراد تصدیقی وجود داشته همزمان با گرفتن ایمیل ها از سرور POP. \n\n\nلطفا اطمینان حاصل کنید از اینکه بطور درست تنظیم اعتبارنامه POP را در [تنظیمات وب سایت] انجام داده اید. (%{base_url}/ریس/تنظیمات _ سایت /دسته/ایمیل)\n"
     too_many_spam_flags:
       subject_template: "حساب جدید کاربری انسداد شد "
       text_body_template: "سلام \n\nاین یک پیغام خوکار است از  %{site_name}  برای تایید اینکه نوشته های شما بطور خودکار مخفی شده اند زیرا آنها توسط انجمن پرچم گزاری شده اند. \n\n\nبه عنوان یک اقدام احتیاطی٬ حساب کاربری جدید شما مسدود شده است از ساختن پاسخ های جدید یا جستارهای جدید تا قبل از اینکه یک مدیران حساب کاربری شما را بررسی کند.\n\n\nبرای راهنمایی بیشتر به[ دستور عمل های انجمن]  مراجعه کنید. (%{base_url}/guidelines).\n"
     blocked_by_staff:
       subject_template: "حساب کاربری مسدود شد"
-      text_body_template: "سلام٬ \n\n\nاین یک پیام خودکار است از طرف  %{site_name}  برای اطلاع  در جهت اینکه حساب کاربری شما توسط یکی از مدیران مدیران مسدود شده است.\n\nبرای راهنمایی بیشتر٬ لطفا  مراجعه کنید به  [دستورالعمل انجمن](%{base_url}/guidelines).\n"
     user_automatically_blocked:
       subject_template: "کاربر جدید%{username}  مسدود شد بخاطر پرچم های انجمن"
     spam_post_blocked:
@@ -1253,10 +1170,6 @@ fa_IR:
     posted_by: "نوشته شده توسط {username}% در تاریخ {post_date}%"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} شما را به یک پیام دعوت کرده است: '%{topic_title}'"
-      text_body_template: "\n%{username} شما را به یک پیام دعوت کرده\n\n\n> **%{topic_title}**\n\n>\n\n> %{topic_excerpt}\n\n\nat \n\n\n> %{site_title} -- %{site_description}\n\n\nلطفا از این پیوند بازدید کنید تا پیام را ببینید: %{base_url}%{url}\n"
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} شما را به یک جستار دعوت کرده  '%{topic_title}'"
-      text_body_template: "\n%{username} به گفتگو دعوت شده است\n\n\n> **%{topic_title}**\n\n>\n\n> %{topic_excerpt}\n\nat \n\n\n> %{site_title} -- %{site_description}\n\n\nلطفا از این پیوند بازدید کنید تا پیام را ببینید: %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -1300,9 +1213,6 @@ fa_IR:
     account_created:
       subject_template: "[%{site_name}] حساب کاربری جدید شما"
       text_body_template: "حساب کاربری جدید برای شما ساخته شد در  %{site_name}\n\nبر روری پیوند پیش رو کلیک کنید برای انتخاب رمز برای حساب کاربری جدیدتان: \n\n%{base_url}/users/password-reset/%{email_token}\n"
-    confirm_new_email:
-      subject_template: "آدرس ایمیل جدید را تایید کنید برای [%{site_name}]"
-      text_body_template: "آدرس ایمیل جدید را تایید کنید برای %{site_name} با کلیک کردن بر پیوند پیش رو : \n\n\n%{base_url}/users/authorize-email/%{email_token}\n"
     signup_after_approval:
       subject_template: "شما تایید شدید %{site_name}! "
       text_body_template: "خوش آمدید به  %{site_name}!\n\nیکی از مدیران حساب کاربری شما را تایید کرد در %{site_name}.\n\nبر روی پیوند پیش رو کلیک کنید تا حساب کاربری شما تایید شود: \n%{base_url}/users/activate-account/%{email_token}\n\nاگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید. \n\n%{new_user_tips}\n\n\nما به  [رفتار انجمن متمدن] معتقدیم (%{base_url}/guidelines) برای  همیشه. \n\nاز بودنتان در اینجا لذت ببرید! \n\n( اگر شما نیاز  به ارتباط با مدیران را دارید[staff members](%{base_url}/about) به عنوان یک کاربر جدید٬ لطفا به این پیام پاسخ دهید.)\n"
@@ -1310,7 +1220,6 @@ fa_IR:
       subject_template: "[%{site_name}] حساب کاربری جدید را تایید کنید"
       text_body_template: "خوش آمدید به %{site_name}!\n\n\nبرای فعال نمودن حساب کاربریتان بر روی پیوند پیش رو کلیک کنید: \n\n%{base_url}/users/activate-account/%{email_token}\n\n\nاگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید. \n"
   page_not_found:
-    title: "صفحه ای که درخواست کردید وجود ندارد یا خصوصی است. "
     popular_topics: "محبوب"
     recent_topics: "اخیر"
     see_more: "بیشتر"

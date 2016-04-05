@@ -10,77 +10,12 @@
 
 <hr>
 
-{{#if model.return_path}}
-  <div class="control-group">
-    <label>{{i18n "admin.email.incoming_emails.modal.return_path"}}</label>
-    <div class="controls">
-      {{model.return_path}}
-    </div>
-  </div>
-{{/if}}
-
 <div class="control-group">
-  <label>{{i18n "admin.email.incoming_emails.modal.message_id"}}</label>
+  <label>{{i18n "admin.email.incoming_emails.modal.headers"}}</label>
   <div class="controls">
-    {{model.message_id}}
+    {{textarea value=model.headers wrap="off"}}
   </div>
 </div>
-
-{{#if model.references}}
-  <div class="control-group">
-    <label>{{i18n "admin.email.incoming_emails.modal.references"}}</label>
-    <div class="controls">
-      <ul>
-        {{#each reference in model.references}}
-          <li>{{reference}}</li>
-        {{/each}}
-      </ul>
-    </div>
-  </div>
-{{/if}}
-
-{{#if model.in_reply_to}}
-  <div class="control-group">
-    <label>{{i18n "admin.email.incoming_emails.modal.in_reply_to"}}</label>
-    <div class="controls">
-      {{model.in_reply_to}}
-    </div>
-  </div>
-{{/if}}
-
-<div class="control-group">
-  <label>{{i18n "admin.email.incoming_emails.modal.date"}}</label>
-  <div class="controls">
-    {{date}}
-  </div>
-</div>
-
-<div class="control-group">
-  <label>{{i18n "admin.email.incoming_emails.modal.from"}}</label>
-  <div class="controls">
-    {{model.from}}
-  </div>
-</div>
-
-<div class="control-group">
-  <label>{{i18n "admin.email.incoming_emails.modal.to"}}</label>
-  <div class="controls">
-    <ul>
-      {{#each to in model.to}}
-        <li>{{to}}</li>
-      {{/each}}
-    </ul>
-  </div>
-</div>
-
-{{#if model.cc}}
-  <div class="control-group">
-    <label>{{i18n "admin.email.incoming_emails.modal.cc"}}</label>
-    <div class="controls">
-      {{model.cc}}
-    </div>
-  </div>
-{{/if}}
 
 <div class="control-group">
   <label>{{i18n "admin.email.incoming_emails.modal.subject"}}</label>

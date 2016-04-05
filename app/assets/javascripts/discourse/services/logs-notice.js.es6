@@ -15,6 +15,7 @@ const LogsNotice = Ember.Object.extend({
 
     this.messageBus.subscribe("/logs_error_rate_exceeded", data => {
       const duration = data.duration;
+      const rate = data.rate;
       var siteSettingLimit = 0;
 
       if (duration === 'minute') {
@@ -23,12 +24,13 @@ const LogsNotice = Ember.Object.extend({
         siteSettingLimit = this.siteSettings.alert_admins_if_errors_per_hour;
       }
 
+      var translationKey = (rate === siteSettingLimit) ? 'reached' : 'exceeded';
+
       this.set('text',
-        I18n.t('logs_error_rate_exceeded_notice', {
+        I18n.t(`logs_error_rate_notice.${translationKey}`, {
           timestamp: moment().format("YYYY-MM-DD H:mm:ss"),
-          siteSettingLimit: siteSettingLimit,
-          rate: data.rate,
-          duration: duration,
+          siteSettingRate: I18n.t('logs_error_rate_notice.rate', { count: siteSettingLimit, duration: duration }),
+          rate: I18n.t('logs_error_rate_notice.rate', { count: rate, duration: duration }),
           url: Discourse.getURL('/logs')
         })
       );

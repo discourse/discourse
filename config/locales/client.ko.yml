@@ -440,7 +440,6 @@ ko:
       muted_users: "알람 끄기"
       muted_users_instructions: "이 회원이 보낸 알림 모두 숨김"
       muted_topics_link: "알림을 끈 토픽 보기"
-      automatically_unpin_topics: "토픽을 끝까지 보면 자동으로 핀이 해제됩니다."
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"
@@ -622,17 +621,11 @@ ko:
       summary:
         title: "요약"
         stats: "통계"
-        topic_count: "새토픽 갯수"
-        post_count: "새글 갯수"
-        likes_given: "좋아요 눌러준 횟수"
-        likes_received: "좋아요 선물받은 횟수"
-        days_visited: "방문일수"
-        posts_read_count: "읽은글 갯수"
         top_replies: "인기 댓글"
-        top_topics: "인기 토픽"
-        top_badges: "인기 배지"
-        more_topics: "토픽 더 보기"
         more_replies: "답글 더 보기"
+        top_topics: "인기 토픽"
+        more_topics: "토픽 더 보기"
+        top_badges: "인기 배지"
         more_badges: "배지 더 보기"
       associated_accounts: "로그인"
       ip_address:
@@ -877,7 +870,6 @@ ko:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1465,7 +1457,6 @@ ko:
           title: "알림 꺼짐"
     flagging:
       title: '우리 커뮤니티 질서를 지키는데 도와주셔서 감사합니다!'
-      private_reminder: '신고는 비밀이기 때문에 <b>오직</b> 운영진들만 볼 수 있습니다'
       action: '글 신고했습니다'
       take_action: "조치하기"
       notify_action: '메시지 보내기'
@@ -1477,7 +1468,6 @@ ko:
       submit_tooltip: "비밀 신고하기"
       take_action_tooltip: "커뮤니티의 신고 수가 채워지기 기다리지 않고, 바로 신고 수를 제재 수준까지 채웁니다."
       cant: "죄송합니다, 지금은 이 글을 신고할 수 없습니다"
-      notify_staff: '운영진에게 알리기'
       formatted_name:
         off_topic: "주제에 벗어났습니다"
         inappropriate: "부적절 컨텐츠입니다"
@@ -1984,14 +1974,6 @@ ko:
           none: "수신된 이메일이 없습니다."
           modal:
             error: "에러"
-            return_path: "Return-Path"
-            message_id: "Message-Id"
-            in_reply_to: "In-Reply-To"
-            references: "레퍼런스"
-            date: "날짜"
-            from: "보내는사람"
-            to: "받는사람"
-            cc: "참조"
             subject: "제목"
             body: "본문"
           filters:
@@ -2514,10 +2496,7 @@ ko:
     badges:
       earned_n_times:
         other: "이 배지를 %{count}번 받았습니다"
-      more_with_badge: "이 배지를 받은 다른사람들"
       title: 배지
-      allow_title: "can be used as a title"
-      multiple_grant: "can be awarded multiple times"
       badge_count:
         other: "배지 %{count}개"
       more_badges:
@@ -2537,97 +2516,6 @@ ko:
           name: 기타
         posting:
           name: 글 관련 배지
-      badge:
-        editor:
-          name: 에디터
-          description: 첫 글 작성
-        basic_user:
-          name: 초보회원
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">초보회원은</a> 커뮤니티의 기본기능을 사용할 수 있습니다
-        member:
-          name: 부회원
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">부회원은</a> 다른 사람을 커뮤티니에 초대할 수 있습니다
-        regular:
-          name: 정회원
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">정회원은</a> 토픽 제목과 카테고리를 바꾸거나 HTML Link Follow 기능을 사용, 정회원 전용카테고리에 접근할 수 있습니다.
-        leader:
-          name: 리더
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">리더는</a> 모든 글을 수정하거나 토픽 핀고정, 토픽닫기, 토픽아카이빙, 토픽쪼개기, 토픽합치기 등을 할 수 있습니다.
-        welcome:
-          name: 웰컴
-          description: 좋아요 선물받음
-        autobiographer:
-          name: 자서전 작가
-          description: 회원 <a href="/my/preferences">프로필</a> 정보를 작성했습니다
-        anniversary:
-          name: 1주년
-          description: 1년동안 열심히 활동하고 글도 1개이상 썼습니다
-        nice_post:
-          name: Nice Post
-          description: 작성한 글이 좋아요를 10개 받았습니다. 이 배지는 여러번 받을 수 있습니다.
-        good_post:
-          name: Good Post
-          description: 작성한 글이 좋아요를 25개 받았습니다. 이 배지는 여러번 받을 수 있습니다.
-        great_post:
-          name: Great Post
-          description: 작성한 글이 좋아요를 50개 받았습니다. 이 배지는 여러번 받을 수 있습니다.
-        nice_topic:
-          name: Nice Topic
-          description: 10개의 '좋아요'를 받았습니다. 이 배지는 여러번 받을 수 있습니다.
-        good_topic:
-          name: Good Topic
-          description: 25개의 '좋아요'를 받았습니다. 이 배지는 여러번 받을 수 있습니다.
-        great_topic:
-          name: Great Topic
-          description: 50개의 '좋아요'를 받았습니다. 이 배지는 여러번 받을 수 있습니다.
-        nice_share:
-          name: Nice Share
-          description: 방문자 25명이 글을 공유했습니다
-        good_share:
-          name: Good Share
-          description: 방문자 300명의 글을 공유했습니다
-        great_share:
-          name: Great Share
-          description: 방문자 1000명이 글을 공유했습니다
-        first_like:
-          name: 처음 좋아요
-          description: 처음으로 글에 '좋아요'를 했습니다.
-        first_flag:
-          name: 처음 신고해요
-          description: 글을 처음으로 신고하였습니다.
-        promoter:
-          name: 후원자
-          description: 회원을 1명 초대했습니다
-        campaigner:
-          name: 운동가
-          description: 초보회원(1등급회원) 3명을 초대했습니다
-        champion:
-          name: 챔피언
-          description: 초보회원(2등급회원) 5명을 초대했습니다
-        first_share:
-          name: 처음 공유해요
-          description: 처음으로 글을 공유했습니다
-        first_link:
-          name: 처음 링크걸어요
-          description: 다른 토픽으로 가는 링크를 처음으로 추가했습니다
-        first_quote:
-          name: 처음 인용해요
-          description: 회원을 인용했습니다
-        read_guidelines:
-          name: 가이드라인 읽음
-          description: <a href="/guidelines">커뮤니티 가이드라인</a> 을 읽었습니다.
-        reader:
-          name: 독서가
-          description: 100개가 넘는 댓글이 달린 토픽의 댓글을 모두 읽었습니다
-        popular_link:
-          name: 인기 링크
-          description: 게시한 외부링크가 50회 이상 클릭되었습니다
-        hot_link:
-          name: 핫 링크
-          description: 게시한 외부링크가 300회 이상 클릭되었습니다
-        famous_link:
-          name: 완전유명 링크
-          description: 게시한 외부링크가 1000회 이상 클릭되었습니
     google_search: |
       <h3>Google 검색</h3>
       <p>

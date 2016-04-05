@@ -3,8 +3,33 @@ require "rails_helper"
 describe Jobs::NotifyMailingListSubscribers do
 
   context "with mailing list on" do
-    before { SiteSetting.stubs(:default_email_mailing_list_mode).returns(true) }
+    before { SiteSetting.default_email_mailing_list_mode = true }
     let(:user) { Fabricate(:user) }
+
+    context "SiteSetting.max_emails_per_day_per_user" do
+
+      it 'stops sending mail once limit is reached' do
+        SiteSetting.max_emails_per_day_per_user = 2
+        post = Fabricate(:post)
+
+        user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+        user.email_logs.create(email_type: 'blah', to_address: user.email, user_id: user.id)
+
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+        expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+      end
+    end
+
+    context "totally skipped if mailing list mode disabled" do
+
+      it "sends no email to the user" do
+        SiteSetting.disable_mailing_list_mode = true
+
+        post = Fabricate(:post)
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+        expect(EmailLog.count).to eq(0)
+      end
+    end
 
     context "with a valid post" do
       let!(:post) { Fabricate(:post, user: user) }

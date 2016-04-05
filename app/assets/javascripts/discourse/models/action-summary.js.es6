@@ -18,10 +18,7 @@ export default RestModel.extend({
   },
 
   togglePromise(post) {
-    if (!this.get('acted')) {
-      return this.act(post).then(() => true);
-    }
-    return this.undo(post).then(() => false);
+    return this.get('acted') ? this.undo(post) : this.act(post);
   },
 
   toggle(post) {
@@ -64,11 +61,15 @@ export default RestModel.extend({
         message: opts.message,
         take_action: opts.takeAction,
         flag_topic: this.get('flagTopic') ? true : false
-      }
-    }).then(function(result) {
+      },
+      returnXHR: true,
+    }).then(function(data) {
       if (!self.get('flagTopic')) {
-        return post.updateActionsSummary(result);
+        post.updateActionsSummary(data.result);
       }
+      const remaining = parseInt(data.xhr.getResponseHeader('Discourse-Actions-Remaining') || 0);
+      const max = parseInt(data.xhr.getResponseHeader('Discourse-Actions-Max') || 0);
+      return { acted: true, remaining, max };
     }).catch(function(error) {
       popupAjaxError(error);
       self.removeAction(post);
@@ -83,7 +84,10 @@ export default RestModel.extend({
     return Discourse.ajax("/post_actions/" + post.get('id'), {
       type: 'DELETE',
       data: { post_action_type_id: this.get('id') }
-    }).then(result => post.updateActionsSummary(result));
+    }).then(result => {
+      post.updateActionsSummary(result);
+      return { acted: false };
+    });
   },
 
   deferFlags(post) {

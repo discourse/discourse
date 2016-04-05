@@ -169,11 +169,6 @@ Discourse.BBCode.replaceBBCodeParamsRaw("email", function(param, contents) {
   return ['a', {href: "mailto:" + param, 'data-bbcode': true}].concat(contents);
 });
 
-Discourse.BBCode.register('size', function(contents, params) {
-  return ['span', {'class': "bbcode-size-" + (parseInt(params, 10) || 1)}].concat(contents);
-});
-Discourse.Markdown.whiteListTag('span', 'class', /^bbcode-size-\d+$/);
-
 // Handles `[code] ... [/code]` blocks
 Discourse.Dialect.replaceBlock({
   start: /(\[code\])([\s\S]*)/igm,

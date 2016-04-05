@@ -41,12 +41,10 @@ describe ::DiscoursePoll::PollsController do
       expect(json["poll"]["options"][1]["votes"]).to eq(1)
     end
 
-    it "ensures topic is not closed" do
+    it "works even if topic is closed" do
       topic.update_attribute(:closed, true)
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["A"] }
-      expect(response).not_to be_success
-      json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.topic_must_be_open_to_vote"))
+      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
+      expect(response).to be_success
     end
 
     it "ensures topic is not archived" do

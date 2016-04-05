@@ -108,7 +108,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: 'like-count|like|share|flag|edit|bookmark|wiki|delete|admin|reply'
+    default: 'like-count|like|share|flag|edit|bookmark|delete|admin|reply'
     choices:
      - like-count
      - like
@@ -119,11 +119,10 @@ basic:
      - bookmark
      - admin
      - reply
-     - wiki
   post_menu_hidden_items:
     client: true
     type: list
-    default: 'bookmark|edit|wiki|delete|admin'
+    default: 'bookmark|edit|delete|admin'
     choices:
      - like
      - edit
@@ -133,7 +132,6 @@ basic:
      - bookmark
      - admin
      - reply
-     - wiki
   share_links:
     client: true
     type: list
@@ -514,6 +512,9 @@ email:
   digest_min_excerpt_length: 100
   digest_topics: 20
   delete_digest_email_after_days: 365
+  digest_suppress_categories:
+    type: category_list
+    default: ''
   disable_digest_emails:
     default: false
     client: true
@@ -559,6 +560,8 @@ email:
   delete_email_logs_after_days:
     default: 365
     min: 0
+  max_emails_per_day_per_user: 100
+  enable_staged_users: true
 
 files:
   max_image_size_kb: 3072

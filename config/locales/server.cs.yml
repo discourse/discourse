@@ -739,34 +739,6 @@ cs:
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} Vás pozval do konverzace '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} Vás pozval do konverzace
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        na
-
-        > %{site_title} -- %{site_description}
-
-        Prosíme klikněte na tento odkaz pro zobrazení konverzace: %{base_url}%{url}
-    user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} Vás pozval do tématu '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} Vás pozval do konverzace
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        na
-
-        > %{site_title} -- %{site_description}
-
-        Prosíme klikněte na tento odkaz pro zobrazení konverzace: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
     user_quoted:
@@ -805,12 +777,6 @@ cs:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Přihlášení"
-    confirm_new_email:
-      subject_template: "[%{site_name}] Potvrďte vaši novou emailovou adresu"
-      text_body_template: |
-        Potvrďte vaši novou emailovou adresu pro %{site_name} kliknutím na následující odkaz:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
     signup:
@@ -822,7 +788,6 @@ cs:
 
         Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
   page_not_found:
-    title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
     popular_topics: "Populární"
     recent_topics: "Nedávné"
     see_more: "Více"

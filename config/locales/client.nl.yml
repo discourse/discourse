@@ -660,17 +660,11 @@ nl:
       summary:
         title: "Overzicht "
         stats: "Statistieken "
-        topic_count: "Topics gemaakt"
-        post_count: "Bericht aangemaakt"
-        likes_given: "'Vind ik leuks' gegeven"
-        likes_received: "'Vind ik leuks' ontvangen"
-        days_visited: "Dagen bezocht"
-        posts_read_count: "Berichten gelezen"
         top_replies: "Beste Reacties"
-        top_topics: "Top Topics"
-        top_badges: "Top Badges"
-        more_topics: "Meer Topics"
         more_replies: "Meer Antwoorden"
+        top_topics: "Top Topics"
+        more_topics: "Meer Topics"
+        top_badges: "Top Badges"
         more_badges: "Meer Badges"
       associated_accounts: "Logins"
       ip_address:
@@ -920,7 +914,6 @@ nl:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='geciteerd' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='beantwoord' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='beantwoord' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='aangepast' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='geliked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='privebericht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -2092,14 +2085,6 @@ nl:
           modal:
             title: "Inkomende Email Details"
             error: "Error"
-            return_path: "Teruggaan-Pad"
-            message_id: "Bericht-Id"
-            in_reply_to: "In-Reactie-Op"
-            references: "Referenties "
-            date: "Datum"
-            from: "Van"
-            to: "Naar"
-            cc: "Cc"
             subject: "Onderwerp"
             body: "Body"
           filters:
@@ -2631,10 +2616,7 @@ nl:
       earned_n_times:
         one: "Verdiende deze badge 1 keer"
         other: "Verdiende deze badge %{count} keer"
-      more_with_badge: "Andere met deze badge"
       title: Badges
-      allow_title: "kan als titel gebruikt worden"
-      multiple_grant: "kan meerdere keren toegekend worden"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"
@@ -2657,97 +2639,6 @@ nl:
           name: Overige
         posting:
           name: Schrijven
-      badge:
-        editor:
-          name: Redacteur
-          description: Eerste berichtwijziging
-        basic_user:
-          name: Basis
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Toegang verleend tot</a> alle essentiële gemeenschaps-functionaliteit.
-        member:
-          name: Lid
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Toegang verleend tot</a> uitnodigingen
-        regular:
-          name: Vaste bezoeker
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Toegang verleend tot</a> hercategoriseren, hernoemen, gevolgde links en lounge
-        leader:
-          name: Leider
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Toegang verleend tot</a> globaal wijzigen, vastpinnen, sluiten, archiveren, splitsen en samenvoegen
-        welcome:
-          name: Welkom
-          description: Like ontvangen.
-        autobiographer:
-          name: Autobiografist
-          description: <a href="/my/preferences">Gebruikersprofiel</a> informatie ingevuld
-        anniversary:
-          name: Verjaardag
-          description: Actief lid voor een jaar, heeft tenminste eenmaal iets gepost
-        nice_post:
-          name: Prima bericht
-          description: 10 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
-        good_post:
-          name: Goed bericht
-          description: 25 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
-        great_post:
-          name: Fantastisch Bericht
-          description: 50 likes op een post ontvangen. Deze badge kan meerdere keren worden toegekend.
-        nice_topic:
-          name: Leuk Topic
-          description: 10 likes ontvangen op een topic. Deze badge kan meerdere keren toegewezen worden.
-        good_topic:
-          name: Goed Topic
-          description: 25 likes ontvangen op een topic. Deze badge kan meerdere keren toegewezen worden.
-        great_topic:
-          name: Geweldig Topic
-          description: 50 likes ontvangen op een topic. Deze badge kan meerdere keren toegewezen worden.
-        nice_share:
-          name: Leuk Gedeeld
-          description: Een bericht met 25 unieke bezoekers gedeeld
-        good_share:
-          name: Goed Gedeeld
-          description: Een bericht met 300 unieke bezoekers gedeeld
-        great_share:
-          name: Geweldig Gedeeld
-          description: Een bericht met 1000 unieke bezoekers gedeeld
-        first_like:
-          name: Eerste like
-          description: Hebt een bericht ge-vind-ik-leukt
-        first_flag:
-          name: Eerste markering
-          description: Een bericht gemarkeerd
-        promoter:
-          name: Promoter
-          description: Heeft een gebruiker uitgenodigd
-        campaigner:
-          name: Campaigner
-          description: Heeft 3 leden (trust level 1) uitgenodigd
-        champion:
-          name: Kampioen
-          description: Heeft 5 leden (trust level 2) uitgenodigd
-        first_share:
-          name: Eerste deel actie
-          description: Een bericht gedeeld
-        first_link:
-          name: Eerste link
-          description: Een interne link toegevoegd aan een ander topic
-        first_quote:
-          name: Eerste citaat
-          description: Een gebruiker geciteerd
-        read_guidelines:
-          name: Heeft de richtlijnen gelezen
-          description: Lees de <a href="/guidelines">community richtlijnen</a>
-        reader:
-          name: Lezer
-          description: Lees elk bericht in een topic met meer dan 100 berichten.
-        popular_link:
-          name: Populaire Link
-          description: Heeft een externe link geplaatst die 50 keer of vaker is aangeklikt.
-        hot_link:
-          name: Zeer Populaire Link
-          description: Heeft een externe link geplaatst die 300 keer of vaker is aangeklikt
-        famous_link:
-          name: Uiterst Populaire Link
-          description: Heeft een externe link geplaatst die 1000 keer of vaker is aangeklikt
     google_search: |
       <h3>Zoek met Google</h3>
       <p>

@@ -244,7 +244,6 @@ vi:
       has_pending_posts:
         other: "Chủ đề này có <b>{{count}}</b> bài viết cần phê chuẩn"
       confirm: "Lưu thay đổi"
-      delete_prompt: "Bạn có chắc muốn xóa <b>%{username}</b>? Tất cả các bài viết của họ sẽ bị xóa, email và ip sẽ bị chặn."
       approval:
         title: "Bài viết cần phê duyệt"
         description: "Chúng tôi đã nhận được bài viết mới của bạn, nhưng nó cần phải được phê duyệt bởi admin trước khi được hiện. Xin hãy kiên nhẫn."
@@ -403,9 +402,7 @@ vi:
         perm_denied_btn: "Không có quyền"
         perm_denied_expl: "Bạn đã từ chối nhận thông báo, để nhận lại bạn cần thiết lập trình duyệt."
         disable: "Khóa Notification"
-        currently_enabled: "(đang cho phép)"
         enable: "Cho phép Notification"
-        currently_disabled: "(hiện tại không cho phép)"
         each_browser_note: "Lưu ý: Bạn phải thay đổi trong cấu hình mỗi trình duyệt bạn sử dụng."
       dismiss_notifications: "Đánh dấu đã đọc cho tất cả"
       dismiss_notifications_tooltip: "Đánh dấu đã đọc cho tất cả các thông báo chưa đọc"
@@ -440,7 +437,6 @@ vi:
       muted_users: "Im lặng"
       muted_users_instructions: "Ngăn chặn tất cả các thông báo từ những thành viên."
       muted_topics_link: "Hiển thị chủ đề Im Lặng"
-      automatically_unpin_topics: "Tự động theo dõi tiêu đề bạn vào "
       staff_counters:
         flags_given: "cờ hữu ích"
         flagged_posts: "bài viết gắn cờ"
@@ -615,17 +611,11 @@ vi:
       summary:
         title: "Tóm tắt"
         stats: "Thống kê"
-        topic_count: "Chủ đề đã tạo"
-        post_count: "Bài viết đã tạo"
-        likes_given: "Lượt Likes"
-        likes_received: "Likes đã nhận"
-        days_visited: "Ngày đã ghé thăm"
-        posts_read_count: "Bài viết đã đọc"
         top_replies: "Top trả lời"
-        top_topics: "Top chủ đề"
-        top_badges: "Top huy hiệu"
-        more_topics: "Thêm chủ đề"
         more_replies: "Thêm trả lời"
+        top_topics: "Top chủ đề"
+        more_topics: "Thêm chủ đề"
+        top_badges: "Top huy hiệu"
         more_badges: "Thêm huy hiệu"
       associated_accounts: "Đăng nhập"
       ip_address:
@@ -698,8 +688,6 @@ vi:
       value_prop: "Khi bạn tạo tài khoản, website nhớ chính xác những gì bạn đã đọc, vì vậy bạn sẽ luôn trở lại đúng nơi đã rời đi. Bạn cũng có thể nhận thông báo ở đây hoặc qua email mỗi khi có bài viết mới. Bạn cũng có thể like bài viết để chia sẻ cảm xúc của mình. :heartbeat:"
     summary:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
-      description: "Có  <b>{{replyCount}}</b> trả lời"
-      description_time: "Đây là <b>{{replyCount}}</b> trả lời tương ứng với thời gian đọc <b>{{readingTime}} phút</b>."
       enable: 'Tóm tắt lại chủ đề'
       disable: 'HIển thị tất cả các bài viết'
     deleted_filter:
@@ -870,7 +858,6 @@ vi:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -976,9 +963,6 @@ vi:
         category: "Không có chủ đề nào trong {{category}} ."
         top: "Không có chủ đề top."
         search: "Không có kết quả tìm kiếm."
-        educate:
-          new: '<p>Chủ đề mới của bạn nằm ở đây.</p><p>Mặc định, chủ đề được coi là mới và sẽ hiện một chỉ báo <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> nếu chúng được tạo trong 2 ngày vừa qua.</p><p>Bạn có thể thay đổi cái này trong <a href="%{userPrefsUrl}">preferences</a>.</p>'
-          unread: '<p>Những chủ đề chưa đọc của bạn nằm ở đây.</p><p>Mặc định, chủ đề được coi là chưa đọc và sẽ hiện số lượng chưa đọc <span class="badge new-posts badge-notification">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã phản hồi chủ đề</li><li>Đọc chủ đề lâu hơn 4 phút</li></ul><p>Hoặc nếu bạn đặt chủ đề là Đã theo dấu hoặc Đã xem qua điều khiển thông bao tại cuối mỗi chủ đề.</p><p>Bạn có thể thay đổi điều này trong <a href="%{userPrefsUrl}">preferences</a>.</p>'
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
         hot: "Không còn của đề nổi bật nào nữa."
@@ -1321,18 +1305,6 @@ vi:
           bookmark: "Hủy đánh dấu"
           like: "Hủy like"
           vote: "Hủy bình chọn"
-        people:
-          off_topic: "{{icons}} đánh dấu nói sai chủ đề"
-          spam: "{{icons}} đánh dấu nó là rác"
-          spam_with_url: "{{icons}} gắn cờ <a href='{{postUrl}}'>cái này là rác</a>"
-          inappropriate: "{{icons}} gắn cờ là không phù hợp"
-          notify_moderators: "{{icons}} thông báo cho điều hành viên"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>đã thông báo quản trị viên</a>"
-          notify_user: "{{icons}} gửi một tin nhắn"
-          notify_user_with_url: "{{icons}} gửi một <a href='{{postUrl}}'>tin nhắn</a>"
-          bookmark: "{{icons}} đã đánh dấu"
-          like: "{{icons}} thích cái này"
-          vote: "{{icons}} bình chọn cho cái này"
         by_you:
           off_topic: "Bạn đã đánh dấu cái nfay là chủ đề đóng"
           spam: "Bạn đã đánh dấu cái này là rác"
@@ -1464,7 +1436,6 @@ vi:
           description: "Bạn sẽ không nhận được thông báo về bất cứ chủ đề mới nào trong các chuyên mục này, và chúng sẽ không hiển thị là mới nhất."
     flagging:
       title: 'Cám ơn bạn đã giúp phát triển cộng đồng!'
-      private_reminder: 'đánh dấu là riêng tư, <b>chỉ</b> hiển thị với quản trị viên'
       action: 'Đánh dấu Bài viết'
       take_action: "Thực hiện"
       notify_action: 'Tin nhắn'
@@ -1476,7 +1447,6 @@ vi:
       submit_tooltip: "Đánh dấu riêng tư"
       take_action_tooltip: "Tiếp cận ngưỡng đánh dấu ngay lập tức, thay vì đợi cộng đồng"
       cant: "Xin lỗi, bạn không thể đánh dấu bài viết lúc này."
-      notify_staff: 'Thông báo quản trị viên'
       formatted_name:
         off_topic: "Nó là sai chủ đề"
         inappropriate: "Không phù hợp"
@@ -1842,11 +1812,9 @@ vi:
             is_disabled: "Khôi phục đã bị cấm sử dụng trong cấu hình trang."
             label: "Khôi phục"
             title: "Khôi phục lại sao lưu này"
-            confirm: "Bạn muốn khôi phục bản sao lưu này?"
           rollback:
             label: "Rollback"
             title: "Đưa csdl về trạng thái làm việc trước"
-            confirm: "Bạn có chắc chắn muốn đưa csdl về trạng thái làm việc trước?"
       export_csv:
         user_archive_confirm: "Bạn có chắc chắn muốn download các bài viết của mình?"
         success: "Export đang được khởi tạo, bạn sẽ nhận được tin nhắn thông báo khi quá trình hoàn tất."
@@ -1949,9 +1917,6 @@ vi:
           love:
             name: 'đáng yêu'
             description: "Màu của nút like"
-          wiki:
-            name: 'wiki'
-            description: "Màu cơ bản sử dụng cho nền của các bài viết wiki."
       email:
         title: "Emails"
         settings: "Cấu hình"
@@ -2506,10 +2471,7 @@ vi:
     badges:
       earned_n_times:
         other: "Đạt được huy hiệu này %{count} lần"
-      more_with_badge: "Others with this badge"
       title: Huy hiệu
-      allow_title: "có thể sử dụng như là tiêu đề"
-      multiple_grant: "có thể trao tặng nhiều lần"
       badge_count:
         other: "%{count} Huy hiệu"
       more_badges:
@@ -2529,97 +2491,6 @@ vi:
           name: Khác
         posting:
           name: Đang đăng bài
-      badge:
-        editor:
-          name: Biên tập
-          description: Chỉnh sửa bàn viết lần đầu
-        basic_user:
-          name: Cơ bản
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Các cấp</a> chức năng cần thiết của cộng đồng
-        member:
-          name: Thành viên
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Các cấp</a> lời mời
-        regular:
-          name: Thường xuyên
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Các cấp</a> phân hạng, đổi tên và theo đuôi liên kết
-        leader:
-          name: Lãnh đạo
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Các cấp</a> sửa tổng thể, ghim, đóng, lưu trữ, tách và hợp nhất
-        welcome:
-          name: Chào mừng
-          description: Đã nhận 1 lượt thích
-        autobiographer:
-          name: Tự truyện
-          description: Filled user <a href="/my/preferences">profile</a> information
-        anniversary:
-          name: Ngày kỷ niệm
-          description: Thành viên hoạt động trong năm, đăng bài ít nhất một lần
-        nice_post:
-          name: Bài viết hay
-          description: Được 10 like cho một bài viết, huy hiệu này có thể được cấp nhiều lần
-        good_post:
-          name: Bài viết tốt
-          description: Được 25 like cho một bài viết, huy hiệu này có thể được cấp nhiều lần
-        great_post:
-          name: Bài viết tuyệt vời
-          description: Được 50 like cho một bài viết, huy hiệu này có thể được cấp nhiều lần
-        nice_topic:
-          name: Bài viết hay
-          description: Được 10 like cho một chủ đề, huy hiệu này có thể được cấp nhiều lần
-        good_topic:
-          name: Chủ đề tốt
-          description: Được 25 like cho một chủ đề, huy hiệu này có thể được cấp nhiều lần
-        great_topic:
-          name: Chủ đề hay
-          description: Được 50 like cho một chủ đề, huy hiệu này có thể được cấp nhiều lần
-        nice_share:
-          name: Nice Share
-          description: Đã chia sẻ bài viết với 25 lượt người truy cập
-        good_share:
-          name: Good Share
-          description: Đã chia sẻ bài viết với 300 lượt người truy cập
-        great_share:
-          name: Great Share
-          description: Đã chia sẻ bài viết với 1000 lượt người truy cập
-        first_like:
-          name: Lượt thích đầu tiên
-          description: Đã thích một bài đăng
-        first_flag:
-          name: Đánh dấu đầu tiên
-          description: Đánh dấu bài viết
-        promoter:
-          name: Promoter
-          description: Đã mời một thành viên
-        campaigner:
-          name: Campaigner
-          description: Mời 3 thành viên (Độ tin cậy 1)
-        champion:
-          name: Champion
-          description: Mời 5 thành viên (Độ tin cậy 2)
-        first_share:
-          name: Chia sẽ đầu tiên
-          description: Chia sẽ bài viết
-        first_link:
-          name: Liên kết đầu tiên
-          description: Thêm một liên kết từ chủ để khác
-        first_quote:
-          name: Trích dẫn đầu tiên
-          description: Trích dẫn thành viên
-        read_guidelines:
-          name: Xem hướng dẫn
-          description: Xem <a href="/guidelines">nguyên tắc cộng đồng</a>
-        reader:
-          name: Người xem
-          description: Đọc tất cả bài viết trong các chủ để có hơn 100 bài
-        popular_link:
-          name: Liên kết phổ biến
-          description: Đăng một liên kết ngoài với ít nhất 50 click
-        hot_link:
-          name: Liên kết hấp dẫn
-          description: Đăng một liên kết ngoài với ít nhất 300 click
-        famous_link:
-          name: Liên kết phổ biến
-          description: Đăng một liên kết ngoài với ít nhất 1000 click
     google_search: |
       <h3>Tìm kiếm với Google</h3>
       <p>

@@ -26,7 +26,11 @@ class EmailUpdater
     email = Email.downcase(email_input.strip)
     EmailValidator.new(attributes: :email).validate_each(self, :email, email)
 
-    errors.add(:base, I18n.t('change_email.error')) if User.find_by_email(email)
+    if existing_user = User.find_by_email(email)
+      error_message = 'change_email.error'
+      error_message << '_staged' if existing_user.staged?
+      errors.add(:base, I18n.t(error_message))
+    end
 
     if errors.blank?
       args = {

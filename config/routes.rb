@@ -9,7 +9,7 @@ require_dependency "permalink_constraint"
 # and makes Guard not work properly.
 USERNAME_ROUTE_FORMAT = /[\w.\-]+/ unless defined? USERNAME_ROUTE_FORMAT
 
-BACKUP_ROUTE_FORMAT = /[\w.\-]+\.(tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
+BACKUP_ROUTE_FORMAT = /.+\.(tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
 
@@ -111,6 +111,7 @@ Discourse::Application.routes.draw do
     end
     get "users/:id.json" => 'users#show', defaults: {format: 'json'}
     get 'users/:id/:username' => 'users#show'
+    get 'users/:id/:username/badges' => 'users#show'
 
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
@@ -252,15 +253,15 @@ Discourse::Application.routes.draw do
   end
 
   resources :static
-  post "login" => "static#enter"
-  get "login" => "static#show", id: "login"
-  get "password-reset" => "static#show", id: "password_reset"
-  get "faq" => "static#show", id: "faq"
-  get "guidelines" => "static#show", id: "guidelines", as: 'guidelines'
-  get "tos" => "static#show", id: "tos", as: 'tos'
-  get "privacy" => "static#show", id: "privacy", as: 'privacy'
-  get "signup" => "static#show", id: "signup"
-  get "login-preferences" => "static#show", id: "login"
+  post "login" => "static#enter", constraints: { format: /(json|html)/ }
+  get "login" => "static#show", id: "login", constraints: { format: /(json|html)/ }
+  get "password-reset" => "static#show", id: "password_reset", constraints: { format: /(json|html)/ }
+  get "faq" => "static#show", id: "faq", constraints: { format: /(json|html)/ }
+  get "guidelines" => "static#show", id: "guidelines", as: 'guidelines', constraints: { format: /(json|html)/ }
+  get "tos" => "static#show", id: "tos", as: 'tos', constraints: { format: /(json|html)/ }
+  get "privacy" => "static#show", id: "privacy", as: 'privacy', constraints: { format: /(json|html)/ }
+  get "signup" => "static#show", id: "signup", constraints: { format: /(json|html)/ }
+  get "login-preferences" => "static#show", id: "login", constraints: { format: /(json|html)/ }
 
   get "users/admin-login" => "users#admin_login"
   put "users/admin-login" => "users#admin_login"
@@ -313,6 +314,11 @@ Discourse::Application.routes.draw do
   get "users/:username/invited/:filter" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/action/send_activation_email" => "users#send_activation_email"
   get "users/:username/summary" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  # user activity RSS feed
+  get "users/:username/activity/topics.rss" => "list#user_topics_feed", format: :rss, constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/activity.rss" => "posts#user_posts_feed", format: :rss, constraints: {username: USERNAME_ROUTE_FORMAT}
+
   get "users/:username/activity" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -347,13 +353,17 @@ Discourse::Application.routes.draw do
   # used to download attachments (old route)
   get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/ }
 
-  get "posts" => "posts#latest"
+  get "posts" => "posts#latest", id: "latest_posts"
+  get "private-posts" => "posts#latest", id: "private_posts"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
   get "posts/:id/reply-history" => "posts#reply_history"
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   resources :groups do
+    get "posts.rss" => "groups#posts_feed", format: :rss
+    get "mentions.rss" => "groups#mentions_feed", format: :rss
+
     get 'members'
     get 'posts'
     get 'topics'

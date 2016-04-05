@@ -919,17 +919,9 @@ fr:
     tl2_requires_likes_received: "Combien de J'aime un utilisateur doit recevoir pour être promu au niveau de confiance 2."
     tl2_requires_likes_given: "Combien de J'aime un utilisateur doit donner pour être promu au niveau de confiance 2."
     tl2_requires_topic_reply_count: "A combien de sujet un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
-    tl3_time_period: "Période de temps requis pour Niveaux de confiance 3"
-    tl3_requires_days_visited: "Nombre minimum de jours qu'un utilisateur doit avoir passer sur le site dans les 100 derniers jours pour être éligible au niveau de confiance 3. Fixer à plus que la période TL3 pour désactiver les promotions (0 ou plus)"
-    tl3_requires_topics_replied_to: "Nombre minimum de sujets auquel un utilisateur doit avoir répondu dans les 100 derniers jours pour être promu au niveau de confiance 3. (0 à 100)"
-    tl3_requires_topics_viewed: "Pourcentage de sujets crées dans les 100 derniers jours qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3. (0 à 100)"
-    tl3_requires_posts_read: "Pourcentage de message crées dans les 100 derniers jours qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3. (0 à 100)"
     tl3_requires_topics_viewed_all_time: "Nombre minimum de sujets qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3."
     tl3_requires_posts_read_all_time: "Nombre minimum de messages qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3."
-    tl3_requires_max_flagged: "L'utilisateur ne doit pas avoir plus de x messages signalés par x utilisateurs différents dans les 100 derniers jours pour être promu au niveau de confiance 3; x étant la valeur de ce paramètre. (0 ou plus)"
     tl3_promotion_min_duration: "Nombre minimum de jours qu'un utilisateur restera promu au niveau de confiance 3 avant de pouvoir être rétrogradé au niveau de confiance 2."
-    tl3_requires_likes_given: "Nombre minimum de J'aime à donner dans les 100 derniers jours pour être promu au niveau de confiance 3."
-    tl3_requires_likes_received: "Nombre minimum de J'aime à recevoir dans les 100 derniers jours pour être promu au niveau de confiance 3."
     tl3_links_no_follow: "Ne pas retirer rel=nofollow sur les liens des messages par les utilisateurs de niveau de confiance 3."
     min_trust_to_create_topic: "Le niveau de confiance minimum pour créer un nouveau sujet."
     min_trust_to_edit_wiki_post: "Le niveau de confiance minimum requis pour modifier les messages de type wiki."
@@ -944,7 +936,6 @@ fr:
     max_users_notified_per_group_mention: "Nombre maximum d'utilisateurs qui peuvent recevoir une notification si un groupe est mentionné (si le seuil est atteint aucune notification n'est envoyée)"
     create_thumbnails: "Créer un aperçu pour les images imbriquées qui sont trop large pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
-    private_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer les notifications par courriel, afin de laisser aux utilisateurs l'opportunité de modifier leurs messages."
     email_posts_context: "Combien de réponses précédentes doit-on inclure dans les courriels de notifications pour situer le contexte."
     flush_timings_secs: "A quelle fréquence les données de timing doivent être vider, en secondes."
     title_max_word_length: "Le nombre maximum de caractères dans le titre d'un sujet."
@@ -1046,7 +1037,6 @@ fr:
     disable_avatar_education_message: "Désactiver le message incitant à changer l'avatar."
     daily_performance_report: "Analyser les logs de NGINX quotidiennement et poster un sujet Responsables Uniquement avec les détails"
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets."
-    permalink_normalizations: "Appliquer l'expression régulière suivante avant de faire correspondre les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les query strings des routes des sujets. Le format est regex+string, utilisez \\1 etc. pour accéder aux captures"
     global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le cacher (HTML autorisé)."
     disable_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
     automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
@@ -1143,11 +1133,6 @@ fr:
       category: 'Catégories'
       topic: 'Résultats'
       user: 'Utilisateurs'
-  sso:
-    not_found: "Impossible de rechercher ou de créer un compte, contacter l'administrateur du site"
-    account_not_approved: "Le compte est en attente d'approbation. Vous recevrez un avis par courriel une fois approuvé."
-    unknown_error: "Erreur de mise à jour des informations, contacter l'administrateur du site"
-    timeout_expired: "La connexion au compte a été interrompue, veuillez vous connecter à nouveau"
   original_poster: "Créateur du sujet"
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
@@ -1343,34 +1328,8 @@ fr:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible ! :)
-
-      Votre version: %{installed_version}
-      Nouvelle version: **%{new_version}**
-
-      - Consultez les nouveautés sur le [changelog GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible ! :)
-
-      Votre version: %{installed_version}
-      Nouvelle version: **%{new_version}**
-
-      - Consultez les nouveautés sur le [changelog GitHub](https://github.com/discourse/discourse/commits/master).
-
-      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
-
-      ### Notes de version
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 message en attente de modération"
@@ -1472,8 +1431,6 @@ fr:
         Pour prévenir quelqu'un que vous appréciez son commentaire, cliquez **sur le cœur**. Partagez votre amour !
 
         Si un commentaire vous pose problème, prévenez soit son auteur en privé, soit [l'équipe de modération](%{base_url}/about) grâce au bouton **drapeau**.
-
-        Vous pouvez aussi partager un lien vers une contribution ou lui mettre un signet afin de la retrouver plus tard dans votre page utilisateur.
 
         ## Notifications
 
@@ -1686,12 +1643,6 @@ fr:
         Pour plus d'informations, merci de vous en référer à la [charte de la communauté](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Compte bloqué"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que vos messages ont été bloqués par un membre de l'équipe.
-
-        Pour plus d'informations, merci de vous en référer à la [charte de la communauté](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Nouvel utilisateur %{username} bloqué à cause de signalements de la communauté"
       text_body_template: |
@@ -1744,25 +1695,10 @@ fr:
     posted_by: "Ecrit par %{username} le %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} vous a invité dans la conversation '%{topic_title}'"
-      text_body_template: "\n%{username} vous a invité dans un message\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nsur \n\n> %{site_title} -- %{site_description}\n\nVeuillez suivre ce lien pour voir le message: %{base_url}%{url}\n"
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} vous a invité à voir un message '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} vous a invité à voir un message
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        à
-
-        > %{site_title} -- %{site_description}
-
-        Veuillez suivre ce lien pour consulter le message: %{base_url}%{url}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} vous a invité dans le sujet '%{topic_title}'"
-      text_body_template: "\n%{username} vous a invité à une conversation\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nsur \n\n> %{site_title} -- %{site_description}\n\nVeuillez suivre ce lien pour voir le message: %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1978,8 +1914,6 @@ fr:
     images:
       too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximum de %{max_size_kb}Ko), merci de le redimensionner et de réessayer."
       size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
-  avatar:
-    missing: "Désolé, l'avatar que vous avez séléctionné n'est pas sur le serveur. Veuillez ressayer de le télécharger."
   flag_reason:
     sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP a répondu. Voir le paramétrage flag_sockpuppets."
     spam_hosts: "Cet utilisateur a essayé de créer plusieurs messages avec des liens vers le même domaine. Voir le paramétrage du site newuser_spam_host_threshold."
@@ -2096,55 +2030,11 @@ fr:
 
       Si nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page. Ce document est soumis à la licence creative commons CC-BY-SA. Il a été mis à jour le 31 mai 2013.
   badges:
-    long_descriptions:
-      autobiographer: |
-        Ce badge est accordé au remplissage de <a href="/my/preferences">votre profil utilisateur</a> et au choix d'une photo de profil. En dire plus à la communauté sur vous et vos intérêts permet de la rendre plus agréable et plus connectée.
-      first_like: |
-        Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, cool, ou amusant.
-      first_link: |
-        Ce badge est accordé la première fois que vous placez un lien vers un autre sujet dans une de vos réponses. Lier des sujets aide les autres lecteurs à trouver des conversations proches potentiellement intéressantes, en montrant les connexions entre sujets dans les deux directions.
-      first_quote: |
-        Ce badge est accordé la première fois que vous citez un message dans une de vos réponses. Citer des passages pertinents des messages précédents dans votre réponse aide à garder les discussions ciblées et à rester dans le sujet.
-      first_share: |
-        Ce badge est accordé la première fois que vous partagez un lien vers une réponse ou un sujet en utilisant le bouton de partage. Partager des liens est un très bon moyen de diffuser des discussions intéressantes auprès du reste du monde et de faire grandir votre communauté.
-      read_guidelines: |
-        Ce badge est accordé après <a href="/guidelines">lecture de la charte de la communauté</a>. Respecter et partager ces règles simples permet de construire une communauté sure, agréable et durable.
-      reader: |
-        Ce badge est accordé après lecture d'un long sujet. Lire est fondamental. Lire attentivement vous aide à suivre une conversation et mène à des réponses meilleures et plus complètes.
-      editor: |
-        Ce badge est accordé après édition d'un de vos messages. N'hésitez pas à éditer vos messages à n'importe quel moment pour les améliorer, corriger de petites erreurs, ou ajouter quelque chose que vous auriez oublié.
-      first_flag: |
-        Ce badge est accordé après signalement d'un message. Les signalements sont essentiels à la santé de votre communauté. Si vous remarquez des messages nécessitant l'intervention d'un modérateur n'hésitez pas à les signaler. Vous pouvez aussi utiliser les boîtes de dialogue de signalement pour envoyer des <b>messages</ba> à d'autres utilisateurs.
-      nice_share: |
-        Ce badge est accordé après le partage d'un lien vers un message consulté par 25 visiteurs extérieurs. Bien joué ! Partager des liens vers des discussions intéressantes auprès de vos amis est un excellent moyen de faire grandir votre communauté.
-      welcome: |
-        Ce badge est accordé lorsque vous recevez votre premier "J'aime" sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, cool, ou utile !
-      anniversary: |
-        Ce badge est accordé après avoir été membre du site pendant une année, avec au moins un message crée. Merci d'être resté avec nous et de contribuer ainsi à notre communauté !
-      good_share: |
-        Ce badge est accordé après le partage d'un lien vers un message consulté par 300 visiteurs extérieurs. Bon travail ! Vous avez diffusé une discussion intéressante à <i>beaucoup</i> de nouvelles personnes et nous avez aidés à grandir.
-      great_share: |
-        Ce badge est accordé après le partage d'un lien vers un message consulté par 100 visiteurs extérieurs. Wow ! Vous avez fait la promotion d'une discussion intéressante auprès d'une énorme nouvelle audience pour le compte de cette communauté, et nous avez beaucoup aidé à grandir.
-      nice_post: |
-        Ce badge est accordé après la création d'une réponse ayant reçu 10 "J'aime". Bien joué !
-      nice_topic: |
-        Ce badge est accordé après la création d'un sujet ayant reçu 10 "J'aime". Bien joué !
-      good_post: |
-        Ce badge est accordé après la création d'une réponse ayant reçu 25 "J'aime". Bon travail !
-      good_topic: |
-        Ce badge est accordé après la création d'un sujet ayant reçu 25 "J'aime". Bon travail !
-      great_post: |
-        Ce badge est accordé après la création d'un message ayant reçu 50 "J'aime". Wow !
-      great_topic: |
-        Ce badge est accordé après la création d'une réponse ayant reçu 50 "J'aime". Wow !
-      basic: |
+    basic_user:
+      name: Actif
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Accordé</a>  toutes les fonctions communautaires essentielles sont accessibles
+      long_description: |
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 1. Merci d'être resté dans le coin un petit moment et d'avoir lu quelques sujets pour en apprendre plus sur notre communauté. Vos restrictions "nouvel utilisateur" ont été levées, et vous avez accès aux fonctionnalités essentielles telles que la messagerie personnelle, le signalement, l'édition des wikis, et la possibilité de poster des images et de multiples liens.
-      member: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, des messages groupés, et quelques "J'aime" supplémentaires chaque jour.
-      regular: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir été un participant régulier à notre communauté pendant ces quelques mois, l'un de nos lecteurs les plus actifs et un contributeur sérieux à ce qui rend notre communauté si belle. Vous pouvez désormais recatégoriser et renommer des sujets, accéder à la section privée, signaler des spams, et vous avez plein de "J'aime" en plus chaque jour.
-      leader: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité d'éditer tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et réunir, ainsi que des tonnes de "J'aime" par jour.
   admin_login:
     success: "Courriel envoyé"
     error: "Erreur !"

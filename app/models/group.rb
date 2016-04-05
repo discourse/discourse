@@ -42,6 +42,7 @@ class Group < ActiveRecord::Base
   }
 
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
+  STAFF_GROUPS = [:admins, :moderators, :staff]
 
   ALIAS_LEVELS = {
     :nobody => 0,
@@ -216,6 +217,17 @@ class Group < ActiveRecord::Base
     group
   end
 
+  def self.ensure_consistency!
+    reset_all_counters!
+    refresh_automatic_groups!
+  end
+
+  def self.reset_all_counters!
+    Group.pluck(:id).each do |group_id|
+      Group.reset_counters(group_id, :group_users)
+    end
+  end
+
   def self.refresh_automatic_groups!(*args)
     if args.length == 0
       args = AUTO_GROUPS.keys
@@ -368,6 +380,10 @@ class Group < ActiveRecord::Base
 
   def mentionable?(user, group_id)
     Group.mentionable(user).where(id: group_id).exists?
+  end
+
+  def staff?
+    STAFF_GROUPS.include?(self.name.to_sym)
   end
 
   protected

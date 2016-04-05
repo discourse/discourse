@@ -10,19 +10,20 @@ end
 #
 # Table name: incoming_emails
 #
-#  id           :integer          not null, primary key
-#  user_id      :integer
-#  topic_id     :integer
-#  post_id      :integer
-#  raw          :text
-#  error        :text
-#  message_id   :text
-#  from_address :text
-#  to_addresses :text
-#  cc_addresses :text
-#  subject      :text
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id                :integer          not null, primary key
+#  user_id           :integer
+#  topic_id          :integer
+#  post_id           :integer
+#  raw               :text
+#  error             :text
+#  message_id        :text
+#  from_address      :text
+#  to_addresses      :text
+#  cc_addresses      :text
+#  subject           :text
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  rejection_message :text
 #
 # Indexes
 #

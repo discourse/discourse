@@ -110,6 +110,7 @@ h2#site-text-logo
 .mobile-view .mobile-nav {
   a .fa {
     margin-right: 8px;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
   a {
     color: $primary;
@@ -120,7 +121,7 @@ h2#site-text-logo
   list-style: none;
   overflow: visible;
   position: relative;
-  width: 40%;
+  width: 45%;
 
   > li > a {
     padding: 8px 10px;

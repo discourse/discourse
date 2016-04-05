@@ -245,7 +245,6 @@ nb_NO:
         one: "Dette emnet har <b>1</b> innlegg som venter på godkjenning"
         other: "Dette emnet har <b>{{count}}</b> innlegg som venter på godkjenning"
       confirm: "Lagre endringer"
-      delete_prompt: "Er du sikker du ønsker å slette <b>%{username}</b>? Dette vil fjerne alle brukerens innnlegg og blokkere epost og ip-addressen."
       approval:
         title: "Innlegg Behøver Godkjenning"
         description: "Vi har mottatt ditt nye innlegg men det krever godkjenning av en moderator før det vises. Venligst vær tålmodig."
@@ -386,9 +385,7 @@ nb_NO:
         perm_default: "Slå på varslinger"
         perm_denied_btn: "Tillatelse avslått"
         disable: "Slå av varslinger"
-        currently_enabled: "(slått på)"
         enable: "Slå på varslinger"
-        currently_disabled: "(slått av)"
         each_browser_note: "Merk: Du må endre denne innstillinger for hver nettleser du bruker."
       dismiss_notifications: "Merk alle som lest"
       dismiss_notifications_tooltip: "Merk alle uleste varslinger som lest"
@@ -568,12 +565,6 @@ nb_NO:
       summary:
         title: "Oppsummering"
         stats: "Statistikk"
-        topic_count: "Emner Startet"
-        post_count: "Innlegg Opprettet"
-        likes_given: "Likes Gitt"
-        likes_received: "Likes Mottatt"
-        days_visited: "Dager Besøkt"
-        posts_read_count: "Innlegg Lest"
         top_replies: "Mest Populære Svar"
         top_topics: "Mest Populære Emner"
         more_topics: "Flere Emner"
@@ -645,8 +636,6 @@ nb_NO:
       value_prop: "Når du registrerer deg husker vi hvor langt du har lest, så du starter på riktig sted neste gang du åpner en tråd. Du får også varsler, her og på e-post når det skjer ting i diskusjonene du vil følge. I tillegg kan du like innlegg :heartbeat:"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene i følge nettsamfunnet."
-      description: "Det er <b>{{replyCount}}</b> svar."
-      description_time: "Det er <b>{{replyCount}}</b> svar med en estimert lesetid på <b>{{readingTime}} minutter</b>."
       enable: 'Oppsummer dette emnet'
       disable: 'Vis alle innlegg'
     deleted_filter:
@@ -811,7 +800,6 @@ nb_NO:
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -898,9 +886,6 @@ nb_NO:
         category: "Det er ingen {{category}} emner."
         top: "Det er ingen populære emner."
         search: "Det er ingen søkeresultater"
-        educate:
-          new: '<p>Dine nye emner vises her.</p><p>Som standard anses emner som nye, og vil ha indikatoren <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> hvis emnet ble opprettet de siste 2 dagene</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
-          unread: '<p>Dine uleste emner vises her.</p><p>Som standard anses emner som uleste, og vil vise antall uleste <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du eksplisitt har satt emnet som Sporet eller Fulgt via varslingskontrollene under hvert emne.</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
       bottom:
         latest: "Det er ikke noen siste emner igjen å lese."
         hot: "Det er ikke noen populære emner igjen å lese."
@@ -1225,18 +1210,6 @@ nb_NO:
           bookmark: "Angre bokmerke"
           like: "Angre liker"
           vote: "Angre stemme"
-        people:
-          off_topic: "{{icons}} rapporterte dette som irrelevant"
-          spam: "{{icons}} rapporterte dette som spam"
-          spam_with_url: "{{icons}} merket <a href='{{postUrl}}'>dette som spam</a>"
-          inappropriate: "{{icons}} rapporterte dette som upassende"
-          notify_moderators: "{{icons}} varslet moderatorene"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>varslet moderatorene</a>"
-          notify_user: "{{icons}} sendte en melding"
-          notify_user_with_url: "{{icons}} sente en <a href='{{postUrl}}'>melding</a>"
-          bookmark: "{{icons}} bokmerket dette"
-          like: "{{icons}} likte dette"
-          vote: "{{icons}} stemte for dette"
         by_you:
           off_topic: "Du rapporterte dette som irrelevant"
           spam: "Du rapporterte dette som spam"
@@ -1383,7 +1356,6 @@ nb_NO:
           title: "Dempet"
     flagging:
       title: 'Takk for at du hjelper å holde forumet ryddig!'
-      private_reminder: 'flagg er private, <b>bare</b> synlige for staben'
       action: 'Rapporter innlegg'
       take_action: "Ta Handling"
       notify_action: 'Melding'
@@ -1395,7 +1367,6 @@ nb_NO:
       submit_tooltip: "Rapporter privat"
       take_action_tooltip: "Oppnå rapporteringsterskel umiddelbart, i stedet for å vente på flere rapporteringer."
       cant: "Beklager, du kan ikke rapportere dette innlegget nå."
-      notify_staff: 'Varsle Personalet'
       formatted_name:
         off_topic: "Det er off-topic "
         inappropriate: "Det er upassende"
@@ -1763,11 +1734,9 @@ nb_NO:
             is_disabled: "Gjenoppretting er deaktivert i nettstedsinnstillingene."
             label: "Gjenooprett"
             title: "Gjenopprett sikkerhetskopien"
-            confirm: "Er du sikker på at du vil gjenopprette denne sikkerhetskopien?"
           rollback:
             label: "Gjenopprett"
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
-            confirm: "Er du sikker på at du vil gjenopprette databasen til en tidligere fungerende tilstand?"
       export_csv:
         user_archive_confirm: "Er du sikker på at du vil laste ned innleggene dine?"
         success: "Eksportering iverksatt. Du vil bli varslet med en melding når prosessen er fullført."
@@ -1864,9 +1833,6 @@ nb_NO:
           love:
             name: 'liker'
             description: "Fargen til Liker-knappen."
-          wiki:
-            name: 'wiki'
-            description: "Grunnfarge brukt for bakgrunnen i wiki-poster."
       email:
         settings: "Instillinger"
         preview_digest: "Forhåndsvis Oppsummering"
@@ -2360,8 +2326,6 @@ nb_NO:
         mark_watching: '<b>m</b>, <b>w</b> Følg emne'
     badges:
       title: Merker
-      allow_title: "kan bli brukt som tittel"
-      multiple_grant: "kan bli belønnet mange ganger"
       badge_count:
         one: "1 Merke"
         other: "%{count} Merker"
@@ -2384,85 +2348,3 @@ nb_NO:
           name: Annet
         posting:
           name: Posting
-      badge:
-        editor:
-          name: Redaktør
-          description: Første redigering av innlegg
-        basic_user:
-          name: Basic
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Innvilget</a> alle essensielle forumfunksjoner
-        member:
-          name: Medlem
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Innvilget</a> invitasjonsmulighet
-        regular:
-          name: Aktivt Medlem
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Innvilget</a> omkategorisering, endring av navn, fulgte lenker og salong
-        leader:
-          name: Leder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Innvilget</a> global redigering, fastsetting, lukking, arkivering, splitting og sammenslåing
-        welcome:
-          name: Velkommen
-          description: Fått en liker
-        autobiographer:
-          name: Selvbiograf
-          description: Fylte ut informasjon om <a href="/my/preferences">brukerprofilen</a>
-        anniversary:
-          name: Jubileum
-          description: Aktivt medlem i over ett år, postet minst en gang
-        nice_post:
-          name: Fint innlegg
-          description: Fått 10 liker for et innlegg. Dette merket kan bli tildelt flere ganger
-        good_post:
-          name: Bra innlegg
-          description: Fått 25 liker for et innlegg. Dette merket kan bli tildelt flere ganger
-        great_post:
-          name: Flott Innlegg
-          description: Fått 50 liker for et innlegg. Dette merket kan bli tildelt flere ganger
-        nice_topic:
-          name: Fint emne
-          description: Fått 10 liker for et emne. Dette merket kan bli tildelt flere ganger
-        good_topic:
-          name: Godt emne
-          description: Fått 25 liker for et emne. Dette merket kan bli tildelt flere ganger
-        great_topic:
-          name: Fantastisk emne
-          description: Fått 50 liker for et emne. Dette merket kan bli tildelt flere ganger
-        nice_share:
-          name: Fin deling
-          description: Delt et innlegg med 25 unike besøkende
-        good_share:
-          name: God deling
-          description: Delt et innlegg med 300 unike besøkende
-        great_share:
-          name: Fantastisk Deling
-          description: Delt et innlegg med 1000 unike besøkende
-        first_like:
-          name: Første liker
-          description: Likt et innlegg
-        first_flag:
-          name: Første rapportering
-          description: Rapportert et innlegg
-        promoter:
-          name: Forfrem
-          description: Inviterte en bruker
-        campaigner:
-          name: Campaigner
-          description: Inviterte 3 medlemmer (tillitsnivå 1)
-        champion:
-          name: Mester
-          description: Inviterte 5 medlemmer (tillitsnivå 2)
-        first_share:
-          name: Første deling
-          description: Delt et innlegg
-        first_link:
-          name: Første lenke
-          description: Link til et eksisterende emne
-        first_quote:
-          name: Første sitat
-          description: Sitert en bruker
-        read_guidelines:
-          name: Leste retningslinjene
-          description: Lest <a href="/guidelines">forumets retningslinjer</a>
-        reader:
-          name: Leser
-          description: Leste hvert innlegg i et emne med mer enn 100 innlegg

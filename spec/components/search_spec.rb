@@ -408,6 +408,24 @@ describe Search do
 
   describe 'Advanced search' do
 
+    it 'supports pinned and unpinned' do
+      topic = Fabricate(:topic)
+      Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+      _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
+
+      topic.update_pinned(true)
+
+      user = Fabricate(:user)
+      guardian = Guardian.new(user)
+
+      expect(Search.execute('boom in:pinned').posts.length).to eq(1)
+      expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(0)
+
+      topic.clear_pin_for(user)
+
+      expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(1)
+    end
+
     it 'supports before and after in:first user:' do
 
       time = Time.zone.parse('2001-05-20 2:55')

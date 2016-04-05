@@ -1,0 +1,48 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+gl:
+  js:
+    poll:
+      voters:
+        one: "votante"
+        other: "votantes"
+      total_votes:
+        one: "votos totais"
+        other: "votos totais"
+      average_rating: "Valoración media: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Debes seleccionar cando menos <strong>1</strong> opción."
+            other: "Debes seleccionar cando menos <strong>%{count}</strong> opcións."
+          up_to_max_options:
+            one: "Podes escoller <strong>1</strong> única opción."
+            other: "Podes escoller até <strong>%{count}</strong> opcións."
+          x_options:
+            one: "Debes escoller <strong>1</strong> opción."
+            other: "Debes escoller <strong>%{count}</strong> opcións."
+          between_min_and_max_options: "Debes escoller entre <strong>%{min}</strong> e <strong>%{max}</strong> opcións."
+      cast-votes:
+        title: "Vota"
+        label: "Vota agora!"
+      show-results:
+        title: "Mostrar os resultados da votación"
+        label: "Mostrar os resultados"
+      hide-results:
+        title: "Volver aos teus votos"
+        label: "Ocultar os resultados"
+      open:
+        title: "Abrir a enquisa"
+        label: "Abrir"
+        confirm: "Confirmas a apertura da enquisa?"
+      close:
+        title: "Pechar a enquisa"
+        label: "Pechar"
+        confirm: "Confirmas o peche desta enquisa?"
+      error_while_toggling_status: "Produciuse un erro durante o cambio do estado da enquisa."
+      error_while_casting_votes: "Produciuse un erro durante a emisión do teu voto."

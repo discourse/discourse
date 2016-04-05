@@ -15,10 +15,7 @@ export default Discourse.Route.extend({
   },
 
   serialize(model) {
-    return {
-      id: model.get("id"),
-      slug: model.get("slug")
-    };
+    return model.getProperties('id', 'slug');
   },
 
   model(params) {
@@ -29,19 +26,18 @@ export default Discourse.Route.extend({
     }
   },
 
-  afterModel(model,transition) {
+  afterModel(model, transition) {
     const username = transition.queryParams && transition.queryParams.username;
 
     return UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
       this.userBadges = userBadges;
     });
-
   },
 
   titleToken() {
     const model = this.modelFor("badges.show");
     if (model) {
-      return model.get("displayName");
+      return model.get("name");
     }
   },
 

@@ -169,6 +169,9 @@ pt:
     hot: "Tópicos quentes"
     top: "Melhores tópicos"
     posts: "Últimas mensagens"
+    private_posts: "Últimas mensagens privadas"
+    group_posts: "Últimas mensagens em %{group_name}"
+    group_mentions: "Últimas menções em %{group_name}"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   revert_version_same: "A versão atual é o mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
@@ -458,6 +461,7 @@ pt:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja a ser utilizado?"
+    error_staged: "Ocorreu um erro ao alterar o seu endereço de email. O endereço de email já está a ser utilizado por um utilizador temporário."
     already_done: "Pedimos desculpa, esta hiperligação de confirmação já não é valida. Talvez o seu email já foi alterado?"
     authorizing_old:
       title: "Obrigado por confirmar o seu endereço de email atual."
@@ -712,11 +716,15 @@ pt:
     site_contact_username_warning: "Introduza o nome de uma conta de utilizador de um membro do pessoal de onde possam ser enviadas mensagens importantes automatizadas. Atualize sítio_contacto_nomedeutilizador nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     notification_email_warning: "Não estão a ser enviados emails de notificação a partir de um endereço de email válido no seu domínio; a entrega do email será errática e não fiável. Por favor configure notificaçao_email para um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
     subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
+    email_polling_errored_recently:
+      one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
+      other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
   site_settings:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
+    set_locale_from_accept_language_header: "defina a língua de interface para utilizadores anónimos com base nos cabeçalhos de língua dos seus navegadores. (EXPERIMENTAL, não funciona com cache anónima)"
     min_post_length: "Tamanho mínimo permitido por mensagem, em caracteres"
     min_first_post_length: "Tamanho mínimo permitido para a primeira mensagem (corpo do tópico), em caracteres"
     min_private_message_post_length: "Tamanho mínimo permitido para mensagens, em caracteres"
@@ -928,17 +936,17 @@ pt:
     tl2_requires_likes_received: "Quantos gostos um utilizador deve receber antes de ser promovido para o Nível de Confiança 2."
     tl2_requires_likes_given: "Quantos gostos um utilizador deve atribuir antes de ser promovido para o Nível de Confiança 2."
     tl2_requires_topic_reply_count: "Quantos tópicos um utilizador deve responder antes de ser promovido para o Nível de Confiança 2."
-    tl3_time_period: "Período de tempo de requisitos do Nível de Confiança 3"
-    tl3_requires_days_visited: "Número mínimo de dias que o utilizador necessita de ter visitado o sítio nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3. Configurar um período de tempo maior que nc3 para desativar promoções para nc3. (0 ou maior)"
-    tl3_requires_topics_replied_to: "Número mínimo de tópicos que o utilizador necessita de ter respondido nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3. (0 ou mais)"
-    tl3_requires_topics_viewed: "Percentagem de tópicos criados nos últimos 100 dias que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
-    tl3_requires_posts_read: "Percentagem de mensagens criadas nos últimos 100 dias que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
+    tl3_time_period: "Período de tempo (em dias) dos requisitos do nível de confiança 3"
+    tl3_requires_days_visited: "Número mínimo de dias que o utilizador necessita de ter visitado o sítio nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3. Configure um período de tempo maior que nc3 para desativar promoções para nc3. (0 ou maior)"
+    tl3_requires_topics_replied_to: "Número mínimo de tópicos que o utilizador necessita de ter respondido nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3. (0 ou mais)"
+    tl3_requires_topics_viewed: "Percentagem de tópicos criados nos últimos dias (perídio nc3) que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
+    tl3_requires_posts_read: "Percentagem de mensagens criadas nos últimos dias (perídio nc3) que o utilizador precisa de ter visto para se qualificar à promoção para o Nível de Confiança 3. (0 a 100)"
     tl3_requires_topics_viewed_all_time: "Número mínimo total de tópicos que o utilizador deve ter visto para se qualificar ao Nível de Confiança 3."
     tl3_requires_posts_read_all_time: "Número mínimo total de mensagens que o utilizador deve ter lido para se qualificar ao Nível de Confiança 3."
-    tl3_requires_max_flagged: "O utilizador não deverá ter mais do que x mensagens marcadas por x diferentes utilizadores nos últimos 100 dias para se qualificar à promoção para o nível de confiança 3, onde x é o valor definido. (0 ou superior)"
+    tl3_requires_max_flagged: "O utilizador não deverá ter mais do que x mensagens marcadas por x diferentes utilizadores nos últimos dias (período nc3) para se qualificar à promoção para o nível de confiança 3, onde x é o valor definido. (0 ou superior)"
     tl3_promotion_min_duration: "Número mínimo de dias em que a promoção para Nível de Confiança 3 dura antes que o utilizador possa ser despromovido para o Nível de Confiança 2."
-    tl3_requires_likes_given: "Número mínimo de gostos que o utilizador deve ter atribuído nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3."
-    tl3_requires_likes_received: "Número mínimo de gostos que o utilizador deve ter recebido nos últimos 100 dias para se qualificar à promoção para o Nível de Confiança 3."
+    tl3_requires_likes_given: "Número mínimo de gostos que o utilizador deve ter atribuído nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3."
+    tl3_requires_likes_received: "Número mínimo de gostos que o utilizador deve ter recebido nos últimos dias (período nc3) para se qualificar à promoção para o Nível de Confiança 3."
     tl3_links_no_follow: "Não remover rel=nofollow das hiperligações publicadas por utilizadores com Nível de Confiança 3."
     min_trust_to_create_topic: "O Nível de Confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível mínimo de confiança necessário para editar mensagens marcadas como wiki."
@@ -1011,6 +1019,8 @@ pt:
     unsubscribe_via_email: "Permitir aos utilizadores cancelar a subscrição de emails enviando um email com \"unsubscribe\" no assunto ou no corpo do email"
     unsubscribe_via_email_footer: "Adicionar uma hiperligação de cancelamento de subscrição ao rodapé de emails enviados"
     delete_email_logs_after_days: "Apagar registos de email após (N) dias. 0 para os manter indefinidamente"
+    max_emails_per_day_per_user: "Número máximo de emails para enviar aos utilizadores. 0 para desligar o limite"
+    manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
     pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
     pop3_polling_ssl: "Utilize SSL ao ligar a um servidor POP3. (Recomendado)"
     pop3_polling_period_mins: "Período em minutos entre a verificação da conta POP3 para o email. NOTA: requer reinicialização."
@@ -1055,7 +1065,7 @@ pt:
     disable_avatar_education_message: "Desativar mensagem educativa para alteração de avatar."
     daily_performance_report: "Analise os logs diários NGINX e publique um tópico visível apenas para o pessoal com detalhes"
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
-    permalink_normalizations: "Utilize a seguinte expressão regular antes de combinar hiperligações permanentes, por exemplo: /(\\/topic.*)\\?.*/\\1 irá retirar sequências de consulta de rotas de tópicos. O formato é regex+sequência utilize \\1 etc. para aceder a capturas."
+    permalink_normalizations: "Aplicar a seguinte expressão regular antes de igualar hiperligações permanentes, por exemplo: /(topic.*)\\?.*/\\1 irá remover parâmetros de roteamento para tópicos. O formato é regex+sequência utilize \\1 etc. para aceder a capturas.O formato é regex+string utilize \\1 etc. para aceder a capturas."
     global_notice: "Exibir um banner global URGENTE, EMERGÊNCIA a todos os visitantes, mudar para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desativa notificações de edição do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
@@ -1093,6 +1103,7 @@ pt:
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
     notify_about_queued_posts_after: "Se não houver mensagens que estiveram à espera de revisão por mais do que estas horas, um email será enviado para o email de contacto. Configure para 0 para desativar estes emails."
     default_email_digest_frequency: "Por defeito, quantas vezes os utilizadores recebem emails de resumo."
+    default_include_tl0_in_digests: "Incluir mensagens de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
     default_email_private_messages: "Por defeito, enviar um email quando alguém envia mensagens ao utilizador."
     default_email_direct: "Por defeito, enviar um email quando alguém cita/responde a/menciona ou convida o utilizador."
     default_email_mailing_list_mode: "Por defeito, enviar um email por cada nova mensagem."
@@ -1131,7 +1142,8 @@ pt:
       pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
       pop3_polling_authentication_failed: "Autenticação POP3 falhada. Por favor verifique as suas credenciais pop3."
       reply_by_email_address_is_empty: "Tem que definir um 'respostas por endereço de email' antes de habilitar a reposta por email."
-      pop3_polling_disabled: "Tem de habilitar o polling POP3 antes de habilitar a reposta por email."
+      email_polling_disabled: "Tem de habilitar a consulta manual ou automática de emails via POP antes de habilitar a reposta por email."
+      user_locale_not_enabled: "Tem de habilitar 'permitir definições regionais do utilizador' antes de habilitar esta configuração."
   notification_types:
     group_mentioned: "%{group_name} foi mencionado em %{link}"
     mentioned: "%{display_username} mencionou-o em %{link}"
@@ -1153,11 +1165,6 @@ pt:
       category: 'Categorias'
       topic: 'Resultados'
       user: 'Utilizadores'
-  sso:
-    not_found: "Não foi possível encontrar ou criar uma conta, contacte a administração do sítio"
-    account_not_approved: "A conta está pendente de aprovação, irá receber uma notificação por email assim que for aprovada."
-    unknown_error: "Erro ao atualizar a informação, contacte a administração do sítio"
-    timeout_expired: "Tempo para início de sessão de conta expirado, por favor tente entrar novamente"
   original_poster: "Participante Original"
   most_posts: "Maior parte das mensagens"
   most_recent_poster: "Participante Mais Recente"
@@ -1314,34 +1321,8 @@ pt:
     text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n- *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**.\n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF.\n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n- Recomendamos vivamente que **envie um email de teste para [mail-tester.com][mt]** para verificar que tudo mencionado em cima está a funcionar correctamente.\n\n(A maneira *fácil* é criar uma conta grátis em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que fornecem grátis, generosamente grátis, pacotes de envio de emails  e será suficiente para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!)\n\nEsperamos que tenha recebido este teste de entrega de email sem problemas!\n\nBoa sorte, \n\nDos seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://sendgrid.com/\n[sp]: https://www.sparkpost.com/\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n[mt]: http://www.mail-tester.com/\n"
   new_version_mailer:
     subject_template: "[%{site_name}]  Nova versão Discourse, atualização disponível"
-    text_body_template: |
-      Hurra, uma nova versão do [Discourse](http://www.discourse.org) está disponível :)
-
-      A sua versão: %{installed_version}
-      A nova versão: **%{new_version}**
-
-      - Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] atualização disponível"
-    text_body_template: |
-      Hurra, uma nova versão do [Discourse](http://www.discourse.org) está disponível :)
-
-      A sua versão: %{installed_version}
-      A nova versão: **%{new_version}**
-
-      - Ver o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Atualizar a partir do seu navegador em [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
-
-      - Visitar [meta.discourse.org](http://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
-
-      ### Notas da versão
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 mensagem à espera de revisão"
@@ -1478,12 +1459,6 @@ pt:
 
         A sua resposta foi enviada de um email diferente daquele que esperávamos, por esta razão não temos a certeza que seja a mesma pessoa. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
 
-    email_reject_no_message_id:
-      subject_template: "[%{site_name}]  Problema de email -- Sem identificador de mensagem"
-      text_body_template: |
-        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
-
-        Não conseguimos encontrar o `Message-Id` nos cabeçalhos do email. Tente enviar através de outro endereço de email ou contacte um membro do pessoal.
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
       text_body_template: |+
@@ -1601,6 +1576,10 @@ pt:
 
         Esta é uma mensagem automática de %{site_name} para informá-lo de que a sua conta foi bloqueada por um membro do pessoal.
 
+        Por favor tome atenção que não poderá criar novas respostas ou tópicos até um membro do pessoal desbloquear a sua conta.
+
+        Se tem questões sobre este bloqueio, por favor contacte um [membro do pessoal](%{base_url}/about)
+
         Para orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Novo utilizador %{username}  bloqueado devido a sinalizações da comunidade."
@@ -1642,6 +1621,9 @@ pt:
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Respostas Anteriores"
+    reached_limit:
+      one: "AVISO: atingiu o número máximo de emails por dia. Próximas notificações será suprimidas."
+      other: "AVISO: atingiu o número máximo de %{count} emails por dia. Próximas notificações será suprimidas."
     in_reply_to: "Em Resposta A"
     unsubscribe:
       title: "Cancelar a Subscrição"
@@ -1654,50 +1636,10 @@ pt:
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} convidou-o para uma mensagem
-
-        >%{username}
-        >
-        > %{topic_excerpt}
-
-        at
-
-        > %{site_title} -- %{site_description}
-
-        Por favor visite esta hiperligação para visualizar a mensagem: %{base_url}%{url}
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
-      text_body_template: |2+
-
-        %{username} convidou-o para uma mensagem
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        em
-
-        > %{site_title} -- %{site_description}
-
-        Por favor visite esta hiperligação para ver a mensagem: %{base_url}%{url}
-
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} convidou-o para '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} convidou-o para uma discussão
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        em
-
-        > %{site_title} -- %{site_description}
-
-        Por favor visite esta hiperligação para visualizar a mensagem: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1920,8 +1862,6 @@ pt:
     images:
       too_large: "Pedimos desculpa, a imagem que está a tentar carregar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor redimensione-a e tente novamente."
       size_not_found: "Pedimos desculpa, mas não conseguimos determinar o tamanho da imagem. É possível que seu ficheiro de imagem esteja corrompido?"
-  avatar:
-    missing: "Desculpe, mas o avatar que selecionou não está presente no servidor. Pode tentar carregá-lo novamente?"
   flag_reason:
     sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP respondeu. Veja as configurações de flag_sockpuppets"
     spam_hosts: "Este novo utilizador tentou criar múltiplas mensagens com hiperligações ao mesmo domínio. Verifique as configurações do sítio em newuser_spam_host_threshold."
@@ -1936,6 +1876,7 @@ pt:
     post_deleted: "a mensagem foi eliminada pelo autor"
     user_suspended: "o utilizador foi suspenso"
     already_read: "o utilizador já leu esta mensagem"
+    exceeded_limit: "Excedeu max_emails_per_day_per_user"
     message_blank: "a mensagem está em branco"
     message_to_blank: "message.to está em branco"
     text_part_body_blank: "text_part.body está em branco"
@@ -1965,7 +1906,7 @@ pt:
       <h3>Dicas</h3>
       <p>
       <ul>
-        <li>A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li> <li> Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
+        <li>A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
         <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
         <li>Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
       </ul>
@@ -1977,7 +1918,7 @@ pt:
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
         <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td></td></tr>
         <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
         </table>
       </p>
@@ -1988,58 +1929,6 @@ pt:
           <li><code>rainbows category:"parks and gardens" in:bookmarks</code> irá retornar uma pesquisa de tópicos que contêm a palavra “rainbows” na categoria “parks and gardens” e que estão marcados por si.</li>
         </ul>
       </p>
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Este distintivo é concedido por preencher <a href="/my/preferences">o seu perfil de utilizador</a> e por selecionar uma imagem de perfil. Deixar a comunidade saber mais sobre quem você é e no que está interessado torna a comunidade melhor e mais ligada.
-      first_like: |
-        Este distintivo é concedido na primeira vez que gosta de uma mensagem utilizando o botão :heart:. Gostar de mensagens é uma excelente maneira de deixar os seus companheiros membros da comunidade saberem que o que eles postaram foi interessante, útil, giro, ou divertido. Partilhe o amor!
-      first_link: |
-        Este distintivo é concedido na primeira vez que coloca uma hiperligação para outro tópico numa resposta. Ligar tópicos ajuda os leitores a encontrarem conversas relacionadas interessantes, ao exibir ligação entre tópicos em ambas as direções.
-      first_quote: |
-        Este distintivo é concedido na primeira vez que cita uma mensagem na sua resposta. Citar secções relevantes de mensagens anteriores na sua resposta ajuda a manter as discussões focadas e no tópico.
-      first_share: |
-        Este distintivo é concedido na primeira vez que partilha uma hiperligação para uma mensagem ou tópico utilizando o botão de partilha. Partilhar hiperligações é uma excelente maneira de mostrar discussões interessantes com o resto do mundo e de fazer crescer a sua comunidade.
-      read_guidelines: |
-        Este distintivo é concedido por <a href="/guidelines">ler as diretrizes da comunidade</a>. Seguir e partilhar estas simples diretrizes ajuda a construir uma comunidade segura, divertida e sustentável.
-      reader: |
-        Este distintivo é concedido ao ler um tópico longo. Ler é fundamental. Ler atentamente ajuda-o a seguir a conversação e leva-o a respostas melhores e mais completas.
-      editor: |
-        Este distintivo é concedido ao editar a sua mensagem. Não hesite em editar as suas mensagens em qualquer altura para melhorá-las, corrigir pequenos erros, ou adicionar algo que se tenha esquecido.
-      first_flag: |
-        Este distintivo é concedido ao sinalizar uma mensagem. Sinalizar é  crítico para a saúde da sua comunidade. Se notar em alguma mensagem que necessite de atenção do moderador por favor
-        não hesite em sinalizá-la. Pode também utilizar o diálogo de sinalização para enviar <b>mensagens</b> para colegas utilizadores.
-      nice_share: |
-        Este distintivo é concedido ao partilhar uma hiperligação para uma mensagem que seja visitada por 25 visitantes externos. Bom trabalho! Partilhar hiperligações para discussões interessantes com amigos é uma excelente maneira de fazer crescer a nossa comunidade.
-      welcome: |
-        Este distintivo é concedido quando recebe o seu primeiro gosto numa mensagem. Parabéns, publicou algo que os colegas membros da comunidade acham interessante, giro, ou útil!
-      anniversary: |
-        Este distintivo é concedido quando tiver sido membro por um ano com pelo menos uma mensagem nesse ano. Obrigado por ficar por cá e por contribuir para a nossa comunidade!
-      good_share: |
-        Este distintivo é concedido por partilhar uma hiperligação para uma mensagem que seja visitada por 300 visitantes externos. Bom trabalho! Mostrou uma discussão interessante a <i>lot</i>novas pessoas e ajudou-nos a crescer.
-      great_share: |
-        Este distintivo é concedido por partilhar uma hiperligação para uma mensagem que seja visitada por 100 visitantes externos. Uau! Promoveu uma discussão interessante junto de uma enorme nova audiência para esta comunidade, e ajudou-nos a crescer de uma forma exponencial.
-      nice_post: |
-        Este distintivo é concedido ao criar uma resposta que obtém 10 gostos. Bom trabalho!
-      nice_topic: |
-        Este distintivo é concedido ao criar um tópico que obtém 10 gostos. Bom trabalho!
-      good_post: |
-        Este distintivo é concedido ao criar uma resposta que obtém 25 gostos. Bom trabalho!
-      good_topic: |+
-        Este distintivo é concedido ao criar um tópico que obtém 25 gostos. Bom trabalho!
-
-      great_post: |
-        Este distintivo é concedido ao criar uma mensagem que obtém 50 gostos. Uau!
-      great_topic: |
-        Este distintivo é concedido ao criar uma resposta que obtém 50 gostos. Uau!
-      basic: |
-        Este distintivo é concedido quando atinge o nível de confiança 1. Obrigado por ficar por cá durante algum tempo e por ler alguns tópicos para aprender do que se trata a nossa comunidade. As suas restrições de novo utilizador foram removidas, e foram-lhe atribuídas habilidades essenciais da comunidade, tais como mensagens pessoais, sinalização, edição da wiki, e a habilidade de publicar imagens e múltiplas hiperligações.
-      member: |
-        Este distintivo é concedido quando atinge o nível de confiança 2. Obrigado por participar durante um período de semanas para se juntar à nossa comunidade. Agora pode enviar convites pessoais da sua página de utilizador ou tópicos individuais, criar mensagens de grupo, e mais alguns gostos por dia!
-      regular: |
-        Este distintivo é concedido quando atingir o nível de confiança 3. Obrigado por ser uma parte regular da nossa comunidade por um período de meses, um dos leitores mais ativos e um contribuinte fiável no que torna a comunidade fantástica. Agora pode recategorizar e renomear tópicos, aceder à área do salão privado, sinalizações de spam mais poderosas, e muitos mais gostos por dia.
-      leader: |
-        Este distintivo é concedido quando atinge o nível de confiança 4. É um líder nesta comunidade, selecionado pelo pessoal, e define um exemplo positivo para a comunidade nos seus trabalhos e palavras. Tem a habilidade de editar todas as mensagens, realizar ações de moderador de tópicos tais como fixar, fechar, arquivar, dividir e unir, e toneladas de gostos por dia.
   admin_login:
     success: "Email Enviado"
     error: "Erro!"

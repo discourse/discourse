@@ -165,6 +165,16 @@ class TopicUser < ActiveRecord::Base
                                   RETURNING
                                     topic_users.notification_level, tu.notification_level old_level, tu.last_read_post_number
                                 "
+
+    INSERT_TOPIC_USER_SQL = "INSERT INTO topic_users (user_id, topic_id, last_read_post_number, highest_seen_post_number, last_visited_at, first_visited_at, notification_level)
+                  SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now, :new_status
+                  FROM topics AS ft
+                  JOIN users u on u.id = :user_id
+                  WHERE ft.id = :topic_id
+                    AND NOT EXISTS(SELECT 1
+                                   FROM topic_users AS ftu
+                                   WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)"
+
     def update_last_read(user, topic_id, post_number, msecs, opts={})
       return if post_number.blank?
       msecs = 0 if msecs.to_i < 0
@@ -214,15 +224,18 @@ class TopicUser < ActiveRecord::Base
 
         user.update_posts_read!(post_number, mobile: opts[:mobile])
 
-        exec_sql("INSERT INTO topic_users (user_id, topic_id, last_read_post_number, highest_seen_post_number, last_visited_at, first_visited_at, notification_level)
-                  SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now, :new_status
-                  FROM topics AS ft
-                  JOIN users u on u.id = :user_id
-                  WHERE ft.id = :topic_id
-                    AND NOT EXISTS(SELECT 1
-                                   FROM topic_users AS ftu
-                                   WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)",
-                  args)
+        begin
+          exec_sql(INSERT_TOPIC_USER_SQL, args)
+        rescue PG::UniqueViolation
+          # if record is inserted between two statements this can happen
+          # we retry once to avoid failing the req
+          if opts[:retry]
+            raise
+          else
+            opts[:retry] = true
+            update_last_read(user, topic_id, post_number, msecs, opts)
+          end
+        end
 
         MessageBus.publish("/topic/#{topic_id}", { notification_level_change: args[:new_status] }, user_ids: [user.id])
       end

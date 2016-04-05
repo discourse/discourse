@@ -124,6 +124,22 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   actions: {
 
+    checkMailingList(){
+      Em.run.next(()=>{
+        const postsPerDay = this.get('model.mailing_list_posts_per_day');
+        if (!postsPerDay || postsPerDay < 2) {
+          this.set('model.user_option.mailing_list_mode', true);
+          return;
+        }
+
+        bootbox.confirm(I18n.t("user.enable_mailing_list", {count: postsPerDay}), I18n.t("no_value"), I18n.t("yes_value"), (success) => {
+          if (success) {
+            this.set('model.user_option.mailing_list_mode', true);
+          }
+        });
+      });
+    },
+
     save() {
       this.set('saved', false);
 

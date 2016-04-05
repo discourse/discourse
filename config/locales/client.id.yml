@@ -475,26 +475,6 @@ id:
         search: '<b>/</b> Cari'
       actions:
         title: 'Aksi'
-    badges:
-      badge:
-        first_quote:
-          name: Kutipan Pertama
-          description: Kutip pengguna
-        read_guidelines:
-          name: Baca Pedoman
-          description: Baca <a href="/guidelines">pedoman komunitas</a>
-        reader:
-          name: Pembaca
-          description: Baca setiap pos di sebuah topik dengan lebih dari 100 pos
-        popular_link:
-          name: Tautan Populer
-          description: Pos sebuah tautan eksternal dengan setidaknya 50 klik
-        hot_link:
-          name: Tautan
-          description: Pos sebuah tautan eksternal dengan setidaknya 300 klik
-        famous_link:
-          name: Tautan terkenal
-          description: Pos sebuah tautan eksternal dengan setidaknya 1000 klik
     google_search: |
       <h3>Cari dengan Google</h3>
       <p>

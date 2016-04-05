@@ -26,9 +26,10 @@ If not using **the exact** domain you verified (e.g. you're using a subdomain of
 ```yml
 DISCOURSE_SMTP_ADDRESS: smtp.sendgrid.net
 DISCOURSE_SMTP_PORT: 587
-DISCOURSE_SMTP_USER_NAME: [SendGrid username]
-DISCOURSE_SMTP_PASSWORD: [SendGrid password]
+DISCOURSE_SMTP_USER_NAME: apikey
+DISCOURSE_SMTP_PASSWORD: [SendGrid API Key]
 ```
+We recommend creating an [API Key][sg2] instead of using your SendGrid username and password.
 
 #### [Mailgun][gun] (10k emails/month)
 
@@ -49,3 +50,4 @@ Go to [My Account page](https://www.mailjet.com/account) and click on the ["SMTP
   [jet]: https://www.mailjet.com/pricing
   [gun]: http://www.mailgun.com/
    [sg]: https://sendgrid.com/
+  [sg2]: https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html

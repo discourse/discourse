@@ -113,6 +113,10 @@ module Jobs
         email_args[:new_email] = user.email
       end
 
+      if EmailLog.reached_max_emails?(user)
+        return skip_message(I18n.t('email_log.exceeded_limit'))
+      end
+
       message = UserNotifications.send(type, user, email_args)
 
       # Update the to address if we have a custom one

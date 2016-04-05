@@ -282,9 +282,13 @@ class Admin::UsersController < Admin::AdminController
     return render nothing: true, status: 404 unless SiteSetting.enable_sso
 
     sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
-    user = sso.lookup_or_create_user
 
-    render_serialized(user, AdminDetailedUserSerializer, root: false)
+    begin
+      user = sso.lookup_or_create_user
+      render_serialized(user, AdminDetailedUserSerializer, root: false)
+    rescue ActiveRecord::RecordInvalid => ex
+      render json: failed_json.merge(message: ex.message), status: 403
+    end
   end
 
   def delete_other_accounts_with_same_ip

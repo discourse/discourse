@@ -81,8 +81,7 @@ registerButton('edit', attrs => {
       className: 'edit',
       title: 'post.controls.edit',
       icon: 'pencil',
-      alwaysShowYours: true,
-      alwaysShowWiki: true
+      alwaysShowYours: true
     };
   }
 });
@@ -161,7 +160,7 @@ registerButton('bookmark', attrs => {
 });
 
 registerButton('admin', attrs => {
-  if (!attrs.canManage) { return; }
+  if (!attrs.canManage && !attrs.canWiki) { return; }
   return { action: 'openAdminMenu',
            title: 'post.controls.admin',
            className: 'show-post-admin-menu',
@@ -177,22 +176,6 @@ registerButton('delete', attrs => {
     return { action: 'recoverPost', title: 'post.controls.undelete', icon: 'undo', className: 'recover' };
   } else if (attrs.canDelete) {
     return { action: 'deletePost', title: 'post.controls.delete', icon: 'trash-o', className: 'delete' };
-  }
-});
-
-registerButton('wiki', attrs => {
-  if (!attrs.canWiki) { return; }
-
-  if (attrs.wiki) {
-    return { action: 'toggleWiki',
-             title: 'post.controls.unwiki',
-             icon: 'pencil-square-o',
-             className: 'wiki wikied' };
-  } else {
-    return { action: 'toggleWiki',
-             title: 'post.controls.wiki',
-             icon: 'pencil-square-o',
-             className: 'wiki' };
   }
 });
 
@@ -229,9 +212,7 @@ export default createWidget('post-menu', {
       const button = this.attachButton(i, attrs);
       if (button) {
         allButtons.push(button);
-        if ((attrs.yours && button.attrs.alwaysShowYours) ||
-            (attrs.wiki && button.attrs.alwaysShowWiki) ||
-            (hiddenButtons.indexOf(i) === -1)) {
+        if ((attrs.yours && button.attrs.alwaysShowYours) || (hiddenButtons.indexOf(i) === -1)) {
           visibleButtons.push(button);
         }
       }

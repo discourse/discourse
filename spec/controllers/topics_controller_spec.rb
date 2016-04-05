@@ -578,6 +578,11 @@ describe TopicsController do
       expect(response.status).to eq(404)
     end
 
+    it 'returns a 404 for an ID that is larger than postgres limits' do
+      xhr :get, :show, topic_id: 50142173232201640412, slug: 'topic-that-is-made-up'
+      expect(response.status).to eq(404)
+    end
+
     context 'a topic with nil slug exists' do
       before do
         @nil_slug_topic = Fabricate(:topic)

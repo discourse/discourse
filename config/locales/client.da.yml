@@ -166,6 +166,8 @@ da:
     more: "Mere"
     less: "Mindre"
     never: "aldrig"
+    every_30_minutes: "hvert 30. minut"
+    every_hour: "hver time"
     daily: "dagligt"
     weekly: "ugentligt"
     every_two_weeks: "hver anden uge"
@@ -256,7 +258,7 @@ da:
         one: "Det emne har <b>1</b> indlæg der afventer godkendelse"
         other: "Dette emne har <b>{{count}}</b> indlæg der afventer godkendelse"
       confirm: "Gem ændringer"
-      delete_prompt: "Er du sikker på, at du vil slette <b>%{username}</b>? Alle brugerens indlæg bliver slettet og email og IP-adresse bliver blokeret."
+      delete_prompt: "Er du sikker på at du vil slette <b>%{username}</b>? Det fjerner alle indlæg og blokerer email og IP-adresse."
       approval:
         title: "Indlæg afventer godkendelse"
         description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
@@ -313,7 +315,10 @@ da:
         one: "gruppe"
         other: "grupper"
       members: "Medlemmer"
+      topics: "Emner"
       posts: "Indlæg"
+      mentions: "Omtaler"
+      messages: "Beskeder"
       alias_levels:
         title: "Hvem kan sende beskeder til og @nævne denne gruppe?"
         nobody: "Ingen"
@@ -420,9 +425,7 @@ da:
         perm_denied_btn: "Tilladelse nægtet"
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         disable: "Deaktiver notifikationer"
-        currently_enabled: "(slået til)"
         enable: "Aktiver notifikationer"
-        currently_disabled: "(slået fra)"
         each_browser_note: "Bemærk: Du skal ændre indstillingen i alle dine browsere."
       dismiss_notifications: "Marker alle som læst"
       dismiss_notifications_tooltip: "Marker alle ulæste notifikationer som læst"
@@ -457,7 +460,6 @@ da:
       muted_users: "Ignoreret"
       muted_users_instructions: "Undertryk alle notifikationer fra disse brugere."
       muted_topics_link: "Vis mute emner"
-      automatically_unpin_topics: "Unpin automatisk emner når du når til bunden."
       staff_counters:
         flags_given: "hjælpsomme markeringer"
         flagged_posts: "markerede indlæg"
@@ -558,12 +560,27 @@ da:
         title: "Brugerkort-Badge"
       website: "Site"
       email_settings: "E-mail"
+      like_notification_frequency:
+        title: "Giv besked når liked"
+        always: "Altid"
+        first_time_and_daily: "Første gang et indlæg likes og dagligt"
+        first_time: "Første gang et indlæg likes"
+        never: "Aldrig"
+      email_previous_replies:
+        title: "Inkluder tidligere svar i bunden af emails"
+        unless_emailed: "medmindre tidligere sendt"
+        always: "altid"
+        never: "aldrig"
       email_digests:
         title: "Når jeg ikke besøger her, send mig en email med nyheder."
+        every_30_minutes: "hvert 30. minut"
+        every_hour: "hver time"
         daily: "dagligt"
         every_three_days: "hver tredje dag"
         weekly: "ugenligt"
         every_two_weeks: "hver anden uge"
+      include_tl0_in_digests: "Inkluder indlæg fra nye brugere i opsummerings-mails"
+      email_in_reply_to: "Inkluder et uddrag af svaret indlæg i emails"
       email_direct: "Send mig en email når nogen citerer mig, svarer på mit indlæg, nævner mit @brugernavn eller inviterer mig til et emne"
       email_private_messages: "Send mig en email når nogen sender mig en besked"
       email_always: "Send mig email-notifikationer, selv når jeg er aktiv på websitet"
@@ -634,17 +651,11 @@ da:
       summary:
         title: "Resume"
         stats: "Statistik"
-        topic_count: "Emner oprettet"
-        post_count: "Indlæg oprettet"
-        likes_given: "Likes givet"
-        likes_received: "Likes modtaget"
-        days_visited: "Dage besøgt"
-        posts_read_count: "Indlæg læst"
         top_replies: "Top svar"
-        top_topics: "Top emner"
-        top_badges: "Top badges"
-        more_topics: "Flere emner"
         more_replies: "Flere svar"
+        top_topics: "Top emner"
+        more_topics: "Flere emner"
+        top_badges: "Top badges"
         more_badges: "Flere badges"
       associated_accounts: "Logins"
       ip_address:
@@ -688,10 +699,15 @@ da:
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
     read_only_mode:
+      enabled: "Dette website kan kun læses lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, likes eller andet indtil videre."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
+      logout_disabled: "Log ud er deaktivere mens websitet kun kan læses."
     too_few_topics_and_posts_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion!</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner og <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg. Nye besøgende har brug for samtaler at læse og svare på."
     too_few_topics_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøgende har brug for samtaler at læse og svare på."
     too_few_posts_notice: "Lad os <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få startet denne diskussion !</a> Der er i øjeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> indlæg. Nye besøgende har brug for samtaler at læse og svare på."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: Aktuelle mængde på <a href='%{url}' target='_blank'>%{rate}</a> har nået websitets begrænsning på %{siteSettingRate}."
+      exceeded: "%{timestamp}: Aktuelle mængde på <a href='%{url}' target='_blank'>%{rate}</a> har overskredet websitets begrænsning på %{siteSettingRate}."
     learn_more: "Læs mere…"
     year: 'år'
     year_desc: 'Indlæg oprettet i de seneste 365 dage'
@@ -718,7 +734,7 @@ da:
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description: "Der er <b>{{replyCount}}</b> svar."
-      description_time: "Der er <b>{{replyCount}}</b> svar og det vil tage ca. <b>{{readingTime}} minutter</b> at læse."
+      description_time: "Der er <b>{{replyCount}}</b> svar med en estimeret læsetid på <b>{{readingTime}} minutter</b>."
       enable: 'Opsummér dette emne'
       disable: 'Vis alle indlæg'
     deleted_filter:
@@ -784,6 +800,9 @@ da:
       twitter:
         title: "med Twitter"
         message: "Logger ind med Twitter (kontrollér at pop-op-blokering ikke er aktiv)"
+      instagram:
+        title: "med Instagram"
+        message: "Validering med Instagram (vær sikker på at pop-up blokering ikke er slået til)"
       facebook:
         title: "med Facebook"
         message: "Logger ind med Facebook (kontrollér at pop-op-blokering ikke er aktiv)"
@@ -889,9 +908,10 @@ da:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='citeret' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='svaret' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='svaret' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='redigeret' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
       private_message: "<i title='privat besked' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='privat besked' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='inviteret til emne' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -998,9 +1018,6 @@ da:
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
         search: "Der er ingen søgeresultater."
-        educate:
-          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de er lavet inden for de sidste 2 dage.</p><p>Du kan skifte dette i dine <a href="%{userPrefsUrl}">indstillinger</a>.</p>'
-          unread: '<p>Dine ulæste emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en ulæst-tæller <span class="badge new-posts badge-notification">1</span> hvis du:</p><ul><li>Lavede emnet</li><li>Svarede på emnet</li><li>læste emnet i mere end 4 min.</li></ul><p>Eller hvis du udtrykkeligt har sat emnet til Sporet eller Overvåget via notifikations kontrollen i budnen af hvert emne.</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a>.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
         hot: "There are no more hot topics."
@@ -1318,6 +1335,7 @@ da:
         about: "dette indlæg er en wiki"
       archetypes:
         save: 'Gem indstillinger'
+      few_likes_left: "Tak fordi du liker! Du har kun få likes tilbage i dag."
       controls:
         reply: "begynd at skrive et svar på dette indlæg"
         like: "like dette indlæg"
@@ -1365,17 +1383,14 @@ da:
           like: "Undo like"
           vote: "Undo vote"
         people:
-          off_topic: "{{icons}} markerede dette som urelevant for emnet"
-          spam: "{{icons}} markerede dette som spam"
-          spam_with_url: "{{icons}} markerede <a href='{{postUrl}}'>dette som spam</a>"
-          inappropriate: "{{icons}} markerede dette som upassende"
-          notify_moderators: "{{icons}} underrettede moderatorer"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>underrettede moderatorer</a>"
-          notify_user: "{{icons}} har sendt en besked"
-          notify_user_with_url: "{{icons}} sendte en <a href='{{postUrl}}'>besked</a>"
-          bookmark: "{{icons}} bogmærker"
-          like: "{{icons}} likes"
-          vote: "{{icons}} stemmer"
+          off_topic: "markerede dette som off-topic"
+          spam: "markerede dette som spam"
+          inappropriate: "markerede dette som upassende"
+          notify_moderators: "informerede moderatorer"
+          notify_user: "sendte en besked"
+          bookmark: "bogmærkede dette"
+          like: "likede dette"
+          vote: "stemte for dette"
         by_you:
           off_topic: "Du flagede dette som off-topic"
           spam: "Du flagede dette som spam"
@@ -1447,6 +1462,7 @@ da:
           last: "Sidste udgave"
           hide: "Skjul udgave"
           show: "Vis udgave"
+          revert: "Gå tilbage til denne udgave"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1527,7 +1543,6 @@ da:
           description: "Du vil aldrig få besked om noget om nye emner i kategorierne og de vises heller ikke i seneste."
     flagging:
       title: 'Tak fordi du hjælper med at holde vores forum civiliseret!'
-      private_reminder: 'flag er private, de er <b>kun</p> synlige for personalet'
       action: 'Flag indlæg'
       take_action: "Reagér"
       notify_action: 'Besked'
@@ -1539,7 +1554,7 @@ da:
       submit_tooltip: "Send privat markeringen"
       take_action_tooltip: "Nå til markerings niveauer med det samme, i stedet for at vente på flere markeringer fra fælleskabet"
       cant: "Beklager, du kan i øjeblikket ikke flage dette indlæg."
-      notify_staff: 'Informer personalet'
+      notify_staff: 'Informer staff privat'
       formatted_name:
         off_topic: "Det holder sig ikke til emnet"
         inappropriate: "Det er upassende"
@@ -1920,11 +1935,9 @@ da:
             is_disabled: "Gendan er deaktiveret i forum indstillingerne."
             label: "Genetabler"
             title: "Gendan backuppen"
-            confirm: "Er du sikker på du vil gendanne fra denne backup?"
           rollback:
             label: "Rul tilbage"
             title: "Rul databasen tilbage til et tidspunkt hvor tingene virkede"
-            confirm: "Er du sikker på du vil rulle databasen tilbage?"
       export_csv:
         user_archive_confirm: "Er du sikker på du vil downloade dine indlæg?"
         success: "Eksport er startet, du vil blive notificeret via en besked når denne proces er færdig."
@@ -2027,9 +2040,6 @@ da:
           love:
             name: 'kærlighed'
             description: "Like knappens farve."
-          wiki:
-            name: 'wiki'
-            description: "Basis farven der bruges som baggrund i wiki posts."
       email:
         title: "Emails"
         settings: "Indstillinger"
@@ -2066,6 +2076,9 @@ da:
           subject: "Emne"
           error: "Fejl"
           none: "Ingen indkommende emails fundet"
+          modal:
+            error: "Fejl"
+            subject: "Emne"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2430,6 +2443,7 @@ da:
         badge: Badge
         display_name: Vist navn
         description: Beskrivelse
+        long_description: Lang beskrivelse
         badge_type: Badge Type
         badge_grouping: Gruppe
         badge_groupings:
@@ -2592,10 +2606,11 @@ da:
       earned_n_times:
         one: "Fortjente dette badge 1 gang"
         other: "Fortjente dette badge %{count} gange."
-      more_with_badge: "Andre med dette badge"
+      granted_on: "Tildelt %{date}"
+      others_count: "Andre med dette badge (%{count})"
       title: Badges
-      allow_title: "kan bruges som titel"
-      multiple_grant: "kan gives flere gange"
+      allow_title: "tilgængelig titel"
+      multiple_grant: "tildelt flere gange"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"
@@ -2618,97 +2633,6 @@ da:
           name: Andre
         posting:
           name: Indlæg
-      badge:
-        editor:
-          name: Redigering
-          description: Første indlæg redigering
-        basic_user:
-          name: Basic
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Givet</a> alle vigtige fællesskab funktioner
-        member:
-          name: Medlem
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Givet</a> invitationer
-        regular:
-          name: Stamgæst
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Givet</a> re-kategoristering, omdøbning, følge links og loungen
-        leader:
-          name: Leder
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Givet</a> global redigering, fastgøring, lukning, arkivering, del og sammensæt
-        welcome:
-          name: Velkommen
-          description: Modtaget et like
-        autobiographer:
-          name: Selvbiografi
-          description: Har udfyldt sin <a href="/my/preferences">profil</a> information
-        anniversary:
-          name: Jubilæum
-          description: Aktivt medlem i et år, som har skrevet mindst en gang
-        nice_post:
-          name: Fint indlæg
-          description: Har modtaget 10 "likes" på et indlæg. Denne badge kan modtages flere gange.
-        good_post:
-          name: Godt indlæg
-          description: Har modtaget 25 "likes" på et indlæg. Denne badge kan modtages flere gange.
-        great_post:
-          name: Rigtig godt indlæg
-          description: Har modtaget 50 "likes" på et indlæg. Denne badge kan modtages flere gange.
-        nice_topic:
-          name: Godt emne
-          description: Har modtaget 10 "likes" på et emne. Denne badge kan modtages flere gange.
-        good_topic:
-          name: Godt emne
-          description: Har modtaget 25 "likes" på et emne. Denne badge kan modtages flere gange.
-        great_topic:
-          name: Fantastisk emne
-          description: Har modtaget 50 "likes" på et emne. Denne badge kan modtages flere gange.
-        nice_share:
-          name: God deling
-          description: Delt et emne med 25 unikke besøgende
-        good_share:
-          name: God deling
-          description: Delt et indlæg med 300 unikke besøgende
-        great_share:
-          name: Fantastisk deling
-          description: Delt et indlæg med 1000 unikke besøgende
-        first_like:
-          name: Første like
-          description: Har liked et indlæg
-        first_flag:
-          name: Første markering
-          description: Markeret et indlæg
-        promoter:
-          name: Promoter
-          description: Inviterede en bruger
-        campaigner:
-          name: Kampagnechef
-          description: Inviterede 3 brugere (tillidsniveau 1)
-        champion:
-          name: Mester
-          description: Inviterede 5 medlemmer (tillidsniveau 2)
-        first_share:
-          name: Første deling
-          description: Delt et indlæg
-        first_link:
-          name: Første link
-          description: Internt link til et andet emne tilføjet
-        first_quote:
-          name: Første citering
-          description: Citeret en bruger
-        read_guidelines:
-          name: Læst retningslinierne
-          description: Har læst <a href="/guidelines">retningslinierne for forummet</a>
-        reader:
-          name: Læser
-          description: Har læst hver eneste indlæg i et emne med mere end 100 posts
-        popular_link:
-          name: Populært link
-          description: Postede et eksternt link med mindst 50 klik
-        hot_link:
-          name: Hot link
-          description: Postede et eksternt link med mindst 300 klik
-        famous_link:
-          name: Berømt link
-          description: Postede et eksternt link med mindst 1000 klik
     google_search: |
       <h3>Søg med Google</h3>
       <p>

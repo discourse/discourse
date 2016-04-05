@@ -20,6 +20,9 @@
 
 .select2-drop {
   background: $secondary;
+  i.fa {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  }
 }
 
 .select2-search input {

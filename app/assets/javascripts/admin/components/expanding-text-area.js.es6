@@ -1,5 +1,5 @@
 import { on, observes } from 'ember-addons/ember-computed-decorators';
-import autosize from 'admin/lib/autosize';
+import autosize from 'discourse/lib/autosize';
 
 export default Ember.TextArea.extend({
   @on('didInsertElement')

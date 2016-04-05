@@ -178,7 +178,6 @@ sk:
       can_not_modify_automatic: "Nemôžte upravovať automatickú skupinu"
       member_already_exist: "'%{username}' už je členom tejto skupiny."
       invalid_domain: "'%{domain}' nie je platnou doménou."
-      invalid_incoming_email: "'%{incoming_email}' je neplatná emailová addresa."
     default_names:
       everyone: "všetci"
       admins: "administrátori"
@@ -319,7 +318,6 @@ sk:
       uncategorized_parent: "Nekategorizovaná nemôže mať nadradenú kategóriu"
       self_parent: "Podkategória si nemôže byť zároveň kategóriou "
       depth: "Nemôžte umiestniť podkategóriu pod inú podkategóriu"
-      email_in_already_exist: "Prichádzajúca emailová adresa '%{email_in}' sa už používa pre kategóriu '%{category_name}'."
     cannot_delete:
       uncategorized: "Nemôžte vymazať nekategorizované"
       has_subcategories: "Nemôžte vymazať kategóriu pretože obsahuje podkategórie"
@@ -932,17 +930,9 @@ sk:
     tl2_requires_likes_received: "Koľko \"Páči sa\" musí nový užívateľ dostať pred povýšením na stupeň dôvery 2."
     tl2_requires_likes_given: "Koľko \"Páči sa\" musí nový užívateľ rozdať pred povýšením na stupeň dôvery 2."
     tl2_requires_topic_reply_count: "Na koľko tém musí nový užívateľ odpovedať pred povýšením na stupeň dôvery 2."
-    tl3_time_period: "Požiadavok na časovú dobu pre stupeň dôvery 3"
-    tl3_requires_days_visited: "Minimálny počet dní, koľkokrát používateľ musí navštíviť stránku za posledných 100 dní, aby sa kvalifikoval na úroveň dôvery 3. Ak chcete vypnúť povýšenie na úroveň dôvery 3, nastavte dobu vyššiu ako dobu na úroveň dôvery 3. (0 a viac)"
-    tl3_requires_topics_replied_to: "Minimálny počet tém,  na ktoré musí mať užívateľ odpovedať za posledných 100 dní potrebných pre kvalifikáciu na dosiahnute 3 levelu dôvery. (0 a viac)"
-    tl3_requires_topics_viewed: "Percento tém ktoré musí mať užívateľ pozreté, za posledných 100 dní pre kvalifikáciu na dosiahnute 3 levelu dôvery. (0 až 100)"
-    tl3_requires_posts_read: "Percento príspevkov, ktoré musí mať užívateľ pozreté za posledných 100 dní pre kvalifikáciu na dosiahnute 3 levelu dôvery. (0 až 100)"
     tl3_requires_topics_viewed_all_time: "Minimálny počet všetkých tém,  ktoré musí mať užívateľ pozreté pre kvalifikáciu na dosiahnute 3 levelu dôvery. "
     tl3_requires_posts_read_all_time: "Minimálny počet všetkých príspevkov,  ktoré musí mať užívateľ prečítané pre kvalifikáciu na 3 level dôvery. "
-    tl3_requires_max_flagged: "V posledných 100 dňoch použivateľ nemôže mať viac ako x príspevkou označených viac ako x rôznymi používateľmi aby sa kvalifikoval na postup na úroveň dôvery 3, kde  x je hodnota ktorú nastavujete. (0 alebo viac)"
     tl3_promotion_min_duration: "MInimálny počet dní po pridelení 3 levelu dôvery než môže byť užívateľ degradovaný späť na 3 level dôvery."
-    tl3_requires_likes_given: "Minimálny počet \"Páči sa\", ktoré musia byť udelené za posledných 100 dní pre kvalifikáciu na dosiahnutie 3 levelu dôvery. "
-    tl3_requires_likes_received: "Minimálny počet \"Páči sa\", ktoré musia byť prijaté za posledných 100 dní pre kvalifikáciu na dosiahnutie 3 levelu dôvery. "
     tl3_links_no_follow: "Neodstraňujte rel = nofollow z odkazov pridaných užívateľmi s úrovňou dôveryhodnosti 3 ."
     min_trust_to_create_topic: "MInimálna úroveň dôvery na vytvorenie novej témy."
     min_trust_to_edit_wiki_post: "MInimálna úroveň dôvery na úpravu wiki príspevku."
@@ -957,7 +947,6 @@ sk:
     max_users_notified_per_group_mention: "Maximálny počet používateľov, ktorý môžu dostať notifikácie, v prípade notifikovania celej skupiny (ak sa dosiahne maximum, žiadne ďalšie notifikácie nebudú zaslané)"
     create_thumbnails: "Vytvor náhľad a okraje pre obrázoky, ktoré sú príliš veľké aby sa zmestili do príspevku."
     email_time_window_mins: "Počkať (n) minút pred poslaním akýchkoľvek notifikačných emailov, aby mali používatelia čas úpraviť a dokončiť svoje príspevky."
-    private_email_time_window_seconds: "Počkať (n) sekúnd pred poslaním akýchkoľvek súkromných notifikačných emailov, aby mali používatelia čas úpraviť a dokončiť svoje príspevky."
     email_posts_context: "Koľko posledných odpovedí zahrnúť do obsahu v notifikačných emailoch."
     flush_timings_secs: "Ako často posielať časové dáta na server, v sekundách."
     title_max_word_length: "Maximálna povolená dĺžka slov v názve témy, v znakoch."
@@ -1059,7 +1048,6 @@ sk:
     disable_avatar_education_message: "Vypnúť informatívnu hlášku na zmenu avatara."
     daily_performance_report: "Denne analyzuj NGINX logy a z detailov vytváraj témy iba pre zamestnancov."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
-    permalink_normalizations: "Pred vyhľadaním trvalého odkazu použi následujúci regulérny výraz, napríklad : /(\\/topic.*)\\?.*/\\1 oddelí dotazovaný reťazec od témy. Formátom je regex+reťazec. Použi \\1 atp. k prístupu na zachytenie"
     global_notice: "Pre všetkých návštevníkov zobraz URGENTNÉ, KRÍZOVÉ globálné záhlavie, zmeň na čierne a schovaj (HTML povolené)."
     disable_edit_notifications: "Ak je premenná 'download_remote_images_to_local' aktívna, vypnúť notifikácie o úpravách systémového používateľa."
     automatically_unpin_topics: "Automaticky odopnúť témy ak používateľ dostanie posledný príspevok."
@@ -1149,11 +1137,6 @@ sk:
       category: 'Kategórie'
       topic: 'Výsledky'
       user: 'Používatelia'
-  sso:
-    not_found: "Nepodarilo sa nájsť, alebo vytvoriť účet, kontaktujte správcu stránky"
-    account_not_approved: "Účet čaká na schválenie, o schválení budete upovedomení emailom"
-    unknown_error: "Zlyhala aktualizácia informácie, kontaktujte správcu stránky"
-    timeout_expired: "Vypršal časový limit príhlásenia, prosím skúste sa prihlásiť znova"
   original_poster: "Pôvodný autor"
   most_posts: "Najviac príspevkov"
   most_recent_poster: "Najaktuálnejší prispievateľ"
@@ -1584,20 +1567,6 @@ sk:
       subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
-    user_invited_to_topic:
-      text_body_template: |2
-
-        %{username} Vás pozval do diskusie
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        na
-
-        > %{site_title} -- %{site_description}
-
-        Prosím návštívte tento odkaz pre pozretie správy: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1714,12 +1683,6 @@ sk:
 
         Kliknite na nasledujúci odkaz pre nastavenie hesla k Vášmu novému účtu:
         %{base_url}/users/password-reset/%{email_token}
-    authorize_email:
-      subject_template: "[%{site_name}] Potvrďte Vašu novú email adresu"
-      text_body_template: |
-        Potvrďte Vašu novú emailovú adresu pre %{site_name} kliknutím na nasledujúci odkaz:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Váš účet bol schválený na %{site_name}!"
     signup:
@@ -1746,8 +1709,6 @@ sk:
     images:
       too_large: "Ľutujeme, obrázok, ktorý sa pokúšate nahrať, je príliš veľký (maximálna veľkosť je %{max_size_kb}KB), prosím zmenšite ho a skúste znovu. "
       size_not_found: "Ľutujeme, ale nepodarilo sa nám zistiť veľkosť obrázku. Nie je nahodou poškodený?"
-  avatar:
-    missing: "Ľutujeme, ale Vami vybraný avatar sa nenachádza na serveri. Môžte ho skúsiť znova nahrať?"
   flag_reason:
     sockpuppet: "Nový užívateľ vytvoril tému, a iný nový užívateľ odpovedal z tej istej adresy. Pozrite flag_sockpuppets v nastaveniach stránky."
     spam_hosts: "Tento nový užívateľ sa pokúsil vytvoriť viacero príspevkov s odkazom na rovnakú doménu. Pozrite newuser_spam_host_threshold v nastaveniach stránky."
@@ -1882,45 +1843,6 @@ sk:
     title: "Podmienky používania"
   privacy_topic:
     title: "Ochrana súkromia"
-  badges:
-    long_descriptions:
-      autobiographer: "Tento odznak je udelený za vypnenie <a href=\"/my/preferences\">Vášho užívateľského profilu</a> a zvolenie profilovej fotky. Dávaním najavo komunite kto ste a čo Vás zaujíma vytvára lepšiu a prepojenejšiu komunitu. \n"
-      first_like: |
-        Tento odznak je udelený za prvé udelené "Páči sa" použitím :heart:  talčidla. Označenie príspevku "Páči sa" je najlepšia cesta ako ukázať členom komunity, že ich príspevky sú zaujímavé, užitočné, výnimočné, alebo zábavné. Podeľte sa o to!
-      first_link: "Tento odznak je udelený za prvý vložený odkaz na inú tému v odpovedi. Spájanie tém pomáha kolegom čitateľom nájsť zaujímavé súvisiace konverzácie, poukázaním na prepojenia medzi témami oboma smermi. \n"
-      first_quote: "Tento odznak je udelený za prvý použitý citát príspevku vo Vašej odpovedi. Citovanie relevantných častí predchádzajúcich príspevkov pomáha udržiavať diskusiu v rámci témy. \n"
-      first_share: "Tento odznak je udelený za prvý zdieľaný odkaz na odpoveď, alebo tému pužítím zdieľacieho tlačidla. Zdieľanie odkazov je výborná cesta, ako ukázať zaujímavé diskusie zvyšku sveta a rozširovať Vašu komunitu. \n"
-      read_guidelines: |
-        Tento odznak je udelený za <a href="/guidelines">prečítanie pravidiel komunity</a>. Dodržiavanie a zdieľanie týchto jednoduchých pravidiel pomáha budovať bezpečnú a udržateľnú komunitu.
-      reader: "Tento odznak je udelený za prečítanie dlhej témy. Čítanie je základ. Pozorné ťítanie pomáha sledovať konverzáciu a vedie k lepším, ucelenejším odpovediam. \n"
-      editor: |
-        Tento odznak je udelený za úpravu Vášho príspevku. Nebojte sa kedykoľvek upravovať svoje príspevky za účelom ich vylepšenia, opravenia chýb, alebo pridania čohokoľvek, čo ste zabudli.
-      first_flag: |
-        Tento odznak je udelený za označenie príspevku. Označovanie príspevkov je dôležité pre zdravú komunitu. Keď zbadáte príspevok, ktorý vyžaduje pozornosť moderátora, prosím
-        nebojte sa ho označiť. Taktiež môžte použiť označovací dialóg na poslanie <b>správy</b> kolegovi užívateľovi.
-      nice_share: "Tento odznak je udelený za zdieľanie odkazu na príspevok, ktorý bol navštívený 25 návštevníkmi zvonku. Pekná práca! Zdieľanie odkazov na zaujímavé diskusie s priateľmi je výborná cesta, ako rozširiť Vašu komunitu. \n"
-      welcome: |
-        Tento odznak je udelený za prvé získané "Páči sa" na príspevok. Gratulujeme, prispeli ste niečim, čo členovia komunity považujú za zaujímavé, užitočné, alebo výnimočné!
-      anniversary: |
-        Tento odznak je udelený za to, že ste boli členom celý rok a prispeli najmenej jedným príspevkom v tomto roku. Ďakujeme za priazeň a prispievanie do našej komunity!
-      good_share: |
-        Tento odznak je udelený za zdieľanie odkazu na príspevok, ktorý bol navštívený 300 návštevníkmi zvonku. Dobrá práca! Ukázali ste zaujímavú diskusiu  <i>veľa</i> novým ľuďom a pomohli ste nám rásť.
-      great_share: |
-        Tento odznak je udelený za zdieľanie odkazu na príspevok, ktorý bol navštívený 100 návštevníkmi zvonku. Super! Spropagovalí ste zaujímavú diskusiu obrovskému publiku, a pomohli ste nám rásť vo veľkom štýle.
-      nice_post: |
-        Tento odznak je udelený za vytvorenie odpovede, ktorá dostane 10 "Páči sa". Pekná práca.
-      nice_topic: |
-        Tento odznak je udelený za vytvorenie témy, ktorá dostane 10 "Páči sa". Pekná práca.
-      good_post: |
-        Tento odznak je udelený za vytvorenie odpovede, ktorá dostane 25 "Páči sa". Dobrá práca.
-      good_topic: |
-        Tento odznak je udelený za vytvorenie témy, ktorá dostane 25 "Páči sa". Dobrá práca.
-      great_post: |
-        Tento odznak je udelený za vytvorenie príspevku, ktorý dostane 50 "Páči sa". Super!
-      great_topic: |
-        Tento odznak je udelený za vytvorenie odpovede, ktorá dostane 50 "Páči sa". Super!
-      basic: |
-        Tento odznak je udelený ak dosiahnete stupeň dóvery 1. Ďakujeme za Váš čas , prečítanie niekoľkých tém a zoznámenie sa s tým o čom je naša komunita. Odstránili sme obmedzenia pre nového používateľa a odteraz máte všetky základné práva, ako je zasielanie osobných správ, značkovanie, wiki úpravy a možnosť publikovať obrázky a viaceré odkazy.
   admin_login:
     success: "Email odoslaný"
     error: "Chyba !"

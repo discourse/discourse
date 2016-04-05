@@ -100,7 +100,7 @@ describe SpamRule::AutoBlock do
 
     context 'user is not blocked' do
       before do
-        UserBlocker.expects(:block).with(user, nil, has_entries(message: :too_many_spam_flags)).returns(true)
+        UserBlocker.expects(:block).with(user, Discourse.system_user, message: :too_many_spam_flags).returns(true)
       end
 
       it 'prevents the user from making new posts' do
@@ -126,7 +126,7 @@ describe SpamRule::AutoBlock do
 
     context 'user is already blocked' do
       before do
-        UserBlocker.expects(:block).with(user, nil, has_entries(message: :too_many_spam_flags)).returns(false)
+        UserBlocker.expects(:block).with(user, Discourse.system_user, message: :too_many_spam_flags).returns(false)
       end
 
       it "doesn't send a pm to moderators if the user is already blocked" do

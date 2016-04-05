@@ -226,7 +226,6 @@ bs_BA:
         few: "Ova tema ima <b>{{count}}</b> postova koji čekaju odobrenje"
         other: "Ova tema ima <b>{{count}}</b> postova koji čekaju odobrenje"
       confirm: "Sačuvaj promjene"
-      delete_prompt: "Jeste li sigurni da želite izbrisati <b>%{username}</b>? Ovo će izbrisati sve njihove postove i blokirati njihovu email i IP adresu."
       approval:
         title: "Post treba odobrenje"
         description: "Primili smo Vaš novi post ali on treba biti odobren od strane moderatora prije nego bude javno dostupan. Molimo budite strpljivi."
@@ -515,8 +514,6 @@ bs_BA:
     last_post: Zadnji post
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
-      description: "There are <b>{{replyCount}}</b> replies."
-      description_time: "There are <b>{{replyCount}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
       enable: 'Summarize This Topic'
       disable: 'Show All Posts'
     deleted_filter:
@@ -660,7 +657,6 @@ bs_BA:
       mentioned: "<i title='spomenut' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='citiran' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='odgovoren' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='odgovoren' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='izmjenjen' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='lajkovan' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='privatna poruka' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -710,9 +706,6 @@ bs_BA:
         hot: "Nema popularnih tema."
         category: "Nema više tema u {{category}}."
         top: "Nema više popularnih tema."
-        educate:
-          new: '<p>Tvoje nepročitane teme se pojavljuju ovdje.</p><p>Nove teme imaju <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nova</span> indikaciju.</p><p>Možete promjeniti notifikacije preko vaših <a href="%{userPrefsUrl}">postavki</a>.</p>'
-          unread: '<p>Tvoje nepročitane teme se pojavljuju ovdje.</p><p>Ako imate nepročitanih postova vidjet ćete njihov broj <span class="badge new-posts badge-notification">1</span> ako ste:</p><ul><li>Kreirali tu temu</li><li>Odgovorili na tu temu</li><li>Proveli čitajući temu više od 4 minuta</li></ul><p>Ili ako ste na dnu teme označili da motrite i pratite temu.</p><p>Možete promjeniti notifikacije preko vaših <a href="%{userPrefsUrl}">postavki</a>.</p>'
       bottom:
         latest: "Nema više novih tema."
         hot: "Nema više popularnih tema."
@@ -951,17 +944,6 @@ bs_BA:
           bookmark: "Otkaži bookmark"
           like: "Otkaži lajk"
           vote: "Otkaži glas"
-        people:
-          off_topic: "{{icons}} označio ka ne-relevatno"
-          spam: "{{icons}} označio kao spam"
-          inappropriate: "{{icons}} flagged this as inappropriate"
-          notify_moderators: "{{icons}} notified moderators"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
-          notify_user: "{{icons}} sent a private message"
-          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
-          bookmark: "{{icons}} bookmarked this"
-          like: "{{icons}} lajkovali ovo"
-          vote: "{{icons}} glasali za ovo"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "Opomenuo si ovo kao spam"
@@ -1307,10 +1289,8 @@ bs_BA:
           restore:
             is_disabled: "Restore is disabled in the site settings."
             title: "Restore the backup"
-            confirm: "Are your sure you want to restore this backup?"
           rollback:
             title: "Rollback the database to previous working state"
-            confirm: "Are your sure you want to rollback the database to the previous working state?"
       export_csv:
         success: "Export has been initiated, you will be notified shortly with progress."
         failed: "Export failed. Please check the logs."
@@ -1380,9 +1360,6 @@ bs_BA:
           love:
             name: 'love'
             description: "The like button's color."
-          wiki:
-            name: 'wiki'
-            description: "Base color used for the background of wiki posts."
       email:
         settings: "Settings"
         preview_digest: "Pregled Sajta"
@@ -1780,8 +1757,6 @@ bs_BA:
         mark_watching: '<b>m</b>, <b>w</b> Motri temu'
     badges:
       title: Bedževi
-      allow_title: "allow badge as title?"
-      multiple_grant: "awarded multiple times?"
       select_badge_for_title: Izaveri bedž za svoj naslov
       none: "<nijedna>"
       badge_grouping:
@@ -1795,78 +1770,3 @@ bs_BA:
           name: Drugi
         posting:
           name: Postiranje
-      badge:
-        editor:
-          name: Urednik
-          description: Prvi post izmjenjen
-        basic_user:
-          name: Osnovni
-          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/4">Odobrene</a> sve osnovne funkcije foruma
-        member:
-          name: Član
-          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/5">Odobrene</a> pozivnice
-        regular:
-          name: Regularan
-          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
-        leader:
-          name: Vođa
-          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
-        welcome:
-          name: Dobrodošao
-          description: Dobio Lajk
-        autobiographer:
-          name: Autobiografičar
-          description: Popunio biografiju na svom <a href="/my/preferences">profilu</a>
-        anniversary:
-          name: Godišnjica
-          description: Aktivan član godinu dana, pisao najmanje jednom
-        nice_post:
-          name: Dobar Post
-          description: Dobio 10 lajkova na postu. Ovaj se bedž može dobiti više puta
-        good_post:
-          name: Odličan Post
-          description: Dobio 25 lajkova na postu. Ovaj se bedž može dobiti više puta
-        great_post:
-          name: Super Post
-          description: Dobio 50 lajkova na postu. Ovaj se bedž može dobiti više puta
-        nice_topic:
-          name: Dobra Tema
-          description: Dobio 10 lajkova na postu. Ovaj se bedž može dobiti više puta
-        good_topic:
-          name: Odlična Tema
-          description: Dobio 25 lajkova na postu. Ovaj se bedž može dobiti više puta
-        great_topic:
-          name: Super Tema
-          description: Dobio 50 lajkova na postu. Ovaj se bedž može dobiti više puta
-        nice_share:
-          name: Dobar Share
-          description: Podijelio je post sa više od 25 posjetilaca
-        good_share:
-          name: Good Share
-          description: Shared a post with 300 unique visitors
-        great_share:
-          name: Great Share
-          description: Shared a post with 1000 unique visitors
-        first_like:
-          name: Prvi Lajk
-          description: Lajkovao post
-        first_flag:
-          name: Prva Opomena
-          description: Opomenuo post
-        champion:
-          description: Pozvao 5 članova (trust level 2)
-        first_share:
-          name: Prvi Share
-          description: Podijelio post
-        first_link:
-          name: Prvi Link
-          description: Dodao interni link na drugu temu
-        first_quote:
-          name: Prvo Citiranje
-          description: Citirao korisnika
-        read_guidelines:
-          name: Pročitao Pravila
-          description: Pročitao <a href="/guidelines">naša pravila</a>
-        reader:
-          name: Čitač
-          description: Pročitao post na temi sa više od 100 postova

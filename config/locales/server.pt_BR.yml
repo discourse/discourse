@@ -39,7 +39,6 @@ pt_BR:
         blocked_user_error: "Ocorre quando o remetente foi bloqueado."
         bad_destination_address: "Ocorre quando nenhum dos endereços de email nos campos Para/Cc/Cco era correspondente ao endereço de email recebido."
         strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
-        insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria de que não possui o nível de confiança necessário."
         reply_user_not_matching_error: "Ocorre quando uma resposta chega em um endereço de email diferente ao da notificação enviada."
         topic_not_found_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi excluído."
         topic_closed_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi fechado."
@@ -177,7 +176,6 @@ pt_BR:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
       member_already_exist: "'%{username}' já é um membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
-      invalid_incoming_email: "'%{incoming_email}' não é um endereço de email válido."
     default_names:
       everyone: "todos"
       admins: "admins"
@@ -306,7 +304,6 @@ pt_BR:
       uncategorized_parent: "Sem categoria não pode ter uma categoria pai"
       self_parent: "A subcategoria mãe não pode ser ela mesma"
       depth: "Você não pode aninhar uma subcategoria sob outra"
-      email_in_already_exist: "Endereço de email de entrada '%{email_in}' já está em uso para categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Não é possível excluir Sem categoria"
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
@@ -864,15 +861,9 @@ pt_BR:
     tl2_requires_likes_received: "Quantos likes um usuário deve receber antes de ser promovido a nível de confiança 2."
     tl2_requires_likes_given: "Quantos likes um usuário deve dar antes de ser promovido a nível de confiança 2."
     tl2_requires_topic_reply_count: "Quantos tópicos um usuário deve responder antes de ser promovido a nível de confiança 2."
-    tl3_requires_topics_replied_to: "Número mínimo de tópicos que um usuário precisa ter respondido o site nos últimos 100 dias para se qualificar a promoção ao nível de confiança 3. (0 ou mais)"
-    tl3_requires_topics_viewed: "O percentual de tópicos criados nos últimos 100 dias que um usuário precisa ter visto para se qualificar a promoção ao nível de confiança 3. (0 até 100)"
-    tl3_requires_posts_read: "O percentual de posts criados nos últimos 100 dias que um usuário precisa ter visto para se qualificar a promoção ao nível de confiança 3. (0 até 100)"
     tl3_requires_topics_viewed_all_time: "O mínimo total de tópicos que um usuário precisa ter visto para se qualificar a promoção ao nível de confiança 3."
     tl3_requires_posts_read_all_time: "O mínimo total de postagens que um usuário precisa ter lido para se qualificar a promoção ao nível de confiança 3."
-    tl3_requires_max_flagged: "Usuário precisa não ter mais que x postagens sinalizadas por x usuários diferentes nos últimos 100 dias para se qualificar à promoção ao nível de confiança 3, onde x é o valor dessa configuração. (0 ou mais)"
     tl3_promotion_min_duration: "O número mínimo de dias que uma promoção ao nível 3 dura antes que um usuário possa ser rebaixado novamente ao nível de confiança 2."
-    tl3_requires_likes_given: "O número mínimo de likes que devem ser dados nos últimos 100 dias para qualificar para promoção ao nível de confiança 3."
-    tl3_requires_likes_received: "O número mínimo de likes que devem ser recebidos nos últimos 100 dias para se qualificar para promoção ao nível de confiança 3."
     tl3_links_no_follow: "Não remover rel=nofollow de links postados por usuários do nível de confiança 3."
     min_trust_to_create_topic: "O nível de confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível de confiança mínimo necessário para editar uma postagem marcada como wiki."
@@ -999,7 +990,6 @@ pt_BR:
     enable_emoji: "Habilitar emoji"
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
-    approve_post_count: "Quantidade de mensagens de novos usuários que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
     notify_about_queued_posts_after: "Se existirem tópicos aguardando revisão a mais de N horas, um e-mail será enviado para o e-mail de contato. Coloque 0 para cancelar estes e-mails."
     errors:
@@ -1035,11 +1025,6 @@ pt_BR:
       category: 'Categorias'
       topic: 'Resultados'
       user: 'Utilizadores'
-  sso:
-    not_found: "Não foi possível procurar ou criar conta, contate o administrador do site"
-    account_not_approved: "A conta está pendente de aprovação, você receberá uma notificação por email assim que for aprovada"
-    unknown_error: "Erro ao fazer update de informação, contate o administrador do site"
-    timeout_expired: "O tempo de login ultrapassou o limite, por favor tente logar de novo"
   original_poster: "Postador original"
   most_posts: "Maior parte das postagens"
   most_recent_poster: "Maior parte das Postagens Recentes"
@@ -1314,7 +1299,6 @@ pt_BR:
         Para informações adicionais, por favor consulte as nossas [diretrizes da comunidade](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Conta bloqueada"
-      text_body_template: "Olá, \n\nEsta é uma mensagem automática do %{site_name} para informá-lo de que a sua conta foi bloqueada por um membro da administração. \n\nPara informações adicionais, por favor consulte as nossas [diretrizes da comunidade](%{base_url}/guidelines).\n"
     user_automatically_blocked:
       subject_template: "Novo usuário %{username} foi bloqueado devido a denúncias da comunidade"
     spam_post_blocked:
@@ -1345,33 +1329,6 @@ pt_BR:
     posted_by: "Postado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou você para uma mensagem '%{topic_title}'"
-      text_body_template: |2
-
-        %{username} convidou você para uma mensagem
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        a
-
-        > %{site_title} -- %{site_description}
-
-        Por favor visitar este link para visualizar a mensagem: %{base_url}%{url}
-    user_invited_to_topic:
-      text_body_template: |2
-
-        %{username} convidou você para uma discussão
-
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
-
-        em
-
-        > %{site_title} -- %{site_description}
-
-        Por favor visitar o link para visualizar a mensagem: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     user_quoted:
@@ -1417,12 +1374,6 @@ pt_BR:
 
         Clique no link a seguir para escolher uma senha para a sua nova conta:
         %{base_url}/users/password-reset/%{email_token}
-    confirm_new_email:
-      subject_template: "[%{site_name}] Confirma o seu novo endereço de email"
-      text_body_template: |
-        Confirma o seu endereço de email novo para %{site_name} clicando no seguinte link:
-
-        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Você foi aprovado no %{site_name}!"
       text_body_template: |
@@ -1476,8 +1427,6 @@ pt_BR:
     images:
       too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor a redimensione e tente novamente."
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
-  avatar:
-    missing: "Desculpe, mas o avatar que você selecionou não está presente no servidor. Você pode tentar carregá-lo novamente?"
   flag_reason:
     sockpuppet: "Um novo usuário criou um tópico e outro novo usuário no mesmo endereço IP respondeu. Veja a configuração flag_sockpuppets."
     spam_hosts: "Esse novo usuário tentou criar múltiplas postagens com links do mesmo domínio. Veja a configuração newuser_spam_host_threshold do site."
@@ -1512,57 +1461,6 @@ pt_BR:
     title: "Termos de Serviço"
   privacy_topic:
     title: "Política de Privacidade"
-  badges:
-    long_descriptions:
-      autobiographer: |
-        Este emblema é concedido por preencher <a href="/my/preferences">seu perfil</a> e selecionar uma foto de perfil. Deixar a comunidade conhecer mais sobre quem você é, e, quais são seus interesses, a torna melhor e mais conectada.
-      first_like: |
-        Este emblema é concedito na primeira vez que você curtir uma m,ensagem usando o botão :heart: . Curtir mensagens é uma ótima maneira de dizer aos membros da sua comunidade que suas mensagens foram interessantes, úteis, legais ou divertidas. Compatilhe o amor!
-      first_link: |
-        Este emblema é concedido na primeira vez que você põe um link para outro tópico numa mensagem. Linkar tópicos ajuda outros leitores a encontrar conversas interessantes relacionadas, monstrando ligações entre tópicos em ambas direções.
-      first_quote: |
-        Este emblema é concedido na primeira vez que você cita uma mensagem na sua resposta. Citar seções relevantes de mensagens anteriories na sua resposta ajuda a manter a discussão focada e no assunto original.
-      first_share: |
-        Este emblema é concedido na primeira vez que você compartilha um link para uma mensagem ou tópico usando o botão compartilhar. Compartilhar links é uma ótima maneira de mostrar discussões interessantes com o resto do mundo e assim, crescer sua comunidade.
-      read_guidelines: |
-        Este emblema é concedido por <a href="/guidelines">ler o guia da comunidade</a>. Seguir e compartilhar estas simples regras ajuda a construir uma segura, divertida e sustentável comunidade.
-      reader: |
-        Este emblema é concedido por ler um tópico longo. Ler é fundamental. Ler atentamente ajuda a seguir a conversa e leva a melhores, e mais completas, respostas.
-      editor: |
-        Este emblema é concedido por editar sua mensagem. Não exite em editar sua mensagem a qualquer tempo para melhora-la , consertar pequenos enganos, ou adicionar qualquer coisa que você tenha esquecido.
-      first_flag: |
-        Este emblema é concedido por sinalizar uma mensagem. Sinalizar é critico para saúde da comunidade. Se você notar qualquer mensagem que necessita de atenção da moderação, por favor, não exite em sinalizar. Você pode também usar o diálogo de sinalização para enviar mensagem para outros usuários.
-      nice_share: |
-        Este emblema é concedido por compartilhar um link para uma mensagem que foi visitada por 25 visitantes externos. Bom trabalho! Compartilhar links para discussões interessantes é uma excelente forma de crescer sua comunidade.
-      welcome: |
-        Este emblema é concedido quando você recebe sua primeira curtida numa mensagem. Parabéns, você postou algo que sua comunidade achou interessante, legal ou divertido!
-      anniversary: |
-        Este emblema é concedido quanto você é membro por um ano com pelo menos uma mensagem nesse ano. Obrigado por fica por aqui e contribuir com nossa comunidade!
-      good_share: |
-        Este emblema é concedido por compartilhar um link de uma mensagem que foi visitada por 300 visitantes externos. Bom Trabalho! Você mostrou uma discussão interessante para um <i>monte</i> de novas pessoas e nos ajudou a crescer.
-      great_share: |
-        Este emblema é concedido por compartilhar um link de uma mensagem que foi visitada por 100 visitantes externos. Nossa! Você promoveu uma discussão interessante para uma grande nova audiência para esta comunidade, e nos ajudou a crescer bastante.
-      nice_post: |
-        Este emblema é concedido por criar uma resposta que conseguiu 10 curtidas. Bom trabalho!
-      nice_topic: |
-        Este emblema é concedido por criar um tópico que conseguiu 10 curtidas. Bom trabalho!
-      good_post: |
-        Este emblema é concedido por criar uma resposta que conseguiu 25 curtidas. Bom trabalho!
-      good_topic: |
-        Este emblema é concedido por criar um tópico que conseguiu 25 curtidas. Bom trabalho!
-      great_post: |
-        Este emblema é concedido por criar um tópico que conseguiu 50 curtidas. Uau!
-      great_topic: |
-        Este emblema é concedido por criar uma resposta que conseguiu 50 curtidas. Uau!
-      basic: |
-        Este emblema é concedido quando você alcança o nível de confiança 1. Obrigado por permanecer por aqui e ler alguns tópicos para aprender sobre o que é nossa comunidade. Suas restrições de novo usuário foram suspensas, e você ganhou todas habilidades essenciais de comunidade, como mensagens pessoais, sinalizações, edições de wiki, e habilidade de postar imagens e múltiplos links.
-      member: |
-        Este emblema é concedido quando você alcança o nível de confiança 2. Obrigado por participar durante essas semanas da nossa comuniadde. Você pode agora enviar convites pessoais da sua página de usuário ou de tópocos individuais, criar mensagens de grupo, e algumas curtidas a mais por dia.
-      regular: |+
-        Este emblema é concedido quando você alcança o nível de confiança 3. Obrigado por ser parte regular da nossa comunidade durante todos esses meses, um dos mais ativos leitores e colaborador confiável para o que faz essa comunidade grande. Você pode agora recategorizar e renomear tópicos, acessar a área privada do lounge, sinalizações mais fortes de spam, e muito mais curtidas por dia.
-
-      leader: |
-        Este emblema é concedido quando você alcança o nível de confiança 4. Você é um líder desta comunidade selecionado pela equipe, e define um exemplo positivo em suas ações e palavras. Você tem habilidade de editar todos tópicos, agir como moderador nas ações como fixar, fechar, delistar, arquivar, separar, agrupar e vários curtidas a mais por dia.
   admin_login:
     success: "Email Enviado"
     error: "Erro!"

@@ -687,17 +687,11 @@ sk:
       summary:
         title: "Sumarizácia"
         stats: "Štatistiky"
-        topic_count: "Vytvorené témy"
-        post_count: "Vytvorené príspevky"
-        likes_given: "Udelené Páči sa mi"
-        likes_received: "Obdržané Páči sa mi"
-        days_visited: "Navštívených dní"
-        posts_read_count: "Prečítaných príspevkov"
         top_replies: "Najvýznamnejšie odpovede"
-        top_topics: "Najvýznamnejšie témy"
-        top_badges: "Najvýznamnejšie odznaky"
-        more_topics: "Viac tém"
         more_replies: "Viac odpovedí"
+        top_topics: "Najvýznamnejšie témy"
+        more_topics: "Viac tém"
+        top_badges: "Najvýznamnejšie odznaky"
         more_badges: "Viac odznakov"
       associated_accounts: "Prihlásenia"
       ip_address:
@@ -946,7 +940,6 @@ sk:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -2161,7 +2154,6 @@ sk:
           none: "Nenájdené žiadne ďalšie emaily."
           modal:
             error: "Chyba"
-            date: "Dátum"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2699,10 +2691,7 @@ sk:
         one: "Získal tento odkaz 1 krát"
         few: "Získal tento odkaz %{count} krát"
         other: "Získal tento odkaz %{count} krát"
-      more_with_badge: "Iný s týmto odznakom"
       title: Odznaky
-      allow_title: "môže byť použitý ako názov"
-      multiple_grant: "Môže byť ocenené viacnásobne"
       badge_count:
         one: "1 Odznak"
         few: "%{count} Odznaky"
@@ -2728,97 +2717,6 @@ sk:
           name: Ostatné
         posting:
           name: Prispievam
-      badge:
-        editor:
-          name: Editor
-          description: Úprava prvého príspevku
-        basic_user:
-          name: Základné
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Povolené</a> všetky základné funkcie komunity
-        member:
-          name: Člen
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Povolené</a> pozývanie
-        regular:
-          name: Bežný
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Povolené</a> zmeny kategóriií, premenovávanie, odkazy a lóža
-        leader:
-          name: Vodca
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Pridelené</a> globálna editácia, pripnutia, uzatváranie, archivovanie, rozdeľovanie a spájanie
-        welcome:
-          name: Vitajte
-          description: Prijal "Páči sa"
-        autobiographer:
-          name: Autobiograf
-          description: Vyplnený užívateľský <a href="/my/preferences">profil</a>
-        anniversary:
-          name: Výročie
-          description: Aktívny člen, napísal aspoň jeden príspevok za rok
-        nice_post:
-          name: Pekný príspevok
-          description: Príspevok získal 10 "Páči sa". Tento odznak môže byť pridelený viac krát
-        good_post:
-          name: Dobrý príspevok
-          description: Príspevok získal 25 "Páči sa". Tento odznak môže byť pridelený viac krát
-        great_post:
-          name: Vynikajúci príspevok
-          description: Príspevok získal 50 "Páči sa". Tento odznak môže byť pridelený viac krát
-        nice_topic:
-          name: Pekná téma
-          description: Téma získala 10 "Páči sa". Tento odznak môže byť pridelený viac krát
-        good_topic:
-          name: Dobrá téma
-          description: Téma získala 25 "Páči sa". Tento odznak môže byť pridelený viac krát
-        great_topic:
-          name: Vynikajúca téma
-          description: Téma získala 50 "Páči sa". Tento odznak môže byť pridelený viac krát
-        nice_share:
-          name: Pekné zdieľanie
-          description: Zdieľaný príspevok s 25 jedinečnými návštevami
-        good_share:
-          name: Dobré zdieľanie
-          description: Zdieľaný príspevok s 300 jedinečnými návštevami
-        great_share:
-          name: Výborné zdieľanie
-          description: Zdieľaný príspevok s 1000 jedinečnými návštevami
-        first_like:
-          name: Prvé "Páči sa mi"
-          description: Príspevok, ktorý sa páčil
-        first_flag:
-          name: Prvé označenie
-          description: Označený príspevok
-        promoter:
-          name: Propagátor
-          description: pozval užívateľa
-        campaigner:
-          name: Bojovník
-          description: Pozval 3 základných užívateľov (stupeň dôvery 1)
-        champion:
-          name: Šampión
-          description: Pozval 5 členov (stupeň dôvery 2)
-        first_share:
-          name: Prvé zdieľanie
-          description: Zdieľal príspevok
-        first_link:
-          name: Prvý odkaz
-          description: Pridaný vnútorný odkaz na ďalšiu tému
-        first_quote:
-          name: Prvý citát
-          description: Citoval užívateľa
-        read_guidelines:
-          name: 'Prečítať pravidlá '
-          description: Prečítať <a href="/guidelines">pravidlá komunity</a>
-        reader:
-          name: Čitateľ
-          description: Prečítať každý príspevok v téme, ktorá má viac ako 100 príspevkov
-        popular_link:
-          name: Populárny odkaz
-          description: Príspevok s externým odkazom s najmenej 50 kliknutiami
-        hot_link:
-          name: Horúci odkaz
-          description: Príspevok s externým odkazom s najmenej 300 kliknutiami
-        famous_link:
-          name: Skvelý odkaz
-          description: Príspevok s externým odkazom s najmenej 1000 kliknutiami
     google_search: |
       <h3>Vyhľadávať pomocou Google</h3>
       <p>

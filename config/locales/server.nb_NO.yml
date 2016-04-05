@@ -697,9 +697,6 @@ nb_NO:
       blank: "Må være til stede"
     email:
       blocked: "er ikke tillatt."
-  flags_reminder:
-    please_review: "Vennligst vurder dem."
-    post_number: "innlegg"
   flags_dispositions:
     agreed: "Takk for at du sier ifra. Vi er enig at det er et problem her og vi ser på saken."
     disagreed: "Takk for at du sier ifra. Vi skal se på det. "

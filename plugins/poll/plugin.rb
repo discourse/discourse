@@ -54,8 +54,8 @@ after_initialize do
             raise StandardError.new I18n.t("poll.post_is_deleted")
           end
 
-          # topic must be open
-          if post.topic.try(:closed) || post.topic.try(:archived)
+          # topic must not be archived
+          if post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
           end
 
@@ -107,8 +107,8 @@ after_initialize do
             raise StandardError.new I18n.t("poll.post_is_deleted")
           end
 
-          # topic must be open
-          if post.topic.try(:closed) || post.topic.try(:archived)
+          # topic must not be archived
+          if post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_toggle_status")
           end
 

@@ -159,8 +159,11 @@ describe Notification do
     before do
       @topic = Fabricate(:private_message_topic)
       @post = Fabricate(:post, topic: @topic, user: @topic.user)
-      PostAlerter.post_created(@post)
       @target = @post.topic.topic_allowed_users.reject{|a| a.user_id == @post.user_id}[0].user
+
+      TopicUser.change(@target.id, @topic.id, notification_level: TopicUser.notification_levels[:watching])
+
+      PostAlerter.post_created(@post)
     end
 
     it 'should create and rollup private message notifications' do

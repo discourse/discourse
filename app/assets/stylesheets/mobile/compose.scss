@@ -131,6 +131,7 @@ input {
         margin-top: 6px;
         width: 99%;
         box-sizing: border-box;
+        border: 1px solid $secondary;
       }
       .wmd-controls {
         transition: top 0.3s ease;
@@ -176,15 +177,22 @@ input {
     }
     .d-editor-input {
       color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
-    }
-    .d-editor-input {
       bottom: 35px;
+      width: 100%;
+      height: 100%;
+      padding: 7px;
+      margin: 0;
+      background-color: $secondary;
+      word-wrap: break-word;
+      box-sizing: border-box;
+      border: 1px solid $secondary;
     }
     .submit-panel {
-      width: 50%;
+      // need minimum width that fits, or this'll wrap cancel under submit/create which is super bad
+      width: 180px;
       position: absolute;
       display: block;
-      bottom: 2px;
+      bottom: 0;
     }
   }
   .category-input {
@@ -267,15 +275,6 @@ input {
         bottom: 5px;
         z-index: 1000001;
       }
-    }
-    .d-editor-input {
-      width: 100%;
-      height: 100%;
-      padding: 7px;
-      margin: 0;
-      background-color: $secondary;
-      word-wrap: break-word;
-      box-sizing: border-box;
     }
     .d-editor-textarea-wrapper {
       position: relative;

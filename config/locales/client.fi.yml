@@ -593,6 +593,7 @@ fi:
         every_three_days: "joka kolmas päivä"
         weekly: "viikottain"
         every_two_weeks: "joka toinen viikko"
+      include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostitiivistelmiin oletuksena."
       email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
       email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni, tai kutsuu minut viestiketjuun"
       email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
@@ -664,17 +665,11 @@ fi:
       summary:
         title: "Yhteenveto"
         stats: "Tilastot"
-        topic_count: "Luotuja ketjuja"
-        post_count: "Kirjoitettuja viestejä"
-        likes_given: "Annettuja tykkäyksiä"
-        likes_received: "Saatuja tykkäyksiä"
-        days_visited: "Päiviä vierailtu"
-        posts_read_count: "Luettuja viestejä"
         top_replies: "Parhaat viestit"
-        top_topics: "Parhaat ketjut"
-        top_badges: "Parhaat arvomerkit"
-        more_topics: "Lisää ketjuja"
         more_replies: "Lisää viestejä"
+        top_topics: "Parhaat ketjut"
+        more_topics: "Lisää ketjuja"
+        top_badges: "Parhaat arvomerkit"
         more_badges: "Lisää arvomerkkejä"
       associated_accounts: "Kirjautumiset"
       ip_address:
@@ -724,7 +719,6 @@ fi:
     too_few_topics_and_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
     too_few_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
-    logs_error_rate_exceeded_notice: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate} errors/%{duration}</a> has exceeded site settings's limit of %{siteSettingLimit} errors/%{duration}."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -1358,6 +1352,7 @@ fi:
         about: "tämä viesti on wiki"
       archetypes:
         save: 'Tallennusasetukset'
+      few_likes_left: "Kiitos hyvän mielen levittämisestä! Sinulla on enää muutama tykkäys jäljellä tälle päivälle."
       controls:
         reply: "aloita vastaamaan tähän viestiin"
         like: "tykkää viestistä"
@@ -2103,14 +2098,6 @@ fi:
           modal:
             title: "Saapuvan sähköpostin tiedot"
             error: "Virhe"
-            return_path: "Paluupolku"
-            message_id: "Viestin ID"
-            in_reply_to: "Vastauksena"
-            references: "Viittaukset"
-            date: "Päivämäärä"
-            from: "Lähettäjä"
-            to: "Vastaanottaja"
-            cc: "Kopio"
             subject: "Otsikko"
             body: "Leipäteksti"
             rejection_message: "Hylkäysviesti"
@@ -2481,6 +2468,7 @@ fi:
         badge: Arvomerkki
         display_name: Nimi
         description: Kuvaus
+        long_description: Pitkä kuvaus
         badge_type: Arvomerkin tyyppi
         badge_grouping: Ryhmä
         badge_groupings:
@@ -2643,10 +2631,11 @@ fi:
       earned_n_times:
         one: "Ansaitsi tämän arvomerkin yhden kerran"
         other: "Ansaitsi tämän arvomerkin %{count} kertaa"
-      more_with_badge: "Muita, joilla on tämä arvomerkki"
+      granted_on: "Myönnetty %{date}"
+      others_count: "Muita, joilla on tämä arvomerkki (%{count})"
       title: Arvomerkit
-      allow_title: "voidaan käyttää tittelinä"
-      multiple_grant: "voidaan myöntää useita kertoja"
+      allow_title: "sallittu titteli"
+      multiple_grant: "myönnettävissä useaan kertaan"
       badge_count:
         one: "1 Arvomerkki"
         other: "%{count} Arvomerkkiä"
@@ -2669,97 +2658,6 @@ fi:
           name: Muut
         posting:
           name: Kirjoittaminen
-      badge:
-        editor:
-          name: Muokkaaja
-          description: Ensimmäinen muokkaus
-        basic_user:
-          name: Haastaja
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Myönnetty</a> oikeudet tärkeimpiin toimintoihin
-        member:
-          name: Konkari
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Myönnetty</a> oikeus kutsua käyttäjiä
-        regular:
-          name: Mestari
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Myönnetty</a> oikeus siirtää ja nimetä uudelleen ketjuja, linkkien seuraaminen ja Lounge
-        leader:
-          name: Johtaja
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Myönnetty</a> ketjujen globaali muokkaus, kiinnitys, sulkeminen, arkistointi, jakaminen ja yhdistäminen
-        welcome:
-          name: Tervetuloa
-          description: Sai tykkäyksen
-        autobiographer:
-          name: Muistelmien kirjoittaja
-          description: Täytti <a href="/my/preferences">käyttäjätiedot</a>
-        anniversary:
-          name: Vuosipäivä
-          description: Ollut vuoden aktiivinen jäsen, kirjoittanut vähintään kerran
-        nice_post:
-          name: Kiva viesti
-          description: Sai 10 tykkäystä viestistä. Tämä arvomerkki voidaan myöntää useita kertoja
-        good_post:
-          name: Hyvä viesti
-          description: Sai 25 tykkäystä viestistä. Tämä arvomerkki voidaan myöntää useita kertoja
-        great_post:
-          name: Mahtava viesti
-          description: Sai 50 tykkäystä viestistä. Tämä arvomerkki voidaan myöntää useita kertoja
-        nice_topic:
-          name: Kiva ketju
-          description: Sai 10 tykkäystä ketjusta. Tämä arvomerkki voidaan myöntää useita kertoja
-        good_topic:
-          name: Hyvä ketju
-          description: Sai 25 tykkäystä ketjusta. Tämä arvomerkki voidaan myöntää useita kertoja
-        great_topic:
-          name: Mahtava ketju
-          description: Sai 50 tykkäystä ketjusta. Tämä arvomerkki voidaan myöntää useita kertoja
-        nice_share:
-          name: Kiva jako
-          description: Jakoi viestin, joka sai 25 uniikkia kävijää
-        good_share:
-          name: Hyvä jako
-          description: Jakoi viestin, joka sai 300 uniikkia kävijää
-        great_share:
-          name: Mahtava jako
-          description: Jakoi viestin, joka sai 1000 uniikkia kävijää
-        first_like:
-          name: Ensimmäinen tykkäys
-          description: Tykkäsi viestistä
-        first_flag:
-          name: Ensimmäinen liputus
-          description: Liputti viestin
-        promoter:
-          name: Myöntäjä
-          description: Kutsui käyttäjän
-        campaigner:
-          name: Kampanjoija
-          description: Kutsui 3 haastajaa (luottamustaso 1)
-        champion:
-          name: Kampanjapäällikkö
-          description: Kutsui 5 konkaria (luottamustaso 2)
-        first_share:
-          name: Ensimmäinen jakaminen
-          description: Jakoi viestin
-        first_link:
-          name: Ensimmäinen linkki
-          description: Lisäsi viestiin linkin toiseen ketjuun
-        first_quote:
-          name: Ensimmäinen lainaus
-          description: Lainasi toista käyttäjää
-        read_guidelines:
-          name: Luki ohjeet
-          description: Luki sivuston <a href="/guidelines">ohjeet</a>
-        reader:
-          name: Lukija
-          description: Luki kaikki viestit ketjusta, jossa on yli 100 viestiä
-        popular_link:
-          name: Suosittu linkki
-          description: Laittoi linkin ulkoiselle sivustolle, joka sai vähintään 50 klikkausta.
-        hot_link:
-          name: Kuuma linkki
-          description: Laittoi linkin ulkoiselle sivustolle, joka sai vähintään 300 klikkausta.
-        famous_link:
-          name: Kuuluisa linkki
-          description: Laittoi linkin ulkoiselle sivustolle, joka sai vähintään 1000 klikkausta.
     google_search: |
       <h3>Etsi Googlella</h3>
       <p>

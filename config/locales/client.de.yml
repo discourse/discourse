@@ -179,6 +179,8 @@ de:
     more: "Mehr"
     less: "Weniger"
     never: "nie"
+    every_30_minutes: "alle 30 Minuten"
+    every_hour: "jede Stunde"
     daily: "täglich"
     weekly: "wöchentlich"
     every_two_weeks: "jede zweite Woche"
@@ -269,7 +271,7 @@ de:
         one: "Dieses Thema hat <b>einen</b> Beitrag, der genehmigt werden muss"
         other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
       confirm: "Änderungen speichern"
-      delete_prompt: "Bist du sicher, dass du <b>%{username}</b> löschen möchtest? Es werden alle Beiträge des Benutzers gelöscht und dessen E-Mail- und IP-Adresse geblockt."
+      delete_prompt: "Möchtest du wirklich <b>%{username}</b> löschen? Damit werden alle Beiträge des Benutzers entfernt und dessen E-Mail- und IP-Adresse geblockt."
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
@@ -326,7 +328,10 @@ de:
         one: "Gruppe"
         other: "Gruppen"
       members: "Mitglieder"
+      topics: "Themen"
       posts: "Beiträge"
+      mentions: "Erwähnungen"
+      messages: "Nachrichten"
       alias_levels:
         title: "Wer kann diese Gruppe kontaktieren und per @Gruppenname erwähnen?"
         nobody: "Niemand"
@@ -340,16 +345,16 @@ de:
       notifications:
         watching:
           title: "Beobachten"
-          description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
+          description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl der neuen Antworten wird angezeigt."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit Nachrichten in dieser Gruppe."
+          description: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Gruppe."
     user_action_groups:
       '1': "Abgegebene Likes"
       '2': "Erhaltene Likes"
@@ -431,11 +436,9 @@ de:
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_default: "Benachrichtigungen einschalten"
         perm_denied_btn: "Zugriff verweigert"
-        perm_denied_expl: "Du hast Benachrichtigungen blockiert. Aktiviere die Benachrichtigungen über deine Browser Einstellungen."
+        perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
-        currently_enabled: "(derzeit aktiviert)"
         enable: "Benachrichtigungen aktivieren"
-        currently_disabled: "(derzeit deaktiviert)"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
       dismiss_notifications: "Alle als gelesen markieren"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
@@ -470,7 +473,7 @@ de:
       muted_users: "Stummgeschaltet"
       muted_users_instructions: "Alle Benachrichtigungen von diesem Benutzer unterdrücken."
       muted_topics_link: "Zeige stummgeschaltete Themen"
-      automatically_unpin_topics: "Themen automatisch loslösen, wenn du das Ende erreichst."
+      automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -486,7 +489,7 @@ de:
         bulk_select: "Nachrichten auswählen"
         move_to_inbox: "In Posteingang verschieben"
         move_to_archive: "Archivieren"
-        failed_to_move: "Die ausgewählten Nachrichten konnten nicht bewegt werden (vielleicht gibt es ein Netzwerkproblem)."
+        failed_to_move: "Die ausgewählten Nachrichten konnten nicht verschoben werden. Vielleicht gibt es ein Netzwerkproblem."
         select_all: "Alle auswählen"
       change_password:
         success: "(E-Mail gesendet)"
@@ -571,17 +574,35 @@ de:
         title: "Benutzerkarten-Abzeichen"
       website: "Website"
       email_settings: "E-Mail"
+      like_notification_frequency:
+        title: "Benachrichtigung für erhaltene Likes anzeigen"
+        always: "immer"
+        first_time_and_daily: "erster Like eines Beitrags und täglich"
+        first_time: "nur erster Like eines Beitrags"
+        never: "nie"
+      email_previous_replies:
+        title: "Füge vorherige Beiträge ans Ende von E-Mails an"
+        unless_emailed: "sofern noch nicht gesendet"
+        always: "immer"
+        never: "nie"
       email_digests:
         title: "Sende eine E-Mail mit Neuigkeiten, wenn ich länger nicht hier bin:"
+        every_30_minutes: "alle 30 Minuten"
+        every_hour: "stündlich"
         daily: "täglich"
         every_three_days: "alle drei Tage"
         weekly: "wöchentlich"
         every_two_weeks: "jede zweite Woche"
+      include_tl0_in_digests: "Beiträge von neuen Benutzern in E-Mail mit Neuigkeiten einfügen"
+      email_in_reply_to: "Einen Auszug aus dem beantworteten Beitrag in E-Mails einfügen."
       email_direct: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet, meinen @Namen erwähnt oder mich zu einem Thema einlädt."
       email_private_messages: "Sende mir eine E-Mail, wenn mir jemand eine Nachricht sendet."
       email_always: "Benachrichtige mich per E-Mail auch während ich auf dieser Website aktiv bin"
       other_settings: "Andere"
       categories_settings: "Kategorien"
+      enable_mailing_list:
+        one: "Bist du dir sicher, dass du jeden neuen Post per E-Mail erhalten willst?"
+        other: "Bist du dir sicher, dass du jeden neuen Post per E-Mail erhalten willst?<br><br>Du wirst ungefähr <b>{{count}} E-Mails</b> pro Tag erhalten."
       new_topic_duration:
         label: "Themen als neu ansehen, wenn"
         not_viewed: "ich diese noch nicht betrachtet habe"
@@ -592,7 +613,7 @@ de:
         after_2_weeks: "in den letzten 2 Wochen erstellt"
       auto_track_topics: "Betrachteten Themen automatisch folgen"
       auto_track_options:
-        never: "niemals"
+        never: "nie"
         immediately: "sofort"
         after_30_seconds: "nach 30 Sekunden"
         after_1_minute: "nach 1 Minute"
@@ -647,17 +668,33 @@ de:
       summary:
         title: "Übersicht"
         stats: "Statistiken"
-        topic_count: "Erstellte Themen"
-        post_count: "Erstelle Beiträge"
-        likes_given: "Abgegebene Likes"
-        likes_received: "Erhaltene Likes"
-        days_visited: "Besuchstage"
-        posts_read_count: "Gelesene Beiträge"
+        time_read: "Lesezeit"
+        topic_count:
+          one: "Thema erstellt"
+          other: "Themen erstellt"
+        post_count:
+          one: "Beitrag erstellt"
+          other: "Beiträge erstellt"
+        likes_given:
+          one: "Like gegeben"
+          other: "Likes gegeben"
+        likes_received:
+          one: "Like bekommen"
+          other: "Likes bekommen"
+        days_visited:
+          one: "Tag vorbeigekommen"
+          other: "Tage vorbeigekommen"
+        posts_read:
+          one: "Beitrag gelesen"
+          other: "Beiträge gelesen"
         top_replies: "Die besten Beiträge"
-        top_topics: "Die besten Themen"
-        top_badges: "Die besten Abzeichen"
-        more_topics: "weitere Themen"
+        no_replies: "Noch keine Antworten."
         more_replies: "weitere Beiträge"
+        top_topics: "Die besten Themen"
+        no_topics: "Noch keine Themen."
+        more_topics: "weitere Themen"
+        top_badges: "Die besten Abzeichen"
+        no_badges: "Noch keine Abzeichen."
         more_badges: "weitere Abzeichen"
       associated_accounts: "Anmeldeinformationen"
       ip_address:
@@ -703,9 +740,16 @@ de:
     read_only_mode:
       enabled: "Diese Seite ist im Nur-Lesen Modus. Du kannst weiterhin die Seite lesen, aber antworten, liken und andere Aktionen sind deaktiviert."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
+      logout_disabled: "Die Abmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die Begrenzung von %{siteSettingRate} in den Website-Einstellungen erreicht."
+      exceeded: "%{timestamp}: Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die Begrenzung von %{siteSettingRate} in den Website-Einstellungen überschritten."
+      rate:
+        one: "1 Fehler/%{duration}"
+        other: "%{count} Fehler/%{duration}"
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
@@ -798,6 +842,9 @@ de:
       twitter:
         title: "mit Twitter"
         message: "Authentifiziere mit Twitter (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
+      instagram:
+        title: "mit Instagram"
+        message: "Authentifiziere mit Instagram (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       facebook:
         title: "mit Facebook"
         message: "Authentifiziere mit Facebook (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
@@ -906,6 +953,10 @@ de:
       posted: "<i title='geantwortet' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='bearbeitet' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} und 1 anderer</span> {{description}}</p>"
+        other: "<i title='gefällt' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} und {{count}} andere</span> {{description}}</p>"
       private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='Nachricht' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='zu Thema eingeladen' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -930,7 +981,7 @@ de:
         moved_post: "Dein Beitrag wurde verschoben von"
         linked: "Link zu deinem Beitrag"
         granted_badge: "Abzeichen erhalten"
-        group_message_summary: "Nachrichten in dem Gruppenpostfach"
+        group_message_summary: "Nachrichten im Gruppenpostfach"
       popup:
         mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
         group_mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
@@ -975,7 +1026,7 @@ de:
         category: "Kategorie „{{category}}“ durchsuchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
-    hamburger_menu: "wechsel zu einem anderen Beitragsliste oder Kategorie"
+    hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     new_item: "neu"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
@@ -1012,11 +1063,6 @@ de:
         category: "Es gibt keine Themen in {{category}}."
         top: "Es gibt keine Top-Themen."
         search: "Es wurden keine Suchergebnisse gefunden."
-        educate:
-          new: '<p>Hier werden neue Themen angezeigt.</p><p>Standardmäßig werden jene Themen als neu angesehen und mit dem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">neu</span> Indikator versehen, die in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
-          unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt.<br/>
-
-            Standardmäßig werden Themen als ungelesen angesehen, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
       bottom:
         latest: "Das waren die aktuellen Themen."
         hot: "Das waren alle beliebten Themen."
@@ -1114,8 +1160,8 @@ de:
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
           '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
-          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet.'
-          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet.'
+          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
           '0_2': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
           '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
@@ -1127,16 +1173,16 @@ de:
           description: "Du wirst über jeden neuen Beitrag in diesem Thema benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         tracking_pm:
           title: "Verfolgen"
-          description: "Die Anzahl der neuen Antworten wird bei dieser Unterhaltung angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Die Anzahl der neuen Antworten wird bei dieser Unterhaltung angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Nachricht antwortet."
         tracking:
           title: "Verfolgen"
-          description: "Die Anzahl der neuen Antworten wird bei diesem Thema angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Die Anzahl der neuen Antworten wird bei diesem Thema angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular_pm:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deine Nachricht antwortet."
         muted_pm:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit dieser Unterhaltung."
@@ -1381,17 +1427,7 @@ de:
           like: "Gefällt mir nicht mehr"
           vote: "Stimme widerrufen"
         people:
-          off_topic: "{{icons}} haben das als „am Thema vorbei“ gemeldet"
-          spam: "{{icons}} haben das als Spam gemeldet"
-          spam_with_url: "{{icons}} haben <a href='{{postUrl}}'>das als Spam</a> gemeldet"
-          inappropriate: "{{icons}} haben das als unangemessen gemeldet"
-          notify_moderators: "{{icons}} haben das den Moderatoren gemeldet"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>haben das den Moderatoren gemeldet</a>"
-          notify_user: "{{icons}} hat eine Nachricht gesendet"
-          notify_user_with_url: "{{icons}} hat eine <a href='{{postUrl}}'>Nachricht</a> gesendet"
-          bookmark: "{{icons}} haben das als Lesezeichen"
-          like: "{{icons}} gefällt dieser Beitrag"
-          vote: "{{icons}} haben dafür gestimmt"
+          spam: "Melde es als Spam"
         by_you:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
@@ -1534,16 +1570,15 @@ de:
           description: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über jeden neuen Beitrag in jedem Thema benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Du wirst benachrichtigt, wenn dich jemand mit @Name erwähnt oder dir antwortet, und die Anzahl neuer Antworten wird angezeigt."
+          description: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
         regular:
           title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder dir antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der letzten Themen erscheinen."
     flagging:
       title: 'Danke für deine Mithilfe!'
-      private_reminder: 'Meldungen sind vertraulich und <b>nur</b> für Mitarbeiter sichtbar'
       action: 'Beitrag melden'
       take_action: "Reagieren"
       notify_action: 'Nachricht'
@@ -1555,7 +1590,6 @@ de:
       submit_tooltip: "Private Meldung abschicken"
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, du kannst diesen Beitrag derzeit nicht melden."
-      notify_staff: 'Mitarbeiter benachrichtigen'
       formatted_name:
         off_topic: "Es ist am Thema vorbei"
         inappropriate: "Es ist unangemessen"
@@ -1846,9 +1880,9 @@ de:
         add: "Hinzufügen"
         add_members: "Mitglieder hinzufügen"
         custom: "Benutzerdefiniert"
-        bulk_complete: "Der Benutzer wurde der Gruppe hinzugefügt."
+        bulk_complete: "Die Benutzer wurden der Gruppe hinzugefügt."
         bulk: "Mehrere der Gruppe hinzufügen"
-        bulk_paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein, jeweils pro Zeile:"
+        bulk_paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein (ein Eintrag je Zeile):"
         bulk_select: "(wähle eine Gruppe aus)"
         automatic: "Automatisch"
         automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
@@ -1932,11 +1966,10 @@ de:
             is_disabled: "Wiederherstellung ist in den Website-Einstellungen deaktiviert."
             label: "Wiederherstellen"
             title: "Das Backup wiederherstellen"
-            confirm: "Möchtest du wirklich dieses Backup wiederherstellen?"
+            confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
           rollback:
             label: "Zurücksetzen"
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
-            confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
         user_archive_confirm: "Möchtest du wirklich deine Beiträge herunterladen?"
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
@@ -2039,9 +2072,6 @@ de:
           love:
             name: 'Liebe'
             description: "Die Farbe des Like-Buttons."
-          wiki:
-            name: 'Wiki'
-            description: "Die Standardfarbe wird als Hintergrundfarbe für Wiki-Beiträge genutzt."
       email:
         title: "E-Mails"
         settings: "Einstellungen"
@@ -2063,7 +2093,7 @@ de:
         send_test: "Test-E-Mail senden"
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
-        preview_digest_desc: "Vorschau der Zusammenfassung der letzten Aktivitäten, die als E-Mail an inaktive Nutzer gesendet wird."
+        preview_digest_desc: "Vorschau der Neuigkeiten, die als E-Mail an inaktive Nutzer gesendet werden."
         refresh: "Aktualisieren"
         format: "Format"
         html: "HTML"
@@ -2078,6 +2108,11 @@ de:
           subject: "Betreff"
           error: "Fehler"
           none: "Keine eingehenden E-Mails gefunden."
+          modal:
+            title: "Details der eingehenden E-Mail"
+            error: "Fehler"
+            subject: "Betreff"
+            body: "Nachrichtentext"
           filters:
             from_placeholder: "von@example.com"
             to_placeholder: "an@example.com"
@@ -2153,6 +2188,7 @@ de:
             revoke_admin: "Administration entziehen"
             grant_moderation: "Moderation gewähren"
             revoke_moderation: "Moderation entziehen"
+            backup_operation: "Backup läuft"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -2320,11 +2356,11 @@ de:
         unblock_failed: 'Beim Aufheben der Blockierung des Benutzers ist ein Fehler aufgetreten.'
         block_failed: 'Beim Blocken des Benutzers ist ein Fehler aufgetreten.'
         block_confirm: 'Bust du sicher, dass du diesen Benutzer blockieren willst? Sie werden keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen.'
-        block_accept: 'Ja, den Nutzer blockieren.'
+        block_accept: 'Ja, diesen Benutzer blockieren.'
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
-        stage_explanation: "Ein vorbereiteter Nutzer kann nur via E-Mail zu gewissen Themen beitragen."
+        stage_explanation: "Ein vorbereiteter Nutzer kann nur via E-Mail zu bestimmten Themen beitragen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
@@ -2404,9 +2440,9 @@ de:
         revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
         go_back: "Zurück zur Suche"
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
-        show_overriden: 'Nur geänderterte Texte anzeigen'
+        show_overriden: 'Nur geänderte Texte anzeigen'
       site_settings:
-        show_overriden: 'Nur geänderterte Einstellungen anzeigen'
+        show_overriden: 'Nur geänderte Einstellungen anzeigen'
         title: 'Einstellungen'
         reset: 'zurücksetzen'
         none: 'keine'
@@ -2606,10 +2642,7 @@ de:
       earned_n_times:
         one: "Einmal dieses Abzeichen erhalten"
         other: "%{count} mal dieses Abzeichen erhalten"
-      more_with_badge: "Andere mit diesem Abzeichen"
       title: Abzeichen
-      allow_title: "kann als Titel verwendet werden"
-      multiple_grant: "kann mehrfach verliehen werden"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"
@@ -2632,97 +2665,6 @@ de:
           name: Andere
         posting:
           name: Beiträge
-      badge:
-        editor:
-          name: Bearbeiter
-          description: Hat den ersten Beitrag bearbeitet
-        basic_user:
-          name: Anwärter
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Ermöglicht</a> das Nutzen alle wesentlichen Community-Funktionen
-        member:
-          name: Mitglied
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ermöglicht</a> Einladungen
-        regular:
-          name: Stammgast
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung von <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbaren Links</a> und den Zugang zur Lounge
-        leader:
-          name: Anführer
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ermöglicht</a> das Bearbeiten aller Beiträge und das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen
-        welcome:
-          name: Willkommen
-          description: Hat ein Like erhalten
-        autobiographer:
-          name: Autobiograf
-          description: Hat <a href="/my/preferences">Benutzerprofil</a> ausgefüllt
-        anniversary:
-          name: Jubiläum
-          description: Aktives Mitglied für ein Jahr und hat mindestens einen Beitrag verfasst
-        nice_post:
-          name: Schöner Beitrag
-          description: Hat 10 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        good_post:
-          name: Guter Beitrag
-          description: Hat 25 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        great_post:
-          name: Großartiger Beitrag
-          description: Hat 50 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        nice_topic:
-          name: Schönes Thema
-          description: Hat 10 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        good_topic:
-          name: Gutes Thema
-          description: Hat 25 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        great_topic:
-          name: Großartiges Thema
-          description: Hat 50 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
-        nice_share:
-          name: Schöne Weitergabe
-          description: Hat einen Beitrag mit 25 Besuchern geteilt
-        good_share:
-          name: Gute Weitergabe
-          description: Hat einen Beitrag mit 300 Besuchern geteilt
-        great_share:
-          name: Großartige Weitergabe
-          description: Hat einen Beitrag mit 1000 Besuchern geteilt
-        first_like:
-          name: Erster Like
-          description: Hat Gefallen an einem Beitrag gefunden
-        first_flag:
-          name: Erste Meldung
-          description: Hat einen Beitrag gemeldet
-        promoter:
-          name: Befürworter
-          description: Hat einen Benutzer eingeladen
-        campaigner:
-          name: Aktivist
-          description: Hat 3 Anwärter (Vertrauensstufe 1) eingeladen
-        champion:
-          name: Verfechter
-          description: Hat 5 Mitglieder (Vertrauensstufe 2) eingeladen
-        first_share:
-          name: Erste Weitergabe
-          description: Hat einen Beitrag geteilt
-        first_link:
-          name: Erster Link
-          description: Hat einen internen Link auf einen anderen Beitrag hinzugefügt
-        first_quote:
-          name: Erstes Zitat
-          description: Hat einen Benutzer zitiert
-        read_guidelines:
-          name: Richtlinien gelesen
-          description: Hat die <a href="/guidelines">Community-Richtlinien</a> gelesen
-        reader:
-          name: Leser
-          description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
-        popular_link:
-          name: Beliebter Link
-          description: Hat einen externen Link veröffentlicht, welcher mindestens 50 Klicks erhalten hat.
-        hot_link:
-          name: Angesagter Link
-          description: Hat einen externen Link veröffentlicht, welcher mindestens 300 Klicks erhalten hat.
-        famous_link:
-          name: Berühmter Link
-          description: Hat einen externen Link veröffentlicht, welcher mindestens 1000 Klicks erhalten hat.
     google_search: |
       <h3>Mit Google suchen</h3>
       <p>

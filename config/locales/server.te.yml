@@ -567,9 +567,6 @@ te:
     email:
       not_allowed: "ఆ ఈమెయిల్ ప్రొవైడరును అనుమంతిచుటలేదు. దయచేసి మరో ఈమెయిల్ చిరునామా రాయండి"
       blocked: "అనుమతించుటలేదు"
-  flags_reminder:
-    please_review: "దయచేసి వాటిని సమీక్షించండి."
-    post_number: "టపా"
   system_messages:
     welcome_user:
       subject_template: "%{site_name} కు సుస్వాగతం!"
