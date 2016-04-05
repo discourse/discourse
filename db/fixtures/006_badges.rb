@@ -366,6 +366,7 @@ Badge.seed do |b|
   b.target_posts = true
   b.show_posts = true
   b.query = BadgeQueries.has_user_first(:mentioned_user)
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostProcessed
   b.system = true
@@ -379,6 +380,7 @@ Badge.seed do |b|
   b.target_posts = true
   b.show_posts = true
   b.query = BadgeQueries.has_user_first(:used_emoji)
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostProcessed
   b.system = true
