@@ -185,9 +185,6 @@
       {{preference-checkbox labelKey="user.email_in_reply_to" checked=model.user_option.email_in_reply_to}}
       {{preference-checkbox labelKey="user.email_private_messages" checked=model.user_option.email_private_messages}}
       {{preference-checkbox labelKey="user.email_direct" checked=model.user_option.email_direct}}
-      {{#unless siteSettings.disable_mailing_list_mode}}
-        {{preference-checkbox warning="checkMailingList" labelKey="user.mailing_list_mode" checked=model.user_option.mailing_list_mode}}
-      {{/unless}}
       {{preference-checkbox labelKey="user.email_always" checked=model.user_option.email_always}}
       {{#unless model.user_option.email_always}}
       <div class='instructions'>
@@ -215,7 +212,7 @@
     {{#unless siteSettings.disable_mailing_list_mode}}
       <div class='control-group pref-mailing-list-mode'>
         <label class="control-label">{{i18n 'user.mailing_list_mode.label'}}</label>
-        {{preference-checkbox labelKey="user.mailing_list_mode.enabled" checked=model.user_option.mailing_list_mode}}
+        {{preference-checkbox labelKey="user.mailing_list_mode.enabled" warning="checkMailingList" checked=model.user_option.mailing_list_mode}}
         <div class='instructions'>{{{i18n 'user.mailing_list_mode.instructions'}}}</div>
         {{#if model.user_option.mailing_list_mode}}
           <div class='controls controls-dropdown'>

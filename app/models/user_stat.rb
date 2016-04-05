@@ -66,11 +66,6 @@ class UserStat < ActiveRecord::Base
     cache_last_seen(Time.now.to_f)
   end
 
-  def mailing_list_mode_frequency_estimate
-    # average of last 30 days of posts
-    @mailing_list_mode_frequency_estimate ||= About.fetch_stats[:posts_30_days].to_f / 30
-  end
-
   protected
 
   def trigger_badges

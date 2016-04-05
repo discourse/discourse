@@ -155,7 +155,6 @@ const User = RestModel.extend({
 
     [       'email_always',
             'mailing_list_mode',
-            'mailing_list_mode_frequency',
             'external_links_in_new_tab',
             'email_digests',
             'email_direct',
