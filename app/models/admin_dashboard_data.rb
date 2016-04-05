@@ -37,7 +37,7 @@ class AdminDashboardData
     @problem_syms.push(*syms) if syms
     @problem_blocks << blk if blk
   end
-  class << self; attr_reader :problem_syms, :problem_blocks; end
+  class << self; attr_reader :problem_syms, :problem_blocks, :problem_messages; end
 
   def problems
     problems = []
@@ -47,6 +47,9 @@ class AdminDashboardData
     AdminDashboardData.problem_blocks.each do |blk|
       problems << instance_exec(&blk)
     end
+    AdminDashboardData.problem_messages.each do |i18n_key|
+      problems << AdminDashboardData.problem_message_check(i18n_key)
+    end
     problems.compact
   end
 
@@ -54,6 +57,7 @@ class AdminDashboardData
   def self.reset_problem_checks
     @problem_syms = []
     @problem_blocks = []
+    @problem_messages = ['dashboard.bad_favicon_url']
 
     add_problem_check :rails_env_check, :ruby_version_check, :host_names_check,
                       :gc_checks, :ram_check, :google_oauth2_config_check,
@@ -81,6 +85,26 @@ class AdminDashboardData
 
   def self.fetch_problems
     AdminDashboardData.new.problems
+  end
+
+  def self.problem_message_check(i18n_key)
+    $redis.get(problem_message_key(i18n_key)) ? I18n.t(i18n_key) : nil
+  end
+
+  def self.add_problem_message(i18n_key, expire_seconds=nil)
+    if expire_seconds.to_i > 0
+      $redis.setex problem_message_key(i18n_key), expire_seconds.to_i, 1
+    else
+      $redis.set problem_message_key(i18n_key), 1
+    end
+  end
+
+  def self.clear_problem_message(i18n_key)
+    $redis.del problem_message_key(i18n_key)
+  end
+
+  def self.problem_message_key(i18n_key)
+    "admin-problem:#{i18n_key}"
   end
 
   def as_json(_options = nil)

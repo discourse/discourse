@@ -790,6 +790,7 @@ en:
     email_polling_errored_recently:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
+    bad_favicon_url: "The favicon is failing to load. Check your favicon_url setting in <a href='/admin/site_settings'>Site Settings</a>."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
