@@ -35,6 +35,7 @@ describe UserFirst do
 
     it "doesn't create the userfirst on private posts" do
       post = PostCreator.create(user,
+                                archetype: Archetype.private_message,
                                 target_usernames: ['codinghorror'],
                                 title: "this topic is about candy",
                                 raw: "time to eat some sweet :candy: mmmm")
