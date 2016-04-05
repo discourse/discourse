@@ -33,6 +33,8 @@ class CookedPostProcessor
   end
 
   def create_firsts
+    return unless Guardian.new.can_see?(@post)
+
     created = false
 
     if @doc.css("img.emoji").size > 0
