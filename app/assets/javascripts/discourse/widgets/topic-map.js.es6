@@ -81,7 +81,7 @@ createWidget('topic-map-summary', {
 
     if (attrs.topicLikeCount) {
       contents.push(h('li.secondary', [
-        numberNode(attrs.likeCount),
+        numberNode(attrs.topicLikeCount),
         h('h4', I18n.t('likes_lowercase', { count: attrs.likeCount }))
       ]));
     }
