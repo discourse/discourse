@@ -248,15 +248,14 @@ In addition to ImageMagick we also need to install some other image related
 software:
 
 ```sh
-brew install optipng
+brew install gifsicle jpegoptim optipng
 npm install -g svgo 
 ```
 
 Install jhead
 
 ```sh
-curl -O "http://www.sentex.net/~mwandel/jhead/jhead-2.97.tar.gz"
-tar xzf jhead-2.97.tar.gz
+curl "http://www.sentex.net/~mwandel/jhead/jhead-2.97.tar.gz" | tar xzf -
 cd jhead-2.97
 make
 make install
