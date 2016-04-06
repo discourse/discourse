@@ -944,7 +944,7 @@ en:
 
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
-    sso_url: "URL of single sign on endpoint"
+    sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
