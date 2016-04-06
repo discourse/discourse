@@ -566,8 +566,12 @@ email:
   enable_staged_users: true
 
 files:
-  max_image_size_kb: 3072
-  max_attachment_size_kb: 3072
+  max_image_size_kb:
+    client: true
+    default: 3072
+  max_attachment_size_kb:
+    client: true
+    default: 3072
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
