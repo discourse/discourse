@@ -134,6 +134,22 @@ SQL
    HAVING COUNT(p.id) > 0
 SQL
 
+  FirstMention = <<-SQL
+  SELECT acting_user_id AS user_id, min(target_post_id) AS post_id, min(p.created_at) AS granted_at
+  FROM user_actions
+  JOIN posts p ON p.id = target_post_id
+  JOIN topics t ON t.id = topic_id
+  JOIN categories c on c.id = category_id
+  WHERE action_type = 7
+    AND NOT read_restricted
+    AND p.deleted_at IS  NULL
+    AND t.deleted_at IS  NULL
+    AND t.visible
+    AND t.archetype <> 'private_message'
+    AND (:backfill OR p.id IN (:post_ids))
+  GROUP BY acting_user_id
+SQL
+
   def self.invite_badge(count,trust_level)
 "
   SELECT u.id user_id, current_timestamp granted_at
