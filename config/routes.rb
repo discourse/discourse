@@ -164,15 +164,15 @@ Discourse::Application.routes.draw do
       resources :emojis, constraints: AdminConstraint.new
 
       # They have periods in their URLs often:
-      get 'site_texts' => 'site_texts#index'
-      match 'site_texts/(:id)' => 'site_texts#show', :constraints => { :id => /[0-9a-zA-Z\_\.\-]+/ }, via: :get
-      match 'site_texts/(:id)' => 'site_texts#update', :constraints => { :id => /[0-9a-zA-Z\_\.\-]+/ }, via: :put
-      match 'site_texts/(:id)' => 'site_texts#revert', :constraints => { :id => /[0-9a-zA-Z\_\.\-]+/ }, via: :delete
+      get 'site_texts'          => 'site_texts#index'
+      get 'site_texts/(:id)'    => 'site_texts#show',   constraints: { id: /[\w.\-]+/i }
+      put 'site_texts/(:id)'    => 'site_texts#update', constraints: { id: /[\w.\-]+/i }
+      delete 'site_texts/(:id)' => 'site_texts#revert', constraints: { id: /[\w.\-]+/i }
 
-      get 'email_templates' => 'email_templates#index'
-      match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :get
-      match 'email_templates/(:id)' => 'email_templates#update', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :put
-      match 'email_templates/(:id)' => 'email_templates#revert', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :delete
+      get 'email_templates'          => 'email_templates#index'
+      get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
+      put 'email_templates/(:id)'    => 'email_templates#update', constraints: { id: /[0-9a-z_.]+/ }
+      delete 'email_templates/(:id)' => 'email_templates#revert', constraints: { id: /[0-9a-z_.]+/ }
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new
