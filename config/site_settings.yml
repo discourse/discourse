@@ -266,7 +266,9 @@ login:
     client: true
     default: false
   enable_sso_provider: false
-  sso_url: ''
+  sso_url:
+    default: ''
+    regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
   sso_overrides_email: false
   sso_overrides_username: false
