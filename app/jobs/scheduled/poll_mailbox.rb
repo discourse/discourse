@@ -105,6 +105,8 @@ module Jobs
       client_message
     end
 
+    POLL_MAILBOX_TIMEOUT_ERROR_KEY = "poll_mailbox_timeout_error_key".freeze
+
     def poll_pop3
       pop3 = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
       pop3.enable_ssl if SiteSetting.pop3_polling_ssl
@@ -115,12 +117,18 @@ module Jobs
         end
       end
     rescue Net::OpenTimeout => e
-      mark_as_errored!
-      AdminDashboardData.add_problem_message('dashboard.poll_pop3_timeout', SiteSetting.pop3_polling_period_mins.minutes + 5.minutes)
-      Discourse.handle_job_exception(e, error_context(@args, "Connecting to '#{SiteSetting.pop3_polling_host}' for polling emails."))
+      count = $redis.incr(POLL_MAILBOX_TIMEOUT_ERROR_KEY).to_i
+      $redis.expire(POLL_MAILBOX_TIMEOUT_ERROR_KEY, 300) if count == 1
+
+      if count > 3
+        $redis.del(POLL_MAILBOX_TIMEOUT_ERROR_KEY)
+        mark_as_errored!
+        add_admin_dashboard_problem_message('dashboard.poll_pop3_timeout')
+        Discourse.handle_job_exception(e, error_context(@args, "Connecting to '#{SiteSetting.pop3_polling_host}' for polling emails."))
+      end
     rescue Net::POPAuthenticationError => e
       mark_as_errored!
-      AdminDashboardData.add_problem_message('dashboard.poll_pop3_auth_error', SiteSetting.pop3_polling_period_mins.minutes + 5.minutes)
+      add_admin_dashboard_problem_message('dashboard.poll_pop3_auth_error')
       Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming emails."))
     end
 
@@ -146,6 +154,13 @@ module Jobs
       if SiteSetting.log_mail_processing_failures
         Rails.logger.warn("Email can not be processed: #{exception}\n\n#{mail_string}")
       end
+    end
+
+    def add_admin_dashboard_problem_message(i18n_key)
+      AdminDashboardData.add_problem_message(
+        i18n_key,
+        SiteSetting.pop3_polling_period_mins.minutes + 5.minutes
+      )
     end
 
   end
