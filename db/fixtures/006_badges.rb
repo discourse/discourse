@@ -365,10 +365,10 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.show_posts = true
-  b.query = BadgeQueries.has_user_first(:mentioned_user)
+  b.query = BadgeQueries::FirstMention
   b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
-  b.trigger = Badge::Trigger::PostProcessed
+  b.trigger = Badge::Trigger::PostRevision
   b.system = true
 end
 

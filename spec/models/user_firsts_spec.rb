@@ -31,17 +31,6 @@ describe UserFirst do
 
   end
 
-  context 'mentioning' do
-    let(:codinghorror) { Fabricate(:codinghorror) }
-
-    it "creates one the first time a user mentions another" do
-      post = PostCreator.create(user, title: "gonna mention another user", raw: "what is up @codinghorror?")
-      uf = UserFirst.where(user_id: user.id, first_type: UserFirst.types[:mentioned_user]).first
-      expect(uf).to be_present
-      expect(uf.post_id).to eq(post.id)
-    end
-  end
-
   context "privacy" do
     let(:codinghorror) { Fabricate(:codinghorror) }
 

@@ -45,10 +45,6 @@ class CookedPostProcessor
       created |= UserFirst.create_for(@post.user_id, :used_emoji, @post.id)
     end
 
-    if @doc.css("span.mention, a.mention").size > 0
-      created |= UserFirst.create_for(@post.user_id, :mentioned_user, @post.id)
-    end
-
     if created
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostProcessed, user: @post.user)
     end
