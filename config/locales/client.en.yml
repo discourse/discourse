@@ -1513,7 +1513,6 @@ en:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        attachment_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)."
         file_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files: "Sorry, you can only drag & drop up to 10 files at a time."
