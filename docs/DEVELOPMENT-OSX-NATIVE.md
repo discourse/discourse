@@ -248,8 +248,7 @@ In addition to ImageMagick we also need to install some other image related
 software:
 
 ```sh
-brew install gifsicle
-brew install optipng
+brew install gifsicle jpegoptim optipng
 npm install -g svgo 
 ```
 
