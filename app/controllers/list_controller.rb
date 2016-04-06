@@ -334,16 +334,18 @@ class ListController < ApplicationController
       return period if top_topics.count >= SiteSetting.topics_per_period_in_top_page
     end
     # default period is yearly
-    SiteSetting.top_page_default_timeframe
+    SiteSetting.top_page_default_timeframe.to_sym
   end
 
   def self.best_periods_for(date)
     date ||= 1.year.ago
+    default_period = SiteSetting.top_page_default_timeframe.to_sym
     periods = []
-    periods << :daily   if date >   8.days.ago
-    periods << :weekly  if date >  35.days.ago
-    periods << :monthly if date > 180.days.ago
-    periods << :yearly
+    periods << default_period if :all     != default_period
+    periods << :daily         if :daily   != default_period && date >   8.days.ago
+    periods << :weekly        if :weekly  != default_period && date >  35.days.ago
+    periods << :monthly       if :monthly != default_period && date > 180.days.ago
+    periods << :yearly        if :yearly  != default_period
     periods
   end
 
