@@ -1,3 +1,5 @@
+<% if crawler_layout? %>
+
 <% content_for :title do %><%=t "about" %><% end %>
 
 <section itemscope itemtype="https://schema.org/AboutPage">
@@ -52,6 +54,8 @@
     </div>
   <% end %>
 
+  <%- stats = About.fetch_cached_stats %>
+
   <section class='about stats'>
     <h2><%=t 'js.about.stats' %></h2>
 
@@ -64,33 +68,33 @@
       </tr>
       <tr>
         <td class='title'><%=t 'js.about.topic_count' %></td>
-        <td><%= @about.stats[:topic_count] %></td>
-        <td><%= @about.stats[:topics_7_days] %></td>
-        <td><%= @about.stats[:topics_30_days] %></td>
+        <td><%= stats["topic_count"] %></td>
+        <td><%= stats["topics_7_days"] %></td>
+        <td><%= stats["topics_30_days"] %></td>
       </tr>
       <tr>
         <td><%=t 'js.about.post_count' %></td>
-        <td><%= @about.stats[:post_count] %></td>
-        <td><%= @about.stats[:posts_7_days] %></td>
-        <td><%= @about.stats[:posts_30_days] %></td>
+        <td><%= stats["post_count"] %></td>
+        <td><%= stats["posts_7_days"] %></td>
+        <td><%= stats["posts_30_days"] %></td>
       </tr>
       <tr>
         <td><%=t 'js.about.user_count' %></td>
-        <td><%= @about.stats[:user_count] %></td>
-        <td><%= @about.stats[:users_7_days] %></td>
-        <td><%= @about.stats[:users_30_days] %></td>
+        <td><%= stats["user_count"] %></td>
+        <td><%= stats["users_7_days"] %></td>
+        <td><%= stats["users_30_days"] %></td>
       </tr>
       <tr>
         <td><%=t 'js.about.active_user_count' %></td>
         <td>&mdash;</td>
-        <td><%= @about.stats[:active_users_7_days] %></td>
-        <td><%= @about.stats[:active_users_30_days] %></td>
+        <td><%= stats["active_users_7_days"] %></td>
+        <td><%= stats["active_users_30_days"] %></td>
       </tr>
       <tr>
         <td><%=t 'js.about.like_count' %></td>
-        <td><%= @about.stats[:like_count] %></td>
-        <td><%= @about.stats[:likes_7_days] %></td>
-        <td><%= @about.stats[:likes_30_days] %></td>
+        <td><%= stats["like_count"] %></td>
+        <td><%= stats["likes_7_days"] %></td>
+        <td><%= stats["likes_30_days"] %></td>
       </tr>
     </table>
   </section>
@@ -98,3 +102,5 @@
 </section>
 <br/>
 <br/>
+
+<% end %>
