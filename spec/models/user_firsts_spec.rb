@@ -11,12 +11,24 @@ describe UserFirst do
     end
   end
 
-  it "creates one the first time a user posts an emoji" do
-    post = PostCreator.create(user, title: "this topic is about candy", raw: "time to eat some sweet :candy: mmmm")
+  context "emoji" do
+    it "logs a user first" do
+      post = PostCreator.create(user, title: "this topic is about candy", raw: "time to eat some sweet :candy: mmmm")
 
-    uf = UserFirst.where(user_id: user.id, first_type: UserFirst.types[:used_emoji]).first
-    expect(uf).to be_present
-    expect(uf.post_id).to eq(post.id)
+      uf = UserFirst.where(user_id: user.id, first_type: UserFirst.types[:used_emoji]).first
+      expect(uf).to be_present
+      expect(uf.post_id).to eq(post.id)
+    end
+
+    it "doesn't log a user first when in a quote" do
+      PostCreator.create(user,
+                         title: "this topic is about candy",
+                         raw: "time to eat some sweet [quote]:candy:[/quote] mmmm")
+
+      uf = UserFirst.where(user_id: user.id, first_type: UserFirst.types[:used_emoji]).first
+      expect(uf).to be_blank
+    end
+
   end
 
   context 'mentioning' do
@@ -34,11 +46,11 @@ describe UserFirst do
     let(:codinghorror) { Fabricate(:codinghorror) }
 
     it "doesn't create the userfirst on private posts" do
-      post = PostCreator.create(user,
-                                archetype: Archetype.private_message,
-                                target_usernames: ['codinghorror'],
-                                title: "this topic is about candy",
-                                raw: "time to eat some sweet :candy: mmmm")
+      PostCreator.create(user,
+                         archetype: Archetype.private_message,
+                         target_usernames: ['codinghorror'],
+                         title: "this topic is about candy",
+                         raw: "time to eat some sweet :candy: mmmm")
 
       uf = UserFirst.where(user_id: user.id, first_type: UserFirst.types[:used_emoji]).first
       expect(uf).to be_blank
