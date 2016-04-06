@@ -165,9 +165,9 @@ Discourse::Application.routes.draw do
 
       # They have periods in their URLs often:
       get 'site_texts' => 'site_texts#index'
-      match 'site_texts/(:id)' => 'site_texts#show', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :get
-      match 'site_texts/(:id)' => 'site_texts#update', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :put
-      match 'site_texts/(:id)' => 'site_texts#revert', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :delete
+      match 'site_texts/(:id)' => 'site_texts#show', :constraints => { :id => /[0-9a-zA-Z\_\.\-]+/ }, via: :get
+      match 'site_texts/(:id)' => 'site_texts#update', :constraints => { :id => /[0-9a-zA-Z\_\.\-]+/ }, via: :put
+      match 'site_texts/(:id)' => 'site_texts#revert', :constraints => { :id => /[0-9a-zA-Z\_\.\-]+/ }, via: :delete
 
       get 'email_templates' => 'email_templates#index'
       match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :get
