@@ -75,12 +75,13 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
-    const mobileView = this.container.lookup('site:main').mobileView;
-    const loc = mobileView ? 'before' : 'after';
+    const site = this.container.lookup('site:main');
+    const loc = site && site.mobileView ? 'before' : 'after';
+
     decorateWidget(`poster-name:${loc}`, dec => {
       const attrs = dec.attrs;
-
       const result = cb(attrs.userCustomFields || {}, attrs);
+
       if (result) {
         let iconBody;
 

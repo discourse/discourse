@@ -102,6 +102,12 @@ class BadgeGranter
         type: "PostAction",
         post_ids: [action.post_id, action.related_post_id].compact!
       }
+    when Badge::Trigger::PostProcessed
+      user = opt[:user]
+      payload = {
+        type: "PostProcessed",
+        user_ids: [user.id]
+      }
     end
 
     $redis.lpush queue_key, payload.to_json if payload

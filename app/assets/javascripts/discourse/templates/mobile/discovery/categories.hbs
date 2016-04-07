@@ -60,7 +60,7 @@
       <figure title="{{i18n 'month_desc'}}">{{number c.topics_month}} <figcaption>{{i18n 'month'}}</figcaption></figure>
       <figure title="{{i18n 'week_desc'}}">{{number c.topics_week}} <figcaption>{{i18n 'week'}}</figcaption></figure>
 
-      {{#if controller.canEdit}}
+      {{#if c.can_edit}}
         <a href {{action "editCategory" c}} class='btn btn-small'>{{i18n 'category.edit'}}</a>
       {{/if}}
 

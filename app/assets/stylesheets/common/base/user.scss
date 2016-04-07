@@ -190,10 +190,49 @@
 }
 
 .top-section {
+  @include clearfix();
   ul {
     list-style: none;
     margin: 0;
   }
+
+  .username, .name {
+    display: block;
+  }
+
+  .name {
+    margin-left: 0;
+  }
+}
+
+.user-nav {
+  margin: 5px 0px;
+  .fa {
+    margin-right: 5px;
+  }
+  .fa.fa-comment {
+    margin-right: 2px;
+  }
+}
+
+.user-right .list-actions {
+  margin-bottom: 10px;
+  .btn {
+    margin-right: 10px;
+  }
+}
+
+.top-section {
+  ul {
+    list-style: none;
+    margin: 0;
+  }
+}
+
+.top-section,
+.replies-section,
+.topics-section {
+  margin-bottom: 20px;
 }
 
 .top-section,
@@ -258,10 +297,6 @@
 
 .topics-section {
   float: right;
-}
-
-.badges-section {
-  clear: both;
 }
 
 @media all

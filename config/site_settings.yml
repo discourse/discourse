@@ -266,7 +266,9 @@ login:
     client: true
     default: false
   enable_sso_provider: false
-  sso_url: ''
+  sso_url:
+    default: ''
+    regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
   sso_overrides_email: false
   sso_overrides_username: false
@@ -564,8 +566,12 @@ email:
   enable_staged_users: true
 
 files:
-  max_image_size_kb: 3072
-  max_attachment_size_kb: 3072
+  max_image_size_kb:
+    client: true
+    default: 3072
+  max_attachment_size_kb:
+    client: true
+    default: 3072
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'

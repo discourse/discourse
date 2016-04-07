@@ -813,6 +813,16 @@ describe TopicsController do
     end
   end
 
+  describe '#posts' do
+    let(:topic) { Fabricate(:post).topic }
+
+    it 'returns first posts of the topic' do
+      get :posts, topic_id: topic.id, format: :json
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/json')
+    end
+  end
+
   describe '#feed' do
     let(:topic) { Fabricate(:post).topic }
 

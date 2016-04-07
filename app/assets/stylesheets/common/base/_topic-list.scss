@@ -229,7 +229,7 @@ ol.category-breadcrumb {
   @include fa-icon-rotate(180deg, 1);
   color: $primary;
   /* because it is rotated, right becomes left! */
-  padding-left: 3px; 
+  padding-left: 3px;
   padding-right: 0 !important;
 }
 

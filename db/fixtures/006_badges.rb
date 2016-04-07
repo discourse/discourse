@@ -1,3 +1,4 @@
+require 'badge_queries'
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::GettingStarted
@@ -50,7 +51,7 @@ trust_level_badges.each do |spec|
     b.id = spec[:id]
     b.default_name = spec[:name]
     b.badge_type_id = spec[:type]
-    b.query = Badge::Queries.trust_level(spec[:id])
+    b.query = BadgeQueries.trust_level(spec[:id])
     b.default_badge_grouping_id = BadgeGrouping::TrustLevel
     b.trigger = Badge::Trigger::TrustLevelChange
 
@@ -68,7 +69,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = false
   b.show_posts = false
-  b.query = Badge::Queries::Reader
+  b.query = BadgeQueries::Reader
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.auto_revoke = false
   b.system = true
@@ -81,7 +82,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = false
   b.show_posts = false
-  b.query = Badge::Queries::ReadGuidelines
+  b.query = BadgeQueries::ReadGuidelines
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::UserChange
   b.system = true
@@ -94,7 +95,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.show_posts = true
-  b.query = Badge::Queries::FirstLink
+  b.query = BadgeQueries::FirstLink
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
   b.system = true
@@ -107,7 +108,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.show_posts = true
-  b.query = Badge::Queries::FirstQuote
+  b.query = BadgeQueries::FirstQuote
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
   b.system = true
@@ -120,7 +121,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.show_posts = true
-  b.query = Badge::Queries::FirstLike
+  b.query = BadgeQueries::FirstLike
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostAction
   b.system = true
@@ -133,7 +134,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.show_posts = false
-  b.query = Badge::Queries::FirstFlag
+  b.query = BadgeQueries::FirstFlag
   b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostAction
@@ -154,7 +155,7 @@ end
     b.multiple_grant = false
     b.target_posts = false
     b.show_posts = false
-    b.query = Badge::Queries.invite_badge(count,trust_level)
+    b.query = BadgeQueries.invite_badge(count,trust_level)
     b.default_badge_grouping_id = BadgeGrouping::Community
     # daily is good enough
     b.trigger = Badge::Trigger::None
@@ -170,7 +171,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.show_posts = true
-  b.query = Badge::Queries::FirstShare
+  b.query = BadgeQueries::FirstShare
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   # don't trigger for now, its too expensive
   b.trigger = Badge::Trigger::None
@@ -191,7 +192,7 @@ end
     b.multiple_grant = true
     b.target_posts = true
     b.show_posts = true
-    b.query = Badge::Queries.sharing_badge(count)
+    b.query = BadgeQueries.sharing_badge(count)
     b.default_badge_grouping_id = BadgeGrouping::Community
     # don't trigger for now, its too expensive
     b.trigger = Badge::Trigger::None
@@ -206,7 +207,7 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.show_posts = true
-  b.query = Badge::Queries::Welcome
+  b.query = BadgeQueries::Welcome
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::PostAction
   b.system = true
@@ -217,7 +218,7 @@ Badge.seed do |b|
   b.default_name = "Autobiographer"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
-  b.query = Badge::Queries::Autobiographer
+  b.query = BadgeQueries::Autobiographer
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::UserChange
   b.system = true
@@ -228,7 +229,7 @@ Badge.seed do |b|
   b.default_name = "Editor"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
-  b.query = Badge::Queries::Editor
+  b.query = BadgeQueries::Editor
   b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
@@ -254,7 +255,7 @@ like_badges.each do |spec|
     b.multiple_grant = true
     b.target_posts = true
     b.show_posts = true
-    b.query = Badge::Queries.like_badge(Badge.like_badge_counts[spec[:id]], spec[:topic])
+    b.query = BadgeQueries.like_badge(Badge.like_badge_counts[spec[:id]], spec[:topic])
     b.default_badge_grouping_id = BadgeGrouping::Posting
     b.trigger = Badge::Trigger::PostAction
     b.system = true
@@ -266,7 +267,7 @@ Badge.seed do |b|
   b.default_name = "Anniversary"
   b.default_icon = "fa-clock-o"
   b.badge_type_id = BadgeType::Silver
-  b.query = Badge::Queries::OneYearAnniversary
+  b.query = BadgeQueries::OneYearAnniversary
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::None
   b.auto_revoke = false
@@ -286,7 +287,7 @@ end
     b.multiple_grant = true
     b.target_posts = true
     b.show_posts = true
-    b.query = Badge::Queries.linking_badge(count)
+    b.query = BadgeQueries.linking_badge(count)
     b.badge_grouping_id = BadgeGrouping::Posting
     b.default_badge_grouping_id = BadgeGrouping::Posting
     # don't trigger for now, its too expensive
@@ -307,7 +308,7 @@ end
     b.default_name = name
     b.default_icon = "fa-heart"
     b.badge_type_id = level
-    b.query = Badge::Queries.liked_posts(post_count, like_count)
+    b.query = BadgeQueries.liked_posts(post_count, like_count)
     b.default_badge_grouping_id = BadgeGrouping::Community
     b.trigger = Badge::Trigger::None
     b.auto_revoke = false
@@ -327,7 +328,7 @@ end
     b.default_name = name
     b.default_icon = "fa-heart"
     b.badge_type_id = level
-    b.query = Badge::Queries.liked_back(count, ratio)
+    b.query = BadgeQueries.liked_back(count, ratio)
     b.badge_grouping_id = BadgeGrouping::Community
     b.default_badge_grouping_id = BadgeGrouping::Community
     b.trigger = Badge::Trigger::None
@@ -348,7 +349,7 @@ end
     b.default_name = name
     b.default_icon = "fa-heart"
     b.badge_type_id = level
-    b.query = Badge::Queries.like_rate_limit(count)
+    b.query = BadgeQueries.like_rate_limit(count)
     b.badge_grouping_id = BadgeGrouping::Community
     b.default_badge_grouping_id = BadgeGrouping::Community
     b.trigger = Badge::Trigger::None
@@ -357,6 +358,33 @@ end
   end
 end
 
+Badge.seed do |b|
+  b.id = Badge::FirstMention
+  b.default_name = "First Mention"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.show_posts = true
+  b.query = BadgeQueries::FirstMention
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
+  b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostRevision
+  b.system = true
+end
+
+Badge.seed do |b|
+  b.id = Badge::FirstEmoji
+  b.default_name = "First Emoji"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.show_posts = true
+  b.query = BadgeQueries.has_user_first(:used_emoji)
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
+  b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostProcessed
+  b.system = true
+end
 
 Badge.where("NOT system AND id < 100").each do |badge|
   new_id = [Badge.maximum(:id) + 1, 100].max
