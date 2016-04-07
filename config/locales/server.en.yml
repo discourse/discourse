@@ -1831,7 +1831,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
+        Your account does not have the required trust level to post new topics to this email address. If you believe this is an error, contact a staff member.
 
     email_reject_user_not_found:
       subject_template: "[%{site_name}] Email issue -- User Not Found"
@@ -1889,14 +1889,14 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account does not have the privileges to post new topics in that category. If you believe this is in error, contact a staff member.
+        Your account does not have the privileges to post new topics in that category. If you believe this is an error, contact a staff member.
 
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] Email issue -- Invalid Access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is in error, contact a staff member.
+        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is an error, contact a staff member.
 
     email_reject_invalid_post:
       subject_template: "[%{site_name}] Email issue -- Posting error"
@@ -1950,21 +1950,21 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic you are replying to no longer exists -- perhaps it was deleted? If you believe this is in error, contact a staff member.
+        The topic you are replying to no longer exists -- perhaps it was deleted? If you believe this is an error, contact a staff member.
 
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Email issue -- Topic Closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic you are replying to is currently closed and no longer accepting replies. If you believe this is in error, contact a staff member.
+        The topic you are replying to is currently closed and no longer accepting replies. If you believe this is an error, contact a staff member.
 
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is in error, contact a staff member.
+        Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is an error, contact a staff member.
 
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP authentication error"
