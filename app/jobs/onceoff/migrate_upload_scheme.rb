@@ -1,6 +1,6 @@
 module Jobs
 
-  class MigrateScheme < Jobs::Onceoff
+  class MigrateUploadScheme < Jobs::Onceoff
 
     def execute(args)
       return unless SiteSetting.migrate_to_new_scheme
