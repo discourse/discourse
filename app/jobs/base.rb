@@ -262,5 +262,6 @@ module Jobs
   end
 end
 
+Dir["#{Rails.root}/app/jobs/onceoff/*.rb"].each {|file| require_dependency file }
 Dir["#{Rails.root}/app/jobs/regular/*.rb"].each {|file| require_dependency file }
 Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each {|file| require_dependency file }
