@@ -169,8 +169,12 @@ module ApplicationHelper
     MobileDetection.resolve_mobile_view!(request.user_agent,params,session)
   end
 
+  def crawler_layout?
+    controller.try(:use_crawler_layout?)
+  end
+
   def include_crawler_content?
-    controller.try(:use_crawler_layout?) || !mobile_view?
+    crawler_layout? || !mobile_view?
   end
 
   def mobile_device?
