@@ -64,6 +64,8 @@ en:
         reply_user_not_matching_error: "Happens when a reply came in from a different email address the notification was sent to."
         topic_not_found_error: "Happens when a reply came in but the related topic has been deleted."
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
+        bounced_email_report: "Email is a bounced email report."
+        auto_generated_email_reply: "Email contains a reply to an auto generated email."
 
   errors: &errors
     format: ! '%{attribute} %{message}'
