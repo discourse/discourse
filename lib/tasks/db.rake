@@ -7,6 +7,8 @@ end
 task 'db:migrate' => ['environment', 'set_locale'] do
   SeedFu.seed
 
+  Jobs::Onceoff.enqueue_all
+
   SiteSetting.last_vacuum = Time.now.to_i if SiteSetting.last_vacuum == 0
 
   if SiteSetting.vacuum_db_days > 0 &&
@@ -82,7 +84,7 @@ task 'db:rebuild_indexes' => 'environment' do
       begin
         puts index_name
         User.exec_sql("DROP INDEX public.#{index_name}")
-      rescue ActiveRecord::StatementInvalid => e
+      rescue ActiveRecord::StatementInvalid
         # It's this:
         # PG::Error: ERROR:  cannot drop index category_users_pkey because constraint category_users_pkey on table category_users requires it
         # HINT:  You can drop constraint category_users_pkey on table category_users instead.
@@ -94,7 +96,7 @@ task 'db:rebuild_indexes' => 'environment' do
       index_definitions[table_name].each do |index_def|
         begin
           User.exec_sql(index_def)
-        rescue ActiveRecord::StatementInvalid => e
+        rescue ActiveRecord::StatementInvalid
           # Trying to recreate a primary key
         end
       end
