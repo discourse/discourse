@@ -131,7 +131,7 @@ de:
         disabled: 'losgelöst, %{when}'
       visible:
         enabled: 'sichtbar gemacht, %{when}'
-        disabled: 'unsichtbar gemacht, {when}'
+        disabled: 'unsichtbar gemacht, %{when}'
     topic_admin_menu: "Thema administrieren"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     s3:
@@ -738,7 +738,7 @@ de:
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     read_only_mode:
-      enabled: "Diese Seite ist im Nur-Lesen Modus. Du kannst weiterhin die Seite lesen, aber antworten, liken und andere Aktionen sind deaktiviert."
+      enabled: "Diese Site ist im Nur-Lesen Modus. Du kannst weiterhin die Site lesen, aber antworten, liken und andere Aktionen sind deaktiviert."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
       logout_disabled: "Die Abmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
@@ -1063,6 +1063,9 @@ de:
         category: "Es gibt keine Themen in {{category}}."
         top: "Es gibt keine Top-Themen."
         search: "Es wurden keine Suchergebnisse gefunden."
+        educate:
+          new: '<p>Hier werden neue Themen angezeigt.</p><p>Standardmäßig werden jene Themen als neu angesehen und mit dem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">neu</span> Indikator versehen, die in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
+          unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
       bottom:
         latest: "Das waren die aktuellen Themen."
         hot: "Das waren alle beliebten Themen."
@@ -1380,6 +1383,7 @@ de:
         about: "dieser Beitrag ist ein Wiki"
       archetypes:
         save: 'Speicheroptionen'
+      few_likes_left: "Danke fürs teilen der Liebe! Du hast für heute nur noch wenige Likes übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
         like: "dieser Beitrag gefällt mir"
@@ -1427,7 +1431,14 @@ de:
           like: "Gefällt mir nicht mehr"
           vote: "Stimme widerrufen"
         people:
+          off_topic: "meldete/n dies als „am Thema vorbei“"
           spam: "Melde es als Spam"
+          inappropriate: "meldete/n dies als unangemessen"
+          notify_moderators: "informierte/n die Moderatoren"
+          notify_user: "hat eine Nachricht gesendet"
+          bookmark: "hat/haben ein Lesezeichen gesetzt"
+          like: "gefällt dies"
+          vote: "hat/haben dafür gestimmt"
         by_you:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
@@ -1499,6 +1510,7 @@ de:
           last: "Letzte Überarbeitung"
           hide: "Überarbeitung verstecken"
           show: "Überarbeitung anzeigen"
+          revert: "Diese Überarbeitung wiederherstellen"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1554,7 +1566,7 @@ de:
       email_in_allow_strangers: "Akzeptiere E-Mails von nicht registrierten, anonymen Benutzern"
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
-      suppress_from_homepage: "Löse diese Kategorie von der Webseite."
+      suppress_from_homepage: "Löse diese Kategorie von der Website."
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie"
       edit_permissions: "Berechtigungen bearbeiten"
       add_permission: "Berechtigung hinzufügen"
@@ -1590,6 +1602,7 @@ de:
       submit_tooltip: "Private Meldung abschicken"
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, du kannst diesen Beitrag derzeit nicht melden."
+      notify_staff: 'Mitarbeiter nichtöffentlich benachrichtigen'
       formatted_name:
         off_topic: "Es ist am Thema vorbei"
         inappropriate: "Es ist unangemessen"
@@ -1970,6 +1983,7 @@ de:
           rollback:
             label: "Zurücksetzen"
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
+            confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
         user_archive_confirm: "Möchtest du wirklich deine Beiträge herunterladen?"
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
@@ -2111,8 +2125,10 @@ de:
           modal:
             title: "Details der eingehenden E-Mail"
             error: "Fehler"
+            headers: "Kopfzeilen"
             subject: "Betreff"
             body: "Nachrichtentext"
+            rejection_message: "Zurückweisung-E-Mail"
           filters:
             from_placeholder: "von@example.com"
             to_placeholder: "an@example.com"
@@ -2355,12 +2371,12 @@ de:
         deactivate_failed: "Beim Deaktivieren des Benutzers ist ein Fehler aufgetreten."
         unblock_failed: 'Beim Aufheben der Blockierung des Benutzers ist ein Fehler aufgetreten.'
         block_failed: 'Beim Blocken des Benutzers ist ein Fehler aufgetreten.'
-        block_confirm: 'Bust du sicher, dass du diesen Benutzer blockieren willst? Sie werden keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen.'
+        block_confirm: 'Bist du sicher, dass du diesen Benutzer blockieren willst? Der Benutzer wird keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen.'
         block_accept: 'Ja, diesen Benutzer blockieren.'
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
-        stage_explanation: "Ein vorbereiteter Nutzer kann nur via E-Mail zu bestimmten Themen beitragen."
+        stage_explanation: "Ein vorbereiteter Benutzer kann nur via E-Mail zu bestimmten Themen beitragen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
@@ -2480,6 +2496,7 @@ de:
         badge: Abzeichen
         display_name: Anzeigename
         description: Beschreibung
+        long_description: Lange Beschreibung
         badge_type: Abzeichentyp
         badge_grouping: Gruppe
         badge_groupings:
@@ -2548,7 +2565,7 @@ de:
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem hinzufügen des host. "
         confirm_delete: "Möchtest du wirklich  diesen Host löschen?"
-        sample: "Benutze den folgenden HTML code für deine Seite um discourse Beiträge zu erstellen und einzubetten. Ersetze <b>ERSETZE_MICH</b> mit der URL der Seite in die du sie einbetten möchtest."
+        sample: "Benutze den folgenden HTML code für deine Site um Discourse Beiträge zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Site in die du sie einbetten möchtest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
         edit: "bearbeiten"
@@ -2556,7 +2573,7 @@ de:
         add_host: "Host hinzufügen"
         settings: "Einbettungseinstellungen"
         feed_settings: "Feed-Einstellungen"
-        feed_description: "Wenn man RSS/ATOM Feeds für eine Webseite zur Verfügung stellt, können sich die Möglichkeiten des Imports verbessern. "
+        feed_description: "Wenn man RSS/ATOM Feeds für eine Website zur Verfügung stellt, können sich die Möglichkeiten des Imports verbessern. "
         crawling_settings: "Crawler-Einstellungen"
         crawling_description: "Wenn Discourse Themen für deine Beiträge erstellt wird es falls kein RSS/ATOM-Feed verfügbar ist versuchen, den Inhalt aus dem HTML-Code zu extrahieren. Dies ist teilweise schwierig, weshalb hier CSS-Regeln angegeben werden können, die die Extraktion erleichtern."
         embed_by_username: "Benutzername für Beitragserstellung"
@@ -2642,7 +2659,11 @@ de:
       earned_n_times:
         one: "Einmal dieses Abzeichen erhalten"
         other: "%{count} mal dieses Abzeichen erhalten"
+      granted_on: "Verliehen %{date}"
+      others_count: "Andere mit diesem Abzeichen (%{count})"
       title: Abzeichen
+      allow_title: "kann als Titel verwendet werden"
+      multiple_grant: "kann mehrfach verliehen werden"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"

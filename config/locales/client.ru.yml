@@ -751,6 +751,9 @@ ru:
     refresh: "Обновить"
     read_only_mode:
       login_disabled: "Вход отключён, пока сайт в режиме «только для чтения»"
+    too_few_topics_and_posts_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Сейчас <strong>%{currentTopics} / %{requiredTopics}</strong> тем и <strong>%{currentPosts} / %{requiredPosts}</strong> сообщений. Новым пользователям будет интереснее тут, если появится больше тем для обсуждений."
+    too_few_topics_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Сейчас <strong>%{currentTopics} / %{requiredTopics}</strong> тем. Новым пользователям будет интереснее тут, если появится больше тем для обсуждений."
+    too_few_posts_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a>  Сейчас <strong>%{currentPosts} / %{requiredPosts}</strong> сообщений. Новым пользователям будет интереснее тут, если появится больше сообщений для обсуждения."
     learn_more: "подробнее..."
     year: 'год'
     year_desc: 'темы, созданные за последние 365 дней'
@@ -1055,6 +1058,9 @@ ru:
         category: "В разделе {{category}} отсутствуют темы."
         top: "Нет обсуждаемых тем."
         search: "Ничего не найдено."
+        educate:
+          new: '<p>Ваши новые темы скоро появятся тут.</p><p>По умолчанию, новые темы отмечаются иконкой: <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">Новая</span> , если она была создана в течении 2 недель.</p><p>Перейдите в <a href="%{userPrefsUrl}">настройки</a> для того, чтобы выбрать период активности новых тем.</p>'
+          unread: '<p>Ваши непрочитанные темы скоро появятся тут.</p><p>По умолчанию темы получают счетчик <span class="badge new-posts badge-notification">1</span>, если:</p><ul><li>Создана тема</li><li>Ответили на тему</li><li>Тема прочитана по истечении 4 минут, после ее создания </li></ul><p>Или можно задать свои настройки отслеживания новых тем.</p><p>Перейдите в свои <a href="%{userPrefsUrl}">настройки</a>.</p>'
       bottom:
         latest: "Тем больше нет."
         hot: "Популярных тем больше нет."
@@ -1129,7 +1135,7 @@ ru:
       toggle_information: "скрыть / показать подробную информацию о теме"
       read_more_in_category: "Хотите почитать что-нибудь еще? Можно посмотреть темы в {{catLink}} или {{latestLink}}."
       read_more: "Хотите почитать что-нибудь еще? {{catLink}} или {{latestLink}}."
-      read_more_MF: "У вас { UNREAD, plural, =0 {} one { <a href='/unread'>1 непрочитанная</a> } other { <a href='/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false { } other{}} <a href='/new'>1 новая</a> тема} other { {BOTH, select, true{and } false { } other{}} <a href='/new'># новых</a> тем} } осталось, или {CATEGORY, select, true {посмотрите другие темы в разделе {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "У вас осталось { UNREAD, plural, =0 {} one { <a href='/unread'>1 непрочитанная</a> } other { <a href='/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='/new'>1 новая</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='/new'># новых</a> тем} }, или {CATEGORY, select, true {посмотрите другие темы в разделе {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Просмотреть все разделы
       view_latest_topics: посмотреть последние темы
       suggest_create_topic: Почему бы вам не создать новую тему?
