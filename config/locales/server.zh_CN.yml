@@ -588,7 +588,7 @@ zh_CN:
       num_topics: "主题数"
       num_users: "用户数"
     top_referred_topics:
-      title: "最高引用主题"
+      title: "最多引用主题"
       xaxis: "主题"
       num_clicks: "点击数"
     page_view_anon_reqs:
@@ -616,11 +616,11 @@ zh_CN:
       xaxis: "天"
       yaxis: "移动端匿名 API 请求"
     http_background_reqs:
-      title: "后台"
+      title: "静默请求"
       xaxis: "天"
       yaxis: "实时更新和追踪的请求"
     http_2xx_reqs:
-      title: "状态码 2xx（正常）"
+      title: "HTTP 2xx（正常）"
       xaxis: "天"
       yaxis: "正常的请求（状态码 2xx）"
     http_3xx_reqs:
@@ -636,7 +636,7 @@ zh_CN:
       xaxis: "天"
       yaxis: "服务器错误（状态码 5xx）"
     http_total_reqs:
-      title: "总量"
+      title: "总请求数"
       xaxis: "天"
       yaxis: "总请求数"
     time_to_first_response:
@@ -1018,7 +1018,7 @@ zh_CN:
     allow_anonymous_posting: "允许用户切换至匿名模式"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最小信任等级"
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
-    hide_user_profiles_from_public: "对来访用户关闭关闭用户信息卡，用户资料和用户目录。"
+    hide_user_profiles_from_public: "不对来访用户显示用户信息卡、用户资料和用户目录。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
     sequential_replies_threshold: "在被提醒回复了太多连续的回复前，用户在主题中可以连续回复的帖子的数量。"
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
@@ -2472,7 +2472,7 @@ zh_CN:
   discourse_hub:
     access_token_problem: "告诉管理员：请更新站点设置，应使用正确的 discourse_org_access_key。"
   performance_report:
-    initial_post_raw: 这个主题包括你网站的每日性能报告
+    initial_post_raw: 这个主题将用来展示网站每日性能报告。
     initial_topic_title: 网站性能报告
   topic_invite:
     user_exists: "抱歉，用户已经被邀请了。你可能只想邀请用户参与主题一次。"

@@ -1106,7 +1106,7 @@ fi:
       jump_reply_down: hyppää myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"
       auto_close_notice: "Tämä ketju sulkeutuu automaattisesti %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Tämä ketju suljetaan %{duration} viimeisen viestin jälkeen."
+      auto_close_notice_based_on_last_post: "Tämä ketju suljetaan %{duration} kuluttua viimeisimmästä viestistä."
       auto_close_title: 'Automaattisen sulkemisen asetukset'
       auto_close_save: "Tallenna"
       auto_close_remove: "Älä sulje tätä ketjua automaattisesti"
