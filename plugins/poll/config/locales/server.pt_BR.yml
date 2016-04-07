@@ -16,7 +16,7 @@ pt_BR:
     named_poll_must_have_at_least_2_options: "A enquete de nome <strong>%{name}</strong> deve ter ao menos 2 opções."
     default_poll_must_have_less_options:
       one: "Enquetes devem ter pelo menos 1 opção."
-      other: "Enquetes devem ter pelo menos %{count} opções."
+      other: "Enquetes devem ter menos de %{count} opções."
     named_poll_must_have_less_options:
       one: "Enquete chamada <strong>%{name}</strong> deve ter menos do que 1 opção."
       other: "Enquete chamada <strong>%{name}</strong> deve ter menos do que %{count} opções."
