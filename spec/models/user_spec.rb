@@ -47,7 +47,7 @@ describe User do
     it "enqueues a 'signup after approval' email if must_approve_users is true" do
       SiteSetting.stubs(:must_approve_users).returns(true)
       Jobs.expects(:enqueue).with(
-        :user_email, has_entries(type: :signup_after_approval)
+        :critical_user_email, has_entries(type: :signup_after_approval)
       )
       user.approve(admin)
     end

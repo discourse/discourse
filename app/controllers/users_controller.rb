@@ -431,7 +431,7 @@ class UsersController < ApplicationController
       user = User.where(email: params[:email], admin: true).where.not(id: Discourse::SYSTEM_USER_ID).first
       if user
         email_token = user.email_tokens.create(email: user.email)
-        Jobs.enqueue(:user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
+        Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
         @message = I18n.t("admin_login.error")
@@ -516,7 +516,7 @@ class UsersController < ApplicationController
 
   def enqueue_activation_email
     @email_token ||= @user.email_tokens.create(email: @user.email)
-    Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
+    Jobs.enqueue(:critical_user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
   end
 
   def search_users
