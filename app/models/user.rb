@@ -29,7 +29,6 @@ class User < ActiveRecord::Base
   has_many :topic_allowed_users, dependent: :destroy
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :email_tokens, dependent: :destroy
-  has_many :views
   has_many :user_visits, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
