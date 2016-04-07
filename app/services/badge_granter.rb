@@ -32,7 +32,7 @@ class BadgeGranter
         user_badge = UserBadge.create!(badge: @badge,
                                        user: @user,
                                        granted_by: @granted_by,
-                                       granted_at: Time.now,
+                                       granted_at: @opts[:created_at] || Time.now,
                                        post_id: @post_id,
                                        seq: seq)
 
