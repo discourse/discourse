@@ -1,10 +1,8 @@
 module Jobs
 
-  class GrantEmoji < Jobs::Base
-    sidekiq_options retry: false
+  class GrantEmoji < Jobs::Onceoff
 
-    def execute(args)
-
+    def execute_onceoff(args)
       to_award = {}
 
       Post.secured(Guardian.new).visible.public_posts.find_in_batches(batch_size: 5000) do |group|
