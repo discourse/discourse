@@ -7,8 +7,6 @@ end
 task 'db:migrate' => ['environment', 'set_locale'] do
   SeedFu.seed
 
-  Jobs::Onceoff.enqueue_all
-
   SiteSetting.last_vacuum = Time.now.to_i if SiteSetting.last_vacuum == 0
 
   if SiteSetting.vacuum_db_days > 0 &&
