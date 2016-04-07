@@ -204,7 +204,7 @@ class SessionController < ApplicationController
     user_presence = user.present? && user.id != Discourse::SYSTEM_USER_ID && !user.staged
     if user_presence
       email_token = user.email_tokens.create(email: user.email)
-      Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
+      Jobs.enqueue(:forgot_password, user_id: user.id, email_token: email_token.token)
     end
 
     json = { result: "ok" }

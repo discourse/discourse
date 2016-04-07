@@ -632,7 +632,7 @@ describe SessionController do
       end
 
       it "enqueues an email" do
-        Jobs.expects(:enqueue).with(:user_email, has_entries(type: :forgot_password, user_id: user.id))
+        Jobs.expects(:enqueue).with(:forgot_password, has_entries(user_id: user.id))
         xhr :post, :forgot_password, login: user.username
       end
     end

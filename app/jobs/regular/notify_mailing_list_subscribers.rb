@@ -2,6 +2,8 @@ module Jobs
 
   class NotifyMailingListSubscribers < Jobs::Base
 
+    sidekiq_options queue: 'low'
+
     def execute(args)
       return if SiteSetting.disable_mailing_list_mode
 

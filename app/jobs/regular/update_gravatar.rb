@@ -2,6 +2,8 @@ module Jobs
 
   class UpdateGravatar < Jobs::Base
 
+    sidekiq_options queue: 'low'
+
     def execute(args)
       user = User.find_by(id: args[:user_id])
       avatar = UserAvatar.find_by(id: args[:avatar_id])
