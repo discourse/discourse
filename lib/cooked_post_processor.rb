@@ -28,7 +28,7 @@ class CookedPostProcessor
       post_process_oneboxes
       optimize_urls
       pull_hotlinked_images(bypass_bump)
-      create_firsts
+      grant_badges
     end
   end
 
@@ -36,17 +36,11 @@ class CookedPostProcessor
     (@doc.css("img.emoji") - @doc.css(".quote img")).size > 0
   end
 
-  def create_firsts
+  def grant_badges
     return unless Guardian.new.can_see?(@post)
 
-    created = false
-
     if has_emoji?
-      created |= UserFirst.create_for(@post.user_id, :used_emoji, @post.id)
-    end
-
-    if created
-      BadgeGranter.queue_badge_grant(Badge::Trigger::PostProcessed, user: @post.user)
+      BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user)
     end
   end
 
