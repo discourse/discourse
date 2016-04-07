@@ -240,8 +240,7 @@ brew install v8-315
 gem uninstall -a libv8
 gem uninstall -a therubyracer
 gem install libv8 -v '3.16.14.13' -- --with-system-v8
-gem install therubyracer -v '0.12.2' -- --with-v8-dir=$(brew --prefix
-v8-315)
+gem install therubyracer -v '0.12.2' -- --with-v8-dir=$(brew --prefix v8-315)
 ```
 
 In addition to ImageMagick we also need to install some other image related
