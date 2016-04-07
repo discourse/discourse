@@ -929,7 +929,7 @@ class User < ActiveRecord::Base
 
   def send_approval_email
     if SiteSetting.must_approve_users
-      Jobs.enqueue(:user_email,
+      Jobs.enqueue(:critical_user_email,
         type: :signup_after_approval,
         user_id: id,
         email_token: email_tokens.first.token

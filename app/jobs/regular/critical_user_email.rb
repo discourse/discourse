@@ -2,12 +2,11 @@
 require_dependency "#{Rails.root}/app/jobs/regular/user_email.rb"
 
 module Jobs
-  class ForgotPassword < UserEmail
+  class CriticalUserEmail < UserEmail
 
     sidekiq_options queue: 'critical'
 
     def execute(args)
-      args[:type] = :forgot_password
       super(args)
     end
   end
