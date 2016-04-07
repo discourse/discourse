@@ -7,6 +7,7 @@ class DiscourseRedis
     include Singleton
 
     MASTER_LINK_STATUS = "master_link_status:up".freeze
+    CONNECTION_TYPES = %w{normal pubsub}.each(&:freeze)
 
     def initialize
       @master = true
@@ -31,8 +32,11 @@ class DiscourseRedis
 
         if slave_client.call([:info]).split("\r\n").include?(MASTER_LINK_STATUS)
           logger.warn "#{log_prefix}: Master server is active, killing all connections to slave..."
-          slave_client.call([:client, [:kill, 'type', 'normal']])
-          slave_client.call([:client, [:kill, 'type', 'pubsub']])
+
+          CONNECTION_TYPES.each do |connection_type|
+            slave_client.call([:client, [:kill, 'type', connection_type]])
+          end
+
           Discourse.clear_readonly!
           Discourse.request_refresh!
           @master = true

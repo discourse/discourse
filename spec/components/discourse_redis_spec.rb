@@ -84,7 +84,7 @@ describe DiscourseRedis do
           fallback_handler.master = false
           Redis::Client.any_instance.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
 
-          %w{normal pubsub}.each do |connection_type|
+          DiscourseRedis::FallbackHandler::CONNECTION_TYPES.each do |connection_type|
             Redis::Client.any_instance.expects(:call).with([:client, [:kill, 'type', connection_type]])
           end
 
