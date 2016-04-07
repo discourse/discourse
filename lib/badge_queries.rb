@@ -246,13 +246,4 @@ SQL
     SQL
   end
 
-  def self.has_user_first(type)
-    <<SQL
-  SELECT uf.user_id, uf.post_id, uf.created_at AS granted_at
-  FROM user_firsts AS uf
-  WHERE (:backfill OR uf.user_id IN (:user_ids))
-    AND uf.first_type = #{UserFirst.types[type]}
-SQL
-  end
-
 end
