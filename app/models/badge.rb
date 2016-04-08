@@ -158,21 +158,13 @@ SQL
   end
 
   def display_name
-    if self.system?
-      key = "badges.#{i18n_name}.name"
-      I18n.t(key, default: self.name)
-    else
-      self.name
-    end
+    key = "badges.#{i18n_name}.name"
+    I18n.t(key, default: self.name)
   end
 
   def long_description
-    if self[:long_description].present?
-      self[:long_description]
-    else
-      key = "badges.#{i18n_name}.long_description"
-      I18n.t(key, default: '')
-    end
+    key = "badges.#{i18n_name}.long_description"
+    I18n.t(key, default: self[:long_description] || '')
   end
 
   def long_description=(val)
@@ -184,12 +176,8 @@ SQL
   end
 
   def description
-    if self[:description].present?
-      self[:description]
-    else
-      key = "badges.#{i18n_name}.description"
-      I18n.t(key, default: '')
-    end
+    key = "badges.#{i18n_name}.description"
+    I18n.t(key, default: self[:description] || '')
   end
 
   def description=(val)
