@@ -34,6 +34,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   }.observes('model.title', 'category'),
 
+  @computed('site.mobileView', 'model.posts_count')
+  showSelectedPostsAtBottom(mobileView, postsCount) {
+    return mobileView && (postsCount > 3);
+  },
+
   @computed('model.postStream.posts')
   postsToRender() {
     return this.capabilities.isAndroid ? this.get('model.postStream.posts')
