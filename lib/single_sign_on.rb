@@ -57,7 +57,7 @@ class SingleSignOn
 
   def diagnostics
     SingleSignOn::ACCESSORS.map do |a|
-      "#{a}: #{sso.send(a)}"
+      "#{a}: #{send(a)}"
     end.join("\n")
   end
 
