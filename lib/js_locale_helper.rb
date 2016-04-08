@@ -139,31 +139,19 @@ module JsLocaleHelper
   end
 
   def self.generate_message_format(message_formats, locale_str)
-    formats = message_formats.map{|k,v| k.inspect << " : " << compile_message_format(locale_str ,v)}.join(" , ")
 
     result = "MessageFormat = {locale: {}};\n"
 
+    formats = message_formats.map{|k,v| k.inspect << " : " << compile_message_format(locale_str,v)}.join(", ")
+    result << "I18n._compiledMFs = {#{formats}};\n\n"
+
     filename = Rails.root + "lib/javascripts/locale/#{locale_str}.js"
     filename = Rails.root + "lib/javascripts/locale/en.js" unless File.exists?(filename)
+    result << File.read(filename) << "\n\n"
 
-    result << File.read(filename) << "\n"
+    result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js")
 
-    result << "I18n.messageFormat = (function(formats){
-      var f = formats;
-      return function(key, options) {
-        var fn = f[key];
-        if(fn){
-          try {
-            return fn(options);
-          } catch(err) {
-            return err.message;
-          }
-        } else {
-          return 'Missing Key: ' + key
-        }
-        return f[key](options);
-      };
-    })({#{formats}});"
+    result
   end
 
   def self.compile_message_format(locale, format)
