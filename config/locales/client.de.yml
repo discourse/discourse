@@ -2443,6 +2443,10 @@ de:
           title: "Im öffentlichen Profil anzeigen?"
           enabled: "wird im Profil angezeigt"
           disabled: "wird im Profil nicht angezeigt"
+        show_on_user_card:
+          title: "Auf Benutzerkarte anzeigen?"
+          enabled: "wird auf Benutzerkarte angezeigt"
+          disabled: "wird auf Benutzerkarte nicht angezeigt"
         field_types:
           text: 'Textfeld'
           confirm: 'Bestätigung'

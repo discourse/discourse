@@ -29,6 +29,10 @@
     {{input type="checkbox" checked=buffered.show_on_profile}} {{i18n 'admin.user_fields.show_on_profile.title'}}
   {{/admin-form-row}}
 
+  {{#admin-form-row wrapLabel="true"}}
+    {{input type="checkbox" checked=buffered.show_on_user_card}} {{i18n 'admin.user_fields.show_on_user_card.title'}}
+  {{/admin-form-row}}
+
   {{#admin-form-row}}
     {{d-button action="save" class="btn-primary" icon="check" label="admin.user_fields.save"}}
     {{d-button action="cancel" class="btn-danger" icon="times" label="admin.user_fields.cancel"}}
