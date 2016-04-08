@@ -83,7 +83,12 @@ class AdminDashboardData
   def self.reset_problem_checks
     @problem_syms = []
     @problem_blocks = []
-    @problem_messages = ['dashboard.bad_favicon_url']
+
+    @problem_messages = [
+      'dashboard.bad_favicon_url',
+      'dashboard.poll_pop3_timeout',
+      'dashboard.poll_pop3_auth_error'
+    ]
 
     add_problem_check :rails_env_check, :ruby_version_check, :host_names_check,
                       :gc_checks, :ram_check, :google_oauth2_config_check,
