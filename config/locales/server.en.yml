@@ -2044,6 +2044,13 @@ en:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
 
+    dashboard_problems:
+      subject_template: "Problems have been found"
+      text_body_template: |
+        Some problems are being reported on your admin dashboard.
+
+        [Please review and fix them](%{base_url}/admin).
+
   unsubscribe_link: |
     To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url})
 
