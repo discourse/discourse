@@ -12,14 +12,15 @@ end
 #
 # Table name: user_fields
 #
-#  id              :integer          not null, primary key
-#  name            :string           not null
-#  field_type      :string           not null
-#  created_at      :datetime
-#  updated_at      :datetime
-#  editable        :boolean          default(FALSE), not null
-#  description     :string           not null
-#  required        :boolean          default(TRUE), not null
-#  show_on_profile :boolean          default(FALSE), not null
-#  position        :integer          default(0)
+#  id                :integer          not null, primary key
+#  name              :string           not null
+#  field_type        :string           not null
+#  created_at        :datetime
+#  updated_at        :datetime
+#  editable          :boolean          default(FALSE), not null
+#  description       :string           not null
+#  required          :boolean          default(TRUE), not null
+#  show_on_profile   :boolean          default(FALSE), not null
+#  show_on_user_card :boolean          default(FALSE), not null
+#  position          :integer          default(0)
 #
