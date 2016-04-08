@@ -399,7 +399,7 @@ class Group < ActiveRecord::Base
       domains.each do |domain|
         domain.sub!(/^https?:\/\//, '')
         domain.sub!(/\/.*$/, '')
-        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\Z/i
+        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
       end
       self.automatic_membership_email_domains = domains.join("|")
     end
