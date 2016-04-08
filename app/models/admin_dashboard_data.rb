@@ -50,7 +50,33 @@ class AdminDashboardData
     AdminDashboardData.problem_messages.each do |i18n_key|
       problems << AdminDashboardData.problem_message_check(i18n_key)
     end
-    problems.compact
+    problems.compact!
+
+    if problems.empty?
+      self.class.clear_problems_started
+    else
+      self.class.set_problems_started
+    end
+
+    problems
+  end
+
+  def self.problems_started_key
+    "dash-problems-started-at"
+  end
+
+  def self.set_problems_started
+    existing_time = $redis.get(problems_started_key)
+    $redis.setex(problems_started_key, 14.days.to_i, existing_time || Time.zone.now.to_s)
+  end
+
+  def self.clear_problems_started
+    $redis.del problems_started_key
+  end
+
+  def self.problems_started_at
+    s = $redis.get(problems_started_key)
+    s ? Time.zone.parse(s) : nil
   end
 
   # used for testing
