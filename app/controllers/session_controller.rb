@@ -20,7 +20,11 @@ class SessionController < ApplicationController
     end
 
     if SiteSetting.enable_sso?
-      redirect_to DiscourseSingleSignOn.generate_url(return_path)
+      sso = DiscourseSingleSignOn.generate_sso(return_path)
+      if SiteSetting.verbose_sso_logging
+        Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
+      end
+      redirect_to sso.to_url
     else
       render nothing: true, status: 404
     end
@@ -69,10 +73,16 @@ class SessionController < ApplicationController
 
     sso = DiscourseSingleSignOn.parse(request.query_string)
     if !sso.nonce_valid?
+      if SiteSetting.verbose_sso_logging
+        Rails.logger.warn("Verbose SSO log: Nonce has already expired\n\n#{sso.diagnostics}")
+      end
       return render(text: I18n.t("sso.timeout_expired"), status: 419)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
+      if SiteSetting.verbose_sso_logging
+        Rails.logger.warn("Verbose SSO log: IP address is blocked #{request.remote_ip}\n\n#{sso.diagnostics}")
+      end
       return render(text: I18n.t("sso.unknown_error"), status: 500)
     end
 
@@ -95,6 +105,9 @@ class SessionController < ApplicationController
           session["user_created_message"] = activation.message
           redirect_to users_account_created_path and return
         else
+          if SiteSetting.verbose_sso_logging
+            Rails.logger.warn("Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}")
+          end
           log_on_user user
         end
 
@@ -115,14 +128,9 @@ class SessionController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
       render text: I18n.t("sso.unknown_error"), status: 500
     rescue => e
-      details = {}
-      SingleSignOn::ACCESSORS.each do |a|
-        details[a] = sso.send(a)
-      end
-
       message = "Failed to create or lookup user: #{e}."
       message << "\n\n" << "-" * 100 << "\n\n"
-      message << details.map { |k,v| "#{k}: #{v}" }.join("\n")
+      message << sso.diagnostics
       message << "\n\n" << "-" * 100 << "\n\n"
       message << e.backtrace.join("\n")
 
