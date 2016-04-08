@@ -26,7 +26,7 @@ class ImportScripts::Ning < ImportScripts::Base
     # Example of importing a custom profile field:
     # @interests_field = UserField.find_by_name("My interests")
     # unless @interests_field
-    #   @interests_field = UserField.create(name: "My interests", description: "Do you like stuff?", field_type: "text", editable: true, required: false, show_on_profile: true)
+    #   @interests_field = UserField.create(name: "My interests", description: "Do you like stuff?", field_type: "text", editable: true, required: false, show_on_profile: true, show_on_user_card: true)
     # end
   end
 
