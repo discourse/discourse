@@ -10,12 +10,16 @@ class DiscourseSingleSignOn < SingleSignOn
     SiteSetting.sso_secret
   end
 
-  def self.generate_url(return_path="/")
+  def self.generate_sso(return_path="/")
     sso = new
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
     sso.return_sso_url = Discourse.base_url + "/session/sso_login"
-    sso.to_url
+    sso
+  end
+
+  def self.generate_url(return_path="/")
+    generate_sso(return_path).to_url
   end
 
   def register_nonce(return_path)
