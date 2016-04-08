@@ -1,9 +1,4 @@
 export default Ember.View.extend({
-  elementId: 'selected-posts',
-  classNameBindings: ['customVisibility'],
+  classNameBindings: ['controller.multiSelect::hidden', ':selected-posts'],
   templateName: "selected-posts",
-
-  customVisibility: function() {
-    if (!this.get('controller.multiSelect')) return 'hidden';
-  }.property('controller.multiSelect')
 });

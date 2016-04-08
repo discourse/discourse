@@ -130,6 +130,10 @@
               </div>
             {{/if}}
 
+            {{#if showSelectedPostsAtBottom}}
+              {{view "selected-posts"}}
+            {{/if}}
+
             {{plugin-outlet "topic-above-suggested"}}
 
             {{#if model.details.suggested_topics.length}}
