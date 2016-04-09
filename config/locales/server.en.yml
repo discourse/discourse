@@ -2969,6 +2969,15 @@ en:
       description: Has 500 liked posts and gave 1000 likes
       long_description: |
         This badge is granted when you've received 500 likes and have given 1000 or more likes in return. Wow! You're a model of generosity and mutual love :two_hearts:.
+    first_emoji:
+      name: First Emoji
+      description: Used an Emoji in a Post
+      long_description: |
+        This badge is granted when you first add an Emoji to a post :heart:
+    first_mention:
+      name: First Mention
+      description: Mentioned a user in a Post
+      long_description: This badge is granted when you @mention a user in your post. @mentions allow you to notify other members in the forum.
 
   admin_login:
     success: "Email Sent"
