@@ -327,17 +327,15 @@ export default {
     // Try to keep the article on screen
     const pos = $article.offset();
     const height = $article.height();
-    const headerHeight = $('header.d-header').height();
     const scrollTop = $(window).scrollTop();
     const windowHeight = $(window).height();
 
     // skip if completely on screen
-    if ((pos.top - headerHeight) > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
+    if (pos.top > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
       return;
     }
 
-	let scrollPos = (pos.top + (height/2)) - (windowHeight * 0.5);
-	if (height > (windowHeight - headerHeight)) { scrollPos = (pos.top - headerHeight); }
+    let scrollPos = (pos.top + (height/2)) - (windowHeight * 0.5);
     if (scrollPos < 0) { scrollPos = 0; }
 
     if (this._scrollAnimation) {
