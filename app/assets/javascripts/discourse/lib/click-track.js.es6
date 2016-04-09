@@ -11,7 +11,7 @@ export default {
     if (Discourse.Utilities.selectedText() !== "") { return false; }
 
     var $link = $(e.currentTarget);
-    if ($link.hasClass('lightbox') || $link.hasClass('mention-group')) { return true; }
+    if ($link.hasClass('lightbox') || $link.hasClass('mention-group') || $link.hasClass('no-track-link')) { return true; }
 
     var href = $link.attr('href') || $link.data('href'),
         $article = $link.closest('article'),
