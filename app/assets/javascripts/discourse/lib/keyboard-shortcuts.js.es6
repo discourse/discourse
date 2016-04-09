@@ -331,11 +331,12 @@ export default {
     const windowHeight = $(window).height();
 
     // skip if completely on screen
-    if (pos.top > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
+    if ((pos.top - 60) > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
       return;
     }
 
     let scrollPos = (pos.top + (height/2)) - (windowHeight * 0.5);
+  	if (height > (windowHeight - 60)) { scrollPos = (pos.top - 60); }
     if (scrollPos < 0) { scrollPos = 0; }
 
     if (this._scrollAnimation) {
