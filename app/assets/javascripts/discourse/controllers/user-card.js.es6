@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
   showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
   showDelete: Em.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
 
-  @computed('model.user_fields.@each.value')
+  @computed('user.user_fields.@each.value')
   publicUserFields() {
     const siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
