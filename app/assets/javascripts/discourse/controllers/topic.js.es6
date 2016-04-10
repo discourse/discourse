@@ -34,6 +34,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   }.observes('model.title', 'category'),
 
+  @computed('site.mobileView', 'model.posts_count')
+  showSelectedPostsAtBottom(mobileView, postsCount) {
+    return mobileView && (postsCount > 3);
+  },
+
   @computed('model.postStream.posts')
   postsToRender() {
     return this.capabilities.isAndroid ? this.get('model.postStream.posts')
@@ -661,34 +666,40 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         case "revised":
         case "rebaked": {
           postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id }));
-          return;
+          break;
         }
         case "deleted": {
           postStream.triggerDeletedPost(data.id, data.post_number).then(() => refresh({ id: data.id }));
-          return;
+          break;
         }
         case "recovered": {
           postStream.triggerRecoveredPost(data.id, data.post_number).then(() => refresh({ id: data.id }));
-          return;
+          break;
         }
         case "created": {
           postStream.triggerNewPostInStream(data.id).then(() => refresh());
           if (this.get('currentUser.id') !== data.user_id) {
             Discourse.notifyBackgroundCountIncrement();
           }
-          return;
+          break;
         }
         case "move_to_inbox": {
           topic.set("message_archived",false);
-          return;
+          break;
         }
         case "archived": {
           topic.set("message_archived",true);
-          return;
+          break;
         }
         default: {
           Em.Logger.warn("unknown topic bus message type", data);
         }
+      }
+
+      if (data.reload_topic) {
+        topic.reload().then(() => {
+          this.send('postChangedRoute', topic.get('post_number') || 1);
+        });
       }
     });
   },

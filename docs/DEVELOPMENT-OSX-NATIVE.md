@@ -193,6 +193,30 @@ ImageMagick is used for generating avatars (including for test fixtures).
 
     brew install imagemagick
 
+ImageMagick is going to want to use the Helvetica font to generate the
+letter-avatars:
+
+```sh
+brew install fondu
+cd ~/Library/Fonts
+fondu /System/Library/Fonts/Helvetica.dfont
+mkdir ~/.magick
+cd ~/.magick
+curl http://www.imagemagick.org/Usage/scripts/imagick_type_gen > type_gen
+find /System/Library/Fonts /Library/Fonts ~/Library/Fonts -name "*.[to]tf" | perl type_gen -f - > type.xml
+cd /usr/local/Cellar/imagemagick/<version>/etc/ImageMagick-6   
+```
+
+Edit system config file called "type.xml" and add line near end to tell IM to
+look at local file we made in earlier step
+
+```
+<typemap>
+<include file="type-ghostscript.xml" />
+<include file="~/.magick/type.xml" />  ### THIS LINE ADDED
+</typemap>
+```
+
 ## Sending email (SMTP)
 
 By default, development.rb will attempt to connect locally to send email.
@@ -203,6 +227,38 @@ config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 
 Set up [MailCatcher](https://github.com/sj26/mailcatcher) so the app can intercept
 outbound email and you can verify what is being sent.
+
+## Additional Setup Tasks
+
+You may have issues installing therubyracer when running `bundle install`
+because of a dependency on libv8. This is how to fix it:
+
+```sh
+brew tap homebrew/versions
+brew uninstall v8
+brew install v8-315
+gem uninstall -a libv8
+gem uninstall -a therubyracer
+gem install libv8 -v '3.16.14.13' -- --with-system-v8
+gem install therubyracer -v '0.12.2' -- --with-v8-dir=$(brew --prefix v8-315)
+```
+
+In addition to ImageMagick we also need to install some other image related
+software:
+
+```sh
+brew install gifsicle jpegoptim optipng
+npm install -g svgo 
+```
+
+Install jhead
+
+```sh
+curl "http://www.sentex.net/~mwandel/jhead/jhead-2.97.tar.gz" | tar xzf -
+cd jhead-2.97
+make
+make install
+```
 
 ## Setting up your Discourse
 

@@ -55,6 +55,12 @@ class SingleSignOn
     sso
   end
 
+  def diagnostics
+    SingleSignOn::ACCESSORS.map do |a|
+      "#{a}: #{send(a)}"
+    end.join("\n")
+  end
+
   def sso_secret
     @sso_secret || self.class.sso_secret
   end

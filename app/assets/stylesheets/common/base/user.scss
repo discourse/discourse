@@ -190,6 +190,7 @@
 }
 
 .top-section {
+  @include clearfix();
   ul {
     list-style: none;
     margin: 0;
@@ -258,10 +259,6 @@
 
 .topics-section {
   float: right;
-}
-
-.badges-section {
-  clear: both;
 }
 
 @media all

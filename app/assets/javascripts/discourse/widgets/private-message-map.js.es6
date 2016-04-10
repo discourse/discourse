@@ -20,9 +20,9 @@ createWidget('pm-remove-link', {
   },
 
   click() {
-    bootbox.confirm(I18n.t("private_message_info.remove_allowed_user", {name: this.attrs.username}),
-      () => this.sendWidgetAction('removeAllowedUser', this.attrs)
-    );
+    bootbox.confirm(I18n.t("private_message_info.remove_allowed_user", {name: this.attrs.username}), (confirmed) => {
+      if (confirmed) { this.sendWidgetAction('removeAllowedUser', this.attrs); }
+    });
   }
 });
 

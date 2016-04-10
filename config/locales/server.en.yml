@@ -790,6 +790,9 @@ en:
     email_polling_errored_recently:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
+    bad_favicon_url: "The favicon is failing to load. Check your favicon_url setting in <a href='/admin/site_settings'>Site Settings</a>."
+    poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a> and service provider."
+    poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -837,7 +840,7 @@ en:
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
 
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
-    digest_logo_url: "The alternate logo image used at the top of your site's email digest. Should be a wide rectangle shape. If left blank `logo_url` will be used."
+    digest_logo_url: "The alternate logo image used at the top of your site's email digest. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
     logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon, to work correctly over a CDN it must be a png"
     mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. Should be a square shape. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
@@ -942,8 +945,9 @@ en:
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
+    verbose_sso_logging: "Log verbose SSO related diagnostics to /logs"
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
-    sso_url: "URL of single sign on endpoint"
+    sso_url: "URL of single sign on endpoint (must include http:// or https://)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
@@ -1830,7 +1834,7 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
+        Your account does not have the required trust level to post new topics to this email address. If you believe this is an error, contact a staff member.
 
     email_reject_user_not_found:
       subject_template: "[%{site_name}] Email issue -- User Not Found"
@@ -1888,14 +1892,14 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account does not have the privileges to post new topics in that category. If you believe this is in error, contact a staff member.
+        Your account does not have the privileges to post new topics in that category. If you believe this is an error, contact a staff member.
 
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] Email issue -- Invalid Access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is in error, contact a staff member.
+        The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is an error, contact a staff member.
 
     email_reject_invalid_post:
       subject_template: "[%{site_name}] Email issue -- Posting error"
@@ -1949,21 +1953,21 @@ en:
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic you are replying to no longer exists -- perhaps it was deleted? If you believe this is in error, contact a staff member.
+        The topic you are replying to no longer exists -- perhaps it was deleted? If you believe this is an error, contact a staff member.
 
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Email issue -- Topic Closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        The topic you are replying to is currently closed and no longer accepting replies. If you believe this is in error, contact a staff member.
+        The topic you are replying to is currently closed and no longer accepting replies. If you believe this is an error, contact a staff member.
 
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is in error, contact a staff member.
+        Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is an error, contact a staff member.
 
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP authentication error"
@@ -2041,6 +2045,13 @@ en:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
+
+    dashboard_problems:
+      subject_template: "Problems have been found"
+      text_body_template: |
+        Some problems are being reported on your admin dashboard.
+
+        [Please review and fix them](%{base_url}/admin).
 
   unsubscribe_link: |
     To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url})
@@ -2958,6 +2969,15 @@ en:
       description: Has 500 liked posts and gave 1000 likes
       long_description: |
         This badge is granted when you've received 500 likes and have given 1000 or more likes in return. Wow! You're a model of generosity and mutual love :two_hearts:.
+    first_emoji:
+      name: First Emoji
+      description: Used an Emoji in a Post
+      long_description: |
+        This badge is granted when you first add an Emoji to a post :heart:
+    first_mention:
+      name: First Mention
+      description: Mentioned a user in a Post
+      long_description: This badge is granted when you @mention a user in your post. @mentions allow you to notify other members in the forum.
 
   admin_login:
     success: "Email Sent"

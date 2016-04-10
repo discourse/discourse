@@ -98,9 +98,11 @@ module Jobs
       end
     rescue Net::OpenTimeout => e
       mark_as_errored!
+      AdminDashboardData.add_problem_message('dashboard.poll_pop3_timeout', SiteSetting.pop3_polling_period_mins.minutes + 5.minutes)
       Discourse.handle_job_exception(e, error_context(@args, "Connecting to '#{SiteSetting.pop3_polling_host}' for polling emails."))
     rescue Net::POPAuthenticationError => e
       mark_as_errored!
+      AdminDashboardData.add_problem_message('dashboard.poll_pop3_auth_error', SiteSetting.pop3_polling_period_mins.minutes + 5.minutes)
       Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming emails."))
     end
 

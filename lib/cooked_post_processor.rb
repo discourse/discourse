@@ -28,6 +28,19 @@ class CookedPostProcessor
       post_process_oneboxes
       optimize_urls
       pull_hotlinked_images(bypass_bump)
+      grant_badges
+    end
+  end
+
+  def has_emoji?
+    (@doc.css("img.emoji") - @doc.css(".quote img")).size > 0
+  end
+
+  def grant_badges
+    return unless Guardian.new.can_see?(@post)
+
+    if has_emoji?
+      BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user)
     end
   end
 

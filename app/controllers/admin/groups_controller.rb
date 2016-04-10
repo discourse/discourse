@@ -66,6 +66,7 @@ class Admin::GroupsController < Admin::AdminController
     group.title = group.automatic ? nil : title
 
     if group.save
+      Group.reset_counters(group.id, :group_users)
       render_serialized(group, BasicGroupSerializer)
     else
       render_json_error group
@@ -101,6 +102,8 @@ class Admin::GroupsController < Admin::AdminController
       group.group_users.where(user_id: user.id).update_all(owner: true)
     end
 
+    Group.reset_counters(group.id, :group_users)
+
     render json: success_json
   end
 
@@ -110,6 +113,8 @@ class Admin::GroupsController < Admin::AdminController
 
     user = User.find(params[:user_id].to_i)
     group.group_users.where(user_id: user.id).update_all(owner: false)
+
+    Group.reset_counters(group.id, :group_users)
 
     render json: success_json
   end

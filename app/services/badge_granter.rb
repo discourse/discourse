@@ -32,7 +32,7 @@ class BadgeGranter
         user_badge = UserBadge.create!(badge: @badge,
                                        user: @user,
                                        granted_by: @granted_by,
-                                       granted_at: Time.now,
+                                       granted_at: @opts[:created_at] || Time.now,
                                        post_id: @post_id,
                                        seq: seq)
 
@@ -101,6 +101,12 @@ class BadgeGranter
       payload = {
         type: "PostAction",
         post_ids: [action.post_id, action.related_post_id].compact!
+      }
+    when Badge::Trigger::PostProcessed
+      user = opt[:user]
+      payload = {
+        type: "PostProcessed",
+        user_ids: [user.id]
       }
     end
 
@@ -317,7 +323,9 @@ class BadgeGranter
     end
 
     badge.reset_grant_count!
-
+  rescue => ex
+    Rails.logger.error("Failed to backfill '#{badge.type}' badge: #{opts}")
+    raise ex
   end
 
 

@@ -478,4 +478,26 @@ describe CookedPostProcessor do
 
   end
 
+  context "grant badges" do
+    context "emoji inside a quote" do
+      let(:post) { Fabricate(:post, raw: "time to eat some sweet [quote]:candy:[/quote] mmmm") }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      it "doesn't award a badge when the emoji is in a quote" do
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstEmoji).exists?).to eq(false)
+      end
+    end
+
+    context "emoji in the text" do
+      let(:post) { Fabricate(:post, raw: "time to eat some sweet :candy: mmmm") }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      it "awards a badge for using an emoji" do
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstEmoji).exists?).to eq(true)
+      end
+    end
+  end
+
 end

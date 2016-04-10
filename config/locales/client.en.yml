@@ -1004,7 +1004,7 @@ en:
       link_description: "enter link description here"
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
-      link_placeholder: "http://example.com \"optional text\""
+      link_url_placeholder: "http://example.com"
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
@@ -1513,7 +1513,6 @@ en:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        attachment_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)."
         file_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files: "Sorry, you can only drag & drop up to 10 files at a time."
@@ -2128,12 +2127,12 @@ en:
         none: "No backup available."
         read_only:
           enable:
-            title: "Enable the read-only mode"
-            label: "Enable read-only mode"
-            confirm: "Are you sure you want to enable the read-only mode?"
+            title: "Enable read-only mode"
+            label: "Enable read-only"
+            confirm: "Are you sure you want to enable read-only mode?"
           disable:
-            title: "Disable the read-only mode"
-            label: "Disable read-only mode"
+            title: "Disable read-only mode"
+            label: "Disable read-only"
         logs:
           none: "No logs yet..."
         columns:
@@ -2641,6 +2640,10 @@ en:
           title: "Show on public profile?"
           enabled: "shown on profile"
           disabled: "not shown on profile"
+        show_on_user_card:
+          title: "Show on user card?"
+          enabled: "shown on user card"
+          disabled: "not shown on user card"
 
         field_types:
           text: 'Text Field'
@@ -2738,6 +2741,7 @@ en:
           post_revision: "When a user edits or creates a post"
           trust_level_change: "When a user changes trust level"
           user_change: "When a user is edited or created"
+          post_processed: "After a post is processed"
         preview:
           link_text: "Preview granted badges"
           plan_text: "Preview with query plan"

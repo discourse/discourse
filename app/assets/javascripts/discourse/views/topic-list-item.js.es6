@@ -84,9 +84,12 @@ export default Ember.View.extend(StringBuffer, {
   click(e) {
     let target = $(e.target);
 
-    if (target.hasClass('posts-map')) {
+    if (target.hasClass('posts-map') || target.parents('.posts-map').length > 0) {
       if (target.prop('tagName') !== 'A') {
         target = target.find('a');
+        if (target.length===0) {
+          target = target.end();
+        }
       }
       this.container.lookup('controller:application').send("showTopicEntrance", {topic: this.get('topic'), position: target.offset()});
       return false;

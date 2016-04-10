@@ -10,10 +10,9 @@ require_relative '../lib/locale_file_walker'
 
 if `which tx`.strip.empty?
   puts '', 'The Transifex client needs to be installed to use this script.'
-  puts 'Instructions are here: http://docs.transifex.com/developer/client/setup'
+  puts 'Instructions are here: http://docs.transifex.com/client/setup/'
   puts '', 'On Mac:', ''
-  puts '  curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py'
-  puts '  sudo python get-pip.py'
+  puts '  sudo easy_install pip'
   puts '  sudo pip install transifex-client', ''
   exit 1
 end

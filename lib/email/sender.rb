@@ -22,7 +22,7 @@ module Email
     end
 
     def send
-      return if SiteSetting.disable_emails
+      return if SiteSetting.disable_emails && @email_type.to_s != "admin_login"
 
       return if ActionMailer::Base::NullMail === @message
       return if ActionMailer::Base::NullMail === (@message.message rescue nil)
@@ -78,10 +78,16 @@ module Email
       if topic_id.present?
         email_log.topic_id = topic_id
 
+        incoming_email = IncomingEmail.find_by(post_id: post_id, topic_id: topic_id)
+
+        incoming_message_id = nil
+        incoming_message_id = "<#{incoming_email.message_id}>" if incoming_email.try(:message_id).present?
+
         topic_identifier = "<topic/#{topic_id}@#{host}>"
         post_identifier = "<topic/#{topic_id}/#{post_id}@#{host}>"
+
         @message.header['Message-ID'] = post_identifier
-        @message.header['In-Reply-To'] = topic_identifier
+        @message.header['In-Reply-To'] = incoming_message_id || topic_identifier
         @message.header['References'] = topic_identifier
 
         topic = Topic.where(id: topic_id).first

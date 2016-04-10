@@ -377,6 +377,7 @@ span.post-count {
 
 .quote-button.visible {
   display: block;
+  z-index: 936;
 }
 
 iframe {
@@ -416,9 +417,9 @@ iframe {
   right: 4px;
 }
 
-#selected-posts {
+.selected-posts {
   width: 97%;
-  padding-left: 3%;
+  padding: 0.1em 0.7em;
   background-color: srgb-scale($tertiary, $secondary, 15%);
   .btn {
     margin-bottom: 10px;
