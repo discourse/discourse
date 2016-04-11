@@ -1367,6 +1367,12 @@ describe Topic do
       expect(topic.all_allowed_users).to include moderator
     end
 
+    it 'includes moderators if offical warning' do
+      topic.stubs(:subtype).returns(TopicSubtype.moderator_warning)
+      topic.stubs(:private_message?).returns(true)
+      expect(topic.all_allowed_users).to include moderator
+    end
+
     it 'does not include moderators if pm without flags' do
       topic.stubs(:private_message?).returns(true)
       expect(topic.all_allowed_users).not_to include moderator
