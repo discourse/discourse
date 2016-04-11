@@ -11,4 +11,19 @@ test("Browsing Groups", () => {
   andThen(() => {
     ok(count('.group-members tr') > 0, "it lists group members");
   });
+
+  visit("/groups/discourse/topics");
+  andThen(() => {
+    ok(count('.user-stream .item') > 0, "it lists stream items");
+  });
+
+  visit("/groups/discourse/mentions");
+  andThen(() => {
+    ok(count('.user-stream .item') > 0, "it lists stream items");
+  });
+
+  visit("/groups/discourse/messages");
+  andThen(() => {
+    ok(count('.user-stream .item') > 0, "it lists stream items");
+  });
 });

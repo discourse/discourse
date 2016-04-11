@@ -170,6 +170,18 @@ export default function() {
                                            slug: request.params.slug } });
     });
 
+    this.get("/groups/discourse/topics.json", () => {
+      return response(200, fixturesByUrl['/groups/discourse/posts.json']);
+    });
+
+    this.get("/groups/discourse/mentions.json", () => {
+      return response(200, fixturesByUrl['/groups/discourse/posts.json']);
+    });
+
+    this.get("/groups/discourse/messages.json", () => {
+      return response(200, fixturesByUrl['/groups/discourse/posts.json']);
+    });
+
     this.get('/t/:topic_id/posts.json', request => {
       const postIds = request.queryParams.post_ids;
       const posts = postIds.map(p => ({id: parseInt(p), post_number: parseInt(p) }));
