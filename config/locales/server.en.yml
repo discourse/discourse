@@ -1239,6 +1239,8 @@ en:
 
     read_time_word_count: "Word count per minute for calculating estimated reading time."
 
+    topic_page_title_includes_category: "Topic page title includes the category name."
+
     full_name_required: "Full name is a required field of a user's profile."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
