@@ -623,11 +623,27 @@ tr_TR:
       summary:
         title: "Özet"
         stats: "İstatistikler"
+        time_read: "okunma süresi"
+        topic_count:
+          other: "oluşturulan konular"
+        post_count:
+          other: "oluşturmuş gönderiler"
+        likes_given:
+          other: "verilen beğeniler"
+        likes_received:
+          other: "alınan beğeniler"
+        days_visited:
+          other: "ziyaret edilen günler"
+        posts_read:
+          other: "okunmuş yazılar"
         top_replies: "Başlıca Yanıtları"
+        no_replies: "Henüz yanıt bulunmuyor."
         more_replies: "Diğer Yanıtları"
         top_topics: "Başlıca Konuları"
+        no_topics: "Henüz konu bulunmuyor."
         more_topics: "Diğer Konuları"
         top_badges: "Başlıca Rozetleri"
+        no_badges: "Henüz rozet bulunmuyor."
         more_badges: "Diğer Rozetleri"
       associated_accounts: "Girişler"
       ip_address:
@@ -677,6 +693,9 @@ tr_TR:
     too_few_topics_and_posts_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu ve <strong>%{currentPosts} / %{requiredPosts}</strong> gönderi var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
     too_few_topics_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
     too_few_posts_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentPosts} / %{requiredPosts}</strong> gönderi var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
+    logs_error_rate_notice:
+      rate:
+        other: "%{count} hata/%{duration}"
     learn_more: "daha fazlasını öğren..."
     year: 'yıl'
     year_desc: 'son 365 günde oluşturulan konular'
@@ -1993,6 +2012,7 @@ tr_TR:
           modal:
             title: "Gelen E-posta Detayları"
             error: "Hata"
+            headers: "Başlıklar"
             subject: "Konu"
             body: "İçerik"
             rejection_message: "Ret E-postası"
@@ -2354,6 +2374,7 @@ tr_TR:
         badge: Rozet
         display_name: Görünen Ad
         description: Açıklama
+        long_description: Uzun Açıklama
         badge_type: Rozet Türü
         badge_grouping: Grup
         badge_groupings:
@@ -2514,7 +2535,11 @@ tr_TR:
     badges:
       earned_n_times:
         other: "Bu rozet %{count} defa kazanılmış"
+      granted_on: "%{date} Tarihinde Verildi"
+      others_count: "Bu rozete sahip diğer kişiler (%{count})"
       title: Rozetler
+      allow_title: "mevcut ünvan"
+      multiple_grant: "birden fazla kez verildi"
       badge_count:
         other: "%{count} Rozet"
       more_badges:

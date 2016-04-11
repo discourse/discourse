@@ -27,6 +27,10 @@ tr_TR:
   purge_reason: "Bırakılmış, etkinleştirilmemiş hesap olarak otomatik silindi"
   disable_remote_images_download_reason: "Yeterli disk alanı kalmaması sebebiyle uzaktan görüntü indirme devre dışı bırakıldı."
   anonymous: "Anonim"
+  emails:
+    incoming:
+      default_subject: "Bu kişiden %{email} gelen e-posta"
+      show_trimmed_content: "Kısaltılmış olan yazıyı göster"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -138,7 +142,9 @@ tr_TR:
   rss_description:
     latest: "En son konular"
     hot: "Sıcak konular"
+    top: "En iyi konular"
     posts: "Son gönderiler"
+    private_posts: "Son özel mesajlar"
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
   excerpt_image: "resim"
   queue:
@@ -148,6 +154,7 @@ tr_TR:
       can_not_modify_automatic: "Otomatik oluşturulan grubu düzenleyemezsiniz"
       member_already_exist: "'%{username}' zaten grubun bir üyesi."
       invalid_domain: "'%{domain}' geçerli bir alan adı değil."
+      invalid_incoming_email: "Bu '%{email}' e-posta geçerli değil."
     default_names:
       everyone: "herkes"
       admins: "adminler"
@@ -286,11 +293,13 @@ tr_TR:
       first_day_topics_per_day: "Yeni bir kullanıcının ilk gününde oluşturabileceğiz maksimum konu sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       create_topic: "Kısa sürede çok sayıda konu oluşturmaya çalıştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       create_post: "Kısa sürede çok sayıda cevap yazmaya çalıştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
+      delete_post: "Kısa sürede çok sayıda mesaj silmeye çalıştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       topics_per_day: "Bugün oluşturabileceğiniz maksimum konu sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       pms_per_day: "Bugün oluşturabileceğiniz maksimum mesaj sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       create_like: "Bugün yapabileceğiniz maksimum beğeni sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       create_bookmark: "Bugün yapabileceğiniz maksimum işaretleme sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       edit_post: "Bugün yapabileceğiniz maksimum düzenleme sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
+      live_post_counts: "Kısa sürede çok sayıda güncel mesaj sayınıza ulaşmaya çalıştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
     hours:
       other: "%{count} saat"
     minutes:
@@ -360,6 +369,9 @@ tr_TR:
     confirmed: "E-posta adresiniz güncellendi."
     please_continue: "%{site_name} adresine devam edin"
     error: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten kullanımda olabilir."
+    error_staged: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten başka bir kullanıcı tarafından kullanımdadır."
+    authorizing_old:
+      title: "Geçerli e-posta adresi onayladığınız için teşekkür ederiz"
   activation:
     action: "Hesabınızı etkinleştirmek için buraya tıklayın"
     already_done: "Üzgünüz, hesap doğrulama linki artık geçerli değil. Hesabınız zaten etkin olabilir mi?"
@@ -736,6 +748,7 @@ tr_TR:
     max_username_length: "Karakter olarak en büyük kullanıcı adı uzunluğu."
     reserved_usernames: "Üyelik için izin verilmeyen kullanıcı adları."
     min_password_length: "En az parola uzunluğu."
+    min_admin_password_length: "Yönetici için en az parola uzunluğu."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
     enable_sso: "Dış bir site aracılığı ile tek oturum açma sistemini etkinleştir. (UYARI: etkinleştirildiği takdirde, doğru yapılandırılmamışsa bazı kişilerin, SİZ DAHİL, oturum açmasını engelleyebilir! Ayrıca davetiye sistemini de devre dışı bırakır.)"
     enable_sso_provider: "/session/sso_provider son noktasında Discourse SSO sağlayıcı protokolünü uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
@@ -756,6 +769,7 @@ tr_TR:
     enable_twitter_logins: "Twitter doğrulamasını etkinleştir. twitter_consumer_key ve twitter_consumer_secret gereklidir"
     twitter_consumer_key: "Twitter doğrulaması için gereken, http://dev.twitter.com adresinde kayıtlı consumer key"
     twitter_consumer_secret: "Twitter doğrulaması için gereken, http://dev.twitter.com adresinde kayıtlı consumer secret"
+    enable_instagram_logins: "Instagram doğrulamasını etkinleştir, instagram_consumer_key ve instagram_consumer_secret gereklidir"
     enable_facebook_logins: "Facebook doğrulamasını etkinleştir. facebook_app_id ve facebook_app_secret gerekir"
     facebook_app_id: "Facebook kimlik doğrulama için gerekli, https://developers.facebook.com/apps sayfasında bulunan app id"
     facebook_app_secret: "Facebook kimlik doğrulama için gerekli, https://developers.facebook.com/apps sayfasında bulunan app secret"

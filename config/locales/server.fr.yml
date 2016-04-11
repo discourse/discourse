@@ -169,6 +169,8 @@ fr:
     hot: "Sujets populaires"
     top: "Meilleurs sujets"
     posts: "Messages récents"
+    private_posts: "Derniers messages privés"
+    user_topics: "Sujets récents par @%{username}"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"

@@ -600,6 +600,9 @@ es:
       email_always: "Quiero recibir notificaciones por email incluso cuando esté de forma activa por el sitio"
       other_settings: "Otros"
       categories_settings: "Categorías"
+      enable_mailing_list:
+        one: "¿Seguro que quieres recibir un email por cada nuevo post?"
+        other: "¿Seguro que quieres recibir un email por cada nuevo post?<br><br>Esto resultará en aproximadamente <b>{{count}} emails</b> al día."
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "No los he visto todavía"
@@ -665,11 +668,33 @@ es:
       summary:
         title: "Resumen"
         stats: "Estadísticas"
+        time_read: "tiempo de lectura"
+        topic_count:
+          one: "tema creado"
+          other: "temas creados"
+        post_count:
+          one: "post publicado"
+          other: "posts publicados"
+        likes_given:
+          one: "me gusta dado"
+          other: "me gusta dados"
+        likes_received:
+          one: "me gusta recibido"
+          other: "me gusta recibidos"
+        days_visited:
+          one: "día visitado"
+          other: "días visitados"
+        posts_read:
+          one: "post leído"
+          other: "posts leídos"
         top_replies: "Respuestas top"
+        no_replies: "No hay respuestas aún."
         more_replies: "Más respuestas"
         top_topics: "Temas top"
+        no_topics: "No hay temas aún."
         more_topics: "Más temas"
         top_badges: "Distintivos top"
+        no_badges: "No hay distintivos aún."
         more_badges: "Más distintivos"
       associated_accounts: "Inicios de sesión"
       ip_address:
@@ -2104,6 +2129,7 @@ es:
           modal:
             title: "Detalles de emails entrantes"
             error: "Error"
+            headers: "Cabeceras"
             subject: "Asunto"
             body: "Cuerpo"
             rejection_message: "Correo de rechazo"
