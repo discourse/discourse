@@ -99,6 +99,7 @@ gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sass'
+gem 'sass-rails'
 gem 'sidekiq'
 gem 'sidekiq-statistic'
 
@@ -114,7 +115,6 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass-rails'
   gem 'uglifier'
   gem 'rtlit', require: false # for css rtling
 end
