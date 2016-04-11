@@ -1,0 +1,7 @@
+<div class='user-stream'>
+  {{#each posts as |post|}}
+    {{group-post post=post}}
+  {{else}}
+    <div>{{i18n emptyText}}</div>
+  {{/each}}
+</div>

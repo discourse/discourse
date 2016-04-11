@@ -266,7 +266,7 @@ login:
     client: true
     default: false
   enable_sso_provider: false
-  verbose_sso_logging: true
+  verbose_sso_logging: false
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -565,6 +565,9 @@ email:
     min: 0
   max_emails_per_day_per_user: 100
   enable_staged_users: true
+  auto_generated_whitelist:
+    default: ''
+    type: list
 
 files:
   max_image_size_kb:
@@ -1090,6 +1093,8 @@ uncategorized:
   read_time_word_count:
     default: 500
     client: true
+
+  topic_page_title_includes_category: true
 
 user_preferences:
   default_email_digest_frequency:

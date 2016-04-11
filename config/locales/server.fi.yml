@@ -288,7 +288,7 @@ fi:
     no_info_other: "<div class='missing-profile'>%{name} ei ole täyttänyt vielä mitään Minusta -kohtaan profiilissaan</div>"
   vip_category_name: "Lounge"
   vip_category_description: "Alue luottamustason 3 ja ylemmille käyttäjille."
-  meta_category_name: "Sivuston palaute"
+  meta_category_name: "Palaute"
   meta_category_description: "Keskustelua tästä sivustosta, sen järjestämisestä, siitä miten se toimii ja miten sitä voisi parantaa."
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
@@ -1937,7 +1937,7 @@ fi:
 
         Henkilökunnan edustaja on hyväksynyt tilisi sivustolla %{site_name}.
 
-        Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisit:
+        Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisi:
         %{base_url}/users/activate-account/%{email_token}
 
         Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
@@ -1954,7 +1954,7 @@ fi:
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
 
-        Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisit:
+        Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisi:
         %{base_url}/users/activate-account/%{email_token}
 
         Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.

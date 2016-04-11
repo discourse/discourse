@@ -254,9 +254,13 @@ class Topic < ActiveRecord::Base
              .exists?
   end
 
+  def is_official_warning?
+    subtype == TopicSubtype.moderator_warning
+  end
+
   # all users (in groups or directly targetted) that are going to get the pm
   def all_allowed_users
-    moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? && has_flags?
+    moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? && (has_flags? || is_official_warning?)
     User.from("(#{allowed_users.to_sql} UNION #{allowed_group_users.to_sql}#{moderators_sql}) as users")
   end
 

@@ -207,10 +207,12 @@ class UserNotifications < ActionMailer::Base
     (user.locale.present? && I18n.available_locales.include?(user.locale.to_sym)) ? user.locale : nil
   end
 
-  def email_post_markdown(post)
+  def email_post_markdown(post, add_posted_by=false)
     result = "[email-indent]\n"
     result << "#{post.raw}\n\n"
-    result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
+    if add_posted_by
+      result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
+    end
     result << "[/email-indent]\n"
     result
   end
@@ -315,7 +317,7 @@ class UserNotifications < ActionMailer::Base
     if context_posts.present?
       context << "-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
-        context << email_post_markdown(cp)
+        context << email_post_markdown(cp, true)
       end
     end
 
@@ -378,7 +380,7 @@ class UserNotifications < ActionMailer::Base
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
       private_reply: post.topic.private_message?,
-      include_respond_instructions: !user.suspended?,
+      include_respond_instructions: !(user.suspended? || user.staged?),
       template: template,
       html_override: html,
       site_description: SiteSetting.site_description,

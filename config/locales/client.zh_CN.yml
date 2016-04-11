@@ -1000,7 +1000,7 @@ zh_CN:
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
-        change_category: "更改目录"
+        change_category: "更改分类"
         close_topics: "关闭话题"
         archive_topics: "存档主题"
         notification_level: "更改提示等级"

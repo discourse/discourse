@@ -118,6 +118,7 @@ module Email
     end
 
     def is_auto_generated?
+      return false if SiteSetting.auto_generated_whitelist.split('|').include?(@from_email)
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
       @mail[:from].to_s[/(mailer-?daemon|postmaster|noreply)@/i] ||
       @mail.header.to_s[/auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i]
@@ -375,7 +376,8 @@ module Email
         options[:raw] << "</details>" << "\n"
       end
 
-      manager = NewPostManager.new(options[:user], options)
+      user = options.delete(:user)
+      manager = NewPostManager.new(user, options)
       result = manager.perform
 
       raise InvalidPost, result.errors.full_messages.join("\n") if result.errors.any?
@@ -383,7 +385,7 @@ module Email
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
         if result.post.topic && result.post.topic.private_message?
-          add_other_addresses(result.post.topic, options[:user])
+          add_other_addresses(result.post.topic, user)
         end
       end
     end
