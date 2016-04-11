@@ -240,9 +240,12 @@ SQL
     <<-SQL
       SELECT us.user_id, current_timestamp AS granted_at
       FROM user_stats AS us
-      WHERE us.likes_received >= #{likes_received}
+      INNER JOIN posts AS p ON p.user_id = us.user_id
+      WHERE p.like_count > 0
         AND us.likes_given >= #{likes_given}
         AND (:backfill OR us.user_id IN (:user_ids))
+      GROUP BY us.user_id, us.likes_given
+      HAVING COUNT(*) > #{likes_received}
     SQL
   end
 
