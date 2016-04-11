@@ -352,6 +352,7 @@ Discourse::Application.routes.draw do
   get "uploads/:site/original/:tree:sha" => "uploads#show", constraints: { site: /\w+/, tree: /(\w+\/)+/i, sha: /[a-f0-9]{40}/ }
   # used to download attachments (old route)
   get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/ }
+  get "uploads-info" => "uploads#limit_info"
 
   get "posts" => "posts#latest", id: "latest_posts"
   get "private-posts" => "posts#latest", id: "private_posts"

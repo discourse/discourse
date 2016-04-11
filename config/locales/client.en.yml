@@ -2900,6 +2900,10 @@ en:
           name: Other
         posting:
           name: Posting
+    learn_more:
+      title: "Learn more"
+      max_image_size: "Max image size is {{max_size}}, you permitted to upload larger image than the limit, but will be rejected if server unable downsize it"
+      max_attachment_size: "Max attachment size is {{max_size}}"
 
     google_search: |
       <h3>Search with Google</h3>

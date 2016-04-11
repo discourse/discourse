@@ -1,6 +1,6 @@
 class UploadsController < ApplicationController
-  before_filter :ensure_logged_in, except: [:show]
-  skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
+  before_filter :ensure_logged_in, except: [:show, :limit_info]
+  skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :limit_info]
 
   def create
     type = params.require(:type)
@@ -43,6 +43,13 @@ class UploadsController < ApplicationController
         render_404
       end
     end
+  end
+
+  def limit_info
+    render json: {
+      max_image_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_image_size_kb.kilobytes),
+      max_attachment_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_attachment_size_kb.kilobytes),
+    }
   end
 
   protected
