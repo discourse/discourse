@@ -82,7 +82,7 @@ GEM
     ember-handlebars-template (0.1.5)
       barber (>= 0.9.0)
       sprockets (>= 2.1, < 3.1)
-    ember-rails (0.18.2)
+    ember-rails (0.18.5)
       active_model_serializers
       ember-data-source (>= 1.0.0.beta.5)
       ember-handlebars-template (>= 0.1.1, < 1.0)
@@ -413,7 +413,7 @@ DEPENDENCIES
   certified
   discourse-qunit-rails
   email_reply_trimmer (= 0.1.3)
-  ember-rails
+  ember-rails (= 0.18.5)
   ember-source (= 1.12.2)
   excon
   fabrication (= 2.9.8)
