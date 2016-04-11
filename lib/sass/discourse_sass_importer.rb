@@ -22,7 +22,8 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
         "plugins_mobile" => DiscoursePluginRegistry.mobile_stylesheets,
         "plugins_desktop" => DiscoursePluginRegistry.desktop_stylesheets,
         "plugins_variables" => DiscoursePluginRegistry.sass_variables,
-        "theme_variables" => [ColorScheme::BASE_COLORS_FILE]
+        "theme_variables" => [ColorScheme::BASE_COLORS_FILE],
+        "category_backgrounds" => Proc.new { |c| "body.category-#{c.full_slug} { background-image: url(#{apply_cdn(c.background_url)}) }\n" }
       }
     end
 
@@ -39,9 +40,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
       if name == "category_backgrounds"
         contents = ""
         Category.where('background_url IS NOT NULL').each do |c|
-          if c.background_url.present?
-            contents << "body.category-#{c.full_slug} { background-image: url(#{apply_cdn(c.background_url)}) }\n"
-          end
+          contents << special_imports[name].call(c) if c.background_url.present?
         end
 
         return ::Sass::Engine.new(contents, options.merge(
@@ -113,4 +112,8 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
 
   include Sass
   include ::Sass::Rails::SassImporter::Globbing
+
+  def self.special_imports
+    self.new('').special_imports
+  end
 end
