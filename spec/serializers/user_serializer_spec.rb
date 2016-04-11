@@ -104,15 +104,29 @@ describe UserSerializer do
 
       context "when website has a subdomain" do
         before do
-          user.user_profile.website = 'http://www.example.com/user'
+          user.user_profile.website = 'http://subdomain.example.com/user'
         end
 
         it "has a website with a subdomain" do
-          expect(json[:website]).to eq 'http://www.example.com/user'
+          expect(json[:website]).to eq 'http://subdomain.example.com/user'
         end
 
         it "returns website name with the subdomain" do
-          expect(json[:website_name]).to eq 'www.example.com/user'
+          expect(json[:website_name]).to eq 'subdomain.example.com/user'
+        end
+      end
+
+      context "when website has www" do
+        before do
+          user.user_profile.website = 'http://www.example.com/user'
+        end
+
+        it "has a website with the www" do
+          expect(json[:website]).to eq 'http://www.example.com/user'
+        end
+
+        it "returns website name without the www" do
+          expect(json[:website_name]).to eq 'example.com/user'
         end
       end
 
