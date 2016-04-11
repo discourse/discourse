@@ -173,8 +173,9 @@ const DiscourseURL = Ember.Object.createWithMixins({
    * @method isInternal
    * @param {String} url
   **/
-  isInternal: function(url) {
+  isInternal(url) {
     if (url && url.length) {
+      if (url.indexOf('//') === 0) { url = "http:" + url; }
       if (url.indexOf('#') === 0) { return true; }
       if (url.indexOf('/') === 0) { return true; }
       if (url.indexOf(this.origin()) === 0) { return true; }
