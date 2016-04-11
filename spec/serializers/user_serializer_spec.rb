@@ -96,20 +96,35 @@ describe UserSerializer do
         expect(json[:website]).to eq 'http://example.com/user'
       end
 
-      context "has a website name" do
-        it "returns website host name when instance domain is not same as website domain" do
-          Discourse.stubs(:current_hostname).returns('discourse.org')
-          expect(json[:website_name]).to eq 'example.com'
+      it "returns complete website name with path" do
+        expect(json[:website_name]).to eq 'example.com/user'
+      end
+
+      context "when website includes query parameters" do
+        before do
+          user.user_profile.website = 'http://example.com/user?ref=payme'
         end
 
-        it "returns complete website path when instance domain is same as website domain" do
-          Discourse.stubs(:current_hostname).returns('example.com')
-          expect(json[:website_name]).to eq 'example.com/user'
+        it "has a website with query params" do
+          expect(json[:website]).to eq 'http://example.com/user?ref=payme'
         end
 
-        it "returns complete website path when website domain is parent of instance domain" do
-          Discourse.stubs(:current_hostname).returns('forums.example.com')
+        it "has a website name without query params" do
           expect(json[:website_name]).to eq 'example.com/user'
+        end
+      end
+
+      context "when website is not a valid url" do
+        before do
+          user.user_profile.website = 'invalid-url'
+        end
+
+        it "has a website with the invalid url" do
+          expect(json[:website]).to eq 'invalid-url'
+        end
+
+        it "has a nil website name" do
+          expect(json[:website_name]).to eq nil
         end
       end
     end
