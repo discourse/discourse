@@ -1091,6 +1091,8 @@ uncategorized:
     default: 500
     client: true
 
+  topic_page_title_includes_category: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'
