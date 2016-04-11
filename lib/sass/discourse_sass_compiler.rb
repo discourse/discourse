@@ -39,17 +39,17 @@ class DiscourseSassCompiler
   # Options:
   #   safe: (boolean) if true, theme and plugin stylesheets will not be included. Default is false.
   def compile(opts={})
-    env = Rails.application.assets
-
-    # In production Rails.application.assets is a Sprockets::Index
-    #  instead of Sprockets::Environment, there is no cleaner way
-    #  to get the environment from the index.
-    if env.is_a?(Sprockets::Index)
-      env = env.instance_variable_get('@environment')
-    end
+    app = Rails.application
+    env = app.assets || Sprockets::Railtie.build_environment(app)
 
     pathname = Pathname.new("app/assets/stylesheets/#{@target}.scss")
-    context = env.context_class.new(env, "#{@target}.scss", pathname)
+
+    context = env.context_class.new(
+      environment: env,
+      filename: "#{@target}.scss",
+      pathname: pathname,
+      metadata: {}
+    )
 
     debug_opts = Rails.env.production? ? {} : {
       line_numbers: true,

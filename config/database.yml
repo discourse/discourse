@@ -1,3 +1,17 @@
+production:
+  prepared_statements: false
+  adapter: postgresql
+  database: discourse_production
+  min_messages: warning
+  pool: 5
+  timeout: 5000
+  host_names:
+    ### Don't include the port number here. Change the "port" site setting instead, at /admin/site_settings.
+    ### If you change this setting you will need to
+    ###   - restart sidekiq if you change this setting
+    ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
+    - "tgxworld.localhost"
+
 development:
   prepared_statements: false
   adapter: postgresql

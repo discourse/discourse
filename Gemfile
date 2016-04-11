@@ -47,7 +47,7 @@ gem 'onebox'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
-gem 'ember-rails'
+gem 'ember-rails', '0.18.5'
 gem 'ember-source', '1.12.2'
 gem 'barber'
 gem 'babel-transpiler'
@@ -99,6 +99,7 @@ gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sass'
+gem 'sass-rails'
 gem 'sidekiq'
 gem 'sidekiq-statistic'
 
@@ -114,7 +115,6 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass-rails', '~> 4.0.5'
   gem 'uglifier'
   gem 'rtlit', require: false # for css rtling
 end
