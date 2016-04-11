@@ -266,7 +266,7 @@ login:
     client: true
     default: false
   enable_sso_provider: false
-  verbose_sso_logging: true
+  verbose_sso_logging: false
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
