@@ -2235,9 +2235,6 @@ en:
 
         %{message}
 
-        ---
-        %{respond_instructions}
-
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
       subject_template: "[%{site_name}] Digest"

@@ -327,6 +327,21 @@ describe Email::Receiver do
       expect { process(:new_user) }.to change(Topic, :count)
     end
 
+    it "works when approving is enabled" do
+      SiteSetting.approve_unless_trust_level = 4
+
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
+
+      category.set_permissions(Group[:trust_level_4] => :full)
+      category.save
+
+      Group.refresh_automatic_group!(:trust_level_4)
+
+      expect { process(:tl3_user) }.to_not change(Topic, :count)
+      expect { process(:tl4_user) }.to change(Topic, :count)
+    end
+
   end
 
 end
