@@ -565,6 +565,9 @@ email:
     min: 0
   max_emails_per_day_per_user: 100
   enable_staged_users: true
+  auto_generated_whitelist:
+    default: ''
+    type: list
 
 files:
   max_image_size_kb:

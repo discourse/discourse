@@ -118,6 +118,7 @@ module Email
     end
 
     def is_auto_generated?
+      return false if SiteSetting.auto_generated_whitelist.split('|').include?(@from_email)
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
       @mail[:from].to_s[/(mailer-?daemon|postmaster|noreply)@/i] ||
       @mail.header.to_s[/auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i]
