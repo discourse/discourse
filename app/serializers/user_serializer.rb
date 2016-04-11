@@ -146,7 +146,7 @@ class UserSerializer < BasicUserSerializer
   def website_name
     uri = URI(website.to_s) rescue nil
     return if uri.nil? || uri.host.nil?
-    uri.host + uri.path
+    uri.host.sub(/^www\./,'') + uri.path
   end
 
   def include_website_name
