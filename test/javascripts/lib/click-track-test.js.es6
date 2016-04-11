@@ -27,6 +27,7 @@ module("lib:click-track", {
             <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
             <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
           </div>
+          <a class="no-track-link" href="http://www.google.com">google.com</a>
           <a id="same-site" href="http://discuss.domain.com">forum</a>
           <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
           <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
@@ -55,6 +56,10 @@ test("it calls preventDefault when clicking on an a", function() {
   track(clickEvent);
   ok(clickEvent.preventDefault.calledOnce);
   ok(DiscourseURL.redirectTo.calledOnce);
+});
+
+test("does not track clicks when forcibly disabled", function() {
+  ok(track(generateClickEventOn('.no-track-link')));
 });
 
 test("does not track clicks on back buttons", function() {
