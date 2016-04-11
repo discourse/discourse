@@ -88,16 +88,32 @@ describe UserSerializer do
     end
 
     context "with filled out website" do
-      before do
-        user.user_profile.website = 'http://example.com/user'
+      context "when website has a path" do
+        before do
+          user.user_profile.website = 'http://example.com/user'
+        end
+
+        it "has a website with a path" do
+          expect(json[:website]).to eq 'http://example.com/user'
+        end
+
+        it "returns complete website name with path" do
+          expect(json[:website_name]).to eq 'example.com/user'
+        end
       end
 
-      it "has a website" do
-        expect(json[:website]).to eq 'http://example.com/user'
-      end
+      context "when website has a subdomain" do
+        before do
+          user.user_profile.website = 'http://www.example.com/user'
+        end
 
-      it "returns complete website name with path" do
-        expect(json[:website_name]).to eq 'example.com/user'
+        it "has a website with a subdomain" do
+          expect(json[:website]).to eq 'http://www.example.com/user'
+        end
+
+        it "returns website name with the subdomain" do
+          expect(json[:website_name]).to eq 'www.example.com/user'
+        end
       end
 
       context "when website includes query parameters" do
