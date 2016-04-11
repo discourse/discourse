@@ -590,7 +590,6 @@ Discourse::Application.routes.draw do
 
   get "onebox" => "onebox#show"
 
-  get "error" => "forums#error"
   get "exception" => "list#latest"
 
   get "message-bus/poll" => "message_bus#poll"
