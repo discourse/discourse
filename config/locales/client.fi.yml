@@ -887,7 +887,7 @@ fi:
       quote_text: "Lainaus"
       code_title: "Teksti ilman muotoiluja"
       code_text: "Sisennä teksti neljällä välilyönnillä poistaaksesi automaattisen muotoilun"
-      upload_title: "Lähetä"
+      upload_title: "Liitä"
       upload_description: "kirjoita ladatun tiedoston kuvaus tähän"
       olist_title: "Numeroitu lista"
       ulist_title: "Luettelomerkillinen luettelo"
