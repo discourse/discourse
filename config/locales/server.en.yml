@@ -2110,7 +2110,6 @@ en:
 
         %{message}
 
-        ---
         %{respond_instructions}
 
     user_invited_to_private_message_pm_staged:
@@ -2120,7 +2119,6 @@ en:
 
         %{message}
 
-        ---
         %{respond_instructions}
 
     user_invited_to_topic:
@@ -2130,7 +2128,6 @@ en:
 
         %{message}
 
-        ---
         %{respond_instructions}
 
     user_replied:
@@ -2142,7 +2139,6 @@ en:
 
         %{context}
 
-        ---
         %{respond_instructions}
 
     user_replied_pm:
@@ -2154,7 +2150,6 @@ en:
 
         %{context}
 
-        ---
         %{respond_instructions}
 
     user_quoted:
@@ -2166,7 +2161,6 @@ en:
 
         %{context}
 
-        ---
         %{respond_instructions}
 
     user_linked:
@@ -2178,7 +2172,6 @@ en:
 
         %{context}
 
-        ---
         %{respond_instructions}
 
     user_mentioned:
@@ -2190,7 +2183,6 @@ en:
 
         %{context}
 
-        ---
         %{respond_instructions}
 
     user_group_mentioned:
@@ -2202,7 +2194,6 @@ en:
 
         %{context}
 
-        ---
         %{respond_instructions}
 
     user_posted:
@@ -2214,7 +2205,6 @@ en:
 
         %{context}
 
-        ---
         %{respond_instructions}
 
     user_posted_pm:
@@ -2226,7 +2216,6 @@ en:
 
         %{context}
 
-        ---
         %{respond_instructions}
 
     user_posted_pm_staged:
