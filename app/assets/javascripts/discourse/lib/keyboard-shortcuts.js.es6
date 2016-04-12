@@ -158,7 +158,7 @@ export default {
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
-      showSearch = $('.cooked').length < this.container.lookup('controller:topic').get('model.postStream.stream.length');
+      showSearch = $('.topic-post .cooked, .small-action:not(.time-gap)').length < this.container.lookup('controller:topic').get('model.postStream.stream.length');
     }
 
     if (showSearch) {
