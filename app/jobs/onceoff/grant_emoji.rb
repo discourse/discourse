@@ -6,7 +6,12 @@ module Jobs
     def execute_onceoff(args)
       to_award = {}
 
-      Post.secured(Guardian.new).visible.public_posts.find_in_batches do |group|
+      Post.secured(Guardian.new)
+          .select(:id, :created_at, :cooked, :user_id)
+          .visible
+          .public_posts
+          .where("cooked like '%emoji%'")
+          .find_in_batches do |group|
         group.each do |p|
           doc = Nokogiri::HTML::fragment(p.cooked)
           if (doc.css("img.emoji") - doc.css(".quote img")).size > 0
