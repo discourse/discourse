@@ -1,11 +1,12 @@
 module Jobs
 
   class GrantEmoji < Jobs::Onceoff
+    sidekiq_options queue: 'low'
 
     def execute_onceoff(args)
       to_award = {}
 
-      Post.secured(Guardian.new).visible.public_posts.find_in_batches(batch_size: 5000) do |group|
+      Post.secured(Guardian.new).visible.public_posts.find_in_batches(batch_size: 1000) do |group|
         group.each do |p|
           doc = Nokogiri::HTML::fragment(p.cooked)
           if (doc.css("img.emoji") - doc.css(".quote img")).size > 0
