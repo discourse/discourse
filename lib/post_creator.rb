@@ -238,7 +238,7 @@ class PostCreator
         SiteSetting.auto_close_topics_post_count <= @post.topic.posts_count
 
       @post.topic.update_status(:closed, true, Discourse.system_user,
-          message: I18n.t('topic_statuses.autoclosed_topic_max_posts', count: SiteSetting.auto_close_messages_post_count))
+          message: I18n.t('topic_statuses.autoclosed_topic_max_posts', count: SiteSetting.auto_close_topics_post_count))
 
     end
   end
