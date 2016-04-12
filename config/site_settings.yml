@@ -505,6 +505,8 @@ posting:
   notify_about_queued_posts_after:
     default: 24
     min: 0
+  auto_close_messages_post_count: 200
+  auto_close_topics_post_count: 10000
 
 email:
   email_time_window_mins:
