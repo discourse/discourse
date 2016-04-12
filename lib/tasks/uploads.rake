@@ -7,6 +7,14 @@ require "digest/sha1"
 task "uploads:gather" => :environment do
   require "db_helper"
 
+  ENV["RAILS_DB"] ? gather_uploads : gather_uploads_for_all_sites
+end
+
+def gather_uploads_for_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { gather_uploads }
+end
+
+def gather_uploads
   public_directory = "#{Rails.root}/public"
   current_db = RailsMultisite::ConnectionManagement.current_db
 
