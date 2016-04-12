@@ -26,6 +26,7 @@ export default Ember.Controller.extend({
   showBadges: setting('enable_badges'),
   showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
   showDelete: Em.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
+  linkWebsite: Em.computed.not('user.isBasic'),
 
   @computed('user.user_fields.@each.value')
   publicUserFields() {
@@ -38,6 +39,11 @@ export default Ember.Controller.extend({
         return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });
       }).compact();
     }
+  },
+
+  @computed("user.trust_level")
+  removeNoFollow(trustLevel) {
+    return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
   },
 
   moreBadgesCount: function() {
