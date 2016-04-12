@@ -41,15 +41,18 @@ class BadgeGranter
         end
 
         if SiteSetting.enable_badges?
-          I18n.with_locale(@user.effective_locale) do
-            notification = @user.notifications.create(
-              notification_type: Notification.types[:granted_badge],
-              data: { badge_id: @badge.id,
-                      badge_name: @badge.display_name,
-                      badge_slug: @badge.slug,
-                      username: @user.username}.to_json
-            )
-            user_badge.update_attributes notification_id: notification.id
+
+          unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
+            I18n.with_locale(@user.effective_locale) do
+              notification = @user.notifications.create(
+                notification_type: Notification.types[:granted_badge],
+                data: { badge_id: @badge.id,
+                        badge_name: @badge.display_name,
+                        badge_slug: @badge.slug,
+                        username: @user.username}.to_json
+              )
+              user_badge.update_attributes notification_id: notification.id
+            end
           end
         end
       end
