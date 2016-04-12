@@ -199,3 +199,69 @@ test("tracks custom urls when opening in another window", function() {
   ok(!track(clickEvent));
   ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42'));
 });
+
+
+module("lib:click-track:custom_parameters", {
+  setup: function() {
+
+    // Separate tests from previous module
+    win = {focus: function() { } };
+    redirectTo = sandbox.stub(DiscourseURL, "redirectTo");
+    sandbox.stub(Discourse, "ajax");
+    windowOpen = sandbox.stub(window, "open").returns(win);
+    sandbox.stub(win, "focus");
+
+    fixture().html(
+      `<tr class="topic-list-item" data-topic-id="980">
+        <td class="main-link">
+          <a href="/t/slug/11/1" class="title">Topic title</a>
+          <span class="topic-post-badges"></span>
+          <a class="plugin-link" href="http://www.google.com">www.google.com</a>
+        </td>
+        <td class="category">
+          <a class="badge-wrapper bullet" href="/c/category_slug">
+            <span class="badge-category-bg"></span>
+            <span>Category</span>
+          </a>
+        </td>
+        <td class="posters">
+          <a href="/users/user_a" data-user-card="user_a"></a>
+          <a href="/users/user_b" data-user-card="user_b"></a>
+        </td>
+        <td class="num posts-map posts heatmap-" title="This topic has 3 replies">
+          <a href="" class="posts-map badge-posts heatmap-">3</a>
+        </td>
+        <td class="num views ">
+          <span class="number" title="this topic has been viewed 4 times">4</span>
+        </td>
+        <td class="num age activity" title="First post time">
+          <a href="/t/slug/11/1">
+            <span class="relative-date" data-time="1459150064293" data-format="tiny">23h</span>
+          </a>
+        </td>
+      </tr>`);
+  }
+});
+
+test("open urls without any tracking parameters when the closest element don't exist", function() {
+  var clickEvent = generateClickEventOn('a.plugin-link');
+  sandbox.stub(Discourse.User, "currentProp").withArgs('external_links_in_new_tab').returns(true);
+  ok(!track(clickEvent));
+  ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com', '_blank'));
+});
+
+
+test("redirect to custom urls without any tracking parameters when the closest element don't exist", function() {
+  var clickEvent = generateClickEventOn('a.plugin-link');
+  ok(!track(clickEvent));
+  ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com'));
+});
+
+
+test("accept custom topic_id and post_id when the closest element don't exist", function() {
+  var clickEvent = generateClickEventOn('a.plugin-link');
+  sandbox.stub(Discourse.User, "currentProp").withArgs('external_links_in_new_tab').returns(true);
+  ok(!track(clickEvent, {topicId: 2, postId: 3}));
+  ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=3&topic_id=2', '_blank'));
+});
+
