@@ -33,7 +33,7 @@
       {{/load-more}}
 
       {{#unless canLoadMore}}
-        {{#if user}}
+        {{#if canShowOthers}}
         <div class='clearfix'>
           <a class='btn' href='{{model.url}}'>{{i18n 'badges.others_count' count=model.grant_count}}</a>
         </div>
