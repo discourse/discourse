@@ -150,8 +150,9 @@ describe PostCreator do
       end
 
       it 'extracts links from the post' do
-        TopicLink.expects(:extract_from).with(instance_of(Post))
+        create_post(raw: "this is a link to the best site at https://google.com")
         creator.create
+        expect(TopicLink.count).to eq(1)
       end
 
       it 'queues up post processing job when saved' do

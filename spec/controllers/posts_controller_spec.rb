@@ -387,8 +387,12 @@ describe PostsController do
       end
 
       it "extracts links from the new body" do
-        TopicLink.expects(:extract_from).with(post)
-        xhr :put, :update, update_params
+        param = update_params
+        param[:post][:raw] =  'I just visited this https://google.com so many cool links'
+
+        xhr :put, :update, param
+        expect(response).to be_success
+        expect(TopicLink.count).to eq(1)
       end
 
       it "doesn't allow updating of deleted posts" do

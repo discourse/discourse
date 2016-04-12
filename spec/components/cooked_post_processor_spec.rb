@@ -478,6 +478,15 @@ describe CookedPostProcessor do
 
   end
 
+  context "extracts links" do
+      let(:post) { Fabricate(:post, raw: "sam has a blog at https://samsaffron.com") }
+      it "always re-extracts links on post process" do
+        TopicLink.destroy_all
+        CookedPostProcessor.new(post).post_process
+        expect(TopicLink.count).to eq(1)
+      end
+  end
+
   context "grant badges" do
     context "emoji inside a quote" do
       let(:post) { Fabricate(:post, raw: "time to eat some sweet [quote]:candy:[/quote] mmmm") }
