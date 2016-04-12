@@ -12,6 +12,7 @@ class Jobs::Onceoff < Jobs::Base
     if args[:force] || !OnceoffLog.where(job_name: job_name).exists?
       return if $redis.exists(self.class.name)
       DistributedMutex.synchronize(self.class.name) do
+        return if OnceoffLog.where(job_name: job_name).exists? && !args[:force]
         execute_onceoff(args)
         OnceoffLog.create(job_name: job_name)
       end
