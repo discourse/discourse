@@ -1281,6 +1281,8 @@ en:
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact_email. Set to 0 to disable these emails."
+    auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
+    auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
 
     default_email_digest_frequency: "How often users receive digest emails by default."
     default_include_tl0_in_digests: "Include posts from new users in digest emails by default. Users can change this in their preferences."
@@ -1391,6 +1393,12 @@ en:
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
     closed_enabled: "This topic is now closed. New replies are no longer allowed."
     closed_disabled: "This topic is now opened. New replies are allowed."
+    autoclosed_message_max_posts:
+      one: "This message was automatically closed after reaching the limit of 1 post per message"
+      other: "This message was automatically closed after reaching the limit of %{count} posts per message"
+    autoclosed_topic_max_posts:
+      one: "This topic was automatically closed after reaching the limit of 1 post per topic"
+      other: "This topic was automatically closed after reaching the limit of %{count} posts per topic"
     autoclosed_enabled_days:
       one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."

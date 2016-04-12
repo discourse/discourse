@@ -547,6 +547,32 @@ describe PostCreator do
     end
   end
 
+  context 'auto closing' do
+    it 'closes private messages that have more than N posts' do
+      SiteSetting.auto_close_messages_post_count = 2
+
+      admin = Fabricate(:admin)
+
+      post1 = create_post(archetype: Archetype.private_message,
+                          target_usernames: [admin.username])
+
+      _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
+
+      post1.topic.reload
+      expect(post1.topic.closed).to eq(true)
+    end
+
+    it 'closes topics that have more than N posts' do
+      SiteSetting.auto_close_topics_post_count = 2
+
+      post1 = create_post
+      _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
+
+      post1.topic.reload
+      expect(post1.topic.closed).to eq(true)
+    end
+  end
+
   context 'private message to group' do
     let(:target_user1) { Fabricate(:coding_horror) }
     let(:target_user2) { Fabricate(:moderator) }
