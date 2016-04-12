@@ -16,6 +16,7 @@ class Badge < ActiveRecord::Base
   FirstQuote = 15
   FirstMention = 40
   FirstEmoji = 41
+  FirstOnebox = 42
 
   ReadGuidelines = 16
   Reader = 17
