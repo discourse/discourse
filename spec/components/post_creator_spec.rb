@@ -447,7 +447,7 @@ describe PostCreator do
                                 raw: raw,
                                 cooking_options: { traditional_markdown_linebreaks: true })
 
-      Post.any_instance.expects(:cook).with(raw, has_key(:traditional_markdown_linebreaks)).twice.returns(raw)
+      Post.any_instance.expects(:cook).with(raw, has_key(:traditional_markdown_linebreaks)).returns(raw)
       creator.create
     end
   end
