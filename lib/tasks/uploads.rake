@@ -14,6 +14,12 @@ def gather_uploads_for_all_sites
   RailsMultisite::ConnectionManagement.each_connection { gather_uploads }
 end
 
+def file_exists?(path)
+  File.exists?(path) && File.size(path) > 0
+rescue
+  false
+end
+
 def gather_uploads
   public_directory = "#{Rails.root}/public"
   current_db = RailsMultisite::ConnectionManagement.current_db
@@ -30,12 +36,15 @@ def gather_uploads
       source = "#{public_directory}#{from}"
       destination = "#{public_directory}#{to}"
 
-      # create destination directory
-      `mkdir -p '#{File.dirname(destination)}'`
-      # copy the file
-      `cp --link '#{source}' '#{destination}'`
+      # create destination directory & copy file unless it already exists
+      unless file_exists?(destination)
+        `mkdir -p '#{File.dirname(destination)}'`
+        `cp --link '#{source}' '#{destination}'`
+      end
+
       # ensure file has been succesfuly copied over
-      raise unless File.exists?(destination) && File.size(destination) > 0
+      raise unless file_exists?(destination)
+
       # remap links in db
       DbHelper.remap(from, to)
     rescue
