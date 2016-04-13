@@ -199,7 +199,9 @@
 
 .top-section,
 .replies-section,
-.topics-section {
+.topics-section,
+.links-section,
+.likes-section {
   margin-bottom: 20px;
 }
 
@@ -235,7 +237,9 @@
 }
 
 .replies-section,
-.topics-section {
+.topics-section,
+.links-section,
+.likes-section {
   width: 50%;
 
   ul {
@@ -253,12 +257,17 @@
   }
 }
 
-.replies-section {
-  float: left;
+.links-section {
+  .domain {
+    font-size: 0.714em;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+  }
 }
 
-.topics-section {
-  float: right;
+.likes-section {
+  li {
+    height: 40px;
+  }
 }
 
 @media all

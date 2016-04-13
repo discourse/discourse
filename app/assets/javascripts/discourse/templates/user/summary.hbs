@@ -1,21 +1,22 @@
 <div class='top-section stats-section'>
   <h3 class='stats-title'>{{i18n "user.summary.stats"}}</h3>
   <ul>
+    <li>{{user-stat value=model.days_visited label="user.summary.days_visited"}}</li>
     <li>
       <span class='value'>{{model.time_read}}</span>
       <span class='label'>{{{i18n "user.summary.time_read"}}}</span>
     </li>
+    <li>{{user-stat value=model.posts_read_count label="user.summary.posts_read"}}</li>
+    <li>{{user-stat value=model.likes_given label="user.summary.likes_given"}}</li>
+    <li>{{user-stat value=model.bookmark_count label="user.summary.bookmark_count"}}</li>
     <li>{{user-stat value=model.topic_count label="user.summary.topic_count"}}</li>
     <li>{{user-stat value=model.post_count label="user.summary.post_count"}}</li>
     <li>{{user-stat value=model.likes_received label="user.summary.likes_received"}}</li>
-    <li>{{user-stat value=model.likes_given label="user.summary.likes_given"}}</li>
-    <li>{{user-stat value=model.days_visited label="user.summary.days_visited"}}</li>
-    <li>{{user-stat value=model.posts_read_count label="user.summary.posts_read"}}</li>
   </ul>
 </div>
 
 <div class='top-section'>
-  <div class='replies-section'>
+  <div class='replies-section pull-left'>
     <h3 class='stats-title'>{{i18n "user.summary.top_replies"}}</h3>
     {{#if model.replies.length}}
       <ul>
@@ -42,7 +43,7 @@
       <p>{{i18n "user.summary.no_replies"}}</p>
     {{/if}}
   </div>
-  <div class='topics-section'>
+  <div class='topics-section pull-right'>
     <h3 class='stats-title'>{{i18n "user.summary.top_topics"}}</h3>
     {{#if model.topics.length}}
       <ul>
@@ -67,6 +68,51 @@
       {{/if}}
     {{else}}
       <p>{{i18n "user.summary.no_topics"}}</p>
+    {{/if}}
+  </div>
+</div>
+
+<div class='top-section'>
+  <div class='links-section pull-left'>
+    <h3 class='stats-title'>{{i18n "user.summary.top_links"}}</h3>
+    {{#if model.links.length}}
+      <ul>
+        {{#each link in model.links}}
+          <li>
+            <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=link.clicks}}'>{{link.clicks}}</span>
+            <span class='domain'>{{unbound link.domain}}</span>
+            <br>
+            <a href="{{unbound link.url}}" target="_blank" title="{{unbound link.url}}">
+              {{#if link.title}}
+                {{link.title}}
+              {{else}}
+                {{shorten-url link.url}}
+              {{/if}}
+            </a>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>{{i18n "user.summary.no_links"}}</p>
+    {{/if}}
+  </div>
+  <div class='likes-section pull-right'>
+    <h3 class='stats-title'>{{i18n "user.summary.most_liked_by"}}</h3>
+    {{#if model.most_liked_by_users.length}}
+      <ul>
+        {{#each user in model.most_liked_by_users}}
+          <li>
+            <span>
+              {{#user-info user=user}}
+                {{fa-icon "heart"}}
+                <span class='likes'>{{user.likes}}</span>
+              {{/user-info}}
+            </span>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>{{i18n "user.summary.no_likes"}}</p>
     {{/if}}
   </div>
 </div>

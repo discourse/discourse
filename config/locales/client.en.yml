@@ -742,17 +742,20 @@ en:
           one: "post created"
           other: "posts created"
         likes_given:
-          one: "like given"
-          other: "likes given"
+          one: "<i class='fa fa-heart'></i> given"
+          other: "<i class='fa fa-heart'></i> given"
         likes_received:
-          one: "like received"
-          other: "likes received"
+          one: "<i class='fa fa-heart'></i> received"
+          other: "<i class='fa fa-heart'></i> received"
         days_visited:
           one: "day visited"
           other: "days visited"
         posts_read:
           one: "post read"
           other: "posts read"
+        bookmark_count:
+          one: "bookmark"
+          other: "bookmarks"
         top_replies: "Top Replies"
         no_replies: "No replies yet."
         more_replies: "More Replies"
@@ -762,6 +765,10 @@ en:
         top_badges: "Top Badges"
         no_badges: "No badges yet."
         more_badges: "More Badges"
+        top_links: "Top Links"
+        no_links: "No links yet."
+        most_liked_by: "Most Liked By"
+        no_likes: "No likes yet."
 
 
       associated_accounts: "Logins"
