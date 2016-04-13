@@ -49,8 +49,8 @@ class CookedPostProcessor
   def grant_badges
     return unless Guardian.new.can_see?(@post)
 
-    BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user) if has_emoji?
-    BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user) if @has_oneboxes
+    BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
+    BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
   end
 
   def keep_reverse_index_up_to_date
