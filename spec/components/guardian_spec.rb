@@ -621,6 +621,14 @@ describe Guardian do
     end
 
     describe 'a Topic' do
+      it 'does not allow moderators to create topics in readonly categories' do
+        category = Fabricate(:category)
+        category.set_permissions(:everyone => :read)
+        category.save
+
+        expect(Guardian.new(moderator).can_create?(Topic,category)).to be_falsey
+      end
+
       it 'should check for full permissions' do
         category = Fabricate(:category)
         category.set_permissions(:everyone => :create_post)
@@ -655,6 +663,7 @@ describe Guardian do
         category.save
 
         expect(Guardian.new(topic.user).can_create?(Post, topic)).to be_falsey
+        expect(Guardian.new(moderator).can_create?(Post, topic)).to be_falsey
       end
 
       it "is false when not logged in" do
@@ -1042,6 +1051,11 @@ describe Guardian do
           topic.category.save
 
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+
+          expect(Guardian.new(admin).can_edit?(topic)).to eq(true)
+
+          expect(Guardian.new(moderator).can_edit?(post)).to eq(false)
+          expect(Guardian.new(moderator).can_edit?(topic)).to eq(false)
         end
       end
 
