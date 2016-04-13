@@ -7,10 +7,9 @@ module Jobs
       UserAvatar.includes(:user)
                 .where(last_gravatar_download_attempt: nil)
                 .order("users.last_posted_at DESC")
-                .find_in_batches(batch_size: 5000) do |user_avatars|
-        user_avatars.each do |user_avatar|
-          user_avatar.user.refresh_avatar
-        end
+                .limit(5000)
+                .each do |u|
+        u.user.refresh_avatar
       end
     end
   end
