@@ -73,6 +73,7 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
+
     (!SpamRule::AutoBlock.block?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
@@ -86,8 +87,10 @@ module PostGuardian
       return false
     end
 
+    return true if is_admin?
+
     if is_staff? || @user.has_trust_level?(TrustLevel[4])
-      return true
+      return can_create_post?(post.topic)
     end
 
     if post.topic.archived? || post.user_deleted || post.deleted_at
