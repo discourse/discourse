@@ -390,8 +390,9 @@ module PrettyText
     doc.css(".lightbox-wrapper .meta").remove
   end
 
-  def self.format_for_email(html)
+  def self.format_for_email(html, post = nil)
     doc = Nokogiri::HTML.fragment(html)
+    DiscourseEvent.trigger(:reduce_cooked, doc, post)
     make_all_links_absolute(doc)
     strip_image_wrapping(doc)
     doc.to_html
