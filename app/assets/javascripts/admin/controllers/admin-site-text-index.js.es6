@@ -1,5 +1,7 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 
+let lastSearch;
+
 export default Ember.Controller.extend({
   _q: null,
   searching: false,
@@ -44,8 +46,12 @@ export default Ember.Controller.extend({
     },
 
     search() {
-      this.set('searching', true);
-      Ember.run.debounce(this, this._performSearch, 400);
+      const q = this.get('q');
+      if (q !== lastSearch) {
+        this.set('searching', true);
+        Ember.run.debounce(this, this._performSearch, 400);
+        lastSearch = q;
+      }
     }
   }
 });
