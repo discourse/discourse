@@ -23,7 +23,7 @@
       </td>
     </tr>
     <tr>
-      <td class='body'><%= format_for_email(use_excerpt ? post.excerpt :  post.cooked) %></td>
+      <td class='body'><%= format_for_email(post, use_excerpt) %></td>
     </tr>
   </tbody>
 </table>

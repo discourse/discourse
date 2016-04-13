@@ -31,6 +31,12 @@ class GroupPostSerializer < ApplicationSerializer
     object.topic
   end
 
+  def cooked
+    fragment = Nokogiri::HTML.fragment(object.cooked)
+    DiscourseEvent.trigger(:reduce_cooked, fragment, object)
+    fragment.to_html
+  end
+
   def category
     object.topic.category
   end

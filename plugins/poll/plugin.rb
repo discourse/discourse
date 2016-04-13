@@ -22,19 +22,6 @@ DEFAULT_POLL_NAME ||= "poll".freeze
 
 after_initialize do
 
-  # turn polls into a link in emails
-  Email::Styles.register_plugin_style do |fragment, opts|
-    post = Post.find_by(id: opts[:post_id]) rescue nil
-    if post.nil? || post.trashed?
-      fragment.css(".poll").each(&:remove)
-    else
-      post_url = "#{Discourse.base_url}#{post.url}"
-      fragment.css(".poll").each do |poll|
-        poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
-      end
-    end
-  end
-
   module ::DiscoursePoll
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -281,7 +268,7 @@ after_initialize do
             self.errors.add(:base, I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")) :
             self.errors.add(:base, I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: poll["name"]))
           return
-         end
+        end
       end
 
       # store the valid poll
@@ -365,6 +352,17 @@ after_initialize do
 
   TopicView.add_post_custom_fields_whitelister do |user|
     user ? [POLLS_CUSTOM_FIELD, VOTES_CUSTOM_FIELD] : [POLLS_CUSTOM_FIELD]
+  end
+
+  on(:reduce_cooked) do |fragment, post|
+    if post.nil? || post.trashed?
+      fragment.css(".poll, [data-poll-name]").each(&:remove)
+    else
+      post_url = "#{Discourse.base_url}#{post.url}"
+      fragment.css(".poll, [data-poll-name]").each do |poll|
+        poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+      end
+    end
   end
 
   # tells the front-end we have a poll for that post

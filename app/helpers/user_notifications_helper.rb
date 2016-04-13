@@ -51,7 +51,7 @@ module UserNotificationsHelper
   def email_excerpt(html, posts_count)
     # only include 1st paragraph when more than 1 posts
     html = first_paragraph_from(html).to_s if posts_count > 1
-    raw format_for_email(html)
+    PrettyText.format_for_email(html).html_safe
   end
 
   def normalize_name(name)
@@ -65,8 +65,9 @@ module UserNotificationsHelper
       normalize_name(post.user.name) != normalize_name(post.user.username)
   end
 
-  def format_for_email(html)
-    PrettyText.format_for_email(html).html_safe
+  def format_for_email(post, use_excerpt)
+    html = use_excerpt ? post.excerpt : post.cooked
+    PrettyText.format_for_email(html, post).html_safe
   end
 
 end
