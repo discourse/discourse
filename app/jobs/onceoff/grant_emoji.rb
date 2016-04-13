@@ -1,8 +1,6 @@
 module Jobs
 
   class GrantEmoji < Jobs::Onceoff
-    sidekiq_options queue: 'low'
-
     def execute_onceoff(args)
       to_award = {}
 
