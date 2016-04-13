@@ -26,6 +26,12 @@ import:
     original: oldsite.example.com/forums    # without http(s)://
     new: http://discourse.example.com       # with http:// or https://
 
+  # Enable this, if you want to redirect old forum links to the the new locations.
+  permalinks:
+    categories: true  # redirects   /viewforum.php?f=1            to  /c/category-name
+    topics: true      # redirects   /viewtopic.php?f=6&t=43       to  /t/topic-name/81
+    posts: false      # redirects   /viewtopic.php?p=2455#p2455   to  /t/topic-name/81/4
+
   avatars:
     uploaded: true  # import uploaded avatars
     gallery: true   # import the predefined avatars phpBB offers
