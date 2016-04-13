@@ -71,7 +71,7 @@ GEM
     daemons (1.2.3)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
-    discourse-qunit-rails (0.0.8)
+    discourse-qunit-rails (0.0.9)
       railties
     docile (1.1.5)
     domain_name (0.5.25)
