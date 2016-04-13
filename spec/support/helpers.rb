@@ -79,4 +79,8 @@ module Helpers
     result
   end
 
+  def email(email_name)
+    fixture_file("emails/#{email_name}.eml")
+  end
+
 end

@@ -136,10 +136,15 @@ describe Email::MessageBuilder do
 
   context "header args" do
 
-    let(:message_with_header_args) { Email::MessageBuilder.new(to_address,
-                                                               body: 'hello world',
-                                                               topic_id: 1234,
-                                                               post_id: 4567) }
+    let(:message_with_header_args) do
+      Email::MessageBuilder.new(
+        to_address,
+        body: 'hello world',
+        topic_id: 1234,
+        post_id: 4567,
+        mark_as_reply_to_auto_generated: true
+      )
+    end
 
     it "passes through a post_id" do
       expect(message_with_header_args.header_args['X-Discourse-Post-Id']).to eq('4567')
@@ -147,6 +152,12 @@ describe Email::MessageBuilder do
 
     it "passes through a topic_id" do
       expect(message_with_header_args.header_args['X-Discourse-Topic-Id']).to eq('1234')
+    end
+
+    it "marks the email as replying to an auto generated email" do
+      expect(message_with_header_args.header_args[
+        Email::MessageBuilder::REPLY_TO_AUTO_GENERATED_HEADER_KEY
+      ]).to eq(Email::MessageBuilder::REPLY_TO_AUTO_GENERATED_HEADER_VALUE)
     end
 
   end
