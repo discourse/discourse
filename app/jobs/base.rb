@@ -244,21 +244,25 @@ module Jobs
   def self.scheduled_for(job_name, params={})
     params = params.with_indifferent_access
     job_class = "Jobs::#{job_name.to_s.camelcase}"
-    Sidekiq::ScheduledSet.new.select do |scheduled_job|
-      if scheduled_job.klass.to_s == job_class
-        matched = true
-        job_params = scheduled_job.item["args"][0].with_indifferent_access
-        params.each do |key, value|
-          if job_params[key] != value
-            matched = false
-            break
+
+    scheduled_jobs = []
+    Sidekiq::Queue.all.each do |queue|
+      queue.each do |scheduled_job|
+        if scheduled_job.klass.to_s == job_class
+          matched = true
+          job_params = scheduled_job.item["args"][0].with_indifferent_access
+          params.each do |key, value|
+            if job_params[key] != value
+              matched = false
+              break
+            end
           end
+          scheduled_jobs << scheduled_job if matched
         end
-        matched
-      else
-        false
       end
     end
+
+    scheduled_jobs
   end
 end
 
