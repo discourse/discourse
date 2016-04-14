@@ -8,7 +8,7 @@ export default Ember.Component.extend({
         query: function(opts) {
                 opts.callback({
                   results: this.get("available").filter(function(o) {
-                      return -1 !== o.name.toLowerCase().indexOf(e.term.toLowerCase());
+                      return -1 !== o.name.toLowerCase().indexOf(opts.term.toLowerCase());
                     }).map(this._format)
                 });
               }.bind(this)
