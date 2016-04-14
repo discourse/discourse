@@ -4,8 +4,12 @@ export default class RawHtml {
   }
 
   init() {
-    return $(this.html)[0];
+    const $html = $(this.html);
+    this.decorate($html);
+    return $html[0];
   }
+
+  decorate() { }
 
   update(prev) {
     if (prev.html === this.html) { return; }

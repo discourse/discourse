@@ -1,6 +1,6 @@
 import afterTransition from 'discourse/lib/after-transition';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
-import { headerHeight } from 'discourse/views/header';
+import { headerHeight } from 'discourse/components/site-header';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import Composer from 'discourse/models/composer';
 

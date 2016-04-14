@@ -37,6 +37,25 @@ export default MountWidget.extend({
                               'searchService');
   }).volatile(),
 
+  beforePatch() {
+    const $body = $(document);
+    this.prevHeight = $body.height();
+    this.prevScrollTop = $body.scrollTop();
+  },
+
+  afterPatch() {
+    const $body = $(document);
+    const height = $body.height();
+    const scrollTop = $body.scrollTop();
+
+    // This hack is for when swapping out many cloaked views at once
+    // when using keyboard navigation. It could suddenly move the
+    // scroll
+    if (this.prevHeight === height && scrollTop !== this.prevScrollTop) {
+      $body.scrollTop(this.prevScrollTop);
+    }
+  },
+
   scrolled() {
     if (this.isDestroyed || this.isDestroying) { return; }
     if (isWorkaroundActive()) { return; }

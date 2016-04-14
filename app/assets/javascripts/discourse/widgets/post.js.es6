@@ -51,6 +51,7 @@ createWidget('select-post', {
 
 createWidget('reply-to-tab', {
   tagName: 'a.reply-to-tab',
+  buildKey: attrs => `reply-to-tab-${attrs.id}`,
 
   defaultState() {
     return { loading: false };
@@ -61,7 +62,7 @@ createWidget('reply-to-tab', {
 
     return [iconNode('mail-forward'),
             ' ',
-            avatarImg.call(this,'small',{
+            avatarImg('small', {
               template: attrs.replyToAvatarTemplate,
               username: attrs.replyToUsername
             }),

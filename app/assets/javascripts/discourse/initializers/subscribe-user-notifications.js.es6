@@ -10,7 +10,8 @@ export default {
           siteSettings = container.lookup('site-settings:main'),
           bus = container.lookup('message-bus:main'),
           keyValueStore = container.lookup('key-value-store:main'),
-          store = container.lookup('store:main');
+          store = container.lookup('store:main'),
+          appEvents = container.lookup('app-events:main');
 
     // clear old cached notifications, we used to store in local storage
     // TODO 2017 delete this line
@@ -30,7 +31,7 @@ export default {
         });
       }
 
-      bus.subscribe("/notification/" + user.get('id'), function(data) {
+      bus.subscribe(`/notification/${user.get('id')}`, function(data) {
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');
 
@@ -38,7 +39,7 @@ export default {
         user.set('unread_private_messages', data.unread_private_messages);
 
         if (oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
-          user.set('lastNotificationChange', new Date());
+          appEvents.trigger('notifications:changed');
         }
 
         const stale = store.findStale('notification', {}, {cacheKey: 'recent-notifications'});

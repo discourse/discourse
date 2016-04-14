@@ -9,7 +9,7 @@ import Composer from 'discourse/models/composer';
 import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
-  needs: ['header', 'modal', 'composer', 'quote-button', 'topic-progress', 'application'],
+  needs: ['modal', 'composer', 'quote-button', 'topic-progress', 'application'],
   multiSelect: false,
   allPostsSelected: false,
   editingTopic: false,
@@ -472,11 +472,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.get('content').toggleStatus('archived');
     },
 
-    // Toggle the star on the topic
-    toggleStar() {
-      this.get('content').toggleStar();
-    },
-
     clearPin() {
       this.get('content').clearPin();
     },
@@ -624,10 +619,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     return false;
   },
-
-  showStarButton: function() {
-    return Discourse.User.current() && !this.get('model.isPrivateMessage');
-  }.property('model.isPrivateMessage'),
 
   loadingHTML: function() {
     return spinnerHTML;

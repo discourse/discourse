@@ -386,7 +386,7 @@ export default Ember.Controller.extend({
     let message = this.get('similarTopicsMessage');
     if (!message) {
       message = Discourse.ComposerMessage.create({
-        templateName: 'composer/similar_topics',
+        templateName: 'composer/similar-topics',
         extraClass: 'similar-topics'
       });
       this.set('similarTopicsMessage', message);

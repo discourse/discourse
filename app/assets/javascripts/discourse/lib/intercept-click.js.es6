@@ -18,6 +18,7 @@ export default function interceptClick(e) {
       $currentTarget.data('auto-route') ||
       $currentTarget.data('share-url') ||
       $currentTarget.data('user-card') ||
+      $currentTarget.hasClass('widget-link') ||
       $currentTarget.hasClass('mention') ||
       (!$currentTarget.hasClass('d-link') && $currentTarget.hasClass('ember-view')) ||
       $currentTarget.hasClass('lightbox') ||

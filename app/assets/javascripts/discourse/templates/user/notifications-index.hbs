@@ -14,14 +14,7 @@
   </div>
 {{/if}}
 
-{{#each n in model}}
-  <div {{bind-attr class=":item :notification n.read::unread"}}>
-    {{notification-item notification=n}}
-    <span class="time">
-      {{format-date n.created_at leaveAgo="true"}}
-    </span>
-  </div>
-{{/each}}
+{{user-notifications-large notifications=model}}
 
 {{#conditional-loading-spinner condition=loading}}
   {{#unless model.canLoadMore}}
