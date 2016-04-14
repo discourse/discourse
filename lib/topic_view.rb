@@ -170,7 +170,12 @@ class TopicView
   end
 
   def image_url
-    @topic.image_url || SiteSetting.default_opengraph_image_url
+    if @post_number.present? && @post_number.to_i != 1 && @desired_post.present?
+      # show poster avatar
+      @desired_post.user.avatar_template_url.gsub("{size}", "100") if @desired_post.user
+    else
+      @topic.image_url || SiteSetting.default_opengraph_image_url
+    end
   end
 
   def filter_posts(opts = {})
