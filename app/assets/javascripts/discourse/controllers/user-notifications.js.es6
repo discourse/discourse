@@ -10,13 +10,13 @@ export default Ember.ArrayController.extend({
   currentPath: Em.computed.alias('controllers.application.currentPath'),
 
   actions: {
-    resetNew: function() {
+    resetNew() {
       Discourse.ajax('/notifications/mark-read', { method: 'PUT' }).then(() => {
         this.setEach('read', true);
       });
     },
 
-    loadMore: function() {
+    loadMore() {
       this.get('model').loadMore();
     }
   }

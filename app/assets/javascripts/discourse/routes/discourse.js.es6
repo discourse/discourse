@@ -75,7 +75,6 @@ const DiscourseRoute = Ember.Route.extend({
 });
 
 export function cleanDOM() {
-
   if (window.MiniProfiler) {
     window.MiniProfiler.pageTransition();
   }

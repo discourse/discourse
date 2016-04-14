@@ -2,7 +2,7 @@
 
 import sessionFixtures from 'fixtures/session-fixtures';
 import siteFixtures from 'fixtures/site-fixtures';
-import HeaderView from 'discourse/views/header';
+import HeaderComponent from 'discourse/components/site-header';
 
 function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
@@ -41,7 +41,7 @@ function acceptance(name, options) {
       Discourse.Utilities.avatarImg = () => "";
 
       // For now don't do scrolling stuff in Test Mode
-      HeaderView.reopen({examineDockHeader: Ember.K});
+      HeaderComponent.reopen({examineDockHeader: Ember.K});
 
       var siteJson = siteFixtures['site.json'].site;
       if (options) {

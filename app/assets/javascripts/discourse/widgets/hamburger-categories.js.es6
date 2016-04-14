@@ -5,7 +5,7 @@ createWidget('hamburger-category', {
   tagName: 'li.category-link',
 
   html(c) {
-    const results = [ this.attach('category_link', { category: c, allowUncategorized: true }) ];
+    const results = [ this.attach('category-link', { category: c, allowUncategorized: true }) ];
 
     const unreadTotal = parseInt(c.get('unreadTopics'), 10) + parseInt(c.get('newTopics'), 10);
     if (unreadTotal) {
