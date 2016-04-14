@@ -11,7 +11,7 @@ export default Discourse.Route.extend({
 
   model: function(params) {
     const Report = require('admin/models/report').default;
-    return Report.find(params.type, params['start-date'], params['end-date'], params['category-id'], params['group-id'])
+    return Report.find(params.type, params['start-date'], params['end-date'], params['category-id'], params['group-id']);
   },
 
   setupController: function(controller, model) {
