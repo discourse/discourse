@@ -2,7 +2,6 @@ import loadScript from 'discourse/lib/load-script';
 
 export default Ember.Component.extend({
   tagName: 'canvas',
-
   refreshChart(){
     const ctx = this.$()[0].getContext("2d");
     const model = this.get("model");
@@ -34,10 +33,10 @@ export default Ember.Component.extend({
       },
     };
 
-    this._chart = new Chart(ctx, config);
+    this._chart = new window.Chart(ctx, config);
   },
 
   didInsertElement(){
     loadScript("/javascripts/Chart.min.js").then(() => this.refreshChart.apply(this));
   }
-})
+});
