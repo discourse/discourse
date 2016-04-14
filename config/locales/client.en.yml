@@ -1986,7 +1986,7 @@ en:
           30_days_ago: "30 Days Ago"
           all: "All"
           view_table: "table"
-          view_chart: "bar chart"
+          view_graph: "graph"
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"
