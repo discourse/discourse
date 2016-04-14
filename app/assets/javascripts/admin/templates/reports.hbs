@@ -18,14 +18,17 @@
     <a href {{action "viewAsTable"}}>{{i18n 'admin.dashboard.reports.view_table'}}</a>
   {{/if}}
   |
-  {{#if viewingBarChart}}
-    {{i18n 'admin.dashboard.reports.view_chart'}}
+  {{#if viewingGraph}}
+    {{i18n 'admin.dashboard.reports.view_graph'}}
   {{else}}
-    <a href {{action "viewAsBarChart"}}>{{i18n 'admin.dashboard.reports.view_chart'}}</a>
+    <a href {{action "viewAsGraph"}}>{{i18n 'admin.dashboard.reports.view_graph'}}</a>
   {{/if}}
 </div>
 
 {{#conditional-loading-spinner condition=refreshing}}
+  {{#if viewingGraph}}
+    {{admin-graph model=model}}
+  {{else}}
   <table class='table report'>
     <tr>
       <th>{{model.xaxis}}</th>
@@ -36,16 +39,10 @@
       <tr>
         <td>{{row.x}}</td>
         <td>
-          {{#if viewingTable}}
-            {{row.y}}
-          {{/if}}
-          {{#if viewingBarChart}}
-            <div class='bar-container'>
-              <div class='bar' style="width: {{unbound row.percentage}}%">{{row.y}}</div>
-            </div>
-          {{/if}}
+          {{row.y}}
         </td>
       </tr>
     {{/each}}
   </table>
+  {{/if}}
 {{/conditional-loading-spinner}}
