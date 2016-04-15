@@ -8,6 +8,32 @@ describe EmailLog do
 
   let(:user) { Fabricate(:user) }
 
+  context 'unique email per post' do
+    it 'only allows through one email per post' do
+      post = Fabricate(:post)
+      user = post.user
+
+      # skipped emails do not matter
+      user.email_logs.create(email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id, skipped: true)
+
+
+      ran = EmailLog.unique_email_per_post(post, user) do
+        true
+      end
+
+      expect(ran).to eq(true)
+
+      user.email_logs.create(email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id)
+
+      ran = EmailLog.unique_email_per_post(post, user) do
+        true
+      end
+
+      expect(ran).to be_falsy
+
+    end
+  end
+
   context 'after_create' do
     context 'with user' do
       it 'updates the last_emailed_at value for the user' do
