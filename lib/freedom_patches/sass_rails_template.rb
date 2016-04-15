@@ -12,4 +12,5 @@ module Discourse
   end
 end
 
-Sprockets::Base.prepend Discourse::Sprockets::Resolve
+# Call `prepend` directly once we drop support for Ruby 2.0.0.
+Sprockets::Base.send(:prepend, Discourse::Sprockets::Resolve)
