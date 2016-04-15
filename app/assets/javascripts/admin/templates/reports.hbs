@@ -1,8 +1,8 @@
 <h3>{{model.title}}</h3>
 
 <div class="admin-reports-filter">
-  {{i18n 'admin.dashboard.reports.start_date'}} {{input type="date" value=startDate}}
-  {{i18n 'admin.dashboard.reports.end_date'}} {{input type="date" value=endDate}}
+  {{i18n 'admin.dashboard.reports.start_date'}} {{date-picker-past value=startDate}}
+  {{i18n 'admin.dashboard.reports.end_date'}} {{date-picker-past value=endDate}}
   {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
   {{#if showGroupOptions}}
     {{combo-box valueAttribute="value" content=groupOptions value=groupId}}
