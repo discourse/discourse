@@ -11,11 +11,9 @@ if Rails.version >= "4.2.0"
       end
 
       def lease
-        synchronize do
-          unless in_use?
-            @last_use = Time.now
-            super
-          end
+        unless in_use?
+          @last_use = Time.now
+          super
         end
       end
     end
