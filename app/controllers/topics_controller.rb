@@ -477,7 +477,7 @@ class TopicsController < ApplicationController
       (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]},
       {mobile: view_context.mobile_view?}
     )
-    render nothing: true
+    head :ok
   end
 
   def feed
