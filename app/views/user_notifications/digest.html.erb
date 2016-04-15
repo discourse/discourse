@@ -5,7 +5,7 @@
     <%- if logo_url.blank? %>
       <%= SiteSetting.title %>
     <%- else %>
-      <img src="<%= logo_url %>" style="max-height: 35px; min-height: 35px; height: 35px;" class='site-logo'>
+      <img src="<%= logo_url %>" style="max-height: 35px; min-height: 35px; height: 35px;" class='site-logo' alt="<%= SiteSetting.title %>">
     <%- end %>
     </a>
   </td>
