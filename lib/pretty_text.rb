@@ -333,7 +333,7 @@ module PrettyText
 
     # extract all links from the post
     doc.css("a").each { |l|
-      unless l["href"].blank?
+      unless l["href"].blank? || "#".freeze == l["href"][0]
         links << DetectedLink.new(l["href"])
       end
     }
