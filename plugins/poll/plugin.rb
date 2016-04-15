@@ -61,7 +61,7 @@ after_initialize do
 
           raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty?
 
-          poll["voters"] = 0
+          poll["voters"] = poll["anonymous_voters"] || 0
           all_options = Hash.new(0)
 
           post.custom_fields[VOTES_CUSTOM_FIELD] ||= {}
@@ -74,7 +74,10 @@ after_initialize do
             poll["voters"] += 1 if (available_options & votes.to_set).size > 0
           end
 
-          poll["options"].each { |o| o["votes"] = all_options[o["id"]] }
+          poll["options"].each do |option|
+            anonymous_votes = option["anonymous_votes"] || 0
+            option["votes"] = all_options[option["id"]] + anonymous_votes
+          end
 
           post.custom_fields[POLLS_CUSTOM_FIELD] = polls
           post.save_custom_fields(true)
@@ -327,8 +330,14 @@ after_initialize do
             end
 
             polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
+            polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"] if previous_polls[poll_name].has_key?("anonymous_voters")
+
             for o in 0...polls[poll_name]["options"].size
-              polls[poll_name]["options"][o]["votes"] = previous_polls[poll_name]["options"][o]["votes"]
+              current_option = polls[poll_name]["options"][o]
+              previous_option = previous_polls[poll_name]["options"][o]
+
+              current_option["votes"] = previous_option["votes"]
+              current_option["anonymous_votes"] = previous_option["anonymous_votes"] if previous_option.has_key?("anonymous_votes")
             end
           end
 
