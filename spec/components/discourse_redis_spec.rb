@@ -96,6 +96,14 @@ describe DiscourseRedis do
           fallback_handler.master = true
         end
       end
+
+      it "should restrict the number of checks" do
+        expect { fallback_handler.verify_master }.to change { Thread.list.count }.by(1)
+        expect(fallback_handler.master).to eq(true)
+
+        fallback_handler.master = false
+        expect { fallback_handler.verify_master }.to_not change { Thread.list.count }
+      end
     end
   end
 end

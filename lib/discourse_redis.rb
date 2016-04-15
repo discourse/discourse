@@ -18,7 +18,7 @@ class DiscourseRedis
 
     def verify_master
       synchronize do
-        return if @running && !recently_checked?
+        return if @running || recently_checked?
         @running = true
       end
 
@@ -58,7 +58,7 @@ class DiscourseRedis
 
     def recently_checked?
       if @last_checked
-        Time.zone.now > (@last_checked + 5.seconds)
+        Time.zone.now <= (@last_checked + 5.seconds)
       else
         false
       end
