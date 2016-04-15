@@ -118,9 +118,6 @@ module Discourse
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.2.4'
 
-    # We need to be able to spin threads
-    config.active_record.thread_safe!
-
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
 
