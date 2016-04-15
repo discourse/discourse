@@ -188,7 +188,6 @@ en:
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
 
   just_posted_that: "is too similar to what you recently posted"
-  has_already_been_used: "has already been used"
   invalid_characters: "contains invalid characters"
   is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "next page →"
@@ -311,6 +310,8 @@ en:
     attributes:
       category:
         name: "Category Name"
+      topic:
+        title: 'Title'
       post:
         raw: "Body"
       user_profile:
