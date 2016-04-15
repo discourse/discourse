@@ -8,9 +8,9 @@ export default {
   initialize(container) {
     const caps = container.lookup('capabilities:main');
     const isSecure = document.location.protocol === 'https:';
-    
+
     if (isSecure && caps.isAndroid && 'serviceWorker' in navigator) {
         navigator.serviceWorker.register(Discourse.BaseUri + '/service-worker.js', {scope: './'});
     }
   }
-}
+};
