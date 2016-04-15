@@ -11,6 +11,10 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
+  gem 'rack', '2.0.0.alpha'
+
+  # for sidekiq web
+  gem 'sinatra', require: false, github: 'sinatra/sinatra'
 else
   # Rails 5 is going to ship with Action Cable, we have no use for it as
   # we already ship MessageBus, AC introduces dependencies on Event Machine,
@@ -32,6 +36,10 @@ else
 
   gem 'rails-observers'
   gem 'seed-fu', '~> 2.3.5'
+
+  # for sidekiq web
+  gem 'sinatra', require: false
+  gem 'thin', require: false
 end
 
 gem 'mail'
@@ -49,6 +57,7 @@ gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
 gem 'ember-source', '1.12.2'
+gem 'ember-data-source', '1.0.0.beta.16.1'
 gem 'barber'
 gem 'babel-transpiler'
 
@@ -103,11 +112,7 @@ gem 'sass-rails'
 gem 'sidekiq'
 gem 'sidekiq-statistic'
 
-# for sidekiq web
-gem 'sinatra', require: false
-
 gem 'therubyracer'
-gem 'thin', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security
 
@@ -131,7 +136,7 @@ group :test, :development do
   gem 'certified', require: false
   # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', '2.9.8', require: false
-  gem 'discourse-qunit-rails', require: 'qunit-rails'
+  # gem 'discourse-qunit-rails', require: 'qunit-rails'
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
