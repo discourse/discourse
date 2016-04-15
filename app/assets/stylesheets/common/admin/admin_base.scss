@@ -1783,6 +1783,11 @@ table#user-badges {
   .time {
     width: 50px;
   }
+  .reply-key {
+    display: block;
+    font-size: 12px;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+  }
   .username div {
     max-width: 180px;
     white-space: nowrap;
