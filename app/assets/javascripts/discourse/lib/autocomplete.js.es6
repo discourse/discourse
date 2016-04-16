@@ -322,7 +322,8 @@ export default function(options) {
     }
   };
 
-  $(this).on('keyup.autocomplete', function() {
+  $(this).on('keyup.autocomplete', function(e) {
+    if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
 
     var caretPosition = Discourse.Utilities.caretPosition(me[0]);
 
