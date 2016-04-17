@@ -26,7 +26,7 @@
               {{format-date reply.createdAt format="tiny" noTitle="true"}}
               {{#if reply.like_count}}
                 &middot;
-                <span class='like-count'>{{number reply.like_count}}&nbsp;{{fa-icon 'heart'}}</span>
+                {{fa-icon 'heart'}}&nbsp;<span class='like-count'>{{number reply.like_count}}</span>
               {{/if}}
             </span>
             <br>
@@ -53,7 +53,7 @@
               {{format-date topic.createdAt format="tiny" noTitle="true"}}
               {{#if topic.like_count}}
                 &middot;
-                <span class='like-count'>{{number topic.like_count}}&nbsp;{{fa-icon 'heart'}}</span>
+                {{fa-icon 'heart'}}&nbsp;<span class='like-count'>{{number topic.like_count}}</span>
               {{/if}}
             </span>
             <br>
