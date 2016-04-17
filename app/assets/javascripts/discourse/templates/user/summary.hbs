@@ -16,7 +16,7 @@
 </div>
 
 <div class='top-section'>
-  <div class='replies-section pull-left'>
+  <div class='top-sub-section replies-section pull-left'>
     <h3 class='stats-title'>{{i18n "user.summary.top_replies"}}</h3>
     {{#if model.replies.length}}
       <ul>
@@ -43,7 +43,7 @@
       <p>{{i18n "user.summary.no_replies"}}</p>
     {{/if}}
   </div>
-  <div class='topics-section pull-right'>
+  <div class='top-sub-section topics-section pull-right'>
     <h3 class='stats-title'>{{i18n "user.summary.top_topics"}}</h3>
     {{#if model.topics.length}}
       <ul>
@@ -73,7 +73,7 @@
 </div>
 
 <div class='top-section'>
-  <div class='links-section pull-left'>
+  <div class='top-sub-section links-section pull-left'>
     <h3 class='stats-title'>{{i18n "user.summary.top_links"}}</h3>
     {{#if model.links.length}}
       <ul>
@@ -96,7 +96,7 @@
       <p>{{i18n "user.summary.no_links"}}</p>
     {{/if}}
   </div>
-  <div class='likes-section pull-right'>
+  <div class='top-sub-section likes-section pull-right'>
     <h3 class='stats-title'>{{i18n "user.summary.most_liked_by"}}</h3>
     {{#if model.most_liked_by_users.length}}
       <ul>
