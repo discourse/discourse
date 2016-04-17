@@ -198,10 +198,7 @@
 }
 
 .top-section,
-.replies-section,
-.topics-section,
-.links-section,
-.likes-section {
+.top-sub-section {
   margin-bottom: 20px;
 }
 
@@ -236,10 +233,7 @@
   }
 }
 
-.replies-section,
-.topics-section,
-.links-section,
-.likes-section {
+.top-sub-section {
   width: 50%;
 
   ul {
@@ -272,8 +266,7 @@
 
 @media all
 and (max-width : 600px) {
-  .replies-section,
-  .topics-section {
+  .top-sub-section {
     float: none;
     width: 100%;
   }
