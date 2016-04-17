@@ -145,7 +145,7 @@ class TopicTrackingState
                 always: User::NewTopicDuration::ALWAYS,
                 default_duration: SiteSetting.default_other_new_topic_duration_minutes,
                 min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
-              ).where_values[0]
+              ).where_clause.send(:predicates)[0]
   end
 
   def self.report(user_id, topic_id = nil)
@@ -176,14 +176,14 @@ class TopicTrackingState
       if opts && opts[:skip_unread]
         "1=0"
       else
-        TopicQuery.unread_filter(Topic).where_values.join(" AND ")
+        TopicQuery.unread_filter(Topic).where_clause.send(:predicates).join(" AND ")
       end
 
     new =
       if opts && opts[:skip_new]
         "1=0"
       else
-        TopicQuery.new_filter(Topic, "xxx").where_values.join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
+        TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
       end
 
     select = (opts && opts[:select]) || "

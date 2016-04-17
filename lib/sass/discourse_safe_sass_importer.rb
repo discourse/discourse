@@ -20,7 +20,7 @@ class DiscourseSafeSassImporter < DiscourseSassImporter
       special_imports[name].each do |css_file|
         contents << File.read(css_file)
       end
-      Sass::Engine.new(contents, options.merge(
+      ::Sass::Engine.new(contents, options.merge(
         filename: "#{name}.scss",
         importer: self,
         syntax: :scss

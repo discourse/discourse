@@ -1,7 +1,7 @@
 # we want MesageBus in the absolute front
 # this is important cause the vast majority of web requests go to it
 # this allows us to avoid full middleware crawls each time
-Rails.configuration.middleware.delete MessageBus::Rack::Middleware
+Rails.configuration.middleware.send(:operations).delete_if { |operation| operation[1].include?(MessageBus::Rack::Middleware) }
 Rails.configuration.middleware.unshift MessageBus::Rack::Middleware
 
 # no reason to track this in development, that is 300+ redis calls saved per

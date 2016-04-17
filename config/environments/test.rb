@@ -8,7 +8,7 @@ Discourse::Application.configure do
   config.cache_classes = true
 
   # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_files = true
+  config.public_file_server.enabled = true
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
