@@ -52,7 +52,12 @@ class UserSummary
   def most_liked_by_users
     likers_ids = []
     counts = []
-    UserAction.where(user: @user)
+    UserAction.joins("JOIN posts  ON posts.id  = user_actions.target_post_id")
+              .joins("JOIN topics ON topics.id = posts.topic_id")
+              .where("posts.deleted_at  IS NULL")
+              .where("topics.deleted_at IS NULL")
+              .where("topics.archetype <> '#{Archetype.private_message}'")
+              .where(user: @user)
               .where(action_type: UserAction::WAS_LIKED)
               .group(:acting_user_id)
               .order("COUNT(*) DESC")
