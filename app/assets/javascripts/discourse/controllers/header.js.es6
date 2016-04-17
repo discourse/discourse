@@ -18,6 +18,21 @@ const HeaderController = Ember.Controller.extend({
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
   }.property('topic.isPrivateMessage'),
 
+  userMenuVisibleChanged: Ember.observer('userMenuVisible', function() {
+    if (this.get('userMenuVisible')) {
+      window.setTimeout(function() {
+        $('.user-menu a:first').focus();
+      }, 100);
+    }
+  }),
+
+  hamburgerVisibleChanged: Ember.observer('hamburgerVisible', function() {
+    if (this.get('hamburgerVisible')) {
+      window.setTimeout(function() {
+        $('.hamburger-panel a:first').focus();
+      }, 100);
+    }
+  }),
 
   actions: {
     toggleSearch() {
