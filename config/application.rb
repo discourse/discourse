@@ -144,6 +144,7 @@ module Discourse
 
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
+    config.handlebars.raw_template_namespace = "Ember.TEMPLATES"
 
     require 'discourse_redis'
     require 'logster/redis_store'
