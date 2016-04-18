@@ -78,6 +78,10 @@ describe DiscourseRedis do
   end
 
   describe DiscourseRedis::FallbackHandler do
+    after do
+      fallback_handler.reset!
+    end
+
     describe '#initiate_fallback_to_master' do
       it 'should fallback to the master server once it is up' do
         begin
