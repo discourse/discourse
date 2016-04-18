@@ -26,6 +26,10 @@ required:
     client: true
     default: ''
     type: email
+  bounce_email:
+    default: ''
+    type: email
+    shadowed_by_global: true
   contact_url:
     client: true
     default: ''

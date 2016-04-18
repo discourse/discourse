@@ -116,6 +116,18 @@ module Email
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
 
+      unless SiteSetting.bounce_email.blank?
+        email_log.bounce_key = SecureRandom.hex
+        address,domain = SiteSetting.bounce_email.split('@')
+        address << (address =~ /[+]/ ? "-" : '+')
+        address << email_log.bounce_key
+
+        # WARNING: RFC claims you can not set the Return Path header, this is 100% correct
+        # however Rails has special handling for this header and ends up using this value
+        # as the Envelope From address so stuff works as expected
+        @message.header[:return_path] = "#{address}@#{domain}"
+      end
+
       email_log.post_id = post_id if post_id.present?
       email_log.reply_key = reply_key if reply_key.present?
 
