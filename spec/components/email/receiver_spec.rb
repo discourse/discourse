@@ -17,7 +17,12 @@ describe Email::Receiver do
     expect { Email::Receiver.new("") }.to raise_error(Email::Receiver::EmptyEmailError)
   end
 
-  it "raises and UserNotFoundError when staged users are disabled" do
+  it "raises a ScreenedEmailError when email address is screened" do
+    ScreenedEmail.expects(:should_block?).with("screened@mail.com").returns(true)
+    expect { process(:screened_email) }.to raise_error(Email::Receiver::ScreenedEmailError)
+  end
+
+  it "raises an UserNotFoundError when staged users are disabled" do
     SiteSetting.enable_staged_users = false
     expect { process(:user_not_found) }.to raise_error(Email::Receiver::UserNotFoundError)
   end
