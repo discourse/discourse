@@ -572,11 +572,11 @@ class User < ActiveRecord::Base
   end
 
   def posted_too_much_in_topic?(topic_id)
-
-    # Does not apply to staff, non-new members or your own topics
-    return false if staff? ||
-                    (trust_level != TrustLevel[0]) ||
-                    Topic.where(id: topic_id, user_id: id).exists?
+    # Does not apply to staff and non-new members...
+    return false if staff? || (trust_level != TrustLevel[0])
+    # ... your own topics or in private messages
+    topic = Topic.where(id: topic_id).first
+    return false if topic.try(:private_message?) || (topic.try(:user_id) == self.id)
 
     last_action_in_topic = UserAction.last_action_in_topic(id, topic_id)
     since_reply = Post.where(user_id: id, topic_id: topic_id)
