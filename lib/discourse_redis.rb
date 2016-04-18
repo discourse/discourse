@@ -64,6 +64,13 @@ class DiscourseRedis
       end
     end
 
+    # Used for testing
+    def reset!
+      @master = true
+      @last_checked = nil
+      @running = false
+    end
+
     private
 
     def synchronize
