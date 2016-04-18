@@ -50,8 +50,7 @@ class UserSummary
   end
 
   def most_liked_by_users
-    likers_ids = []
-    counts = []
+    likers = {}
     UserAction.joins("JOIN posts  ON posts.id  = user_actions.target_post_id")
               .joins("JOIN topics ON topics.id = posts.topic_id")
               .where("posts.deleted_at  IS NULL")
@@ -63,22 +62,19 @@ class UserSummary
               .order("COUNT(*) DESC")
               .limit(MAX_SUMMARY_RESULTS)
               .pluck("acting_user_id, COUNT(*)")
-              .each do |i|
-                likers_ids << i[0]
-                counts << i[1]
-              end
+              .each { |l| likers[l[0].to_s] = l[1] }
 
-    User.where(id: likers_ids)
+    User.where(id: likers.keys)
         .pluck(:id, :username, :name, :uploaded_avatar_id)
-        .map.with_index do |u, i|
+        .map do |u|
       LikedByUser.new(
         id: u[0],
         username: u[1],
         name: u[2],
         avatar_template: User.avatar_template(u[1], u[3]),
-        likes: counts[i]
+        likes: likers[u[0].to_s]
       )
-    end
+    end.sort_by { |u| -u[:likes] }
   end
 
   def badges
