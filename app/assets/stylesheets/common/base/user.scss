@@ -251,6 +251,14 @@
   }
 }
 
+.replies-section,
+.topics-section,
+.links-section {
+  li {
+    word-wrap: break-word;
+  }
+}
+
 .links-section {
   .domain {
     font-size: 0.714em;
