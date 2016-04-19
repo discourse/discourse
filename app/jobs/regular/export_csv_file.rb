@@ -225,13 +225,15 @@ module Jobs
             elsif attr == 'staff_user'
               user = User.find_by(id: staff_action.attributes['acting_user_id'])
               user.username if !user.nil?
+            elsif attr == 'subject'
+              user = User.find_by(id: staff_action.attributes['target_user_id'])
+              user.nil? ? staff_action.attributes[attr] : "#{user.username} #{staff_action.attributes[attr]}" 
             else
               staff_action.attributes[attr]
             end
 
             staff_action_array.push(data)
         end
-
         staff_action_array
       end
 
