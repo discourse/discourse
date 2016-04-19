@@ -2001,26 +2001,24 @@ en:
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
 
     too_many_spam_flags:
-      subject_template: "New account blocked"
+      subject_template: "New account blocked due to community flags"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
+        This is an automated message from %{site_name} to inform you that your posts have been temporarily hidden because they were flagged by the community.
 
-        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
+        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     blocked_by_staff:
-      subject_template: "Account blocked"
+      subject_template: "Account temporarily blocked"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
+        This is an automated message from %{site_name} to inform you that your account has been temporarily blocked as a precautionary measure.
 
-        Please be aware that you will not be able to create new replies or topics until unblocked by a staff member.
-
-        If you have questions regarding this block, please contact a [staff members](%{base_url}/about).
+        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -2053,7 +2051,7 @@ en:
 
         This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
 
-        You can now create new replies and topics again.
+        You can now create new replies and topics again. Thank you for your patience.
 
     pending_users_reminder:
       subject_template:
