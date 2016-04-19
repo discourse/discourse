@@ -5,17 +5,26 @@ class Jobs::Onceoff < Jobs::Base
     klass.name.sub(/^Jobs\:\:/, '')
   end
 
+  def running_key_name
+    "#{self.class.name}:running"
+  end
+
   # Pass `force: true` to force it happen again
   def execute(args)
     job_name = self.class.name_for(self.class)
+    has_lock = $redis.setnx(running_key_name, Time.now.to_i)
 
-    if args[:force] || !OnceoffLog.where(job_name: job_name).exists?
-      return if $redis.exists(self.class.name)
-      DistributedMutex.synchronize(self.class.name) do
+    # If we can't get a lock, just noop
+    if args[:force] || has_lock
+      begin
+        return if OnceoffLog.where(job_name: job_name).exists? && !args[:force]
         execute_onceoff(args)
         OnceoffLog.create(job_name: job_name)
+      ensure
+        $redis.del(running_key_name) if has_lock
       end
     end
+
   end
 
   def self.enqueue_all

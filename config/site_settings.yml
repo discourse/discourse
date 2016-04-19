@@ -26,6 +26,10 @@ required:
     client: true
     default: ''
     type: email
+  bounce_email:
+    default: ''
+    type: email
+    shadowed_by_global: true
   contact_url:
     client: true
     default: ''
@@ -505,6 +509,8 @@ posting:
   notify_about_queued_posts_after:
     default: 24
     min: 0
+  auto_close_messages_post_count: 500
+  auto_close_topics_post_count: 10000
 
 email:
   email_time_window_mins:

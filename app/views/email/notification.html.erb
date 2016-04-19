@@ -21,11 +21,11 @@
     <% end %>
   <% end %>
 
-  <hr>
-
   <% if reached_limit %>
+    <hr>
     <div class='footer'><%= t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user %></div>
   <% end %>
+
   <div class='footer'>%{respond_instructions}</div>
   <div class='footer'>%{unsubscribe_link}%{unsubscribe_via_email_link}</div>
 

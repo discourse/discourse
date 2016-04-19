@@ -742,17 +742,20 @@ en:
           one: "post created"
           other: "posts created"
         likes_given:
-          one: "like given"
-          other: "likes given"
+          one: "<i class='fa fa-heart'></i> given"
+          other: "<i class='fa fa-heart'></i> given"
         likes_received:
-          one: "like received"
-          other: "likes received"
+          one: "<i class='fa fa-heart'></i> received"
+          other: "<i class='fa fa-heart'></i> received"
         days_visited:
           one: "day visited"
           other: "days visited"
         posts_read:
           one: "post read"
           other: "posts read"
+        bookmark_count:
+          one: "bookmark"
+          other: "bookmarks"
         top_replies: "Top Replies"
         no_replies: "No replies yet."
         more_replies: "More Replies"
@@ -762,6 +765,10 @@ en:
         top_badges: "Top Badges"
         no_badges: "No badges yet."
         more_badges: "More Badges"
+        top_links: "Top Links"
+        no_links: "No links yet."
+        most_liked_by: "Most Liked By"
+        no_likes: "No likes yet."
 
 
       associated_accounts: "Logins"
@@ -1513,9 +1520,9 @@ en:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        file_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)"
+        file_too_large: "Sorry, that file is too big (maximum size is {{max_size_kb}}kb). Why not upload your large file to a cloud sharing service, then share the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
-        too_many_dragged_and_dropped_files: "Sorry, you can only drag & drop up to 10 files at a time."
+        too_many_dragged_and_dropped_files: "Sorry, you can only upload 10 files at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
@@ -1752,6 +1759,7 @@ en:
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Message'
+      official_warning: 'Official Warning'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
@@ -1979,7 +1987,7 @@ en:
           30_days_ago: "30 Days Ago"
           all: "All"
           view_table: "table"
-          view_chart: "bar chart"
+          view_graph: "graph"
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"

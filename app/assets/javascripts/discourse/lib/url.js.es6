@@ -217,6 +217,8 @@ const DiscourseURL = Ember.Object.createWithMixins({
         if (path.match(/last$/)) { opts.nearPost = topicController.get('model.highest_post_number'); }
         const closest = opts.nearPost || 1;
 
+        opts.cancelSummary = true;
+
         postStream.refresh(opts).then(() => {
           topicController.setProperties({
             'model.currentPost': closest,

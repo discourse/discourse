@@ -1,0 +1,22 @@
+.pika-table {
+  th, td {
+    padding: 0 !important;
+    border-top: none !important;
+    border-bottom: none !important;
+  }
+}
+
+.date-picker-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.date-picker {
+  text-align: center;
+  width: 80px;
+  margin: 0;
+}
+
+.pika-single {
+  position: absolute !important;
+}

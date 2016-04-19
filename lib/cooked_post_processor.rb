@@ -17,7 +17,10 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
-    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
+
+    analyzer = post.post_analyzer
+    @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
+    @has_oneboxes = analyzer.found_oneboxes?
     @size_cache = {}
   end
 
@@ -29,7 +32,14 @@ class CookedPostProcessor
       optimize_urls
       pull_hotlinked_images(bypass_bump)
       grant_badges
+      extract_links
     end
+  end
+
+  # onebox may have added some links, so extract them now
+  def extract_links
+    TopicLink.extract_from(@post)
+    QuotedPost.extract_from(@post)
   end
 
   def has_emoji?
@@ -39,9 +49,8 @@ class CookedPostProcessor
   def grant_badges
     return unless Guardian.new.can_see?(@post)
 
-    if has_emoji?
-      BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user)
-    end
+    BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
+    BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
   end
 
   def keep_reverse_index_up_to_date
@@ -279,6 +288,7 @@ class CookedPostProcessor
 
     # apply oneboxes
     Oneboxer.apply(@doc, topic_id: @post.topic_id) { |url|
+      @has_oneboxes = true
       Oneboxer.onebox(url, args)
     }
 

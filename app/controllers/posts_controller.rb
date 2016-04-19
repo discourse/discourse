@@ -458,6 +458,10 @@ class PostsController < ApplicationController
       json_obj = json_obj[:post]
     end
 
+    if !success && GlobalSetting.try(:verbose_api_logging) && is_api?
+      Rails.logger.error "Error creating post via API:\n\n#{json_obj.inspect}"
+    end
+
     render json: json_obj, status: (!!success) ? 200 : 422
   end
 

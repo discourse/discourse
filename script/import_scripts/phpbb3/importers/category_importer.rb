@@ -2,9 +2,11 @@ module ImportScripts::PhpBB3
   class CategoryImporter
     # @param lookup [ImportScripts::LookupContainer]
     # @param text_processor [ImportScripts::PhpBB3::TextProcessor]
-    def initialize(lookup, text_processor)
+    # @param permalink_importer [ImportScripts::PhpBB3::PermalinkImporter]
+    def initialize(lookup, text_processor, permalink_importer)
       @lookup = lookup
       @text_processor = text_processor
+      @permalink_importer = permalink_importer
     end
 
     def map_category(row)
@@ -14,6 +16,7 @@ module ImportScripts::PhpBB3
         parent_category_id: @lookup.category_id_from_imported_category_id(row[:parent_id]),
         post_create_action: proc do |category|
           update_category_description(category, row)
+          @permalink_importer.create_for_category(category, row[:forum_id])
         end
       }
     end

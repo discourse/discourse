@@ -90,7 +90,7 @@ class Category < ActiveRecord::Base
   end
 
   def self.scoped_to_permissions(guardian, permission_types)
-    if guardian && guardian.is_staff?
+    if guardian && guardian.is_admin?
       all
     elsif !guardian || guardian.anonymous?
       if permission_types.include?(:readonly)

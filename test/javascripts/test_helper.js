@@ -1,7 +1,7 @@
 /*global document, sinon, QUnit, Logster */
 
 //= require env
-//= require ../../app/assets/javascripts/preload_store
+//= require preload_store
 //= require probes
 //= require jquery.debug
 //= require jquery.ui.widget
@@ -14,8 +14,8 @@
 //= require route-recognizer
 //= require pretender
 
-//= require ../../app/assets/javascripts/locales/i18n
-//= require ../../app/assets/javascripts/locales/en
+//= require locales/i18n
+//= require locales/en
 
 //= require vendor
 
@@ -39,7 +39,7 @@
 //= require plugin_tests
 //= require_self
 //
-//= require ../../public/javascripts/jquery.magnific-popup-min.js
+//= require jquery.magnific-popup-min.js
 
 window.inTestEnv = true;
 

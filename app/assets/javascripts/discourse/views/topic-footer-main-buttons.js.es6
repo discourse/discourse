@@ -15,22 +15,22 @@ export default ContainerView.extend({
 
     const topic = this.get('topic');
     if (!topic.get('isPrivateMessage')) {
-
       if (mobileView) {
         this.attachViewWithArgs({ topic }, 'topic-footer-mobile-dropdown');
       } else {
         // We hide some controls from private messages
-        if (this.get('topic.details.can_invite_to')) {
-          this.attachViewClass('invite-reply-button');
-        }
         this.attachViewClass('bookmark-button');
         this.attachViewClass('share-button');
         if (this.get('topic.details.can_flag_topic')) {
           this.attachViewClass('flag-topic-button');
         }
       }
-
     }
+
+    if (this.get('topic.details.can_invite_to')) {
+      this.attachViewClass('invite-reply-button');
+    }
+
     if (topic.get('isPrivateMessage')) {
       this.attachViewClass('archive-button');
     }

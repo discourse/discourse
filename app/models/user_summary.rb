@@ -2,8 +2,8 @@
 
 class UserSummary
 
+  MAX_SUMMARY_RESULTS = 6
   MAX_BADGES = 6
-  MAX_TOPICS = 6
 
   alias :read_attribute_for_serialization :send
 
@@ -20,7 +20,7 @@ class UserSummary
       .where(user: @user)
       .order('like_count DESC, created_at ASC')
       .includes(:user, :category)
-      .limit(MAX_TOPICS)
+      .limit(MAX_SUMMARY_RESULTS)
   end
 
   def replies
@@ -33,7 +33,46 @@ class UserSummary
       .where('post_number > 1')
       .where('topics.archetype <> ?', Archetype.private_message)
       .order('posts.like_count DESC, posts.created_at ASC')
-      .limit(MAX_TOPICS)
+      .limit(MAX_SUMMARY_RESULTS)
+  end
+
+  def links
+    TopicLink
+      .joins(:topic, :post)
+      .where('topics.archetype <> ?', Archetype.private_message)
+      .where(user: @user)
+      .where(internal: false, reflection: false, quote: false)
+      .order('clicks DESC, created_at ASC')
+      .limit(MAX_SUMMARY_RESULTS)
+  end
+
+  class LikedByUser < OpenStruct
+    include ActiveModel::SerializerSupport
+  end
+
+  def most_liked_by_users
+    likers = {}
+    UserAction.joins(:target_topic, :target_post)
+              .where('topics.archetype <> ?', Archetype.private_message)
+              .where(user: @user)
+              .where(action_type: UserAction::WAS_LIKED)
+              .group(:acting_user_id)
+              .order('COUNT(*) DESC')
+              .limit(MAX_SUMMARY_RESULTS)
+              .pluck('acting_user_id, COUNT(*)')
+              .each { |l| likers[l[0].to_s] = l[1] }
+
+    User.where(id: likers.keys)
+        .pluck(:id, :username, :name, :uploaded_avatar_id)
+        .map do |u|
+      LikedByUser.new(
+        id: u[0],
+        username: u[1],
+        name: u[2],
+        avatar_template: User.avatar_template(u[1], u[3]),
+        likes: likers[u[0].to_s]
+      )
+    end.sort_by { |u| -u[:likes] }
   end
 
   def badges
@@ -42,6 +81,13 @@ class UserSummary
 
   def user_stat
     @user.user_stat
+  end
+
+  def bookmark_count
+    UserAction
+      .where(user: @user)
+      .where(action_type: UserAction::BOOKMARK)
+      .count
   end
 
   delegate :likes_given,

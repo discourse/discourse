@@ -478,7 +478,17 @@ describe CookedPostProcessor do
 
   end
 
+  context "extracts links" do
+      let(:post) { Fabricate(:post, raw: "sam has a blog at https://samsaffron.com") }
+      it "always re-extracts links on post process" do
+        TopicLink.destroy_all
+        CookedPostProcessor.new(post).post_process
+        expect(TopicLink.count).to eq(1)
+      end
+  end
+
   context "grant badges" do
+
     context "emoji inside a quote" do
       let(:post) { Fabricate(:post, raw: "time to eat some sweet [quote]:candy:[/quote] mmmm") }
       let(:cpp) { CookedPostProcessor.new(post) }
@@ -498,6 +508,23 @@ describe CookedPostProcessor do
         expect(post.user.user_badges.where(badge_id: Badge::FirstEmoji).exists?).to eq(true)
       end
     end
+
+    context "onebox" do
+      let(:user) { Fabricate(:user) }
+      let(:post) { Fabricate.build(:post, user: user, raw: "onebox me:\n\nhttps://www.youtube.com/watch?v=Wji-BZ0oCwg\n") }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      before do
+        Oneboxer.stubs(:onebox)
+      end
+
+      it "awards a badge for using an emoji" do
+        cpp.post_process_oneboxes
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(true)
+      end
+    end
+
   end
 
 end

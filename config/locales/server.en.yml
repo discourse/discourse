@@ -64,6 +64,9 @@ en:
         reply_user_not_matching_error: "Happens when a reply came in from a different email address the notification was sent to."
         topic_not_found_error: "Happens when a reply came in but the related topic has been deleted."
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
+        bounced_email_report: "Email is a bounced email report."
+        auto_generated_email_reply: "Email contains a reply to an auto generated email."
+        screened_email_error: "Happens when the sender's email address was already screened."
 
   errors: &errors
     format: ! '%{attribute} %{message}'
@@ -816,6 +819,7 @@ en:
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications such as unhandled flags, as well as on the /about contact form for urgent matters."
+    bounce_email: "Variable Email Return Path used for emails, example: bounce@example.com will cause us to generate bounce+GUID@example.com as the Retrun Path for emails we send. This feature allows us to automatically disable bouncing emails. Requires additional configurations, leave blank if unsure."
     contact_url: "Contact URL for this site. Used on the /about contact form for urgent matters."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
@@ -1281,6 +1285,8 @@ en:
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact_email. Set to 0 to disable these emails."
+    auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
+    auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
 
     default_email_digest_frequency: "How often users receive digest emails by default."
     default_include_tl0_in_digests: "Include posts from new users in digest emails by default. Users can change this in their preferences."
@@ -1391,6 +1397,12 @@ en:
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
     closed_enabled: "This topic is now closed. New replies are no longer allowed."
     closed_disabled: "This topic is now opened. New replies are allowed."
+    autoclosed_message_max_posts:
+      one: "This message was automatically closed after reaching the maximum limit of 1 reply."
+      other: "This message was automatically closed after reaching the maximum limit of %{count} replies."
+    autoclosed_topic_max_posts:
+      one: "This topic was automatically closed after reaching the maximum limit of 1 reply."
+      other: "This topic was automatically closed after reaching the maximum limit of %{count} replies."
     autoclosed_enabled_days:
       one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
@@ -1560,7 +1572,7 @@ en:
       [2]: http://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [7]: https://www.mail-tester.com/spf-dkim-check
       [8]: http://www.openspf.org/SPF_Record_Syntax
       [sg]: https://sendgrid.com/
       [sp]: https://www.sparkpost.com/
@@ -1846,6 +1858,13 @@ en:
 
         Your reply was sent from an unknown email address. Try sending from another email address, or contact a staff member.
 
+    email_reject_screened_email:
+      subject_template: "[%{site_name}] Email issue -- Blocked Email"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your reply was sent from a blocked email address. Try sending from another email address, or contact a staff member.
+
     email_reject_inactive_user:
       subject_template: "[%{site_name}] Email issue -- Inactive User"
       text_body_template: |
@@ -1982,26 +2001,24 @@ en:
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
 
     too_many_spam_flags:
-      subject_template: "New account blocked"
+      subject_template: "New account blocked due to community flags"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
+        This is an automated message from %{site_name} to inform you that your posts have been temporarily hidden because they were flagged by the community.
 
-        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
+        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     blocked_by_staff:
-      subject_template: "Account blocked"
+      subject_template: "Account temporarily blocked"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
+        This is an automated message from %{site_name} to inform you that your account has been temporarily blocked as a precautionary measure.
 
-        Please be aware that you will not be able to create new replies or topics until unblocked by a staff member.
-
-        If you have questions regarding this block, please contact a [staff members](%{base_url}/about).
+        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -2034,7 +2051,7 @@ en:
 
         This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
 
-        You can now create new replies and topics again.
+        You can now create new replies and topics again. Thank you for your patience.
 
     pending_users_reminder:
       subject_template:
@@ -2867,7 +2884,7 @@ en:
       name: Campaigner
       description: Invited 3 basic users
       long_description: |
-        This badge is granted when you've invited 3 people who subsequently spent enough time on the site to become basic users. A vibrant community needs a regular infusion of newcomers who regularly participate and add new voices to the conversationss.
+        This badge is granted when you've invited 3 people who subsequently spent enough time on the site to become basic users. A vibrant community needs a regular infusion of newcomers who regularly participate and add new voices to the conversations.
     champion:
       name: Champion
       description: Invited 5 members
@@ -2887,7 +2904,7 @@ en:
       name: First Quote
       description: Quoted a post
       long_description: |
-        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions focused and on topic. And it's easy: you can quickly quote by highlighting a section of any post and using the Quote Reply button that appears near the selection. Quote generously!
+        This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions connected together and on topic. The easiest way to quote is to highlight a section of a post, and then press any reply button. Quote generously!
     read_guidelines:
       name: Read Guidelines
       description: Read the <a href="/guidelines">community guidelines</a>
@@ -2962,11 +2979,15 @@ en:
       name: First Emoji
       description: Used an Emoji in a Post
       long_description: |
-        This badge is granted when you first add an Emoji to a post :heart:
+        This badge is granted the first time you add an Emoji to your post :thumbsup:. Emoji let you convey emotion in your posts, from happiness :smiley: to sadness :anguished: to anger :angry: and everything in between :sunglasses: . Just type a : (colon) or press the Emoji toolbar button in the editor to select from hundreds of choices :ok_hand:
     first_mention:
       name: First Mention
       description: Mentioned a user in a Post
-      long_description: This badge is granted when you @mention a user in your post. @mentions allow you to notify other members in the forum.
+      long_description: This badge is granted the first time you mention someone's @username in your post. Each mention generates a notification to that person, so they know about your post. Just begin typing @ (at symbol) to mention any user or, if allowed, group – it's a convenient way to bring something to their attention.
+    first_onebox:
+      name: First Onebox
+      description: Posted a link that was oneboxed
+      long_description: This badge is granted the first time you post a link on a line by itself, which was then automatically expanded into a onebox with a brief summary of the link, a title, and (when available) a picture.
 
   admin_login:
     success: "Email Sent"

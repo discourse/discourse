@@ -221,7 +221,7 @@ describe PostAlerter do
       create_post(topic_id: topic.id, user: user, raw: "my magic topic\n##{Discourse.base_url}#{post1.url}")
 
       user.reload
-      expect(user.notifications.count).to eq(1)
+      expect(user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(1)
 
       expect(watcher.notifications.count).to eq(1)
 

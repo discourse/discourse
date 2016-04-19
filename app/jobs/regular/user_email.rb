@@ -117,7 +117,9 @@ module Jobs
         return skip_message(I18n.t('email_log.exceeded_limit'))
       end
 
-      message = UserNotifications.send(type, user, email_args)
+      message = EmailLog.unique_email_per_post(post, user) do
+        UserNotifications.send(type, user, email_args)
+      end
 
       # Update the to address if we have a custom one
       if message && to_address.present?

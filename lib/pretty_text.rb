@@ -333,7 +333,7 @@ module PrettyText
 
     # extract all links from the post
     doc.css("a").each { |l|
-      unless l["href"].blank?
+      unless l["href"].blank? || "#".freeze == l["href"][0]
         links << DetectedLink.new(l["href"])
       end
     }
@@ -390,8 +390,9 @@ module PrettyText
     doc.css(".lightbox-wrapper .meta").remove
   end
 
-  def self.format_for_email(html)
+  def self.format_for_email(html, post = nil)
     doc = Nokogiri::HTML.fragment(html)
+    DiscourseEvent.trigger(:reduce_cooked, doc, post)
     make_all_links_absolute(doc)
     strip_image_wrapping(doc)
     doc.to_html

@@ -29,7 +29,11 @@
                 {{email.from_address}}
               {{/link-to}}
             {{else}}
-              &mdash;
+              {{#if email.from_address}}
+                <a href='mailto:{{unbound email.from_address}}'>{{email.from_address}}</a>
+              {{else}}
+                &mdash;
+              {{/if}}
             {{/if}}
           </div>
         </td>
