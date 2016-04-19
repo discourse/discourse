@@ -38,9 +38,10 @@ class UserSummary
 
   def links
     TopicLink
+      .joins(:topic, :post)
+      .where('topics.archetype <> ?', Archetype.private_message)
       .where(user: @user)
-      .where(internal: false)
-      .where(reflection: false)
+      .where(internal: false, reflection: false, quote: false)
       .order('clicks DESC, created_at ASC')
       .limit(MAX_SUMMARY_RESULTS)
   end
@@ -51,17 +52,14 @@ class UserSummary
 
   def most_liked_by_users
     likers = {}
-    UserAction.joins("JOIN posts  ON posts.id  = user_actions.target_post_id")
-              .joins("JOIN topics ON topics.id = posts.topic_id")
-              .where("posts.deleted_at  IS NULL")
-              .where("topics.deleted_at IS NULL")
-              .where("topics.archetype <> '#{Archetype.private_message}'")
+    UserAction.joins(:target_topic, :target_post)
+              .where('topics.archetype <> ?', Archetype.private_message)
               .where(user: @user)
               .where(action_type: UserAction::WAS_LIKED)
               .group(:acting_user_id)
-              .order("COUNT(*) DESC")
+              .order('COUNT(*) DESC')
               .limit(MAX_SUMMARY_RESULTS)
-              .pluck("acting_user_id, COUNT(*)")
+              .pluck('acting_user_id, COUNT(*)')
               .each { |l| likers[l[0].to_s] = l[1] }
 
     User.where(id: likers.keys)
