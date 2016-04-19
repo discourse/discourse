@@ -159,9 +159,13 @@ $user_card_background: #222;
     }
   }
 
-  .website-name {
-    a {
-      color: $user_card_primary;
+  .location-and-website {
+    clear: left;
+
+    .website-name {
+      a {
+        color: $user_card_primary;
+      }
     }
   }
 

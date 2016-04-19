@@ -55,22 +55,24 @@
     {{/link-to}}
   {{/if}}
 
-  <div>
-    {{#if user.location}}
-      <span class='location'>{{fa-icon "map-marker"}} {{user.location}}</span>
-    {{/if}}
+  {{#if hasLocationOrWebsite}}
+    <div class="location-and-website">
+      {{#if user.location}}
+        <span class='location'>{{fa-icon "map-marker"}} {{user.location}}</span>
+      {{/if}}
 
-    {{#if user.website_name}}
-      <span class='website-name'>
-        {{fa-icon "globe"}}
-        {{#if linkWebsite}}
-          <a href={{user.website}} rel={{unless removeNoFollow 'nofollow'}} target="_blank">{{user.website_name}}</a>
-        {{else}}
-          <span title={{user.website}}>{{user.website_name}}</span>
-        {{/if}}
-      </span>
-    {{/if}}
-  </div>
+      {{#if user.website_name}}
+        <span class='website-name'>
+          {{fa-icon "globe"}}
+          {{#if linkWebsite}}
+            <a href={{user.website}} rel={{unless removeNoFollow 'nofollow'}} target="_blank">{{user.website_name}}</a>
+          {{else}}
+            <span title={{user.website}}>{{user.website_name}}</span>
+          {{/if}}
+        </span>
+      {{/if}}
+    </div>
+  {{/if}}
 
   {{#if user}}
     <div class="metadata">
