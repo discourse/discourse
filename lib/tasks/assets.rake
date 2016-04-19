@@ -29,6 +29,8 @@ task 'assets:precompile:before' do
   include GlobalPath
 
   if $node_uglify
+    Rails.configuration.assets.js_compressor = nil
+
     module ::Sprockets
       # TODO: https://github.com/rails/sprockets-rails/pull/342
       # Rails.configuration.assets.gzip = false
@@ -36,15 +38,6 @@ task 'assets:precompile:before' do
         def skip_gzip?
           true
         end
-      end
-
-      class UglifierCompressor
-
-        def evaluate(context, locals, &block)
-          # monkey patch cause we do this later, no idea how to cleanly disable
-          data
-        end
-
       end
     end
   end
