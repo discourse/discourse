@@ -37,21 +37,9 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
 
     def find(name, options)
 
-      if name == "category_backgrounds"
-        contents = ""
-        Category.where('background_url IS NOT NULL').each do |c|
-          contents << special_imports[name].call(c) if c.background_url.present?
-        end
-
-        return ::Sass::Engine.new(contents, options.merge(
-          filename: "#{name}.scss",
-          importer: self,
-          syntax: :scss
-        ))
-      end
-
       if special_imports.has_key? name
-        if name == "theme_variables"
+        case name
+        when "theme_variables"
           contents = ""
           if color_scheme = ColorScheme.enabled
             ColorScheme.base_colors.each do |n, base_hex|
@@ -63,12 +51,11 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
               contents << File.read(css_file)
             end
           end
-
-          ::Sass::Engine.new(contents, options.merge(
-            filename: "#{name}.scss",
-            importer: self,
-            syntax: :scss
-          ))
+        when "category_backgrounds"
+          contents = ""
+          Category.where('background_url IS NOT NULL').each do |c|
+            contents << special_imports[name].call(c) if c.background_url.present?
+          end
         else
           stylesheets = special_imports[name]
           contents = ""
@@ -80,13 +67,13 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
             end
             depend_on(css_file)
           end
-
-          ::Sass::Engine.new(contents, options.merge(
-            filename: "#{name}.scss",
-            importer: self,
-            syntax: :scss
-          ))
         end
+
+        ::Sass::Engine.new(contents, options.merge(
+          filename: "#{name}.scss",
+          importer: self,
+          syntax: :scss
+        ))
       else
         engine_from_path(name, root, options)
       end
