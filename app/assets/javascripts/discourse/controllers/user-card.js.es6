@@ -27,6 +27,7 @@ export default Ember.Controller.extend({
   showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
   showDelete: Em.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: Em.computed.not('user.isBasic'),
+  hasLocationOrWebsite: Em.computed.or('user.location', 'user.website_name'),
 
   @computed('user.user_fields.@each.value')
   publicUserFields() {
