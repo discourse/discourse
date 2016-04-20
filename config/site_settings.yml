@@ -574,6 +574,8 @@ email:
   auto_generated_whitelist:
     default: ''
     type: list
+  block_auto_generated_emails: true
+
 
 files:
   max_image_size_kb:

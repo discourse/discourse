@@ -1174,6 +1174,7 @@ en:
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     auto_generated_whitelist: "List of email addresses that won't be checked for auto-generated content."
+    block_auto_generated_emails: "Block incoming emails identified as being auto generated."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."

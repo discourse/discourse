@@ -63,6 +63,7 @@ class PostSerializer < BasicPostSerializer
              :user_custom_fields,
              :static_doc,
              :via_email,
+             :is_auto_generated,
              :action_code,
              :action_code_who
 
@@ -309,6 +310,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_via_email?
     object.via_email?
+  end
+
+  def is_auto_generated
+    object.incoming_email.try(:is_auto_generated)
+  end
+
+  def include_is_auto_generated?
+    object.via_email? && is_auto_generated
   end
 
   def version

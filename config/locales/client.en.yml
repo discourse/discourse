@@ -1534,6 +1534,7 @@ en:
         yes_value: "Yes, abandon"
 
       via_email: "this post arrived via email"
+      via_auto_generated_email: "this post arrived via an auto generated email"
       whisper: "this post is a private whisper for moderators"
 
       wiki:
