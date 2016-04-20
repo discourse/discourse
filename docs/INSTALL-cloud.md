@@ -42,12 +42,11 @@ This command installs the latest versions of Docker and Git on your server. Alte
 Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it, and make a copy of the config file as `app.yml`:
 
     sudo -s
-    mkdir /var/discourse
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
     cd /var/discourse
-    cp samples/standalone.yml containers/app.yml
+    ./launcher memconfig app
 
-You will need to be root through the rest of the bootstrap process.
+You will need to continue to be root through the rest of the bootstrap process.
 
 # Edit Discourse Configuration
 
@@ -63,7 +62,7 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 - Place your [Email Server credentials][mailconfig] in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
 
-- If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
+- `./launcher memconfig app` sets reasonable defaults for `UNICORN_WORKERS` and `db_shared_buffers` for typical users, but check the comments in `app.yml` for further information. 
 
 <img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1" width="600px">
 
