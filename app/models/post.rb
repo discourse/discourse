@@ -40,6 +40,8 @@ class Post < ActiveRecord::Base
   has_one :post_search_data
   has_one :post_stat
 
+  has_one :incoming_email
+
   has_many :post_details
 
   has_many :post_revisions
