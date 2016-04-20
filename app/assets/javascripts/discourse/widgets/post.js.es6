@@ -1,4 +1,5 @@
 import PostCooked from 'discourse/widgets/post-cooked';
+import DecoratorHelper from 'discourse/widgets/decorator-helper';
 import { createWidget, applyDecorators } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon';
 import { transformBasicPost } from 'discourse/lib/transform-post';
@@ -224,17 +225,6 @@ createWidget('expand-post-button', {
     this.sendWidgetAction('expandFirstPost');
   }
 });
-
-class DecoratorHelper {
-  constructor(widget) {
-    this.container = widget.container;
-    this._widget = widget;
-  }
-
-  getModel() {
-    return this._widget.findAncestorModel();
-  }
-}
 
 createWidget('post-contents', {
   buildKey: attrs => `post-contents-${attrs.id}`,
