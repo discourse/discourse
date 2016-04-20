@@ -75,7 +75,13 @@
       <ul>
         {{#each link in model.links}}
           <li>
-            <a class='domain' href='{{unbound link.url}}' title='{{unbound link.title}}' target='_blank'>{{shorten-url link.url}}</a>
+            <a class='domain'
+               href='{{unbound link.url}}'
+               title='{{unbound link.title}}'
+               rel='{{unless user.removeNoFollow 'nofollow'}}'
+               target='_blank'>
+              {{shorten-url link.url}}
+            </a>
             <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=link.clicks}}'>{{link.clicks}}</span>
             <br>
             <a href="{{unbound link.post_url}}">{{{link.topic.fancyTitle}}}</a>
