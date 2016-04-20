@@ -488,6 +488,13 @@ describe Topic do
           @topic.reload
         }.not_to change(@topic, :bumped_at)
       end
+
+      it "doesn't bump the topic when a post have invalid topic title while edit" do
+        expect {
+          @last_post.revise(Fabricate(:moderator), { title: 'invalid title' })
+          @topic.reload
+        }.not_to change(@topic, :bumped_at)
+      end
     end
   end
 
