@@ -46,7 +46,7 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
     cd /var/discourse
     ./launcher memconfig app
 
-You will need continue to be root through the rest of the bootstrap process.
+You will need to continue to be root through the rest of the bootstrap process.
 
 # Edit Discourse Configuration
 
