@@ -173,8 +173,9 @@ const DiscourseURL = Ember.Object.createWithMixins({
    * @method isInternal
    * @param {String} url
   **/
-  isInternal: function(url) {
+  isInternal(url) {
     if (url && url.length) {
+      if (url.indexOf('//') === 0) { url = "http:" + url; }
       if (url.indexOf('#') === 0) { return true; }
       if (url.indexOf('/') === 0) { return true; }
       if (url.indexOf(this.origin()) === 0) { return true; }
@@ -215,6 +216,8 @@ const DiscourseURL = Ember.Object.createWithMixins({
         if (newMatches[3]) { opts.nearPost = newMatches[3]; }
         if (path.match(/last$/)) { opts.nearPost = topicController.get('model.highest_post_number'); }
         const closest = opts.nearPost || 1;
+
+        opts.cancelSummary = true;
 
         postStream.refresh(opts).then(() => {
           topicController.setProperties({

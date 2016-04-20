@@ -194,6 +194,11 @@ export default RestModel.extend({
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
+    if (opts.cancelSummary) {
+      this.set('summary', false);
+      delete opts.cancelSummary;
+    }
+
     const topic = this.get('topic');
 
     // Do we already have the post in our list of posts? Jump there.

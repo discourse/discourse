@@ -300,7 +300,10 @@ ko:
       title:
         other: "그룹"
       members: "멤버"
+      topics: "토픽"
       posts: "게시글"
+      mentions: "멘션"
+      messages: "메시지"
       alias_levels:
         title: "누가 이 그룹에 메시지와 @멘션을 보낼 수 있습니까?"
         nobody: "0명"
@@ -440,6 +443,7 @@ ko:
       muted_users: "알람 끄기"
       muted_users_instructions: "이 회원이 보낸 알림 모두 숨김"
       muted_topics_link: "알림을 끈 토픽 보기"
+      automatically_unpin_topics: "글 끝에 다다르면 자동으로 토픽고정 해제합니다."
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"
@@ -465,7 +469,7 @@ ko:
         set_password: "비밀번호 설정"
       change_about:
         title: "내 소개 변경"
-        error: "값을 변경하는데 에러가 발생했습니다."
+        error: "값을 바꾸는 중 에러가 발생했습니다."
       change_username:
         title: "아이디 변경"
         confirm: "아이디를을 변경하면 모든 인용과 @아이디 멘션이 끊어집니다. 그래도 진행하시겠습니까?"
@@ -539,6 +543,9 @@ ko:
         title: "사용자 카드 배지"
       website: "웹사이트"
       email_settings: "이메일"
+      like_notification_frequency:
+        title: "누군가 '좋아요' 해주면 알려주기"
+        always: "항상"
       email_previous_replies:
         title: "이메일 밑부분에 이전 댓글을 포함합니다."
         unless_emailed: "예전에 발송된 것이 아닌 한"
@@ -557,6 +564,8 @@ ko:
       email_always: "사이트를 이용중 일 때도 이메일 알림 보내기"
       other_settings: "추가 사항"
       categories_settings: "카테고리"
+      enable_mailing_list:
+        other: "정말 모든 새글을 이메일로 받으시겠어요? 그러면 하루에 <b>{{count}} 개</b> 정도 이메일이 갈 꺼에요."
       new_topic_duration:
         label: "새글을 정의해주세요."
         not_viewed: "아직 보지 않았습니다."
@@ -833,7 +842,6 @@ ko:
       link_description: "링크 설명을 입력"
       link_dialog_title: "하이퍼링크 삽입"
       link_optional_text: "옵션 제목"
-      link_placeholder: "http://example.com \"선택적 텍스트\""
       quote_title: "인용구"
       quote_text: "인용구"
       code_title: "코드 샘플"
@@ -1256,7 +1264,6 @@ ko:
         create: "죄송합니다. 글을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
         upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
-        attachment_too_large: "업로드하려는 파일의 크기가 너무 큽니다. 최대 크기는 {{max_size_kb}}kb 입니다."
         file_too_large: "업로드하시려는 파일이 너무 커요. (최대 허용 파일 크기는 {{max_size_kb}}kb입니다)"
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
         too_many_dragged_and_dropped_files: "Sorry, 한번에 10개까지만 드래그앤 드롭 할 수 있어요."
@@ -1788,14 +1795,6 @@ ko:
           backups: "백업"
           logs: "로그"
         none: "가능한 백업이 없습니다."
-        read_only:
-          enable:
-            title: "읽기 전용 모드 활성화하기"
-            label: "읽기 전용 모드 활성화"
-            confirm: "정말로 읽기 전용 모드를 활성화 하시겠습니까?"
-          disable:
-            title: "읽기 전용 모드 비활성화 하기"
-            label: "읽기 전용 모드 비활성화"
         logs:
           none: "아직 로그가 없어요."
         columns:

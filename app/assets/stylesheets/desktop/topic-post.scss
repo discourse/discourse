@@ -571,16 +571,6 @@ video {
   position: relative;
 }
 
-a.mention, a.mention-group {
-  padding: 2px 4px;
-  color: dark-light-diff($primary, $secondary, 30%, -30%);
-  background: dark-light-diff($primary, $secondary, 95%, -60%);
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 0.93em;
-}
-
-
 .moderator {
   .topic-body {
     background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
@@ -805,7 +795,7 @@ $topic-avatar-width: 45px;
   clear: both;
 }
 
-#selected-posts {
+.selected-posts {
   width: 200px;
   position: fixed;
   z-index: 1000;

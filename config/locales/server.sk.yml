@@ -764,7 +764,6 @@ sk:
     post_onebox_maxlength: "Maximálna dĺžka vloženého Discourse príspevku v znakoch."
     onebox_domains_whitelist: "Zoznam domén, pre ktoré je umožnené vkladanie. Tieto domény by mali podporovať OpenGraph alebo oEmbed. Overte ich pomocou http://iframely.com/debug"
     logo_url: "Obrázok loga na ľavej hornej časti stránky, mal by byť tvaru širokého obdĺžnika. Ak nebude uvedený, zobrazí sa nadpis stránok."
-    digest_logo_url: "Obrázok loga na začiatku sumarizačného emailu stránok. Mal by byť tvaru širokého obdĺžnika. Ak nebude uvedený, použije sa logo_url."
     logo_small_url: "Malý obrázok loga na ľavej hornej strane stránok, mal by mať tvar štvorca a bude zobrazený pri skrolovaní nadol. Ak nebude uvedený, zobrazí sa piktogram domu."
     favicon_url: "Favicon pre Vaše stránky, pozrite http://en.wikipedia.org/wiki/Favicon. Aby fungoval správne s CDN, musí byť vo formáte png"
     mobile_logo_url: "Obrázok loga zobrazený na fixnej pozícií v ľavom hornom rohu mobilnej verzie. Mal byť mať tvar štvorca. Ak nie je uvedené, použije sa `logo_url`. Napríklad: http://example.com/uploads/default/logo.png"
@@ -785,7 +784,6 @@ sk:
     polling_interval: "Ak sa nepoužíva technika long-polling, ako často majú byť klienti dotazovaný v milisekundách"
     anon_polling_interval: "Ako často majú byť dotazovaný anonymný klienti v milisekundách"
     background_polling_interval: "Ako často majú byť dotazovaný klienti v milisekundách (ak je okno v pozadí)"
-    flags_required_to_hide_post: "Počet značiek ktoré automaticky príspevok skryjú a používateľovi bude zaslaná správa (0 pre nikdy)"
     cooldown_minutes_after_hiding_posts: "Počet minút koľko musí používateľ počkať pred tým než môže upraviť príspevok skytý pomocou komunitných značiek"
     max_topics_in_first_day: "Maximálny počet tém, ktoré používateľ môže vytvoriť v jeho prvý deň ."
     max_replies_in_first_day: "Maximálny povolený počet odpovedí, ktoré môže používateľa vytvoriť v jeho prvý deň."
@@ -851,7 +849,6 @@ sk:
     block_common_passwords: "Nepovoliť heslá, ktoré sú v zozname 10 000 najbežnejších hesiel."
     enable_sso: "Povolit prihlasovanie pomocou externej stránky (VAROVANIE: POUŽÍVATEĽSKÉ EAMILOVÉ ADRESY *MUSIA* BYŤ OVERENÉ EXTERNOU STRÁNKOU)"
     enable_sso_provider: "Implementácia protokolu Discourse SSO poskytovateľa na koncovom bode /session/sso_provider, vyžaduje nastavenie sso_secret"
-    sso_url: "URL pre single sign on."
     sso_secret: "Tajný text, použitý na kryptografické overenie SSO informácie, uistite sa, že má 10 alebo viac znakov"
     sso_overrides_email: "Nahrádzať lokálne emaily pomocou emailov z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám. (VAROVANIE: z dôvodu normálizácie lokálnych emailov sa môžu objaviť nezrovnalosti)"
     sso_overrides_username: "Nahrádzať lokálne použivateľské mená pomocou použivateľských mien z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám. (VAROVANIE: z dôvodu rozdielov v požiadavkách na používateľské meno a jeho dĺžku sa môžu objaviť nezrovnalosti)"
@@ -1082,7 +1079,6 @@ sk:
     emoji_set: "Aké emoji chcete mať?"
     enforce_square_emoji: "Vynútiť švorcový pomer strán na všetkých emoji."
     approve_unless_trust_level: "Príspevky používateľov pod touto úrovňou důvery musia byť schválené"
-    notify_about_queued_posts_after: "Ak existujú príspevky, ktoré čakali na schválenie viac ako uvedený počet hodín, na kontaktný email bude zaslaná správa. Na vypnutie emailov nastavte 0."
     default_email_digest_frequency: "Ako často štandardne používatelia dostávajú sumárny email."
     default_email_private_messages: "Štandardne poslať email použivateľovi, ktorému niekto poslal správu."
     default_email_direct: "Štandardne poslať email ak niekto cituje/odpovedá/uvednie alebo pozve používateľa."
@@ -1497,10 +1493,6 @@ sk:
         Vo Vašom emaile se nepodarilo nájsť pridávaný obsah. **Uistite sa, že ste odpoveď uviedli na začiatku emailu** -- nedokážeme spracovať vložené odpovede.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Problém s emailom -- Nesprávny prístup"
-      text_body_template: |
-        Prepáčte, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-        Na založenie novej témy v tejto kategórií Váš účet nemá dostatočné oprávnenia. Ak si myslíte, že ide o chybu, kontaktujte zamestnanca stránok.
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] Problém s emailom -- Nesprávny prístup"
     email_reject_invalid_post:
@@ -1517,10 +1509,6 @@ sk:
       subject_template: "[%{site_name}] Problém s emailom -- Téma nebola nájdená"
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problém s emailom -- Téma je uzavretá"
-      text_body_template: |
-        Prepáčte, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-        Téma, na ktorú odpovedáte je s súčasnosti uzavretá a ďalelšie odpovede nie sú akceptované. Ak si myslíte, že ide o chybu, kontaktujte zamestnanca stránok.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problém s emailom -- Automaticky generovaná odpoveď"
     email_error_notification:

@@ -25,11 +25,11 @@ class User < ActiveRecord::Base
   has_many :user_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }, dependent: :destroy
   has_many :badges, through: :user_badges
   has_many :email_logs, dependent: :delete_all
+  has_many :incoming_emails, dependent: :delete_all
   has_many :post_timings
   has_many :topic_allowed_users, dependent: :destroy
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :email_tokens, dependent: :destroy
-  has_many :views
   has_many :user_visits, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :topic_links, dependent: :destroy
@@ -573,11 +573,11 @@ class User < ActiveRecord::Base
   end
 
   def posted_too_much_in_topic?(topic_id)
-
-    # Does not apply to staff, non-new members or your own topics
-    return false if staff? ||
-                    (trust_level != TrustLevel[0]) ||
-                    Topic.where(id: topic_id, user_id: id).exists?
+    # Does not apply to staff and non-new members...
+    return false if staff? || (trust_level != TrustLevel[0])
+    # ... your own topics or in private messages
+    topic = Topic.where(id: topic_id).first
+    return false if topic.try(:private_message?) || (topic.try(:user_id) == self.id)
 
     last_action_in_topic = UserAction.last_action_in_topic(id, topic_id)
     since_reply = Post.where(user_id: id, topic_id: topic_id)
@@ -754,7 +754,8 @@ class User < ActiveRecord::Base
     avatar = user_avatar || create_user_avatar
 
     if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
-      Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
+      Jobs.cancel_scheduled_job(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
+      Jobs.enqueue_in(1.second, :update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
 
     # mark all the user's quoted posts as "needing a rebake"
@@ -929,7 +930,7 @@ class User < ActiveRecord::Base
 
   def send_approval_email
     if SiteSetting.must_approve_users
-      Jobs.enqueue(:user_email,
+      Jobs.enqueue(:critical_user_email,
         type: :signup_after_approval,
         user_id: id,
         email_token: email_tokens.first.token

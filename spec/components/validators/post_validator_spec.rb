@@ -67,6 +67,14 @@ describe Validators::PostValidator do
       expect(post.errors.count).to be(0)
     end
 
+    it "should be valid when new user exceeds max mentions limit in PM" do
+      post.acting_user = build(:newuser)
+      post.topic.expects(:private_message?).returns(true)
+      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
     it "should be valid when elder user does not exceed max mentions limit" do
       post.acting_user = build(:trust_level_4)
       post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])

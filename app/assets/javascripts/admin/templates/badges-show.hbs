@@ -3,7 +3,7 @@
     <div>
       <label for="name">{{i18n 'admin.badges.name'}}</label>
       {{#if readOnly}}
-        {{input type="text" name="name" value=buffered.displayName disabled=true}}
+        {{input type="text" name="name" value=buffered.name disabled=true}}
       {{else}}
         {{input type="text" name="name" value=buffered.name}}
       {{/if}}
@@ -45,7 +45,7 @@
     <div>
       <label for="description">{{i18n 'admin.badges.description'}}</label>
       {{#if buffered.system}}
-        {{textarea name="description" value=buffered.displayDescription disabled=true}}
+        {{textarea name="description" value=buffered.description disabled=true}}
       {{else}}
         {{textarea name="description" value=buffered.description}}
       {{/if}}

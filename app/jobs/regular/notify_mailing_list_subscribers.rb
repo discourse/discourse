@@ -2,6 +2,8 @@ module Jobs
 
   class NotifyMailingListSubscribers < Jobs::Base
 
+    sidekiq_options queue: 'low'
+
     def execute(args)
       return if SiteSetting.disable_mailing_list_mode
 
@@ -46,7 +48,11 @@ module Jobs
               )
             else
               message = UserNotifications.mailing_list_notify(user, post)
-              Email::Sender.new(message, :mailing_list, user).send if message
+              if message
+                EmailLog.unique_email_per_post(post, user) do
+                  Email::Sender.new(message, :mailing_list, user).send
+                end
+              end
             end
           rescue => e
             Discourse.handle_job_exception(e, error_context(args, "Sending post to mailing list subscribers", { user_id: user.id, user_email: user.email }))

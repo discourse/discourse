@@ -6,6 +6,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
   VANILLA_DB = "vanilla_mysql"
   TABLE_PREFIX = "GDN_"
+  ATTACHMENTS_BASE_DIR = nil # "/absolute/path/to/attachments" set the absolute path if you have attachments
   BATCH_SIZE = 1000
   CONVERT_HTML = true
 
@@ -22,6 +23,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
   def execute
     import_users
+    import_avatars
     import_categories
     import_topics
     import_posts
@@ -80,6 +82,78 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           end }
       end
     end
+  end
+
+  def import_avatars
+    if ATTACHMENTS_BASE_DIR && File.exists?(ATTACHMENTS_BASE_DIR)
+      puts "", "importing user avatars"
+
+      User.find_each do |u|
+        next unless u.custom_fields["import_id"]
+
+        r = mysql_query("SELECT photo FROM #{TABLE_PREFIX}User WHERE UserID = #{u.custom_fields['import_id']};").first
+        next if r.nil?
+        photo = r["photo"]
+        next unless photo.present?
+
+        # Possible encoded values:
+        # 1. cf://uploads/userpics/820/Y0AFUQYYM6QN.jpg
+        # 2. ~cf/userpics2/cf566487133f1f538e02da96f9a16b18.jpg
+        # 3. ~cf/userpics/txkt8kw1wozn.jpg
+
+        photo_real_filename = nil
+        parts = photo.squeeze("/").split("/")
+        if parts[0] == "cf:"
+          photo_path = "#{ATTACHMENTS_BASE_DIR}/#{parts[2..-2].join('/')}".squeeze("/")
+        elsif parts[0] == "~cf"
+          photo_path = "#{ATTACHMENTS_BASE_DIR}/#{parts[1..-2].join('/')}".squeeze("/")
+        else
+          puts "UNKNOWN FORMAT: #{photo}"
+          next
+        end
+
+        if !File.exists?(photo_path)
+          puts "Path to avatar file not found! Skipping. #{photo_path}"
+          next
+        end
+
+        photo_real_filename = find_photo_file(photo_path, parts.last)
+        if photo_real_filename.nil?
+          puts "Couldn't find file for #{photo}. Skipping."
+          next
+        end
+
+        print "."
+
+        upload = create_upload(u.id, photo_real_filename, File.basename(photo_real_filename))
+        if upload.persisted?
+          u.import_mode = false
+          u.create_user_avatar
+          u.import_mode = true
+          u.user_avatar.update(custom_upload_id: upload.id)
+          u.update(uploaded_avatar_id: upload.id)
+        else
+          puts "Error: Upload did not persist for #{u.username} #{photo_real_filename}!"
+        end
+      end
+    end
+  end
+
+  def find_photo_file(path, base_filename)
+    base_guess = base_filename.dup
+    full_guess = File.join(path, base_guess) # often an exact match exists
+
+    return full_guess if File.exists?(full_guess)
+
+    # Otherwise, the file exists but with a prefix:
+    # The p prefix seems to be the full file, so try to find that one first.
+    ['p', 't', 'n'].each do |prefix|
+      full_guess = File.join(path, "#{prefix}#{base_guess}")
+      return full_guess if File.exists?(full_guess)
+    end
+
+    # Didn't find it.
+    nil
   end
 
   def import_categories

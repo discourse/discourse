@@ -8,12 +8,14 @@ import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 import { createWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
+import { h } from 'virtual-dom';
 
 class PluginApi {
   constructor(version, container) {
     this.version = version;
     this.container = container;
     this._currentUser = container.lookup('current-user:main');
+    this.h = h;
   }
 
   /**
@@ -75,12 +77,13 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
-    const mobileView = this.container.lookup('site:main').mobileView;
-    const loc = mobileView ? 'before' : 'after';
+    const site = this.container.lookup('site:main');
+    const loc = site && site.mobileView ? 'before' : 'after';
+
     decorateWidget(`poster-name:${loc}`, dec => {
       const attrs = dec.attrs;
-
       const result = cb(attrs.userCustomFields || {}, attrs);
+
       if (result) {
         let iconBody;
 
@@ -285,7 +288,7 @@ class PluginApi {
 
 let _pluginv01;
 function getPluginApi(version) {
-  if (version === "0.1" || version === "0.2") {
+  if (version === "0.1" || version === "0.2" || version === "0.3") {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }

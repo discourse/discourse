@@ -26,6 +26,10 @@ required:
     client: true
     default: ''
     type: email
+  bounce_email:
+    default: ''
+    type: email
+    shadowed_by_global: true
   contact_url:
     client: true
     default: ''
@@ -266,7 +270,10 @@ login:
     client: true
     default: false
   enable_sso_provider: false
-  sso_url: ''
+  verbose_sso_logging: false
+  sso_url:
+    default: ''
+    regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
   sso_overrides_email: false
   sso_overrides_username: false
@@ -502,6 +509,8 @@ posting:
   notify_about_queued_posts_after:
     default: 24
     min: 0
+  auto_close_messages_post_count: 500
+  auto_close_topics_post_count: 10000
 
 email:
   email_time_window_mins:
@@ -562,10 +571,19 @@ email:
     min: 0
   max_emails_per_day_per_user: 100
   enable_staged_users: true
+  auto_generated_whitelist:
+    default: ''
+    type: list
+  block_auto_generated_emails: true
+
 
 files:
-  max_image_size_kb: 3072
-  max_attachment_size_kb: 3072
+  max_image_size_kb:
+    client: true
+    default: 3072
+  max_attachment_size_kb:
+    client: true
+    default: 3072
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
@@ -1083,6 +1101,8 @@ uncategorized:
   read_time_word_count:
     default: 500
     client: true
+
+  topic_page_title_includes_category: true
 
 user_preferences:
   default_email_digest_frequency:

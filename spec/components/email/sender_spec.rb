@@ -4,10 +4,17 @@ require 'email/sender'
 describe Email::Sender do
 
   it "doesn't deliver mail when mails are disabled" do
-    SiteSetting.expects(:disable_emails).returns(true)
+    SiteSetting.disable_emails = true
     Mail::Message.any_instance.expects(:deliver_now).never
     message = Mail::Message.new(to: "hello@world.com" , body: "hello")
     expect(Email::Sender.new(message, :hello).send).to eq(nil)
+  end
+
+  it "delivers mail when mails are disabled but the email_type is admin_login" do
+    SiteSetting.disable_emails = true
+    Mail::Message.any_instance.expects(:deliver_now).once
+    message = Mail::Message.new(to: "hello@world.com" , body: "hello")
+    Email::Sender.new(message, :admin_login).send
   end
 
   it "doesn't deliver mail when the message is of type NullMail" do
@@ -68,6 +75,28 @@ describe Email::Sender do
     it 'calls deliver' do
       message.expects(:deliver_now).once
       email_sender.send
+    end
+
+    context "adds return_path correctly when no plus addressing" do
+      before do
+        SiteSetting.bounce_email = 'bounce@test.com'
+      end
+
+      When { email_sender.send }
+      Then {
+        expect(message.header[:return_path].to_s).to eq("bounce+#{EmailLog.last.bounce_key}@test.com")
+      }
+    end
+
+    context "adds return_path correctly with plus addressing" do
+      before do
+        SiteSetting.bounce_email = 'bounce+meta@test.com'
+      end
+
+      When { email_sender.send }
+      Then {
+        expect(message.header[:return_path].to_s).to eq("bounce+meta-#{EmailLog.last.bounce_key}@test.com")
+      }
     end
 
     context "adds a List-ID header to identify the forum" do

@@ -159,6 +159,16 @@ $user_card_background: #222;
     }
   }
 
+  .location-and-website {
+    clear: left;
+
+    .website-name {
+      a {
+        color: $user_card_primary;
+      }
+    }
+  }
+
   img.avatar {
     float: left;
     margin-right: 10px;

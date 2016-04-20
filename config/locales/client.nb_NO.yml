@@ -438,7 +438,6 @@ nb_NO:
         set_password: "Sett passord"
       change_about:
         title: "Rediger om meg"
-        error: "Det skjedde en feil ved endring av denne verdien"
       change_username:
         title: "Endre brukernavn"
         confirm: "Hvis du endrer brukernavn vil alle siteringer av dine innlegg og nevning ved ditt @navn gå i stykker. Er du sikker på at du vil gjøre det?"
@@ -1150,7 +1149,6 @@ nb_NO:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Vennligst prøv igjen."
         edit: "Beklager, det oppstod en feil ved redigeringen av ditt innlegg. Vennligst prøv igjen."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        attachment_too_large: "Beklager, filen du prøver å laste opp er for stor (maksimal størrelsen er {{max_size_kb}}kb)."
         file_too_large: "Beklager, filen du prøver å laste opp er for stor (maximum size is {{max_size_kb}}kb)"
         too_many_uploads: "Beklager, du kan bare laste opp ett bilde om gangen."
         too_many_dragged_and_dropped_files: "Beklager, du kan bare flytte opp til 10 filer om gangen."
@@ -1693,14 +1691,6 @@ nb_NO:
           backups: "Sikkerhetskopieringer"
           logs: "Logger"
         none: "Ingen sikkerhetskopiering er tilgjengelig."
-        read_only:
-          enable:
-            title: "Aktiver skrivebeskyttet modus"
-            label: "Aktiver skrivebeskyttet modus"
-            confirm: "Er du sikker på at du vil aktivere skrivebeskyttet modus?"
-          disable:
-            title: "Deaktiver skrivebeskyttet modus"
-            label: "Deaktiver skrivebeskyttet modus"
         logs:
           none: "Ingen logger enda..."
         columns:

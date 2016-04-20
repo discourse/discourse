@@ -6,6 +6,7 @@
     <a href={{item.postUrl}}>{{{item.title}}}</a>
   </span>
   <div class="category">{{category-link item.category}}</div>
+  {{plugin-outlet "user-stream-item-header"}}
 </div>
 
 {{#if actionDescription}}

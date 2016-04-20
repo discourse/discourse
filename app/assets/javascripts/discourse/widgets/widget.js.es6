@@ -75,8 +75,13 @@ function drawWidget(builder, attrs, state) {
 
   const attributes = properties['attributes'] || {};
   properties.attributes = attributes;
+
   if (this.title) {
-    attributes.title = I18n.t(this.title);
+    if (typeof this.title === 'function') {
+      attributes.title = this.title(attrs, state);
+    } else {
+      attributes.title = I18n.t(this.title);
+    }
   }
 
   let contents = this.html(attrs, state);

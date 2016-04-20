@@ -208,7 +208,7 @@ Discourse.Utilities = {
       if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
     }
 
-    var type = Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment';
+    var type = Discourse.Utilities.uploadTypeFromFileName(upload.name);
 
     return Discourse.Utilities.validateUploadedFile(upload, type, bypassNewUserRestriction);
   },
@@ -232,6 +232,10 @@ Discourse.Utilities = {
 
     // everything went fine
     return true;
+  },
+
+  uploadTypeFromFileName: function(fileName) {
+    return Discourse.Utilities.isAnImage(fileName) ? 'image' : 'attachment';
   },
 
   authorizesAllExtensions: function() {
@@ -295,7 +299,8 @@ Discourse.Utilities = {
 
         // entity too large, usually returned from the web server
         case 413:
-          var maxSizeKB = 10 * 1024; // 10 MB
+          var type = Discourse.Utilities.uploadTypeFromFileName(data.files[0].name);
+          var maxSizeKB = Discourse.SiteSettings['max_' + type + '_size_kb'];
           bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb: maxSizeKB }));
           return;
 

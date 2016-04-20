@@ -193,7 +193,8 @@ export default Ember.Component.extend({
   ready: false,
   forcePreview: false,
   insertLinkHidden: true,
-  link: '',
+  linkUrl: '',
+  linkText: '',
   lastSel: null,
   _mouseTrap: null,
 
@@ -523,34 +524,27 @@ export default Ember.Component.extend({
     },
 
     insertLink() {
-      const link = this.get('link');
+      const origLink = this.get('linkUrl');
+      const linkUrl = (origLink.indexOf('://') === -1) ? `http://${origLink}` : origLink;
       const sel = this._lastSel;
 
-      const autoHttp = function(l){
-        if (l.indexOf("://") === -1) {
-          return "http://" + l;
-        } else {
-          return l;
-        }
-      };
 
-      if (Ember.isEmpty(link)) { return; }
-      const m = / "([^"]+)"/.exec(link);
-      if (m && m.length === 2) {
-        const description = m[1];
-        const remaining = link.replace(m[0], '');
-        this._addText(sel, `[${description}](${autoHttp(remaining)})`);
+      if (Ember.isEmpty(linkUrl)) { return; }
+
+      const linkText = this.get('linkText') || '';
+      if (linkText.length) {
+        this._addText(sel, `[${linkText}](${linkUrl})`);
       } else {
         if (sel.value) {
-          this._addText(sel, `[${sel.value}](${autoHttp(link)})`);
+          this._addText(sel, `[${sel.value}](${linkUrl})`);
         } else {
-          const desc = I18n.t('composer.link_description');
-          this._addText(sel, `[${desc}](${autoHttp(link)})`);
-          this._selectText(sel.start + 1, desc.length);
+          this._addText(sel, `[${origLink}](${linkUrl})`);
+          this._selectText(sel.start + 1, origLink.length);
         }
       }
 
-      this.set('link', '');
+      this.set('linkUrl', '');
+      this.set('linkText', '');
     },
 
     emoji() {

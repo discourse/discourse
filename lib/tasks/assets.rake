@@ -29,45 +29,15 @@ task 'assets:precompile:before' do
   include GlobalPath
 
   if $node_uglify
-    # monkey patch asset pipeline not to gzip, compress: false is broken
-    class ::Sprockets::Asset
-      # Save asset to disk.
-      def write_to(filename, options = {})
-        # Gzip contents if filename has '.gz'
-        return if File.extname(filename) == '.gz'
-
-        begin
-          FileUtils.mkdir_p File.dirname(filename)
-
-          File.open("#{filename}+", 'wb') do |f|
-            f.write to_s
-          end
-
-          # Atomic write
-          FileUtils.mv("#{filename}+", filename)
-
-          # Set mtime correctly
-          File.utime(mtime, mtime, filename)
-
-          nil
-        ensure
-          # Ensure tmp file gets cleaned up
-          FileUtils.rm("#{filename}+") if File.exist?("#{filename}+")
-        end
-      end
-
-
-    end
+    Rails.configuration.assets.js_compressor = nil
 
     module ::Sprockets
-
-      class UglifierCompressor
-
-        def evaluate(context, locals, &block)
-          # monkey patch cause we do this later, no idea how to cleanly disable
-          data
+      # TODO: https://github.com/rails/sprockets-rails/pull/342
+      # Rails.configuration.assets.gzip = false
+      class Base
+        def skip_gzip?
+          true
         end
-
       end
     end
   end

@@ -600,6 +600,9 @@ es:
       email_always: "Quiero recibir notificaciones por email incluso cuando esté de forma activa por el sitio"
       other_settings: "Otros"
       categories_settings: "Categorías"
+      enable_mailing_list:
+        one: "¿Seguro que quieres recibir un email por cada nuevo post?"
+        other: "¿Seguro que quieres recibir un email por cada nuevo post?<br><br>Esto resultará en aproximadamente <b>{{count}} emails</b> al día."
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "No los he visto todavía"
@@ -665,11 +668,33 @@ es:
       summary:
         title: "Resumen"
         stats: "Estadísticas"
+        time_read: "tiempo de lectura"
+        topic_count:
+          one: "tema creado"
+          other: "temas creados"
+        post_count:
+          one: "post publicado"
+          other: "posts publicados"
+        likes_given:
+          one: "me gusta dado"
+          other: "me gusta dados"
+        likes_received:
+          one: "me gusta recibido"
+          other: "me gusta recibidos"
+        days_visited:
+          one: "día visitado"
+          other: "días visitados"
+        posts_read:
+          one: "post leído"
+          other: "posts leídos"
         top_replies: "Respuestas top"
+        no_replies: "No hay respuestas aún."
         more_replies: "Más respuestas"
         top_topics: "Temas top"
+        no_topics: "No hay temas aún."
         more_topics: "Más temas"
         top_badges: "Distintivos top"
+        no_badges: "No hay distintivos aún."
         more_badges: "Más distintivos"
       associated_accounts: "Inicios de sesión"
       ip_address:
@@ -888,7 +913,7 @@ es:
       link_description: "introduzca descripción del enlace aquí"
       link_dialog_title: "Insertar Enlace"
       link_optional_text: "título opcional"
-      link_placeholder: "http://ejemplo.com \"texto opcional\""
+      link_url_placeholder: "http://ejemplo.com"
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Texto preformateado"
@@ -1340,7 +1365,6 @@ es:
         create: "Lo sentimos, hubo un error al crear tu post. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
-        attachment_too_large: "Lo siento, el archivo que estas intentando subir es demasiado grande (el tamaño máximo es {{max_size_kb}}kb)."
         file_too_large: "Lo sentimos, el archivo que estas tratando de subir es demasiado grande (el tamaño máximo es de {{max_size_kb}}kb)"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
         too_many_dragged_and_dropped_files: "Lo sentimos, solo puedes arrastrar 10 archivos a la vez."
@@ -1919,12 +1943,12 @@ es:
         none: "Ninguna copia disponible."
         read_only:
           enable:
-            title: "Habilitar el modo de 'solo-lectura'"
-            label: "Activar el modo solo-lectura"
-            confirm: "¿Estás seguro que quieres habilitar el modo de \"solo lectura\"?"
+            title: "Activar el modo solo-lectura"
+            label: "Activar solo-lecutra"
+            confirm: "¿Seguro que quieres activar el modo solo-lectura?"
           disable:
-            title: "Deshabilitar el modo de \"solo lectura\""
-            label: "Desactivar el modo solo-lectura"
+            title: "Desactivar el modo solo-lectura"
+            label: "Desactivar solo-lectura"
         logs:
           none: "No hay información de momento..."
         columns:
@@ -2104,6 +2128,7 @@ es:
           modal:
             title: "Detalles de emails entrantes"
             error: "Error"
+            headers: "Cabeceras"
             subject: "Asunto"
             body: "Cuerpo"
             rejection_message: "Correo de rechazo"
@@ -2421,6 +2446,10 @@ es:
           title: "¿Se muestra públicamente en el perfil?"
           enabled: "Mostrado en el perfil"
           disabled: "No mostrado en el perfil"
+        show_on_user_card:
+          title: "¿Mostrar en las tarjetas de usuario?"
+          enabled: "mostrado en las tarjetas de usuario"
+          disabled: "no mostrado en las tarjetas de usuario"
         field_types:
           text: 'Campo de Texto'
           confirm: 'Confirmación'
@@ -2514,6 +2543,7 @@ es:
           post_revision: "Cuando un usuario edita o crea un post"
           trust_level_change: "Cuando cambia el nivel de confianza de un usuario"
           user_change: "Cuando se edita o se crea un usuario"
+          post_processed: "Después de procesar un post"
         preview:
           link_text: "Vista previa de los distintivos concedidos"
           plan_text: "Vista previa con el planteamiento de tu query"

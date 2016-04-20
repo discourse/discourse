@@ -292,7 +292,7 @@ table.md-table {
 
 .small-action {
   .topic-avatar {
-    padding: 5px 0;
+    padding: 5px 0 3px;
     border-top: none;
     float: left;
     i {
@@ -305,7 +305,7 @@ table.md-table {
 
   .small-action-desc {
     padding: 0.5em 0 0.5em 4em;
-    margin-top: 5px;
+    margin-top: 6px;
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
@@ -351,4 +351,13 @@ table.md-table {
       color: dark-light-diff($primary, $secondary, 55%, -40%);
     }
   }
+}
+
+a.mention, a.mention-group {
+  padding: 2px 4px;
+  color: dark-light-diff($primary, $secondary, 30%, -20%);
+  background: dark-light-diff($primary, $secondary, 95%, -60%);
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.93em;
 }

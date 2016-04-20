@@ -5,6 +5,7 @@ class Admin::BadgesController < Admin::AdminController
       badge_types: BadgeType.all.order(:id).to_a,
       badge_groupings: BadgeGrouping.all.order(:position).to_a,
       badges: Badge.includes(:badge_grouping)
+                    .includes(:badge_type)
                     .references(:badge_grouping)
                     .order('badge_groupings.position, badge_type_id, badges.name').to_a,
       protected_system_fields: Badge.protected_system_fields,

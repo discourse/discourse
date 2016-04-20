@@ -68,6 +68,8 @@
 
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
+          {{plugin-outlet "topic-above-posts"}}
+
           {{#unless model.postStream.loadingFilter}}
             {{scrolling-post-stream
               posts=postsToRender
@@ -128,6 +130,10 @@
                   {{/link-to}}
                 {{/if}}
               </div>
+            {{/if}}
+
+            {{#if showSelectedPostsAtBottom}}
+              {{view "selected-posts"}}
             {{/if}}
 
             {{plugin-outlet "topic-above-suggested"}}

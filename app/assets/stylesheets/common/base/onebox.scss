@@ -295,6 +295,7 @@ aside.onebox.twitterstatus .onebox-body {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     text-overflow: ellipsis;
+    max-width: 100%;
 
     .inner-box {
       padding-left: 10px;

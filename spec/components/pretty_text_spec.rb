@@ -208,6 +208,10 @@ HTML
       expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/topic/1234/4567"])
     end
 
+    it "should not extract links to anchors" do
+      expect(extract_urls("<a href='#tos'>TOS</a>")).to eq([])
+    end
+
     it "should not extract links inside quotes" do
       links = PrettyText.extract_links("
         <a href='http://body_only.com'>http://useless1.com</a>

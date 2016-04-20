@@ -672,7 +672,6 @@ he:
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פרסום Discourse אחד בקופסא (oneboxed Discourse post)."
     onebox_domains_whitelist: "רשימת מתחמים (דומיינים) מותרים לאריזה (oneboxing); על דומיינים אלה לתמוך ב-OpenGraph או ב-oEmbed. בדקו אותם ב-http://iframely.com/debug."
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
-    digest_logo_url: "The alternate logo image used at the top of your site's email digest. Should be a wide rectangle shape. If left blank `logo_url` will be used. "
     logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon, to work correctly over a CDN it must be a png"
     mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. Should be a square shape. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
@@ -692,7 +691,6 @@ he:
     polling_interval: "כאשר לא מבצעים תשאול ארוך (long polling), כל כמה זמן לקוחות מחוברים למערכת יבצעו poll, במילי-שניות"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "באיזו תכיפות צריכים לקוחות לבצע תשאול (poll) במילישניות (כאשר החלון נמצא ברקע)"
-    flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     cooldown_minutes_after_hiding_posts: "מספר הדקות שמשתמש/ת חייבים לחכות לפני שהם יכולים לערוך פרסום מוסתר דרך סימון קהילתי"
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
     max_replies_in_first_day: "The maximum number of replies a user is allowed to create in their first day on the site"
@@ -753,7 +751,6 @@ he:
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     enable_sso_provider: "הטמיעו את פרוטוקול הספק Discourse SSO בנקודת הקצה /session/sso_provider, דורש כיוון של sso_secret"
-    sso_url: "URL of single sign on endpoint"
     sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
     sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
@@ -962,7 +959,6 @@ he:
     emoji_set: "איך אתם אוהבים את ה-emoji שלכם?"
     enforce_square_emoji: "חובת מימדי ריבועיים בכל ה-emojis."
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
-    notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact email. Set to 0 to disable these emails."
     default_email_digest_frequency: "באיזה תדירות משתמשים מקבלים מייל עדכון בתור ברירת מחדל. "
     default_email_private_messages: "שלח מייל כשמישהו שולח הודעה למשתמש, בתור ברירת מחדל."
     default_email_direct: "שלח מייל כשמישהו מצטט/ מגיב ל/מזכיר או מזמין משתמש, בתור ברירת מחדל. "
@@ -1241,20 +1237,12 @@ he:
       text_body_template: "אנחנו מתנצלים, אבל הודעת המייל שלך ל- %{destination}  (titled %{former_title})  לא עבדה. \n\nלא מצאנו תוכן במייל שלך. אנא ודא שהתגובה שלך בראש המייל, אנחנו לא יכולים לעבד תגובות בין השורות. \n"
     email_reject_invalid_access:
       subject_template: "[%{site_name}]  בעיית מייל -- גישה לא תקינה"
-      text_body_template: |
-        אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
-
-        אין לחשבון שלך את רמון האמון הנדרשת כדי לפרסם נושאים חדשים  בקטגוריה הזו.  אם אתם חושבים שזוהי שגיאה, צרו קשר עם אחד מאנשי הצוות.
     email_reject_reply_key:
       subject_template: "[%{site_name}]  בעיית מייל -- תו תגובה לא מוכר"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}]  בעיית מייל -- לא נמצא נושא"
     email_reject_topic_closed:
       subject_template: "[%{site_name}]  בעיית מייל -- נושא נסגר"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת הדוא"ל שלך אל %{destination} (בנושא %{former_title}) לא נשלחה.
-
-        הנושא שהשבתם אליו נסגר ולכן לא ניתן להשיב לו יותר.  אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
     email_reject_auto_generated:
       subject_template: "[%{site_name}]  בעיית מייל -- תגובה נוצרה אוטומטית"
     email_error_notification:

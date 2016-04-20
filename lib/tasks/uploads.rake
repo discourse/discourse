@@ -1,6 +1,64 @@
 require "digest/sha1"
 
 ################################################################################
+#                                    gather                                    #
+################################################################################
+
+task "uploads:gather" => :environment do
+  require "db_helper"
+
+  ENV["RAILS_DB"] ? gather_uploads : gather_uploads_for_all_sites
+end
+
+def gather_uploads_for_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { gather_uploads }
+end
+
+def file_exists?(path)
+  File.exists?(path) && File.size(path) > 0
+rescue
+  false
+end
+
+def gather_uploads
+  public_directory = "#{Rails.root}/public"
+  current_db = RailsMultisite::ConnectionManagement.current_db
+
+  puts "", "Gathering uploads for '#{current_db}'...", ""
+
+  Upload.where("url ~ '^\/uploads\/'")
+        .where("url !~ '^\/uploads\/#{current_db}'")
+        .find_each do |upload|
+    begin
+      old_db = upload.url[/^\/uploads\/([^\/]+)\//, 1]
+      from = upload.url.dup
+      to = upload.url.sub("/uploads/#{old_db}/", "/uploads/#{current_db}/")
+      source = "#{public_directory}#{from}"
+      destination = "#{public_directory}#{to}"
+
+      # create destination directory & copy file unless it already exists
+      unless file_exists?(destination)
+        `mkdir -p '#{File.dirname(destination)}'`
+        `cp --link '#{source}' '#{destination}'`
+      end
+
+      # ensure file has been succesfuly copied over
+      raise unless file_exists?(destination)
+
+      # remap links in db
+      DbHelper.remap(from, to)
+    rescue
+      putc "!"
+    else
+      putc "."
+    end
+  end
+
+  puts "", "Done!"
+
+end
+
+################################################################################
 #                                backfill_shas                                 #
 ################################################################################
 

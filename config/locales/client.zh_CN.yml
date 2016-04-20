@@ -145,7 +145,7 @@ zh_CN:
     links: "链接"
     links_lowercase:
       other: "链接"
-    faq: "常见问题（FAQ）"
+    faq: "常见问题"
     guidelines: "指引"
     privacy_policy: "隐私政策"
     privacy: "隐私"
@@ -409,14 +409,14 @@ zh_CN:
         perm_denied_expl: "你拒绝了通知提醒的权限。设置浏览器允许通知提醒。"
         disable: "禁用通知"
         enable: "启用通知"
-        each_browser_note: "注意：你必须在任何你使用的浏览器中更改这项设置。"
+        each_browser_note: "注意：你必须在你使用的所用浏览器中更改这项设置。"
       dismiss_notifications: "标记所有为已读"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
       disable_jump_reply: "不要在回复后跳转到我的新帖子"
       dynamic_favicon: "在浏览器图标上显示新/更新的主题数量"
-      edit_history_public: "让其他用户查看我的帖子的以前版本"
+      edit_history_public: "让其他用户查看我的帖子的历史版本"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
-      enable_quoting: "在高亮选择文字时启用引用回复"
+      enable_quoting: "在高亮选择文字时显示引用回复按钮"
       change: "修改"
       moderator: "{{user}} 是版主"
       admin: "{{user}} 是管理员"
@@ -469,10 +469,9 @@ zh_CN:
         set_password: "设置密码"
       change_about:
         title: "更改个人简介"
-        error: "改变该值时出现错误。"
       change_username:
         title: "修改用户名"
-        confirm: "如果你修改用户名，所有引用你的帖子和 @你 的链接将失效。你真的确定要这么做么？"
+        confirm: "如果你修改用户名，所有引用你的帖子和@你的链接都将失效。你真的确定要这么做么？"
         taken: "抱歉，此用户名已经被使用了。"
         error: "在修改你的用户名时发生了错误。"
         invalid: "此用户名不合法，用户名只能包含字母和数字"
@@ -550,12 +549,12 @@ zh_CN:
         first_time: "第一个被赞的帖子"
         never: "从不"
       email_previous_replies:
-        title: "包括邮件底下的以前的回复"
-        unless_emailed: "除非曾经发送过"
+        title: "在邮件底部包含过往回复"
+        unless_emailed: "如果还没收到过"
         always: "总是"
         never: "从不"
       email_digests:
-        title: "当我不访问时，向我的邮箱发送最新信息："
+        title: "当我不访问时，向我的邮箱发送最近更新的摘要"
         every_30_minutes: "每半小时"
         every_hour: "每小时"
         daily: "每天"
@@ -563,9 +562,9 @@ zh_CN:
         weekly: "每周"
         every_two_weeks: "每两周"
       include_tl0_in_digests: "在摘要邮件中包含新用户的帖子"
-      email_in_reply_to: "在邮件中包含回复的摘要文本"
-      email_direct: "当有人引用我、回复我的帖子，@提及你或邀请你至主题时发送一封邮件给我"
-      email_private_messages: "当有人给发消息给我时发送一封邮件给我"
+      email_in_reply_to: "在邮件中附带回复你的帖子的内容节选"
+      email_direct: "当有人引用我、回复我的帖子、@提及我或邀请我至主题时，发送一封邮件给我"
+      email_private_messages: "当有人发消息给我时，发送一封邮件给我"
       email_always: "即使我在论坛中活跃时也发送电子邮件提醒给我"
       other_settings: "其它"
       categories_settings: "分类"
@@ -639,7 +638,7 @@ zh_CN:
         topic_count:
           other: "创建的主题"
         post_count:
-          other: "创建的帖子"
+          other: "发表的帖子"
         likes_given:
           other: "给赞"
         likes_received:
@@ -872,7 +871,6 @@ zh_CN:
       link_description: "在此输入链接描述"
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
-      link_placeholder: "http://example.com \"可选文字\""
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
@@ -901,7 +899,7 @@ zh_CN:
           units: "(# 小时数）"
           examples: '输入小时数（24）。'
     notifications:
-      title: "使用@名字提及到你，回复你的帖子和主题，消息等等的通知消息"
+      title: "使用@名字提及到你，回复你的帖子和主题、消息以及其他的通知消息"
       none: "现在无法载入通知"
       more: "浏览以前的通知"
       total_flagged: "被标记帖子的总数"
@@ -993,14 +991,14 @@ zh_CN:
         reset_read: "设为未读"
         delete: "删除主题"
         dismiss: "忽略"
-        dismiss_read: "忽略所有未读"
+        dismiss_read: "忽略所有未读主题"
         dismiss_button: "忽略..."
         dismiss_tooltip: "仅忽略新帖子或停止跟踪主题"
-        also_dismiss_topics: "停止跟踪这些主题它们将不再作为未读给我显示"
+        also_dismiss_topics: "停止追踪这些主题，这样这些主题就不再显示为未读了"
         dismiss_new: "设为已读"
         toggle: "切换批量选择"
         actions: "批量操作"
-        change_category: "更改目录"
+        change_category: "更改分类"
         close_topics: "关闭话题"
         archive_topics: "存档主题"
         notification_level: "更改提示等级"
@@ -1301,7 +1299,6 @@ zh_CN:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
-        attachment_too_large: "抱歉，你上传的附件太大了（最大不能超过 {{max_size_kb}}kb）。"
         file_too_large: "抱歉，你上传的附件太大了（最大限制 {{max_size_kb}}kb）。"
         too_many_uploads: "抱歉，你只能一次上传一张图片。"
         too_many_dragged_and_dropped_files: "抱歉，你一次只能拖放最多 10 个文件。"
@@ -1758,7 +1755,7 @@ zh_CN:
           disagreed: "被否决"
           deferred: "已推迟"
         flagged_by: "标记者"
-        resolved_by: "已解决，被"
+        resolved_by: "处理者"
         took_action: "立即执行"
         system: "系统"
         error: "出错了"
@@ -1844,14 +1841,6 @@ zh_CN:
           backups: "备份"
           logs: "日志"
         none: "无可用备份"
-        read_only:
-          enable:
-            title: "启用只读模式"
-            label: "启用只读模式"
-            confirm: "你确定要打开只读模式吗？"
-          disable:
-            title: "禁用只读模式"
-            label: "关闭只读模式"
         logs:
           none: "暂无日志"
         columns:
@@ -2232,7 +2221,7 @@ zh_CN:
         last_100_days: '在最近 100 天'
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
-        post_count: 创建的帖子数量
+        post_count: 发表的帖子数量
         topics_entered: 已查看的主题数量
         flags_given_count: 提交标记数量
         flags_received_count: 被他人标记数量
@@ -2249,7 +2238,7 @@ zh_CN:
         anonymize_failed: "在匿名化该账户时遇到问题。"
         delete: "删除用户"
         delete_forbidden_because_staff: "不能删除管理员和版主。"
-        delete_posts_forbidden_because_staff: "不能删除管理员和版主的所以帖子。"
+        delete_posts_forbidden_because_staff: "不能完全删除管理员和版主的帖子。"
         delete_forbidden:
           other: "用户如果有帖子将不能删除。在试图尝试删除一个用户前删除所有的帖子（%{count} 天前的帖子不能被删除）"
         cant_delete_all_posts:

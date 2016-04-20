@@ -336,7 +336,7 @@ class Admin::UsersController < Admin::AdminController
     email_token = user.email_tokens.create(email: user.email)
 
     unless params[:send_email] == '0' || params[:send_email] == 'false'
-      Jobs.enqueue( :user_email,
+      Jobs.enqueue( :critical_user_email,
                     type: :account_created,
                     user_id: user.id,
                     email_token: email_token.token)

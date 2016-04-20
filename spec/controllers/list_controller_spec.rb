@@ -224,26 +224,60 @@ describe ListController do
   describe "best_periods_for" do
 
     it "returns yearly for more than 180 days" do
+      SiteSetting.top_page_default_timeframe = 'all'
       expect(ListController.best_periods_for(nil)).to eq([:yearly])
       expect(ListController.best_periods_for(180.days.ago)).to eq([:yearly])
     end
 
     it "includes monthly when less than 180 days and more than 35 days" do
+      SiteSetting.top_page_default_timeframe = 'all'
       (35...180).each do |date|
         expect(ListController.best_periods_for(date.days.ago)).to eq([:monthly, :yearly])
       end
     end
 
     it "includes weekly when less than 35 days and more than 8 days" do
+      SiteSetting.top_page_default_timeframe = 'all'
       (8...35).each do |date|
         expect(ListController.best_periods_for(date.days.ago)).to eq([:weekly, :monthly, :yearly])
       end
     end
 
     it "includes daily when less than 8 days" do
+      SiteSetting.top_page_default_timeframe = 'all'
       (0...8).each do |date|
         expect(ListController.best_periods_for(date.days.ago)).to eq([:daily, :weekly, :monthly, :yearly])
       end
+    end
+
+    it "returns default even for more than 180 days" do
+      SiteSetting.top_page_default_timeframe = 'monthly'
+      expect(ListController.best_periods_for(nil)).to eq([:monthly, :yearly])
+      expect(ListController.best_periods_for(180.days.ago)).to eq([:monthly, :yearly])
+    end
+
+    it "returns default even when less than 180 days and more than 35 days" do
+      SiteSetting.top_page_default_timeframe = 'weekly'
+      (35...180).each do |date|
+        expect(ListController.best_periods_for(date.days.ago)).to eq([:weekly, :monthly, :yearly])
+      end
+    end
+
+    it "returns default even when less than 35 days and more than 8 days" do
+      SiteSetting.top_page_default_timeframe = 'daily'
+      (8...35).each do |date|
+        expect(ListController.best_periods_for(date.days.ago)).to eq([:daily, :weekly, :monthly, :yearly])
+      end
+    end
+
+    it "doesn't return default when set to all" do
+      SiteSetting.top_page_default_timeframe = 'all'
+      expect(ListController.best_periods_for(nil)).to eq([:yearly])
+    end
+
+    it "doesn't return value twice when matches default" do
+      SiteSetting.top_page_default_timeframe = 'yearly'
+      expect(ListController.best_periods_for(nil)).to eq([:yearly])
     end
 
   end

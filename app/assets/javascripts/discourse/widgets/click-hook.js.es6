@@ -42,7 +42,8 @@ WidgetClickHook.setupDocumentCallback = function() {
     while (node) {
       const widget = node[CLICK_ATTRIBUTE_NAME];
       if (widget) {
-        return widget.rerenderResult(() => widget.click(e));
+        widget.rerenderResult(() => widget.click(e));
+        break;
       }
       node = node.parentNode;
     }
@@ -53,7 +54,7 @@ WidgetClickHook.setupDocumentCallback = function() {
       if (outNode.contains(node)) { return; }
       const widget = outNode[CLICK_OUTSIDE_ATTRIBUTE_NAME];
       if (widget) {
-        return widget.clickOutside(e);
+        widget.clickOutside(e);
       }
     });
   });

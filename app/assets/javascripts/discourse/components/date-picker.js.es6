@@ -15,8 +15,6 @@ export default Em.Component.extend({
         field: input,
         container: this.$()[0],
         format: "YYYY-MM-DD",
-        defaultDate: moment().add(1, "day").toDate(),
-        minDate: new Date(),
         firstDay: moment.localeData().firstDayOfWeek(),
         i18n: {
           previousMonth: I18n.t('dates.previous_month'),

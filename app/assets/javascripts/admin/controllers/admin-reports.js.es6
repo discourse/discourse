@@ -4,9 +4,10 @@ import Report from 'admin/models/report';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-  viewMode: 'table',
+  queryParams: ["mode", "start-date", "end-date", "category-id", "group-id"],
+  viewMode: 'graph',
   viewingTable: Em.computed.equal('viewMode', 'table'),
-  viewingBarChart: Em.computed.equal('viewMode', 'barChart'),
+  viewingGraph: Em.computed.equal('viewMode', 'graph'),
   startDate: null,
   endDate: null,
   categoryId: null,
@@ -35,6 +36,16 @@ export default Ember.Controller.extend({
       var q;
       this.set("refreshing", true);
 
+      this.setProperties({
+        'start-date': this.get('startDate'),
+        'end-date': this.get('endDate'),
+        'category-id': this.get('categoryId'),
+      });
+
+      if (this.get('groupId')){
+        this.set('group-id', this.get('groupId'));
+      }
+
       q = Report.find(this.get("model.type"), this.get("startDate"), this.get("endDate"), this.get("categoryId"), this.get("groupId"));
       q.then(m => this.set("model", m)).finally(() => this.set("refreshing", false));
     },
@@ -43,8 +54,8 @@ export default Ember.Controller.extend({
       this.set('viewMode', 'table');
     },
 
-    viewAsBarChart() {
-      this.set('viewMode', 'barChart');
+    viewAsGraph() {
+      this.set('viewMode', 'graph');
     },
 
     exportCsv() {

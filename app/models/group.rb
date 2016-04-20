@@ -217,6 +217,17 @@ class Group < ActiveRecord::Base
     group
   end
 
+  def self.ensure_consistency!
+    reset_all_counters!
+    refresh_automatic_groups!
+  end
+
+  def self.reset_all_counters!
+    Group.pluck(:id).each do |group_id|
+      Group.reset_counters(group_id, :group_users)
+    end
+  end
+
   def self.refresh_automatic_groups!(*args)
     if args.length == 0
       args = AUTO_GROUPS.keys
@@ -388,7 +399,7 @@ class Group < ActiveRecord::Base
       domains.each do |domain|
         domain.sub!(/^https?:\/\//, '')
         domain.sub!(/\/.*$/, '')
-        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\Z/i
+        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
       end
       self.automatic_membership_email_domains = domains.join("|")
     end

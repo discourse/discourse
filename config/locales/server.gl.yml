@@ -423,6 +423,8 @@ gl:
     types:
       category: 'Categorías'
       user: 'Usuarios'
+  original_poster: "Publicador orixinal"
+  most_recent_poster: "Publicador máis recente"
   frequent_poster: "Publicador frecuente"
   redirected_to_top_reasons:
     new_user: "Benvido/a á nosa comunidade. Estes son os temas recentes máis populares."

@@ -17,6 +17,9 @@ module Email
   class MessageBuilder
     attr_reader :template_args
 
+    REPLY_TO_AUTO_GENERATED_HEADER_KEY = "X-Discourse-Reply-to-Auto-Generated".freeze
+    REPLY_TO_AUTO_GENERATED_HEADER_VALUE = "marked".freeze
+
     def initialize(to, opts=nil)
       @to = to
       @opts = opts || {}
@@ -39,7 +42,7 @@ module Email
             string = allow_reply_by_email? ? "user_notifications.reply_by_email" : "user_notifications.visit_link_to_respond"
             string << "_pm" if @opts[:private_reply]
           end
-          @template_args[:respond_instructions] = I18n.t(string, @template_args)
+          @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)
         end
       end
     end
@@ -132,7 +135,11 @@ module Email
     def header_args
       result = {}
       if @opts[:add_unsubscribe_link]
-        result['List-Unsubscribe'] = "<#{template_args[:user_preferences_url]}>" if @opts[:add_unsubscribe_link]
+        result['List-Unsubscribe'] = "<#{template_args[:user_preferences_url]}>"
+      end
+
+      if @opts[:mark_as_reply_to_auto_generated]
+        result[REPLY_TO_AUTO_GENERATED_HEADER_KEY] = REPLY_TO_AUTO_GENERATED_HEADER_VALUE
       end
 
       result['X-Discourse-Post-Id'] = @opts[:post_id].to_s if @opts[:post_id]

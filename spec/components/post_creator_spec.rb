@@ -150,8 +150,9 @@ describe PostCreator do
       end
 
       it 'extracts links from the post' do
-        TopicLink.expects(:extract_from).with(instance_of(Post))
+        create_post(raw: "this is a link to the best site at https://google.com")
         creator.create
+        expect(TopicLink.count).to eq(1)
       end
 
       it 'queues up post processing job when saved' do
@@ -446,7 +447,7 @@ describe PostCreator do
                                 raw: raw,
                                 cooking_options: { traditional_markdown_linebreaks: true })
 
-      Post.any_instance.expects(:cook).with(raw, has_key(:traditional_markdown_linebreaks)).twice.returns(raw)
+      Post.any_instance.expects(:cook).with(raw, has_key(:traditional_markdown_linebreaks)).returns(raw)
       creator.create
     end
   end
@@ -543,6 +544,32 @@ describe PostCreator do
       expect(topic.warning.user).to eq(target_user1)
       expect(topic.warning.created_by).to eq(user)
       expect(target_user1.warnings.count).to eq(1)
+    end
+  end
+
+  context 'auto closing' do
+    it 'closes private messages that have more than N posts' do
+      SiteSetting.auto_close_messages_post_count = 2
+
+      admin = Fabricate(:admin)
+
+      post1 = create_post(archetype: Archetype.private_message,
+                          target_usernames: [admin.username])
+
+      _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
+
+      post1.topic.reload
+      expect(post1.topic.closed).to eq(true)
+    end
+
+    it 'closes topics that have more than N posts' do
+      SiteSetting.auto_close_topics_post_count = 2
+
+      post1 = create_post
+      _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
+
+      post1.topic.reload
+      expect(post1.topic.closed).to eq(true)
     end
   end
 

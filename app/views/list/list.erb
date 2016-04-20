@@ -1,5 +1,7 @@
 <%- if include_crawler_content? %>
 
+<%= server_plugin_outlet "topic_list_header" %>
+
 <% if @category %>
   <h1>
     <% if @category.parent_category %>

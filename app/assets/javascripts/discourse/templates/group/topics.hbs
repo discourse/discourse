@@ -1,7 +1,1 @@
-<div class='user-stream'>
-  {{#each controller as |post|}}
-    {{group-post post=post}}
-  {{else}}
-    <div>{{i18n "groups.empty.topics"}}</div>
-  {{/each}}
-</div>
+{{group-post-stream posts=controller emptyText="groups.empty.topics"}}

@@ -416,7 +416,6 @@ zh_TW:
         set_password: "設定密碼"
       change_about:
         title: "修改關於我"
-        error: "變更值時發生錯誤。"
       change_username:
         title: "修改用戶名稱"
         confirm: "如果你修改了你的用戶名稱，之前引用你的文章或以 @用戶名稱 提到你的連結都將失效，你確定要修改嗎？"
@@ -1059,7 +1058,6 @@ zh_TW:
         create: "抱歉，建立你的文章時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的文章時發生錯誤，請再試一次。"
         upload: "抱歉，上傳你的檔案時發生錯誤，請再試一次。"
-        attachment_too_large: "抱歉，你想上傳的檔案太大 (最大限制為 {{max_size_kb}} kb)。"
         file_too_large: "抱歉，你想上傳的檔案太大 (最大限制為 {{max_size_kb}} kb)。"
         too_many_uploads: "抱歉，一次只能上傳一個檔案。"
         too_many_dragged_and_dropped_files: "抱歉，一次最多只能拖放 10 個檔案"
@@ -1570,14 +1568,6 @@ zh_TW:
           backups: "備份"
           logs: "紀錄"
         none: "沒有可用的備份。"
-        read_only:
-          enable:
-            title: "啟動唯讀模式"
-            label: "啟動唯讀模式"
-            confirm: "你確定要啟動唯讀模式?"
-          disable:
-            title: "關閉啟動唯讀模式"
-            label: "關閉唯讀模式"
         logs:
           none: "尚無紀錄..."
         columns:
