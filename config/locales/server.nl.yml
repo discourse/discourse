@@ -343,7 +343,6 @@ nl:
       create_like: "Je hebt het maximum aantal likes voor vandaag bereikt. Wacht aub %{time_left} voordat je het opnieuw probeert."
       create_bookmark: "Je hebt het maximum aantal bladwijzers voor vandaag bereikt. Wacht aub %{time_left} voordat je het opnieuw probeert."
       edit_post: "Je hebt het maximum aantal bewerkingen voor vandaag bereikt. Wacht aub %{time_left} voordat je het opnieuw probeert."
-      live_post_counts: "Je vraagt te snel om het huidige aantal berichten. Wacht %{time_left} voor je het opnieuw probeert."
       unsubscribe_via_email: "Je hebt het maximum aantal uitschrijvingen voor vandaag bereikt. Wacht aub %{time_left} voordat je het opnieuw probeert."
       topic_invitations_per_day: "Je hebt het maximum aantal topic uitnodigingen bereikt voor vandaag. Wacht aub %{time_left} voordat je het opnieuw probeert."
     hours:
@@ -732,7 +731,6 @@ nl:
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
     onebox_domains_whitelist: "Een lijst met domeinen waarvoor oneboxing is toegestaan; deze domeinen moeten OpenGraph of oEmbed ondersteunen. Dit kun je testen op http://iframely.com/debug"
     logo_url: "De logo afbeelding links bovenaan je site moet de vorm hebben van een brede rechthoek. Indien leeg wordt de site titeltekst getoond."
-    digest_logo_url: "Het alternatieve logo voor bovenaan de digest mail van je site wordt moet de vorm hebben van een brede rechthoek. Indien leeg wordt ´logo_url´ gebruikt."
     logo_small_url: "De kleine logo afbeelding links boven aan je site moet de vorm van een vierkant hebben en wordt getoond als naar beneden wordt gescrold. Indien leeg wordt een homepage symbool getoond."
     favicon_url: "Een favicon voor je site, zie http://nl.wikipedia.org/wiki/Favicon. Voor een correcte werking via CDN moet het een png zijn."
     mobile_logo_url: "De logo afbeelding met vaste positie voor linksboven op je mobiele site. De afbeelding moet vierkant zijn. Indien leeg wordt `logo_url` gebruikt. Bijv.: http://example.com/uploads/default/logo.png"
@@ -753,7 +751,6 @@ nl:
     polling_interval: "Als ´long polling´ niet wordt toegepast, hoe vaak moet een ingelogde client een 'poll' uitvoeren in milliseconden"
     anon_polling_interval: "Hoe vaak een anonieme client een 'poll' moet uitvoeren in milliseconden"
     background_polling_interval: "Hoe vaak zouden de clients moeten pollen in milliseconden (als het venster in de achtergrond staat)"
-    flags_required_to_hide_post: "Berichten zullen automatisch worden verborgen zodra het aantal meldingen maximaal dit aantal is (0 voor nooit)"
     cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat zij een door de gemeenschap verborgen bericht kunnen wijzigen"
     max_topics_in_first_day: "Het maximum aantal topics dat een gebruiker mag maken tijdens hun eerste dag op de site"
     max_replies_in_first_day: "Het maximum aantal reacties dat een gebruiker mag schrijven tijdens hun eerste dag op de site"
@@ -819,7 +816,6 @@ nl:
     block_common_passwords: "Accepteer geen wachtwoorden die voorkomen in de 10.000 meest voorkomende wachtwoorden."
     enable_sso: "Schakel single sign on in via een externe site (WAARSCHUWING: E-MAILADRESSEN VAN GEBRUIKERS '* MOETEN * DOOR DE EXTERNE SITE WORDEN GEVALIDEERD)"
     enable_sso_provider: "Pas  Discourse SSO provider protocol toe op het /session/sso_provider eindpunt, vereist dat sso_secret is ingesteld"
-    sso_url: "URL van single sign on eindpunt"
     sso_secret: "Geheime tekenreeks voor het cryptografisch valideren van SSO informatie, zorg er voor dat het 10 tekens of langer is"
     sso_overrides_email: "Overschrijft bij elke aanmelding lokaal opgegeven mailadres door mailadres uit SSO payload van externe site, en voorkomt lokaal wijzigen. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale mailadressen)"
     sso_overrides_username: "Overschrijft bij elke aanmelding lokaal opgegeven gebruikersnaam door gebruikersnaam uit SSO payload van externe site, en voorkomt lokaal wijzigen. (WAARSCHUWING: er kunnen discrepanties ontstaan door verschillen in gebruikersnaam lengte/vereisten)"
@@ -1045,7 +1041,6 @@ nl:
     enforce_square_emoji: "Forceer een vierkant aspect ratio bij alle emojis."
     approve_post_count: "Het aantal berichten van een nieuwe of normale gebruiker dat moet worden goedgekeurd"
     approve_unless_trust_level: "Posts voor gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
-    notify_about_queued_posts_after: "Als er posts zijn die meer dan dit aantal uren klaar staan om te worden beoordeeld, dan zal er een e-mail worden gestuurd naar het contact e-mail. Zet op 0 om deze e-mails uit te schakelen."
     default_email_digest_frequency: "Hoe vaak ontvangen gebruikers standaard een samenvattings-e-mails."
     default_email_private_messages: "Stuur standaard een e-mail als iemand de gebruiker bericht."
     default_email_direct: "Stuur standaard een e-mail wanneer iemand de gebruiker citeert/beantwoordt/vermeldt of uitnodigt."
@@ -1318,10 +1313,6 @@ nl:
       text_body_template: "Het spijt ons, maar de export is mislukt. Bekijk de logbestanden of neem contact op met de staf."
     email_reject_insufficient_trust_level:
       subject_template: "[%{site_name}] E-mailprobleem -- Vertrouwensniveau te laag"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Het vertrouwensniveau van je account is niet hoog genoeg om nieuwe topics aan dit e-mailadres te sturen. Als je denkt dat dit niet klopt, kan je contact opnemen met de staf.
     email_reject_inactive_user:
       subject_template: "[%{site_name}] E-mailprobleem -- Gebruiker inactief"
       text_body_template: |
@@ -1364,16 +1355,8 @@ nl:
         We konden je reactie niet in je e-mail vinden. **Zorg ervoor dat je reactie bovenaan de e-mail staat**, we kunnen ingebedde reacties niet verwerken.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] E-mailprobleem -- Ongeldige toegang"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Je hebt niet het privilege om nieuwe topics in die categorie te plaatsen. Als je denkt dat dit niet klopt, kan je contact opnemen met de staf.
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] E-mailprobleem -- Ongeldige toegang"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        In de categorie waaraan je de e-mail stuurde, zijn alleen reacties van gebruikers met geldige accounts en bekende e-mailadressen toegestaan. Als je denkt dat dit niet klopt, kan je contact opnemen met de staf.
     email_reject_invalid_post:
       subject_template: "[%{site_name}] E-mailprobleem -- Foutmelding bij het plaatsen"
       text_body_template: |
@@ -1416,22 +1399,10 @@ nl:
         Geen van de bestemmingsadressen werd herkend. Zorg ervoor dat je je e-mail naar het juiste door de staf verstrekte e-mailadres stuurt.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-mailprobleem -- Topic niet gevonden"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Het topic waarop je reageert bestaat niet meer. Misschien is het verwijderd? Als je denkt dat dit niet klopt, kan je contact opnemen met de staf.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-mailprobleem -- Topic gesloten"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Het topic waarop je reageert is op dit moment gesloten en accepteert geen reacties meer. Als je denkt dat dit niet klopt, kan je contact opnemen met de staf.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-mailprobleem -- Automatisch gegenereerde reactie"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Je e-mail is als ‘automatisch gegenereerd’ gemarkeerd, wat betekent dat het automatisch door een computer is geschreven in plaats van door een mens. Zulke e-mails kunnen wij niet accepteren. Als je denkt dat dit niet klopt, kan je contact opnemen met de staf.
     email_error_notification:
       subject_template: "[%{site_name}] Email probleem -- POP authenticatie fout"
     too_many_spam_flags:

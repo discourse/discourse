@@ -499,7 +499,6 @@ pt_BR:
         set_password: "Definir Senha"
       change_about:
         title: "Modificar Sobre Mim"
-        error: "Houve um erro ao alterar este valor."
       change_username:
         title: "Alterar Nome de Usuário"
         confirm: "Se você mudar seu Nome de Usuário, todas as citações das suas respostas e as menções ao seu @nome vão quebrar. Você tem certeza?"
@@ -911,7 +910,7 @@ pt_BR:
       link_description: "digite a descrição do link aqui"
       link_dialog_title: "Inserir link"
       link_optional_text: "título opcional"
-      link_placeholder: "http://example.com \"texto opcional\""
+      link_url_placeholder: "http://exemplo.com"
       quote_title: "Bloco de citação"
       quote_text: "Bloco de citação"
       code_title: "Texto pré-formatado"
@@ -1350,7 +1349,6 @@ pt_BR:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
         upload: "Desculpe, houve um erro ao enviar esse arquivo. Por favor, tente outra vez."
-        attachment_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
         file_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
         too_many_dragged_and_dropped_files: "Desculpe, você pode arrastar & soltar apenas 10 arquivos por vez."
@@ -1919,14 +1917,6 @@ pt_BR:
           backups: "Backups"
           logs: "Registros"
         none: "Nenhum backup disponível."
-        read_only:
-          enable:
-            title: "Habilitar o modo \"somente leitura\""
-            label: "Habilita modo \"somente leitura\""
-            confirm: "Você está certo em querer habilitar o modo \"somente leitura\"?"
-          disable:
-            title: "Desabilitar o modo \"somente leitura\""
-            label: "Desabilita modo \"somente leitura\""
         logs:
           none: "Nenhum registro ainda..."
         columns:

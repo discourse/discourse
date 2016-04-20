@@ -738,7 +738,7 @@ de:
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     read_only_mode:
-      enabled: "Diese Site ist im Nur-Lesen Modus. Du kannst weiterhin die Site lesen, aber antworten, liken und andere Aktionen sind deaktiviert."
+      enabled: "Diese Website befindet sich im Nur-Lesen-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von Likes und Durchführen einiger weiterer Aktionen ist derzeit nicht möglich."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
       logout_disabled: "Die Abmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_and_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen und <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
@@ -913,7 +913,7 @@ de:
       link_description: "gib hier eine Link-Beschreibung ein"
       link_dialog_title: "Hyperlink einfügen"
       link_optional_text: "Optionaler Titel"
-      link_placeholder: "http://example.com \"Optionaler Text\""
+      link_url_placeholder: "http://example.com"
       quote_title: "Zitat"
       quote_text: "Zitat"
       code_title: "Vorformatierter Text"
@@ -1365,7 +1365,6 @@ de:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
-        attachment_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
         file_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         too_many_dragged_and_dropped_files: "Entschuldige, du kannst Drag & Drop gleichzeitig nur für bis zu 10 Dateien benutzen."
@@ -1942,7 +1941,7 @@ de:
           enable:
             title: "Nur-Lesen-Modus aktivieren"
             label: "Nur-Lesen-Modus aktivieren"
-            confirm: "Möchtest du wirklich den Nur-Lesen Modus aktivieren?"
+            confirm: "Möchtest du wirklich den Nur-Lesen-Modus aktivieren?"
           disable:
             title: "Nur-Lesen-Modus deaktivieren"
             label: "Nur-Lesen-Modus deaktivieren"
@@ -2445,8 +2444,8 @@ de:
           disabled: "wird im Profil nicht angezeigt"
         show_on_user_card:
           title: "Auf Benutzerkarte anzeigen?"
-          enabled: "wird auf Benutzerkarte angezeigt"
-          disabled: "wird auf Benutzerkarte nicht angezeigt"
+          enabled: "Wird auf Benutzerkarte angezeigt"
+          disabled: "Wird nicht auf Benutzerkarte angezeigt"
         field_types:
           text: 'Textfeld'
           confirm: 'Bestätigung'
@@ -2540,6 +2539,7 @@ de:
           post_revision: "Wenn ein Benutzer einen Beitrag bearbeitet oder erstellt"
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
           user_change: "Wenn ein Benutzer bearbeitet oder angelegt wird"
+          post_processed: "Nach der Verarbeitung eines Beitrags"
         preview:
           link_text: "Vorschau auf verliehene Abzeichen"
           plan_text: "Vorschau mit Query Plan"

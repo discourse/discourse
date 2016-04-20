@@ -499,7 +499,6 @@ fi:
         set_password: "Aseta salasana"
       change_about:
         title: "Muokkaa kuvaustasi"
-        error: "Arvon muuttamisessa tapahtui virhe."
       change_username:
         title: "Vaihda käyttäjätunnus"
         confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
@@ -882,7 +881,6 @@ fi:
       link_description: "kirjoita linkin kuvaus tähän"
       link_dialog_title: "Lisää linkki"
       link_optional_text: "vaihtoehtoinen kuvaus"
-      link_placeholder: "http://esimerkki.fi \"valinnainen teksti\""
       quote_title: "Lainaus"
       quote_text: "Lainaus"
       code_title: "Teksti ilman muotoiluja"
@@ -1334,7 +1332,6 @@ fi:
         create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
         edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
         upload: "Pahoittelut, tiedoston lähetys ei onnistunut. Ole hyvä ja yritä uudelleen."
-        attachment_too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on {{max_size_kb}}kb)."
         file_too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on {{max_size_kb}}kb)"
         too_many_uploads: "Pahoittelut, voit ladata vain yhden tiedoston kerrallaan."
         too_many_dragged_and_dropped_files: "Pahoittelut, voit raahata korkeintaan 10 tiedostoa kerrallaan."
@@ -1911,14 +1908,6 @@ fi:
           backups: "Varmuuskopiot"
           logs: "Lokit"
         none: "Ei saatavilla olevia varmuuskopioita."
-        read_only:
-          enable:
-            title: "Käynnistä vain luku -tila."
-            label: "Käynnistä vain luku -tila."
-            confirm: "Oletko varma, että haluat käynnistää vain luku -tilan?"
-          disable:
-            title: "Poista vain luku -tila"
-            label: "Poista vain luku -tila"
         logs:
           none: "Lokeja ei ole vielä..."
         columns:

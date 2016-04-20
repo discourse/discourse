@@ -143,6 +143,10 @@ sq:
         eu_west_1: "EU (Ireland)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
+        ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_northeast_1: "Asia Pacific (Tokyo)"
+        ap_northeast_2: "Asia Pacific (Seoul)"
+        sa_east_1: "South America (Sao Paulo)"
     edit: 'redakto titullin dhe kategorinë e kësaj teme'
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
@@ -432,6 +436,7 @@ sq:
         not_supported: "Notifications are not supported on this browser. Sorry."
         perm_default: "Turn On Notifications"
         perm_denied_btn: "Permission Denied"
+        perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
         enable: "Enable Notifications"
         each_browser_note: "Note: You have to change this setting on every browser you use."
@@ -457,6 +462,7 @@ sq:
       tracked_categories: "Gjurmuar"
       tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
       muted_categories: "Heshtur"
+      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
       delete_account: "Fshi Llogarin Time"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Llogaria juaj u fshi me sukses."
@@ -466,6 +472,8 @@ sq:
       users: "Users"
       muted_users: "Muted"
       muted_users_instructions: "Suppress all notifications from these users."
+      muted_topics_link: "Show muted topics"
+      automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
       staff_counters:
         flags_given: "helpful flags"
         flagged_posts: "postimet e raportuara"
@@ -474,6 +482,15 @@ sq:
         warnings_received: "paralajmërimet"
       messages:
         all: "Të gjithë"
+        inbox: "Inbox"
+        sent: "Sent"
+        archive: "Archive"
+        groups: "Grupet e mia"
+        bulk_select: "Zgjidh mesazhet"
+        move_to_inbox: "Move to Inbox"
+        move_to_archive: "Arkivo"
+        failed_to_move: "Failed to move selected messages (perhaps your network is down)"
+        select_all: "Agjidh të gjitha"
       change_password:
         success: "(email u dërgua)"
         in_progress: "(duke dërguar emailin)"
@@ -482,7 +499,7 @@ sq:
         set_password: "Vendos Fjalëkalim"
       change_about:
         title: "Ndrysho Rreth Meje"
-        error: "There was an error changing ths value."
+        error: "There was an error changing this value."
       change_username:
         title: "Ndrysho Pseudonimin"
         confirm: "Nëse ndryshoni emrin, të gjithë postimet e cituara tek duke përfolur @emri  nuk do të punojnë. Jeni të sigurte që doni ta aprovoni?"
@@ -518,6 +535,7 @@ sq:
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
+        frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
       name:
         title: "Emri"
         instructions: "Emri i Plotë (fakultativ)"
@@ -553,9 +571,21 @@ sq:
         title: "Card Badge Anëtarit"
       website: "Web Site"
       email_settings: "Email"
+      like_notification_frequency:
+        title: "Notify when liked"
+        always: "Gjithmonë"
+        first_time_and_daily: "First time a post is liked and daily"
+        first_time: "First time a post is liked"
+        never: "Asnjëherë"
+      email_previous_replies:
+        title: "Include previous replies at the bottom of emails"
+        unless_emailed: "nëse ishin dërguar më parë"
+        always: "gjithmonë"
+        never: "asnjëherë"
       email_digests:
         title: "When I don't visit here, send an email digest of what's new:"
         every_30_minutes: "çdo 30 minuta"
+        every_hour: "ditore"
         daily: "ditore"
         every_three_days: "çdo 3 ditë"
         weekly: "javore"
@@ -575,15 +605,27 @@ sq:
         immediately: "menjëherë"
         after_30_seconds: "pas 30 sekonda"
         after_1_minute: "pas 1 minute"
+        after_2_minutes: "pas 2 minutash"
+        after_3_minutes: "pas 3 minutash"
+        after_4_minutes: "pas 4 minutash"
+        after_5_minutes: "pas 5 minutash"
+        after_10_minutes: "pas 10 minutash"
       invited:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesa"
         user: "Anëtarët e Ftuar"
+        sent: "Dërguar"
+        none: "There are no pending invites to display."
+        truncated:
+          one: "Showing the first invite."
+          other: "Showing the first {{count}} invites."
         redeemed: "Ridërgo ftesat"
         redeemed_tab: "Redeemed"
+        redeemed_tab_with_count: "Redeemed ({{count}})"
         redeemed_at: "Redeemed"
         pending: "Ftesat e Pezulluara"
         pending_tab: "Pending"
+        pending_tab_with_count: "Pending ({{count}})"
         topics_entered: "Diskutimet e Para"
         posts_read_count: "Postimet e Lexuara"
         expired: "Kjo ftesa ka skaduar."
@@ -595,6 +637,7 @@ sq:
         days_visited: "Days Visited"
         account_age_days: "Account age in days"
         create: "Dërgo një ftesë"
+        generate_link: "Kopjo lidhjen e Ftesës"
         bulk_invite:
           none: "Ju nuk keni ftuar askënd deri tani. Mund të dërgoni ftesa individuale ose mund të ftoni një grup personash duke <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ngarkuar skedarin</a>."
           text: "Skedari për Ftesat në Grup"
@@ -610,7 +653,19 @@ sq:
         ok: "Fjalëkalimi është i pranueshëm."
         instructions: "Të paktën %{count} karaktere."
       summary:
+        title: "Përmbledhja"
         stats: "Statistikat"
+        time_read: "koha e leximit"
+        likes_given:
+          one: "like given"
+          other: "pëlqime të dhëna"
+        more_replies: "Më shumë përgjigje"
+        top_topics: "Top Topics"
+        no_topics: "No topics yet."
+        more_topics: "More Topics"
+        top_badges: "Top Badges"
+        no_badges: "No badges yet."
+        more_badges: "More Badges"
       associated_accounts: "Logins"
       ip_address:
         title: "Adresa IP e Fundit"
@@ -642,6 +697,7 @@ sq:
         network_fixed: "Duket sikur u ktheve."
         server: "Kodi Gabimit: {{status}}"
         forbidden: "You're not allowed to view that."
+        not_found: "Oops, the application tried to load a URL that doesn't exist."
         unknown: "Diçka shkoj keq."
       buttons:
         back: "Shko Mbrapa"
@@ -652,7 +708,15 @@ sq:
     logout: "Ju jeni shkëputur!"
     refresh: "Rifresko"
     read_only_mode:
+      enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
+      logout_disabled: "Logout is disabled while the site is in read only mode."
+    too_few_topics_and_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
+    too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
+    too_few_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has reached site settings's limit of %{siteSettingRate}."
+      exceeded: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has exceeded site settings's limit of %{siteSettingRate}."
     learn_more: "mëso më shumë..."
     year: 'vit'
     year_desc: 'temat e krijuara në 365 ditët e fundit'
@@ -670,9 +734,16 @@ sq:
       one: përgjigje
       other: përgjigje
     signup_cta:
+      sign_up: "Sign Up"
+      hide_session: "Remind me tomorrow"
       hide_forever: "jo faleminderit"
+      hidden_for_session: "OK, I'll ask you tomorrow. You can always use 'Log In' to create an account, too."
+      intro: "Hey there! :heart_eyes: Looks like you're enjoying the discussion, but you're not signed up for an account."
+      value_prop: "When you create an account, we remember exactly what you've read, so you always come right back where you left off. You also get notifications, here and via email, whenever new posts are made. And you can like posts to share the love. :heartbeat:"
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
+      description: "There are <b>{{replyCount}}</b> replies."
+      description_time: "There are <b>{{replyCount}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
       enable: 'Përmbidhë këtë Diskutim'
       disable: 'Shfaq të gjithë Postimet'
     deleted_filter:
@@ -727,6 +798,8 @@ sq:
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Ju lutem, Identifikohuni"
+      preferences: "You need to be logged in to change your user preferences."
+      forgot: "I don't recall my account details"
       google:
         title: "me Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
@@ -736,6 +809,9 @@ sq:
       twitter:
         title: "me Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
+      instagram:
+        title: "with Instagram"
+        message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
         title: "me Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
@@ -754,15 +830,19 @@ sq:
       ctrl: 'Ctrl'
       alt: 'Alt'
     composer:
+      emoji: "Emoji :)"
       more_emoji: "më shumë..."
       options: "Opsione"
+      whisper: "pëshpëritje"
       add_warning: "This is an official warning."
+      toggle_whisper: "Hiq pëshpëritjet"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "duke e ruajtur..."
       saved_draft_tip: "ruajtur"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Tema juaj është e ngjashme me..."
       drafts_offline: "drafts offline"
+      group_mentioned: "By using {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a>."
       error:
         title_missing: "Titulli është i nevojshëm"
         title_too_short: "Title must be at least {{min}} characters"
@@ -783,6 +863,7 @@ sq:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
       show_edit_reason: "(arsye redaktimit)"
+      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "Shikoni postimin tuaj te ri."
       saving: "Duke e ruajtur"
       saved: "U Ruajt!"
@@ -799,6 +880,7 @@ sq:
       link_description: "shkruaj përshkrimin e lidhjes këtu"
       link_dialog_title: "Vendos Lidhje"
       link_optional_text: "titull opsional"
+      link_url_placeholder: "http://example.com"
       quote_title: "Citim"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
@@ -815,6 +897,7 @@ sq:
       toggler: "hide or show the composer panel"
       modal_ok: "OK"
       modal_cancel: "Anulo"
+      cant_send_pm: "Sorry, you can't send a message to %{username}."
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
         label: "Auto-close topic time:"
@@ -831,10 +914,16 @@ sq:
       more: "shiko njoftimet e kaluara"
       total_flagged: "totali postimeve të sinjalizuar"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} dhe 1 tjetër</span> {{description}}</p>"
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} dhe {{count}} others</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -842,11 +931,27 @@ sq:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+      group_message_summary:
+        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} message in your {{group_name}} inbox</p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mesazhe në {{group_name}} inbox</p>"
       alt:
+        mentioned: "Cituar nga"
         quoted: "Cituar nga"
+        replied: "Përgjigjur"
         posted: "Postim nga"
+        edited: "Redakto postimin tuaj"
+        liked: "Liked your post"
+        private_message: "Private message from"
+        invited_to_private_message: "Invited to a private message from"
+        invited_to_topic: "Invited to a topic from"
+        invitee_accepted: "Invite accepted by"
+        moved_post: "Your post was moved by"
+        linked: "Link to your post"
+        granted_badge: "Badge granted"
+        group_message_summary: "Messages in group inbox"
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
         replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
@@ -858,13 +963,22 @@ sq:
       from_my_computer: "Nga çdo paisje"
       from_the_web: "Nga web"
       remote_tip: "lidhje tek imazhi"
+      remote_tip_with_attachments: "link to image or file {{authorized_extensions}}"
       local_tip: "select images from your device"
+      local_tip_with_attachments: "select images or files from your device {{authorized_extensions}}"
       hint: "(you can also drag & drop into the editor to upload them)"
+      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Duke ngarkaur"
       select_file: "Select File"
       image_link: "link your image will point to"
     search:
       sort_by: "Rendit sipas"
+      relevance: "Relevance"
+      latest_post: "Latest Post"
+      most_viewed: "Most Viewed"
+      most_liked: "Most Liked"
+      select_all: "Select All"
+      clear_all: "Clear All"
       title: "search topics, posts, users, or categories"
       no_results: "Nuk i gjet asnjë rezultat."
       no_more_results: "No more results found."
@@ -876,14 +990,21 @@ sq:
         category: "Kërko tek kategoria \"{{category}}\""
         topic: "Kërko tek kjo temë"
         private_messages: "Search messages"
+    hamburger_menu: "go to another topic list or category"
     new_item: "e re"
     go_back: 'kthehu mbrapa'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
     topics:
       bulk:
+        unlist_topics: "Unlist Topics"
         reset_read: "Reseto Leximet"
         delete: "Delete Topics"
+        dismiss: "Dismiss"
+        dismiss_read: "Dismiss all unread"
+        dismiss_button: "Dismiss…"
+        dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
+        also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
@@ -906,6 +1027,9 @@ sq:
         category: "Nuk ka {{category}} tema."
         top: "Nuk ka tema të populluara."
         search: "There are no search results."
+        educate:
+          new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "Nuk ka më tema së fundmi."
         hot: "Nuk ka më tema të populluara."
@@ -918,10 +1042,19 @@ sq:
         bookmarks: "There are no more bookmarked topics."
         search: "There are no more search results."
     topic:
+      unsubscribe:
+        stop_notifications: "You will now receive less notifications for <strong>{{title}}</strong>"
+        change_notification_state: "Your current notification state is "
       filter_to: "{{post_count}} posts in topic"
       create: 'Temë e Re'
       create_long: 'Fillo një Diskutim të Ri'
       private_message: 'Start a message'
+      archive_message:
+        help: 'Move message to your archive'
+        title: 'Archive'
+      move_to_inbox:
+        title: 'Move to Inbox'
+        help: 'Move message back to Inbox'
       list: 'Tema'
       new: 'temë e re'
       unread: 'unread'
@@ -972,6 +1105,7 @@ sq:
       auto_close_title: 'Auto-Close Settings'
       auto_close_save: "Ruaj"
       auto_close_remove: "Don't Auto-Close This Topic"
+      auto_close_immediate: "The last post in the topic is already %{hours} hours old, so the topic will be closed immediately."
       progress:
         title: progresi temës
         go_top: "sipër"
@@ -1021,6 +1155,7 @@ sq:
           description: "You will never be notified of anything about this message."
         muted:
           title: "Muted"
+          description: "You will never be notified of anything about this topic, and it will not appear in latest."
       actions:
         recover: "Un-Delete Topic"
         delete: "Fshi Diskutimin"
@@ -1061,14 +1196,19 @@ sq:
         unpin: "Remove this topic from the top of the {{categoryLink}} category."
         unpin_until: "Remove this topic from the top of the {{categoryLink}} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
+        pin_validation: "A date is required to pin this topic."
+        not_pinned: "There are no topics pinned in {{categoryLink}}."
         pin_globally: "Make this topic appear at the top of all topic lists until"
         confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Users can unpin the topic individually for themselves."
+        not_pinned_globally: "There are no topics pinned globally."
         make_banner: "Make this topic into a banner that appears at the top of all pages."
         remove_banner: "Remove the banner that appears at the top of all pages."
         banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
+        no_banner_exists: "There is no banner topic."
+        banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
       inviting: "Inviting..."
       automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
       automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
@@ -1080,6 +1220,7 @@ sq:
         success: "We've invited that user to participate in this message."
         error: "Sorry, there was an error inviting that user."
         group_name: "emri grupit"
+      controls: "Topic Controls"
       invite_reply:
         title: 'Ftesa'
         username_placeholder: "username"
@@ -1126,6 +1267,12 @@ sq:
           one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
           other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
         instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+      change_timestamp:
+        title: "Change Timestamp"
+        action: "change timestamp"
+        invalid_timestamp: "Timestamp cannot be in the future."
+        error: "There was an error changing the timestamp of the topic."
+        instructions: "Please select the new timestamp of the topic. Posts in the topic will be updated to have the same time difference."
       multi_select:
         select: 'zgjidh'
         selected: 'selected ({{count}})'
@@ -1168,11 +1315,11 @@ sq:
       has_likes_title:
         one: "1 person liked this post"
         other: "{{count}} people liked this post"
+      has_likes_title_only_you: "you liked this post"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        attachment_too_large: "Upps, skedari qe po ngarkoni është shume i madh (maksimumi vlerave {{max_size_kb}}kb)."
         file_too_large: "Upps, skedari qe po ngarkoni është shume i madh (vlera maksimale {{max_size_kb}}kb)"
         too_many_uploads: "Na vjen keq, por ju mund te ngarkoni vetëm një skedar."
         too_many_dragged_and_dropped_files: "Sorry, you can only drag & drop up to 10 files at a time."
@@ -1185,8 +1332,12 @@ sq:
         no_value: "Jo, mbaji"
         yes_value: "Po, braktise"
       via_email: "this post arrived via email"
+      whisper: "this post is a private whisper for moderators"
+      wiki:
+        about: "this post is a wiki"
       archetypes:
         save: 'Ruaj Opsionet'
+      few_likes_left: "Thanks for sharing the love! You only have a few likes left for today."
       controls:
         reply: "shkruaj një përgjigje tek ky diskutim"
         like: "pëlqejë postimin"
@@ -1212,6 +1363,7 @@ sq:
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
         unhide: "Unhide"
+        change_owner: "Change Ownership"
       actions:
         flag: 'Shëno'
         defer_flags:
@@ -1232,6 +1384,15 @@ sq:
           bookmark: "Undo bookmark"
           like: "Anulo pëlqimin"
           vote: "Rikthe votën"
+        people:
+          off_topic: "flagged this as off-topic"
+          spam: "flagged this as spam"
+          inappropriate: "flagged this as inappropriate"
+          notify_moderators: "notified moderators"
+          notify_user: "sent a message"
+          bookmark: "bookmarked this"
+          like: "liked this"
+          vote: "voted for this"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -1303,6 +1464,7 @@ sq:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
+          revert: "Revert to this revision"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1327,6 +1489,7 @@ sq:
       topic_template: "Topic Template"
       delete: 'Fshi Kategori'
       create: 'Kategori e Re'
+      create_long: 'Create a new category'
       save: 'Ruaj Kategori'
       slug: 'Category Slug'
       slug_placeholder: '(Optional) dashed-words for url'
@@ -1349,6 +1512,7 @@ sq:
       change_in_category_topic: "Redakto Përshkrimin"
       already_used: 'This color has been used by another category'
       security: "Siguria"
+      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Imazhe"
       auto_close_label: "Auto-close topics after:"
       auto_close_units: "orë"
@@ -1356,6 +1520,7 @@ sq:
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
+      suppress_from_homepage: "Suppress this category from the homepage."
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Ndrysho autorizimin"
       add_permission: "Shto autorizim"
@@ -1368,13 +1533,16 @@ sq:
       notifications:
         watching:
           title: "Watching"
+          description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
         tracking:
           title: "Tracking"
+          description: "You will automatically track all new topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
         regular:
           title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
         muted:
           title: "Muted"
+          description: "You will never be notified of anything about new topics in these categories, and they will not appear in latest."
     flagging:
       title: 'Faleminderit për ndihmën që i jepni këtij komuniteti!'
       action: 'Flag Post'
@@ -1388,6 +1556,7 @@ sq:
       submit_tooltip: "Submit the private flag"
       take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
       cant: "Sorry, you can't flag this post at this time."
+      notify_staff: 'Notify staff privately'
       formatted_name:
         off_topic: "Është Jashtë teme"
         inappropriate: "Është e papërshtatshme"
@@ -1419,11 +1588,14 @@ sq:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
         help: "This topic is archived; it is frozen and cannot be changed"
+      locked_and_archived:
+        help: "This topic is closed and archived; it no longer accepts new replies and cannot be changed"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned for you; it will display in regular order"
       pinned_globally:
         title: "Pinned Globally"
+        help: "This topic is pinned globally; it will display at the top of latest and its category"
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
@@ -1466,6 +1638,7 @@ sq:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       latest:
+        title: "Latest"
         help: "temat me postime të fundit"
       hot:
         title: "Kryesoret"
@@ -1573,6 +1746,7 @@ sq:
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"
+          groups: "All groups"
       commits:
         latest_changes: "Latest changes: please update often!"
         by: "nga"
@@ -1653,15 +1827,24 @@ sq:
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
+        delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         name: "Emri"
         add: "Shto"
         add_members: "Shto Anëtar"
         custom: "Custom"
+        bulk_complete: "The users have been added to the group."
+        bulk: "Bulk Add to Group"
+        bulk_paste: "Paste a list of usernames or emails, one per line:"
+        bulk_select: "(select a group)"
         automatic: "Automatik"
         automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
         automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
         default_title: "Default title for all users in this group"
         primary_group: "Automatically set as primary group"
+        group_owners: Owners
+        add_owners: Add owners
+        incoming_email: "Custom incoming email address"
+        incoming_email_placeholder: "enter email address"
       api:
         generate_master: "Gjenero Master API Key"
         none: "There are no active API keys right now."
@@ -1696,12 +1879,12 @@ sq:
         none: "No backup available."
         read_only:
           enable:
-            title: "Enable the read-only mode"
-            label: "Enable read-only mode"
-            confirm: "Are you sure you want to enable the read-only mode?"
+            title: "Enable read-only mode"
+            label: "Enable read-only"
+            confirm: "Are you sure you want to enable read-only mode?"
           disable:
-            title: "Disable the read-only mode"
-            label: "Disable read-only mode"
+            title: "Disable read-only mode"
+            label: "Disable read-only"
         logs:
           none: "No logs yet..."
         columns:
@@ -1735,9 +1918,11 @@ sq:
             is_disabled: "Restore is disabled in the site settings."
             label: "Rikthe"
             title: "Restore the backup"
+            confirm: "Are you sure you want to restore this backup?"
           rollback:
             label: "Rollback"
             title: "Rollback the database to previous working state"
+            confirm: "Are you sure you want to rollback the database to the previous working state?"
       export_csv:
         user_archive_confirm: "Are you sure you want to download your posts?"
         success: "Export initiated, you will be notified via message when the process is complete."
@@ -1762,6 +1947,7 @@ sq:
         header: "Header"
         top: "Top"
         footer: "Footer"
+        embedded_css: "Embedded CSS"
         head_tag:
           text: "</head>"
           title: "HTML that will be inserted before the </head> tag"
@@ -1787,6 +1973,14 @@ sq:
         color: "Ngjyra"
         opacity: "Opaciteti"
         copy: "Kopjo"
+        email_templates:
+          title: "Email Templates"
+          subject: "Subject"
+          multiple_subjects: "This email template has multiple subjects."
+          body: "Body"
+          none_selected: "Select an email template to begin editing."
+          revert: "Revert Changes"
+          revert_confirm: "Are you sure you want to revert your changes?"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS and HTML Customizations"
@@ -1832,6 +2026,7 @@ sq:
             name: 'love'
             description: "The like button's color."
       email:
+        title: "Emails"
         settings: "Rregullimet"
         preview_digest: "Preview Digest"
         sending_test: "Sending test Email..."
@@ -1839,6 +2034,8 @@ sq:
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Dërguar"
         skipped: "Skipped"
+        received: "Received"
+        rejected: "Rejected"
         sent_at: "Sent At"
         time: "Koha"
         user: "User"
@@ -1848,6 +2045,7 @@ sq:
         send_test: "Send Test Email"
         sent_test: "u dërgua!"
         delivery_method: "Delivery Method"
+        preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
         refresh: "Rifresko"
         format: "Formati"
         html: "html"
@@ -1855,6 +2053,25 @@ sq:
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
         skipped_reason: "Skip Reason"
+        incoming_emails:
+          from_address: "From"
+          to_addresses: "To"
+          cc_addresses: "Cc"
+          subject: "Subject"
+          error: "Error"
+          modal:
+            title: "Incoming Email Details"
+            error: "Error"
+            headers: "Headers"
+            subject: "Subject"
+            body: "Body"
+            rejection_message: "Rejection Mail"
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Subjekti..."
+            error_placeholder: "Gabim"
         logs:
           none: "No logs found."
           filters:
@@ -1873,6 +2090,7 @@ sq:
         ip_address: "IP"
         topic_id: "Topic ID"
         post_id: "Post ID"
+        category_id: "Category ID"
         delete: 'Fshij'
         edit: 'Redakto'
         save: 'Ruaj'
@@ -1903,6 +2121,7 @@ sq:
             change_site_setting: "change site setting"
             change_site_customization: "change site customization"
             delete_site_customization: "delete site customization"
+            change_site_text: "change site text"
             suspend_user: "suspend user"
             unsuspend_user: "unsuspend user"
             grant_badge: "grant badge"
@@ -1913,6 +2132,14 @@ sq:
             impersonate: "impersonate"
             anonymize_user: "anonymize user"
             roll_up: "roll up IP blocks"
+            change_category_settings: "change category settings"
+            delete_category: "delete category"
+            create_category: "create category"
+            block_user: "block user"
+            unblock_user: "unblock user"
+            grant_admin: "grant admin"
+            revoke_admin: "revoke admin"
+            grant_moderation: "grant moderation"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -2341,3 +2568,12 @@ sq:
           name: Other
         posting:
           name: Posting
+    google_search: |
+      <h3>Kerko me Google</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

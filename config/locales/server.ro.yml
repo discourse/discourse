@@ -607,7 +607,6 @@ ro:
     login_required: "Autentificarea e necesară pentru a citii conținutul site-ului, nu permite accesul anonim."
     min_password_length: "Lungimea minimă de caractere pentru parolă."
     block_common_passwords: "nu permite parole ce sunt în cele 10,000 cele mai cunoscute parole."
-    sso_url: "URL-ul semnului singular în punctul de sfârșit"
     enable_local_logins: "Activează numele de utilizator local și a conturilor bazate pe logare cu parola. (Notă: Aceasta trebuie activiată pentru invitații pt a funcționa)"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori . Debifați pentru a restricționa oricui să creeze un cont nou."
     enable_yahoo_logins: "Activează autentificarea cu Yahoo"
