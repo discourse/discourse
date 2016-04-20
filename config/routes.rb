@@ -615,4 +615,6 @@ Discourse::Application.routes.draw do
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
+
+  get "/user_topics_feed" => "lc_endpoints#get_topics_for_categories"
 end
