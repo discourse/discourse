@@ -756,7 +756,6 @@ uk:
         create: "Даруйте, під час створення допису трапилася помилка. Будь ласка, спробуйте ще раз."
         edit: "Даруйте, під час редагування допису трапилася помилка. Будь ласка, спробуйте ще раз."
         upload: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
-        attachment_too_large: "Даруйте, але файл, який Ви намагаєтеся завантажити, надто великий (максимальний розмір складає {{max_size_kb}} кБ)."
         too_many_uploads: "Даруйте, але Ви можете одночасно завантажувати тільки один файл."
         upload_not_authorized: "Даруйте, але файл, який Ви намагаєтеся завантажити, є недозволеним (дозволені розширення: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Даруйте, нові користувачі не можуть завантажувати зображення."
@@ -1041,12 +1040,6 @@ uk:
           backups: "Backups"
           logs: "Logs"
         none: "No backup available."
-        read_only:
-          enable:
-            title: "Enable the read-only mode"
-            confirm: "Are you sure you want to enable the read-only mode?"
-          disable:
-            title: "Disable the read-only mode"
         logs:
           none: "No logs yet..."
         columns:

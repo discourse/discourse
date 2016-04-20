@@ -510,7 +510,6 @@ ro:
         set_password: "Introduceți parolă"
       change_about:
         title: "Schimbă la Profil"
-        error: "A apărut o eroare la schimbarea acestei valori"
       change_username:
         title: "Schimbă numele utilizatorului"
         confirm: "Dacă schimbi numele utilizatorului, toate citatele din posturile precedente inclusiv @mențiunile nu vor mai funcționa. Ești absolut sigur?"
@@ -859,7 +858,6 @@ ro:
       link_description: "adaugă aici descrierea adresei hyper"
       link_dialog_title: "Introdu adresă hyper"
       link_optional_text: "titlu opțional"
-      link_placeholder: "http://example.com \"text optional\""
       quote_title: "Citat-bloc"
       quote_text: "Citat-bloc"
       code_title: "Text preformatat"
@@ -1280,7 +1278,6 @@ ro:
         create: "Ne pare rău, a apărut o eroare în creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare în editarea postării. Te rugăm să încerci iar."
         upload: "Ne pare rău, a apărut o eroare în încărcarea acelui fișier. Te rugăm să încerci iar."
-        attachment_too_large: "Ne pare rău, fișierul pe care-l încarcați este prea mare (marimea maximă este de {{max_size_kb}}kb)."
         file_too_large: "Ne pare rău, fişierul pe care încercaţi să îl încărcaţi este prea mare (mărimea maximă este de {{max_size_kb}}kb)"
         too_many_uploads: "Ne pare rău, poți încarca doar câte un fișier."
         too_many_dragged_and_dropped_files: "Ne pare rău, dar nu poți trage mai mult de 10 fişiere în acelaşi timp."
@@ -1595,6 +1592,10 @@ ro:
       with_category: "%{filter} %{category} discuții"
       latest:
         title: "Ultimele"
+        title_with_count:
+          one: "Ultimele (1)"
+          few: "Ultimele ({{count}})"
+          other: "Ultimele ({{count}})"
         help: "Discuții cu postări recente"
       hot:
         title: "Interesant"
@@ -1845,14 +1846,6 @@ ro:
           backups: "Backups"
           logs: "Rapoarte"
         none: "Nicio rezervare valabilă."
-        read_only:
-          enable:
-            title: "Activearea modul doar-citire"
-            label: "Activează modul doar-citire"
-            confirm: "sunteți sigur că doriți să activați modul doar ctire?"
-          disable:
-            title: "Dezactivearea modului doar-citire"
-            label: "Dezactivează modul doar-citire"
         logs:
           none: "Nu există rapoarte..."
         columns:

@@ -580,7 +580,6 @@ da:
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     anon_polling_interval: "Hvor ofte skal anonyme brugere polle, i millisekunder."
-    flags_required_to_hide_post: "Antallet af flag som gør at et indlæg automatisk skjules og der sendes en PM til brugeren (0 for aldrig)."
     max_topics_in_first_day: "Det maksimale antal indlæg en bruger har lov til at oprette på deres første dag på sitet."
     max_replies_in_first_day: "Det maksimale antal svar en bruger har lov til at oprette på deres første dag på sitet."
     notify_mods_when_user_blocked: "Send en besked til alle moderatorer hvis en bruger blokeres automatisk"

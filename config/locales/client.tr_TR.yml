@@ -464,7 +464,6 @@ tr_TR:
         set_password: "Parola Belirle"
       change_about:
         title: "Hakkımda'yı Değiştir"
-        error: "Değer değiştirilirken bir hata oluştu."
       change_username:
         title: "Kullanıcı Adını Değiştir"
         confirm: "Kullanıcı adınızı degiştirmeniz halinde, eski gönderilerinizden yapılan tüm alıntılar ve @isim bahsedilişler bozulacak. Bunu yapmak istediginize gerçekten emin misiniz?"
@@ -858,7 +857,6 @@ tr_TR:
       link_description: "buraya bağlantı açıklamasını girin"
       link_dialog_title: "Bağlantı ekle"
       link_optional_text: "opsiyonel başlık"
-      link_placeholder: "http://example.com \"isteğe bağlı yazı\""
       quote_title: "Blok-alıntı"
       quote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
@@ -1284,7 +1282,6 @@ tr_TR:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin. "
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
-        attachment_too_large: "Üzgünüz, yükleyeme çalıştığınız dosya çok büyük (en fazla {{max_size_kb}}kb olabilir)"
         file_too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük. (en fazla boyut {{max_size_kb}}kb)"
         too_many_uploads: "Üzgünüz, aynı anda birden fazla dosya yükleyemezsiniz."
         too_many_dragged_and_dropped_files: "Üzgünüz, sürükle bırak ile tek seferde en fazla 10 dosya yükleyebilirsiniz"
@@ -1825,14 +1822,6 @@ tr_TR:
           backups: "Yedekler"
           logs: "Kayıtlar"
         none: "Yedek bulunmuyor."
-        read_only:
-          enable:
-            title: "Salt-okunur modunu etkinleştir"
-            label: "Salt-okunur modu etkinleştir"
-            confirm: "Salt-okunur modunu etkinleştirmek istediğinize emin misiniz?"
-          disable:
-            title: "Salt-okunur modunu devre dışı bırak"
-            label: "Salt-okunur modu devre dışı bırak"
         logs:
           none: "Henüz kayıt bulunmuyor..."
         columns:

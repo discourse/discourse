@@ -159,6 +159,8 @@ vi:
     more: "Nhiều hơn"
     less: "Ít hơn"
     never: "không bao giờ"
+    every_30_minutes: "mỗi 30 phút"
+    every_hour: "mỗi giờ"
     daily: "hàng ngày"
     weekly: "hàng tuần"
     every_two_weeks: "mỗi hai tuần"
@@ -244,6 +246,7 @@ vi:
       has_pending_posts:
         other: "Chủ đề này có <b>{{count}}</b> bài viết cần phê chuẩn"
       confirm: "Lưu thay đổi"
+      delete_prompt: "Bạn có chắc chắn muốn xóa <b>%{username}</b>? Thao tác này sẽ loại bỏ tất cả các bài viết của họ kèm theo khóa địa chỉ IP và email của họ."
       approval:
         title: "Bài viết cần phê duyệt"
         description: "Chúng tôi đã nhận được bài viết mới của bạn, nhưng nó cần phải được phê duyệt bởi admin trước khi được hiện. Xin hãy kiên nhẫn."
@@ -297,7 +300,10 @@ vi:
       title:
         other: "các nhóm"
       members: "Các thành viên"
+      topics: "Chủ đề"
       posts: "Các bài viết"
+      mentions: "Được nhắc đến"
+      messages: "Tin nhắn"
       alias_levels:
         title: "Ai có thể nhắn tin và @mention trong nhóm này?"
         nobody: "Không ai cả"
@@ -437,6 +443,7 @@ vi:
       muted_users: "Im lặng"
       muted_users_instructions: "Ngăn chặn tất cả các thông báo từ những thành viên."
       muted_topics_link: "Hiển thị chủ đề Im Lặng"
+      automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang."
       staff_counters:
         flags_given: "cờ hữu ích"
         flagged_posts: "bài viết gắn cờ"
@@ -462,7 +469,7 @@ vi:
         set_password: "Nhập Mật khẩu"
       change_about:
         title: "Thay đổi thông tin về tôi"
-        error: "Có lỗi khi thay đổi giá trị này."
+        error: "Có lỗi xảy ra khi thay đổi giá trị này."
       change_username:
         title: "Thay Username"
         confirm: "Nếu bạn thay đổi tên đăng nhập, tất cả những câu nói của bạn ở bài viết trước và @tên bạn sẽ được đề cập sẽ bị phá vỡ. Bạn có chắc bạn muốn tiếp tục không?"
@@ -536,17 +543,34 @@ vi:
         title: "Huy hiệu của thẻ thành viên"
       website: "Web Site"
       email_settings: "Email"
+      like_notification_frequency:
+        title: "Thông báo khi tôi like"
+        always: "Luôn luôn"
+        first_time_and_daily: "Lần đầu tiên bài viết được like và hàng ngày"
+        first_time: "Lần đầu tiên bài viết được like"
+        never: "Không"
+      email_previous_replies:
+        title: "Kèm theo các trả lời trước ở dưới cùng email"
+        unless_emailed: "trừ khi đã gửi trước đó"
+        always: "luôn luôn"
+        never: "không"
       email_digests:
         title: "Khi tôi không truy cập, gửi email gợi ý những cái mới cho tôi:"
+        every_30_minutes: "mỗi 30 phút"
+        every_hour: "hàng giờ"
         daily: "hàng ngày"
         every_three_days: "ba ngày một"
         weekly: "hàng tuần"
         every_two_weeks: "hai tuần một"
+      include_tl0_in_digests: "Kèm theo bài viết của các thành viên mới trong tập san email"
+      email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
       email_direct: "Gửi cho tôi một email khi có người trích dẫn, trả lời cho bài viết của tôi, đề cập đến @username của tôi, hoặc mời tôi đến một chủ đề"
       email_private_messages: "Gửi cho tôi email khi có ai đó nhắn tin cho tôi"
       email_always: "Gửi email thông báo cho tôi mỗi khi tôi kích hoạt trên website này"
       other_settings: "Khác"
       categories_settings: "Chuyên mục"
+      enable_mailing_list:
+        other: "Bạn có chắc chắn muốn nhận email mỗi khi có bài viết mới?<br><br>Ước lượng sẽ có khoảng <b>{{count}} emails</b> mỗi ngày."
       new_topic_duration:
         label: "Để ý tới chủ đề mới khi"
         not_viewed: "Tôi chưa từng xem họ"
@@ -611,11 +635,27 @@ vi:
       summary:
         title: "Tóm tắt"
         stats: "Thống kê"
+        time_read: "thời gian đọc"
+        topic_count:
+          other: "Chủ đề đã được tạo"
+        post_count:
+          other: "Bài viết đã được tạo"
+        likes_given:
+          other: "Đã like"
+        likes_received:
+          other: "Like đã nhận"
+        days_visited:
+          other: "Ngày đã ghé thăm"
+        posts_read:
+          other: "Bài viết đã đọc"
         top_replies: "Top trả lời"
+        no_replies: "Chưa có trả lời."
         more_replies: "Thêm trả lời"
         top_topics: "Top chủ đề"
+        no_topics: "Chưa có chủ đề nào."
         more_topics: "Thêm chủ đề"
         top_badges: "Top huy hiệu"
+        no_badges: "Chưa có huy hiệu nào."
         more_badges: "Thêm huy hiệu"
       associated_accounts: "Đăng nhập"
       ip_address:
@@ -661,9 +701,15 @@ vi:
     read_only_mode:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
+      logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
     too_few_topics_and_posts_notice: "Hãy <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bắt đầu thảo luận!</a> Hiện có <strong>%{currentTopics} / %{requiredTopics}</strong> chủ đề và <strong>%{currentPosts} / %{requiredPosts}</strong> bài viết. Khách ghé thăm cần một số chủ đề để đọc và trả lời."
     too_few_topics_notice: "Hãy <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bắt đầu thảo luận!</a> Hiện có <strong>%{currentTopics} / %{requiredTopics}</strong> chủ đề. Khách ghé thăm cần một số chủ đề để đọc và trả lời."
     too_few_posts_notice: "Hãy <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bắt đầu thảo luận!</a> Hiện có <strong>%{currentPosts} / %{requiredPosts}</strong> bài viết. Khách ghé thăm cần một số chủ đề để đọc và trả lời."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: Tỷ lệ hiện tại <a href='%{url}' target='_blank'>%{rate}</a> đã đạt tới giới hạn thiết lập %{siteSettingRate} của website."
+      exceeded: "%{timestamp}: Tỷ lệ hiện tại <a href='%{url}' target='_blank'>%{rate}</a> đã vượt quá giới hạn thiết lập %{siteSettingRate} của website."
+      rate:
+        other: "%{count} lỗi/%{duration}"
     learn_more: "tìm hiểu thêm..."
     year: 'năm'
     year_desc: 'chủ đề được tạo ra trong 365 ngày qua'
@@ -688,6 +734,8 @@ vi:
       value_prop: "Khi bạn tạo tài khoản, website nhớ chính xác những gì bạn đã đọc, vì vậy bạn sẽ luôn trở lại đúng nơi đã rời đi. Bạn cũng có thể nhận thông báo ở đây hoặc qua email mỗi khi có bài viết mới. Bạn cũng có thể like bài viết để chia sẻ cảm xúc của mình. :heartbeat:"
     summary:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
+      description: "Có <b>{{replyCount}}</b> trả lời."
+      description_time: "Có <b>{{replyCount}}</b> trả lời với thời gian đọc ước tính khoảng <b>{{readingTime}} phút</b>."
       enable: 'Tóm tắt lại chủ đề'
       disable: 'HIển thị tất cả các bài viết'
     deleted_filter:
@@ -753,6 +801,9 @@ vi:
       twitter:
         title: "với Twitter"
         message: "Chứng thực với Twitter(hãy chắc chắn là chăn pop up không bật)"
+      instagram:
+        title: "với Instagram"
+        message: "Chứng thực với Instagram (chăc chắn rằng chặn pop-up không bật)"
       facebook:
         title: "với Facebook"
         message: "Chứng thực với Facebook(chắc chắn là chặn pop up không bật)"
@@ -821,7 +872,7 @@ vi:
       link_description: "Nhập mô tả liên kết ở đây"
       link_dialog_title: "Chèn liên kết"
       link_optional_text: "tiêu đề tùy chọn"
-      link_placeholder: "http://example.com \"chữ tuỳ chọn\""
+      link_url_placeholder: "http://example.com"
       quote_title: "Trích dẫn"
       quote_text: "Trích dẫn"
       code_title: "Văn bản định dạng trước"
@@ -858,8 +909,12 @@ vi:
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} và {{count}} người khác</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -963,6 +1018,9 @@ vi:
         category: "Không có chủ đề nào trong {{category}} ."
         top: "Không có chủ đề top."
         search: "Không có kết quả tìm kiếm."
+        educate:
+          new: '<p>Chủ đề mới của bạn sẽ hiển thị ở đây.</p><p>Mặc định, chủ đề được coi là mới và sẽ hiển thị <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> cho biết chúng đã được tạo ra trong 2 ngày qua.</p><p>Xem <a href="%{userPrefsUrl}">thiết lập</a> của bạn nếu muốn thay đổi.</p>'
+          unread: '<p>Chủ đề chưa đọc của bạn sẽ hiển thị ở đây.</p><p>Mặc định, chủ đề được coi là chưa đọc và sẽ hiển thị số <span class="badge new-posts badge-notification">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 4 phút</li></ul><p>Hoặc nếu bạn đã thiết lập một cách rõ ràng các chủ đề Theo dõi hoặc Xem thông qua việc kiểm soát thông báo ở dưới cùng của mỗi chủ đề.</p><p>Xem <a href="%{userPrefsUrl}">thiết lập</a> của bạn nếu muốn thay đổi.</p>'
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
         hot: "Không còn của đề nổi bật nào nữa."
@@ -1243,7 +1301,6 @@ vi:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
         upload: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
-        attachment_too_large: "Xin lỗi, tập tin của bạn tải lên quá lớn (kích thước tối đa là {{max_size_kb}}kb)."
         file_too_large: "Xin lỗi, tập tin của bạn tải lên quá lớn (kích thước tối đa là {{max_size_kb}}kb)"
         too_many_uploads: "Xin lỗi, bạn chỉ có thể tải lên 1 file cùng 1 lúc."
         too_many_dragged_and_dropped_files: "Xin lỗi, bạn chỉ có thể kéo và thả 10 tập tin cùng lúc."
@@ -1261,6 +1318,7 @@ vi:
         about: "bài viết này là wiki"
       archetypes:
         save: 'Lưu lựa chọn'
+      few_likes_left: "Cám ơn bạn đã chia sẻ cảm nhận! Bạn chỉ còn lại vài lượt like cho ngày hôm nay."
       controls:
         reply: "bắt đầu soản trả lời cho bài viết này"
         like: "like bài viết này"
@@ -1305,6 +1363,15 @@ vi:
           bookmark: "Hủy đánh dấu"
           like: "Hủy like"
           vote: "Hủy bình chọn"
+        people:
+          off_topic: "đánh dấu là chủ đề đóng"
+          spam: "đánh dấu là spam"
+          inappropriate: "đánh dấu là không phù hợp"
+          notify_moderators: "đã thông báo với BQT"
+          notify_user: "đã gửi tin nhắn"
+          bookmark: "đã đánh dấu bài này"
+          like: "đã like bài này"
+          vote: "đã bầu cho bài này"
         by_you:
           off_topic: "Bạn đã đánh dấu cái nfay là chủ đề đóng"
           spam: "Bạn đã đánh dấu cái này là rác"
@@ -1359,13 +1426,17 @@ vi:
           last: "Sửa đổi gần nhất"
           hide: "Ẩn sửa đổi"
           show: "Hiện sửa đổi"
+          revert: "Hoàn nguyên sửa đổi"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
+            title: "Hiển thị dạng xuất kèm theo các bổ sung và loại bỏ nội tuyến"
             button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
+            title: "Hiển thị dạng xuất với các điểm khác biệt cạnh nhau"
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
+            title: "Hiển thị nguyên bản với các điểm khác biệt cạnh nhau"
             button: '<i class="fa fa-columns"></i> Thô'
     category:
       can: 'can&hellip;'
@@ -1447,6 +1518,7 @@ vi:
       submit_tooltip: "Đánh dấu riêng tư"
       take_action_tooltip: "Tiếp cận ngưỡng đánh dấu ngay lập tức, thay vì đợi cộng đồng"
       cant: "Xin lỗi, bạn không thể đánh dấu bài viết lúc này."
+      notify_staff: 'Thông báo riêng cho BQT'
       formatted_name:
         off_topic: "Nó là sai chủ đề"
         inappropriate: "Không phù hợp"
@@ -1773,12 +1845,12 @@ vi:
         none: "Chưa có bản sao lưu."
         read_only:
           enable:
-            title: "Kích hoạt chế độ chỉ xem"
-            label: "Kích hoạt chế độ chỉ xem"
-            confirm: "Bạn muốn kích hoạt chế chộ chỉ xem?"
+            title: "Bật chế độ chỉ đọc"
+            label: "Bật chỉ đọc"
+            confirm: "Bạn có chắc chắn muốn bật chế độ chỉ đọc?"
           disable:
-            title: "Hủy chế độ chỉ xem này"
-            label: "Hủy chế độ chỉ xem"
+            title: "Tắt chế độ chỉ đọc"
+            label: "Tắt chỉ đọc"
         logs:
           none: "Chưa có log..."
         columns:
@@ -1812,9 +1884,11 @@ vi:
             is_disabled: "Khôi phục đã bị cấm sử dụng trong cấu hình trang."
             label: "Khôi phục"
             title: "Khôi phục lại sao lưu này"
+            confirm: "Bạn có chắc chắn muón phục hồi bản sao lưu này?"
           rollback:
             label: "Rollback"
             title: "Đưa csdl về trạng thái làm việc trước"
+            confirm: "Bạn có chắc chắn muốn phục hồi csdl về trạng thái làm việc trước?"
       export_csv:
         user_archive_confirm: "Bạn có chắc chắn muốn download các bài viết của mình?"
         success: "Export đang được khởi tạo, bạn sẽ nhận được tin nhắn thông báo khi quá trình hoàn tất."
@@ -1953,6 +2027,13 @@ vi:
           subject: "Chủ đề"
           error: "Lỗi"
           none: "Không tìm tháy các email đến."
+          modal:
+            title: "Chi Tiết Email Đến"
+            error: "Lỗi"
+            headers: "Tên"
+            subject: "Tiêu đề"
+            body: "Nội dung"
+            rejection_message: "Từ Chối Thư"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -2028,6 +2109,7 @@ vi:
             revoke_admin: "hủy bỏ quản trị"
             grant_moderation: "cấp điều hành"
             revoke_moderation: "hủy bỏ điều hành"
+            backup_operation: "hoạt động sao lưu"
         screened_emails:
           title: "Screened Emails"
           description: "Khi ai đó cố gắng tạo tài khoản mới, các địa chỉ email sau sẽ được kiểm tra và đăng ký sẽ bị chặn, hoặc một số hành động khác được thực hiện."
@@ -2259,6 +2341,10 @@ vi:
           title: "Hiển thị trong hồ sơ công khai"
           enabled: "hiển thị trong hồ sơ"
           disabled: "không hiển thị trong hồ sơ"
+        show_on_user_card:
+          title: "Hiện trên thẻ người dùng?"
+          enabled: "hiển trên thẻ người dùng"
+          disabled: "không hiện trên thẻ người dùng"
         field_types:
           text: 'Nội dung chữ'
           confirm: 'Xác nhận'
@@ -2312,6 +2398,7 @@ vi:
         badge: Huy hiệu
         display_name: Tên Hiển thị
         description: Mô tả
+        long_description: Mô Tả Dài
         badge_type: Kiểu huy hiệu
         badge_grouping: Nhóm
         badge_groupings:
@@ -2347,9 +2434,11 @@ vi:
         trigger: Phát động
         trigger_type:
           none: "Cập nhật hàng ngày"
+          post_action: "Khi người dùng hoạt động trên bài viết"
           post_revision: "Khi người dùng sửa hoặc tạo bài viết"
           trust_level_change: "Khi người dùng thay đổi mức độ tin cậy"
           user_change: "Khi người dùng được sửa hoặc được tạo"
+          post_processed: "Sau khi bài viết được đăng"
         preview:
           link_text: "Xem trước cấp huy hiệu"
           plan_text: "Xem trước kế hoạch truy vấn"
@@ -2471,7 +2560,11 @@ vi:
     badges:
       earned_n_times:
         other: "Đạt được huy hiệu này %{count} lần"
+      granted_on: "Cấp ngày %{date}"
+      others_count: "Người có huy hiệu này (%{count})"
       title: Huy hiệu
+      allow_title: "tiêu đề có sẵn"
+      multiple_grant: "trao tặng nhiều lần"
       badge_count:
         other: "%{count} Huy hiệu"
       more_badges:
