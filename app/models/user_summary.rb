@@ -19,15 +19,14 @@ class UserSummary
       .visible
       .where(user: @user)
       .order('like_count DESC, created_at ASC')
-      .includes(:user, :category)
       .limit(MAX_SUMMARY_RESULTS)
   end
 
   def replies
     Post
+      .joins(:topic)
+      .includes(:topic)
       .secured(@guardian)
-      .includes(:user, topic: :category)
-      .references(:topic)
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .where('post_number > 1')
@@ -39,10 +38,11 @@ class UserSummary
   def links
     TopicLink
       .joins(:topic, :post)
+      .includes(:topic, :post)
       .where('topics.archetype <> ?', Archetype.private_message)
       .where(user: @user)
       .where(internal: false, reflection: false, quote: false)
-      .order('clicks DESC, created_at ASC')
+      .order('clicks DESC, topic_links.created_at ASC')
       .limit(MAX_SUMMARY_RESULTS)
   end
 
