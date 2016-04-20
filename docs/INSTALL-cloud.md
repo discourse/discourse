@@ -63,9 +63,7 @@ We recommend Nano because it's simple; just use your arrow keys to edit.
 
 - Place your [Email Server credentials][mailconfig] in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
 
-- If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
-
-<img src="https://www.discourse.org/images/install/14/console-nano-app-yml.png?v=1" width="600px">
+<img src="https://www.discourse.org/images/install/15/console-nano-app-yml.png" width="600px">
 
 Please be careful while editing and double check your work; YAML is _very_ sensitive to incorrect spacing and misplaced characters. After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
