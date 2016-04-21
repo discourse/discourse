@@ -18,8 +18,7 @@ describe Onebox::Engine::AmazonOnebox do
     end
 
     it "matches canadian domains" do
-      resp = check_link("ca", "http://www.amazon.ca/Too-Much-Happiness-Alice-Munro-ebook/dp/B0031TZ98K/")
-
+      check_link("ca", "http://www.amazon.ca/Too-Much-Happiness-Alice-Munro-ebook/dp/B0031TZ98K/")
     end
 
     it "matches german domains" do
@@ -60,6 +59,16 @@ describe Onebox::Engine::AmazonOnebox do
 
   end
 
+  describe "#url" do
+    it "maintains the same http/https scheme as the requested URL" do
+      expect(described_class.new("https://www.amazon.fr/gp/product/B01BYD0TZM").url)
+        .to eq("https://www.amazon.fr/gp/aw/d/B01BYD0TZM")
+
+      expect(described_class.new("http://www.amazon.fr/gp/product/B01BYD0TZM").url)
+        .to eq("http://www.amazon.fr/gp/aw/d/B01BYD0TZM")
+    end
+  end
+
   describe "#to_html" do
     it "includes image" do
       expect(html).to include("http://ecx.images-amazon.com/images/I/51opYcR6kVL._SY400_.jpg")
@@ -76,6 +85,6 @@ describe Onebox::Engine::AmazonOnebox do
     it "includes title" do
       expect(html).to include("Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)")
     end
-
   end
+
 end

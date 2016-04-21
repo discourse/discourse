@@ -11,7 +11,11 @@ module Onebox
       matches_regexp(/^https?:\/\/(?:www)\.amazon\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br)\//)
 
       def url
-        return "http://www.amazon.#{tld}/gp/aw/d/" + URI::encode(match[:id]) if match && match[:id]
+        if match && match[:id]
+          _url = URI("http://www.amazon.#{tld}/gp/aw/d/" + URI::encode(match[:id]))
+          _url.scheme = URI(@url).scheme
+          return _url.to_s
+        end
         @url
       end
 
