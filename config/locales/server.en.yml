@@ -43,7 +43,7 @@ en:
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
 
-  purge_reason: "Automatically deleted as abandoned, unactivated account"
+  purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
 
@@ -55,7 +55,7 @@ en:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
         auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
-        no_body_detected_error: "Happens when we couldn't extract a body and there was no attachments."
+        no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         inactive_user_error: "Happens when the sender is not active."
         blocked_user_error: "Happens when the sender has been blocked."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
@@ -222,7 +222,7 @@ en:
 
   groups:
     errors:
-      can_not_modify_automatic: "You can not modify an automatic group"
+      can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist: "'%{username}' is already a member of this group."
       invalid_domain: "'%{domain}' is not a valid domain."
       invalid_incoming_email: "'%{email}' is not a valid email address."
@@ -540,7 +540,7 @@ en:
     continue_button: "Continue to %{site_name}"
     welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
-    missing_session: "We can not detect if your account was created, please ensure you have cookies enabled."
+    missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -819,7 +819,7 @@ en:
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications such as unhandled flags, as well as on the /about contact form for urgent matters."
-    bounce_email: "Variable Email Return Path used for emails, example: bounce@example.com will cause us to generate bounce+GUID@example.com as the Retrun Path for emails we send. This feature allows us to automatically disable bouncing emails. Requires additional configurations, leave blank if unsure."
+    bounce_email: "Variable Email Return Path used for emails, example: bounce@example.com will cause us to generate bounce+GUID@example.com as the Return Path for emails we send. This feature allows us to automatically disable bouncing emails. Requires additional configurations, leave blank if unsure."
     contact_url: "Contact URL for this site. Used on the /about contact form for urgent matters."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
