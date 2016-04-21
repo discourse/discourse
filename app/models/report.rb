@@ -205,7 +205,7 @@ class Report
   # Private messages counts:
 
   def self.private_messages_report(report, topic_subtype)
-    basic_report_about report, Post, :private_messages_count_per_day, default_days, topic_subtype
+    basic_report_about report, Post, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
     add_counts report, Post.private_posts.with_topic_subtype(topic_subtype), 'posts.created_at'
   end
 
