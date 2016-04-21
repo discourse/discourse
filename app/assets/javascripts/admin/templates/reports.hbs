@@ -1,13 +1,15 @@
 <h3>{{model.title}}</h3>
 
 <div class="admin-reports-filter">
-  {{i18n 'admin.dashboard.reports.start_date'}} {{date-picker-past value=startDate}}
-  {{i18n 'admin.dashboard.reports.end_date'}} {{date-picker-past value=endDate}}
-  {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
-  {{#if showGroupOptions}}
-    {{combo-box valueAttribute="value" content=groupOptions value=groupId}}
+  {{#if showFilterOptions}}
+    {{i18n 'admin.dashboard.reports.start_date'}} {{date-picker-past value=startDate}}
+    {{i18n 'admin.dashboard.reports.end_date'}} {{date-picker-past value=endDate}}
+    {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
+    {{#if showGroupOptions}}
+      {{combo-box valueAttribute="value" content=groupOptions value=groupId}}
+    {{/if}}
+    {{d-button action="refreshReport" class="btn-primary" label="admin.dashboard.reports.refresh_report" icon="refresh"}}
   {{/if}}
-  {{d-button action="refreshReport" class="btn-primary" label="admin.dashboard.reports.refresh_report" icon="refresh"}}
   {{d-button action="exportCsv" label="admin.export_csv.button_text" icon="download"}}
 </div>
 
