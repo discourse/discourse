@@ -1,7 +1,5 @@
 module Jobs
   class DashboardStats < Jobs::Scheduled
-    include Jobs::Stats
-
     every 30.minutes
 
     def execute(args)
@@ -12,9 +10,7 @@ module Jobs
         GroupMessage.create(Group[:admins].name, :dashboard_problems, {limit_once_per: 7.days.to_i})
       end
 
-      stats = AdminDashboardData.fetch_stats
-      set_cache(AdminDashboardData, stats)
-      stats
+      AdminDashboardData.refresh_stats
     end
   end
 end
