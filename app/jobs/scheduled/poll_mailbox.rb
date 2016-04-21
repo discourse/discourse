@@ -119,7 +119,11 @@ module Jobs
       end
     rescue Net::OpenTimeout => e
       count = $redis.incr(POLL_MAILBOX_TIMEOUT_ERROR_KEY).to_i
-      $redis.expire(POLL_MAILBOX_TIMEOUT_ERROR_KEY, 300) if count == 1
+
+      $redis.expire(
+        POLL_MAILBOX_TIMEOUT_ERROR_KEY,
+        SiteSetting.pop3_polling_period_mins.minutes * 3
+      ) if count == 1
 
       if count > 3
         $redis.del(POLL_MAILBOX_TIMEOUT_ERROR_KEY)
