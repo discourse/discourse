@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
   },
 
   @computed('model.type')
-  showFilterOptions(modelType) {
+  showCategoryOptions(modelType) {
     return !modelType.match(/_private_messages$/);
   },
 
