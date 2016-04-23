@@ -68,6 +68,7 @@ class Auth::DefaultCurrentUserProvider
     end
     cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
     make_developer_admin(user)
+    enable_bootstrap_mode(user)
     @env[CURRENT_USER_KEY] = user
   end
 
@@ -79,6 +80,10 @@ class Auth::DefaultCurrentUserProvider
       user.admin = true
       user.save
     end
+  end
+
+  def enable_bootstrap_mode(user)
+    Jobs.enqueue(:enable_bootstrap_mode, user_id: user.id) if user.admin && user.last_seen_at.nil? && !SiteSetting.bootstrap_mode_enabled && user.is_singular_admin?
   end
 
   def log_off_user(session, cookies)

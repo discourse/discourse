@@ -841,6 +841,10 @@ class User < ActiveRecord::Base
       custom_fields["master_id"].to_i > 0
   end
 
+  def is_singular_admin?
+    User.where(admin: true).where.not(id: id).where.not(id: Discourse::SYSTEM_USER_ID).blank?
+  end
+
   protected
 
   def badge_grant
