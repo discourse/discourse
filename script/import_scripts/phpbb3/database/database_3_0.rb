@@ -95,33 +95,50 @@ module ImportScripts::PhpBB3
 
     def fetch_poll_options(topic_id)
       query(<<-SQL)
-        SELECT poll_option_id, poll_option_text, poll_option_total
-        FROM #{@table_prefix}_poll_options
-        WHERE topic_id = #{topic_id}
-        ORDER BY poll_option_id
+        SELECT o.poll_option_id, o.poll_option_text, o.poll_option_total AS total_votes,
+          o.poll_option_total - (
+            SELECT COUNT(DISTINCT v.vote_user_id)
+              FROM #{@table_prefix}_poll_votes v
+                JOIN #{@table_prefix}_users u ON (v.vote_user_id = u.user_id)
+                JOIN #{@table_prefix}_topics t ON (v.topic_id = t.topic_id)
+              WHERE v.poll_option_id = o.poll_option_id AND v.topic_id = o.topic_id
+          ) AS anonymous_votes
+        FROM #{@table_prefix}_poll_options o
+        WHERE o.topic_id = #{topic_id}
+        ORDER BY o.poll_option_id
       SQL
     end
 
     def fetch_poll_votes(topic_id)
-      # this query ignores votes from users that do not exist anymore
+      # this query ignores invalid votes that belong to non-existent users or topics
       query(<<-SQL)
         SELECT u.user_id, v.poll_option_id
         FROM #{@table_prefix}_poll_votes v
+          JOIN #{@table_prefix}_poll_options o ON (v.poll_option_id = o.poll_option_id AND v.topic_id = o.topic_id)
           JOIN #{@table_prefix}_users u ON (v.vote_user_id = u.user_id)
+          JOIN #{@table_prefix}_topics t ON (v.topic_id = t.topic_id)
         WHERE v.topic_id = #{topic_id}
       SQL
     end
 
-    def count_voters(topic_id)
+    def get_voters(topic_id)
       # anonymous voters can't be counted, but lets try to make the count look "correct" anyway
-      count(<<-SQL)
-        SELECT MAX(count) AS count
+      query(<<-SQL).first
+        SELECT MAX(x.total_voters) AS total_voters,
+          MAX(x.total_voters) - (
+            SELECT COUNT(DISTINCT v.vote_user_id)
+            FROM #{@table_prefix}_poll_votes v
+              JOIN #{@table_prefix}_poll_options o ON (v.poll_option_id = o.poll_option_id AND v.topic_id = o.topic_id)
+              JOIN #{@table_prefix}_users u ON (v.vote_user_id = u.user_id)
+              JOIN #{@table_prefix}_topics t ON (v.topic_id = t.topic_id)
+            WHERE v.topic_id = #{topic_id}
+          ) AS anonymous_voters
         FROM (
-          SELECT COUNT(DISTINCT vote_user_id) AS count
+          SELECT COUNT(DISTINCT vote_user_id) AS total_voters
           FROM #{@table_prefix}_poll_votes
           WHERE topic_id  = #{topic_id}
           UNION
-          SELECT MAX(poll_option_total) AS count
+          SELECT MAX(poll_option_total) AS total_voters
           FROM #{@table_prefix}_poll_options
           WHERE topic_id = #{topic_id}
         ) x
