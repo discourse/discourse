@@ -160,9 +160,11 @@ class TopicTrackingState
     #  cycles from usual requests
     #
     #
-    sql = report_raw_sql(topic_id: topic_id, skip_unread: true, skip_order: true)
+    guardian = Guardian.new(User.find(user_id))
+
+    sql = report_raw_sql(topic_id: topic_id, skip_unread: true, skip_order: true, guardian: guardian)
     sql << "\nUNION ALL\n\n"
-    sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true)
+    sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true, guardian: guardian)
 
     SqlBuilder.new(sql)
       .map_exec(TopicTrackingState, user_id: user_id, topic_id: topic_id)
@@ -172,11 +174,13 @@ class TopicTrackingState
 
   def self.report_raw_sql(opts=nil)
 
+    guardian = opts[:guardian]
+
     unread =
       if opts && opts[:skip_unread]
         "1=0"
       else
-        TopicQuery.unread_filter(Topic).where_values.join(" AND ")
+        TopicQuery.unread_filter(Topic, guardian).where_values.join(" AND ")
       end
 
     new =
@@ -186,6 +190,51 @@ class TopicTrackingState
         TopicQuery.new_filter(Topic, "xxx").where_values.join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
       end
 
+    if NewPostManager.queued_preview_enabled?
+    select = (opts && opts[:select]) || "
+           u.id AS user_id,
+           topics.id AS topic_id,
+           topics.created_at,
+           highest_post_number,
+           last_read_post_number,
+           c.id AS category_id,
+           tu.notification_level"
+
+    part2 = unless guardian.authenticated?
+              "1=1"
+            else
+              "topics.user_id=:user_id AND spm.topic_id is not null"
+            end
+
+    sql = <<SQL
+    SELECT #{select}
+    FROM topics
+    JOIN users u on u.id = :user_id
+    JOIN user_stats AS us ON us.user_id = u.id
+    JOIN user_options AS uo ON uo.user_id = u.id
+    JOIN categories c ON c.id = topics.category_id
+    LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
+    LEFT JOIN queued_preview_post_maps spm ON spm.topic_id = topics.id
+    WHERE u.id = :user_id AND
+          (spm.topic_id is null OR (#{part2})) AND
+          topics.archetype <> 'private_message' AND
+          ((#{unread}) OR (#{new})) AND
+          (topics.visible OR u.admin OR u.moderator) AND
+          topics.deleted_at IS NULL AND
+          ( NOT c.read_restricted OR u.admin OR category_id IN (
+              SELECT c2.id FROM categories c2
+              JOIN category_groups cg ON cg.category_id = c2.id
+              JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
+              WHERE c2.read_restricted )
+          )
+          AND NOT EXISTS( SELECT 1 FROM category_users cu
+                          WHERE last_read_post_number IS NULL AND
+                               cu.user_id = :user_id AND
+                               cu.category_id = topics.category_id AND
+                               cu.notification_level = #{CategoryUser.notification_levels[:muted]})
+
+SQL
+    else
     select = (opts && opts[:select]) || "
            u.id AS user_id,
            topics.id AS topic_id,
@@ -222,6 +271,8 @@ class TopicTrackingState
                                cu.notification_level = #{CategoryUser.notification_levels[:muted]})
 
 SQL
+    end
+
 
     if opts && opts[:topic_id]
       sql << " AND topics.id = :topic_id"

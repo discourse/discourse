@@ -76,7 +76,7 @@ class TopicList
         ft.user_data.post_action_data = {post_action_type => actions}
       end
 
-      ft.posters = ft.posters_summary(avatar_lookup: avatar_lookup)
+      ft.posters = ft.posters_summary(avatar_lookup: avatar_lookup, user: @current_user)
       ft.participants = ft.participants_summary(avatar_lookup: avatar_lookup, user: @current_user)
       ft.topic_list = self
     end

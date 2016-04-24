@@ -12,6 +12,14 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
                             .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
+  scope :with_queued_preview_map, -> { joins('LEFT JOIN queued_preview_post_maps ON notifications.topic_id = queued_preview_post_maps.topic_id') }
+  scope :hide_queued_preview, -> (guardian) {
+    guardian.queued_preview_actions(
+      user_action: ->{with_queued_preview_map.where("queued_preview_post_maps.topic_id is null OR (topics.user_id = ? AND queued_preview_post_maps.topic_id is not null)", guardian.user.id)},
+      anon_action: ->{with_queued_preview_map.where("queued_preview_post_maps.topic_id is null")}
+    )
+  }
+
   after_save :refresh_notification_count
   after_destroy :refresh_notification_count
 
@@ -125,7 +133,9 @@ class Notification < ActiveRecord::Base
     return unless user && user.user_option
 
     count ||= 10
+    guardian = Guardian.new(user)
     notifications = user.notifications
+                        .hide_queued_preview(guardian)
                         .visible
                         .recent(count)
                         .includes(:topic)

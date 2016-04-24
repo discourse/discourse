@@ -11,7 +11,7 @@ class PostJobsEnqueuer
     # Otherwise they might begin before the data has been comitted.
     enqueue_post_alerts unless @opts[:import_mode]
     feature_topic_users unless @opts[:import_mode]
-    trigger_post_post_process
+    trigger_post_post_process unless @opts[:queued_preview_approving]
 
     unless skip_after_create?
       after_post_create
@@ -49,8 +49,10 @@ class PostJobsEnqueuer
     # Don't publish invisible topics
     return unless @topic.visible?
 
-    @topic.posters = @topic.posters_summary
-    @topic.posts_count = 1
+    unless @opts[:queued_preview_approving]
+      @topic.posters = @topic.posters_summary
+      @topic.posts_count = 1
+    end
 
     TopicTrackingState.publish_new(@topic)
   end

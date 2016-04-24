@@ -292,10 +292,11 @@ class User < ActiveRecord::Base
   end
 
   def unread_notifications
-    @unread_notifications ||=
-      begin
-        # perf critical, much more efficient than AR
-        sql = "
+    unless NewPostManager.queued_preview_enabled?
+      @unread_notifications ||=
+        begin
+          # perf critical, much more efficient than AR
+          sql = "
            SELECT COUNT(*) FROM notifications n
            LEFT JOIN topics t ON n.topic_id = t.id
            WHERE
@@ -305,15 +306,37 @@ class User < ActiveRecord::Base
             NOT read AND
             n.id > :seen_notification_id"
 
-        User.exec_sql(sql, user_id: id,
-                           seen_notification_id: seen_notification_id,
-                           pm:  Notification.types[:private_message])
+          User.exec_sql(sql, user_id: id,
+                        seen_notification_id: seen_notification_id,
+                        pm:  Notification.types[:private_message])
             .getvalue(0,0).to_i
-      end
+        end
+    else
+      @unread_notifications ||=
+        begin
+          # perf critical, much more efficient than AR
+          sql = "
+           SELECT COUNT(*) FROM notifications n
+           LEFT JOIN topics t ON n.topic_id = t.id
+           LEFT JOIN queued_preview_post_maps spm ON n.topic_id = spm.topic_id
+           WHERE
+            (spm.topic_id IS NULL OR (t.user_id = :user_id AND spm.topic_id is not null)) AND
+            t.deleted_at IS NULL AND
+            n.notification_type <> :pm AND
+            n.user_id = :user_id AND
+            NOT read AND
+            n.id > :seen_notification_id"
+
+          User.exec_sql(sql, user_id: id,
+                        seen_notification_id: seen_notification_id,
+                        pm:  Notification.types[:private_message])
+            .getvalue(0,0).to_i
+        end
+    end
   end
 
   def total_unread_notifications
-    @unread_total_notifications ||= notifications.where("read = false").count
+    @unread_total_notifications ||= notifications.eager_load(:topic).hide_queued_preview(Guardian.new(self)).where("read = false").count
   end
 
   def saw_notification_id(notification_id)
@@ -324,11 +347,11 @@ class User < ActiveRecord::Base
   def publish_notifications_state
     # publish last notification json with the message so we
     # can apply an update
-    notification = notifications.visible.order('notifications.id desc').first
-    json = NotificationSerializer.new(notification).as_json if notification
 
+    unless NewPostManager.queued_preview_enabled?
+      notification = notifications.visible.order('notifications.id desc').first
 
-    sql = "
+      sql = "
        SELECT * FROM (
          SELECT n.id, n.read FROM notifications n
          LEFT JOIN topics t ON n.topic_id = t.id
@@ -352,9 +375,42 @@ class User < ActiveRecord::Base
        LIMIT 20
       ) AS y
     "
+    else
+      notification = notifications.visible.hide_queued_preview(Guardian.new(self)).order('notifications.id desc').first
 
+      sql = "
+       SELECT * FROM (
+         SELECT n.id, n.read FROM notifications n
+         LEFT JOIN topics t ON n.topic_id = t.id
+         LEFT JOIN queued_preview_post_maps spm ON n.topic_id = spm.topic_id
+         WHERE
+          (spm.topic_id IS NULL OR (t.user_id = :user_id AND spm.topic_id IS NOT NULL)) AND
+          t.deleted_at IS NULL AND
+          n.notification_type = :type AND
+          n.user_id = :user_id AND
+          NOT read
+        ORDER BY n.id DESC
+        LIMIT 20
+      ) AS x
+      UNION ALL
+      SELECT * FROM (
+       SELECT n.id, n.read FROM notifications n
+       LEFT JOIN topics t ON n.topic_id = t.id
+       LEFT JOIN queued_preview_post_maps spm ON n.topic_id = spm.topic_id
+       WHERE
+        (spm.topic_id IS NULL OR (t.user_id = :user_id AND spm.topic_id IS NOT NULL)) AND
+        t.deleted_at IS NULL AND
+        (n.notification_type <> :type OR read) AND
+        n.user_id = :user_id
+       ORDER BY n.id DESC
+       LIMIT 20
+      ) AS y
+    "
+    end
+
+    json = NotificationSerializer.new(notification).as_json if notification
     recent = User.exec_sql(sql, user_id: id,
-                       type:  Notification.types[:private_message]).values.map do |id, read|
+                           type:  Notification.types[:private_message]).values.map do |id, read|
       [id.to_i, read == 't'.freeze]
     end
 

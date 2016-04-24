@@ -4,6 +4,17 @@ class TopicPostersSummary
   def initialize(topic, options = {})
     @topic = topic
     @options = options
+    @guardian = Guardian.new(@options[:user])
+
+    # Cache queued_preview ids
+    if NewPostManager.queued_preview_enabled?
+      @last_post_user_id = @topic.hide_last_post_user_id(@guardian)
+      @post_ids = @topic.posts.hide_queued_preview(@guardian).pluck(:user_id)
+      @topic_user_id = (@post_ids & [ topic.user_id ]).first
+    else
+      @topic_user_id = topic.user_id
+      @last_post_user_id = @topic.last_post_user_id
+    end
   end
 
   def summary
@@ -16,7 +27,7 @@ class TopicPostersSummary
     TopicPoster.new.tap do |topic_poster|
       topic_poster.user = user
       topic_poster.description = descriptions_for(user)
-      if topic.last_post_user_id == user.id
+      if @last_post_user_id == user.id
         topic_poster.extras = 'latest'
         topic_poster.extras << ' single' if user_ids.uniq.size == 1
       end
@@ -38,8 +49,8 @@ class TopicPostersSummary
 
   def shuffle_last_poster_to_back_in(summary)
     unless last_poster_is_topic_creator?
-      summary.reject!{ |u| u.id == topic.last_post_user_id }
-      summary << avatar_lookup[topic.last_post_user_id]
+      summary.reject!{ |u| u.id == @last_post_user_id }
+      summary << avatar_lookup[@last_post_user_id]
     end
     summary
   end
@@ -56,7 +67,7 @@ class TopicPostersSummary
   end
 
   def last_poster_is_topic_creator?
-    topic.user_id == topic.last_post_user_id
+    @topic_user_id == @last_post_user_id
   end
 
   def sorted_top_posters
@@ -68,7 +79,13 @@ class TopicPostersSummary
   end
 
   def user_ids
-    [ topic.user_id, topic.last_post_user_id, *topic.featured_user_ids ]
+    if NewPostManager.queued_preview_enabled? && !@guardian.can_see_queued_preview?
+      featured_ids = topic.featured_user_ids & @post_ids
+    else
+      featured_ids = topic.featured_user_ids
+    end
+
+    [ @topic_user_id, @last_post_user_id, *featured_ids ]
   end
 
   def avatar_lookup

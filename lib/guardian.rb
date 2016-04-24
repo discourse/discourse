@@ -71,6 +71,24 @@ class Guardian
     )
   end
 
+  def can_see_queued_preview?
+    authenticated? && (is_admin? || is_staff? || is_moderator?)
+  end
+
+  def can_hide_queued_preview?
+    authenticated? && (is_admin? || is_staff? || is_moderator?)
+  end
+
+  def queued_preview_actions(user_action: nil, anon_action: nil)
+    if NewPostManager.queued_preview_enabled?
+      if authenticated?
+        user_action.call unless can_see_queued_preview?
+      else
+        anon_action.call
+      end
+    end
+  end
+
   # Can the user see the object?
   def can_see?(obj)
     if obj

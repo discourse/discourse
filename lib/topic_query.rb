@@ -7,6 +7,7 @@ require_dependency 'topic_list'
 require_dependency 'suggested_topics_builder'
 require_dependency 'topic_query_sql'
 require_dependency 'avatar_lookup'
+require_dependency 'new_post_manager'
 
 class TopicQuery
   # Could be rewritten to %i if Ruby 1.9 is no longer supported
@@ -240,8 +241,13 @@ class TopicQuery
         .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
   end
 
-  def self.unread_filter(list)
-    list.where("tu.last_read_post_number < topics.highest_post_number")
+  def self.unread_filter(list, guardian = nil)
+    if NewPostManager.queued_preview_enabled? && guardian && !guardian.can_see_queued_preview?
+      highest_post_number = Topic.hide_highest_post_number_query(guardian)
+    else
+      highest_post_number = "topics.highest_post_number"
+    end
+    list.where("tu.last_read_post_number < #{highest_post_number}")
         .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
@@ -299,6 +305,16 @@ class TopicQuery
       t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map{|u| u.id} : []
     end
 
+    # Hide some feilds
+    if NewPostManager.queued_preview_enabled?
+      topics.each do |t|
+        t.posts_count = t.hide_posts_count(@guardian)
+        t.last_posted_at = t.hide_last_posted_at(@guardian)
+        t.bumped_at = t.last_posted_at
+        t.highest_post_number = t.hide_highest_post_number(@guardian)
+      end
+    end
+
     list = TopicList.new(filter, @user, topics, options.merge(@options))
     list.per_page = per_page_setting
     list
@@ -318,7 +334,7 @@ class TopicQuery
   end
 
   def unread_results(options={})
-    result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
+    result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)), @guardian)
     .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
     self.class.results_filter_callbacks.each do |filter_callback|
@@ -428,6 +444,8 @@ class TopicQuery
 
       # Start with a list of all topics
       result = Topic.unscoped
+
+      result = result.hide_queued_preview(@guardian) if NewPostManager.queued_preview_enabled?
 
       if @user
         result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")

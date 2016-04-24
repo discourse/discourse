@@ -276,7 +276,7 @@ class PostsController < ApplicationController
   # Direct replies to this post
   def replies
     post = find_post_from_params
-    replies = post.replies.secured(guardian)
+    replies = post.replies.hide_queued_preview(guardian).secured(guardian)
     render_serialized(replies, PostSerializer)
   end
 
@@ -515,6 +515,7 @@ class PostsController < ApplicationController
 
   def user_posts(guardian, user_id, opts)
     posts = Post.includes(:user, :topic, :deleted_by, :user_actions)
+                .hide_queued_preview(guardian)
                 .where(user_id: user_id)
                 .with_deleted
                 .order(created_at: :desc)
@@ -525,7 +526,7 @@ class PostsController < ApplicationController
       # So instead I grab the topics separately
       topic_ids = posts.dup.pluck(:topic_id)
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: 'private_message')
-      topics = topics.secured(guardian)
+      topics = topics.secured(guardian).hide_queued_preview(guardian)
 
       posts = posts.where(topic_id: topics.pluck(:id))
     end
@@ -635,6 +636,7 @@ class PostsController < ApplicationController
     # load deleted topic
     post.topic = Topic.with_deleted.find(post.topic_id) if current_user.try(:staff?)
     guardian.ensure_can_see!(post)
+    post.reply_count = post.find_queued_preview_reply_count(guardian)
     post
   end
 

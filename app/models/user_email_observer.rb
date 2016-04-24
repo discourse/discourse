@@ -104,6 +104,12 @@ class UserEmailObserver < ActiveRecord::Observer
   end
 
   def self.process_notification(notification)
+    # if NewPostManager.queued_preview_enabled?
+    #   post = Post.find(notification.post_id)
+    #   guardian = Guardian.new(notification.user)
+    #   return unless guardian.can_see?(post)
+    # end
+
     email_user   = EmailUser.new(notification)
     email_method = Notification.types[notification.notification_type]
 

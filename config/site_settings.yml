@@ -507,6 +507,8 @@ posting:
     min: 0
   auto_close_messages_post_count: 500
   auto_close_topics_post_count: 10000
+  queued_preview_mode:
+    default: false
 
 email:
   email_time_window_mins:

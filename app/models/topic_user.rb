@@ -127,7 +127,7 @@ class TopicUser < ActiveRecord::Base
 
     def track_visit!(topic,user)
       topic_id = topic.is_a?(Topic) ? topic.id : topic
-      user_id = user.is_a?(User) ? user.id : topic
+      user_id = user.is_a?(User) ? user.id : user
 
       now = DateTime.now
       rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
@@ -143,7 +143,7 @@ class TopicUser < ActiveRecord::Base
     UPDATE_TOPIC_USER_SQL = "UPDATE topic_users
                                     SET
                                       last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
-                                      highest_seen_post_number = t.highest_post_number,
+                                      highest_seen_post_number = :highest_post_number,
                                       total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
                                       notification_level =
                                          case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
@@ -167,7 +167,7 @@ class TopicUser < ActiveRecord::Base
                                 "
 
     INSERT_TOPIC_USER_SQL = "INSERT INTO topic_users (user_id, topic_id, last_read_post_number, highest_seen_post_number, last_visited_at, first_visited_at, notification_level)
-                  SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now, :new_status
+                  SELECT :user_id, :topic_id, :post_number, :highest_post_number, :now, :now, :new_status
                   FROM topics AS ft
                   JOIN users u on u.id = :user_id
                   WHERE ft.id = :topic_id
@@ -188,6 +188,14 @@ class TopicUser < ActiveRecord::Base
         tracking: notification_levels[:tracking],
         threshold: SiteSetting.default_other_auto_track_topics_after_msecs
       }
+
+      if NewPostManager.queued_preview_enabled?
+        guardian = Guardian.new(user)
+        args[:highest_post_number] = Topic.find(topic_id).hide_highest_post_number(guardian)
+      else
+        args[:highest_post_number] = Topic.find(topic_id).highest_post_number
+      end
+
 
       # In case anyone seens "highest_seen_post_number" and gets confused, like I do.
       # highest_seen_post_number represents the highest_post_number of the topic when

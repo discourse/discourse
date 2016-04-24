@@ -155,6 +155,7 @@ module PostGuardian
     return false unless can_see_topic?(post.topic)
     return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
     return false if !is_moderator? && post.deleted_at.present?
+    return false if post.user != @user && post.queued_preview? # Do not show queued_preview post
 
     true
   end

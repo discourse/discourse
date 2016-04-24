@@ -1,6 +1,7 @@
 require_dependency 'post_creator'
 require_dependency 'new_post_result'
 require_dependency 'post_enqueuer'
+require_dependency 'post_queued_preview_mapper'
 
 # Determines what actions should be taken with new posts.
 #
@@ -70,6 +71,7 @@ class NewPostManager
     user = manager.user
 
     return false if user.staff? || user.staged
+    return true if queued_preview_enabled?
 
     (user.trust_level <= TrustLevel.levels[:basic] && user.post_count < SiteSetting.approve_post_count) ||
     (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
@@ -93,7 +95,12 @@ class NewPostManager
   def self.queue_enabled?
     SiteSetting.approve_post_count > 0 ||
     SiteSetting.approve_unless_trust_level.to_i > 0 ||
-    handlers.size > 1
+    handlers.size > 1 ||
+    queued_preview_enabled?
+  end
+
+  def self.queued_preview_enabled?
+    SiteSetting.queued_preview_mode
   end
 
   def initialize(user, args)
@@ -108,15 +115,44 @@ class NewPostManager
       return perform_create_post
     end
 
-    # Perform handlers until one returns a result
-    handled = NewPostManager.handlers.any? do |handler|
-      result = handler.call(self)
-      return result if result
+    # Perform handlers until one returns true result
+    # and remember that result
+    handled_result = nil
 
-      false
+    handled = NewPostManager.handlers.any? do |handler|
+      handled_result = handler.call(self)
     end
 
-    perform_create_post unless handled
+    if self.class.queued_preview_enabled?
+      if handled && handled_result
+        return handled_result if handled_result.failed? || handled_result.action != :enqueued
+      end
+
+      create_result = perform_create_post
+
+      if !create_result.present? || create_result.failed?
+        # If there is some queued_post - destroy it
+        handled_result.queued_post.destroy if handled_result.present? && handled_result.queued_post.present?
+        return create_result
+      end
+
+      # Do mapping from posts to queued_posts to hide it
+      # if queued_preview mode is on
+      if create_result.success? && handled_result.present? && handled_result.queued_post.present? && handled_result.success?
+        queued_preview(handled_result, create_result)
+      end
+
+      create_result
+
+    else
+
+      if handled
+        handled_result
+      else
+        perform_create_post
+      end
+
+    end
   end
 
   # Enqueue this post in a queue
@@ -152,6 +188,11 @@ class NewPostManager
     end
 
     result
+  end
+
+  # Create hiding mapping from posts to queued_posts
+  def queued_preview(enqueue_result, post_result)
+    PostQueuedPreviewMapper.new(enqueue_result, post_result).hide
   end
 
 end

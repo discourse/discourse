@@ -5,6 +5,11 @@ class TopicParticipantsSummary
     @topic = topic
     @options = options
     @user = options[:user]
+    @guardian = Guardian.new(@user)
+
+    if NewPostManager.queued_preview_enabled?
+      @post_ids = topic.posts.hide_queued_preview(@guardian).pluck(:user_id) # Only show not queued_preview ids
+    end
   end
 
   def summary
@@ -28,7 +33,13 @@ class TopicParticipantsSummary
 
   def user_ids
     return [] unless @user
-    [topic.user_id] + topic.allowed_user_ids - [@user.id]
+    ids = [topic.user_id] + topic.allowed_user_ids - [@user.id]
+
+    if !NewPostManager.queued_preview_enabled? || @guardian.can_see_queued_preview?
+      ids
+    else
+      @post_ids & ids
+    end
   end
 
   def avatar_lookup

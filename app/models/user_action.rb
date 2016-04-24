@@ -62,6 +62,7 @@ class UserAction < ActiveRecord::Base
     LEFT JOIN posts p on p.id = a.target_post_id
     LEFT JOIN posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
     LEFT JOIN categories c ON c.id = t.category_id
+    LEFT JOIN queued_preview_post_maps spm on p.id = spm.post_id
     /*where*/
     GROUP BY action_type
 SQL
@@ -192,6 +193,7 @@ SQL
       JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
       JOIN users au on au.id = a.user_id
       LEFT JOIN categories c on c.id = t.category_id
+      LEFT JOIN queued_preview_post_maps spm on p.id = spm.post_id
       /*where*/
       /*order_by*/
       /*offset*/
@@ -336,6 +338,17 @@ SQL
       current_user_id = -2
       current_user_id = guardian.user.id if guardian.user
       builder.where("NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id", current_user_id: current_user_id )
+    end
+
+    # Don't show queued posts and topics
+    builder.where("a.queued_post_id is null")
+
+    # And queued_preview if enabled
+    if NewPostManager.queued_preview_enabled?
+      guardian.queued_preview_actions(
+        user_action: ->{ builder.where("spm.post_id is null OR (p.user_id = :current_user_id AND spm.post_id is not null)") },
+        anon_action: ->{ builder.where("spm.post_id is null") }
+      )
     end
 
     visible_post_types = Topic.visible_post_types(guardian.user)

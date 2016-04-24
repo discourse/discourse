@@ -109,6 +109,8 @@ class Topic < ActiveRecord::Base
 
   has_one :first_post, -> {where post_number: 1}, class_name: Post
 
+  has_one :queued_preview_post_map, foreign_key: :topic_id
+
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
 
@@ -147,6 +149,47 @@ class Topic < ActiveRecord::Base
            SELECT c.id FROM categories c
            WHERE #{condition[0]})", condition[1])
   }
+
+  scope :with_queued_preview_map, -> { eager_load(:queued_preview_post_map) }
+  scope :hide_queued_preview, -> (guardian) {
+    if guardian.present?
+      guardian.queued_preview_actions(
+        user_action: ->{with_queued_preview_map.where("queued_preview_post_maps.topic_id is null OR (topics.user_id = ? AND queued_preview_post_maps.topic_id is not null)", guardian.user.id)},
+        anon_action: ->{with_queued_preview_map.where("queued_preview_post_maps.topic_id is null")}
+      )
+    end
+  }
+
+  def queued_preview?
+    queued_preview_post_map
+  end
+
+  def hide_last_post_user_id(guardian)
+    posts.by_newest.hide_queued_preview(guardian).pluck(:user_id).first
+  end
+
+  def hide_last_poster(guardian)
+    User.find(hide_last_post_user_id(guardian))
+  end
+
+  def hide_posts_count(guardian)
+    posts.hide_queued_preview(guardian).count
+  end
+
+  def hide_last_posted_at(guardian)
+    posts.by_newest.hide_queued_preview(guardian).pluck(:created_at).first
+  end
+
+  def hide_highest_post_number(guardian)
+    posts.order('post_number DESC').hide_queued_preview(guardian).pluck(:post_number).first
+  end
+
+  def self.hide_highest_post_number_query(guardian)
+    guardian.queued_preview_actions(
+      user_action: -> {"(SELECT MAX(pst.post_number) FROM posts AS pst LEFT OUTER JOIN queued_preview_post_maps AS spm ON pst.id=spm.post_id WHERE pst.topic_id=topics.id AND (spm.post_id is null OR (pst.user_id=#{guardian.user.id} AND spm.post_id is not null)))"},
+      anon_action: -> {"(SELECT MAX(pst.post_number) FROM posts AS pst LEFT OUTER JOIN queued_preview_post_maps AS spm ON pst.id=spm.post_id WHERE pst.topic_id=topics.id AND spm.post_id is null)"}
+    )
+  end
 
   attr_accessor :ignore_category_auto_close
   attr_accessor :skip_callbacks
@@ -237,7 +280,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.recent(max = 10)
-    Topic.listable_topics.visible.secured.order('created_at desc').limit(max)
+    Topic.listable_topics.visible.secured.order('topics.created_at desc').limit(max)
   end
 
   def self.count_exceeds_minimum?
@@ -311,9 +354,11 @@ class Topic < ActiveRecord::Base
     opts = opts || {}
     score = "#{ListController.best_period_for(since)}_score"
 
+    guardian=Guardian.new(user)
     topics = Topic
               .visible
-              .secured(Guardian.new(user))
+              .secured(guardian)
+              .hide_queued_preview(guardian)
               .joins("LEFT OUTER JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{user.id.to_i}")
               .joins("LEFT OUTER JOIN users ON users.id = topics.user_id")
               .where(closed: false, archived: false)
@@ -415,8 +460,11 @@ class Topic < ActiveRecord::Base
 
     # Exclude category definitions from similar topic suggestions
 
+    guardian=Guardian.new(user)
+
     candidates = Topic.visible
-       .secured(Guardian.new(user))
+       .secured(guardian)
+       .hide_queued_preview(guardian)
        .listable_topics
        .joins('JOIN topic_search_data s ON topics.id = s.topic_id')
        .where("search_data @@ #{ts_query}")

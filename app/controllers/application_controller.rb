@@ -490,7 +490,15 @@ class ApplicationController < ActionController::Base
       category_topic_ids = Category.pluck(:topic_id).compact
       @container_class = "wrap not-found-container"
       @top_viewed = TopicQuery.new(nil, {except_topic_ids: category_topic_ids}).list_top_for("monthly").topics.first(10)
-      @recent = Topic.where.not(id: category_topic_ids).recent(10)
+
+      if NewPostManager.queued_preview_enabled?
+        # Any unapproved topic is unlikely to appear among the top viewed, so we only
+        # care about protecting the recent view here.
+        @recent = Topic.hide_queued_preview(guardian).where.not(id: category_topic_ids).recent(10)
+      else
+        @recent = Topic.where.not(id: category_topic_ids).recent(10)
+      end
+
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')

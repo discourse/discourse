@@ -528,6 +528,52 @@ class ImportScripts::Base
     [created, skipped]
   end
 
+  # Iterate through a list of "like" records to be imported.
+  # Takes a collection, and yields to the block for each element.
+  # Block should return a hash with the attributes for the "like".
+  # Required fields are :user_id and :post_id, where both ids are
+  # the values in the original datasource.
+  def create_likes(results, opts={})
+    created = 0
+    skipped = 0
+    total = opts[:total] || results.size
+
+    user = User.new
+    post = Post.new
+
+    results.each do |result|
+      params = yield(result)
+
+      # only the IDs are needed, so this should be enough
+      if params.nil?
+        skipped += 1
+      else
+        user.id = @lookup.user_id_from_imported_user_id(params[:user_id])
+        post.id = @lookup.post_id_from_imported_post_id(params[:post_id])
+
+        if user.id.nil? || post.id.nil?
+          skipped += 1
+          puts "Skipping 'Like' for user id #{params[:user_id]} and post id #{params[:post_id]}"
+        else
+          begin
+            like = PostAction.act(user, post, PostActionType.types[:like])
+            created += 1
+            unless params[:created_at].nil?
+              like.created_at = params[:created_at]
+              like.save!
+            end
+          rescue PostAction::AlreadyActed
+            skipped += 1
+          end
+        end
+      end
+
+      print_status created + skipped + (opts[:offset] || 0), total
+    end
+
+    [created, skipped]
+  end
+
   def close_inactive_topics(opts={})
     num_days = opts[:days] || 30
     puts '', "Closing topics that have been inactive for more than #{num_days} days."

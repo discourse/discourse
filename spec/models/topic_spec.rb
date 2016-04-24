@@ -1626,4 +1626,242 @@ describe Topic do
 
     expect(@topic_status_event_triggered).to eq(true)
   end
+
+  context 'when queued_preview approving on' do
+    before(:each) do
+      SiteSetting.stubs(:queued_preview_mode).returns(true)
+      ActiveRecord::Base.observers.enable :search_observer
+    end
+
+    let!(:anon)     { nil }
+    let!(:stranger) { Fabricate(:user, admin: false) }
+    let!(:writer)   { Fabricate(:user, admin: false) }
+    let!(:author1)  { Fabricate(:user, admin: false) }
+    let!(:author2)  { Fabricate(:user, admin: false) }
+    let!(:admin)    { Fabricate(:user, admin: true) }
+
+    let!(:t1) { create_topic(user: author1, title: 'Test topic for the good stuff 1') }
+    let!(:t2) { create_topic(user: author1, title: 'Test topic for the good stuff 2') }
+    let!(:t3) { create_topic(user: author2, title: 'Test topic for the good stuff 3') }
+    let!(:t4) { create_topic(user: author2, title: 'Test topic for the good stuff 4') }
+    let!(:t5) { create_topic(user: author1, title: 'Test topic for the good stuff 5') }
+
+    let!(:p11) { Post.create(topic: t1, user: author1, post_number: 1, raw: 'Test post for the good topic 11') }
+    let!(:p21) { Post.create(topic: t2, user: author1, post_number: 1, raw: 'Test post for the good topic 21') }
+    let!(:p31) { Post.create(topic: t3, user: author2, post_number: 1, raw: 'Test post for the good topic 31') }
+    let!(:p41) { Post.create(topic: t4, user: author2, post_number: 1, raw: 'Test post for the good topic 41') }
+    let!(:p51) { Post.create(topic: t5, user: author1, post_number: 1, raw: 'Test post for the good topic 51') }
+
+    let!(:p12) { Post.create(topic: t1, user: writer, post_number: 2, raw: 'Test post for the good topic 12') }
+    let!(:p22) { Post.create(topic: t2, user: writer, post_number: 2, raw: 'Test post for the good topic 22') }
+    let!(:p32) { Post.create(topic: t3, user: writer, post_number: 2, raw: 'Test post for the good topic 32') }
+    let!(:p42) { Post.create(topic: t4, user: writer, post_number: 2, raw: 'Test post for the good topic 42') }
+    let!(:p52) { Post.create(topic: t5, user: writer, post_number: 2, raw: 'Test post for the good topic 52') }
+
+    before do
+      [t1,t2,t3,t4,t5].each do |t|
+        t.highest_post_number = 2
+        t.last_post_user_id = writer.id
+      end
+      t1.last_posted_at = p12.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+      t2.last_posted_at = p22.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+      t3.last_posted_at = p32.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+      t4.last_posted_at = p42.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+      t5.last_posted_at = p52.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+    end
+
+    context 'when no topics hidden' do
+      it 'topics saved' do
+        expect(Topic.by_newest.to_a).to eq([t5,t4,t3,t2,t1])
+      end
+
+      it 'all can see all topics' do
+        [anon, stranger, writer, author1, author2, admin].each do |u|
+          guardian = Guardian.new(u)
+          expect(Topic.hide_queued_preview(guardian).by_newest.to_a).to eq([t5,t4,t3,t2,t1])
+        end
+      end
+
+      it 'all can see actual last poster' do
+        uid = writer.id
+        [anon, stranger, writer, author1, author2, admin].each do |u|
+          guardian = Guardian.new(u)
+          [t1,t2,t3,t4,t5].each do |t|
+            expect(t.hide_last_post_user_id(guardian)).to eq(uid)
+            expect(t.hide_last_poster(guardian)).to eq(writer)
+          end
+        end
+      end
+
+      it 'all can see actual last posted at' do
+        [anon, stranger, writer, author1, author2, admin].each do |u|
+          guardian = Guardian.new(u)
+          [t1,t2,t3,t4,t5].each do |t|
+            expect(t.hide_last_posted_at(guardian)).to eq(t.last_posted_at)
+          end
+        end
+      end
+
+      it 'all can see actual post count' do
+        [anon, stranger, writer, author1, author2, admin].each do |u|
+          guardian = Guardian.new(u)
+          [t1,t2,t3,t4,t5].each do |t|
+            expect(t.hide_posts_count(guardian)).to eq(t.posts_count)
+          end
+        end
+      end
+
+      it 'all can see actual highest post_number' do
+        [anon, stranger, writer, author1, author2, admin].each do |u|
+          guardian = Guardian.new(u)
+          [t1,t2,t3,t4,t5].each do |t|
+            expect(t.hide_highest_post_number(guardian)).to eq(t.highest_post_number)
+          end
+        end
+      end
+
+      it 'all can see all topics in digest' do
+        [stranger, writer, author1, author2, admin].each do |u|
+          expect(Topic.by_newest.for_digest(u, 1.year.ago, top_order: true)).to eq([t5,t4,t3,t2,t1])
+        end
+      end
+
+      it 'all can see all topics in similar' do
+        [anon, stranger, writer, author1, author2, admin].each do |u|
+          expect(Topic.by_newest.similar_to('Test topic for the good stuff', 'Test post for the good topic', u)).to eq([t5,t4,t3,t2,t1])
+        end
+      end
+    end
+
+    context 'when some topics hidden' do
+      before do
+        [t1,t2,t3,t4,t5].each do |t|
+          t.highest_post_number = 2
+          t.last_post_user_id = writer.id
+        end
+        t1.last_posted_at = p12.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+        t2.last_posted_at = p22.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+        t3.last_posted_at = p32.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+        t4.last_posted_at = p42.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+        t5.last_posted_at = p52.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N')
+
+        # Hide topics
+        QueuedPreviewPostMap.create(topic_id: t4.id, post_id: p41.id)
+        QueuedPreviewPostMap.create(topic_id: t5.id, post_id: p51.id)
+
+        # Hide some posts
+        QueuedPreviewPostMap.create(post_id: p32.id)
+      end
+
+      it 'admin can see all topics' do
+        [admin].each do |u|
+          guardian = Guardian.new(u)
+          expect(Topic.hide_queued_preview(guardian).by_newest.to_a).to eq([t5,t4,t3,t2,t1])
+        end
+      end
+
+      it 'authors can see theirs topics' do
+        expect(Topic.hide_queued_preview(Guardian.new(author1)).by_newest.to_a).to eq([t5,t3,t2,t1])
+        expect(Topic.hide_queued_preview(Guardian.new(author2)).by_newest.to_a).to eq([t4,t3,t2,t1])
+      end
+
+      it 'others can see only approved topics' do
+        [anon, stranger, writer].each do |u|
+          guardian = Guardian.new(u)
+          expect(Topic.hide_queued_preview(guardian).by_newest.to_a).to eq([t3,t2,t1])
+        end
+      end
+
+      it 'admin and post writer can see actual last poster' do
+        uid = writer.id
+        [writer, admin].each do |u|
+          guardian = Guardian.new(u)
+          expect(t3.hide_last_post_user_id(guardian)).to eq(uid)
+          expect(t3.hide_last_poster(guardian)).to eq(writer)
+        end
+      end
+
+      it 'others can see last approved poster' do
+        uid = author2.id
+        [anon, stranger, author1, author2].each do |u|
+          guardian = Guardian.new(u)
+          expect(t3.hide_last_post_user_id(guardian)).to eq(uid)
+          expect(t3.hide_last_poster(guardian)).to eq(author2)
+        end
+      end
+
+      it 'admin and writer can see actual last posted at' do
+        [writer, admin].each do |u|
+          guardian = Guardian.new(u)
+          expect(t3.hide_last_posted_at(guardian)).to eq(t3.last_posted_at)
+        end
+      end
+
+      it 'others can see last approved posted at' do
+        [anon, stranger, author1, author2].each do |u|
+          guardian = Guardian.new(u)
+          expect(t3.hide_last_posted_at(guardian)).to eq(p31.created_at.strftime('%Y-%m-%d %H:%M:%S.%6N'))
+        end
+      end
+
+      it 'admin and writer can see actual post count' do
+        [writer, admin].each do |u|
+          guardian = Guardian.new(u)
+          expect(t3.hide_posts_count(guardian)).to eq(t3.posts_count)
+        end
+      end
+
+      it 'others can see approved post count' do
+        [anon, stranger,author1, author2].each do |u|
+          guardian = Guardian.new(u)
+          expect(t3.hide_posts_count(guardian)).to eq(t3.posts_count - 1)
+        end
+      end
+
+      it 'admin and writer can see actual highest post_number' do
+        [writer, admin].each do |u|
+          guardian = Guardian.new(u)
+          expect(t3.hide_highest_post_number(guardian)).to eq(t3.highest_post_number)
+        end
+      end
+
+      it 'others can see highest approved post_number' do
+        [anon, stranger, author1, author2].each do |u|
+          guardian = Guardian.new(u)
+          expect(t3.hide_highest_post_number(guardian)).to eq(t3.highest_post_number - 1)
+        end
+      end
+
+      it 'admin can see all topics in digest' do
+        expect(Topic.by_newest.for_digest(admin, 1.year.ago, top_order: true)).to eq([t5,t4,t3,t2,t1])
+      end
+
+      it 'authors can see theirs topics in digest' do
+        expect(Topic.by_newest.for_digest(author1, 1.year.ago, top_order: true)).to eq([t5,t3,t2,t1])
+        expect(Topic.by_newest.for_digest(author2, 1.year.ago, top_order: true)).to eq([t4,t3,t2,t1])
+      end
+
+      it 'others can see oply approved topics in digest' do
+        [stranger, writer].each do |u|
+          expect(Topic.by_newest.for_digest(u, 1.year.ago, top_order: true)).to eq([t3,t2,t1])
+        end
+      end
+
+      it 'admin can see all topics in similar' do
+        expect(Topic.by_newest.similar_to('Test topic for the good stuff', 'Test post for the good topic', admin)).to eq([t5,t4,t3,t2,t1])
+      end
+
+      it 'authors can see theirs topics in similar' do
+        expect(Topic.by_newest.similar_to('Test topic for the good stuff', 'Test post for the good topic', author1)).to eq([t5,t3,t2,t1])
+        expect(Topic.by_newest.similar_to('Test topic for the good stuff', 'Test post for the good topic', author2)).to eq([t4,t3,t2,t1])
+      end
+
+      it 'others can see approved topics in similar' do
+        [anon, stranger, writer].each do |u|
+          expect(Topic.by_newest.similar_to('Test topic for the good stuff', 'Test post for the good topic', u)).to eq([t3,t2,t1])
+        end
+      end
+
+    end
+  end
 end

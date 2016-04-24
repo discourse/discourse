@@ -73,6 +73,8 @@ module TopicGuardian
     # Deleted topics
     return false if topic.deleted_at && !can_see_deleted_topics?
 
+    return false if topic.user != @user && topic.queued_preview? # Do not show queued_preview topic
+
     if topic.private_message?
       return authenticated? &&
              topic.all_allowed_users.where(id: @user.id).exists?

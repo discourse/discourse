@@ -7,6 +7,9 @@ class QueuedPost < ActiveRecord::Base
   belongs_to :approved_by, class_name: "User"
   belongs_to :rejected_by, class_name: "User"
 
+  has_one :queued_preview_post_map, foreign_key: :queued_id
+  scope :with_queued_preview_map, -> { eager_load(:queued_preview_post_map) }
+
   def create_pending_action
     UserAction.log_action!(action_type: UserAction::PENDING,
                            user_id: user_id,
@@ -45,8 +48,33 @@ class QueuedPost < ActiveRecord::Base
     MessageBus.publish('/queue_counts', msg, user_ids: User.staff.pluck(:id))
   end
 
+  # Delete queued_preview post and topic if any
+  def destroy_queued_preview!
+    queued_preview_post_map.post.destroy if queued_preview_post_map.present? && queued_preview_post_map.post_id.present?
+    queued_preview_post_map.topic.destroy if queued_preview_post_map.present? && queued_preview_post_map.topic_id.present?
+  end
+
+  def cleanup_hideing!
+    queued_preview_post_map.destroy
+  end
+
+  def edit_queued_preview!(raw)
+    if queued_preview_post_map.present? && queued_preview_post_map.post_id.present?
+      post = Post.find(queued_preview_post_map.post_id)
+      post.update_column(:raw, raw)
+      post.rebake!
+    end
+  end
+
   def reject!(rejected_by)
-    change_to!(:rejected, rejected_by)
+    QueuedPost.transaction do
+      change_to!(:rejected, rejected_by)
+      if NewPostManager.queued_preview_enabled?
+        destroy_queued_preview!
+        cleanup_hideing!
+      end
+    end
+
     DiscourseEvent.trigger(:rejected_post, self)
   end
 
@@ -66,17 +94,46 @@ class QueuedPost < ActiveRecord::Base
 
       UserBlocker.unblock(user, approved_by) if user.blocked?
 
-      creator = PostCreator.new(user, create_options.merge(skip_validations: true))
-      created_post = creator.create
-
-      unless created_post && creator.errors.blank?
-        raise StandardError, "Failed to create post #{raw[0..100]} #{creator.errors.full_messages.inspect}"
+      unless NewPostManager.queued_preview_enabled?
+        creator = PostCreator.new(user, create_options.merge(skip_validations: true, queued_preview_approving: true))
+        created_post = creator.create
+        unless created_post && creator.errors.blank?
+          raise StandardError, "Failed to create post #{raw[0..100]} #{creator.errors.full_messages.inspect}"
+        end
       end
+    end
 
+    if NewPostManager.queued_preview_enabled? && queued_preview_post_map.present? && queued_preview_post_map.post_id.present?
+      post = queued_preview_post_map.post
+      if post.present?
+        new_topic = queued_preview_post_map.new_topic?
+        cleanup_hideing!
+
+        # Reapply events and jobs
+        PostJobsEnqueuer.new(post, post.topic, new_topic, {queued_preview_approving: true}).enqueue_jobs
+        opts = create_options
+        DiscourseEvent.trigger(:topic_created, post.topic, opts, user) if new_topic
+        DiscourseEvent.trigger(:post_created, post, opts, user)
+        BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: post)
+        post.publish_change_to_clients! :created
+        user.publish_notifications_state
+      end
     end
 
     DiscourseEvent.trigger(:approved_post, self)
-    created_post
+
+    if NewPostManager.queued_preview_enabled?
+      post
+    else
+      created_post
+    end
+  end
+
+  def edit_content!(raw)
+    QueuedPost.transaction do
+      update_column(:raw, raw)
+      edit_queued_preview!(raw) if NewPostManager.queued_preview_enabled?
+    end
   end
 
   private

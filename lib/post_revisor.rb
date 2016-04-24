@@ -45,6 +45,12 @@ class PostRevisor
   def initialize(post, topic=nil)
     @post = post
     @topic = topic || post.topic
+
+    if NewPostManager.queued_preview_enabled? && post.queued_preview?
+      @queued_post = post.queued_preview_post_map.queued_post
+    else
+      @queued_post = nil
+    end
   end
 
   def self.tracked_topic_fields
@@ -202,6 +208,7 @@ class PostRevisor
     update_post
     update_topic if topic_changed?
     create_or_update_revision
+    update_queued_post if @queued_post.present?
   end
 
   USER_ACTIONS_TO_REMOVE ||= [UserAction::REPLY, UserAction::RESPONSE]
@@ -265,6 +272,26 @@ class PostRevisor
       new_owner.user_stat.update_topic_reply_count
       new_owner.user_stat.save
     end
+  end
+
+  def update_queued_post
+    return unless @queued_post.present?
+
+    queued_preview_map = @queued_post.queued_preview_post_map
+
+    queued_preview_map.post_id = @post.id
+    @queued_post.user_id = @post.user_id
+    @queued_post.raw = @post.raw
+
+    if topic_changed?
+      topic = @post.topic
+
+      queued_preview_map.topic_id = topic.id if topic.queued_preview? # Hide new topic if it's in queued_preview map
+      @queued_post.topic_id = topic.id
+    end
+
+    queued_preview_map.save
+    @queued_post.save
   end
 
   def self_edit?

@@ -47,6 +47,8 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
+  has_one :queued_preview_post_map, foreign_key: :post_id
+
   validates_with ::Validators::PostValidator
 
   # We can pass several creating options to a post via attributes
@@ -54,7 +56,7 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS = 1200
 
-  scope :by_newest, -> { order('created_at desc, id desc') }
+  scope :by_newest, -> { order('posts.created_at desc, posts.id desc') }
   scope :by_post_number, -> { order('post_number ASC') }
   scope :with_user, -> { includes(:user) }
   scope :created_since, lambda { |time_ago| where('posts.created_at > ?', time_ago) }
@@ -63,6 +65,19 @@ class Post < ActiveRecord::Base
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
   scope :secured, lambda { |guardian| where('posts.post_type in (?)', Topic.visible_post_types(guardian && guardian.user))}
+  scope :with_queued_preview_map, -> { eager_load(:queued_preview_post_map) }
+  scope :hide_queued_preview, -> (guardian) {
+    if guardian.present?
+      guardian.queued_preview_actions(
+        user_action: ->{with_queued_preview_map.where("queued_preview_post_maps.post_id is null OR (posts.user_id = ? AND queued_preview_post_maps.post_id is not null)", guardian.user.id)},
+        anon_action: ->{with_queued_preview_map.where("queued_preview_post_maps.post_id is null")}
+      )
+    end
+  }
+
+  def self.find_queued_preview_last_post(guardian)
+    hide_queued_preview(guardian).by_newest.first
+  end
 
   delegate :username, to: :user
 
@@ -88,6 +103,14 @@ class Post < ActiveRecord::Base
 
   def self.find_by_detail(key, value)
     includes(:post_details).find_by(post_details: { key: key, value: value })
+  end
+
+  def queued_preview?
+    queued_preview_post_map
+  end
+
+  def find_queued_preview_reply_count(guardian)
+    topic.posts.hide_queued_preview(guardian).where(reply_to_post_number: post_number).count
   end
 
   def whisper?
@@ -560,6 +583,8 @@ class Post < ActiveRecord::Base
   end
 
   def reply_history(max_replies=100, guardian=nil)
+    return [] if guardian && !guardian.can_see?(self)
+
     post_ids = Post.exec_sql("WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
                               SELECT p.id, p.reply_to_post_number FROM posts AS p
                                 WHERE p.id = :post_id
@@ -575,7 +600,7 @@ class Post < ActiveRecord::Base
     # [1,2,3][-10,-1] => nil
     post_ids = (post_ids[(0-max_replies)..-1] || post_ids)
 
-    Post.secured(guardian).where(id: post_ids).includes(:user, :topic).order(:id).to_a
+    Post.hide_queued_preview(guardian).secured(guardian).where(id: post_ids).includes(:user, :topic).order(:id).to_a
   end
 
   def revert_to(number)
