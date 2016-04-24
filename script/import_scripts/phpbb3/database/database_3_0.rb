@@ -161,82 +161,39 @@ module ImportScripts::PhpBB3
       SQL
     end
 
-    def count_messages(use_fixed_messages)
-      if use_fixed_messages
-        count(<<-SQL)
-          SELECT COUNT(*) AS count
-          FROM #{@table_prefix}_import_privmsgs
-        SQL
-      else
-        count(<<-SQL)
-          SELECT COUNT(*) AS count
-          FROM #{@table_prefix}_privmsgs
-        SQL
-      end
+    def count_messages
+      count(<<-SQL)
+        SELECT COUNT(*) AS count
+        FROM #{@table_prefix}_privmsgs m
+        WHERE NOT EXISTS ( -- ignore duplicate messages
+            SELECT 1
+            FROM #{@table_prefix}_privmsgs x
+            WHERE x.msg_id < m.msg_id AND x.root_level = m.root_level AND x.author_id = m.author_id
+              AND x.to_address = m.to_address AND x.message_time = m.message_time
+          )
+      SQL
     end
 
-    def fetch_messages(use_fixed_messages, last_msg_id)
-      if use_fixed_messages
-        query(<<-SQL, :msg_id)
-          SELECT m.msg_id, i.root_msg_id, m.author_id, m.message_time, m.message_subject, m.message_text,
-            IFNULL(a.attachment_count, 0) AS attachment_count
-          FROM #{@table_prefix}_privmsgs m
-            JOIN #{@table_prefix}_import_privmsgs i ON (m.msg_id = i.msg_id)
-            LEFT OUTER JOIN (
-              SELECT post_msg_id, COUNT(*) AS attachment_count
-              FROM #{@table_prefix}_attachments
-              WHERE topic_id = 0
-              GROUP BY post_msg_id
-            ) a ON (m.msg_id = a.post_msg_id)
-          WHERE m.msg_id > #{last_msg_id}
-          ORDER BY i.root_msg_id, m.msg_id
-          LIMIT #{@batch_size}
-        SQL
-      else
-        query(<<-SQL, :msg_id)
-          SELECT m.msg_id, m.root_level AS root_msg_id, m.author_id, m.message_time, m.message_subject,
-            m.message_text, IFNULL(a.attachment_count, 0) AS attachment_count
-          FROM #{@table_prefix}_privmsgs m
-            LEFT OUTER JOIN (
-              SELECT post_msg_id, COUNT(*) AS attachment_count
-              FROM #{@table_prefix}_attachments
-              WHERE topic_id = 0
-              GROUP BY post_msg_id
-            ) a ON (m.msg_id = a.post_msg_id)
-          WHERE m.msg_id > #{last_msg_id}
-          ORDER BY m.root_level, m.msg_id
-          LIMIT #{@batch_size}
-        SQL
-      end
-    end
-
-    def fetch_message_participants(msg_id, use_fixed_messages)
-      if use_fixed_messages
-        query(<<-SQL)
-          SELECT m.to_address
-          FROM #{@table_prefix}_privmsgs m
-            JOIN #{@table_prefix}_import_privmsgs i ON (m.msg_id = i.msg_id)
-          WHERE i.msg_id = #{msg_id} OR i.root_msg_id = #{msg_id}
-        SQL
-      else
-        query(<<-SQL)
-          SELECT m.to_address
-          FROM #{@table_prefix}_privmsgs m
-          WHERE m.msg_id = #{msg_id} OR m.root_level = #{msg_id}
-        SQL
-      end
-    end
-
-    def calculate_fixed_messages
-      drop_temp_import_message_table
-      create_temp_import_message_table
-      fill_temp_import_message_table
-
-      drop_import_message_table
-      create_import_message_table
-      fill_import_message_table
-
-      drop_temp_import_message_table
+    def fetch_messages(last_msg_id)
+      query(<<-SQL, :msg_id)
+        SELECT m.msg_id, m.root_level AS root_msg_id, m.author_id, m.message_time, m.message_subject,
+          m.message_text, m.to_address, r.author_id AS root_author_id, r.to_address AS root_to_address, (
+            SELECT COUNT(*)
+            FROM #{@table_prefix}_attachments a
+            WHERE a.topic_id = 0 AND m.msg_id = a.post_msg_id
+          ) AS attachment_count
+        FROM #{@table_prefix}_privmsgs m
+          LEFT OUTER JOIN #{@table_prefix}_privmsgs r ON (m.root_level = r.msg_id)
+        WHERE m.msg_id > #{last_msg_id}
+          AND NOT EXISTS ( -- ignore duplicate messages
+            SELECT 1
+            FROM #{@table_prefix}_privmsgs x
+            WHERE x.msg_id < m.msg_id AND x.root_level = m.root_level AND x.author_id = m.author_id
+              AND x.to_address = m.to_address AND x.message_time = m.message_time
+          )
+        ORDER BY m.msg_id
+        LIMIT #{@batch_size}
+      SQL
     end
 
     def count_bookmarks
@@ -266,84 +223,6 @@ module ImportScripts::PhpBB3
           (SELECT config_value FROM #{@table_prefix}_config WHERE config_name = 'avatar_salt') AS avatar_salt,
           (SELECT config_value FROM #{@table_prefix}_config WHERE config_name = 'smilies_path') AS smilies_path,
           (SELECT config_value FROM #{@table_prefix}_config WHERE config_name = 'upload_path') AS attachment_path
-      SQL
-    end
-
-    protected
-
-    def drop_temp_import_message_table
-      query("DROP TABLE IF EXISTS #{@table_prefix}_import_privmsgs_temp")
-    end
-
-    def create_temp_import_message_table
-      query(<<-SQL)
-        CREATE TABLE #{@table_prefix}_import_privmsgs_temp (
-          msg_id MEDIUMINT(8) NOT NULL,
-          root_msg_id MEDIUMINT(8) NOT NULL,
-          recipient_id MEDIUMINT(8),
-          normalized_subject VARCHAR(255) NOT NULL,
-          PRIMARY KEY (msg_id)
-        )
-      SQL
-    end
-
-    # this removes duplicate messages, converts the to_address to a number
-    # and stores the message_subject in lowercase and without the prefix "Re: "
-    def fill_temp_import_message_table
-      query(<<-SQL)
-        INSERT INTO #{@table_prefix}_import_privmsgs_temp (msg_id, root_msg_id, recipient_id, normalized_subject)
-        SELECT m.msg_id, m.root_level,
-          CASE WHEN m.root_level = 0 AND INSTR(m.to_address, ':') = 0 THEN
-            CAST(SUBSTRING(m.to_address, 3) AS SIGNED INTEGER)
-          ELSE NULL END AS recipient_id,
-          LOWER(CASE WHEN m.message_subject LIKE 'Re: %' THEN
-            SUBSTRING(m.message_subject, 5)
-          ELSE m.message_subject END) AS normalized_subject
-        FROM #{@table_prefix}_privmsgs m
-        WHERE NOT EXISTS (
-            SELECT 1
-            FROM #{@table_prefix}_privmsgs x
-            WHERE x.msg_id < m.msg_id AND x.root_level = m.root_level AND x.author_id = m.author_id
-              AND x.to_address = m.to_address AND x.message_time = m.message_time
-          )
-      SQL
-    end
-
-    def drop_import_message_table
-      query("DROP TABLE IF EXISTS #{@table_prefix}_import_privmsgs")
-    end
-
-    def create_import_message_table
-      query(<<-SQL)
-        CREATE TABLE #{@table_prefix}_import_privmsgs (
-          msg_id MEDIUMINT(8) NOT NULL,
-          root_msg_id MEDIUMINT(8) NOT NULL,
-          PRIMARY KEY (msg_id),
-          INDEX #{@table_prefix}_import_privmsgs_root_msg_id (root_msg_id)
-        )
-      SQL
-    end
-
-    # this tries to calculate the actual root_level (= msg_id of the first message in a
-    # private conversation) based on subject, time, author and recipient
-    def fill_import_message_table
-      query(<<-SQL)
-        INSERT INTO #{@table_prefix}_import_privmsgs (msg_id, root_msg_id)
-        SELECT m.msg_id, CASE WHEN i.root_msg_id = 0 THEN
-          COALESCE((
-            SELECT a.msg_id
-            FROM #{@table_prefix}_privmsgs a
-              JOIN #{@table_prefix}_import_privmsgs_temp b ON (a.msg_id = b.msg_id)
-            WHERE ((a.author_id = m.author_id AND b.recipient_id = i.recipient_id) OR
-                   (a.author_id = i.recipient_id AND b.recipient_id = m.author_id))
-              AND b.normalized_subject = i.normalized_subject
-              AND a.msg_id <> m.msg_id
-              AND a.message_time < m.message_time
-            ORDER BY a.message_time
-            LIMIT 1
-          ), 0) ELSE i.root_msg_id END AS root_msg_id
-        FROM #{@table_prefix}_privmsgs m
-          JOIN #{@table_prefix}_import_privmsgs_temp i ON (m.msg_id = i.msg_id)
       SQL
     end
   end
