@@ -1,7 +1,7 @@
 .d-header {
     width: 100%;
     position: absolute;
-    top: 0;
+    top: -1px;
     z-index: 1001;
     background-color: $header_background;
     box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
