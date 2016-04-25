@@ -744,8 +744,8 @@ bs_BA:
       instagram:
         title: "sa Instagramom"
       facebook:
-        title: "sa Facebukom"
-        message: "Identifikujemo sa Facebukom (nadamo se da su vam isključeni popup blokeri)"
+        title: "sa Facebook"
+        message: "Identifikujemo sa Facebook (nadamo se da su vam isključeni popup blokeri)"
       yahoo:
         title: "sa Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
@@ -1620,6 +1620,7 @@ bs_BA:
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
+            change_username: "zamjeni korisničko ime"
             change_site_setting: "change site setting"
             change_site_customization: "change site customization"
             delete_site_customization: "delete site customization"
@@ -1677,6 +1678,7 @@ bs_BA:
           pending: 'Users Pending Review'
           newuser: 'Users at Trust Level 0 (New User)'
           basic: 'Users at Trust Level 1 (Basic User)'
+          staff: "Zaposleni"
           admins: 'Admin Users'
           moderators: 'Moderators'
           blocked: 'Blocked Users'
