@@ -11,6 +11,8 @@ function renderIcon(name, key, canAct) {
 }
 
 export default createWidget('topic-status', {
+  tagName: 'div.topic-statuses',
+
   html(attrs) {
     const topic = attrs.topic;
     const canAct = this.currentUser && !attrs.disableActions;
@@ -26,13 +28,13 @@ export default createWidget('topic-status', {
     if (topic.get('closed') && topic.get('archived')) {
       renderIcon('lock', 'locked_and_archived');
     } else {
-      renderIconIf('topic.closed', 'lock', 'locked');
-      renderIconIf('topic.archived', 'lock', 'archived');
+      renderIconIf('closed', 'lock', 'locked');
+      renderIconIf('archived', 'lock', 'archived');
     }
 
-    renderIconIf('topic.pinned', 'thumb-tack', 'pinned');
-    renderIconIf('topic.unpinned', 'thumb-tack', 'unpinned');
-    renderIconIf('topic.invisible', 'eye-slash', 'invisible');
+    renderIconIf('pinned', 'thumb-tack', 'pinned');
+    renderIconIf('unpinned', 'thumb-tack', 'unpinned');
+    renderIconIf('invisible', 'eye-slash', 'invisible');
 
     return result;
   }
