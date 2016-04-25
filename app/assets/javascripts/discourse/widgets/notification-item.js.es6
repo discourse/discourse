@@ -96,7 +96,9 @@ createWidget('notification-item', {
   },
 
   click(e) {
+    if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
     e.preventDefault();
+
     this.attrs.set('read', true);
     const id = this.attrs.id;
     Discourse.setTransientHeader("Discourse-Clear-Notifications", id);

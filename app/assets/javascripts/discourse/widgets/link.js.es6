@@ -70,6 +70,7 @@ export default createWidget('link', {
   },
 
   click(e) {
+    if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
     e.preventDefault();
 
     if (this.attrs.action) {
