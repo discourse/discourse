@@ -36,7 +36,12 @@ class EmbedController < ApplicationController
       end
 
     elsif embed_url.present?
-      Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url, author_username: embed_username)
+      Jobs.enqueue(:retrieve_topic,
+                      user_id: current_user.try(:id),
+                      embed_url: embed_url,
+                      author_username: embed_username,
+                      referer: request.env['HTTP_REFERER']
+                  )
       render 'loading'
     end
 
