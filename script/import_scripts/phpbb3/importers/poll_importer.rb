@@ -24,15 +24,17 @@ module ImportScripts::PhpBB3
 
       return if extracted_poll.nil?
 
-      update_poll(extracted_poll, options, topic_id, poll)
+      update_poll_metadata(extracted_poll, topic_id, poll)
+      update_poll_options(extracted_poll, options, poll)
 
       mapped_poll = {
         raw: poll_text,
         custom_fields: {}
       }
 
-      add_polls_field(mapped_poll[:custom_fields], extracted_poll)
-      add_vote_fields(mapped_poll[:custom_fields], topic_id, poll)
+      add_poll_to_custom_fields(mapped_poll[:custom_fields], extracted_poll)
+      add_votes_to_custom_fields(mapped_poll[:custom_fields], topic_id, poll)
+
       mapped_poll
     end
 
@@ -40,23 +42,17 @@ module ImportScripts::PhpBB3
 
     def get_poll_options(topic_id)
       rows = @database.fetch_poll_options(topic_id)
-      options_by_text = {}
+      options_by_text = Hash.new { |h, k| h[k] = {ids: [], total_votes: 0, anonymous_votes: 0} }
 
       rows.each do |row|
         option_text = @text_processor.process_raw_text(row[:poll_option_text]).delete("\n")
 
-        if options_by_text.key?(option_text)
-          # phpBB allows duplicate options (why?!) - we need to merge them
-          option = options_by_text[option_text]
-          option[:ids] << row[:poll_option_id]
-          option[:votes] += row[:poll_option_total]
-        else
-          options_by_text[option_text] = {
-            ids: [row[:poll_option_id]],
-            text: option_text,
-            votes: row[:poll_option_total]
-          }
-        end
+        # phpBB allows duplicate options (why?!) - we need to merge them
+        option = options_by_text[option_text]
+        option[:ids] << row[:poll_option_id]
+        option[:text] = option_text
+        option[:total_votes] += row[:total_votes]
+        option[:anonymous_votes] += row[:anonymous_votes]
       end
 
       options_by_text.values
@@ -91,47 +87,47 @@ module ImportScripts::PhpBB3
     end
 
     # @param poll [ImportScripts::PhpBB3::Poll]
-    def update_poll(default_poll, imported_options, topic_id, poll)
-      default_poll['voters'] = @database.count_voters(topic_id) # this includes anonymous voters
-      default_poll['status'] = poll.has_ended? ? :open : :closed
+    def update_poll_metadata(extracted_poll, topic_id, poll)
+      row = @database.get_voters(topic_id)
 
-      default_poll['options'].each_with_index do |option, index|
+      extracted_poll['voters'] = row[:total_voters]
+      extracted_poll['anonymous_voters'] = row[:anonymous_voters] if row[:anonymous_voters] > 0
+      extracted_poll['status'] = poll.has_ended? ? :open : :closed
+    end
+
+    # @param poll [ImportScripts::PhpBB3::Poll]
+    def update_poll_options(extracted_poll, imported_options, poll)
+      extracted_poll['options'].each_with_index do |option, index|
         imported_option = imported_options[index]
-        option['votes'] = imported_option[:votes]
+        option['votes'] = imported_option[:total_votes]
+        option['anonymous_votes'] = imported_option[:anonymous_votes] if imported_option[:anonymous_votes] > 0
         poll.add_option_id(imported_option[:ids], option['id'])
       end
     end
 
-    def add_polls_field(custom_fields, default_poll)
-      custom_fields[@polls_field] = {@default_poll_name => default_poll}
+    # @param custom_fields [Hash]
+    def add_poll_to_custom_fields(custom_fields, extracted_poll)
+      custom_fields[@polls_field] = {@default_poll_name => extracted_poll}
     end
 
     # @param custom_fields [Hash]
     # @param poll [ImportScripts::PhpBB3::Poll]
-    def add_vote_fields(custom_fields, topic_id, poll)
+    def add_votes_to_custom_fields(custom_fields, topic_id, poll)
       rows = @database.fetch_poll_votes(topic_id)
-      warned = false
+      votes = {}
 
       rows.each do |row|
         option_id = poll.option_id_from_imported_option_id(row[:poll_option_id])
         user_id = @lookup.user_id_from_imported_user_id(row[:user_id])
 
         if option_id.present? && user_id.present?
-          key = "#{@votes_field}-#{user_id}"
-
-          if custom_fields.key?(key)
-            votes = custom_fields[key][@default_poll_name]
-          else
-            votes = []
-            custom_fields[key] = {@default_poll_name => votes}
-          end
-
-          votes << option_id
-        elsif !warned
-          warned = true
-          Rails.logger.warn("Topic with id #{topic_id} has invalid votes.")
+          user_votes = votes["#{user_id}"] ||= {}
+          user_votes = user_votes[@default_poll_name] ||= []
+          user_votes << option_id
         end
       end
+
+      custom_fields[@votes_field] = votes
     end
   end
 
