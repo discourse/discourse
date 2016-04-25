@@ -229,7 +229,6 @@ class Post < ActiveRecord::Base
   end
 
   def whitelisted_spam_hosts
-
     hosts = SiteSetting
               .white_listed_spam_host_domains
               .split('|')
@@ -255,7 +254,8 @@ class Post < ActiveRecord::Base
 
     TopicLink.where(domain: hosts.keys, user_id: acting_user.id)
              .group(:domain, :post_id)
-             .count.each_key do |tuple|
+             .count
+             .each_key do |tuple|
       domain = tuple[0]
       hosts[domain] = (hosts[domain] || 0) + 1
     end
@@ -265,13 +265,9 @@ class Post < ActiveRecord::Base
 
   # Prevent new users from posting the same hosts too many times.
   def has_host_spam?
-    return false if acting_user.present? && acting_user.has_trust_level?(TrustLevel[1])
+    return false if acting_user.present? && (acting_user.staged? || acting_user.has_trust_level?(TrustLevel[1]))
 
-    total_hosts_usage.each do |_, count|
-      return true if count >= SiteSetting.newuser_spam_host_threshold
-    end
-
-    false
+    total_hosts_usage.values.any? { |count| count >= SiteSetting.newuser_spam_host_threshold }
   end
 
   def archetype
