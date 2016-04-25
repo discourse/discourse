@@ -19,16 +19,16 @@ export default createWidget('home-logo', {
     if (!mobileView && this.attrs.minimized) {
       const logoSmallUrl = siteSettings.logo_small_url || '';
       if (logoSmallUrl.length) {
-        return h('img#site-logo.logo-small', { attributes: { src: logoSmallUrl, width: 33, height: 33, alt: title } });
+        return h('img#site-logo.logo-small', { key: 'logo-small', attributes: { src: logoSmallUrl, width: 33, height: 33, alt: title } });
       } else {
         return iconNode('home');
       }
     } else if (showMobileLogo) {
-      return h('img#site-logo.logo-big', { attributes: { src: mobileLogoUrl, alt: title } });
+      return h('img#site-logo.logo-big', { key: 'logo-mobile', attributes: { src: mobileLogoUrl, alt: title } });
     } else if (logoUrl.length) {
-      return h('img#site-logo.logo-big', { attributes: { src: logoUrl, alt: title } });
+      return h('img#site-logo.logo-big', { key: 'logo-big', attributes: { src: logoUrl, alt: title } });
     } else {
-      return h('h2#site-text-logo.text-logo', title);
+      return h('h2#site-text-logo.text-logo', { key: 'logo-text' }, title);
     }
   },
 
