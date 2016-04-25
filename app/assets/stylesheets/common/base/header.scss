@@ -88,6 +88,15 @@
           border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
           border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
           border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+
+          .badge-notification {
+            top: -10px;
+          }
+
+          .flagged-posts {
+            right: 24px;
+          }
+
           &:after {
             display: block;
             position: absolute;
