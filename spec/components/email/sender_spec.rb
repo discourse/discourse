@@ -77,25 +77,21 @@ describe Email::Sender do
       email_sender.send
     end
 
-    context "adds return_path correctly when no plus addressing" do
-      before do
-        SiteSetting.bounce_email = 'bounce@test.com'
-      end
+    context "doesn't add return_path when no plus addressing" do
+      before { SiteSetting.reply_by_email_address = '%{reply_key}@test.com' }
 
       When { email_sender.send }
       Then {
-        expect(message.header[:return_path].to_s).to eq("bounce+#{EmailLog.last.bounce_key}@test.com")
+        expect(message.header[:return_path].to_s).to eq("")
       }
     end
 
-    context "adds return_path correctly with plus addressing" do
-      before do
-        SiteSetting.bounce_email = 'bounce+meta@test.com'
-      end
+    context "adds return_path with plus addressing" do
+      before { SiteSetting.reply_by_email_address = 'replies+%{reply_key}@test.com' }
 
       When { email_sender.send }
       Then {
-        expect(message.header[:return_path].to_s).to eq("bounce+meta-#{EmailLog.last.bounce_key}@test.com")
+        expect(message.header[:return_path].to_s).to eq("replies+verp-#{EmailLog.last.bounce_key}@test.com")
       }
     end
 
