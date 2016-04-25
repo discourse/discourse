@@ -121,13 +121,13 @@ class TopicsController < ApplicationController
 
     tu = TopicUser.find_by(user_id: current_user.id, topic_id: params[:topic_id])
 
-    if tu.notification_level > TopicUser.notification_levels[:regular]
+    if tu && tu.notification_level > TopicUser.notification_levels[:regular]
       tu.notification_level = TopicUser.notification_levels[:regular]
+      tu.save!
     else
-      tu.notification_level = TopicUser.notification_levels[:muted]
+      TopicUser.change(current_user.id, params[:topic_id].to_i, notification_level: TopicUser.notification_levels[:muted])
     end
 
-    tu.save!
 
     perform_show_response
   end
