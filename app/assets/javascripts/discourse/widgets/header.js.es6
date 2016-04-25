@@ -187,10 +187,14 @@ export default createWidget('header', {
     }
   },
 
-  linkClickedEvent() {
+  closeAll() {
     this.state.userVisible = false;
     this.state.hamburgerVisible = false;
     this.state.searchVisible = false;
+  },
+
+  linkClickedEvent() {
+    this.closeAll();
     this.updateHighlight();
   },
 
@@ -253,6 +257,14 @@ export default createWidget('header', {
 
   searchMenuContextChanged(value) {
     this.state.contextEnabled = value;
+  },
+
+  domClean() {
+    const { state } = this;
+
+    if (state.searchVisible || state.hamburgerVisible || state.userVisible) {
+      this.closeAll();
+    }
   },
 
   headerKeyboardTrigger(msg) {

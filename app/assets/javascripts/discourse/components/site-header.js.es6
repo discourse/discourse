@@ -65,6 +65,14 @@ const SiteHeaderComponent = MountWidget.extend({
 
     this.dispatch('notifications:changed', 'user-notifications');
     this.dispatch('header:keyboard-trigger', 'header');
+
+    this.appEvents.on('dom:clean', () => {
+      // For performance, only trigger a re-render if any menu panels are visible
+      if (this.$('.menu-panel').length) {
+        this.eventDispatched('dom:clean', 'header');
+      }
+    });
+
     this.examineDockHeader();
   },
 
@@ -78,6 +86,7 @@ const SiteHeaderComponent = MountWidget.extend({
 
     this.appEvents.off('header:show-topic');
     this.appEvents.off('header:hide-topic');
+    this.appEvents.off('dom:clean');
   },
 
   buildArgs() {
