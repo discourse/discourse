@@ -2,6 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { iconNode } from 'discourse/helpers/fa-icon';
 import DiscourseURL from 'discourse/lib/url';
+import RawHtml from 'discourse/widgets/raw-html';
 
 export default createWidget('header-topic-info', {
   tagName: 'div.extra-info-wrapper',
@@ -23,10 +24,12 @@ export default createWidget('header-topic-info', {
 
     if (loaded) {
       heading.push(this.attach('topic-status', attrs));
+
+      const titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
       heading.push(this.attach('link', { className: 'topic-link',
                                          action: 'jumpToTopPost',
                                          href: topic.get('url'),
-                                         contents: () =>  topic.get('fancyTitle') }));
+                                         contents: () => titleHTML }));
     }
 
     const title = [h('h1', heading)];
