@@ -11,7 +11,7 @@ class TopicsBulkAction
   def self.operations
     @operations ||= %w(change_category close archive change_notification_level
                        reset_read dismiss_posts delete unlist archive_messages
-                       move_messages_to_inbox)
+                       move_messages_to_inbox change_tags)
   end
 
   def self.register_operation(name, &block)
@@ -127,6 +127,23 @@ class TopicsBulkAction
     def delete
       topics.each do |t|
         t.trash! if guardian.can_delete?(t)
+      end
+    end
+
+    def change_tags
+      tags = @operation[:tags]
+      tags = DiscourseTagging.tags_for_saving(tags, guardian) if tags.present?
+
+      topics.each do |t|
+        if guardian.can_edit?(t)
+          if tags.present?
+            t.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
+            t.save
+            DiscourseTagging.auto_notify_for(tags, t)
+          else
+            t.custom_fields.delete(DiscourseTagging::TAGS_FIELD_NAME)
+          end
+        end
       end
     end
 

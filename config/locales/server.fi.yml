@@ -1112,6 +1112,10 @@ fi:
     default_categories_watching: "Lista oletuksena tarkkailtavista alueista."
     default_categories_tracking: "Lista oletuksena seurattavista alueista."
     default_categories_muted: "Lista oletuksena vaimennetuista alueista."
+    tagging_enabled: "Salli käyttäjien tagata viestejä?"
+    min_trust_to_create_tag: "Alin luottamustaso tagin luomiseen."
+    max_tags_per_topic: "Tagien maksimiäärä per aihe."
+    max_tag_length: "Tagien merkkien maksimimäärä."
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä nimellä ei löydy käyttäjää."
@@ -2270,3 +2274,6 @@ fi:
   activemodel:
     errors:
       <<: *errors
+  rss_by_tag: "Aiheet tagattu %{tag}"
+  rss_description:
+    tag: "Tagatut aiheet"

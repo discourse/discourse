@@ -913,6 +913,10 @@ fa_IR:
     emoji_set: "می‌خواهید ایموجی شما چطور باشد؟"
     enforce_square_emoji: "تحمیل نسبت ابعاد مربع به تمام شکلک ها emojis . "
     approve_unless_trust_level: "نوشته ها برای کاربران پایین ت از این سطح اعتماد نیاز به تایید دارد. "
+    tagging_enabled: "کاربران اجازه انتخاب برچسب برای موضوعات داشته باشند?"
+    min_trust_to_create_tag: "حداقل سطح اعتماد مورد نیاز برای انتخاب برچسب؟."
+    max_tags_per_topic: "حداکثر تعداد برچسب انتخابی برای موضوع."
+    max_tag_length: "حداقل کراکتر یک نوشته برای برچسب انتخابی."
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام کاربری وجود ندارد."
@@ -1291,3 +1295,6 @@ fa_IR:
   activemodel:
     errors:
       <<: *errors
+  rss_by_tag: "موضوعات برچسب خورد %{tag}"
+  rss_description:
+    tag: "موضوعات برچسب خورد"

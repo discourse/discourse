@@ -1110,6 +1110,19 @@ es:
     default_categories_watching: "Lista de categorías que están vigiladas por defecto."
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
+    tagging_enabled: "¿Permitir a los usuarios etiquetar temas?"
+    min_trust_to_create_tag: "Mínimo nivel de confianza requerido para crear una etiqueta."
+    max_tags_per_topic: "Número máximo de etiquetas que pueden añadirse a un tema."
+    max_tag_length: "Longitud máxima de caracteres que puede tener el nombre de una etiqueta."
+    max_tag_search_results: "Máximo número de resultados a mostrar al buscar etiquetas."
+    show_filter_by_tag: "Mostrar un desplegable para filtrar la lista de temas por etiqueta."
+    max_tags_in_filter_list: "Máximo número de etiquetas a mostrar en el desplegable. Se mostrarán las más usadas."
+    tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se muestran por popularidad."
+    tag_style: "Estilo visual de los distintivos de etiqueta."
+    staff_tags: "Una lista de etiquetas que sólo podrá ser aplicada por administradores o moderadores"
+    min_trust_level_to_tag_topics: "Mínimo nivel de confianza requerido para etiquetar temas"
+    suppress_overlapping_tags_in_list: "Ocultar etiquetas de la vista de listado si se solapan con el título"
+    remove_muted_tags_from_latest: "No mostrar temas etiquetados con etiquetas silenciadas en la lista de temas recientes."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -2228,3 +2241,9 @@ es:
   activemodel:
     errors:
       <<: *errors
+  tags:
+    staff_tag_disallowed: "La etiqueta \"%{tag}\" sólo puede ser aplicada por los administradores."
+    staff_tag_remove_disallowed: "La etiqueta \"%{tag}\" sólo puede ser eliminada por los administradores."
+  rss_by_tag: "Temas con la etiqueta %{tag}"
+  rss_description:
+    tag: "Temas etiquetados"

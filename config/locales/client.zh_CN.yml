@@ -1005,6 +1005,9 @@ zh_CN:
         choose_new_category: "为主题选择新分类："
         selected:
           other: "你已经选择了 <b>{{count}}</b>个主题"
+        change_tags: "更改标签"
+        choose_new_tags: "为这些主题选择新标签："
+        changed_tags: "这些主题的标签已被修改。"
       none:
         unread: "你没有未读主题。"
         new: "你没有新主题可读。"
@@ -2100,6 +2103,8 @@ zh_CN:
             grant_moderation: "授予版主权限"
             revoke_moderation: "撤销版主权限"
             backup_operation: "备份操作"
+            deleted_tag: "deleted tag"
+            renamed_tag: "renamed tag"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -2578,3 +2583,52 @@ zh_CN:
       <button class="btn btn-primary">Google</button>
       </form>
       </p>
+    tagging:
+      all_tags: "全部标签"
+      selector_all_tags: "所有标签"
+      changed: "标签更改："
+      tags: "标签"
+      choose_for_topic: "为主题选择可选标签"
+      delete_tag: "删除标签"
+      delete_confirm: "你确定要删除该标签？"
+      rename_tag: "重命名标签"
+      rename_instructions: "为标签选择一个新的名字："
+      sort_by: "排列顺序："
+      sort_by_count: "数量"
+      sort_by_name: "名字"
+
+      notifications:
+        watching:
+          title: "关注"
+          description: "你能自动关注该标签下的所有主题。一旦与这个标签有关的新主题和新帖子发表，你都会收到通知。未读贴和新帖子的数量将出现在主题列表中每个主题的标题后。"
+        tracking:
+          title: "追踪"
+          description: "你能自动追踪这个标签下的所有新主题。未读贴和新帖子的数量将出现在主题列表中每个主题的标题后。"
+        regular:
+          title: "常规"
+          description: "当有人@你或者回复你的帖子时，你才会收到通知。"
+        muted:
+          title: "防打扰"
+          description: "你不会收到该标签下的新主题的任何通知，也不会在你的未阅选项卡中显示。"
+
+      topics:
+        none:
+          unread: "你没有未读主题。"
+          new: "你没有近期主题。"
+          read: "你还未阅读任何主题。"
+          posted: "你还未在任何主题中回复。"
+          latest: "没有最新主题。"
+          hot: "没有热门主题。"
+          bookmarks: "你还没有加上书签的主题。"
+          top: "没有热门主题。"
+          search: "搜索无结果。"
+        bottom:
+          latest: "没有更多最新主题了。"
+          hot: "没有更多热门主题了。"
+          posted: "没有更多发表的主题了。"
+          read: "没有更多读过的主题了。"
+          new: "没有更多近期主题了。"
+          unread: "没有更多未读主题了。"
+          top: "没有更多热门主题了。"
+          bookmarks: "没有更多加上书签的主题了。"
+          search: "没有更多搜索结果了。"

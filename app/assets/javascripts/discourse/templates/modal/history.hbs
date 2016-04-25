@@ -73,6 +73,19 @@
         </div>
       {{/if}}
     {{/if}}
+    {{#if model.tags_changes}}
+      <div class='row'>
+        {{i18n "tagging.changed"}}
+        {{#each previousTagChanges as |t|}}
+          {{discourse-tag t}}
+        {{/each}}
+        &rarr;
+        &nbsp;
+        {{#each currentTagChanges as |t|}}
+          {{discourse-tag t}}
+        {{/each}}
+      </div>
+    {{/if}}
 
     {{plugin-outlet "post-revisions"}}
 

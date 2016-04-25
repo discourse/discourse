@@ -108,6 +108,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     return post => this.postSelected(post);
   }.property(),
 
+  @computed('model.isPrivateMessage')
+  canEditTags(isPrivateMessage) {
+    return !isPrivateMessage && this.site.get('can_tag_topics');
+  },
+
   actions: {
 
     fillGapBefore(args) {

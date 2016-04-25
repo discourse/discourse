@@ -899,6 +899,9 @@ nb_NO:
         selected:
           one: "Du har valgt <b>1</b> emne."
           other: "Du har valgt <b>{{count}}</b> emner."
+        change_tags: "Endre emneord"
+        choose_new_tags: "Velg nye emneord for disse emnene:"
+        changed_tags: "Emneord for disse emnene ble endret."
       none:
         unread: "Du har ingen uleste emner å lese."
         new: "Du har ingen nye emner å lese."
@@ -1950,6 +1953,8 @@ nb_NO:
             roll_up: "rull opp IP-blokker"
             delete_category: "slett kategori"
             create_category: "opprett kategori"
+            deleted_tag: "Slettet emneord"
+            renamed_tag: "Endret emneord"
         screened_emails:
           title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
@@ -2374,3 +2379,27 @@ nb_NO:
           name: Annet
         posting:
           name: Posting
+    tagging:
+      all_tags: "Alle emneord"
+      changed: "emneord endret:"
+      tags: "Emneord"
+      choose_for_topic: "velg ekstra emneord for dette emnet"
+      delete_tag: "Slett emneord"
+      delete_confirm: "Er du sikker påat du ønsker å slette dette emneordet?"
+      rename_tag: "Endre emneord"
+      rename_instructions: "Velg et nytt navn på dette emneordet:"
+
+      notifications:
+        watching:
+          title: "Følger"
+          description: "Du vil automatisk følge alle nye emner med dette emneordet. Du vil bli varslet om alle nye innlegg og emner samt at antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
+        tracking:
+          title: "Følger"
+          description: "Du vil automatisk følge alle nye emner med dette emneordet. Antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
+        regular:
+          title: "Vanlig"
+          description: "Du vil bli varslet om noen nevnet ditt @navn eller svarer på din post."
+        muted:
+          title: "Dempet"
+          description: "Du vil ikke bli varslet om noe vedrørende disse emneneordene og de vil ikke vises i din ulest-liste."
+

@@ -1052,6 +1052,9 @@ pt:
         selected:
           one: "Selecionou  <b>1</b> tópico."
           other: "Selecionou <b>{{count}}</b> tópicos."
+        change_tags: "Alterar etiquetas"
+        choose_new_tags: "Escolher novas etiquetas para estes tópicos:"
+        changed_tags: "As etiquetas desses tópicos foram alteradas."
       none:
         unread: "Tem tópicos não lidos."
         new: "Não tem novos tópicos."
@@ -2208,6 +2211,8 @@ pt:
             grant_moderation: "conceder moderação"
             revoke_moderation: "revogar moderação"
             backup_operation: "operação de cópia de segurança"
+            deleted_tag: "etiqueta apagada"
+            renamed_tag: "etiqueta renomeada"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de email serão verificados e o registo será bloqueado, ou outra ação será executada."
@@ -2703,3 +2708,25 @@ pt:
       <button class="btn btn-primary">Google</button>
       </form>
       </p>
+    tagging:
+      all_tags: "Todas as etiquetas"
+      changed: "etiquetas alteradas:"
+      tags: "Etiquetas"
+      choose_for_topic: "escolher etiqetas opcionais para este tópico"
+      delete_tag: "Apagar etiqueta"
+      delete_confirm: "Tem a certeza que quer apagar esta etiqueta?"
+      rename_tag: "Renomear Etiqueta"
+      rename_instructions: "Escolher um novo nome para a etiqueta:"
+      notifications:
+        watching:
+          title: "A vigiar"
+          description: "Irá automaticamente vigiar todos os novos tópicos com esta etiqueta. Será notoficado de todas as novas mensagens e tópicos."
+        tracking:
+          title: "A acompanhar"
+          description: "Irá automaticamente acompanhar todos os novos tópcicos com esta etiqueta"
+        regular:
+          title: "Habitual"
+          description: "Será notoficado se mencionarem o seu @nome ou se alguém lhe responder"
+        muted:
+          title: "Silenciado"
+          description: "Não será notoficado sobre nenhum tópico com esta etiqueta"

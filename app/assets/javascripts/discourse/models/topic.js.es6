@@ -72,6 +72,24 @@ const Topic = RestModel.extend({
     return this.store.createRecord('postStream', {id: this.get('id'), topic: this});
   }.property(),
 
+  @computed('tags')
+  visibleListTags(tags) {
+    if (!tags || !Discourse.SiteSettings.suppress_overlapping_tags_in_list) {
+      return tags;
+    }
+
+    const title = this.get('title');
+    const newTags = [];
+
+    tags.forEach(function(tag){
+      if (title.toLowerCase().indexOf(tag) === -1 || Discourse.SiteSettings.staff_tags.indexOf(tag) !== -1) {
+        newTags.push(tag);
+      }
+    });
+
+    return newTags;
+  },
+
   replyCount: function() {
     return this.get('posts_count') - 1;
   }.property('posts_count'),

@@ -97,6 +97,9 @@
         {{#if currentUser}}
           <div class='submit-panel'>
             {{plugin-outlet "composer-fields-below"}}
+            {{#if canEditTags}}
+              {{tag-chooser tags=model.tags tabIndex="4"}}
+            {{/if}}
             <button {{action "save"}} tabindex="5" {{bind-attr class=":btn :btn-primary :create disableSubmit:disabled"}} title="{{i18n 'composer.title'}}">{{{model.saveIcon}}}{{model.saveText}}</button>
             <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
 

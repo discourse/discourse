@@ -1018,6 +1018,9 @@ fr:
         selected:
           one: "Vous avez sélectionné <b>1</b> sujet."
           other: "Vous avez sélectionné <b>{{count}}</b> sujets."
+        change_tags: "Modifier les tags"
+        choose_new_tags: "Choisir de nouveaux tags pour ces sujets :"
+        changed_tags: "Les tags de ces sujets ont été modifiés."
       none:
         unread: "Vous n'avez aucun sujet non lu."
         new: "Vous n'avez aucun nouveau sujet."
@@ -2164,6 +2167,8 @@ fr:
             grant_moderation: "Accorder les droits de modération"
             revoke_moderation: "Révoquer les droits de modération"
             backup_operation: "sauvegarde"
+            deleted_tag: "tag supprimé"
+            renamed_tag: "tag renommé"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -2649,3 +2654,26 @@ fr:
       <button class="btn btn-primary">Google</button>
       </form>
       </p>
+    tagging:
+      all_tags: "Tous les tags"
+      changed: "tags modifiés:"
+      tags: "Tags"
+      choose_for_topic: "choisissez des tags pour ce sujet (optionnel)"
+      delete_tag: "Supprimer ce tag"
+      delete_confirm: "Êtes-vous sûr de vouloir supprimer ce tag ?"
+      rename_tag: "Renommer ce tag"
+      rename_instructions: "Choisissez un nouveau nom pour le tag :"
+
+      notifications:
+        watching:
+          title: "Surveiller"
+          description: "Vous surveillerez automatiquement les nouveaux sujets portant ce tag. Vous serez averti de tous les nouveaux messages et sujets. De plus, le nombre de messages non lus et nouveaux apparaîtra en regard du sujet."
+        tracking:
+          title: "Suivre"
+          description: "Vous suivrez automatiquement les nouveaux sujets portant ce tag. Le nombre de messages non lus et nouveaux apparaîtra en regard du sujet."
+        regular:
+          title: "Normal"
+          description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
+        muted:
+          title: "Silencieux"
+          description: "Vous ne recevrez aucune notification des sujets portant ce tag, et ils n'apparaîtront pas dans votre onglet non lus."

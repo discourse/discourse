@@ -1,3 +1,5 @@
+require_dependency 'discourse_tagging'
+
 class SiteSerializer < ApplicationSerializer
 
   attributes :default_archetype,
@@ -14,7 +16,11 @@ class SiteSerializer < ApplicationSerializer
              :user_field_max_length,
              :suppressed_from_homepage_category_ids,
              :post_action_types,
-             :topic_flag_types
+             :topic_flag_types,
+             :can_create_tag,
+             :can_tag_topics,
+             :tags_filter_regexp,
+             :top_tags
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
@@ -79,6 +85,28 @@ class SiteSerializer < ApplicationSerializer
 
   def user_field_max_length
     UserField.max_length
+  end
+
+  def can_create_tag
+    SiteSetting.tagging_enabled && scope.can_create_tag?
+  end
+
+  def can_tag_topics
+    SiteSetting.tagging_enabled && scope.can_tag_topics?
+  end
+
+  def include_tags_filter_regexp?
+    SiteSetting.tagging_enabled
+  end
+  def tags_filter_regexp
+    DiscourseTagging::TAGS_FILTER_REGEXP.source
+  end
+
+  def include_top_tags?
+    SiteSetting.tagging_enabled && SiteSetting.show_filter_by_tag
+  end
+  def top_tags
+    DiscourseTagging.top_tags
   end
 
 end

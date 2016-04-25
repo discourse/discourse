@@ -67,6 +67,23 @@ module PrettyText
         }
       end
     end
+
+    def category_tag_hashtag_lookup(text)
+      tag_postfix = '::tag'
+      is_tag = text =~ /#{tag_postfix}$/
+
+      if !is_tag && category = Category.query_from_hashtag_slug(text)
+        [category.url_with_id, text]
+      elsif is_tag && tag = TopicCustomField.find_by(name: TAGS_FIELD_NAME, value: text.gsub!("#{tag_postfix}", ''))
+        ["#{Discourse.base_url}/tags/#{tag.value}", text]
+      else
+        nil
+      end
+    end
+
+    DiscourseEvent.on(:markdown_context) do |context|
+      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_tag_hashtag_lookup(c);}')
+    end
   end
 
   @mutex = Mutex.new

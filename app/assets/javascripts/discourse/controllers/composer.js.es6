@@ -81,6 +81,14 @@ export default Ember.Controller.extend({
     this.set('similarTopics', []);
   }.on('init'),
 
+  @computed('model.canEditTitle', 'model.creatingPrivateMessage')
+  canEditTags(canEditTitle, creatingPrivateMessage) {
+    return !this.site.mobileView &&
+            this.site.get('can_tag_topics') &&
+            canEditTitle &&
+            !creatingPrivateMessage;
+  },
+
   @computed('model.action')
   canWhisper(action) {
     const currentUser = this.currentUser;
