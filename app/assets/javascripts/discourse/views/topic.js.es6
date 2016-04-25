@@ -37,6 +37,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     // prevents scrolled from being called twice.
     const enteredAt = this.get('controller.enteredAt');
     if (enteredAt && (this.get('lastEnteredAt') !== enteredAt)) {
+      this._lastShowTopic = null;
       this.scrolled();
       this.set('lastEnteredAt', enteredAt);
     }
