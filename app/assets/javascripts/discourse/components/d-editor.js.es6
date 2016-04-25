@@ -3,9 +3,10 @@ import loadScript from 'discourse/lib/load-script';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
 import Category from 'discourse/models/category';
-import { SEPARATOR as categoryHashtagSeparator,
-         categoryHashtagTriggerRule
-       } from 'discourse/lib/category-hashtags';
+import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
+import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
+import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
+import { SEPARATOR } from 'discourse/lib/category-hashtags';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -278,17 +279,22 @@ export default Ember.Component.extend({
     Ember.run.debounce(this, this._updatePreview, 30);
   },
 
-  _applyCategoryHashtagAutocomplete(container, $editorInput) {
-    const template = container.lookup('template:category-group-autocomplete.raw');
+  _applyCategoryHashtagAutocomplete(container) {
+    const template = container.lookup('template:category-tag-autocomplete.raw');
+    const siteSettings = this.siteSettings;
 
-    $editorInput.autocomplete({
+    this.$('.d-editor-input').autocomplete({
       template: template,
       key: '#',
-      transformComplete(category) {
-        return Category.slugFor(category, categoryHashtagSeparator);
+      transformComplete(obj) {
+        if (obj.model) {
+          return Category.slugFor(obj.model, SEPARATOR);
+        } else {
+          return `${obj.text}${TAG_HASHTAG_POSTFIX}`;
+        }
       },
       dataSource(term) {
-        return Category.search(term);
+        return searchCategoryTag(term, siteSettings);
       },
       triggerRule(textarea, opts) {
         return categoryHashtagTriggerRule(textarea, opts);

@@ -11,6 +11,13 @@
   {{#if controller.showTopicPostBadges}}
     {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
   {{/if}}
+  {{#if topic.tags}}
+    <div class='discourse-tags'>
+    {{#each tag in topic.visibleListTags}}
+      {{discourse-tag tag}}
+    {{/each}}
+    </div>
+  {{/if}}
   {{plugin-outlet "topic-list-tags"}}
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}

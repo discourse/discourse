@@ -2699,3 +2699,9 @@ pl_PL:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+    tagging:
+      all_tags: "Wszystkie tagi"
+      changed: "zmienione tagi:"
+      tags: "Tagi"
+      choose_for_topic: "wybierz opcjonalne tagi dla tego tematu"
+      topics_tagged: "Tematy otagowane jako <span class='discourse-tag'>{{tag}}</span>"

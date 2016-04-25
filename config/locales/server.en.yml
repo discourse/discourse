@@ -1317,6 +1317,20 @@ en:
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
 
+    tagging_enabled: "Enable tags on topics?"
+    min_trust_to_create_tag: "The minimum trust level required to create a tag."
+    max_tags_per_topic: "The maximum tags that can be applied to a topic."
+    max_tag_length: "The maximum amount of characters that can be used in a tag."
+    max_tag_search_results: "When searching for tags, the maxium number of results to show."
+    show_filter_by_tag: "Show a dropdown to filter a topic list by tag."
+    max_tags_in_filter_list: "Maximum number of tags to show in the filter dropdown. The most used tags will be shown."
+    tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
+    tag_style: "Visual style for tag badges."
+    staff_tags: "A list of tags that can only be applied by staff members"
+    min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
+    suppress_overlapping_tags_in_list: "Hide tags from list views, if they overlap with title"
+    remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -3006,3 +3020,10 @@ en:
 
   topic_invite:
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
+
+  tags:
+    staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
+    staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
+  rss_by_tag: "Topics tagged %{tag}"
+  rss_description:
+    tag: "Tagged topics"

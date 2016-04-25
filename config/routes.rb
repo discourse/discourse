@@ -606,6 +606,29 @@ Discourse::Application.routes.draw do
   get "manifest.json" => "metadata#manifest", as: :manifest
   get "opensearch" => "metadata#opensearch", format: :xml
 
+  scope "/tags" do
+    get '/' => 'tags#index'
+    get '/filter/list' => 'tags#index'
+    get '/filter/search' => 'tags#search'
+    get '/check' => 'tags#check_hashtag'
+    constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
+      get '/:tag_id.rss' => 'tags#tag_feed'
+      get '/:tag_id' => 'tags#show', as: 'list_by_tag'
+      get '/c/:category/:tag_id' => 'tags#show'
+      get '/c/:parent_category/:category/:tag_id' => 'tags#show'
+      get '/:tag_id/notifications' => 'tags#notifications'
+      put '/:tag_id/notifications' => 'tags#update_notifications'
+      put '/:tag_id' => 'tags#update'
+      delete '/:tag_id' => 'tags#destroy'
+
+      Discourse.filters.each do |filter|
+        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+        get "/c/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+        get "/c/:parent_category/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+      end
+    end
+  end
+
   Discourse.filters.each do |filter|
     root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), :as => "list_#{filter}"
   end

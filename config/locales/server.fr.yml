@@ -1094,6 +1094,10 @@ fr:
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
+    tagging_enabled: "Autoriser les utilisateurs à mettre des tags sur les sujets ?"
+    min_trust_to_create_tag: "Le niveau de confiance requis pour créer un tag."
+    max_tags_per_topic: "Le nombre maximum de tags qui peuvent être ajouté à un sujet."
+    max_tag_length: "The nombre maximum de caractères qui peuvent être utilisés pour un tag."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -2193,3 +2197,6 @@ fr:
   activemodel:
     errors:
       <<: *errors
+  rss_by_tag: "Sujets portant le tag %{tag}"
+  rss_description:
+    tag: "Sujet tagués"

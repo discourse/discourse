@@ -6,6 +6,7 @@ require_dependency 'text_sentinel'
 require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
+require_dependency 'discourse_tagging'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -1041,6 +1042,11 @@ SQL
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.exec.first["count"].to_i
+  end
+
+  def tags
+    result = custom_fields[DiscourseTagging::TAGS_FIELD_NAME]
+    [result].flatten unless result.blank?
   end
 
   private

@@ -308,6 +308,7 @@ class TopicQuery
     result = default_results(options)
     result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
     result = remove_muted_categories(result, @user, exclude: options[:category])
+    result = remove_muted_tags(result, @user, options)
 
     # plugins can remove topics here:
     self.class.results_filter_callbacks.each do |filter_callback|
@@ -334,6 +335,7 @@ class TopicQuery
     result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.user_option.treat_as_new_topic_start_date)
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
+    result = remove_muted_tags(result, @user, options)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:new, result, @user, options)
@@ -561,6 +563,36 @@ class TopicQuery
       end
 
       list
+    end
+    def remove_muted_tags(list, user, opts=nil)
+      if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
+        list
+      else
+        muted_tags = DiscourseTagging.muted_tags(user)
+        if muted_tags.empty?
+          list
+        else
+          showing_tag = if opts[:filter]
+            f = opts[:filter].split('/')
+            f[0] == 'tags' ? f[1] : nil
+          else
+            nil
+          end
+
+          if muted_tags.include?(showing_tag)
+            list # if viewing the topic list for a muted tag, show all the topics
+          else
+            arr = muted_tags.map{ |z| "'#{z}'" }.join(',')
+            list.where("EXISTS (
+       SELECT 1
+         FROM topic_custom_fields tcf
+        WHERE tcf.name = 'tags'
+          AND tcf.value NOT IN (#{arr})
+          AND tcf.topic_id = topics.id
+       ) OR NOT EXISTS (select 1 from topic_custom_fields tcf where tcf.name = 'tags' and tcf.topic_id = topics.id)")
+          end
+        end
+      end
     end
 
     def new_messages(params)

@@ -1049,6 +1049,9 @@ pt_BR:
         selected:
           one: "Você selecionou <b>1</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
+        change_tags: "Alterar Tags"
+        choose_new_tags: "Escolha novas tags para estes tópicos:"
+        changed_tags: "As tags desses tópicos foram alteradas."
       none:
         unread: "Não há nenhum tópico não lido."
         new: "Não há tópicos novos."
@@ -2148,6 +2151,8 @@ pt_BR:
             block_user: "bloquear usuário"
             unblock_user: "desbloquear usuário"
             backup_operation: "operação de backup"
+            deleted_tag: "tag removida"
+            renamed_tag: "tag renomeada"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de email serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -2628,3 +2633,52 @@ pt_BR:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+    tagging:
+      all_tags: "Todas as Tags"
+      selector_all_tags: "todas as tags"
+      changed: "tags alteradas:"
+      tags: "Tags"
+      choose_for_topic: "escolha tags opcionais para este tópico"
+      delete_tag: "Remover Tag"
+      delete_confirm: "Você tem certeza que quer remover essa tag?"
+      rename_tag: "Renomear Tag"
+      rename_instructions: "Escolha um novo nome para a tag:"
+      sort_by: "Ordenar por:"
+      sort_by_count: "número"
+      sort_by_name: "nome"
+
+      notifications:
+        watching:
+          title: "Observando"
+          description: "Você vai observar automaticamente todos os novos tópicos dessa tag. Você será notificado de todas as novas mensagens e tópicos, e uma contagem de novas respostas será mostrada ao lado do tópico."
+        tracking:
+          title: "Monitorando"
+          description: "Você vai monitorar automaticamente todos os novos tópicos dessa tag. Uma contagem de novas respostas será mostrada ao lado do tópico."
+        regular:
+          title: "Normal"
+          description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
+        muted:
+          title: "Silenciado"
+          description: "Você nunca será notificado sobre novos tópicos nessa tag, e eles não aparecerão na sua aba não lidas."
+
+      topics:
+        none:
+          unread: "Você não possui tópicos não lidos."
+          new: "Você não possui novos tópicos."
+          read: "Você não leu nenhum tópico ainda."
+          posted: "Você não postou em nenhum tópico ainda."
+          latest: "Não há tópicos mais recentes."
+          hot: "Não há tópicos quentes."
+          bookmarks: "Você não possui tópicos favoritos ainda."
+          top: "Não há melhores tópicos."
+          search: "Nenhum resultado encontrado."
+        bottom:
+          latest: "Não há mais tópicos mais recentes."
+          hot: "Não há mais tópicos quentes."
+          posted: "Não há mais tópicos postados."
+          read: "Não há mais tópicos lidos."
+          new: "Não há mais tópicos novos."
+          unread: "Não há mais tópicos não lidos."
+          top: "Não há mais melhores tópicos."
+          bookmarks: "Não há mais tópicos favoritos."
+          search: "Não há mais resultados de busca."

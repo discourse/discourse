@@ -27,6 +27,14 @@
         </div>
       {{/unless}}
 
+      {{#if context.topic.tags}}
+        <div class='discourse-tags'>
+        {{#each tag in context.topic.visibleListTags}}
+          {{discourse-tag tag}}
+        {{/each}}
+        </div>
+      {{/if}}
+
       {{plugin-outlet "topic-list-tags"}}
 
       <div class="pull-right">

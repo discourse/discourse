@@ -2,6 +2,7 @@ import userSearch from 'discourse/lib/user-search';
 import { default as computed, on } from 'ember-addons/ember-computed-decorators';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
+import { fetchUnseenTagHashtags, linkSeenTagHashtags } from 'discourse/lib/link-tag-hashtag';
 
 export default Ember.Component.extend({
   classNames: ['wmd-controls'],
@@ -25,6 +26,22 @@ export default Ember.Component.extend({
   @computed('showPreview')
   toggleText: function(showPreview) {
     return showPreview ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
+  },
+
+  _renderUnseenTagHashtags($preview, unseen) {
+    fetchUnseenTagHashtags(unseen).then(() => {
+      linkSeenTagHashtags($preview);
+    });
+  },
+
+  @on('previewRefreshed')
+  paintTagHashtags($preview) {
+    if (!this.siteSettings.tagging_enabled) { return; }
+
+    const unseenTagHashtags = linkSeenTagHashtags($preview);
+    if (unseenTagHashtags.length) {
+      Ember.run.debounce(this, this._renderUnseenTagHashtags, $preview, unseenTagHashtags, 500);
+    }
   },
 
   @computed

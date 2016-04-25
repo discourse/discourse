@@ -991,6 +991,9 @@ tr_TR:
         choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
+        change_tags: "Etiketleri değiştir"
+        choose_new_tags: "Bu konular için yeni etiket seç:"
+        changed_tags: "Seçtğiniz konular için etiketler değiştirildi."
       none:
         unread: "Okunmamış konunuz yok."
         new: "Yeni konunuz yok."
@@ -2081,6 +2084,8 @@ tr_TR:
             grant_moderation: "moderasyon yetkisi ver"
             revoke_moderation: "moderasyon yetkisini kaldır"
             backup_operation: "yedek operasyonu"
+            deleted_tag: "silinmiş etiket"
+            renamed_tag: "yeniden adlandırılmış etiket"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir aksiyon alınacak."
@@ -2557,3 +2562,26 @@ tr_TR:
       <button class="btn btn-primary">Google</button>
       </form>
       </p>
+    tagging:
+      all_tags: "Tüm etiketler"
+      changed: "Etiketler değişti:"
+      tags: "Etiketler"
+      choose_for_topic: "Bu konu için opsiyonel olarak bir etiket seçin"
+      delete_tag: "Etiketi sil"
+      delete_confirm: "Bu etiketi kaldırmak istediğinize emin misiniz?"
+      rename_tag: "Etiketi yeniden adlandır"
+      rename_instructions: "Etiket için yeni bir ad girin:"
+
+      notifications:
+        watching:
+          title: "Gözleniyor"
+          description: "Bu etikette ki her yeni gönderi için bir bildirim alacaksınız. Okunmamış ve yeni gönderilerin sayısı konunun yanında belirecek."
+        tracking:
+          title: "Takip Ediliyor"
+          description: "Bu etikette ki her yeni gönderi takip edilecek. Okunmamış ve yeni gönderilerin sayısı konunun yanında belirecek."
+        regular:
+          title: "Standart"
+          description: "Biri @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız."
+        muted:
+          title: "Susturuldu"
+          description: "Bu etiket okunmamışlar sekmenizde belirmeyecek, ve hakkında hiç bir bildirim almayacaksınız."

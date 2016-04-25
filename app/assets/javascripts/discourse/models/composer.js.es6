@@ -28,12 +28,14 @@ const CLOSED = 'closed',
         archetype: 'archetypeId',
         target_usernames: 'targetUsernames',
         typing_duration_msecs: 'typingTime',
-        composer_open_duration_msecs: 'composerTime'
+        composer_open_duration_msecs: 'composerTime',
+        tags: 'tags'
       },
 
       _edit_topic_serializer = {
         title: 'topic.title',
-        categoryId: 'topic.category.id'
+        categoryId: 'topic.category.id',
+        tags: 'topic.tags'
       };
 
 const Composer = RestModel.extend({

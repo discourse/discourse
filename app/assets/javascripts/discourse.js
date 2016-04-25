@@ -11,6 +11,7 @@ var _pluginCallbacks = [];
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
   _docTitle: document.title,
+  __TAGS_INCLUDED__: true,
 
   getURL: function(url) {
     if (!url) return url;

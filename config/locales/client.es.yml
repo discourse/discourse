@@ -1052,6 +1052,9 @@ es:
         selected:
           one: "Has seleccionado <b>1</b> tema."
           other: "Has seleccionado <b>{{count}}</b> temas."
+        change_tags: "Cambiar etiquetas"
+        choose_new_tags: "Elegir nuevas etiquetas para estos temas:"
+        changed_tags: "Las etiquetas de estos temas fueron cambiadas."
       none:
         unread: "No hay temas que sigas y que no hayas leído ya."
         new: "No tienes temas nuevos por leer."
@@ -2208,6 +2211,8 @@ es:
             grant_moderation: "conceder moderación"
             revoke_moderation: "revocar moderación"
             backup_operation: "operación de copia de seguridad de respaldo"
+            deleted_tag: "etiqueta eliminada"
+            renamed_tag: "etiqueta renombrada"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -2703,3 +2708,54 @@ es:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+
+    tagging:
+      all_tags: "Etiquetas"
+      selector_all_tags: "etiquetas"
+      changed: "etiquetas cambiadas:"
+      tags: "Etiquetas"
+      choose_for_topic: "elegir etiquetas para este tema (opcional)"
+      delete_tag: "Eliminar etiqueta"
+      delete_confirm: "¿Seguro que quieres eliminar esta etiqueta?"
+      rename_tag: "Renombrar etiqueta"
+      rename_instructions: "Elige un nuevo nombre para la etiqueta:"
+      sort_by: "Ordenar por:"
+      sort_by_count: "volumen"
+      sort_by_name: "nombre"
+
+      notifications:
+        watching:
+          title: "Vigilar"
+          description: "Vigilarás automáticamente todos los nuevos temas con esta etiqueta. Se añadirá un contador de posts nuevos y sin leer al lado del tema y además, se te notificará de cada nuevo tema y post."
+        tracking:
+          title: "Seguir"
+          description: "Seguirás automáticamente todos los nuevos temas con esta etiqueta. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+        regular:
+          title: "Normal"
+          description: "Se te notificará solo si alguien te menciona con tu @usuario o responde a algún post tuyo."
+        muted:
+          title: "Silenciar"
+          description: "No se te notificará de nuevos temas con esta etiqueta, ni aparecerán en tu pestaña de temas no leídos."
+
+      topics:
+        none:
+          unread: "No tienes temas sin leer."
+          new: "No hay temas nuevos."
+          read: "Aún no has leído ningún tema."
+          posted: "Aún no has publicado en ningún tema."
+          latest: "No hay temas recientes."
+          hot: "No hay temas candentes"
+          bookmarks: "Aún no has guardado temas en marcadores."
+          top: "No hay temas top."
+          search: "No hay resultados resultados de búsqueda."
+        bottom:
+          latest: "No hay más temas recientes."
+          hot: "No hay más temas candentes."
+          posted: "No hay más temas en los que hayas publicado."
+          read: "No hay más temas que hayas leído."
+          new: "No hay más temas nuevos."
+          unread: "No hay más temas sin leer."
+          top: "No hay más temas top."
+          bookmarks: "No hay más temas en marcadores."
+          search: "No hay más resultados de búsqueda."
+

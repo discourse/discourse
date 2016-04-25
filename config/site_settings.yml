@@ -1157,3 +1157,57 @@ user_preferences:
   default_categories_muted:
     type: category_list
     default: ''
+
+tags:
+  tagging_enabled:
+    client: true
+    default: false
+    refresh: true
+  tag_style:
+    client: true
+    type: enum
+    default: 'simple'
+    choices:
+     - simple
+     - bullet
+     - box
+    preview: '<div class="discourse-tags"><span class="discourse-tag {{value}}">tag1</span><span class="discourse-tag {{value}}">tag2</span></div>'
+  max_tags_per_topic:
+    default: 5
+    client: true
+  max_tag_length:
+    default: 20
+    client: true
+  min_trust_to_create_tag:
+    default: 3
+    enum: 'TrustLevelSetting'
+  min_trust_level_to_tag_topics:
+    default: 0
+    enum: 'TrustLevelSetting'
+    client: true
+  max_tag_search_results:
+    client: true
+    default: 5
+    min: 1
+  show_filter_by_tag:
+    client: true
+    default: false
+    refresh: true
+  max_tags_in_filter_list:
+    default: 30
+    min: 1
+    refresh: true
+  tags_sort_alphabetically:
+    client: true
+    default: false
+    refresh: true
+  staff_tags:
+    type: list
+    client: true
+    default: ''
+  suppress_overlapping_tags_in_list:
+    default: false
+    client: true
+  remove_muted_tags_from_latest:
+    default: false
+

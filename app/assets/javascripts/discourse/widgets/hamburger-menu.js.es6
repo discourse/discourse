@@ -83,6 +83,10 @@ export default createWidget('hamburger-menu', {
       links.push({ route: 'users', className: 'user-directory-link', label: 'directory.title' });
     }
 
+    if (this.siteSettings.tagging_enabled) {
+      links.push({ route: 'tags', label: 'tagging.tags' });
+    }
+
     return links.map(l => this.attach('link', l));
   },
 

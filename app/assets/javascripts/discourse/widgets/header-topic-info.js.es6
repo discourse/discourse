@@ -3,6 +3,7 @@ import { h } from 'virtual-dom';
 import { iconNode } from 'discourse/helpers/fa-icon';
 import DiscourseURL from 'discourse/lib/url';
 import RawHtml from 'discourse/widgets/raw-html';
+import { tagNode } from 'discourse/lib/render-tag';
 
 export default createWidget('header-topic-info', {
   tagName: 'div.extra-info-wrapper',
@@ -41,6 +42,13 @@ export default createWidget('header-topic-info', {
           title.push(this.attach('category-link', { category: parentCategory }));
         }
         title.push(this.attach('category-link', { category }));
+      }
+
+      if (this.siteSettings.tagging_enabled) {
+        const tags = topic.get('tags') || [];
+        if (tags.length) {
+          title.push(h('div.list-tags', tags.map(tagNode)));
+        }
       }
     }
 
