@@ -100,6 +100,8 @@ nb_NO:
         x_years:
           one: "1 år senere"
           other: "%{count} år senere"
+      previous_month: 'Forrige Måned'
+      next_month: 'Neste Måned'
     share:
       topic: 'del en lenke til dette emnet'
       post: 'innlegg #%{postNumber}'
@@ -157,6 +159,8 @@ nb_NO:
     more: "Mer"
     less: "Mindre"
     never: "aldri"
+    every_30_minutes: "hvert 30 minutt"
+    every_hour: "hver time"
     daily: "daglig"
     weekly: "ukentlig"
     every_two_weeks: "annenhver uke"
@@ -168,6 +172,7 @@ nb_NO:
       other: "{{count}} tegn"
     suggested_topics:
       title: "Anbefalte emner"
+      pm_title: "Foreslåtte Meldinger"
     about:
       simple_title: "Om"
       title: "Om %{title}"
@@ -223,6 +228,7 @@ nb_NO:
     revert: "Reverser"
     failed: "Mislykket"
     switch_to_anon: "Anonym modus"
+    switch_from_anon: "Avslutt Anonym"
     banner:
       close: "Fjern denne banneren"
       edit: "Endre denne banneren >>"
@@ -299,7 +305,9 @@ nb_NO:
         one: "gruppe"
         other: "grupper"
       members: "Medlemmer"
+      topics: "Emner"
       posts: "Innlegg"
+      messages: "Meldinger"
       alias_levels:
         nobody: "Ingen"
         only_admins: "Kun administratorer"
@@ -315,6 +323,7 @@ nb_NO:
           title: "Sporer"
         regular:
           title: "Normal"
+          description: "Du vil bli varslet hvis noen nevner ditt @navn eller svarer deg."
     user_action_groups:
       '1': "Liker tildelt"
       '2': "Liker mottatt"
@@ -382,6 +391,7 @@ nb_NO:
       notifications: "Varsler"
       statistics: "Statistikk"
       desktop_notifications:
+        label: "Skrivebordsvarslinger"
         perm_default: "Slå på varslinger"
         perm_denied_btn: "Tillatelse avslått"
         disable: "Slå av varslinger"
@@ -507,8 +517,17 @@ nb_NO:
         title: "Brukerkort merke"
       website: "Nettsted"
       email_settings: "E-post"
+      like_notification_frequency:
+        always: "Alltid"
+        first_time_and_daily: "Første gnag et innlegg blir likt og daglig"
+        first_time: "Første gang et innlegg blir likt"
+        never: "Aldri"
+      email_previous_replies:
+        always: "alltid"
+        never: "aldri"
       email_digests:
         title: "Send meg sammendrag av hva som er nytt på e-post når jeg ikke er ofte innom:"
+        every_hour: "hver time"
         daily: "daglig"
         every_three_days: "hver tredje dag"
         weekly: "ukentlig"
@@ -526,6 +545,12 @@ nb_NO:
       auto_track_options:
         never: "aldri"
         immediately: "øyeblikkelig"
+        after_1_minute: "etter 1 minutt"
+        after_2_minutes: "etter 2 minutt"
+        after_3_minutes: "etter 3 minutt"
+        after_4_minutes: "etter 4 minutt"
+        after_5_minutes: "etter 5 minut"
+        after_10_minutes: "etter 10 minutt"
       invited:
         search: "skriv for å søke etter invitasjoner..."
         title: "invitasjoner"
@@ -901,6 +926,11 @@ nb_NO:
       create: 'Nytt emne'
       create_long: 'Opprett et nytt emne'
       private_message: 'Begynn en melding'
+      archive_message:
+        title: 'Arkiver'
+      move_to_inbox:
+        title: 'Flytt til Inbox'
+        help: 'Flytt meldingen tilbake til Inbox'
       list: 'Emner'
       new: 'nytt emne'
       unread: 'ulest'
@@ -1208,6 +1238,11 @@ nb_NO:
           bookmark: "Angre bokmerke"
           like: "Angre liker"
           vote: "Angre stemme"
+        people:
+          notify_moderators: "varslet moderatorer"
+          notify_user: "sendte en melding"
+          like: "likte dette"
+          vote: "stemte for dette"
         by_you:
           off_topic: "Du rapporterte dette som irrelevant"
           spam: "Du rapporterte dette som spam"
@@ -1570,6 +1605,7 @@ nb_NO:
           refresh_report: "Refresh Rapport"
           start_date: "Startdato"
           end_date: "Sluttdato"
+          groups: "Alle grupper"
       commits:
         latest_changes: "Siste endringer: Vennligst oppgrader ofte!"
         by: "av"
