@@ -91,7 +91,7 @@ const SiteHeaderComponent = MountWidget.extend({
 
   buildArgs() {
     return {
-      flagCount: _flagProperties.reduce((prev, cur) => prev + this.get(cur), 0),
+      flagCount: _flagProperties.reduce((prev, cur) => prev + (this.get(cur) || 0), 0),
       topic: this._topic,
       canSignUp: this.get('canSignUp')
     };
