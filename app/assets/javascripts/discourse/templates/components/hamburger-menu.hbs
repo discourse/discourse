@@ -73,6 +73,8 @@
 
     {{plugin-outlet "site-map-links-last"}}
   {{/menu-links}}
+  
+  {{plugin-outlet "after-site-map-links"}}
 
   {{mount-widget widget='hamburger-categories' args=(as-hash categories=categories)}}
   <hr>
