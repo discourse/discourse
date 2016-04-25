@@ -63,12 +63,16 @@ export default Ember.Component.extend({
   afterPatch() {
   },
 
+  eventDispatched(eventName, key, refreshArg) {
+    const onRefresh = Ember.String.camelize(eventName.replace(/:/, '-'));
+    keyDirty(key, { onRefresh, refreshArg });
+    this.queueRerender();
+  },
+
   dispatch(eventName, key) {
     this._childEvents.push(eventName);
     this.appEvents.on(eventName, refreshArg => {
-      const onRefresh = Ember.String.camelize(eventName.replace(/:/, '-'));
-      keyDirty(key, { onRefresh, refreshArg });
-      this.queueRerender();
+      this.eventDispatched(eventName, key, refreshArg);
     });
   },
 
