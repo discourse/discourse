@@ -96,8 +96,6 @@ createWidget('notification-item', {
   },
 
   click(e) {
-    if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
-    e.preventDefault();
 
     this.attrs.set('read', true);
     const id = this.attrs.id;
@@ -105,6 +103,9 @@ createWidget('notification-item', {
     if (document && document.cookie) {
       document.cookie = `cn=${id}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
     }
+    if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey || e.button !== 0) { return; }
+    e.preventDefault();
+
     this.sendWidgetEvent('linkClicked');
     DiscourseURL.routeTo(this.url());
   }
