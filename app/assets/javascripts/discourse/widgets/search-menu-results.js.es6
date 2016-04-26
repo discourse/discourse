@@ -12,7 +12,9 @@ class Highlighted extends RawHtml {
   }
 
   decorate($html) {
-    $html.highlight(this.term.split(/\s+/), { className: 'search-highlight' });
+    if (this.term) {
+      $html.highlight(this.term.split(/\s+/), { className: 'search-highlight' });
+    }
   }
 }
 
