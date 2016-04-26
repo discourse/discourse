@@ -371,6 +371,12 @@ module SiteSettingExtension
     end
   end
 
+  def set_and_log(name, value, user=Discourse.system_user)
+    prev_value = send(name)
+    set(name, value)
+    StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
+  end
+
   protected
 
   def clear_cache!

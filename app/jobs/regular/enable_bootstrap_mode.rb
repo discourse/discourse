@@ -10,15 +10,9 @@ module Jobs
       return unless user.is_singular_admin?
 
       # let's enable bootstrap mode settings
-      update_site_setting('default_trust_level', TrustLevel[1])
-      update_site_setting('default_email_digest_frequency', 1440)
-      update_site_setting('bootstrap_mode_enabled', true)
-    end
-
-    def update_site_setting(id, value)
-      prev_value = SiteSetting.send(id)
-      SiteSetting.set(id, value)
-      StaffActionLogger.new(Discourse.system_user).log_site_setting_change(id, prev_value, value) if SiteSetting.has_setting?(id)
+      SiteSetting.set_and_log('default_trust_level', TrustLevel[1])
+      SiteSetting.set_and_log('default_email_digest_frequency', 1440)
+      SiteSetting.set_and_log('bootstrap_mode_enabled', true)
     end
   end
 end
