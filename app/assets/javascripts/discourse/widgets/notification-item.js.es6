@@ -58,14 +58,9 @@ createWidget('notification-item', {
     return Ember.isEmpty(title) ? "" : Discourse.Utilities.escapeExpression(title);
   },
 
-  text() {
-    const attrs = this.attrs;
+  text(notificationType, notName) {
+    const { attrs } = this;
     const data = attrs.data;
-
-    const notificationType = attrs.notification_type;
-
-    const lookup = this.site.get('notificationLookup');
-    const notName = lookup[notificationType];
     const scope = (notName === 'custom') ? data.message : `notifications.${notName}`;
 
     if (notificationType === GROUP_SUMMARY_TYPE) {
@@ -89,10 +84,15 @@ createWidget('notification-item', {
     return I18n.t(scope, {description, username});
   },
 
-  html() {
-    const contents = new RawHtml({ html: `<div>${Discourse.Emoji.unescape(this.text())}</div>` });
-    const url = this.url();
-    return url ? h('a', { attributes: { href: url, 'data-auto-route': true } }, contents) : contents;
+  html(attrs) {
+    const notificationType = attrs.notification_type;
+    const lookup = this.site.get('notificationLookup');
+    const notName = lookup[notificationType];
+
+    const contents = new RawHtml({ html: `<div>${Discourse.Emoji.unescape(this.text(notificationType, notName))}</div>` });
+    const href = this.url();
+    const alt = I18n.t(`notifications.alt.${notName}`);
+    return href ? h('a', { attributes: { href, alt } }, contents) : contents;
   },
 
   click(e) {
