@@ -3,7 +3,8 @@ export default Ember.ArrayController.extend({
 
   actions: {
     emojiUploaded(emoji) {
-      this.pushObject(Em.Object.create(emoji));
+      emoji = this.pushObject(Em.Object.create(emoji));
+      emoji.set("url", emoji.get('url')+ '?t=' + (new Date()).getTime())
     },
 
     destroy(emoji) {
