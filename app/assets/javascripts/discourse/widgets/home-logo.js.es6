@@ -37,8 +37,7 @@ export default createWidget('home-logo', {
   },
 
   click(e) {
-    // if they want to open in a new tab, let it so
-    if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) { return true; }
+    if (e.shiftKey || e.metaKey || e.ctrlKey || e.button !== 0) { return true; }
 
     e.preventDefault();
 
