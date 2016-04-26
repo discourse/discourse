@@ -122,7 +122,11 @@ class Guardian
   end
 
   def can_see_group?(group)
-    group.present? && (is_admin? || group.visible?)
+    return false if group.blank?
+    return true if is_admin? || group.visible?
+    return false if user.blank?
+
+    group.group_users.where(user_id: user.id).exists?
   end
 
 
