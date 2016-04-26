@@ -1090,6 +1090,17 @@ uncategorized:
     default: -1
     hidden: true
 
+  bootstrap_mode_min_users:
+    default: 50
+    client: true
+    min: 0
+    max: 5000
+
+  bootstrap_mode_enabled:
+    default: false
+    client: true
+    hidden: true
+
   automatically_unpin_topics:
     default: true
     client: true

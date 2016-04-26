@@ -330,6 +330,20 @@ describe User do
     end
   end
 
+  describe '.is_singular_admin?' do
+    it 'returns true if user is singular admin' do
+      admin = Fabricate(:admin)
+      expect(admin.is_singular_admin?).to eq(true)
+    end
+
+    it 'returns false if user is not the only admin' do
+      admin = Fabricate(:admin)
+      second_admin = Fabricate(:admin)
+
+      expect(admin.is_singular_admin?).to eq(false)
+    end
+  end
+
   describe 'name heuristics' do
     it 'is able to guess a decent name from an email' do
       expect(User.suggest_name('sam.saffron@gmail.com')).to eq('Sam Saffron')
