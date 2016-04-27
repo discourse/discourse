@@ -1,4 +1,4 @@
-import { createWidget } from 'discourse/widgets/widget';
+import { createWidget, applyDecorators } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 
 export default createWidget('hamburger-menu', {
@@ -141,7 +141,10 @@ export default createWidget('hamburger-menu', {
     }
 
     if (currentUser && currentUser.staff) {
-      results.push(this.attach('menu-links', { contents: () => this.adminLinks() }));
+      results.push(this.attach('menu-links', { contents: () => {
+        const extraLinks = applyDecorators(this, 'admin-links', this.attrs, this.state) || [];
+        return this.adminLinks().concat(extraLinks);
+      }}));
     }
 
     results.push(this.attach('menu-links', { contents: () => this.generalLinks() }));
