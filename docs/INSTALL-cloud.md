@@ -26,11 +26,6 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 <img src="https://www.discourse.org/images/install/14/console-ssh.png?v=1" width="600px">
 
-# Set up Swap (if needed)
-
-- If you're using the minimum 1 GB install, you *must* [set up a swap file](https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880).
-- If you're using 2 GB+ memory, you can probably get by without a swap file.
-
 # Install Docker / Git
 
     wget -qO- https://get.docker.com/ | sh
@@ -46,7 +41,7 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
     cd /var/discourse
 
-You will need to be root through the rest of the bootstrap process.
+You will need to be root through the rest of the setup and bootstrap process.
 
 # Edit Discourse Configuration
 
