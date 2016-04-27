@@ -62,7 +62,7 @@ Answer the following questions when prompted:
     SMTP user name? [postmaster@discourse.example.com]: 
     SMTP password? []: 
 
-This will generate an `app.yml` configuration file on your behalf, and then kick off bootstrap.
+This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse.
 
 # Email Is Important
 
@@ -78,7 +78,7 @@ If you need to change or fix your email settings after bootstrapping, you must e
 
 # Start Discourse
 
-Bootstrapping takes between **2-8 minutes** to set up your Discourse. Your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
+ Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
 
 <img src="https://www.discourse.org/images/install/15/browser-discourse-installed.png">
 
