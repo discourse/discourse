@@ -60,7 +60,7 @@ export default createWidget('search-menu', {
 
   fullSearchUrl() {
     const state = this.state;
-    const contextEnabled = this.attrs.contextEnabled;
+    const contextEnabled = state.contextEnabled;
 
     const ctx = contextEnabled ? this.searchContext() : null;
     const type = Ember.get(ctx, 'type');
@@ -84,7 +84,7 @@ export default createWidget('search-menu', {
 
   panelContents() {
     const { state } = this;
-    const contextEnabled = this.attrs.contextEnabled;
+    const contextEnabled = state.contextEnabled;
 
     const results = [this.attach('search-term', { value: state.term, contextEnabled }),
                      this.attach('search-context', { contextEnabled })];
@@ -114,7 +114,9 @@ export default createWidget('search-menu', {
     return this._searchContext;
   },
 
-  html() {
+  html(attrs, state) {
+    state.contextEnabled = attrs.contextEnabled;
+
     return this.attach('menu-panel', { maxWidth: 500, contents: () => this.panelContents() });
   },
 
