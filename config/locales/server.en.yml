@@ -212,6 +212,7 @@ en:
     group_mentions: "Latest mentions from %{group_name}"
     user_posts: "Latest posts by @%{username}"
     user_topics: "Latest topics by @%{username}"
+    tag: "Tagged topics"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   revert_version_same: "The current version is same as the version you are trying to revert to."
 
@@ -3025,5 +3026,3 @@ en:
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
   rss_by_tag: "Topics tagged %{tag}"
-  rss_description:
-    tag: "Tagged topics"
