@@ -1,17 +1,21 @@
 import DiscourseURL from 'discourse/lib/url';
 
+const TOPIC = 'topic',
+  OTHER = 'other';
+
 export function isValidLink($link) {
   return ($link.hasClass("track-link") ||
           $link.closest('.hashtag,.badge-category,.onebox-result,.onebox-body').length === 0);
 };
 
 export default {
-  trackClick(e) {
+  trackClick(e, relation = TOPIC) {
+    var forTopic = relation === TOPIC;
     // cancel click if triggered as part of selection.
     if (Discourse.Utilities.selectedText() !== "") { return false; }
 
     var $link = $(e.currentTarget);
-    if ($link.hasClass('lightbox') || $link.hasClass('mention-group')) { return true; }
+    if ($link.hasClass('lightbox') || $link.hasClass('mention-group') || $link.hasClass('no-track-link')) { return true; }
 
     var href = $link.attr('href') || $link.data('href'),
         $article = $link.closest('article'),
@@ -24,11 +28,11 @@ export default {
     if (!userId) userId = $article.data('user-id');
 
     var ownLink = userId && (userId === Discourse.User.currentProp('id')),
-        trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
-    if (postId && (!$link.data('ignore-post-id'))) {
+        trackingUrl = (forTopic) ? Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href)) : href;
+    if (forTopic && postId && (!$link.data('ignore-post-id'))) {
       trackingUrl += "&post_id=" + encodeURI(postId);
     }
-    if (topicId) {
+    if (forTopic && topicId) {
       trackingUrl += "&topic_id=" + encodeURI(topicId);
     }
 
@@ -46,13 +50,13 @@ export default {
 
     // If they right clicked, change the destination href
     if (e.which === 3) {
-      var destination = Discourse.SiteSettings.track_external_right_clicks ? trackingUrl : href;
+      var destination = (forTopic && Discourse.SiteSettings.track_external_right_clicks) ? trackingUrl : href;
       $link.attr('href', destination);
       return true;
     }
 
     // if they want to open in a new tab, do an AJAX request
-    if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
+    if (forTopic && (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2)) {
       Discourse.ajax("/clicks/track", {
         data: {
           url: href,
@@ -94,15 +98,18 @@ export default {
 
     // If we're on the same site, use the router and track via AJAX
     if (DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
-      Discourse.ajax("/clicks/track", {
-        data: {
-          url: href,
-          post_id: postId,
-          topic_id: topicId,
-          redirect: false
-        },
-        dataType: 'html'
-      });
+      if (forTopic) {
+        Discourse.ajax("/clicks/track", {
+          data: {
+            url: href,
+            post_id: postId,
+            topic_id: topicId,
+            redirect: false
+          },
+          dataType: 'html'
+        });
+      }
+
       DiscourseURL.routeTo(href);
       return false;
     }
@@ -116,5 +123,8 @@ export default {
     }
 
     return false;
-  }
+  },
+
+  TOPIC,
+  OTHER
 };
