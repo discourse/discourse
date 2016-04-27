@@ -125,8 +125,11 @@ export default class Widget {
     this.key = this.buildKey ? this.buildKey(attrs) : null;
 
     // Helps debug widgets
-    if (Ember.Test) {
-      if (Object.keys(this.defaultState(attrs)).length > 0 && !this.key) {
+    if (Ember.testing) {
+      const ds = this.defaultState(attrs);
+      if (typeof ds !== "object") {
+        Ember.warn(`defaultState must return an object`);
+      } else if (Object.keys(ds).length > 0 && !this.key) {
         Ember.warn(`you need a key when using state ${this.name}`);
       }
     }
