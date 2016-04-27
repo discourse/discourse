@@ -92,15 +92,15 @@ Your Discourse should be accessible in your web browser via the domain name `dis
 
 # Register New Account and Become Admin
 
-There is a reminder at the top about the `DISCOURSE_DEVELOPER_EMAILS` you entered previously in `app.yml`; register a new account using one of those email addresses, and your account will automatically be made an Admin.
+Register a new admin account using one of the email addresses you entered before bootstrapping.
 
-(If you *don't* get any email from your install, and are unable to register a new admin account, please check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
+(If you *don't* get any email from your install, and are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
 <img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
 
 You should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains the next steps for further configuring and customizing your Discourse install as an administrator. Read it closely!
 
-(If you are still unable to register a new admin account via email, see [Create Admin Account from Console](https://meta.discourse.org/t/create-admin-account-from-console/17274), but please note that *you will have a broken site* unless you get email working on your instance.)
+(If you are unable to register a new admin account via email, see [Create Admin Account from Console](https://meta.discourse.org/t/create-admin-account-from-console/17274), but please note that *you will have a broken site* unless you get email working on your instance.)
 
 # Post-Install Maintenance
 
