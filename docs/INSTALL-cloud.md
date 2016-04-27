@@ -74,7 +74,7 @@ This will generate an `app.yml` configuration file on your behalf, and then kick
 
 - For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
 
-If you need to change or fix your email settings after bootstrapping, you must edit the `app.yml` file again and `./launcher rebuild app`, otherwise your changes will not take effect. If you didn't receive an email from your install, read [Register New Account and Become Admin](#register-new-account-and-become-admin) for troubleshooting.
+If you need to change or fix your email settings after bootstrapping, you must edit your `app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
 
 # Start Discourse
 
@@ -94,7 +94,7 @@ Your Discourse should be accessible in your web browser via the domain name `dis
 
 Register a new admin account using one of the email addresses you entered before bootstrapping.
 
-(If you *don't* get any email from your install, and are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
+(If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
 <img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
 
