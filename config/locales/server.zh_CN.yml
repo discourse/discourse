@@ -162,6 +162,7 @@ zh_CN:
     group_mentions: "%{group_name}组最近的提及"
     user_posts: "最新贴子由@%{username}发表"
     user_topics: "最新主题由@%{username}发表"
+    tag: "加标签的主题"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
@@ -2468,5 +2469,3 @@ zh_CN:
     staff_tag_disallowed: "标签\"%{tag}\"只可以由职员标记。"
     staff_tag_remove_disallowed: "标签\"%{tag}\"只可以由职员删除。"
   rss_by_tag: "%{tag}标签的主题"
-  rss_description:
-    tag: "加标签的主题"

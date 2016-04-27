@@ -170,6 +170,7 @@ pt_BR:
     private_posts: "Últimas mensagens privadas"
     user_posts: "Últimos posts por @%{username}"
     user_topics: "Últimos tópicos por @%{username}"
+    tag: "Tópicos com tag"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   excerpt_image: "imagem"
   queue:
@@ -1533,5 +1534,3 @@ pt_BR:
     staff_tag_disallowed: "A tag \"%{tag}\" só pode ser aplicada pela moderação."
     staff_tag_remove_disallowed: "A tag \"%{tag}\" só pode ser removida pela moderação."
   rss_by_tag: "Tópicos com a tag %{tag}"
-  rss_description:
-    tag: "Tópicos com tag"

@@ -172,6 +172,7 @@ fi:
     private_posts: "Uusimmat yksityisviestit"
     group_posts: "Uusimmat viestit ryhmässä %{group_name}"
     group_mentions: "Uusimmat maininnat ryhmässä %{group_name}"
+    tag: "Tagatut aiheet"
   too_late_to_edit: "Tämä viesti luotiin liian kauan sitten. Sitä ei voi enää muokata tai poistaa."
   revert_version_same: "Nykyinen revisio on sama, kuin jonka yrität palauttaa."
   excerpt_image: "kuva"
@@ -2275,5 +2276,3 @@ fi:
     errors:
       <<: *errors
   rss_by_tag: "Aiheet tagattu %{tag}"
-  rss_description:
-    tag: "Tagatut aiheet"

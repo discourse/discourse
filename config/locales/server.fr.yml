@@ -174,6 +174,7 @@ fr:
     group_mentions: "Mentions récentes par %{username}"
     user_posts: "Derniers messages par @%{username}"
     user_topics: "Sujets récents par @%{username}"
+    tag: "Sujet tagués"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"
@@ -2198,5 +2199,3 @@ fr:
     errors:
       <<: *errors
   rss_by_tag: "Sujets portant le tag %{tag}"
-  rss_description:
-    tag: "Sujet tagués"

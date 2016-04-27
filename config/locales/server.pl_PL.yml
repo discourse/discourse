@@ -137,6 +137,7 @@ pl_PL:
     latest: "Ostatnie wątki"
     hot: "Popularne wątki"
     posts: "Aktualne wpisy"
+    tag: "Otagowane tematy"
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   excerpt_image: "zdjęcie"
   queue:
@@ -1221,5 +1222,3 @@ pl_PL:
     errors:
       <<: *errors
   rss_by_tag: "Tematy otagowane jako %{tag}"
-  rss_description:
-    tag: "Otagowane tematy"

@@ -145,6 +145,7 @@ tr_TR:
     top: "En iyi konular"
     posts: "Son gönderiler"
     private_posts: "Son özel mesajlar"
+    tag: "Etiketlenmiş konular"
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
   excerpt_image: "resim"
   queue:
@@ -1457,5 +1458,3 @@ tr_TR:
     errors:
       <<: *errors
   rss_by_tag: "Konu %{tag} ile etiketlenmiştir."
-  rss_description:
-    tag: "Etiketlenmiş konular"
