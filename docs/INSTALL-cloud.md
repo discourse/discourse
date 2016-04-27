@@ -24,7 +24,7 @@ Replace `192.168.1.1` with the IP address of your server.
 
 You will be asked for permission to connect, type `yes`, then enter the root password from the email DigitalOcean sent you when the server was set up. You may be prompted to change the root password, too.
 
-<img src="https://www.discourse.org/images/install/14/console-ssh.png?v=1" width="600px">
+<img src="https://www.discourse.org/images/install/15/ssh-login-terminal.png" width="600px">
 
 # Install Docker / Git
 
