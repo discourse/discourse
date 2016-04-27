@@ -30,7 +30,7 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
     wget -qO- https://get.docker.com/ | sh
 
-This command installs the latest versions of Docker and Git on your server. Alternately, you can manually install Git and the [Docker package for your OS](https://docs.docker.com/installation/).
+This command installs the latest versions of Docker and Git on your server. Alternately, you can manually [install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and the [Docker package for your OS](https://docs.docker.com/installation/).
 
 # Install Discourse
 
