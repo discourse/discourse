@@ -1,10 +1,14 @@
-import DiscourseURL from 'discourse/lib/url';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { iconNode } from 'discourse/helpers/fa-icon';
+import interceptClick from 'discourse/lib/intercept-click';
 
 export default createWidget('home-logo', {
   tagName: 'div.title',
+
+  settings: {
+    href: '/'
+  },
 
   logo() {
     const { siteSettings } = this;
@@ -33,15 +37,8 @@ export default createWidget('home-logo', {
   },
 
   html() {
-    return h('a', { attributes: { href: "/", 'data-auto-route': true } }, this.logo());
+    return h('a', { attributes: { href: this.settings.href } }, this.logo());
   },
 
-  click(e) {
-    if (e.shiftKey || e.metaKey || e.ctrlKey || e.button !== 0) { return true; }
-
-    e.preventDefault();
-
-    DiscourseURL.routeTo("/");
-    return false;
-  }
+  click: interceptClick
 });
