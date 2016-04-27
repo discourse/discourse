@@ -5,8 +5,6 @@ export default Ember.ArrayController.extend({
     this.set("controllers.application.showFooter", !this.get("model.canLoadMore"));
   }.observes("model.canLoadMore"),
 
-  showDismissButton: Ember.computed.gt('user.total_unread_notifications', 0),
-
   currentPath: Em.computed.alias('controllers.application.currentPath'),
 
   actions: {
