@@ -78,17 +78,11 @@ If you need to change or fix your email settings after bootstrapping, you must e
 
 # Start Discourse
 
-Bootstrapping takes between **2-8 minutes** to set up your Discourse. After that completes, start Discourse:
-
-    ./launcher start app
-
-<img src="https://www.discourse.org/images/install/14/console-launcher-start.png?v=1" width="600px">
-
-Congratulations! You just built your very own Discourse!
-
-Your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
+Bootstrapping takes between **2-8 minutes** to set up your Discourse. Your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
 
 <img src="https://www.discourse.org/images/install/15/browser-discourse-installed.png">
+
+Congratulations! You just built your very own Discourse!
 
 # Register New Account and Become Admin
 
