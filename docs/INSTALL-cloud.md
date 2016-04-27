@@ -39,33 +39,30 @@ This command installs the latest versions of Docker and Git on your server. Alte
 
 # Install Discourse
 
-Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it, and make a copy of the config file as `app.yml`:
+Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it:
 
     sudo -s
     mkdir /var/discourse
     git clone https://github.com/discourse/discourse_docker.git /var/discourse
     cd /var/discourse
-    cp samples/standalone.yml containers/app.yml
 
 You will need to be root through the rest of the bootstrap process.
 
 # Edit Discourse Configuration
 
-Edit the Discourse config file `app.yml`:
+Launch the setup tool at
 
-    nano containers/app.yml
+    ./discourse-setup
 
-We recommend Nano because it's simple; just use your arrow keys to edit.
+Answer the following questions when prompted:
 
-- Set `DISCOURSE_DEVELOPER_EMAILS` to your email address.
+    Hostname for your Discourse? [discourse.example.com]: 
+    Email address for admin account? [me@example.com]: 
+    SMTP server address? [smtp.example.com]: 
+    SMTP user name? [postmaster@discourse.example.com]: 
+    SMTP password? []: 
 
-- Set `DISCOURSE_HOSTNAME` to `discourse.example.com`, this means you want your Discourse available at `http://discourse.example.com/`. You'll need to update the DNS A record for this domain with the IP address of your server.
-
-- Place your [Email Server credentials][mailconfig] in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
-
-<img src="https://www.discourse.org/images/install/15/console-nano-app-yml.png" width="600px">
-
-Please be careful while editing and double check your work; YAML is _very_ sensitive to incorrect spacing and misplaced characters. After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
+This will generate an `app.yml` configuration file on your behalf, and then kick off bootstrap.
 
 # Email Is Important
 
@@ -79,13 +76,9 @@ Please be careful while editing and double check your work; YAML is _very_ sensi
 
 If you need to change or fix your email settings after bootstrapping, you must edit the `app.yml` file again and `./launcher rebuild app`, otherwise your changes will not take effect. If you didn't receive an email from your install, read [Register New Account and Become Admin](#register-new-account-and-become-admin) for troubleshooting.
 
-# Bootstrap Discourse
+# Start Discourse
 
-Save the `app.yml` file, and begin bootstrapping Discourse:
-
-    ./launcher bootstrap app
-
-This command takes between **2-8 minutes** to automagically configure your Discourse. After that completes, start Discourse:
+Bootstrapping takes between **2-8 minutes** to set up your Discourse. After that completes, start Discourse:
 
     ./launcher start app
 
