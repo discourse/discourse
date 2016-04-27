@@ -18,7 +18,6 @@ widgetTest('basics', {
 
   test(assert) {
     assert.ok(this.$('.title').length === 1);
-    assert.ok(this.$('a[data-auto-route]').length === 1);
 
     assert.ok(this.$('img#site-logo.logo-big').length === 1);
     assert.equal(this.$('#site-logo').attr('src'), bigLogo);
@@ -52,8 +51,6 @@ widgetTest('no logo', {
   },
 
   test(assert) {
-    assert.ok(this.$('a[data-auto-route]').length === 1);
-
     assert.ok(this.$('h2#site-text-logo.text-logo').length === 1);
     assert.equal(this.$('#site-text-logo').text(), title);
   }
