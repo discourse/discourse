@@ -1,11 +1,3 @@
-export default Discourse.Route.extend({
+import { buildIndex } from 'discourse/routes/group-index';
 
-  model() {
-    return this.modelFor("group").findPosts({type: 'mentions'});
-  },
-
-  setupController(controller, model) {
-    controller.set("model", model);
-    this.controllerFor("group").set("showing", "mentions");
-  }
-});
+export default buildIndex('mentions');

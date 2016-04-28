@@ -1,5 +1,5 @@
 {{#if model.categories}}
-  <div class='contents'>
+  {{#discovery-categories refresh="refresh"}}
     <table class='topic-list categories'>
       <thead>
         <tr>
@@ -54,6 +54,6 @@
         {{/each}}
       </tbody>
     </table>
-  </div>
+  {{/discovery-categories}}
   <footer class='topic-list-bottom'></footer>
 {{/if}}

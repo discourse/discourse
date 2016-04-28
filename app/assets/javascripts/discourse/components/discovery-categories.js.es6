@@ -3,7 +3,9 @@ import { on } from 'ember-addons/ember-computed-decorators';
 
 const CATEGORIES_LIST_BODY_CLASS = "categories-list";
 
-export default Ember.View.extend(UrlRefresh, {
+export default Ember.Component.extend(UrlRefresh, {
+  classNames: ['contents'],
+
   @on("didInsertElement")
   addBodyClass() {
     $('body').addClass(CATEGORIES_LIST_BODY_CLASS);

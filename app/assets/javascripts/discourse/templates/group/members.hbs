@@ -7,36 +7,39 @@
       </form>
     </div>
   {{/if}}
-  <table class='group-members'>
-    <tr>
-      <th colspan="2">{{i18n 'last_post'}}</th>
-      <th>{{i18n 'last_seen'}}</th>
-      {{#if isOwner}}
-      <th></th>
-      {{/if}}
-    </tr>
-    {{#each model.members as |m|}}
+
+  {{#load-more selector=".group-members tr" action="loadMore"}}
+    <table class='group-members'>
       <tr>
-        <td class='avatar'>
-          {{user-info user=m}}
-          {{#if m.owner}}<span class='is-owner'>{{i18n "groups.owner"}}</span>{{/if}}
-        </td>
-        <td>
-          <span class="text">{{bound-date m.last_posted_at}}</span>
-        </td>
-        <td>
-          <span class="text">{{bound-date m.last_seen_at}}</span>
-        </td>
+        <th colspan="2">{{i18n 'last_post'}}</th>
+        <th>{{i18n 'last_seen'}}</th>
         {{#if isOwner}}
-          <td class='remove-user'>
-            {{#unless m.owner}}
-              <a class="remove-link" {{action "removeMember" m}}><i class="fa fa-times"></i></a>
-            {{/unless}}
-          </td>
+        <th></th>
         {{/if}}
       </tr>
-    {{/each}}
-  </table>
+      {{#each model.members as |m|}}
+        <tr>
+          <td class='avatar'>
+            {{user-info user=m}}
+            {{#if m.owner}}<span class='is-owner'>{{i18n "groups.owner"}}</span>{{/if}}
+          </td>
+          <td>
+            <span class="text">{{bound-date m.last_posted_at}}</span>
+          </td>
+          <td>
+            <span class="text">{{bound-date m.last_seen_at}}</span>
+          </td>
+          {{#if isOwner}}
+            <td class='remove-user'>
+              {{#unless m.owner}}
+                <a class="remove-link" {{action "removeMember" m}}><i class="fa fa-times"></i></a>
+              {{/unless}}
+            </td>
+          {{/if}}
+        </tr>
+      {{/each}}
+    </table>
+  {{/load-more}}
 {{else}}
   <div>{{i18n "groups.empty.users"}}</div>
 {{/if}}

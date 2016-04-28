@@ -1,3 +1,4 @@
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import RawHtml from 'discourse/widgets/raw-html';
 import { createWidget } from 'discourse/widgets/widget';
 import DiscourseURL from 'discourse/lib/url';
@@ -103,7 +104,7 @@ createWidget('notification-item', {
     if (document && document.cookie) {
       document.cookie = `cn=${id}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
     }
-    if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey || e.button !== 0) { return; }
+    if (wantsNewWindow(e)) { return; }
     e.preventDefault();
 
     this.sendWidgetEvent('linkClicked');
