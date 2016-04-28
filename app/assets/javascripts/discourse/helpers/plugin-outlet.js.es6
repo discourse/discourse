@@ -60,7 +60,7 @@ function findOutlets(collection, callback) {
 
   const disabledPlugins = Discourse.Site.currentProp('disabled_plugins') || [];
 
-  Ember.keys(collection).forEach(function(res) {
+  Object.keys(collection).forEach(function(res) {
     if (res.indexOf("/connectors/") !== -1) {
       // Skip any disabled plugins
       for (let i=0; i<disabledPlugins.length; i++) {

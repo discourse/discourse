@@ -142,7 +142,7 @@ const controllerOpts = {
 
 };
 
-Ember.keys(queryParams).forEach(function(p) {
+Object.keys(queryParams).forEach(function(p) {
   // If we don't have a default value, initialize it to null
   if (typeof controllerOpts[p] === 'undefined') {
     controllerOpts[p] = null;

@@ -41,7 +41,7 @@ const Site = RestModel.extend({
       }
     });
 
-    Ember.keys(remaining).forEach(parentCategoryId => {
+    Object.keys(remaining).forEach(parentCategoryId => {
       const category = result.findBy('id', parseInt(parentCategoryId, 10)),
             index = result.indexOf(category);
 

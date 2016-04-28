@@ -136,7 +136,7 @@ const User = RestModel.extend({
   },
 
   copy() {
-    return Discourse.User.create(this.getProperties(Ember.keys(this)));
+    return Discourse.User.create(this.getProperties(Object.keys(this)));
   },
 
   save() {
