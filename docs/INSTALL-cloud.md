@@ -16,11 +16,9 @@ Create your new Droplet. You will receive an email with the root password to you
 
 # Access Your Cloud Server
 
-Connect to your server via SSH, or use [Putty][put] on Windows:
+Connect to your server via its IP address with SSH, or use [Putty][put] on Windows:
 
     ssh root@192.168.1.1
-
-Replace `192.168.1.1` with the IP address of your server.
 
 You will be asked for permission to connect, type `yes`, then enter the root password from the email DigitalOcean sent you when the server was set up. You may be prompted to change the root password, too.
 
