@@ -1,5 +1,5 @@
 export function autoLoadModules() {
-  Ember.keys(requirejs.entries).forEach(entry => {
+  Object.keys(requirejs.entries).forEach(entry => {
     if ((/\/helpers\//).test(entry)) {
       require(entry, null, null, true);
     }

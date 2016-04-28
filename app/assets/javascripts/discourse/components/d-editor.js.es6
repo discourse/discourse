@@ -218,7 +218,7 @@ export default Ember.Component.extend({
     const mouseTrap = Mousetrap(this.$('.d-editor-input')[0]);
 
     const shortcuts = this.get('toolbar.shortcuts');
-    Ember.keys(shortcuts).forEach(sc => {
+    Object.keys(shortcuts).forEach(sc => {
       const button = shortcuts[sc];
       mouseTrap.bind(sc, () => {
         this.send(button.action, button);
@@ -244,7 +244,7 @@ export default Ember.Component.extend({
     this.appEvents.off('composer:insert-text');
 
     const mouseTrap = this._mouseTrap;
-    Ember.keys(this.get('toolbar.shortcuts')).forEach(sc => mouseTrap.unbind(sc));
+    Object.keys(this.get('toolbar.shortcuts')).forEach(sc => mouseTrap.unbind(sc));
     this.$('.d-editor-preview').off('click.preview');
   },
 

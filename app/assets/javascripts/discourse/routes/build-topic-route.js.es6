@@ -4,7 +4,7 @@ import { queryParams } from 'discourse/controllers/discovery-sortable';
 function filterQueryParams(params, defaultParams) {
   const findOpts = defaultParams || {};
   if (params) {
-    Ember.keys(queryParams).forEach(function(opt) {
+    Object.keys(queryParams).forEach(function(opt) {
       if (params[opt]) { findOpts[opt] = params[opt]; }
     });
   }
@@ -38,7 +38,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
     // Clean up any string parameters that might slip through
     filterParams = filterParams || {};
-    Ember.keys(filterParams).forEach(function(k) {
+    Object.keys(filterParams).forEach(function(k) {
       const val = filterParams[k];
       if (val === "undefined" || val === "null" || val === 'false') {
         filterParams[k] = undefined;

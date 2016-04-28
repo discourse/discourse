@@ -70,7 +70,7 @@ export default Ember.DefaultResolver.extend({
     // If we end with the name we want, use it. This allows us to define components within plugins.
     const suffix = parsedName.type + 's/' + parsedName.fullNameWithoutType,
           dashed = Ember.String.dasherize(suffix),
-          moduleName = Ember.keys(requirejs.entries).find(function(e) {
+          moduleName = Object.keys(requirejs.entries).find(function(e) {
             return (e.indexOf(suffix, e.length - suffix.length) !== -1) ||
                    (e.indexOf(dashed, e.length - dashed.length) !== -1);
           });
