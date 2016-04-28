@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
            Discourse.User.currentProp('can_send_private_messages');
   }.property('controllers.user.viewingSelf'),
 
-  @computed('selected.@each', 'bulkSelectEnabled')
+  @computed('selected.[]', 'bulkSelectEnabled')
   hasSelection(selected, bulkSelectEnabled){
     return bulkSelectEnabled && selected && selected.length > 0;
   },

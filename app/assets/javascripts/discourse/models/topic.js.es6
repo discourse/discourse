@@ -32,7 +32,7 @@ const Topic = RestModel.extend({
     return poster && poster.user;
   },
 
-  @computed('posters.@each')
+  @computed('posters.[]')
   lastPoster(posters) {
     var user;
     if (posters && posters.length > 0) {

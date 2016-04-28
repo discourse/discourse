@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
   limit: null,
   offset: null,
 
-  @computed('model.owners.@each')
+  @computed('model.owners.[]')
   isOwner(owners) {
     if (this.get('currentUser.admin')) {
       return true;

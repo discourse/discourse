@@ -13,7 +13,7 @@ export default Ember.Component.extend({
 
   _topicListChanged: function() {
     this._initFromTopicList(this.get('topicList'));
-  }.observes('topicList.@each'),
+  }.observes('topicList.[]'),
 
   _initFromTopicList(topicList) {
     if (topicList !== null) {
