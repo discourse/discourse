@@ -74,5 +74,5 @@
 <div class='footer'>
   <%=raw(t 'user_notifications.digest.unsubscribe',
            site_link: html_site_link(@anchor_color),
-           unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url_no_prefix, key: @unsubscribe_key), {:style=>'color: #' + @anchor_color }))  %>
+           unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url_no_prefix, key: @unsubscribe_key), {:style=>"color: ##{@anchor_color}"}))  %>
 </div>
