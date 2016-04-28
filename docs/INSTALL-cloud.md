@@ -16,7 +16,7 @@ Create your new Droplet. You will receive an email with the root password to you
 
 # Access Your Cloud Server
 
-Connect to your server via its IP address with SSH, or use [Putty][put] on Windows:
+Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
     ssh root@192.168.1.1
 
@@ -79,13 +79,13 @@ If you need to change or fix your email settings after bootstrapping, edit your 
 
 Register a new admin account using one of the email addresses you entered before bootstrapping.
 
-(If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
+If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).
 
 <img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
 
 You should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains the next steps for further configuring and customizing your Discourse install as an administrator. Read it closely!
 
-(If you are unable to register a new admin account via email, see [Create Admin Account from Console](https://meta.discourse.org/t/create-admin-account-from-console/17274), but please note that *you will have a broken site* unless you get email working on your instance.)
+(If you are still unable to register a new admin account via email, see [Create Admin Account from Console](https://meta.discourse.org/t/create-admin-account-from-console/17274), but note that *you will have a broken site* unless you get email working.)
 
 # Post-Install Maintenance
 
@@ -99,21 +99,21 @@ You will get email reminders as new versions of Discourse are released. Please s
 The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
 
 ```
-Usage: launcher COMMAND CONFIG [--skip-prereqs]
+Usage: launcher COMMAND CONFIG [--skip-prereqs] [--docker-args STRING]
 Commands:
     start:      Start/initialize a container
     stop:       Stop a running container
     restart:    Restart a container
     destroy:    Stop and remove a container
-    enter:      Enter a container using docker exec
-    logs:       Docker logs for container
+    enter:      Use nsenter to get a shell into a container
+    logs:       View the Docker logs for a container
     bootstrap:  Bootstrap a container for the config based on a template
     rebuild:    Rebuild a container (destroy old, bootstrap, start new)
     cleanup:    Remove all containers that have stopped for > 24 hours
 
 Options:
-    --skip-prereqs   Don't check prerequisites
-    --docker-args    Extra arguments to pass when running docker
+    --skip-prereqs             Don't check launcher prerequisites
+    --docker-args              Extra arguments to pass when running docker
 ```
 
 # Add More Discourse Features
@@ -122,19 +122,13 @@ Do you want...
 
 * Users to log in *only* via your pre-existing website's registration system? [Configure Single-Sign-On](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045).
 
-- Users to log in via Google? [Configure Google logins](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858).
-
-- Users to log in via Facebook? [Configure Facebook logins](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394).
-
-- Users to log in via Twitter? [Configure Twitter logins](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395).
-
-- Users to log in via GitHub? [Configure GitHub logins](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745)
+- Users to log in via [Google](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858), [Twitter](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395), [GitHub](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745), or  [Facebook](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)?
 
 - Users to post replies via email? [Configure reply via email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
 - Automatic daily backups? [Configure backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855).
  
-- Free HTTPS / SSL support? [Configure Let's Encrypt](https://meta.discourse.org/t/setting-up-lets-encrypt-cert-with-discourse-docker/40709)
+- Free HTTPS / SSL support? [Configure Let's Encrypt](https://meta.discourse.org/t/setting-up-lets-encrypt-cert-with-discourse-docker/40709).
 
 - Paid HTTPS / SSL support? [Configure SSL](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847).
 
@@ -142,9 +136,9 @@ Do you want...
 
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857). We recommend [Fastly](http://www.fastly.com/).
 
-- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/master/script/import_scripts)
+- Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/master/script/import_scripts).
 
-- A firewall on your server? [Configure firewall](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584)
+- A firewall on your server? [Configure firewall](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
 
 - To embed Discourse [in your WordPress install](https://github.com/discourse/wp-discourse), or [on your static HTML site](https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963)?
 
