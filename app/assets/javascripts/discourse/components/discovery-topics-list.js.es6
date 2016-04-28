@@ -3,8 +3,6 @@ import LoadMore from "discourse/mixins/load-more";
 import UrlRefresh from 'discourse/mixins/url-refresh';
 
 const DiscoveryTopicsListComponent = Ember.Component.extend(UrlRefresh, LoadMore, {
-  _viaComponent: true,
-
   classNames: ['contents'],
   eyelineSelector: '.topic-list-item',
 

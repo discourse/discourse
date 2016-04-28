@@ -167,7 +167,7 @@ testOpenInANewTab("it opens in a new tab when pressing ctrl", function(clickEven
 });
 
 testOpenInANewTab("it opens in a new tab on middle click", function(clickEvent) {
-  clickEvent.which = 2;
+  clickEvent.button = 2;
 });
 
 test("tracks via AJAX if we're on the same site", function() {

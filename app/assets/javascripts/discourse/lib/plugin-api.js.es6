@@ -49,7 +49,7 @@ class PluginApi {
 
     if (!opts.onlyStream) {
       decorate(ComposerEditor, 'previewRefreshed', callback);
-      decorate(this.container.lookupFactory('view:user-stream'), 'didInsertElement', callback);
+      decorate(this.container.lookupFactory('component:user-stream'), 'didInsertElement', callback);
     }
   }
 

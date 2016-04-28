@@ -151,11 +151,13 @@ export default Ember.DefaultResolver.extend({
     const withoutType = parsedName.fullNameWithoutType,
           slashedType = withoutType.replace(/\./g, '/'),
           decamelized = withoutType.decamelize(),
+          dashed = decamelized.replace(/\./g, '-').replace(/\_/g, '-'),
           templates = Ember.TEMPLATES;
 
     return this._super(parsedName) ||
            templates[slashedType] ||
            templates[withoutType] ||
+           templates[dashed] ||
            templates[decamelized.replace(/\./, '/')] ||
            templates[decamelized.replace(/\_/, '/')] ||
            this.findAdminTemplate(parsedName) ||
