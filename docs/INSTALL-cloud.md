@@ -75,8 +75,6 @@ If you need to change or fix your email settings after bootstrapping, edit your 
 
 <img src="https://www.discourse.org/images/install/15/browser-discourse-installed.png">
 
-Congratulations! You just built your very own Discourse!
-
 # Register New Account and Become Admin
 
 Register a new admin account using one of the email addresses you entered before bootstrapping.
