@@ -67,9 +67,9 @@ This will generate an `app.yml` configuration file on your behalf, and then kick
 
 - No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
 
-- For proper email deliverability, you must set correct SPF and DKIM records in your DNS. See your email provider instructions for specifics.
+- For proper email deliverability, add valid SPF and DKIM records in your DNS. See your email provider instructions for specifics.
 
-If you need to change or fix your email settings after bootstrapping, you must edit your `app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
+If you need to change or fix your email settings after bootstrapping, edit your `app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
 
 # Start Discourse
 
