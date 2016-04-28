@@ -8,5 +8,4 @@ export default Discourse.Route.extend({
     controller.set("model", model);
     model.findMembers();
   }
-
 });

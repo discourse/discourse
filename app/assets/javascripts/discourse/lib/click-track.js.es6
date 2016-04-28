@@ -1,4 +1,5 @@
 import DiscourseURL from 'discourse/lib/url';
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 
 export function isValidLink($link) {
   return ($link.hasClass("track-link") ||
@@ -52,7 +53,7 @@ export default {
     }
 
     // if they want to open in a new tab, do an AJAX request
-    if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
+    if (wantsNewWindow(e)) {
       Discourse.ajax("/clicks/track", {
         data: {
           url: href,

@@ -1,7 +1,6 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
 import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
-import { listenForViewEvent } from 'discourse/lib/app-events';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Scrolling from 'discourse/mixins/scrolling';
 
@@ -63,6 +62,9 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
       return ClickTrack.trackClick(e);
     });
 
+    this.appEvents.on('post:highlight', postNumber => {
+      Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
+    });
   }.on('didInsertElement'),
 
   // This view is being removed. Shut down operations
@@ -77,6 +79,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
     // this happens after route exit, stuff could have trickled in
     this.appEvents.trigger('header:hide-topic');
+    this.appEvents.off('post:highlight');
 
   }.on('willDestroyElement'),
 
@@ -199,9 +202,5 @@ function highlight(postNumber) {
       $contents.css({'background-color': ''});
     });
 }
-
-listenForViewEvent(TopicView, 'post:highlight', postNumber => {
-  Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
-});
 
 export default TopicView;

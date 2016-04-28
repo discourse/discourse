@@ -1,7 +1,8 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { iconNode } from 'discourse/helpers/fa-icon';
-import interceptClick from 'discourse/lib/intercept-click';
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
+import DiscourseURL from 'discourse/lib/url';
 
 export default createWidget('home-logo', {
   tagName: 'div.title',
@@ -40,5 +41,11 @@ export default createWidget('home-logo', {
     return h('a', { attributes: { href: this.settings.href } }, this.logo());
   },
 
-  click: interceptClick
+  click(e) {
+    if (wantsNewWindow(e)) { return false; }
+    e.preventDefault();
+    DiscourseURL.routeTo(this.settings.href);
+    return false;
+  }
+
 });

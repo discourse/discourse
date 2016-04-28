@@ -1,3 +1,4 @@
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import { createWidget } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon';
 import { h } from 'virtual-dom';
@@ -70,7 +71,7 @@ export default createWidget('link', {
   },
 
   click(e) {
-    if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
+    if (wantsNewWindow(e)) { return; }
     e.preventDefault();
 
     if (this.attrs.action) {
