@@ -229,7 +229,7 @@ const User = RestModel.extend({
            ua.action_type === UserAction.TYPES.topics;
   },
 
-  @computed("groups.@each")
+  @computed("groups.[]")
   displayGroups() {
     const groups = this.get('groups');
     const filtered = groups.filter(group => {

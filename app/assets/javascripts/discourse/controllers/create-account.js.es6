@@ -127,7 +127,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       failed: true,
       reason: I18n.t('user.email.invalid')
     });
-  }.property('accountEmail', 'rejectedEmails.@each'),
+  }.property('accountEmail', 'rejectedEmails.[]'),
 
   emailValidated: function() {
     return this.get('authOptions.email') === this.get("accountEmail") && this.get('authOptions.email_valid');
@@ -326,7 +326,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       ok: true,
       reason: I18n.t('user.password.ok')
     });
-  }.property('accountPassword', 'rejectedPasswords.@each', 'accountUsername', 'accountEmail', 'isDeveloper'),
+  }.property('accountPassword', 'rejectedPasswords.[]', 'accountUsername', 'accountEmail', 'isDeveloper'),
 
   @on('init')
   fetchConfirmationValue() {

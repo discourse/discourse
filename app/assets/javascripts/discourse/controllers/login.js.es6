@@ -27,7 +27,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   **/
   hasAtLeastOneLoginButton: function() {
     return Em.get("Discourse.LoginMethod.all").length > 0;
-  }.property("Discourse.LoginMethod.all.@each"),
+  }.property("Discourse.LoginMethod.all.[]"),
 
   loginButtonText: function() {
     return this.get('loggingIn') ? I18n.t('login.logging_in') : I18n.t('login.title');
