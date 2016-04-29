@@ -12,7 +12,7 @@
 
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 
-Create your new Droplet. You will receive an email with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
+Create your new Droplet. You will receive an email with the root password. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
 # Access Your Cloud Server
 
@@ -20,7 +20,7 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
     ssh root@192.168.1.1
 
-You will be asked for permission to connect, type `yes`, then enter the root password from the email DigitalOcean sent you when the server was set up. You may be prompted to change the root password, too.
+Enter the root password from the email DigitalOcean sent you when the server was set up. You may be prompted to change the root password, too.
 
 <img src="https://www.discourse.org/images/install/15/ssh-login-terminal.png" width="600px">
 
