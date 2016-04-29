@@ -5,10 +5,10 @@ export default Em.Component.extend({
     return I18n.t(this.get('labelKey'));
   }.property('labelKey'),
 
-  click() {
+  change() {
     const warning = this.get('warning');
 
-    if (warning && !this.get('checked')) {
+    if (warning && this.get('checked')) {
       this.sendAction('warning');
       return false;
     }
