@@ -6,7 +6,7 @@ var windowOpen,
     win,
     redirectTo;
 
-module("lib:click-track", {
+module("lib:click-track-profile-page", {
   setup: function() {
 
     // Prevent any of these tests from navigating away
@@ -17,22 +17,18 @@ module("lib:click-track", {
     sandbox.stub(win, "focus");
 
     fixture().html(
-      `<div id="topic" data-topic-id="1337">
-        <article data-post-id="42" data-user-id="3141">
-          <a href="http://www.google.com">google.com</a>
-          <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
-          <a id="with-badge" data-user-id="314" href="http://www.google.com">google.com<span class="badge">1</span></a>
-          <a id="with-badge-but-not-mine" href="http://www.google.com">google.com<span class="badge">1</span></a>
-          <div class="onebox-result">
-            <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
-            <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
-          </div>
-          <a class="no-track-link" href="http://www.google.com">google.com</a>
-          <a id="same-site" href="http://discuss.domain.com">forum</a>
-          <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
-          <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
-        </article>
-      </div>`);
+      `<p class="excerpt" data-post-id="42" data-topic-id="1337" data-user-id="3141">
+        <a href="http://www.google.com">google.com</a>
+        <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+        <div class="onebox-result">
+          <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
+          <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
+        </div>
+        <a class="no-track-link" href="http://www.google.com">google.com</a>
+        <a id="same-site" href="http://discuss.domain.com">forum</a>
+        <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
+        <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
+      </p>`);
   }
 });
 
@@ -94,28 +90,6 @@ asyncTestDiscourse("restores the href after a while", function() {
     start();
     equal(fixture('a').attr('href'), "http://www.google.com");
   }, 75);
-});
-
-var badgeClickCount = function(id, expected) {
-  track(generateClickEventOn('#' + id));
-  var $badge = $('span.badge', fixture('#' + id).first());
-  equal(parseInt($badge.html(), 10), expected);
-};
-
-test("does not update badge clicks on my own link", function() {
-  sandbox.stub(Discourse.User, 'currentProp').withArgs('id').returns(314);
-  badgeClickCount('with-badge', 1);
-});
-
-test("does not update badge clicks in my own post", function() {
-  sandbox.stub(Discourse.User, 'currentProp').withArgs('id').returns(3141);
-  badgeClickCount('with-badge-but-not-mine', 1);
-});
-
-test("updates badge counts correctly", function() {
-  badgeClickCount('inside-onebox', 1);
-  badgeClickCount('inside-onebox-forced', 2);
-  badgeClickCount('with-badge', 2);
 });
 
 var trackRightClick = function() {
