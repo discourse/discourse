@@ -13,7 +13,7 @@
   {{/if}}
   {{#if topic.tags}}
     <div class='discourse-tags'>
-    {{#each tag in topic.visibleListTags}}
+    {{#each topic.visibleListTags as |tag|}}
       {{discourse-tag tag}}
     {{/each}}
     </div>

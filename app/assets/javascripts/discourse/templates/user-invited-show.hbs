@@ -45,7 +45,7 @@
               <th colspan="6">{{i18n 'user.invited.sent'}}</th>
             {{/if}}
           </tr>
-          {{#each invite in model.invites}}
+          {{#each model.invites as |invite|}}
             <tr>
               {{#if invite.user}}
                 <td>

@@ -88,7 +88,7 @@
 
             {{#if publicUserFields}}
               <div class="public-user-fields">
-                {{#each uf in publicUserFields}}
+                {{#each publicUserFields as |uf|}}
                   {{#if uf.value}}
                     <div class="public-user-field {{uf.field.dasherized_name}}">
                       <span class="user-field-name">{{uf.field.name}}</span>:
@@ -139,7 +139,7 @@
           {{#if model.displayGroups}}
             <dt>{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
             <dd class='groups'>
-              {{#each group in model.displayGroups}}
+              {{#each model.displayGroups as |group|}}
                 <span>{{#link-to 'group' group class="group-link"}}{{group.name}}{{/link-to}}</span>
               {{/each}}
             </dd>

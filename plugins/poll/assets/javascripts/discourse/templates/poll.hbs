@@ -8,7 +8,7 @@
       {{/if}}
     {{else}}
       <ul>
-        {{#each option in poll.options}}
+        {{#each poll.options as |option|}}
           {{poll-option option=option toggle="toggleOption"}}
         {{/each}}
       </ul>

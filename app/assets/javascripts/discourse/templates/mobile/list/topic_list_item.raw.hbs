@@ -29,7 +29,7 @@
 
       {{#if context.topic.tags}}
         <div class='discourse-tags'>
-        {{#each tag in context.topic.visibleListTags}}
+        {{#each context.topic.visibleListTags as |tag|}}
           {{discourse-tag tag}}
         {{/each}}
         </div>

@@ -18,7 +18,7 @@
       <td>{{text-field value=filter.skipped_reason placeholderKey="admin.email.logs.filters.skipped_reason_placeholder"}}</td>
     </tr>
 
-    {{#each l in model}}
+    {{#each model as |l|}}
       <tr>
         <td>{{format-date l.created_at}}</td>
         <td>

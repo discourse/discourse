@@ -10,7 +10,7 @@
       {{#if model.length}}
         <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
 
-          {{#each ic in model itemController="directory-item"}}
+          {{#each model itemController="directory-item"}}
             <div class="user {{if ic.me 'me'}}">
               {{#with ic.model as |it|}}
                 {{user-info user=it.user}}

@@ -21,7 +21,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each plugin in controller}}
+      {{#each controller as |plugin|}}
         <tr>
           <td>
             {{#if plugin.url}}
