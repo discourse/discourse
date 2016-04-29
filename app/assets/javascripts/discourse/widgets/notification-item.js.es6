@@ -93,11 +93,10 @@ createWidget('notification-item', {
     const contents = new RawHtml({ html: `<div>${Discourse.Emoji.unescape(this.text(notificationType, notName))}</div>` });
     const href = this.url();
     const alt = I18n.t(`notifications.alt.${notName}`);
-    return href ? h('a', { attributes: { href, alt } }, contents) : contents;
+    return href ? h('a', { attributes: { href, alt, 'data-auto-route': true } }, contents) : contents;
   },
 
   click(e) {
-
     this.attrs.set('read', true);
     const id = this.attrs.id;
     Discourse.setTransientHeader("Discourse-Clear-Notifications", id);
