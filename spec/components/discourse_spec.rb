@@ -85,12 +85,23 @@ describe Discourse do
 
   end
 
-  context "#enable_readonly_mode" do
+  context ".enable_readonly_mode" do
 
     it "adds a key in redis and publish a message through the message bus" do
-      $redis.expects(:set).with(Discourse.readonly_mode_key, 1)
-      MessageBus.expects(:publish).with(Discourse.readonly_channel, true)
-      Discourse.enable_readonly_mode
+      begin
+        readonly_mode_key = Discourse.readonly_mode_key
+
+        message = MessageBus.track_publish do
+          Discourse.enable_readonly_mode
+        end.first
+
+        expect(message.channel).to eq(Discourse.readonly_channel)
+        expect(message.data).to eq(true)
+        expect($redis.get(readonly_mode_key)).to eq("1")
+        expect($redis.ttl(readonly_mode_key)).to eq(Discourse.readonly_mode_key_ttl)
+      ensure
+        $redis.del(readonly_mode_key)
+      end
     end
 
   end
