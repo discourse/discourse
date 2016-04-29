@@ -11,6 +11,11 @@ export default createWidget('home-logo', {
     href: '/'
   },
 
+  href() {
+    const href = this.settings.href;
+    return (typeof href === "function") ? href() : href;
+  },
+
   logo() {
     const { siteSettings } = this;
     const mobileView = this.site.mobileView;
@@ -38,13 +43,13 @@ export default createWidget('home-logo', {
   },
 
   html() {
-    return h('a', { attributes: { href: this.settings.href } }, this.logo());
+    return h('a', { attributes: { href: this.href(), 'data-auto-route': true } }, this.logo());
   },
 
   click(e) {
     if (wantsNewWindow(e)) { return false; }
     e.preventDefault();
-    DiscourseURL.routeTo(this.settings.href);
+    DiscourseURL.routeTo(this.href());
     return false;
   }
 
