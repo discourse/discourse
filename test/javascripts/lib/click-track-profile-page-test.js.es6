@@ -17,7 +17,19 @@ module("lib:click-track-profile-page", {
     sandbox.stub(win, "focus");
 
     fixture().html(
-      `<p class="excerpt" data-post-id="42" data-topic-id="1337" data-user-id="3141">
+      `<p class="excerpt first" data-post-id="42" data-topic-id="1337" data-user-id="3141">
+        <a href="http://www.google.com">google.com</a>
+        <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+        <div class="onebox-result">
+          <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
+          <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
+        </div>
+        <a class="no-track-link" href="http://www.google.com">google.com</a>
+        <a id="same-site" href="http://discuss.domain.com">forum</a>
+        <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
+        <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
+      </p>
+      <p class="excerpt second" data-post-id="24" data-topic-id="7331" data-user-id="1413">
         <a href="http://www.google.com">google.com</a>
         <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
         <div class="onebox-result">
@@ -92,21 +104,27 @@ asyncTestDiscourse("restores the href after a while", function() {
   }, 75);
 });
 
-var trackRightClick = function() {
-  var clickEvent = generateClickEventOn('a');
+var trackRightClick = function(target) {
+  var clickEvent = generateClickEventOn(target);
   clickEvent.which = 3;
   return track(clickEvent);
 };
 
 test("right clicks change the href", function() {
-  ok(trackRightClick());
+  ok(trackRightClick('a'));
   equal(fixture('a').first().prop('href'), "http://www.google.com/");
 });
 
 test("right clicks are tracked", function() {
   Discourse.SiteSettings.track_external_right_clicks = true;
-  trackRightClick();
-  equal(fixture('a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337");
+  trackRightClick('a');
+  equal(fixture('.first a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337");
+});
+
+test("right clicks are tracked for second excerpt", function() {
+  Discourse.SiteSettings.track_external_right_clicks = true;
+  trackRightClick('.second a');
+  equal(fixture('.second a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331");
 });
 
 test("preventDefault is not called for right clicks", function() {
@@ -168,8 +186,21 @@ test("tracks custom urls when opening in another window", function() {
   ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337', '_blank'));
 });
 
+test("tracks custom urls on second excerpt when opening in another window", function() {
+  var clickEvent = generateClickEventOn('.second a');
+  sandbox.stub(Discourse.User, "currentProp").withArgs('external_links_in_new_tab').returns(true);
+  ok(!track(clickEvent));
+  ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331', '_blank'));
+});
+
 test("tracks custom urls when opening in another window", function() {
   var clickEvent = generateClickEventOn('a');
   ok(!track(clickEvent));
   ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337'));
+});
+
+test("tracks custom urls on second excerpt when opening in another window", function() {
+  var clickEvent = generateClickEventOn('.second a');
+  ok(!track(clickEvent));
+  ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331'));
 });
