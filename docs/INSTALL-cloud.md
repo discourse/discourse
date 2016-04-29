@@ -1,6 +1,6 @@
 **Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell using our [Discourse Docker image][dd]. We recommend [DigitalOcean][do], but these steps will work on any Docker-compatible cloud provider or local server.
 
-# Create New Cloud Server
+### Create New Cloud Server
 
 [Sign up for DigitalOcean][do], update billing info, then create your new cloud server.
 
@@ -14,7 +14,7 @@
 
 Create your new Droplet. You will receive an email with the root password. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
-# Access Your Cloud Server
+### Access Your Cloud Server
 
 Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
@@ -24,13 +24,13 @@ Enter the root password from the email DigitalOcean sent you when the server was
 
 <img src="https://www.discourse.org/images/install/15/ssh-login-terminal.png" width="600px">
 
-# Install Docker / Git
+### Install Docker / Git
 
     wget -qO- https://get.docker.com/ | sh
 
 This command installs the latest versions of Docker and Git on your server. Alternately, you can manually [install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and the [Docker package for your OS](https://docs.docker.com/installation/).
 
-# Install Discourse
+### Install Discourse
 
 Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd] into it:
 
@@ -41,7 +41,7 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
 
 You will need to be root through the rest of the setup and bootstrap process.
 
-# Edit Discourse Configuration
+### Edit Discourse Configuration
 
 Launch the setup tool at
 
@@ -57,7 +57,7 @@ Answer the following questions when prompted:
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse.
 
-# Email Is Important
+### Email Is Important
 
 **Email is CRITICAL for account creation and notifications in Discourse. If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!**
 
@@ -69,13 +69,13 @@ This will generate an `app.yml` configuration file on your behalf, and then kick
 
 If you need to change or fix your email settings after bootstrapping, edit your `app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
 
-# Start Discourse
+### Start Discourse
 
  Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
 
 <img src="https://www.discourse.org/images/install/15/browser-discourse-installed.png">
 
-# Register New Account and Become Admin
+### Register New Account and Become Admin
 
 Register a new admin account using one of the email addresses you entered before bootstrapping.
 
@@ -87,7 +87,7 @@ You should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This
 
 (If you are still unable to register a new admin account via email, see [Create Admin Account from Console](https://meta.discourse.org/t/create-admin-account-from-console/17274), but note that *you will have a broken site* unless you get email working.)
 
-# Post-Install Maintenance
+### Post-Install Maintenance
 
 We strongly suggest you:
 
@@ -116,7 +116,7 @@ Options:
     --docker-args              Extra arguments to pass when running docker
 ```
 
-# Add More Discourse Features
+### Add More Discourse Features
 
 Do you want...
 
