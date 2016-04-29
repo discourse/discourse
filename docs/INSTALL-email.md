@@ -4,39 +4,29 @@ We strongly recommend using a dedicated email service. Email server setup and ma
 
 The following are template configurations for email service providers who offer generous free plans that work for most communities.
 
-Use these values when you [edit your Discourse `app.yml` configuration file](https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud.md#edit-discourse-configuration):
+**Please note that in any email provider, you _must_ verify and use the subdomain, e.g. `discourse.example.com`. If you verify the domain only, e.g. `example.com`, mail will not be configured correctly.**
+
+Enter these values when prompted by `./discourse-setup` per the [install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud.md#edit-discourse-configuration):
 
 #### [SparkPost][sp] (100k emails/month)
 
-```yml
-DISCOURSE_SMTP_ADDRESS: smtp.sparkpostmail.com
-DISCOURSE_SMTP_USER_NAME: SMTP_Injection
-DISCOURSE_SMTP_PASSWORD: [Any API key with Send via SMTP permission]
-```
-
-If not using **the exact** domain you verified (e.g. you're using a subdomain of it), you must change the default `from` email to match the sending domain. Uncomment (and update with your sending domain) this line in `app.yml`:
-
-```yml
-- exec: rails r "SiteSetting.notification_email='info@unconfigured.discourse.org'"
-```
+    SMTP server address? smtp.sparkpostmail.com
+    SMTP user name?      SMTP_Injection
+    SMTP password?       [Any API key with Send via SMTP permission]
 
 #### [SendGrid][sg] (12k emails/month)
 
-```yml
-DISCOURSE_SMTP_ADDRESS: smtp.sendgrid.net
-DISCOURSE_SMTP_USER_NAME: apikey
-DISCOURSE_SMTP_PASSWORD: [SendGrid API Key]
-```
+    SMTP server address? smtp.sendgrid.net
+    SMTP user name?      apikey
+    SMTP password?       [SendGrid API Key]
+
 We recommend creating an [API Key][sg2] instead of using your SendGrid username and password.
 
 #### [Mailgun][gun] (10k emails/month)
 
-
-```yml
-DISCOURSE_SMTP_ADDRESS: smtp.mailgun.org
-DISCOURSE_SMTP_USER_NAME: [SMTP credentials for your domain under Mailgun domains tab]
-DISCOURSE_SMTP_PASSWORD: [SMTP credentials for your domain under Mailgun domains tab]
-```
+    SMTP server address? smtp.mailgun.org
+    SMTP user name?      [SMTP credentials for your domain under domains tab]
+    SMTP password?       [SMTP credentials for your domain under domains tab]
 
 #### [Mailjet][jet] (6k emails/month)
 
