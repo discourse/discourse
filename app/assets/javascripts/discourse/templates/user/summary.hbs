@@ -20,7 +20,7 @@
     <h3 class='stats-title'>{{i18n "user.summary.top_replies"}}</h3>
     {{#if model.replies.length}}
       <ul>
-        {{#each reply in model.replies}}
+        {{#each model.replies as |reply|}}
           <li>
             <span class='topic-info'>
               {{format-date reply.createdAt format="tiny" noTitle="true"}}
@@ -45,7 +45,7 @@
     <h3 class='stats-title'>{{i18n "user.summary.top_topics"}}</h3>
     {{#if model.topics.length}}
       <ul>
-        {{#each topic in model.topics}}
+        {{#each model.topics as |topic|}}
           <li>
             <span class='topic-info'>
               {{format-date topic.createdAt format="tiny" noTitle="true"}}
@@ -73,7 +73,7 @@
     <h3 class='stats-title'>{{i18n "user.summary.top_links"}}</h3>
     {{#if model.links.length}}
       <ul>
-        {{#each link in model.links}}
+        {{#each model.links as |link|}}
           <li>
             <a class='domain'
                href='{{unbound link.url}}'
@@ -96,7 +96,7 @@
     <h3 class='stats-title'>{{i18n "user.summary.most_liked_by"}}</h3>
     {{#if model.most_liked_by_users.length}}
       <ul>
-        {{#each user in model.most_liked_by_users}}
+        {{#each model.most_liked_by_users as |user|}}
           <li>
             {{#user-info user=user}}
               {{fa-icon "heart"}}
@@ -113,7 +113,7 @@
 
 <div class='top-section badges-section'>
   <h3 class='stats-title'>{{i18n "user.summary.top_badges"}}</h3>
-  {{#each badge in model.badges}}
+  {{#each model.badges as |badge|}}
     {{badge-card badge=badge count=badge.count navigateOnClick="true" username=user.username_lower}}
   {{else}}
     <p>{{i18n "user.summary.no_badges"}}</p>

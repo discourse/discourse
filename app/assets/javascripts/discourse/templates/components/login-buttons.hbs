@@ -1,3 +1,3 @@
-{{#each b in buttons}}
+{{#each buttons as |b|}}
   <button {{bind-attr class=":btn :btn-social b.name"}} {{action "externalLogin" b}}>{{b.title}}</button>
 {{/each}}

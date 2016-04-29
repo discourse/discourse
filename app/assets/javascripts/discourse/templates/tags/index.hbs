@@ -11,7 +11,7 @@
 </div>
 
 <div class='tag-list'>
-  {{#each tag in sortedTags}}
+  {{#each sortedTags as |tag|}}
     <div class='tag-box'>
       {{discourse-tag tag.id}} <span class='tag-count'>x {{tag.count}}</span>
     </div>

@@ -37,7 +37,7 @@
       <th>{{model.yaxis}}</th>
     </tr>
 
-    {{#each row in model.dataReversed}}
+    {{#each model.dataReversed as |row|}}
       <tr>
         <td>{{row.x}}</td>
         <td>

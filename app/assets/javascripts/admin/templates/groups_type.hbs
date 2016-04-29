@@ -2,7 +2,7 @@
   <div class='content-list span6'>
     <h3>{{i18n 'admin.groups.edit'}}</h3>
     <ul>
-      {{#each group in controller}}
+      {{#each controller as |group|}}
         <li>
           {{#link-to "adminGroup" group.type group.name}}{{group.name}}
             {{#if group.userCountDisplay}}

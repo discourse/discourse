@@ -128,7 +128,7 @@
 
 {{#if userFields}}
   <section class='details'>
-    {{#each uf in userFields}}
+    {{#each userFields as |uf|}}
       <div class='display-row'>
         <div class='field'>{{uf.name}}</div>
         <div class='value'>

@@ -4,7 +4,7 @@
     <td>{{delivery_method}}</td>
   </tr>
 
-  {{#each s in model.settings}}
+  {{#each model.settings as |s|}}
     <tr>
       <th style='width: 25%'>{{s.name}}</th>
       <td>{{s.value}}</td>

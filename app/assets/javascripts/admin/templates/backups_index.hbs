@@ -13,7 +13,7 @@
       </div>
     </th>
   </tr>
-  {{#each backup in model}}
+  {{#each model as |backup|}}
     <tr>
       <td>{{backup.filename}}</td>
       <td>{{human-size backup.size}}</td>

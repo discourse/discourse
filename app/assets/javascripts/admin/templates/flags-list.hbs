@@ -42,7 +42,7 @@
           <td class='flaggers'>
             <table>
               <tbody>
-                {{#each flagger in flaggedPost.flaggers}}
+                {{#each flaggedPost.flaggers as |flagger|}}
                   <tr>
                     <td class='avatar'>
                       {{#link-to 'adminUser' flagger.user}}
@@ -67,7 +67,7 @@
             {{#if adminOldFlagsView}}
               <table>
                 <tbody>
-                  {{#each flagger in flaggedPost.flaggers}}
+                  {{#each flaggedPost.flaggers as |flagger|}}
                     <tr>
                       <td class='avatar'>
                         {{#link-to 'adminUser' flagger.disposedBy}}
@@ -101,7 +101,7 @@
           </tr>
         {{/if}}
 
-        {{#each c in flaggedPost.conversations}}
+        {{#each flaggedPost.conversations as |c|}}
           <tr class='message'>
             <td></td>
             <td colspan="3">
