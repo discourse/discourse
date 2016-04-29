@@ -1,4 +1,4 @@
-## Recommended Email Providers for Discourse
+### Recommended Email Providers for Discourse
 
 We strongly recommend using a dedicated email service. Email server setup and maintenance is _very_ difficult even for experienced system administrators, and getting any part of the complex required email setup wrong means your email won't be delivered, or worse, delivered erratically.
 
