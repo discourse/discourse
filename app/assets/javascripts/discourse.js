@@ -8,7 +8,7 @@ define('ember', ['exports'], function(__exports__) {
 
 var _pluginCallbacks = [];
 
-window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
+window.Discourse = Ember.Application.extend(Discourse.Ajax, {
   rootElement: '#main',
   _docTitle: document.title,
   __TAGS_INCLUDED__: true,
@@ -168,7 +168,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       return this.get("currentAssetVersion");
     }
   })
-});
+}).create();
 
 function RemovedObject(name) {
   this._removedName = name;

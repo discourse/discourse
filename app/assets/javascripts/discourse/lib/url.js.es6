@@ -2,7 +2,7 @@
 let _jumpScheduled = false;
 const rewrites = [];
 
-const DiscourseURL = Ember.Object.createWithMixins({
+const DiscourseURL = Ember.Object.extend({
 
   // Used for matching a topic
   TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
@@ -327,7 +327,6 @@ const DiscourseURL = Ember.Object.createWithMixins({
       }
     });
   }
-
-});
+}).create();
 
 export default DiscourseURL;
