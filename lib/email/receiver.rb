@@ -56,6 +56,9 @@ module Email
     end
 
     def process_internal
+      # temporarily disable processing automated replies to VERP
+      return if @mail.destinations.any? { |to| to[/\+verp-\h{32}@/i] }
+
       raise BouncedEmailError  if @mail.bounced? && !@mail.retryable?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
