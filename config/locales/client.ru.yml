@@ -138,8 +138,8 @@ ru:
           few: "%{count} года спустя"
           many: "%{count} лет спустя"
           other: "%{count} лет спустя"
-      previous_month: 'Предыдущий Месяц'
-      next_month: 'Следующий Месяц'
+      previous_month: 'Предыдущий месяц'
+      next_month: 'Следующий месяц'
     share:
       topic: 'Поделиться ссылкой на эту тему'
       post: 'Ссылка на сообщение №%{postNumber}'
@@ -233,7 +233,7 @@ ru:
       other: "{{count}} букв"
     suggested_topics:
       title: "Похожие темы"
-      pm_title: "Похожие Сообщения"
+      pm_title: "Похожие сообщения"
     about:
       simple_title: "Информация"
       title: "Информация про %{title}"
@@ -367,6 +367,12 @@ ru:
         many: "%{count} пользователей"
         other: "%{count} пользователей"
     groups:
+      empty:
+        posts: "Участники этой группы не отправили ни одного сообщения"
+        members: "В этой группе нет участников"
+        mentions: "Упоминаний этой группы нет"
+        messages: "Для этой группы нет сообщений"
+        topics: "Участниками этой группы не создано ни одной темы"
       add: "Добавить"
       selector_placeholder: "Добавить участников"
       owner: "владелец"
@@ -379,8 +385,10 @@ ru:
       members: "Участники"
       topics: "Темы"
       posts: "Сообщения"
+      mentions: "Упоминания"
       messages: "Сообщения"
       alias_levels:
+        title: "Кто может отправлять сообщения и @упоминать эту группу?"
         nobody: "Никто"
         only_admins: "Только администраторы"
         mods_and_admins: "Только модераторы и администраторы"
@@ -394,6 +402,11 @@ ru:
           title: "Отслеживание"
         tracking:
           title: "Следить"
+        regular:
+          title: "Уведомлять"
+          description: "Вам придёт уведомление, если кто-нибудь упомянет ваш @псевдоним или ответит вам."
+        muted:
+          title: "Выключено"
     user_action_groups:
       '1': "Выразил симпатий"
       '2': "Получил симпатий"
@@ -540,7 +553,6 @@ ru:
         set_password: "Установить пароль"
       change_about:
         title: "Изменить информацию обо мне"
-        error: "При изменении значения произошла ошибка."
       change_username:
         title: "Изменить псевдоним"
         confirm: "Если вы измените свой псевдоним, то все существующие цитаты ваших сообщений и упоминания вас по @псевдониму в чужих сообщениях перестанут ссылаться на вас. Вы точно хотите изменить псевадоним?"
@@ -617,6 +629,7 @@ ru:
       website: "Веб-сайт"
       email_settings: "E-mail"
       like_notification_frequency:
+        title: "Уведомлять при получении симпатии"
         always: "Всегда"
         never: "Никогда"
       email_previous_replies:
@@ -951,7 +964,6 @@ ru:
       link_description: "введите описание ссылки"
       link_dialog_title: "Вставить ссылку"
       link_optional_text: "текст ссылки"
-      link_placeholder: "Пример: http://example.com \"текст ссылки\""
       quote_title: "Цитата"
       quote_text: "Впишите текст цитаты сюда"
       code_title: "Текст \"как есть\" (без применения форматирования)"
@@ -989,6 +1001,11 @@ ru:
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} и ещё 1</span> {{description}}</p>"
+        few: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} и ещё {{count}}</span> {{description}}</p>"
+        many: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} и ещё {{count}}</span> {{description}}</p>"
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} и ещё {{count}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='приглашен в тему' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1410,7 +1427,6 @@ ru:
         create: "К сожалению, не удалось создать сообщение из-за ошибки. Попробуйте еще раз."
         edit: "К сожалению, не удалось изменить сообщение. Попробуйте еще раз."
         upload: "К сожалению, не удалось загрузить файл. Попробуйте еще раз."
-        attachment_too_large: "Файл, который вы пытаетесь загрузить, слишком большой (максимальный разрешенный размер {{max_size_kb}}КБ)."
         file_too_large: "К сожалению, файл, который вы пытаетесь загрузить, слишком большой (максимально допустимый размер {{max_size_kb}}kb)"
         too_many_uploads: "К сожалению, за один раз можно загрузить только одно изображение."
         too_many_dragged_and_dropped_files: "За один раз можно перетянуть не более 10 файлов."
@@ -1597,7 +1613,7 @@ ru:
     category:
       can: 'может&hellip; '
       none: '(вне раздела)'
-      all: 'Все категории'
+      all: 'Все разделы'
       choose: 'Выберете раздел&hellip;'
       edit: 'изменить'
       edit_long: "Изменить"
@@ -1609,7 +1625,7 @@ ru:
       create: 'Создать Раздел'
       create_long: 'Создать новый раздел'
       save: 'Сохранить раздел'
-      slug: 'Ссылка Категории'
+      slug: 'Ссылка на раздел'
       slug_placeholder: '(Опция) дефисы в url'
       creation_error: При создании нового раздела возникла ошибка.
       save_error: При сохранении раздела возникла ошибка.
@@ -1630,7 +1646,7 @@ ru:
       change_in_category_topic: "Изменить описание"
       already_used: 'Цвет уже используется другим разделом'
       security: "Безопасность"
-      special_warning: "Внимание: данная категория была предустановлена и настройки безопасности не могут быть изменены. Если не хотите использовать эту категорию, удалите ее вместо изменения."
+      special_warning: "Внимание: данный раздел был предустановлен и настройки безопасности не могут быть изменены. Если не хотите использовать этот раздел, удалите его вместо изменения."
       images: "Изображения"
       auto_close_label: "Закрыть тему через:"
       auto_close_units: "часов"
@@ -2039,14 +2055,6 @@ ru:
           backups: "Резервные копии"
           logs: "Журнал событий"
         none: "Нет доступных резервных копий"
-        read_only:
-          enable:
-            title: "Включить режим \"только для чтения\""
-            label: "Включить режим \"только для чтения\""
-            confirm: "Вы уверены, что хотите включить режим \"только для чтения\"?"
-          disable:
-            title: "Выключить режим \"только для чтения\""
-            label: "Выключить режим \"только для чтения\""
         logs:
           none: "Пока нет сообщений в журнале регистрации..."
         columns:
@@ -2745,7 +2753,9 @@ ru:
         mark_tracking: '<b>m</b>, <b>t</b> Отслеживать тему'
         mark_watching: '<b>m</b>, <b>w</b> Наблюдать за темой'
     badges:
+      others_count: "Другие с этой наградой (%{count})"
       title: Награды
+      multiple_grant: "Выдаётся многократно"
       badge_count:
         one: "1 награда"
         few: "%{count} награды"

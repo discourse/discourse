@@ -499,7 +499,6 @@ gl:
         set_password: "Estabelecer o contrasinal"
       change_about:
         title: "Cambiar «Verbo de min»"
-        error: "Produciuse un erro ao cambiar este valor."
       change_username:
         title: "Cambiar o nome do usuario"
         confirm: "Se cambias o nome de usuario, todas as citas anteriores das túas publicacións e as mencións ao teu @nome romperanse. Estás totalmente seguro?"
@@ -881,7 +880,6 @@ gl:
       link_description: "introducir a descrición da ligazón aquí"
       link_dialog_title: "Inserir hiperligazón"
       link_optional_text: "título opcional"
-      link_placeholder: "http://exemplo.com \"texto opcional\""
       quote_title: "Citación"
       quote_text: "Citación"
       code_title: "Texto preformatado"
@@ -1333,7 +1331,6 @@ gl:
         create: "Sentímolo pero produciuse un erro creando a publicación. Téntao de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Téntao de novo."
         upload: "Sentímolo pero produciuse un erro enviando a publicación. Téntao de novo."
-        attachment_too_large: "Sentímolo pero o ficheiro é demasiado grande (o tamaño máximo son {{max_size_kb}}kb)."
         file_too_large: "Sentímolo pero o ficheiro é demasiado grande (o tamaño máximo son {{max_size_kb}}kb)"
         too_many_uploads: "Sentímolo pero só podes enviar un ficheiro de cada vez."
         too_many_dragged_and_dropped_files: "Sentímolo pero só podes arrastrar e soltar até 10 ficheiros dunha vez."
@@ -1909,14 +1906,6 @@ gl:
           backups: "Copias de seguranza"
           logs: "Rexistros"
         none: "Non hai copia de seguranza dispoñíbel"
-        read_only:
-          enable:
-            title: "Activar o modo de só-lectura"
-            label: "Activar modo de só-lectura"
-            confirm: "Confirmas a activación do modo de só-lectura?"
-          disable:
-            title: "Desactivar o modo de só-lectura"
-            label: "Desactivar modo de só-lectura"
         logs:
           none: "Aínda non hai rexistros..."
         columns:

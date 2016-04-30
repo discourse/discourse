@@ -469,7 +469,6 @@ zh_CN:
         set_password: "设置密码"
       change_about:
         title: "更改个人简介"
-        error: "改变该值时出现错误。"
       change_username:
         title: "修改用户名"
         confirm: "如果你修改用户名，所有引用你的帖子和@你的链接都将失效。你真的确定要这么做么？"
@@ -872,7 +871,6 @@ zh_CN:
       link_description: "在此输入链接描述"
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
-      link_placeholder: "http://example.com \"可选文字\""
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
@@ -1301,7 +1299,6 @@ zh_CN:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
-        attachment_too_large: "抱歉，你上传的附件太大了（最大不能超过 {{max_size_kb}}kb）。"
         file_too_large: "抱歉，你上传的附件太大了（最大限制 {{max_size_kb}}kb）。"
         too_many_uploads: "抱歉，你只能一次上传一张图片。"
         too_many_dragged_and_dropped_files: "抱歉，你一次只能拖放最多 10 个文件。"
@@ -1844,14 +1841,6 @@ zh_CN:
           backups: "备份"
           logs: "日志"
         none: "无可用备份"
-        read_only:
-          enable:
-            title: "启用只读模式"
-            label: "启用只读模式"
-            confirm: "你确定要打开只读模式吗？"
-          disable:
-            title: "禁用只读模式"
-            label: "关闭只读模式"
         logs:
           none: "暂无日志"
         columns:

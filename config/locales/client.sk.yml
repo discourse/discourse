@@ -525,7 +525,6 @@ sk:
         set_password: "Nastaviť heslo"
       change_about:
         title: "Upraviť O mne"
-        error: "Pri úprave hodnoty nastala chyba"
       change_username:
         title: "Zmeniť užívateľské meno"
         confirm: "Ak si zmeníte vaše užívateľské meno, všetky predchádajúce cítacie vašich príspevkov a @zmienok prestanú platiť. Ste si určite istý, že to chcete?"
@@ -903,7 +902,6 @@ sk:
       link_description: "tu zadaj popis odkazu"
       link_dialog_title: "Vložte hyperlink"
       link_optional_text: "nepovinný názov"
-      link_placeholder: "http://example.com \"voliteľný text\""
       quote_title: "Úvodzovky"
       quote_text: "Úvodzovky"
       code_title: "Preformátovaný text"
@@ -1369,7 +1367,6 @@ sk:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
         upload: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
-        attachment_too_large: "Ľutujeme, súbor, ktorý sa pokúšate nahrať, je príliš veľký (maximálna veľkosť je {{max_size_kb}}kb)."
         file_too_large: "Ľutujeme, súbor, ktorý sa pokúšate nahrať je príliš veľký (maximálna veľkosť je {{max_size_kb}}kb)"
         too_many_uploads: "Ľutujeme, ale naraz je možné nahrať len jeden súbor."
         too_many_dragged_and_dropped_files: "Prepáčte, naraz môžte presunúť maximálne 10 súborov."
@@ -1970,14 +1967,6 @@ sk:
           backups: "Zálohy"
           logs: "Logy"
         none: "Nie je dostupná žiadna záloha."
-        read_only:
-          enable:
-            title: "Povoliť mód len na čítanie."
-            label: "Povoliť mód len na čítanie."
-            confirm: "Ste si istý, že chcete povoliť mód len na čítanie?"
-          disable:
-            title: "Zakázať mód len na čítanie"
-            label: "Zakázať mód len na čítanie"
         logs:
           none: "Zatiaľ žiadne logy..."
         columns:

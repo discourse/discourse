@@ -102,6 +102,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return isSaving ? I18n.t('saving') : I18n.t('save');
   },
 
+  reset() {
+    this.setProperties({
+      passwordProgress: null
+    });
+  },
+
   passwordProgress: null,
 
   actions: {

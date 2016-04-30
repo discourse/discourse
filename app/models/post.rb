@@ -40,6 +40,8 @@ class Post < ActiveRecord::Base
   has_one :post_search_data
   has_one :post_stat
 
+  has_one :incoming_email
+
   has_many :post_details
 
   has_many :post_revisions
@@ -578,8 +580,8 @@ class Post < ActiveRecord::Base
     result.group('date(posts.created_at)').order('date(posts.created_at)').count
   end
 
-  def self.private_messages_count_per_day(since_days_ago, topic_subtype)
-    private_posts.with_topic_subtype(topic_subtype).where('posts.created_at > ?', since_days_ago.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
+  def self.private_messages_count_per_day(start_date, end_date, topic_subtype)
+    private_posts.with_topic_subtype(topic_subtype).where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date).group('date(posts.created_at)').order('date(posts.created_at)').count
   end
 
   def reply_history(max_replies=100, guardian=nil)

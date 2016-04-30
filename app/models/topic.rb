@@ -288,7 +288,7 @@ class Topic < ActiveRecord::Base
   end
 
   def best_post
-    posts.order('score desc').limit(1).first
+    posts.order('score desc nulls last').limit(1).first
   end
 
   def has_flags?

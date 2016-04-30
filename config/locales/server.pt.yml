@@ -172,6 +172,8 @@ pt:
     private_posts: "Últimas mensagens privadas"
     group_posts: "Últimas mensagens em %{group_name}"
     group_mentions: "Últimas menções em %{group_name}"
+    user_posts: "Mensagens mais recentes criados por @%{username}"
+    user_topics: "Tópicos mais recentes criados por @%{username}"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   revert_version_same: "A versão atual é o mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
@@ -364,7 +366,7 @@ pt:
       create_like: "Atingiu o número máximo de gostos de hoje. Por favor espere %{time_left} antes de tentar novamente."
       create_bookmark: "Atingiu o número máximo de marcações de hoje. Por favor espere %{time_left} antes de tentar novamente."
       edit_post: "Atingiu o número máximo de edições de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      live_post_counts: "Tem estado a pedir contagens de mensagens em directo demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
+      live_post_counts: "Está a pedir por contagens de mensagens em tempo real demasiadamente depressa. Por favor espere %{time_left} antes de tentar outra vez."
       unsubscribe_via_email: "Atingiu o número máximo de cancelamentos de subscrições por email de hoje. Por favor espere %{time_left} antes de tentar novamente."
       topic_invitations_per_day: "Atingiu o número máximo de convites para tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
     hours:
@@ -763,7 +765,6 @@ pt:
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
     onebox_domains_whitelist: "Lista de domínios que permitem colocar em caixa única; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
     logo_url: "A imagem do logótipo no canto superior esquerdo do seu sítio, deve ter uma forma retangular. Quando deixada em branco, o texto do título do sítio será exibido."
-    digest_logo_url: "A imagem do logótipo alternativo utilizado no topo do resumo de email do seu sítio, deve ter uma forma retangular. Quando deixada em branco `logo_url` será utilizado."
     logo_small_url: "A pequena imagem do logótipo no canto superior esquerdo do seu sítio, deve ter uma forma quadrada, visível quando arrastado para baixo. Quando deixado em branco, um glifo de início será exibido."
     favicon_url: "Um favicon para o seu sítio, veja http://en.wikipedia.org/wiki/Favicon, para trabalhar corretamente sobre um CDN deve ser um png"
     mobile_logo_url: "A imagem do logótipo com posição fixa utilizada no canto superior esquerdo do seu sítio móvel deve ter uma forma quadrada. Quando deixado em branco, `logo_url` será utilizado. ex: http://exemplo.com/uploads/default/logo.png"
@@ -784,7 +785,6 @@ pt:
     polling_interval: "Quando não está a ocorrer uma solicitação ao servidor, com que frequência devem os clientes ligados requerer uma atualização, em milissegundos"
     anon_polling_interval: "Com que frequência os clientes não registados podem fazer solicitações ao servidor, em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
-    flags_required_to_hide_post: "Número de sinalizações que fazem com que uma mensagem seja automaticamente oculta e que uma MP seja enviada para o utilizador (0 para nunca)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que o utilizador deve esperar antes de poder editar uma mensagem oculta devido a sinalizações por parte da comunidade"
     max_topics_in_first_day: "O número máximo de tópicos que é o utilizador pode criar no seu primeiro dia no Fórum."
     max_replies_in_first_day: "Número máximo de mensagens que um utilizador pode criar no seu primeiro dia no Fórum."
@@ -850,7 +850,6 @@ pt:
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
     enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
     enable_sso_provider: "Implementar o protocolo do provedor SSO do Discourse no caminho /session/sso_provider, requer que sso_secret seja configurado"
-    sso_url: "URL da inscrição única"
     sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou  mais caracteres"
     sso_overrides_email: "Substitui o email local por um email de um sítio externo a partir de um SSO em cada início de sessão, e previne mudanças locais. (AVISO: podem ocorrer discrepâncias devido à normalização de emails locais) "
     sso_overrides_username: "Substitui nomes de utilizadores locais por nomes de utilizadores de sítios externos a partir de um SSO em cada início de sessão, e previne mudanças locais. (AVISO: podem ocorrer discrepâncias devido a diferenças no comprimento/requisitos do nome de utilizador)"
@@ -1101,7 +1100,6 @@ pt:
     enforce_square_emoji: "Forçar uma relação de aspecto quadrado para todos os emojis."
     approve_post_count: "A quantidade de mensagens de um novo utilizador ou utilizador básico que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
-    notify_about_queued_posts_after: "Se não houver mensagens que estiveram à espera de revisão por mais do que estas horas, um email será enviado para o email de contacto. Configure para 0 para desativar estes emails."
     default_email_digest_frequency: "Por defeito, quantas vezes os utilizadores recebem emails de resumo."
     default_include_tl0_in_digests: "Incluir mensagens de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
     default_email_private_messages: "Por defeito, enviar um email quando alguém envia mensagens ao utilizador."
@@ -1435,10 +1433,6 @@ pt:
       text_body_template: "Pedimos desculpa mas a sua exportação de dados falhou. Por favor verifique os registos do log ou contacte um membro do pessoal."
     email_reject_insufficient_trust_level:
       subject_template: "[%{site_name}] Problema com Email -- Insuficiente nível de confiança"
-      text_body_template: |
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) falhou.
-
-        A sua conta não possui o nível de confiança necessário para criar novos tópicos para este endereço de email. Se acredita que isto é um erro contacte alguém do pessoal.
     email_reject_inactive_user:
       subject_template: "[%{site_name}] Problema de email -- Utilizador inactivo"
       text_body_template: |
@@ -1482,17 +1476,8 @@ pt:
         Não conseguimos encontrar a sua resposta no email. **Certifique-se que a sua resposta se encontra no topo do email** - não conseguimos processar respostas em linha.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Problema de email -- Acesso Inválido"
-      text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
-
-        A sua conta não tem privilégios para publicar novos tópicos nessa categoria. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] Problema de email -- Acesso Inválido"
-      text_body_template: |+
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
-
-        A categoria que enviou neste email apenas permite respostas de utilizadores com contas validadas e endereços de email conhecidos. Se acredita ser um erro contacto um membro do pessoal.
-
     email_reject_invalid_post:
       subject_template: "[%{site_name}] Problema de email -- Erro de publicação"
       text_body_template: |
@@ -1535,22 +1520,10 @@ pt:
         Nenhum dos endereços de destino é reconhecido. Por favor, certifique-se que está a enviar o endereço de email correcto fornecido pelo pessoal.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema de email -- Tópico Não Encontrado"
-      text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
-
-        O tópico ao qual está a responder já não existe -- talvez tenha sido apagado. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Problema de email -- Tópico Encerrado"
-      text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
-
-        O tópico ao qual está a responder encontra-se fechado e já não aceita respostas. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problema de email -- Resposta Gerada Automaticamente"
-      text_body_template: |
-        Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
-
-        O seu email foi marcado como "gerado automaticamente", o que quer dizer que foi automaticamente criado por um computador em vez de ser escrito por uma pessoa; não podemos aceitar esse tipo de emails. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_error_notification:
       subject_template: "[%{site_name}] Problema de email -- Erro de autenticação POP"
       text_body_template: |

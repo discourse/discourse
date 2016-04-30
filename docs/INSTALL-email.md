@@ -10,7 +10,6 @@ Use these values when you [edit your Discourse `app.yml` configuration file](htt
 
 ```yml
 DISCOURSE_SMTP_ADDRESS: smtp.sparkpostmail.com
-DISCOURSE_SMTP_PORT: 587
 DISCOURSE_SMTP_USER_NAME: SMTP_Injection
 DISCOURSE_SMTP_PASSWORD: [Any API key with Send via SMTP permission]
 ```
@@ -25,7 +24,6 @@ If not using **the exact** domain you verified (e.g. you're using a subdomain of
 
 ```yml
 DISCOURSE_SMTP_ADDRESS: smtp.sendgrid.net
-DISCOURSE_SMTP_PORT: 587
 DISCOURSE_SMTP_USER_NAME: apikey
 DISCOURSE_SMTP_PASSWORD: [SendGrid API Key]
 ```
@@ -36,7 +34,6 @@ We recommend creating an [API Key][sg2] instead of using your SendGrid username 
 
 ```yml
 DISCOURSE_SMTP_ADDRESS: smtp.mailgun.org
-DISCOURSE_SMTP_PORT: 587
 DISCOURSE_SMTP_USER_NAME: [SMTP credentials for your domain under Mailgun domains tab]
 DISCOURSE_SMTP_PASSWORD: [SMTP credentials for your domain under Mailgun domains tab]
 ```

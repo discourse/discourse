@@ -352,3 +352,12 @@ table.md-table {
     }
   }
 }
+
+a.mention, a.mention-group {
+  padding: 2px 4px;
+  color: dark-light-diff($primary, $secondary, 30%, -20%);
+  background: dark-light-diff($primary, $secondary, 95%, -60%);
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.93em;
+}

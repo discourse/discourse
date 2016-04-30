@@ -499,7 +499,6 @@ fr:
         set_password: "Définir le mot de passe"
       change_about:
         title: "Modifier à propos de moi"
-        error: "Il y a eu une erreur lors du changement de ce paramètre."
       change_username:
         title: "Modifier le pseudo"
         confirm: "Si vous modifiez votre pseudo, toutes les citations de vos messages et les mentions @pseudo seront cassées. Êtes-vous absolument sûr de vouloir le faire ?"
@@ -881,7 +880,6 @@ fr:
       link_description: "saisir ici la description du lien"
       link_dialog_title: "Insérez le lien"
       link_optional_text: "titre optionnel"
-      link_placeholder: "http://exemple.fr \"texte facultatif\""
       quote_title: "Citation"
       quote_text: "Citation"
       code_title: "Texte préformaté"
@@ -1333,7 +1331,6 @@ fr:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Merci de réessayer."
         edit: "Désolé, il y a eu une erreur lors de l'édition de votre message. Merci de réessayer."
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Merci de réessayer."
-        attachment_too_large: "Désolé, le fichier que vous êtes en train d'envoyer est trop grand (taille maximum de {{max_size_kb}} Ko)."
         file_too_large: "Désolé, le fichier que vous êtes en train d'envoyer est trop grand (taille maximum de {{max_size_kb}} Ko)"
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
         too_many_dragged_and_dropped_files: "Désolé, vous pouvez seulement glisser-déposer jusqu'à 10 fichiers à la fois."
@@ -1909,14 +1906,6 @@ fr:
           backups: "Sauvegardes"
           logs: "Journaux"
         none: "Aucune sauvegarde disponible."
-        read_only:
-          enable:
-            title: "Activer le mode lecture seule"
-            label: "Activer le mode lecture seule"
-            confirm: "Êtes-vous sûr de vouloir activer le mode lecture seule?"
-          disable:
-            title: "Désactiver le mode lecture seule"
-            label: "Désactiver le mode lecture seule"
         logs:
           none: "Pas de journaux pour l'instant..."
         columns:
