@@ -20,7 +20,7 @@ export default {
         topicId = $('#topic').data('topic-id'),
         userId = $link.data('user-id');
 
-    if (!href || href.trim().length === 0) { return; }
+    if (!href || href.trim().length === 0 || href.indexOf("mailto:") === 0) { return; }
 
     if (!userId) userId = $article.data('user-id');
 
