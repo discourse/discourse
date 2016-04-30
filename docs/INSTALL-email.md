@@ -8,13 +8,13 @@ The following are template configurations for email service providers who offer 
 
 Enter these values when prompted by `./discourse-setup` per the [install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud.md#edit-discourse-configuration):
 
-#### [SparkPost][sp] (100k emails/month)
+#### [SparkPost][sp] &mdash; 100k emails/month
 
     SMTP server address? smtp.sparkpostmail.com
     SMTP user name?      SMTP_Injection
     SMTP password?       [Any API key with Send via SMTP permission]
 
-#### [SendGrid][sg] (12k emails/month)
+#### [SendGrid][sg] &mdash; 12k emails/month
 
     SMTP server address? smtp.sendgrid.net
     SMTP user name?      apikey
@@ -22,16 +22,15 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
 
 We recommend creating an [API Key][sg2] instead of using your SendGrid username and password.
 
-#### [Mailgun][gun] (10k emails/month)
+#### [Mailgun][gun] &mdash; 10k emails/month
 
     SMTP server address? smtp.mailgun.org
     SMTP user name?      [SMTP credentials for your domain under domains tab]
     SMTP password?       [SMTP credentials for your domain under domains tab]
 
-#### [Mailjet][jet] (6k emails/month)
+#### [Mailjet][jet] &mdash; 6k emails/month
 
 Go to [My Account page](https://www.mailjet.com/account) and click on the ["SMTP and SEND API Settings"](https://www.mailjet.com/account/setup) link.
-
 
    [sp]: https://www.sparkpost.com/
   [jet]: https://www.mailjet.com/pricing
