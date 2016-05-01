@@ -1047,6 +1047,18 @@ SQL
     [result].flatten unless result.blank?
   end
 
+  def convert_to_public_topic(user)
+    public_topic = TopicConverter.new(self, user).convert_to_public_topic
+    add_small_action(user, "public_topic") if public_topic
+    public_topic
+  end
+
+  def convert_to_private_message(user)
+    private_topic = TopicConverter.new(self, user).convert_to_private_message
+    add_small_action(user, "private_topic") if private_topic
+    private_topic
+  end
+
   private
 
   def update_category_topic_count_by(num)

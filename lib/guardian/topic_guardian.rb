@@ -58,6 +58,10 @@ module TopicGuardian
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
+  def can_convert_topic?(topic)
+    topic && !topic.trashed? && is_admin?
+  end
+
   def can_reply_as_new_topic?(topic)
     authenticated? && topic && not(topic.private_message?) && @user.has_trust_level?(TrustLevel[1])
   end

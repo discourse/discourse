@@ -872,6 +872,24 @@ describe Guardian do
 
   end
 
+  context 'can_convert_topic?' do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_convert_topic?(nil)).to be_falsey
+    end
+
+    it 'returns false when not logged in' do
+      expect(Guardian.new.can_convert_topic?(topic)).to be_falsey
+    end
+
+    it 'returns false when not admin' do
+      expect(Guardian.new(moderator).can_convert_topic?(topic)).to be_falsey
+    end
+
+    it 'returns true when an admin' do
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
+    end
+  end
+
   describe 'can_edit?' do
 
     it 'returns false with a nil object' do
