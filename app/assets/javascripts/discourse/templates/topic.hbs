@@ -256,6 +256,16 @@
       {{/if}}
     </li>
 
+    {{#if currentUser.admin}}
+      <li class="topic-admin-convert">
+        {{#if model.isPrivateMessage}}
+          {{d-button action="convertToPublicTopic" icon="comment" label="topic.actions.make_public"}}
+        {{else}}
+          {{d-button action="convertToPrivateMessage" icon="envelope" label="topic.actions.make_private"}}
+        {{/if}}
+      </li>
+    {{/if}}
+
     {{plugin-outlet "topic-admin-menu-buttons"}}
   {{/popup-menu}}
 {{/if}}

@@ -121,6 +121,8 @@ en:
       email: 'send this link in an email'
 
     action_codes:
+      public_topic: "made this topic public %{when}"
+      private_topic: "made this topic private %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
       removed_user: "removed %{who} %{when}"
@@ -1344,6 +1346,8 @@ en:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
+        make_public: "Make Public Topic"
+        make_private: "Make Private Message"
 
       feature:
         pin: "Pin Topic"
@@ -2982,4 +2986,3 @@ en:
           top: "There are no more top topics."
           bookmarks: "There are no more bookmarked topics."
           search: "There are no more search results."
-

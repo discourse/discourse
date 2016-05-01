@@ -4,6 +4,7 @@ import { propertyEqual } from 'discourse/lib/computed';
 import { longDate } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
 import ActionSummary from 'discourse/models/action-summary';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export function loadTopicView(topic, args) {
   const topicId = topic.get('id');
@@ -446,8 +447,13 @@ const Topic = RestModel.extend({
     }).finally(()=>this.set('archiving', false));
 
     return promise;
-  }
+  },
 
+  convertTopic(type) {
+    return Discourse.ajax(`/t/${this.get('id')}/convert-topic/${type}`, {type: 'PUT'}).then(() => {
+      window.location.reload();
+    }).catch(popupAjaxError);
+  }
 });
 
 Topic.reopenClass({

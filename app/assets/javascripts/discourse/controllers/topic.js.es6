@@ -545,6 +545,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     changePostOwner(post) {
       this.get('selectedPosts').addObject(post);
       this.send('changeOwner');
+    },
+
+    convertToPublicTopic() {
+      this.get('content').convertTopic("public");
+    },
+
+    convertToPrivateMessage() {
+      this.get('content').convertTopic("private");
     }
   },
 
