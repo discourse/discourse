@@ -571,6 +571,9 @@ email:
     default: ''
     type: list
   block_auto_generated_emails: true
+  bounce_score_threshold:
+    default: 4
+    min: 1
 
 
 files:

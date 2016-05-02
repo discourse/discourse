@@ -124,6 +124,7 @@ Discourse::Application.routes.draw do
         post "test"
         get "sent"
         get "skipped"
+        get "bounced"
         get "received"
         get "rejected"
         get "/incoming/:id/raw" => "email#raw_email"

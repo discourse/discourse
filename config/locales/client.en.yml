@@ -2303,6 +2303,7 @@ en:
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
+        bounced: "Bounced"
         received: "Received"
         rejected: "Rejected"
         sent_at: "Sent At"

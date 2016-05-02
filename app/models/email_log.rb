@@ -9,6 +9,7 @@ class EmailLog < ActiveRecord::Base
 
   scope :sent,    -> { where(skipped: false) }
   scope :skipped, -> { where(skipped: true) }
+  scope :bounced, -> { sent.where(bounced: true) }
 
   after_create do
     # Update last_emailed_at if the user_id is present and email was sent
