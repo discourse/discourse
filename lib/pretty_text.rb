@@ -3,6 +3,7 @@ require 'nokogiri'
 require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
 require_dependency 'post'
+require_dependency 'discourse_tagging'
 
 module PrettyText
 
@@ -74,7 +75,7 @@ module PrettyText
 
       if !is_tag && category = Category.query_from_hashtag_slug(text)
         [category.url_with_id, text]
-      elsif is_tag && tag = TopicCustomField.find_by(name: TAGS_FIELD_NAME, value: text.gsub!("#{tag_postfix}", ''))
+      elsif is_tag && tag = TopicCustomField.find_by(name: DiscourseTagging::TAGS_FIELD_NAME, value: text.gsub!("#{tag_postfix}", ''))
         ["#{Discourse.base_url}/tags/#{tag.value}", text]
       else
         nil
