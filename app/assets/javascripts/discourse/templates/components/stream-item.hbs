@@ -13,7 +13,7 @@
   <p class='excerpt'>{{actionDescription}}</p>
 {{/if}}
 
-<p class='excerpt'>{{{item.excerpt}}}</p>
+<p class='excerpt' data-topic-id="{{item.topic_id}}" data-post-id="{{item.post_id}}" data-user-id="{{item.user_id}}">{{{item.excerpt}}}</p>
 
 {{#each item.children as |child|}}
   <div class='child-actions'>

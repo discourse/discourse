@@ -6,7 +6,7 @@ var windowOpen,
     win,
     redirectTo;
 
-module("lib:click-track", {
+module("lib:click-track-profile-page", {
   setup: function() {
 
     // Prevent any of these tests from navigating away
@@ -17,22 +17,30 @@ module("lib:click-track", {
     sandbox.stub(win, "focus");
 
     fixture().html(
-      `<div id="topic" data-topic-id="1337">
-        <article data-post-id="42" data-user-id="3141">
-          <a href="http://www.google.com">google.com</a>
-          <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
-          <a id="with-badge" data-user-id="314" href="http://www.google.com">google.com<span class="badge">1</span></a>
-          <a id="with-badge-but-not-mine" href="http://www.google.com">google.com<span class="badge">1</span></a>
-          <div class="onebox-result">
-            <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
-            <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
-          </div>
-          <a class="no-track-link" href="http://www.google.com">google.com</a>
-          <a id="same-site" href="http://discuss.domain.com">forum</a>
-          <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
-          <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
-        </article>
-      </div>`);
+      `<p class="excerpt first" data-post-id="42" data-topic-id="1337" data-user-id="3141">
+        <a href="http://www.google.com">google.com</a>
+        <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+        <div class="onebox-result">
+          <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
+          <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
+        </div>
+        <a class="no-track-link" href="http://www.google.com">google.com</a>
+        <a id="same-site" href="http://discuss.domain.com">forum</a>
+        <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
+        <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
+      </p>
+      <p class="excerpt second" data-post-id="24" data-topic-id="7331" data-user-id="1413">
+        <a href="http://www.google.com">google.com</a>
+        <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+        <div class="onebox-result">
+          <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
+          <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
+        </div>
+        <a class="no-track-link" href="http://www.google.com">google.com</a>
+        <a id="same-site" href="http://discuss.domain.com">forum</a>
+        <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
+        <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
+      </p>`);
   }
 });
 
@@ -96,43 +104,27 @@ asyncTestDiscourse("restores the href after a while", function() {
   }, 75);
 });
 
-var badgeClickCount = function(id, expected) {
-  track(generateClickEventOn('#' + id));
-  var $badge = $('span.badge', fixture('#' + id).first());
-  equal(parseInt($badge.html(), 10), expected);
-};
-
-test("does not update badge clicks on my own link", function() {
-  sandbox.stub(Discourse.User, 'currentProp').withArgs('id').returns(314);
-  badgeClickCount('with-badge', 1);
-});
-
-test("does not update badge clicks in my own post", function() {
-  sandbox.stub(Discourse.User, 'currentProp').withArgs('id').returns(3141);
-  badgeClickCount('with-badge-but-not-mine', 1);
-});
-
-test("updates badge counts correctly", function() {
-  badgeClickCount('inside-onebox', 1);
-  badgeClickCount('inside-onebox-forced', 2);
-  badgeClickCount('with-badge', 2);
-});
-
-var trackRightClick = function() {
-  var clickEvent = generateClickEventOn('a');
+var trackRightClick = function(target) {
+  var clickEvent = generateClickEventOn(target);
   clickEvent.which = 3;
   return track(clickEvent);
 };
 
 test("right clicks change the href", function() {
-  ok(trackRightClick());
+  ok(trackRightClick('a'));
   equal(fixture('a').first().prop('href'), "http://www.google.com/");
 });
 
 test("right clicks are tracked", function() {
   Discourse.SiteSettings.track_external_right_clicks = true;
-  trackRightClick();
-  equal(fixture('a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337");
+  trackRightClick('a');
+  equal(fixture('.first a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337");
+});
+
+test("right clicks are tracked for second excerpt", function() {
+  Discourse.SiteSettings.track_external_right_clicks = true;
+  trackRightClick('.second a');
+  equal(fixture('.second a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331");
 });
 
 test("preventDefault is not called for right clicks", function() {
@@ -194,8 +186,21 @@ test("tracks custom urls when opening in another window", function() {
   ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337', '_blank'));
 });
 
+test("tracks custom urls on second excerpt when opening in another window", function() {
+  var clickEvent = generateClickEventOn('.second a');
+  sandbox.stub(Discourse.User, "currentProp").withArgs('external_links_in_new_tab').returns(true);
+  ok(!track(clickEvent));
+  ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331', '_blank'));
+});
+
 test("tracks custom urls when opening in another window", function() {
   var clickEvent = generateClickEventOn('a');
   ok(!track(clickEvent));
   ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337'));
+});
+
+test("tracks custom urls on second excerpt when opening in another window", function() {
+  var clickEvent = generateClickEventOn('.second a');
+  ok(!track(clickEvent));
+  ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331'));
 });
