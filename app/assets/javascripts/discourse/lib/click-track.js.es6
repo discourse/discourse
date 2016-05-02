@@ -15,7 +15,7 @@ export default {
     if ($link.hasClass('lightbox') || $link.hasClass('mention-group') || $link.hasClass('no-track-link')) { return true; }
 
     var href = $link.attr('href') || $link.data('href'),
-        $article = $link.closest('article,.excerpt'),
+        $article = $link.closest('article,.excerpt,#revisions'),
         postId = $article.data('post-id'),
         topicId = $('#topic').data('topic-id') || $article.data('topic-id'),
         userId = $link.data('user-id');
