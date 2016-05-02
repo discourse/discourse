@@ -34,15 +34,22 @@ const SearchHelper = {
     const searchContext = contextEnabled ? widget.searchContext() : null;
     const fullSearchUrl = widget.fullSearchUrl();
 
-    this._activeSearch = searchForTerm(term, { typeFilter, searchContext, fullSearchUrl });
-    this._activeSearch.then(content => {
-      state.noResults = content.resultTypes.length === 0;
-      state.results = content;
-    }).finally(() => {
+    if (!isValidSearchTerm(term)) {
+      state.noResults = true;
+      state.results = [];
       state.loading = false;
       widget.scheduleRerender();
-      this._activeSearch = null;
-    });
+    } else {
+      this._activeSearch = searchForTerm(term, { typeFilter, searchContext, fullSearchUrl });
+      this._activeSearch.then(content => {
+        state.noResults = content.resultTypes.length === 0;
+        state.results = content;
+      }).finally(() => {
+        state.loading = false;
+        widget.scheduleRerender();
+        this._activeSearch = null;
+      });
+    }
   }
 };
 
