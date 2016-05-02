@@ -139,14 +139,12 @@ class Topic < ActiveRecord::Base
 
     # Query conditions
     condition = if ids.present?
-      ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
+      ["NOT read_restricted OR id IN (:cats)", cats: ids]
     else
-      ["NOT c.read_restricted"]
+      ["NOT read_restricted"]
     end
 
-    where("category_id IS NULL OR category_id IN (
-           SELECT c.id FROM categories c
-           WHERE #{condition[0]})", condition[1])
+    where("topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})", condition[1])
   }
 
   attr_accessor :ignore_category_auto_close

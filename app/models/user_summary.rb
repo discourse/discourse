@@ -30,7 +30,6 @@ class UserSummary
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .where('post_number > 1')
-      .where('topics.archetype <> ?', Archetype.private_message)
       .order('posts.like_count DESC, posts.created_at ASC')
       .limit(MAX_SUMMARY_RESULTS)
   end
@@ -39,7 +38,8 @@ class UserSummary
     TopicLink
       .joins(:topic, :post)
       .includes(:topic, :post)
-      .where('topics.archetype <> ?', Archetype.private_message)
+      .where('posts.post_type IN (?)', Topic.visible_post_types(@guardian && @guardian.user))
+      .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .where(internal: false, reflection: false, quote: false)
       .order('clicks DESC, topic_links.created_at ASC')
