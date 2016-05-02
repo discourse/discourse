@@ -27,6 +27,11 @@ class Admin::EmailController < Admin::AdminController
     render_serialized(email_logs, EmailLogSerializer)
   end
 
+  def bounced
+    email_logs = filter_email_logs(EmailLog.bounced, params)
+    render_serialized(email_logs, EmailLogSerializer)
+  end
+
   def received
     incoming_emails = filter_incoming_emails(IncomingEmail, params)
     render_serialized(incoming_emails, IncomingEmailSerializer)

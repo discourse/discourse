@@ -1175,6 +1175,7 @@ en:
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     auto_generated_whitelist: "List of email addresses that won't be checked for auto-generated content."
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
+    bounce_score_threshold: "The maximum user bounce score before the they are deactivated. A soft bounce adds 1, a hard bounce adds 2."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -2420,7 +2421,8 @@ en:
     post_deleted: "post was deleted by the author"
     user_suspended: "user was suspended"
     already_read: "user has already read this post"
-    exceeded_limit: "Exceeded max_emails_per_day_per_user"
+    exceeded_emails_limit: "Exceeded max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Exceeded bounce_score_threshold"
     message_blank: "message is blank"
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"

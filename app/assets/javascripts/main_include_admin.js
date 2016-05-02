@@ -6,8 +6,6 @@
 //= require admin/models/tl3-requirements
 //= require admin/models/admin-user
 //= require_tree ./admin/models
-//= require admin/routes/admin-email-logs
-//= require admin/controllers/admin-email-skipped
 //= require discourse/lib/export-result
 //= require_tree ./admin
 
