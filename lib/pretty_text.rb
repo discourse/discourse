@@ -81,10 +81,6 @@ module PrettyText
         nil
       end
     end
-
-    DiscourseEvent.on(:markdown_context) do |context|
-      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_tag_hashtag_lookup(c);}')
-    end
   end
 
   @mutex = Mutex.new
@@ -238,6 +234,7 @@ module PrettyText
       context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_hashtag_lookup(c);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
+      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_tag_hashtag_lookup(c);}')
       DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
