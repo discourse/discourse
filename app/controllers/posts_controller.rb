@@ -544,7 +544,8 @@ class PostsController < ApplicationController
       :reply_to_post_number,
       :auto_track,
       :typing_duration_msecs,
-      :composer_open_duration_msecs
+      :composer_open_duration_msecs,
+      :created_at
     ]
 
     # param munging for WordPress
