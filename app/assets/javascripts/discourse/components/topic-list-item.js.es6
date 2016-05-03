@@ -1,22 +1,14 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
-export default Ember.View.extend(StringBuffer, {
-  topic: Em.computed.alias("content"),
-  rerenderTriggers: ['controller.bulkSelectEnabled', 'topic.pinned'],
+export default Ember.Component.extend(StringBuffer, {
+  rerenderTriggers: ['bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',
   rawTemplate: 'list/topic-list-item.raw',
-  classNameBindings: ['controller.checked',
-                      ':topic-list-item',
-                      'unboundClassNames',
-                      'selected'],
+  classNameBindings: [':topic-list-item', 'unboundClassNames'],
   attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('topic.id'),
 
   actions: {
-    select() {
-      this.set('controller.selectedRow', this);
-    },
-
     toggleBookmark() {
       const self = this;
       this.get('topic').toggleBookmark().finally(function() {
@@ -24,10 +16,6 @@ export default Ember.View.extend(StringBuffer, {
       });
     }
   },
-
-  selected: function() {
-    return this.get('controller.selectedRow')===this;
-  }.property('controller.selectedRow'),
 
   unboundClassNames: function() {
     let classes = [];
@@ -51,7 +39,7 @@ export default Ember.View.extend(StringBuffer, {
   }.property(),
 
   titleColSpan: function() {
-    return (!this.get('controller.hideCategory') &&
+    return (!this.get('hideCategory') &&
              this.get('topic.isPinnedUncategorized') ? 2 : 1);
   }.property("topic.isPinnedUncategorized"),
 
@@ -70,11 +58,11 @@ export default Ember.View.extend(StringBuffer, {
       return false;
     }
 
-    if (this.get('controller.expandGloballyPinned') && this.get('topic.pinned_globally')) {
+    if (this.get('expandGloballyPinned') && this.get('topic.pinned_globally')) {
       return true;
     }
 
-    if (this.get('controller.expandAllPinned')) {
+    if (this.get('expandAllPinned')) {
       return true;
     }
 
@@ -96,7 +84,7 @@ export default Ember.View.extend(StringBuffer, {
     }
 
     if (target.hasClass('bulk-select')) {
-      const selected = this.get('controller.selected');
+      const selected = this.get('selected');
       const topic = this.get('topic');
 
       if (target.is(':checked')) {
