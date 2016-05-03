@@ -387,6 +387,7 @@ class TopicView
     result = filter_post_types(@topic.posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?
     result = @topic.posts.where("user_id IS NOT NULL") if @exclude_deleted_users
+    result = @topic.posts.where(hidden: false) if @exclude_hidden
     result
   end
 
