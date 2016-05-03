@@ -40,7 +40,11 @@ class CategoryFeaturedTopic < ActiveRecord::Base
       CategoryFeaturedTopic.delete_all(category_id: c.id)
       if results
         results.each_with_index do |topic_id, idx|
-          c.category_featured_topics.create(topic_id: topic_id, rank: idx)
+          begin
+            c.category_featured_topics.create(topic_id: topic_id, rank: idx)
+          rescue PG::UniqueViolation
+            # If another process features this topic, just ignore it
+          end
         end
       end
     end
