@@ -70,7 +70,7 @@ class Upload < ActiveRecord::Base
   def self.create_for(user_id, file, filename, filesize, options = {})
     DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
       # do some work on images
-      if FileHelper.is_image?(filename) && system("identify '#{file.path}' >/dev/null 2>&1")
+      if FileHelper.is_image?(filename) && is_actual_image?(file)
         if filename =~ /\.svg$/i
           svg = Nokogiri::XML(file).at_css("svg")
           w = svg["width"].to_i
@@ -168,6 +168,14 @@ class Upload < ActiveRecord::Base
 
       upload
     end
+  end
+
+  def self.is_actual_image?(file)
+    # due to ImageMagick CVE-2016–3714, use FastImage to check the magic bytes
+    # cf. https://meta.discourse.org/t/imagemagick-cve-2016-3714/43624
+    FastImage.size(file, raise_on_failure: true)
+  rescue
+    false
   end
 
   LARGE_PNG_SIZE ||= 3.megabytes
