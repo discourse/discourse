@@ -73,6 +73,7 @@ GEM
     diff-lcs (1.2.5)
     discourse-qunit-rails (0.0.9)
       railties
+    discourse_fastimage (2.0.0)
     docile (1.1.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
@@ -107,7 +108,6 @@ GEM
       rake
       rake-compiler
     fast_xs (0.8.0)
-    fastimage_discourse (1.6.6)
     ffi (1.9.10)
     flamegraph (0.1.0)
       fast_stack
@@ -413,6 +413,7 @@ DEPENDENCIES
   byebug
   certified
   discourse-qunit-rails
+  discourse_fastimage
   email_reply_trimmer (= 0.1.3)
   ember-rails (= 0.18.5)
   ember-source (= 1.12.2)
@@ -422,7 +423,6 @@ DEPENDENCIES
   fast_blank
   fast_xor
   fast_xs
-  fastimage_discourse
   flamegraph
   foreman
   gctools
