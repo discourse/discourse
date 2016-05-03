@@ -79,7 +79,7 @@ test("does not track clicks on quote buttons", function() {
 });
 
 test("does not track clicks on category badges", () => {
-  ok(!track(generateClickEventOn('.hashtag')));
+  ok(track(generateClickEventOn('.hashtag')));
 });
 
 test("removes the href and put it as a data attribute", function() {
