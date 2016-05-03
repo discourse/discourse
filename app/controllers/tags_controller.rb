@@ -7,14 +7,22 @@ class TagsController < ::ApplicationController
 
   before_filter :ensure_tags_enabled
 
-  skip_before_filter :check_xhr, only: [:tag_feed, :show]
+  skip_before_filter :check_xhr, only: [:tag_feed, :show, :index]
   before_filter :ensure_logged_in, only: [:notifications, :update_notifications, :update]
   before_filter :set_category_from_params, except: [:index, :update, :destroy, :tag_feed, :search, :notifications, :update_notifications]
 
   def index
     tag_counts = self.class.tags_by_count(guardian, limit: 300).count
-    tags = tag_counts.map {|t, c| { id: t, text: t, count: c } }
-    render json: { tags: tags }
+    @tags = tag_counts.map {|t, c| { id: t, text: t, count: c } }
+
+    respond_to do |format|
+      format.html do
+        render :index
+      end
+      format.json do
+        render json: { tags: @tags }
+      end
+    end
   end
 
   Discourse.filters.each do |filter|

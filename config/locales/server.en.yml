@@ -3025,6 +3025,7 @@ en:
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
 
   tags:
+    title: "Tags"
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
   rss_by_tag: "Topics tagged %{tag}"
