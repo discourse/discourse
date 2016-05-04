@@ -134,6 +134,8 @@ pt:
         disabled: 'removido da lista %{when}'
     topic_admin_menu: "Ações administrativas dos Tópicos"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
+    bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo sítio mais fácil, encontra-se agora em modo de inicialização. Qualquer utilizador novo terá nível de confiança 1 e resumos de email diários ligados. Este modo será automaticamente desligado quando o número total de utilizadores ultrapassar %{min_users}."
+    bootstrap_mode_disabled: "Modo de inicialização será desligado dentro das próximas 24 horas."
     s3:
       regions:
         us_east_1: "Este dos E.U.A. (Virgínia do Norte)"
@@ -676,17 +678,20 @@ pt:
           one: "mensagem criada"
           other: "mensagens criadas"
         likes_given:
-          one: "gosto dado"
-          other: "gostos dados"
+          one: "<i class='fa fa-heart'></i> dado"
+          other: "<i class='fa fa-heart'></i> dados"
         likes_received:
-          one: "gosto recebido"
-          other: "gostos recebidos"
+          one: "<i class='fa fa-heart'></i> recebido"
+          other: "<i class='fa fa-heart'></i> recebidos"
         days_visited:
           one: "dia visitado"
           other: "dias visitados"
         posts_read:
           one: "mensagem lida"
           other: "mensagens lidas"
+        bookmark_count:
+          one: "marcador"
+          other: "marcadores"
         top_replies: "Respostas"
         no_replies: "Nenhuma resposta ainda."
         more_replies: "Mais Respostas"
@@ -696,6 +701,10 @@ pt:
         top_badges: "Melhores Medalhas"
         no_badges: "Nenhuma medalha ainda."
         more_badges: "Mais Medalhas"
+        top_links: "Melhores hiperligações"
+        no_links: "Não há nenhuma hiperligação ainda."
+        most_liked_by: "Por mais apreciados"
+        no_likes: "Nenhum gostos ainda."
       associated_accounts: "Contas associadas"
       ip_address:
         title: "Último endereço IP"
@@ -1052,9 +1061,9 @@ pt:
         selected:
           one: "Selecionou  <b>1</b> tópico."
           other: "Selecionou <b>{{count}}</b> tópicos."
-        change_tags: "Alterar etiquetas"
-        choose_new_tags: "Escolher novas etiquetas para estes tópicos:"
-        changed_tags: "As etiquetas desses tópicos foram alteradas."
+        change_tags: "Mudar Etiquetas"
+        choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
+        changed_tags: "As etiquetas para esses tópicos foram mudadas."
       none:
         unread: "Tem tópicos não lidos."
         new: "Não tem novos tópicos."
@@ -1209,6 +1218,8 @@ pt:
         invisible: "Tornar Não Listado"
         visible: "Tornar Listado"
         reset_read: "Repor Data de Leitura"
+        make_public: "Criar tópico publico"
+        make_private: "Criar mensagem privada"
       feature:
         pin: "Fixar Tópico"
         unpin: "Desafixar Tópico"
@@ -1368,9 +1379,9 @@ pt:
         create: "Pedimos desculpa, ocorreu um erro ao criar a sua mensagem. Por favor, tente novamente."
         edit: "Pedimos desculpa, ocorreu um erro ao editar a sua mensagem. Por favor, tente novamente."
         upload: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
-        file_too_large: "Pedimos desculpa, o ficheiro que está a tentar carregar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
+        file_too_large: "Lamentamos mas esse ficheiro é demasiado grande (o tamanho máximo é de {{max_size_kb}}kb). Porque não carregar o seu ficheiro grande para um serviço de partilha na nuvem e depois partilhar o link?"
         too_many_uploads: "Pedimos desculpa, só pode carregar um ficheiro de cada vez."
-        too_many_dragged_and_dropped_files: "Pedimos desculpa, só pode arrastar e largar até 10 ficheiros de cada vez."
+        too_many_dragged_and_dropped_files: "Lamentamos mas só pode carregar 10 ficheiros de cada vez."
         upload_not_authorized: "Pedimos desculpa, o tipo de ficheiro que está a carregar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar imagens."
         attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
@@ -1380,6 +1391,7 @@ pt:
         no_value: "Não, manter"
         yes_value: "Sim, abandonar"
       via_email: "esta mensagem chegou por email"
+      via_auto_generated_email: "esta mensagem chegou via um email gerado automaticamente"
       whisper: "esta mensagem é um susurro privado para os moderadores"
       wiki:
         about: "esta mensagem é uma wiki"
@@ -1596,6 +1608,7 @@ pt:
       action: 'Sinalizar Mensagem'
       take_action: "Acionar"
       notify_action: 'Mensagem'
+      official_warning: 'Aviso Oficial'
       delete_spammer: "Eliminar Spammer"
       delete_confirm: "Está prestes a apagar <b>%{posts}</b> mensagens e <b>%{topics}</b> tópicos deste utilizador, remover a sua conta, bloquear acessos do seu endereço IP <b>%{ip_address}</b>, e adicionar o seu endereço de email <b>%{email}</b> a uma lista negra. Tem a certeza que este utilizador é de facto um spammer?"
       yes_delete_spammer: "Sim, Eliminar Spammer"
@@ -1809,7 +1822,7 @@ pt:
           30_days_ago: "30 Dias Atrás"
           all: "Tudo"
           view_table: "tabela"
-          view_chart: "gráfico de barras"
+          view_graph: "grafo"
           refresh_report: "Atualizar relatório"
           start_date: "Data de Início"
           end_date: "Data final"
@@ -2211,7 +2224,7 @@ pt:
             grant_moderation: "conceder moderação"
             revoke_moderation: "revogar moderação"
             backup_operation: "operação de cópia de segurança"
-            deleted_tag: "etiqueta apagada"
+            deleted_tag: "etiqueta removida"
             renamed_tag: "etiqueta renomeada"
         screened_emails:
           title: "Emails Filtrados"
@@ -2500,6 +2513,7 @@ pt:
           login: "Iniciar Sessão"
           plugins: "Plugins"
           user_preferences: "Preferências do Utilizador"
+          tags: "Etiquetas"
       badges:
         title: Distintivos
         new_badge: Novo Distintivo
@@ -2709,24 +2723,45 @@ pt:
       </form>
       </p>
     tagging:
-      all_tags: "Todas as etiquetas"
-      changed: "etiquetas alteradas:"
+      all_tags: "Todas as Etiquetas"
+      selector_all_tags: "todas as etiquetas"
+      changed: "etiquetas modificadas:"
       tags: "Etiquetas"
-      choose_for_topic: "escolher etiqetas opcionais para este tópico"
-      delete_tag: "Apagar etiqueta"
-      delete_confirm: "Tem a certeza que quer apagar esta etiqueta?"
+      choose_for_topic: "escolha etiquetas opcionais para este tópico"
+      delete_tag: "Remover Etiqueta"
+      delete_confirm: "Tem a certeza que deseja remover esta etiqueta?"
       rename_tag: "Renomear Etiqueta"
-      rename_instructions: "Escolher um novo nome para a etiqueta:"
+      rename_instructions: "Escolha o novo nome para a etiqueta:"
+      sort_by: "Ordenar por:"
+      sort_by_count: "contagem"
+      sort_by_name: "nome"
+      filters:
+        without_category: "%{filter} %{tag} tópicos"
+        with_category: "%{filter} %{tag} tópicos em %{category}"
       notifications:
         watching:
           title: "A vigiar"
-          description: "Irá automaticamente vigiar todos os novos tópicos com esta etiqueta. Será notoficado de todas as novas mensagens e tópicos."
+          description: "Vigiará automaticamente todos os tópicos novos nesta etiqueta. Será notificado acerca de todas as novas mensagens e tópicos,bem como lhe será apresentada a contagem de mensagens por ler e novas ao lado do tópico."
         tracking:
-          title: "A acompanhar"
-          description: "Irá automaticamente acompanhar todos os novos tópcicos com esta etiqueta"
+          title: "A seguir"
+          description: "Irá automaticamente seguir todos os novos tópicos nesta etiqueta. Uma contagem de mensagens não lidas e novas aparecerá ao lado to tópico."
         regular:
-          title: "Habitual"
-          description: "Será notoficado se mencionarem o seu @nome ou se alguém lhe responder"
+          title: "Regular"
+          description: "Será notificado quando alguém mencione o seu @nome ou responda à sua mensagem."
         muted:
           title: "Silenciado"
-          description: "Não será notoficado sobre nenhum tópico com esta etiqueta"
+          description: "Não será notificado acerca de novos tópicos sob esta etiqueta, não aparecendo eles no seu separador de não lidos."
+      topics:
+        none:
+          unread: "Não tem tópicos por ler."
+          new: "Não tem nenhum tópico novo."
+          read: "Ainda não leu quaisquer tópicos."
+          posted: "Ainda não publicou nada em um tópico qualquer."
+          latest: "Não há tópicos recentes."
+          hot: "Não há tópicos quentes."
+          bookmarks: "Não marcou qualquer tópico ainda."
+          top: "Não há quaisquer tópicos de topo."
+          search: "Não há resultados para a procura."
+        bottom:
+          latest: "Não há mais tópicos recentes."
+          hot: "Não há mais tópicos quentes."

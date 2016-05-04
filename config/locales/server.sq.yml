@@ -10,13 +10,17 @@ sq:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
   title: "Discourse"
   topics: "Tema"
   posts: "postime"
   loading: "Loading"
   powered_by_html: 'Mundësuar nga <a href="http://www.discourse.org">Discourse</a>, për një eksperience më të mirë aktivizoni JavaScript'
   log_in: "Identifikohu"
-  purge_reason: "Automatically deleted as abandoned, unactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonim"
   errors: &errors
@@ -73,6 +77,8 @@ sq:
   not_found: "The requested URL or resource could not be found."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  reading_time: "Koha e leximit"
+  likes: "Pëlqime"
   too_many_replies:
     one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
@@ -269,6 +275,12 @@ sq:
       title: "anëtar i ri"
     basic:
       title: "anëtar basic"
+    member:
+      title: "anëtarë"
+    regular:
+      title: "i rregullt"
+    leader:
+      title: "udhëheqës"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
@@ -453,6 +465,8 @@ sq:
       title: "New Users"
       xaxis: "Ditë"
       yaxis: "Number of new users"
+    profile_views:
+      xaxis: "Ditë"
     topics:
       title: "Tema"
       xaxis: "Ditë"
@@ -1275,22 +1289,120 @@ sq:
   subject_pm: "[PM] "
   user_notifications:
     previous_discussion: "Previous Replies"
+    in_reply_to: "Në Përgjigje Të"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
     posted_by: "Posted by %{username} on %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} invited you to '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
       subject_template: "[%{site_name}] Digest"
@@ -1657,6 +1769,17 @@ sq:
       Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Politika e Privatësisë"
+  badges:
+    member:
+      name: Anëtarë
+    regular:
+      name: I rregullt
+    leader:
+      name: Udhëheqës
+    welcome:
+      name: Mirë se vini
+    anniversary:
+      name: Përvjetori
   admin_login:
     success: "Email Sent"
     error: "Error!"
@@ -1667,6 +1790,10 @@ sq:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Raportet e performancës se faqes
+  date:
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

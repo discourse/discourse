@@ -93,6 +93,10 @@ ja:
       email: 'メールでこのリンクを送る'
     action_codes:
       invited_user: "%{who} から招待されました: %{when}"
+      autoclosed:
+        enabled: 'クローズされました // %{when}'
+      closed:
+        enabled: 'クローズされました // %{when}'
     topic_admin_menu: "トピック管理"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
     s3:
@@ -119,7 +123,7 @@ ja:
     age: "経過"
     joined: "参加時刻"
     admin_title: "管理者"
-    flags_title: "フラグ"
+    flags_title: "通報"
     show_more: "もっと見る"
     show_help: "オプション"
     links: "リンク"
@@ -307,7 +311,7 @@ ja:
       '2': "「いいね！」 された"
       '3': "ブックマーク"
       '4': "トピック"
-      '5': "返信数"
+      '5': "返信"
       '6': "レスポンス数"
       '7': "タグ付け"
       '9': "引用"
@@ -417,15 +421,15 @@ ja:
       muted_users_instructions: "ユーザからの通知をすべて行いません"
       muted_topics_link: "ミュートしたトピックを表示する"
       staff_counters:
-        flags_given: "役に立ったフラグ"
-        flagged_posts: "フラグをした投稿"
+        flags_given: "役に立った通報"
+        flagged_posts: "通報した投稿"
         deleted_posts: "削除された投稿"
         suspensions: "凍結"
         warnings_received: "警告"
       messages:
         all: "すべて"
         inbox: "Inbox"
-        sent: "送る"
+        sent: "送信済み"
         archive: "アーカイブ"
         groups: "自分のグループ"
         bulk_select: "メッセージを選択"
@@ -635,7 +639,7 @@ ja:
     close: "閉じる"
     assets_changed_confirm: "Discourseがアップデートされました。ページを更新して最新のバージョンにしますか？"
     logout: "ログアウトしました"
-    refresh: "Refresh"
+    refresh: "更新"
     read_only_mode:
       enabled: "このサイトは閲覧専用モードになっています。閲覧し続けられますが、返信したりいいねを付けたり等のアクションは現在出来ません。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
@@ -696,7 +700,7 @@ ja:
       complete_email_not_found: "<b>%{email}</b>で登録したアカウントがありません。"
     login:
       title: "ログイン"
-      username: "ログイン名"
+      username: "ユーザ名"
       password: "パスワード"
       email_placeholder: "メールアドレスかユーザ名"
       caps_lock_warning: "Caps Lockがオンになっています。"
@@ -723,7 +727,7 @@ ja:
         title: "Googleで"
         message: "Googleによる認証 (ポップアップがブロックされていないことを確認してください)"
       twitter:
-        title: "Twitterで"
+        title: "Twitter"
         message: "Twitter による認証 (ポップアップがブロックされていないことを確認してください)"
       instagram:
         message: "Instagram による認証 (ポップアップがブロックされていないことを確認してください)"
@@ -829,6 +833,8 @@ ja:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p> {{description}}バッジを付けられました</p>"
+      group_message_summary:
+        other: "<i title='グループ宛にメッセージが届いています' class='fa fa-group'></i><p> {{count}}件のメッセージが{{group_name}}へ着ています</p>"
       alt:
         posted: "投稿者 "
         edited: "投稿の編集者: "
@@ -838,6 +844,7 @@ ja:
         invitee_accepted: "招待が承認されました: "
         moved_post: "投稿を移動しました: "
         linked: "あなたの投稿にリンク"
+        group_message_summary: "グループ宛のメッセージがあります"
       popup:
         mentioned: '"{{topic}}"で{{username}} がタグ付けしました - {{site_title}}'
         quoted: '"{{topic}}"で{{username}}が引用しました - {{site_title}}'
@@ -877,6 +884,7 @@ ja:
     current_user: 'ユーザページに移動'
     topics:
       bulk:
+        unlist_topics: "トピックをリストから非表示にする"
         reset_read: "未読に設定"
         delete: "トピックを削除"
         dismiss_new: "既読に設定"
@@ -901,6 +909,7 @@ ja:
         top: "トップトピックはありません。"
         search: "検索結果はありません。"
         educate:
+          new: '<p>新しいトピックがここに表示されます。</p><p>デフォルトで、新しいトピックがある場合は2日間、 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> が表示されます。</p><p>設定は<a href="%{userPrefsUrl}">プロフィール設定</a>から変更できます。</p>'
           unread: '<p>新しいトピックがここに表示されます。</p><p>未読のトピックがある場合は、<span class="badge new-posts badge-notification">1</span>と表示されます。 もし、</p><ul><li>トピックを作る</li><li>トピックに返信</li><li>4分以上のトピックを読む場合</li></ul><p>などを設定した場合、トピックを追跡してそれぞれのトピックの下にある通知の設定を経由してウォッチします。</p><p><a href="%{userPrefsUrl}">プロフィール</a> から変更できます。</p>'
       bottom:
         latest: "最新のトピックは以上です。"
@@ -918,6 +927,8 @@ ja:
       create: '新規トピック'
       create_long: '新しいトピックの作成'
       private_message: 'メッセージを書く'
+      archive_message:
+        title: 'アーカイブ'
       list: 'トピック'
       new: '新規トピック'
       unread: '未読'
@@ -953,7 +964,7 @@ ja:
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>未読 1つ</a> } other { <a href='/unread'>未読 #つ</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{} false {} other{}} <a href='/new'>新規トピック 1つ</a>} other { {BOTH, select, true{} false {} other{}} <a href='/new'>新規トピック #つ</a>} } remaining, or {CATEGORY, select, true {{catLink}の他のトピックを読む} false {{latestLink}} other {}}"
       browse_all_categories: 全てのカテゴリを閲覧する
       view_latest_topics: 最新のトピックを見る
-      suggest_create_topic: 新しいトピックを作成しますか？
+      suggest_create_topic: 新しいトピックを作成しませんか?
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
@@ -1023,8 +1034,8 @@ ja:
         unpin: "トピックの固定を解除"
         unarchive: "トピックのアーカイブ解除"
         archive: "トピックのアーカイブ"
-        invisible: "リストされないようにする"
-        visible: "リストする"
+        invisible: "リストから非表示にする"
+        visible: "リストに表示"
         reset_read: "読み込みデータをリセット"
       feature:
         pin: "トピックをピン留めする..."
@@ -1042,9 +1053,9 @@ ja:
         title: 'シェア'
         help: 'このトピックへのリンクをシェアする'
       flag_topic:
-        title: 'フラグ'
-        help: '注目したいトピックにフラグを立てることで、それについての通知をプライベートに受け取ることが出来ます'
-        success_message: 'このトピックにフラグを立てました。'
+        title: '通報'
+        help: 'スタッフに知らせたいトピックを通報することにより、それについての通知をプライベートメッセージで受け取ることが出来ます'
+        success_message: 'このトピックを通報しました。'
       feature_topic:
         title: "トピックを特集"
         pin: "{{categoryLink}} カテゴリのトップに表示する"
@@ -1058,7 +1069,7 @@ ja:
         unpin_globally: "トピック一覧のトップからこのトピックを削除します"
         unpin_globally_until: "このトピックをすべてのトピックリストのトップから削除するか、<strong>%{until}</strong> まで待つ。"
         global_pin_note: "ユーザはトピックを個別にピン留め解除することができます"
-        not_pinned_globally: "ピン留めされたトピックはありません。"
+        not_pinned_globally: "すべてのトピックリストでピン留めされたトピックはありません。"
         make_banner: "このトピックを全てのページのバナーに表示します"
         remove_banner: "全てのページのバナーを削除します"
         banner_note: "ユーザはバナーを閉じることができます。常に１つのトピックだけがバナー表示されます"
@@ -1200,42 +1211,46 @@ ja:
         unhide: "表示する"
         change_owner: "オーナーシップを変更"
       actions:
-        flag: 'フラグ'
+        flag: '通報'
         defer_flags:
-          other: "デファーフラグ"
+          other: "受理された通報"
         it_too:
-          off_topic: "フラグをたてる"
-          spam: "フラグをたてる"
-          inappropriate: "フラグをたてる"
-          custom_flag: "フラグをたてる"
+          off_topic: "通報する"
+          spam: "通報する"
+          inappropriate: "通報する"
+          custom_flag: "通報する"
           bookmark: "ブックマークする"
           like: "あなたも「いいね！」する"
           vote: "投票する"
         undo:
-          off_topic: "フラグを取り消す"
-          spam: "フラグを取り消す"
-          inappropriate: "フラグを取り消す"
+          off_topic: "通報を取り消す"
+          spam: "通報を取り消す"
+          inappropriate: "通報を取り消す"
           bookmark: "ブックマークを取り消す"
           like: "「いいね！」を取り消す"
           vote: "投票を取り消す"
+        people:
+          off_topic: "関係無い話題として通報"
+          spam: "スパムとして通報"
+          inappropriate: "不適切な発言として通報"
         by_you:
-          off_topic: "オフトピックのフラグを立てました"
-          spam: "スパムを報告するフラグを立てました"
+          off_topic: "関係のない話題として通報しました"
+          spam: "スパム報告として通報しました"
           inappropriate: "不適切であると報告するフラグを立てました"
-          notify_moderators: "モデレータ確認を必要とするというフラグを立てました"
+          notify_moderators: "スタッフによる確認が必要として通報しました"
           notify_user: "このユーザにメッセージを送信しました"
           bookmark: "この投稿をブックマークしました"
           like: "あなたが「いいね！」しました"
           vote: "この投稿に投票しました"
         by_you_and_others:
           off_topic:
-            other: "あなたと他{{count}}人がオフトピックであるとフラグを立てました"
+            other: "あなたと他{{count}}名が関係無い話題として通報しました"
           spam:
-            other: "あなたと他{{count}}人がスパムであるとフラグを立てました"
+            other: "あなたと他{{count}}名がスパム報告として通報しました"
           inappropriate:
-            other: "あなたと他{{count}}人が不適切であるとフラグを立てました"
+            other: "あなたと他{{count}}名が不適切な発言として通報しました"
           notify_moderators:
-            other: "あなたと他{{count}}人がモデレータ確認を要するとフラグを立てました"
+            other: "あなたと他{{count}}名がスタッフの確認が必要として通報しました"
           notify_user:
             other: "あなたと他{{count}}人がこのユーザにメッセージを送信しました"
           bookmark:
@@ -1246,13 +1261,13 @@ ja:
             other: "あなたと他{{count}}人がこの投稿に投票しました"
         by_others:
           off_topic:
-            other: "{{count}}人のユーザがオフトピックであるとフラグを立てました"
+            other: "{{count}}名のユーザが関係無い話題として通報しました"
           spam:
-            other: "{{count}}人のユーザがスパムであるとフラグを立てました"
+            other: "{{count}}名のユーザがスパム報告として通報しました"
           inappropriate:
-            other: "{{count}}人のユーザが不適切であるとフラグを立てました"
+            other: "{{count}}名のユーザが不適切な発言として通報しました"
           notify_moderators:
-            other: "{{count}}人のユーザがモデレータ確認を要するとフラグを立てました"
+            other: "{{count}}名のユーザがスタッフの確認が必要として通報しました"
           notify_user:
             other: "{{count}} 人がこのユーザにメッセージを送信しました"
           bookmark:
@@ -1347,7 +1362,7 @@ ja:
           title: "ミュート中"
     flagging:
       title: '私達のコミュニティの維持を助けてくれてありがとうごうざいます'
-      action: 'フラグをつける'
+      action: '投稿を通報'
       take_action: "アクションをする"
       notify_action: 'メッセージ'
       delete_spammer: "スパムの削除"
@@ -1355,9 +1370,9 @@ ja:
       yes_delete_spammer: "はい、スパムを削除する"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
-      submit_tooltip: "プライベートフラグを通知する"
-      take_action_tooltip: "コミュニティのフラグを待つのではなく、すぐにフラグを始めましょう"
-      cant: "申し訳ありませんが、現在この投稿にフラグをつけることはできません。"
+      submit_tooltip: "プライベートの通報を送信する"
+      take_action_tooltip: "誰かが通報するのを待つのではなく、通報しましょう。"
+      cant: "現在、この投稿を通報することはできません。"
       formatted_name:
         off_topic: "オフトピック"
         inappropriate: "不適切"
@@ -1370,7 +1385,7 @@ ja:
         left: "残り{{n}}文字"
     flagging_topic:
       title: "私達のコミュニティの維持を助けてくれてありがとうごうざいます"
-      action: "トピックにフラグを立てる"
+      action: "トピックを通報"
       notify_action: "メッセージ"
     topic_map:
       title: "トピックの情報"
@@ -1391,10 +1406,10 @@ ja:
       locked_and_archived:
         help: "このトピックは閉じられ、アーカイブされます。新しい返信を受け入れず、変更することはできません"
       unpinned:
-        title: "ピン留め解除しました"
+        title: "ピン留めされていません"
         help: "このトピックはピン留めされていません。 既定の順番に表示されます。"
       pinned_globally:
-        title: "全サイト的にピン留めされました"
+        title: "全体でピン留めされました"
       pinned:
         title: "ピン留め"
         help: "このトピックはピン留めされています。常にカテゴリのトップに表示されます"
@@ -1483,7 +1498,7 @@ ja:
         yearly:
           title: "今年"
         quarterly:
-          title: "３ヶ月おき"
+          title: "3ヶ月おき"
         monthly:
           title: "今月"
         weekly:
@@ -1557,51 +1572,51 @@ ja:
         latest_changes: "最新の更新内容:"
         by: "by"
       flags:
-        title: "フラグ"
+        title: "通報"
         old: "古いフラグ"
         active: "アクティブなフラグ"
         agree: "賛成"
-        agree_title: "有効かつ正しいとしてフラグを確認"
+        agree_title: "有効で、間違いが無いものとして通報を行う"
         agree_flag_modal_title: "Agree and..."
         agree_flag_hide_post: "賛成(ポスト非表示 + プライベートメッセージ送信)"
         agree_flag_hide_post_title: "この投稿を非表示にし、編集を促すプライベートメッセージを自動的に送信する"
         agree_flag_restore_post: "賛成(投稿を復元)"
         agree_flag_restore_post_title: "この投稿を復元"
-        agree_flag: "フラグに賛成する"
-        agree_flag_title: "フラグと投稿を変更しないことに賛成します"
-        defer_flag: "Defer"
-        defer_flag_title: "フラグを削除します。何のアクションも必要としません"
+        agree_flag: "通報に賛成"
+        agree_flag_title: "投稿を変更できなくする事に賛成"
+        defer_flag: "受理"
+        defer_flag_title: "通報を削除します。何のアクションも必要としません"
         delete: "削除する"
-        delete_title: "このフラグが参照している投稿を削除します"
-        delete_post_defer_flag: "投稿を削除し、フラグを外します"
+        delete_title: "この通報で通報されている投稿を削除します"
+        delete_post_defer_flag: "投稿を削除し、通報を受理します"
         delete_post_defer_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
-        delete_post_agree_flag: "投稿を削除し、フラグに賛成します"
+        delete_post_agree_flag: "投稿を削除することに賛成します"
         delete_post_agree_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
         delete_flag_modal_title: "Delete and..."
         delete_spammer: "スパムユーザーを削除"
         delete_spammer_title: "ユーザと投稿した全ての投稿とトピックを削除します"
         disagree_flag_unhide_post: "反対する（投稿を表示する）"
-        disagree_flag_unhide_post_title: "投稿に付けたフラグを削除し、投稿を表示します"
+        disagree_flag_unhide_post_title: "投稿への通報を削除し、投稿を表示します"
         disagree_flag: "反対する"
-        disagree_flag_title: "無効または、不正としてこのフラグを拒否"
+        disagree_flag_title: "無効または、不正としてこの通報を拒否します"
         clear_topic_flags: "トピックのフラグをクリアしました"
-        clear_topic_flags_title: "このトピックについての問題が解決されました。「完了」をクリックしてフラグを外します。"
+        clear_topic_flags_title: "このトピックについての問題が解決されました。「完了」をクリックして通報の対応を完了します。"
         more: "(more replies...)"
         dispositions:
           agreed: "賛成した。"
           disagreed: "反対する"
           deferred: "deferred"
-        flagged_by: "フラグを立てた人"
+        flagged_by: "通報者: "
         resolved_by: "解決方法"
         took_action: "Took action"
         system: "システム"
         error: "何らかの理由でうまくいきませんでした"
         reply_message: "返信する"
-        no_results: "フラグはありません。"
-        topic_flagged: "この <strong>トピック</strong> はフラグされました。"
+        no_results: "通報はありません。"
+        topic_flagged: "この <strong>トピック</strong> は通報されました。"
         visit_topic: "トピックを閲覧して問題を調査してくさだい"
-        was_edited: "最初のフラグ後に編集された投稿"
-        previous_flags_count: "この投稿は既に {{count}} 回フラグされています"
+        was_edited: "最初の通報後に編集された投稿"
+        previous_flags_count: "この投稿は既に {{count}} 回通報されています"
         summary:
           action_type_3:
             other: "オフトピック x{{count}}"
@@ -1877,8 +1892,8 @@ ja:
             change_site_setting: "サイトの設定を変更"
             change_site_customization: "サイトのカスタマイズ設定を変更"
             delete_site_customization: "サイトのカスタマイズ設定を削除"
-            suspend_user: "ユーザをサスペンドにする"
-            unsuspend_user: "ユーザのサスペンドを解除する"
+            suspend_user: "ユーザを凍結する"
+            unsuspend_user: "ユーザの凍結を解除する"
             grant_badge: "バッジを付ける"
             revoke_badge: "バッジを取り消す"
             check_email: "メールアドレスを表示する"
@@ -1928,7 +1943,7 @@ ja:
         logster:
           title: "エラーログ"
       impersonate:
-        title: "ユーザになる"
+        title: "このユーザに切り替える"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
         not_found: "ユーザが見つかりませんでした。"
         invalid: "申し訳ありませんがこのユーザとして使えません。"
@@ -1936,7 +1951,7 @@ ja:
         title: 'ユーザ'
         create: '管理者を追加'
         last_emailed: "最終メール"
-        not_found: "このユーザネームはシステムに存在しません。"
+        not_found: "ユーザが見つかりませんでした。"
         id_not_found: "申し訳ありません。そのユーザIDはシステムに存在していません"
         active: "アクティブ"
         show_emails: "メールアドレス参照"
@@ -1945,7 +1960,7 @@ ja:
           active: "アクティブ"
           pending: "保留中"
           staff: 'スタッフ'
-          suspended: 'サスペンド中'
+          suspended: '凍結中'
           blocked: 'ブロック中'
           suspect: 'サスペクト'
         approved: "承認?"
@@ -1963,7 +1978,7 @@ ja:
           admins: '管理者ユーザ'
           moderators: 'モデレータ'
           blocked: 'ブロック中のユーザ'
-          suspended: 'サスペンド中のユーザ'
+          suspended: '凍結中のユーザ'
           suspect: 'サスペクトユーザ'
         reject_successful:
           other: "%{count}人のユーザの拒否に成功しました。"
@@ -1974,18 +1989,18 @@ ja:
           title: "メールアドレスを表示する"
           text: "表示する"
       user:
-        suspend_failed: "ユーザのサスペンドに失敗しました {{error}}"
-        unsuspend_failed: "ユーザのサスペンド解除に失敗しました {{error}}"
-        suspend_duration: "ユーザを何日間サスペンドしますか?"
+        suspend_failed: "ユーザの凍結に失敗しました: {{error}}"
+        unsuspend_failed: "ユーザの凍結解除に失敗しました: {{error}}"
+        suspend_duration: "ユーザを何日間凍結しますか?"
         suspend_duration_units: "(日)"
-        suspend_reason_label: "サスペンドする理由を簡潔に説明してください。ここに書いた理由は、このユーザのプロファイルページにおいて<b>全員が閲覧可能な状態</b>で公開されます。またこのユーザがログインを試みた際にも表示されます。"
+        suspend_reason_label: "アカウントを凍結する理由を説明してください。ここに書いた理由は、このユーザのプロファイルページにおいて<b>全員が閲覧可能な状態</b>で公開されます。またこのユーザがログインを試みた際にも表示されます。"
         suspend_reason: "理由"
-        suspended_by: "サスペンドしたユーザ"
+        suspended_by: "凍結したユーザ"
         delete_all_posts: "全ての投稿を削除"
         delete_all_posts_confirm: "%{posts}件の投稿と%{topics}個のトピックが削除されます。よろしいですか?"
-        suspend: "サスペンド"
-        unsuspend: "サスペンド解除"
-        suspended: "サスペンド中?"
+        suspend: "凍結"
+        unsuspend: "凍結解除"
+        suspended: "凍結状態"
         moderator: "モデレータ?"
         admin: "管理者?"
         blocked: "ブロック中?"
@@ -1994,7 +2009,7 @@ ja:
         save_title: "タイトルを保存"
         refresh_browsers: "ブラウザを強制リフレッシュ"
         refresh_browsers_message: "全てのクライアントにメッセージが送信されました！"
-        show_public_profile: "一般プロファイルを表示"
+        show_public_profile: "公開されるプロフィールを見る"
         impersonate: 'このユーザになりすます'
         ip_lookup: "IP検索"
         log_out: "ログアウト"
@@ -2014,10 +2029,10 @@ ja:
         posts_read_count: 読んだ投稿数
         post_count: 投稿数
         topics_entered: 閲覧したトピック数
-        flags_given_count: 設定したフラグ数
-        flags_received_count: 設定されたフラグ数
+        flags_given_count: 通報した数
+        flags_received_count: 通報された数
         warnings_received_count: 警告されました
-        flags_given_received_count: 'フラグを与えた/もらった'
+        flags_given_received_count: '通報をした / された'
         approve: '承認'
         approved_by: "承認したユーザ"
         approve_success: "ユーザが承認され、アクティベーション方法を記載したメールが送信されました。"
@@ -2052,10 +2067,10 @@ ja:
         block_failed: 'ユーザのブロックに失敗しました。'
         block_confirm: 'このユーザをブロックしてもよろしいですか? ユーザは新しくトピックを作成したり、投稿する事ができなくなります。'
         deactivate_explanation: "アクティベート解除されたユーザは、メールで再アクティベートする必要があります。"
-        suspended_explanation: "サスペンド中のユーザはログインできません。"
+        suspended_explanation: "凍結中のユーザはログインできません。"
         block_explanation: "ブロックされているユーザは投稿およびトピックの作成ができません。"
         trust_level_change_failed: "ユーザのトラストレベル変更に失敗しました。"
-        suspend_modal_title: "サスペンド中ユーザ"
+        suspend_modal_title: "凍結中のユーザ"
         trust_level_2_users: "トラストレベル2のユーザ"
         trust_level_3_requirements: "トラストレベル3の条件"
         trust_level_locked_tip: "トラストレベルはロックされています。システムがユーザを昇格、降格させることはありません"
@@ -2074,7 +2089,7 @@ ja:
           topics_viewed_all_time: "閲覧したトピック"
           posts_read: "閲覧した投稿数"
           posts_read_all_time: "閲覧した投稿数"
-          flagged_posts: "フラグ付きの投稿"
+          flagged_posts: "通報されている投稿"
           flagged_by_users: "フラグを立ったユーザ"
           likes_given: "与えた「いいね！」"
           likes_received: "もらった「いいね！」"
@@ -2288,7 +2303,7 @@ ja:
         reply_post: '<b>r</b> 投稿に返信'
         quote_post: '<b>q</b> 投稿を引用する'
         like: '<b>l</b> 投稿を「いいね！」する'
-        flag: '<b>!</b> 投稿にフラグをつける'
+        flag: '<b>!</b> 投稿を通報'
         bookmark: '<b>b</b> 投稿をブックマークする'
         edit: '<b>e</b> 投稿を編集'
         delete: '<b>d</b> 投稿を削除する'

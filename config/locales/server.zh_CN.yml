@@ -278,7 +278,7 @@ zh_CN:
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
   vip_category_name: "贵宾室"
   vip_category_description: "高于信任等级3的用户参与讨论的分类。"
-  meta_category_name: "页面反馈"
+  meta_category_name: "站点反馈"
   meta_category_description: "讨论该站点的站务、组织、如何运作和如何改善它。"
   staff_category_name: "管理人员"
   staff_category_description: "管理人员私有的分类。只有管理员和版主才能阅览主题。"

@@ -676,17 +676,20 @@ es:
           one: "post publicado"
           other: "posts publicados"
         likes_given:
-          one: "me gusta dado"
-          other: "me gusta dados"
+          one: "<i class='fa fa-heart'></i> dado"
+          other: "<i class='fa fa-heart'></i> dados"
         likes_received:
-          one: "me gusta recibido"
-          other: "me gusta recibidos"
+          one: "<i class='fa fa-heart'></i> recibido"
+          other: "<i class='fa fa-heart'></i> recibidos"
         days_visited:
           one: "día visitado"
           other: "días visitados"
         posts_read:
           one: "post leído"
           other: "posts leídos"
+        bookmark_count:
+          one: "marcador"
+          other: "marcadores"
         top_replies: "Respuestas top"
         no_replies: "No hay respuestas aún."
         more_replies: "Más respuestas"
@@ -696,6 +699,10 @@ es:
         top_badges: "Distintivos top"
         no_badges: "No hay distintivos aún."
         more_badges: "Más distintivos"
+        top_links: "Top enlaces"
+        no_links: "No hay enlaces aún."
+        most_liked_by: "Los que dieron más me gusta"
+        no_likes: "No hay me gusta aún."
       associated_accounts: "Inicios de sesión"
       ip_address:
         title: "Última dirección IP"
@@ -1368,9 +1375,9 @@ es:
         create: "Lo sentimos, hubo un error al crear tu post. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
-        file_too_large: "Lo sentimos, el archivo que estas tratando de subir es demasiado grande (el tamaño máximo es de {{max_size_kb}}kb)"
+        file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es {{max_size_kb}}kb). ¿Quizá podrías subir el archivo a un servicio de almacenamiento en la nube y compartir aquí el enlace?"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
-        too_many_dragged_and_dropped_files: "Lo sentimos, solo puedes arrastrar 10 archivos a la vez."
+        too_many_dragged_and_dropped_files: "Lo sentimos, sólo puedes subir 10 archivos a la vez."
         upload_not_authorized: "Lo sentimos, el archivo que intenta cargar no está autorizado (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir archivos adjuntos."
@@ -1380,6 +1387,7 @@ es:
         no_value: "No, mantener"
         yes_value: "Sí, abandonar"
       via_email: "este post llegó por email"
+      via_auto_generated_email: "este post llegó a través de un email generado automáticamente"
       whisper: "esto post es un susurro privado para moderadores"
       wiki:
         about: "este post es tipo wiki"
@@ -1596,6 +1604,7 @@ es:
       action: 'Reportar post'
       take_action: "Tomar medidas"
       notify_action: 'Mensaje'
+      official_warning: 'Advertencia oficial'
       delete_spammer: "Borrar spammer"
       delete_confirm: "Estás a punto de eliminar <b>%{posts}</b> publicaciones y <b>%{topics}</b> temas de este usuario, borrar su cuenta, bloquear sus inicios de sesión desde su dirección IP <b>%{ip_address}</b>, y añadir su dirección de email <b>%{email}</b> a una lista de bloqueo permanente. ¿Estás seguro de que este usuario es realmente un spammer?"
       yes_delete_spammer: "Sí, borrar spammer"
@@ -1809,7 +1818,7 @@ es:
           30_days_ago: "Hace 30 días"
           all: "Todo"
           view_table: "tabla"
-          view_chart: "gráfico de barras"
+          view_graph: "gráfico"
           refresh_report: "Actualizar reporte"
           start_date: "Desde fecha"
           end_date: "Hasta fecha"

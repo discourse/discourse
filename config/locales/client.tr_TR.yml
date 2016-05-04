@@ -857,6 +857,7 @@ tr_TR:
       link_description: "buraya bağlantı açıklamasını girin"
       link_dialog_title: "Bağlantı ekle"
       link_optional_text: "opsiyonel başlık"
+      link_url_placeholder: "http://ornek.com"
       quote_title: "Blok-alıntı"
       quote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
