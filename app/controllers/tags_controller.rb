@@ -29,14 +29,11 @@ class TagsController < ::ApplicationController
     define_method("show_#{filter}") do
       @tag_id = DiscourseTagging.clean_tag(params[:tag_id])
 
-      # TODO PERF: doesn't scale:
-      topics_tagged = TopicCustomField.where(name: DiscourseTagging::TAGS_FIELD_NAME, value: @tag_id).pluck(:topic_id)
-
       page = params[:page].to_i
 
       query = TopicQuery.new(current_user, build_topic_list_options)
 
-      results = query.send("#{filter}_results").where(id: topics_tagged)
+      results = query.send("#{filter}_results")
 
       if @filter_on_category
         category_ids = [@filter_on_category.id] + @filter_on_category.subcategories.pluck(:id)
@@ -52,8 +49,7 @@ class TagsController < ::ApplicationController
       @list.more_topics_url = list_by_tag_path(tag_id: @tag_id, page: page + 1)
       @rss = "tag"
 
-
-      if @list.topics.size == 0 && !TopicCustomField.where(name: DiscourseTagging::TAGS_FIELD_NAME, value: @tag_id).exists?
+      if @list.topics.size == 0 && !Tag.where(name: @tag_id).exists?
         raise Discourse::NotFound
       else
         respond_with_list(@list)
@@ -68,11 +64,17 @@ class TagsController < ::ApplicationController
   def update
     guardian.ensure_can_admin_tags!
 
-    new_tag_id = DiscourseTagging.clean_tag(params[:tag][:id])
-    if current_user.staff?
-      DiscourseTagging.rename_tag(current_user, params[:tag_id], new_tag_id)
+    tag = Tag.find_by_name(params[:tag_id])
+    raise Discourse::NotFound if tag.nil?
+
+    new_tag_name = DiscourseTagging.clean_tag(params[:tag][:id])
+    tag.name = new_tag_name
+    if tag.save
+      StaffActionLogger.new(current_user).log_custom('renamed_tag', previous_value: params[:tag_id], new_value: new_tag_name)
+      render json: { tag: { id: new_tag_name }}
+    else
+      render_json_error tag.errors.full_messages
     end
-    render json: { tag: { id: new_tag_id }}
   end
 
   def destroy
@@ -104,15 +106,15 @@ class TagsController < ::ApplicationController
   end
 
   def search
-    tags = self.class.tags_by_count(guardian, params.slice(:limit))
+    query = self.class.tags_by_count(guardian, params.slice(:limit))
     term = params[:q]
     if term.present?
       term.gsub!(/[^a-z0-9\.\-\_]*/, '')
       term.gsub!("_", "\\_")
-      tags = tags.where('value like ?', "%#{term}%")
+      query = query.where('tags.name like ?', "%#{term}%")
     end
 
-    tags = tags.count(:value).map {|t, c| { id: t, text: t, count: c } }
+    tags = query.count.map {|t, c| { id: t, text: t, count: c } }
 
     render json: { results: tags }
   end
@@ -147,15 +149,8 @@ class TagsController < ::ApplicationController
       raise Discourse::NotFound unless SiteSetting.tagging_enabled?
     end
 
-    def self.tags_by_count(guardian, opts=nil)
-      opts = opts || {}
-      result = TopicCustomField.where(name: DiscourseTagging::TAGS_FIELD_NAME)
-                               .joins(:topic)
-                               .group(:value)
-                               .limit(opts[:limit] || 5)
-                               .order('COUNT(topic_custom_fields.value) DESC')
-
-      guardian.filter_allowed_categories(result)
+    def self.tags_by_count(guardian, opts={})
+      guardian.filter_allowed_categories(Tag.tags_by_count_query(opts))
     end
 
     def set_category_from_params
@@ -182,6 +177,7 @@ class TagsController < ::ApplicationController
         topic_ids: param_to_integer_list(:topic_ids),
         exclude_category_ids: params[:exclude_category_ids],
         category: params[:category],
+        tags: [params[:tag_id]],
         order: params[:order],
         ascending: params[:ascending],
         min_posts: params[:min_posts],

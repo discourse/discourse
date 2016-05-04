@@ -17,9 +17,8 @@ module TopicsHelper
 
     if (tags = topic.tags).present?
       tags.each do |tag|
-        tag_id = DiscourseTagging.clean_tag(tag)
-        url = "#{Discourse.base_url}/tags/#{tag_id}"
-        breadcrumb << {url: url, name: tag}
+        url = "#{Discourse.base_url}/tags/#{tag.name}"
+        breadcrumb << {url: url, name: tag.name}
       end
     end
 

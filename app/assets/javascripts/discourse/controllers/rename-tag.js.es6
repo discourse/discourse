@@ -14,11 +14,19 @@ export default Ember.Controller.extend(ModalFunctionality, BufferedContent, {
     performRename() {
       const tag = this.get('model'),
             self = this;
-      tag.update({ id: this.get('buffered.id') }).then(function() {
+      tag.update({ id: this.get('buffered.id') }).then(function(result) {
         self.send('closeModal');
-        self.transitionToRoute('tags.show', tag.get('id'));
-      }).catch(function() {
-        self.flash(I18n.t('generic_error'), 'error');
+        if (result.responseJson.tag) {
+          self.transitionToRoute('tags.show', result.responseJson.tag.id);
+        } else {
+          self.flash(result.responseJson.errors || I18n.t('generic_error'), 'error');
+        }
+      }).catch(function(e) {
+        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+          self.flash(e.jqXHR.responseJSON.errors[0], 'error');
+        } else {
+          self.flash(I18n.t('generic_error'), 'error');
+        }
       });
     }
   }
