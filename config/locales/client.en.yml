@@ -773,6 +773,8 @@ en:
         top_links: "Top Links"
         no_links: "No links yet."
         most_liked_by: "Most Liked By"
+        most_liked_users: "Most Liked"
+        most_replied_to_users: "Most Replied To"
         no_likes: "No likes yet."
 
 

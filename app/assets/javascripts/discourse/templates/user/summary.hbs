@@ -93,6 +93,26 @@
     {{/if}}
   </div>
   <div class='top-sub-section likes-section pull-right'>
+  <h3 class='stats-title'>{{i18n "user.summary.most_replied_to_users"}}</h3>
+    {{#if model.most_replied_to_users.length}}
+      <ul>
+        {{#each user in model.most_replied_to_users}}
+          <li>
+            {{#user-info user=user}}
+              {{fa-icon "reply"}}
+              <span class='replies'>{{user.count}}</span>
+            {{/user-info}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>{{i18n "user.summary.no_likes"}}</p>
+    {{/if}}
+  </div>
+</div>
+
+<div class='top-section'>
+  <div class='top-sub-section likes-section pull-left'>
     <h3 class='stats-title'>{{i18n "user.summary.most_liked_by"}}</h3>
     {{#if model.most_liked_by_users.length}}
       <ul>
@@ -100,7 +120,24 @@
           <li>
             {{#user-info user=user}}
               {{fa-icon "heart"}}
-              <span class='likes'>{{user.likes}}</span>
+              <span class='likes'>{{user.count}}</span>
+            {{/user-info}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>{{i18n "user.summary.no_likes"}}</p>
+    {{/if}}
+  </div>
+  <div class='top-sub-section likes-section pull-right'>
+    <h3 class='stats-title'>{{i18n "user.summary.most_liked_users"}}</h3>
+    {{#if model.most_liked_users.length}}
+      <ul>
+        {{#each user in model.most_liked_users}}
+          <li>
+            {{#user-info user=user}}
+              {{fa-icon "heart"}}
+              <span class='likes'>{{user.count}}</span>
             {{/user-info}}
           </li>
         {{/each}}
