@@ -553,6 +553,16 @@ describe Search do
       expect(Search.execute('testing again #category-24:sub-category').posts.length).to eq(1)
       expect(Search.execute('testing again #sub-category').posts.length).to eq(0)
     end
+
+    it "can find with tag" do
+      topic1 = Fabricate(:topic, title: 'Could not, would not, on a boat')
+      topic1.tags = [Fabricate(:tag, name: 'eggs'), Fabricate(:tag, name: 'ham')]
+      post1 = Fabricate(:post, topic: topic1)
+      post2 = Fabricate(:post, topic: topic1, raw: "It probably doesn't help that they're green...")
+
+      expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post2.id])
+      expect(Search.execute('green tags:plants').posts.size).to eq(0)
+    end
   end
 
   it 'can parse complex strings using ts_query helper' do

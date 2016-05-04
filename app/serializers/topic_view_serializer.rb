@@ -33,8 +33,7 @@ class TopicViewSerializer < ApplicationSerializer
                         :word_count,
                         :deleted_at,
                         :pending_posts_count,
-                        :user_id,
-                        :tags
+                        :user_id
 
   attributes :draft,
              :draft_key,
@@ -55,7 +54,8 @@ class TopicViewSerializer < ApplicationSerializer
              :is_warning,
              :chunk_size,
              :bookmarked,
-             :message_archived
+             :message_archived,
+             :tags
 
   # TODO: Split off into proper object / serializer
   def details
@@ -229,6 +229,13 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_pending_posts_count?
     scope.is_staff? && NewPostManager.queue_enabled?
+  end
+
+  def include_tags?
+    SiteSetting.tagging_enabled
+  end
+  def tags
+    object.topic.tags.map(&:name)
   end
 
 end

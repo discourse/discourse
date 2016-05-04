@@ -92,6 +92,9 @@ class Topic < ActiveRecord::Base
   has_many :allowed_users, through: :topic_allowed_users, source: :user
   has_many :queued_posts
 
+  has_many :topic_tags, dependent: :destroy
+  has_many :tags, through: :topic_tags
+
   has_one :top_topic
   belongs_to :user
   belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id
@@ -1040,11 +1043,6 @@ SQL
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.exec.first["count"].to_i
-  end
-
-  def tags
-    result = custom_fields[DiscourseTagging::TAGS_FIELD_NAME]
-    [result].flatten unless result.blank?
   end
 
   def convert_to_public_topic(user)

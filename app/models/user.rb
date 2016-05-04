@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
   has_many :category_users, dependent: :destroy
+  has_many :tag_users, dependent: :destroy
   has_many :topics
   has_many :user_open_ids, dependent: :destroy
   has_many :user_actions, dependent: :destroy
