@@ -203,7 +203,13 @@ export default {
       const post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
       if (post) {
         // TODO: Use ember closure actions
-        const result = topicController._actions[action].call(topicController, post);
+        let actionMethod = topicController._actions[action];
+        if (!actionMethod) {
+          const topicRoute = container.lookup('route:topic');
+          actionMethod = topicRoute._actions[action];
+        }
+
+        const result = actionMethod.call(topicController, post);
         if (result && result.then) {
           this.appEvents.trigger('post-stream:refresh', { id: selectedPostId });
         }
