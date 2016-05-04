@@ -256,7 +256,7 @@
       {{/if}}
     </li>
 
-    {{#if currentUser.admin}}
+    {{#if currentUser.staff}}
       <li class="topic-admin-convert">
         {{#if model.isPrivateMessage}}
           {{d-button action="convertToPublicTopic" icon="comment" label="topic.actions.make_public"}}

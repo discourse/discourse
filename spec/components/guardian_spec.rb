@@ -881,8 +881,12 @@ describe Guardian do
       expect(Guardian.new.can_convert_topic?(topic)).to be_falsey
     end
 
-    it 'returns false when not admin' do
-      expect(Guardian.new(moderator).can_convert_topic?(topic)).to be_falsey
+    it 'returns false when not staff' do
+      expect(Guardian.new(trust_level_4).can_convert_topic?(topic)).to be_falsey
+    end
+
+    it 'returns true when a moderator' do
+      expect(Guardian.new(moderator).can_convert_topic?(topic)).to be_truthy
     end
 
     it 'returns true when an admin' do

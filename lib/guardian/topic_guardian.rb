@@ -59,7 +59,9 @@ module TopicGuardian
   end
 
   def can_convert_topic?(topic)
-    topic && !topic.trashed? && is_admin?
+    return false if topic && topic.trashed?
+    return true if is_admin?
+    is_moderator? && can_create_post?(topic)
   end
 
   def can_reply_as_new_topic?(topic)
