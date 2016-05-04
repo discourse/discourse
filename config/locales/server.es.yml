@@ -2220,11 +2220,15 @@ es:
       name: Primer emoji
       description: Utilizó un emoji en un post
       long_description: |
-        Este distintivo se concede cuando utilizas tu primer emoji en un post :heart:
+        Este distintivo se concede la primera vez que añades un Emoji a tu post :thumbsup:. Los Emoji te permiten añadir emociones a tu publicación, desde felicidad :smiley: a tristeza :anguished: pasando por enfado :angry: o cualquier otra expresión :sunglasses: . Comienza escribiendo : (dos puntos) o haz clic en el botón Emoji de la barra del editor para seleccionar entre cientos de opciones :ok_hand:
     first_mention:
       name: Primera mención
       description: Mencionó a un usuario en un post
-      long_description: Este distintivo se concede cuando mencionas a un @usuario en tu post. Las @menciones te permiten notificar a otros miembros del foro.
+      long_description: Este distintivo se concede la primera vez que mencionas a un @usuario en tu post. Las menciones generan una notificación a la persona, así saben de tu publicación. Comienza escribiendo una @ para mencionar a cualquier usuario o, si está permitido, a un grupo – es una forma útil de llamar su atención.
+    first_onebox:
+      name: Primer Onebox
+      description: Publicó un enlace expandido vía Onebox
+      long_description: Este distintivo se concede la primera vez que publicas un enlace en una línea aparte, que fue automáticamente expandido vía Onebox con un resumen del enlace, un título y (si estuvo disponible) una imagen.
   admin_login:
     success: "Email enviado"
     error: "¡Error!"

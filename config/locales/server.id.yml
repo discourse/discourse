@@ -21,25 +21,103 @@ id:
   loading: "Memuat"
   powered_by_html: 'Didayakan oleh <a href="http://www.discourse.org">Discourse</a>, aktifkan JavaScript untuk tampilan terbaik'
   log_in: "Log In"
+  purge_reason: "Secara otomatis dihapus sebagai akun yang ditinggalkan, dinon-aktifkan."
+  disable_remote_images_download_reason: "Unduh gambar jarak jauh dimatikan karena ruang penyimpanan di server tidak cukup."
   anonymous: "Anonim"
+  emails:
+    incoming:
+      default_subject: "Email masuk dari %{email}"
+      show_trimmed_content: "Tampilkan konten yang dipersingkat"
+      errors:
+        empty_email_error: "Terjadi bila surel mentah yang kami terima tidak berisi apapun (kosong)."
+        no_message_id_error: "Terjadi bila surel tidak memiliki header 'Message-Id'."
+        auto_generated_email_error: "Terjadi bila 'precedence' header ditentukan sebagai: list, junk, bulk atau auto_reply, atau ketika header lainnya mengandung: kumpulkan otomatis, balas otomatis, atau buat otomatis."
   errors: &errors
     messages:
+      too_long_validation: "Dibatasi hingga %{max} karakter; Anda memasukkan %{length} karakter."
+      taken: "sudah diambil"
+      accepted: harus diterima
+      blank: tidak boleh kosong
+      present: harus kosong
+      confirmation: "tidak cocok dengan %{attribute}"
+      empty: tidak boleh kosong
+      equal_to: harus sebanyak %{count}
+      even: harus genap
+      exclusion: telah dipratentukan oleh sistem
+      greater_than: harus lebih besar dari %{count}
+      greater_than_or_equal_to: harus sama dengan atau lebih besar dari %{count}
+      has_already_been_used: "telah digunakan"
+      inclusion: tidak dimasukkan kedalam daftar
       invalid: tidak benar
+      is_invalid: "tidak valid; cobalah untuk lebih deskriptif"
+      less_than: harus kurang dari %{count}
+      less_than_or_equal_to: harus sama dengan atau kurang dari %{count}
       not_a_number: bukan numerik
       not_an_integer: harus integer
       odd: harus ganjil
+      record_invalid: 'Validasi gagal: %{errors}'
+      restrict_dependent_destroy:
+        one: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
+        many: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
+      too_long:
+        other: terlalu panjang (panjang maksimum adalah %{count} karakter)
+      too_short:
+        other: terlalu pendek (jumlah minimum adalah %{count} karakter)
+      wrong_length:
+        other: jumlah karakter salah (seharusnya %{count} karakter)
+      other_than: "harus lain dari %{count}"
+    template:
+      body: 'Ada masalah dengan objek-objek berikut:'
+      header:
+        other: '%{count} kesalahan menyebabkan %{model} ini tidak bisa disimpan'
+    embed:
+      load_from_remote: "Ada kesalahan dalam memuat posting itu."
+    site_settings:
+      min_username_length_exists: "Anda tidak boleh menentukan jumlah karakter minimum username lebih dari username yang terpendek"
+      min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
+      max_username_length_exists: "Anda tidak boleh menentukan jumlah karakter maksimum username dibawah username terpendek. "
+      max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
+      default_categories_already_selected: "Anda tidak boleh memilih kategori yang digunakan di daftar lainnya."
   backup:
     operation_already_running: "Proses lain sedang berjalan. Tidak dapat menjalankan proses baru saat ini."
     backup_file_should_be_tar_gz: "File backup harus berupa arsip .tar.gz."
+    not_enough_space_on_disk: "Ruang penyimpanan tidak cukup untuk menerima unduhan backup ini."
   not_logged_in: "Anda harus login untuk melakukan itu."
+  not_found: "URL atau sumber yang diminta tidak dapat ditemukan."
+  invalid_access: "Anda tidak diijinkan untuk melihat sumber yang diminta."
   read_only_mode_enabled: "Situs ini dalam modus read-only. Interaksi dinonaktifkan."
+  reading_time: "Waktu bacaan"
+  likes: "Suka"
+  too_many_replies:
+    other: "Maaft, bagi pengguna baru sementara ini hanya dibatasi hingga %{count} jawaban dalam topik yang sama."
   embed:
     start_discussion: "Mulai Diskusi"
     continue: "Lanjutkan Diskusi"
+    more_replies:
+      other: "%{count} jawaban lainnya"
+    loading: "Sedang memuat diskusi..."
+    imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} balasan"
+  no_mentions_allowed: "Maaf, Anda tidak dapat menyebut pengguna lain."
+  too_many_mentions:
+    other: "Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
+  no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
+  too_many_mentions_newuser:
+    other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
+  no_images_allowed: "Maaf, pengguna baru tidak diperbolehkan untuk memasang gambar/foto dalam posting."
+  too_many_images:
+    other: "Maaf, pengguna baru hanya diperbolehkan untuk memasang %{count} gambar/foto dalam satu posting."
+  no_attachments_allowed: "Maaf, pengguna baru tidak diijinkan untuk mengunggah file/attachment dalam posting."
+  too_many_attachments:
+    other: "Maaf, pengguna baru hanya diijinkan untuk mengunggah %{count} file/attachment dalam satu posting."
+  no_links_allowed: "Maaf, pengguna baru tidak diijinkan untuk menulis tautan dalam posting."
+  too_many_links:
+    other: "Maaf, pengguna baru hanya diijinkan untuk menulis %{count} tautan dalam satu posting."
   spamming_host: "Maaf, Anda tidak dapat mencantumkan tautan ke host tersebut."
+  user_is_suspended: "Pengguna yang dalam masa suspensi tidak diperbolehkan untuk membuat posting."
+  topic_not_found: "Ada yang salah. Mungkin topik ini ditutup atau dihapus ketika Anda sedang menjelajahinya?"
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
   has_already_been_used: "telah digunakan"
   invalid_characters: "memuat karakter yang tidak valid"
@@ -59,11 +137,15 @@ id:
   rss_description:
     latest: "Topik Terbaru"
     hot: "Topik Terpanas"
+    top: "Topik unggulan"
     posts: "Pos terbaru"
+    private_posts: "pesan pribadi terkini"
+    group_posts: "Posting terkini dari %{group_name}"
+    group_mentions: "Mention terkini dari %{group_name}"
   excerpt_image: "gambar"
   groups:
     errors:
-      can_not_modify_automatic: "Anda tidak dapat mengubah grup otomatis"
+      invalid_incoming_email: "'%{email}' bukanlah alamat email yang valid."
     default_names:
       everyone: "setiap orang"
       admins: "admin"
@@ -96,6 +178,8 @@ id:
     title: "Selamat datang di Lounge"
   category:
     topic_prefix: "Tentang kategori %{category}"
+    errors:
+      invalid_email_in: "'%{email}' bukanlah alamat email yang valid."
   trust_levels:
     newuser:
       title: "pengguna baru"
@@ -122,6 +206,16 @@ id:
         other: "baru saja"
       x_seconds:
         other: "%{count} detik yang lalu"
+  password_reset:
+    choose_new: "Silahkan memilih password baru"
+  change_email:
+    error: "Ada kesalahan dalam merubah alamat email Anda. Mungkinkah alamat ini telah digunakan oleh pengguna lain?"
+    error_staged: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain."
+    authorizing_old:
+      title: "Terima kasih telah mengkonfirmasi alamat email terkini Anda"
+      description: "Sekarang kami akan mengirimkan surel konfirmasi ke alamat email baru Anda."
+  activation:
+    please_continue: "Akun baru Anda telah dikonfirmasi. Anda akan diarahkan ke halaman utama."
   post_action_types:
     bookmark:
       title: 'Penandaan'
@@ -131,10 +225,21 @@ id:
     notify_moderators:
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
   reports:
+    signups:
+      title: "Pengguna Baru"
+      yaxis: "Jumlah pengguna baru"
+    topics:
+      yaxis: "Jumlah topik baru"
     posts:
       title: "Pos"
+      yaxis: "Jumlah posting baru"
     likes:
       title: "Suka"
+      yaxis: "Jumlah suka baru"
+    bookmarks:
+      yaxis: "Jumlah bookmark baru"
+    starred:
+      yaxis: "Jumlah topik berbintang baru"
     notify_moderators_private_messages:
       xaxis: "Hari"
     notify_user_private_messages:
@@ -160,16 +265,57 @@ id:
   site_settings:
     notify_mods_when_user_blocked: "Jika pengguna diblokir secara otomatis, kirimkan pesan kepada semua moderator."
     maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
+    email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
+    errors:
+      invalid_email: "Alamat email tidak valid."
+  topic_statuses:
+    closed_enabled: "Topik telah ditutup. Jawaban baru tidak lagi diijinkan."
+    closed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
+    autoclosed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
+    autoclosed_disabled_lastpost: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
   user:
     email:
+      not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
       blocked: "tidak diperbolehkan."
+    ip_address:
+      blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
+      max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
   system_messages:
+    too_many_spam_flags:
+      subject_template: "Akun baru disuspensi atas alasan laporan dari komunitas"
+    user_automatically_blocked:
+      subject_template: "Pengguna baru %{username} disuspensi atas laporan komunitas"
+    spam_post_blocked:
+      subject_template: "Pengguna baru %{username} disuspensi atas penulisan tautan yang berulang-ulang kali"
     pending_users_reminder:
       subject_template:
         other: "%{count} pengguna sedang menunggu persetujuan"
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
+    digest:
+      new_activity: "Aktifitas baru di topik dan posting Anda:"
+      more_topics: "Ada %{new_topics_since_seen} topik baru lainnya."
+      more_topics_category: "Topik baru lebih banyak:"
+    account_created:
+      subject_template: "[%{site_name}] Akun Baru Anda"
+      text_body_template: |+
+        Anda mendapatkan akun baru di %{site_name}
+
+
+        Silahkan sentuh tautan dibawah ini untuk menentukan sandi dari akun baru Anda:
+
+        %{base_url}/users/password-reset/%{email_token}
+
+    confirm_new_email:
+      subject_template: "[%{site_name}] Konfirmasi email baru Anda"
+      text_body_template: |
+        Silahkan mengkonfirmasi email baru Anda di %{site_name} dengan mengunjungi tautan dibawah:
+
+
+        %{base_url}/users/authorize-email/%{email_token}
+    signup:
+      subject_template: "[%{site_name}] Konfirmasi akun baru Anda"
   page_not_found:
     see_more: "Selengkapnya"
   terms_of_service:

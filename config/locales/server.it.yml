@@ -24,13 +24,18 @@ it:
   loading: "Caricamento"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, è consigliato abilitare JavaScript '
   log_in: "Accedi"
-  purge_reason: "Cancellato automaticamente come account abbandonato e mai attivato"
+  purge_reason: "Account cancellato automaticamente perché abbandonato o disattivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
   emails:
     incoming:
       default_subject: "Email in arrivo da %{email}"
       show_trimmed_content: "Mostra contenuto tagliato"
+      errors:
+        empty_email_error: "Succede quando l'email ricevuta era vuota."
+        no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
+        inactive_user_error: "Succede quando il mittente non è attivo."
+        blocked_user_error: "Succede quando il mittente è stato bloccato."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -429,7 +434,7 @@ it:
     like:
       title: 'Mi piace'
       description: 'Metti "Mi piace" a questo messaggio'
-      long_form: 'hai messo "Mi piace"'
+      long_form: 'hanno messo "Mi piace"'
     vote:
       title: 'Vota'
       description: 'Vota questo messaggio'
@@ -896,7 +901,7 @@ it:
     allow_animated_thumbnails: "Genera miniature animate delle gif animate."
     default_avatars: "URL degli avatar che verranno utilizzati come predefiniti per i nuovi utenti, fintanto che non li cambieranno esplicitamente."
     automatically_download_gravatars: "Scarica i Gravatars per gli utenti quando viene creato l'account o quando viene modificata l'email"
-    digest_topics: "Numero massimo di argomenti da mostrare nel riassunto email."
+    digest_topics: "Numero massimo di argomenti da mostrare nelle email riepilogative."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     enable_mobile_theme: "I dispositivi mobili usano un tema apposito, con possibilità di passare alla visualizzazione completa. Disabilita questa opzione se vuoi usare un foglio di stile personalizzato che sia completamente reattivo."
     suppress_uncategorized_badge: "Non mostrare la targhetta per gli argomenti senza categoria nell'elenco degli argomenti."
@@ -951,6 +956,10 @@ it:
   redirected_to_top_reasons:
     new_user: "Benvenuto nella nostra comunità! Questi sono gli argomenti recenti più popolari."
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Questi sono gli argomenti più popolari da quando sei stato via."
+  move_posts:
+    existing_topic_moderator_post:
+      one: "Un messaggio è stato fuso in un argomento esistente: %{topic_link}"
+      other: "%{count} messaggi sono stati fusi in un argomento esistente: %{topic_link}"
   change_owner:
     post_revision_text: "Proprietà trasferita da %{old_user} a %{new_user}"
     deleted_user: "un utente eliminato"
@@ -1141,51 +1150,29 @@ it:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_replied_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_linked:
       subject_template: "[%{site_name}] %{topic_title} "
-      text_body_template: "%{header_instructions}\n \n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions}\n\n%{message}\n \n%{context}\n\n---\n%{respond_instructions}\n"
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions}\n\n%{message}\n\n%{context}\n \n---\n%{respond_instructions}\n"
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions}\n\n%{message}\n \n%{context}\n\n---\n%{respond_instructions}\n"
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       subject_template: "[%{site_name}] Riepilogo"
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
       top_topics: "Messaggi di successo"
       other_new_topics: "Argomenti più attivi"
-      unsubscribe: "Questo riassunto viene spedito da %{site_link} ogniqualvolta non ti vediamo per un po' di tempo. Per cancellarti %{unsubscribe_link}."
+      unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       read_more: "Leggi Altro"
@@ -1285,6 +1272,20 @@ it:
     title: "Termini del Servizio"
   privacy_topic:
     title: "Politica della Privacy"
+  badges:
+    first_like:
+      name: Primo "Mi piace"
+      description: Ha messo "Mi piace" a un messaggio
+    first_flag:
+      name: Prima Segnalazione
+      description: Segnalato un messaggio
+    first_share:
+      name: Prima Condivisione
+      description: Ha condiviso un messaggio
+    first_link:
+      name: Primo Collegamento
+    first_quote:
+      description: Ha citato un messaggio
   admin_login:
     success: "email Inviata"
     error: "Errore!"

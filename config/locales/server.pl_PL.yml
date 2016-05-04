@@ -24,12 +24,14 @@ pl_PL:
   loading: "Ładowanie"
   powered_by_html: 'Zasilane przez <a href="http://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
   log_in: "Logowanie"
-  purge_reason: "Automatycznie usunięto jako porzucone, nieaktywne konto"
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   anonymous: "Anonim"
   emails:
     incoming:
       default_subject: "Przychodzący email od %{email}"
+      show_trimmed_content: "Pokaż skróconą zawartość"
+      errors:
+        no_message_id_error: "Zdarza się kiedy email nie posiada nagłówka 'Message-Id'."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
