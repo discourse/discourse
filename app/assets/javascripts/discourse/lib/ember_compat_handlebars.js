@@ -69,10 +69,18 @@
     RawHandlebars.JavaScriptCompiler.prototype.namespace = "Discourse.EmberCompatHandlebars";
 
     function buildPath(blk, args) {
-      return $.extend({ type: "PathExpression",
-                        data: false,
-                        depth: blk.path.depth,
-                        loc: blk.path.loc }, args);
+
+      const result = { type: "PathExpression",
+                       data: false,
+                       depth: blk.path.depth,
+                       loc: blk.path.loc };
+
+      // Server side precompile doesn't have jquery.extend
+      Object.keys(args).forEach(function (a) {
+        result[a] = args[a]}
+      );
+
+      return result;
     }
 
     function replaceGet(ast) {
