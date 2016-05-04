@@ -13,6 +13,10 @@ export default DiscourseRoute.extend({
   },
 
   actions: {
+    removePost(post) {
+      this.modelFor('queued-posts').removeObject(post);
+    },
+
     refresh() {
       this.modelFor('queued-posts').refresh();
     }
