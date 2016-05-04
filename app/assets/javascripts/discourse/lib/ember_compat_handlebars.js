@@ -77,8 +77,8 @@
 
       // Server side precompile doesn't have jquery.extend
       Object.keys(args).forEach(function (a) {
-        result[a] = args[a]}
-      );
+        result[a] = args[a];
+      });
 
       return result;
     }
