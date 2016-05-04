@@ -8,6 +8,55 @@ module DiscourseTagging
   #   isolate_namespace DiscourseTagging
   # end
 
+  def self.tag_topic_by_names(topic, guardian, tag_names_arg)
+    if SiteSetting.tagging_enabled
+      tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
+
+      old_tag_names = topic.tags.map(&:name) || []
+      new_tag_names = tag_names - old_tag_names
+      removed_tag_names = old_tag_names - tag_names
+
+      # Protect staff-only tags
+      unless guardian.is_staff?
+        staff_tags = DiscourseTagging.staff_only_tags(new_tag_names)
+        if staff_tags.present?
+          topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" "))
+          return false
+        end
+
+        staff_tags = DiscourseTagging.staff_only_tags(removed_tag_names)
+        if staff_tags.present?
+          topic.errors[:base] << I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" "))
+          return false
+        end
+      end
+
+      if tag_names.present?
+        tags = Tag.where(name: tag_names).all
+        if tags.size < tag_names.size
+          existing_names = tags.map(&:name)
+          tag_names.each do |name|
+            next if existing_names.include?(name)
+            tags << Tag.create(name: name)
+          end
+        end
+
+        auto_notify_for(tags, topic)
+
+        topic.tags = tags
+      else
+        auto_notify_for([], topic)
+        topic.tags = []
+      end
+    end
+    true
+  end
+
+  def self.auto_notify_for(tags, topic)
+    TagUser.auto_watch_new_topic(topic, tags)
+    TagUser.auto_track_new_topic(topic, tags)
+  end
+
   def self.clean_tag(tag)
     tag.downcase.strip[0...SiteSetting.max_tag_length].gsub(TAGS_FILTER_REGEXP, '')
   end
@@ -36,8 +85,7 @@ module DiscourseTagging
     # If the user can't create tags, remove any tags that don't already exist
     # TODO: this is doing a full count, it should just check first or use a cache
     unless guardian.can_create_tag?
-      tag_count = TopicCustomField.where(name: TAGS_FIELD_NAME, value: tags).group(:value).count
-      tags.delete_if {|t| !tag_count.has_key?(t) }
+      tags = Tag.where(name: tags).pluck(:name)
     end
 
     return tags[0...SiteSetting.max_tags_per_topic]
@@ -45,68 +93,6 @@ module DiscourseTagging
 
   def self.notification_key(tag_id)
     "tags_notification:#{tag_id}"
-  end
-
-  def self.auto_notify_for(tags, topic)
-    # This insert will run up to SiteSetting.max_tags_per_topic times
-    tags.each do |tag|
-      key_name_sql = ActiveRecord::Base.sql_fragment("('#{notification_key(tag)}')", tag)
-
-      sql = <<-SQL
-         INSERT INTO topic_users(user_id, topic_id, notification_level, notifications_reason_id)
-         SELECT ucf.user_id,
-                #{topic.id.to_i},
-                CAST(ucf.value AS INTEGER),
-                #{TopicUser.notification_reasons[:plugin_changed]}
-         FROM user_custom_fields AS ucf
-         WHERE ucf.name IN #{key_name_sql}
-           AND NOT EXISTS(SELECT 1 FROM topic_users WHERE topic_id = #{topic.id.to_i} AND user_id = ucf.user_id)
-           AND CAST(ucf.value AS INTEGER) <> #{TopicUser.notification_levels[:regular]}
-      SQL
-
-      ActiveRecord::Base.exec_sql(sql)
-    end
-  end
-
-  def self.rename_tag(current_user, old_id, new_id)
-    sql = <<-SQL
-      UPDATE topic_custom_fields AS tcf
-        SET value = :new_id
-      WHERE value = :old_id
-        AND name = :tags_field_name
-        AND NOT EXISTS(SELECT 1
-                       FROM topic_custom_fields
-                       WHERE value = :new_id AND name = :tags_field_name AND topic_id = tcf.topic_id)
-    SQL
-
-    user_sql = <<-SQL
-      UPDATE user_custom_fields
-        SET name = :new_user_tag_id
-      WHERE name = :old_user_tag_id
-        AND NOT EXISTS(SELECT 1
-                       FROM user_custom_fields
-                       WHERE name = :new_user_tag_id)
-    SQL
-
-    ActiveRecord::Base.transaction do
-      ActiveRecord::Base.exec_sql(sql, new_id: new_id, old_id: old_id, tags_field_name: TAGS_FIELD_NAME)
-      TopicCustomField.delete_all(name: TAGS_FIELD_NAME, value: old_id)
-      ActiveRecord::Base.exec_sql(user_sql, new_user_tag_id: notification_key(new_id),
-                                       old_user_tag_id: notification_key(old_id))
-      UserCustomField.delete_all(name: notification_key(old_id))
-      StaffActionLogger.new(current_user).log_custom('renamed_tag', previous_value: old_id, new_value: new_id)
-    end
-  end
-
-  def self.top_tags(limit_arg=nil)
-    # TODO: cache
-    # TODO: need an index for this (name,value)
-    TopicCustomField.where(name: TAGS_FIELD_NAME)
-                    .group(:value)
-                    .limit(limit_arg || SiteSetting.max_tags_in_filter_list)
-                    .order('COUNT(value) DESC')
-                    .count
-                    .map {|name, count| name}
   end
 
   def self.muted_tags(user)

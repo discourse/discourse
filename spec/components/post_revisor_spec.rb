@@ -362,5 +362,131 @@ describe PostRevisor do
         expect(payload[:reload_topic]).to eq(true)
       end
     end
+
+    context "tagging" do
+      context "tagging disabled" do
+        before do
+          SiteSetting.tagging_enabled = false
+        end
+
+        it "doesn't add the tags" do
+          result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: ['totally', 'update'] })
+          expect(result).to eq(true)
+          post.reload
+          expect(post.topic.tags.size).to eq(0)
+        end
+      end
+
+      context "tagging enabled" do
+        before do
+          SiteSetting.tagging_enabled = true
+        end
+
+        context "can create tags" do
+          before do
+            SiteSetting.min_trust_to_create_tag = 0
+            SiteSetting.min_trust_level_to_tag_topics = 0
+          end
+
+          it "can create all tags if none exist" do
+            expect {
+              @result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: ['totally', 'update'] })
+            }.to change { Tag.count }.by(2)
+            expect(@result).to eq(true)
+            post.reload
+            expect(post.topic.tags.map(&:name).sort).to eq(['totally', 'update'])
+          end
+
+          it "creates missing tags if some exist" do
+            Fabricate(:tag, name: 'totally')
+            expect {
+              @result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: ['totally', 'update'] })
+            }.to change { Tag.count }.by(1)
+            expect(@result).to eq(true)
+            post.reload
+            expect(post.topic.tags.map(&:name).sort).to eq(['totally', 'update'])
+          end
+
+          it "can remove all tags" do
+            topic.tags = [Fabricate(:tag, name: "super"), Fabricate(:tag, name: "stuff")]
+            result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: [] })
+            expect(result).to eq(true)
+            post.reload
+            expect(post.topic.tags.size).to eq(0)
+          end
+
+          it "can't add staff-only tags" do
+            SiteSetting.staff_tags = "important"
+            result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: ['important', 'stuff'] })
+            expect(result).to eq(false)
+            expect(post.topic.errors.present?).to eq(true)
+          end
+
+          it "staff can add staff-only tags" do
+            SiteSetting.staff_tags = "important"
+            result = subject.revise!(Fabricate(:admin), { raw: "lets totally update the body", tags: ['important', 'stuff'] })
+            expect(result).to eq(true)
+            post.reload
+            expect(post.topic.tags.map(&:name).sort).to eq(['important', 'stuff'])
+          end
+
+          context "with staff-only tags" do
+            before do
+              SiteSetting.staff_tags = "important"
+              topic = post.topic
+              topic.tags = [Fabricate(:tag, name: "super"), Fabricate(:tag, name: "important"), Fabricate(:tag, name: "stuff")]
+            end
+
+            it "staff-only tags can't be removed" do
+              result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: ['stuff'] })
+              expect(result).to eq(false)
+              expect(post.topic.errors.present?).to eq(true)
+              post.reload
+              expect(post.topic.tags.map(&:name).sort).to eq(['important', 'stuff', 'super'])
+            end
+
+            it "can't remove all tags if some are staff-only" do
+              result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: [] })
+              expect(result).to eq(false)
+              expect(post.topic.errors.present?).to eq(true)
+              post.reload
+              expect(post.topic.tags.map(&:name).sort).to eq(['important', 'stuff', 'super'])
+            end
+
+            it "staff-only tags can be removed by staff" do
+              result = subject.revise!(Fabricate(:admin), { raw: "lets totally update the body", tags: ['stuff'] })
+              expect(result).to eq(true)
+              post.reload
+              expect(post.topic.tags.map(&:name)).to eq(['stuff'])
+            end
+
+            it "staff can remove all tags" do
+              result = subject.revise!(Fabricate(:admin), { raw: "lets totally update the body", tags: [] })
+              expect(result).to eq(true)
+              post.reload
+              expect(post.topic.tags.size).to eq(0)
+            end
+          end
+
+        end
+
+        context "cannot create tags" do
+          before do
+            SiteSetting.min_trust_to_create_tag = 4
+            SiteSetting.min_trust_level_to_tag_topics = 0
+          end
+
+          it "only uses existing tags" do
+            Fabricate(:tag, name: 'totally')
+            expect {
+              @result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: ['totally', 'update'] })
+            }.to_not change { Tag.count }
+            expect(@result).to eq(true)
+            post.reload
+            expect(post.topic.tags.map(&:name)).to eq(['totally'])
+          end
+        end
+      end
+    end
   end
 end

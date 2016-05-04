@@ -147,7 +147,6 @@ class PostCreator
       track_latest_on_category
       enqueue_jobs
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
-      auto_notify_for_tags
 
       trigger_after_events(@post)
 
@@ -437,17 +436,6 @@ class PostCreator
   def enqueue_jobs
     return unless @post && !@post.errors.present?
     PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
-  end
-
-  def auto_notify_for_tags
-    if SiteSetting.tagging_enabled
-      tags = DiscourseTagging.tags_for_saving(@opts[:tags], @guardian)
-      if tags.present?
-        @topic.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
-        @topic.save
-        DiscourseTagging.auto_notify_for(tags, @topic)
-      end
-    end
   end
 
   def new_topic?
