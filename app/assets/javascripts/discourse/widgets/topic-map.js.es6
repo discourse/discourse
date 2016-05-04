@@ -125,6 +125,7 @@ createWidget('topic-map-link', {
 
 createWidget('topic-map-expanded', {
   tagName: 'section.topic-map-expanded',
+  buildKey: attrs => `topic-map-expanded-${attrs.id}`,
 
   defaultState() {
     return { allLinksShown: false };

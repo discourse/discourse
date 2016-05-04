@@ -162,6 +162,7 @@ zh_CN:
     group_mentions: "%{group_name}组最近的提及"
     user_posts: "最新贴子由@%{username}发表"
     user_topics: "最新主题由@%{username}发表"
+    tag: "加标签的主题"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
@@ -277,7 +278,7 @@ zh_CN:
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
   vip_category_name: "贵宾室"
   vip_category_description: "高于信任等级3的用户参与讨论的分类。"
-  meta_category_name: "页面反馈"
+  meta_category_name: "站点反馈"
   meta_category_description: "讨论该站点的站务、组织、如何运作和如何改善它。"
   staff_category_name: "管理人员"
   staff_category_description: "管理人员私有的分类。只有管理员和版主才能阅览主题。"
@@ -1079,6 +1080,18 @@ zh_CN:
     default_categories_watching: "分类列表默认跟踪。"
     default_categories_tracking: "分类列表默认追踪。"
     default_categories_muted: "分类列表默认不显示。"
+    tagging_enabled: "允许用户为主题设置标签？"
+    min_trust_to_create_tag: "允许创建标签的最小信任等级。"
+    max_tags_per_topic: "一个主题最多允许有多少个标签。"
+    max_tag_length: "一个标签允许的最大字符数。"
+    max_tag_search_results: "当搜索标签时，显示的最多几个结果。"
+    show_filter_by_tag: "显示一个下拉菜单按照标签过滤主题列表。"
+    max_tags_in_filter_list: "过滤下拉菜单中显示的最大标签数。最常用的标签将优先显示。"
+    tags_sort_alphabetically: "按照字母顺序显示标签。默认显示顺序是流行度。"
+    tag_style: "标签的视觉样式。"
+    staff_tags: "只可由志愿设置的标签列表"
+    min_trust_level_to_tag_topics: "给主题加标签的最小信任等级"
+    suppress_overlapping_tags_in_list: "如果在列表视图中标签覆盖了主题，则隐藏标签"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -2452,3 +2465,7 @@ zh_CN:
   activemodel:
     errors:
       <<: *errors
+  tags:
+    staff_tag_disallowed: "标签\"%{tag}\"只可以由职员标记。"
+    staff_tag_remove_disallowed: "标签\"%{tag}\"只可以由职员删除。"
+  rss_by_tag: "%{tag}标签的主题"

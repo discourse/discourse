@@ -15,7 +15,7 @@
 
 {{bulk-select-button selected=selected refreshTarget=controller}}
 
-<div class='contents'>
+{{#discovery-topics-list model=model refresh="refresh" incomingCount=topicTrackingState.incomingCount}}
   {{#if top}}
     <div class='top-lists'>
       {{period-chooser period=period action="changePeriod"}}
@@ -32,23 +32,23 @@
   {{/if}}
 
   {{#if hasTopics}}
-    {{topic-list
-        showTopicPostBadges=showTopicPostBadges
-        showPosters=true
-        currentUser=currentUser
-        canBulkSelect=canBulkSelect
-        changeSort="changeSort"
-        toggleBulkSelect="toggleBulkSelect"
-        hideCategory=model.hideCategory
-        order=order
-        ascending=ascending
-        bulkSelectEnabled=bulkSelectEnabled
-        selected=selected
-        expandGloballyPinned=expandGloballyPinned
-        expandAllPinned=expandAllPinned
-        topics=model.topics}}
+      {{topic-list
+          showTopicPostBadges=showTopicPostBadges
+          showPosters=true
+          currentUser=currentUser
+          canBulkSelect=canBulkSelect
+          changeSort="changeSort"
+          toggleBulkSelect="toggleBulkSelect"
+          hideCategory=model.hideCategory
+          order=order
+          ascending=ascending
+          bulkSelectEnabled=bulkSelectEnabled
+          selected=selected
+          expandGloballyPinned=expandGloballyPinned
+          expandAllPinned=expandAllPinned
+          topics=model.topics}}
   {{/if}}
-</div>
+{{/discovery-topics-list}}
 
 <footer class='topic-list-bottom'>
   {{conditional-loading-spinner condition=model.loadingMore}}

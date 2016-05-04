@@ -1,7 +1,6 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
 import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
-import { listenForViewEvent } from 'discourse/lib/app-events';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Scrolling from 'discourse/mixins/scrolling';
 
@@ -23,6 +22,8 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
   postStream: Em.computed.alias('topic.postStream'),
   archetype: Em.computed.alias('topic.archetype'),
 
+  _lastShowTopic: null,
+
   _composeChanged: function() {
     const composerController = Discourse.get('router.composerController');
     composerController.clearState();
@@ -35,6 +36,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     // prevents scrolled from being called twice.
     const enteredAt = this.get('controller.enteredAt');
     if (enteredAt && (this.get('lastEnteredAt') !== enteredAt)) {
+      this._lastShowTopic = null;
       this.scrolled();
       this.set('lastEnteredAt', enteredAt);
     }
@@ -60,6 +62,9 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
       return ClickTrack.trackClick(e);
     });
 
+    this.appEvents.on('post:highlight', postNumber => {
+      Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
+    });
   }.on('didInsertElement'),
 
   // This view is being removed. Shut down operations
@@ -73,7 +78,8 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     this.resetExamineDockCache();
 
     // this happens after route exit, stuff could have trickled in
-    this.set('controller.controllers.header.showExtraInfo', false);
+    this.appEvents.trigger('header:hide-topic');
+    this.appEvents.off('post:highlight');
 
   }.on('willDestroyElement'),
 
@@ -89,6 +95,14 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
   offset: 0,
   hasScrolled: Em.computed.gt("offset", 0),
+
+  showTopicInHeader(topic, offset) {
+    if (this.get('docAt')) {
+      return offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded');
+    } else {
+      return topic.get('postStream.firstPostNotLoaded');
+    }
+  },
 
   // The user has scrolled the window, or it is finished rendering and ready for processing.
   scrolled() {
@@ -106,12 +120,16 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
     this.set("offset", offset);
 
-    const headerController = this.get('controller.controllers.header'),
-          topic = this.get('controller.model');
-    if (this.get('docAt')) {
-      headerController.set('showExtraInfo', offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded'));
-    } else {
-      headerController.set('showExtraInfo', topic.get('postStream.firstPostNotLoaded'));
+    const topic = this.get('controller.model');
+    const showTopic = this.showTopicInHeader(topic, offset);
+    if (showTopic !== this._lastShowTopic) {
+      this._lastShowTopic = showTopic;
+
+      if (showTopic) {
+        this.appEvents.trigger('header:show-topic', topic);
+      } else {
+        this.appEvents.trigger('header:hide-topic');
+      }
     }
 
     // Trigger a scrolled event
@@ -184,9 +202,5 @@ function highlight(postNumber) {
       $contents.css({'background-color': ''});
     });
 }
-
-listenForViewEvent(TopicView, 'post:highlight', postNumber => {
-  Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
-});
 
 export default TopicView;

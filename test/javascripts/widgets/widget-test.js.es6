@@ -89,6 +89,7 @@ widgetTest('widget state', {
   setup() {
     createWidget('state-test', {
       tagName: 'button.test',
+      buildKey: () => `button-test`,
 
       defaultState() {
         return { clicks: 0 };
@@ -121,6 +122,7 @@ widgetTest('widget update with promise', {
   setup() {
     createWidget('promise-test', {
       tagName: 'button.test',
+      buildKey: () => 'promise-test',
 
       html(attrs, state) {
         return state.name || "No name";

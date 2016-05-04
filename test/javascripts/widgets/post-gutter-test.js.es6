@@ -6,6 +6,7 @@ widgetTest("duplicate links", {
   template: '{{mount-widget widget="post-gutter" args=args}}',
   setup() {
     this.set('args', {
+      id: 2,
       links: [
         { title: "Evil Trout Link", url: "http://eviltrout.com" },
         { title: "Evil Trout Link", url: "http://dupe.eviltrout.com" }
@@ -21,6 +22,7 @@ widgetTest("collapsed links", {
   template: '{{mount-widget widget="post-gutter" args=args}}',
   setup() {
     this.set('args', {
+      id: 1,
       links: [
         { title: "Link 1", url: "http://eviltrout.com?1" },
         { title: "Link 2", url: "http://eviltrout.com?2" },

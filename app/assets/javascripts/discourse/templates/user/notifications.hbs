@@ -23,5 +23,7 @@
 </section>
 
 <section class='user-right'>
-  {{outlet}}
+  {{#load-more class="notification-history user-stream" selector=".user-stream .notification" action="loadMore"}}
+    {{outlet}}
+  {{/load-more}}
 </section>

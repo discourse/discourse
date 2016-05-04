@@ -702,12 +702,16 @@ class User < ActiveRecord::Base
 
   # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
-    admin = Discourse.system_user
+    disagreed_flag_post_ids = PostAction.where(post_action_type_id: PostActionType.types[:spam])
+                                        .where.not(disagreed_at: nil)
+                                        .pluck(:post_id)
 
-    disagreed_flag_post_ids = PostAction.where(post_action_type_id: PostActionType.types[:spam]).where.not(disagreed_at: nil).pluck(:post_id)
-    topic_links.includes(:post).where.not(post_id: disagreed_flag_post_ids).each do |tl|
+    topic_links.includes(:post)
+               .where.not(post_id: disagreed_flag_post_ids)
+               .each do |tl|
       begin
-        PostAction.act(admin, tl.post, PostActionType.types[:spam], message: I18n.t('flag_reason.spam_hosts'))
+        message = I18n.t('flag_reason.spam_hosts', domain: tl.domain)
+        PostAction.act(Discourse.system_user, tl.post, PostActionType.types[:spam], message: message)
       rescue PostAction::AlreadyActed
         # If the user has already acted, just ignore it
       end
@@ -839,6 +843,10 @@ class User < ActiveRecord::Base
     SiteSetting.allow_anonymous_posting &&
       trust_level >= 1 &&
       custom_fields["master_id"].to_i > 0
+  end
+
+  def is_singular_admin?
+    User.where(admin: true).where.not(id: id).where.not(id: Discourse::SYSTEM_USER_ID).blank?
   end
 
   protected

@@ -23,6 +23,12 @@ class TopicCreator
     # so we fire the validation event after
     # this allows us to add errors
     valid = topic.valid?
+
+    # not sure where this should go
+    if !@guardian.is_staff? && staff_only = DiscourseTagging.staff_only_tags(@opts[:tags])
+      topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_only.join(" "))
+    end
+
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
     valid &&= topic.errors.empty?
 

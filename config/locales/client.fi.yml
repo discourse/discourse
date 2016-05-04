@@ -1019,6 +1019,9 @@ fi:
         selected:
           one: "Olet valinnut <b>yhden</b> ketjun."
           other: "Olet valinnut <b>{{count}}</b> ketjua."
+        change_tags: "Muuta tagit"
+        choose_new_tags: "Valitse uudet tagit näille aiheille:"
+        changed_tags: "Aiheiden tagit on vaihdettu."
       none:
         unread: "Sinulla ei ole lukemattomia ketjuja."
         new: "Sinulla ei ole uusia ketjuja."
@@ -2166,6 +2169,8 @@ fi:
             grant_moderation: "myönnä valvojan oikeudet"
             revoke_moderation: "peru valvojan oikeudet"
             backup_operation: "varmuuskopiointi"
+            deleted_tag: "poistettu tagi"
+            renamed_tag: "uudelleennimetty tagi"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -2656,3 +2661,27 @@ fi:
       <button class="btn btn-primary">Google</button>
       </form>
       </p>
+    tagging:
+      all_tags: "Kaikki tagit"
+      changed: "muutetut tagit:"
+      tags: "Tagit"
+      choose_for_topic: "valitse sopivat tagit aiheelle"
+      topics_tagged: "Aiheet tagattu <span class='discourse-tag'>{{tag}}</span>"
+      delete_tag: "Poista tagi"
+      delete_confirm: "Haluatko varmasti poistaa tagin?"
+      rename_tag: "Uudelleennimeä tagi"
+      rename_instructions: "Valitse tagin uusi nimi:"
+
+      notifications:
+        watching:
+          title: "Tarkkaile"
+          description: "Saat ilmoituksen kaikista uusista viesteistä ja ketjuista jotka käyttää tätä tagia. Uusien ja lukemattomien määrä näkyy ketjun yhteydessä."
+        tracking:
+          title: "Seuraa"
+          description: "Seuraat automaattisesti tämän tagin ketjuja ja viestejä. Uusien ja lukemattomien määrä näkyy ketjun yhteydessä."
+        regular:
+          title: "Tavallinen"
+          description: "Saat ilmoituksen kun joku mainitsee @nimesi tai vastaa ketjuun."
+        muted:
+          title: "Vaimenna"
+          description: "Et saa ilmoituksia, eikä se näy lukemattomissa."

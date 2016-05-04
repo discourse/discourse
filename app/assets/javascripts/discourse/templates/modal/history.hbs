@@ -44,7 +44,7 @@
       {{/if}}
     {{/unless}}
   </div>
-  <div id="revisions" {{bind-attr class="hiddenClasses"}}>
+  <div id="revisions" data-post-id="{{model.post_id}}" {{bind-attr class="hiddenClasses"}}>
     {{#if model.title_changes}}
       <div class="row">
         <h2>{{{titleDiff}}}</h2>
@@ -72,6 +72,19 @@
           {{{previousCategory}}} &rarr; {{{currentCategory}}}
         </div>
       {{/if}}
+    {{/if}}
+    {{#if model.tags_changes}}
+      <div class='row'>
+        {{i18n "tagging.changed"}}
+        {{#each previousTagChanges as |t|}}
+          {{discourse-tag t}}
+        {{/each}}
+        &rarr;
+        &nbsp;
+        {{#each currentTagChanges as |t|}}
+          {{discourse-tag t}}
+        {{/each}}
+      </div>
     {{/if}}
 
     {{plugin-outlet "post-revisions"}}

@@ -2214,13 +2214,97 @@ vi:
       description: Trích dẫn một bài viết
       long_description: |
         Huy hiệu này được trao cho lần đầu tiên bạn trích dẫn trong một bài trả lời của bạn. Trích dẫn các phần có liên quan trong trả lời của bạn sẽ giúp cho các cuộc thảo luận tập trung vào chủ đề. Điều đó thật dễ dàng: bạn có thể nhanh chóng trích dẫn bằng cách nêu bật một phần bất kỳ của bài viết nào và sử dụng nút Trích Dẫn Trả Lời xuất hiện ở gần vùng chọn. Trích dẫn thoải mái!
+    read_guidelines:
+      name: Xem hướng dẫn
+      description: Xem <a href="/guidelines">nguyên tắc cộng đồng</a>
+      long_description: |
+        Huy hiệu này được cấp khi bạn xem <a href="/guidelines">nguyên tắc cộng đồng</a>. Xem và làm theo những nguyên tắc này sẽ giúp bạn cùng chúng tôi xây dựng một cộng đồng an toàn, bền vững, và đem lại nhiều niềm vui cho tất cả mọi người!
+    reader:
+      name: Người xem
+      description: Đọc từng trả lời trong một chủ đề có hơn 100 trả lời
+      long_description: |
+        Huy hiệu này được cấp cho lần đầu tiên bạn đọc một chủ đề dài với hơn 100 trả lời. Theo dõi sát sao một cuộc hội thoại giúp bạn hiểu được những quan điểm khác nhau, và giúp cho cuộc trò chuyện thú vị hơn. Bạn càng đọc, càng trò chuyện được tốt hơn. :slight_smile:
+    popular_link:
+      name: Liên kết phổ biến
+      description: Đăng một liên kết ngoài được 50 click
+      long_description: |
+        Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 50 click. Cám ơn bạn đã đăng một liên kết hữu ích!
+    hot_link:
+      name: Liên kết hấp dẫn
+      description: Đăng một liên kết ngoài được 300 click
+      long_description: |
+        Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 300 click. Cám ơn đã đăng một liên kết hấp dẫn giúp kéo cuộc trò chuyện về phía trước!
+    famous_link:
+      name: Liên kết nổi tiếng
+      description: Đăng một liên kết ngoài được 1000 click
+      long_description: |
+        Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 1000 click. Tuyệt vời! Bạn đã gửi một liên kết cải thiện đáng kể cuộc hội thoại bằng cách bổ sung chi tiết, bối cảnh và thông tin. Làm tốt lắm!
+    appreciated:
+      name: Được đánh giá cao
+      description: Nhận được 1 like cho 20 bài viết
+      long_description: |
+        Huy hiệu này được cấp khi bạn nhận được ít nhất 1 like cho 20 bài viết khác nhau. Cộng đồng thích thú với các đóng góp của bạn trong các cuộc đối thoại!
+    respected:
+      name: Được tôn trọng
+      description: Nhận được 2 like cho 100 bài viết
+      long_description: |
+        Huy hiệu này được cấp khi bạn nhận được ít nhất 2 like cho 100 bài viết khác nhau. Cộng đồng đang hướng tới tôn trọng những đóng góp của bạn trong các cuộc đối thoại.
+    admired:
+      name: Được ngưỡng mộ
+      description: Nhận được 5 like cho 300 bài viết
+      long_description: |
+        Huy hiệu này được cấp khi bạn nhận được ít nhất 5 like cho 300 bài viết khác nhau. Tuyệt vời! Cộng đồng rất ngưỡng mộ các đóng góp thường xuyên có chất lượng cao của bạn trong các cuộc đối thoại.
+    out_of_love:
+      name: Vì yêu thích
+      description: Sử dụng 50 like trong 1 ngày
+      long_description: |
+        Huy hiệu này được cấp khi bạn sử dụng tất cả 50 lượt like hàng ngày của bạn. Ghi nhớ một chút các bài viết mà bạn xem và khuyến khích các thành viên cộng đồng tạo ra các cuộc thảo luận lớn hơn trong tương lai.
+    higher_love:
+      name: Thích nhiều hơn
+      description: Sử dụng 50 like một ngày trong 5 ngày
+      long_description: |
+        Huy hiệu này được cấp khi bạn sử dụng 50 lượt like một ngày trong 5 ngày liên tiếp. Cám ơn bạn đã dành thời gian để khuyến khích các cuộc hội thoại tốt nhất mỗi ngày!
+    crazy_in_love:
+      name: Thích nhiệt tình
+      description: Sử dụng 50 like một ngày trong 20 ngày
+      long_description: |
+        Huy hiệu này được cấp khi bạn sử dụng 50 lượt like một ngày trong 20 ngày liên tiếp. Tuyệt vời! Bạn là một tấm gương thường xuyên khuyến khích các thành viên trong cộng đồng!
+    thank_you:
+      name: Cám ơn bạn
+      description: Nhận được 20 like và đã like 10 lần
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã nhận được 20 like cho các bài viết của mình và đã like 10 lần hoặc hơn các bài viết khác. Khi ai đó like bài viết của bạn, bạn tìm thấy lúc để like những gì người khác đăng lại.
+    gives_back:
+      name: Tặng lại
+      description: Nhận được 100 like và đã like 100 lần
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã nhận được 100 like và đã like 100 lần hoặc hơn các bài viết khác. Cám ơn bạn đã cho đi để nhận lại yêu thương!
+    empathetic:
+      name: Cảm thông
+      description: Nhận được 500 like và đã like 1000 lần
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã nhận được 500 like và đã like 1000 lần hoặc hơn các bài viết khác. Tuyệt vời! Bạn là mẫu người quảng đại và đầy yêu thương :two_hearts:.
+    first_emoji:
+      name: Emoji đầu tiên
+      description: Sử dụng Emoji trong bài viết
+      long_description: |
+        Huy hiệu này được cấp khi bạn thêm một biểu tượng Emoji vào bài đăng :heart:
+    first_mention:
+      name: Đề cập đầu tiên
+      description: Đề cập một thành viên trong bài viết
+      long_description: Huy hiệu này được cấp khi bạn đề cập @mention một thành viên trong bài viết của bạn. @mentions cho phép bạn gửi thông báo cho các thành viên khác trong diễn đàn.
   admin_login:
     success: "Gửi mail lỗi"
     error: "Lỗi!"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
+  discourse_hub:
+    access_token_problem: "Dành cho admin: Hãy cập nhật đúng discourse_org_access_key trong thiết lập website."
   performance_report:
+    initial_post_raw: Chủ đề này bao gồm các báo cáo hiệu suất hàng ngày của website.
     initial_topic_title: Báo cáo hiệu suất website
+  topic_invite:
+    user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
   time:
     <<: *datetime_formats
   activemodel:

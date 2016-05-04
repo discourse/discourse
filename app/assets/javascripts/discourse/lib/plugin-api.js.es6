@@ -9,6 +9,7 @@ import { createWidget, decorateWidget, changeSetting } from 'discourse/widgets/w
 import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
+import { addFlagProperty } from 'discourse/components/site-header';
 
 class PluginApi {
   constructor(version, container) {
@@ -48,7 +49,7 @@ class PluginApi {
 
     if (!opts.onlyStream) {
       decorate(ComposerEditor, 'previewRefreshed', callback);
-      decorate(this.container.lookupFactory('view:user-stream'), 'didInsertElement', callback);
+      decorate(this.container.lookupFactory('component:user-stream'), 'didInsertElement', callback);
     }
   }
 
@@ -284,11 +285,20 @@ class PluginApi {
   createWidget(name, args) {
     return createWidget(name, args);
   }
+
+  /**
+   * Adds a property that can be summed for calculating the flag counter
+   **/
+  addFlagProperty(property) {
+    return addFlagProperty(property);
+  }
+
 }
 
 let _pluginv01;
 function getPluginApi(version) {
-  if (version === "0.1" || version === "0.2" || version === "0.3") {
+  version = parseFloat(version);
+  if (version <= 0.4) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
@@ -299,7 +309,7 @@ function getPluginApi(version) {
 }
 
 /**
- * withPluginApi(version, apiCode, noApi)
+ * withPluginApi(version, apiCodeCallback, opts)
  *
  * Helper to version our client side plugin API. Pass the version of the API that your
  * plugin is coded against. If that API is available, the `apiCodeCallback` function will

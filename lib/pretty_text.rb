@@ -3,6 +3,7 @@ require 'nokogiri'
 require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
 require_dependency 'post'
+require_dependency 'discourse_tagging'
 
 module PrettyText
 
@@ -67,6 +68,19 @@ module PrettyText
         }
       end
     end
+
+    def category_tag_hashtag_lookup(text)
+      tag_postfix = '::tag'
+      is_tag = text =~ /#{tag_postfix}$/
+
+      if !is_tag && category = Category.query_from_hashtag_slug(text)
+        [category.url_with_id, text]
+      elsif is_tag && tag = TopicCustomField.find_by(name: DiscourseTagging::TAGS_FIELD_NAME, value: text.gsub!("#{tag_postfix}", ''))
+        ["#{Discourse.base_url}/tags/#{tag.value}", text]
+      else
+        nil
+      end
+    end
   end
 
   @mutex = Mutex.new
@@ -77,8 +91,8 @@ module PrettyText
   end
 
   def self.create_new_context
-    # timeout any eval that takes longer that 5 seconds
-    ctx = V8::Context.new(timeout: 10000)
+    # timeout any eval that takes longer than 15 seconds
+    ctx = V8::Context.new(timeout: 15000)
 
     ctx["helpers"] = Helpers.new
 
@@ -220,6 +234,7 @@ module PrettyText
       context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_hashtag_lookup(c);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
+      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_tag_hashtag_lookup(c);}')
       DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end

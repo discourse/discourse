@@ -1,4 +1,4 @@
-<div class='contents'>
+{{#discovery-topics-list model=model refresh="refresh" incomingCount=topicTrackingState.incomingCount}}
   {{#if top}}
     <div class='top-lists'>
       {{period-chooser period=period action="changePeriod"}}
@@ -19,7 +19,7 @@
         hideCategory=model.hideCategory
         topics=model.topics}}
   {{/if}}
-</div>
+{{/discovery-topics-list}}
 
 <footer class='topic-list-bottom'>
   {{conditional-loading-spinner condition=model.loadingMore}}

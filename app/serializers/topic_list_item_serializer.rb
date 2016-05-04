@@ -9,7 +9,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :op_like_count,
              :pinned_globally,
              :bookmarked_post_numbers,
-             :liked_post_numbers
+             :liked_post_numbers,
+             :tags
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -61,6 +62,13 @@ class TopicListItemSerializer < ListableTopicSerializer
     # this is rather odd code, but we need to have op_likes loaded somehow
     # simplest optimisation is adding a cache column on topic.
     object.association(:first_post).loaded?
+  end
+
+  def include_tags?
+    SiteSetting.tagging_enabled
+  end
+  def tags
+    object.tags
   end
 
 end

@@ -170,6 +170,7 @@ pt_BR:
     private_posts: "Últimas mensagens privadas"
     user_posts: "Últimos posts por @%{username}"
     user_topics: "Últimos tópicos por @%{username}"
+    tag: "Tópicos com tag"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   excerpt_image: "imagem"
   queue:
@@ -1002,6 +1003,19 @@ pt_BR:
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
+    tagging_enabled: "Permitir que usuários coloquem tags em tópicos?"
+    min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma tag."
+    max_tags_per_topic: "O número máximo de tags que podem ser aplicados a um tópico."
+    max_tag_length: "O número máximo de caracteres que pode ser usado em uma tag."
+    max_tag_search_results: "Quando buscando por tags, o número máximo de resultados a exibir."
+    show_filter_by_tag: "Exibir um dropdown para filtrar uma lista de tópicos por uma tag."
+    max_tags_in_filter_list: "Número máximo de tags no filtro do dropdown. As tags mais utilizadas serão exibidas."
+    tags_sort_alphabetically: "Exibir tags em ordem alfabetica. O padrão é exibí-las em ordem de popularidade."
+    tag_style: "Estilo visual para as insígnias de tag."
+    staff_tags: "Uma lista de tags que só podem ser aplicadas por membros da moderação"
+    min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para aplicar uma tag"
+    suppress_overlapping_tags_in_list: "Esconder tags das visualizações de lista, se elas se sobreporem ao título"
+    remove_muted_tags_from_latest: "Não mostrar tópicos com tags silenciadas na lista de tópicos recentes."
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."
@@ -1516,3 +1530,7 @@ pt_BR:
   activemodel:
     errors:
       <<: *errors
+  tags:
+    staff_tag_disallowed: "A tag \"%{tag}\" só pode ser aplicada pela moderação."
+    staff_tag_remove_disallowed: "A tag \"%{tag}\" só pode ser removida pela moderação."
+  rss_by_tag: "Tópicos com a tag %{tag}"

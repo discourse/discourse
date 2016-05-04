@@ -3,6 +3,17 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
+  def self.ensure_consistency!(last_seen = 1.hour.ago)
+    reset_bounce_scores
+    update_view_counts(last_seen)
+  end
+
+  def self.reset_bounce_scores
+    UserStat.where("reset_bounce_score_after < now()")
+            .where("bounce_score > 0")
+            .update_all(bounce_score: 0)
+  end
+
   # Updates the denormalized view counts for all users
   def self.update_view_counts(last_seen = 1.hour.ago)
 

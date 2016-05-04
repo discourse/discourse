@@ -174,6 +174,7 @@ de:
     group_mentions: "Neueste Nennungen von %{group_name}"
     user_posts: "Neueste Beiträge von @%{username}"
     user_topics: "Neueste Themen von @%{username}"
+    tag: "Getaggte Themen"
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
   excerpt_image: "Bild"
@@ -1101,6 +1102,19 @@ de:
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
     default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
+    tagging_enabled: "Nutzern erlauben Themen zu taggen?"
+    min_trust_to_create_tag: "Minimale Vertrauensstufe um ein Tag zu erstellen."
+    max_tags_per_topic: "Maximale Anzahl von Tags, die einem Thema zugeordnet werden können."
+    max_tag_length: "Maximale Anzahl von Zeichen, die in einem Tag verwendet werden können."
+    max_tag_search_results: "Maximale Anzahl von Ergebnissen, die bei der Suche nach Tags angezeigt werden."
+    show_filter_by_tag: "Dropdown-Liste zum Filtern von Theman nach Tag anzeigen."
+    max_tags_in_filter_list: "Maximale Anzahl von Tags in der Dropdown-Liste. Die meist genutzten Tags werden angezeigt."
+    tags_sort_alphabetically: "Anzeige der Tags in alphabetischer Reihenfolge. Standard ist die Sortierung nach Beliebtheit."
+    tag_style: "Visuelle Darstellung der Tag-Schildchen."
+    staff_tags: "Eine Liste von Tags, die nur von Mitarbeitern verwendet werden können"
+    min_trust_level_to_tag_topics: "Minimal benötigte Vertrauensstufe zum Taggen von Themen"
+    suppress_overlapping_tags_in_list: "Verstecke Tags in Listen, wenn diese mit dem Titel überlappen"
+    remove_muted_tags_from_latest: "Zeige Themen mit stummgeschalteten Tags nicht in der Liste der aktuellen Themen an."
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
@@ -2048,3 +2062,7 @@ de:
   activemodel:
     errors:
       <<: *errors
+  tags:
+    staff_tag_disallowed: "Das Tag \"%{tag}\" kann nur von Mitarbeitern hinzugefügt werden."
+    staff_tag_remove_disallowed: "Das Tag \"%{tag}\" kann nur von Mitarbeitern entfernt werden."
+  rss_by_tag: "Themen getaggt mit %{tag}"

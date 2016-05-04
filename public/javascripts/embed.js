@@ -63,9 +63,13 @@
     return top;
   }
 
+  function normalizeUrl(url) {
+    return url.replace(/^https?(\:\/\/)?/, '');
+  }
+
   function postMessageReceived(e) {
     if (!e) { return; }
-    if (DE.discourseUrl.indexOf(e.origin) === -1) { return; }
+    if (normalizeUrl(DE.discourseUrl).indexOf(normalizeUrl(e.origin)) === -1) { return; }
 
     if (e.data) {
       if (e.data.type === 'discourse-resize' && e.data.height) {

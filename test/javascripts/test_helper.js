@@ -132,7 +132,7 @@ window.asyncTestDiscourse = helpers.asyncTestDiscourse;
 window.controllerFor = helpers.controllerFor;
 window.fixture = helpers.fixture;
 
-Ember.keys(requirejs.entries).forEach(function(entry) {
+Object.keys(requirejs.entries).forEach(function(entry) {
   if ((/\-test/).test(entry)) {
     require(entry, null, null, true);
   }

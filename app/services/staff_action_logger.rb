@@ -334,6 +334,14 @@ class StaffActionLogger
     }))
   end
 
+  def log_revoke_email(user, opts={})
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:revoke_email],
+      target_user_id: user.id,
+      details: user.email
+    }))
+  end
+
   private
 
     def params(opts=nil)

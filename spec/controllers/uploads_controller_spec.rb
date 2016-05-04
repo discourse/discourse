@@ -77,9 +77,8 @@ describe UploadsController do
       end
 
       it 'correctly sets retain_hours for admins' do
-        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
-
         log_in :admin
+        Jobs.expects(:enqueue).with(:create_thumbnails, anything)
 
         message = MessageBus.track_publish do
           xhr :post, :create, file: logo, retain_hours: 100, type: "profile_background"

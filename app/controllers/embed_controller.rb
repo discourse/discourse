@@ -22,7 +22,8 @@ class EmbedController < ApplicationController
                                   current_user,
                                   limit: SiteSetting.embed_post_limit,
                                   exclude_first: true,
-                                  exclude_deleted_users: true)
+                                  exclude_deleted_users: true,
+                                  exclude_hidden: true)
 
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
       @posts_left = 0
@@ -36,7 +37,12 @@ class EmbedController < ApplicationController
       end
 
     elsif embed_url.present?
-      Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url, author_username: embed_username)
+      Jobs.enqueue(:retrieve_topic,
+                      user_id: current_user.try(:id),
+                      embed_url: embed_url,
+                      author_username: embed_username,
+                      referer: request.env['HTTP_REFERER']
+                  )
       render 'loading'
     end
 

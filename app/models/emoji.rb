@@ -56,7 +56,7 @@ class Emoji
 
   def self.create_from_db_item(emoji)
     name = emoji["name"]
-    filename = "#{name}.png"
+    filename = "#{emoji['filename'] || name}.png"
     Emoji.new.tap do |e|
       e.name = name
       e.url = "/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
@@ -90,7 +90,14 @@ class Emoji
   end
 
   def self.db
-    @db ||= File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+    return @db if @db
+    @db = File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+
+    # Small tweak to `emoji.json` from Emoji one
+    @db['emojis'] << {"code" => "1f44d", "name" => "+1", "filename" => "thumbsup"}
+    @db['emojis'] << {"code" => "1f44e", "name" => "-1", "filename" => "thumbsdown"}
+
+    @db
   end
 
   def self.load_standard

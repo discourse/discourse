@@ -3,6 +3,7 @@ import logout from 'discourse/lib/logout';
 import showModal from 'discourse/lib/show-modal';
 import OpenComposer from "discourse/mixins/open-composer";
 import Category from 'discourse/models/category';
+import mobile from 'discourse/lib/mobile';
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -24,6 +25,22 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   actions: {
+
+    showSearchHelp() {
+      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(model => {
+        showModal('searchHelp', { model });
+      });
+    },
+
+    toggleAnonymous() {
+      Discourse.ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
+        window.location.reload();
+      });
+    },
+
+    toggleMobileView() {
+      mobile.toggleMobileView();
+    },
 
     logout: unlessReadOnly('_handleLogout', I18n.t("read_only_mode.logout_disabled")),
 

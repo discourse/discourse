@@ -499,6 +499,7 @@ fr:
         set_password: "Définir le mot de passe"
       change_about:
         title: "Modifier à propos de moi"
+        error: "Il y avait une erreur lors de la modification de cette valeur."
       change_username:
         title: "Modifier le pseudo"
         confirm: "Si vous modifiez votre pseudo, toutes les citations de vos messages et les mentions @pseudo seront cassées. Êtes-vous absolument sûr de vouloir le faire ?"
@@ -592,12 +593,16 @@ fr:
         every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
         every_two_weeks: "toutes les deux semaines"
+      include_tl0_in_digests: "Inclure les messages de nouveaux utilisateurs dans courriels de résumé"
       email_in_reply_to: "Inclure un extrait du message auquel il a été répondu dans les courriels"
       email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
       email_always: "Recevoir des notifications par email même lorsque je suis actif sur le site"
       other_settings: "Autre"
       categories_settings: "Catégories"
+      enable_mailing_list:
+        one: "Etes-vous sûr que vous souhaitez recevoir un courriel pour chaque nouveau message?"
+        other: "Etes-vous sûr que vous souhaitez recevoir un email pour chaque nouveau message?<br><br>Ceci équivaudra à environ <b>{{count}} courriels</b> par jour."
       new_topic_duration:
         label: "Considérer les sujets comme nouveau quand"
         not_viewed: "Je ne les ai pas encore vus"
@@ -663,12 +668,41 @@ fr:
       summary:
         title: "Résumé"
         stats: "Statistiques"
+        time_read: "temps de lecture"
+        topic_count:
+          one: "sujets créés"
+          other: "sujets créés"
+        post_count:
+          one: "message créé"
+          other: "messages créés"
+        likes_given:
+          one: "<i class='fa fa-heart'></i> donné"
+          other: "<i class='fa fa-heart'></i> donnés"
+        likes_received:
+          one: "<i class='fa fa-heart'></i> reçu"
+          other: "<i class='fa fa-heart'></i> reçus"
+        days_visited:
+          one: "jour visité"
+          other: "jours visités"
+        posts_read:
+          one: "message lu"
+          other: "Messages lus"
+        bookmark_count:
+          one: "signet"
+          other: "signets"
         top_replies: "Réponses les plus référencés"
+        no_replies: "Pas encore de message."
         more_replies: "Plus de réponses"
         top_topics: "Sujets les plus référencés"
+        no_topics: "Pas encore de sujet."
         more_topics: "Plus de sujets"
         top_badges: "Badges les plus accordés"
+        no_badges: "Pas encore de badge."
         more_badges: "Plus de badges"
+        top_links: "Liens les plus suivis"
+        no_links: "Pas encore de lien."
+        most_liked_by: "Les plus aimés par"
+        no_likes: "Pas encore de j'aime."
       associated_accounts: "Connexions"
       ip_address:
         title: "Dernières adresses IP"
@@ -717,6 +751,12 @@ fr:
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
+    logs_error_rate_notice:
+      reached: "%{timestamp}: Le taux actuel de <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite des paramètres du site de %{siteSettingRate}."
+      exceeded: "%{timestamp}: Le taux actuel de <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite des paramètres du site de %{siteSettingRate}."
+      rate:
+        one: "1 erreur/%{duration}"
+        other: "%{count} erreurs/%{duration}"
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -880,6 +920,7 @@ fr:
       link_description: "saisir ici la description du lien"
       link_dialog_title: "Insérez le lien"
       link_optional_text: "titre optionnel"
+      link_url_placeholder: "http://example.com"
       quote_title: "Citation"
       quote_text: "Citation"
       code_title: "Texte préformaté"
@@ -1018,6 +1059,9 @@ fr:
         selected:
           one: "Vous avez sélectionné <b>1</b> sujet."
           other: "Vous avez sélectionné <b>{{count}}</b> sujets."
+        change_tags: "Modifier les tags"
+        choose_new_tags: "Choisir de nouveaux tags pour ces sujets :"
+        changed_tags: "Les tags de ces sujets ont été modifiés."
       none:
         unread: "Vous n'avez aucun sujet non lu."
         new: "Vous n'avez aucun nouveau sujet."
@@ -1331,9 +1375,9 @@ fr:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Merci de réessayer."
         edit: "Désolé, il y a eu une erreur lors de l'édition de votre message. Merci de réessayer."
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Merci de réessayer."
-        file_too_large: "Désolé, le fichier que vous êtes en train d'envoyer est trop grand (taille maximum de {{max_size_kb}} Ko)"
+        file_too_large: "Désolé, ce fichier est trop gros (la taille maximale est {{max_size_kb}}kb). Pourquoi ne pas télécharger votre gros fichier sur un service partagé cloud, puis partager le lien?"
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
-        too_many_dragged_and_dropped_files: "Désolé, vous pouvez seulement glisser-déposer jusqu'à 10 fichiers à la fois."
+        too_many_dragged_and_dropped_files: "Désolé, vous ne pouvez télécharger que 10 fichiers à la fois."
         upload_not_authorized: "Désolé, le fichier que vous êtes en train d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'image."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichier."
@@ -1343,11 +1387,13 @@ fr:
         no_value: "Non, le conserver"
         yes_value: "Oui, abandonner"
       via_email: "message depuis un courriel"
+      via_auto_generated_email: "ce message est arrivé via un courriel généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
       wiki:
         about: "ce message est un wiki"
       archetypes:
         save: 'Sauvegarder les options'
+      few_likes_left: "Merci de partager votre amour! Vous avez plus que quelques j'aime à distribuer pour aujourd'hui."
       controls:
         reply: "Rédiger une réponse à ce message"
         like: "J'aime ce message"
@@ -1558,6 +1604,7 @@ fr:
       action: 'Signaler ce message'
       take_action: "Signaler"
       notify_action: 'Message'
+      official_warning: 'Avertissement officiel'
       delete_spammer: "Supprimer le spammeur"
       delete_confirm: "Vous vous apprêtez à supprimer <b>%{posts}</b> messages et  <b>%{topics}</b> sujets de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>%{ip_address}</b> et à ajouter son adresse de courriel <b>%{email}</b> à la liste des utilisateurs bloqués. Etes-vous sûr que cet utilisateur est un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
@@ -1771,7 +1818,7 @@ fr:
           30_days_ago: "il y a 30 jours"
           all: "Tous"
           view_table: "tableau"
-          view_chart: "histogramme"
+          view_graph: "graphique"
           refresh_report: "Actualiser le rapport"
           start_date: "Date de début"
           end_date: "Date de fin"
@@ -1906,6 +1953,14 @@ fr:
           backups: "Sauvegardes"
           logs: "Journaux"
         none: "Aucune sauvegarde disponible."
+        read_only:
+          enable:
+            title: "Activer le mode lecture seule"
+            label: "Activer la lecture seule"
+            confirm: "Etes-vous sûr de vouloir activer le mode lecture seule?"
+          disable:
+            title: "Désactiver le mode lecture seule"
+            label: "Désactiver lecture seule"
         logs:
           none: "Pas de journaux pour l'instant..."
         columns:
@@ -2085,6 +2140,7 @@ fr:
           modal:
             title: "Détails du courriel entrant"
             error: "Erreur"
+            headers: "En-têtes"
             subject: "Subject"
             body: "Body"
             rejection_message: "Courriel de refus"
@@ -2164,6 +2220,8 @@ fr:
             grant_moderation: "Accorder les droits de modération"
             revoke_moderation: "Révoquer les droits de modération"
             backup_operation: "sauvegarde"
+            deleted_tag: "tag supprimé"
+            renamed_tag: "tag renommé"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -2402,6 +2460,10 @@ fr:
           title: "Afficher dans le profil public"
           enabled: "affiché dans le profil"
           disabled: "pas affiché dans le profil"
+        show_on_user_card:
+          title: "Montrer sur la carte de l'utilisateur?"
+          enabled: "montré sur la carte de l'utilisateur"
+          disabled: "non montré sur la carte de l'utilisateur"
         field_types:
           text: 'Zone de texte'
           confirm: 'Confirmation'
@@ -2455,6 +2517,7 @@ fr:
         badge: Badge
         display_name: Nom affiché
         description: Description
+        long_description: Description longue
         badge_type: Type de badge
         badge_grouping: Groupe
         badge_groupings:
@@ -2494,6 +2557,7 @@ fr:
           post_revision: "Lorsqu'un utilisateur modifie ou crée un message"
           trust_level_change: "Lorsqu'un utilisateur change de niveau de confiance"
           user_change: "Lorsqu'un utilisateur est modifié ou crée"
+          post_processed: "Après un message est traité"
         preview:
           link_text: "Aperçu du badge accordé"
           plan_text: "Aperçu avant le plan de requête"
@@ -2617,7 +2681,11 @@ fr:
       earned_n_times:
         one: "A reçu ce badge 1 fois"
         other: "A reçu ce badge %{count} fois"
+      granted_on: "Accordé %{date}"
+      others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
+      allow_title: "titre disponible"
+      multiple_grant: "attribué plusieurs fois"
       badge_count:
         one: "1 badge"
         other: "%{count} badges"
@@ -2649,3 +2717,26 @@ fr:
       <button class="btn btn-primary">Google</button>
       </form>
       </p>
+    tagging:
+      all_tags: "Tous les tags"
+      changed: "tags modifiés:"
+      tags: "Tags"
+      choose_for_topic: "choisissez des tags pour ce sujet (optionnel)"
+      delete_tag: "Supprimer ce tag"
+      delete_confirm: "Êtes-vous sûr de vouloir supprimer ce tag ?"
+      rename_tag: "Renommer ce tag"
+      rename_instructions: "Choisissez un nouveau nom pour le tag :"
+
+      notifications:
+        watching:
+          title: "Surveiller"
+          description: "Vous surveillerez automatiquement les nouveaux sujets portant ce tag. Vous serez averti de tous les nouveaux messages et sujets. De plus, le nombre de messages non lus et nouveaux apparaîtra en regard du sujet."
+        tracking:
+          title: "Suivre"
+          description: "Vous suivrez automatiquement les nouveaux sujets portant ce tag. Le nombre de messages non lus et nouveaux apparaîtra en regard du sujet."
+        regular:
+          title: "Normal"
+          description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
+        muted:
+          title: "Silencieux"
+          description: "Vous ne recevrez aucune notification des sujets portant ce tag, et ils n'apparaîtront pas dans votre onglet non lus."

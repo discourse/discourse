@@ -5,7 +5,7 @@
     <%- if logo_url.blank? %>
       <%= SiteSetting.title %>
     <%- else %>
-      <img src="<%= logo_url %>" style="max-height: 35px; min-height: 35px; height: 35px;" class='site-logo'>
+      <img src="<%= logo_url %>" style="max-height: 35px; min-height: 35px; height: 35px;" class='site-logo' alt="<%= SiteSetting.title %>">
     <%- end %>
     </a>
   </td>
@@ -21,7 +21,7 @@
 
       <%- @featured_topics.each_with_index do |t, i| %>
         <div class='featured-topic'>
-          <a href='<%= Discourse.base_url + t.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw format_topic_title(t.title) %></a>
+          <a href='<%= Discourse.base_url_no_prefix + t.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw format_topic_title(t.title) %></a>
           <br/>
           <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </div>
@@ -44,7 +44,7 @@
       <%- @new_topics.each do |t| %>
         <ul>
           <li>
-            <a href='<%= Discourse.base_url + t.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw format_topic_title(t.title) %></a>
+            <a href='<%= Discourse.base_url_no_prefix + t.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw format_topic_title(t.title) %></a>
             <span class='post-count'><%= t.posts_count %></span>
             <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
           </li>
@@ -59,7 +59,7 @@
         <div>
         <%- @new_by_category.first(10).each do |c| %>
           <span style='white-space: nowrap'>
-            <a href='<%= Discourse.base_url %><%= c[0].url %>' style='color: #<%= @anchor_color %>'><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span></a>
+            <a href='<%= Discourse.base_url_no_prefix %><%= c[0].url %>' style='color: #<%= @anchor_color %>'><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span></a>
           </span>
         <%- end %>
       </div>
@@ -74,5 +74,5 @@
 <div class='footer'>
   <%=raw(t 'user_notifications.digest.unsubscribe',
            site_link: html_site_link(@anchor_color),
-           unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @unsubscribe_key), {:style=>'color: #' + @anchor_color }))  %>
+           unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url_no_prefix, key: @unsubscribe_key), {:style=>"color: ##{@anchor_color}"}))  %>
 </div>

@@ -6,7 +6,7 @@ function resolveParams(ctx, options) {
 
   if (hash) {
     if (options.hashTypes) {
-      Ember.keys(hash).forEach(function(k) {
+      Object.keys(hash).forEach(function(k) {
         const type = options.hashTypes[k];
         if (type === "STRING" || type === "StringLiteral") {
           params[k] = hash[k];

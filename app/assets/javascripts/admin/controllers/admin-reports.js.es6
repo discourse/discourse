@@ -27,6 +27,11 @@ export default Ember.Controller.extend({
   },
 
   @computed('model.type')
+  showCategoryOptions(modelType) {
+    return !modelType.match(/_private_messages$/);
+  },
+
+  @computed('model.type')
   showGroupOptions(modelType) {
     return modelType === "visits" || modelType === "signups" || modelType === "profile_views";
   },

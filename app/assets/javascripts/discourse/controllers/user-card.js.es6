@@ -49,7 +49,7 @@ export default Ember.Controller.extend({
 
   moreBadgesCount: function() {
     return this.get('user.badge_count') - this.get('user.featured_user_badges.length');
-  }.property('user.badge_count', 'user.featured_user_badges.@each'),
+  }.property('user.badge_count', 'user.featured_user_badges.[]'),
 
   hasCardBadgeImage: function() {
     const img = this.get('user.card_badge.image');

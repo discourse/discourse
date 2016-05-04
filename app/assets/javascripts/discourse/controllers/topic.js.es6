@@ -9,7 +9,7 @@ import Composer from 'discourse/models/composer';
 import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
-  needs: ['header', 'modal', 'composer', 'quote-button', 'topic-progress', 'application'],
+  needs: ['modal', 'composer', 'quote-button', 'topic-progress', 'application'],
   multiSelect: false,
   allPostsSelected: false,
   editingTopic: false,
@@ -107,6 +107,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   selectedQuery: function() {
     return post => this.postSelected(post);
   }.property(),
+
+  @computed('model.isPrivateMessage')
+  canEditTags(isPrivateMessage) {
+    return !isPrivateMessage && this.site.get('can_tag_topics');
+  },
 
   actions: {
 
@@ -472,11 +477,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.get('content').toggleStatus('archived');
     },
 
-    // Toggle the star on the topic
-    toggleStar() {
-      this.get('content').toggleStar();
-    },
-
     clearPin() {
       this.get('content').clearPin();
     },
@@ -509,7 +509,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }).then(q => {
         const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
         const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
-        composerController.get('model').appendText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
+        composerController.get('model').prependText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`, {new_line: true});
       });
     },
 
@@ -545,6 +545,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     changePostOwner(post) {
       this.get('selectedPosts').addObject(post);
       this.send('changeOwner');
+    },
+
+    convertToPublicTopic() {
+      this.get('content').convertTopic("public");
+    },
+
+    convertToPrivateMessage() {
+      this.get('content').convertTopic("private");
     }
   },
 
@@ -624,10 +632,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     return false;
   },
-
-  showStarButton: function() {
-    return Discourse.User.current() && !this.get('model.isPrivateMessage');
-  }.property('model.isPrivateMessage'),
 
   loadingHTML: function() {
     return spinnerHTML;

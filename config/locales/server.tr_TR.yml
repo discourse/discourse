@@ -145,6 +145,7 @@ tr_TR:
     top: "En iyi konular"
     posts: "Son gönderiler"
     private_posts: "Son özel mesajlar"
+    tag: "Etiketlenmiş konular"
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
   excerpt_image: "resim"
   queue:
@@ -984,6 +985,10 @@ tr_TR:
     default_categories_watching: "Öntanımlı olarak, izlenen kategorilerin listesi."
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
+    tagging_enabled: "Kullanıcılar konularına etiket ekleyebilsinler mi?"
+    min_trust_to_create_tag: "Etiket oluşturmak için gereken minumum güven seviyesi."
+    max_tags_per_topic: "Bir konu en fazla kaç adet etiket eklenebilir."
+    max_tag_length: "Bir etiket en fazla kaç karakterde oluşabilir."
     errors:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
@@ -1452,3 +1457,4 @@ tr_TR:
   activemodel:
     errors:
       <<: *errors
+  rss_by_tag: "Konu %{tag} ile etiketlenmiştir."

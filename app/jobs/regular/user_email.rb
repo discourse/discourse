@@ -114,7 +114,11 @@ module Jobs
       end
 
       if EmailLog.reached_max_emails?(user)
-        return skip_message(I18n.t('email_log.exceeded_limit'))
+        return skip_message(I18n.t('email_log.exceeded_emails_limit'))
+      end
+
+      if (user.user_stat.try(:bounce_score) || 0) >= SiteSetting.bounce_score_threshold
+        return skip_message(I18n.t('email_log.exceeded_bounces_limit'))
       end
 
       message = EmailLog.unique_email_per_post(post, user) do

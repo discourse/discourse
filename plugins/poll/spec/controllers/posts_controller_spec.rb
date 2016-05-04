@@ -1,4 +1,5 @@
 require "rails_helper"
+require_relative "../helpers"
 
 describe PostsController do
   let!(:user) { log_in }
@@ -165,12 +166,31 @@ describe PostsController do
             expect(json["errors"][0]).to eq(I18n.t("poll.op_cannot_edit_options_after_5_minutes"))
           end
 
-          it "staff can change the options" do
+          it "staff can change the options and votes are merged" do
             log_in_user(Fabricate(:moderator))
             xhr :put, :update, { id: post_id, post: { raw: new_option } }
             expect(response).to be_success
             json = ::JSON.parse(response.body)
             expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
+            expect(json["post"]["polls"]["poll"]["voters"]).to eq(1)
+            expect(json["post"]["polls"]["poll"]["options"][0]["votes"]).to eq(1)
+            expect(json["post"]["polls"]["poll"]["options"][1]["votes"]).to eq(0)
+          end
+
+          it "staff can change the options and anonymous votes are merged" do
+            post = Post.find_by(id: post_id)
+            default_poll = post.custom_fields["polls"]["poll"]
+            add_anonymous_votes(post, default_poll, 7, {"5c24fc1df56d764b550ceae1b9319125" => 7})
+
+            log_in_user(Fabricate(:moderator))
+            xhr :put, :update, { id: post_id, post: { raw: new_option } }
+            expect(response).to be_success
+
+            json = ::JSON.parse(response.body)
+            expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
+            expect(json["post"]["polls"]["poll"]["voters"]).to eq(8)
+            expect(json["post"]["polls"]["poll"]["options"][0]["votes"]).to eq(8)
+            expect(json["post"]["polls"]["poll"]["options"][1]["votes"]).to eq(0)
           end
 
           it "support changes on the post" do

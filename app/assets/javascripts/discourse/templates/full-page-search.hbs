@@ -70,6 +70,9 @@
           </a>
           <div class='search-category'>
             {{category-link result.topic.category}}
+            {{#each result.topic.tags as |tag|}}
+              {{discourse-tag tag}}
+            {{/each}}
             {{plugin-outlet "full-page-search-category"}}
           </div>
         </div>

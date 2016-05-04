@@ -73,6 +73,7 @@ GEM
     diff-lcs (1.2.5)
     discourse-qunit-rails (0.0.9)
       railties
+    discourse_fastimage (2.0.0)
     docile (1.1.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
@@ -107,7 +108,6 @@ GEM
       rake
       rake-compiler
     fast_xs (0.8.0)
-    fastimage_discourse (1.6.6)
     ffi (1.9.10)
     flamegraph (0.1.0)
       fast_stack
@@ -156,7 +156,7 @@ GEM
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
     memory_profiler (0.9.6)
-    message_bus (2.0.0.beta.5)
+    message_bus (2.0.0.beta.8)
       rack (>= 1.1.3)
     metaclass (0.0.4)
     method_source (0.8.2)
@@ -213,7 +213,7 @@ GEM
     omniauth-twitter (1.2.1)
       json (~> 1.3)
       omniauth-oauth (~> 1.1)
-    onebox (1.5.38)
+    onebox (1.5.39)
       htmlentities (~> 4.3.4)
       moneta (~> 0.8)
       multi_json (~> 1.11)
@@ -413,6 +413,7 @@ DEPENDENCIES
   byebug
   certified
   discourse-qunit-rails
+  discourse_fastimage
   email_reply_trimmer (= 0.1.3)
   ember-rails (= 0.18.5)
   ember-source (= 1.12.2)
@@ -422,7 +423,6 @@ DEPENDENCIES
   fast_blank
   fast_xor
   fast_xs
-  fastimage_discourse
   flamegraph
   foreman
   gctools
@@ -437,7 +437,7 @@ DEPENDENCIES
   lru_redux
   mail
   memory_profiler
-  message_bus (= 2.0.0.beta.5)
+  message_bus (= 2.0.0.beta.8)
   mime-types
   minitest
   mocha
