@@ -317,8 +317,7 @@ class PostCreator
       topic_creator = TopicCreator.new(@user, guardian, @opts)
       @topic = topic_creator.create
     rescue ActiveRecord::Rollback
-      add_errors_from(topic_creator)
-      return
+      rollback_from_errors!(topic_creator)
     end
     @post.topic_id = @topic.id
     @post.topic = @topic
