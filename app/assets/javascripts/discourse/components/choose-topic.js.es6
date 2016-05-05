@@ -1,9 +1,7 @@
 import debounce from 'discourse/lib/debounce';
 import { searchForTerm } from 'discourse/lib/search';
 
-export default Ember.View.extend({
-  templateName: 'choose_topic',
-
+export default Ember.Component.extend({
   topicTitleChanged: function() {
     this.setProperties({
       loading: true,

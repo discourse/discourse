@@ -50,7 +50,7 @@
 
   {{#conditional-loading-spinner condition=loading}}
     {{#if model.length}}
-      {{view "staff-action-logs-list" content=controller}}
+      {{staff-action-logs-list content=controller}}
     {{else}}
       {{i18n 'search.no_results'}}
     {{/if}}
