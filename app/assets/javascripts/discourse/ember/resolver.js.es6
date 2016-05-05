@@ -39,7 +39,6 @@ function parseName(fullName) {
 }
 
 export default Ember.DefaultResolver.extend({
-
   parseName: parseName,
 
   normalize(fullName) {

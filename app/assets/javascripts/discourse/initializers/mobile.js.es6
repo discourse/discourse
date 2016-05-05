@@ -1,6 +1,6 @@
 import Mobile from 'discourse/lib/mobile';
 
-//  Initializes the `Mobile` helper object.
+// Initializes the `Mobile` helper object.
 export default {
   name: 'mobile',
   after: 'inject-objects',
@@ -16,4 +16,3 @@ export default {
     app.registry.resolver.__resolver__.mobileView = Mobile.mobileView;
   }
 };
-
