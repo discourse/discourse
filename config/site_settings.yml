@@ -756,7 +756,7 @@ spam:
   num_flags_to_block_new_user: 3
   num_users_to_block_new_user: 3
   notify_mods_when_user_blocked: false
-  flag_sockpuppets: true
+  flag_sockpuppets: false
   newuser_spam_host_threshold: 3
   white_listed_spam_host_domains:
     default: ''
