@@ -13,7 +13,7 @@ module HasErrors
   end
 
   def rollback_with!(obj, error)
-    obj.errors[:base] << error
+    obj.errors.add(:base, error)
     rollback_from_errors!(obj)
   end
 
