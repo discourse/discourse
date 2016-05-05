@@ -261,7 +261,7 @@ class DiscourseDiff
     end
 
     def characters(string)
-      @tokens.concat string.scan(/(\W|\w+[ \t]*)/).flatten.map { |x| CGI::escapeHTML(x) }
+      @tokens.concat string.scan(/\W|\w+[ \t]*/).map { |x| CGI::escapeHTML(x) }
     end
 
   end
