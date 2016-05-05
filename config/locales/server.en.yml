@@ -1606,11 +1606,11 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse
 
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
@@ -1620,11 +1620,11 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse
 
       ### Release notes
 
