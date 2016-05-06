@@ -156,7 +156,7 @@ module Email
     end
 
     def verp
-      @verp ||= @mail.destinations.select { |to| to[/\+verp-\h{32}@/] }.first
+      @verp ||= all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
     end
 
     def update_bounce_score(email, score)
@@ -171,10 +171,8 @@ module Email
           user.user_stat.reset_bounce_score_after = 30.days.from_now
           user.user_stat.save
 
-          if user.active && user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
-            user.deactivate
+          if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
             StaffActionLogger.new(Discourse.system_user).log_revoke_email(user)
-            EmailToken.where(email: user.email, confirmed: true).update_all(confirmed: false)
           end
         end
 
@@ -292,16 +290,18 @@ module Email
       user
     end
 
-    def destinations
-      [  @mail.destinations,
+    def all_destinations
+      @all_destinations ||= [
+        @mail.destinations,
         [@mail[:x_forwarded_to]].flatten.compact.map(&:decoded),
         [@mail[:delivered_to]].flatten.compact.map(&:decoded),
-      ].flatten
-       .select(&:present?)
-       .uniq
-       .lazy
-       .map { |d| check_address(d) }
-       .drop_while(&:blank?)
+      ].flatten.select(&:present?).uniq.lazy
+    end
+
+    def destinations
+      all_destinations
+        .map { |d| check_address(d) }
+        .drop_while(&:blank?)
     end
 
     def check_address(address)

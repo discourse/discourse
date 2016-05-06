@@ -350,7 +350,20 @@
   <div class="display-row">
     <div class='field'>{{i18n 'admin.user.staged'}}</div>
     <div class='value'>{{model.staged}}</div>
-    <div class='controls'>{{i18n 'admin.user.stage_explanation'}}</div>
+    <div class='controls'>{{i18n 'admin.user.staged_explanation'}}</div>
+  </div>
+
+  <div class="display-row">
+    <div class='field'>{{i18n 'admin.user.bounce_score'}}</div>
+    <div class='value'>{{model.bounceScore}}</div>
+    <div class='controls'>
+      {{#if model.canResetBounceScore}}
+        <button class='btn' {{action "resetBounceScore" target="content"}} title={{i18n "admin.user.reset_bounce_score.title"}}>
+          {{i18n "admin.user.reset_bounce_score.label"}}
+        </button>
+      {{/if}}
+      {{model.bounceScoreExplanation}}
+    </div>
   </div>
 </section>
 

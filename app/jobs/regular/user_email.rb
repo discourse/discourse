@@ -48,7 +48,24 @@ module Jobs
       @skip_context = { type: type, user_id: user_id, to_address: to_address, post_id: post_id }
     end
 
-    NOTIFICATIONS_SENT_BY_MAILING_LIST ||= Set.new %w{posted replied mentioned group_mentioned quoted}
+    NOTIFICATIONS_SENT_BY_MAILING_LIST ||= Set.new %w{
+      posted
+      replied
+      mentioned
+      group_mentioned
+      quoted
+    }
+
+    CRITICAL_EMAIL_TYPES = Set.new %i{
+      account_created
+      admin_login
+      confirm_new_email
+      confirm_old_email
+      forgot_password
+      notify_old_email
+      signup
+      signup_after_approval
+    }
 
     def message_for_email(user, post, type, notification,
                          notification_type=nil, notification_data_hash=nil,
@@ -109,7 +126,7 @@ module Jobs
         email_args[:email_token] = email_token
       end
 
-      if type == 'notify_old_email'
+      if type == :notify_old_email
         email_args[:new_email] = user.email
       end
 
@@ -117,7 +134,7 @@ module Jobs
         return skip_message(I18n.t('email_log.exceeded_emails_limit'))
       end
 
-      if (user.user_stat.try(:bounce_score) || 0) >= SiteSetting.bounce_score_threshold
+      if !CRITICAL_EMAIL_TYPES.include?(type) && user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
         return skip_message(I18n.t('email_log.exceeded_bounces_limit'))
       end
 
