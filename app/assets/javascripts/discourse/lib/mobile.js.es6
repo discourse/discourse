@@ -10,7 +10,7 @@ const Mobile = {
     this.isMobileDevice = mobileForced || $html.hasClass('mobile-device');
     this.mobileView = mobileForced || $html.hasClass('mobile-view');
 
-    if (mobileForced) { return; }
+    if (Ember.testing || mobileForced) { return; }
 
     try{
       if (window.location.search.match(/mobile_view=1/)){

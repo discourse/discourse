@@ -1,7 +1,7 @@
 <h2>{{period-title period showDateRange=true}}</h2>
 <button>{{fa-icon "caret-down"}}</button>
 
-<div id='period-popup' {{bind-attr class="showPeriods::hidden :period-popup"}}>
+<div id='period-popup' class="{{unless showPeriods 'hidden'}} period-popup">
   <ul>
     {{#each site.periods as |p|}}
       <li><a href {{action "changePeriod" p}}>{{period-title p showDateRange=true}}</a></li>

@@ -10,7 +10,7 @@
     </thead>
     <tbody>
       {{#each flaggedPost in content}}
-        <tr {{bind-attr class="flaggedPost.extraClasses"}}>
+        <tr class={{flaggedPost.extraClasses}}>
 
           <td class='user'>
             {{#if flaggedPost.postAuthorFlagged}}

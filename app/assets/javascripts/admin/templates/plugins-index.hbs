@@ -25,7 +25,7 @@
         <tr>
           <td>
             {{#if plugin.url}}
-              <a {{bind-attr href=plugin.url}} target="_blank">{{plugin.name}}</a>
+              <a href={{plugin.url}} target="_blank">{{plugin.name}}</a>
             {{else}}
               {{plugin.name}}
             {{/if}}

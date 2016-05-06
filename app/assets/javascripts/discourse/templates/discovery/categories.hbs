@@ -10,7 +10,7 @@
       </thead>
       <tbody>
         {{#each model.categories as |c|}}
-          <tr data-category_id='{{unbound c.id}}' {{bind-attr class="c.description_excerpt:has-description:no-description c.logo_url:has-logo:no-logo"}}>
+          <tr data-category_id='{{unbound c.id}}' class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.logo_url 'has-logo' 'no-logo'}}">
             <td class='category' style={{border-color c.color}}>
               <div>
                 {{category-title-link category=c}}
@@ -38,7 +38,7 @@
                 {{featured-topic topic=f latestTopicOnly=latestTopicOnly action="showTopicEntrance"}}
               {{/each}}
             </td>
-            <td class='stats' {{bind-attr title="c.topicStatsTitle"}}>
+            <td class='stats' title={{c.topicStatsTitle}}>
               <table class="categoryStats">
                 <tbody>
                 {{#each c.topicCountStats as |s|}}

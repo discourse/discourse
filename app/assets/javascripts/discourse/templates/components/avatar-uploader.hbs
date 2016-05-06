@@ -1,6 +1,6 @@
-<label class="btn" {{bind-attr disabled="uploading"}} title="{{i18n 'user.change_avatar.upload_title'}}">
+<label class="btn" disabled={{uploading}} title="{{i18n 'user.change_avatar.upload_title'}}">
   {{fa-icon "picture-o"}}&nbsp;{{uploadButtonText}}
-  <input {{bind-attr disabled="uploading"}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
+  <input disabled={{uploading}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
 </label>
 {{#if uploading}}
   <span>{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>

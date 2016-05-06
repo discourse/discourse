@@ -19,7 +19,7 @@
       <td>{{human-size backup.size}}</td>
       <td>
         <div class="pull-right">
-          <a {{bind-attr href="backup.link"}} class="btn download" title="{{i18n 'admin.backups.operations.download.title'}}">{{fa-icon "download"}}{{i18n 'admin.backups.operations.download.label'}}</a>
+          <a href={{backup.link}} class="btn download" title="{{i18n 'admin.backups.operations.download.title'}}">{{fa-icon "download"}}{{i18n 'admin.backups.operations.download.label'}}</a>
           {{#if status.model.isOperationRunning}}
             {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger" disabled="true" title="admin.backups.operations.is_running"}}
             {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.model.restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}

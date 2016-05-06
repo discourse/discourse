@@ -11,7 +11,7 @@
     <a {{action "filterByTargetUser" target_user}} class="btn btn-small">{{target_user.username}}</a>
   {{/if}}
   {{#if subject}}
-    <a {{action "filterBySubject" subject}} {{bind-attr title="subject"}}  class="btn btn-small">{{subject}}</a>
+    <a {{action "filterBySubject" subject}} title={{subject}}  class="btn btn-small">{{subject}}</a>
   {{/if}}
 </div>
 <div class="col value created_at">{{age-with-tooltip created_at}}</div>

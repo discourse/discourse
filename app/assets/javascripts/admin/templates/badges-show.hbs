@@ -134,7 +134,7 @@
     </div>
 
     <div class='buttons'>
-      <button {{action "save"}} {{bind-attr disabled=saving}} class='btn btn-primary'>{{i18n 'admin.badges.save'}}</button>
+      <button {{action "save"}} disabled={{saving}} class='btn btn-primary'>{{i18n 'admin.badges.save'}}</button>
       <span class='saving'>{{savingStatus}}</span>
       {{#unless readOnly}}
         <a {{action "destroy"}} class='delete-link'>{{i18n 'admin.badges.delete'}}</a>

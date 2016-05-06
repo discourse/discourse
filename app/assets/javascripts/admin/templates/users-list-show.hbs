@@ -42,7 +42,7 @@
       </tr>
 
       {{#each model as |user|}}
-        <tr {{bind-attr class="user.selected user.active::not-activated"}}>
+        <tr class="{{user.selected}} {{unless user.active 'not-activated'}}">
           {{#if controller.showApproval}}
             <td>
               {{#if user.can_approve}}

@@ -1,4 +1,4 @@
-<div {{bind-attr class=":dashboard-stats :version-check versionCheck.critical_updates:critical:normal"}}>
+<div class="dashboard-stats version-check {{if versionCheck.critical_updates 'critical' 'normal'}}">
   <table class="table table-condensed table-hover">
     <thead>
       {{custom-html 'upgrade-header'}}
@@ -11,7 +11,7 @@
     {{#unless loading}}
       <tbody>
         <td class="title">{{i18n 'admin.dashboard.version'}}</td>
-        <td class="version-number"><a {{bind-attr href="versionCheck.gitLink"}} target="_blank">{{dash-if-empty versionCheck.installed_describe}}</a></td>
+        <td class="version-number"><a href={{versionCheck.gitLink}} target="_blank">{{dash-if-empty versionCheck.installed_describe}}</a></td>
 
         {{#if versionCheck.noCheckPerformed}}
           <td class="version-number">&mdash;</td>
@@ -46,7 +46,7 @@
               {{#if versionCheck.upToDate }}
               <span class='icon up-to-date'>{{fa-icon "smile-o"}}</span>
               {{else}}
-                <span {{bind-attr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
+                <span class="icon {{if versionCheck.critical_updates 'critical-updates-available' 'updates-available'}}">
                   {{#if versionCheck.behindByOneVersion}}
                     {{fa-icon "meh-o"}}
                   {{else}}
