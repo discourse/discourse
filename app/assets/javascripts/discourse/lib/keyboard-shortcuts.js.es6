@@ -294,10 +294,6 @@ export default {
       $articles.removeClass('selected');
       $article.addClass('selected');
 
-      if ($article.is('.topic-list-item')) {
-        this.sendToTopicListItemView('select');
-      }
-
       if ($article.is('.topic-post')) {
         $('a.tabLoc', $article).focus();
       }
