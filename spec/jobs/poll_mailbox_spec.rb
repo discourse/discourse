@@ -86,7 +86,7 @@ describe Jobs::PollMailbox do
       incoming_email = IncomingEmail.last
 
       expect(incoming_email.rejection_message).to eq(
-        I18n.t("email.incoming.errors.bounced_email_report")
+        I18n.t("email.incoming.errors.bounced_email_error")
       )
     end
 
