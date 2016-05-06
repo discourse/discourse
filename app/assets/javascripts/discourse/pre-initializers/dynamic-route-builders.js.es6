@@ -1,12 +1,13 @@
 import buildCategoryRoute from 'discourse/routes/build-category-route';
 import buildTopicRoute from 'discourse/routes/build-topic-route';
 import DiscoverySortableController from 'discourse/controllers/discovery-sortable';
+import TagsShowRoute from 'discourse/routes/tags-show';
 
 export default {
   after: 'inject-discourse-objects',
   name: 'dynamic-route-builders',
 
-  initialize(container, app) {
+  initialize(registry, app) {
     app.DiscoveryCategoryController = DiscoverySortableController.extend();
     app.DiscoveryParentCategoryController = DiscoverySortableController.extend();
     app.DiscoveryCategoryNoneController = DiscoverySortableController.extend();
@@ -57,6 +58,15 @@ export default {
       app[`DiscoveryTop${periodCapitalized}CategoryRoute`] = buildCategoryRoute('top/' + period);
       app[`DiscoveryTop${periodCapitalized}ParentCategoryRoute`] = buildCategoryRoute('top/' + period);
       app[`DiscoveryTop${periodCapitalized}CategoryNoneRoute`] = buildCategoryRoute('top/' + period, {no_subcategories: true});
+    });
+
+    app["TagsShowCategoryRoute"] = TagsShowRoute.extend();
+    app["TagsShowParentCategoryRoute"] = TagsShowRoute.extend();
+
+    site.get('filters').forEach(function(filter) {
+      app["TagsShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({ filterMode: filter });
+      app["TagsShowCategory" + filter.capitalize() + "Route"] = TagsShowRoute.extend({ filterMode: filter });
+      app["TagsShowParentCategory" + filter.capitalize() + "Route"] = TagsShowRoute.extend({ filterMode: filter });
     });
   }
 };
