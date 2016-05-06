@@ -27,7 +27,7 @@ module DiscourseTagging
 
     return [] unless guardian.can_tag_topics?
 
-    return unless tags
+    return unless tags.present?
 
     tags.map! {|t| clean_tag(t) }
     tags.delete_if {|t| t.blank? }
