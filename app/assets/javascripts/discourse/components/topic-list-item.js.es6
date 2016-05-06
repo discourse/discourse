@@ -10,10 +10,7 @@ export default Ember.Component.extend(StringBuffer, {
 
   actions: {
     toggleBookmark() {
-      const self = this;
-      this.get('topic').toggleBookmark().finally(function() {
-        self.rerender();
-      });
+      this.get('topic').toggleBookmark().finally(() => this.rerender());
     }
   },
 
