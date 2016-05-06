@@ -16,10 +16,10 @@
 
 {{#if categories}}
   <a href {{action "expand"}} class={{dropdownButtonClass}} style={{badgeStyle}}><i class={{iconClass}}></i></a>
-  <section {{bind-attr class="expanded::hidden :category-dropdown-menu :chooser"}}>
-    <div class='cat'><a {{bind-attr href=allCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{allCategoriesLabel}}</a></div>
+  <section class="{{unless expanded 'hidden'}} category-dropdown-menu chooser}}">
+    <div class='cat'><a href={{allCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{allCategoriesLabel}}</a></div>
     {{#if subCategory}}
-      <div class='cat'><a {{bind-attr href=noCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{i18n 'categories.no_subcategory'}}</a></div>
+      <div class='cat'><a href={{noCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{i18n 'categories.no_subcategory'}}</a></div>
     {{/if}}
     {{#if renderCategories}}
       {{#each categories as |c|}}<div class='cat'>{{category-link c allowUncategorized=true hideParent=subCategory}}</div>{{/each}}

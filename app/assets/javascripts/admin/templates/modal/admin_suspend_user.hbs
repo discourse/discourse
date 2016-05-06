@@ -10,6 +10,6 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button class='btn btn-danger' {{action "suspend"}} {{bind-attr disabled="submitDisabled"}}><i class='fa fa-ban'></i>{{i18n 'admin.user.suspend'}}</button>
+  <button class='btn btn-danger' {{action "suspend"}} disabled={{submitDisabled}}><i class='fa fa-ban'></i>{{i18n 'admin.user.suspend'}}</button>
   <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
 </div>

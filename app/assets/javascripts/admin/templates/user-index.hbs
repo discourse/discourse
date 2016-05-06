@@ -288,7 +288,7 @@
     </div>
   </div>
 
-  <div {{bind-attr class=":display-row model.isSuspended:highlight-danger"}}>
+    <div class="display-row {{if model.isSuspended 'highlight-danger'}}">
     <div class='field'>{{i18n 'admin.user.suspended'}}</div>
     <div class='value'>{{model.isSuspended}}</div>
     <div class='controls'>
@@ -325,7 +325,7 @@
     </div>
   {{/if}}
 
-  <div {{bind-attr class=":display-row model.blocked:highlight-danger"}}>
+  <div class="display-row {{if model.blocked 'highlight-danger'}}">
     <div class='field'>{{i18n 'admin.user.blocked'}}</div>
     <div class='value'>{{model.blocked}}</div>
     <div class='controls'>
