@@ -35,6 +35,7 @@ class SessionController < ApplicationController
     if SiteSetting.enable_sso_provider
       sso = SingleSignOn.parse(payload, SiteSetting.sso_secret)
       if current_user
+        sso.user_found = true;
         sso.name = current_user.name
         sso.username = current_user.username
         sso.email = current_user.email
@@ -46,6 +47,10 @@ class SessionController < ApplicationController
         else
           redirect_to sso.to_url(sso.return_sso_url)
         end
+      elsif (sso.no_user_found_return_sso_url != "" && !sso.no_user_found_return_sso_url.nil? )
+        sso.user_found = false;
+        no_user_URL = sso.no_user_found_return_sso_url
+        redirect_to sso.to_url(no_user_URL)
       else
         session[:sso_payload] = request.query_string
         redirect_to path('/login')
