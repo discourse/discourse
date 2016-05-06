@@ -572,6 +572,7 @@ email:
     type: list
   block_auto_generated_emails: true
   bounce_score_threshold:
+    client: true
     default: 4
     min: 1
 

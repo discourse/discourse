@@ -68,7 +68,7 @@ describe Email::Receiver do
 
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
     let(:bounce_key_2) { "b542fb5a9bacda6d28cc061d18e4eb83" }
-    let!(:user) { Fabricate(:user, email: "foo@bar.com", active: true) }
+    let!(:user) { Fabricate(:user, email: "foo@bar.com") }
     let!(:email_log) { Fabricate(:email_log, user: user, bounce_key: bounce_key) }
     let!(:email_log_2) { Fabricate(:email_log, user: user, bounce_key: bounce_key_2) }
 
@@ -82,7 +82,6 @@ describe Email::Receiver do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.active).to eq(true)
       expect(email_log.user.user_stat.bounce_score).to eq(1)
     end
 
@@ -91,7 +90,6 @@ describe Email::Receiver do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.user.active).to eq(true)
       expect(email_log.user.user_stat.bounce_score).to eq(2)
 
       Timecop.freeze(2.days.from_now) do
@@ -99,7 +97,6 @@ describe Email::Receiver do
 
         email_log_2.reload
         expect(email_log_2.bounced).to eq(true)
-        expect(email_log_2.user.active).to eq(false)
         expect(email_log_2.user.user_stat.bounce_score).to eq(4)
       end
     end
