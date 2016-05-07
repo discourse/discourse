@@ -1,7 +1,7 @@
 class SingleSignOn
   ACCESSORS = [:nonce, :name, :username, :email, :avatar_url, :avatar_force_update, :require_activation,
-                :no_user_found_return_sso_url,:user_found, :about_me, :external_id, :return_sso_url,
-                :admin, :moderator, :suppress_welcome_message]
+               :return_sso_unlogged_in_url,:user_found, :about_me, :external_id, :return_sso_url,
+               :admin, :moderator, :suppress_welcome_message]
   FIXNUMS = []
   BOOLS = [:user_found, :avatar_force_update, :admin, :moderator, :require_activation, :suppress_welcome_message]
   NONCE_EXPIRY_TIME = 10.minutes
