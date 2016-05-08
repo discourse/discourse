@@ -92,7 +92,7 @@ GEM
       railties (>= 3.1)
     ember-source (1.12.2)
     erubis (2.7.0)
-    eventmachine (1.0.8)
+    eventmachine (1.2.0.1)
     excon (0.45.4)
     execjs (2.6.0)
     exifr (1.2.4)
@@ -501,4 +501,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.12.0
+   1.12.3
