@@ -2,6 +2,10 @@ import debounce from 'discourse/lib/debounce';
 import { searchForTerm } from 'discourse/lib/search';
 
 export default Ember.Component.extend({
+  loading: null,
+  noResults: null,
+  topics: null,
+
   topicTitleChanged: function() {
     this.setProperties({
       loading: true,
@@ -38,14 +42,10 @@ export default Ember.Component.extend({
   }, 300),
 
   actions: {
-    chooseTopic: function (topic) {
+    chooseTopic(topic) {
       const topicId = Em.get(topic, 'id');
       this.set('selectedTopicId', topicId);
-
-      Em.run.next(function () {
-        $('#choose-topic-' + topicId).prop('checked', 'true');
-      });
-
+      Ember.run.next(() => $('#choose-topic-' + topicId).prop('checked', 'true'));
       return false;
     }
   }
