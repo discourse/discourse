@@ -9,7 +9,7 @@ export default MountWidget.extend({
     this.args = { notifications: this.get('notifications') };
   },
 
-  @observes('notifications.length')
+  @observes('notifications.length', 'notifications.@each.read')
   _triggerRefresh() {
     this.queueRerender();
   }
