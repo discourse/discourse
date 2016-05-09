@@ -1,8 +1,8 @@
 {{#if postNumbers}}
 <div class='post-actions {{className}}'>
   <i class='fa fa-{{icon}}'></i>
-  {{#each postNumber in postNumbers}}
-  <a href='{{topic.url}}/{{postNumber}}'>#{{postNumber}}</a>
+  {{#each postNumbers as |postNumber|}}
+    <a href='{{topic.url}}/{{postNumber}}'>#{{postNumber}}</a>
   {{/each}}
 </div>
 {{/if}}
