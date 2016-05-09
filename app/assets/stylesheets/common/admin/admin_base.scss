@@ -393,11 +393,13 @@ td.flaggers td {
     .setting-value {
       float: left;
       width: 53%;
+      padding-right: 20px;
       .category-group {
         width: 95%;
       }
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
+        padding-right: 0;
       }
       .select2-container {
         width: 100% !important; // Needs !important to override hard-coded value
@@ -413,14 +415,14 @@ td.flaggers td {
       float: left;
     }
     .input-setting-string {
-      width: 404px;
-      @include medium-width { width: 314px; }
+      box-sizing: border-box;
+      height: 30px;
+      width: 100%;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
     }
     .input-setting-list {
-      width: 408px;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
