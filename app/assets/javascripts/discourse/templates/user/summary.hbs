@@ -98,7 +98,7 @@
   <h3 class='stats-title'>{{i18n "user.summary.most_replied_to_users"}}</h3>
     {{#if model.most_replied_to_users.length}}
       <ul>
-        {{#each user in model.most_replied_to_users}}
+        {{#each model.most_replied_to_users as |user|}}
           <li>
             {{#user-info user=user}}
               {{fa-icon "reply"}}
@@ -135,7 +135,7 @@
     <h3 class='stats-title'>{{i18n "user.summary.most_liked_users"}}</h3>
     {{#if model.most_liked_users.length}}
       <ul>
-        {{#each user in model.most_liked_users}}
+        {{#each model.most_liked_users as |user|}}
           <li>
             {{#user-info user=user}}
               {{fa-icon "heart"}}
