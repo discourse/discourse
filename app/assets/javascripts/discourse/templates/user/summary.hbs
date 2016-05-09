@@ -8,7 +8,9 @@
     </li>
     <li>{{user-stat value=model.posts_read_count label="user.summary.posts_read"}}</li>
     <li>{{user-stat value=model.likes_given label="user.summary.likes_given"}}</li>
-    <li>{{user-stat value=model.bookmark_count label="user.summary.bookmark_count"}}</li>
+    {{#if model.bookmark_count}}
+      <li>{{user-stat value=model.bookmark_count label="user.summary.bookmark_count"}}</li>
+    {{/if}}
     <li>{{user-stat value=model.topic_count label="user.summary.topic_count"}}</li>
     <li>{{user-stat value=model.post_count label="user.summary.post_count"}}</li>
     <li>{{user-stat value=model.likes_received label="user.summary.likes_received"}}</li>

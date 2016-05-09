@@ -43,6 +43,10 @@ class UserSummarySerializer < ApplicationSerializer
     SiteSetting.enable_badges
   end
 
+  def include_bookmark_count?
+    scope.authenticated? && object.user_id == scope.user.id
+  end
+
   def time_read
     AgeWords.age_words(object.time_read)
   end

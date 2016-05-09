@@ -136,6 +136,10 @@ class UserSummary
     @user.featured_user_badges(MAX_BADGES)
   end
 
+  def user_id
+    @user.id
+  end
+
   def user_stat
     @user.user_stat
   end
