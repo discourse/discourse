@@ -27,18 +27,6 @@ Discourse.Utilities = {
     return size;
   },
 
-  /**
-    Allows us to supply bindings without "binding" to a helper.
-  **/
-  normalizeHash: function(hash, hashTypes) {
-    for (var prop in hash) {
-      if (hashTypes[prop] === 'ID') {
-        hash[prop + 'Binding'] = hash[prop];
-        delete hash[prop];
-      }
-    }
-  },
-
   // Handlebars no longer allows spaces in its `escapeExpression` code which makes it
   // unsuitable for many of Discourse's uses. Use `Handlebars.Utils.escapeExpression`
   // when escaping an attribute in HTML, otherwise this one will do.
