@@ -481,7 +481,7 @@ class Search
       if @term.present?
         if is_topic_search
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
-          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
+          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{@term}%")
         else
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
           exact_terms = @term.scan(/"([^"]+)"/).flatten
