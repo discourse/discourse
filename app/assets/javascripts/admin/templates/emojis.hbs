@@ -5,7 +5,7 @@
 
   <p>{{emoji-uploader done="emojiUploaded"}}</p>
 
-  {{#if controller}}
+  {{#if model}}
     <div class="span8">
       <table id="custom_emoji">
         <thead>
@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each controller as |e|}}
+          {{#each model as |e|}}
             <tr>
               <th><img class="emoji" src="{{unbound e.url}}" title="{{unbound e.name}}"></th>
               <th>:{{e.name}}:</th>

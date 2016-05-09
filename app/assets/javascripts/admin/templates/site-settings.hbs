@@ -14,7 +14,7 @@
 
 <div class="admin-nav pull-left">
   <ul class="nav nav-stacked">
-    {{#each controller as |category|}}
+    {{#each model as |category|}}
       {{#link-to 'adminSiteSettingsCategory' category.nameKey tagName='li' class=category.nameKey}}
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
