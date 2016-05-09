@@ -229,11 +229,6 @@ export default createWidget('header', {
   togglePageSearch() {
     const { state } = this;
 
-    if (state.searchVisible) {
-      this.toggleSearchMenu();
-      return false;
-    }
-
     state.contextEnabled = false;
 
     const currentPath = this.container.lookup('controller:application').get('currentPath');
@@ -246,6 +241,11 @@ export default createWidget('header', {
     if (showSearch && currentPath.match(/^topic\./)) {
       showSearch = ($('.topic-post .cooked, .small-action:not(.time-gap)').length <
                     this.container.lookup('controller:topic').get('model.postStream.stream.length'));
+    }
+
+    if (state.searchVisible) {
+      this.toggleSearchMenu();
+      return showSearch;
     }
 
     if (showSearch) {
