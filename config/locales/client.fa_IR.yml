@@ -2444,7 +2444,6 @@ fa_IR:
       delete_confirm: "آیا مطمئنید که می خواهید این برچسب را خذف کنید?"
       rename_tag: "تغییر نام برچسب"
       rename_instructions: "یک نام جدید برای برچسب انتخاب نمایید:"
-
       notifications:
         watching:
           title: "تماشا"
@@ -2458,4 +2457,3 @@ fa_IR:
         muted:
           title: "بی صدا"
           description: "به شما هیچ چیزی در باره نوشته های این تگ اطلاع رسانی نخواهد شد."
-

@@ -92,6 +92,8 @@ zh_CN:
       google+: '分享这个链接到 Google+'
       email: '用电子邮件发送这个链接'
     action_codes:
+      public_topic: "于 %{when} 设置为公共主题"
+      private_topic: "于 %{when} 设置为私有主题"
       split_topic: "于%{when}分割了该主题"
       invited_user: "于%{when}邀请%{who}"
       removed_user: "于%{when}移除%{who}"
@@ -115,6 +117,7 @@ zh_CN:
         disabled: '于%{when}移除出列表'
     topic_admin_menu: "主题管理操作"
     emails_are_disabled: "所有的出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
+    bootstrap_mode_disabled: "Bootstrap模式将会在24小时后关闭"
     s3:
       regions:
         us_east_1: "美国东部（N. Virginia）"
@@ -469,6 +472,7 @@ zh_CN:
         set_password: "设置密码"
       change_about:
         title: "更改个人简介"
+        error: "修改该值是发生了错误"
       change_username:
         title: "修改用户名"
         confirm: "如果你修改用户名，所有引用你的帖子和@你的链接都将失效。你真的确定要这么做么？"
@@ -639,14 +643,12 @@ zh_CN:
           other: "创建的主题"
         post_count:
           other: "发表的帖子"
-        likes_given:
-          other: "给赞"
-        likes_received:
-          other: "被赞"
         days_visited:
           other: "访问天数"
         posts_read:
           other: "阅读过的帖子"
+        bookmark_count:
+          other: "书签"
         top_replies: "热门回复"
         no_replies: "暂无回复。"
         more_replies: "更多回复"
@@ -656,6 +658,10 @@ zh_CN:
         top_badges: "热门勋章"
         no_badges: "暂无徽章。"
         more_badges: "更多徽章"
+        top_links: "热门链接"
+        no_links: "暂无链接"
+        most_liked_by: "被最多赞"
+        no_likes: "暂无赞"
       associated_accounts: "登录"
       ip_address:
         title: "最后使用的 IP 地址"
@@ -871,6 +877,7 @@ zh_CN:
       link_description: "在此输入链接描述"
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
+      link_url_placeholder: "http://example.com"
       quote_title: "引用"
       quote_text: "引用"
       code_title: "预格式化文本"
@@ -1005,9 +1012,9 @@ zh_CN:
         choose_new_category: "为主题选择新分类："
         selected:
           other: "你已经选择了 <b>{{count}}</b>个主题"
-        change_tags: "更改标签"
-        choose_new_tags: "为这些主题选择新标签："
-        changed_tags: "这些主题的标签已被修改。"
+        change_tags: "修改标签"
+        choose_new_tags: "为主题选择新标签："
+        changed_tags: "主题的标签被修改"
       none:
         unread: "你没有未读主题。"
         new: "你没有新主题可读。"
@@ -1156,6 +1163,8 @@ zh_CN:
         invisible: "使其不列于主题列表"
         visible: "使其列于主题列表"
         reset_read: "重置阅读数据"
+        make_public: "设置为公共主题"
+        make_private: "设置为私有帖子"
       feature:
         pin: "置顶主题"
         unpin: "解除主题置顶"
@@ -1302,9 +1311,8 @@ zh_CN:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
-        file_too_large: "抱歉，你上传的附件太大了（最大限制 {{max_size_kb}}kb）。"
         too_many_uploads: "抱歉，你只能一次上传一张图片。"
-        too_many_dragged_and_dropped_files: "抱歉，你一次只能拖放最多 10 个文件。"
+        too_many_dragged_and_dropped_files: "抱歉，你只能一次上传10个文件。"
         upload_not_authorized: "抱歉，你不能上传此类型文件（可上传的文件类型有: {{authorized_extensions}}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传附件。"
@@ -1511,6 +1519,7 @@ zh_CN:
       action: '标记帖子'
       take_action: "立即执行"
       notify_action: '消息'
+      official_warning: '正式警告'
       delete_spammer: "删除垃圾发布者"
       delete_confirm: "你将删除该用户的 <b>%{posts}</b> 个帖子和 <b>%{topics}</b> 个主题，删除该账户，阻止其IP地址 <b>%{ip_address}</b> 再次注册，并将其邮件地址 <b>%{email}</b> 加入黑名单。确定吗？"
       yes_delete_spammer: "确定"
@@ -1714,7 +1723,6 @@ zh_CN:
           30_days_ago: "30 天之前"
           all: "全部"
           view_table: "表格"
-          view_chart: "柱状图"
           refresh_report: "刷新报告"
           start_date: "开始日期"
           end_date: "结束日期"
@@ -1844,6 +1852,14 @@ zh_CN:
           backups: "备份"
           logs: "日志"
         none: "无可用备份"
+        read_only:
+          enable:
+            title: "开启只读模式"
+            label: "开启只读模式"
+            confirm: "你确定要开启只读模式么？"
+          disable:
+            title: "关闭只读模式"
+            label: "关闭只读模式"
         logs:
           none: "暂无日志"
         columns:
@@ -1994,6 +2010,7 @@ zh_CN:
         test_error: "发送测试邮件时遇到问题。请再检查一遍邮件设置，确认你的主机没有封锁邮件链接，然后重试。"
         sent: "已发送"
         skipped: "跳过"
+        bounced: "退回"
         received: "收到"
         rejected: "拒绝"
         sent_at: "发送时间"
@@ -2103,8 +2120,8 @@ zh_CN:
             grant_moderation: "授予版主权限"
             revoke_moderation: "撤销版主权限"
             backup_operation: "备份操作"
-            deleted_tag: "deleted tag"
-            renamed_tag: "renamed tag"
+            deleted_tag: "删除的标签"
+            renamed_tag: "重命名的标签"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -2381,6 +2398,7 @@ zh_CN:
           login: "登录"
           plugins: "插件"
           user_preferences: "用户设置"
+          tags: "标签"
       badges:
         title: 徽章
         new_badge: 新徽章
@@ -2584,51 +2602,52 @@ zh_CN:
       </form>
       </p>
     tagging:
-      all_tags: "全部标签"
-      selector_all_tags: "所有标签"
-      changed: "标签更改："
+      all_tags: "所以标签"
+      selector_all_tags: "所以标签"
+      changed: "标签被修改"
       tags: "标签"
       choose_for_topic: "为主题选择可选标签"
       delete_tag: "删除标签"
-      delete_confirm: "你确定要删除该标签？"
+      delete_confirm: "你确定要删除这个标签吗？"
       rename_tag: "重命名标签"
-      rename_instructions: "为标签选择一个新的名字："
-      sort_by: "排列顺序："
-      sort_by_count: "数量"
-      sort_by_name: "名字"
-
+      rename_instructions: "为该标签选择一个新名字"
+      sort_by: "排序按"
+      sort_by_count: "计数"
+      sort_by_name: "名称"
+      filters:
+        without_category: "%{filter} %{tag} 主题"
+        with_category: "%{category}的%{filter} %{tag}主题"
       notifications:
         watching:
           title: "关注"
-          description: "你能自动关注该标签下的所有主题。一旦与这个标签有关的新主题和新帖子发表，你都会收到通知。未读贴和新帖子的数量将出现在主题列表中每个主题的标题后。"
+          description: "你将会自动监视包含这些标签的所有新主题。你会收到新帖子或新主题的通知，未读和新帖数量将出现在每个主题后。"
         tracking:
           title: "追踪"
-          description: "你能自动追踪这个标签下的所有新主题。未读贴和新帖子的数量将出现在主题列表中每个主题的标题后。"
+          description: "你将会自动追踪这些标签的所有新主题。未读和新帖子数量将出现在每个主题后。"
         regular:
           title: "常规"
           description: "当有人@你或者回复你的帖子时，你才会收到通知。"
         muted:
-          title: "防打扰"
-          description: "你不会收到该标签下的新主题的任何通知，也不会在你的未阅选项卡中显示。"
-
+          title: "免打扰"
+          description: "你不会收到这些标签的任何新主题通知，并且他们将不会出现在你的未读列表中。"
       topics:
         none:
           unread: "你没有未读主题。"
-          new: "你没有近期主题。"
-          read: "你还未阅读任何主题。"
-          posted: "你还未在任何主题中回复。"
+          new: "你没有新主题可读"
+          read: "你尚未阅读任何主题。"
+          posted: "你尚未在任何主题中发帖。"
           latest: "没有最新主题。"
           hot: "没有热门主题。"
-          bookmarks: "你还没有加上书签的主题。"
-          top: "没有热门主题。"
-          search: "搜索无结果。"
+          bookmarks: "你没有收藏任何主题。"
+          top: "没有最佳主题。"
+          search: "没有搜索结果。"
         bottom:
-          latest: "没有更多最新主题了。"
-          hot: "没有更多热门主题了。"
-          posted: "没有更多发表的主题了。"
-          read: "没有更多读过的主题了。"
-          new: "没有更多近期主题了。"
+          latest: "没有更多主题可看了"
+          hot: "没有更多热门主题可看了"
+          posted: "没有更多已发布主题可看了"
+          read: "没有更多已阅主题可看了"
+          new: "没有更多新主题可看了。"
           unread: "没有更多未读主题了。"
-          top: "没有更多热门主题了。"
-          bookmarks: "没有更多加上书签的主题了。"
-          search: "没有更多搜索结果了。"
+          top: "没有更多最佳主题了。"
+          bookmarks: "没有更多书签主题了。"
+          search: "没有更多搜索结果"

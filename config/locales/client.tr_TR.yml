@@ -2572,7 +2572,6 @@ tr_TR:
       delete_confirm: "Bu etiketi kaldırmak istediğinize emin misiniz?"
       rename_tag: "Etiketi yeniden adlandır"
       rename_instructions: "Etiket için yeni bir ad girin:"
-
       notifications:
         watching:
           title: "Gözleniyor"

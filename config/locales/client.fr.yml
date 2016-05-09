@@ -2726,7 +2726,6 @@ fr:
       delete_confirm: "Êtes-vous sûr de vouloir supprimer ce tag ?"
       rename_tag: "Renommer ce tag"
       rename_instructions: "Choisissez un nouveau nom pour le tag :"
-
       notifications:
         watching:
           title: "Surveiller"

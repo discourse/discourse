@@ -26,7 +26,7 @@ ro:
     named_poll_must_have_different_options: "Sondajul numit <strong>%{name}</strong> trebuie să aibă opțiuni diferite."
     default_poll_with_multiple_choices_has_invalid_parameters: "Sondajul cu opțiuni multiple are parametri invalizi."
     named_poll_with_multiple_choices_has_invalid_parameters: "Sondajul numit <strong>%{name}</strong> cu opțiuni multiple are parametri invalizi."
-    requires_at_least_1_valid_option: "Trebuie să selectezi cel puțin 1 valoare validă."
+    requires_at_least_1_valid_option: "Trebuie să selectezi cel puțin o opțiune validă."
     cannot_change_polls_after_5_minutes: "Nu poți adăuga, elimina sau redenumi sondaje după primele 5 minute."
     op_cannot_edit_options_after_5_minutes: "Nu poți adăuga sau elimina opțiuni ale unui sondaj după primele 5 minute. Te rugăm contactează un moderator pentru a edita o opțiune din sondaj."
     staff_cannot_add_or_remove_options_after_5_minutes: "Nu poți adăuga sau elimina opțiuni ale unui sondaj după primele 5 minute. Ar trebui să închizi discuția și să creezi alta în loc."

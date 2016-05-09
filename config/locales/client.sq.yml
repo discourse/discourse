@@ -111,8 +111,10 @@ sq:
       google+: 'shpërndaje këtë lidhje në Google+'
       email: 'dërgoje këtë lidhje me email'
     action_codes:
+      public_topic: "e bëri këtë temë publike %{when}"
+      private_topic: "e bëri këtë temë private %{when}"
       split_topic: "ndaje këtë teme %{when}"
-      invited_user: "ftuar %{who} %{when}"
+      invited_user: "ka ftuar %{who} %{when}"
       removed_user: "hequr %{who} %{when}"
       autoclosed:
         enabled: 'mbylli %{when}'
@@ -347,13 +349,13 @@ sq:
           title: "Në vëzhgim"
           description: "Ju do të njoftoheni për çdo postim të ri në çdo mesazh, dhe numri i ri i përgjigjeve të reja do të tregohet."
         tracking:
-          title: "Ndjekje"
+          title: "Në gjurmim"
           description: "Ju do të njoftoheni në qoftë se dikush ju pëmend me @emri ose ju përgjigjet, gjithashtu numri i përgjigjeve të reja do të tregohet."
         regular:
-          title: "Normale"
+          title: "Normal"
           description: "Ju do të njoftoheni në qoftë se dikush ju përmend @emrin ose ju përgjigjet."
         muted:
-          title: "Heshtur"
+          title: "Pa njoftime"
           description: "Ju nuk do të njoftoheni asnjëherë për asgjë mbi temat e reja të këtij grupi."
     user_action_groups:
       '1': "Pëlqime të dhëna"
@@ -461,7 +463,7 @@ sq:
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Gjurmuar"
       tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
-      muted_categories: "Heshtur"
+      muted_categories: "Pa njoftime"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
       delete_account: "Fshi llogarinë time"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -595,7 +597,7 @@ sq:
         every_two_weeks: "çdo 2 javë"
       include_tl0_in_digests: "Përfshi postimet nga anëtarët e rinj të faqes në emailat përmbledhës. "
       email_in_reply_to: "Përfshi një copëz të përgjigjeve ndaj postimit në email"
-      email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
+      email_direct: "Më dërgo një email kur dikush më citon, i përgjigjet një postimi tim, më përmend me @username, ose më fton në një temë"
       email_private_messages: "Send me an email when someone messages me"
       email_always: "Send me email notifications even when I am active on the site"
       other_settings: "Tjetër"
@@ -624,13 +626,13 @@ sq:
         after_10_minutes: "pas 10 minutash"
       invited:
         search: "shkruaj për të kërkuar ftesat..."
-        title: "Ftesa"
+        title: "Ftesat"
         user: "Anëtari i ftuar"
         sent: "Dërguar"
-        none: "There are no pending invites to display."
+        none: "Nuk keni asnjë ftesë në pritje. "
         truncated:
-          one: "Showing the first invite."
-          other: "Showing the first {{count}} invites."
+          one: "Po afishohet ftesa e parë."
+          other: "Po afishohen {{count}} ftesat e para."
         redeemed: "Ridërgo ftesat"
         redeemed_tab: "Redeemed"
         redeemed_tab_with_count: "Redeemed ({{count}})"
@@ -650,6 +652,7 @@ sq:
         account_age_days: "Jetëgjatësia e llogarisë (ditë)"
         create: "Dërgo një ftesë"
         generate_link: "Kopjo lidhjen e ftesës"
+        generated_link_message: '<p>Lidhja e ftesës u krijua!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Kjo ftesë është e vlefshme veto për adresën email: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Ju nuk keni ftuar askënd deri tani. Mund të dërgoni ftesa individuale ose mund të ftoni një grup personash duke <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ngarkuar skedarin</a>."
           text: "Skedari për ftesat në grup"
@@ -700,7 +703,7 @@ sq:
         more_badges: "More Badges"
         top_links: "Lidhjet Top"
         no_links: "Nuk ka ende lidhje."
-        most_liked_by: "Më e pëlqyer nga"
+        most_liked_by: "Pëlqyer më shumë nga"
         no_likes: "Nuk ka ende asnjë pëlqim."
       associated_accounts: "Identifikime"
       ip_address:
@@ -830,7 +833,7 @@ sq:
       authenticating: "Duke u autorizuar..."
       awaiting_confirmation: "Llogaria juaj është në pritje të aktivizimit, përdorni butonin e fjalëkalimit të humbur që të merrni një email të ri me kodin e aktivizimit."
       awaiting_approval: "Llogaria juaj nuk është aprovuar ende nga një admin. Do t'ju dërgojmë një email kur të aprovohet. "
-      requires_invite: "Sorry, access to this forum is by invite only."
+      requires_invite: "Na vjen keq, ky forum është vetëm për anëtarë të ftuar. "
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
@@ -880,12 +883,12 @@ sq:
       saved_draft_tip: "ruajtur"
       saved_local_draft_tip: "ruajtur lokalisht"
       similar_topics: "Tema juaj është e ngjashme me..."
-      drafts_offline: "drafts offline"
-      group_mentioned: "By using {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a>."
+      drafts_offline: "draftet offline"
+      group_mentioned: "Duke qënë se po përdorni {{group}}, jeni duke njoftuar <a href='{{group_link}}'>{{count}} anëtarë</a>."
       error:
         title_missing: "Titulli është i nevojshëm"
         title_too_short: "Titulli duhet të ketë të paktën {{min} shkronja."
-        title_too_long: "Title can't be more than {{max}} characters"
+        title_too_long: "Titulli nuk mund të ketë më shumë se {{max}} shkronja"
         post_missing: "Postimi s'mund të jetë bosh"
         post_length: "Postimi duhet të ketë të paktën {{min} shkronja."
         try_like: 'A e keni provuar butonin <i class="fa fa-heart"></i> ?'
@@ -921,35 +924,35 @@ sq:
       link_optional_text: "titull fakultativ"
       link_url_placeholder: "http://shembull.com"
       quote_title: "Citim"
-      quote_text: "Blockquote"
-      code_title: "Preformatted text"
-      code_text: "indent preformatted text by 4 spaces"
+      quote_text: "Citim"
+      code_title: "Tekst i paraformatuar"
+      code_text: "shkruani 4 hapësira (space) për të filluar tekstin e paraformatuar"
       upload_title: "Ngarko"
-      upload_description: "enter upload description here"
+      upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
       olist_title: "Listë e numëruar"
-      ulist_title: "Bulleted List"
-      list_item: "List item"
-      heading_title: "Heading"
-      heading_text: "Heading"
-      hr_title: "Horizontal Rule"
-      help: "Markdown Editing Help"
-      toggler: "hide or show the composer panel"
+      ulist_title: "Listë me pika"
+      list_item: "Element liste"
+      heading_title: "Titull"
+      heading_text: "Titull"
+      hr_title: "Vizë ndarëse horizontale"
+      help: "Ndihmë mbi Markdown"
+      toggler: "trego ose fshih panelin e shkrimit"
       modal_ok: "OK"
       modal_cancel: "Anulo"
-      cant_send_pm: "Sorry, you can't send a message to %{username}."
+      cant_send_pm: "Na vjen keq, nuk mund t'i dërgoni mesazh privat anëtarit %{username}."
       admin_options_title: "Rregullime opsionale të stafit për këtë temë"
       auto_close:
-        label: "Auto-close topic time:"
-        error: "Please enter a valid value."
-        based_on_last_post: "Don't close until the last post in the topic is at least this old."
+        label: "Data e mbylljes automatike të temës:"
+        error: "Ju lutem shkruani një vlerë të vlefshme."
+        based_on_last_post: "Mos e mbyll derisa postimi i fundit brenda temës të jetë të paktën kaq i vjetër. "
         all:
-          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+          examples: 'Vendosni numrin e orëve (24), orën absolute (17:30) ose një "timestamp" (2013-11-22 14:00).'
         limited:
           units: "(# i orëve)"
-          examples: 'Enter number of hours (24).'
+          examples: 'Vendosni numrin e orëve (24).'
     notifications:
-      title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
-      none: "Unable to load notifications at this time."
+      title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
+      none: "Nuk i hapëm dot njoftimet."
       more: "shiko njoftimet e kaluara"
       total_flagged: "totali i postimeve të sinjalizuar"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -966,13 +969,13 @@ sq:
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> pranoi ftesën tuaj</p>"
+      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> transferoi {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} message in your {{group_name}} inbox</p>"
-        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mesazhe në {{group_name}} inbox</p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mesazhe në inboxin e {{group_name}}</p>"
       alt:
         mentioned: "Përmendur nga"
         quoted: "Cituar nga"
@@ -980,22 +983,22 @@ sq:
         posted: "Postim nga"
         edited: "Redakto postimin tuaj"
         liked: "Pëlqeu postimin tuaj"
-        private_message: "Private message from"
-        invited_to_private_message: "Invited to a private message from"
-        invited_to_topic: "Invited to a topic from"
-        invitee_accepted: "Invite accepted by"
-        moved_post: "Your post was moved by"
-        linked: "Link to your post"
+        private_message: "Mesazh privat nga"
+        invited_to_private_message: "I/e ftuar në një mesazh privat nga"
+        invited_to_topic: "I/e ftuar në temë nga"
+        invitee_accepted: "Ftesa u pranua nga"
+        moved_post: "Postimi juaj u transferua nga"
+        linked: "Lidhja drejt postimit tuaj"
         granted_badge: "Badge granted"
-        group_message_summary: "Messages in group inbox"
+        group_message_summary: "Mesazhet në inboxin e grupit"
       popup:
-        mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
-        group_mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
-        quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
-        replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
-        posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} sent you a private message in "{{topic}}" - {{site_title}}'
-        linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
+        mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} ju ka cituar në "{{topic}}" - {{site_title}}'
+        replied: '{{username}} ju u përgjigj në "{{topic}}" - {{site_title}}'
+        posted: '{{username}} postoi në "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} ju dërgoi një mesazh privat nga "{{topic}}" - {{site_title}}'
+        linked: '{{username}} vendosi një lidhje për postimin tuaj nga "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Shto një imazh"
       title_with_attachments: "Shto një imazh ose një skedar"
@@ -1040,8 +1043,8 @@ sq:
     topics:
       bulk:
         unlist_topics: "Unlist Topics"
-        reset_read: "Reseto Leximet"
-        delete: "Delete Topics"
+        reset_read: "Reseto leximet"
+        delete: "Fshi temat"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
         dismiss_button: "Dismiss…"
@@ -1049,10 +1052,10 @@ sq:
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
         toggle: "toggle bulk selection of topics"
-        actions: "Bulk Actions"
+        actions: "Veprime në masë"
         change_category: "Ndrysho kategori"
         close_topics: "Mbyll temat"
-        archive_topics: "Archive Topics"
+        archive_topics: "Arkivo temat"
         notification_level: "Ndrysho nivelin e njoftimeve"
         choose_new_category: "Choose the new category for the topics:"
         selected:
@@ -1104,11 +1107,11 @@ sq:
       new: 'temë e re'
       unread: 'unread'
       new_topics:
-        one: '1 new topic'
-        other: '{{count}} new topics'
+        one: '1 temë e re'
+        other: '{{count}} tema të reja'
       unread_topics:
-        one: '1 unread topic'
-        other: '{{count}} unread topics'
+        one: '1 temë e palexuar'
+        other: '{{count}} tema të palexuara'
       title: 'Tema'
       invalid_access:
         title: "Tema është private"
@@ -1135,7 +1138,7 @@ sq:
       back_to_list: "Kthehu tek lista e temave"
       options: "Opsionet e temës"
       show_links: "show links within this topic"
-      toggle_information: "toggle topic details"
+      toggle_information: "më shumë mbi temën"
       read_more_in_category: "Dëshironi të lexoni më shumë? Shfleto temat në {{catLink}} ose {{latestLink}}."
       read_more: "Dëshironi të lexoni më shumë? {{catLink}} ose {{latestLink}}."
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
@@ -1164,31 +1167,31 @@ sq:
       notifications:
         reasons:
           '3_6': 'Ju do të merrni njoftime sepse jeni duke vëzhguar këtë kategori. '
-          '3_5': 'You will receive notifications because you started watching this topic automatically.'
-          '3_2': 'You will receive notifications because you are watching this topic.'
-          '3_1': 'You will receive notifications because you created this topic.'
-          '3': 'You will receive notifications because you are watching this topic.'
-          '2_8': 'You will receive notifications because you are tracking this category.'
-          '2_4': 'You will receive notifications because you posted a reply to this topic.'
-          '2_2': 'You will receive notifications because you are tracking this topic.'
+          '3_5': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë automatikisht. '
+          '3_2': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
+          '3_1': 'Ju do të njoftoheni duke qënë se ju jeni autori i kësaj teme. '
+          '3': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
+          '2_8': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë kategori. '
+          '2_4': 'Ju do të njoftoheni duke qënë se keni dërguar një përgjigje në këtë temë. '
+          '2_2': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë. '
           '2': 'Ju do të merrni njoftime sepse e keni <a href="/users/{{username}}/preferences">lexuar këtë temë</a>.'
           '1_2': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
           '1': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
-          '0_7': 'You are ignoring all notifications in this category.'
-          '0_2': 'You are ignoring all notifications on this topic.'
-          '0': 'You are ignoring all notifications on this topic.'
+          '0_7': 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
+          '0_2': 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
+          '0': 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
         watching_pm:
-          title: "Watching"
+          title: "Në vëzhgim"
           description: "Ju do të njoftoheni për çdo përgjigje të re në këtë mesazh, dhe numri i përgjigjeve të reja do të shfaqet. "
         watching:
           title: "Në vëzhgim"
-          description: "You will be notified of every new reply in this topic, and a count of new replies will be shown."
+          description: "Ju do të njoftoheni për çdo postim të ri në këtë temë, dhe numri i ri i përgjigjeve të reja do të tregohet."
         tracking_pm:
-          title: "Tracking"
-          description: "A count of new replies will be shown for this message. You will be notified if someone mentions your @name or replies to you."
+          title: "Në gjurmim"
+          description: "Numri i përgjigjeve të reja do të afishohet për këtë mesazh. Do të njoftoheni vetëm nëse dikush ju përmend @emrin apo nëse dikush ju përgjigjet juve. "
         tracking:
-          title: "Tracking"
-          description: "A count of new replies will be shown for this topic. You will be notified if someone mentions your @name or replies to you. "
+          title: "Në gjurmim"
+          description: "Numri i përgjigjeve të reja në këtë temë do të afishohet në listat e faqes. Do të njoftoheni nëse dikush ju përmend @emrin ose ju përgjigjet. "
         regular:
           title: "Normal"
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
@@ -1196,10 +1199,10 @@ sq:
           title: "Normal"
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
         muted_pm:
-          title: "Muted"
+          title: "Pa njoftime"
           description: "Ju nuk do të njoftoheni kurrë mbi këtë mesazh. "
         muted:
-          title: "Muted"
+          title: "Pa njoftime"
           description: "Ju nuk do të njoftoheni për asgjë mbi këtë temë, dhe tema nuk do të shfaqet në listën e temave më të fundit. "
       actions:
         recover: "Un-Delete Topic"
@@ -1215,6 +1218,8 @@ sq:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
+        make_public: "Bëje temën publike"
+        make_private: "Bëje mesazh privat"
       feature:
         pin: "Pin Topic"
         unpin: "Un-Pin Topic"
@@ -1229,10 +1234,10 @@ sq:
         help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
       share:
         title: 'Shpërndaje'
-        help: 'share a link to this topic'
+        help: 'shpërndani një lidhje mbi temën'
       flag_topic:
-        title: 'Flag'
-        help: 'privately flag this topic for attention or send a private notification about it'
+        title: 'Sinjalizo'
+        help: 'sinjalizo privatisht këtë temë ose dërgo një njoftim privat'
         success_message: 'You successfully flagged this topic.'
       feature_topic:
         title: "Feature this topic"
@@ -1255,22 +1260,22 @@ sq:
         no_banner_exists: "There is no banner topic."
         banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
       inviting: "Inviting..."
-      automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
-      automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
+      automatically_add_to_groups_optional: "Kjo ftesë përfshin edhe akses për këto grupe: (fakultative, vetëm për adminët)"
+      automatically_add_to_groups_required: "Kjo ftesë përfshin edhe akses për këto grupe: (<b>e detyrueshme</b>, vetëm për adminët)"
       invite_private:
-        title: 'Invite to Message'
-        email_or_username: "Invitee's Email or Username"
+        title: 'Ftoje në këtë mesazh'
+        email_or_username: "Emaili ose emri i përdoruesit të të ftuarit"
         email_or_username_placeholder: "email address or username"
-        action: "Fto"
-        success: "We've invited that user to participate in this message."
+        action: "Ftoni"
+        success: "Anëtari u ftua të marrë pjesë në këtë mesazh. "
         error: "Sorry, there was an error inviting that user."
         group_name: "emri grupit"
       controls: "Topic Controls"
       invite_reply:
-        title: 'Ftesa'
+        title: 'Ftoni'
         username_placeholder: "emri i përdoruesit"
-        action: 'Dërgo një ftesë'
-        help: 'invite others to this topic via email or notifications'
+        action: 'Dërgoni ftesën'
+        help: 'ftoni të tjerë në këtë temë nëpërmjet emailit ose njoftimeve'
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
         sso_enabled: "Vendosni emrin e përdoruesit që dëshironi të ftoni në këtë temë"
         to_topic_blank: "Vendosni emrin e përdoruesit ose adresën email të personit që dëshironi të ftoni në këtë temë"
@@ -1278,9 +1283,9 @@ sq:
         to_topic_username: "You've entered a username. We'll send a notification with a link inviting them to this topic."
         to_username: "Vendosni emrin e përdoruesit që dëshironi të ftoni. Sistemi do i dërgojë një njoftim me një lidhje drejt kësaj teme. "
         email_placeholder: 'emri@adresa.com'
-        success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
-        success_username: "We've invited that user to participate in this topic."
-        error: "Sorry, we couldn't invite that person. Perhaps they have already been invited? (Invites are rate limited)"
+        success_email: "Sistemi dërgoi një ftesë për <b>{{emailOrUsername}}</b>. Do t'ju njoftojmë kur ftesa të jetë pranuar. Shikoni edhe faqen Ftesat nën profilin tuaj të anëtarit për të parë statusin e ftesave. "
+        success_username: "Ky anëtar u ftua të marrë pjesë në këtë temë. "
+        error: "Nuk e ftuam dot këtë person. A ka mundësi që të jetë ftuar më parë?"
       login_reply: 'Identifikohu për t''u përgjigjur'
       filters:
         n_posts:
@@ -1333,7 +1338,7 @@ sq:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "cito përgjigjen"
-      edit: "Editing {{link}} {{replyAvatar}} {{username}}"
+      edit: "Duke modifikuar {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Arsyeja:"
       post_number: "postimi {{number}}"
       last_edited_on: "redaktimi i fundit u krye më"
@@ -1344,7 +1349,7 @@ sq:
       show_hidden: 'Shfaq materialin e fshehur.'
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
-        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+        other: "(postim i tërhequr nga autori, do të fshihet automatikisht në %{count} orë nëse nuk sinjalizohet)"
       expand_collapse: "expand/collapse"
       gap:
         one: "shiko 1 përgjigje të fshehur"
@@ -1368,6 +1373,7 @@ sq:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
         upload: "Sorry, there was an error uploading that file. Please try again."
+        file_too_large: "Na vjen keq, skedari është shumë i madh (maksimumi i lejuar është {{max_size_kb}}kb). Mund t'a vendosni këtë skedar të madh në një faqe tjetër dhe të vendosni këtu vetëm lidhjen."
         too_many_uploads: "Na vjen keq, por duhet t'i ngarkoni skedarët një nga një."
         too_many_dragged_and_dropped_files: "Na vjen keq, por ju lejohet të ngarkoni vetëm 10 skedarë njëkohësisht."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
@@ -1392,26 +1398,26 @@ sq:
         has_liked: "ju pëlqeni këtë postim"
         undo_like: "anulo pëlqimin"
         edit: "redakto këtë postim"
-        edit_anonymous: "Sorry, but you need to be logged in to edit this post."
-        flag: "privately flag this post for attention or send a private notification about it"
+        edit_anonymous: "Na vjen keq, ju duhet të jeni të identifikuar për të redaktuar këtë postim. "
+        flag: "sinjalizojeni privatisht këtë postim për të tërhequr vëmendjen e adminëve"
         delete: "fshini këtë postim"
         undelete: "anuloni fshirjen e postimit"
         share: "shpërndani një link tek ky postim"
         more: "Më shumë"
         delete_replies:
           confirm:
-            one: "Do you also want to delete the direct reply to this post?"
-            other: "Do you also want to delete the {{count}} direct replies to this post?"
-          yes_value: "Yes, delete the replies too"
+            one: "A doni të fshini edhe 1 përgjigje direkte ndaj këtij postimi?"
+            other: "A doni të fshini edhe {{count}} përgjigjet direkte ndaj këtij postimi?"
+          yes_value: "Po, fshi edhe përgjigjet"
           no_value: "Jo, vetëm këtë postim"
-        admin: "post admin actions"
+        admin: "veprimet administrative mbi postimin"
         wiki: "Bëje Wiki"
         unwiki: "Hiqe Wiki"
-        convert_to_moderator: "Add Staff Color"
-        revert_to_regular: "Remove Staff Color"
+        convert_to_moderator: "Shto ngjyrë stafi"
+        revert_to_regular: "Hiq ngjyrën e stafit"
         rebake: "Rindërtoni HTML"
         unhide: "Unhide"
-        change_owner: "Change Ownership"
+        change_owner: "Ndrysho zotëruesin"
       actions:
         flag: 'Sinjalizoni'
         defer_flags:
@@ -1422,6 +1428,7 @@ sq:
           spam: "Flag it too"
           inappropriate: "Flag it too"
           custom_flag: "Flag it too"
+          bookmark: "Shtoje edhe tek Të preferuarat"
           like: "E pëlqejnë"
           vote: "Vote for it too"
         undo:
@@ -1579,42 +1586,42 @@ sq:
       parent: "Parent Category"
       notifications:
         watching:
-          title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
+          title: "Në vëzhgim"
+          description: "Ju do të vëzhgoni automatikisht të gjitha temat e reja nën këto kategori. Do të njoftoheni për çdo postim të ri, dhe numri i përgjigjeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
         tracking:
-          title: "Tracking"
-          description: "You will automatically track all new topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
+          title: "Në gjurmim"
+          description: "Ju do të gjurmoni automatikisht çdo temë të re nën këto kategori. Do të njoftoheni nëse dikush ju përmend @emrin apo ju përgjigjet. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës në listat e faqes. "
         regular:
           title: "Normal"
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
         muted:
-          title: "Muted"
-          description: "You will never be notified of anything about new topics in these categories, and they will not appear in latest."
+          title: "Pa njoftime"
+          description: "Ju nuk do të njoftoheni për asgjë nga temat e reja të këtyre kategorive, dhe këto tema nuk do të afishohen në faqen \"Më të fundit\" për ju. "
     flagging:
       title: 'Faleminderit për ndihmën që i jepni këtij komuniteti!'
-      action: 'Flag Post'
-      take_action: "Take Action"
+      action: 'Sinjalizo postimin'
+      take_action: "Vepro"
       notify_action: 'Mesazh'
       official_warning: 'Paralajmërim zyrtar'
       delete_spammer: "Elimino Spammer"
-      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+      delete_confirm: "Jeni duke fshirë <b>%{posts}</b> postime dhe <b>%{topics}</b> tema nga ky anëtar. Gjithashtu, po fshini llogarinë e tij/saj, po bllokoni regjistrime të reja nga adresa IP <b>%{ip_address}</b>, dhe po shtoni adresën email <b>%{email}</b> në një listë adresash të bllokuara. A jeni të sigurtë që ky anëtar është spammer?"
       yes_delete_spammer: "Po, Elimino Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(fshehur)"
-      submit_tooltip: "Submit the private flag"
-      take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
-      cant: "Sorry, you can't flag this post at this time."
-      notify_staff: 'Notify staff privately'
+      submit_tooltip: "Dërgoni sinjalizimin privatisht"
+      take_action_tooltip: "Kaloni direkt tek pragu i sinjalizimeve (dmth, mos prisni për sinjalizime të tjera nga komuniteti)"
+      cant: "Na vjen keq, nuk mund të sinjalizoni këtë postim tani. "
+      notify_staff: 'Njoftoni stafin privatisht'
       formatted_name:
-        off_topic: "Është Jashtë teme"
+        off_topic: "Është jashtë teme"
         inappropriate: "Është e papërshtatshme"
         spam: "Është Spam"
-      custom_placeholder_notify_user: "Të jeni specifik, konstruktiv dhe gjithmonë të sjellshëm."
-      custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
+      custom_placeholder_notify_user: "Jini specifikë, konstruktiv dhe gjithmonë të sjellshëm."
+      custom_placeholder_notify_moderators: "Na thoni specifikisht se çfarë ju shqetëson dhe na jepni lidhje dhe shembuj konkretë brenda mundësive. "
       custom_message:
         at_least: "shkruaj të pakën {{n}} karaktere "
         more: "{{n}} shko tek..."
-        left: "{{n}} remaining"
+        left: "mund të shkruani edhe {{n}} shkronja"
     flagging_topic:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Raporto Temën"
@@ -1829,20 +1836,20 @@ sq:
         agree_flag_restore_post: "Agree (restore post)"
         agree_flag_restore_post_title: "Rikthe këtë postim"
         agree_flag: "Agree with flag"
-        agree_flag_title: "Agree with flag and keep the post unchanged"
+        agree_flag_title: "Dakord me sinjalizimin dhe lini postimin të pandryshuar"
         defer_flag: "Defer"
         defer_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Fshij"
-        delete_title: "Delete the post this flag refers to."
-        delete_post_defer_flag: "Delete post and Defer flag"
+        delete_title: "Fshini postimin e sinjalizuar."
+        delete_post_defer_flag: "Fshini postimin dhe shtyni për më vonë sinjalizimin"
         delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
-        delete_post_agree_flag: "Delete post and Agree with flag"
+        delete_post_agree_flag: "Fshini postimin dhe bini dakord me sinjalizimin"
         delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
         delete_flag_modal_title: "Delete and..."
         delete_spammer: "Elimino Spammer"
         delete_spammer_title: "Remove the user and all posts and topics by this user."
         disagree_flag_unhide_post: "Disagree (unhide post)"
-        disagree_flag_unhide_post_title: "Remove any flags from this post and make the post visible again"
+        disagree_flag_unhide_post_title: "Hiqni të gjitha sinjalizimet mbi këtë postim dhe ripublikojeni postimin"
         disagree_flag: "Disagree"
         disagree_flag_title: "Deny this flag as invalid or incorrect"
         clear_topic_flags: "U krye"
@@ -1861,8 +1868,8 @@ sq:
         no_results: "Nuk ka sinjalizime."
         topic_flagged: "This <strong>topic</strong> has been flagged."
         visit_topic: "Visit the topic to take action"
-        was_edited: "Post was edited after the first flag"
-        previous_flags_count: "This post has already been flagged {{count}} times."
+        was_edited: "Postimi është redaktuar pas sinjalizimit të parë"
+        previous_flags_count: "Ky postim është sinjalizuar {{count}} herë."
         summary:
           action_type_3:
             one: "off-topic"
@@ -2045,7 +2052,7 @@ sq:
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
           body: "Body"
-          none_selected: "Select an email template to begin editing."
+          none_selected: "Zgjidhni një shabllon emaili për të filluar redaktimin. "
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
         css_html:
@@ -2397,7 +2404,7 @@ sq:
           topics_viewed_all_time: "Topics Viewed (all time)"
           posts_read: "Posts Read"
           posts_read_all_time: "Posts Read (all time)"
-          flagged_posts: "Flagged Posts"
+          flagged_posts: "Postimet e sinjalizuara"
           flagged_by_users: "Users Who Flagged"
           likes_given: "Pëlqime të dhëna"
           likes_received: "Pëlqime të marra"
@@ -2594,6 +2601,8 @@ sq:
         categories: '<b>g</b>, <b>c</b> Kategoritë'
         top: '<b>g</b>, <b>t</b> Top'
         bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
+        profile: '<b>g</b>, <b>p</b> Profili'
+        messages: '<b>g</b>, <b>m</b> Mesazhet'
       navigation:
         title: 'Shfletimi'
         jump: '<b>#</b> Shko tek postimi #'
@@ -2604,13 +2613,15 @@ sq:
       application:
         title: 'Aplikacion'
         create: '<b>c</b> Filloni një diskutim të ri'
-        notifications: '<b>n</b> Open notifications'
+        notifications: '<b>n</b> Hap njoftimet'
+        hamburger_menu: '<b>=</b> Hap menunë hamburger'
         user_profile_menu: '<b>p</b> Open user menu'
         show_incoming_updated_topics: '<b>.</b> Show updated topics'
         search: '<b>/</b> Kërko'
         help: '<b>?</b> Open keyboard help'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Shkëputu'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2622,7 +2633,7 @@ sq:
         reply_post: '<b>r</b> Reply to post'
         quote_post: '<b>q</b> Quote post'
         like: '<b>l</b> Like post'
-        flag: '<b>!</b> Flag post'
+        flag: '<b>!</b> Sinjalizo postimin'
         bookmark: '<b>b</b> Bookmark post'
         edit: '<b>e</b> Edit post'
         delete: '<b>d</b> Delete post'
@@ -2674,9 +2685,23 @@ sq:
       rename_tag: "Riemëro etiketën"
       rename_instructions: "Zgjidhni një emër të ri për këtë etiketë"
       sort_by: "Rendit sipas:"
+      sort_by_name: "emër"
       filters:
         without_category: "%{filter} %{tag} temat"
         with_category: "%{filter} %{tag} temat në %{category}"
+      notifications:
+        watching:
+          title: "Në vëzhgim"
+          description: "Ju do të vëzhgoni automatikisht të gjitha temat e reja nën këtë etiketë. Do të njoftoheni për çdo postim e temë të re, dhe numri i postimeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
+        tracking:
+          title: "Në gjurmim"
+          description: "Ju do të gjurmoni automatikisht çdo temë të re nën këtë etiketë. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës në listat e faqes. "
+        regular:
+          title: "Normal"
+          description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose i përgjigjet postimeve tuaja. "
+        muted:
+          title: "Pa njoftime"
+          description: "Ju nuk do të njoftoheni për asgjë nga temat e reja të kësaj etikete, dhe këto tema nuk do të afishohen në faqen \"Të palexuara\" për ju. "
       topics:
         none:
           unread: "Nuk keni tema të palexuara."

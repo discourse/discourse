@@ -2717,7 +2717,6 @@ es:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
-
     tagging:
       all_tags: "Etiquetas"
       selector_all_tags: "etiquetas"
@@ -2731,7 +2730,6 @@ es:
       sort_by: "Ordenar por:"
       sort_by_count: "volumen"
       sort_by_name: "nombre"
-
       notifications:
         watching:
           title: "Vigilar"
@@ -2745,7 +2743,6 @@ es:
         muted:
           title: "Silenciar"
           description: "No se te notificará de nuevos temas con esta etiqueta, ni aparecerán en tu pestaña de temas no leídos."
-
       topics:
         none:
           unread: "No tienes temas sin leer."
@@ -2767,4 +2764,3 @@ es:
           top: "No hay más temas top."
           bookmarks: "No hay más temas en marcadores."
           search: "No hay más resultados de búsqueda."
-
