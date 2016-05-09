@@ -2671,7 +2671,6 @@ fi:
       delete_confirm: "Haluatko varmasti poistaa tagin?"
       rename_tag: "Uudelleennimeä tagi"
       rename_instructions: "Valitse tagin uusi nimi:"
-
       notifications:
         watching:
           title: "Tarkkaile"
