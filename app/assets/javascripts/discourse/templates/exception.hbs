@@ -13,7 +13,7 @@
       {{desc}}
     </div>
     <div class="buttons">
-      {{#each buttonData in enabledButtons}}
+      {{#each enabledButtons as |buttonData|}}
         {{d-button icon=buttonData.icon action=buttonData.action label=buttonData.key class=buttonData.classes}}
       {{/each}}
       {{conditional-loading-spinner condition=loading}}

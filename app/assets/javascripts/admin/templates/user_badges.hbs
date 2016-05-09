@@ -35,7 +35,7 @@
         <th></th>
       </tr>
 
-      {{#each userBadge in groupedBadges}}
+      {{#each groupedBadges as |userBadge|}}
         <tr>
           <td>{{user-badge badge=userBadge.badge count=userBadge.count}}</td>
           <td>
