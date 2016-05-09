@@ -61,8 +61,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     this.perform(operation).then(topics => {
       if (topics) {
         topics.forEach(cb);
-        const refreshTarget = this.get('refreshTarget');
-        if (refreshTarget) { refreshTarget.send('refresh'); }
+        (this.get('refreshClosure') || Ember.k)();
         this.send('closeModal');
       }
     });
@@ -70,8 +69,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
 
   performAndRefresh(operation) {
     return this.perform(operation).then(() => {
-      const refreshTarget = this.get('refreshTarget');
-      if (refreshTarget) { refreshTarget.send('refresh'); }
+      (this.get('refreshClosure') || Ember.k)();
       this.send('closeModal');
     });
   },
@@ -117,8 +115,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
 
       this.perform({type: 'change_category', category_id: categoryId}).then(topics => {
         topics.forEach(t => t.set('category', category));
-        const refreshTarget = this.get('refreshTarget');
-        if (refreshTarget) { refreshTarget.send('refresh'); }
+        (this.get('refreshClosure') || Ember.k)();
         this.send('closeModal');
       });
     },
