@@ -18,7 +18,22 @@ module StatsCacheable
     def fetch_cached_stats
       # The scheduled Stats job is responsible for generating and caching this.
       stats = $redis.get(stats_cache_key)
-      stats ? JSON.parse(stats) : nil
+      stats = refresh_stats if !stats
+      JSON.parse(stats).with_indifferent_access
+    end
+
+    def refresh_stats
+      stats = fetch_stats.to_json
+      set_cache(stats)
+      stats
+    end
+
+    private
+
+    def set_cache(stats)
+      # Add some extra time to the expiry so that the next job run has plenty of time to
+      # finish before previous cached value expires.
+      $redis.setex stats_cache_key, (recalculate_stats_interval + 5).minutes, stats
     end
   end
 end

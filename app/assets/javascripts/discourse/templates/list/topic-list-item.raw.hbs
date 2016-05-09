@@ -1,4 +1,4 @@
-{{#if controller.bulkSelectEnabled}}
+{{#if bulkSelectEnabled}}
   <td class='star'>
     <input type="checkbox" class="bulk-select">
   </td>
@@ -8,8 +8,15 @@
   {{raw "topic-status" topic=topic}}
   {{topic-link topic}}
   {{plugin-outlet "topic-list-after-title"}}
-  {{#if controller.showTopicPostBadges}}
+  {{#if showTopicPostBadges}}
     {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
+  {{/if}}
+  {{#if topic.tags}}
+    <div class='discourse-tags'>
+    {{#each topic.visibleListTags as |tag|}}
+      {{discourse-tag tag}}
+    {{/each}}
+    </div>
   {{/if}}
   {{plugin-outlet "topic-list-tags"}}
   {{#if expandPinned}}
@@ -18,23 +25,23 @@
   {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
 </td>
 
-{{#unless controller.hideCategory}}
+{{#unless hideCategory}}
   {{#unless topic.isPinnedUncategorized}}
     {{raw "list/category-column" category=topic.category}}
   {{/unless}}
 {{/unless}}
 
-{{#if controller.showPosters}}
+{{#if showPosters}}
   {{raw "list/posters-column" posters=topic.posters}}
 {{/if}}
 
 {{raw "list/posts-count-column" topic=topic}}
 
-{{#if controller.showParticipants}}
+{{#if showParticipants}}
   {{raw "list/posters-column" posters=topic.participants}}
 {{/if}}
 
-{{#if controller.showLikes}}
+{{#if showLikes}}
 <td class="num likes">
   {{#if hasLikes}}
     <a href='{{topic.summaryUrl}}'>
@@ -43,7 +50,7 @@
   {{/if}}
 {{/if}}
 
-{{#if controller.showOpLikes}}
+{{#if showOpLikes}}
 <td class="num likes">
   {{#if hasOpLikes}}
     <a href='{{topic.summaryUrl}}'>

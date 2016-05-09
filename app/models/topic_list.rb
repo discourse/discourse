@@ -81,8 +81,11 @@ class TopicList
       ft.topic_list = self
     end
 
-    if TopicList.preloaded_custom_fields.present?
-      Topic.preload_custom_fields(@topics, TopicList.preloaded_custom_fields)
+    preload_custom_fields = TopicList.preloaded_custom_fields
+    preload_custom_fields << DiscourseTagging::TAGS_FIELD_NAME if SiteSetting.tagging_enabled
+
+    if preload_custom_fields.present?
+      Topic.preload_custom_fields(@topics, preload_custom_fields)
     end
 
     @topics

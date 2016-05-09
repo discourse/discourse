@@ -1,7 +1,7 @@
 <div class='content-list span6'>
   <h3>{{i18n 'admin.customize.colors.long_title'}}</h3>
   <ul>
-    {{#each scheme in model}}
+    {{#each model as |scheme|}}
       {{#unless scheme.is_base}}
         <li><a {{action "selectColorScheme" scheme}} {{bind-attr class="scheme.selected:active"}}>{{scheme.description}}</a></li>
       {{/unless}}
@@ -50,7 +50,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each c in colors}}
+          {{#each colors as |c|}}
             <tr {{bind-attr class="c.changed c.valid:valid:invalid"}}>
               <td class="name" {{bind-attr title="c.name"}}>
                 <b>{{c.translatedName}}</b>

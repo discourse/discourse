@@ -121,6 +121,8 @@ en:
       email: 'send this link in an email'
 
     action_codes:
+      public_topic: "made this topic public %{when}"
+      private_topic: "made this topic private %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
       removed_user: "removed %{who} %{when}"
@@ -146,6 +148,9 @@ en:
     topic_admin_menu: "topic admin actions"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+
+    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
+    bootstrap_mode_disabled: "Bootstrap mode will be disabled in next 24 hours."
 
     s3:
       regions:
@@ -768,6 +773,8 @@ en:
         top_links: "Top Links"
         no_links: "No links yet."
         most_liked_by: "Most Liked By"
+        most_liked_users: "Most Liked"
+        most_replied_to_users: "Most Replied To"
         no_likes: "No likes yet."
 
 
@@ -1161,6 +1168,9 @@ en:
         selected:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."
+        change_tags: "Change Tags"
+        choose_new_tags: "Choose new tags for these topics:"
+        changed_tags: "The tags of those topics were changed."
 
       none:
         unread: "You have no unread topics."
@@ -1338,6 +1348,8 @@ en:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
+        make_public: "Make Public Topic"
+        make_private: "Make Private Message"
 
       feature:
         pin: "Pin Topic"
@@ -1534,6 +1546,7 @@ en:
         yes_value: "Yes, abandon"
 
       via_email: "this post arrived via email"
+      via_auto_generated_email: "this post arrived via an auto generated email"
       whisper: "this post is a private whisper for moderators"
 
       wiki:
@@ -2296,6 +2309,7 @@ en:
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
+        bounced: "Bounced"
         received: "Received"
         rejected: "Rejected"
         sent_at: "Sent At"
@@ -2406,6 +2420,8 @@ en:
             grant_moderation: "grant moderation"
             revoke_moderation: "revoke moderation"
             backup_operation: "backup operation"
+            deleted_tag: "deleted tag"
+            renamed_tag: "renamed tag"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -2577,10 +2593,18 @@ en:
         block_failed: 'There was a problem blocking the user.'
         block_confirm: 'Are you sure you want to block this user? They will not be able to create any new topics or posts.'
         block_accept: 'Yes, block this user'
+        bounce_score: "Bounce Score"
+        reset_bounce_score:
+          label: "Reset"
+          title: "Reset bounce score back to 0"
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
-        stage_explanation: "A staged user can only post via email in specific topics."
+        staged_explanation: "A staged user can only post via email in specific topics."
+        bounce_score_explanation:
+          none: "No bounces were received recently from that email."
+          some: "Some bounces were received recently from that email."
+          threshold_reached: "Received too many bounces from that email."
         trust_level_change_failed: "There was a problem changing the user's trust level."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Trust Level 2 Users"
@@ -2700,6 +2724,7 @@ en:
           login: "Login"
           plugins: "Plugins"
           user_preferences: "User Preferences"
+          tags: "Tags"
 
       badges:
         title: Badges
@@ -2918,3 +2943,57 @@ en:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+
+    tagging:
+      all_tags: "All Tags"
+      selector_all_tags: "all tags"
+      changed: "tags changed:"
+      tags: "Tags"
+      choose_for_topic: "choose optional tags for this topic"
+      delete_tag: "Delete Tag"
+      delete_confirm: "Are you sure you want to delete that tag?"
+      rename_tag: "Rename Tag"
+      rename_instructions: "Choose a new name for the tag:"
+      sort_by: "Sort by:"
+      sort_by_count: "count"
+      sort_by_name: "name"
+
+      filters:
+        without_category: "%{filter} %{tag} topics"
+        with_category: "%{filter} %{tag} topics in %{category}"
+
+      notifications:
+        watching:
+          title: "Watching"
+          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+        tracking:
+          title: "Tracking"
+          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
+        regular:
+          title: "Regular"
+          description: "You will be notified if someone mentions your @name or replies to your post."
+        muted:
+          title: "Muted"
+          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."
+
+      topics:
+        none:
+          unread: "You have no unread topics."
+          new: "You have no new topics."
+          read: "You haven't read any topics yet."
+          posted: "You haven't posted in any topics yet."
+          latest: "There are no latest topics."
+          hot: "There are no hot topics."
+          bookmarks: "You have no bookmarked topics yet."
+          top: "There are no top topics."
+          search: "There are no search results."
+        bottom:
+          latest: "There are no more latest topics."
+          hot: "There are no more hot topics."
+          posted: "There are no more posted topics."
+          read: "There are no more read topics."
+          new: "There are no more new topics."
+          unread: "There are no more unread topics."
+          top: "There are no more top topics."
+          bookmarks: "There are no more bookmarked topics."
+          search: "There are no more search results."

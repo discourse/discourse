@@ -348,7 +348,7 @@ class TopicView
     visible_types = Topic.visible_post_types(@user)
 
     if @user.present?
-      posts.where("user_id = ? OR post_type IN (?)", @user.id, visible_types)
+      posts.where("posts.user_id = ? OR post_type IN (?)", @user.id, visible_types)
     else
       posts.where(post_type: visible_types)
     end
@@ -357,7 +357,7 @@ class TopicView
   def filter_posts_by_ids(post_ids)
     # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
-                 .includes(:user, :reply_to_user)
+                 .includes(:user, :reply_to_user, :incoming_email)
                  .order('sort_order')
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?
@@ -386,7 +386,8 @@ class TopicView
   def unfiltered_posts
     result = filter_post_types(@topic.posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?
-    result = @topic.posts.where("user_id IS NOT NULL") if @exclude_deleted_users
+    result = result.where("user_id IS NOT NULL") if @exclude_deleted_users
+    result = result.where(hidden: false) if @exclude_hidden
     result
   end
 

@@ -1,28 +1,30 @@
-{{#each p in model.content}}
-  <div {{bind-attr class=":item p.hidden p.deleted p.moderator_action"}}>
-    <div class="clearfix info">
-      <a href="{{unbound p.usernameUrl}}" class="avatar-link">
-        <div class="avatar-wrapper">
-          {{avatar p imageSize="large" extraClasses="actor" ignoreTitle="true"}}
-        </div>
-      </a>
-      <span class="time">
-        {{format-date p.created_at leaveAgo="true"}}
-      </span>
-      <span class="title">
-        <a href="{{unbound p.url}}">{{unbound p.topic_title}}</a>
-      </span>
-      <span class="category">
-        {{category-link p.category}}
-      </span>
-      {{#if p.deleted}}
-        <span class="delete-info">
-          <i class="fa fa-trash-o"></i> {{avatar p.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}} {{format-date p.deleted_at leaveAgo="true"}}
+{{#user-stream stream=model}}
+  {{#each model.content as |p|}}
+    <div {{bind-attr class=":item p.hidden p.deleted p.moderator_action"}}>
+      <div class="clearfix info">
+        <a href="{{unbound p.usernameUrl}}" class="avatar-link">
+          <div class="avatar-wrapper">
+            {{avatar p imageSize="large" extraClasses="actor" ignoreTitle="true"}}
+          </div>
+        </a>
+        <span class="time">
+          {{format-date p.created_at leaveAgo="true"}}
         </span>
-      {{/if}}
+        <span class="title">
+          <a href="{{unbound p.url}}">{{unbound p.topic_title}}</a>
+        </span>
+        <span class="category">
+          {{category-link p.category}}
+        </span>
+        {{#if p.deleted}}
+          <span class="delete-info">
+            <i class="fa fa-trash-o"></i> {{avatar p.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}} {{format-date p.deleted_at leaveAgo="true"}}
+          </span>
+        {{/if}}
+      </div>
+      <p class="excerpt">
+        {{{p.excerpt}}}
+      </p>
     </div>
-    <p class="excerpt">
-      {{{p.excerpt}}}
-    </p>
-  </div>
-{{/each}}
+  {{/each}}
+{{/user-stream}}

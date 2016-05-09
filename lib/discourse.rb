@@ -283,7 +283,7 @@ module Discourse
   SYSTEM_USER_ID ||= -1
 
   def self.system_user
-    User.find_by(id: SYSTEM_USER_ID)
+    @system_user ||= User.find_by(id: SYSTEM_USER_ID)
   end
 
   def self.store

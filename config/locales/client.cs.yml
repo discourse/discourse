@@ -474,7 +474,6 @@ cs:
         set_password: "Nastavit heslo"
       change_about:
         title: "Změna o mně"
-        error: "Při změně této hodnoty nastala chyba."
       change_username:
         title: "Změnit uživatelské jméno"
         confirm: "Změna uživatelského jména může mít vážné následky. Opravdu to chcete udělat?"
@@ -825,7 +824,6 @@ cs:
       link_description: "sem vložte popis odkazu"
       link_dialog_title: "Vložit odkaz"
       link_optional_text: "volitelný popis"
-      link_placeholder: "http://example.com \"nepovinný text\""
       quote_title: "Bloková citace"
       quote_text: "Bloková citace"
       code_title: "Ukázka kódu"
@@ -1272,7 +1270,6 @@ cs:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
-        attachment_too_large: "Soubor, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
         file_too_large: "Omlouváme se, ale soubor, který se snažíte nahrát, je příliš veliký (maximální velikost je {{max_size_kb}}kb)"
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
         too_many_dragged_and_dropped_files: "Eh, pardon, ale můžete najednou nahrát nanejvýš 10 souborů."
@@ -1867,14 +1864,6 @@ cs:
           backups: "Zálohy"
           logs: "Logy"
         none: "Žádné zálohy nejsou k dispozici."
-        read_only:
-          enable:
-            title: "Zapnout režim jen pro čtení"
-            label: "Zapnout režim jen pro čtení"
-            confirm: "Určitě chcete zapnout režim jen pro čtení?"
-          disable:
-            title: "Vypnout režim jen pro čtení"
-            label: "Vypnout režim jen pro čtení"
         logs:
           none: "Zatím je log prázdný..."
         columns:

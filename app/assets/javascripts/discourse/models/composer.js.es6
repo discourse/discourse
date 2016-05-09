@@ -28,12 +28,14 @@ const CLOSED = 'closed',
         archetype: 'archetypeId',
         target_usernames: 'targetUsernames',
         typing_duration_msecs: 'typingTime',
-        composer_open_duration_msecs: 'composerTime'
+        composer_open_duration_msecs: 'composerTime',
+        tags: 'tags'
       },
 
       _edit_topic_serializer = {
         title: 'topic.title',
-        categoryId: 'topic.category.id'
+        categoryId: 'topic.category.id',
+        tags: 'topic.tags'
       };
 
 const Composer = RestModel.extend({
@@ -356,6 +358,15 @@ const Composer = RestModel.extend({
     this.set('reply', before + text + after);
 
     return before.length + text.length;
+  },
+
+  prependText(text, opts) {
+    const reply = (this.get('reply') || '');
+
+    if (opts && opts.new_line && reply.length > 0) {
+      text = text.trim() + "\n\n";
+    }
+    this.set('reply', text + reply);
   },
 
   applyTopicTemplate(oldCategoryId, categoryId) {

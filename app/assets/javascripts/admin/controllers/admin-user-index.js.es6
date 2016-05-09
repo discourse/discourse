@@ -27,7 +27,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
       });
     }
     return [];
-  }.property('model.user_fields.@each'),
+  }.property('model.user_fields.[]'),
 
   actions: {
     toggleTitleEdit() {

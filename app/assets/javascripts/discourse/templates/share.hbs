@@ -10,7 +10,7 @@
     <div class="share-for-touch"><div class="overflow-ellipsis"><a></a></div></div>
   </div>
 
-  {{#each s in sources}}
+  {{#each sources as |s|}}
     {{share-source source=s title=view.title action="share"}}
   {{/each}}
 

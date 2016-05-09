@@ -13,8 +13,8 @@ zh_CN:
   datetime_formats: &datetime_formats
     formats:
       short: "%Y 年 %-m 月 %-d 日"
-      short_no_year: "%-m 月 %-d 日"
-      date_only: "%Y 年 %-m 月 %-d 日"
+      short_no_year: "%-m月%-d日"
+      date_only: "%Y年%-m月%-d日"
   date:
     month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
@@ -45,11 +45,11 @@ zh_CN:
         topic_not_found_error: "当回复到已经删除的相关主题时发生。"
         topic_closed_error: "当回复到已经关闭的相关主题时发生。"
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: '%{attribute}%{message}'
     messages:
       too_long_validation: "最多只能有 %{max} 个字符；你已经输入了 %{length} 个字符。"
       invalid_boolean: "无效布尔值。"
-      taken: "已经被使用"
+      taken: "不能和已有的%{attribute}重复"
       accepted: 必须被接受
       blank: 不能为空
       present: 必须为空
@@ -60,7 +60,7 @@ zh_CN:
       exclusion: 被保留
       greater_than: 必须大于 %{count}
       greater_than_or_equal_to: 必须大于或等于 %{count}
-      has_already_been_used: "已经被使用"
+      has_already_been_used: "不能和其他%{attribute}重复"
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "无效；请描述得更详尽些"
@@ -162,6 +162,7 @@ zh_CN:
     group_mentions: "%{group_name}组最近的提及"
     user_posts: "最新贴子由@%{username}发表"
     user_topics: "最新主题由@%{username}发表"
+    tag: "加标签的主题"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
@@ -277,7 +278,7 @@ zh_CN:
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
   vip_category_name: "贵宾室"
   vip_category_description: "高于信任等级3的用户参与讨论的分类。"
-  meta_category_name: "页面反馈"
+  meta_category_name: "站点反馈"
   meta_category_description: "讨论该站点的站务、组织、如何运作和如何改善它。"
   staff_category_name: "管理人员"
   staff_category_description: "管理人员私有的分类。只有管理员和版主才能阅览主题。"
@@ -349,7 +350,6 @@ zh_CN:
       create_like: "你今天的“赞”数量已经到达上限，请等待%{time_left}之后再试。"
       create_bookmark: "你今天的收藏已经到达上限，请等待%{time_left}之后再试。"
       edit_post: "你今天编辑帖子的数量已经到达上限，请等待%{time_left}之后再试。"
-      live_post_counts: "你请求新帖子的速度太快了，请等待 %{time_left}之后再试。"
       unsubscribe_via_email: "你已经达到了今日用邮件接触订阅的最大数量限制。请等 %{time_left}之后再试。"
       topic_invitations_per_day: "你已经达到了今日主题邀请的最大数量限制。请等 %{time_left}之后再试。"
     hours:
@@ -722,7 +722,6 @@ zh_CN:
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
     onebox_domains_whitelist: "对这些站点启用 Onebox 的域名列表；这些域名应该支持 OpenGraph 或 oEmbed。在此测试他们：http://iframely.com/debug"
     logo_url: "在你站点左上角出现的小号标志图片，应为一个长方形。如果留空，将显示站点标题文字。"
-    digest_logo_url: "邮件摘要中使用的替代标志。应为长方形。如果留空，将使用 `logo_url`。"
     logo_small_url: "在你站点左上角的小号标志图片，应为正方形，当滚动时才可见。如果留空，将显示主页图标。"
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon，如果要正确地通过 CDN 分发，它必须是 png 图片"
     mobile_logo_url: "移动站点左上角的固定标志图片。应为正方形。如果留空，`logo_url` 将被使用。如：http://example.com/uploads/default/logo.png"
@@ -743,7 +742,6 @@ zh_CN:
     polling_interval: "当不再长轮询时，已登录的客户端多久应该轮询一次，以毫秒为单位"
     anon_polling_interval: "匿名客户端轮询时间间隔（单位：毫秒）"
     background_polling_interval: "客户端轮询的间隔，以毫秒计（当窗口在后台时）"
-    flags_required_to_hide_post: "一个帖子累计多少个标记之后会被自动隐藏，并向帖子作者发送私信通知（0 为从不）"
     cooldown_minutes_after_hiding_posts: "当一个帖子因为标记而隐藏之后，用户需要等待多少分钟才能编辑帖子"
     max_topics_in_first_day: "新用户在第一天内最多可以创建的主题数"
     max_replies_in_first_day: "新用户在第一天内最大可以创建的回复数"
@@ -809,7 +807,6 @@ zh_CN:
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
     enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 提供方协议，要求设置 sso_secret"
-    sso_url: "单点登录 URL 入口点"
     sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
     sso_overrides_email: "每一次登录时，用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且阻止本地的邮件地址修改。（警告：因格本地邮件的正规化，邮件地址可能会有所差异）"
     sso_overrides_username: "每一次登录时，用 SSO 信息中的外部站点的用户名覆盖本地用户名，并且阻止本地的用户名修改。（警告：因格本地用户名的长度和其他要求，用户名可能会有所差异）"
@@ -1062,7 +1059,6 @@ zh_CN:
     enforce_square_emoji: "强制为所有 emojis 设置正方形比例。"
     approve_post_count: "新用户或基础用户需要被审核的帖子数量"
     approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
-    notify_about_queued_posts_after: "如果有帖子等待了设定的小时数后仍在等候处理，发送一封邮件给联络邮件地址。设为 0 将禁用这些邮件。"
     default_email_digest_frequency: "用户默认收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "用户在摘要邮件中是否收到新用户帖子的默认设置。用户可以在参数设置中更改这个设置。"
     default_email_private_messages: "默认在有人发消息给用户时发送一封邮件通知。"
@@ -1084,6 +1080,18 @@ zh_CN:
     default_categories_watching: "分类列表默认跟踪。"
     default_categories_tracking: "分类列表默认追踪。"
     default_categories_muted: "分类列表默认不显示。"
+    tagging_enabled: "允许用户为主题设置标签？"
+    min_trust_to_create_tag: "允许创建标签的最小信任等级。"
+    max_tags_per_topic: "一个主题最多允许有多少个标签。"
+    max_tag_length: "一个标签允许的最大字符数。"
+    max_tag_search_results: "当搜索标签时，显示的最多几个结果。"
+    show_filter_by_tag: "显示一个下拉菜单按照标签过滤主题列表。"
+    max_tags_in_filter_list: "过滤下拉菜单中显示的最大标签数。最常用的标签将优先显示。"
+    tags_sort_alphabetically: "按照字母顺序显示标签。默认显示顺序是流行度。"
+    tag_style: "标签的视觉样式。"
+    staff_tags: "只可由志愿设置的标签列表"
+    min_trust_level_to_tag_topics: "给主题加标签的最小信任等级"
+    suppress_overlapping_tags_in_list: "如果在列表视图中标签覆盖了主题，则隐藏标签"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -1538,10 +1546,6 @@ zh_CN:
       text_body_template: "我们很抱歉，但是你的数据导出请求失败了。请检查日志或联系一位管理人员。"
     email_reject_insufficient_trust_level:
       subject_template: "[%{site_name}] 电子邮件错误 -- 信任等级不足"
-      text_body_template: |
-        我们非常抱歉，你发送至 %{destination}（名为 %{former_title}）的邮件出问题了。
-
-        你的账户没有足够的信任等级向该邮件地址发布新主题。如果你坚信这是错误，联系管理人员。
     email_reject_user_not_found:
       subject_template: "[%{site_name}] 邮件问题 -- 用户未找到"
       text_body_template: |
@@ -1588,16 +1592,8 @@ zh_CN:
         我们不能找到你邮件中的回复。**请确认将你的回复置于邮件顶端**——我们不能处理行内回复。
     email_reject_invalid_access:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
-      text_body_template: |
-        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
-
-        您的账户没有足够的权限在该分类发布一个新主题。如果您坚信这是一个错误，联系一个管理人员。
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
-      text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
-        你发邮件到的分类只接受已知邮件的合法账户。如果你坚信这是错误，联系管理人员。
     email_reject_invalid_post:
       subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
@@ -1640,22 +1636,10 @@ zh_CN:
         目标邮件地址无法识别。请确保你是向管理人员提供的邮件地址发信。
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] 邮件问题 -- 主题未找到"
-      text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
-        你回复的主题已经不存在了 —— 可能已经被深处了？如果你确定这是错误，请联系管理人员。
     email_reject_topic_closed:
       subject_template: "[%{site_name}] 邮件问题 -- 主题已关闭"
-      text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
-
-        你回复的主题现在已经被关闭并不再接受回复。如果你确定这是个错误，联系管理人员。
     email_reject_auto_generated:
       subject_template: "[%{site_name}] 邮件问题 -- 自动生成的回复"
-      text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
-        你的邮件被标记为“自动生成”的，即邮件是由电脑生成而不是人类所写；我们不接受这样的邮件。如果你确信这是错误，请联系管理人员。
     email_error_notification:
       subject_template: "[%{site_name}] 电子邮件错误 -- POP 验证错误"
       text_body_template: |
@@ -2481,3 +2465,7 @@ zh_CN:
   activemodel:
     errors:
       <<: *errors
+  tags:
+    staff_tag_disallowed: "标签\"%{tag}\"只可以由职员标记。"
+    staff_tag_remove_disallowed: "标签\"%{tag}\"只可以由职员删除。"
+  rss_by_tag: "%{tag}标签的主题"

@@ -524,7 +524,6 @@ pl_PL:
         set_password: "Ustaw hasło"
       change_about:
         title: "Zmień O mnie"
-        error: "Wystąpił błąd podczas zmiany tej wartości."
       change_username:
         title: "Zmień nazwę użytkownika"
         confirm: "Jeżeli zmienisz swoją nazwę użytkownika, wszystkie stare cytaty twoich wpisów oraz wzmianki przez @nazwę przestaną działać. Czy na pewno tego chcesz?"
@@ -896,7 +895,6 @@ pl_PL:
       link_description: "wprowadź tutaj opis odnośnika"
       link_dialog_title: "Wstaw odnośnik"
       link_optional_text: "opcjonalny tytuł"
-      link_placeholder: "http://example.com \"opcjonalny tekst\""
       quote_title: "Cytat"
       quote_text: "Cytat"
       code_title: "Tekst sformatowany"
@@ -1366,7 +1364,6 @@ pl_PL:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
-        attachment_too_large: "Przepraszamy, ale plik, który chcesz wgrać jest za duży (maksymalny rozmiar to {{max_size_kb}}KB)."
         file_too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to {{max_size_kb}}kb)"
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
         too_many_dragged_and_dropped_files: "Przepraszamy, możesz wczytać maksymalnie 10 plików naraz."
@@ -1965,14 +1962,6 @@ pl_PL:
           backups: "Kopie zapasowe"
           logs: "Logi"
         none: "Brak kopii zapasowych."
-        read_only:
-          enable:
-            title: "Włącz tryb tylko do odczytu"
-            label: "Włącz tryb tylko do odczytu"
-            confirm: "Czy na pewno chcesz włączyć tryb tylko do odczytu?"
-          disable:
-            title: "Wyłącz tryb tylko do odczytu"
-            label: "Wyłącz tryb tylko do odczytu"
         logs:
           none: "Póki co brak logów…"
         columns:
@@ -2710,3 +2699,9 @@ pl_PL:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+    tagging:
+      all_tags: "Wszystkie tagi"
+      changed: "zmienione tagi:"
+      tags: "Tagi"
+      choose_for_topic: "wybierz opcjonalne tagi dla tego tematu"
+      topics_tagged: "Tematy otagowane jako <span class='discourse-tag'>{{tag}}</span>"

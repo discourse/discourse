@@ -17,6 +17,14 @@ export default Ember.Component.extend(StringBuffer, {
       notices.push([I18n.t("emails_are_disabled"), 'alert-emails-disabled']);
     }
 
+    if (this.currentUser && this.currentUser.get('staff') && this.siteSettings.bootstrap_mode_enabled) {
+      if (this.siteSettings.bootstrap_mode_min_users > 0) {
+        notices.push([I18n.t("bootstrap_mode_enabled", {min_users: this.siteSettings.bootstrap_mode_min_users}), 'alert-bootstrap-mode']);
+      } else {
+        notices.push([I18n.t("bootstrap_mode_disabled"), 'alert-bootstrap-mode']);
+      }
+    }
+
     if (!_.isEmpty(this.siteSettings.global_notice)) {
       notices.push([this.siteSettings.global_notice, 'alert-global-notice']);
     }

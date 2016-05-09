@@ -22,7 +22,7 @@
       <div class='cat'><a {{bind-attr href=noCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{i18n 'categories.no_subcategory'}}</a></div>
     {{/if}}
     {{#if renderCategories}}
-      {{#each c in categories}}<div class='cat'>{{category-link c allowUncategorized=true hideParent=subCategory}}</div>{{/each}}
+      {{#each categories as |c|}}<div class='cat'>{{category-link c allowUncategorized=true hideParent=subCategory}}</div>{{/each}}
     {{/if}}
   </section>
 {{/if}}

@@ -24,13 +24,18 @@ it:
   loading: "Caricamento"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, è consigliato abilitare JavaScript '
   log_in: "Accedi"
-  purge_reason: "Cancellato automaticamente come account abbandonato e mai attivato"
+  purge_reason: "Account cancellato automaticamente perché abbandonato o disattivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
   emails:
     incoming:
       default_subject: "Email in arrivo da %{email}"
       show_trimmed_content: "Mostra contenuto tagliato"
+      errors:
+        empty_email_error: "Succede quando l'email ricevuta era vuota."
+        no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
+        inactive_user_error: "Succede quando il mittente non è attivo."
+        blocked_user_error: "Succede quando il mittente è stato bloccato."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -429,7 +434,7 @@ it:
     like:
       title: 'Mi piace'
       description: 'Metti "Mi piace" a questo messaggio'
-      long_form: 'hai messo "Mi piace"'
+      long_form: 'hanno messo "Mi piace"'
     vote:
       title: 'Vota'
       description: 'Vota questo messaggio'
@@ -680,7 +685,6 @@ it:
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
     onebox_domains_whitelist: "Lista di domini per i quali consentire la funzione di onebox; questi domini devono supportare OpenGraph o oEmbed. Testali su http://iframely.com/debug"
     logo_url: "L'immagine nel logo in alto a sinistra del sito, dovrebbe essere larga e di forma rettangolare. Se non impostata, verrà usato il testo del titolo del sito."
-    digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Dovrebbe essere a forma di un ampio rettangolo. Se lasciato vuoto, sarà utilizzato il campo `logo_url`."
     logo_small_url: "Il piccolo logo in alto a sinistra del tuo sito, dovrebbe essere a forma di quadrato. Se non impostato, verrà mostrata l'icona di una casa."
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
@@ -698,7 +702,6 @@ it:
     polling_interval: "Se non si esegue il long polling, quanto spesso i client autenticati devono fare poll in millisecondi"
     anon_polling_interval: "Frequenza in millisecondi con cui client anonimi effettuano il poll"
     background_polling_interval: "Quanto spesso i client devono fare poll in millisecondi (quando la finestra è in background)"
-    flags_required_to_hide_post: "Numero di segnalazioni che rendono un argomento automaticamente nascosto. L'utente riceve un messaggio privato. (0 mai)"
     cooldown_minutes_after_hiding_posts: "Quanti minuti l'utente deve attendere prima di poter modificare un messaggio che è stato nascosto a causa di segnalazioni"
     max_topics_in_first_day: "Numero massimo di argomenti che l'utente può creare nel suo primo giorno di forum"
     max_replies_in_first_day: "Numero massimo di risposte che un utente può pubblicare nel suo primo giorno sul sito"
@@ -755,7 +758,6 @@ it:
     min_password_length: "Minima lunghezza della password."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
     enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider, richiede che sia impostata l'opzione sso_secret"
-    sso_url: "URL per l'endpoint del single sign on "
     sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
     sso_overrides_avatar: "Sostituisce l'avatar dell'utente con un avatar su un sito esterno usando SSO. Se abilitato, si raccomanda di disabilitare allow_uploaded_avatars"
     sso_not_approved_url: "Ridirigi a questa URL gli account SSO non approvati"
@@ -899,7 +901,7 @@ it:
     allow_animated_thumbnails: "Genera miniature animate delle gif animate."
     default_avatars: "URL degli avatar che verranno utilizzati come predefiniti per i nuovi utenti, fintanto che non li cambieranno esplicitamente."
     automatically_download_gravatars: "Scarica i Gravatars per gli utenti quando viene creato l'account o quando viene modificata l'email"
-    digest_topics: "Numero massimo di argomenti da mostrare nel riassunto email."
+    digest_topics: "Numero massimo di argomenti da mostrare nelle email riepilogative."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     enable_mobile_theme: "I dispositivi mobili usano un tema apposito, con possibilità di passare alla visualizzazione completa. Disabilita questa opzione se vuoi usare un foglio di stile personalizzato che sia completamente reattivo."
     suppress_uncategorized_badge: "Non mostrare la targhetta per gli argomenti senza categoria nell'elenco degli argomenti."
@@ -954,6 +956,10 @@ it:
   redirected_to_top_reasons:
     new_user: "Benvenuto nella nostra comunità! Questi sono gli argomenti recenti più popolari."
     not_seen_in_a_month: "Bentornato! Non ti si vede da un po'. Questi sono gli argomenti più popolari da quando sei stato via."
+  move_posts:
+    existing_topic_moderator_post:
+      one: "Un messaggio è stato fuso in un argomento esistente: %{topic_link}"
+      other: "%{count} messaggi sono stati fusi in un argomento esistente: %{topic_link}"
   change_owner:
     post_revision_text: "Proprietà trasferita da %{old_user} a %{new_user}"
     deleted_user: "un utente eliminato"
@@ -1144,51 +1150,29 @@ it:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_replied_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions} \n\n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_linked:
       subject_template: "[%{site_name}] %{topic_title} "
-      text_body_template: "%{header_instructions}\n \n%{message}\n\n%{context}\n\n---\n%{respond_instructions}\n"
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions}\n\n%{message}\n \n%{context}\n\n---\n%{respond_instructions}\n"
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions}\n\n%{message}\n\n%{context}\n \n---\n%{respond_instructions}\n"
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: "%{header_instructions}\n\n%{message}\n \n%{context}\n\n---\n%{respond_instructions}\n"
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       subject_template: "[%{site_name}] Riepilogo"
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
       top_topics: "Messaggi di successo"
       other_new_topics: "Argomenti più attivi"
-      unsubscribe: "Questo riassunto viene spedito da %{site_link} ogniqualvolta non ti vediamo per un po' di tempo. Per cancellarti %{unsubscribe_link}."
+      unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       read_more: "Leggi Altro"
@@ -1288,6 +1272,20 @@ it:
     title: "Termini del Servizio"
   privacy_topic:
     title: "Politica della Privacy"
+  badges:
+    first_like:
+      name: Primo "Mi piace"
+      description: Ha messo "Mi piace" a un messaggio
+    first_flag:
+      name: Prima Segnalazione
+      description: Segnalato un messaggio
+    first_share:
+      name: Prima Condivisione
+      description: Ha condiviso un messaggio
+    first_link:
+      name: Primo Collegamento
+    first_quote:
+      description: Ha citato un messaggio
   admin_login:
     success: "email Inviata"
     error: "Errore!"

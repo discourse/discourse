@@ -102,6 +102,7 @@ class PostCreator
     setup_post
 
     return true if skip_validations?
+
     if @post.has_host_spam?
       @spam = true
       errors[:base] << I18n.t(:spamming_host)
@@ -146,6 +147,7 @@ class PostCreator
       track_latest_on_category
       enqueue_jobs
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
+      auto_notify_for_tags
 
       trigger_after_events(@post)
 
@@ -315,8 +317,7 @@ class PostCreator
       topic_creator = TopicCreator.new(@user, guardian, @opts)
       @topic = topic_creator.create
     rescue ActiveRecord::Rollback
-      add_errors_from(topic_creator)
-      return
+      rollback_from_errors!(topic_creator)
     end
     @post.topic_id = @topic.id
     @post.topic = @topic
@@ -434,6 +435,17 @@ class PostCreator
   def enqueue_jobs
     return unless @post && !@post.errors.present?
     PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
+  end
+
+  def auto_notify_for_tags
+    if SiteSetting.tagging_enabled
+      tags = DiscourseTagging.tags_for_saving(@opts[:tags], @guardian)
+      if tags.present?
+        @topic.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
+        @topic.save
+        DiscourseTagging.auto_notify_for(tags, @topic)
+      end
+    end
   end
 
   def new_topic?

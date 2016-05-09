@@ -619,7 +619,6 @@ ar:
         set_password: " إعادة تعين الرمز السري"
       change_about:
         title: "تعديل معلومات عنّي"
-        error: "حدث خطأ عند تغيير القيمة."
       change_username:
         title: "تغيير اسم المستخدم"
         confirm: "إذا قمت بتغيير الاسم المستعار، فإن جميع المشاركات التي قمت بالمشاركة بها سيتم الغائها. هل أنت متأكد بقيامك على هذه الخطوة؟"
@@ -1013,7 +1012,6 @@ ar:
       link_description: "ادخل وصف الرابط هنا "
       link_dialog_title: "اضف الرابط"
       link_optional_text: "عنوان اختياري"
-      link_placeholder: "http://example.com \"نص إختياري\""
       quote_title: "اقتباس فقرة"
       quote_text: "اقتباس فقرة"
       code_title: "المحافظة على التنسيق"
@@ -1540,10 +1538,7 @@ ar:
         create: "المعذرة، حدثت مشكلة أثناء إنشاء المشاركة. الرجاء المحاولة مرة أخرى."
         edit: "المعذرة، حدث  خطأ أثناء تحرير مشاركتك. الرجاء المحاولة في وقت لاحق."
         upload: "المعذرة، حدث خطأ أثناء رفع الملف. الرجاء المحاولة في وقت لاحق."
-        attachment_too_large: "نعتذر، الملف الذي تريد رفعه كبير جداَ ( الحد الاقصى {{max_size_kb}} كيلوبايت )"
-        file_too_large: "المعذرة، الملف الذي تحاول رفعه أكبر من المسموح به {{max_size_kb}} كيلوبايت"
         too_many_uploads: "نأسف, يمكنك رفع ملف واحد فقط في نفس الوقت."
-        too_many_dragged_and_dropped_files: "يمكنك سحب و إفلات ١٠ ملفات في الوقت الواحد كحد أقصى."
         upload_not_authorized: "المعذرة، الملف الذي تحاول رفعه غير مسموح به، الامتدادات المسموح بها هي {{authorized_extensions}}."
         image_upload_not_allowed_for_new_user: "نعتذر، المستخدمين الجدد لا يمكنهم رفع صور."
         attachment_upload_not_allowed_for_new_user: "نعتذر، المستخدمين الجدد لا يمكنهم رفع مرفقات."
@@ -2097,7 +2092,6 @@ ar:
           30_days_ago: "منذ ٣٠ يوم"
           all: "الكل"
           view_table: "جدول"
-          view_chart: "شريط الرسم البياني"
           refresh_report: "تحديث التقرير "
           start_date: "تاريخ البدء"
           end_date: "تاريخ الإنتهاء"
@@ -2252,14 +2246,6 @@ ar:
           backups: "نسخة احتياطية"
           logs: "Logs"
         none: "لاتوجد نسخ احتياطية"
-        read_only:
-          enable:
-            title: "تفعيل وضع القراءة فقط"
-            label: "تفعيل وضع القراءة فقط."
-            confirm: "هل أنت متأكد من تفعيل وضع القراءة فقط؟"
-          disable:
-            title: "تعطيل وضع القراءة فقط"
-            label: "تعطيل وضع القراءة فقط."
         logs:
           none: "No logs yet."
         columns:

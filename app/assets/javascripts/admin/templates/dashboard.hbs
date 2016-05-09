@@ -19,7 +19,7 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{#each r in user_reports}}
+          {{#each user_reports as |r|}}
             {{admin-report-trust-level-counts report=r}}
           {{/each}}
         {{/unless}}
@@ -58,7 +58,7 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{#each r in global_reports}}
+          {{#each global_reports as |r|}}
             {{admin-report-counts report=r}}
           {{/each}}
         {{/unless}}
@@ -80,7 +80,7 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{#each r in page_view_reports}}
+          {{#each page_view_reports as |r|}}
             {{admin-report-counts report=r}}
           {{/each}}
         {{/unless}}
@@ -102,7 +102,7 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{#each r in private_message_reports}}
+          {{#each private_message_reports as |r|}}
             {{admin-report-counts report=r}}
           {{/each}}
         {{/unless}}
@@ -124,7 +124,7 @@
       </thead>
       <tbody>
         {{#unless loading}}
-          {{#each r in mobile_reports}}
+          {{#each mobile_reports as |r|}}
             {{admin-report-counts report=r}}
           {{/each}}
         {{/unless}}
@@ -171,7 +171,7 @@
         </thead>
         <tbody>
           {{#unless loading}}
-            {{#each r in http_reports}}
+            {{#each http_reports as |r|}}
               {{admin-report-counts report=r}}
             {{/each}}
           {{/unless}}
@@ -195,7 +195,7 @@
         <p {{bind-attr class="loadingProblems:invisible"}}>
           {{i18n 'admin.dashboard.problems_found'}}
           <ul {{bind-attr class="loadingProblems:invisible"}}>
-            {{#each problem in problems}}
+            {{#each problems as |problem|}}
               <li>{{{problem}}}</li>
             {{/each}}
           </ul>
@@ -231,7 +231,7 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{#each data in top_referred_topics.data}}
+        {{#each top_referred_topics.data as |data|}}
           <tbody>
             <tr>
               <td class="title">
@@ -259,7 +259,7 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{#each s in top_traffic_sources.data}}
+        {{#each top_traffic_sources.data as |s|}}
           <tbody>
             <tr>
               <td class="title">{{s.domain}}</td>
@@ -282,7 +282,7 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{#each r in top_referrers.data}}
+        {{#each top_referrers.data as |r|}}
           <tbody>
             <tr>
               <td class="title">{{#link-to 'adminUser' r.user_id r.username}}{{unbound r.username}}{{/link-to}}</td>

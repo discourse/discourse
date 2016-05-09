@@ -485,7 +485,6 @@ da:
         set_password: "Skriv password"
       change_about:
         title: "Skift “Om mig”"
-        error: "Der skete en fejl i forbindelse med skift af denne værdi."
       change_username:
         title: "Skift brugernavn"
         confirm: "Der kan være konsekvenser ved at skifte brugernavn. Er du sikker på at du vil skifte?"
@@ -871,7 +870,6 @@ da:
       link_description: "skriv linkets beskrivelse her"
       link_dialog_title: "Indsæt link"
       link_optional_text: "evt. titel"
-      link_placeholder: "http://example.com \"valgfri tekst\""
       quote_title: "Citatblok"
       quote_text: "Citatblok"
       code_title: "Præformateret tekst"
@@ -1317,7 +1315,6 @@ da:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
         upload: "Beklager, der opstod en fejl ved upload af filen. Prøv venligst igen."
-        attachment_too_large: "Beklager, filen, som du forsøger at uploade, er for store (den maksimale størrelse er {{max_size_kb}}kb)."
         file_too_large: "Beklager, filen, som du forsøger at uploade, er for store (den maksimale størrelse er {{max_size_kb}}kb)."
         too_many_uploads: "Beklager, men du kan kun uploade én fil ad gangen."
         too_many_dragged_and_dropped_files: "Beklager, du kan kun drag & drope'e op til 10 filer af gangen."
@@ -1894,14 +1891,6 @@ da:
           backups: "Backups"
           logs: "Logs"
         none: "Ingen backups tilgængelige"
-        read_only:
-          enable:
-            title: "Aktiver \"kun læsning\" tilstanden"
-            label: "Aktiver skrivebeskyttet tilstand"
-            confirm: "Er du sikker på du vil aktivere \"kun læsning\" tilstranden?"
-          disable:
-            title: "Deaktiver \"kun læsning\" tilstanden"
-            label: "De-aktiver skrivebeskyttet tilstand"
         logs:
           none: "Ingen logs endnu..."
         columns:
@@ -2059,7 +2048,7 @@ da:
         to_address: "Modtager"
         test_email_address: "e-mail-adress der skal testes"
         send_test: "send test-e-mail"
-        sent_test: "sednt!"
+        sent_test: "sendt!"
         delivery_method: "Leveringsmetode"
         preview_digest_desc: "Forhåndsvis indholdet af de opsamlings-emails der sendes til inaktive brugere"
         refresh: "Opdatér"

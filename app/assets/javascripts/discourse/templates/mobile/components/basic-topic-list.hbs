@@ -2,7 +2,7 @@
   {{#if topics}}
     <table class="topic-list">
       <tbody>
-      {{#each t in topics}}
+      {{#each topics as |t|}}
         <tr {{bind-attr class="t.archived"}} data-topic-id={{t.id}}>
           <td>
             <div class='main-link'>
@@ -39,7 +39,7 @@
               {{/unless}}
               {{#if controller.showParticipants}}
                 <div class='participants'>
-                  {{#each p in participants}}
+                  {{#each participants as |p|}}
                     <a href="{{unbound p.user.path}}" class="{{unbound p.extras}}">{{avatar p usernamePath="user.username" imageSize="small"}}</a>
                   {{/each}}
                 </div>

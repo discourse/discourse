@@ -174,6 +174,7 @@ de:
     group_mentions: "Neueste Nennungen von %{group_name}"
     user_posts: "Neueste Beiträge von @%{username}"
     user_topics: "Neueste Themen von @%{username}"
+    tag: "Getaggte Themen"
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
   excerpt_image: "Bild"
@@ -343,7 +344,7 @@ de:
       create_like: "Du hast die maximale Anzahl „Gefällt mir“ für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       create_bookmark: "Du hast die maximale Anzahl an Lesezeichen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       edit_post: "Du hast die maximale Anzahl an Änderungen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell an. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, bis du es wieder versuchst."
       unsubscribe_via_email: "Du hast die maximale Anzahl an Abbestell-E-Mails für heute erreicht. Bitte warte %{time_left}, vor einem neuen Versuch."
       topic_invitations_per_day: "Du hast die maximale Zahl an neuen Thema-Einladungen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
     hours:
@@ -742,7 +743,6 @@ de:
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
     onebox_domains_whitelist: "Liste von Domains, deren Inhalte für Oneboxen erlaubt sind; diese Domains sollten OpenGraph oder oEmbed unterstützen. Teste ihre Kompatibilität unter http://iframely.com/debug"
     logo_url: "Das Logo oben links auf deiner Site sollte eine breite, rechteckige Form haben. Wenn du kein Logo auswählst, wird stattdessen `title` angezeigt."
-    digest_logo_url: "Alternatives Logo, welches oben in der E-Mail Kurzfassung angezeigt wird (sollte eine breite, rechteckige Form haben). Wenn du kein Logo auswählst, wird stattdessen das `logo_url` verwendet. "
     logo_small_url: "Dein Logo in klein für die obere linke Seite deiner Website, in Form eines rechteckigen Quadrates. Es wird angezeigt, wenn der Benutzer scrollt. Wenn du dieses Feld frei lässt, wird stattdessen ein Haus-Symbol angezeigt."
     favicon_url: "Das Favicon deiner Site. Besuche http://en.wikipedia.org/wiki/Favicon um weitere Informationen zu erhalten. Damit das Favicon korrekt über einen CDN-Service funktioniert, muss es eine .png Datei sein."
     mobile_logo_url: "Das fixierte Logo in der oberen linken Hälfte der mobilen Siteversion. Es sollte eine quadratische Form haben. Wenn du dieses Feld frei lässt, wird `logo_url` benutzt. Z.B. http://example.com/uploads/default/logo.png"
@@ -763,7 +763,6 @@ de:
     polling_interval: "Polling-Intervall in Millisekunden für angemeldete Clients, wenn Long Polling nicht verwendet wird."
     anon_polling_interval: "Polling-Intervall in Millisekunden für anonyme Clients."
     background_polling_interval: "Polling-Intervall in Millisekunden für Clients, wenn sich das Browser-Fenster im Hintergrund befindet."
-    flags_required_to_hide_post: "Anzahl der Meldungen, die dazu führen, dass ein Beitrag automatisch versteckt und eine private Nachricht an den Benutzer geschickt wird (0 für niemals)"
     cooldown_minutes_after_hiding_posts: "Minuten die ein Benutzer warten muss, bevor ein Beitrag bearbeitet werden kann, der wegen Meldungen anderer Benutzer versteckt wurde"
     max_topics_in_first_day: "Maximale Zahl an Themen, die ein Benutzer an seinem ersten Tag auf der Site erstellen kann"
     max_replies_in_first_day: "Maximale Zahl an Antworten, die ein Benutzer an seinem ersten Tag auf der Site erstellen kann"
@@ -828,8 +827,8 @@ de:
     min_admin_password_length: "Minimale Passwortlänge für Administratoren."
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
     enable_sso: "Aktiviere Single Sign-on über eine externe Site (WARNUNG: DIE E-MAIL-ADRESSE DES BENUTZERS *MUSS* VON DER EXTERNEN SITE VERIFIZIERT WERDEN)."
+    verbose_sso_logging: "Protokolliere ausführliche SSO-bezogene Diagnose in /logs"
     enable_sso_provider: "Aktiviere das Discourse SSO Anbieter Protokoll unter /session/sso_provider; benötigt sso_secret."
-    sso_url: "URL des Single Sign On Endpunkts"
     sso_secret: "Geheime Zeichenkette die als Schlüssel für die Authentifizierung von SSO-Informationen verwendet wird. Sollte unbedingt 10 Zeichen oder länger sein."
     sso_overrides_email: "Überschreibt lokale E-Mail mit E-Mail der externen Site aus SSO Daten (WARNUNG: Diskrepanzen können aufgrund der Normalisierung lokaler E-Mail-Adressen auftreten.)"
     sso_overrides_username: "Überschreibt lokalen Benutzernamen mit dem Benutzernamen der externen Site aus SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Normalisierung von lokalen Benutzernamen auftreten)"
@@ -1082,7 +1081,6 @@ de:
     enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzer oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
-    notify_about_queued_posts_after: "Wenn es Beiträge gibt, welche seit mehreren Stunden auf ihre Freischaltung warten, sende eine E-Mail an contact_email. Setze diesen Wert auf 0 um das zu deaktivieren."
     default_email_digest_frequency: "Lege fest, wie oft die Benutzer eine Zusammenfassung per E-Mail erhalten."
     default_include_tl0_in_digests: "Beiträge von neuen Benutzern standardmäßig in E-Mail mit Neuigkeiten einfügen. Benutzer können dies in ihren Einstellungen anpassen."
     default_email_private_messages: "Sende einem Benutzer standardmäßig eine E-Mail, wenn dieser eine Nachricht von einem anderen Benutzer erhält."
@@ -1104,6 +1102,19 @@ de:
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
     default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
+    tagging_enabled: "Nutzern erlauben Themen zu taggen?"
+    min_trust_to_create_tag: "Minimale Vertrauensstufe um ein Tag zu erstellen."
+    max_tags_per_topic: "Maximale Anzahl von Tags, die einem Thema zugeordnet werden können."
+    max_tag_length: "Maximale Anzahl von Zeichen, die in einem Tag verwendet werden können."
+    max_tag_search_results: "Maximale Anzahl von Ergebnissen, die bei der Suche nach Tags angezeigt werden."
+    show_filter_by_tag: "Dropdown-Liste zum Filtern von Theman nach Tag anzeigen."
+    max_tags_in_filter_list: "Maximale Anzahl von Tags in der Dropdown-Liste. Die meist genutzten Tags werden angezeigt."
+    tags_sort_alphabetically: "Anzeige der Tags in alphabetischer Reihenfolge. Standard ist die Sortierung nach Beliebtheit."
+    tag_style: "Visuelle Darstellung der Tag-Schildchen."
+    staff_tags: "Eine Liste von Tags, die nur von Mitarbeitern verwendet werden können"
+    min_trust_level_to_tag_topics: "Minimal benötigte Vertrauensstufe zum Taggen von Themen"
+    suppress_overlapping_tags_in_list: "Verstecke Tags in Listen, wenn diese mit dem Titel überlappen"
+    remove_muted_tags_from_latest: "Zeige Themen mit stummgeschalteten Tags nicht in der Liste der aktuellen Themen an."
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
@@ -1523,10 +1534,6 @@ de:
       text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere einen Mitarbeiter oder sieh in die Logs."
     email_reject_insufficient_trust_level:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unzureichende Vertrauensstufe"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
-        Dein Benutzerkonto hat nicht die benötigte Vertrauensstufe, um neue Themen an diese E-Mail-Adresse zu senden. Bitte kontaktiere einen Mitarbeiter, wenn du von einem Fehler ausgehst.
     email_reject_user_not_found:
       subject_template: "[%{site_name}] E-Mail-Problem -- Benutzer nicht gefunden"
       text_body_template: |
@@ -1573,16 +1580,8 @@ de:
         Wir konnten keinen Inhalt in deiner E-Mail feststellen. **Versichere dich, dass du den Inhalt oberhalb der erhaltenen E-Mail eingegeben hast** -- Eingebettete Antworten können wir nicht verarbeiten.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] E-Mail-Problem -- Nicht erlaubt"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
-        Dein Benutzerkonto verfügt nicht über die nötigen Rechte, um in dieser Kategorie ein neues Thema anzulegen. Bitte kontaktiere einen Mitarbeiter, wenn du von einem Fehler ausgehst.
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] E-Mail-Problem -- Zugriff nicht erlaubt"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
-        Die Kategorie, an die du diese E-Mail gesendet hast, erlaubt nur Antworten von Benutzern mit gültigem Konto und bekannter E-Mail-Adresse. Bitte kontaktiere einen Mitarbeiter, wenn du von einem Fehler ausgehst.
     email_reject_invalid_post:
       subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
       text_body_template: |
@@ -1625,23 +1624,10 @@ de:
         Keine der Ziel-E-Mail-Adressen wurde erkannt.  Bitte stell sicher, dass du die E-Mail an die richtige Adresse schickst, die dir von unseren Mitarbeitern genannt wurde.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-Mail-Problem -- Thema nicht gefunden"
-      text_body_template: |+
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
-        Das Thema existiert nicht mehr -- vielleicht wurde es gelöscht? Bitte kontaktiere einen Mitarbeiter, wenn du von einem Fehler ausgehst.
-
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-Mail-Problem -- Thema geschlossen"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
-        Das Thema ist uns nicht bekannt oder es wurde gelöscht bzw. geschlossen. Bitte kontaktiere einen Mitarbeiter, wenn du von einem Fehler ausgehst.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-Mail-Problem -- Automatisch erzeugte Antwort"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
-        Deine E-Mail wurde als "computergeneriert" markiert. Das heißt sie wurde automatisch von einem Computer erstellt und nicht von einem Menschen geschrieben; wir können solche E-Mails nicht akzeptieren. Bitte kontaktiere einen Mitarbeiter, wenn du von einem Fehler ausgehst.
     email_error_notification:
       subject_template: "[%{site_name}] E-Mail-Problem -- POP-Authentifizierungsfehler"
     too_many_spam_flags:
@@ -1679,6 +1665,8 @@ de:
     download_remote_images_disabled:
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
+    dashboard_problems:
+      subject_template: "Probleme wurden festgestellt"
   unsubscribe_link: |
     Um keine Benachrichtigungen mehr zu diesem Thema zu erhalten, bitte [hier klicken](%{unsubscribe_url}). Du kannst den Empfang von Benachrichtigungen per E-Mail auch in deinen [Profil-Eigenschaften](%{user_preferences_url}) deaktivieren
   unsubscribe_via_email_link: |
@@ -2048,6 +2036,15 @@ de:
     empathetic:
       name: Empathisch
       description: Hat 500 Likes für Beiträge erhalten und 1000 Likes gegeben
+    first_emoji:
+      name: Erstes Emoji
+      description: Hat ein Emoji in einem Beitrag verwendet
+      long_description: |
+        Dieses Abzeichen wird verliehen, wenn du zum ersten Mal ein Emoji in einem Beitrag einfügst :heart:
+    first_mention:
+      name: Erste Erwähnung
+      description: Hat einen Benutzer in einem Beitrag erwähnt
+      long_description: Dieses Abzeichen wird verliehen, wenn du einen Benutzer in einem Beitrag @erwähnst. @Erwähnungen erlauben es andere Mitglieder im Forum zu benachrichtigen.
   admin_login:
     success: "E-Mail gesendet"
     error: "Fehler!"
@@ -2065,3 +2062,7 @@ de:
   activemodel:
     errors:
       <<: *errors
+  tags:
+    staff_tag_disallowed: "Das Tag \"%{tag}\" kann nur von Mitarbeitern hinzugefügt werden."
+    staff_tag_remove_disallowed: "Das Tag \"%{tag}\" kann nur von Mitarbeitern entfernt werden."
+  rss_by_tag: "Themen getaggt mit %{tag}"

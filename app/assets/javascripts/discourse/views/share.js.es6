@@ -1,3 +1,4 @@
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 
 export default Ember.View.extend({
   templateName: 'share',
@@ -95,7 +96,7 @@ export default Ember.View.extend({
 
     $html.on('click.discoure-share-link', '[data-share-url]', function(e) {
       // if they want to open in a new tab, let it so
-      if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) { return true; }
+      if (wantsNewWindow(e)) { return true; }
 
       e.preventDefault();
 

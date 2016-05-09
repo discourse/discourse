@@ -170,6 +170,7 @@ pt_BR:
     private_posts: "Últimas mensagens privadas"
     user_posts: "Últimos posts por @%{username}"
     user_topics: "Últimos tópicos por @%{username}"
+    tag: "Tópicos com tag"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   excerpt_image: "imagem"
   queue:
@@ -743,7 +744,6 @@ pt_BR:
     polling_interval: "Com que frequencia os clientes podem solicitar o servidor em milisegundos"
     anon_polling_interval: "Com que frequencia os clientes não registrados podem solicitar o servidor em milisegundos"
     background_polling_interval: "Com que frequência os clientes podem solicitar o servidor em milisegundos ( em segundo plano )"
-    flags_required_to_hide_post: "As postagens vão ser escondidos automaticamente quando o númereo de sinalizações atingir este número (0 para nunca)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que um usuário deve esperar antes de poder editar uma publicação que foi ocultada devido a sinalização da comunidade."
     max_topics_in_first_day: "O número máximo de tópicos que um usuário tem permissão para criar em seu primeiro dia no site"
     max_replies_in_first_day: "O número máximo de respostas que um usuário tem permissão para criar em seu primeiro dia no site"
@@ -804,7 +804,6 @@ pt_BR:
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
     enable_sso: "Permite autenticação única atráves de site externo (AVISO: OS ENDEREÇOS DE E-MAIL *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
     enable_sso_provider: "Implementar protocolo do provedor Discourse SSO no caminho /session/sso_provider, requer que sso_secret seja configurado"
-    sso_url: "URL destino do logon único"
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
     sso_overrides_email: "Substitui endereço de e-mail local pelo fornecido no site externo através de cada informação de login, e previne mudanças locais. (AVISO: discrepâncias podem ocorrer devido a normalização de e-mails locais)"
     sso_overrides_username: "Substitui nome de usuário local com o fornecido pelo site externo através da informação de cada login, e previne mudanças locais. (AVISO: discrepâncias podem ocorrer devido a diferenças ao tamanho e pré-requisitos de nomes de usuário)"
@@ -1004,7 +1003,19 @@ pt_BR:
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
-    notify_about_queued_posts_after: "Se existirem tópicos aguardando revisão a mais de N horas, um e-mail será enviado para o e-mail de contato. Coloque 0 para cancelar estes e-mails."
+    tagging_enabled: "Permitir que usuários coloquem tags em tópicos?"
+    min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma tag."
+    max_tags_per_topic: "O número máximo de tags que podem ser aplicados a um tópico."
+    max_tag_length: "O número máximo de caracteres que pode ser usado em uma tag."
+    max_tag_search_results: "Quando buscando por tags, o número máximo de resultados a exibir."
+    show_filter_by_tag: "Exibir um dropdown para filtrar uma lista de tópicos por uma tag."
+    max_tags_in_filter_list: "Número máximo de tags no filtro do dropdown. As tags mais utilizadas serão exibidas."
+    tags_sort_alphabetically: "Exibir tags em ordem alfabetica. O padrão é exibí-las em ordem de popularidade."
+    tag_style: "Estilo visual para as insígnias de tag."
+    staff_tags: "Uma lista de tags que só podem ser aplicadas por membros da moderação"
+    min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para aplicar uma tag"
+    suppress_overlapping_tags_in_list: "Esconder tags das visualizações de lista, se elas se sobreporem ao título"
+    remove_muted_tags_from_latest: "Não mostrar tópicos com tags silenciadas na lista de tópicos recentes."
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."
@@ -1289,10 +1300,6 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com email -- Conteúdo não reconhecido"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email -- Acesso Inválido"
-      text_body_template: |
-        Desculpe, mas a mensagem do email %{destination} (titled %{former_title}) não funcionou.
-
-        Sua conta não possui privilégios para postar novos topicos nessa categoria. Se acredita que isso esteja errado, entre em contato com um dos membros responsáveis..
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema com email -- Chave de Resposta Desconhecida"
     email_reject_topic_not_found:
@@ -1523,3 +1530,7 @@ pt_BR:
   activemodel:
     errors:
       <<: *errors
+  tags:
+    staff_tag_disallowed: "A tag \"%{tag}\" só pode ser aplicada pela moderação."
+    staff_tag_remove_disallowed: "A tag \"%{tag}\" só pode ser removida pela moderação."
+  rss_by_tag: "Tópicos com a tag %{tag}"

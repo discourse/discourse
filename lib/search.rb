@@ -313,6 +313,17 @@ class Search
     end
   end
 
+  advanced_filter(/tags?:([a-zA-Z0-9,\-_]+)/) do |posts, match|
+    tags = match.split(",")
+
+    posts.where("topics.id IN (
+      SELECT tc.topic_id
+      FROM topic_custom_fields tc
+      WHERE tc.name = '#{DiscourseTagging::TAGS_FIELD_NAME}' AND
+                      tc.value in (?)
+      )", tags)
+  end
+
   private
 
 

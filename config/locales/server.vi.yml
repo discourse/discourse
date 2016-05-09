@@ -30,6 +30,20 @@ vi:
   emails:
     incoming:
       default_subject: "Email đến từ %{email}"
+      show_trimmed_content: "Hiện nội dung đã cắt"
+      errors:
+        empty_email_error: "Xảy ra khi thư nguồn hệ thống nhận được là trống."
+        no_message_id_error: "Xảy ra khi thư không có tiêu đề."
+        auto_generated_email_error: "Xảy ra khi tiêu đề 'ưu tiên' được đặt là: danh sách, rác, theo lô hoặc tự động trả lời, hoặc khi có tiêu đề khác bao gồm: tự động gửi, tự động trả lời hoặc tự động tạo."
+        no_body_detected_error: "Xảy ra khi hệ thống không thể trích xuất nội dung và không có đính kèm."
+        inactive_user_error: "Xảy ra khi người gửi không hoạt động."
+        blocked_user_error: "Xảy ra khi người gửi đã bị chặn."
+        bad_destination_address: "Xảy ra khi không có địa chỉ email trong các trường Tới/Cc/Bcc khớp với địa chỉ email đến đã được cấu hình."
+        strangers_not_allowed_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ không phải là thành viên."
+        insufficient_trust_level_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ chưa đủ cấp độ tin cậy."
+        reply_user_not_matching_error: "Xảy ra khi trả lời đến từ một địa chỉ email khác với thông báo được gửi đến."
+        topic_not_found_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã bị xóa."
+        topic_closed_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã được đóng lại."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -141,8 +155,15 @@ vi:
   rss_description:
     latest: "Chủ đề mới nhất"
     hot: "Chủ đề nóng nhất"
+    top: "Top chủ đề"
     posts: "Bài viết mới nhất"
+    private_posts: "Tin nhắn mới nhất"
+    group_posts: "Bài viết mới từ %{group_name}"
+    group_mentions: "Đề cập mới từ %{group_name}"
+    user_posts: "Bài viết mới của @%{username}"
+    user_topics: "Chủ đề mới của @%{username}"
   too_late_to_edit: "Bài đăng đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
+  revert_version_same: "Phiên bản hiện tại giống với phiên bản mà bạn muốn hoàn nguyên."
   excerpt_image: "hình ảnh"
   queue:
     delete_reason: "Đã xóa thông qua hàng đợi kiểm duyệt"
@@ -151,6 +172,9 @@ vi:
       can_not_modify_automatic: "Bạn không thể sửa đổi một nhóm tự động"
       member_already_exist: "'%{username}' đã là thành viên của nhóm"
       invalid_domain: "'%{domain}' không phải là tên miền hợp lệ."
+      invalid_incoming_email: "'%{email}' không phải là email hợp lệ."
+      email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
+      email_already_used_in_category: "'%{email}' đã được sử dụng trong danh mục '%{category_name}'."
     default_names:
       everyone: "Mọi người"
       admins: "quản trị"
@@ -279,6 +303,9 @@ vi:
       uncategorized_parent: "Mục \"Chưa được phân loại\" không thể có một chuyên mục chính"
       self_parent: "Cha của chủ đề phụ không thể nào là chính nó"
       depth: "Bạn không thể để một chuyên mục con trong một chuyên mục con khác."
+      invalid_email_in: "'%{email}' không phải là email hợp lệ."
+      email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
+      email_already_used_in_category: "'%{email}' đã được sử dụng trong danh mục '%{category_name}'."
     cannot_delete:
       uncategorized: "Không thể xoá mục Chưa phân loại"
       has_subcategories: "Không thể xoá chuyên mục này được vì nó có chuyên mục con."
@@ -306,11 +333,15 @@ vi:
       first_day_topics_per_day: "Bạn vừa đạt tới số lần mở topic tối đa cho thành viên mới. Xin vui lòng chờ %{time_left} trước khi thử lại."
       create_topic: "Bạn đang tạo topic quá nhanh. Vui lòng chờ %{time_left} trước khi thử lại."
       create_post: "Bạn đang trả lời quá nhanh. Xin vui lòng chờ %{time_left} trước khi thử lại."
+      delete_post: "Bạn đang xóa bài viết quá nhanh, hãy đợi %{time_left} trước khi thử lại."
       topics_per_day: "Bạn vừa đạt tới số lần mở topic mới tối đa trong ngày hôm nay. Vui lòng chờ %{time_left} trước khi thử lại."
       pms_per_day: "Bạn vừa đạt tới số lần gửi tin nhắn tối đa trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
       create_like: "Bạn vừa đạt tới số lần tối đa được Like trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
       create_bookmark: "Bạn vừa đạt tới số lần đánh dấu tối đa trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
       edit_post: "Bạn vừa đạt tới số lần chỉnh sửa tối đa trong ngày. Xin vui lòng chờ %{time_left} trước khi thử lại."
+      live_post_counts: "Bạn đang yêu cầu bộ đếm bài viết quá nhanh, hãy đợi %{time_left} trước khi thử lại."
+      unsubscribe_via_email: "Bạn đã vượt quá số lần hủy nhận tin qua email của ngày hôm nay, hãy đợi %{time_left} trước khi thử lại."
+      topic_invitations_per_day: "Bạn đã vượt quá số lần mời chủ đề của ngày hôm nay, hãy đợi %{time_left} trước khi thử lại."
     hours:
       other: "%{count} giờ"
     minutes:
@@ -380,6 +411,11 @@ vi:
     confirmed: "Email của bạn đã được cập nhật."
     please_continue: "Tiếp tục đến %{site_name}"
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
+    error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
+    already_done: "Xin lỗi, liên kết xác nhận này không còn giá trị. Có lẽ email của bạn đã được thay đổi?"
+    authorizing_old:
+      title: "Cám ơn bạn đã xác nhận địa chỉ email."
+      description: "Chúng tôi sẽ không gửi email tới địa chỉ mới của bạn để xác nhận."
   activation:
     action: "Nhấn vào đây để kích hoạt tài khoản của bạn"
     already_done: "Xin lỗi, liên kết để xác nhận tài khoản này không còn hợp lệ. Có thể tài khoản của bạn được kích hoạt?"
@@ -630,11 +666,17 @@ vi:
     site_contact_username_warning: "Điền tên tài khoản điều hành viên để gửi tin nhắn tự động, cập nhật site_contact_username trong <a href='/admin/site_settings'>Thiết lập website</a>."
     notification_email_warning: "Email thông báo không thể gửi từ một địa chỉ email với tên miền của bạn, gửi email sẽ thất thường và không đáng tin cậy. Hãy thiết lập notification_email tới một địa chỉ tin cậy trong <a href='/admin/site_settings'>Thiết lập website</a>."
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
+    email_polling_errored_recently:
+      other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
+    bad_favicon_url: "Favicon không tải được, bạn hãy kiểm tra lại favicon_url trong <a href='/admin/site_settings'>Thiết Lập Website</a>."
+    poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
+    poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='/admin/site_settings/category/email'>thiết lập POP3</a>."
   site_settings:
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
     default_locale: "Ngôn ngữ mặc định của Discourse (Mã ISO 639-1)"
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
+    set_locale_from_accept_language_header: "đặt ngôn ngữ giao diện cho người dùng ẩn danh từ tiêu đề ngôn ngữ trình duyệt web của họ. (KINH NGHIỆM, không hoạt động với bộ nhớ cache ẩn danh)"
     min_post_length: "Số kí tự tối thiểu trong bài đăng."
     min_first_post_length: "Chiều dài tối thiểu cho bài viết đầu tiên (nội dung chủ đề) tính theo ký tự."
     min_private_message_post_length: "Số kí tự tối thiểu trong tin nhắn."
@@ -673,7 +715,7 @@ vi:
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
     onebox_domains_whitelist: "Danh sách các tên miền cho phép onebox, các tên miền này phải hỗ trợ OpenGraph hoặc oEmbed. Kiểm tra tại http://iframely.com/debug"
     logo_url: "Logo ở vị trí trên cùng của website nên là hình chữ nhật, nếu để trống thì tên website sẽ hiển thị."
-    digest_logo_url: "Logo thay thế đặt ở trên cùng của tập san email nên là hình chữ nhật, nếu để trống thì 'logo_url' sẽ được sử dụng."
+    digest_logo_url: "Logo thay thế sử dụng ở vị trí header của tập san email. Nên là hình chữ nhật, không nên dùng ảnh SVG. Nếu để trống thì `logo_url` sẽ được sử dụng."
     logo_small_url: "Logo nhỏ ở vị trí trên cùng của website hiển thị khi cuộn xuống nên là hình vuông, nếu để trống thì icon trang chủ sẽ hiển thị."
     favicon_url: "Favicon cho trang của bạn, xem tại http://en.wikipedia.org/wiki/Favicon, để chạy được với CDN ảnh phải là png"
     mobile_logo_url: "Cố định vị trí hình logo sử dụng tại phía trên bên trái trang mobile của bạn. Nên là hình vuông. Nếu để trống, sẽ sử dụng `logo_url`. Ví dụ: http://example.com/uploads/default/logo.png"
@@ -694,7 +736,7 @@ vi:
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
-    flags_required_to_hide_post: "Số lần đánh dấu để bài viết tự động ẩn và gửi tin nhắn đến người dùng (điền 0 để tắt)"
+    flags_required_to_hide_post: "Số lần đánh dấu làm cho bài viết sẽ được tự động ẩn và tin nhắn sẽ được gửi đến người dùng (0 là không giới hạn)"
     cooldown_minutes_after_hiding_posts: "Số phút một người dùng phải chờ trước khi họ có thể sửa một bài viết ẩn bởi gắn cờ cộng đồng"
     max_topics_in_first_day: "Số chủ đề tối đa một thành viên được tạo trong ngày đầu tiên."
     max_replies_in_first_day: "Số trả lời tối đa một thành viên được tạo trong ngày đầu tiên"
@@ -756,10 +798,12 @@ vi:
     max_username_length: "Chiều dài username tối đa."
     reserved_usernames: "Những username không được phép đăng ký."
     min_password_length: "Chiều dài mật khẩu tối thiểu."
+    min_admin_password_length: "Chiều dài mật khẩu tối thiểu đối với Admin."
     block_common_passwords: "Không cho phép mật khẩu trong danh sách 10.000 mật khẩu phổ biến."
     enable_sso: "Cho phép dùng single sign on bằng trang ngoài (CẢNH BÁO: ĐỊA CHỈ EMAIL CỦA NGƯỜI DÙNG PHẢI ĐƯỢC CHỨNG THỰC BỞI TRANG NGOÀI!)"
+    verbose_sso_logging: "Nhật ký chi tiết SSO chẩn đoán liên quan với /logs"
     enable_sso_provider: "Thực hiện giao thức cung cấp Discourse SSO tại điểm cuối /session/sso_provider, yêu cầu phải thiết lập sso_secret"
-    sso_url: "URL của single sign on enpoint"
+    sso_url: "URL đầu cuối của Single Sign On (phải kèm theo http:// hoặc https://)"
     sso_secret: "Chuỗi bảo mật đã được sử dụng để chứng thực thông tin SSO, chắc chắn nó có ít nhất 10 ký tự."
     sso_overrides_email: "Ghi đè email cục bộ với email trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ. (LƯU Ý: sự khác biệt có thể xảy ra do sự bình thường hóa các email cục bộ)"
     sso_overrides_username: "Ghi đè tên tài khoản cục bộ với tài khoản trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ. (LƯU Ý: sự khác biệt có thể xảy ra do yêu cầu độ dài tên tài khoản khác nhau)"
@@ -776,6 +820,9 @@ vi:
     enable_twitter_logins: "Cho phép chứng thực qua Twitter, yêu cầu twitter_consumer_key và twitter_consumser_secret"
     twitter_consumer_key: "Consumer key cho chứng thực Twitter, đăng ký tại http://dev.twitter.com"
     twitter_consumer_secret: "Consumer secret cho chứng thực Twitter, đăng ký tại http://dev.twitter.com"
+    enable_instagram_logins: "Bật chứng thực Instagram, yêu cầu instagram_consumer_key và instagram_consumer_secret"
+    instagram_consumer_key: "Khóa người dùng để chứng thực Instagram"
+    instagram_consumer_secret: "Khóa bảo mật để chứng thực Instagram"
     enable_facebook_logins: "Cho phép chứng thực Facebook, yêu cầu facebook_app_id và facebook_app_secret"
     facebook_app_id: "App id cho chứng thực Facebook, đăng ký tại https://developers.facebook.com/apps"
     facebook_app_secret: "App secret cho chứng thực Facebook, đăng ký tại https://developers.facebook.com/apps"
@@ -788,6 +835,7 @@ vi:
     backup_frequency: "Tần số sao lưu trang web, trong ngày."
     enable_s3_backups: "Tải bản sao lưu lên S3 khi hoàn tất. QUAN TRỌNG: yêu cầu chứng thực S3 đã được nhập trong cấu hình File."
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
+    s3_disable_cleanup: "Vô hiệu hóa việc loại bỏ các bản sao lưu từ S3 khi lấy ra tại địa phương."
     backup_time_of_day: "Thời gian theo ngày UTC khi backup."
     backup_with_uploads: "Kèm theo cả thư mục uploads theo lịch trình backup. Tắt tính năng này sẽ chỉ backup csdl."
     active_user_rate_limit_secs: "Tần số cập nhật trường 'last_seen_at, tính theo giây"
@@ -808,6 +856,8 @@ vi:
     max_private_messages_per_day: "Số tin nhắn tối đa người dùng có thể tạo mỗi ngày."
     max_invites_per_day: "Số tối đa người dùng có thể gửi lời mời mỗi ngày."
     max_topic_invitations_per_day: "Số tối đa lời mời chủ đề thành viên có thể gửi mỗi ngày."
+    alert_admins_if_errors_per_minute: "Số lỗi trong một phút để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
+    alert_admins_if_errors_per_hour: "Số lỗi trong một giờ để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
     suggested_topics: "Số chủ đề gợi ý hiện ở cuối một chủ đề"
     limit_suggested_to_category: "Chỉ hiện thị những chủ đề từ danh mục hiện tại trong chủ đề gợi ý."
     clean_up_uploads: "Loại bỏ không triệt các dòng mồ côi khi upload để ngăn chặn hosting bất hợp pháp. LƯU Ý: bạn cần phải backup thư mục /uploads trước khi bật thiết lập này."
@@ -825,6 +875,7 @@ vi:
     external_system_avatars_enabled: "Sử dụng dịch vụ ảnh đại diện bên ngoài."
     external_system_avatars_url: "URL của dịch vụ avatar ngoài, cho phép thay thế {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL của ảnh opengraph mặc định."
+    allow_all_attachments_for_group_messages: "Cho phép các email có đính kèm trong tin nhắn nhóm."
     enable_flash_video_onebox: "Cho phép nhúng liên kết swf và flv (Adobe Flash). CHÚ Ý: có thể chứa đựng các rủi ro bảo mật."
     default_invitee_trust_level: "Bậc tin tưởng mặc định (0-4) cho thành viên được mời."
     default_trust_level: "Cấp độ tin cậy mặc định (0-4) cho tất cả các thành viên mới. CHÚ Ý! Thay đổi thiết lập này sẽ đặt bạn vào nguy cơ spam cao."
@@ -838,9 +889,17 @@ vi:
     tl2_requires_likes_received: "Số like một thành viên phải nhận được trước khi được thăng lên bậc tin cậy cấp 2."
     tl2_requires_likes_given: "Số like một thành viên phải thực hiện trước khi được thăng lên bậc tin cậy cấp 2."
     tl2_requires_topic_reply_count: "Số chủ đề thành viên phải trả lời trước khi được thăng lên bậc tin cậy cấp 2."
+    tl3_time_period: "Độ tin cậy mức 3 yêu cầu khoảng thời gian (theo ngày)"
+    tl3_requires_days_visited: "Số ngày tối thiểu mà thành viên cần phải truy cập website trong (tl3) ngày để được thăng lên độ tin cậy mức 3. Đặt cao hơn khoảng thời gian tl3 để tắt thăng hạng cho tl3. (0 hoặc cao hơn)"
+    tl3_requires_topics_replied_to: "Số lượng chủ đề tối thiểu mà thành viên cần phải trả lời trong (tl3) ngày để được thăng lên độ tin cậy mức 3. (0 hoặc cao hơn)"
+    tl3_requires_topics_viewed: "Phần trăm số chủ đề được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy mức 3. (0 tới 100)"
+    tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy mức 3. (0 tới 100)"
     tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy cấp 3."
     tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy cấp 3."
+    tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn X bài viết được đánh dấu bởi X thành viên khác trong (tl3) ngày để được thăng lên độ tin cậy mức 3, khi X là giá trị thiết lập. (0 hoặc cao hơn)"
     tl3_promotion_min_duration: "Số ngày tối thiểu chương trình thăng hạng cấp 3 kéo dài trước khi thành viên có thể bị giáng cấp xuống độ tin cậy cấp 2."
+    tl3_requires_likes_given: "Số like tối thiểu phải thực hiện trong (tl3) ngày để được thăng lên độ tin cậy mức 3."
+    tl3_requires_likes_received: "Số like tối thiểu nhận được trong (tl3) ngày để được thăng lên độ tin cậy mức 3."
     tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy cấp 3."
     min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
     min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
@@ -852,35 +911,173 @@ vi:
     newuser_max_mentions_per_post: "Số tối đa thông báo @name mà thành viên mới có thể sử dụng trong bài viết."
     newuser_max_replies_per_topic: "Số lượng tối đa trả lời mà thành viên có thể thực hiện trong một chủ đề cho đến khi có ai đó gửi trả lời."
     max_mentions_per_post: "Số tối đa thông báo @name mà tất cả mọi người có thể sử dụng trong bài viết."
+    max_users_notified_per_group_mention: "Số lượng tối đa thành viên có thể nhận được thông báo nếu một nhóm được đề cập (nếu ngưỡng được đáp ứng không có thông báo sẽ được tăng lên)"
+    create_thumbnails: "Tạo ảnh nhỏ và ảnh lightbox nếu quá lớn để vừa trong một bài đăng."
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
+    private_email_time_window_seconds: "Đợi (n) giây trước khi gửi bất kỳ thông báo email nào, để cho thành viên cơ hội để chỉnh sửa và hoàn thiện các thông điệp của họ."
+    email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
+    flush_timings_secs: "Tần suất tuôn dữ liệu thời gan tới server, theo giây."
     title_max_word_length: "Chiều dài tối đa chữ cho phép, tính theo ký tự, trong một tiêu đề chủ đề."
+    title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
+    body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
     allow_uppercase_posts: "Cho phép viết hoa tất cả các chữ trong tên chủ đề hoặc nội dung bài viết."
     title_fancy_entities: "Chuyển đổi các ký tự ASCII thành các đối tượng HTML trong tên chủ đề, http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     min_body_similar_length: "Chiều dài tối thiểu của nội dung bài viết trước khi kiểm trang chủ đề tương tự."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
+    category_style: "Style trực quan cho phù hiệu danh mục."
+    max_image_size_kb: "Kích cỡ ảnh upload tối đa theo Kb. Thiết lập này phải được cấu hình cả trong nginx (client_max_body_size) / apache hoặc trong proxy."
     max_attachment_size_kb: "Kích thước file tải lên tối đa tính theo kB. đã cấu hình trong nginx (client_max_body_size) / apache hoặc proxy."
     authorized_extensions: "Danh sách định dạng file cho phép tải lên (sử dụng '*' để cho phép tất cả loại tập tin)"
     max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."
+    title_prettify: "Ngăn chặn lỗi chính tả và sai sót phổ biến trong tiêu đề, bao gồm tất cả là chữ hoa, ký tự đầu tiên là chữ thường, sử dụng quá nhiều ! và ?, thêm . ở cuối..."
+    topic_views_heat_low: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật một chút."
+    topic_views_heat_medium: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật vừa phải."
+    topic_views_heat_high: "Sau bao nhiêu lượt xem thì số lượt xem sẽ rất nổi bật."
+    cold_age_days_low: "Sau bao nhiêu ngày thảo luận thì ngày cuối cùng hoạt động sẽ mờ một chút."
+    cold_age_days_medium: "Sau bao nhiêu ngày thảo luận thì ngày cuối cùng hoạt động sẽ mờ vừa phải."
+    cold_age_days_high: "Sau bao nhiêu ngày thảo luận thì ngày cuối cùng hoạt động sẽ rất mờ."
+    history_hours_low: "Một bài viết được sửa trong bao nhiêu giờ thì thông báo sửa sẽ nổi bật một chút."
+    history_hours_medium: "Một bài viết được sửa trong bao nhiêu giờ thì thông báo sửa sẽ nổi bật vừa phải."
+    history_hours_high: "Một bài viết được sửa trong bao nhiêu giờ thì thông báo sửa sẽ rất nổi bật."
+    topic_post_like_heat_low: "Nếu tỷ lệ likes:post vượt quá tỷ lệ này thì bộ đếm bài viết sẽ nổi bật một chút."
+    topic_post_like_heat_medium: "Nếu tỷ lệ likes:post vượt quá tỷ lệ này thì bộ đếm bài viết sẽ nổi bật vừa phải."
+    topic_post_like_heat_high: "Nếu tỷ lệ likes:post vượt quá tỷ lệ này thì bộ đếm bài viết sẽ rất nổi bật."
+    faq_url: "Nếu bạn có một địa chỉ FAQ muốn sử dụng, điền URL đầy đủ ở đây."
+    tos_url: "Nếu bạn có một địa chỉ Quy Định Sử Dụng muốn sử dụng, điền URL đầy đủ ở đây."
+    privacy_policy_url: "Nếu bạn có một địa chỉ Quyền Riêng Tư muốn sử dụng, điền URL đầy đủ ở đây."
+    newuser_spam_host_threshold: "Số lần thành viên mới có thể điền cùng một liên kết trong `newuser_spam_host_posts` bài viết trước khi bị coi là spam."
+    white_listed_spam_host_domains: "Danh sách tên miền sẽ được miễn trừ khỏi kiểm tra spam. Thành viên mới sẽ không bị giới hạn khi tạo bài viết có chứa liên kết từ các tên miền này."
+    staff_like_weight: "Trọng số cộng thêm khi BQT like là bao nhiêu."
+    topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
+    user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
+    levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."
+    max_new_accounts_per_registration_ip: "Nếu đã có (n) tài khoản với độ tin cậy mức 0 từ IP này (không phải là BQT, mức TL2 hoặc cao hơn), ngừng chấp nhận đăng ký mới từ IP này."
+    min_ban_entries_for_roll_up: "Khi click vào nút cuộn lên, sẽ tạo ra một entry subnet cấm mới nếu có ít nhất (N) entry."
+    max_age_unmatched_emails: "Xóa các email hiển thị không khớp sau (N) ngày."
+    max_age_unmatched_ips: "Xóa các IP hiển thị không khớp sau (N) ngày."
+    num_flaggers_to_close_topic: "Số lượng tối thiểu đánh dấu độc nhất để tự động tạm dừng một chủ đề để can thiệp."
+    num_flags_to_close_topic: "Số lượng tối thiểu đánh dấu hoạt động để tự động tạm dừng một chủ đề để can thiệp."
+    auto_respond_to_flag_actions: "Kích hoạt tính năng trả lời tự động khi xử lý một đánh dấu."
+    min_first_post_typing_time: "Số lượng thời gian tối thiểu theo phần ngàn giây mà thành viên phải nhập trong bài viết đầu tiên, nếu ngưỡng không được đáp ứng sẽ tự động nhập vào hàng chờ duyệt. Đặt là 0 để tắt (không khuyến nghị)"
+    auto_block_fast_typers_on_first_post: "Tự động chặn người dùng không đáp ứng min_first_post_typing_time"
+    auto_block_fast_typers_max_trust_level: "Cấp độ tin cậy tối đa để tự động chặn những người đánh máy quá nhanh"
+    auto_block_first_post_regex: "Regex trường hợp không nhạy cảm để nếu vượt qua sẽ khóa bài viết đầu tiên của thành viên và gửi tới chờ duyệt. Ví dụ: raging|a[bc]a , sẽ khóa tất cả các bài viết đầu tiên có chứa raging, aba hoặc aca. Chỉ áp dụng cho các bài viết đầu tiên."
     reply_by_email_enabled: "Cho phép trả lời chủ đề qua email."
+    reply_by_email_address: "Mẫu để trả lời cho các địa chỉ email đến, ví dụ: %{reply_key}@reply.example.com hoặc replies+%{reply_key}@example.com"
+    disable_emails: "Ngăn chặn Discourse gửi thêm bất kỳ email nào"
+    strip_images_from_short_emails: "Tất cả các ảnh từ email phải có kích cỡ nhỏ hơn 2800 Bytes"
+    short_email_length: "Độ dài email ngắn theo Bytes"
+    display_name_on_email_from: "Hiển thị tên đầy đủ trên email từ trường"
+    unsubscribe_via_email: "Cho phép thành viên có thể hủy nhận email bằng cách gửi một email kèm theo liên kết 'unsubscribe' trong tiêu đề hoặc nội dung."
+    unsubscribe_via_email_footer: "Gắn kèm liên kết hủy nhận tin vào chân của email được gửi"
+    delete_email_logs_after_days: "Xóa nhật ký email sau (N) ngày. 0 để giữ lại vĩnh viễn"
+    max_emails_per_day_per_user: "Số lượng tối đa email thành viên được gửi mỗi ngày. 0 để không giới hạn"
+    enable_staged_users: "Tự động tạo các giai đoạn người dùng khi xử lý các email gửi đến."
+    manual_polling_enabled: "Push email bằng cách sử dụng API để trả lời email."
+    pop3_polling_enabled: "Poll thông qua POP3 các email trả lời."
     pop3_polling_ssl: "Sử dụng SSL khi kết nối tới POP3 server. (Đề nghị sử dụng)"
+    pop3_polling_period_mins: "Thời gian kiểm tra tài khoản POP3 email tính theo phút. LƯU Ý: yêu cầu khởi động lại. "
+    pop3_polling_port: "Cổng để poll của tài khoản POP3."
+    pop3_polling_host: "Máy chủ để poll email thông qua POP3."
+    pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
+    pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
+    log_mail_processing_failures: "Ghi lại tất cả các lỗi xử lý email vào http://yoursitename.com/logs"
+    email_in: "Cho phép người dùng tạo chủ đề mới thông qua email (yêu cầu pop3 polling). Cấu hình các địa chỉ trong tab \"Thiết lập\" cho mỗi chuyên mục."
     email_in_min_trust: "Bậc tin tưởng tối thiểu cho phép một thành viên gửi chủ đề mới qua email."
+    email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
+    email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."
+    minimum_topics_similar: "Có bao nhiêu chủ đề cần phải có trước các chủ đề tương tự được giới thiệu khi soạn thảo chủ đề mới."
+    relative_date_duration: "Số ngày sau khi đăng bài nơi ngày của bài viết sẽ được hiển thị tương đối (7d) thay vì tuyệt đối (20 Feb)."
+    delete_user_max_post_age: "Không cho phép xóa thành viên khi bài viết đầu tiên của họ cũ hơn (x) ngày."
+    delete_all_posts_max: "Số lượng tối đa bài viết có thể được xóa cùng một lúc khi sử dụng nút Xóa Tất Cả Bài Viết. Nếu thành viên có nhiều hơn số lượng bài viết này, các bài viết có thể không bị xóa cùng một lúc và cũng không thể xóa được thành viên đó."
     username_change_period: "Số ngày thành viên có thể thay đổi tên đăng nhập sau khi đăng kí (0 để vô hiệu hóa chức năng thay đổi tên thành viên)"
     email_editable: "Cho phép thành viên thay đổi địa chỉ email sau khi đăng kí"
     logout_redirect: "Trang chuyển hướng sau khi đăng xuất . Ví dụ : (http://somesite.com/logout)"
     allow_uploaded_avatars: "Cho phép người dùng tải lên hình hồ sơ."
+    allow_animated_avatars: "Cho phép người dùng sử dụng ảnh gif động trong trang hồ sơ. CẢNH BÁO: cần chạy tác vụ avatars:refresh sau khi thay đổi thiết lập này."
     allow_animated_thumbnails: "Tạo ảnh động thu nhỏ cho ảnh .gif"
+    default_avatars: "URL avatar mặc định được sử dụng cho các thành viên mới cho đến khi họ tự sửa đổi."
+    automatically_download_gravatars: "Download Gravatar cho thành viên khi họ tạo tài khoản hoặc thay đổi email."
+    digest_topics: "Số lượng tối đa chủ đề hiển thị trong tập san email."
     digest_min_excerpt_length: "Số kí tự tối thiểu của tóm tắt bài viết trong bản tin tóm tắt gửi qua email"
+    delete_digest_email_after_days: "Ngăn chặn tập san email không cho thành viên xem trong hơn (n) ngày."
+    digest_suppress_categories: "Ngăn chặn các chuyên mục này khỏi tập san email."
+    disable_digest_emails: "Tắt tập san email với tất cả các thành viên."
+    detect_custom_avatars: "Có kiểm tra hay không việc thành viên đã upload ảnh hồ sơ của họ."
     max_daily_gravatar_crawls: "Giới hạn số lần Discourse sẽ kiểm tra Gravatar mới trong một ngày"
+    public_user_custom_fields: "Danh sách trắng các trường tùy biến cho thành viên có thể hiển thị công khai."
+    staff_user_custom_fields: "Danh sách trắng các trường tùy biến cho thành viên có thể hiển thị cho BQT."
+    enable_user_directory: "Cung cấp một danh mục thành viên để duyệt xem"
+    allow_anonymous_posting: "Cho phép thành viên chuyển sang chế độ ẩn danh"
+    anonymous_posting_min_trust_level: "Độ tin cậy tối thiểu bắt buộc để có thể gửi bài ở chế độ ẩn danh"
+    anonymous_account_duration_minutes: "Để bảo vệ danh tính tạo ra một tài khoản ẩn danh mới mỗi N phút cho mỗi người dùng. Ví dụ: nếu đặt là 600, ngay sau khi 600 phút trôi qua kể từ bài viết cuối cùng VÀ lập tức tạo ra một tài khoản ẩn danh mới cho thành viên."
+    hide_user_profiles_from_public: "Vô hiệu hóa thẻ thành viên, hồ sơ và thư mục người dùng với các thành viên ẩn danh."
     allow_profile_backgrounds: "Cho phép người dùng tải lên ảnh nền"
+    sequential_replies_threshold: "Số bài viết một thành viên có thể gửi liên tiếp trong một chủ đề trước khi được nhắc nhở về hành vi trả lời liên tục quá nhiều."
+    enable_mobile_theme: "Thiết bị di động có thể sử dụng giao diện riêng, với khả năng chuyển sang chế độ xem đầy đủ. Tắt thiết lập này nếu bạn muốn sử dụng một style tùy biến hỗ trợ responsive."
+    dominating_topic_minimum_percent: "Số phần trăm bài viết mà một thành viên có thể gửi trong một chủ đề trước khi được nhắc nhở về hành vi muốn tạo ưu thế trong chủ đề."
+    disable_avatar_education_message: "Tắt thông điệp hướng dẫn khi đổi avatar."
+    daily_performance_report: "Phân tích nhật ký NGINX hàng ngày và gửi cho BQT thông tin chi tiết"
     suppress_uncategorized_badge: "Không hiển thị huy hiệu cho các chủ đề chưa phân loại trong danh sách chủ đề"
+    permalink_normalizations: "Áp dụng regex sau trước khi khớp với permalink, ví dụ: /(topic.*)\\?.*/\\1 sẽ loại bỏ các chuỗi truy vấn từ đường dẫn chủ đề. Định dạng regex+string với \\1 ... để giữ truy cập"
+    global_notice: "Hiển thị banner KHẨN CẤP, THÔNG BÁO KHẨN trên toàn website để thông báo cho tất cả các khách ghé thăm, bỏ trống để ẩn (hỗ trợ HTML)."
+    disable_edit_notifications: "Vô hiệu hoá thông báo chỉnh sửa bởi người dùng hệ thống khi 'download_remote_images_to_local' đang hoạt động."
+    automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi người dùng xuống cuối trang."
+    read_time_word_count: "Đếm số từ mỗi phút để ước lượng thời gian đọc."
+    full_name_required: "Tên đầy đủ là trường bắt buộc trong hồ sơ thành viên."
+    enable_names: "Hiển thị tên đầy đủ của thành viên trên trang hồ sơ, thẻ thành viên, và email. Tắt để ẩn tên đầy đủ ở khắp mọi nơi."
+    display_name_on_posts: "Hiển thị tên đầy đủ của thành viên trên bài viết của họ và khi gõ @username."
+    show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
     invites_per_page: "Lời mời mặc định hiển thị trên trang thành viên"
     short_progress_text_threshold: "Sau khi số bài đăng của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của bài đăng hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này"
+    default_code_lang: "Highlight cú pháp ngôn ngữ lập trình mặc định áp dụng cho đoạn mã GitHub (lang-auto, ruby, python...)"
+    warn_reviving_old_topic_age: "Khi ai đó trả lời chủ đề mà lần trả lời cuối cùng cũ hơn số ngày được thiết lập ở đây, hiển thị một cảnh báo. Vô hiệu hóa bằng cách đặt là 0."
+    autohighlight_all_code: "Highlight code bắt buộc đối với các đoạn mã thực thi ngay cả khi họ không chỉ định ngôn ngữ rõ ràng."
+    highlighted_languages: "Kèm theo quy tắc highlight cú pháp. (Cảnh báo: kèm theo quá nhiều ngôn ngữ sẽ làm ảnh hưởng  performance), xem demo tại: https://highlightjs.org/static/demo/"
+    feed_polling_enabled: "CHỈ NHÚNG: Cho dù chỉ nhúng RSS/ATOM bài viết."
+    feed_polling_url: "CHỈ NHÚNG: URL của RSS/ATOM để nhúng."
+    embed_by_username: "Tên tài khoản Discourse của thành viên tạo các chủ đề nhúng."
+    embed_username_key_from_feed: "Khóa để kéo tên tài khoản Discourse từ feed."
+    embed_truncate: "Cắt ngắn các bài viết được nhúng."
+    embed_post_limit: "Số lượng tối đa bài viết được nhúng."
+    embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
+    embed_whitelist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng."
+    embed_blacklist_selector: "Bộ chọn các thành phần CSS được loại bỏ khi nhúng."
+    notify_about_flags_after: "Nếu có các đánh dấu chưa được xử lý sau số giờ được thiết lập ở đây, gửi email đến contact_email. Đặt là 0 để vô hiệu hóa."
+    enable_cdn_js_debugging: "Cho phép /logs hiển thị lỗi thích hợp bằng cách thêm quyền cross-origin trên tất cả js kèm theo."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
+    delete_drafts_older_than_n_days: Xóa các bản nháp cũ hơn (n) ngày.
+    vacuum_db_days: "Chạy VACUUM ANALYZE để lấy lại khoảng trống DB sau khi migration (đặt là 0 để tắt)"
     prevent_anons_from_downloading_files: "Cấm khách truy cập tải các tập tin đính kèm. CẢNH BÁO: việc này sẽ chặn những hình ảnh không thuộc giao diện trang hoạt động"
+    slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
+    enable_emoji: "Kích hoạt emoji"
+    emoji_set: "Bạn thích dùng gói emoji nào?"
+    enforce_square_emoji: "Sử dụng kích thước vuông cho tất cả các emoji."
+    approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
+    approve_unless_trust_level: "Bài viết của thành viên dưới cấp độ tin cậy này phải được duyệt"
+    notify_about_queued_posts_after: "Nếu những bài viết đang chờ duyệt có thời gian cũ hơn số giờ thiết lập ở đây, một email sẽ được gửi đến contact_email. Đặt là 0 để vô hiệu hóa email này."
+    default_email_digest_frequency: "Bao lâu thành viên nhận được tập san email theo mặc định."
+    default_include_tl0_in_digests: "Kèm theo các bài viết từ thành viên mới trong tập san email theo mặc định. Thành viên có thể thay đổi trong thiết lập của họ."
+    default_email_private_messages: "Gửi email khi ai đó nhắn tin cho thành viên theo mặc định."
+    default_email_direct: "Gửi email khi ai đó trích dẫn/trả lời/đề cập hoặc mời thành viên theo mặc định."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
+    disable_mailing_list_mode: "Không cho phép thành viên bật chế độ danh sách thư."
     default_email_always: "Mặc định gửi email thông báo mỗi khi người dùng kích hoạt."
+    default_email_previous_replies: "Kèm theo các trả lời trước trong email theo mặc định."
+    default_email_in_reply_to: "Kèm theo trích đoạn trả lời bài viết trong email theo mặc định."
+    default_other_new_topic_duration_minutes: "Điều kiện mặc định chung với chủ đề được coi là mới."
+    default_other_auto_track_topics_after_msecs: "Thời gian mặc định chung trước khi chủ đề được theo dõi tự động."
     default_other_external_links_in_new_tab: "Mặc định mở các liên kết ngoài trong thẻ mới "
+    default_other_enable_quoting: "Bật trích dẫn trả lời để nổi bật nội dung theo mặc định."
+    default_other_dynamic_favicon: "Hiện bộ đếm chủ đề mới/cập nhật trên icon trình duyệt theo mặc định."
+    default_other_disable_jump_reply: "Không nhảy tới bài viết của thành viên sau khi họ trả lời theo mặc định."
+    default_other_edit_history_public: "Đặt sửa đổi bài viết công khai theo mặc định."
+    default_other_like_notification_frequency: "Thông báo thành viên khi like theo mặc định"
+    default_topics_automatic_unpin: "Tự động bỏ ghim chủ đề khi thành viên xuống cuối trang theo mặc định."
+    default_categories_watching: "Hiển thị danh sách chuyên mục đang xem theo mặc định."
+    default_categories_tracking: "Hiển thị danh sách chuyên mục đang theo dõi theo mặc định."
+    default_categories_muted: "Hiển thị danh sách chuyên mục đang im lặng theo mặc định."
     errors:
       invalid_email: "Địa chỉ email sai"
       invalid_username: "Không có thành viên với tên đăng nhập này"
@@ -889,12 +1086,21 @@ vi:
       invalid_integer_max: "Giá trị không thể cao hơn %{max}."
       invalid_integer: "Giá trị phải là một số nguyên"
       regex_mismatch: "Giá trị không giống với định dạng"
+      must_include_latest: "Top menu phải kèm theo tab 'latest'."
       invalid_string: "Giá trị không hợp lệ."
       invalid_string_min_max: "Phải nằm giữa %{min} và %{max} ký tự."
       invalid_string_min: "Phải ít nhất %{min} ký tự."
       invalid_string_max: "Không nhiều hơn %{max} ký tự."
       invalid_reply_by_email_address: "Giá trị phải chứa '%{reply_key}' và phải khác với email thông báo."
+      pop3_polling_host_is_empty: "Bạn phải thiết lập 'pop3 polling host' trước khi kích hoạt POP3 polling."
+      pop3_polling_username_is_empty: "Bạn phải thiết lập 'pop3 polling username' trước khi kích hoạt POP3 polling."
+      pop3_polling_password_is_empty: "Bạn phải thiết lập 'pop3 polling password' trước khi kích hoạt POP3 polling."
+      pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
+      reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
+      email_polling_disabled: "Bạn phải kích hoạt bằng tay hoặc POP3 polling trước khi kích hoạt trả lời bằng email."
+      user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
   notification_types:
+    group_mentioned: "%{group_name} được đề cập trong %{link}"
     mentioned: "%{display_username} đề cập bạn ở %{link}"
     liked: "%{display_username} thích bài viết %{link} của bạn"
     replied: "%{display_username} trả lời bài viết %{link} của bạn"
@@ -904,6 +1110,7 @@ vi:
     moved_post: "%{display_username} di chuyển bài viết của bạn tới %{link}"
     private_message: "%{display_username} gửi bạn một tin nhắn: %{link}"
     invited_to_private_message: "%{display_username} mời bạn xem tin nhắn: %{link}"
+    invited_to_topic: "%{display_username} mời bạn tham gia %{link}"
     invitee_accepted: "%{display_username} chấp nhận lời mời của bạn"
     linked: "%{display_username} kết nối với bạn ở %{link}"
     granted_badge: "Bạn kiếm được %{link}"
@@ -913,28 +1120,61 @@ vi:
       category: 'Thư mục'
       topic: 'Kết quả'
       user: 'Thành viên'
+  sso:
+    not_found: "Không tìm thấy tài khoản của bạn, xin hãy liên hệ với BQT."
+    account_not_approved: "Tài khoản của bạn chưa được BQT chấp thuận, bạn sẽ nhận được email thông báo khi được chấp nhận."
+    unknown_error: "Đã có vấn đề xảy ra với tài khoản của bạn, xin hãy liên hệ với BQT."
+    timeout_expired: "Đăng nhập tài khoản hết hạn, xin hãy thử đăng nhập lại."
   original_poster: "Người viết gốc"
   most_posts: "Bài viết Phỏ biến"
+  most_recent_poster: "Người Gửi Mới Đây"
+  frequent_poster: "Người Gửi Thường Xuyên"
   redirected_to_top_reasons:
     new_user: "Chào mừng đến với cộng dồng của chúng tôi! Ở đây có những chủ để phổ biến."
     not_seen_in_a_month: "Chào mừng quay trở lại! Chúng tôi thấy bạn truy cập một khoảng thời gian. Ở đây có những bài viết phổ biến từ lúc bạn đ."
+  move_posts:
+    new_topic_moderator_post:
+      other: "%{count} bài viết đã được chia thành chủ đề mới: %{topic_link}"
+    existing_topic_moderator_post:
+      other: "%{count} bài viết đã được hợp nhất vào chủ đề: %{topic_link}"
   change_owner:
+    post_revision_text: "Chuyển quyền sở hữu từ %{old_user} sang %{new_user}"
     deleted_user: "xóa người dùng"
+  emoji:
+    errors:
+      name_already_exists: "Xin lỗi, tên '%{name}' đã được sử dụng bởi một emoji khác."
+      error_while_storing_emoji: "Xin lỗi, đã có lỗi xảy ra trong khi lưu emoji."
   topic_statuses:
     archived_enabled: "Chủ đề này được đưa vào lưu trữ. Nó sẽ không được sửa đổi nữa. "
     archived_disabled: "Chủ đề này được đưa khỏi lưu trữ. Nó có thể được sửa đổi."
     closed_enabled: "Chủ đề này được đóng lại. Các trả lời mới sẽ không được chấp nhận."
     closed_disabled: "Chủ đề này được mở ra. Các trả lời mới sẽ được chấp nhận."
+    autoclosed_enabled_days:
+      other: "Chủ đề này sẽ được tự động đóng sau %{count} ngày, sẽ không được gửi trả lời."
+    autoclosed_enabled_hours:
+      other: "Chủ đề này sẽ được tự động đóng sau %{count} giờ, sẽ không được gửi trả lời."
+    autoclosed_enabled_minutes:
+      other: "Chủ đề này sẽ được tự động đóng sau %{count} phút, sẽ không được gửi trả lời."
+    autoclosed_enabled_lastpost_days:
+      other: "Chủ đề này sẽ được tự động đóng sau %{count} ngày sau lần trả lời cuối, sẽ không được gửi trả lời."
     autoclosed_enabled_lastpost_hours:
       other: "Chủ đề này đã được đóng tự động %{count} giờ sau phản hồi cuối cùng. Không còn cho phép phản hồi mới."
+    autoclosed_enabled_lastpost_minutes:
+      other: "Chủ đề này sẽ được tự động đóng sau %{count} phút sau lần trả lời cuối, sẽ không được gửi trả lời."
     autoclosed_disabled: "Chủ đề này đã được mở. Bạn có thể bình luận"
     autoclosed_disabled_lastpost: "Chủ đề này đã được mở. Bạn có thể bình luận"
+    pinned_enabled: "Chủ đề này đang được ghim, nó sẽ hiển thị ở trên cùng chuyên mục cho đến khi được BQT bỏ ghim, hoặc bởi chính thành viên cá nhân."
+    pinned_disabled: "Chủ đề này đã được bỏ ghim, nó sẽ không còn hiển thị ở trên cùng chuyên mục."
+    pinned_globally_enabled: "Chủ đề này đang được ghim trên toàn website, nó sẽ hiển thị ở trên cùng chuyên mục và danh sách chủ đề cho đến khi được BQT bỏ ghim, hoặc bởi chính thành viên cá nhân."
+    pinned_globally_disabled: "Chủ đề này đã được bỏ ghim, nó sẽ không còn hiển thị ở trên cùng chuyên mục."
     visible_enabled: "Chủ để này đã được lưu. Nó sẽ hiển thị trong danh sách chủ đề."
+    visible_disabled: "Chủ đề này hiện không được liệt kê, nó sẽ không còn hiển thị trong bất kỳ danh sách chủ đề nào. Cách duy nhất để truy cập chủ đề này là qua liên kết trực tiếp."
   login:
     not_approved: "Tài khoản của bạn chưa được kiểm duyệt. Bạn sẽ nhận được email thông báo khi bạn được phép đăng nhập."
     incorrect_username_email_or_password: "Không đúng tài khoản, email hoặc mật khẩu"
     wait_approval: "Cảm ơn bạn đã đăng ký. Chúng tôi sẽ thông báo sau khi tài khoản của bạn được kiểm duyệt."
     active: "Tài khoản của bạn đã được kích hoạt và sẵn sàng để sử dụng."
+    activate_email: "<p>Bạn đã gần hoàn thành! Chúng tôi đã gửi bạn một email kích hoạt tới địa chỉ <b>%{email}</b>. Xin hãy làm theo hướng dẫn trong email đó để kích hoạt tài khoản của bạn.</p><p>Nếu bạn không nhận được thư, hãy kiểm tra thư mục thư rác, hoặc thử đăng nhập lại để được nhận email kích hoạt khác.</p>"
     not_activated: "Bạn không thể đăng nhập bây giờ. Chúng tôi đã gửi bạn một email kích hoạt tài khoản. Vui lòng làm theo hướng dẫn trong email để kích hoạt tài khoản của bạn."
     not_allowed_from_ip_address: "Bạn không thể đăng nhập như là %{username} từ địa chỉ IP này."
     admin_not_allowed_from_ip_address: "Bạn không thể đăng nhập như quản trị từ IP này."
@@ -951,16 +1191,58 @@ vi:
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
     close_window: "Chứng thực hoàn tất. Đóng của sổ này để tiếp tụ."
+    already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
   user:
+    no_accounts_associated: "Không có tài khoản liên quan"
     username:
+      short: "phải dài ít nhất %{min} ký tự"
+      long: "không được dài hơn %{max} ký tự"
       characters: "chỉ bao gồm số, ký tự và dấu gạch dưới"
       unique: "phải độc nhất"
       blank: "phải hiện hành"
+      must_begin_with_alphanumeric_or_underscore: "phải bắt đầu bằng chữ, số hoặc dấu gạch dưới"
+      must_end_with_alphanumeric: "phải kết thúc bằng chữ hoặc số"
+      must_not_contain_two_special_chars_in_seq: "không được chứa 2 hoặc nhiều ký tự đặc biệt liên tiếp (.-_)"
+      must_not_end_with_confusing_suffix: "không được kết thúc bằng các hậu tố như: .json, .png..."
     email:
       not_allowed: "không được chấp nhận từ nhà cung cấp email đó. Vui long sử dụng địa chỉ email khác."
       blocked: "không được chấp nhận."
     ip_address:
       blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
+      max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
+  flags_reminder:
+    flags_were_submitted:
+      other: "Đánh dấu đã được gửi %{count} giờ qua, xin hãy xem xét."
+    subject_template:
+      other: "%{count} đánh dấu đang đợi xử lý"
+  unsubscribe_mailer:
+    subject_template: "Xác nhận bạn không còn muốn nhận email cập nhật từ %{site_title}"
+    text_body_template: |
+      Ai đó (có thể là bạn?) đã yêu cầu không muốn nhận email cập nhật từ %{site_domain_name} tới địa chỉ này.
+      Nếu bạn muốn xác nhận điều này, xin hãy click liên kết:
+
+      %{confirm_unsubscribe_link}
+
+
+      Nếu bạn vẫn muốn tiếp tục nhận email cập nhật, xin hãy bỏ qua email này.
+  invite_mailer:
+    subject_template: "%{invitee_name} mời bạn tham gia chủ đề '%{topic_title}' trên %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} đã mời bạn tham gia thảo luận
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      tại
+
+      > %{site_title} -- %{site_description}
+
+      Nếu bạn quan tâm, xin hãy click liên kết sau:
+
+      %{invite_link}
+
+      Lời mời này đến từ thành viên tin cậy nên bạn có thể tham gia thảo luận ngay.
   invite_forum_mailer:
     subject_template: "%{invitee_name} đã mời bạn gia nhập %{site_domain_name}"
     text_body_template: |
@@ -977,22 +1259,155 @@ vi:
       Nó được mời từ một người dùng tin cập, bạn không cần đăng nhập.
   invite_password_instructions:
     subject_template: "Đặt mật khẩu cho tài khoản của bạn ở %{site_name}"
+    text_body_template: |
+      Cám ơn bạn đã chấp nhận lời mời tham gia %{site_name} -- chào mừng!
+
+      Xin hãy click liên kết sau để đặt mật khẩu:
+      %{base_url}/users/password-reset/%{email_token}
+
+      (Nếu liên kết trên hết hạn, bạn hãy chọn "Quên mật khẩu" khi đăng nhập với email của bạn).
+  test_mailer:
+    subject_template: "[%{site_name}] Email Thử Nghiệm"
+    text_body_template: |
+      Đây là email thử nghiệm từ
+
+      [**%{base_url}**][0]
+
+      Khả năng gửi email là rất phức tạp, sau đây là một số điều quan trọng mà bạn cần kiểm tra trước:
+
+      - Hãy *đảm bảo* đã thiết lập `notification email` từ: địa chỉ đúng trong thiết lập website. **Tên miền được chỉ định trong địa chỉ "từ" của các email bạn gửi là tên miền email phải được xác nhận**.
+
+      - Biết cách xem mã nguồn email trong mail client của bạn, vì thế bạn có thể xem xét email header để biết các đầu mối quan trọng. Trong Gmail, có tùy chọn "hiển thị nguyên bản" từ menu thả xuống ở phía trên bên phải của email.
+
+      - **QUAN TRỌNG:** ISP của bạn có đảo ngược bản ghi DNS để kết hợp tên miền và địa chỉ IP bạn gửi email? [Kiểm tra bản ghi Reverse PTR][2] ở đây. Nếu ISP không điền bản ghi đảo ngược DNS chính thức, sẽ không có email được gửi.
+
+      - [Bản ghi SPF][8] có đúng? [Kiểm tra bản ghi SPF][1] ở đây. Lưu ý rằng TXT là kiểu bản ghi chính thức của SPF.
+
+      - [Bản ghi DKIM][3] có đúng? ĐIều này sẽ cải thiện đáng kể khả năng gửi thư. [Kiểm tra bản ghi DKIM][7] ở đây.
+
+      - Nếu bạn chạy trên mail server riêng, hãy kiểm tra và chắc chắn rằng IPs của mail server là [không trong bất kỳ email blacklists][4]. Bạn cũng phải xác nhận có thể gửi một hostname đủ điều kiện DNS trong tin nhắn HELO. Nếu không, email của bạn sẽ bị một số mail services từ chối.
+
+      - Chúng tôi khuyên bạn nên **gửi một email thử nghiệm tới [mail-tester.com][mt]** để xác nhận rằng tất cả các thiết lập trên là chính xác.
+
+      (Cách *dễ nhất* là tạo tài khoản trên [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] hoặc [Mailjet][mj], cho phép gửi thư miễn phí. Bạn vẫn cần phải thiết lập bản ghi SPF và DKIM trong DNS!)
+
+      Chúc may mắn, [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://sendgrid.com/
+      [sp]: https://www.sparkpost.com/
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
+      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Phiên bạn Discourse mới, cập nhật đã sẵn sàng"
+    text_body_template: |
+      Tuyệt, đã có phiên bản mới của [Discourse] (http://www.discourse.org)!
+
+      Phiên bản của bạn: %{installed_version}
+      Phiên bản mới: **%{new_version}**
+
+      - Xem có gì mới trong [GitHub changelog] (https://github.com/discourse/discourse/commits/master).
+
+      - Nâng cấp từ trình duyệt của bạn tại [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Truy cập [meta.discourse.org] (http://meta.discourse.org) để có thêm thông tin và nhận hỗ trợ từ Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] cập nhật đã sẵn sàng"
+    text_body_template: |
+      Tuyệt, đã có phiên bản mới của [Discourse] (http://www.discourse.org)!
+
+      Phiên bản của bạn: %{installed_version}
+      Phiên bản mới: **%{new_version}**
+
+      - Xem có gì mới trong [GitHub changelog] (https://github.com/discourse/discourse/commits/master).
+
+      - Nâng cấp từ trình duyệt của bạn tại [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+
+      - Truy cập [meta.discourse.org] (http://meta.discourse.org) để có thêm thông tin và nhận hỗ trợ từ Discourse.
+
+      ### Ghi chú phát hành
+
+      %{notes}
+  queued_posts_reminder:
+    subject_template:
+      other: "[%{site_name}] %{count} bài viết đang chờ duyệt"
+    text_body_template: |
+      Chào bạn,
+
+      Có bài mới gửi từ thành viên đang chờ duyệt. [Bạn có thể duyệt hoặc từ chối ở địa chỉ](%{base_url}/queued-posts).
+  flag_reasons:
+    off_topic: "Bài viết của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và bài viết đầu tiên."
+    inappropriate: "Bài viết của bạn được đánh dấu là **inappropriate**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](/guidelines)."
+    spam: "Bài viết của bạn được đánh dấu là **spam**: cộng đồng cảm thấy đó là một quảng cáo, khuyến mại thay vì một nội dung hữu ích như mong đợi."
+    notify_moderators: "Bài viết của bạn được đánh dấu là **for moderator attention**: cộng đồng cảm thấy có điều gì đó cần được BQT xét duyệt."
   flags_dispositions:
     agreed: "Cảm ơn đã cho chúng tôi biết. Chúng thôi đồng ý nó là một vấn đề và chúng tôi sẽ xem xét nó."
     agreed_and_deleted: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đồng ý đây là một vấn đề và chúng tôi đã xóa bài viết này."
     disagreed: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
     deferred: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
+    deferred_and_deleted: "Cảm ơn bạn đã cho chúng tôi biết, chúng tôi đã gỡ bỏ bài viết."
+  temporarily_closed_due_to_flags: "Chủ đề này tạm thời đóng do có một lượng lớn đánh dấu từ cộng đồng."
   system_messages:
+    post_hidden:
+      subject_template: "Bài viết bị ẩn do cộng đồng đánh dấu"
+      text_body_template: |
+        Xin chào,
+
+        Đây là tin nhắn tự động từ %{site_name} để thông báo rằng bài viết của bạn đã được ẩn.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Nhiều thành viên trong cộng đồng đã gắn cờ bài viết này trước khi nó được ẩn, vì vậy bạn hãy xem xét sửa lại bài viết để phản ánh thông tin phản hồi của họ. **Bạn có thể chỉnh sửa bài viết sau %{edit_delay}, và nó sẽ tự động hiển thị.**
+
+        Xin lưu ý, nếu bài viết bị ẩn bởi cộng đồng lần thứ hai, nó sẽ vẫn ẩn cho đến khi được BQT duyệt - và có thể có thêm hành động, bao gồm cả việc đình chỉ tài khoản của bạn.
+
+        Để được hướng dẫn thêm, vui lòng tham khảo [community guidelines](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
+      text_body_template: |
+        Chào mừng bạn gia nhập %{site_name}!
+
+        %{new_user_tips}
+
+        Chúng tôi tin rằng bạn sẽ cùng chúng tôi phát triển một cộng đồng văn minh [hành vi ứng xử](%{base_url}/guidelines).
+
+        Chúc vui vẻ!
+
+        (Nếu bạn cần giao tiếp với BQT [thành viên quản trị](%{base_url}/about), bạn có thể gửi trả lời email này).
     welcome_invite:
       subject_template: "Chào mừng đến với %{site_name}!"
+      text_body_template: |
+        Chào mừng bạn gia nhập %{site_name}!
+
+        Chúng tôi đã tạo một tài khoản mới **%{username}** cho bạn, bạn có thể thay đổi tên của mình bằng cách truy cập [your user profile][prefs].
+
+        Cho lần đăng nhập sau:
+
+        1. Luôn **sử dụng cùng một địa chỉ email từ lời mời ban đầu của bạn** khi đăng nhập. Nếu không chúng ta sẽ không thể biết đó là bạn!
+
+        2. Tạo một mật khẩu cho [your user profile][prefs], và sử dụng nó để đăng nhập.
+
+        %{new_user_tips}
+
+        Chúng tôi tin rằng bạn sẽ cùng chúng tôi phát triển một cộng đồng văn minh [hành vi ứng xử](%{base_url}/guidelines).
+
+        Chúc vui vẻ!
+
+        (Nếu bạn cần giao tiếp với BQT [thành viên quản trị](%{base_url}/about), bạn có thể gửi trả lời email này).
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
+      text_body_template: "Bản sao lưu đã được tạo thành công.\nTruy cập [admin > backup section](%{base_url}/admin/backups) để download bản sao lưu mới."
     backup_failed:
       subject_template: "Sao lưu lỗi."
       text_body_template: |
@@ -1016,64 +1431,394 @@ vi:
         ```
         %{logs}
         ```
+    bulk_invite_succeeded:
+      subject_template: "Mời thành viên hàng loạt đã được thực hiện thành công"
+      text_body_template: "File mời thành viên hàng loạt của bạn đã được thực hiện, %{sent} lời mời đã được gửi."
+    bulk_invite_failed:
+      subject_template: "Có lỗi khi thực hiện mời thành viên hàng loạt"
+      text_body_template: |
+        File mời thành viên hàng loạt của bạn đã được thực hiện, %{sent} lời mời đã được gửi kèm với %{failed} lỗi.
+
+        Đây là nhật ký:
+
+        ```
+        %{logs}
+        ```
     csv_export_succeeded:
       subject_template: "Xuất dữ liệu hoàn tất"
+      text_body_template: |
+        Dữ liệu của bạn đã được export thành công! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        Liên kết download trên sẽ có hiệu lực trong 48 giờ.
     csv_export_failed:
       subject_template: "Xuất dữ liệu thất bại"
       text_body_template: "Chúng tôi xin lỗi, những dữ liệu bạn xuất bị lỗi. Vui lòng xem log hoặc liên hệ nhân viên."
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] Sự cố email -- Cấp độ tin cậy thiếu tin tưởng"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Tài khoản của bạn không đủ cấp độ tin cậy bắt buộc để gửi chủ đề mới tới địa chỉ email này. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
+    email_reject_user_not_found:
+      subject_template: "[%{site_name}] Sự cố email -- Không tìm thấy tài khoản"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Trả lời của bạn đã được gửi từ một địa chỉ email chưa rõ. Xin hãy thử gửi với địa chỉ email khác, hoặc liên hệ với BQT.
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Sự cố email -- Thành viên không hoạt động"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Tài khoản của bạn liên kết với địa chỉ email này chưa được kích hoạt. Xin hãy kích hoạt tài khoản của bạn trước khi gửi email.
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Sự cố -- Thành viên bị chặn"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Tài khoản của bạn liên kết với địa chỉ email này đã bị chặn.
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] Sự cố email -- Thành viên trả lời không khớp"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Trả lời của bạn đã được gửi từ một địa chỉ email khác với những gì chúng tôi mong đợi, chúng tôi nghĩ đây có thể là cùng một người. Xin hãy thử gửi với địa chỉ email khác, hoặc liên hệ với BQT.
     email_reject_no_account:
       subject_template: "[%{site_name}] Vấn đề Email -- Không xác định tài khoản"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Chúng tôi không tìm thấy tài khoản nào khớp với địa chỉ email của bạn. Xin hãy thử gửi với địa chỉ email khác, hoặc liên hệ với BQT.
     email_reject_empty:
       subject_template: "[%{site_name}] Vấn đề Email -- Không có nội dung"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Chúng tôi không tìm thấy nội dung trả lời trong email của bạn.
+
+        Nếu bạn tin _đã_kèm_theo nội dung trả lời, xin hãy thử lại với định dạng đơn giản hơn.
     email_reject_parsing:
       subject_template: "[%{site_name}] Vấn đề Email-- Không nhận dạng được nội dung"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Chúng tôi không tìm thấy nội dung trả lời trong email của bạn. **Hãy đảm bảo rằng trả lời của bạn ở phía trên cùng của email** -- chúng tôi không thể xử lý các trả lời nội tuyến.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Vấn đề Email -- truy cập không phù hợp"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Tài khoản của bạn không có quyền tạo chủ đề mới trong chuyên mục đó. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] Sự cố email -- Truy cập không phù hợp"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Chuyên mục bạn gửi email này tới chỉ chấp nhận trả lời từ các thành viên có tài khoản hợp lệ với các địa chỉ email rõ ràng. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
+    email_reject_invalid_post:
+      subject_template: "[%{site_name}] Sự cố email -- Lỗi gửi bài"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Một số nguyên nhân có thể là: định dạng phức tạp, nội dung quá nhiều, hoặc nội dung quá ít... xin hãy thử lại, hoặc gửi thông qua website.
+    email_reject_invalid_post_specified:
+      subject_template: "[%{site_name}] Sự cố email -- Lỗi gửi bài"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Lý do:
+
+        %{post_error}
+
+        Nếu bạn có thể khắc phục sự cố, xin hãy thử lại.
+    email_reject_rate_limit_specified:
+      subject_template: "[%{site_name}] Sự cố email -- Tỷ lệ giới hạn"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Lý do: %{rate_limit_description}
+    email_reject_invalid_post_action:
+      subject_template: "[%{site_name}] Sự cố email -- Hành động gửi bài không hợp lệ"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Hành động gửi bài không được công nhận, bạn hãy thử lại hoặc gửi thông qua website.
     email_reject_reply_key:
       subject_template: "[%{site_name}] Vấn đề Email -- Không xác định được key trả lời"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Khóa trả lời trong email là không hợp lệ hoặc không rõ, vì thế chúng tôi không thể hình dung ra email này gửi trả lời tới đâu. Xin hãy liên hệ với BQT.
+    email_reject_bad_destination_address:
+      subject_template: "[%{site_name}] Sự cố email -- Không rõ địa chỉ Tới:"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Không có địa chỉ email người nhận được xác định, hãy chắc chắn rằng địa chỉ email bạn gửi tới là chính xác.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Vấn đề Email -- Không tìm thấy chủ đề"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Chủ đề bạn gửi trả lời không còn tồn tại -- có thể do đã được xóa? Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Vấn đề Email -- Chủ đề đóng"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Chủ đề bạn gửi trả lời hiện đang đóng và không nhận gửi trả lời. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Vấn đề Email -- Tự động tạo trả lời"
+      text_body_template: |
+        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
+
+        Email của bạn được đánh dấu là "tạo tự động", chúng tôi không chấp nhận các kiểu email này. Nếu bạn tin đây là lỗi, xin hãy liên hệ với BQT.
     email_error_notification:
       subject_template: "[%{site_name}] Vấn đề Email -- chứng thực POP lỗi"
+      text_body_template: |
+        Thật không may, có một lỗi xác thực trong khi polling mail từ POP server.
+
+        Hãy chắc chắn rằng bạn đã cấu hình đúng các thông tin POP trong [thiết lập website](%{base_url}/admin/site_settings/category/email).
+
+        Nếu có một giao diện web cho các tài khoản email POP, bạn có thể cần phải đăng nhập vào website và kiểm tra các thiết lập này.
     too_many_spam_flags:
       subject_template: "Tài khoản mới bị chặn"
+      text_body_template: |
+        Chào bạn,
+
+        Đây là tin nhắn tự động gửi từ %{site_name} để thông báo rằng bài viết của bạn đã được tự động ẩn do cộng đồng đã gắn cờ.
+
+        Như một biện pháp phòng ngừa, tài khoản mới của bạn đã bị chặn không thể gửi trả lời hoặc tạo chủ đề mới cho đến khi BQT có thể xem lại tài khoản của bạn.
+
+        Để được hướng dẫn thêm, vui lòng tham khảo [nguyên tắc cộng đồng](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Tài khoản bị khóa"
+      text_body_template: |
+        Chào bạn,
+
+        Đây là tin nhắn tự động gửi từ %{site_name} để thông báo rằng tài khoản của bạn đã bị chặn bởi BQT.
+
+        Xin lưu ý rằng bạn sẽ không thể gửi trả lời hoặc tạo chủ đề mới cho đến khi được gỡ bỏ bởi BQT.
+
+        Nếu bạn có thắc mắc liên quan đến việc chặn này, xin hãy liên hệ với BQT [nhân viên quản trị](%{base_url}/about).
+
+        Để được hướng dẫn thêm, vui lòng tham khảo [nguyên tắc cộng đồng](%{base_url}/guidelines).
+    user_automatically_blocked:
+      subject_template: "Tài khoản mới %{username} đã bị chặn do cộng đồng gắn cờ"
+      text_body_template: |
+        Đây là tin nhắn tự động.
+
+        Tài khoản mới [%{username}](%{user_url}) đã được tự động chặn do nhiều thành viên đã gắn cờ các bài viết của %{username}.
+
+        Hãy [xem lại các cờ](%{base_url}/admin/flags). Nếu %{username} không đáng bị chặn gửi bài, click nút gỡ bỏ trên [trang quản trị thành viên](%{user_url}).
+
+        Ngưỡng này có thể thay đổi trong thiết lập `block_new_user` của website.
+    spam_post_blocked:
+      subject_template: "Các bài viết của tài khoản mới %{username} đã bị chặn do lặp đi lặp lại các liên kết"
+      text_body_template: |
+        Đây là tin nhắn tự động.
+
+        Tài khoản mới [%{username}](%{user_url}) đã nhiều lần tạo bài viết chứa các liên kết tới %{domains}, nhưng những bài viết này đã bị chặn để tránh spam. Thành viên vẫn có thể tạo bài viết mới mà không liên kết tới %{domains}.
+
+        Hãy [xem xét thành viên](%{user_url}).
+
+        Có thể thay đổi điều này trong thiết lập `newuser_spam_host_threshold` và `white_listed_spam_host_domains` của website.
     unblocked:
       subject_template: "Tài khoản được mở khóa"
+      text_body_template: |
+        Chào bạn,
+
+        Đây là tin nhắn tự động gửi từ %{site_name} để thông báo rằng tài khoản của bạn đã được gỡ bỏ chặn sau khi được BQT xem xét.
+
+        Giờ đây bạn có thể gửi trả lời và tạo bài viết như cũ.
     pending_users_reminder:
       subject_template:
         other: "%{count} thành viên đang chờ duyệt"
+      text_body_template: |
+        Có tài khoản mới đăng ký đang chờ duyệt (hoặc từ chối) trước khi họ có thể truy cập diễn đàn.
+
+        [Hãy xem xét họ trong khu vực admin](%{base_url}/admin/users/list/pending).
+    download_remote_images_disabled:
+      subject_template: "Download ảnh từ xa đã bị vô hiệu"
+      text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
+    dashboard_problems:
+      subject_template: "Vấn đề đã được tìm thấy"
+      text_body_template: |
+        Một số vấn đề đang được báo cáo trên bảng điều khiển admin của bạn.
+
+        [Hãy xem xét và sửa chữa](%{base_url}/admin).
+  unsubscribe_link: |
+    Để ngừng nhận thông báo cho chủ đề này, bạn hãy [click vào đây](%{unsubscribe_url}). Để hủy nhận tin từ những email này, hãy thay đổi [thiết lập người dùng](%{user_preferences_url}) của bạn
+  unsubscribe_via_email_link: |
+    hoặc, [click vào đây](mailto:reply@%{hostname}?subject=unsubscribe) để hủy nhận tin qua email.
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Các trả lời trước"
+    reached_limit:
+      other: "LƯU Ý: bạn đã đạt đến giới hạn %{count} email được gửi mỗi ngày. Thêm nữa, các email thông báo sẽ tiếp tục bị chặn."
+    in_reply_to: "Trong Trả Lời Tới"
     unsubscribe:
       title: "Bỏ theo dõi"
       description: "Bạn không thích nhận mail giống mail này? Nhấn vào bỏ theo dõi để bỏ đăng ký ngay lập tức:"
+    reply_by_email: "[Xem chủ đề](%{base_url}%{url}) hoặc trả lời email này để phản hồi"
+    reply_by_email_pm: "[Xem tin nhắn](%{base_url}%{url}) hoặc trả lời email này để phản hồi"
+    only_reply_by_email: "Trả lời email này để phản hồi"
+    visit_link_to_respond: "[Xem chủ đề](%{base_url}%{url}) để phản hồi"
+    visit_link_to_respond_pm: "[Xem tin nhắn](%{base_url}%{url}) để phản hồi"
     posted_by: "Đăng bởi %{{username} ngày %{post_date}"
+    invited_to_private_message_body: |
+      %{username} mời bạn xem
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      tại
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} mời bạn thảo luận
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      tại
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} mời bạn trả lời thông điệp '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        ---
+        %{respond_instructions}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} mời bạn xem '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        ---
+        %{respond_instructions}
+    user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} mời bạn xem '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_linked:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+
+        ---
+        %{respond_instructions}
     digest:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
       subject_template: "[%{site_name}] Tóm tắt"
       new_activity: "Hoạt động mới ở chủ đề và bài viết của bạn:"
       top_topics: "Bài viết phổ biến"
       other_new_topics: "Chủ đề phổ biến"
+      unsubscribe: "Tập san này được gửi từ %{site_link} khi chúng tôi đã không thấy bạn trong thời gian dài. Để hủy nhận tin xin hãy click %{unsubscribe_link}."
       click_here: "bấm vào đây"
       from: "%{site_name} tóm tắt"
       read_more: "Đọc Tiếp"
@@ -1081,17 +1826,90 @@ vi:
       more_topics_category: "Thêm chủ đề mới:"
     forgot_password:
       subject_template: "[%{site_name}] Đặt lại mật khẩu"
+      text_body_template: |
+        Có người đã yêu cầu được đặt lại mật khẩu của bạn trên [%{site_name}](%{base_url}).
+
+        Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.
+
+        Click vào liên kết sau để chọn mật khẩu mới:
+        %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Đặt Mật khẩu"
+      text_body_template: |
+        Có người đã yêu cầu thêm mật khẩu vào tài khoản của bạn trên [%{site_name}](%{base_url}). Ngoài ra, bạn có thể đăng nhập sử dụng bất kỳ dịch vụ trực tuyến nào hỗ trợ (Google, Facebook,...) được liên kết với địa chỉ email này.
+
+        Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.
+
+        Click vào liên kết sau để chọn mật khẩu mới:
+        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Đăng nhập"
+      text_body_template: |
+        Có người đã yêu cầu đăng nhập vào tài khoản của bạn trên [%{site_name}](%{base_url}).
+
+        Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.
+
+        Click liên kết sau để đăng nhập:
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Tài khoản mới"
+      text_body_template: |
+        Tài khoản mới cho bạn trên %{site_name} đã được tạo
+
+        Click liên kết sau để chọn mật khẩu cho tài khoản của bạn:
+        %{base_url}/users/password-reset/%{email_token}
+    confirm_new_email:
+      subject_template: "[%{site_name}] Xác nhận địa chỉ email mới của bạn"
+      text_body_template: |
+        Xác nhận địa chỉ email mới của bạn trên %{site_name} bằng cách click liên kết sau:
+
+        %{base_url}/users/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] Xác nhận địa chỉ email hiện tại của bạn"
+      text_body_template: |
+        Trước khi thay đổi địa chỉ email của bạn, chúng tôi cần xác nhận rằng bạn kiểm soát địa chỉ email của tài khoản hiện tại. Sau khi hoàn thành bước này, bạn có thể xác nhận địa chỉ email mới.
+
+        Xác nhận địa chỉ email hiện tại của bạn trên %{site_name} bằng cách click liên kết sau:
+
+        %{base_url}/users/authorize-email/%{email_token}
+    notify_old_email:
+      subject_template: "[%{site_name}] Địa chỉ email của bạn đã được thay đổi"
+      text_body_template: |
+        Đây là tin nhắn tự động để thông báo rằng địa chỉ email của bạn trên %{site_name} đã được thay đổi. Nếu điều này là không đúng, xin hãy liên hệ với BQT.
+
+        Địa chỉ email của bạn được đổi thành:
+
+        %{new_email}
     signup_after_approval:
       subject_template: "Bạn đã được kiểm duyệt ở %{site_name}!"
+      text_body_template: |
+        Chào mừng bạn tham gia %{site_name}!
+
+        BQT đã chấp nhận tài khoản của bạn trên %{site_name}.
+
+        Click liên kết sau để xác nhận và kích hoạt tài khoản của bạn:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Nếu bạn không thể click liên kết trên, hãy thử sao chép và dán vào thanh địa chỉ của trình duyệt web.
+
+        %{new_user_tips}
+
+        Chúng tôi tin rằng bạn sẽ cùng chúng tôi hướng tới một cộng đồng văn minh [quy tắc ứng xử văn minh](%{base_url}/guidelines).
+
+        Chúc vui vẻ!
+
+        (Nếu bạn cần liên hệ với BQT [nhân viên quản trị](%{base_url}/about), bạn có thể gửi trả lời tin nhắn này).
     signup:
       subject_template: "[%{site_name}] Xác nhận tài khoản mới của bạn"
+      text_body_template: |
+        Chào mừng bạn tham gia %{site_name}!
+
+        Click liên kết sau để xác nhận và kích hoạt tài khoản của bạn:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Nếu bạn không thể click liên kết trên, hãy thử sao chép và dán vào thanh địa chỉ của trình duyệt web.
   page_not_found:
+    title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
     popular_topics: "Phổ biến"
     recent_topics: "Gân đây"
     see_more: "Thêm"
@@ -1116,6 +1934,11 @@ vi:
     images:
       too_large: "Xin lỗi, hình bạn tải lên quá lớn (kích thước tối đa %{max_size_kb}KB), Vui lòng chỉnh lại kích thước và thử lại."
       size_not_found: "Xin lỗi, không thể xác định kích thước hình. Có thể hình của bạn bị lỗi?"
+  avatar:
+    missing: "Xin lỗi, chúng tôi không thể tìm thấy avatar liên kết với email đó. Bạn có thể thử upload lại một lần nữa?"
+  flag_reason:
+    sockpuppet: "Một tài khoản mới vừa tạo một chủ đề, và một tài khoản mới có cùng địa chỉ IP cũng vừa gửi trả lời. Hãy xem lại thiết lập flag_sockpuppets của website."
+    spam_hosts: "Tài khoản mới này đã tạo nhiều bài viết với các liên kết tới cùng một tên miền. Hãy xem lại thiết lập newuser_spam_host_threshold của website."
   email_log:
     no_user: "không tìm thấy người dùng với id %{user_id}"
     anonymous_user: "Người dùng là nặc danh"
@@ -1127,6 +1950,7 @@ vi:
     post_deleted: "bài viết đã bị xóa bởi tác giả"
     user_suspended: "người dùng đã bị tạm khóa"
     already_read: "người dùng đã đọc  bài viết này"
+    exceeded_limit: "Vượt quá max_emails_per_day_per_user"
     message_blank: "tin nhắn rỗng"
     message_to_blank: "message.to rỗng"
     text_part_body_blank: "text_part.body rỗng"
@@ -1140,19 +1964,347 @@ vi:
   csv_export:
     boolean_yes: "Đồng ý"
     boolean_no: "Không"
+  static_topic_first_reply: |
+    Sửa bài viết đầu tiên trong chủ đề này để thay đổi nội dung của trang %{page_name}.
   guidelines_topic:
     title: "FAQ/Hướng dẫn"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Đây Là Một Cộng Đồng Thảo Luận Văn Minh](#civilized)
+
+      Hãy thể hiện nếp sống văn minh ở cộng đồng này.  Đây là một cộng đồng chia sẻ &mdash; kỹ năng, sự hiểu biết và sở thích thông qua đối thoại.
+
+      Đây không phải là những quy tắc cứng nhắc, mà chỉ là những quy tắc được dùng để đánh giá. Bạn hãy sử dụng các hướng dẫn này để giúp giữ vững một cộng đồng lành mạnh, văn minh.
+
+      <a name="improve"></a>
+
+      ## [Nâng Cao Thảo Luận](#improve)
+
+      Các chủ đề thảo luận ở đây là quan trọng với chúng tôi, và chúng tôi cũng muốn bạn coi đó là quan trọng. Hãy tôn trọng nội dung chủ đề và những người cùng tham gia thảo luận, ngay cả khi bạn không đồng ý với những gì đang thảo luận.
+
+      Một cách để thảo luận là khám phá những gì đã xảy ra, hãy dành một chút thời gian duyệt xem các bài viết trước khi bạn gửi bài viết của mình.
+
+      <a name="agreeable"></a>
+
+      ## [Hãy Thoải Mái, Ngay Cả Khi Bạn Không Đồng Ý](#agreeable)
+
+      Bạn có thể muốn trả lời một cái gì đó bởi không đồng ý, đó là điều tốt. Nhưng hãy nhớ không được chỉ trích quan điểm của người khác. Hãy tránh:
+
+      *   Chửi rủa.
+      *   Chống đối nhau.
+      *   Đối phó với giọng điệu của bài viết thay vì nội dung thực của bài viết.
+      *   Sự mâu thuẫn.
+
+      Thay vào đó, bạn hãy cung cấp lập luận để cải thiện cuộc trò chuyện.
+
+      <a name="participate"></a>
+
+      ## [Đếm Sự Tham Gia Của Bạn](#participate)
+
+      Discourse cung cấp các công cụ để giúp cộng đồng xác định đóng góp tốt nhất (cũng như tồi nhất): yêu thích, đánh dấu, gắn cờ, trả lời, sửa,... Các công cụ này được sử dụng để cải thiện kinh nghiệm của riêng bạn, và của mọi người khác.
+
+      <a name="flag-problems"></a>
+
+      ## [Nếu Bạn Thấy Có Vấn Đề, Hãy Đánh Dấu](#flag-problems)
+
+      Khi bạn nhìn thấy một hành vi xấu, đừng trả lời, hãy gắn cờ nó. Nếu đủ cờ tích luỹ, hành động sẽ được thực hiện, hoặc là tự động hoặc bằng cách can thiệp điều tiết.
+
+      Để duy trì cộng đồng, BQT có quyền loại bỏ bất cứ nội dung nào cũng như bất kỳ tài khoản người dùng nào vì bất cứ lý do và bất cứ lúc nào. BQT không chịu trách nhiệm cho bất kỳ nội dung nào được đăng bởi cộng đồng.
+
+      <a name="be-civil"></a>
+
+      ## [Tuân Thủ Pháp Luật](#be-civil)
+
+      Không có gì phá hoại một cuộc trò chuyện mạnh bằng sự thô lỗ:
+
+      *   Hãy lịch sự: không đăng bất cứ điều gì mà người khác coi là sự xúc phạm, lăng mạ, hay thù hận.
+      *   Giữ sạch sẽ: không đăng bất cứ điều gì khiêu dâm hay đồi trụy.
+      *   Tôn trọng lẫn nhau: không quấy rối hoặc làm người khác bực, mạo danh, hoặc lộ thông tin cá nhân của họ.
+      *   Tôn trọng diễn đàn: không spam hoặc phá hoại diễn đàn.
+
+      Đây là một diễn đàn công khai, các nội dung ở đây có thể được các công cụ tìm kiếm tìm thấy. Bạn hãy tự bảo vệ ngôn từ, liên kết, và hình ảnh an toàn cho gia đình và bạn bè của mình.
+
+      <a name="keep-tidy"></a>
+
+      ## [Sạch Sẽ, Gọn Gàng](#keep-tidy)
+
+      Hãy nỗ lực để đưa mọi thứ vào đúng chỗ để chúng ta có thể có nhiều thời gian thảo luận hơn, vì thế:
+
+      *   Không tạo chủ đề sai chuyên mục.
+      *   Không gửi cùng một bài trong nhiều chuyên mục khác nhau.
+      *   Không gửi bài viết chưa có nội dung.
+      *   Không chuyển hướng một chủ đề bằng cách thay đổi nó giữa dòng.
+      *   Không ký vào bài viết của bạn &mdash; và tất cả các bài viết khác có chứa thông tin hồ sơ của bạn trong đó.
+
+      Thay vì gửi bài viết có nội dung là “+1” hoặc “Đồng ý!”, hãy sử dụng nút Like.
+
+      <a name="stealing"></a>
+
+      ## [Chỉ Gửi Những Gì Bạn Có](#stealing)
+
+      Bạn không được gửi bất cứ nội dung nào thuộc về người khác mà không được phép. Bạn không được gửi thông tin mô tả, đường dẫn, hoặc các phương pháp để ăn cắp tài sản trí tuệ của một ai đó (phần mềm, video, âm thanh, hình ảnh...), hoặc vi phạm pháp luật khác.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Website này được điều hành bởi [nhóm điều hành](/about) và *bạn*, trong một cộng đồng. Nếu bạn có bất kỳ thắc mắc nào, hãy tạo chủ đề mới trong [chuyên mục phản hồi](/c/site-feedback) và thảo luận với chúng tôi! Nếu có một vấn đề quan trọng, cấp bách cần xử lý ngay, hãy liên hệ với chúng tôi qua [trang nhân viên](/about).
+
+      <a name="tos"></a>
+
+      ## [Quy Định Sử Dụng](#tos)
+
+      Chúng tôi có mục [Quy Định Sử Dụng](/tos) mô tả hành vi bạn (và chúng tôi) phải thực hiện liên quan đến nội dung, bảo mật, quyền riêng tư, và pháp luật. Để sử dụng dịch vụ này, bạn phải đồng ý với các quy định của chúng tôi [TOS](/tos).
   tos_topic:
     title: "Điều khoản Dịch vụ"
   privacy_topic:
     title: "Chính sách Riêng tư"
+  static:
+    search_help: |
+      <h3>Lời khuyên</h3>
+      <p>
+      <ul>
+        <li>Tiêu đề chính xác được ưu tiên &ndash; tìm theo tiêu đề</li>
+        <li>Độc đáo, các từ không phổ biến sẽ cho ra kết quả tốt nhất</li>
+        <li>Hãy thử tìm kiếm trong chuyên mục, chủ đề, hoặc tài khoản cụ thể</li>
+      </ul>
+      </p>
+      <h3>Tùy chọn</h3>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td></td></tr>
+        <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
+        </table>
+      </p>
+      <h3>Ví dụ</h3>
+      <p>
+        <ul>
+          <li><code>rainbows category:parks status:open order:latest</code> sẽ tìm kiếm các chủ đề có chứa từ "rainbows" trong chuyên mục "parks" mà không bị đóng hoặc được lưu trữ, sắp xếp thứ tự theo ngày cuối cùng trả lời.</li>
+          <li><code>rainbows category:"parks and gardens" in:bookmarks</code> sẽ tìm kiếm các chủ đề có chứa từ "rainbows" trong chuyên mục "parks and gardens" mà được bạn đánh dấu.</li>
+        </ul>
+      </p>
+  badges:
+    editor:
+      name: Biên tập
+      description: Sửa lần đầu
+      long_description: |
+        Huy hiệu này được trao lần đầu tiên khi bạn chỉnh sửa một trong những bài viết của mình. Chỉnh sửa luôn luôn là một ý tưởng tốt — bạn có thể cải thiện bài viết của mình, sửa chữa những lỗi nhỏ, hoặc thêm bất cứ điều gì còn thiếu. Chỉnh sửa có thể làm cho bài viết của bạn thậm chí còn tốt hơn!
+    basic_user:
+      name: Cơ bản
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Các cấp</a> chức năng cần thiết của cộng đồng
+      long_description: |
+        Huy hiệu này được cấp khi bạn đạt cấp độ tin cậy 1. Cám ơn bạn đã nán lại một chút đọc một vài chủ đề để tìm hiểu về cộng đồng của chúng tôi. Hạn chế đối với thành viên mới của bạn đã được dỡ bỏ; bạn đã được cấp tất cả các khả năng cần thiết của cộng đồng, chẳng hạn như tin nhắn cá nhân, gắn cờ, chỉnh sửa wiki, và khả năng gửi nhiều ảnh và liên kết.
+    member:
+      name: Thành viên
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Các cấp</a> lời mời, nhắn tin nhóm, và thêm lượt like
+      long_description: |
+        Huy hiệu này được cấp khi bạn đạt cấp độ tin cậy 2. Cám ơn bạn đã tham gia trong một thời gian vài tuần để thực sự gia nhập cộng đồng của chúng tôi. Bây giờ bạn có thể gửi lời mời từ trang tài khoản hay tạo chủ đề cá nhân, tạo nhóm tin nhắn cá nhân, và có thể thêm một vài lượt like mỗi ngày.
+    regular:
+      name: Thường xuyên
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Cấp độ</a> phân hạng, đổi tên, theo đuôi liên kết, wiki, và thêm lượt like
+      long_description: |
+        Huy hiệu này được cấp khi bạn đạt cấp độ tin cậy 3. Cám ơn bạn đã tham gia cộng đồng của chúng tôi trong thời gian vài tháng. Bây giờ bạn đã là một trong những độc giả tích cực nhất, và là một đóng góp tin cậy giúp cho cộng đồng của chúng tôi tuyệt vời hơn. Bây giờ bạn có thể phân loại và đổi tên chủ đề, tận dụng lợi thế để gắn cờ spam mạnh mẽ hơn, truy cập vào một khu vực phòng riêng, và bạn cũng có thể nhận được nhiều lượt like hơn mỗi ngày.
+    leader:
+      name: Lãnh đạo
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Cấp độ</a> sửa toàn trang, ghim, đóng, lưu trữ, tách và hợp nhất, và thêm lượt like
+      long_description: |
+        Huy hiệu này được cấp khi bạn đạt cấp độ tin cậy 4. Bạn là một nhà lãnh đạo trong cộng đồng theo sự lựa chọn của BQT, bạn là một ví dụ về sự tích cực cho phần còn lại của cộng đồng trong hành động và lời nói. Bạn có khả năng chỉnh sửa tất cả các bài viết, thực hiện hành động quản trị như ghim, đóng, lưu trữ, tách và hợp nhất, và bạn có thể có hàng ngàn lượt like mỗi ngày.
+    welcome:
+      name: Chào mừng
+      description: Đã nhận 1 like
+      long_description: |
+        Huy hiệu này được cấp khi bạn nhận được like đầu tiên. Xin chúc mừng, bạn đã đăng nội dung mà các thành viên của cộng đồng cảm thấy thú vị, hấp dẫn, hoặc có ích!
+    autobiographer:
+      name: Tự truyện
+      description: Điền thông tin vào <a href="/my/preferences">hồ sơ</a>
+      long_description: |
+        Huy hiệu này được cấp khi bạn điền thông tin vào <a href="/my/preferences">hồ sơ thành viên</a> và chọn một ảnh cá nhân. Cho cộng đồng biết thêm một chút về bạn và những gì bạn quan tâm, qua đó làm cho cộng đồng tốt hơn, kết nối hơn. Tham gia cùng chúng tôi!
+    anniversary:
+      name: Ngày kỷ niệm
+      description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã là thành viên của cộng đồng trong một năm và gửi ít nhất một bài trong năm đó. Cám ơn bạn đã nán lại và đóng góp cho cộng đồng của chúng tôi. Chúng tôi không thể làm điều đó mà không có bạn.
+    nice_post:
+      name: Trả Lời Hay
+      description: Nhận được 10 like cho một trả lời
+      long_description: |
+        Huy hiệu này được cấp khi trả lời của bạn nhận được 10 like. Trả lời của bạn thực sự đã gây ấn tượng đối với cộng đồng và giúp đưa các cuộc hội thoại tiến lên trước!
+    good_post:
+      name: Trả Lời Tốt
+      description: Nhận được 25 like cho một trả lời
+      long_description: |
+        Huy hiệu này được cấp khi trả lời của bạn nhận được 25 like. Trả lời của bạn rất đặc biệt và làm cho các cuộc hội thoại tốt hơn nhiều cho tất cả mọi người!
+    great_post:
+      name: Trả Lời Tuyệt Vời
+      description: Nhận được 50 like cho một trả lời
+      long_description: |
+        Huy hiệu này được cấp khi trả lời của bạn nhận được 50 like. Tuyệt vời! Trả lời của bạn là cảm hứng, hấp dẫn, vui nhộn, hoặc sâu sắc và cộng đồng yêu thích nó.
+    nice_topic:
+      name: Chủ Đề Hay
+      description: Nhận được 10 like cho một chủ đề
+      long_description: |
+        Huy hiệu này được cấp khi chủ đề của bạn nhận được 10 like. Bạn đã bắt đầu một cuộc trò chuyện thú vị mà cộng đồng rất thích!
+    good_topic:
+      name: Chủ Đề Tốt
+      description: Nhận được 25 like cho một chủ đề
+      long_description: |
+        Huy hiệu này được cấp khi chủ đề của bạn nhận được 25 like. Bạn đã phát động một cuộc trò chuyện sôi nổi và cộng đồng yêu thích nó!
+    great_topic:
+      name: Chủ Đề Tuyệt Vời
+      description: Nhận được 50 like cho một chủ đề
+      long_description: |
+        Huy hiệu này được cấp khi chủ đề của bạn nhận được 50 like. Bạn đã phát động một cuộc trò chuyện thú vị và được cộng đồng hưởng ứng thảo luận sôi nổi!
+    nice_share:
+      name: Chia Sẻ Hay
+      description: Chia sẻ một bài viết có 25 lượt truy cập
+      long_description: |
+        Huy hiệu này được cấp khi liên kết chia sẻ của bạn nhận được 25 lượt truy cập. Cám ơn bạn đã giúp lan tỏa các cuộc thảo luận của cộng đồng.
+    good_share:
+      name: Chia Sẻ Tốt
+      description: Chia sẻ một bài viết có 300 lượt truy cập
+      long_description: |
+        Huy hiệu này được cấp khi liên kết chia sẻ của bạn nhận được 300 lượt truy cập. Làm tốt lắm! Bạn đã thu hút những người mới tham gia thảo luận và giúp cộng đồng phát triển.
+    great_share:
+      name: Chia Sẻ Tuyệt Vời
+      description: Chia sẻ một bài viết có 1000 lượt truy cập
+      long_description: |
+        Huy hiệu này được cấp khi liên kết chia sẻ của bạn nhận được 1000 lượt truy cập. Tuyệt vời! Bạn đã thúc đẩy một cuộc thảo luận thú vị cho một lượng lớn độc giả, và giúp chúng tôi phát triển cộng đồng theo số lớn!
+    first_like:
+      name: Like Đầu Tiên
+      description: Đã like một bài viết
+      long_description: |
+        Huy hiệu này được cấp cho lần đầu tiên bạn like một bài đăng bằng sử dụng nút :heart:. Like bài viết là một cách tuyệt vời để cho các thành viên của cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ tình yêu!
+    first_flag:
+      name: Gắn Cờ Đầu Tiên
+      description: Đã gắn cờ một bài viết
+      long_description: |
+        Huy hiệu này được cấp cho lần đầu tiên bạn gắn cờ một bài viết. Gắn cờ là cách chúng ta làm để giúp nơi này sạch sẽ cho tất cả mọi người. Nếu bạn nhận thấy bất kỳ một bài viết nào cần BQT chú ý xem xét, đừng ngần ngại gắn cờ. Bạn cũng có thể gắn cờ để gửi <b>tin nhắn riêng</b> cho thành viên khác, nếu bạn thấy có vấn đề với bài của họ. Nếu bạn thấy một nguy cơ thực sự, hãy gắn cờ đen :flag_black: vào đó!
+    promoter:
+      name: Người Khởi Xướng
+      description: Đã mời 1 người dùng
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã mời 1 người tham gia cộng đồng thông qua nút mời trên trang tài khoản của bạn, hoặc nút mời ở dưới cùng của chủ đề. Mời bạn bè tham gia thảo luận là một cách tuyệt vời để giới thiệu những người mới đến với cộng đồng, cám ơn bạn!
+    campaigner:
+      name: Người Vận Động
+      description: Đã mời 3 người dùng
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã mời 3 người và những người này đã trở thành những người dùng cơ bản. Một cộng đồng sôi động cần có người truyền cảm hứng cho những người mới tham gia, qua đó bổ sung thêm làn gió mới cho các cuộc hội thoại.
+    champion:
+      name: Quán Quân
+      description: Đã mời 5 thành viên
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã mời 5 người và sau đó những người này đã trở thành thành viên chính thức. Tuyệt vời! Cám ơn bạn đã mở rộng sự đa dạng của cộng đồng đến với các thành viên mới!
+    first_share:
+      name: Chia Sẻ Đầu Tiên
+      description: Chia sẻ 1 bài viết
+      long_description: |
+        Huy hiệu này được cấp cho lần đầu tiên bạn chia sẻ liên kết một bài trả lời hoặc một chủ đề bằng cách sử dụng nút chia sẻ. Chia sẻ liên kết là cách tuyệt vời để chia sẻ các cuộc thảo luận thú vị với phần còn lại của Thế Giới và giúp phát triển cộng đồng.
+    first_link:
+      name: Liên Kết Đầu Tiên
+      description: Đã thêm 1 liên kết tới chủ đề khác
+      long_description: |
+        Huy hiệu này được cáp cho lần đầu tiên bạn thêm một liên kết tới một chủ đề khác. Liên kết chủ đề giúp độc giả tìm thấy thú vị liên quan trong hội thoại, bằng cách hiển thị kết nối giữa các chủ đề theo cả hai hướng. Thoải mái liên kết!
+    first_quote:
+      name: Trích Dẫn Đầu Tiên
+      description: Trích dẫn một bài viết
+      long_description: |
+        Huy hiệu này được trao cho lần đầu tiên bạn trích dẫn trong một bài trả lời của bạn. Trích dẫn các phần có liên quan trong trả lời của bạn sẽ giúp cho các cuộc thảo luận tập trung vào chủ đề. Điều đó thật dễ dàng: bạn có thể nhanh chóng trích dẫn bằng cách nêu bật một phần bất kỳ của bài viết nào và sử dụng nút Trích Dẫn Trả Lời xuất hiện ở gần vùng chọn. Trích dẫn thoải mái!
+    read_guidelines:
+      name: Xem hướng dẫn
+      description: Xem <a href="/guidelines">nguyên tắc cộng đồng</a>
+      long_description: |
+        Huy hiệu này được cấp khi bạn xem <a href="/guidelines">nguyên tắc cộng đồng</a>. Xem và làm theo những nguyên tắc này sẽ giúp bạn cùng chúng tôi xây dựng một cộng đồng an toàn, bền vững, và đem lại nhiều niềm vui cho tất cả mọi người!
+    reader:
+      name: Người xem
+      description: Đọc từng trả lời trong một chủ đề có hơn 100 trả lời
+      long_description: |
+        Huy hiệu này được cấp cho lần đầu tiên bạn đọc một chủ đề dài với hơn 100 trả lời. Theo dõi sát sao một cuộc hội thoại giúp bạn hiểu được những quan điểm khác nhau, và giúp cho cuộc trò chuyện thú vị hơn. Bạn càng đọc, càng trò chuyện được tốt hơn. :slight_smile:
+    popular_link:
+      name: Liên kết phổ biến
+      description: Đăng một liên kết ngoài được 50 click
+      long_description: |
+        Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 50 click. Cám ơn bạn đã đăng một liên kết hữu ích!
+    hot_link:
+      name: Liên kết hấp dẫn
+      description: Đăng một liên kết ngoài được 300 click
+      long_description: |
+        Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 300 click. Cám ơn đã đăng một liên kết hấp dẫn giúp kéo cuộc trò chuyện về phía trước!
+    famous_link:
+      name: Liên kết nổi tiếng
+      description: Đăng một liên kết ngoài được 1000 click
+      long_description: |
+        Huy hiệu này được cấp khi một liên kết mà bạn chia sẻ được 1000 click. Tuyệt vời! Bạn đã gửi một liên kết cải thiện đáng kể cuộc hội thoại bằng cách bổ sung chi tiết, bối cảnh và thông tin. Làm tốt lắm!
+    appreciated:
+      name: Được đánh giá cao
+      description: Nhận được 1 like cho 20 bài viết
+      long_description: |
+        Huy hiệu này được cấp khi bạn nhận được ít nhất 1 like cho 20 bài viết khác nhau. Cộng đồng thích thú với các đóng góp của bạn trong các cuộc đối thoại!
+    respected:
+      name: Được tôn trọng
+      description: Nhận được 2 like cho 100 bài viết
+      long_description: |
+        Huy hiệu này được cấp khi bạn nhận được ít nhất 2 like cho 100 bài viết khác nhau. Cộng đồng đang hướng tới tôn trọng những đóng góp của bạn trong các cuộc đối thoại.
+    admired:
+      name: Được ngưỡng mộ
+      description: Nhận được 5 like cho 300 bài viết
+      long_description: |
+        Huy hiệu này được cấp khi bạn nhận được ít nhất 5 like cho 300 bài viết khác nhau. Tuyệt vời! Cộng đồng rất ngưỡng mộ các đóng góp thường xuyên có chất lượng cao của bạn trong các cuộc đối thoại.
+    out_of_love:
+      name: Vì yêu thích
+      description: Sử dụng 50 like trong 1 ngày
+      long_description: |
+        Huy hiệu này được cấp khi bạn sử dụng tất cả 50 lượt like hàng ngày của bạn. Ghi nhớ một chút các bài viết mà bạn xem và khuyến khích các thành viên cộng đồng tạo ra các cuộc thảo luận lớn hơn trong tương lai.
+    higher_love:
+      name: Thích nhiều hơn
+      description: Sử dụng 50 like một ngày trong 5 ngày
+      long_description: |
+        Huy hiệu này được cấp khi bạn sử dụng 50 lượt like một ngày trong 5 ngày liên tiếp. Cám ơn bạn đã dành thời gian để khuyến khích các cuộc hội thoại tốt nhất mỗi ngày!
+    crazy_in_love:
+      name: Thích nhiệt tình
+      description: Sử dụng 50 like một ngày trong 20 ngày
+      long_description: |
+        Huy hiệu này được cấp khi bạn sử dụng 50 lượt like một ngày trong 20 ngày liên tiếp. Tuyệt vời! Bạn là một tấm gương thường xuyên khuyến khích các thành viên trong cộng đồng!
+    thank_you:
+      name: Cám ơn bạn
+      description: Nhận được 20 like và đã like 10 lần
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã nhận được 20 like cho các bài viết của mình và đã like 10 lần hoặc hơn các bài viết khác. Khi ai đó like bài viết của bạn, bạn tìm thấy lúc để like những gì người khác đăng lại.
+    gives_back:
+      name: Tặng lại
+      description: Nhận được 100 like và đã like 100 lần
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã nhận được 100 like và đã like 100 lần hoặc hơn các bài viết khác. Cám ơn bạn đã cho đi để nhận lại yêu thương!
+    empathetic:
+      name: Cảm thông
+      description: Nhận được 500 like và đã like 1000 lần
+      long_description: |
+        Huy hiệu này được cấp khi bạn đã nhận được 500 like và đã like 1000 lần hoặc hơn các bài viết khác. Tuyệt vời! Bạn là mẫu người quảng đại và đầy yêu thương :two_hearts:.
+    first_emoji:
+      name: Emoji đầu tiên
+      description: Sử dụng Emoji trong bài viết
+      long_description: |
+        Huy hiệu này được cấp khi bạn thêm một biểu tượng Emoji vào bài đăng :heart:
+    first_mention:
+      name: Đề cập đầu tiên
+      description: Đề cập một thành viên trong bài viết
+      long_description: Huy hiệu này được cấp khi bạn đề cập @mention một thành viên trong bài viết của bạn. @mentions cho phép bạn gửi thông báo cho các thành viên khác trong diễn đàn.
   admin_login:
     success: "Gửi mail lỗi"
     error: "Lỗi!"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
+  discourse_hub:
+    access_token_problem: "Dành cho admin: Hãy cập nhật đúng discourse_org_access_key trong thiết lập website."
   performance_report:
+    initial_post_raw: Chủ đề này bao gồm các báo cáo hiệu suất hàng ngày của website.
     initial_topic_title: Báo cáo hiệu suất website
+  topic_invite:
+    user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
   time:
     <<: *datetime_formats
   activemodel:

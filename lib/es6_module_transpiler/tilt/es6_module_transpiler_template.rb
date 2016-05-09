@@ -29,7 +29,8 @@ module Tilt
     end
 
     def self.create_new_context
-      ctx = V8::Context.new(timeout: 10000)
+      # timeout any eval that takes longer than 15 seconds
+      ctx = V8::Context.new(timeout: 15000)
       ctx.eval("var self = this; #{File.read(Babel::Transpiler.script_path)}")
       ctx.eval("module = {}; exports = {};");
       ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")

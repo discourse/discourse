@@ -7,6 +7,7 @@ const MAX_GUTTER_LINKS = 5;
 
 export default createWidget('post-gutter', {
   tagName: 'div.gutter',
+  buildKey: (attrs) => `post-gutter-${attrs.id}`,
 
   defaultState() {
     return { collapsed: true };

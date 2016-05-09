@@ -23,6 +23,10 @@
               {{category-chooser valueAttribute="id" value=buffered.category_id source=buffered.category_id}}
             {{/if}}
 
+            {{#if canEditTags}}
+              {{tag-chooser tags=buffered.tags}}
+            {{/if}}
+
             {{plugin-outlet "edit-topic"}}
 
             {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
@@ -251,6 +255,16 @@
         {{d-button action="toggleVisibility" icon="eye" label="topic.actions.visible"}}
       {{/if}}
     </li>
+
+    {{#if currentUser.staff}}
+      <li class="topic-admin-convert">
+        {{#if model.isPrivateMessage}}
+          {{d-button action="convertToPublicTopic" icon="comment" label="topic.actions.make_public"}}
+        {{else}}
+          {{d-button action="convertToPrivateMessage" icon="envelope" label="topic.actions.make_private"}}
+        {{/if}}
+      </li>
+    {{/if}}
 
     {{plugin-outlet "topic-admin-menu-buttons"}}
   {{/popup-menu}}

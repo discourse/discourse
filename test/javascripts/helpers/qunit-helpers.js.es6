@@ -2,7 +2,8 @@
 
 import sessionFixtures from 'fixtures/session-fixtures';
 import siteFixtures from 'fixtures/site-fixtures';
-import HeaderView from 'discourse/views/header';
+import HeaderComponent from 'discourse/components/site-header';
+import { forceMobile, resetMobile } from 'discourse/lib/mobile';
 
 function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
@@ -36,17 +37,23 @@ var oldAvatar = Discourse.Utilities.avatarImg;
 
 function acceptance(name, options) {
   module("Acceptance: " + name, {
-    setup: function() {
+    setup() {
+      resetMobile();
+
       // Don't render avatars in acceptance tests, it's faster and no 404s
       Discourse.Utilities.avatarImg = () => "";
 
       // For now don't do scrolling stuff in Test Mode
-      HeaderView.reopen({examineDockHeader: Ember.K});
+      HeaderComponent.reopen({examineDockHeader: Ember.K});
 
-      var siteJson = siteFixtures['site.json'].site;
+      const siteJson = siteFixtures['site.json'].site;
       if (options) {
         if (options.setup) {
           options.setup.call(this);
+        }
+
+        if (options.mobileView) {
+          forceMobile();
         }
 
         if (options.loggedIn) {
@@ -65,7 +72,7 @@ function acceptance(name, options) {
       Discourse.reset();
     },
 
-    teardown: function() {
+    teardown() {
       if (options && options.teardown) {
         options.teardown.call(this);
       }

@@ -61,6 +61,7 @@ createWidget('action-link', {
 
 createWidget('actions-summary-item', {
   tagName: 'div.post-action',
+  buildKey: (attrs) => `actions-summary-item-${attrs.id}`,
 
   defaultState() {
     return { users: [] };

@@ -81,6 +81,8 @@ id:
           other: "%{count} bulan kemudian"
         x_years:
           other: "%{count} bulan kemudian"
+      previous_month: 'Bulan Lalu'
+      next_month: 'Bulan Depan'
     share:
       topic: 'share link ke topik ini'
       post: 'post #%{postNumber}'
@@ -91,6 +93,8 @@ id:
       email: 'kirim link ini melalui email'
     action_codes:
       split_topic: "pisahkan topik ini %{when}"
+      invited_user: "mengundang %{who} %{when}"
+      removed_user: "menghapus %{who} %{when}"
       autoclosed:
         enabled: 'ditutup %{when}'
         disabled: 'dibuka %{when}'
@@ -142,6 +146,8 @@ id:
     more: "Selengkapnya"
     less: "Lebih Singkat"
     never: "tidak pernah"
+    every_30_minutes: "setiap 30 menit"
+    every_hour: "setiap jam"
     daily: "harian"
     weekly: "mingguan"
     every_two_weeks: "setiap dua minggu"
@@ -222,6 +228,8 @@ id:
       none: "Tidak ada pos untuk di pratinjau."
       edit: "Ubah"
       cancel: "Batal"
+      approval:
+        description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> memposting <a href='{{topicUrl}}'>topik</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Anda</a> memposting <a href='{{topicUrl}}'>the topic</a>"
@@ -275,10 +283,12 @@ id:
       post_stat_sentence:
         other: "%{count} pos baru dalam %{unit} terakhir."
     ip_lookup:
+      title: Pencarian Alamat IP
       location: Lokasi
       location_not_found: (tidak diketahui)
       organisation: Organisasi
       phone: Telepon
+      other_accounts: "Akun lain dengan alamat IP ini: "
       username: "username"
       read_time: "waktu baca"
       confirm_delete_other_accounts: "Apakah Anda yakin  untuk menghapus akun ini?"
@@ -288,6 +298,7 @@ id:
       mute: "Redam"
       edit: "Ubah Preferensi"
       download_archive: "Unduh Pos Saya"
+      new_private_message: "Pesan Baru"
       private_messages: "Messages"
       activity_stream: "Activity"
       bookmarks: "Markah"
@@ -331,6 +342,10 @@ id:
       change_email:
         title: "Ganti Alamat Surel"
         taken: "Maaf, alamat surel tersebut tidak tersedia."
+        error: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain?"
+        success: "Kami telah mengirimkan surel kepada alamat itu. Silahkan mengikuti petunjuk konfirmasi didalamnya."
+      email:
+        invalid: "Silahkan masukkan alamat email yang valid"
       name:
         title: "Name"
       last_seen: "Seen"
@@ -346,6 +361,10 @@ id:
       password:
         title: "Password"
         too_short: "Password kamu terlalu pendek."
+      ip_address:
+        title: "Alamat IP terakhir"
+      registration_ip_address:
+        title: "Alamat IP registrasi"
       filters:
         all: "Semua"
     close: "Tutup"
@@ -354,8 +373,12 @@ id:
     week: 'minggu'
     last_seen: 'Terlihat'
     created: 'Dibuat'
+    search_hint: 'username, email, atau alamat IP'
+    create_account:
+      title: "Buat Akun Baru"
     forgot_password:
       action: "Saya lupa password"
+      invite: "Silahkan masukkan username atau alamat email, dan kami akan mengirimkan email untuk menentukan ulang sandi Anda."
     login:
       title: "Log In"
       email_placeholder: "email atau username"
@@ -368,19 +391,35 @@ id:
       reply: "Balas"
       cancel: "Batal"
       users_placeholder: "Tambahkan pengguna"
+      view_new_post: "Lihat posting baru Anda"
       bold_title: "Strong"
       italic_title: "Emphasis"
       link_title: "Hyperlink"
       modal_cancel: "Batal"
     notifications:
       more: "lihat notifikasi sebelumnya"
+    new_item: "baru"
+    topics:
+      bulk:
+        choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
+      none:
+        new: "Anda tidak memiliki topik baru"
+      bottom:
+        new: "Tidak ada topik baru lagi"
     topic:
+      create: 'Topik Baru'
+      create_long: 'Pilih topik baru'
+      new: 'topik baru'
+      new_topics:
+        other: '{{count}} topik baru'
       invalid_access:
         description: "Maaf,  kamu tidak berhak mengakses topik tersebut."
       server_error:
         title: "Gagal membuka topik"
       not_found:
         title: "Tidak ada topik"
+      new_posts:
+        other: "ada {{count}} posting baru di topik ini sejak terakhir Anda mengunjunginya"
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
@@ -388,9 +427,16 @@ id:
       view_latest_topics: lihat topik terbaru
       suggest_create_topic: Buat topik baru?
       jump_reply_up: lompat ke balasan sebelumnya
+      split_topic:
+        title: "Pindahkan sebagai Topik Baru"
+        action: "pindahkan sebagai topik baru"
+        topic_name: "Nama Topik Baru"
+        error: "Ada kesalahan dalam memindahkan posting sebagai topik baru"
+      change_owner:
+        label: "Pemilik Posting Yang Baru"
+        placeholder: "username pemilik yang baru"
     post:
       errors:
-        attachment_too_large: "Maaf, file yang kamu unggah terlalu besar (ukuran maksimal {{max_size_kb}}kb)."
         image_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah gambar."
         attachment_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah lampiran."
       controls:
@@ -401,12 +447,22 @@ id:
     category:
       edit_long: "Ubah"
       auto_close_units: "jam"
+    topic_statuses:
+      locked:
+        help: "Topik ini telah ditutup; tidak lagi menerima jawaban baru"
+      locked_and_archived:
+        help: "Topik ini telah ditutup dan diarsip; tidak lagi menerima jawaban baru dan tidak dapat dirubah lagi"
     posts: "Pos"
     likes: "Suka"
     users: "Pengguna"
     filters:
       new:
+        lower_title_with_count:
+          other: "{{count}} baru"
         lower_title: "baru"
+        title: "Baru"
+        title_with_count:
+          other: "Baru ({{count}})"
       category:
         help: "topik terakhir di kategori {{categoryName}}"
       top:
@@ -427,6 +483,7 @@ id:
       flags:
         system: "Sistem"
       groups:
+        new: "Baru"
         delete: "Hapus"
         delete_confirm: "Hapus grup ini?"
       backups:
@@ -439,30 +496,49 @@ id:
         new_style: "preview"
         delete: "Hapus"
       email:
+        to_address: "Kepada Alamat"
         test_email_address: "alamat email uji coba"
         sent_test: "terkirim!"
         delivery_method: "Metode Pengiriman"
         html: "html"
       logs:
         edit: 'Ubah'
+        staff_actions:
+          new_value: "Baru"
+          deleted: "Tidak ada nilai baru. Catatan telah dihapus."
+        screened_emails:
+          email: "Alamat Email"
+        screened_ips:
+          description: 'Alamat IP sedang dalam pengawasan. Gunakan "Allow" atau "Ijinkan" untuk memasukkan alamat IP dalam daftar putih.'
+          form:
+            label: "Baru:"
+            ip_address: "Alamat IP"
       users:
         not_found: "Maaf, username tersebut tidak ada ditemukan."
         active: "Aktif"
         nav:
+          new: "Baru"
           staff: 'Staf'
         titles:
+          new: 'Pengguna Baru'
           staff: "Staf"
+        check_email:
+          title: "Tampilkan alamat email pengguna ini"
       user:
         suspend_duration_units: "(hari)"
         suspend_reason: "Alasan"
         approve: 'Terima'
         delete: "Hapus Pengguna"
+        delete_and_block: "Hapus dan <b>block</b> email dan alamat IP ini"
       user_fields:
         edit: "Ubah"
         cancel: "Batal"
       site_settings:
         categories:
           users: 'Pengguna'
+      badges:
+        new_badge: Badge Baru
+        new: Baru
     lightbox:
       download: "unduh"
     keyboard_shortcuts_help:
@@ -484,3 +560,9 @@ id:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+    tagging:
+      topics:
+        none:
+          new: "Anda tidak memiliki topik baru."
+        bottom:
+          new: "Tidak ada topik baru lainnya."

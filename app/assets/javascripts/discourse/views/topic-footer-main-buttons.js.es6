@@ -27,7 +27,7 @@ export default ContainerView.extend({
       }
     }
 
-    if (this.get('topic.details.can_invite_to')) {
+    if (!mobileView && this.get('topic.details.can_invite_to')) {
       this.attachViewClass('invite-reply-button');
     }
 

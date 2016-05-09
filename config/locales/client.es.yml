@@ -676,17 +676,20 @@ es:
           one: "post publicado"
           other: "posts publicados"
         likes_given:
-          one: "me gusta dado"
-          other: "me gusta dados"
+          one: "<i class='fa fa-heart'></i> dado"
+          other: "<i class='fa fa-heart'></i> dados"
         likes_received:
-          one: "me gusta recibido"
-          other: "me gusta recibidos"
+          one: "<i class='fa fa-heart'></i> recibido"
+          other: "<i class='fa fa-heart'></i> recibidos"
         days_visited:
           one: "día visitado"
           other: "días visitados"
         posts_read:
           one: "post leído"
           other: "posts leídos"
+        bookmark_count:
+          one: "marcador"
+          other: "marcadores"
         top_replies: "Respuestas top"
         no_replies: "No hay respuestas aún."
         more_replies: "Más respuestas"
@@ -696,6 +699,10 @@ es:
         top_badges: "Distintivos top"
         no_badges: "No hay distintivos aún."
         more_badges: "Más distintivos"
+        top_links: "Top enlaces"
+        no_links: "No hay enlaces aún."
+        most_liked_by: "Los que dieron más me gusta"
+        no_likes: "No hay me gusta aún."
       associated_accounts: "Inicios de sesión"
       ip_address:
         title: "Última dirección IP"
@@ -913,7 +920,7 @@ es:
       link_description: "introduzca descripción del enlace aquí"
       link_dialog_title: "Insertar Enlace"
       link_optional_text: "título opcional"
-      link_placeholder: "http://ejemplo.com \"texto opcional\""
+      link_url_placeholder: "http://ejemplo.com"
       quote_title: "Cita"
       quote_text: "Cita"
       code_title: "Texto preformateado"
@@ -1052,6 +1059,9 @@ es:
         selected:
           one: "Has seleccionado <b>1</b> tema."
           other: "Has seleccionado <b>{{count}}</b> temas."
+        change_tags: "Cambiar etiquetas"
+        choose_new_tags: "Elegir nuevas etiquetas para estos temas:"
+        changed_tags: "Las etiquetas de estos temas fueron cambiadas."
       none:
         unread: "No hay temas que sigas y que no hayas leído ya."
         new: "No tienes temas nuevos por leer."
@@ -1365,10 +1375,9 @@ es:
         create: "Lo sentimos, hubo un error al crear tu post. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
-        attachment_too_large: "Lo siento, el archivo que estas intentando subir es demasiado grande (el tamaño máximo es {{max_size_kb}}kb)."
-        file_too_large: "Lo sentimos, el archivo que estas tratando de subir es demasiado grande (el tamaño máximo es de {{max_size_kb}}kb)"
+        file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es {{max_size_kb}}kb). ¿Quizá podrías subir el archivo a un servicio de almacenamiento en la nube y compartir aquí el enlace?"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
-        too_many_dragged_and_dropped_files: "Lo sentimos, solo puedes arrastrar 10 archivos a la vez."
+        too_many_dragged_and_dropped_files: "Lo sentimos, sólo puedes subir 10 archivos a la vez."
         upload_not_authorized: "Lo sentimos, el archivo que intenta cargar no está autorizado (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir archivos adjuntos."
@@ -1378,6 +1387,7 @@ es:
         no_value: "No, mantener"
         yes_value: "Sí, abandonar"
       via_email: "este post llegó por email"
+      via_auto_generated_email: "este post llegó a través de un email generado automáticamente"
       whisper: "esto post es un susurro privado para moderadores"
       wiki:
         about: "este post es tipo wiki"
@@ -1594,6 +1604,7 @@ es:
       action: 'Reportar post'
       take_action: "Tomar medidas"
       notify_action: 'Mensaje'
+      official_warning: 'Advertencia oficial'
       delete_spammer: "Borrar spammer"
       delete_confirm: "Estás a punto de eliminar <b>%{posts}</b> publicaciones y <b>%{topics}</b> temas de este usuario, borrar su cuenta, bloquear sus inicios de sesión desde su dirección IP <b>%{ip_address}</b>, y añadir su dirección de email <b>%{email}</b> a una lista de bloqueo permanente. ¿Estás seguro de que este usuario es realmente un spammer?"
       yes_delete_spammer: "Sí, borrar spammer"
@@ -1807,7 +1818,7 @@ es:
           30_days_ago: "Hace 30 días"
           all: "Todo"
           view_table: "tabla"
-          view_chart: "gráfico de barras"
+          view_graph: "gráfico"
           refresh_report: "Actualizar reporte"
           start_date: "Desde fecha"
           end_date: "Hasta fecha"
@@ -1944,12 +1955,12 @@ es:
         none: "Ninguna copia disponible."
         read_only:
           enable:
-            title: "Habilitar el modo de 'solo-lectura'"
-            label: "Activar el modo solo-lectura"
-            confirm: "¿Estás seguro que quieres habilitar el modo de \"solo lectura\"?"
+            title: "Activar el modo solo-lectura"
+            label: "Activar solo-lecutra"
+            confirm: "¿Seguro que quieres activar el modo solo-lectura?"
           disable:
-            title: "Deshabilitar el modo de \"solo lectura\""
-            label: "Desactivar el modo solo-lectura"
+            title: "Desactivar el modo solo-lectura"
+            label: "Desactivar solo-lectura"
         logs:
           none: "No hay información de momento..."
         columns:
@@ -2209,6 +2220,8 @@ es:
             grant_moderation: "conceder moderación"
             revoke_moderation: "revocar moderación"
             backup_operation: "operación de copia de seguridad de respaldo"
+            deleted_tag: "etiqueta eliminada"
+            renamed_tag: "etiqueta renombrada"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -2447,6 +2460,10 @@ es:
           title: "¿Se muestra públicamente en el perfil?"
           enabled: "Mostrado en el perfil"
           disabled: "No mostrado en el perfil"
+        show_on_user_card:
+          title: "¿Mostrar en las tarjetas de usuario?"
+          enabled: "mostrado en las tarjetas de usuario"
+          disabled: "no mostrado en las tarjetas de usuario"
         field_types:
           text: 'Campo de Texto'
           confirm: 'Confirmación'
@@ -2540,6 +2557,7 @@ es:
           post_revision: "Cuando un usuario edita o crea un post"
           trust_level_change: "Cuando cambia el nivel de confianza de un usuario"
           user_change: "Cuando se edita o se crea un usuario"
+          post_processed: "Después de procesar un post"
         preview:
           link_text: "Vista previa de los distintivos concedidos"
           plan_text: "Vista previa con el planteamiento de tu query"
@@ -2699,3 +2717,50 @@ es:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+    tagging:
+      all_tags: "Etiquetas"
+      selector_all_tags: "etiquetas"
+      changed: "etiquetas cambiadas:"
+      tags: "Etiquetas"
+      choose_for_topic: "elegir etiquetas para este tema (opcional)"
+      delete_tag: "Eliminar etiqueta"
+      delete_confirm: "¿Seguro que quieres eliminar esta etiqueta?"
+      rename_tag: "Renombrar etiqueta"
+      rename_instructions: "Elige un nuevo nombre para la etiqueta:"
+      sort_by: "Ordenar por:"
+      sort_by_count: "volumen"
+      sort_by_name: "nombre"
+      notifications:
+        watching:
+          title: "Vigilar"
+          description: "Vigilarás automáticamente todos los nuevos temas con esta etiqueta. Se añadirá un contador de posts nuevos y sin leer al lado del tema y además, se te notificará de cada nuevo tema y post."
+        tracking:
+          title: "Seguir"
+          description: "Seguirás automáticamente todos los nuevos temas con esta etiqueta. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+        regular:
+          title: "Normal"
+          description: "Se te notificará solo si alguien te menciona con tu @usuario o responde a algún post tuyo."
+        muted:
+          title: "Silenciar"
+          description: "No se te notificará de nuevos temas con esta etiqueta, ni aparecerán en tu pestaña de temas no leídos."
+      topics:
+        none:
+          unread: "No tienes temas sin leer."
+          new: "No hay temas nuevos."
+          read: "Aún no has leído ningún tema."
+          posted: "Aún no has publicado en ningún tema."
+          latest: "No hay temas recientes."
+          hot: "No hay temas candentes"
+          bookmarks: "Aún no has guardado temas en marcadores."
+          top: "No hay temas top."
+          search: "No hay resultados resultados de búsqueda."
+        bottom:
+          latest: "No hay más temas recientes."
+          hot: "No hay más temas candentes."
+          posted: "No hay más temas en los que hayas publicado."
+          read: "No hay más temas que hayas leído."
+          new: "No hay más temas nuevos."
+          unread: "No hay más temas sin leer."
+          top: "No hay más temas top."
+          bookmarks: "No hay más temas en marcadores."
+          search: "No hay más resultados de búsqueda."

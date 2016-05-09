@@ -147,10 +147,10 @@ const UserAction = RestModel.extend({
     }
     return rval;
   }.property("childGroups",
-    "childGroups.likes.items", "childGroups.likes.items.@each",
-    "childGroups.stars.items", "childGroups.stars.items.@each",
-    "childGroups.edits.items", "childGroups.edits.items.@each",
-    "childGroups.bookmarks.items", "childGroups.bookmarks.items.@each"),
+    "childGroups.likes.items", "childGroups.likes.items.[]",
+    "childGroups.stars.items", "childGroups.stars.items.[]",
+    "childGroups.edits.items", "childGroups.edits.items.[]",
+    "childGroups.bookmarks.items", "childGroups.bookmarks.items.[]"),
 
   switchToActing() {
     this.setProperties({

@@ -63,12 +63,11 @@
 //= require ./discourse/components/combo-box
 //= require ./discourse/components/edit-category-panel
 //= require ./discourse/views/button
-//= require ./discourse/components/search-result
 //= require ./discourse/components/dropdown-button
 //= require ./discourse/components/notifications-button
 //= require ./discourse/components/topic-notifications-button
 //= require ./discourse/lib/link-mentions
-//= require ./discourse/views/header
+//= require ./discourse/components/site-header
 //= require ./discourse/lib/utilities
 //= require ./discourse/dialects/dialect
 //= require ./discourse/lib/emoji/emoji

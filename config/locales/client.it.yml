@@ -134,6 +134,18 @@ it:
         disabled: 'delistato %{when}'
     topic_admin_menu: "azioni amministrative sull'argomento"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
+    s3:
+      regions:
+        us_east_1: "Stati Uniti Est (Virginia del Nord)"
+        us_west_1: "Stati Uniti Ovest (California del Nord)"
+        us_west_2: "Stati Uniti Ovest (Oregon)"
+        eu_west_1: "Europa (Irlanda)"
+        eu_central_1: "Europa (Francoforte)"
+        ap_southeast_1: "Asia Pacifico (Singapore)"
+        ap_southeast_2: "Asia Pacifico (Sidney)"
+        ap_northeast_1: "Asia Pacifico (Tokyo)"
+        ap_northeast_2: "Asia Pacifico (Seoul)"
+        sa_east_1: "America del Sud (San Paolo)"
     edit: 'modifica titolo e categoria dell''argomento'
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
@@ -166,6 +178,8 @@ it:
     more: "Più"
     less: "Meno"
     never: "mai"
+    every_30_minutes: "ogni 30 minuti"
+    every_hour: "ogni ora"
     daily: "giornaliero"
     weekly: "settimanale"
     every_two_weeks: "bisettimanale"
@@ -177,6 +191,7 @@ it:
       other: "{{count}} caratteri"
     suggested_topics:
       title: "Discussioni Suggerite"
+      pm_title: "Messaggi Suggeriti"
     about:
       simple_title: "Informazioni"
       title: "Informazioni su %{title}"
@@ -255,6 +270,7 @@ it:
         one: "Questo argomento ha <b>1</b> messaggio in attesa di approvazione"
         other: "Questo argomento ha <b>{{count}}</b> messaggi in attesa di approvazione"
       confirm: "Salva Modifiche"
+      delete_prompt: "Sei sicuro di voler eliminare <b>%{username}</b>? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'indirizzo IP."
       approval:
         title: "Il Messaggio Richiede Approvazione"
         description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia è necessario che venga approvato da un moderatore. Per favore sii paziente."
@@ -419,6 +435,7 @@ it:
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
         perm_default: "Attiva Notifiche"
         perm_denied_btn: "Permesso Negato"
+        perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
@@ -455,6 +472,7 @@ it:
       muted_users: "Silenziati"
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       muted_topics_link: "Mostra argomenti silenziati"
+      automatically_unpin_topics: "Spunta automaticamente gli argomenti quando raggiungo il fondo."
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -469,6 +487,7 @@ it:
         groups: "I Miei Gruppi"
         bulk_select: "Seleziona messaggi"
         move_to_inbox: "Sposta in arrivo"
+        move_to_archive: "Archivio"
         failed_to_move: "Errore nello spostare i messaggi selezionati (forse la tua connessione non è attiva)"
         select_all: "Seleziona Tutti"
       change_password:
@@ -479,7 +498,7 @@ it:
         set_password: "Imposta Password"
       change_about:
         title: "Modifica i dati personali"
-        error: "Si è verificato un errore nel cambio di questo valore."
+        error: "Si è verificato un errore durante la modifica del valore."
       change_username:
         title: "Cambia Utente"
         confirm: "Se modifichi il tuo nome utente, non funzioneranno più le precedenti citazioni ai tuoi messaggi e le menzioni @nome. Sei sicuro di volerlo fare?"
@@ -555,19 +574,34 @@ it:
       website: "Sito Web"
       email_settings: "Email"
       like_notification_frequency:
+        title: "Notifica alla ricezione di \"Mi piace\"."
         always: "Sempre"
+        first_time_and_daily: "La prima volta che un messaggio riceve un \"Mi piace\" e giornalmente"
+        first_time: "La prima volta che un messaggio riceve un \"Mi piace\""
         never: "Mai"
+      email_previous_replies:
+        title: "Includi risposte precedenti al fondo delle email"
+        unless_emailed: "a meno che non sia stato già inviato"
+        always: "sempre"
+        never: "mai"
       email_digests:
         title: "Quando non visito il sito, invia un riassunto delle novità per email: "
+        every_30_minutes: "ogni 30 minuti"
+        every_hour: "ogni ora"
         daily: "ogni giorno"
         every_three_days: "ogni tre giorni"
         weekly: "ogni settimana"
         every_two_weeks: "ogni due settimane"
+      include_tl0_in_digests: "Includi messaggi dai nuovi utenti nelle email riepilogative"
+      email_in_reply_to: "Nelle email includi un estratto delle risposte al messaggio"
       email_direct: "Inviami un'email quando qualcuno mi cita, risponde a un mio messaggio, menziona il mio @nome o mi invita ad un argomento"
       email_private_messages: "Inviami una email quando qualcuno mi scrive un messaggio"
       email_always: "Inviami notifiche via email anche quando sono collegato al sito"
       other_settings: "Altro"
       categories_settings: "Categorie"
+      enable_mailing_list:
+        one: "Sei sicuro di voler essere avvisato per email per ogni nuovo post?"
+        other: "Sei sicuro di voler essere avvisato via email per ogni nuovo post?<br><br> Questo significherà approssimativamente <b>{{somma}} emails</b> ogni giorno."
       new_topic_duration:
         label: "Considera un argomento \"nuovo\" se"
         not_viewed: "non l'ho ancora letto"
@@ -633,11 +667,27 @@ it:
       summary:
         title: "Riepilogo"
         stats: "Statistiche"
+        time_read: "tempo di lettura"
+        topic_count:
+          one: "argomento creato"
+          other: "argomenti creati"
+        post_count:
+          one: "messaggio creato"
+          other: "messaggi creati"
+        days_visited:
+          one: "Giorno visitato"
+          other: "Giorni Frequenza"
+        posts_read:
+          one: "messaggio letto"
+          other: "messaggi letti"
         top_replies: "Migliori Risposte"
+        no_replies: "Ancora nessuna risposta."
         more_replies: "Altre Risposte"
         top_topics: "Migliori Argomenti"
+        no_topics: "Ancora nessun argomento."
         more_topics: "Altri Argomenti"
         top_badges: "Migliori Targhette"
+        no_badges: "Ancora nessuna targhetta."
         more_badges: "Altre Targhette"
       associated_accounts: "Login"
       ip_address:
@@ -681,7 +731,9 @@ it:
     logout: "Ti sei disconnesso."
     refresh: "Ricarica"
     read_only_mode:
+      enabled: "Questo sito è in modalità di sola lettura. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono per il momento disabilitate."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
+      logout_disabled: "Il logout è disabilitato quando il sito è in modalità di sola lettura."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
@@ -777,6 +829,9 @@ it:
       twitter:
         title: "con Twitter"
         message: "Autenticazione con Twitter (assicurati che il blocco pop up non sia attivo)"
+      instagram:
+        title: "con Instagram"
+        message: "Autenticazione con Instagram (assicurati che il blocco pop up non sia attivo)"
       facebook:
         title: "con Facebook"
         message: "Autenticazione con Facebook (assicurati che il blocco pop up non sia attivo)"
@@ -845,7 +900,7 @@ it:
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
-      link_placeholder: "http://example.com \"testo opzionale\""
+      link_url_placeholder: "http://esempio.com"
       quote_title: "Citazione"
       quote_text: "Citazione"
       code_title: "Testo preformattato"
@@ -905,6 +960,7 @@ it:
         moved_post: "Il tuo messaggio è stato spostato da"
         linked: "Collegamento al tuo messaggio"
         granted_badge: "Targhetta assegnata"
+        group_message_summary: "Messaggi nel gruppo in arrivo"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
@@ -986,6 +1042,9 @@ it:
         category: "Non ci sono argomenti in {{category}}."
         top: "Non ci sono argomenti di punta."
         search: "Non ci sono risultati della ricerca."
+        educate:
+          new: '<p>Qui compaiono i nuovi argomenti.</p><p>Per difetto, gli argomenti vengono considerati nuovi e mostrano l''indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuovo</span> se sono stati creati negli ultimi 2 giorni.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
+          unread: '<p>Qui compaiono gli argomenti che non hai letto.</p><p>Per difetto, gli argomenti sono considerati non letti e ne viene mostrato un conteggio <span class="badge new-posts badge-notification">1</span> se hai:</p><ul><li>Creato l''argomento</li><li>Risposto all''argomento</li><li>Letto l''argomento per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato usando il pannello delle notifiche in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         hot: "Non ci sono altri argomenti caldi."
@@ -1010,7 +1069,7 @@ it:
         title: 'Archivio'
       move_to_inbox:
         title: 'Sposta in arrivo'
-        help: 'Sposta in arrivo'
+        help: 'Sposta il messaggio di nuovo nella posta in arrivo'
       list: 'Argomenti'
       new: 'nuovo argomento'
       unread: 'non letto'
@@ -1285,7 +1344,6 @@ it:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
-        attachment_too_large: "Spiacenti, il file che stai tentando di caricare è troppo grande (il massimo consentito è {{max_size_kb}}kb)."
         file_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la grandezza massima è {{max_size_kb}}kb)"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
         too_many_dragged_and_dropped_files: "Spiacenti, puoi trascinare e rilasciare solo 10 file alla volta."
@@ -1303,6 +1361,7 @@ it:
         about: "questo messaggio è una guida"
       archetypes:
         save: 'Opzioni di salvataggio'
+      few_likes_left: "Grazie per aver condiviso l'amore! Hai ancora pochi \"Mi piace\" rimasti per oggi."
       controls:
         reply: "inizia a comporre una risposta a questo messaggio"
         like: "metti \"Mi piace\" al messaggio"
@@ -1354,6 +1413,10 @@ it:
           spam: "l'hanno segnalato come spam"
           inappropriate: "l'hanno segnalato come inappropriato"
           notify_moderators: "hanno informato i moderatori"
+          notify_user: "hanno inviato un messaggio"
+          bookmark: "l'hanno aggiunto ai segnalibri"
+          like: "hanno messo \"Mi piace\""
+          vote: "hanno votato"
         by_you:
           off_topic: "L'hai segnalato come fuori tema"
           spam: "L'hai segnalato come spam"
@@ -1362,7 +1425,7 @@ it:
           notify_user: "Hai inviato un messaggio a questo utente"
           bookmark: "Hai inserito questo messaggio nei segnalibri"
           like: "Ti piace"
-          vote: "Hai votato per questo post"
+          vote: "Hai votato per questo messaggio"
         by_you_and_others:
           off_topic:
             one: "Tu e un'altra persona lo avete contrassegnato come fuori tema"
@@ -1425,6 +1488,7 @@ it:
           last: "Ultima revisione"
           hide: "Nascondi revisione"
           show: "Mostra revisione"
+          revert: "Ritorna alla revisione"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1516,6 +1580,7 @@ it:
       submit_tooltip: "Invia la segnalazione privata"
       take_action_tooltip: "Raggiungi la soglia di segnalazioni immediatamente, piuttosto che aspettare altre segnalazioni della comunità"
       cant: "Spiacenti, al momento non puoi segnalare questo messaggio."
+      notify_staff: 'Notifica staff privatamente'
       formatted_name:
         off_topic: "E' fuori tema"
         inappropriate: "È inappropriato"
@@ -1720,6 +1785,7 @@ it:
           refresh_report: "Aggiorna Rapporto"
           start_date: "Data Inizio"
           end_date: "Data Fine"
+          groups: "Tutti i gruppi"
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"
@@ -1852,12 +1918,12 @@ it:
         none: "Nessun backup disponibile."
         read_only:
           enable:
-            title: "Abilita modalità sola lettura"
-            label: "Abilita la modalità sola lettura"
-            confirm: "Sicuro di voler attivare la modalità di sola lettura?"
+            title: "Abilita la modalità sola-lettura"
+            label: "Abilita sola-lettura"
+            confirm: "Sei sicuro di voler abilitare la modalità sola-lettura?"
           disable:
-            title: "Disattiva la modalità di sola lettura"
-            label: "Disabilita la modalità sola lettura"
+            title: "Disattiva la modalità di sola-lettura"
+            label: "Disattiva sola-lettura"
         logs:
           none: "Nessun log al momento..."
         columns:
@@ -1891,9 +1957,11 @@ it:
             is_disabled: "Il ripristino è disabilitato nelle opzioni del sito."
             label: "Ripristina"
             title: "Ripristina il backup"
+            confirm: "Sei sicuro di voler ripristinare questo backup?"
           rollback:
             label: "Rollback"
             title: "Ripristina il database a una versione funzionante precedente"
+            confirm: "Sei sicuro di voler ripristinare il database alla versione funzionante precedente?"
       export_csv:
         user_archive_confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
         success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
@@ -1997,14 +2065,17 @@ it:
             name: 'amo'
             description: "Il colore del bottone \"Mi piace\"."
       email:
+        title: "Email"
         settings: "Impostazioni"
-        templates: "Template"
-        preview_digest: "Anteprima Riassunto"
+        templates: "Modelli"
+        preview_digest: "Anteprima Riepilogo"
         sending_test: "Invio email di prova in corso..."
         error: "<b>ERRORE</b> - %{server_error}"
         test_error: "C'è stato un problema nell'invio dell'email di test. Controlla nuovamente le impostazioni email, verifica che il tuo host non blocchi le connessioni email e riprova."
         sent: "Inviato"
         skipped: "Omesso"
+        received: "Ricevute"
+        rejected: "Rifiutate"
         sent_at: "Inviato Alle"
         time: "Ora"
         user: "Utente"
@@ -2014,7 +2085,7 @@ it:
         send_test: "Invia una email di prova"
         sent_test: "inviata!"
         delivery_method: "Metodo di consegna"
-        preview_digest_desc: "Vedi in anteprima il contenuto delle email di riassunto inviate agli utenti inattivi."
+        preview_digest_desc: "Vedi in anteprima il contenuto delle email di riepilogo inviate agli utenti inattivi."
         refresh: "Aggiorna"
         format: "Formato"
         html: "html"
@@ -2022,13 +2093,33 @@ it:
         last_seen_user: "Ultimo Utente Visto:"
         reply_key: "Chiave di risposta"
         skipped_reason: "Motivo Omissione"
+        incoming_emails:
+          from_address: "Da"
+          to_addresses: "A"
+          cc_addresses: "Cc"
+          subject: "Oggetto"
+          error: "Errore"
+          none: "Nessuna email in entrata."
+          modal:
+            title: "In arrivo dettagli email"
+            error: "Errore"
+            headers: "Intestazione"
+            subject: "Oggetto"
+            body: "Corpo"
+            rejection_message: "Mail di Rifiuto"
+          filters:
+            from_placeholder: "da@esempio.com"
+            to_placeholder: "a@esempio.com"
+            cc_placeholder: "cc@esempio.com"
+            subject_placeholder: "Oggetto..."
+            error_placeholder: "Errore"
         logs:
           none: "Nessun log trovato."
           filters:
             title: "Filtro"
             user_placeholder: "nome utente"
             address_placeholder: "nome@esempio.com"
-            type_placeholder: "riassunto, iscrizione..."
+            type_placeholder: "riepilogo, iscrizione..."
             reply_key_placeholder: "chiave di risposta"
             skipped_reason_placeholder: "motivo"
       logs:
@@ -2085,6 +2176,13 @@ it:
             change_category_settings: "cambia le impostazioni della categoria"
             delete_category: "cancella categoria"
             create_category: "crea categoria"
+            block_user: "blocca utente"
+            unblock_user: "sblocca utente"
+            grant_admin: "assegna amministrazione"
+            revoke_admin: "revoca amministrazione"
+            grant_moderation: "assegna moderazione"
+            revoke_moderation: "revoca moderazione"
+            backup_operation: "operazione di backup"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -2186,6 +2284,7 @@ it:
         moderator: "Moderatore?"
         admin: "Amministratore?"
         blocked: "Bloccato?"
+        staged: "Organizzato?"
         show_admin_profile: "Amministratore"
         edit_title: "Modifica Titolo"
         save_title: "Salva Titolo"
@@ -2250,6 +2349,8 @@ it:
         deactivate_failed: "Si è verificato un errore durante la disattivazione dell'utente."
         unblock_failed: 'Si è verificato un errore durante lo sblocco dell''utente.'
         block_failed: 'Si è verificato un errore durante il blocco dell''utente.'
+        block_confirm: 'Sei sicuro di voler bloccare questo utente? Non sarà più in grado di creare alcun nuovo argomento o messaggio.'
+        block_accept: 'Sì, blocca questo utente'
         deactivate_explanation: "Un utente disattivato deve riconvalidare la propria email."
         suspended_explanation: "Un utente sospeso non può fare il login."
         block_explanation: "Un utente bloccato non può pubblicare messaggi o iniziare argomenti."
@@ -2319,6 +2420,10 @@ it:
           title: "Mostrare nel profilo pubblico?"
           enabled: "mostrato nel profilo"
           disabled: "non mostrato nel profilo"
+        show_on_user_card:
+          title: "Mostrare sulla scheda utente?"
+          enabled: "mostrato sulla scheda utente"
+          disabled: "non mostrato sulla scheda utente"
         field_types:
           text: 'Campo Testo'
           confirm: 'Conferma'
@@ -2372,6 +2477,7 @@ it:
         badge: Targhetta
         display_name: Nome Visualizzato
         description: Descrizione
+        long_description: Descrizione Lunga
         badge_type: Tipo Targhetta
         badge_grouping: Gruppo
         badge_groupings:
@@ -2411,6 +2517,7 @@ it:
           post_revision: "Quando un utente modifica o crea un messaggio"
           trust_level_change: "Quando un utente cambia livello di esperienza"
           user_change: "Quando un utente viene modificato o creato"
+          post_processed: "Dopo che un messaggio viene elaborato"
         preview:
           link_text: "Anteprima targhette guadagnate"
           plan_text: "Anteprima con query plan"
@@ -2531,7 +2638,14 @@ it:
         mark_tracking: '<b>m</b>, <b>t</b> Segui argomento'
         mark_watching: '<b>m</b>, <b>w</b> Osserva argomento'
     badges:
+      earned_n_times:
+        one: "Guadagnato questa targhetta una volta"
+        other: "Guadagnato questa targhetta %{count} volte"
+      granted_on: "Assegnata %{data}"
+      others_count: "Altri utenti con questa targhetta (%{count})"
       title: Targhette
+      allow_title: "titolo disponibile"
+      multiple_grant: "assegnata più volte"
       badge_count:
         one: "1 Targhetta"
         other: "%{count} Targhette"

@@ -1,5 +1,5 @@
 {{#if model.categories}}
-  <div class='contents'>
+  {{#discovery-categories refresh="refresh"}}
     <table class='topic-list categories'>
       <thead>
         <tr>
@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each c in model.categories}}
+        {{#each model.categories as |c|}}
           <tr data-category_id='{{unbound c.id}}' {{bind-attr class="c.description_excerpt:has-description:no-description c.logo_url:has-logo:no-logo"}}>
             <td class='category' style={{border-color c.color}}>
               <div>
@@ -41,7 +41,7 @@
             <td class='stats' {{bind-attr title="c.topicStatsTitle"}}>
               <table class="categoryStats">
                 <tbody>
-                {{#each s in c.topicCountStats}}
+                {{#each c.topicCountStats as |s|}}
                   <tr>
                     <td class="value">{{s.value}}</td>
                     <td class="unit"> / {{s.unit}}</td>
@@ -54,6 +54,6 @@
         {{/each}}
       </tbody>
     </table>
-  </div>
+  {{/discovery-categories}}
   <footer class='topic-list-bottom'></footer>
 {{/if}}

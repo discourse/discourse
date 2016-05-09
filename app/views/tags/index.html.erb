@@ -1,0 +1,20 @@
+<% if crawler_layout? %>
+
+<% content_for :title do %><%=t "tags.title" %><% end %>
+
+<h1><%=t "tags.title" %></h1>
+
+<div class='tags-list' itemscope itemtype='http://schema.org/ItemList'>
+  <% @tags.each do |tag| %>
+    <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+      <meta itemprop='url' content='<%= "#{Discourse.base_url}/tags/#{tag[:id]}" %>'>
+      <a href='<%= "#{Discourse.base_url}/tags/#{tag[:id]}" %>' itemprop='item'>
+        <span itemprop='name'>
+          <%= tag[:text] %>
+        </span>
+      </a>
+    </div>
+  <% end %>
+</div>
+
+<% end %>

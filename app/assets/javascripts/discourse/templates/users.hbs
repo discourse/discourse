@@ -1,56 +1,44 @@
-<div class="container">
-  <div class='directory'>
+{{#load-more selector=".directory tbody tr" action="loadMore"}}
+  <div class="container">
+    <div class='directory'>
 
-    <div class='clearfix'>
-      {{period-chooser period=period}}
-      {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name"}}
+      <div class='clearfix'>
+        {{period-chooser period=period}}
+        {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name"}}
+      </div>
+
+      {{#conditional-loading-spinner condition=model.loading}}
+        {{#if model.length}}
+          <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
+
+          <table>
+            <thead>
+              <th>&nbsp;</th>
+              {{directory-toggle field="likes_received" order=order asc=asc icon="heart"}}
+              {{directory-toggle field="likes_given" order=order asc=asc icon="heart"}}
+              {{directory-toggle field="topic_count" order=order asc=asc}}
+              {{directory-toggle field="post_count" order=order asc=asc}}
+              {{directory-toggle field="topics_entered" order=order asc=asc}}
+              {{directory-toggle field="posts_read" order=order asc=asc}}
+              {{directory-toggle field="days_visited" order=order asc=asc}}
+              {{#if showTimeRead}}
+                <th>{{i18n "directory.time_read"}}</th>
+              {{/if}}
+            </thead>
+            <tbody>
+              {{#each model as |item|}}
+                {{directory-item item=item showTimeRead=showTimeRead}}
+              {{/each}}
+            </tbody>
+          </table>
+
+          {{conditional-loading-spinner condition=model.loadingMore}}
+        {{else}}
+          <div class='clearfix'></div>
+          <p>{{i18n "directory.no_results"}}</p>
+        {{/if}}
+      {{/conditional-loading-spinner}}
+
     </div>
-
-    {{#conditional-loading-spinner condition=model.loading}}
-      {{#if model.length}}
-        <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
-
-        <table>
-          <thead>
-            <th>&nbsp;</th>
-            {{directory-toggle field="likes_received" order=order asc=asc icon="heart"}}
-            {{directory-toggle field="likes_given" order=order asc=asc icon="heart"}}
-            {{directory-toggle field="topic_count" order=order asc=asc}}
-            {{directory-toggle field="post_count" order=order asc=asc}}
-            {{directory-toggle field="topics_entered" order=order asc=asc}}
-            {{directory-toggle field="posts_read" order=order asc=asc}}
-            {{directory-toggle field="days_visited" order=order asc=asc}}
-            {{#if showTimeRead}}
-              <th>{{i18n "directory.time_read"}}</th>
-            {{/if}}
-          </thead>
-          <tbody>
-            {{#each ic in model itemController="directory-item"}}
-              <tr class="{{if ic.me 'me'}}">
-                {{#with ic.model as |it|}}
-                  <td>{{user-info user=it.user}}</td>
-                  <td>{{number it.likes_received}}</td>
-                  <td>{{number it.likes_given}}</td>
-                  <td>{{number it.topic_count}}</td>
-                  <td>{{number it.post_count}}</td>
-                  <td>{{number it.topics_entered}}</td>
-                  <td>{{number it.posts_read}}</td>
-                  <td>{{number it.days_visited}}</td>
-                  {{#if controller.parentController.showTimeRead}}
-                    <td><span class='time-read'>{{unbound it.time_read}}</span></td>
-                  {{/if}}
-                {{/with}}
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-
-        {{conditional-loading-spinner condition=model.loadingMore}}
-      {{else}}
-        <div class='clearfix'></div>
-        <p>{{i18n "directory.no_results"}}</p>
-      {{/if}}
-    {{/conditional-loading-spinner}}
-
   </div>
-</div>
+{{/load-more}}

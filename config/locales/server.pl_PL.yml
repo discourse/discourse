@@ -24,12 +24,14 @@ pl_PL:
   loading: "Ładowanie"
   powered_by_html: 'Zasilane przez <a href="http://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
   log_in: "Logowanie"
-  purge_reason: "Automatycznie usunięto jako porzucone, nieaktywne konto"
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   anonymous: "Anonim"
   emails:
     incoming:
       default_subject: "Przychodzący email od %{email}"
+      show_trimmed_content: "Pokaż skróconą zawartość"
+      errors:
+        no_message_id_error: "Zdarza się kiedy email nie posiada nagłówka 'Message-Id'."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -137,6 +139,7 @@ pl_PL:
     latest: "Ostatnie wątki"
     hot: "Popularne wątki"
     posts: "Aktualne wpisy"
+    tag: "Otagowane tematy"
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   excerpt_image: "zdjęcie"
   queue:
@@ -702,7 +705,6 @@ pl_PL:
     summary_max_results: "Maksymalna liczba wpisów w 'Podsumowaniu tematu'"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     cooldown_minutes_after_hiding_posts: "Liczba minut, ile musi odczekać użytkownik, zanim będzie mógł edytować post ukryty w wyniku oflagowania przez społeczność"
     max_topics_in_first_day: "Maksymalna liczba tematów, jakie może stworzyć użytkownik pierwszego dnia na tej stronie."
     max_replies_in_first_day: "Maksymalna liczba odpowiedzi, jakie może napisać użytkownik pierwszego dnia na tej stronie."
@@ -822,6 +824,10 @@ pl_PL:
     approve_unless_trust_level: "Posty użytkowników poniżej tego poziomu zaufania muszą być zatwierdzane"
     default_categories_watching: "Lista kategorii obserwowanych domyślnie."
     default_categories_tracking: "Lista kategorii śledzonych domyślnie."
+    tagging_enabled: "Pozwolić użytkownikom na tagowanie tematów?"
+    min_trust_to_create_tag: "Minimalny poziom zaufania dla tworzenia nowych tagów."
+    max_tags_per_topic: "Maksymalna ilość tagów przypisanych do tematu."
+    max_tag_length: "Maksymalna ilość znaków per tag."
     errors:
       invalid_email: "Nieprawidłowy adres email."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
@@ -1217,3 +1223,4 @@ pl_PL:
   activemodel:
     errors:
       <<: *errors
+  rss_by_tag: "Tematy otagowane jako %{tag}"

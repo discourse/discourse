@@ -72,6 +72,54 @@ class PostRevisor
     tc.check_result(tc.topic.change_category_to_id(category_id))
   end
 
+  track_topic_field(:tags_empty_array) do |tc, val|
+    if val.present?
+      unless tc.guardian.is_staff?
+        old_tags = tc.topic.tags || []
+        staff_tags = DiscourseTagging.staff_only_tags(old_tags)
+        if staff_tags.present?
+          tc.topic.errors[:base] << I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" "))
+          tc.check_result(false)
+          next
+        end
+      end
+
+      tc.record_change(DiscourseTagging::TAGS_FIELD_NAME, tc.topic.custom_fields[DiscourseTagging::TAGS_FIELD_NAME], nil)
+      tc.topic.custom_fields.delete(DiscourseTagging::TAGS_FIELD_NAME)
+    end
+  end
+
+  track_topic_field(:tags) do |tc, tags|
+    if tags.present? && tc.guardian.can_tag_topics?
+      tags = DiscourseTagging.tags_for_saving(tags, tc.guardian)
+      old_tags = tc.topic.tags || []
+
+      new_tags = tags - old_tags
+      removed_tags = old_tags - tags
+
+      unless tc.guardian.is_staff?
+        staff_tags = DiscourseTagging.staff_only_tags(new_tags)
+        if staff_tags.present?
+          tc.topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" "))
+          tc.check_result(false)
+          next
+        end
+
+        staff_tags = DiscourseTagging.staff_only_tags(removed_tags)
+        if staff_tags.present?
+          tc.topic.errors[:base] << I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" "))
+          tc.check_result(false)
+          next
+        end
+      end
+
+      tc.record_change(DiscourseTagging::TAGS_FIELD_NAME, tc.topic.custom_fields[DiscourseTagging::TAGS_FIELD_NAME], tags)
+      tc.topic.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
+
+      DiscourseTagging.auto_notify_for(new_tags, tc.topic) if new_tags.present?
+    end
+  end
+
   # AVAILABLE OPTIONS:
   # - revised_at: changes the date of the revision
   # - force_new_version: bypass ninja-edit window
@@ -363,7 +411,7 @@ class PostRevisor
   end
 
   def bypass_bump?
-    !@post_successfully_saved || @opts[:bypass_bump] == true
+    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true
   end
 
   def is_last_post?

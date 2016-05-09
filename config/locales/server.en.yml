@@ -43,7 +43,7 @@ en:
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
 
-  purge_reason: "Automatically deleted as abandoned, unactivated account"
+  purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
 
@@ -55,7 +55,7 @@ en:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
         auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
-        no_body_detected_error: "Happens when we couldn't extract a body and there was no attachments."
+        no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         inactive_user_error: "Happens when the sender is not active."
         blocked_user_error: "Happens when the sender has been blocked."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
@@ -64,7 +64,7 @@ en:
         reply_user_not_matching_error: "Happens when a reply came in from a different email address the notification was sent to."
         topic_not_found_error: "Happens when a reply came in but the related topic has been deleted."
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
-        bounced_email_report: "Email is a bounced email report."
+        bounced_email_error: "Email is a bounced email report."
         auto_generated_email_reply: "Email contains a reply to an auto generated email."
         screened_email_error: "Happens when the sender's email address was already screened."
 
@@ -212,6 +212,7 @@ en:
     group_mentions: "Latest mentions from %{group_name}"
     user_posts: "Latest posts by @%{username}"
     user_topics: "Latest topics by @%{username}"
+    tag: "Tagged topics"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   revert_version_same: "The current version is same as the version you are trying to revert to."
 
@@ -222,7 +223,7 @@ en:
 
   groups:
     errors:
-      can_not_modify_automatic: "You can not modify an automatic group"
+      can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist: "'%{username}' is already a member of this group."
       invalid_domain: "'%{domain}' is not a valid domain."
       invalid_incoming_email: "'%{email}' is not a valid email address."
@@ -540,7 +541,7 @@ en:
     continue_button: "Continue to %{site_name}"
     welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
-    missing_session: "We can not detect if your account was created, please ensure you have cookies enabled."
+    missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -819,7 +820,6 @@ en:
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications such as unhandled flags, as well as on the /about contact form for urgent matters."
-    bounce_email: "Variable Email Return Path used for emails, example: bounce@example.com will cause us to generate bounce+GUID@example.com as the Retrun Path for emails we send. This feature allows us to automatically disable bouncing emails. Requires additional configurations, leave blank if unsure."
     contact_url: "Contact URL for this site. Used on the /about contact form for urgent matters."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
@@ -893,7 +893,7 @@ en:
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://support.google.com/webmasters/answer/174992?hl=en"
+    enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
@@ -1135,7 +1135,7 @@ en:
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
 
-    newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
+    newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
     white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
@@ -1174,6 +1174,8 @@ en:
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     auto_generated_whitelist: "List of email addresses that won't be checked for auto-generated content."
+    block_auto_generated_emails: "Block incoming emails identified as being auto generated."
+    bounce_score_threshold: "The maximum user bounce score before the they are deactivated. A soft bounce adds 1, a hard bounce adds 2."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1272,6 +1274,8 @@ en:
 
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
 
+    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
+
     vacuum_db_days: "Run VACUUM ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
@@ -1314,6 +1318,20 @@ en:
     default_categories_watching: "List of categories that are watched by default."
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
+
+    tagging_enabled: "Enable tags on topics?"
+    min_trust_to_create_tag: "The minimum trust level required to create a tag."
+    max_tags_per_topic: "The maximum tags that can be applied to a topic."
+    max_tag_length: "The maximum amount of characters that can be used in a tag."
+    max_tag_search_results: "When searching for tags, the maxium number of results to show."
+    show_filter_by_tag: "Show a dropdown to filter a topic list by tag."
+    max_tags_in_filter_list: "Maximum number of tags to show in the filter dropdown. The most used tags will be shown."
+    tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
+    tag_style: "Visual style for tag badges."
+    staff_tags: "A list of tags that can only be applied by staff members"
+    min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
+    suppress_overlapping_tags_in_list: "Hide tags from list views, if they overlap with title"
+    remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
 
     errors:
       invalid_email: "Invalid email address."
@@ -1559,7 +1577,7 @@ en:
 
       - We highly recommend you **send a test email to [mail-tester.com][mt]** to verify that all the above is working correctly.
 
-      (The *easy* way is to create a free account on [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+      (The *easy* way is to create a free account on [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] or [Mailjet][mj], which have generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
 
       We hope you received this email deliverability test OK!
 
@@ -1588,11 +1606,11 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse
 
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
@@ -1602,11 +1620,11 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse
 
       ### Release notes
 
@@ -2389,8 +2407,8 @@ en:
     missing: "Sorry, we can't find any avatar associated with that email address. Can you try uploading it again?"
 
   flag_reason:
-    sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
-    spam_hosts: "This new user tried to create multiple posts with links to the same domain. See the newuser_spam_host_threshold site setting."
+    sockpuppet: "A new user created a topic, and another new user at the same IP address (%{ip_address}) replied. See the <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a> site setting."
+    spam_hosts: "This new user tried to create multiple posts with links to the same domain (%{domain}). See the <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> site setting."
 
   email_log:
     no_user: "Can't find user with id %{user_id}"
@@ -2403,7 +2421,8 @@ en:
     post_deleted: "post was deleted by the author"
     user_suspended: "user was suspended"
     already_read: "user has already read this post"
-    exceeded_limit: "Exceeded max_emails_per_day_per_user"
+    exceeded_emails_limit: "Exceeded max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Exceeded bounce_score_threshold"
     message_blank: "message is blank"
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
@@ -3004,3 +3023,9 @@ en:
 
   topic_invite:
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
+
+  tags:
+    title: "Tags"
+    staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
+    staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
+  rss_by_tag: "Topics tagged %{tag}"

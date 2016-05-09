@@ -93,6 +93,8 @@ zh_TW:
       email: '以電子郵件分享此連結'
     action_codes:
       split_topic: "於 %{when} 切分此討論話題"
+      invited_user: "邀請 %{who} 於 %{when} "
+      removed_user: "移除 %{who} 於 %{when} "
       autoclosed:
         enabled: '於 %{when} 關閉'
         disabled: '於 %{when} 開啟'
@@ -108,8 +110,24 @@ zh_TW:
       pinned_globally:
         enabled: '於 %{when} 全局置頂'
         disabled: '於 %{when} 解除置頂'
+      visible:
+        enabled: '於 %{when} 列出'
+        disabled: '於 %{when} 除名'
     topic_admin_menu: "討論話題管理員操作"
     emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
+    s3:
+      regions:
+        us_east_1: "美國東部 (北維珍尼亞州)"
+        us_west_1: "美國西部 (北加州)"
+        us_west_2: "美國西部 (奧勒岡州)"
+        us_gov_west_1: "AWS GovCloud (美國)"
+        eu_west_1: "歐洲 (愛爾蘭)"
+        eu_central_1: "歐洲 (法蘭克福)"
+        ap_southeast_1: "亞太地區 (新加坡)"
+        ap_southeast_2: "亞太地區 (悉尼)"
+        ap_northeast_1: "亞太地區 (東京)"
+        ap_northeast_2: "亞太地區 (首爾)"
+        sa_east_1: "南美洲 (聖保羅)"
     edit: '編輯此討論話題的標題與分類'
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
@@ -141,6 +159,8 @@ zh_TW:
     more: "更多"
     less: "較少"
     never: "永不"
+    every_30_minutes: "每 30 分鐘"
+    every_hour: "每小時"
     daily: "每天"
     weekly: "每週"
     every_two_weeks: "每兩週"
@@ -151,6 +171,7 @@ zh_TW:
       other: "{{count}} 個字"
     suggested_topics:
       title: "推薦的討論話題"
+      pm_title: "推薦訊息"
     about:
       simple_title: "關於"
       title: "關於%{title}"
@@ -225,6 +246,7 @@ zh_TW:
       has_pending_posts:
         other: "本主題仍有 <b>{{count}}</b>篇貼文等待審核"
       confirm: "儲存變更"
+      delete_prompt: "你確定要刪除 <b>%{username}</b> ? 這會移走有關他的文章，並封鎖他的電子郵箱及 IP 位址。"
       approval:
         title: "貼文需等待審核"
         description: "貼文已經送出，但必須等待管理者審核過後才會出現在板上，請耐心等候。"
@@ -416,7 +438,6 @@ zh_TW:
         set_password: "設定密碼"
       change_about:
         title: "修改關於我"
-        error: "變更值時發生錯誤。"
       change_username:
         title: "修改用戶名稱"
         confirm: "如果你修改了你的用戶名稱，之前引用你的文章或以 @用戶名稱 提到你的連結都將失效，你確定要修改嗎？"
@@ -1059,7 +1080,6 @@ zh_TW:
         create: "抱歉，建立你的文章時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的文章時發生錯誤，請再試一次。"
         upload: "抱歉，上傳你的檔案時發生錯誤，請再試一次。"
-        attachment_too_large: "抱歉，你想上傳的檔案太大 (最大限制為 {{max_size_kb}} kb)。"
         file_too_large: "抱歉，你想上傳的檔案太大 (最大限制為 {{max_size_kb}} kb)。"
         too_many_uploads: "抱歉，一次只能上傳一個檔案。"
         too_many_dragged_and_dropped_files: "抱歉，一次最多只能拖放 10 個檔案"
@@ -1570,14 +1590,6 @@ zh_TW:
           backups: "備份"
           logs: "紀錄"
         none: "沒有可用的備份。"
-        read_only:
-          enable:
-            title: "啟動唯讀模式"
-            label: "啟動唯讀模式"
-            confirm: "你確定要啟動唯讀模式?"
-          disable:
-            title: "關閉啟動唯讀模式"
-            label: "關閉唯讀模式"
         logs:
           none: "尚無紀錄..."
         columns:

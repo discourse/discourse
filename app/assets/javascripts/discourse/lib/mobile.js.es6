@@ -1,3 +1,5 @@
+let mobileForced = false;
+
 //  An object that is responsible for logic related to mobile devices.
 const Mobile = {
   isMobileDevice: false,
@@ -5,8 +7,10 @@ const Mobile = {
 
   init() {
     const $html = $('html');
-    this.isMobileDevice = $html.hasClass('mobile-device');
-    this.mobileView = $html.hasClass('mobile-view');
+    this.isMobileDevice = mobileForced || $html.hasClass('mobile-device');
+    this.mobileView = mobileForced || $html.hasClass('mobile-view');
+
+    if (mobileForced) { return; }
 
     try{
       if (window.location.search.match(/mobile_view=1/)){
@@ -27,8 +31,8 @@ const Mobile = {
     }
   },
 
-  toggleMobileView: function() {
-    try{
+  toggleMobileView() {
+    try {
       if (localStorage) {
         localStorage.mobileView = !this.mobileView;
       }
@@ -38,10 +42,18 @@ const Mobile = {
     this.reloadPage(!this.mobileView);
   },
 
-  reloadPage: function(mobile) {
+  reloadPage(mobile) {
     window.location.assign(window.location.pathname + '?mobile_view=' + (mobile ? '1' : '0'));
   }
 };
+
+export function forceMobile() {
+  mobileForced = true;
+}
+
+export function resetMobile() {
+  mobileForced = false;
+}
 
 // Backwards compatibiltity, deprecated
 Object.defineProperty(Discourse, 'Mobile', {

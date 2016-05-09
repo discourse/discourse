@@ -204,6 +204,12 @@ describe Jobs::UserEmail do
         expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
       end
 
+      it "does not send notification if bounce threshold is reached" do
+        user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
+        expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+      end
+
       it "doesn't send the mail if the user is using mailing list mode" do
         Email::Sender.any_instance.expects(:send).never
         user.user_option.update_column(:mailing_list_mode, true)

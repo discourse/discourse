@@ -7,24 +7,33 @@
 
 sq:
   site_settings:
-    poll_enabled: "Allow users to create polls?"
+    poll_enabled: "Lejo anëtarët të hapin sondazhe?"
     poll_maximum_options: "Numri maksimal i opsioneve të lejuara në një sondazh."
   poll:
     multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
     default_poll_must_have_at_least_2_options: "Sondazhi duhet të ketë të paktën 2 opsione. "
     named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
+    default_poll_must_have_less_options:
+      one: "Sondazhi duhet të ketë të paktën 1 opsion."
+      other: "Sondazhi duhet të ketë më pak se %{count} opsione."
+    named_poll_must_have_less_options:
+      one: "Sondazhi <strong>%{name}</strong> duhet të ketë më pak se 1 opsion."
+      other: "Sondazhi <strong>%{name}</strong> duhet të kete më pak se %{count} opsione."
     default_poll_must_have_different_options: "Sondazh duhet të ketë opsione të ndryshme."
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
-    default_poll_with_multiple_choices_has_invalid_parameters: "Poll with multiple choices has invalid parameters."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Sondazhi me zgjedhje ka disa parametra të pavlefshme."
     named_poll_with_multiple_choices_has_invalid_parameters: "Poll named <strong>%{name}</strong> with multiple choice has invalid parameters."
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
     cannot_change_polls_after_5_minutes: "You cannot add, remove or rename polls after the first 5 minutes."
     op_cannot_edit_options_after_5_minutes: "You cannot add or remove poll options after the first 5 minutes. Please contact a moderator if you need to edit a poll option."
     staff_cannot_add_or_remove_options_after_5_minutes: "You cannot add or remove poll options after the first 5 minutes. You should close this topic and create a new one instead."
-    no_polls_associated_with_this_post: "No polls are associated with this post."
+    no_polls_associated_with_this_post: "Asnjë sondazh nuk është bashkangjitur me këtë postim."
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
-    post_is_deleted: "Cannot act on a deleted post."
-    topic_must_be_open_to_vote: "The topic must be open to vote."
-    poll_must_be_open_to_vote: "Poll must be open to vote."
-    topic_must_be_open_to_toggle_status: "The topic must be open to toggle status."
+    post_is_deleted: "S'mund të veproj në një postim të eliminuar."
+    topic_must_be_open_to_vote: "Tema duhet të jetë e hapur për të votuar."
+    poll_must_be_open_to_vote: "Sondazhi duhet të jetë i hapur për të votuar."
+    topic_must_be_open_to_toggle_status: "Tema duhet të jetë e hapur për të ndryshuar statusin."
+    only_staff_or_op_can_toggle_status: "Vetëm stafi ose autori temës mund të ndryshoje statusin e sondazhit."
+    email:
+      link_to_poll: "Kliko për të shfaqur sondazhin."

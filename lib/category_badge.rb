@@ -60,7 +60,7 @@ module CategoryBadge
     class_names = 'badge-category clear-badge'
     text_color = "##{category.text_color}"
     description = category.description_text ? "title='#{category.description_text.html_safe}'" : ''
-    category_url = opts[:absolute_url] ? "#{Discourse.base_url}#{category.url}" : category.url
+    category_url = opts[:absolute_url] ? "#{Discourse.base_url_no_prefix}#{category.url}" : category.url
 
     extra_span_classes = if opts[:inline_style]
         case (SiteSetting.category_style || :box).to_sym

@@ -465,7 +465,6 @@ sv:
         set_password: "Ange lösenord"
       change_about:
         title: "Ändra Om Mig"
-        error: "Ett fel inträffade när beskrivningen skulle sparas. "
       change_username:
         title: "Byt användarnamn"
         confirm: "Om du byter ditt användarnamn, kommer alla tidigare citeringar av dina inlägg och @namn-omnämningar att bli trasiga. Är du helt säker på att du vill?"
@@ -810,7 +809,6 @@ sv:
       link_description: "skriv en länkbeskrivning här"
       link_dialog_title: "Infoga Hyperlänk"
       link_optional_text: "valfri titel"
-      link_placeholder: "http://example.com \"valfri text\""
       quote_title: "Citat"
       quote_text: "Citat"
       code_title: "Förformaterad text"
@@ -1205,10 +1203,7 @@ sv:
         create: "Tyvärr, det uppstod ett fel under skapandet av ditt inlägg. Var god försök igen."
         edit: "Tyvärr, det uppstod ett fel under ändringen av ditt inlägg. Var god försök igen."
         upload: "Tyvärr, det uppstod ett fel under uppladdandet av den filen. Vad god försök igen."
-        attachment_too_large: "Tyvärr, filen du försöker ladda upp är för stor (maximal storlek är {{max_size_kb}} kb)."
-        file_too_large: "Tyvärr, filen du försöker ladda upp är för stor (maximal filstorlek är {{max_size_kb}}kb)"
         too_many_uploads: "Tyvärr, du kan bara ladda upp en bild i taget."
-        too_many_dragged_and_dropped_files: "Tyvärr, du kan bara dra och släppa upp till 10 filer åt gången."
         upload_not_authorized: "Tyvärr, filen du försökte ladda upp är inte tillåten (tillåtna filtyper: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte bifoga filer."
@@ -1714,14 +1709,6 @@ sv:
           backups: "säkerhetskopior"
           logs: "loggar"
         none: "Ingen säkerhetskopia är tillgänglig."
-        read_only:
-          enable:
-            title: "Aktivera skrivskyddat läget"
-            label: "Aktivera skrivskyddat läge"
-            confirm: "Är du säker på att du vill aktivera skrivskyddat läge?"
-          disable:
-            title: "Avaktivera skrivskyddat läget"
-            label: "Avaktivera skrivskyddat läge"
         logs:
           none: "Inga loggar ännu..."
         columns:

@@ -634,7 +634,6 @@ ko:
     polling_interval: "long polling을 안 쓸 때 로그인된 클라이언트가 몇 밀리초마다  poll해야 하는 지"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "(페이지를 안 보고 있을 때) 클라이언트가 몇 밀리초마다  poll해야 하는 지"
-    flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     cooldown_minutes_after_hiding_posts: "신고 당해서 숨겨진 글을 사용자가 편집할 수 있기 전까지 기대려야 하는 시간(분)"
     max_topics_in_first_day: "사용 첫 날에 글타래를 생성할 수 있는 최대 허용 개수"
     max_replies_in_first_day: "사용 첫 날에 사용자가 생성할 수 있는 답글의 최대 허용 개수"
@@ -695,7 +694,6 @@ ko:
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
     enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
     enable_sso_provider: "/session/sso_provider 를 엔드포인트로 사용해서 Discourse SSO 제공 프로토콜 구현하기, sso_secret 체크 필요"
-    sso_url: "SSO endpoint의 URL"
     sso_secret: "SSO 정보 암호화 인증에 사용 될 암호 문자열, 10글자 이상이어야 합니다."
     sso_overrides_email: "SSO로 접속 시 사용자 이메일 정보 갱신 후 사용자 임의 변경 금지 설정 (경고: 이메일 정보 불일치가 생길 수도 있습니다)"
     sso_overrides_username: "SSO로 접속 시 사용자 아이디 정보 갱신 후 사용자 임의 변경 금지 설정 (경고: 아이디 길이/필요조건 등 내부 규정으로 인해 불일치가 생길 수도 있습니다)"
@@ -889,7 +887,6 @@ ko:
     emoji_set: "어떤 emoji가 좋은가요?"
     enforce_square_emoji: "모든 emoji를 정사각형 비율로 강제로 바꿉니다."
     approve_unless_trust_level: "허가 받고 글 올려야 하는 유저들 최저 회원등급"
-    notify_about_queued_posts_after: "글이 리뷰가 되길 기다리면서 이 시간이 지나면 문의처 메일로 연락을 보냅니다. 0으로 두면 보내지 않습니다."
     errors:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
@@ -1263,17 +1260,12 @@ ko:
         이메일에 내용이 안 보입니다. 답글이 이메일 상단에 있는지 확인 해주세요 -- 한줄 답변은 처리 못합니다.
     email_reject_invalid_access:
       subject_template: "[%{site_name}]  이메일 문제 -- 잘못된 접근"
-      text_body_template: |
-        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        이 카테고리에서 새 글타래를 작성하는 데 필요한 회원등급이 없습니다. 오류라고 생각되면 스태프에게 연락주세요.
     email_reject_reply_key:
       subject_template: "[%{site_name}] 이메일 문제 -- 잘못된 답글 Key"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] 이메일 문제 -- 글타래 못 찾음"
     email_reject_topic_closed:
       subject_template: "[%{site_name}] 이메일 문제 -- 글타래 닫힘"
-      text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n답글하려는 글타래가 닫혔거나 더이상 답글을 받지 않습니다. 오류라고 생각되면 스태프에게 연락 주세요.\n"
     email_reject_auto_generated:
       subject_template: "[%{site_name}] 이메일 문제 -- 자동 생성된 답글"
     email_error_notification:

@@ -4,6 +4,7 @@ import { propertyEqual } from 'discourse/lib/computed';
 import { longDate } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
 import ActionSummary from 'discourse/models/action-summary';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export function loadTopicView(topic, args) {
   const topicId = topic.get('id');
@@ -32,7 +33,7 @@ const Topic = RestModel.extend({
     return poster && poster.user;
   },
 
-  @computed('posters.@each')
+  @computed('posters.[]')
   lastPoster(posters) {
     var user;
     if (posters && posters.length > 0) {
@@ -71,6 +72,24 @@ const Topic = RestModel.extend({
   postStream: function() {
     return this.store.createRecord('postStream', {id: this.get('id'), topic: this});
   }.property(),
+
+  @computed('tags')
+  visibleListTags(tags) {
+    if (!tags || !Discourse.SiteSettings.suppress_overlapping_tags_in_list) {
+      return tags;
+    }
+
+    const title = this.get('title');
+    const newTags = [];
+
+    tags.forEach(function(tag){
+      if (title.toLowerCase().indexOf(tag) === -1 || Discourse.SiteSettings.staff_tags.indexOf(tag) !== -1) {
+        newTags.push(tag);
+      }
+    });
+
+    return newTags;
+  },
 
   replyCount: function() {
     return this.get('posts_count') - 1;
@@ -428,8 +447,13 @@ const Topic = RestModel.extend({
     }).finally(()=>this.set('archiving', false));
 
     return promise;
-  }
+  },
 
+  convertTopic(type) {
+    return Discourse.ajax(`/t/${this.get('id')}/convert-topic/${type}`, {type: 'PUT'}).then(() => {
+      window.location.reload();
+    }).catch(popupAjaxError);
+  }
 });
 
 Topic.reopenClass({

@@ -8,9 +8,10 @@ define('ember', ['exports'], function(__exports__) {
 
 var _pluginCallbacks = [];
 
-window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
+window.Discourse = Ember.Application.extend(Discourse.Ajax, {
   rootElement: '#main',
   _docTitle: document.title,
+  __TAGS_INCLUDED__: true,
 
   getURL: function(url) {
     if (!url) return url;
@@ -106,7 +107,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
     $('noscript').remove();
 
-    Ember.keys(requirejs._eak_seen).forEach(function(key) {
+    Object.keys(requirejs._eak_seen).forEach(function(key) {
       if (/\/pre\-initializers\//.test(key)) {
         var module = require(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
@@ -114,7 +115,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       }
     });
 
-    Ember.keys(requirejs._eak_seen).forEach(function(key) {
+    Object.keys(requirejs._eak_seen).forEach(function(key) {
       if (/\/initializers\//.test(key)) {
         var module = require(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
@@ -167,7 +168,7 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       return this.get("currentAssetVersion");
     }
   })
-});
+}).create();
 
 function RemovedObject(name) {
   this._removedName = name;

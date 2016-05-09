@@ -3,7 +3,9 @@
 <div class="admin-reports-filter">
   {{i18n 'admin.dashboard.reports.start_date'}} {{date-picker-past value=startDate}}
   {{i18n 'admin.dashboard.reports.end_date'}} {{date-picker-past value=endDate}}
-  {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
+  {{#if showCategoryOptions}}
+    {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
+  {{/if}}
   {{#if showGroupOptions}}
     {{combo-box valueAttribute="value" content=groupOptions value=groupId}}
   {{/if}}
@@ -35,7 +37,7 @@
       <th>{{model.yaxis}}</th>
     </tr>
 
-    {{#each row in model.dataReversed}}
+    {{#each model.dataReversed as |row|}}
       <tr>
         <td>{{row.x}}</td>
         <td>

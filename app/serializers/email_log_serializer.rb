@@ -9,7 +9,8 @@ class EmailLogSerializer < ApplicationSerializer
              :skipped,
              :skipped_reason,
              :post_url,
-             :post_description
+             :post_description,
+             :bounced
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 

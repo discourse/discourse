@@ -116,16 +116,13 @@ module Email
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
 
-      unless SiteSetting.bounce_email.blank?
+      if SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
         email_log.bounce_key = SecureRandom.hex
-        address,domain = SiteSetting.bounce_email.split('@')
-        address << (address =~ /[+]/ ? "-" : '+')
-        address << email_log.bounce_key
 
         # WARNING: RFC claims you can not set the Return Path header, this is 100% correct
         # however Rails has special handling for this header and ends up using this value
         # as the Envelope From address so stuff works as expected
-        @message.header[:return_path] = "#{address}@#{domain}"
+        @message.header[:return_path] = SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{email_log.bounce_key}")
       end
 
       email_log.post_id = post_id if post_id.present?
@@ -138,8 +135,8 @@ module Email
 
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails &&
-         @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
-         @message.html_part.body =~ /<img[^>]+>/
+        @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
+        @message.html_part.body =~ /<img[^>]+>/
         style = Email::Styles.new(@message.html_part.body.to_s)
         @message.html_part.body = style.strip_avatars_and_emojis
       end

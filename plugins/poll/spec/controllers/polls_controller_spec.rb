@@ -1,4 +1,5 @@
 require "rails_helper"
+require_relative "../helpers"
 
 describe ::DiscoursePoll::PollsController do
   routes { ::DiscoursePoll::Engine.routes }
@@ -85,6 +86,18 @@ describe ::DiscoursePoll::PollsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.poll_must_be_open_to_vote"))
     end
 
+    it "doesn't discard anonymous votes when someone votes" do
+      default_poll = poll.custom_fields["polls"]["poll"]
+      add_anonymous_votes(poll, default_poll, 17, {"5c24fc1df56d764b550ceae1b9319125" => 11, "e89dec30bbd9bf50fabf6a05b4324edf" => 6})
+
+      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
+      expect(response).to be_success
+
+      json = ::JSON.parse(response.body)
+      expect(json["poll"]["voters"]).to eq(18)
+      expect(json["poll"]["options"][0]["votes"]).to eq(12)
+      expect(json["poll"]["options"][1]["votes"]).to eq(6)
+    end
   end
 
   describe "#toggle_status" do

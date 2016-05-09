@@ -1,12 +1,13 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
+import Group from 'discourse/models/group';
 
 export default Ember.Controller.extend({
   loading: false,
   limit: null,
   offset: null,
 
-  @computed('model.owners.@each')
+  @computed('model.owners.[]')
   isOwner(owners) {
     if (this.get('currentUser.admin')) {
       return true;
@@ -30,10 +31,7 @@ export default Ember.Controller.extend({
     },
 
     loadMore() {
-      const Group = require('discourse/models/group').default;
-
       if (this.get("loading")) { return; }
-      // we've reached the end
       if (this.get("model.members.length") >= this.get("model.user_count")) { return; }
 
       this.set("loading", true);

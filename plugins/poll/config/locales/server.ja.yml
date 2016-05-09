@@ -7,7 +7,7 @@
 
 ja:
   site_settings:
-    poll_enabled: "ユーザによる投票の作成を許可しますか？"
+    poll_enabled: "ユーザによる投票を許可しますか？"
     poll_maximum_options: "投票で許可されるオプションの最大数。"
   poll:
     multiple_polls_without_name: "名前のない複数の投票があります。一意に投票結果を識別するために、属性'<code>name</code>'を使用します。"
@@ -34,4 +34,4 @@ ja:
     topic_must_be_open_to_toggle_status: "状態を切り替えるには、トピックがオープンになっている必要があります。"
     only_staff_or_op_can_toggle_status: "スタッフやオリジナル投稿者のみが投票状態を切り替えることができます。"
     email:
-      link_to_poll: "クリックして投票を表示。"
+      link_to_poll: "クリックして投票を見る"

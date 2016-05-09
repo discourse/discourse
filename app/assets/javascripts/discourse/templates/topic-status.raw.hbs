@@ -1,7 +1,7 @@
 {{~#if view.renderDiv ~}}
 <div class='topic-statuses'>
 {{/if ~}}
-{{~#each status in view.statuses ~}}
+{{~#each view.statuses as |status|~}}
 {{~#if status.href ~}}
 <a href='{{status.href}}' title='{{status.title}}' class='topic-status {{status.extraClasses}}'><i class='fa fa-{{status.icon}}'></i></a>
 {{~else ~}}

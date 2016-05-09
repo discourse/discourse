@@ -108,6 +108,7 @@ Discourse::Application.routes.draw do
       get "leader_requirements" => "users#tl3_requirements"
       get "tl3_requirements"
       put "anonymize"
+      post "reset_bounce_score"
     end
     get "users/:id.json" => 'users#show', defaults: {format: 'json'}
     get 'users/:id/:username' => 'users#show'
@@ -124,6 +125,7 @@ Discourse::Application.routes.draw do
         post "test"
         get "sent"
         get "skipped"
+        get "bounced"
         get "received"
         get "rejected"
         get "/incoming/:id/raw" => "email#raw_email"
@@ -485,6 +487,7 @@ Discourse::Application.routes.draw do
   delete "t/:id" => "topics#destroy"
   put "t/:id/archive-message" => "topics#archive_message"
   put "t/:id/move-to-inbox" => "topics#move_to_inbox"
+  put "t/:id/convert-topic/:type" => "topics#convert_topic"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
@@ -605,6 +608,29 @@ Discourse::Application.routes.draw do
   get "robots.txt" => "robots_txt#index"
   get "manifest.json" => "metadata#manifest", as: :manifest
   get "opensearch" => "metadata#opensearch", format: :xml
+
+  scope "/tags" do
+    get '/' => 'tags#index'
+    get '/filter/list' => 'tags#index'
+    get '/filter/search' => 'tags#search'
+    get '/check' => 'tags#check_hashtag'
+    constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
+      get '/:tag_id.rss' => 'tags#tag_feed'
+      get '/:tag_id' => 'tags#show', as: 'list_by_tag'
+      get '/c/:category/:tag_id' => 'tags#show'
+      get '/c/:parent_category/:category/:tag_id' => 'tags#show'
+      get '/:tag_id/notifications' => 'tags#notifications'
+      put '/:tag_id/notifications' => 'tags#update_notifications'
+      put '/:tag_id' => 'tags#update'
+      delete '/:tag_id' => 'tags#destroy'
+
+      Discourse.filters.each do |filter|
+        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+        get "/c/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+        get "/c/:parent_category/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+      end
+    end
+  end
 
   Discourse.filters.each do |filter|
     root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), :as => "list_#{filter}"
