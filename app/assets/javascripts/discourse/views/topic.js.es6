@@ -5,9 +5,9 @@ import Scrolling from 'discourse/mixins/scrolling';
 
 const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolling, {
   templateName: 'topic',
-  topicBinding: 'controller.model',
+  topic: Ember.computed.alias('controller.model'),
 
-  userFilters: Ember.computed.alias('controller.model.userFilters'),
+  userFilters: Ember.computed.alias('topic.userFilters'),
   classNameBindings: ['controller.multiSelect:multi-select',
                       'topic.archetype',
                       'topic.is_warning',
@@ -119,7 +119,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
     this.set("offset", offset);
 
-    const topic = this.get('controller.model');
+    const topic = this.get('topic');
     const showTopic = this.showTopicInHeader(topic, offset);
     if (showTopic !== this._lastShowTopic) {
       this._lastShowTopic = showTopic;
