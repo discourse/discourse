@@ -135,8 +135,8 @@ module Email
 
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails &&
-         @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
-         @message.html_part.body =~ /<img[^>]+>/
+        @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
+        @message.html_part.body =~ /<img[^>]+>/
         style = Email::Styles.new(@message.html_part.body.to_s)
         @message.html_part.body = style.strip_avatars_and_emojis
       end
