@@ -66,11 +66,8 @@ class Report
         ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
       end
 
-    filtered_results = data
-    filtered_results = data.filtered_results.where(category_id: report.category_id) if report.category_id
-
     report.data = []
-    filtered_results.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
+    data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
                     .order(date: :asc)
                     .group(:date)
                     .sum(:count)
@@ -79,7 +76,7 @@ class Report
     end
 
     report.total      = data.sum(:count)
-    report.prev30Days = filtered_results.where('date >= ? AND date <= ?',
+    report.prev30Days = data.where('date >= ? AND date <= ?',
                                                (report.start_date - 31.days).to_date,
                                                (report.end_date - 31.days).to_date )
                                         .sum(:count)
