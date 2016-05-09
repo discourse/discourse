@@ -6,7 +6,7 @@ const TITLE_SUBS = {
   daily: 'today',
 };
 
-export default Ember.Helper.helper(function (period, options) {
+export default Ember.Handlebars.makeBoundHelper(function (period, options) {
   const title = I18n.t('filters.top.' + (TITLE_SUBS[period] || 'this_week'));
   if (options.hash.showDateRange) {
     var dateString = "";
