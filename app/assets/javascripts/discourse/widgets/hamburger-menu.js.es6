@@ -87,7 +87,9 @@ export default createWidget('hamburger-menu', {
       links.push({ route: 'tags', label: 'tagging.tags' });
     }
 
-    return links.map(l => this.attach('link', l));
+    const extraLinks = applyDecorators(this, 'generalLinks', this.attrs, this.state);
+
+    return links.concat(extraLinks).map(l => this.attach('link', l));
   },
 
   listCategories() {
