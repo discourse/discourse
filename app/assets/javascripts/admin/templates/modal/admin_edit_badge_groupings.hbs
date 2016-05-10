@@ -1,7 +1,7 @@
 <div class="modal-body">
   <div>
     <ul class='badge-groupings'>
-    {{#each wc in workingCopy}}
+    {{#each workingCopy as |wc|}}
       <li>
         {{#if wc.editing}}
           {{input value=wc.name}}

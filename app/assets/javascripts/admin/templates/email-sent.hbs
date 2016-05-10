@@ -18,7 +18,7 @@
       <td>{{text-field value=filter.reply_key placeholderKey="admin.email.logs.filters.reply_key_placeholder"}}</td>
     </tr>
 
-    {{#each l in model}}
+    {{#each model as |l|}}
       <tr>
         <td>{{format-date l.created_at}}</td>
         <td>

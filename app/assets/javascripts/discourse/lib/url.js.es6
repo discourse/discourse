@@ -139,9 +139,7 @@ const DiscourseURL = Ember.Object.extend({
       }
     }
 
-    rewrites.forEach(function(rw) {
-      path = path.replace(rw.regexp, rw.replacement);
-    });
+    rewrites.forEach(rw => path = path.replace(rw.regexp, rw.replacement));
 
     if (this.navigatedToPost(oldPath, path)) { return; }
     // Schedule a DOM cleanup event

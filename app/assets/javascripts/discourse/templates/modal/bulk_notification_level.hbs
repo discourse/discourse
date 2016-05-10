@@ -1,4 +1,4 @@
-{{#each level in notificationLevels}}
+{{#each notificationLevels as |level|}}
   <div class='controls'>
     <label class='radio'>
       {{radio-button value=level.id name="notification_level" selection=controller.notificationLevelId}} <strong>{{unbound level.name}}</strong>

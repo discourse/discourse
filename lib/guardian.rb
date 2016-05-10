@@ -271,6 +271,7 @@ class Guardian
   end
 
   def can_export_entity?(entity_type)
+    return false unless @user
     return true if is_staff?
     return false if entity_type == "admin"
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0

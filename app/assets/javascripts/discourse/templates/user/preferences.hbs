@@ -137,7 +137,7 @@
       </div>
     </div>
 
-    {{#each uf in userFields}}
+    {{#each userFields as |uf|}}
       {{user-field field=uf.field value=uf.value}}
     {{/each}}
     <div class='clearfix'></div>

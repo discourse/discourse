@@ -41,7 +41,7 @@
         <th>&nbsp;</th>
       </tr>
 
-      {{#each user in model}}
+      {{#each model as |user|}}
         <tr {{bind-attr class="user.selected user.active::not-activated"}}>
           {{#if controller.showApproval}}
             <td>

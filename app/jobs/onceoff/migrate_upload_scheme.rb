@@ -2,7 +2,7 @@ module Jobs
 
   class MigrateUploadScheme < Jobs::Onceoff
 
-    def execute(args)
+    def execute_onceoff(args)
       return unless SiteSetting.migrate_to_new_scheme
 
       # clean up failed uploads

@@ -2646,7 +2646,6 @@ pt_BR:
       sort_by: "Ordenar por:"
       sort_by_count: "número"
       sort_by_name: "nome"
-
       notifications:
         watching:
           title: "Observando"
@@ -2660,7 +2659,6 @@ pt_BR:
         muted:
           title: "Silenciado"
           description: "Você nunca será notificado sobre novos tópicos nessa tag, e eles não aparecerão na sua aba não lidas."
-
       topics:
         none:
           unread: "Você não possui tópicos não lidos."

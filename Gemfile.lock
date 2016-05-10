@@ -65,7 +65,7 @@ GEM
     byebug (8.2.1)
     certified (1.0.0)
     coderay (1.1.0)
-    concurrent-ruby (1.0.1)
+    concurrent-ruby (1.0.2)
     connection_pool (2.2.0)
     crass (1.0.2)
     daemons (1.2.3)
@@ -92,7 +92,7 @@ GEM
       railties (>= 3.1)
     ember-source (1.12.2)
     erubis (2.7.0)
-    eventmachine (1.0.8)
+    eventmachine (1.2.0.1)
     excon (0.45.4)
     execjs (2.6.0)
     exifr (1.2.4)
@@ -149,7 +149,7 @@ GEM
       thor (~> 0.15)
     libv8 (3.16.14.13)
     listen (0.7.3)
-    logster (1.2.2)
+    logster (1.2.3)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
@@ -282,7 +282,7 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       trollop (>= 1.16.2)
-    redis (3.2.2)
+    redis (3.3.0)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
     ref (2.0.0)
@@ -344,7 +344,7 @@ GEM
     shoulda-context (1.2.1)
     shoulda-matchers (2.8.0)
       activesupport (>= 3.0.0)
-    sidekiq (4.0.2)
+    sidekiq (4.1.2)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
       redis (~> 3.2, >= 3.2.1)
@@ -501,4 +501,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.11.2
+   1.12.3

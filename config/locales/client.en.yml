@@ -773,6 +773,8 @@ en:
         top_links: "Top Links"
         no_links: "No links yet."
         most_liked_by: "Most Liked By"
+        most_liked_users: "Most Liked"
+        most_replied_to_users: "Most Replied To"
         no_likes: "No likes yet."
 
 
@@ -2591,10 +2593,18 @@ en:
         block_failed: 'There was a problem blocking the user.'
         block_confirm: 'Are you sure you want to block this user? They will not be able to create any new topics or posts.'
         block_accept: 'Yes, block this user'
+        bounce_score: "Bounce Score"
+        reset_bounce_score:
+          label: "Reset"
+          title: "Reset bounce score back to 0"
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
-        stage_explanation: "A staged user can only post via email in specific topics."
+        staged_explanation: "A staged user can only post via email in specific topics."
+        bounce_score_explanation:
+          none: "No bounces were received recently from that email."
+          some: "Some bounces were received recently from that email."
+          threshold_reached: "Received too many bounces from that email."
         trust_level_change_failed: "There was a problem changing the user's trust level."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Trust Level 2 Users"

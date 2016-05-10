@@ -24,7 +24,7 @@ es:
   loading: "Cargando"
   powered_by_html: 'Funciona gracias a <a href="http://www.discourse.org">Discourse</a>, se ve mejor con JavaScript activado'
   log_in: "Iniciar sesión"
-  purge_reason: "Eliminada automáticamente como cuenta abandonada, sin activar"
+  purge_reason: "Cuenta eliminada automáticamente al detectarse como abandonada, desactivada"
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
   anonymous: "Anónimos"
   emails:
@@ -44,6 +44,9 @@ es:
         reply_user_not_matching_error: "Sucede cuando una respuesta vino de una dirección de email diferente a la que fue enviada la notificación."
         topic_not_found_error: "Sucede cuando entró una respuesta pero el tema relacionado ha sido eliminado."
         topic_closed_error: "Sucede cuando entró una respuesta pero el tema relacionado ha sido cerrado. "
+        bounced_email_report: "El email es un reporte que ha rebotado."
+        auto_generated_email_reply: "El email contiene una respuesta a un correo autogenerado."
+        screened_email_error: "Sucede cuando la dirección de email del remitente ya ha sido filtrada."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -182,7 +185,7 @@ es:
     delete_reason: "Eliminado vía moderación"
   groups:
     errors:
-      can_not_modify_automatic: "No puedes modificar un grupo automático"
+      can_not_modify_automatic: "No se puede modificar un grupo automático"
       member_already_exist: "'%{username}' ya es miembro de este grupo."
       invalid_domain: "'%{domain}' no es un dominio válido."
       invalid_incoming_email: "'%{email}' no es una dirección de email válida."
@@ -355,6 +358,7 @@ es:
       create_like: "Has llegado al límite de Me gusta de hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
       create_bookmark: "Has llegado al límite de marcadores de hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
       edit_post: "Has llegado al límite de ediciones de hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
+      live_post_counts: "Estás solicitando actualizaciones de posts demasiado rápido. Por favor, espera %{time_left} antes de intentarlo de nuevo."
       unsubscribe_via_email: "Has alcanzado el máximo de bajas de suscripción vía email por hoy. Por favor espera %{time_left} antes de intentarlo de nuevo."
       topic_invitations_per_day: "Has alcanzado el máximo de invitaciones a temas por hoy. Por favor, espera %{time_left} antes de intentarlo de nuevo."
     hours:
@@ -709,6 +713,9 @@ es:
     email_polling_errored_recently:
       one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
       other: "El email polling ha generado %{count} errores en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
+    bad_favicon_url: "El favicon está dando fallos en su carga. Revisa la opción favicon_url en <a href='/admin/site_settings'>Ajustes del sitio</a>."
+    poll_pop3_timeout: "La conexión al servidor POP3 está rebasando el tiempo de espera. Los emails entrantes no han podido ser recogidos. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
+    poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes POP3</a>."
   site_settings:
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
@@ -753,6 +760,7 @@ es:
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
     onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
     logo_url: "El logo situado en la esquina superior izquierda de tu sitio, debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se mostrará un texto con el título del sitio."
+    digest_logo_url: "El logo alternativo que irá arriba en los emails de resumen de tu sitio. Debería encajar en las dimensiones de un rectángulo ancho. Si se deja en blanco, se utilizará `logo_url`."
     logo_small_url: "El logo pequeño situado en la esquina superior izquierda del sitio, debería encajar en las dimensiones de un cuadrado y se muestra cuando se hace scroll hacia abajo. Si se deja en blanco, se mostrará un glifo de una casita."
     favicon_url: "Un favicon para tu sitio, mira más info en http://es.wikipedia.org/wiki/Favicon - para que funcione correctamente sobre un CDN debe ser un png"
     mobile_logo_url: "El logo con posición fija utilizado en la esquina superior izquierda de la versión móvil de tu sitio. Debería encajar en las dimensiones de un cuadrado. Si se deja en blanco, se mostrará el campo introducido en `logo_url`. Ejemplo: http://example.com/uploads/default/logo.png"
@@ -773,6 +781,7 @@ es:
     polling_interval: "Cuando no este en 'long polling', ¿Qué tan frecuente debe los clientes con sesión iniciada hacer 'poll' en milisegundos?"
     anon_polling_interval: "¿Cuán a menudo deben hacer poll los usuarios anónimos en milisegundos"
     background_polling_interval: "Cada cuántos milisegundos debería hacerse cargarse información (mientras que la ventana esté en segundo plano)"
+    flags_required_to_hide_post: "Número de reportes que causan que un post se oculte auomáticamente y le sea enviado un mensaje privado al usuario (0 para nunca)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar un post oculto por los reportes de la comunidad"
     max_topics_in_first_day: "El número máximo de temas que un usuario puede crear en su primer día en el sitio"
     max_replies_in_first_day: "El máximo número de respuestas que un usuario puede publicar en su primer día en el sitio"
@@ -792,7 +801,7 @@ es:
     ga_domain_name: "El nombre de dominio especificado en Google Analytics (ga.js). Ejemplo: misitio.com; ver en http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita http://google.com/analytics"
-    enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira https://support.google.com/webmasters/answer/174992?hl=en"
+    enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Habilitar el soporte de motor de búsqueda estándar webcrawler mediante la etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
     cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
@@ -980,7 +989,6 @@ es:
     faq_url: "Si tienes un documento de Preguntas Frecuentes alojado que quieras utilizar, introduce la URL completa aquí."
     tos_url: "Si tienes un documento de Condiciones de Servicio alojado en algún sitio quieras utilizar, facilita la URL aquí."
     privacy_policy_url: "Si tienes un documento de Preguntas Frecuentes alojado en algún sitio quieras utilizar, facilita la URL aquí."
-    newuser_spam_host_threshold: "Cuántas veces un nuevo usuario puede publicar un enlace hacia mismo sitio dentro de `` newuser_spam_host_posts posts antes de ser considerado spam."
     white_listed_spam_host_domains: "Una lista de dominios a excluir de las pruebas de spam. A los nuevos usuarios no se les restringirá la posibilidad de crear posts con enlaces a estos dominios."
     staff_like_weight: "Qué ponderación extra otorgan los me gusta provenientes de los miembros del Staff."
     topic_view_duration_hours: "Contar una visita a un nuevo tema por IP/Usuario cada N horas"
@@ -1111,19 +1119,7 @@ es:
     default_categories_watching: "Lista de categorías que están vigiladas por defecto."
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
-    tagging_enabled: "¿Permitir a los usuarios etiquetar temas?"
-    min_trust_to_create_tag: "Mínimo nivel de confianza requerido para crear una etiqueta."
-    max_tags_per_topic: "Número máximo de etiquetas que pueden añadirse a un tema."
-    max_tag_length: "Longitud máxima de caracteres que puede tener el nombre de una etiqueta."
-    max_tag_search_results: "Máximo número de resultados a mostrar al buscar etiquetas."
-    show_filter_by_tag: "Mostrar un desplegable para filtrar la lista de temas por etiqueta."
-    max_tags_in_filter_list: "Máximo número de etiquetas a mostrar en el desplegable. Se mostrarán las más usadas."
-    tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se muestran por popularidad."
-    tag_style: "Estilo visual de los distintivos de etiqueta."
-    staff_tags: "Una lista de etiquetas que sólo podrá ser aplicada por administradores o moderadores"
-    min_trust_level_to_tag_topics: "Mínimo nivel de confianza requerido para etiquetar temas"
-    suppress_overlapping_tags_in_list: "Ocultar etiquetas de la vista de listado si se solapan con el título"
-    remove_muted_tags_from_latest: "No mostrar temas etiquetados con etiquetas silenciadas en la lista de temas recientes."
+    tagging_enabled: "¿Activar etiquetas para los temas?"
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1471,18 +1467,6 @@ es:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Respuesta Auto Generada"
     email_error_notification:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de autenticación POP"
-    too_many_spam_flags:
-      subject_template: "Cuenta nueva bloqueada"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automatizado de %{site_name} para informarte que tus posts han sido automáticamente ocultados porque fueron reportados por la comunidad.
-
-        Como medida precautoria, tu nueva cuenta ha sido bloqueada para crear nuevas respuestas o temas hasta que un miembro del staff pueda revisar tu cuenta.
-
-        Para orientación adicional, por favor revisa nuestras [reglas de comunidad](%{base_url}/guidelines).
-    blocked_by_staff:
-      subject_template: "Cuenta bloqueada"
     user_automatically_blocked:
       subject_template: "El nuevo usuario %{username} ha sido bloqueado tras ser reportado por la comunidad"
       text_body_template: |
@@ -1505,12 +1489,6 @@ es:
         Esto puede ser modificado con los ajustes`newuser_spam_host_threshold` y`white_listed_spam_host_domains`.
     unblocked:
       subject_template: "Cuenta desbloqueada"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático desde %{site_name} para informarte de que tu cuenta ha sido desbloqueada después de la revisión de un moderador.
-
-        A partir de ahora, de nuevo podrás crear nuevas respuestas o temas.
     pending_users_reminder:
       subject_template:
         one: "1 usuario esperando aprobación"
@@ -1542,10 +1520,28 @@ es:
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} te ha invitado a un mensaje '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} te invitó a '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1555,7 +1551,6 @@ es:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_replied_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
@@ -1566,7 +1561,6 @@ es:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1577,7 +1571,6 @@ es:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1588,7 +1581,6 @@ es:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1599,7 +1591,6 @@ es:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1610,7 +1601,6 @@ es:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} publicó en '%{topic_title}'"
@@ -1621,7 +1611,6 @@ es:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
@@ -1632,16 +1621,12 @@ es:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
         %{message}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Un breve resumen de %{site_link} desde tu última visita el %{last_seen_at}"
       subject_template: "Resumen de [%{site_name}]"
@@ -1696,6 +1681,8 @@ es:
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{site_name}] Confirma tu dirección actual de email"
+    notify_old_email:
+      subject_template: "[%{site_name}] Tu dirección de email ha sido cambiada"
     signup_after_approval:
       subject_template: "¡Tu solicitud ha sido aprobada en %{site_name}!"
       text_body_template: |
@@ -1750,9 +1737,6 @@ es:
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Por favor, modifica sus dimensiones y prueba otra vez."
       size_not_found: "Lo sentimos, pero no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
-  flag_reason:
-    sockpuppet: "Un nuevo usuario ha creado un tema, y otro nuevo usuario con la misma dirección IP le ha respondido. Mira la opción flag_sockpuppets del sitio."
-    spam_hosts: "Este nuevo usuario intentó crear varios posts con enlaces al mismo dominio. Mira la opción newuser_spam_host_threshold."
   email_log:
     no_user: "No se puede encontrar al usuario con id %{user_id}"
     anonymous_user: "El usuario es anónimo"
@@ -2145,7 +2129,7 @@ es:
       name: Primera Cita
       description: Citó un post
       long_description: |
-        Este distintivo se otorga la primera vez que citas un post en una respuesta. Citar secciones relevantes de posts anteriores en tus respuestas ayuda a mantener los debates centrados en el tema central. Y es fácil: puedes citar tan solo seleccionando un trozo de cualquier post y utilizando el botón Citar que aparece al lado. ¡Sé generoso citando!
+        Este distintivo se otorga la primera vez que citas un post en tu respuesta. Citar secciones relevantes de posts anteriores ayuda a mantener los debates conectados y centrados en el tema. La forma más fácil de citar es seleccionando un trozo de cualquier post y utilizando el botón Citar que aparece al lado. ¡Cita generosamente!
     read_guidelines:
       name: Directrices leídas
       description: Leyó las <a href="/guidelines">directrices de la comunidad</a>
@@ -2241,12 +2225,13 @@ es:
     initial_topic_title: Informe sobre el rendimiento del sitio
   topic_invite:
     user_exists: "Lo sentimos, ese usuario ya ha sido invitado. Solo se puede invitar una vez a un usuario a un tema."
+  tags:
+    title: "Etiquetas"
+    staff_tag_disallowed: "La etiqueta \"%{tag}\" solo puede ser insertada por moderadores."
+    staff_tag_remove_disallowed: "La etiqueta \"%{tag}\" solo puede ser eliminada por moderadores."
+  rss_by_tag: "Temas con la etiqueta %{tag}"
   time:
     <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors
-  tags:
-    staff_tag_disallowed: "La etiqueta \"%{tag}\" sólo puede ser aplicada por los administradores."
-    staff_tag_remove_disallowed: "La etiqueta \"%{tag}\" sólo puede ser eliminada por los administradores."
-  rss_by_tag: "Temas con la etiqueta %{tag}"

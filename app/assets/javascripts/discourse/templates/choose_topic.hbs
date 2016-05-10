@@ -8,7 +8,7 @@
   {{#if view.noResults}}
     <p>{{i18n 'choose_topic.none_found'}}</p>
   {{else}}
-    {{#each t in view.topics}}
+    {{#each view.topics as |t|}}
       <div class='controls'>
         <label class='radio'>
         <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t target="view"}}>{{t.title}}

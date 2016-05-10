@@ -49,6 +49,12 @@ describe DiscourseDiff do
       expect(DiscourseDiff.new(before, after).inline_html).to eq("<div class=\"inline-diff\"><p class=\"diff-del\">this is the first paragraph</p><p>this is the second paragraph</p></div>")
     end
 
+    it "does not break diff on character references" do
+      before = "<p>'</p>"
+      after = "<p></p>"
+      expect(DiscourseDiff.new(before, after).inline_html).to eq("<div class=\"inline-diff\"><p><del>&#39;</del></p></div>")
+    end
+
   end
 
   describe "side_by_side_html" do
@@ -84,6 +90,12 @@ describe DiscourseDiff do
       before = "<p>this is the first paragraph</p><p>this is the second paragraph</p>"
       after = "<p>this is the second paragraph</p>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"span8\"><p class=\"diff-del\">this is the first paragraph</p><p>this is the second paragraph</p></div><div class=\"span8 offset1\"><p>this is the second paragraph</p></div>")
+    end
+
+    it "does not break diff on character references" do
+      before = "<p>'</p>"
+      after = "<p></p>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq("<div class=\"span8\"><p><del>&#39;</del></p></div><div class=\"span8 offset1\"><p></p></div>")
     end
 
   end

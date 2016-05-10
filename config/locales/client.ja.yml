@@ -122,7 +122,7 @@ ja:
     log_in: "ログイン"
     age: "経過"
     joined: "参加時刻"
-    admin_title: "管理者"
+    admin_title: "Admin"
     flags_title: "通報"
     show_more: "もっと見る"
     show_help: "オプション"
@@ -299,11 +299,11 @@ ja:
         none: "なし"
       notifications:
         watching:
-          title: "ウォッチ"
+          title: "ウォッチ中"
         tracking:
           title: "追跡中"
         regular:
-          title: "ノーマル"
+          title: "デフォルト"
         muted:
           title: "ミュート"
     user_action_groups:
@@ -334,7 +334,7 @@ ja:
         position: "位置"
       posts: "投稿"
       topics: "トピック"
-      latest: "最新ポスト"
+      latest: "最新の投稿"
       latest_by: "最新投稿： "
       toggle_ordering: "カテゴリの並び替えモードを切り替え"
       subcategories: "サブカテゴリ:"
@@ -372,7 +372,7 @@ ja:
       private_messages: "メッセージ"
       activity_stream: "アクティビティ"
       preferences: "設定"
-      expand_profile: "展開"
+      expand_profile: "開く"
       bookmarks: "ブックマーク"
       bio: "自己紹介"
       invited_by: "招待した人: "
@@ -399,7 +399,7 @@ ja:
       moderator: "{{user}} はモデレータです"
       admin: "{{user}} は管理者です"
       moderator_tooltip: "このユーザはモデレータであり"
-      admin_tooltip: "このユーザは管理者であり"
+      admin_tooltip: "このユーザは管理者です"
       blocked_tooltip: "このユーザはブロックされています"
       suspended_notice: "このユーザは {{date}} まで凍結状態です。"
       suspended_reason: "理由: "
@@ -511,14 +511,14 @@ ja:
       last_seen: "最後のアクティビティ"
       created: "参加日"
       log_out: "ログアウト"
-      location: "所在地"
+      location: "場所"
       card_badge:
         title: "ユーザカードバッジ"
       website: "ウェブサイト"
       email_settings: "メール"
       like_notification_frequency:
         title: "いいねされた時に通知"
-        always: "いつも"
+        always: "常時"
       email_previous_replies:
         always: "常に"
       email_digests:
@@ -556,9 +556,9 @@ ja:
         none: "保留中の招待はありません。"
         truncated:
           other: "{{count}} 件の招待を表示しています。"
-        redeemed: "受理された招待"
-        redeemed_tab: "受理"
-        redeemed_at: "受理日"
+        redeemed: "受け取られた招待"
+        redeemed_tab: "受け取られた"
+        redeemed_at: "受け取り日"
         pending: "保留中の招待"
         pending_tab: "保留中"
         topics_entered: "閲覧したトピック数"
@@ -582,7 +582,7 @@ ja:
       password:
         title: "パスワード"
         too_short: "パスワードが短すぎます。"
-        common: "このパスワードは他の人が使用している可能性があります。"
+        common: "このパスワードは他のユーザが使用している可能性があります。"
         same_as_username: "パスワードがユーザ名と一致しています"
         same_as_email: "パスワードとメールアドレスが一致しています"
         ok: "パスワード OK。"
@@ -591,12 +591,12 @@ ja:
         title: "情報"
         stats: "統計"
         time_read: "読んだ時間"
-        likes_given:
-          other: "likes をあげた数"
-        likes_received:
-          other: "likes をもらった数"
+        topic_count:
+          other: "つのトピックを作成"
         posts_read:
           other: "読んだ投稿"
+        bookmark_count:
+          other: "つのブックマーク"
         no_replies: "まだ返信はありません。"
         no_topics: "まだトピックはありません。"
         no_badges: "まだバッジはありません。"
@@ -641,7 +641,7 @@ ja:
     logout: "ログアウトしました"
     refresh: "更新"
     read_only_mode:
-      enabled: "このサイトは閲覧専用モードになっています。閲覧し続けられますが、返信したりいいねを付けたり等のアクションは現在出来ません。"
+      enabled: "このサイトは閲覧専用モードになっています。閲覧し続けられますが、返信したりいいねを付けるなどのアクションは現在出来ません。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
     learn_more: "より詳しく..."
     year: '年'
@@ -819,7 +819,7 @@ ja:
       title: "@ユーザ名 のメンション、投稿やトピックへの返信、メッセージなどの通知"
       none: "通知はありません"
       more: "通知をすべて確認する"
-      total_flagged: "フラグが立った投稿の合計"
+      total_flagged: "通報された投稿の合計"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -832,7 +832,7 @@ ja:
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p> {{description}}バッジを付けられました</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p> {{description}}バッジをゲットしました</p>"
       group_message_summary:
         other: "<i title='グループ宛にメッセージが届いています' class='fa fa-group'></i><p> {{count}}件のメッセージが{{group_name}}へ着ています</p>"
       alt:
@@ -878,7 +878,7 @@ ja:
         category: "\"{{category}}\" カテゴリで検索する"
         topic: "このトピックを探す"
         private_messages: "メッセージ検索"
-    hamburger_menu: "他のトピック一覧 or カテゴリ へ行く"
+    hamburger_menu: "他のトピック一覧やカテゴリを見る"
     go_back: '戻る'
     not_logged_in_user: 'ユーザアクティビティと設定ページ'
     current_user: 'ユーザページに移動'
@@ -988,7 +988,7 @@ ja:
           '3_6': 'このカテゴリに参加中のため通知されます'
           '3_5': 'このトピックに参加中のため通知されます'
           '3_2': 'このトピックに参加中のため通知されます。'
-          '3_1': 'このトピックの作成者なため、通知されます。'
+          '3_1': 'このトピックを作成したため通知されます。'
           '3': 'このトピックに参加中のため通知されます。'
           '2_8': 'このカテゴリを追跡しているため通知されます。'
           '2_4': 'このトピックに返信したため通知されます。'
@@ -1000,10 +1000,10 @@ ja:
           '0_2': 'このトピックに関して一切通知を受け取りません。'
           '0': 'このトピックに関して一切通知を受け取りません。'
         watching_pm:
-          title: "参加中"
+          title: "ウォッチ中"
           description: "未読件数と新しい投稿がトピックの横に表示されます。このトピックに対して新しい投稿があった場合に通知されます。"
         watching:
-          title: "参加中"
+          title: "ウォッチ中"
           description: "未読件数と新しい投稿がトピックの横に表示されます。このトピックに対して新しい投稿があった場合に通知されます。"
         tracking_pm:
           title: "追跡中"
@@ -1012,10 +1012,10 @@ ja:
           title: "追跡中"
           description: "新しい返信の数がこのトピックに表示されます。他のユーザから@ユーザ名でメンションされた場合や、投稿へ返信された場合に通知されます。"
         regular:
-          title: "ノーマル"
+          title: "デフォルト"
           description: "他のユーザからメンションされた場合か、投稿に返信された場合に通知されます。"
         regular_pm:
-          title: "ノーマル"
+          title: "デフォルト"
           description: "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
         muted_pm:
           title: "ミュートされました"
@@ -1037,6 +1037,8 @@ ja:
         invisible: "リストから非表示にする"
         visible: "リストに表示"
         reset_read: "読み込みデータをリセット"
+        make_public: "公開トピックへ変更"
+        make_private: "プライベートメッセージへ変更"
       feature:
         pin: "トピックをピン留めする..."
         unpin: "トピックの固定を解除"
@@ -1147,14 +1149,14 @@ ja:
       edit_reason: "理由: "
       post_number: "投稿{{number}}"
       last_edited_on: "投稿の最終編集日"
-      reply_as_new_topic: "リンクされたトピックとして返信"
-      continue_discussion: "{{postLink}} からのディスカッションを継続:"
+      reply_as_new_topic: "トピックへのリンクを付けて返信"
+      continue_discussion: "{{postLink}} から:"
       follow_quote: "引用した投稿に移動"
       show_full: "全て表示"
       show_hidden: '隠されたコンテンツを表示する'
       deleted_by_author:
         other: "(投稿は投稿者により削除されました。フラグがついていない場合、%{count}時間後に自動的に削除されます)"
-      expand_collapse: "展開/折りたたみ"
+      expand_collapse: "開く/折りたたみ"
       gap:
         other: "{{count}}個の返信をすべて表示する"
       more_links: "{{count}} つのリンク..."
@@ -1170,9 +1172,7 @@ ja:
         create: "申し訳ありませんが、投稿中にエラーが発生しました。もう一度やり直してください。"
         edit: "申し訳ありませんが、投稿の編集中にエラーが発生しました。もう一度やり直してください。"
         upload: "申し訳ありませんが、ファイルアップロード中にエラーが発生しました。もう一度やり直してください。"
-        file_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}KB)"
         too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
-        too_many_dragged_and_dropped_files: "申し訳ありません。一度にドラッグ&ドロップできるのは10ファイルまでです"
         upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (利用可能な拡張子: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
@@ -1192,7 +1192,7 @@ ja:
         undo_like: "「いいね！」を取り消す"
         edit: "この投稿を編集"
         edit_anonymous: "投稿を編集するには、ログインする必要があります"
-        flag: "この投稿にフラグをつける、またはプライベート通知を送る"
+        flag: "この投稿を通報する、またはプライベート通知を送る"
         delete: "投稿を削除する"
         undelete: "投稿を元に戻す"
         share: "投稿のリンクを共有する"
@@ -1213,7 +1213,7 @@ ja:
       actions:
         flag: '通報'
         defer_flags:
-          other: "受理された通報"
+          other: "取り下げた通報"
         it_too:
           off_topic: "通報する"
           spam: "通報する"
@@ -1236,7 +1236,7 @@ ja:
         by_you:
           off_topic: "関係のない話題として通報しました"
           spam: "スパム報告として通報しました"
-          inappropriate: "不適切であると報告するフラグを立てました"
+          inappropriate: "不適切であると報告されています"
           notify_moderators: "スタッフによる確認が必要として通報しました"
           notify_user: "このユーザにメッセージを送信しました"
           bookmark: "この投稿をブックマークしました"
@@ -1338,7 +1338,7 @@ ja:
       auto_close_label: "トピックが自動的にクローズするまでの時間:"
       auto_close_units: "時間"
       email_in: "カスタムメールアドレス:"
-      email_in_allow_strangers: "登録されていないユーザからメールを受けとります。"
+      email_in_allow_strangers: "登録されていないユーザからメールを受け取ります"
       email_in_disabled: "メールでの新規投稿は、サイトの設定で無効になっています。メールでの新規投稿を有効にするには"
       email_in_disabled_click: '"email in"設定を有効にしてください'
       allow_badges_label: "このカテゴリでバッジが付与されることを許可"
@@ -1352,16 +1352,16 @@ ja:
       parent: "親カテゴリ"
       notifications:
         watching:
-          title: "カテゴリ参加中"
+          title: "ウォッチ中"
         tracking:
           title: "追跡中"
         regular:
-          title: "ノーマル"
+          title: "デフォルト"
           description: "他のユーザからメンションされた場合や、投稿に返信された場合に通知されます。"
         muted:
           title: "ミュート中"
     flagging:
-      title: '私達のコミュニティの維持を助けてくれてありがとうごうざいます'
+      title: '報告していただきありがとうございます。'
       action: '投稿を通報'
       take_action: "アクションをする"
       notify_action: 'メッセージ'
@@ -1378,13 +1378,13 @@ ja:
         inappropriate: "不適切"
         spam: "スパム"
       custom_placeholder_notify_user: "具体的に、建設的に、そして常に親切にしましょう。"
-      custom_placeholder_notify_moderators: "特に何を懸念しているかを伝えてください。可能な場合、関連するリンクや例を提供してください。"
+      custom_placeholder_notify_moderators: "特にどのような問題が発生しているか記入して下さい。可能なら、関連するリンクなどを教えて下さい。"
       custom_message:
         at_least: "少なくとも{{n}}文字入力してください"
         more: "あと{{n}}文字..."
         left: "残り{{n}}文字"
     flagging_topic:
-      title: "私達のコミュニティの維持を助けてくれてありがとうごうざいます"
+      title: "報告していただきありがとうございます。"
       action: "トピックを通報"
       notify_action: "メッセージ"
     topic_map:
@@ -1520,7 +1520,7 @@ ja:
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:
-      title: 'Discourse 管理者'
+      title: 'Discourseの管理者'
       moderator: 'モデレータ'
       dashboard:
         title: "ダッシュボード"
@@ -1533,7 +1533,7 @@ ja:
         no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         version_check_pending: "まるでアップデート直後のようです。素晴らしい！"
-        installed_version: "Installed"
+        installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "Discourse のインストールにいくつか問題が発見されました:"
         last_checked: "最終チェック"
@@ -1564,7 +1564,6 @@ ja:
           30_days_ago: "30日前"
           all: "全て"
           view_table: "table"
-          view_chart: "bar chart"
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"
@@ -1573,9 +1572,9 @@ ja:
         by: "by"
       flags:
         title: "通報"
-        old: "古いフラグ"
-        active: "アクティブなフラグ"
-        agree: "賛成"
+        old: "古い通報"
+        active: "アクティブな通報"
+        agree: "賛成する"
         agree_title: "有効で、間違いが無いものとして通報を行う"
         agree_flag_modal_title: "Agree and..."
         agree_flag_hide_post: "賛成(ポスト非表示 + プライベートメッセージ送信)"
@@ -1584,11 +1583,11 @@ ja:
         agree_flag_restore_post_title: "この投稿を復元"
         agree_flag: "通報に賛成"
         agree_flag_title: "投稿を変更できなくする事に賛成"
-        defer_flag: "受理"
-        defer_flag_title: "通報を削除します。何のアクションも必要としません"
+        defer_flag: "取り下げる"
+        defer_flag_title: "通報を削除します。何も行いません。"
         delete: "削除する"
         delete_title: "この通報で通報されている投稿を削除します"
-        delete_post_defer_flag: "投稿を削除し、通報を受理します"
+        delete_post_defer_flag: "投稿を削除し、通報を取り下げます"
         delete_post_defer_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
         delete_post_agree_flag: "投稿を削除することに賛成します"
         delete_post_agree_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
@@ -1599,13 +1598,13 @@ ja:
         disagree_flag_unhide_post_title: "投稿への通報を削除し、投稿を表示します"
         disagree_flag: "反対する"
         disagree_flag_title: "無効または、不正としてこの通報を拒否します"
-        clear_topic_flags: "トピックのフラグをクリアしました"
+        clear_topic_flags: "完了"
         clear_topic_flags_title: "このトピックについての問題が解決されました。「完了」をクリックして通報の対応を完了します。"
         more: "(more replies...)"
         dispositions:
-          agreed: "賛成した。"
+          agreed: "賛成しました。"
           disagreed: "反対する"
-          deferred: "deferred"
+          deferred: "取り下げられた"
         flagged_by: "通報者: "
         resolved_by: "解決方法"
         took_action: "Took action"
@@ -1614,7 +1613,7 @@ ja:
         reply_message: "返信する"
         no_results: "通報はありません。"
         topic_flagged: "この <strong>トピック</strong> は通報されました。"
-        visit_topic: "トピックを閲覧して問題を調査してくさだい"
+        visit_topic: "トピックを確認"
         was_edited: "最初の通報後に編集された投稿"
         previous_flags_count: "この投稿は既に {{count}} 回通報されています"
         summary:
@@ -1684,6 +1683,14 @@ ja:
           backups: "バックアップ"
           logs: "ログ"
         none: "バックアップはありません"
+        read_only:
+          enable:
+            title: "閲覧専用モードを有効にする"
+            label: "閲覧専用モードを有効"
+            confirm: "閲覧専用モードを有効にしてもよろしいですか？"
+          disable:
+            title: "閲覧専用モードを無効にする"
+            label: "閲覧専用モードを無効"
         logs:
           none: "ログがありません"
         columns:
@@ -1705,7 +1712,7 @@ ja:
           backup:
             label: "バックアップ"
             title: "バックアップを作成"
-            confirm: "新しいバックアップを行ってもよろしいですか？"
+            confirm: "新しくバックアップを行ってもよろしいですか？"
             without_uploads: "はい(ファイルは含まない)"
           download:
             label: "ダウンロード"
@@ -1770,6 +1777,8 @@ ja:
         color: "色"
         opacity: "透明度"
         copy: "コピー"
+        email_templates:
+          title: "メールのテンプレート"
         css_html:
           title: "CSS, HTML"
           long_title: "CSS と HTML のカスタマイズ"
@@ -1815,6 +1824,7 @@ ja:
             name: 'love'
             description: "ライクボタンの色"
       email:
+        title: "メール"
         settings: "設定"
         preview_digest: "ダイジェストのプレビュー"
         sending_test: "テストメールを送信中..."
@@ -1875,7 +1885,7 @@ ja:
           staff_user: "スタッフユーザ"
           target_user: "対象ユーザ"
           subject: "対象"
-          when: "いつ"
+          when: "日時"
           context: "コンテンツ"
           details: "詳細"
           previous_value: "変更前"
@@ -1962,7 +1972,7 @@ ja:
           staff: 'スタッフ'
           suspended: '凍結中'
           blocked: 'ブロック中'
-          suspect: 'サスペクト'
+          suspect: 'マーク中'
         approved: "承認?"
         approved_selected:
           other: "承認ユーザ ({{count}})"
@@ -1979,7 +1989,7 @@ ja:
           moderators: 'モデレータ'
           blocked: 'ブロック中のユーザ'
           suspended: '凍結中のユーザ'
-          suspect: 'サスペクトユーザ'
+          suspect: 'マーク中のユーザ'
         reject_successful:
           other: "%{count}人のユーザの拒否に成功しました。"
         reject_failures:
@@ -2004,7 +2014,7 @@ ja:
         moderator: "モデレータ?"
         admin: "管理者?"
         blocked: "ブロック中?"
-        show_admin_profile: "管理者"
+        show_admin_profile: "アカウントの管理"
         edit_title: "タイトルを編集"
         save_title: "タイトルを保存"
         refresh_browsers: "ブラウザを強制リフレッシュ"
@@ -2090,7 +2100,7 @@ ja:
           posts_read: "閲覧した投稿数"
           posts_read_all_time: "閲覧した投稿数"
           flagged_posts: "通報されている投稿"
-          flagged_by_users: "フラグを立ったユーザ"
+          flagged_by_users: "通報されたユーザ"
           likes_given: "与えた「いいね！」"
           likes_received: "もらった「いいね！」"
           likes_received_days: "「いいね！」数：日別"
@@ -2170,8 +2180,9 @@ ja:
           legal: "法律に基づく情報"
           uncategorized: 'その他'
           backups: "バックアップ"
-          login: "ログインする"
+          login: "ログイン"
           plugins: "プラグイン"
+          user_preferences: "ユーザ設定"
       badges:
         title: バッジ
         new_badge: 新しいバッジ
@@ -2183,9 +2194,9 @@ ja:
         badge_type: バッジの種類
         badge_grouping: グループ
         badge_groupings:
-          modal_title: バッジグルーピング
-        granted_by: バッジ付与者
-        granted_at: バッジ付与日
+          modal_title: バッジの振り分け
+        granted_by: 'バッジをつけた人: '
+        granted_at: 'バッジをつけた日: '
         reason_help: (投稿かトピックへのリンク)
         save: バッジを保存する
         delete: バッジを削除する
@@ -2243,8 +2254,11 @@ ja:
         image: "画像"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
       embedding:
+        title: "埋め込み"
         edit: "編集"
         category: "カテゴリへ投稿"
+        settings: "埋め込みの設定"
+        save: "埋め込みの設定を保存"
       permalink:
         title: "パーマリンク"
         url: "URL"

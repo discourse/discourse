@@ -317,8 +317,7 @@ class PostCreator
       topic_creator = TopicCreator.new(@user, guardian, @opts)
       @topic = topic_creator.create
     rescue ActiveRecord::Rollback
-      add_errors_from(topic_creator)
-      return
+      rollback_from_errors!(topic_creator)
     end
     @post.topic_id = @topic.id
     @post.topic = @topic
@@ -439,11 +438,13 @@ class PostCreator
   end
 
   def auto_notify_for_tags
-    tags = DiscourseTagging.tags_for_saving(@opts[:tags], @guardian)
-    if tags.present?
-      @topic.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
-      @topic.save
-      DiscourseTagging.auto_notify_for(tags, @topic)
+    if SiteSetting.tagging_enabled
+      tags = DiscourseTagging.tags_for_saving(@opts[:tags], @guardian)
+      if tags.present?
+        @topic.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
+        @topic.save
+        DiscourseTagging.auto_notify_for(tags, @topic)
+      end
     end
   end
 

@@ -8,7 +8,9 @@
     </li>
     <li>{{user-stat value=model.posts_read_count label="user.summary.posts_read"}}</li>
     <li>{{user-stat value=model.likes_given label="user.summary.likes_given"}}</li>
-    <li>{{user-stat value=model.bookmark_count label="user.summary.bookmark_count"}}</li>
+    {{#if model.bookmark_count}}
+      <li>{{user-stat value=model.bookmark_count label="user.summary.bookmark_count"}}</li>
+    {{/if}}
     <li>{{user-stat value=model.topic_count label="user.summary.topic_count"}}</li>
     <li>{{user-stat value=model.post_count label="user.summary.post_count"}}</li>
     <li>{{user-stat value=model.likes_received label="user.summary.likes_received"}}</li>
@@ -20,7 +22,7 @@
     <h3 class='stats-title'>{{i18n "user.summary.top_replies"}}</h3>
     {{#if model.replies.length}}
       <ul>
-        {{#each reply in model.replies}}
+        {{#each model.replies as |reply|}}
           <li>
             <span class='topic-info'>
               {{format-date reply.createdAt format="tiny" noTitle="true"}}
@@ -45,7 +47,7 @@
     <h3 class='stats-title'>{{i18n "user.summary.top_topics"}}</h3>
     {{#if model.topics.length}}
       <ul>
-        {{#each topic in model.topics}}
+        {{#each model.topics as |topic|}}
           <li>
             <span class='topic-info'>
               {{format-date topic.createdAt format="tiny" noTitle="true"}}
@@ -73,7 +75,7 @@
     <h3 class='stats-title'>{{i18n "user.summary.top_links"}}</h3>
     {{#if model.links.length}}
       <ul>
-        {{#each link in model.links}}
+        {{#each model.links as |link|}}
           <li>
             <a class='domain'
                href='{{unbound link.url}}'
@@ -93,14 +95,51 @@
     {{/if}}
   </div>
   <div class='top-sub-section likes-section pull-right'>
+  <h3 class='stats-title'>{{i18n "user.summary.most_replied_to_users"}}</h3>
+    {{#if model.most_replied_to_users.length}}
+      <ul>
+        {{#each user in model.most_replied_to_users}}
+          <li>
+            {{#user-info user=user}}
+              {{fa-icon "reply"}}
+              <span class='replies'>{{user.count}}</span>
+            {{/user-info}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>{{i18n "user.summary.no_likes"}}</p>
+    {{/if}}
+  </div>
+</div>
+
+<div class='top-section'>
+  <div class='top-sub-section likes-section pull-left'>
     <h3 class='stats-title'>{{i18n "user.summary.most_liked_by"}}</h3>
     {{#if model.most_liked_by_users.length}}
       <ul>
-        {{#each user in model.most_liked_by_users}}
+        {{#each model.most_liked_by_users as |user|}}
           <li>
             {{#user-info user=user}}
               {{fa-icon "heart"}}
-              <span class='likes'>{{user.likes}}</span>
+              <span class='likes'>{{user.count}}</span>
+            {{/user-info}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>{{i18n "user.summary.no_likes"}}</p>
+    {{/if}}
+  </div>
+  <div class='top-sub-section likes-section pull-right'>
+    <h3 class='stats-title'>{{i18n "user.summary.most_liked_users"}}</h3>
+    {{#if model.most_liked_users.length}}
+      <ul>
+        {{#each user in model.most_liked_users}}
+          <li>
+            {{#user-info user=user}}
+              {{fa-icon "heart"}}
+              <span class='likes'>{{user.count}}</span>
             {{/user-info}}
           </li>
         {{/each}}
@@ -113,7 +152,7 @@
 
 <div class='top-section badges-section'>
   <h3 class='stats-title'>{{i18n "user.summary.top_badges"}}</h3>
-  {{#each badge in model.badges}}
+  {{#each model.badges as |badge|}}
     {{badge-card badge=badge count=badge.count navigateOnClick="true" username=user.username_lower}}
   {{else}}
     <p>{{i18n "user.summary.no_badges"}}</p>

@@ -1,5 +1,5 @@
 {{#user-stream stream=model}}
-  {{#each p in model.content}}
+  {{#each model.content as |p|}}
     <div {{bind-attr class=":item p.hidden p.deleted p.moderator_action"}}>
       <div class="clearfix info">
         <a href="{{unbound p.usernameUrl}}" class="avatar-link">

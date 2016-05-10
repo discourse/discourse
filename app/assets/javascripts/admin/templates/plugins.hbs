@@ -2,7 +2,7 @@
   <ul class="nav nav-stacked">
     {{nav-item route='adminPlugins.index' label="admin.plugins.title"}}
 
-    {{#each route in adminRoutes}}
+    {{#each adminRoutes as |route|}}
       {{nav-item route=route.full_location label=route.label}}
     {{/each}}
   </ul>

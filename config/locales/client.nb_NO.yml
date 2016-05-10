@@ -2388,7 +2388,6 @@ nb_NO:
       delete_confirm: "Er du sikker påat du ønsker å slette dette emneordet?"
       rename_tag: "Endre emneord"
       rename_instructions: "Velg et nytt navn på dette emneordet:"
-
       notifications:
         watching:
           title: "Følger"
@@ -2402,4 +2401,3 @@ nb_NO:
         muted:
           title: "Dempet"
           description: "Du vil ikke bli varslet om noe vedrørende disse emneneordene og de vil ikke vises i din ulest-liste."
-
