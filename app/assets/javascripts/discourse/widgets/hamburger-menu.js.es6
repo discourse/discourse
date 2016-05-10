@@ -147,7 +147,10 @@ export default createWidget('hamburger-menu', {
       }}));
     }
 
-    results.push(this.attach('menu-links', { contents: () => this.generalLinks() }));
+    results.push(this.attach('menu-links', { contents: () => {
+      const extraLinks = applyDecorators(this, 'general-links', this.attrs, this.state) || [];
+      return this.generalLinks().concat(extraLinks);
+    }}));
     results.push(this.listCategories());
     results.push(h('hr'));
     results.push(this.attach('menu-links', { omitRule: true, contents: () => this.footerLinks(prioritizeFaq, faqUrl) }));
