@@ -148,7 +148,8 @@
 
   RawHandlebars.get = function(ctx, property, options){
     if (options.types && options.data.view) {
-      return options.data.view.getStream(property).value();
+      var view = options.data.view;
+      return view.getStream ? view.getStream(property).value() : view.getAttr(property);
     } else {
       return Ember.get(ctx, property);
     }

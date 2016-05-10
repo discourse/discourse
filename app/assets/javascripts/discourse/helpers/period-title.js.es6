@@ -1,3 +1,5 @@
+import { htmlHelper } from 'discourse/lib/helpers';
+
 const TITLE_SUBS = {
   all: 'all_time',
   yearly: 'this_year',
@@ -6,7 +8,7 @@ const TITLE_SUBS = {
   daily: 'today',
 };
 
-export default Ember.Handlebars.makeBoundHelper(function (period, options) {
+export default htmlHelper((period, options) => {
   const title = I18n.t('filters.top.' + (TITLE_SUBS[period] || 'this_week'));
   if (options.hash.showDateRange) {
     var dateString = "";
@@ -27,8 +29,9 @@ export default Ember.Handlebars.makeBoundHelper(function (period, options) {
         dateString = moment().format(I18n.t('dates.full_no_year_no_time'));
         break;
     }
-    return new Handlebars.SafeString(title + " <span class='top-date-string'>" + dateString + "</span>");
+
+    return `${title} <span class='top-date-string'>${dateString}</span>`;
   } else {
-    return new Handlebars.SafeString(title);
+    return title;
   }
 });
