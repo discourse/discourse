@@ -1,3 +1,3 @@
-Em.Handlebars.helper('preserve-newlines', str => {
-  return new Handlebars.SafeString(Discourse.Utilities.escapeExpression(str).replace(/\n/g, "<br>"));
-});
+import { htmlHelper } from 'discourse/lib/helpers';
+
+export default htmlHelper(str => Discourse.Utilities.escapeExpression(str).replace(/\n/g, "<br>"));
