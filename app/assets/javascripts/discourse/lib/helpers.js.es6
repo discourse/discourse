@@ -2,11 +2,11 @@
 export function htmlHelper(fn) {
   if (Ember.Helper) {
     return Ember.Helper.helper(function() {
-      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)));
+      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)) || '');
     });
   } else {
     return Ember.Handlebars.makeBoundHelper(function() {
-      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)));
+      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)) || '');
     });
   }
 }
