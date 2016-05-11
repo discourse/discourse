@@ -79,11 +79,10 @@ class TagsController < ::ApplicationController
 
   def destroy
     guardian.ensure_can_admin_tags!
-    tag_id = params[:tag_id]
+    tag_name = params[:tag_id]
     TopicCustomField.transaction do
-      TopicCustomField.where(name: DiscourseTagging::TAGS_FIELD_NAME, value: tag_id).delete_all
-      UserCustomField.delete_all(name: ::DiscourseTagging.notification_key(tag_id))
-      StaffActionLogger.new(current_user).log_custom('deleted_tag', subject: tag_id)
+      Tag.find_by_name(tag_name).destroy
+      StaffActionLogger.new(current_user).log_custom('deleted_tag', subject: tag_name)
     end
     render json: success_json
   end
@@ -91,15 +90,14 @@ class TagsController < ::ApplicationController
   def tag_feed
     discourse_expires_in 1.minute
 
-    tag_id = ::DiscourseTagging.clean_tag(params[:tag_id])
+    tag_id = DiscourseTagging.clean_tag(params[:tag_id])
     @link = "#{Discourse.base_url}/tags/#{tag_id}"
     @description = I18n.t("rss_by_tag", tag: tag_id)
     @title = "#{SiteSetting.title} - #{@description}"
     @atom_link = "#{Discourse.base_url}/tags/#{tag_id}.rss"
 
-    query = TopicQuery.new(current_user)
-    topics_tagged = TopicCustomField.where(name: DiscourseTagging::TAGS_FIELD_NAME, value: tag_id).pluck(:topic_id)
-    latest_results = query.latest_results.where(id: topics_tagged)
+    query = TopicQuery.new(current_user, {tags: [tag_id]})
+    latest_results = query.latest_results
     @topic_list = query.create_list(:by_tag, {}, latest_results)
 
     render 'list/list', formats: [:rss]
