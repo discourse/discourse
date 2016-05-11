@@ -470,7 +470,7 @@ class TopicQuery
 
       if options[:page]
         offset = options[:page].to_i * options[:per_page]
-        result.offset(offset) if offset > 0
+        result = result.offset(offset) if offset > 0
       end
 
       if options[:topic_ids]
