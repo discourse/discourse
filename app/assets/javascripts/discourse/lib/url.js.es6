@@ -90,6 +90,15 @@ const DiscourseURL = Ember.Object.extend({
     });
   },
 
+  routeToTag(a) {
+    if (a && a.host !== document.location.host) {
+      document.location = a.href;
+      return false;
+    }
+
+    return this.routeTo(a.href);
+  },
+
   /**
     Our custom routeTo method is used to intelligently overwrite default routing
     behavior.

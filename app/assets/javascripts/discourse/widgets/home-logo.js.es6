@@ -48,15 +48,9 @@ export default createWidget('home-logo', {
 
   click(e) {
     if (wantsNewWindow(e)) { return false; }
-
     e.preventDefault();
-    const a = $(e.target).closest('a')[0];
-    if (a && a.host !== document.location.host) {
-      document.location = a.href;
-    }
 
-    DiscourseURL.routeTo(this.href());
+    DiscourseURL.routeToTag($(e.target).closest('a')[0]);
     return false;
   }
-
 });
