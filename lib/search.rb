@@ -279,6 +279,24 @@ class Search
     end
   end
 
+  advanced_filter(/^\#([a-zA-Z0-9,\-:]+)/) do |posts,match|
+    slug = match.to_s.split(":")
+    if slug[1]
+      # sub category
+      parent_category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
+      category_id = Category.where(slug: slug[1].downcase, parent_category_id: parent_category_id).pluck(:id).first
+    else
+      # main category
+      category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
+    end
+
+    if category_id
+      posts.where("topics.category_id = ?", category_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
   advanced_filter(/group:(.+)/) do |posts,match|
     group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck(:id).first
     if group_id
