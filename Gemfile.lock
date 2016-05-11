@@ -437,7 +437,7 @@ DEPENDENCIES
   lru_redux
   mail
   memory_profiler
-  message_bus (= 2.0.0.beta.10)
+  message_bus (= 2.0.0.beta.11)
   mime-types
   minitest
   mocha
