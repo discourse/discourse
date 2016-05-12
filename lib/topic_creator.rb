@@ -92,8 +92,11 @@ class TopicCreator
     end
 
     unless topic.private_message?
+      # In order of importance:
       CategoryUser.auto_watch_new_topic(topic)
       CategoryUser.auto_track_new_topic(topic)
+      TagUser.auto_watch_new_topic(topic)
+      TagUser.auto_track_new_topic(topic)
     end
   end
 
@@ -145,22 +148,6 @@ class TopicCreator
 
   def setup_tags(topic)
     DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
-    # if SiteSetting.tagging_enabled
-    #   tag_names = DiscourseTagging.tags_for_saving(@opts[:tags], @guardian)
-    #   if tag_names.present?
-    #     tags = Tag.where(name: tag_names).all
-    #     if tags.size < tag_names.size
-    #       existing_names = tags.map(&:name)
-    #       tag_names.each do |name|
-    #         next if existing_names.include?(name)
-    #         tags << Tag.create(name: name)
-    #       end
-    #     end
-    #     topic.tags = tags
-    #     # TODO: do this in post_creator
-    #     # DiscourseTagging.auto_notify_for(tags, @topic)
-    #   end
-    # end
   end
 
   def setup_auto_close_time(topic)

@@ -12,9 +12,15 @@ class CreateTags < ActiveRecord::Migration
       t.timestamps
     end
 
+    create_table :tag_users do |t|
+      t.references :tag,  null: false
+      t.references :user, null: false
+      t.integer    :notification_level, null: false
+    end
+
     add_index :tags, :name, unique: true
     add_index :topic_tags, [:topic_id, :tag_id], unique: true
-
-    # tag_users? for notification preferences
+    add_index :tag_users, [:user_id, :tag_id, :notification_level], name: "idx_tag_users_ix1", unique: true
+    add_index :tag_users, [:tag_id, :user_id, :notification_level], name: "idx_tag_users_ix2", unique: true
   end
 end

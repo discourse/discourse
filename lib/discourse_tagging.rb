@@ -41,15 +41,20 @@ module DiscourseTagging
           end
         end
 
-        topic.tags = tags
+        auto_notify_for(tags, topic)
 
-        # TODO:
-        # auto_notify_for(tags, topic)
+        topic.tags = tags
       else
+        auto_notify_for([], topic)
         topic.tags = []
       end
     end
     true
+  end
+
+  def self.auto_notify_for(tags, topic)
+    TagUser.auto_watch_new_topic(topic, tags)
+    TagUser.auto_track_new_topic(topic, tags)
   end
 
   def self.clean_tag(tag)
@@ -88,27 +93,6 @@ module DiscourseTagging
 
   def self.notification_key(tag_id)
     "tags_notification:#{tag_id}"
-  end
-
-  def self.auto_notify_for(tags, topic)
-    # This insert will run up to SiteSetting.max_tags_per_topic times
-    tags.each do |tag|
-      key_name_sql = ActiveRecord::Base.sql_fragment("('#{notification_key(tag)}')", tag)
-
-      sql = <<-SQL
-         INSERT INTO topic_users(user_id, topic_id, notification_level, notifications_reason_id)
-         SELECT ucf.user_id,
-                #{topic.id.to_i},
-                CAST(ucf.value AS INTEGER),
-                #{TopicUser.notification_reasons[:plugin_changed]}
-         FROM user_custom_fields AS ucf
-         WHERE ucf.name IN #{key_name_sql}
-           AND NOT EXISTS(SELECT 1 FROM topic_users WHERE topic_id = #{topic.id.to_i} AND user_id = ucf.user_id)
-           AND CAST(ucf.value AS INTEGER) <> #{TopicUser.notification_levels[:regular]}
-      SQL
-
-      ActiveRecord::Base.exec_sql(sql)
-    end
   end
 
   def self.rename_tag(current_user, old_id, new_id)

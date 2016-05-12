@@ -32,7 +32,10 @@ class TopicUser < ActiveRecord::Base
                                          auto_watch_category: 6,
                                          auto_mute_category: 7,
                                          auto_track_category: 8,
-                                         plugin_changed: 9)
+                                         plugin_changed: 9,
+                                         auto_watch_tag: 10,
+                                         auto_mute_tag: 11,
+                                         auto_track_tag: 12)
     end
 
     def auto_track(user_id, topic_id, reason)
