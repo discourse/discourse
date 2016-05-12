@@ -341,6 +341,12 @@ table.md-table {
   clear: both;
 }
 
+/* hide the reply border above the time gap notices */
+.time-gap + .topic-post .topic-body,
+.time-gap + .topic-post .topic-avatar {
+  border-top: none;
+}
+
 .whisper {
   .post-info.whisper {
     margin-left: 0.5em;
