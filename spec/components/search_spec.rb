@@ -426,7 +426,7 @@ describe Search do
       expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(1)
     end
 
-    it 'supports before and after in:first user:' do
+    it 'supports before and after, in:first, user:, @username' do
 
       time = Time.zone.parse('2001-05-20 2:55')
       freeze_time(time)
@@ -449,6 +449,8 @@ describe Search do
       expect(Search.execute('user:nobody').posts.length).to eq(0)
       expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
       expect(Search.execute("user:#{_post.user_id}").posts.length).to eq(1)
+
+      expect(Search.execute("@#{_post.user.username}").posts.length).to eq(1)
     end
 
     it 'supports group' do
