@@ -1660,7 +1660,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your post was hidden.
+        This is an automated message from %{site_name} to let you know that your post was hidden.
 
         %{base_url}%{url}
 
@@ -2023,22 +2023,22 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been temporarily hidden because they were flagged by the community.
+        This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
 
         As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     blocked_by_staff:
-      subject_template: "Account temporarily blocked"
+      subject_template: "Account temporarily on hold"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been temporarily blocked as a precautionary measure.
+        This is an automated message from %{site_name} to let you know that your account has been temporarily placed on hold as a precautionary measure.
 
-        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your account. We apologize for the inconvenience.
+        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your most recent posts. We apologize for the inconvenience.
 
-        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     user_automatically_blocked:
       subject_template: "New user %{username} blocked due to community flags"
@@ -2063,11 +2063,11 @@ en:
         This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
 
     unblocked:
-      subject_template: "Account unblocked"
+      subject_template: "Account no longer on hold"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
+        This is an automated message from %{site_name} to let you know that your account is no longer on hold after staff review.
 
         You can now create new replies and topics again. Thank you for your patience.
 
