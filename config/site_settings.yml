@@ -231,10 +231,10 @@ login:
     default: false
   twitter_consumer_key:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]+$"
+    regex: "^[\\w+-]+$"
   twitter_consumer_secret:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]+$"
+    regex: "^[\\w+-]+$"
   enable_instagram_logins:
     client: true
     default: false
@@ -625,7 +625,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: '^[^A-Z_.]+$' # can't use '.' when using HTTPS
+    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -930,7 +930,7 @@ backups:
     shadowed_by_global: true
   s3_backup_bucket:
     default: ''
-    regex: "^[^A-Z_.]+$" # can't use '.' when using HTTPS
+    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
     shadowed_by_global: true
   s3_disable_cleanup:
     default: false
