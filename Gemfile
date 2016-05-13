@@ -168,6 +168,7 @@ gem 'htmlentities', require: false
 #  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
+gem 'fast_stack', require: false, platform: [:mri_20]
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
