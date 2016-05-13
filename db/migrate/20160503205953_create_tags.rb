@@ -16,6 +16,7 @@ class CreateTags < ActiveRecord::Migration
       t.references :tag,  null: false
       t.references :user, null: false
       t.integer    :notification_level, null: false
+      t.timestamps
     end
 
     add_index :tags, :name, unique: true

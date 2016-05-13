@@ -118,16 +118,17 @@ class TagsController < ::ApplicationController
   end
 
   def notifications
-    level = current_user.custom_fields[::DiscourseTagging.notification_key(params[:tag_id])] || 1
+    tag = Tag.find_by_name(params[:tag_id])
+    raise Discourse::NotFound unless tag
+    level = tag.tag_users.where(user: current_user).first.try(:notification_level) || TagUser.notification_levels[:regular]
     render json: { tag_notification: { id: params[:tag_id], notification_level: level.to_i } }
   end
 
   def update_notifications
+    tag = Tag.find_by_name(params[:tag_id])
+    raise Discourse::NotFound unless tag
     level = params[:tag_notification][:notification_level].to_i
-
-    current_user.custom_fields[::DiscourseTagging.notification_key(params[:tag_id])] = level
-    current_user.save_custom_fields
-
+    TagUser.change(current_user.id, tag.id, level)
     render json: {notification_level: level}
   end
 

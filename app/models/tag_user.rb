@@ -6,6 +6,28 @@ class TagUser < ActiveRecord::Base
     TopicUser.notification_levels
   end
 
+  def self.change(user_id, tag_id, level)
+    tag_id = tag_id.id if tag_id.is_a?(::Tag)
+    user_id = user_id.id if user_id.is_a?(::User)
+
+    tag_id = tag_id.to_i
+    user_id = user_id.to_i
+
+    tag_user = TagUser.where(user_id: user_id, tag_id: tag_id).first
+
+    if tag_user
+      return tag_user if tag_user.notification_level == level
+      tag_user.notification_level = level
+      tag_user.save
+    else
+      tag_user = TagUser.create(user_id: user_id, tag_id: tag_id, notification_level: level)
+    end
+
+    tag_user
+  rescue ActiveRecord::RecordNotUnique
+    # In case of a race condition to insert, do nothing
+  end
+
   %w{watch track}.each do |s|
     define_singleton_method("auto_#{s}_new_topic") do |topic, new_tags=nil|
       tag_ids = topic.tags.pluck(:id)
@@ -69,5 +91,5 @@ class TagUser < ActiveRecord::Base
     )
   end
 
-  private_class_method :apply_default_to_topic
+  private_class_method :apply_default_to_topic, :remove_default_from_topic
 end
