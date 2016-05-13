@@ -231,6 +231,10 @@ class Search
     end
   end
 
+  advanced_filter(/in:wiki/) do |posts,match|
+    posts.where(wiki: true)
+  end
+
   advanced_filter(/badge:(.*)/) do |posts,match|
     badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
     if badge_id
