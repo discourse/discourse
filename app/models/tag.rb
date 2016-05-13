@@ -8,4 +8,10 @@ class Tag < ActiveRecord::Base
     q = q.limit(opts[:limit]) if opts[:limit]
     q
   end
+
+  def self.top_tags(limit_arg=nil)
+    self.tags_by_count_query(limit: limit_arg || SiteSetting.max_tags_in_filter_list)
+        .count
+        .map {|name, count| name}
+  end
 end
