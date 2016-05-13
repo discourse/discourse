@@ -426,6 +426,13 @@ describe Search do
       expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(1)
     end
 
+    it 'supports wiki' do
+      topic = Fabricate(:topic)
+      wiki_post = Fabricate(:post, raw: 'this is a test 248', wiki: true, topic: topic)
+
+      expect(Search.execute('test 248 in:wiki').posts.length).to eq(1)
+    end
+
     it 'supports before and after, in:first, user:, @username' do
 
       time = Time.zone.parse('2001-05-20 2:55')
