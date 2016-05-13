@@ -583,10 +583,6 @@ video {
   }
 }
 
-.small-action.deleted {
-  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
-}
-
 #share-link {
   width: 365px;
   margin-left: -4px;
@@ -716,6 +712,16 @@ $topic-avatar-width: 45px;
 .small-action {
   max-width: 755px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+}
+
+.small-action.deleted {
+  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+}
+
+/* hide the reply border above the time gap notices */
+.time-gap + .topic-post .topic-body,
+.time-gap + .topic-post .topic-avatar {
+  border-top: none;
 }
 
 .posts-wrapper {

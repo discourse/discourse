@@ -15,11 +15,16 @@
 
   .small-action-desc {
     padding-top: 1em;
-    
+
     button {
       padding-top: 0px;
     }
   }
+}
+
+/* hide the reply border above the time gap notices */
+.time-gap + .topic-post article {
+  border-top: none;
 }
 
 .topic-post article {
