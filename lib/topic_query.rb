@@ -456,7 +456,8 @@ class TopicQuery
       # Topic.joins(:tags).where('tags.name in (?)', @options[:tags]).group('topic_id').having('count(*)=?', @options[:tags].size).select('topic_id')
 
       if @options[:tags] && @options[:tags].size > 0
-        result = result.joins(:tags).includes(:tags)
+        result = result.joins(:tags).preload(:tags)
+
         # ANY of the given tags:
         if @options[:tags][0].is_a?(Integer)
           result = result.where("tags.id in (?)", @options[:tags])
