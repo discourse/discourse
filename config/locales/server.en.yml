@@ -1175,7 +1175,7 @@ en:
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     auto_generated_whitelist: "List of email addresses that won't be checked for auto-generated content."
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
-    bounce_score_threshold: "The maximum user bounce score before the they are deactivated. A soft bounce adds 1, a hard bounce adds 2."
+    bounce_score_threshold: "Max score before we will stop emailing a user. Soft bounce adds 1, hard bounce adds 2, score reset 30 days after last bounce."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
