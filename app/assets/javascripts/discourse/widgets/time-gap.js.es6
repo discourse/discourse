@@ -21,6 +21,6 @@ export default createWidget('time-gap', {
 
   html(attrs) {
     return [h('div.topic-avatar', iconNode('fw')),
-            h('div.small-action-desc', description(attrs))];
+            h('div.small-action-desc.timegap', description(attrs))];
   }
 });
