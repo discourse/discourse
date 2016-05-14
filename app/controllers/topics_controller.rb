@@ -576,9 +576,7 @@ class TopicsController < ApplicationController
 
     Scheduler::Defer.later "Track Visit" do
       TopicViewItem.add(topic_id, ip, user_id)
-      if track_visit
-        TopicUser.track_visit! topic_id, user_id
-      end
+      TopicUser.track_visit!(topic_id, user_id) if track_visit
     end
 
   end
