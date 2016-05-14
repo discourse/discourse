@@ -125,7 +125,7 @@ describe TopicUser do
   describe 'visited at' do
 
     before do
-      TopicUser.track_visit!(topic, user)
+      TopicUser.track_visit!(topic.id, user.id)
     end
 
     it 'set upon initial visit' do
@@ -139,7 +139,7 @@ describe TopicUser do
       today = yesterday.tomorrow
 
       freeze_time today do
-        TopicUser.track_visit!(topic,user)
+        TopicUser.track_visit!(topic.id, user.id)
         # reload is a no go
         topic_user = TopicUser.get(topic,user)
         expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
@@ -149,7 +149,7 @@ describe TopicUser do
 
     it 'triggers the observer callbacks when updating' do
       UserActionObserver.instance.expects(:after_save).twice
-      2.times { TopicUser.track_visit!(topic, user) }
+      2.times { TopicUser.track_visit!(topic.id, user.id) }
     end
   end
 
