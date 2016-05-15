@@ -249,16 +249,25 @@ Discourse.Utilities = {
             .join(", ");
   },
 
+  uploadUrl: function(url) {
+    if (Discourse.CDN) {
+      return Discourse.CDN.startsWith('//') ? "http:" + Discourse.getURLWithCDN(upload.url) : Discourse.getURLWithCDN(upload.url);
+    } else if (Discourse.SiteSettings.enable_s3_uploads) {
+      return 'https:' + url;
+    } else {
+      var protocol = window.location.protocol + '//',
+        hostname = window.location.hostname,
+        port = ':' + window.location.port;
+        return protocol + hostname + port + url;
+    }
+  },
+
   getUploadMarkdown: function(upload) {
     if (Discourse.Utilities.isAnImage(upload.original_filename)) {
       return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
     } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav)$/i).test(upload.original_filename)) {
       // is Audio/Video
-      if (Discourse.CDN) {
-        return Discourse.CDN.startsWith('//') ? "http:" + Discourse.getURLWithCDN(upload.url) : Discourse.getURLWithCDN(upload.url);
-      } else {
-        return "http://" + Discourse.BaseUrl + upload.url;
-      }
+      return Discourse.Utilities.uploadUrl(upload.url);
     } else {
       return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
     }
