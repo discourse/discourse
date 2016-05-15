@@ -213,7 +213,9 @@
         margin-top: 0;
         width: 100%;
         line-height: 1;
+        vertical-align: text-top;
         span.badge-category {
+          max-width: 100px;
           padding: 5px;
         }
       }
