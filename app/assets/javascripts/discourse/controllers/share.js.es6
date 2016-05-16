@@ -5,8 +5,10 @@ import computed from 'ember-addons/ember-computed-decorators';
 export default Ember.Controller.extend({
   needs: ['topic'],
 
+  title: Ember.computed.alias('controllers.topic.model.title'),
+
   @computed('type', 'postNumber')
-  title(type, postNumber) {
+  shareTitle(type, postNumber) {
     if (type === 'topic') { return I18n.t('share.topic'); }
     if (postNumber) {
       return I18n.t('share.post', { postNumber });
