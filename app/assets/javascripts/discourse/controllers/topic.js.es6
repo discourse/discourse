@@ -10,7 +10,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
-  needs: ['modal', 'composer', 'quote-button', 'topic-progress', 'application'],
+  needs: ['modal', 'composer', 'quote-button', 'application'],
   multiSelect: false,
   allPostsSelected: false,
   editingTopic: false,
@@ -21,9 +21,15 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   enteredAt: null,
   retrying: false,
   adminMenuVisible: false,
+  screenProgressPosition: null,
 
   showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
   isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
+
+  @computed('screenProgressPosition', 'model.postStream.filteredPostsCount')
+  progressPosition(pp, filteredPostsCount) {
+    return (filteredPostsCount < pp) ? filteredPostsCount : pp;
+  },
 
   _titleChanged: function() {
     const title = this.get('model.title');
@@ -203,7 +209,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       const postStream = this.get('model.postStream');
       const lastLoadedPost = postStream.get('posts.lastObject');
 
-      this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
+      this.set('screenProgressPosition', postStream.progressIndexOfPost(post));
 
       if (lastLoadedPost && lastLoadedPost === post && postStream.get('canAppendMore')) {
         postStream.appendMore().then(() => refresh());
@@ -379,7 +385,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     jumpTop() {
-      this.get('controllers.topic-progress').send('jumpTop');
+      DiscourseURL.routeTo(this.get('model.firstPostUrl'));
+    },
+
+    jumpBottom() {
+      DiscourseURL.routeTo(this.get('model.lastPostUrl'));
     },
 
     selectAll() {
