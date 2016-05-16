@@ -232,7 +232,7 @@ describe TopicQuery do
 
           # returns the topics in reverse posters order if requested" do
           expect(ids_in_order('posters', false)).to eq([archived_topic, closed_topic, invisible_topic, future_topic, regular_topic, pinned_topic].map(&:id))
-    
+
           # sets a custom field for each topic to emulate a plugin
           regular_topic.custom_fields["sheep"] = 26
           pinned_topic.custom_fields["sheep"] = 47
@@ -240,7 +240,7 @@ describe TopicQuery do
           invisible_topic.custom_fields["sheep"] = 12
           closed_topic.custom_fields["sheep"] = 31
           future_topic.custom_fields["sheep"] = 53
-          
+
           regular_topic.save
           pinned_topic.save
           archived_topic.save
@@ -257,7 +257,7 @@ describe TopicQuery do
 
           # returns the topics in reverse sheep order if requested" do
           expect(ids_in_order('sheep', false)).to eq([invisible_topic, regular_topic, closed_topic, pinned_topic, future_topic, archived_topic].map(&:id))
-    
+
 
         end
 
