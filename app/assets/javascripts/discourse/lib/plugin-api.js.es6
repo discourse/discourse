@@ -293,6 +293,13 @@ class PluginApi {
     return addFlagProperty(property);
   }
 
+  /**
+   * Adds a pluralization to the store
+   * api.addPluralization('mouse', 'mice')
+   **/
+  addStorePluralization(thing, plural) {
+    this.container.lookup("store:main").addPluralization(thing, plural);
+  }
 }
 
 let _pluginv01;
