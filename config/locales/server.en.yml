@@ -2986,17 +2986,14 @@ en:
       name: Thank You
       description: Has 20 liked posts and gave 10 likes
       long_description: |
-        This badge is granted when you've received 20 likes on your posts and have given 10 or more likes in return. When someone likes your posts, you find the time to like what other people are posting in return.
     gives_back:
       name: Gives Back
       description: Has 100 liked posts and gave 100 likes
       long_description: |
-        This badge is granted when you've received 100 likes and have given 100 or more likes in return. Thanks for paying it forward, and liking in return!
     empathetic:
       name: Empathetic
       description: Has 500 liked posts and gave 1000 likes
       long_description: |
-        This badge is granted when you've received 500 likes and have given 1000 or more likes in return. Wow! You're a model of generosity and mutual love :two_hearts:.
     first_emoji:
       name: First Emoji
       description: Used an Emoji in a Post
