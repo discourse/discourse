@@ -325,6 +325,12 @@ describe Email::Receiver do
       expect(emails).to include("someone@else.com", "discourse@bar.com", "wat@bar.com")
     end
 
+    it "cap the number of staged users created per email" do
+      SiteSetting.maximum_staged_users_per_email = 1
+      expect { process(:cc) }.to change(Topic, :count)
+      expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
+    end
+
     it "associates email replies using both 'In-Reply-To' and 'References' headers" do
       expect { process(:email_reply_1) }.to change(Topic, :count)
 
