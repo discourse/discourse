@@ -1,5 +1,4 @@
 #topic-title {
-
   .title-wrapper {
     float: left;
     width: 90%;
@@ -76,6 +75,52 @@
     }
     .dropdown-menu {
       bottom: initial;
+    }
+  }
+}
+
+.post-links-container {
+  @include unselectable;
+  clear: both;
+  text-align: right;
+  margin-top: 1em;
+
+  .expand-links {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  }
+
+  .track-link {
+    padding-left: 10px;
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  ul {
+    list-style: none;
+
+    li {
+      margin-bottom: 0.5em;
+      a[href] {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      }
+      i {
+        font-size: 0.857em;
+        margin-left: 0.5em;
+      }
+    }
+  }
+
+  a.reply-new {
+    i {
+      background: $secondary;
+      border-radius: 20px;
+      transition: all linear .15s;
+    }
+    &:hover {
+      color: $tertiary;
+      i {
+        background: dark-light-diff($tertiary, $secondary, 85%, -65%);
+      }
     }
   }
 }
