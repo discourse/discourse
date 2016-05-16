@@ -567,6 +567,7 @@ email:
     min: 0
   max_emails_per_day_per_user: 100
   enable_staged_users: true
+  maximum_staged_users_per_email: 10
   auto_generated_whitelist:
     default: ''
     type: list
