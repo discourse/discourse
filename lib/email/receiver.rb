@@ -148,6 +148,8 @@ module Email
             elsif @mail.error_status.start_with?("5.")
               update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
             end
+          elsif is_auto_generated?
+            update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
           end
         end
       end
