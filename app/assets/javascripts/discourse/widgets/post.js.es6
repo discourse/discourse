@@ -306,6 +306,7 @@ createWidget('post-body', {
     if (attrs.showTopicMap) {
       result.push(this.attach('topic-map', attrs));
     }
+    result.push(this.attach('post-links', attrs));
 
     return result;
   }
@@ -341,9 +342,7 @@ createWidget('post-article', {
       rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
     }
 
-    rows.push(h('div.row', [this.attach('post-avatar', attrs),
-                            this.attach('post-body', attrs),
-                            this.attach('post-gutter', attrs)]));
+    rows.push(h('div.row', [this.attach('post-avatar', attrs), this.attach('post-body', attrs)]));
     return rows;
   },
 
