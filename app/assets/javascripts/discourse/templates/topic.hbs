@@ -71,7 +71,10 @@
       <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
         <div class="posts-wrapper">
 
-          {{render "topic-progress"}}
+          {{topic-progress topic=model
+                           progressPosition=progressPosition
+                           jumpTop="jumpTop"
+                           jumpBottom="jumpBottom"}}
 
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 

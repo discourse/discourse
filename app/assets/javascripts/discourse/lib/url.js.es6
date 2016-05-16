@@ -232,11 +232,6 @@ const DiscourseURL = Ember.Object.extend({
             enteredAt: new Date().getTime().toString()
           });
 
-          const closestPost = postStream.closestPostForPostNumber(closest);
-          const progress = postStream.progressIndexOfPost(closestPost);
-          const progressController = container.lookup('controller:topic-progress');
-
-          progressController.set('progressPosition', progress);
           this.appEvents.trigger('post:highlight', closest);
         }).then(() => {
           DiscourseURL.jumpToPost(closest, {skipIfOnScreen: true});
