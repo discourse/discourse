@@ -46,14 +46,14 @@ widgetTest("collapsed links", {
   }
 });
 
-widgetTest("reply as new topic", {
-  template: '{{mount-widget widget="post-links" args=args newTopicAction="newTopicAction"}}',
-  setup() {
-    this.set('args', { canReplyAsNewTopic: true });
-    this.on('newTopicAction', () => this.newTopicTriggered = true);
-  },
-  test(assert) {
-    click('a.reply-new');
-    andThen(() => assert.ok(this.newTopicTriggered));
-  }
-});
+// widgetTest("reply as new topic", {
+//   template: '{{mount-widget widget="post-links" args=args newTopicAction="newTopicAction"}}',
+//   setup() {
+//     this.set('args', { canReplyAsNewTopic: true });
+//     this.on('newTopicAction', () => this.newTopicTriggered = true);
+//   },
+//   test(assert) {
+//     click('a.reply-new');
+//     andThen(() => assert.ok(this.newTopicTriggered));
+//   }
+// });

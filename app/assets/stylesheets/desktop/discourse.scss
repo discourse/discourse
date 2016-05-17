@@ -17,6 +17,11 @@ header {
   margin-bottom: 15px;
 }
 
+body.widget-dragging {
+  @include unselectable;
+  cursor: move;
+}
+
 body {
 
   .boxed {

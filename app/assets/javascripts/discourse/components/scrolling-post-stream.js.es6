@@ -3,11 +3,12 @@ import { keyDirty } from 'discourse/widgets/widget';
 import MountWidget from 'discourse/components/mount-widget';
 import { cloak, uncloak } from 'discourse/widgets/post-stream';
 import { isWorkaroundActive } from 'discourse/lib/safari-hacks';
+import offsetCalculator from 'discourse/lib/offset-calculator';
 
 function findTopView($posts, viewportTop, min, max) {
   if (max < min) { return min; }
 
-  while(max>min){
+  while (max > min) {
     const mid = Math.floor((min + max) / 2);
     const $post = $($posts[mid]);
     const viewBottom = $post.position().top + $post.height();
@@ -26,6 +27,8 @@ export default MountWidget.extend({
   widget: 'post-stream',
   _topVisible: null,
   _bottomVisible: null,
+  _currentPost: -1,
+  _currentVisible: null,
 
   args: Ember.computed(function() {
     return this.getProperties('posts',
@@ -66,7 +69,7 @@ export default MountWidget.extend({
     const onscreen = [];
     const nearby = [];
 
-    let windowTop = $w.scrollTop();
+    const windowTop = $w.scrollTop();
 
     const $posts = this.$('.onscreen-post, .cloaked-post');
     const viewportTop = windowTop - slack;
@@ -78,6 +81,13 @@ export default MountWidget.extend({
     const bodyHeight = $('body').height();
     if (windowBottom > bodyHeight) { windowBottom = bodyHeight; }
     if (viewportBottom > bodyHeight) { viewportBottom = bodyHeight; }
+
+    let currentPost = -1;
+
+    const offset = offsetCalculator();
+    if (windowTop < offset) {
+      currentPost = 0;
+    }
 
     let bottomView = topView;
     while (bottomView < $posts.length) {
@@ -94,6 +104,11 @@ export default MountWidget.extend({
       if (viewBottom > windowTop && viewTop <= windowBottom) {
         onscreen.push(bottomView);
       }
+
+      if (currentPost === -1 && (viewTop >= windowTop + offset)) {
+        currentPost = bottomView;
+      }
+
       nearby.push(bottomView);
 
       bottomView++;
@@ -131,9 +146,17 @@ export default MountWidget.extend({
         this._bottomVisible = last;
         this.sendAction('bottomVisibleChanged', { post: last, refresh });
       }
+
+      if (this._currentPost !== currentPost) {
+        this._currentPost = currentPost;
+        const post = posts.objectAt(currentPost);
+        this.sendAction('currentPostChanged', { post });
+      }
+
     } else {
       this._topVisible = null;
       this._bottomVisible = null;
+      this._currentPost = -1;
     }
 
     const onscreenPostNumbers = [];

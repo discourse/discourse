@@ -1,3 +1,5 @@
+import offsetCalculator from 'discourse/lib/offset-calculator';
+
 /*global LockOn:true*/
 let _jumpScheduled = false;
 const rewrites = [];
@@ -14,14 +16,6 @@ const DiscourseURL = Ember.Object.extend({
   // Jumps to a particular post in the stream
   jumpToPost(postNumber, opts) {
     const holderId = `#post_${postNumber}`;
-    const offset = () => {
-      const $header = $('header');
-      const $title = $('#topic-title');
-      const windowHeight = $(window).height() - $title.height();
-      const expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
-
-      return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
-    };
 
     Em.run.schedule('afterRender', () => {
       if (postNumber === 1) {
@@ -29,15 +23,14 @@ const DiscourseURL = Ember.Object.extend({
         return;
       }
 
-      const lockon = new LockOn(holderId, {offsetCalculator: offset});
+      const lockon = new LockOn(holderId, { offsetCalculator });
       const holder = $(holderId);
 
       if (holder.length > 0 && opts && opts.skipIfOnScreen){
-        // if we are on screen skip
-        const elementTop = lockon.elementTop(),
-              scrollTop = $(window).scrollTop(),
-              windowHeight = $(window).height()-offset(),
-              height = holder.height();
+        const elementTop = lockon.elementTop();
+        const scrollTop = $(window).scrollTop();
+        const windowHeight = $(window).height() - offsetCalculator();
+        const height = holder.height();
 
         if (elementTop > scrollTop && (elementTop + height) < (scrollTop + windowHeight)) {
           return;
@@ -166,11 +159,11 @@ const DiscourseURL = Ember.Object.extend({
     return this.handleURL(path, opts);
   },
 
-  rewrite: function(regexp, replacement) {
-    rewrites.push({ regexp: regexp, replacement: replacement });
+  rewrite(regexp, replacement) {
+    rewrites.push({ regexp, replacement });
   },
 
-  redirectTo: function(url) {
+  redirectTo(url) {
     window.location = Discourse.getURL(url);
   },
 
