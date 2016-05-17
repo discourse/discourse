@@ -151,7 +151,7 @@ class PostCreator
 
       trigger_after_events(@post)
 
-      auto_close
+      auto_close unless @opts[:import_mode]
     end
 
     if @post || @spam
