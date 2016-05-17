@@ -336,10 +336,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
-        Permalink.create(
-          url: "profile/#{ucf['import_id']}/#{ucf['import_username']}",
-          external_url: "/users/#{u.username}"
-        )
+        Permalink.create( url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}" ) rescue nil
       end
     end
 
@@ -350,15 +347,9 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         id = pcf["import_id"].split('#').last
         if post.post_number == 1
           slug = Slug.for(topic.title) # probably matches what vanilla would do...
-          Permalink.create(
-            url: "discussion/#{id}/#{slug}",
-            topic_id: topic.id
-          )
+          Permalink.create( url: "discussion/#{id}/#{slug}", topic_id: topic.id ) rescue nil
         else
-          Permalink.create(
-            url: "discussion/comment/#{id}",
-            post_id: post.id
-          )
+          Permalink.create( url: "discussion/comment/#{id}", post_id: post.id ) rescue nil
         end
       end
     end
