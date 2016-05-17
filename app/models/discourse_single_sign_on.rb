@@ -72,11 +72,17 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     user.ip_address = ip_address
+
     user.admin = admin unless admin.nil?
     user.moderator = moderator unless moderator.nil?
 
     # optionally save the user and sso_record if they have changed
     user.save!
+
+    unless admin.nil? && moderator.nil?
+      Group.refresh_automatic_groups!(:admins, :moderators, :staff)
+    end
+
     sso_record.save!
 
     sso_record && sso_record.user
