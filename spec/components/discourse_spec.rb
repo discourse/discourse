@@ -85,50 +85,109 @@ describe Discourse do
 
   end
 
-  context "#enable_readonly_mode" do
+  context "readonly mode" do
+    let(:readonly_channel) { Discourse.readonly_channel }
+    let(:readonly_key_ttl) { Discourse::READONLY_MODE_KEY_TTL }
+    let(:readonly_key) { Discourse.readonly_mode_key }
 
-    it "adds a key in redis and publish a message through the message bus" do
-      $redis.expects(:set).with(Discourse.readonly_mode_key, 1)
-      MessageBus.expects(:publish).with(Discourse.readonly_channel, true)
-      Discourse.enable_readonly_mode
-    end
-
-  end
-
-  context "#disable_readonly_mode" do
-
-    it "removes a key from redis and publish a message through the message bus" do
-      $redis.expects(:del).with(Discourse.readonly_mode_key)
-      MessageBus.expects(:publish).with(Discourse.readonly_channel, false)
+    after do
       Discourse.disable_readonly_mode
     end
 
-  end
-
-  context "#readonly_mode?" do
-    it "is false by default" do
-      expect(Discourse.readonly_mode?).to eq(false)
+    def assert_readonly_mode(message, channel, key, ttl)
+      expect(message.channel).to eq(channel)
+      expect(message.data).to eq(true)
+      expect($redis.get(key)).to eq("1")
+      expect($redis.ttl(key)).to eq(ttl)
     end
 
-    it "returns true when the key is present in redis" do
-      begin
-        $redis.set(Discourse.readonly_mode_key, 1)
-        expect(Discourse.readonly_mode?).to eq(true)
-      ensure
-        $redis.del(Discourse.readonly_mode_key)
+    def assert_readonly_mode_disabled(message, channel, key)
+      expect(message.channel).to eq(channel)
+      expect(message.data).to eq(false)
+      expect($redis.get(key)).to eq(nil)
+    end
+
+    context ".enable_readonly_mode" do
+      it "adds a key in redis and publish a message through MessageBus" do
+        expect($redis.get(readonly_key)).to eq(nil)
+
+        message = MessageBus.track_publish { Discourse.enable_readonly_mode }.first
+
+        assert_readonly_mode(message, readonly_channel, readonly_key, readonly_key_ttl)
       end
     end
 
-    it "returns true when Discourse is recently read only" do
-      Discourse.received_readonly!
-      expect(Discourse.readonly_mode?).to eq(true)
-    end
-  end
+    context ".disable_readonly_mode" do
+      it "removes a key from redis and publish a message through the MessageBus" do
+        Discourse.enable_readonly_mode
 
-  context ".received_readonly!" do
-    it "sets the right time" do
-      time = Discourse.received_readonly!
-      expect(Discourse.last_read_only['default']).to eq(time)
+        message = MessageBus.track_publish do
+          Discourse.disable_readonly_mode
+        end.first
+
+        assert_readonly_mode_disabled(message, readonly_channel, readonly_key)
+      end
+    end
+
+    context ".readonly_mode?" do
+      it "is false by default" do
+        expect(Discourse.readonly_mode?).to eq(false)
+      end
+
+      it "returns true when the key is present in redis" do
+        begin
+          $redis.set(Discourse.readonly_mode_key, 1)
+          expect(Discourse.readonly_mode?).to eq(true)
+        ensure
+          $redis.del(Discourse.readonly_mode_key)
+        end
+      end
+
+      it "returns true when Discourse is recently read only" do
+        Discourse.received_readonly!
+        expect(Discourse.readonly_mode?).to eq(true)
+      end
+    end
+
+    context ".received_readonly!" do
+      it "sets the right time" do
+        time = Discourse.received_readonly!
+        expect(Discourse.last_read_only['default']).to eq(time)
+      end
+    end
+
+
+    context "maintenance" do
+      let(:readonly_channel) { Discourse::MAINTENANCE_READONLY_MODE_CHANNEL }
+      let(:readonly_key) { Discourse::MAINTENANCE_READONLY_MODE_KEY }
+
+      after do
+        Discourse.disable_maintenance_readonly_mode
+      end
+
+      describe ".enable_maintenance_readonly_mode" do
+        it "adds a key in redis and publish a message through MessageBus" do
+          expect($redis.get(readonly_key)).to eq(nil)
+
+          message = MessageBus.track_publish do
+            Discourse.enable_maintenance_readonly_mode
+          end.first
+
+          assert_readonly_mode(message, readonly_channel, readonly_key, readonly_key_ttl)
+        end
+      end
+
+      describe ".disable_maintenance_readonly_mode" do
+        it "removes the key in redis and publish a message through MessageBus" do
+          Discourse.enable_readonly_mode
+
+          message = MessageBus.track_publish do
+            Discourse.disable_maintenance_readonly_mode
+          end.first
+
+          assert_readonly_mode_disabled(message, readonly_channel, readonly_key)
+        end
+      end
     end
   end
 
