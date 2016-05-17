@@ -20,7 +20,7 @@
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
             {{#if showCategoryChooser}}
               <br>
-              {{category-chooser valueAttribute="id" value=buffered.category_id source=buffered.category_id}}
+              {{category-chooser valueAttribute="id" value=buffered.category_id}}
             {{/if}}
 
             {{#if canEditTags}}
@@ -34,7 +34,7 @@
           {{else}}
             <h1>
               {{#unless model.is_warning}}
-                <a href="{{view.pmPath}}">
+                <a href={{pmPath}}>
                   <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
                 </a>
               {{/unless}}
@@ -62,7 +62,9 @@
   {{/if}}
 
   <div class="container posts">
-    {{view "selected-posts"}}
+    <div class='selected-posts {{unless multiSelect 'hidden'}}'>
+      {{partial "selected-posts"}}
+    </div>
 
     <div class="row">
       <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
@@ -98,7 +100,6 @@
               unhidePost="unhidePost"
               replyToPost="replyToPost"
               toggleWiki="toggleWiki"
-              toggleParticipant="toggleParticipant"
               toggleSummary="toggleSummary"
               removeAllowedUser="removeAllowedUser"
               showInvite="showInvite"
@@ -115,12 +116,12 @@
         {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
           {{#if loadedAllPosts}}
 
-            {{view "topic-closing" topic=model}}
+            {{topic-closing topic=model}}
             {{#if session.showSignupCta}}
               {{! replace "Log In to Reply" with the infobox }}
               {{signup-cta}}
             {{else}}
-              {{view "topic-footer-buttons" topic=model}}
+              {{topic-footer-buttons topic=model}}
             {{/if}}
 
             {{#if model.pending_posts_count}}
@@ -137,14 +138,16 @@
             {{/if}}
 
             {{#if showSelectedPostsAtBottom}}
-              {{view "selected-posts"}}
+              <div class='selected-posts {{unless multiSelect 'hidden'}}'>
+                {{partial "selected-posts"}}
+              </div>
             {{/if}}
 
             {{plugin-outlet "topic-above-suggested"}}
 
             {{#if model.details.suggested_topics.length}}
               <div id="suggested-topics">
-                <h3>{{{view.suggestedTitle}}}</h3>
+                <h3>{{{suggestedTitle}}}</h3>
                 <div class="topics">
                   {{#if model.isPrivateMessage}}
                     {{basic-topic-list hideCategory="true"
@@ -155,7 +158,7 @@
                     {{basic-topic-list topics=model.details.suggested_topics postsAction="showTopicEntrance"}}
                   {{/if}}
                 </div>
-                <h3>{{{view.browseMoreMessage}}}</h3>
+                <h3>{{{browseMoreMessage}}}</h3>
               </div>
             {{/if}}
 

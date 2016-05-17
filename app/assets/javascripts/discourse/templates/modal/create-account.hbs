@@ -64,7 +64,7 @@
             <td></td>
             <td>
               <label>{{passwordInstructions}}</label>
-              <div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
+              <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
             </td>
           </tr>
         {{/if}}
@@ -94,7 +94,7 @@
 
   {{#if showCreateForm}}
     <div class="modal-footer">
-      <button class='btn btn-large btn-primary' {{bind-attr disabled="submitDisabled"}} {{action "createAccount"}}>{{i18n 'create_account.title'}}</button>
+      <button class='btn btn-large btn-primary' disabled={{submitDisabled}} {{action "createAccount"}}>{{i18n 'create_account.title'}}</button>
       {{#conditional-loading-spinner condition=formSubmitted size="small"}}
         <button class="btn btn-large" id="login-link" {{action "showLogin"}}>
           {{i18n 'log_in'}}

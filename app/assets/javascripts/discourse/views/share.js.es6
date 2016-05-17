@@ -5,16 +5,6 @@ export default Ember.View.extend({
   elementId: 'share-link',
   classNameBindings: ['hasLink'],
 
-  title: function() {
-    if (this.get('controller.type') === 'topic') return I18n.t('share.topic');
-    var postNumber = this.get('controller.postNumber');
-    if (postNumber) {
-      return I18n.t('share.post', {postNumber: this.get('controller.postNumber')});
-    } else {
-      return I18n.t('share.topic');
-    }
-  }.property('controller.type', 'controller.postNumber'),
-
   hasLink: function() {
     if (!Ember.isEmpty(this.get('controller.link'))) return 'visible';
     return null;

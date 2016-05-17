@@ -1,5 +1,5 @@
-{{#if length}}
-  <table class='admin-flags'>
+{{#if model.length}}
+  {{#load-more tagName="table" className="admin-flags" selector="tbody tr" action="loadMore"}}
     <thead>
       <tr>
         <th class='user'></th>
@@ -9,8 +9,8 @@
       </tr>
     </thead>
     <tbody>
-      {{#each flaggedPost in content}}
-        <tr {{bind-attr class="flaggedPost.extraClasses"}}>
+      {{#each content as |flaggedPost|}}
+        <tr class={{flaggedPost.extraClasses}}>
 
           <td class='user'>
             {{#if flaggedPost.postAuthorFlagged}}
@@ -145,9 +145,8 @@
       {{/each}}
 
     </tbody>
-  </table>
+  {{/load-more}}
 
-  {{conditional-loading-spinner condition=view.loading}}
 {{else}}
   <p>{{i18n 'admin.flags.no_results'}}</p>
 {{/if}}

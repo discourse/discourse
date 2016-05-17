@@ -3,7 +3,7 @@
     <table class="topic-list">
       <tbody>
       {{#each topics as |t|}}
-        <tr {{bind-attr class="t.archived"}} data-topic-id={{t.id}}>
+        <tr class="{{if t.archived 'archived'}}" data-topic-id={{t.id}}>
           <td>
             <div class='main-link'>
               {{topic-status topic=t}}
@@ -32,12 +32,12 @@
                 {{raw "list/activity-column" topic=t tagName="div" class="num activity last"}}
                 <a href="{{t.lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date t.bumped_at}}}'>{{t.last_poster_username}}</a>
               </div>
-              {{#unless controller.hideCategory}}
+              {{#unless hideCategory}}
                 <div class='category'>
                   {{category-link t.category}}
                 </div>
               {{/unless}}
-              {{#if controller.showParticipants}}
+              {{#if showParticipants}}
                 <div class='participants'>
                   {{#each participants as |p|}}
                     <a href="{{unbound p.user.path}}" class="{{unbound p.extras}}">{{avatar p usernamePath="user.username" imageSize="small"}}</a>

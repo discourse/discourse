@@ -29,7 +29,7 @@ export default createWidget('post-gutter', {
         seenTitles[title] = true;
         titleCount++;
         if (result.length < toShow) {
-          const linkBody = [new RawHtml({html: `<span>${Discourse.Emoji.unescape(title)}</span>`})];
+          const linkBody = [new RawHtml({html: `<span>${Discourse.Emoji.unescape(Handlebars.Utils.escapeExpression(title))}</span>`})];
           if (l.clicks) {
             linkBody.push(h('span.badge.badge-notification.clicks', l.clicks.toString()));
           }

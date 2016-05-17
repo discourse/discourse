@@ -12,7 +12,7 @@
 
 <div class="composer-bottom-right">
   {{#if site.mobileView}}
-    <input type="file" id="mobile-uploader" />
+    <input type="file" id="mobile-uploader" multiple />
     <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
   {{else}}
     <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>

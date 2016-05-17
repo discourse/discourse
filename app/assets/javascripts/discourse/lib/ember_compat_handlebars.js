@@ -70,10 +70,10 @@
 
     function buildPath(blk, args) {
 
-      const result = { type: "PathExpression",
-                       data: false,
-                       depth: blk.path.depth,
-                       loc: blk.path.loc };
+      var result = { type: "PathExpression",
+                     data: false,
+                     depth: blk.path.depth,
+                     loc: blk.path.loc };
 
       // Server side precompile doesn't have jquery.extend
       Object.keys(args).forEach(function (a) {
@@ -99,7 +99,7 @@
       // This allows us to use the same syntax in all templates
       visitor.BlockStatement = function(block) {
         if (block.path.original === 'each' && block.params.length === 1) {
-          const paramName = block.program.blockParams[0];
+          var paramName = block.program.blockParams[0];
           block.params = [ buildPath(block, { original: paramName }),
                            { type: "CommentStatement", value: "in" },
                            block.params[0] ];
@@ -148,7 +148,8 @@
 
   RawHandlebars.get = function(ctx, property, options){
     if (options.types && options.data.view) {
-      return options.data.view.getStream(property).value();
+      var view = options.data.view;
+      return view.getStream ? view.getStream(property).value() : view.getAttr(property);
     } else {
       return Ember.get(ctx, property);
     }

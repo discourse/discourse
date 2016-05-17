@@ -4,7 +4,7 @@
     <label class='radio'><input type='radio' id="radio_{{unbound flag.name_key}}" {{action "changePostActionType" flag}} name='post_action_type_index'> <span class='description'>{{{flag.description}}}</span></label>
     {{#if showMessageInput}}
       {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
-      <div {{bind-attr class=":custom-message-length customMessageLengthClasses"}}>{{customMessageLength}}</div>
+      <div class="custom-message-length {{customMessageLengthClasses}}">{{customMessageLength}}</div>
     {{/if}}
   </div>
   {{#if staffFlagsAvailable}}
@@ -21,7 +21,7 @@
     </label>
     {{#if showMessageInput}}
       {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
-      <div {{bind-attr class=":custom-message-length customMessageLengthClasses"}}>{{customMessageLength}}</div>
+      <div class="custom-message-length {{customMessageLengthClasses}}">{{customMessageLength}}</div>
     {{/if}}
   </div>
 {{/if}}

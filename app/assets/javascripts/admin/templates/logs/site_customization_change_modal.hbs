@@ -1,14 +1,14 @@
 <div>
   <ul class="nav nav-pills">
-    <li {{bind-attr class="newSelected:active"}}>
+    <li class="{{if newSelected 'active'}}">
       <a href {{action "selectNew"}}>{{i18n 'admin.logs.staff_actions.new_value'}}</a>
     </li>
-    <li {{bind-attr class="previousSelected:active"}}>
+    <li class="{{if previousSelected 'active'}}">
       <a href {{action "selectPrevious"}}>{{i18n 'admin.logs.staff_actions.previous_value'}}</a>
     </li>
   </ul>
   <div class="modal-body">
-    <div {{bind-attr class=":modal-tab :new-tab newSelected::invisible"}}>
+    <div class="modal-tab new-tab {{unless newSelected 'invisible'}}">
       {{#if model.new_value}}
         {{#with model.new_value}}
           {{partial "admin/templates/logs/site_customization_change_details"}}
@@ -17,7 +17,7 @@
         {{i18n 'admin.logs.staff_actions.deleted'}}
       {{/if}}
     </div>
-    <div {{bind-attr class=":modal-tab :previous-tab previousSelected::invisible"}}>
+    <div class="modal-tab previous-tab {{unless previousSelected 'invisible'}}">
       {{#if model.previous_value}}
         {{#with model.previous_value}}
           {{partial "admin/templates/logs/site_customization_change_details"}}

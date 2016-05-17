@@ -81,6 +81,6 @@ export default createWidget('link', {
       this.sendWidgetEvent('linkClicked');
     }
 
-    return DiscourseURL.routeTo(this.href(this.attrs));
+    return DiscourseURL.routeToTag($(e.target).closest('a')[0]);
   }
 });

@@ -1,3 +1,20 @@
+// `Ember.Helper` is only available in versions after 1.12
+export function htmlHelper(fn) {
+  if (Ember.Helper) {
+    return Ember.Helper.helper(function() {
+      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)) || '');
+    });
+  } else {
+    return Ember.Handlebars.makeBoundHelper(function() {
+      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)) || '');
+    });
+  }
+}
+
+export function registerHelper(name, fn) {
+  Ember.HTMLBars._registerHelper(name, fn);
+}
+
 const get = Discourse.EmberCompatHandlebars.get;
 
 function resolveParams(ctx, options) {
@@ -21,7 +38,7 @@ function resolveParams(ctx, options) {
   return params;
 }
 
-export default function registerUnbound(name, fn) {
+export function registerUnbound(name, fn) {
   const func = function(property, options) {
     if (options.types && (options.types[0] === "ID" || options.types[0] === "PathExpression")) {
       property = get(this, property, options);

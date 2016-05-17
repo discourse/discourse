@@ -374,7 +374,11 @@ class TopicQuery
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
-      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
+
+      if options[:page]
+        offset = options[:page].to_i * options[:per_page]
+        result = result.offset(offset) if offset > 0
+      end
       result
     end
 
@@ -463,7 +467,11 @@ class TopicQuery
 
       result = result.visible if options[:visible]
       result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
-      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
+
+      if options[:page]
+        offset = options[:page].to_i * options[:per_page]
+        result = result.offset(offset) if offset > 0
+      end
 
       if options[:topic_ids]
         result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)

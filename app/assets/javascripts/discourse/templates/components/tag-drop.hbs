@@ -1,14 +1,14 @@
 {{#if showTagDropdown}}
   {{#if tagId}}
-    <a href {{action "expand"}} {{bind-attr class=":badge-category tagClass"}}>{{tagId}}</a>
+    <a href {{action "expand"}} class="badge-category {{tagClass}}">{{tagId}}</a>
   {{else}}
-    <a href {{action "expand"}} {{bind-attr class=":badge-category tagClass :home"}}>{{allTagsLabel}}</a>
+    <a href {{action "expand"}} class="badge-category {{tagClass}} home">{{allTagsLabel}}</a>
   {{/if}}
 
   {{#if tags}}
     <a href {{action "expand"}} class={{dropdownButtonClass}}><i class={{iconClass}}></i></a>
-    <section {{bind-attr class="expanded::hidden :category-dropdown-menu :chooser"}}>
-      <div class='cat'><a {{bind-attr href=allTagsUrl}} data-drop-close="true" class='badge-category home'>{{allTagsLabel}}</a></div>
+    <section class="{{unless expanded 'hidden'}} category-dropdown-menu chooser">
+      <div class='cat'><a href={{allTagsUrl}} data-drop-close="true" class='badge-category home'>{{allTagsLabel}}</a></div>
       {{#if renderTags}}
         {{#each tags as |t|}}
           <div class='cat'>

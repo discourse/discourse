@@ -7,6 +7,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 import Composer from 'discourse/models/composer';
 import DiscourseURL from 'discourse/lib/url';
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   needs: ['modal', 'composer', 'quote-button', 'topic-progress', 'application'],
@@ -74,6 +75,58 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     get() {
       return this.get('postStream.summary') ? "summary" : undefined;
     }
+  },
+
+  @computed('model', 'topicTrackingState.messageCount')
+  browseMoreMessage(model) {
+
+    // TODO decide what to show for pms
+    if (model.get('isPrivateMessage')) { return; }
+
+    const opts = { latestLink: `<a href="${Discourse.getURL("/latest")}">${I18n.t("topic.view_latest_topics")}</a>` };
+    let category = model.get('category');
+
+    if (category && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
+      category = null;
+    }
+
+    if (category) {
+      opts.catLink = categoryBadgeHTML(category);
+    } else {
+      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
+    }
+
+    const unreadTopics = this.topicTrackingState.countUnread();
+    const newTopics = this.topicTrackingState.countNew();
+
+    if (newTopics + unreadTopics > 0) {
+      const hasBoth = unreadTopics > 0 && newTopics > 0;
+
+      return I18n.messageFormat("topic.read_more_MF", {
+        "BOTH": hasBoth,
+        "UNREAD": unreadTopics,
+        "NEW": newTopics,
+        "CATEGORY": category ? true : false,
+        latestLink: opts.latestLink,
+        catLink: opts.catLink
+      });
+    } else if (category) {
+      return I18n.t("topic.read_more_in_category", opts);
+    } else {
+      return I18n.t("topic.read_more", opts);
+    }
+  },
+
+  @computed('model')
+  pmPath(model) {
+    return this.currentUser && this.currentUser.pmPath(model);
+  },
+
+  @computed('model')
+  suggestedTitle(model) {
+    return model.get('isPrivateMessage') ?
+      `<i class='private-message-glyph fa fa-envelope'></i> ${I18n.t("suggested_topics.pm_title")}` :
+      I18n.t("suggested_topics.title");
   },
 
   @computed('model.postStream.streamFilters.username_filters')

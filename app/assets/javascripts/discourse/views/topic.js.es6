@@ -1,14 +1,13 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
 import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
-import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Scrolling from 'discourse/mixins/scrolling';
 
 const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolling, {
   templateName: 'topic',
-  topicBinding: 'controller.model',
+  topic: Ember.computed.alias('controller.model'),
 
-  userFilters: Ember.computed.alias('controller.model.userFilters'),
+  userFilters: Ember.computed.alias('topic.userFilters'),
   classNameBindings: ['controller.multiSelect:multi-select',
                       'topic.archetype',
                       'topic.is_warning',
@@ -120,7 +119,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
     this.set("offset", offset);
 
-    const topic = this.get('controller.model');
+    const topic = this.get('topic');
     const showTopic = this.showTopicInHeader(topic, offset);
     if (showTopic !== this._lastShowTopic) {
       this._lastShowTopic = showTopic;
@@ -134,60 +133,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
     // Trigger a scrolled event
     this.appEvents.trigger('topic:scrolled', offset);
-  },
-
-  pmPath: function() {
-    var currentUser = this.get('controller.currentUser');
-    return currentUser && currentUser.pmPath(this.get('topic'));
-  }.property(),
-
-  browseMoreMessage: function() {
-
-    // TODO decide what to show for pms
-    if (this.get('topic.isPrivateMessage')) {
-      return;
-    }
-
-    var opts = { latestLink: "<a href=\"" + Discourse.getURL("/latest") + "\">" + I18n.t("topic.view_latest_topics") + "</a>" },
-        category = this.get('topic.category');
-
-    if(category && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
-      category = null;
-    }
-
-    if (category) {
-      opts.catLink = categoryBadgeHTML(category);
-    } else {
-      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
-    }
-
-    const tracking = this.get('topicTrackingState'),
-          unreadTopics = tracking.countUnread(),
-          newTopics = tracking.countNew();
-
-    if (newTopics + unreadTopics > 0) {
-      const hasBoth = unreadTopics > 0 && newTopics > 0;
-
-      return I18n.messageFormat("topic.read_more_MF", {
-        "BOTH": hasBoth,
-        "UNREAD": unreadTopics,
-        "NEW": newTopics,
-        "CATEGORY": category ? true : false,
-        latestLink: opts.latestLink,
-        catLink: opts.catLink
-      });
-    } else if (category) {
-      return I18n.t("topic.read_more_in_category", opts);
-    } else {
-      return I18n.t("topic.read_more", opts);
-    }
-  }.property('topicTrackingState.messageCount', 'topic'),
-
-  suggestedTitle: function(){
-    return this.get('controller.model.isPrivateMessage') ?
-      "<i class='private-message-glyph fa fa-envelope'></i> " + I18n.t("suggested_topics.pm_title") :
-      I18n.t("suggested_topics.title");
-  }.property('topic')
+  }
 });
 
 function highlight(postNumber) {

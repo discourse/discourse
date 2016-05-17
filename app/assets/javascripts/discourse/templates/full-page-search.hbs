@@ -9,7 +9,7 @@
   {{#if canBulkSelect}}
     {{#if model.posts}}
       {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
-      {{bulk-select-button selected=selected refreshTarget=controller}}
+      {{bulk-select-button selected=selected action="refresh"}}
     {{/if}}
   {{/if}}
 </div>
@@ -66,7 +66,7 @@
           {{/if}}
           {{avatar result imageSize="tiny"}}
           <a class='search-link' href='{{unbound result.url}}'>
-            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=controller.q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
           </a>
           <div class='search-category'>
             {{category-link result.topic.category}}
@@ -84,7 +84,7 @@
           {{/if}}
           </span>
           {{#if result.blurb}}
-            {{#highlight-text highlight=controller.q}}
+            {{#highlight-text highlight=q}}
               {{{unbound result.blurb}}}
             {{/highlight-text}}
           {{/if}}

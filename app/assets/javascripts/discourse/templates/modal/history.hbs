@@ -3,9 +3,9 @@
     <div id="revision-controls">
       {{d-button action="loadFirstVersion" icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
       {{d-button action="loadPreviousVersion" icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
-      <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>
+      <div id="revision-numbers" class="{{unless displayRevisions 'invisible'}}">
         {{#conditional-loading-spinner condition=loading size="small"}}
-          {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="model.current_version" totalBinding="model.version_count"}}
+          {{{revisionsText}}}
         {{/conditional-loading-spinner}}
       </div>
       {{d-button action="loadNextVersion" icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
@@ -44,7 +44,7 @@
       {{/if}}
     {{/unless}}
   </div>
-  <div id="revisions" data-post-id="{{model.post_id}}" {{bind-attr class="hiddenClasses"}}>
+  <div id="revisions" data-post-id="{{model.post_id}}" class={{hiddenClasses}}>
     {{#if model.title_changes}}
       <div class="row">
         <h2>{{{titleDiff}}}</h2>

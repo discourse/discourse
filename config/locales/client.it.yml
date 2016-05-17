@@ -111,6 +111,8 @@ it:
       google+: 'Condividi questo link su Google+'
       email: 'invia questo collegamento via email'
     action_codes:
+      public_topic: "ha reso questo argomento pubblico %{when}"
+      private_topic: "ha reso questo argomento privato %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       removed_user: "rimosso %{who} %{when}"
@@ -134,11 +136,14 @@ it:
         disabled: 'delistato %{when}'
     topic_admin_menu: "azioni amministrative sull'argomento"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
+    bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello 1 e riceveranno il riassunto quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti."
+    bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
     s3:
       regions:
         us_east_1: "Stati Uniti Est (Virginia del Nord)"
         us_west_1: "Stati Uniti Ovest (California del Nord)"
         us_west_2: "Stati Uniti Ovest (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "Europa (Irlanda)"
         eu_central_1: "Europa (Francoforte)"
         ap_southeast_1: "Asia Pacifico (Singapore)"
@@ -297,8 +302,6 @@ it:
       title: "Utenti"
       likes_given: "Dati"
       likes_received: "Ricevuti"
-      topics_entered: "Inseriti"
-      topics_entered_long: "Argomenti Inseriti"
       time_read: "Tempo di Lettura"
       topic_count: "Argomenti"
       topic_count_long: "Argomenti Creati"
@@ -407,7 +410,7 @@ it:
       username: "nome utente"
       trust_level: "TL"
       read_time: "durata lettura"
-      topics_entered: "argomenti creati"
+      topics_entered: "argomenti visualizzati"
       post_count: "n° messaggi"
       confirm_delete_other_accounts: "Sicuro di voler cancellare questi account?"
     user_fields:
@@ -604,7 +607,7 @@ it:
         other: "Sei sicuro di voler essere avvisato via email per ogni nuovo post?<br><br> Questo significherà approssimativamente <b>{{somma}} emails</b> ogni giorno."
       new_topic_duration:
         label: "Considera un argomento \"nuovo\" se"
-        not_viewed: "non l'ho ancora letto"
+        not_viewed: "non ancora visti"
         last_here: "è stato creato dopo la mia ultima visita"
         after_1_day: "creato nell'ultimo giorno"
         after_2_days: "creato negli ultimi 2 giorni"
@@ -637,7 +640,7 @@ it:
         pending: "Inviti in sospeso"
         pending_tab: "In sospeso"
         pending_tab_with_count: "In sospeso ({{count}})"
-        topics_entered: "Argomenti Letti"
+        topics_entered: "Argomenti Visti"
         posts_read_count: "Messaggi Letti"
         expired: "L'invito è scaduto."
         rescind: "Rimuovi"
@@ -674,12 +677,21 @@ it:
         post_count:
           one: "messaggio creato"
           other: "messaggi creati"
+        likes_given:
+          one: "<i class='fa fa-heart'></i> assegnato"
+          other: "<i class='fa fa-heart'></i> assegnati"
+        likes_received:
+          one: "<i class='fa fa-heart'></i> ricevuto"
+          other: "<i class='fa fa-heart'></i> ricevuti"
         days_visited:
           one: "Giorno visitato"
           other: "Giorni Frequenza"
         posts_read:
           one: "messaggio letto"
           other: "messaggi letti"
+        bookmark_count:
+          one: "segnalibro"
+          other: "segnalibri"
         top_replies: "Migliori Risposte"
         no_replies: "Ancora nessuna risposta."
         more_replies: "Altre Risposte"
@@ -1344,9 +1356,7 @@ it:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
-        file_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la grandezza massima è {{max_size_kb}}kb)"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
-        too_many_dragged_and_dropped_files: "Spiacenti, puoi trascinare e rilasciare solo 10 file alla volta."
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
@@ -1636,7 +1646,7 @@ it:
       one: "visita"
       other: "visite"
     replies: "Risposte"
-    views_long: "questo argomento è stato visualizzato {{number}} volte"
+    views_long: "questo argomento è stato visto {{number}} volte"
     activity: "Attività"
     likes: "Mi piace"
     likes_lowercase:
@@ -1781,7 +1791,6 @@ it:
           30_days_ago: "30 Giorni Fa"
           all: "Tutti"
           view_table: "tabella"
-          view_chart: "grafico a barre"
           refresh_report: "Aggiorna Rapporto"
           start_date: "Data Inizio"
           end_date: "Data Fine"
@@ -2370,8 +2379,8 @@ it:
           visits: "Visite"
           days: "giorni"
           topics_replied_to: "Argomenti Risposti A"
-          topics_viewed: "Argomenti Visualizzati"
-          topics_viewed_all_time: "Argomenti Visualizzati (di sempre)"
+          topics_viewed: "Argomenti Visti"
+          topics_viewed_all_time: "Argomenti Visti (di sempre)"
           posts_read: "Messaggi Letti"
           posts_read_all_time: "Messaggi Letti (di sempre)"
           flagged_posts: "Messaggi Segnalati"

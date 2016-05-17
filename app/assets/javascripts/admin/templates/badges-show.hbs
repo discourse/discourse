@@ -23,21 +23,21 @@
 
     <div>
       <label for="badge_type_id">{{i18n 'admin.badges.badge_type'}}</label>
-      {{view "select" name="badge_type_id"
-                      value=buffered.badge_type_id
-                      content=badgeTypes
-                      optionValuePath="content.id"
-                      optionLabelPath="content.name"
-                      disabled=readOnly}}
+      {{combo-box name="badge_type_id"
+                  value=buffered.badge_type_id
+                  content=badgeTypes
+                  optionValuePath="content.id"
+                  optionLabelPath="content.name"
+                  disabled=readOnly}}
     </div>
 
     <div>
       <label for="badge_grouping_id">{{i18n 'admin.badges.badge_grouping'}}</label>
-      {{view "select" name="badge_grouping_id"
-                      value=buffered.badge_grouping_id
-                      content=badgeGroupings
-                      optionValuePath="content.id"
-                      optionLabelPath="content.displayName"}}
+      {{combo-box name="badge_grouping_id"
+                  value=buffered.badge_grouping_id
+                  content=badgeGroupings
+                  optionValuePath="content.id"
+                  optionLabelPath="content.displayName"}}
       &nbsp;<button {{action "editGroupings"}} class='btn'>{{fa-icon 'pencil'}}</button>
     </div>
 
@@ -89,12 +89,12 @@
 
       <div>
         <label for="trigger">{{i18n 'admin.badges.trigger'}}</label>
-        {{view "select" name="trigger"
-                        value=buffered.trigger
-                        content=badgeTriggers
-                        optionValuePath="content.id"
-                        optionLabelPath="content.name"
-                        disabled=readOnly}}
+        {{combo-box name="trigger"
+                    value=buffered.trigger
+                    content=badgeTriggers
+                    optionValuePath="content.id"
+                    optionLabelPath="content.name"
+                    disabled=readOnly}}
       </div>
     {{/if}}
 
@@ -134,7 +134,7 @@
     </div>
 
     <div class='buttons'>
-      <button {{action "save"}} {{bind-attr disabled=saving}} class='btn btn-primary'>{{i18n 'admin.badges.save'}}</button>
+      <button {{action "save"}} disabled={{saving}} class='btn btn-primary'>{{i18n 'admin.badges.save'}}</button>
       <span class='saving'>{{savingStatus}}</span>
       {{#unless readOnly}}
         <a {{action "destroy"}} class='delete-link'>{{i18n 'admin.badges.delete'}}</a>

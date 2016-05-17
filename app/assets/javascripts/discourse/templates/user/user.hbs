@@ -1,6 +1,6 @@
 <div class="container{{if viewingSelf ' viewing-self'}}">
   <section class='user-main'>
-    <section {{bind-attr class="collapsedInfo :about model.profileBackground:has-background:no-background"}}  style={{model.profileBackground}}>
+    <section class="{{if collapsedInfo 'collapsed-info'}} about {{if model.profileBackground 'has-background' 'no-background'}}"  style={{model.profileBackground}}>
     {{#unless collapsedInfo}}
     <div class='staff-counters'>
       {{#if model.number_of_flags_given}}

@@ -351,8 +351,6 @@ ru:
       title: "Пользователи"
       likes_given: "Отправлено"
       likes_received: "Получено"
-      topics_entered: "Посещено тем"
-      topics_entered_long: "Посещено тем"
       time_read: "Время чтения"
       topic_count: "Тем"
       topic_count_long: "Тем создано"

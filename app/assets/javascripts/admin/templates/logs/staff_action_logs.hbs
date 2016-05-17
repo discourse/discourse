@@ -1,5 +1,5 @@
 <div class="staff-action-logs-controls">
-  <a {{action "clearAllFilters"}} {{bind-attr class=":clear-filters :filter filtersExists::invisible"}}>
+  <a {{action "clearAllFilters"}} class="clear-filters filter {{unless filtersExists 'invisible'}}">
     <span class="label">{{i18n 'admin.logs.staff_actions.clear_filters'}}</span>
   </a>
   {{#if actionFilter}}
@@ -50,7 +50,7 @@
 
   {{#conditional-loading-spinner condition=loading}}
     {{#if model.length}}
-      {{view "staff-action-logs-list" content=controller}}
+      {{staff-action-logs-list content=model}}
     {{else}}
       {{i18n 'search.no_results'}}
     {{/if}}
