@@ -320,6 +320,11 @@ const TopicTrackingState = Discourse.Model.extend({
             .length;
   },
 
+  lastReadPostNumber(topicId) {
+    const state = this.states[`t${topicId}`];
+    return state ? state.last_read_post_number : null;
+  },
+
   countCategory(category_id) {
     let sum = 0;
     _.each(this.states, function(topic){

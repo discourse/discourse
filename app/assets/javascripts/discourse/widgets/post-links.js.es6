@@ -48,13 +48,13 @@ export default createWidget('post-links', {
       });
     }
 
-    if (attrs.canReplyAsNewTopic) {
-      result.push(h('li', this.attach('link', {
-                    className: 'reply-new',
-                    contents: () => [I18n.t('post.reply_as_new_topic'), iconNode('plus')],
-                    action: 'newTopicAction'
-                  })));
-    }
+    // if (attrs.canReplyAsNewTopic) {
+    //   result.push(h('li', this.attach('link', {
+    //                 className: 'reply-new',
+    //                 contents: () => [I18n.t('post.reply_as_new_topic'), iconNode('plus')],
+    //                 action: 'newTopicAction'
+    //               })));
+    // }
 
     return h('ul.post-links', result);
   },

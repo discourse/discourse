@@ -10,6 +10,7 @@
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events
+//= require ./discourse/lib/offset-calculator
 //= require ./discourse/lib/url
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/quote

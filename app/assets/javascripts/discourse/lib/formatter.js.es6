@@ -55,7 +55,7 @@ function shortDateNoYear(date) {
   return moment(date).format(I18n.t("dates.tiny.date_month"));
 }
 
-function tinyDateYear(date) {
+export function tinyDateYear(date) {
   return moment(date).format(I18n.t("dates.tiny.date_year"));
 }
 

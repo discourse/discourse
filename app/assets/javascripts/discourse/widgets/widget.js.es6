@@ -1,4 +1,4 @@
-import { WidgetClickHook, WidgetClickOutsideHook, WidgetKeyUpHook } from 'discourse/widgets/hooks';
+import { WidgetClickHook, WidgetClickOutsideHook, WidgetKeyUpHook, WidgetDragHook } from 'discourse/widgets/hooks';
 import { h } from 'virtual-dom';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 
@@ -76,6 +76,9 @@ function drawWidget(builder, attrs, state) {
   }
   if (this.click) {
     properties['widget-click'] = new WidgetClickHook(this);
+  }
+  if (this.drag) {
+    properties['widget-drag'] = new WidgetDragHook(this);
   }
 
   const attributes = properties['attributes'] || {};

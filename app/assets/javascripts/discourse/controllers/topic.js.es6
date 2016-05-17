@@ -21,14 +21,18 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   enteredAt: null,
   retrying: false,
   adminMenuVisible: false,
-  screenProgressPosition: null,
 
   showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
   isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
 
-  @computed('screenProgressPosition', 'model.postStream.filteredPostsCount')
-  progressPosition(pp, filteredPostsCount) {
-    return (filteredPostsCount < pp) ? filteredPostsCount : pp;
+  @computed
+  showTimeline() {
+    return !this.site.mobileView;
+  },
+
+  @computed('showTimeline')
+  loadingClass(showTimeline) {
+    return showTimeline ? 'timeline-loading' : undefined;
   },
 
   _titleChanged: function() {
@@ -182,18 +186,23 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return this.get('model.postStream').fillGapAfter(args.post, args.gap);
     },
 
+    currentPostChanged(event) {
+      const { post } = event;
+      if (!post) { return; }
+
+      const postNumber = post.get('post_number');
+      this.set('model.currentPost', postNumber);
+      this.send('postChangedRoute', postNumber);
+      this.appEvents.trigger('topic:current-post-changed', postNumber);
+    },
+
     // Called the the topmost visible post on the page changes.
     topVisibleChanged(event) {
       const { post, refresh } = event;
-
       if (!post) { return; }
 
       const postStream = this.get('model.postStream');
       const firstLoadedPost = postStream.get('posts.firstObject');
-
-      const currentPostNumber = post.get('post_number');
-      this.set('model.currentPost', currentPostNumber);
-      this.send('postChangedRoute', currentPostNumber);
 
       if (post.get('post_number') === 1) { return; }
 
@@ -202,14 +211,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
     },
 
-    //  Called the the bottommost visible post on the page changes.
+    // Called the the bottommost visible post on the page changes.
     bottomVisibleChanged(event) {
       const { post, refresh } = event;
 
       const postStream = this.get('model.postStream');
       const lastLoadedPost = postStream.get('posts.lastObject');
-
-      this.set('screenProgressPosition', postStream.progressIndexOfPost(post));
 
       if (lastLoadedPost && lastLoadedPost === post && postStream.get('canAppendMore')) {
         postStream.appendMore().then(() => refresh());
@@ -380,6 +387,27 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return this.get("model").toggleBookmark().then(changedIds => {
           if (!changedIds) { return; }
           changedIds.forEach(id => this.appEvents.trigger('post-stream:refresh', { id }));
+        });
+      }
+    },
+
+    jumpToPost(postNumber) {
+      const topic = this.get('model');
+      const stream = topic.get('postStream');
+      const postId = stream.findPostIdForPostNumber(postNumber);
+
+      if (!postId) {
+        Em.Logger.warn("jump-post code broken - requested an index outside the stream array");
+        return;
+      }
+
+      const post = stream.findLoadedPost(postId);
+      if (post) {
+        DiscourseURL.routeTo(topic.urlForPostNumber(post.get('post_number')));
+      } else {
+        // need to load it
+        stream.findPostsByIds([postId]).then(arr => {
+          DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].get('post_number')));
         });
       }
     },

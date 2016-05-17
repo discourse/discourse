@@ -1288,6 +1288,10 @@ en:
       auto_close_remove: "Don't Auto-Close This Topic"
       auto_close_immediate: "The last post in the topic is already %{hours} hours old, so the topic will be closed immediately."
 
+      timeline:
+        now: "Now"
+        replies: "%{current} / %{total} replies"
+
       progress:
         title: topic progress
         go_top: "top"

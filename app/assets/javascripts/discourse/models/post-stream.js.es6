@@ -16,6 +16,7 @@ export default RestModel.extend({
   loadingFilter: null,
   stagingPost: null,
   postsWithPlaceholders: null,
+  timelineLookup: null,
 
   init() {
     this._identityMap = {};
@@ -33,6 +34,7 @@ export default RestModel.extend({
       loadingBelow: false,
       loadingFilter: false,
       stagingPost: false,
+      timelineLookup: []
     });
   },
 
@@ -217,7 +219,7 @@ export default RestModel.extend({
     // Request a topicView
     return loadTopicView(topic, opts).then(json => {
       this.updateFromJson(json.post_stream);
-      this.setProperties({ loadingFilter: false, loaded: true });
+      this.setProperties({ loadingFilter: false, timelineLookup: json.timeline_lookup, loaded: true });
     }).catch(result => {
       this.errorLoading(result);
       throw result;
@@ -610,6 +612,27 @@ export default RestModel.extend({
     });
 
     return closest;
+  },
+
+  closestDaysAgoFor(postNumber) {
+    const timelineLookup = this.get('timelineLookup') || [];
+
+    let low = 0, high = timelineLookup.length - 1;
+    while (low <= high) {
+      const mid = Math.floor(low + ((high - low) / 2));
+      const midValue = timelineLookup[mid][0];
+
+      if (midValue > postNumber) {
+        high = mid - 1;
+      } else if (midValue < postNumber) {
+        low = mid + 1;
+      } else {
+        return timelineLookup[mid][1];
+      }
+    }
+
+    const val = timelineLookup[high] || timelineLookup[low];
+    if (val) { return val[1]; }
   },
 
   // Find a postId for a postNumber, respecting gaps

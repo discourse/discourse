@@ -1,4 +1,3 @@
-import DiscourseURL from 'discourse/lib/url';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
@@ -7,6 +6,7 @@ export default Ember.Component.extend({
   expanded: false,
   toPostIndex: null,
   docked: false,
+  progressPosition: null,
 
   postStream: Ember.computed.alias('topic.postStream'),
 
@@ -58,7 +58,8 @@ export default Ember.Component.extend({
     this.appEvents.on("composer:opened", this, this._dock)
                   .on("composer:resized", this, this._dock)
                   .on("composer:closed", this, this._dock)
-                  .on("topic:scrolled", this, this._dock);
+                  .on("topic:scrolled", this, this._dock)
+                  .on('topic:current-post-changed', postNumber => this.set('progressPosition', postNumber));
 
     // Reflows are expensive. Cache the jQuery selector
     // and the width when inserted into the DOM
@@ -72,7 +73,8 @@ export default Ember.Component.extend({
     this.appEvents.off("composer:opened", this, this._dock)
                   .off("composer:resized", this, this._dock)
                   .off("composer:closed", this, this._dock)
-                  .off('topic:scrolled', this, this._dock);
+                  .off('topic:scrolled', this, this._dock)
+                  .off('topic:current-post-changed');
   },
 
   _updateProgressBar() {
@@ -140,11 +142,6 @@ export default Ember.Component.extend({
     }
   },
 
-  jumpTo(url) {
-    this.set('expanded', false);
-    DiscourseURL.routeTo(url);
-  },
-
   actions: {
     toggleExpansion(opts) {
       this.toggleProperty('expanded');
@@ -173,23 +170,8 @@ export default Ember.Component.extend({
         postIndex = this.get('postStream.filteredPostsCount');
       }
       this.set('toPostIndex', postIndex);
-      const stream = this.get('postStream');
-      const postId = stream.findPostIdForPostNumber(postIndex);
-
-      if (!postId) {
-        Em.Logger.warn("jump-post code broken - requested an index outside the stream array");
-        return;
-      }
-
-      const post = stream.findLoadedPost(postId);
-      if (post) {
-        this.jumpTo(this.get('topic').urlForPostNumber(post.get('post_number')));
-      } else {
-        // need to load it
-        stream.findPostsByIds([postId]).then(arr => {
-          this.jumpTo(this.get('topic').urlForPostNumber(arr[0].get('post_number')));
-        });
-      }
+      this.set('expanded', false);
+      this.sendAction('jumpToPost', postIndex);
     },
 
     jumpTop() {

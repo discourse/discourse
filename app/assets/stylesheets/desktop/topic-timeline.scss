@@ -1,0 +1,85 @@
+.timeline-loading {
+  width: 900px;
+}
+
+.fixed-gutter {
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1;
+  margin-left: 757px;
+  position: fixed;
+  top: 140px;
+
+  .topic-timeline {
+    margin-left: 7em;
+    width: 200px;
+
+    .timeline-controls {
+      margin-bottom: 2em;
+    }
+
+    .start-date {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
+    .timeline-scrollarea {
+      margin-top: 0.5em;
+      margin-left: 0.5em;
+      border-left: 1px solid;
+      border-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+      position: relative;
+    }
+
+    .timeline-padding {
+      transition: height 0.15s ease-out;
+      cursor: pointer;
+      .widget-dragging & {
+        transition: none;
+      }
+    }
+
+    .timeline-handle {
+      @include border-radius-all(0.8em);
+      width: 0.35em;
+      background-color: $tertiary;
+      height: 100%;
+      float: left;
+    }
+
+    .timeline-scroller-content {
+      padding-left: 1em;
+    }
+
+    .timeline-scroller {
+      @include unselectable;
+      margin-left: -0.18em;
+      cursor: move;
+      display: flex;
+      align-items: center;
+    }
+
+    .timeline-replies {
+      font-weight: bold;
+    }
+
+    .timeline-last-read {
+      position: absolute;
+      margin-left: -0.18em;
+
+      i.progress {
+        font-size: 0.5em;
+        color: $tertiary;
+        margin-right: 1em;
+      }
+    }
+
+    .now-date {
+      display: inline-block;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      margin-top: 0.5em;
+      i {
+        margin-left: 0.15em;
+      }
+    }
+  }
+}
