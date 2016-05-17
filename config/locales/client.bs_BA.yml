@@ -286,8 +286,6 @@ bs_BA:
       title: "Korisnici"
       likes_given: "Dato"
       likes_received: "Primljeno"
-      topics_entered: "Posjećeno"
-      topics_entered_long: "Upisano Tema"
       time_read: "Pročitano puta"
       topic_count: "Teme"
       topic_count_long: "Kreirano Temi"
@@ -448,6 +446,7 @@ bs_BA:
       muted_users: "Utišani"
       muted_users_instructions: "Odbij sve notifikacije od ovih korisnika."
       muted_topics_link: "Prikaži utišane teme"
+      automatically_unpin_topics: "Automatski otkači temu kada dođem do dna"
       staff_counters:
         flags_given: "helpful flags"
         flagged_posts: "flagged posts"
@@ -1098,7 +1097,6 @@ bs_BA:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        file_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
@@ -1380,7 +1378,6 @@ bs_BA:
           30_days_ago: "30 Days Ago"
           all: "All"
           view_table: "View as Table"
-          view_chart: "View as Bar Chart"
       commits:
         latest_changes: "Latest changes: please update often!"
         by: "by"

@@ -272,8 +272,6 @@ vi:
       title: "Thành viên"
       likes_given: "Đưa ra"
       likes_received: "Đã nhận"
-      topics_entered: "Được nhập"
-      topics_entered_long: "Chủ đề được nhập"
       time_read: "Thời gian đọc"
       topic_count: "Chủ đề"
       topic_count_long: "Chủ đề đã được tạo"
@@ -640,10 +638,6 @@ vi:
           other: "Chủ đề đã được tạo"
         post_count:
           other: "Bài viết đã được tạo"
-        likes_given:
-          other: "Đã like"
-        likes_received:
-          other: "Like đã nhận"
         days_visited:
           other: "Ngày đã ghé thăm"
         posts_read:
@@ -1301,9 +1295,7 @@ vi:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
         upload: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
-        file_too_large: "Xin lỗi, tập tin của bạn tải lên quá lớn (kích thước tối đa là {{max_size_kb}}kb)"
         too_many_uploads: "Xin lỗi, bạn chỉ có thể tải lên 1 file cùng 1 lúc."
-        too_many_dragged_and_dropped_files: "Xin lỗi, bạn chỉ có thể kéo và thả 10 tập tin cùng lúc."
         upload_not_authorized: "Xin lỗi, tập tin của bạn tải lên chưa được cho phép (định dạng cho phép: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên ảnh."
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
@@ -1713,7 +1705,6 @@ vi:
           30_days_ago: "30 Ngày trước"
           all: "Tất cả"
           view_table: "bảng"
-          view_chart: "biểu đồ bar"
           refresh_report: "Làm mới báo cáo"
           start_date: "Từ ngày"
           end_date: "Đến ngày"
@@ -2274,7 +2265,6 @@ vi:
         deactivate_explanation: "Tài khoản chờ kích hoạt phải xác thực email của họ."
         suspended_explanation: "Tài khoản tạm khóa không thể đăng nhập."
         block_explanation: "Tài khoản bị khóa không thể đăng bài hoặc tạo chủ đề."
-        stage_explanation: "Người dùng có cấp bậc chỉ có thể gửi bài qua email trong các chủ đề cụ thể."
         trust_level_change_failed: "Có lỗi xảy ra khi thay đổi mức độ tin tưởng của tài khoản."
         suspend_modal_title: "Tạm khóa Thành viên"
         trust_level_2_users: "Độ tin cậy tài khoản mức 2"
