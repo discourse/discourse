@@ -2413,6 +2413,7 @@ en:
     spam_hosts: "This new user tried to create multiple posts with links to the same domain (%{domain}). See the <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> site setting."
 
   email_log:
+    post_user_deleted: "User of the post has been deleted."
     no_user: "Can't find user with id %{user_id}"
     anonymous_user: "User is anonymous"
     suspended_not_pm: "User is suspended, not a message"
