@@ -216,20 +216,19 @@ module Discourse
   end
 
   MAINTENANCE_READONLY_MODE_KEY ||= "readonly_mode:maintenance".freeze
-  MAINTENANCE_READONLY_MODE_CHANNEL ||= "/site/maintenance-read-only".freeze
   READONLY_MODE_KEY_TTL ||= 60
 
   def self.enable_maintenance_readonly_mode
-    enable_readonly_mode(MAINTENANCE_READONLY_MODE_KEY, MAINTENANCE_READONLY_MODE_CHANNEL)
+    enable_readonly_mode(MAINTENANCE_READONLY_MODE_KEY)
   end
 
   def self.disable_maintenance_readonly_mode
-    disable_readonly_mode(MAINTENANCE_READONLY_MODE_KEY, MAINTENANCE_READONLY_MODE_CHANNEL)
+    disable_readonly_mode(MAINTENANCE_READONLY_MODE_KEY)
   end
 
-  def self.enable_readonly_mode(key = readonly_mode_key, channel = readonly_channel)
+  def self.enable_readonly_mode(key = readonly_mode_key)
     $redis.setex(key, READONLY_MODE_KEY_TTL, 1)
-    MessageBus.publish(channel, true)
+    MessageBus.publish(readonly_channel, true)
     keep_readonly_mode(key)
     true
   end
@@ -244,10 +243,18 @@ module Discourse
     end
   end
 
-  def self.disable_readonly_mode(key = readonly_mode_key, channel = readonly_channel)
+  def self.disable_readonly_mode(key = readonly_mode_key)
     $redis.del(key)
-    MessageBus.publish(channel, false)
+    MessageBus.publish(readonly_channel, false)
     true
+  end
+
+  def self.activate_readonly
+    if !!$redis.get(readonly_mode_key)
+      enable_readonly_mode
+    elsif !!$redis.get(MAINTENANCE_READONLY_MODE_KEY)
+      enable_maintenance_readonly_mode
+    end
   end
 
   def self.readonly_mode?
