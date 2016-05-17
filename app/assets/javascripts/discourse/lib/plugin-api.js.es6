@@ -295,7 +295,17 @@ class PluginApi {
 
   /**
    * Adds a pluralization to the store
-   * api.addPluralization('mouse', 'mice')
+   *
+   * Example:
+   *
+   * ```javascript
+   * api.addStorePluralization('mouse', 'mice');
+   * ```
+   *
+   * ```javascript
+   * this.store.find('mouse');
+   * ```
+   * will issue a request to `/mice.json`
    **/
   addStorePluralization(thing, plural) {
     this.container.lookup("store:main").addPluralization(thing, plural);
