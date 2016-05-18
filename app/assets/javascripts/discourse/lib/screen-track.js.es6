@@ -124,6 +124,9 @@ export default class {
             const postNumbers = Object.keys(newTimings).map(v => parseInt(v, 10));
             controller.readPosts(topicId, postNumbers);
           }
+        }).catch(e => {
+          const error = e.jqXHR;
+          if (error.status === 405 && error.responseJSON.error_type === "read_only") return;
         });
       } else if (this._anonCallback) {
         // Anonymous viewer - save to localStorage
