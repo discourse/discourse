@@ -85,7 +85,7 @@
                              jumpToPost="jumpToPost"
                              jumpBottom="jumpBottom"}}
           {{/if}}
-          {{conditional-loading-spinner condition=model.postStream.loadingAbove containerClass=loadingClass}}
+          {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
           {{plugin-outlet "topic-above-posts"}}
 
@@ -127,7 +127,7 @@
         </div>
         <div id="topic-bottom"></div>
 
-        {{#conditional-loading-spinner condition=model.postStream.loadingFilter containerClass=loadingClass}}
+        {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
           {{#if loadedAllPosts}}
 
             {{topic-closing topic=model}}
