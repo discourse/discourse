@@ -5,19 +5,85 @@ import ScreenedIpAddress from 'admin/models/screened-ip-address';
 
 export default Ember.ArrayController.extend({
   loading: false,
-  itemController: 'admin-log-screened-ip-address',
   filter: null,
+  savedIpAddress: null,
 
   show: debounce(function() {
-    var self = this;
-    self.set('loading', true);
-    ScreenedIpAddress.findAll(this.get("filter")).then(function(result) {
-      self.set('model', result);
-      self.set('loading', false);
-    });
+    this.set('loading', true);
+    ScreenedIpAddress.findAll(this.get("filter"))
+                     .then(result => {
+                       this.set('model', result);
+                       this.set('loading', false);
+                      });
   }, 250).observes("filter"),
 
   actions: {
+    allow(record) {
+      record.set('action_name', 'do_nothing');
+      record.save();
+    },
+
+    block(record) {
+      record.set('action_name', 'block');
+      record.save();
+    },
+
+    edit(record) {
+      if (!record.get('editing')) {
+        this.set("savedIpAddress", record.get('ip_address'));
+      }
+      record.set('editing', true);
+    },
+
+    cancel(record) {
+      if (this.get('savedIpAddress') && record.get('editing')) {
+        record.set('ip_address', this.get('savedIpAddress'));
+      }
+      record.set('editing', false);
+    },
+
+    save(record) {
+      const wasEditing = record.get('editing');
+      record.set('editing', false);
+      record.save().then(saved => {
+        if (saved.success) {
+          this.set('savedIpAddress', null);
+        } else {
+          bootbox.alert(saved.errors);
+          if (wasEditing) record.set('editing', true);
+        }
+      }).catch(e => {
+        if (e.responseJSON && e.responseJSON.errors) {
+          bootbox.alert(I18n.t("generic_error_with_reason", {error: e.responseJSON.errors.join('. ')}));
+        } else {
+          bootbox.alert(I18n.t("generic_error"));
+        }
+        if (wasEditing) record.set('editing', true);
+      });
+    },
+
+    destroy(record) {
+      const self = this;
+      return bootbox.confirm(
+        I18n.t("admin.logs.screened_ips.delete_confirm", { ip_address: record.get('ip_address') }),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function (result) {
+          if (result) {
+            record.destroy().then(deleted => {
+              if (deleted) {
+                self.get("content").removeObject(record);
+              } else {
+                bootbox.alert(I18n.t("generic_error"));
+              }
+            }).catch(e => {
+              bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
+            });
+          }
+        }
+      );
+    },
+
     recordAdded(arg) {
       this.get("model").unshiftObject(arg);
     },
