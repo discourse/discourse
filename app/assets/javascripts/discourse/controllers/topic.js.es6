@@ -521,9 +521,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       bootbox.confirm(I18n.t("post.merge.confirm", { count: this.get('selectedPostsCount')}), result => {
         if (result) {
           const selectedPosts = this.get('selectedPosts');
-          const selectedReplies = this.get('selectedReplies');
 
-          Discourse.Post.mergePosts(selectedPosts, selectedReplies);
+          Discourse.Post.mergePosts(selectedPosts);
           this.send('toggleMultiSelect');
         }
       });

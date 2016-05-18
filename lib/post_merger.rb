@@ -10,6 +10,7 @@ class PostMerger
 
   def merge
     postContent = []
+
     @posts.each {|p| postContent.push(p.raw) }
 
     post = @posts.last
@@ -19,6 +20,15 @@ class PostMerger
     }
     revisor = PostRevisor.new(post, post.topic)
     revisor.revise!(@user, changes, {})
+
+    Post.transaction do
+      @posts.each_with_index  do |p, index|
+        # do not delete the last post since in will have the content of the merged posts
+        if index < @posts.length - 1
+          PostDestroyer.new(@user, p).destroy
+        end
+      end
+    end
   end
 
 end
