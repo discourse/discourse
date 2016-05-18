@@ -32,6 +32,11 @@ const AdminUser = Discourse.User.extend({
     }
   },
 
+  @computed
+  bounceLink() {
+    return Discourse.getURL("/admin/email/bounced");
+  },
+
   canResetBounceScore: Ember.computed.gt("bounce_score", 0),
 
   resetBounceScore() {

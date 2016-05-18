@@ -354,7 +354,7 @@
   </div>
 
   <div class="display-row">
-    <div class='field'>{{i18n 'admin.user.bounce_score'}}</div>
+    <div class='field'><a href="{{model.bounceLink}}">{{i18n 'admin.user.bounce_score'}}</a></div>
     <div class='value'>{{model.bounceScore}}</div>
     <div class='controls'>
       {{#if model.canResetBounceScore}}
