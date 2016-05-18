@@ -38,12 +38,18 @@ module Email
     end
 
     def process!
+      return if is_blacklisted?
       @from_email, @from_display_name = parse_from_field
       @incoming_email = find_or_create_incoming_email
       process_internal
     rescue => e
-      @incoming_email.update_columns(error: e.to_s)
+      @incoming_email.update_columns(error: e.to_s) if @incoming_email
       raise
+    end
+
+    def is_blacklisted?
+      return false if SiteSetting.ignore_by_title.blank?
+      Regexp.new(SiteSetting.ignore_by_title) =~ @mail.subject
     end
 
     def find_or_create_incoming_email

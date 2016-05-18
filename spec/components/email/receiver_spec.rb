@@ -407,6 +407,11 @@ describe Email::Receiver do
       expect { process(:tl4_user) }.to change(Topic, :count)
     end
 
+    it "ignores by title" do
+      SiteSetting.ignore_by_title = "foo"
+      expect { process(:ignored) }.to_not change(Topic, :count)
+    end
+
   end
 
 end

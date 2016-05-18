@@ -576,6 +576,9 @@ email:
     client: true
     default: 4
     min: 1
+  ignore_by_title:
+    type: list
+    default: ''
 
 
 files:
