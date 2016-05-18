@@ -13,5 +13,4 @@ export default MountWidget.extend({
     this._super();
     this.dispatch('topic:current-post-changed', 'timeline-scrollarea');
   }
-
 });
