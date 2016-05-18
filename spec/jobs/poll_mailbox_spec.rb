@@ -31,7 +31,7 @@ describe Jobs::PollMailbox do
       end
 
       after do
-        $redis.flushall
+        $redis.del(Jobs::PollMailbox::POLL_MAILBOX_TIMEOUT_ERROR_KEY)
       end
 
       it "add an admin dashboard message on pop authentication error" do
