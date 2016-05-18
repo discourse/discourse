@@ -122,7 +122,7 @@ basic:
   post_menu_hidden_items:
     client: true
     type: list
-    default: 'bookmark|edit|delete|admin'
+    default: 'flag|bookmark|edit|delete|admin'
     choices:
      - like
      - edit
