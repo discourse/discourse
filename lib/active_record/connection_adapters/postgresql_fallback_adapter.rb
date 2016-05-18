@@ -39,6 +39,7 @@ class PostgreSQLFallbackHandler
             end
 
             Discourse.disable_readonly_mode
+            Discourse.clear_readonly!
             self.master = true
           end
         rescue => e
