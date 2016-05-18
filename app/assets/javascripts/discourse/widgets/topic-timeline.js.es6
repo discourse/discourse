@@ -133,7 +133,7 @@ createWidget('timeline-scrollarea', {
     ];
 
 
-    if (position.lastRead) {
+    if (position.lastRead && position.lastRead < attrs.topic.posts_count) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
       if (lastReadTop > (before + SCROLLER_HEIGHT)) {
         result.push(this.attach('timeline-last-read', { top: lastReadTop, lastRead: position.lastRead }));
