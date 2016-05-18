@@ -26,7 +26,7 @@ export default Em.Component.extend({
             weekdays: moment.weekdays(),
             weekdaysShort: moment.weekdaysShort()
           },
-          onSelect: date => this.set("value", moment(date).format("YYYY-MM-DD"))
+          onSelect: date => this.set("value", moment(date).locale("en").format("YYYY-MM-DD"))
         };
 
         this._picker = new Pikaday(_.merge(default_opts, this._opts()));
