@@ -1,0 +1,65 @@
+<div class="container">
+  {{discourse-banner user=currentUser banner=site.banner}}
+</div>
+
+<div class="list-controls">
+  <div class="container">
+    {{#if tagNotification}}
+      {{tag-notifications-button action="changeTagNotification"
+                                 notificationLevel=tagNotification.notification_level}}
+    {{/if}}
+
+    {{#if showAdminControls}}
+      {{d-button action="deleteTag" label="tagging.delete_tag" icon="trash-o" class="admin-tag btn-danger"}}
+      {{d-button action="renameTag" actionParam=tag label="tagging.rename_tag" icon="pencil" class="admin-tag"}}
+    {{else}}
+      {{#if canCreateTopic}}
+        <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>
+      {{/if}}
+    {{/if}}
+
+    {{#if showTagFilter}}
+      {{bread-crumbs categories=categories
+                     category=category
+                     tagId=tag.id
+                     noSubcategories=noSubcategories
+                     hideSubcategories=showingSubcategoryList}}
+
+      {{navigation-bar navItems=navItems filterMode=filterMode}}
+    {{else}}
+      <h2 class="tag-show-heading">
+        {{#link-to 'tags'}}{{i18n "tagging.tags"}}{{/link-to}}
+        {{fa-icon "angle-right"}}
+        {{discourse-tag-bound tagRecord=tag style="simple"}}
+      </h2>
+    {{/if}}
+  </div>
+</div>
+
+<footer class='topic-list-bottom'>
+  {{conditional-loading-spinner condition=loading}}
+
+  {{#unless loading}}
+    {{#if list.topics}}
+      {{#discovery-topics-list model=list refresh="refresh"}}
+      {{bulk-select-button selected=selected action="refresh"}}
+
+      {{topic-list topics=list.topics
+                   canBulkSelect=canBulkSelect
+                   toggleBulkSelect="toggleBulkSelect"
+                   bulkSelectEnabled=bulkSelectEnabled
+                   selected=selected
+                   showPosters=true
+                   currentUser=currentUser
+                   order=order
+                   ascending=ascending
+                   changeSort="changeSort"}}
+
+      {{/discovery-topics-list}}
+    {{else}}
+      <h3>
+        {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n 'topic.browse_all_categories'}}{{/link-to}} {{i18n 'or'}} {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}}
+      </h3>
+    {{/if}}
+  {{/unless}}
+</footer>

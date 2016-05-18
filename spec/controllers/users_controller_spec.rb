@@ -321,7 +321,7 @@ describe UsersController do
 
     context 'enqueues mail' do
       it 'enqueues mail with admin email and sso enabled' do
-        Jobs.expects(:enqueue).with(:user_email, has_entries(type: :admin_login, user_id: admin.id))
+        Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :admin_login, user_id: admin.id))
         put :admin_login, email: admin.email
       end
     end
@@ -417,7 +417,7 @@ describe UsersController do
       end
 
       it 'creates a user correctly' do
-        Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+        Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
 
         post_user
@@ -1297,7 +1297,7 @@ describe UsersController do
 
       context 'with a valid email_token' do
         it 'should send the activation email' do
-          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
           xhr :post, :send_activation_email, username: user.username
         end
       end
@@ -1315,7 +1315,7 @@ describe UsersController do
         end
 
         it 'should send an email' do
-          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
           xhr :post, :send_activation_email, username: user.username
         end
       end

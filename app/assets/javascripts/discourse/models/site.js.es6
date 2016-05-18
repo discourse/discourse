@@ -15,7 +15,7 @@ const Site = RestModel.extend({
     return result;
   },
 
-  @computed("post_action_types.@each")
+  @computed("post_action_types.[]")
   flagTypes() {
     const postActionTypes = this.get('post_action_types');
     if (!postActionTypes) return [];
@@ -26,7 +26,7 @@ const Site = RestModel.extend({
   categoriesByCount: Ember.computed.sort('categories', 'topicCountDesc'),
 
   // Sort subcategories under parents
-  @computed("categoriesByCount", "categories.@each")
+  @computed("categoriesByCount", "categories.[]")
   sortedCategories(cats) {
     const result = [],
           remaining = {};
@@ -41,7 +41,7 @@ const Site = RestModel.extend({
       }
     });
 
-    Ember.keys(remaining).forEach(parentCategoryId => {
+    Object.keys(remaining).forEach(parentCategoryId => {
       const category = result.findBy('id', parseInt(parentCategoryId, 10)),
             index = result.indexOf(category);
 

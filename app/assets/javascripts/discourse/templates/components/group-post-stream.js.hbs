@@ -1,0 +1,9 @@
+{{#load-more selector=".user-stream .item" action="loadMore"}}
+  <div class='user-stream'>
+    {{#each posts as |post|}}
+      {{group-post post=post}}
+    {{else}}
+      <div>{{i18n emptyText}}</div>
+    {{/each}}
+  </div>
+{{/load-more}}

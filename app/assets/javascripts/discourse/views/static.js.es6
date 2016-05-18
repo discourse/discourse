@@ -5,6 +5,18 @@ import { on } from 'ember-addons/ember-computed-decorators';
 export default Ember.View.extend(ScrollTop, {
 
   @on('didInsertElement')
+  _addBodyClass() {
+    const path = this.get('controller.model.path');
+    $('body').addClass(`static-${path}`);
+  },
+
+  @on('willDestroyElement')
+  _removeBodyClass() {
+    const path = this.get('controller.model.path');
+    $('body').removeClass(`static-${path}`);
+  },
+
+  @on('didInsertElement')
   _checkRead() {
     const currentUser = this.get('controller.currentUser');
     if (currentUser) {

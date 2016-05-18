@@ -200,7 +200,7 @@ gl:
       our_admins: "Administradores"
       our_moderators: "Os moderadores"
       stat:
-        all_time: "De sempre"
+        all_time: "Todos"
         last_7_days: "Últimos 7 días"
         last_30_days: "Últimos 30 días"
       like_count: "Gústames"
@@ -298,8 +298,6 @@ gl:
       title: "Usuarios"
       likes_given: "Dados"
       likes_received: "Recibidos"
-      topics_entered: "Introducidos"
-      topics_entered_long: "Temas introducidos"
       time_read: "Tempo de lectura"
       topic_count: "Temas"
       topic_count_long: "Temas creados"
@@ -370,7 +368,7 @@ gl:
       '14': "Pendente"
     categories:
       all: "todas as categorías"
-      all_subcategories: "todas"
+      all_subcategories: "todo"
       no_subcategory: "ningunha"
       category: "Categoría"
       category_list: "Amosar a lista de categorías"
@@ -390,12 +388,12 @@ gl:
       subcategories: "Subcategorías"
       topic_stats: "Número de temas novos."
       topic_stat_sentence:
-        one: "%{count} tema novo nos últimos %{unit}."
-        other: "%{count} temas novos nos últimos %{unit}."
+        one: "%{count} tema novo no último %{unit}."
+        other: "%{count} temas novos no último %{unit}."
       post_stats: "O número de publicacións novas."
       post_stat_sentence:
-        one: "%{count} nova publicación no último %{unit}."
-        other: "%{count} novas publicacións nos últimos %{unit}."
+        one: "%{count} nova publicación na última %{unit}."
+        other: "%{count} novas publicacións na última %{unit}."
     ip_lookup:
       title: Busca do enderezo IP
       hostname: Nome do servidor
@@ -458,7 +456,7 @@ gl:
       github_profile: "Github"
       mailing_list_mode: "Enviar un correo por cada nova publicación (a non ser que eu silencie o tema ou categoría)"
       watched_categories: "Visto"
-      watched_categories_instructions: "Mirarás automaticamente todos os temas novos nestas categorías. Notificaránseche todas as novas publicacións e temas, e o número de novas publicacións aparecerá tamén preto do tema."
+      watched_categories_instructions: "Verás automaticamente todos os temas novos nestas categorías. Notificaránseche todas as novas publicacións e temas, e o número de novas publicacións aparecerá tamén preto do tema."
       tracked_categories: "Seguido"
       tracked_categories_instructions: "Seguirás automaticamente todos os temas novos nestas categorías. Un número de novas publicacións aparecerá preto do tema."
       muted_categories: "Silenciado"
@@ -473,7 +471,7 @@ gl:
       muted_users: "Silenciado"
       muted_users_instructions: "Suprimir todas as notificacións destes usuarios."
       muted_topics_link: "Amosar os temas silenciados"
-      automatically_unpin_topics: "Despegar os temas automaticamente cando eu chegue á banda inferior."
+      automatically_unpin_topics: "Despegar os temas automaticamente cando alcance o fondo."
       staff_counters:
         flags_given: "denuncias útiles"
         flagged_posts: "publicacións denunciadas"
@@ -481,7 +479,7 @@ gl:
         suspensions: "suspensións"
         warnings_received: "advertencias"
       messages:
-        all: "Todas"
+        all: "Todo"
         inbox: "Caixa de entrada"
         sent: "Enviados"
         archive: "Arquivo"
@@ -499,7 +497,6 @@ gl:
         set_password: "Estabelecer o contrasinal"
       change_about:
         title: "Cambiar «Verbo de min»"
-        error: "Produciuse un erro ao cambiar este valor."
       change_username:
         title: "Cambiar o nome do usuario"
         confirm: "Se cambias o nome de usuario, todas as citas anteriores das túas publicacións e as mencións ao teu @nome romperanse. Estás totalmente seguro?"
@@ -594,9 +591,9 @@ gl:
         weekly: "semanalmente"
         every_two_weeks: "cada dúas semanas"
       email_in_reply_to: "Incluír nos correos un extracto das respostas á publicación"
-      email_direct: "Enviarme un correo electrónico cando alguén me cite, responda a unha das miñas publicacións, mencione o meu @nome_do_usuario ou me convide a un tema."
+      email_direct: "Enviar un correo electrónico cando alguén me cite, responda a unha das miñas publicacións, mencione o meu @nome_do_usuario ou me convide a un tema."
       email_private_messages: "Enviar correo electrónico cando alguén me mande unha mensaxe"
-      email_always: "Enviádeme notificación por correo-e incluso cando estea activo no sitio"
+      email_always: "Enviar notificación por correo-e incluso cando estea activo no sitio"
       other_settings: "Outro"
       categories_settings: "Categorías"
       new_topic_duration:
@@ -681,7 +678,7 @@ gl:
       title:
         title: "Título"
       filters:
-        all: "Todas"
+        all: "Todo"
       stream:
         posted_by: "Publicado por"
         sent_by: "Enviado por"
@@ -881,7 +878,6 @@ gl:
       link_description: "introducir a descrición da ligazón aquí"
       link_dialog_title: "Inserir hiperligazón"
       link_optional_text: "título opcional"
-      link_placeholder: "http://exemplo.com \"texto opcional\""
       quote_title: "Citación"
       quote_text: "Citación"
       code_title: "Texto preformatado"
@@ -912,7 +908,7 @@ gl:
     notifications:
       title: "notificacións das mencións ao teu @nome, respostas ás túas publicacións e temas, mensaxes, etc"
       none: "Non é posíbel cargar as notificacións neste intre"
-      more: "ver notifiacións anteriores"
+      more: "ver notificacións anteriores"
       total_flagged: "total de publicacións denunciadas"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1333,10 +1329,7 @@ gl:
         create: "Sentímolo pero produciuse un erro creando a publicación. Téntao de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Téntao de novo."
         upload: "Sentímolo pero produciuse un erro enviando a publicación. Téntao de novo."
-        attachment_too_large: "Sentímolo pero o ficheiro é demasiado grande (o tamaño máximo son {{max_size_kb}}kb)."
-        file_too_large: "Sentímolo pero o ficheiro é demasiado grande (o tamaño máximo son {{max_size_kb}}kb)"
         too_many_uploads: "Sentímolo pero só podes enviar un ficheiro de cada vez."
-        too_many_dragged_and_dropped_files: "Sentímolo pero só podes arrastrar e soltar até 10 ficheiros dunha vez."
         upload_not_authorized: "Sentímolo pero o ficheiro que tentas enviar non está autorizado (extensións autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir anexos."
@@ -1701,10 +1694,10 @@ gl:
           other: "{{categoryName}} ({{count}})"
         help: "últimos temas na categoría {{categoryName}}"
       top:
-        title: "Banda superior"
+        title: "Destacados"
         help: "os temas máis activos no último ano, mes, semana ou día"
         all:
-          title: "De sempre"
+          title: "Todos"
         yearly:
           title: "Anual"
         quarterly:
@@ -1715,13 +1708,13 @@ gl:
           title: "Semanal"
         daily:
           title: "Diario"
-        all_time: "De sempre"
+        all_time: "Todos"
         this_year: "Ano"
         this_quarter: "Trimestre"
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoxe"
-        other_periods: "ver arriba"
+        other_periods: "ver destacados"
     browser_update: 'Desgraciadamente, <a href="http://www.discourse.org/faq/#browser">o navegador é demasiado vello para funcionar nesta web</a>. <a href="http://browsehappy.com">Anóvao</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
@@ -1769,12 +1762,11 @@ gl:
           yesterday: "Onte"
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"
-          all_time: "De sempre"
+          all_time: "Todos"
           7_days_ago: "Hai 7 días"
           30_days_ago: "Hai 30 días"
-          all: "Todas"
+          all: "Todo"
           view_table: "táboa"
-          view_chart: "gráfica de barras"
           refresh_report: "Actualiza informe"
           start_date: "Data de inicio"
           end_date: "Data de remate"
@@ -1909,14 +1901,6 @@ gl:
           backups: "Copias de seguranza"
           logs: "Rexistros"
         none: "Non hai copia de seguranza dispoñíbel"
-        read_only:
-          enable:
-            title: "Activar o modo de só-lectura"
-            label: "Activar modo de só-lectura"
-            confirm: "Confirmas a activación do modo de só-lectura?"
-          disable:
-            title: "Desactivar o modo de só-lectura"
-            label: "Desactivar modo de só-lectura"
         logs:
           none: "Aínda non hai rexistros..."
         columns:
@@ -1977,7 +1961,7 @@ gl:
         long_title: "Personalización do sitio"
         css: "CSS"
         header: "Cabeceira"
-        top: "Banda superior"
+        top: "Destacados"
         footer: "Pé de páxina"
         embedded_css: "CSS encaixado"
         head_tag:
@@ -2346,7 +2330,6 @@ gl:
         deactivate_explanation: "Un usuario desactivado debe revalidar o seu correo-e."
         suspended_explanation: "Un usuario suspendido non pode iniciar sesión."
         block_explanation: "Un usuario bloquedo non pode publicar nin iniciar temas."
-        stage_explanation: "Un usuario transitorio só pode publicar por correo electrónico en temas específicos."
         trust_level_change_failed: "Produciuse un problema cambiando o nivel de confianza do usuario."
         suspend_modal_title: "Suspender usuario"
         trust_level_2_users: "Usuarios con nivel 2 de confianza"
@@ -2437,7 +2420,7 @@ gl:
         add_url: "engadir URL"
         add_host: "engadir host"
         categories:
-          all_results: 'Todas'
+          all_results: 'Todo'
           required: 'Obrigatorio'
           basic: 'Configuración básica'
           users: 'Usuarios'

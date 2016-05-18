@@ -133,7 +133,7 @@ class TopicView
 
   def page_title
     title = @topic.title
-    if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
+    if SiteSetting.topic_page_title_includes_category && @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
       title += " - #{topic.category.name}"
     end
     title
@@ -170,7 +170,12 @@ class TopicView
   end
 
   def image_url
-    @topic.image_url || SiteSetting.default_opengraph_image_url
+    if @post_number.present? && @post_number.to_i != 1 && @desired_post.present?
+      # show poster avatar
+      @desired_post.user.avatar_template_url.gsub("{size}", "100") if @desired_post.user
+    else
+      @topic.image_url || SiteSetting.default_opengraph_image_url
+    end
   end
 
   def filter_posts(opts = {})
@@ -343,7 +348,7 @@ class TopicView
     visible_types = Topic.visible_post_types(@user)
 
     if @user.present?
-      posts.where("user_id = ? OR post_type IN (?)", @user.id, visible_types)
+      posts.where("posts.user_id = ? OR post_type IN (?)", @user.id, visible_types)
     else
       posts.where(post_type: visible_types)
     end
@@ -352,7 +357,7 @@ class TopicView
   def filter_posts_by_ids(post_ids)
     # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
-                 .includes(:user, :reply_to_user)
+                 .includes(:user, :reply_to_user, :incoming_email)
                  .order('sort_order')
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?
@@ -381,7 +386,8 @@ class TopicView
   def unfiltered_posts
     result = filter_post_types(@topic.posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?
-    result = @topic.posts.where("user_id IS NOT NULL") if @exclude_deleted_users
+    result = result.where("user_id IS NOT NULL") if @exclude_deleted_users
+    result = result.where(hidden: false) if @exclude_hidden
     result
   end
 

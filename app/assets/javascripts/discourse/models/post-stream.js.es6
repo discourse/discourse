@@ -40,7 +40,7 @@ export default RestModel.extend({
   notLoading: Ember.computed.not('loading'),
   filteredPostsCount: Ember.computed.alias("stream.length"),
 
-  @computed('posts.@each')
+  @computed('posts.[]')
   hasPosts() {
     return this.get('posts.length') > 0;
   },
@@ -53,7 +53,7 @@ export default RestModel.extend({
   canAppendMore: Ember.computed.and('notLoading', 'hasPosts', 'lastPostNotLoaded'),
   canPrependMore: Ember.computed.and('notLoading', 'hasPosts', 'firstPostNotLoaded'),
 
-  @computed('hasLoadedData', 'firstPostId', 'posts.@each')
+  @computed('hasLoadedData', 'firstPostId', 'posts.[]')
   firstPostPresent(hasLoadedData, firstPostId) {
     if (!hasLoadedData) { return false; }
     return !!this.get('posts').findProperty('id', firstPostId);
@@ -101,7 +101,7 @@ export default RestModel.extend({
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
   **/
-  @computed('posts.@each', 'stream.@each')
+  @computed('posts.[]', 'stream.[]')
   previousWindow() {
     // If we can't find the last post loaded, bail
     const firstPost = _.first(this.get('posts'));
@@ -121,7 +121,7 @@ export default RestModel.extend({
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
   **/
-  @computed('posts.lastObject', 'stream.@each')
+  @computed('posts.lastObject', 'stream.[]')
   nextWindow(lastLoadedPost) {
     // If we can't find the last post loaded, bail
     if (!lastLoadedPost) { return []; }
@@ -193,6 +193,11 @@ export default RestModel.extend({
   refresh(opts) {
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
+
+    if (opts.cancelSummary) {
+      this.set('summary', false);
+      delete opts.cancelSummary;
+    }
 
     const topic = this.get('topic');
 

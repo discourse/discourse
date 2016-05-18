@@ -1,5 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   needs: ['topic', 'application'],
@@ -25,10 +26,30 @@ export default Ember.Controller.extend({
   showBadges: setting('enable_badges'),
   showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
   showDelete: Em.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
+  linkWebsite: Em.computed.not('user.isBasic'),
+  hasLocationOrWebsite: Em.computed.or('user.location', 'user.website_name'),
+
+  @computed('user.user_fields.@each.value')
+  publicUserFields() {
+    const siteUserFields = this.site.get('user_fields');
+    if (!Ember.isEmpty(siteUserFields)) {
+      const userFields = this.get('user.user_fields');
+      return siteUserFields.filterProperty('show_on_user_card', true).sortBy('position').map(field => {
+        Ember.set(field, 'dasherized_name', field.get('name').dasherize());
+        const value = userFields ? userFields[field.get('id')] : null;
+        return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });
+      }).compact();
+    }
+  },
+
+  @computed("user.trust_level")
+  removeNoFollow(trustLevel) {
+    return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
+  },
 
   moreBadgesCount: function() {
     return this.get('user.badge_count') - this.get('user.featured_user_badges.length');
-  }.property('user.badge_count', 'user.featured_user_badges.@each'),
+  }.property('user.badge_count', 'user.featured_user_badges.[]'),
 
   hasCardBadgeImage: function() {
     const img = this.get('user.card_badge.image');

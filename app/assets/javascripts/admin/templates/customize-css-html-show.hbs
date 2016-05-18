@@ -28,11 +28,11 @@
           <li>{{#link-to 'adminCustomizeCssHtml.show' model.id 'embedded-css' replace=true}}{{i18n "admin.customize.embedded_css"}}{{/link-to}}</li>
         {{/if}}
         <li class='toggle-mobile'>
-          <a {{bind-attr class="mobile:active"}} {{action "toggleMobile"}}>{{fa-icon "mobile"}}</a>
+          <a class="{{if mobile 'active'}}" {{action "toggleMobile"}}>{{fa-icon "mobile"}}</a>
         </li>
         <li class='toggle-maximize'>
           <a {{action "toggleMaximize"}}>
-            {{fa-icon-bound maximizeIcon}}
+            <i class="fa fa-{{maximizeIcon}}"></i>
           </a>
         </li>
       </ul>

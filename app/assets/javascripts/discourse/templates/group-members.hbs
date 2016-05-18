@@ -1,0 +1,45 @@
+{{#if model}}
+  {{#if isOwner}}
+    <div class='clearfix'>
+      <form id='add-user-to-group' autocomplete="off">
+        {{user-selector usernames=usernames placeholderKey="groups.selector_placeholder" id="user-search-selector" name="usernames"}}
+        {{d-button action="addMembers" class="add" icon="plus" label="groups.add"}}
+      </form>
+    </div>
+  {{/if}}
+
+  {{#load-more selector=".group-members tr" action="loadMore"}}
+    <table class='group-members'>
+      <tr>
+        <th colspan="2">{{i18n 'last_post'}}</th>
+        <th>{{i18n 'last_seen'}}</th>
+        {{#if isOwner}}
+        <th></th>
+        {{/if}}
+      </tr>
+      {{#each model.members as |m|}}
+        <tr>
+          <td class='avatar'>
+            {{user-info user=m}}
+            {{#if m.owner}}<span class='is-owner'>{{i18n "groups.owner"}}</span>{{/if}}
+          </td>
+          <td>
+            <span class="text">{{bound-date m.last_posted_at}}</span>
+          </td>
+          <td>
+            <span class="text">{{bound-date m.last_seen_at}}</span>
+          </td>
+          {{#if isOwner}}
+            <td class='remove-user'>
+              {{#unless m.owner}}
+                <a class="remove-link" {{action "removeMember" m}}><i class="fa fa-times"></i></a>
+              {{/unless}}
+            </td>
+          {{/if}}
+        </tr>
+      {{/each}}
+    </table>
+  {{/load-more}}
+{{else}}
+  <div>{{i18n "groups.empty.users"}}</div>
+{{/if}}

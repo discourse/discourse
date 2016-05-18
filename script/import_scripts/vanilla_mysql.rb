@@ -27,6 +27,10 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     import_categories
     import_topics
     import_posts
+
+    update_tl0
+
+    create_permalinks
   end
 
   def import_users
@@ -54,6 +58,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['Email'].blank?
         next if user['Name'].blank?
+        next if @lookup.user_id_from_imported_user_id(user['UserID'])
 
         if user['Name'] == '[Deleted User]'
           # EVERY deleted user record in Vanilla has the same username: [Deleted User]
@@ -325,6 +330,32 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     # @client.query(sql, cache_rows: false) #segfault: cache_rows: false causes segmentation fault
   end
 
+  def create_permalinks
+    puts '', 'Creating redirects...', ''
+
+    User.find_each do |u|
+      ucf = u.custom_fields
+      if ucf && ucf["import_id"] && ucf["import_username"]
+        Permalink.create( url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}" ) rescue nil
+      end
+    end
+
+    Post.find_each do |post|
+      pcf = post.custom_fields
+      if pcf && pcf["import_id"]
+        topic = post.topic
+        id = pcf["import_id"].split('#').last
+        if post.post_number == 1
+          slug = Slug.for(topic.title) # probably matches what vanilla would do...
+          Permalink.create( url: "discussion/#{id}/#{slug}", topic_id: topic.id ) rescue nil
+        else
+          Permalink.create( url: "discussion/comment/#{id}", post_id: post.id ) rescue nil
+        end
+      end
+    end
+  end
+
 end
+
 
 ImportScripts::VanillaSQL.new.perform

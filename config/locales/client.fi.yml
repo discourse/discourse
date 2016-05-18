@@ -298,8 +298,6 @@ fi:
       title: "Käyttäjät"
       likes_given: "Annetut"
       likes_received: "Saadut"
-      topics_entered: "Avatut"
-      topics_entered_long: "Avattuja ketjuja"
       time_read: "Lukuaika"
       topic_count: "Ketjut"
       topic_count_long: "Luotuja ketjuja"
@@ -499,7 +497,6 @@ fi:
         set_password: "Aseta salasana"
       change_about:
         title: "Muokkaa kuvaustasi"
-        error: "Arvon muuttamisessa tapahtui virhe."
       change_username:
         title: "Vaihda käyttäjätunnus"
         confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
@@ -882,12 +879,11 @@ fi:
       link_description: "kirjoita linkin kuvaus tähän"
       link_dialog_title: "Lisää linkki"
       link_optional_text: "vaihtoehtoinen kuvaus"
-      link_placeholder: "http://esimerkki.fi \"valinnainen teksti\""
       quote_title: "Lainaus"
       quote_text: "Lainaus"
       code_title: "Teksti ilman muotoiluja"
       code_text: "Sisennä teksti neljällä välilyönnillä poistaaksesi automaattisen muotoilun"
-      upload_title: "Lähetä"
+      upload_title: "Liitä"
       upload_description: "kirjoita ladatun tiedoston kuvaus tähän"
       olist_title: "Numeroitu lista"
       ulist_title: "Luettelomerkillinen luettelo"
@@ -1106,7 +1102,7 @@ fi:
       jump_reply_down: hyppää myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"
       auto_close_notice: "Tämä ketju sulkeutuu automaattisesti %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Tämä ketju suljetaan %{duration} viimeisen viestin jälkeen."
+      auto_close_notice_based_on_last_post: "Tämä ketju suljetaan %{duration} kuluttua viimeisimmästä viestistä."
       auto_close_title: 'Automaattisen sulkemisen asetukset'
       auto_close_save: "Tallenna"
       auto_close_remove: "Älä sulje tätä ketjua automaattisesti"
@@ -1334,10 +1330,7 @@ fi:
         create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
         edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
         upload: "Pahoittelut, tiedoston lähetys ei onnistunut. Ole hyvä ja yritä uudelleen."
-        attachment_too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on {{max_size_kb}}kb)."
-        file_too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on {{max_size_kb}}kb)"
         too_many_uploads: "Pahoittelut, voit ladata vain yhden tiedoston kerrallaan."
-        too_many_dragged_and_dropped_files: "Pahoittelut, voit raahata korkeintaan 10 tiedostoa kerrallaan."
         upload_not_authorized: "Pahoittelut, tiedostomuoto ei ole sallittu (sallitut tiedostopäätteet: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttjät eivät saa ladata kuvia."
         attachment_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttäjät eivät saa ladata liitteitä."
@@ -1776,7 +1769,6 @@ fi:
           30_days_ago: "30 päivää sitten"
           all: "Kaikki"
           view_table: "taulukko"
-          view_chart: "pylväsdiagrammi"
           refresh_report: "Päivitä raportti"
           start_date: "Alkupäivämäärä"
           end_date: "Loppupäivämäärä"
@@ -1911,14 +1903,6 @@ fi:
           backups: "Varmuuskopiot"
           logs: "Lokit"
         none: "Ei saatavilla olevia varmuuskopioita."
-        read_only:
-          enable:
-            title: "Käynnistä vain luku -tila."
-            label: "Käynnistä vain luku -tila."
-            confirm: "Oletko varma, että haluat käynnistää vain luku -tilan?"
-          disable:
-            title: "Poista vain luku -tila"
-            label: "Poista vain luku -tila"
         logs:
           none: "Lokeja ei ole vielä..."
         columns:
@@ -2348,7 +2332,6 @@ fi:
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
-        stage_explanation: "Automaattisesti luotu käyttäjä voi vastata sähköpostilla vain erikseen määritettyihin ketjuihin."
         trust_level_change_failed: "Käyttäjän luottamustason vaihtamisessa tapahtui virhe."
         suspend_modal_title: "Hyllytä käyttäjä"
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
@@ -2667,3 +2650,5 @@ fi:
       <button class="btn btn-primary">Google</button>
       </form>
       </p>
+    tagging:
+      sort_by_name: "nimi"

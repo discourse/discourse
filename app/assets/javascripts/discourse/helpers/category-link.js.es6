@@ -1,4 +1,4 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse/lib/helpers';
 import { iconHTML } from 'discourse/helpers/fa-icon';
 
 var get = Em.get,
@@ -94,4 +94,3 @@ export function categoryLinkHTML(category, options) {
 }
 
 registerUnbound('category-link', categoryLinkHTML);
-Ember.Handlebars.helper('bound-category-link', categoryLinkHTML);

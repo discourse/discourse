@@ -51,16 +51,17 @@ class UploadsController < ApplicationController
     render nothing: true, status: 404
   end
 
-  MAXIMUM_UPLOAD_SIZE ||= 10.megabytes
   DOWNSIZE_RATIO ||= 0.8
 
   def create_upload(type, file, url)
     begin
+      maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+
       # ensure we have a file
       if file.nil?
         # API can provide a URL
         if url.present? && is_api?
-          tempfile = FileHelper.download(url, MAXIMUM_UPLOAD_SIZE, "discourse-upload-#{type}") rescue nil
+          tempfile = FileHelper.download(url, maximum_upload_size, "discourse-upload-#{type}") rescue nil
           filename = File.basename(URI.parse(url).path)
         end
       else
@@ -72,14 +73,15 @@ class UploadsController < ApplicationController
       return { errors: I18n.t("upload.file_missing") } if tempfile.nil?
 
       # allow users to upload (not that) large images that will be automatically reduced to allowed size
-      if SiteSetting.max_image_size_kb > 0 && FileHelper.is_image?(filename)
+      max_image_size_kb = SiteSetting.max_image_size_kb.kilobytes
+      if max_image_size_kb > 0 && FileHelper.is_image?(filename)
         uploaded_size = File.size(tempfile.path)
-        if 0 < uploaded_size && uploaded_size < MAXIMUM_UPLOAD_SIZE && Upload.should_optimize?(tempfile.path)
+        if 0 < uploaded_size && uploaded_size < maximum_upload_size && Upload.should_optimize?(tempfile.path)
           attempt = 2
           allow_animation = type == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
           while attempt > 0
             downsized_size = File.size(tempfile.path)
-            break if uploaded_size < downsized_size || downsized_size < SiteSetting.max_image_size_kb.kilobytes
+            break if downsized_size >= uploaded_size || downsized_size < max_image_size_kb
             image_info = FastImage.new(tempfile.path) rescue nil
             w, h = *(image_info.try(:size) || [0, 0])
             break if w == 0 || h == 0

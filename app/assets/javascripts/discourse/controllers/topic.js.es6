@@ -7,9 +7,10 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 import Composer from 'discourse/models/composer';
 import DiscourseURL from 'discourse/lib/url';
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
-  needs: ['header', 'modal', 'composer', 'quote-button', 'topic-progress', 'application'],
+  needs: ['modal', 'composer', 'quote-button', 'topic-progress', 'application'],
   multiSelect: false,
   allPostsSelected: false,
   editingTopic: false,
@@ -33,6 +34,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.send('refreshTitle');
     }
   }.observes('model.title', 'category'),
+
+  @computed('site.mobileView', 'model.posts_count')
+  showSelectedPostsAtBottom(mobileView, postsCount) {
+    return mobileView && (postsCount > 3);
+  },
 
   @computed('model.postStream.posts')
   postsToRender() {
@@ -71,6 +77,58 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   },
 
+  @computed('model', 'topicTrackingState.messageCount')
+  browseMoreMessage(model) {
+
+    // TODO decide what to show for pms
+    if (model.get('isPrivateMessage')) { return; }
+
+    const opts = { latestLink: `<a href="${Discourse.getURL("/latest")}">${I18n.t("topic.view_latest_topics")}</a>` };
+    let category = model.get('category');
+
+    if (category && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
+      category = null;
+    }
+
+    if (category) {
+      opts.catLink = categoryBadgeHTML(category);
+    } else {
+      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
+    }
+
+    const unreadTopics = this.topicTrackingState.countUnread();
+    const newTopics = this.topicTrackingState.countNew();
+
+    if (newTopics + unreadTopics > 0) {
+      const hasBoth = unreadTopics > 0 && newTopics > 0;
+
+      return I18n.messageFormat("topic.read_more_MF", {
+        "BOTH": hasBoth,
+        "UNREAD": unreadTopics,
+        "NEW": newTopics,
+        "CATEGORY": category ? true : false,
+        latestLink: opts.latestLink,
+        catLink: opts.catLink
+      });
+    } else if (category) {
+      return I18n.t("topic.read_more_in_category", opts);
+    } else {
+      return I18n.t("topic.read_more", opts);
+    }
+  },
+
+  @computed('model')
+  pmPath(model) {
+    return this.currentUser && this.currentUser.pmPath(model);
+  },
+
+  @computed('model')
+  suggestedTitle(model) {
+    return model.get('isPrivateMessage') ?
+      `<i class='private-message-glyph fa fa-envelope'></i> ${I18n.t("suggested_topics.pm_title")}` :
+      I18n.t("suggested_topics.title");
+  },
+
   @computed('model.postStream.streamFilters.username_filters')
   username_filters: {
     set(value) {
@@ -102,6 +160,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   selectedQuery: function() {
     return post => this.postSelected(post);
   }.property(),
+
+  @computed('model.isPrivateMessage')
+  canEditTags(isPrivateMessage) {
+    return !isPrivateMessage && this.site.get('can_tag_topics');
+  },
 
   actions: {
 
@@ -467,11 +530,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.get('content').toggleStatus('archived');
     },
 
-    // Toggle the star on the topic
-    toggleStar() {
-      this.get('content').toggleStar();
-    },
-
     clearPin() {
       this.get('content').clearPin();
     },
@@ -504,7 +562,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }).then(q => {
         const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
         const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
-        composerController.get('model').appendText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`);
+        composerController.get('model').prependText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`, {new_line: true});
       });
     },
 
@@ -540,6 +598,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     changePostOwner(post) {
       this.get('selectedPosts').addObject(post);
       this.send('changeOwner');
+    },
+
+    convertToPublicTopic() {
+      this.get('content').convertTopic("public");
+    },
+
+    convertToPrivateMessage() {
+      this.get('content').convertTopic("private");
     }
   },
 
@@ -620,10 +686,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     return false;
   },
 
-  showStarButton: function() {
-    return Discourse.User.current() && !this.get('model.isPrivateMessage');
-  }.property('model.isPrivateMessage'),
-
   loadingHTML: function() {
     return spinnerHTML;
   }.property(),
@@ -661,34 +723,40 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         case "revised":
         case "rebaked": {
           postStream.triggerChangedPost(data.id, data.updated_at).then(() => refresh({ id: data.id }));
-          return;
+          break;
         }
         case "deleted": {
           postStream.triggerDeletedPost(data.id, data.post_number).then(() => refresh({ id: data.id }));
-          return;
+          break;
         }
         case "recovered": {
           postStream.triggerRecoveredPost(data.id, data.post_number).then(() => refresh({ id: data.id }));
-          return;
+          break;
         }
         case "created": {
           postStream.triggerNewPostInStream(data.id).then(() => refresh());
           if (this.get('currentUser.id') !== data.user_id) {
             Discourse.notifyBackgroundCountIncrement();
           }
-          return;
+          break;
         }
         case "move_to_inbox": {
           topic.set("message_archived",false);
-          return;
+          break;
         }
         case "archived": {
           topic.set("message_archived",true);
-          return;
+          break;
         }
         default: {
           Em.Logger.warn("unknown topic bus message type", data);
         }
+      }
+
+      if (data.reload_topic) {
+        topic.reload().then(() => {
+          this.send('postChangedRoute', topic.get('post_number') || 1);
+        });
       }
     });
   },

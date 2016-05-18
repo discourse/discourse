@@ -7,6 +7,7 @@ class DiscourseRedis
     include Singleton
 
     MASTER_LINK_STATUS = "master_link_status:up".freeze
+    CONNECTION_TYPES = %w{normal pubsub}.each(&:freeze)
 
     def initialize
       @master = true
@@ -17,7 +18,7 @@ class DiscourseRedis
 
     def verify_master
       synchronize do
-        return if @running && !recently_checked?
+        return if @running || recently_checked?
         @running = true
       end
 
@@ -31,7 +32,11 @@ class DiscourseRedis
 
         if slave_client.call([:info]).split("\r\n").include?(MASTER_LINK_STATUS)
           logger.warn "#{log_prefix}: Master server is active, killing all connections to slave..."
-          slave_client.call([:client, [:kill, 'type', 'normal']])
+
+          CONNECTION_TYPES.each do |connection_type|
+            slave_client.call([:client, [:kill, 'type', connection_type]])
+          end
+
           Discourse.clear_readonly!
           Discourse.request_refresh!
           @master = true
@@ -53,10 +58,17 @@ class DiscourseRedis
 
     def recently_checked?
       if @last_checked
-        Time.zone.now > (@last_checked + 5.seconds)
+        Time.zone.now <= (@last_checked + 5.seconds)
       else
         false
       end
+    end
+
+    # Used for testing
+    def reset!
+      @master = true
+      @last_checked = nil
+      @running = false
     end
 
     private

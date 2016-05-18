@@ -122,7 +122,11 @@ class Guardian
   end
 
   def can_see_group?(group)
-    group.present? && (is_admin? || group.visible?)
+    return false if group.blank?
+    return true if is_admin? || group.visible?
+    return false if user.blank?
+
+    group.group_users.where(user_id: user.id).exists?
   end
 
 
@@ -267,9 +271,22 @@ class Guardian
   end
 
   def can_export_entity?(entity_type)
+    return false unless @user
     return true if is_staff?
     return false if entity_type == "admin"
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
+  end
+
+  def can_create_tag?
+    user && user.has_trust_level?(SiteSetting.min_trust_to_create_tag.to_i)
+  end
+
+  def can_tag_topics?
+    user && user.has_trust_level?(SiteSetting.min_trust_level_to_tag_topics.to_i)
+  end
+
+  def can_admin_tags?
+    is_staff?
   end
 
   private

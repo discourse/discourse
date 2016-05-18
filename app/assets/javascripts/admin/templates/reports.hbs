@@ -1,9 +1,11 @@
 <h3>{{model.title}}</h3>
 
 <div class="admin-reports-filter">
-  {{i18n 'admin.dashboard.reports.start_date'}} {{input type="date" value=startDate}}
-  {{i18n 'admin.dashboard.reports.end_date'}} {{input type="date" value=endDate}}
-  {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
+  {{i18n 'admin.dashboard.reports.start_date'}} {{date-picker-past value=startDate}}
+  {{i18n 'admin.dashboard.reports.end_date'}} {{date-picker-past value=endDate}}
+  {{#if showCategoryOptions}}
+    {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
+  {{/if}}
   {{#if showGroupOptions}}
     {{combo-box valueAttribute="value" content=groupOptions value=groupId}}
   {{/if}}
@@ -18,34 +20,31 @@
     <a href {{action "viewAsTable"}}>{{i18n 'admin.dashboard.reports.view_table'}}</a>
   {{/if}}
   |
-  {{#if viewingBarChart}}
-    {{i18n 'admin.dashboard.reports.view_chart'}}
+  {{#if viewingGraph}}
+    {{i18n 'admin.dashboard.reports.view_graph'}}
   {{else}}
-    <a href {{action "viewAsBarChart"}}>{{i18n 'admin.dashboard.reports.view_chart'}}</a>
+    <a href {{action "viewAsGraph"}}>{{i18n 'admin.dashboard.reports.view_graph'}}</a>
   {{/if}}
 </div>
 
 {{#conditional-loading-spinner condition=refreshing}}
+  {{#if viewingGraph}}
+    {{admin-graph model=model}}
+  {{else}}
   <table class='table report'>
     <tr>
       <th>{{model.xaxis}}</th>
       <th>{{model.yaxis}}</th>
     </tr>
 
-    {{#each row in model.dataReversed}}
+    {{#each model.dataReversed as |row|}}
       <tr>
         <td>{{row.x}}</td>
         <td>
-          {{#if viewingTable}}
-            {{row.y}}
-          {{/if}}
-          {{#if viewingBarChart}}
-            <div class='bar-container'>
-              <div class='bar' style="width: {{unbound row.percentage}}%">{{row.y}}</div>
-            </div>
-          {{/if}}
+          {{row.y}}
         </td>
       </tr>
     {{/each}}
   </table>
+  {{/if}}
 {{/conditional-loading-spinner}}

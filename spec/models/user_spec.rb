@@ -47,7 +47,7 @@ describe User do
     it "enqueues a 'signup after approval' email if must_approve_users is true" do
       SiteSetting.stubs(:must_approve_users).returns(true)
       Jobs.expects(:enqueue).with(
-        :user_email, has_entries(type: :signup_after_approval)
+        :critical_user_email, has_entries(type: :signup_after_approval)
       )
       user.approve(admin)
     end
@@ -327,6 +327,20 @@ describe User do
       user.reload
       expect(user.associated_accounts).to eq("Twitter(sam), Facebook(sam), Google(sam@sam.com), Github(sam)")
 
+    end
+  end
+
+  describe '.is_singular_admin?' do
+    it 'returns true if user is singular admin' do
+      admin = Fabricate(:admin)
+      expect(admin.is_singular_admin?).to eq(true)
+    end
+
+    it 'returns false if user is not the only admin' do
+      admin = Fabricate(:admin)
+      second_admin = Fabricate(:admin)
+
+      expect(admin.is_singular_admin?).to eq(false)
     end
   end
 

@@ -1,18 +1,9 @@
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 
 export default Ember.View.extend({
   templateName: 'share',
   elementId: 'share-link',
   classNameBindings: ['hasLink'],
-
-  title: function() {
-    if (this.get('controller.type') === 'topic') return I18n.t('share.topic');
-    var postNumber = this.get('controller.postNumber');
-    if (postNumber) {
-      return I18n.t('share.post', {postNumber: this.get('controller.postNumber')});
-    } else {
-      return I18n.t('share.topic');
-    }
-  }.property('controller.type', 'controller.postNumber'),
 
   hasLink: function() {
     if (!Ember.isEmpty(this.get('controller.link'))) return 'visible';
@@ -95,7 +86,7 @@ export default Ember.View.extend({
 
     $html.on('click.discoure-share-link', '[data-share-url]', function(e) {
       // if they want to open in a new tab, let it so
-      if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) { return true; }
+      if (wantsNewWindow(e)) { return true; }
 
       e.preventDefault();
 

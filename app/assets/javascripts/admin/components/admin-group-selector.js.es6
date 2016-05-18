@@ -6,7 +6,11 @@ export default Ember.Component.extend({
         multiple: true,
         width: '100%',
         query: function(opts) {
-                opts.callback({ results: this.get("available").map(this._format) });
+                opts.callback({
+                  results: this.get("available").filter(function(o) {
+                      return -1 !== o.name.toLowerCase().indexOf(opts.term.toLowerCase());
+                    }).map(this._format)
+                });
               }.bind(this)
       }).on("change", function(evt) {
         if (evt.added){

@@ -2,7 +2,8 @@
 <div class='d-editor-modals'>
   {{#d-editor-modal class="insert-link" hidden=insertLinkHidden okAction="insertLink"}}
     <h3>{{i18n "composer.link_dialog_title"}}</h3>
-    {{text-field value=link placeholderKey="composer.link_placeholder"}}
+    {{text-field value=linkUrl placeholderKey="composer.link_url_placeholder" class="link-url"}}
+    {{text-field value=linkText placeholderKey="composer.link_optional_text" class="link-text"}}
   {{/d-editor-modal}}
 </div>
 

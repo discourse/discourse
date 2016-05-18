@@ -6,7 +6,8 @@ class TopicListSerializer < ApplicationSerializer
              :draft_key,
              :draft_sequence,
              :for_period,
-             :per_page
+             :per_page,
+             :tags
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
 
@@ -20,6 +21,13 @@ class TopicListSerializer < ApplicationSerializer
 
   def include_more_topics_url?
     object.more_topics_url.present? && (object.topics.size == object.per_page)
+  end
+
+  def include_tags?
+    SiteSetting.tagging_enabled && SiteSetting.show_filter_by_tag
+  end
+  def tags
+    DiscourseTagging.top_tags
   end
 
 end

@@ -1,4 +1,4 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse/lib/helpers';
 
 registerUnbound('i18n', function(key, params) {
   return I18n.t(key, params);

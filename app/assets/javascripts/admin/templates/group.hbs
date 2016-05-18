@@ -102,11 +102,12 @@
   {{/unless}}
 
   <div class='buttons'>
-    <button {{action "save"}} {{bind-attr disabled="disableSave"}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
+    <button {{action "save"}} disabled={{disableSave}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
     {{#unless model.automatic}}
       <button {{action "destroy"}} class='btn btn-danger'>{{fa-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
     {{/unless}}
-    <span {{bind-attr class=":saving savingStatus::hidden"}}>{{savingStatus}}</span>
+
+    <span class="saving {{unless savingStatus 'hidden'}}">{{savingStatus}}</span>
   </div>
 
 </form>

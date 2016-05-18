@@ -39,7 +39,7 @@
         <p class="with-validation">
           {{{pinMessage}}}
           {{fa-icon "clock-o"}}
-          {{date-picker value=model.pinnedInCategoryUntil}}
+          {{date-picker-future value=model.pinnedInCategoryUntil}}
           {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
         </p>
         <p>
@@ -65,7 +65,7 @@
         <p class="with-validation">
           {{i18n "topic.feature_topic.pin_globally"}}
           {{fa-icon "clock-o"}}
-          {{date-picker value=model.pinnedGloballyUntil}}
+          {{date-picker-future value=model.pinnedGloballyUntil}}
           {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
         </p>
         <p>

@@ -46,6 +46,9 @@ class Category < ActiveRecord::Base
 
   after_update :rename_category_definition, if: :name_changed?
 
+  after_create :delete_category_permalink
+  after_update :create_category_permalink, if: :slug_changed?
+
   after_save :publish_discourse_stylesheet
 
   has_one :category_search_data
@@ -90,7 +93,7 @@ class Category < ActiveRecord::Base
   end
 
   def self.scoped_to_permissions(guardian, permission_types)
-    if guardian && guardian.is_staff?
+    if guardian && guardian.is_admin?
       all
     elsif !guardian || guardian.anonymous?
       if permission_types.include?(:readonly)
@@ -445,6 +448,24 @@ SQL
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
       topic.update_column(:title, I18n.t("category.topic_prefix", category: name))
     end
+  end
+
+  def create_category_permalink
+    old_slug = changed_attributes["slug"]
+    if self.parent_category
+      Permalink.create(url: "c/#{self.parent_category.slug}/#{old_slug}", category_id: id)
+    else
+      Permalink.create(url: "c/#{old_slug}", category_id: id)
+    end
+  end
+
+  def delete_category_permalink
+    if self.parent_category
+      permalink = Permalink.find_by_url("c/#{self.parent_category.slug}/#{slug}")
+    else
+      permalink = Permalink.find_by_url("c/#{slug}")
+    end
+    permalink.destroy if permalink
   end
 
   def publish_discourse_stylesheet

@@ -108,7 +108,7 @@ const Post = RestModel.extend({
     // Put the metaData into the request
     if (metaData) {
       data.meta_data = {};
-      Ember.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
+      Object.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
     }
 
     return data;

@@ -15,8 +15,8 @@
         </tr>
       {{/if}}
 
-      {{#each t in c.topics}}
-        <tr {{bind-attr class="t.archived :category-topic-link"}}>
+      {{#each c.topics as |t|}}
+        <tr class="{{if t.archived 'archived'}} category-topic-link">
           <td class='main-link'>
             <div class='topic-inset'>
               {{topic-status topic=t}}
@@ -46,7 +46,7 @@
         <tr class="subcategories-list">
           <td>
             <div class='subcategories'>
-              {{#each subcategory in c.subcategories}}
+              {{#each c.subcategories as |subcategory|}}
                 {{category-link subcategory}}
               {{/each}}
             </div>

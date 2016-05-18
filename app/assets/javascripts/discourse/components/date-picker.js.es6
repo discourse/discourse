@@ -9,26 +9,28 @@ export default Em.Component.extend({
   @on("didInsertElement")
   _loadDatePicker() {
     const input = this.$(".date-picker")[0];
+    const container = $("#" + this.get("containerId"))[0];
 
     loadScript("/javascripts/pikaday.js").then(() => {
-      let default_opts = {
-        field: input,
-        container: this.$()[0],
-        format: "YYYY-MM-DD",
-        defaultDate: moment().add(1, "day").toDate(),
-        minDate: new Date(),
-        firstDay: moment.localeData().firstDayOfWeek(),
-        i18n: {
-          previousMonth: I18n.t('dates.previous_month'),
-          nextMonth: I18n.t('dates.next_month'),
-          months: moment.months(),
-          weekdays: moment.weekdays(),
-          weekdaysShort: moment.weekdaysShort()
-        },
-        onSelect: date => this.set("value", moment(date).format("YYYY-MM-DD"))
-      };
+      Ember.run.next(() => {
+        let default_opts = {
+          field: input,
+          container: container || this.$()[0],
+          bound: container === undefined,
+          format: "YYYY-MM-DD",
+          firstDay: moment.localeData().firstDayOfWeek(),
+          i18n: {
+            previousMonth: I18n.t('dates.previous_month'),
+            nextMonth: I18n.t('dates.next_month'),
+            months: moment.months(),
+            weekdays: moment.weekdays(),
+            weekdaysShort: moment.weekdaysShort()
+          },
+          onSelect: date => this.set("value", moment(date).format("YYYY-MM-DD"))
+        };
 
-      this._picker = new Pikaday(_.merge(default_opts, this._opts()));
+        this._picker = new Pikaday(_.merge(default_opts, this._opts()));
+      });
     });
   },
 

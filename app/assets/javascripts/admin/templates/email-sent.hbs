@@ -18,7 +18,7 @@
       <td>{{text-field value=filter.reply_key placeholderKey="admin.email.logs.filters.reply_key_placeholder"}}</td>
     </tr>
 
-    {{#each l in model}}
+    {{#each model as |l|}}
       <tr>
         <td>{{format-date l.created_at}}</td>
         <td>
@@ -31,11 +31,12 @@
         </td>
         <td><a href='mailto:{{unbound l.to_address}}'>{{l.to_address}}</a></td>
         <td>{{l.email_type}}</td>
-        <td>
+        <td class='post-link'>
           {{#if l.post_url}}
-            <a href="{{l.post_url}}">{{l.reply_key}}</a>
+            <a href="{{l.post_url}}">{{l.post_description}}</a>
+            <span class='reply-key'>{{l.reply_key}}</span>
           {{else}}
-            {{l.reply_key}}
+            <span class='reply-key'>{{l.reply_key}}</span>
           {{/if}}
         </td>
       </tr>

@@ -167,6 +167,10 @@ pt_BR:
     hot: "Tópicos quentes"
     top: "Principais tópicos"
     posts: "Últimos tópicos"
+    private_posts: "Últimas mensagens privadas"
+    user_posts: "Últimos posts por @%{username}"
+    user_topics: "Últimos tópicos por @%{username}"
+    tag: "Tópicos com tag"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   excerpt_image: "imagem"
   queue:
@@ -176,6 +180,7 @@ pt_BR:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
       member_already_exist: "'%{username}' já é um membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
+      invalid_incoming_email: "'%{email}' não é um endereço de e-mail válido."
     default_names:
       everyone: "todos"
       admins: "admins"
@@ -304,6 +309,7 @@ pt_BR:
       uncategorized_parent: "Sem categoria não pode ter uma categoria pai"
       self_parent: "A subcategoria mãe não pode ser ela mesma"
       depth: "Você não pode aninhar uma subcategoria sob outra"
+      invalid_email_in: "'%{email}' não é um endereço de e-mail válido."
     cannot_delete:
       uncategorized: "Não é possível excluir Sem categoria"
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
@@ -431,6 +437,10 @@ pt_BR:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar no %{site_name}"
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
+    already_done: "Desculpe, este link de confirmação não está mais válido. Talvez o seu e-mail já foi alterado?"
+    authorizing_old:
+      title: "Obrigado por confirmar o seu endereço de e-mail atual."
+      description: "Estamos enviando um e-mail ao seu novo endereço para confirmação."
   activation:
     action: "Clique aqui para ativar sua conta"
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
@@ -734,7 +744,6 @@ pt_BR:
     polling_interval: "Com que frequencia os clientes podem solicitar o servidor em milisegundos"
     anon_polling_interval: "Com que frequencia os clientes não registrados podem solicitar o servidor em milisegundos"
     background_polling_interval: "Com que frequência os clientes podem solicitar o servidor em milisegundos ( em segundo plano )"
-    flags_required_to_hide_post: "As postagens vão ser escondidos automaticamente quando o númereo de sinalizações atingir este número (0 para nunca)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que um usuário deve esperar antes de poder editar uma publicação que foi ocultada devido a sinalização da comunidade."
     max_topics_in_first_day: "O número máximo de tópicos que um usuário tem permissão para criar em seu primeiro dia no site"
     max_replies_in_first_day: "O número máximo de respostas que um usuário tem permissão para criar em seu primeiro dia no site"
@@ -787,12 +796,14 @@ pt_BR:
     invite_passthrough_hours: "Quando tempo um usuário pode usar uma chave de convite previamente usada para logar, em horas"
     invite_only: "Cadastro público está desabilitado, todos os novos usuários devem ser explicitamente convidados por outros membros ou equipe."
     login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
+    min_username_length: "Nome de usuário mínimo em caracteres."
+    max_username_length: "Nome de usuário máximo em caracteres."
     reserved_usernames: "Nomes de usuário não permitidos para criação de contas."
     min_password_length: "Comprimento mínimo da senha."
+    min_admin_password_length: "Tamanho de senha mínima para Administradores."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
     enable_sso: "Permite autenticação única atráves de site externo (AVISO: OS ENDEREÇOS DE E-MAIL *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
     enable_sso_provider: "Implementar protocolo do provedor Discourse SSO no caminho /session/sso_provider, requer que sso_secret seja configurado"
-    sso_url: "URL destino do logon único"
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
     sso_overrides_email: "Substitui endereço de e-mail local pelo fornecido no site externo através de cada informação de login, e previne mudanças locais. (AVISO: discrepâncias podem ocorrer devido a normalização de e-mails locais)"
     sso_overrides_username: "Substitui nome de usuário local com o fornecido pelo site externo através da informação de cada login, e previne mudanças locais. (AVISO: discrepâncias podem ocorrer devido a diferenças ao tamanho e pré-requisitos de nomes de usuário)"
@@ -963,6 +974,7 @@ pt_BR:
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
     automatically_unpin_topics: "Desafixar automaticamente os tópicos quando o usuário atinge o fundo."
+    read_time_word_count: "Palavras por minuto para calcular o tempo estimado de leitura."
     full_name_required: "Nome completo é um campo obrigatório do perfil do usuário."
     enable_names: "Mostrar o nome completo do usuário em seu perfil, cartão de usuário, e emails. Desabilitar para esconder o nome completo em todos os lugares."
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
@@ -991,7 +1003,19 @@ pt_BR:
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
-    notify_about_queued_posts_after: "Se existirem tópicos aguardando revisão a mais de N horas, um e-mail será enviado para o e-mail de contato. Coloque 0 para cancelar estes e-mails."
+    tagging_enabled: "Permitir que usuários coloquem tags em tópicos?"
+    min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma tag."
+    max_tags_per_topic: "O número máximo de tags que podem ser aplicados a um tópico."
+    max_tag_length: "O número máximo de caracteres que pode ser usado em uma tag."
+    max_tag_search_results: "Quando buscando por tags, o número máximo de resultados a exibir."
+    show_filter_by_tag: "Exibir um dropdown para filtrar uma lista de tópicos por uma tag."
+    max_tags_in_filter_list: "Número máximo de tags no filtro do dropdown. As tags mais utilizadas serão exibidas."
+    tags_sort_alphabetically: "Exibir tags em ordem alfabetica. O padrão é exibí-las em ordem de popularidade."
+    tag_style: "Estilo visual para as insígnias de tag."
+    staff_tags: "Uma lista de tags que só podem ser aplicadas por membros da moderação"
+    min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para aplicar uma tag"
+    suppress_overlapping_tags_in_list: "Esconder tags das visualizações de lista, se elas se sobreporem ao título"
+    remove_muted_tags_from_latest: "Não mostrar tópicos com tags silenciadas na lista de tópicos recentes."
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."
@@ -1100,7 +1124,10 @@ pt_BR:
       characters: "deve incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
+      must_begin_with_alphanumeric_or_underscore: "deve começar com uma letra, número ou um underline"
+      must_end_with_alphanumeric: "deve terminar com uma letra ou número"
       must_not_contain_two_special_chars_in_seq: "não deve conter uma seqüência de 2 ou mais caracteres especiais (.-_)"
+      must_not_end_with_confusing_suffix: "não deve terminar com um sufixo confuso como .json ou .png etc."
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
@@ -1273,10 +1300,6 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com email -- Conteúdo não reconhecido"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email -- Acesso Inválido"
-      text_body_template: |
-        Desculpe, mas a mensagem do email %{destination} (titled %{former_title}) não funcionou.
-
-        Sua conta não possui privilégios para postar novos topicos nessa categoria. Se acredita que isso esteja errado, entre em contato com um dos membros responsáveis..
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema com email -- Chave de Resposta Desconhecida"
     email_reject_topic_not_found:
@@ -1403,6 +1426,7 @@ pt_BR:
 
         Se não conseguires clicar no link em cima, tenta copia-lo e cola-lo na barra de endereções do seu browser de internet.
   page_not_found:
+    title: "Oops! Essa página não existe ou é privada."
     popular_topics: "Popular"
     recent_topics: "Recente"
     see_more: "Mais"
@@ -1461,6 +1485,36 @@ pt_BR:
     title: "Termos de Serviço"
   privacy_topic:
     title: "Política de Privacidade"
+  badges:
+    editor:
+      name: Editor
+    member:
+      name: Membro
+    leader:
+      name: Líder
+    welcome:
+      name: Boas-vindas
+      description: Recebeu uma curtida
+    anniversary:
+      name: Aniversário
+    champion:
+      name: Campeão
+    reader:
+      name: Leitor
+      description: Leu todas as respostas em um tópico com mais de 100 respostas
+    popular_link:
+      name: Link Popular
+      description: Postou um link externo com 50 clicks
+    hot_link:
+      name: Link Quente
+      description: Postou um link externo com 300 clicks
+    famous_link:
+      name: Link Famoso
+      description: Postou um link externo com 1000 clicks
+    out_of_love:
+      name: Por Amor
+    crazy_in_love:
+      name: Apaixonado
   admin_login:
     success: "Email Enviado"
     error: "Erro!"
@@ -1476,3 +1530,7 @@ pt_BR:
   activemodel:
     errors:
       <<: *errors
+  tags:
+    staff_tag_disallowed: "A tag \"%{tag}\" só pode ser aplicada pela moderação."
+    staff_tag_remove_disallowed: "A tag \"%{tag}\" só pode ser removida pela moderação."
+  rss_by_tag: "Tópicos com a tag %{tag}"

@@ -102,6 +102,7 @@ class PostCreator
     setup_post
 
     return true if skip_validations?
+
     if @post.has_host_spam?
       @spam = true
       errors[:base] << I18n.t(:spamming_host)
@@ -146,8 +147,11 @@ class PostCreator
       track_latest_on_category
       enqueue_jobs
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
+      auto_notify_for_tags
 
       trigger_after_events(@post)
+
+      auto_close unless @opts[:import_mode]
     end
 
     if @post || @spam
@@ -219,6 +223,26 @@ class PostCreator
   def trigger_after_events(post)
     DiscourseEvent.trigger(:topic_created, post.topic, @opts, @user) unless @opts[:topic_id]
     DiscourseEvent.trigger(:post_created, post, @opts, @user)
+  end
+
+  def auto_close
+    if @post.topic.private_message? &&
+        !@post.topic.closed &&
+        SiteSetting.auto_close_messages_post_count > 0 &&
+        SiteSetting.auto_close_messages_post_count <= @post.topic.posts_count
+
+      @post.topic.update_status(:closed, true, Discourse.system_user,
+          message: I18n.t('topic_statuses.autoclosed_message_max_posts', count: SiteSetting.auto_close_messages_post_count))
+
+    elsif !@post.topic.private_message? &&
+        !@post.topic.closed &&
+        SiteSetting.auto_close_topics_post_count > 0 &&
+        SiteSetting.auto_close_topics_post_count <= @post.topic.posts_count
+
+      @post.topic.update_status(:closed, true, Discourse.system_user,
+          message: I18n.t('topic_statuses.autoclosed_topic_max_posts', count: SiteSetting.auto_close_topics_post_count))
+
+    end
   end
 
   def transaction(&blk)
@@ -293,8 +317,7 @@ class PostCreator
       topic_creator = TopicCreator.new(@user, guardian, @opts)
       @topic = topic_creator.create
     rescue ActiveRecord::Rollback
-      add_errors_from(topic_creator)
-      return
+      rollback_from_errors!(topic_creator)
     end
     @post.topic_id = @topic.id
     @post.topic = @topic
@@ -353,6 +376,8 @@ class PostCreator
   end
 
   def update_user_counts
+    return if @opts[:import_mode]
+
     @user.create_user_stat if @user.user_stat.nil?
 
     if @user.user_stat.first_post_created_at.nil?
@@ -412,6 +437,17 @@ class PostCreator
   def enqueue_jobs
     return unless @post && !@post.errors.present?
     PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
+  end
+
+  def auto_notify_for_tags
+    if SiteSetting.tagging_enabled
+      tags = DiscourseTagging.tags_for_saving(@opts[:tags], @guardian)
+      if tags.present?
+        @topic.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
+        @topic.save
+        DiscourseTagging.auto_notify_for(tags, @topic)
+      end
+    end
   end
 
   def new_topic?

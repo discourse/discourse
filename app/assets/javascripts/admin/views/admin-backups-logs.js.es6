@@ -27,7 +27,7 @@ export default Ember.View.extend({
       // force rerender
       this.rerender();
     }
-  }, 150).observes("controller.model.@each"),
+  }, 150).observes("controller.model.[]"),
 
   render(buffer) {
     const formattedLogs = this.get("formattedLogs");

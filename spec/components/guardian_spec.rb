@@ -362,15 +362,22 @@ describe Guardian do
 
     describe 'a Group' do
       let(:group) { Group.new }
-      let(:invisible_group) { Group.new(visible: false) }
+      let(:invisible_group) { Group.new(visible: false, name: 'invisible') }
 
       it "returns true when the group is visible" do
         expect(Guardian.new.can_see?(group)).to be_truthy
       end
 
-      it "returns true when the group is visible but the user is an admin" do
+      it "returns true when the group is invisible but the user is an admin" do
         admin = Fabricate.build(:admin)
         expect(Guardian.new(admin).can_see?(invisible_group)).to be_truthy
+      end
+
+      it "returns true when the group is invisible but the user is a member" do
+        invisible_group.save!
+        member = Fabricate.build(:user)
+        GroupUser.create(group: invisible_group, user: member)
+        expect(Guardian.new(member).can_see?(invisible_group)).to be_truthy
       end
 
       it "returns false when the group is invisible" do
@@ -621,6 +628,14 @@ describe Guardian do
     end
 
     describe 'a Topic' do
+      it 'does not allow moderators to create topics in readonly categories' do
+        category = Fabricate(:category)
+        category.set_permissions(:everyone => :read)
+        category.save
+
+        expect(Guardian.new(moderator).can_create?(Topic,category)).to be_falsey
+      end
+
       it 'should check for full permissions' do
         category = Fabricate(:category)
         category.set_permissions(:everyone => :create_post)
@@ -655,6 +670,7 @@ describe Guardian do
         category.save
 
         expect(Guardian.new(topic.user).can_create?(Post, topic)).to be_falsey
+        expect(Guardian.new(moderator).can_create?(Post, topic)).to be_falsey
       end
 
       it "is false when not logged in" do
@@ -856,6 +872,28 @@ describe Guardian do
 
   end
 
+  context 'can_convert_topic?' do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_convert_topic?(nil)).to be_falsey
+    end
+
+    it 'returns false when not logged in' do
+      expect(Guardian.new.can_convert_topic?(topic)).to be_falsey
+    end
+
+    it 'returns false when not staff' do
+      expect(Guardian.new(trust_level_4).can_convert_topic?(topic)).to be_falsey
+    end
+
+    it 'returns true when a moderator' do
+      expect(Guardian.new(moderator).can_convert_topic?(topic)).to be_truthy
+    end
+
+    it 'returns true when an admin' do
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
+    end
+  end
+
   describe 'can_edit?' do
 
     it 'returns false with a nil object' do
@@ -1042,6 +1080,11 @@ describe Guardian do
           topic.category.save
 
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+
+          expect(Guardian.new(admin).can_edit?(topic)).to eq(true)
+
+          expect(Guardian.new(moderator).can_edit?(post)).to eq(false)
+          expect(Guardian.new(moderator).can_edit?(topic)).to eq(false)
         end
       end
 

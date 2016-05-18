@@ -24,7 +24,7 @@ fr:
   loading: "Chargement"
   powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé'
   log_in: "Se connecter"
-  purge_reason: "Supprimé automatiquement comme compte abandonné, non activé"
+  purge_reason: "Supprimé automatiquement comme abandonné, compte désactivé"
   disable_remote_images_download_reason: "Le téléchargement des images externes a été désactivé faute de place suffisante sur le disque."
   anonymous: "Anonyme"
   emails:
@@ -44,6 +44,9 @@ fr:
         reply_user_not_matching_error: "Arrive quand une réponse est venue d'une adresse de courriel différente de celle où a été envoyée la notification."
         topic_not_found_error: "Arrive quand quelqu'un répond à un sujet qui a été supprimé."
         topic_closed_error: "Arrive quand quelqu'un répond mais le sujet lié a été fermé."
+        bounced_email_report: "Le courriel est un rapport de courriel rejeté."
+        auto_generated_email_reply: "Email contient une réponse à un email automatiquement généré."
+        screened_email_error: "Arrive quand l'adresse courriel de l'expéditeur est déjà sous surveillance."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -169,6 +172,11 @@ fr:
     hot: "Sujets populaires"
     top: "Meilleurs sujets"
     posts: "Messages récents"
+    private_posts: "Derniers messages privés"
+    group_posts: "Derniers messages de %{group_name}"
+    group_mentions: "Dernières mentions de %{group_name}"
+    user_posts: "Derniers messages par @%{username}"
+    user_topics: "Derniers sujets par @%{username}"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"
@@ -353,6 +361,7 @@ fr:
       create_like: "Vous avez atteint le nombre maximum de J'aime pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       create_bookmark: "Vous avez atteint le nombre maximum de favoris pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       edit_post: "Vous avez atteint le nombre maximum de modifications pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
+      live_post_counts: "Vous demandez le nombre de posts en activité trop rapidement. Veuillez respecter le temps d'attente %{time_left} avant de réessayer."
       unsubscribe_via_email: "Vous avez atteint le nombre maximum de désinscriptions par email pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       topic_invitations_per_day: "Vous avez atteint le nombre maximum d'invitations dans un sujet pour aujourd'hui. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
     hours:
@@ -449,6 +458,7 @@ fr:
     confirmed: "Votre adresse de courriel a été mise à jour."
     please_continue: "Continuer vers %{site_name}"
     error: "Il y a eu une erreur lors de la modification de votre adresse de courriel. Elle est peut-être déjà utilisée ?"
+    error_staged: "Une erreur est survenue lors de la modification de votre adresse courriel. Cette adresse est déjà utilisée par un utilisateur en attente."
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre adresse de courriel a peut-être déjà été changée ?"
     authorizing_old:
       title: "Merci d'avoir confirmée votre adresse de courriel"
@@ -460,7 +470,7 @@ fr:
     continue_button: "Continuer vers %{site_name}"
     welcome_to: "Bienvenue sur %{site_name} !"
     approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous accédiez au forum. Vous recevrez un courriel lorsque que votre compte sera approuvé !"
-    missing_session: "Nous n'arrivons pas à savoir si votre compte a été créé ou pas. Veuillez vérifier que vous avec bien activé les cookies."
+    missing_session: "Nous ne pouvons pas détecter si votre compte a été créé, veuillez vérifier que vous avez activé les cookies."
   post_action_types:
     off_topic:
       title: 'Hors-sujet'
@@ -703,6 +713,7 @@ fr:
     site_contact_username_warning: "Saisissez le pseudo d'un responsable sympathique à partir duquel sera envoyé les messages importants. Mettez à jour site_contact_username dans les <a href='/admin/site_settings'>Paramètres du site</a>."
     notification_email_warning: "Les courriels de notification ne serot pas envoyés depuis une adresse de courriel valide sur votre domaine ; l'envoie des courriels sera aléatoire et peu fiable. Veuillez saisir une adresse de courriel locale dans notification_email  dans les <a href='/admin/site_settings'>Paramètres du site</a>."
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
+    bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon_url dans les <a href='/admin/site_settings'>paramètres du site</a>"
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
@@ -746,7 +757,6 @@ fr:
     post_onebox_maxlength: "Longueur maximale d'un message emboîté en nombre de caractères."
     onebox_domains_whitelist: "Liste des noms de domaines autorisés pour les 'onebox'. Ces domaines doivent supporter OpenGraph or oEmbed. Testez les sur http://iframely.com/debug"
     logo_url: "L'image de votre logo situé en haut à gauche de votre site doit être de forme rectangulaire large. Si vous laissez ce champ vide, le nom de votre site apparaitra."
-    digest_logo_url: "Le logo alternatif sera utilisé en haut des notifications par e-mail. Il doit être de forme rectangulaire large. Si vous laissez ce champ vide, `logo_url` sera utilisé."
     logo_small_url: "Le petit logo situé en haut à gauche de votre site doit être de forme carré. Si vous laissez ce champ vide, un logo de maison apparaîtra."
     favicon_url: "Un favicon pour votre site, voir http://fr.wikipedia.org/wiki/Favicon, pour fonctionner correctement à travers un CDN il doit être PNG."
     mobile_logo_url: "L'image fixe utilisée tout en haut à gauche de votre site mobile. Devrait-être de forme carrée. Si laissé vide, `logo_url` sera utilisé. ex: http://example.com/uploads/default/logo.png"
@@ -767,7 +777,6 @@ fr:
     polling_interval: "À quelle fréquence les clients connectés devraient-ils requêter le serveur, en millisecondes (sans utiliser les requêtes longues)"
     anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes"
     background_polling_interval: "À quelle fréquence les clients devraient-ils requêter le serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
-    flags_required_to_hide_post: "Les messages seront automatiquement cachés lorsque le compteur de signalements atteint cette limite (0 pour jamais)"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué via un signalement de la communauté"
     max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer lors de son premier jour sur le site"
     max_replies_in_first_day: "Le nombre maximum de réponses qu'un utilisateur est autorisé à créer lors de son premier jour sur le site"
@@ -833,7 +842,6 @@ fr:
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
     enable_sso: "Activer l'authentification unique via un site externe (ATTENTION: LES ADRESSES EMAIL *DOIVENT* ÊTRE VALIDÉES PAR LE SITE EXTERNE !)"
     enable_sso_provider: "Implémenter le procotole Discourse de provider SSO à /session/sso_provider, requiert sso_secret"
-    sso_url: "URL de l'authentification unique"
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
     sso_overrides_email: "Surcharger les emails locaux avec les emails externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION : Des écarts peuvent se produire dus aux règles locales sur les emails)"
     sso_overrides_username: "Surcharger les pseudos locaux avec les pseudos externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION: Des écarts peuvent se produire dus aux différences de longueur et d'exigences sur les pseudos)"
@@ -936,6 +944,7 @@ fr:
     max_users_notified_per_group_mention: "Nombre maximum d'utilisateurs qui peuvent recevoir une notification si un groupe est mentionné (si le seuil est atteint aucune notification n'est envoyée)"
     create_thumbnails: "Créer un aperçu pour les images imbriquées qui sont trop large pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
+    private_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer des courriels de notification privés, afin de donner aux utilisateurs la chance d'éditer et de finaliser leurs messages."
     email_posts_context: "Combien de réponses précédentes doit-on inclure dans les courriels de notifications pour situer le contexte."
     flush_timings_secs: "A quelle fréquence les données de timing doivent être vider, en secondes."
     title_max_word_length: "Le nombre maximum de caractères dans le titre d'un sujet."
@@ -993,6 +1002,10 @@ fr:
     unsubscribe_via_email: "Autorise les utilisateurs à se désinscrire des courriels en envoyant un courriel avec \"unsubscribe\" dans le sujet ou le corps du message."
     unsubscribe_via_email_footer: "Ajoute un lien pour se désinscrire dans le pied des courriels envoyés"
     delete_email_logs_after_days: "Efface les journaux de messagerie après (N) jours. 0 pour conserver indéfiniment."
+    max_emails_per_day_per_user: "Nombre maximum de courriels à envoyer aux utilisateurs par jour. 0 pour désactiver la limite"
+    enable_staged_users: "Créer automatiquement les utilisateurs en attente lors du traitement des courriels entrants."
+    auto_generated_whitelist: "Liste des adresses courriel qui ne seront pas vérifiées pour du contenu généré automatiquement."
+    block_auto_generated_emails: "Bloquer les courriels entrants identifiés comme générés automatiquement."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connections au serveur POP3. (Recommandé)"
     pop3_polling_period_mins: "La période en minute entre chaque vérification du compte POP3 des courriels.\nNote: nécessite un redémarrage de la machine."
@@ -1072,7 +1085,6 @@ fr:
     enforce_square_emoji: "Forcer tous les emojiis à être carrés."
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
-    notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, un email sera envoyé à l'email de contact. Désactivez ces emails en indiquant 0."
     default_email_digest_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les courriels par défaut."
     default_email_private_messages: "Envoyer un courriel quand quelqu'un envoie un message à un utilisateur."
     default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
@@ -1093,6 +1105,10 @@ fr:
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
+    tagging_enabled: "Autoriser les utilisateurs à mettre des tags sur les sujets ?"
+    min_trust_to_create_tag: "Le niveau de confiance requis pour créer un tag."
+    max_tags_per_topic: "Le nombre maximum de tags qui peuvent être ajouté à un sujet."
+    max_tag_length: "The nombre maximum de caractères qui peuvent être utilisés pour un tag."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -1133,6 +1149,11 @@ fr:
       category: 'Catégories'
       topic: 'Résultats'
       user: 'Utilisateurs'
+  sso:
+    not_found: "Votre compte n'a pas été trouvé. Merci de contacter l'administrateur du site."
+    account_not_approved: "Votre compte est en attente d'approbation. Vous recevrez une notification par courriel lorsque vous êtes approuvé."
+    unknown_error: "Il y a un problème avec votre compte. Merci de contacter l'administrateur du site."
+    timeout_expired: "La connexion au compte a expiré, veuillez essayer de vous reconnecter."
   original_poster: "Créateur du sujet"
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
@@ -1159,6 +1180,12 @@ fr:
     archived_disabled: "Ce sujet est maintenant dé-archivé. Il n'est plus gelé, et peut être modifié."
     closed_enabled: "Ce sujet est maintenant fermé. Les nouvelles réponses ne sont plus autorisées."
     closed_disabled: "Ce sujet est maintenant ouvert. Les nouvelles réponses sont autorisées."
+    autoclosed_message_max_posts:
+      one: "Ce message a été automatiquement fermé après avoir atteint la limite maximum de 1 réponse."
+      other: "Ce message a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponses."
+    autoclosed_topic_max_posts:
+      one: "Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de 1 réponse."
+      other: "Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponses."
     autoclosed_enabled_days:
       one: "Cette discussion a été automatiquement fermée après un jour. Aucune réponse n'est permise dorénavant."
       other: "Ce sujet a été automatiquement fermé après %{count} jours. Aucune réponse n'est permise dorénavant."
@@ -1519,10 +1546,6 @@ fr:
       text_body_template: "Nous sommes désolés, l'exportation de vos données a échoué. Veuillez consultez les logs ou contactez un modérateur."
     email_reject_insufficient_trust_level:
       subject_template: "[%{site_name}] Incident d'email -- Niveau de confiance insuffisant "
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse de courriel. Si vous considérez que c'est une erreur, contacter un responsable.
     email_reject_inactive_user:
       subject_template: "[%{site_name}] Erreur de courriel -- Compte inactivé"
       text_body_template: |
@@ -1560,16 +1583,8 @@ fr:
         Nous n'avons pu trouver votre réponse dans l'email. **Assurez-vous que votre réponse se trouve au début de l'email** -- nous ne pouvons pas traiter les réponses en ligne.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Problème de courriel -- Accès invalide"
-      text_body_template: |
-        Nous sommes désolé, mais votre email à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Votre compte n'a pas les privilèges pour créer un nouveau sujet dans cette catégorie. Si vous trouvez que c'est une erreur, contacter l’équipe du site.
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] Problème de courriel -- Accès invalide"
-      text_body_template: |
-        Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        La catégorie à laquelle vous avez envoyé ce courriel ne permet des réponses que par des utilisateurs avec des comptes valides et des adresses courriels reconnues. Si vous considérez que c'est une erreur, contacter un membre de l'équipe du site.
     email_reject_invalid_post:
       subject_template: "[%{site_name}] Incident d'email -- Erreur d'envoi d'un message"
       text_body_template: |
@@ -1610,19 +1625,10 @@ fr:
         Aucune des adresses de destination n'est reconnue. Veuillez vérifier que vous envoyez bien à l'adresse de courriel fournie par l'équipe.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Erreur de courriel -- Le sujet est introuvable"
-      text_body_template: |
-        Nous sommes désolés, mais votre email à %{destination} (intitulé %{former_title}) n'a pas été envoyé.
-
-        Le sujet auquel vous répondez n'existe plus, peut-être a-t-il été supprimé? Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Erreur de courriel -- Le sujet est fermé"
-      text_body_template: |
-        Nous sommes désolés, mais votre email à %{destination} (titled %{former_title}) n'a pas été envoyé.
-
-        Le sujet auquel vous répondez est actuellement fermé et n'accepte plus de réponses. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Problème de courriel - Réponse automatique"
-      text_body_template: "Nous sommes désolés, mais votre email à %{destination} (intitulé %{former_title}) n'a pas été envoyé.\n\nVotre email a été marqué comme \"automatiquement généré\" ce qui signifie qu'il était créer par un ordinateur au lieu d'être écrit par un humain; ce que nous ne pouvons accepter. Si vous pensez qu'il s'agit d'une erreur, contactez un responsable. \n"
     email_error_notification:
       subject_template: "[%{site_name}] Incident d'email -- Erreur d'authentification POP3"
       text_body_template: |
@@ -1632,17 +1638,9 @@ fr:
 
         S'il y a une interface web pour le compte POP, vous devrez peut-être vous y connecter pour vérifier les paramètres.
     too_many_spam_flags:
-      subject_template: "Nouveau compte bloqué"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que vos messages ont été cachés automatiquement à la suite des signalements de la communauté.
-
-        Par mesure de précaution, votre compte a été bloqué, vous ne pourrez par créer de nouvelles réponses ou sujets tant qu'un membre de l'équipe n'aura pas étudié votre compte.
-
-        Pour plus d'informations, merci de vous en référer à la [charte de la communauté](%{base_url}/guidelines).
+      subject_template: "Nouveau compte bloqué en raison de signalements communautaires."
     blocked_by_staff:
-      subject_template: "Compte bloqué"
+      subject_template: "Compte bloqué temporairement"
     user_automatically_blocked:
       subject_template: "Nouvel utilisateur %{username} bloqué à cause de signalements de la communauté"
       text_body_template: |
@@ -1675,6 +1673,8 @@ fr:
     download_remote_images_disabled:
       subject_template: "Téléchargement d'images distantes désactivé"
       text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
+    dashboard_problems:
+      subject_template: "Des problèmes ont été trouvé"
   unsubscribe_link: |
     Pour ne plus recevoir de notifications pour ce sujet, [cliquez ici](%{unsubscribe_url}). Pour ne plus recevoir ces courriels, visitez vos [préférences utilisateur](%{user_preferences_url}).
   unsubscribe_via_email_link: |
@@ -1695,8 +1695,20 @@ fr:
     posted_by: "Ecrit par %{username} le %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} vous a invité dans la conversation '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} vous a invité à voir un message '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} vous a invité dans le sujet '%{topic_title}'"
     user_replied:
@@ -1914,9 +1926,8 @@ fr:
     images:
       too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximum de %{max_size_kb}Ko), merci de le redimensionner et de réessayer."
       size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
-  flag_reason:
-    sockpuppet: "Un nouvel utilisateur a créé un sujet et un autre nouvel utilisateur avec la même adresse IP a répondu. Voir le paramétrage flag_sockpuppets."
-    spam_hosts: "Cet utilisateur a essayé de créer plusieurs messages avec des liens vers le même domaine. Voir le paramétrage du site newuser_spam_host_threshold."
+  avatar:
+    missing: "Désolé, nous ne parvenons pas à trouver un avatar associé à cette adresse mail. Pouvez-vous essayer de la télécharger à nouveau ?"
   email_log:
     no_user: "Impossible de trouver l'utilisateur avec l'id %{user_id}"
     anonymous_user: "L'utilisateur est anonyme"
@@ -2030,11 +2041,206 @@ fr:
 
       Si nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page. Ce document est soumis à la licence creative commons CC-BY-SA. Il a été mis à jour le 31 mai 2013.
   badges:
+    editor:
+      name: Editeur
+      description: Première édition d'un message
+      long_description: |
+        Ce badge est accordé après la première édition d'un de vos messages. Bien que vous la possibilité d'éditer un message est limité dans le temps, l'édition est toujours une bonne idée — vous pouvez améliorer vos messages, réparer des petites erreurs, ou ajouter des choses que vous avez oublié la première fois. Editer vos messages pour les rendre encore meilleurs!
     basic_user:
       name: Actif
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Accordé</a>  toutes les fonctions communautaires essentielles sont accessibles
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Accès accordé</a> à toutes les fonctions communautaires essentielles
       long_description: |
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 1. Merci d'être resté dans le coin un petit moment et d'avoir lu quelques sujets pour en apprendre plus sur notre communauté. Vos restrictions "nouvel utilisateur" ont été levées, et vous avez accès aux fonctionnalités essentielles telles que la messagerie personnelle, le signalement, l'édition des wikis, et la possibilité de poster des images et de multiples liens.
+    member:
+      name: Membre
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Accès accordé</a> aux invitations, messages de groupe, et plus de "J'aime"
+      long_description: |
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, envoyer des messages groupés, et avez quelques "J'aime" supplémentaires chaque jour.
+    regular:
+      name: Habitué
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Accès accordé</a> à la re-catégorisation, le renommage, le suivi de lien, et plus de "J'aime"
+      long_description: |
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir été un participant régulier à notre communauté pendant ces quelques mois, l'un de nos lecteurs les plus actifs et un contributeur sérieux à ce qui rend notre communauté si belle. Vous pouvez désormais recatégoriser et renommer des sujets, accéder à la section privée, signaler des spams, et vous avez plein de "J'aime" en plus chaque jour.
+    leader:
+      name: Meneur
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion, et toujours plus de "J'aime"
+      long_description: |
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité d'éditer tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et fusionner, ainsi que des tonnes de "J'aime" par jour.
+    welcome:
+      name: Bienvenue
+      description: A reçu un j'aime.
+      long_description: |
+        Ce badge est accordé lorsque vous recevez votre premier "J'aime" sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, cool, ou utile !
+    autobiographer:
+      name: Autobiographe
+      description: A rempli les informations de son <a href="/my/preferences">profil</a>
+      long_description: |
+        Ce badge est accordé au remplissage de <a href="/my/preferences">votre profil utilisateur</a> et au choix d'une photo de profil. En dire plus à la communauté sur vous et vos intérêts permet de la rendre plus agréable et plus connectée. Rejoignez-nous!
+    anniversary:
+      name: Jubilaire
+      description: Membre actif depuis un an, avec au moins un message
+      long_description: |
+        Ce badge est accordé après avoir été membre du site pendant une année, avec au moins un message crée dans cette année. Merci d'être resté avec nous et de contribuer ainsi à notre communauté ! Nous n'aurions pas pu le faire sans vous.
+    nice_post:
+      name: Jolie réponse
+      description: A reçu 10 j'aime sur une réponse.
+      long_description: |
+        Ce badge est accordé quand une réponse obtient 10 j'aime. Votre réponse a vraiment fait impression sur la communauté et a aidé à faire progresser la conversation.
+    good_post:
+      name: Bonne Réponse
+      description: A reçu 25 j'aime sur une réponse
+      long_description: |
+        Ce badge est accordé quand votre réponse obtient 25 j'aime. Votre réponse est exceptionnel et a rendu la conversation bien mieux pour tout le monde.
+    great_post:
+      name: Super Réponse
+      description: A reçu 50 j'aime sur une réponse
+      long_description: |
+        Ce badge est accordé quand une réponse obtient 50 j'aime. Votre réponse était inspirante, fascinante, hilarante, ou pertinente et la communauté l'a adorée.
+    nice_topic:
+      name: Sujet intéressant
+      description: A reçu 10 j'aime sur un sujet.
+      long_description: |
+        Ce badge est accordé quand un sujet obtient 10 j'aime.  Vous avez commencé une conversation intéressante que la communauté a apprécié !
+    good_topic:
+      name: Bon sujet
+      description: A reçu 25 j'aime sur un sujet
+      long_description: |
+        Ce badge est accordé quand un sujet obtient 25 j'aime. Vous avez lancé une conversation vibrante autour de laquelle la communauté s'est ralliée et elle l'a adorée.
+    great_topic:
+      name: Super sujet
+      description: A reçu 50 j'aime sur un sujet
+      long_description: |
+        Ce badge est accordé quand un sujet obtient 50 j'aime. Vous avez initié une fascinante conversation et la communauté a apprécié la discussion dynamique qui en a résulté !
+    nice_share:
+      name: Partage sympa
+      description: Message partagé avec 25 visiteurs uniques
+      long_description: |
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 25 visiteurs extérieurs. Merci de faire connaître nos discussions et cette communauté.
+    good_share:
+      name: Bon partage
+      description: Message partagé avec 300 visiteurs uniques
+      long_description: |
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 300 visiteurs extérieurs. Bon travail ! Vous avez diffusé une discussion intéressante à <i>beaucoup</i> de nouvelles personnes et nous avez aidés à grandir.
+    great_share:
+      name: Super partage
+      description: Message partagé avec 1000 visiteurs uniques
+      long_description: |
+        Ce badge est accordé après le partage d'un lien vers un message consulté par 1000 visiteurs extérieurs. Wow ! Vous avez fait la promotion d'une discussion intéressante auprès d'une énorme nouvelle audience pour le compte de cette communauté, et nous avez beaucoup aidé à grandir !
+    first_like:
+      name: Premier j'aime
+      description: A aimé un message
+      long_description: "Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, cool, ou amusant. \n"
+    first_flag:
+      name: Premier signalement
+      description: A signalé un message
+      long_description: |
+        Ce badge est accordé la première fois que vous signalez un message. Les signalements sont essentiels à la santé de votre communauté. Si vous remarquez des messages nécessitant l'intervention d'un modérateur n'hésitez pas à les signaler. Vous pouvez aussi utiliser les boîtes de dialogue de signalement pour envoyer des <b>messages</b> à d'autres utilisateurs. Si vous voyez un problème, :flag_black: signalez-le !
+    promoter:
+      name: Ambassadeur
+      description: A invité un utilisateur
+      long_description: |
+        Ce badge est accordé quand vous invitez quelqu'un à rejoindre la communauté via le bouton d'invitation de la page utilisateur, ou à la fin d'un sujet. Inviter des amis qui peuvent être intéressé par des discussions spécifiques est un bonne manière d'introduire de nouvelles personnes dans la communauté, donc merci !
+    campaigner:
+      name: Militant
+      description: A invité 3 utilisateurs basiques
+      long_description: |
+        Ce badge est accordé lorsque vous avez invité 3 personnes qui ont ensuite passé assez de temps sur le site pour devenir des utilisateurs de base. Une communauté dynamique a besoin d'un apport régulier de nouveaux arrivants qui participent régulièrement et ajouter de nouvelles voix aux conversations.
+    champion:
+      name: Champion
+      description: A invité 5 membres
+      long_description: |
+        Ce badge est accordé lorsque vous avez invité 5 personnes qui ont ensuite passé assez de temps sur le site pour devenir membres à part entière. Hou la la! Merci d'élargir la diversité de notre communauté avec de nouveaux membres!
+    first_share:
+      name: Premier partage
+      description: A partagé un message
+      long_description: |
+        Ce badge est accordé la première fois que vous partagez un lien vers une réponse ou un sujet en utilisant le bouton de partage. Partager des liens est une excellente façon de montrer des discussions intéressantes avec le reste du monde et faire croître votre communauté.
+    first_link:
+      name: Premier lien
+      description: A ajouté un lien  vers un autre sujet
+      long_description: |
+        Ce badge est accordé la première fois que vous ajoutez un lien à un autre sujet. Lier les sujets aident d'autres lecteurs à trouver des conversations intéressantes proches, en montrant les liens entre les sujets dans les deux directions. Linker librement!
+    first_quote:
+      name: Première citation
+      description: A cité un message
+      long_description: |
+        Ce badge est accordé la première fois que vous citez un message dans votre réponse. Citant les sections pertinentes des messages précédents dans votre réponse permet de garder les discussions reliées entre elles et sur le sujet. La meilleure façon de citer est de mettre en évidence une section d'un poste, puis appuyez sur un bouton de réponse. Citer généreusement!
+    read_guidelines:
+      name: Règlement lu
+      description: A lu le <a href="/guidelines">règlement de la communauté</a>
+      long_description: |
+        Ce badge est accordé pour <a href="/guidelines">en lisant la communauté des directives</a>. En suivant et en partageant ces lignes directrices simples qui aident à construire une communauté sûre, sympa et durable pour tout le monde. Rappelez-vous toujours qu'il y a un autre être humain, très bien comme vous, de l'autre côté de cet écran. Soyez sympa!
+    reader:
+      name: Lecteur
+      description: A lu tous les messages d'un sujet contenant plus de 100 messages
+      long_description: |
+        Ce badge est accordé la première fois que vous lisez un long sujet avec plus de 100 réponses. Lire une conversation attentivement, vous aide à suivre la discussion, comprendre différents points de vue, et conduit à des conversations plus intéressantes. Plus vous lisez, mieux la conversation devient. Comme nous aimons le dire, la lecture est fondamentale! : sourire timide:
+    popular_link:
+      name: Lien populaire
+      description: A posté un lien externe avec au moins 50 clics
+      long_description: |
+        Ce badge est accordé quand un lien que vous avez partagé obtient 50 clics. Merci de poster un lien utile qui a ajouté  un contexte intéressant à la conversation!
+    hot_link:
+      name: Lien tendance
+      description: A posté un lien externe avec au moins 300 clics
+      long_description: "Ce badge est accordé quand un lien que vous avez partagé obtient 300 clics. Merci de poster un lien fascinant qui a conduit la conversation vers l'avant et a illuminé la discussion! \n"
+    famous_link:
+      name: Lien célèbre
+      description: A posté un lien externe avec 1000 clic
+      long_description: |
+        Ce badge est accordé quand un lien que vous avez partagé obtient 1000 clics. Hou la la! Vous avez publié un lien qui a considérablement amélioré la conversation en ajoutant des détails, le contexte et les informations essentielles. Excellent travail!
+    appreciated:
+      name: Apprécié
+      description: A recu 1 j'aime sur 20 messages
+      long_description: |
+        Ce badge est accordé lorsque vous recevez au moins un j'aime sur 20 postes différents. La communauté connaît vos contributions aux conversations ici!
+    respected:
+      name: Respecté
+      description: A reçu 2 j'aime sur 100 messages
+      long_description: |
+        Ce badge est accordé lorsque vous recevez au moins 2 j'aime sur 100 postes différents. La communauté est en croissance de respecter vos nombreuses contributions aux conversations ici
+    admired:
+      name: Admiré
+      description: A reçu 5 j'aime sur 300 messages
+      long_description: |
+        Ce badge est accordé lorsque vous recevez au moins 5 j'aime sur 300 postes différents. Hou la la! La communauté admire vos fréquentes contributions de haute qualité aux conversations ici.
+    out_of_love:
+      name: Trop d'amour
+      description: A utilisé 50 j'aime en une journée
+      long_description: |
+        Ce badge est accordé lorsque vous utilisez tous les 50 de vos j'aime quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et d'apprécier encourager vos membres de la communauté pour créer encore plus de grandes discussions à l'avenir.
+    higher_love:
+      name: Amour plus fort
+      long_description: |
+        Ce badge est accordé lorsque vous utilisez tous les 50 j'aime par jour pendant 5 jours. Merci de prendre le temps activement d'encourager les meilleures conversations chaque jour!
+    crazy_in_love:
+      name: Fou amoureux
+      long_description: |
+        Ce badge est accordé lorsque vous utilisez tous les 50 de vos j'aime par jour pendant 20 jours. Hou la la! Vous êtes un modèle de régulièrement encourager vos membres de la communauté!
+    thank_you:
+      name: 'Merci '
+      description: A 20 messages ayant reçu un j'aime et a donné 10 j'aime
+      long_description: "Ce badge vous est accordé quand vous avez reçu 20 j'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour. \n"
+    gives_back:
+      name: Redonne
+      description: A 100 messages ayant reçu un j'aime et a donné 100 j'aime
+      long_description: |
+        Ce badge vous est accordé quand vous avez reçu 100 j'aime et en avez donné 100 ou plus en retour.  Merci pour tout cela.
+    empathetic:
+      name: Empathique
+      description: A 500 messages ayant reçu un j'aime et a donné 1000 j'aime
+      long_description: "Ce badge vous est accordé quand vous avez reçu 500 j'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:. \n"
+    first_emoji:
+      name: Premier Emoji
+      description: A utilisé un emoji dans un message
+      long_description: |
+        Ce badge est accordé la première fois que vous ajoutez un Emoji à votre message: pouce en l'air :. Les Emoji vous permettent de transmettre de l'émotion dans vos messages, du bonheur: smiley: à la tristesse: angoissé: à la colère: colère: et tout le reste: lunettes de soleil:. Il suffit de taper un: (deux points) ou appuyez sur le bouton de la barre d'outils Emoji dans l'éditeur de choisir parmi des centaines de choix: ok_hand:
+    first_mention:
+      name: Première mention
+      description: A mentionné un utilisateur dans un message
+      long_description: Ce badge est accordé la première fois que vous mentionnez le @username de quelqu'un dans votre post. Chaque mention génère une notification à cette personne, de sorte qu'ils savent au sujet de votre poste. Il suffit de commencer à taper @ (arobase) de mentionner tout utilisateur ou, si autorisé, groupe - c'est un moyen pratique d'apporter quelque chose à leur attention.
+    first_onebox:
+      long_description: Ce badge est accordé la première fois que vous publiez un lien en ligne par lui-même, qui a ensuite été développé automatiquement dans un onebox avec un bref résumé du lien, un titre, et (le cas échéant) une image.
   admin_login:
     success: "Courriel envoyé"
     error: "Erreur !"
@@ -2052,3 +2258,4 @@ fr:
   activemodel:
     errors:
       <<: *errors
+  rss_by_tag: "Sujets portant le tag %{tag}"

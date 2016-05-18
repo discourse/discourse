@@ -10,12 +10,16 @@ class DiscourseSingleSignOn < SingleSignOn
     SiteSetting.sso_secret
   end
 
-  def self.generate_url(return_path="/")
+  def self.generate_sso(return_path="/")
     sso = new
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
     sso.return_sso_url = Discourse.base_url + "/session/sso_login"
-    sso.to_url
+    sso
+  end
+
+  def self.generate_url(return_path="/")
+    generate_sso(return_path).to_url
   end
 
   def register_nonce(return_path)
@@ -68,11 +72,17 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     user.ip_address = ip_address
+
     user.admin = admin unless admin.nil?
     user.moderator = moderator unless moderator.nil?
 
     # optionally save the user and sso_record if they have changed
     user.save!
+
+    unless admin.nil? && moderator.nil?
+      Group.refresh_automatic_groups!(:admins, :moderators, :staff)
+    end
+
     sso_record.save!
 
     sso_record && sso_record.user

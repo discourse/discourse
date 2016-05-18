@@ -121,6 +121,8 @@ en:
       email: 'send this link in an email'
 
     action_codes:
+      public_topic: "made this topic public %{when}"
+      private_topic: "made this topic private %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
       removed_user: "removed %{who} %{when}"
@@ -146,6 +148,9 @@ en:
     topic_admin_menu: "topic admin actions"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+
+    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
+    bootstrap_mode_disabled: "Bootstrap mode will be disabled in next 24 hours."
 
     s3:
       regions:
@@ -333,8 +338,8 @@ en:
       title: "Users"
       likes_given: "Given"
       likes_received: "Received"
-      topics_entered: "Entered"
-      topics_entered_long: "Topics Entered"
+      topics_entered: "Viewed"
+      topics_entered_long: "Topics Viewed"
       time_read: "Time Read"
       topic_count: "Topics"
       topic_count_long: "Topics Created"
@@ -556,7 +561,7 @@ en:
 
       change_about:
         title: "Change About Me"
-        error: "There was an error changing ths value."
+        error: "There was an error changing this value."
 
       change_username:
         title: "Change Username"
@@ -752,17 +757,20 @@ en:
           one: "post created"
           other: "posts created"
         likes_given:
-          one: "like given"
-          other: "likes given"
+          one: "<i class='fa fa-heart'></i> given"
+          other: "<i class='fa fa-heart'></i> given"
         likes_received:
-          one: "like received"
-          other: "likes received"
+          one: "<i class='fa fa-heart'></i> received"
+          other: "<i class='fa fa-heart'></i> received"
         days_visited:
           one: "day visited"
           other: "days visited"
         posts_read:
           one: "post read"
           other: "posts read"
+        bookmark_count:
+          one: "bookmark"
+          other: "bookmarks"
         top_replies: "Top Replies"
         no_replies: "No replies yet."
         more_replies: "More Replies"
@@ -772,6 +780,12 @@ en:
         top_badges: "Top Badges"
         no_badges: "No badges yet."
         more_badges: "More Badges"
+        top_links: "Top Links"
+        no_links: "No links yet."
+        most_liked_by: "Most Liked By"
+        most_liked_users: "Most Liked"
+        most_replied_to_users: "Most Replied To"
+        no_likes: "No likes yet."
 
 
       associated_accounts: "Logins"
@@ -1014,7 +1028,7 @@ en:
       link_description: "enter link description here"
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
-      link_placeholder: "http://example.com \"optional text\""
+      link_url_placeholder: "http://example.com"
       quote_title: "Blockquote"
       quote_text: "Blockquote"
       code_title: "Preformatted text"
@@ -1164,6 +1178,9 @@ en:
         selected:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."
+        change_tags: "Change Tags"
+        choose_new_tags: "Choose new tags for these topics:"
+        changed_tags: "The tags of those topics were changed."
 
       none:
         unread: "You have no unread topics."
@@ -1341,6 +1358,8 @@ en:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
+        make_public: "Make Public Topic"
+        make_private: "Make Private Message"
 
       feature:
         pin: "Pin Topic"
@@ -1523,10 +1542,9 @@ en:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        attachment_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)."
-        file_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)"
+        file_too_large: "Sorry, that file is too big (maximum size is {{max_size_kb}}kb). Why not upload your large file to a cloud sharing service, then share the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
-        too_many_dragged_and_dropped_files: "Sorry, you can only drag & drop up to 10 files at a time."
+        too_many_dragged_and_dropped_files: "Sorry, you can only upload 10 files at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
@@ -1538,6 +1556,7 @@ en:
         yes_value: "Yes, abandon"
 
       via_email: "this post arrived via email"
+      via_auto_generated_email: "this post arrived via an auto generated email"
       whisper: "this post is a private whisper for moderators"
 
       wiki:
@@ -1763,6 +1782,7 @@ en:
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Message'
+      official_warning: 'Official Warning'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
@@ -1990,7 +2010,7 @@ en:
           30_days_ago: "30 Days Ago"
           all: "All"
           view_table: "table"
-          view_chart: "bar chart"
+          view_graph: "graph"
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"
@@ -2299,6 +2319,7 @@ en:
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
+        bounced: "Bounced"
         received: "Received"
         rejected: "Rejected"
         sent_at: "Sent At"
@@ -2409,6 +2430,8 @@ en:
             grant_moderation: "grant moderation"
             revoke_moderation: "revoke moderation"
             backup_operation: "backup operation"
+            deleted_tag: "deleted tag"
+            renamed_tag: "renamed tag"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -2580,10 +2603,18 @@ en:
         block_failed: 'There was a problem blocking the user.'
         block_confirm: 'Are you sure you want to block this user? They will not be able to create any new topics or posts.'
         block_accept: 'Yes, block this user'
+        bounce_score: "Bounce Score"
+        reset_bounce_score:
+          label: "Reset"
+          title: "Reset bounce score back to 0"
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
-        stage_explanation: "A staged user can only post via email in specific topics."
+        staged_explanation: "A staged user can only post via email in specific topics."
+        bounce_score_explanation:
+          none: "No bounces were received recently from that email."
+          some: "Some bounces were received recently from that email."
+          threshold_reached: "Received too many bounces from that email."
         trust_level_change_failed: "There was a problem changing the user's trust level."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Trust Level 2 Users"
@@ -2651,6 +2682,10 @@ en:
           title: "Show on public profile?"
           enabled: "shown on profile"
           disabled: "not shown on profile"
+        show_on_user_card:
+          title: "Show on user card?"
+          enabled: "shown on user card"
+          disabled: "not shown on user card"
 
         field_types:
           text: 'Text Field'
@@ -2699,6 +2734,7 @@ en:
           login: "Login"
           plugins: "Plugins"
           user_preferences: "User Preferences"
+          tags: "Tags"
 
       badges:
         title: Badges
@@ -2748,6 +2784,7 @@ en:
           post_revision: "When a user edits or creates a post"
           trust_level_change: "When a user changes trust level"
           user_change: "When a user is edited or created"
+          post_processed: "After a post is processed"
         preview:
           link_text: "Preview granted badges"
           plan_text: "Preview with query plan"
@@ -2797,6 +2834,7 @@ en:
         embed_truncate: "Truncate the embedded posts"
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
+        embed_classname_whitelist: "Allowed CSS class names"
         feed_polling_enabled: "Import posts via RSS/ATOM"
         feed_polling_url: "URL of RSS/ATOM feed to crawl"
         save: "Save Embedding Settings"
@@ -2916,3 +2954,57 @@ en:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+
+    tagging:
+      all_tags: "All Tags"
+      selector_all_tags: "all tags"
+      changed: "tags changed:"
+      tags: "Tags"
+      choose_for_topic: "choose optional tags for this topic"
+      delete_tag: "Delete Tag"
+      delete_confirm: "Are you sure you want to delete that tag?"
+      rename_tag: "Rename Tag"
+      rename_instructions: "Choose a new name for the tag:"
+      sort_by: "Sort by:"
+      sort_by_count: "count"
+      sort_by_name: "name"
+
+      filters:
+        without_category: "%{filter} %{tag} topics"
+        with_category: "%{filter} %{tag} topics in %{category}"
+
+      notifications:
+        watching:
+          title: "Watching"
+          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+        tracking:
+          title: "Tracking"
+          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
+        regular:
+          title: "Regular"
+          description: "You will be notified if someone mentions your @name or replies to your post."
+        muted:
+          title: "Muted"
+          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."
+
+      topics:
+        none:
+          unread: "You have no unread topics."
+          new: "You have no new topics."
+          read: "You haven't read any topics yet."
+          posted: "You haven't posted in any topics yet."
+          latest: "There are no latest topics."
+          hot: "There are no hot topics."
+          bookmarks: "You have no bookmarked topics yet."
+          top: "There are no top topics."
+          search: "There are no search results."
+        bottom:
+          latest: "There are no more latest topics."
+          hot: "There are no more hot topics."
+          posted: "There are no more posted topics."
+          read: "There are no more read topics."
+          new: "There are no more new topics."
+          unread: "There are no more unread topics."
+          top: "There are no more top topics."
+          bookmarks: "There are no more bookmarked topics."
+          search: "There are no more search results."

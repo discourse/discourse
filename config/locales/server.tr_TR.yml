@@ -27,6 +27,10 @@ tr_TR:
   purge_reason: "Bırakılmış, etkinleştirilmemiş hesap olarak otomatik silindi"
   disable_remote_images_download_reason: "Yeterli disk alanı kalmaması sebebiyle uzaktan görüntü indirme devre dışı bırakıldı."
   anonymous: "Anonim"
+  emails:
+    incoming:
+      default_subject: "Bu kişiden %{email} gelen e-posta"
+      show_trimmed_content: "Kısaltılmış olan yazıyı göster"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -138,7 +142,10 @@ tr_TR:
   rss_description:
     latest: "En son konular"
     hot: "Sıcak konular"
+    top: "En iyi konular"
     posts: "Son gönderiler"
+    private_posts: "Son özel mesajlar"
+    tag: "Etiketlenmiş konular"
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
   excerpt_image: "resim"
   queue:
@@ -148,6 +155,7 @@ tr_TR:
       can_not_modify_automatic: "Otomatik oluşturulan grubu düzenleyemezsiniz"
       member_already_exist: "'%{username}' zaten grubun bir üyesi."
       invalid_domain: "'%{domain}' geçerli bir alan adı değil."
+      invalid_incoming_email: "Bu '%{email}' e-posta geçerli değil."
     default_names:
       everyone: "herkes"
       admins: "adminler"
@@ -286,6 +294,7 @@ tr_TR:
       first_day_topics_per_day: "Yeni bir kullanıcının ilk gününde oluşturabileceğiz maksimum konu sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       create_topic: "Kısa sürede çok sayıda konu oluşturmaya çalıştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       create_post: "Kısa sürede çok sayıda cevap yazmaya çalıştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
+      delete_post: "Kısa sürede çok sayıda mesaj silmeye çalıştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       topics_per_day: "Bugün oluşturabileceğiniz maksimum konu sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       pms_per_day: "Bugün oluşturabileceğiniz maksimum mesaj sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       create_like: "Bugün yapabileceğiniz maksimum beğeni sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
@@ -360,6 +369,9 @@ tr_TR:
     confirmed: "E-posta adresiniz güncellendi."
     please_continue: "%{site_name} adresine devam edin"
     error: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten kullanımda olabilir."
+    error_staged: "E-posta adresiniz değiştirilirken bir hata oluştu. Bu adres zaten başka bir kullanıcı tarafından kullanımdadır."
+    authorizing_old:
+      title: "Geçerli e-posta adresi onayladığınız için teşekkür ederiz"
   activation:
     action: "Hesabınızı etkinleştirmek için buraya tıklayın"
     already_done: "Üzgünüz, hesap doğrulama linki artık geçerli değil. Hesabınız zaten etkin olabilir mi?"
@@ -653,7 +665,6 @@ tr_TR:
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
     onebox_domains_whitelist: "Kutulamaya izin verilen alan adları listesi; bu alan adları OpenGraph ya da oEmbed desteklemeliler. http://iframely.com/debug adresinden test edebilirsiniz."
     logo_url: "Sitenin üst solundaki logo resmi, geniş dikdörtgen şeklinde olmalıdır. Boş bırakılırsa site başlığı gösterilecektir."
-    digest_logo_url: "Sitenin e-posta özetinin üstünde kullanılan diğer logo resmi. Geniş dikdörtgen şeklinde olmalıdır. Boş bırakılırsa `logo_url` kullanılacaktır."
     logo_small_url: "Sitenin üst solundaki küçük logo resmi, kare şeklinde olmalıdır, aşağıya doğru kaydırılırken görünür. Boş bırakılırsa bir ev oyması gösterilecektir."
     favicon_url: "Site simgesi, bilgi için http://en.wikipedia.org/wiki/Favicon adresine bakınız, bir CDN ile doğru şekilde çalışmak için png olmalıdır."
     mobile_logo_url: "Mobil sitenin üst solunda kullanılan sabit konumlu logo resmi. Kare şeklinde olmalıdır. Boş bırakılırsa, `logo_url` kullanılacaktır. Örneğin: http://example.com/uploads/default/logo.png"
@@ -674,7 +685,6 @@ tr_TR:
     polling_interval: "Uzun sorgular yapılmadığı zaman, kaç mili saniyede bir giriş yapmış kullanıcılar poll yapmalı"
     anon_polling_interval: "Kaç mili saniyede bir anonim kullanıcılar sorgu yapmalı"
     background_polling_interval: "(Pencere arkaplanda olduğu zaman) kaç mili saniyede bir kullanıcılan sorgu yapmalı"
-    flags_required_to_hide_post: "Bir postun otomatik olarak gizlenmesi ve yazarına Özel Mesaj gönderilmesi için gereken bayrak sayısı (Hiç bir zaman için 0 girin)"
     cooldown_minutes_after_hiding_posts: "Topluluk tarafından bayraklanarak gizlenen gönderiyi düzenleyebilmek için, kullanıcının beklemesi gereken dakika süresi "
     max_topics_in_first_day: "Kullanıcının sitedeki ilk gününde, oluşturabileceği en fazla konu sayısı"
     max_replies_in_first_day: "Kullanıcının sitedeki ilk gününde, oluşturabileceği en fazla cevap sayısı"
@@ -736,10 +746,10 @@ tr_TR:
     max_username_length: "Karakter olarak en büyük kullanıcı adı uzunluğu."
     reserved_usernames: "Üyelik için izin verilmeyen kullanıcı adları."
     min_password_length: "En az parola uzunluğu."
+    min_admin_password_length: "Yönetici için en az parola uzunluğu."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
     enable_sso: "Dış bir site aracılığı ile tek oturum açma sistemini etkinleştir. (UYARI: etkinleştirildiği takdirde, doğru yapılandırılmamışsa bazı kişilerin, SİZ DAHİL, oturum açmasını engelleyebilir! Ayrıca davetiye sistemini de devre dışı bırakır.)"
     enable_sso_provider: "/session/sso_provider son noktasında Discourse SSO sağlayıcı protokolünü uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
-    sso_url: "Bitiş noktasındaki tek oturum açma URL'i"
     sso_secret: "SSO bilgisinin kritopgrafik şekilde doğrulanması için kullanılan gizli string, 10 karakter veya daha uzun olduğundan emin olun"
     sso_overrides_email: "SSO yararlı yükündeki dış sitedeki e-postayı, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel e-postanın üzerine yazar (DİKKAT: yerel e-postaların normalizasyon sürecinde uyuşmazlıklar doğabilir)"
     sso_overrides_username: "SSO yararlı yükündeki dış sitedeki kullanıcı adını, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel kullanıcı adının üzerine yazar. (DİKKAT: kullanıcı adı uzunluklarıyla ilgili kurallardaki farklılıklardan ötürü uyuşmazlıklar doğabilir)"
@@ -756,6 +766,7 @@ tr_TR:
     enable_twitter_logins: "Twitter doğrulamasını etkinleştir. twitter_consumer_key ve twitter_consumer_secret gereklidir"
     twitter_consumer_key: "Twitter doğrulaması için gereken, http://dev.twitter.com adresinde kayıtlı consumer key"
     twitter_consumer_secret: "Twitter doğrulaması için gereken, http://dev.twitter.com adresinde kayıtlı consumer secret"
+    enable_instagram_logins: "Instagram doğrulamasını etkinleştir, instagram_consumer_key ve instagram_consumer_secret gereklidir"
     enable_facebook_logins: "Facebook doğrulamasını etkinleştir. facebook_app_id ve facebook_app_secret gerekir"
     facebook_app_id: "Facebook kimlik doğrulama için gerekli, https://developers.facebook.com/apps sayfasında bulunan app id"
     facebook_app_secret: "Facebook kimlik doğrulama için gerekli, https://developers.facebook.com/apps sayfasında bulunan app secret"
@@ -958,7 +969,6 @@ tr_TR:
     emoji_set: "Emojinizi nasıl isterdiniz?"
     enforce_square_emoji: "Tüm emojileri kare en-boy oranına zorla"
     approve_unless_trust_level: "Bu güven seviyesi altındaki kullanıcılardan gelen gönderilerin onaylanması gerekir"
-    notify_about_queued_posts_after: "Bu kadar saat geçmesine rağmen hala incelenmemiş konular varsa, iletişim adresine e-posta gönder. Devre dışı bırakmak için 0 girin."
     default_email_digest_frequency: "Öntanımlı olarak kullanıcılar hangi sıklıkta özet e-postalar alırlar."
     default_email_private_messages: "Öntanımlı olarak birisi bir kullanıcıya mesaj attığında e-posta gönder."
     default_email_direct: "Öntanımlı olarak birisi bir kullanıcı hakkında alıntı yapma, cevaplama, bahsetme ya da davet etme eylemlerini gerçekleştirdiğinde e-posta gönder."
@@ -975,6 +985,10 @@ tr_TR:
     default_categories_watching: "Öntanımlı olarak, izlenen kategorilerin listesi."
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
+    tagging_enabled: "Kullanıcılar konularına etiket ekleyebilsinler mi?"
+    min_trust_to_create_tag: "Etiket oluşturmak için gereken minumum güven seviyesi."
+    max_tags_per_topic: "Bir konu en fazla kaç adet etiket eklenebilir."
+    max_tag_length: "Bir etiket en fazla kaç karakterde oluşabilir."
     errors:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
@@ -1226,18 +1240,12 @@ tr_TR:
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu. E-postada herhangi bir cevap bulamadık. **Cevabınızın e-posta'nın en üstünde yer aldığından emin olun** -- aralardaki cevapları işleyemiyoruz.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] E-posta sorunu -- Geçersiz giriş"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
-
-        Hesabınız o kategoride yeni konu oluşturabilmeniz için gereken ayrıcalıklara sahip değil. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_reply_key:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Cevap Anahtarı"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Bulunamadı"
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Kapatıldı"
-      text_body_template: |
-        Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu. Konu kapatılmış. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-posta sorunu -- Otomatik Üretilmiş Cevap"
     email_error_notification:
@@ -1413,6 +1421,27 @@ tr_TR:
     title: "Üyelik Sözleşmesi"
   privacy_topic:
     title: "Gizlilik İlkeleri"
+  badges:
+    editor:
+      name: Editör
+    welcome:
+      name: Hoş geldiniz
+      description: Bir beğeni aldınız
+    first_like:
+      name: İlk Beğeni
+      description: Bir gönderiyi beğendin
+    first_flag:
+      name: İlk İşaret
+      description: Gönderiyi işaretledin
+    reader:
+      name: Okuyucu
+    hot_link:
+      name: Taze Bağlantı
+    appreciated:
+      name: Takdir Edildi
+      description: 20 gönderine 1 beğeni aldın
+    out_of_love:
+      name: Sevgiden Öte
   admin_login:
     success: "E-posta Gönderildi"
     error: "Hata!"
@@ -1428,3 +1457,4 @@ tr_TR:
   activemodel:
     errors:
       <<: *errors
+  rss_by_tag: "Konu %{tag} ile etiketlenmiştir."

@@ -108,6 +108,7 @@ Discourse::Application.routes.draw do
       get "leader_requirements" => "users#tl3_requirements"
       get "tl3_requirements"
       put "anonymize"
+      post "reset_bounce_score"
     end
     get "users/:id.json" => 'users#show', defaults: {format: 'json'}
     get 'users/:id/:username' => 'users#show'
@@ -124,6 +125,7 @@ Discourse::Application.routes.draw do
         post "test"
         get "sent"
         get "skipped"
+        get "bounced"
         get "received"
         get "rejected"
         get "/incoming/:id/raw" => "email#raw_email"
@@ -164,15 +166,15 @@ Discourse::Application.routes.draw do
       resources :emojis, constraints: AdminConstraint.new
 
       # They have periods in their URLs often:
-      get 'site_texts' => 'site_texts#index'
-      match 'site_texts/(:id)' => 'site_texts#show', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :get
-      match 'site_texts/(:id)' => 'site_texts#update', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :put
-      match 'site_texts/(:id)' => 'site_texts#revert', :constraints => { :id => /[0-9a-z\_\.\-]+/ }, via: :delete
+      get 'site_texts'          => 'site_texts#index'
+      get 'site_texts/(:id)'    => 'site_texts#show',   constraints: { id: /[\w.\-]+/i }
+      put 'site_texts/(:id)'    => 'site_texts#update', constraints: { id: /[\w.\-]+/i }
+      delete 'site_texts/(:id)' => 'site_texts#revert', constraints: { id: /[\w.\-]+/i }
 
-      get 'email_templates' => 'email_templates#index'
-      match 'email_templates/(:id)' => 'email_templates#show', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :get
-      match 'email_templates/(:id)' => 'email_templates#update', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :put
-      match 'email_templates/(:id)' => 'email_templates#revert', :constraints => { :id => /[0-9a-z\_\.]+/ }, via: :delete
+      get 'email_templates'          => 'email_templates#index'
+      get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
+      put 'email_templates/(:id)'    => 'email_templates#update', constraints: { id: /[0-9a-z_.]+/ }
+      delete 'email_templates/(:id)' => 'email_templates#revert', constraints: { id: /[0-9a-z_.]+/ }
     end
 
     resources :embeddable_hosts, constraints: AdminConstraint.new
@@ -485,6 +487,7 @@ Discourse::Application.routes.draw do
   delete "t/:id" => "topics#destroy"
   put "t/:id/archive-message" => "topics#archive_message"
   put "t/:id/move-to-inbox" => "topics#move_to_inbox"
+  put "t/:id/convert-topic/:type" => "topics#convert_topic"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
@@ -544,7 +547,7 @@ Discourse::Application.routes.draw do
   get "t/:slug/:topic_id" => "topics#show", constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
   get "t/:slug/:topic_id/last" => "topics#show", post_number: 99999999, constraints: {topic_id: /\d+/}
-  get "t/:topic_id/posts" => "topics#posts", constraints: {topic_id: /\d+/}
+  get "t/:topic_id/posts" => "topics#posts", constraints: {topic_id: /\d+/}, format: :json
   post "t/:topic_id/timings" => "topics#timings", constraints: {topic_id: /\d+/}
   post "t/:topic_id/invite" => "topics#invite", constraints: {topic_id: /\d+/}
   post "t/:topic_id/move-posts" => "topics#move_posts", constraints: {topic_id: /\d+/}
@@ -590,7 +593,6 @@ Discourse::Application.routes.draw do
 
   get "onebox" => "onebox#show"
 
-  get "error" => "forums#error"
   get "exception" => "list#latest"
 
   get "message-bus/poll" => "message_bus#poll"
@@ -604,7 +606,31 @@ Discourse::Application.routes.draw do
   get "favicon/proxied" => "static#favicon", format: false
 
   get "robots.txt" => "robots_txt#index"
-  get "manifest.json" => "manifest_json#index", as: :manifest
+  get "manifest.json" => "metadata#manifest", as: :manifest
+  get "opensearch" => "metadata#opensearch", format: :xml
+
+  scope "/tags" do
+    get '/' => 'tags#index'
+    get '/filter/list' => 'tags#index'
+    get '/filter/search' => 'tags#search'
+    get '/check' => 'tags#check_hashtag'
+    constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
+      get '/:tag_id.rss' => 'tags#tag_feed'
+      get '/:tag_id' => 'tags#show', as: 'list_by_tag'
+      get '/c/:category/:tag_id' => 'tags#show'
+      get '/c/:parent_category/:category/:tag_id' => 'tags#show'
+      get '/:tag_id/notifications' => 'tags#notifications'
+      put '/:tag_id/notifications' => 'tags#update_notifications'
+      put '/:tag_id' => 'tags#update'
+      delete '/:tag_id' => 'tags#destroy'
+
+      Discourse.filters.each do |filter|
+        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+        get "/c/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+        get "/c/:parent_category/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+      end
+    end
+  end
 
   Discourse.filters.each do |filter|
     root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), :as => "list_#{filter}"

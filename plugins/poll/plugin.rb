@@ -22,19 +22,6 @@ DEFAULT_POLL_NAME ||= "poll".freeze
 
 after_initialize do
 
-  # turn polls into a link in emails
-  Email::Styles.register_plugin_style do |fragment, opts|
-    post = Post.find_by(id: opts[:post_id]) rescue nil
-    if post.nil? || post.trashed?
-      fragment.css(".poll").each(&:remove)
-    else
-      post_url = "#{Discourse.base_url}#{post.url}"
-      fragment.css(".poll").each do |poll|
-        poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
-      end
-    end
-  end
-
   module ::DiscoursePoll
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -74,7 +61,7 @@ after_initialize do
 
           raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty?
 
-          poll["voters"] = 0
+          poll["voters"] = poll["anonymous_voters"] || 0
           all_options = Hash.new(0)
 
           post.custom_fields[VOTES_CUSTOM_FIELD] ||= {}
@@ -87,7 +74,10 @@ after_initialize do
             poll["voters"] += 1 if (available_options & votes.to_set).size > 0
           end
 
-          poll["options"].each { |o| o["votes"] = all_options[o["id"]] }
+          poll["options"].each do |option|
+            anonymous_votes = option["anonymous_votes"] || 0
+            option["votes"] = all_options[option["id"]] + anonymous_votes
+          end
 
           post.custom_fields[POLLS_CUSTOM_FIELD] = polls
           post.save_custom_fields(true)
@@ -281,7 +271,7 @@ after_initialize do
             self.errors.add(:base, I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")) :
             self.errors.add(:base, I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: poll["name"]))
           return
-         end
+        end
       end
 
       # store the valid poll
@@ -340,8 +330,14 @@ after_initialize do
             end
 
             polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
+            polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"] if previous_polls[poll_name].has_key?("anonymous_voters")
+
             for o in 0...polls[poll_name]["options"].size
-              polls[poll_name]["options"][o]["votes"] = previous_polls[poll_name]["options"][o]["votes"]
+              current_option = polls[poll_name]["options"][o]
+              previous_option = previous_polls[poll_name]["options"][o]
+
+              current_option["votes"] = previous_option["votes"]
+              current_option["anonymous_votes"] = previous_option["anonymous_votes"] if previous_option.has_key?("anonymous_votes")
             end
           end
 
@@ -365,6 +361,17 @@ after_initialize do
 
   TopicView.add_post_custom_fields_whitelister do |user|
     user ? [POLLS_CUSTOM_FIELD, VOTES_CUSTOM_FIELD] : [POLLS_CUSTOM_FIELD]
+  end
+
+  on(:reduce_cooked) do |fragment, post|
+    if post.nil? || post.trashed?
+      fragment.css(".poll, [data-poll-name]").each(&:remove)
+    else
+      post_url = "#{Discourse.base_url}#{post.url}"
+      fragment.css(".poll, [data-poll-name]").each do |poll|
+        poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+      end
+    end
   end
 
   # tells the front-end we have a poll for that post

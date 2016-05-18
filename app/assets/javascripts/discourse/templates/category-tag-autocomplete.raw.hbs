@@ -1,0 +1,13 @@
+<div class='autocomplete'>
+  <ul>
+    {{#each options as |option|}}
+      <li>
+        {{#if option.model}}
+          <a href>{{category-link option.model allowUncategorized="true" link="false"}}</a>
+        {{else}}
+          <a href>{{fa-icon 'tag'}}{{option.text}} x {{option.count}}</a>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+</div>

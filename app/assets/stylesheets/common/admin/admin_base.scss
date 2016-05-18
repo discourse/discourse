@@ -38,12 +38,6 @@ $mobile-breakpoint: 700px;
   .filters input { margin-bottom: 0; }
 }
 
-.admin-contents .admin-reports-filter {
-  input[type="date"] {
-    width: 140px;
-  }
-}
-
 td.flaggers td {
   border-bottom: none;
   border-top: none;
@@ -288,7 +282,7 @@ td.flaggers td {
     display: inline-block;
     margin-right: 5px;
   }
-  #last-seen {
+  #last-seen input[type="text"] {
     float: none;
   }
   .ac-wrap {
@@ -399,11 +393,13 @@ td.flaggers td {
     .setting-value {
       float: left;
       width: 53%;
+      padding-right: 20px;
       .category-group {
         width: 95%;
       }
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
+        padding-right: 0;
       }
       .select2-container {
         width: 100% !important; // Needs !important to override hard-coded value
@@ -419,14 +415,14 @@ td.flaggers td {
       float: left;
     }
     .input-setting-string {
-      width: 404px;
-      @include medium-width { width: 314px; }
+      box-sizing: border-box;
+      height: 30px;
+      width: 100%;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
     }
     .input-setting-list {
-      width: 408px;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
@@ -1782,6 +1778,11 @@ table#user-badges {
   }
   .time {
     width: 50px;
+  }
+  .reply-key {
+    display: block;
+    font-size: 12px;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
   }
   .username div {
     max-width: 180px;

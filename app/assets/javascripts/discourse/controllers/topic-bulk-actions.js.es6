@@ -14,10 +14,14 @@ addBulkButton('archiveTopics', 'archive_topics');
 addBulkButton('showNotificationLevel', 'notification_level');
 addBulkButton('resetRead', 'reset_read');
 addBulkButton('unlistTopics', 'unlist_topics');
+addBulkButton('showTagTopics', 'change_tags');
 
 // Modal for performing bulk actions on topics
 export default Ember.ArrayController.extend(ModalFunctionality, {
+  tags: null,
   buttonRows: null,
+
+  emptyTags: Ember.computed.empty('tags'),
 
   onShow() {
     this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal small');
@@ -57,8 +61,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     this.perform(operation).then(topics => {
       if (topics) {
         topics.forEach(cb);
-        const refreshTarget = this.get('refreshTarget');
-        if (refreshTarget) { refreshTarget.send('refresh'); }
+        (this.get('refreshClosure') || Ember.k)();
         this.send('closeModal');
       }
     });
@@ -66,13 +69,21 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
 
   performAndRefresh(operation) {
     return this.perform(operation).then(() => {
-      const refreshTarget = this.get('refreshTarget');
-      if (refreshTarget) { refreshTarget.send('refresh'); }
+      (this.get('refreshClosure') || Ember.k)();
       this.send('closeModal');
     });
   },
 
   actions: {
+    showTagTopics() {
+      this.set('tags', '');
+      this.send('changeBulkTemplate', 'bulk-tag');
+    },
+
+    changeTags() {
+      this.performAndRefresh({type: 'change_tags', tags: this.get('tags')});
+    },
+
     showChangeCategory() {
       this.send('changeBulkTemplate', 'modal/bulk_change_category');
       this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal full');
@@ -104,8 +115,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
 
       this.perform({type: 'change_category', category_id: categoryId}).then(topics => {
         topics.forEach(t => t.set('category', category));
-        const refreshTarget = this.get('refreshTarget');
-        if (refreshTarget) { refreshTarget.send('refresh'); }
+        (this.get('refreshClosure') || Ember.k)();
         this.send('closeModal');
       });
     },

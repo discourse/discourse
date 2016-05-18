@@ -272,8 +272,6 @@ tr_TR:
       title: "Kullanıcılar"
       likes_given: "Verilen"
       likes_received: "Alınan"
-      topics_entered: "Açıldı"
-      topics_entered_long: "Açılan Konular"
       time_read: "Okuma Zamanı"
       topic_count: "Konular"
       topic_count_long: "Oluşturulan Konular"
@@ -464,7 +462,6 @@ tr_TR:
         set_password: "Parola Belirle"
       change_about:
         title: "Hakkımda'yı Değiştir"
-        error: "Değer değiştirilirken bir hata oluştu."
       change_username:
         title: "Kullanıcı Adını Değiştir"
         confirm: "Kullanıcı adınızı degiştirmeniz halinde, eski gönderilerinizden yapılan tüm alıntılar ve @isim bahsedilişler bozulacak. Bunu yapmak istediginize gerçekten emin misiniz?"
@@ -541,6 +538,7 @@ tr_TR:
       like_notification_frequency:
         title: "Beğenildiğinde bildir"
         always: "Her zaman"
+        first_time: "İlk ileti beğenisi"
         never: "Asla"
       email_previous_replies:
         unless_emailed: "daha önce gönderilmediyse"
@@ -623,12 +621,28 @@ tr_TR:
       summary:
         title: "Özet"
         stats: "İstatistikler"
+        time_read: "okunma süresi"
+        topic_count:
+          other: "oluşturulan konular"
+        post_count:
+          other: "oluşturmuş gönderiler"
+        days_visited:
+          other: "ziyaret edilen günler"
+        posts_read:
+          other: "okunmuş yazılar"
+        bookmark_count:
+          other: "yer imleri"
         top_replies: "Başlıca Yanıtları"
+        no_replies: "Henüz yanıt bulunmuyor."
         more_replies: "Diğer Yanıtları"
         top_topics: "Başlıca Konuları"
+        no_topics: "Henüz konu bulunmuyor."
         more_topics: "Diğer Konuları"
         top_badges: "Başlıca Rozetleri"
+        no_badges: "Henüz rozet bulunmuyor."
         more_badges: "Diğer Rozetleri"
+        top_links: "Önemli Bağlantılar"
+        most_liked_users: "Popüler Beğenmeler"
       associated_accounts: "Girişler"
       ip_address:
         title: "Son IP Adresi"
@@ -677,6 +691,9 @@ tr_TR:
     too_few_topics_and_posts_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu ve <strong>%{currentPosts} / %{requiredPosts}</strong> gönderi var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
     too_few_topics_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentTopics} / %{requiredTopics}</strong> konu var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
     too_few_posts_notice: "Hadi <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bu tartışmayı başlatalım!</a> Şu anda <strong>%{currentPosts} / %{requiredPosts}</strong> gönderi var. Yeni ziyaretçiler okumak ve yanıtlamak için birkaç tartışmaya ihtiyaç duyarlar."
+    logs_error_rate_notice:
+      rate:
+        other: "%{count} hata/%{duration}"
     learn_more: "daha fazlasını öğren..."
     year: 'yıl'
     year_desc: 'son 365 günde oluşturulan konular'
@@ -839,7 +856,7 @@ tr_TR:
       link_description: "buraya bağlantı açıklamasını girin"
       link_dialog_title: "Bağlantı ekle"
       link_optional_text: "opsiyonel başlık"
-      link_placeholder: "http://example.com \"isteğe bağlı yazı\""
+      link_url_placeholder: "http://ornek.com"
       quote_title: "Blok-alıntı"
       quote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
@@ -974,6 +991,7 @@ tr_TR:
         choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
+        change_tags: "Etiketleri Değiştir"
       none:
         unread: "Okunmamış konunuz yok."
         new: "Yeni konunuz yok."
@@ -1265,10 +1283,7 @@ tr_TR:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin. "
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
-        attachment_too_large: "Üzgünüz, yükleyeme çalıştığınız dosya çok büyük (en fazla {{max_size_kb}}kb olabilir)"
-        file_too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük. (en fazla boyut {{max_size_kb}}kb)"
         too_many_uploads: "Üzgünüz, aynı anda birden fazla dosya yükleyemezsiniz."
-        too_many_dragged_and_dropped_files: "Üzgünüz, sürükle bırak ile tek seferde en fazla 10 dosya yükleyebilirsiniz"
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya tipine izin verilmiyor. (izin verilen uzantılar: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemiyorlar."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya ekleyemiyorlar."
@@ -1676,7 +1691,6 @@ tr_TR:
           30_days_ago: "30 Gün Önce"
           all: "Hepsi"
           view_table: "tablo"
-          view_chart: "sütunlu grafik"
           refresh_report: "Raporu Yenile"
           start_date: "Başlangıç tarihi"
           end_date: "Bitiş Tarihi"
@@ -1806,14 +1820,6 @@ tr_TR:
           backups: "Yedekler"
           logs: "Kayıtlar"
         none: "Yedek bulunmuyor."
-        read_only:
-          enable:
-            title: "Salt-okunur modunu etkinleştir"
-            label: "Salt-okunur modu etkinleştir"
-            confirm: "Salt-okunur modunu etkinleştirmek istediğinize emin misiniz?"
-          disable:
-            title: "Salt-okunur modunu devre dışı bırak"
-            label: "Salt-okunur modu devre dışı bırak"
         logs:
           none: "Henüz kayıt bulunmuyor..."
         columns:
@@ -1993,6 +1999,7 @@ tr_TR:
           modal:
             title: "Gelen E-posta Detayları"
             error: "Hata"
+            headers: "Başlıklar"
             subject: "Konu"
             body: "İçerik"
             rejection_message: "Ret E-postası"
@@ -2354,6 +2361,7 @@ tr_TR:
         badge: Rozet
         display_name: Görünen Ad
         description: Açıklama
+        long_description: Uzun Açıklama
         badge_type: Rozet Türü
         badge_grouping: Grup
         badge_groupings:
@@ -2514,7 +2522,11 @@ tr_TR:
     badges:
       earned_n_times:
         other: "Bu rozet %{count} defa kazanılmış"
+      granted_on: "%{date} Tarihinde Verildi"
+      others_count: "Bu rozete sahip diğer kişiler (%{count})"
       title: Rozetler
+      allow_title: "mevcut ünvan"
+      multiple_grant: "birden fazla kez verildi"
       badge_count:
         other: "%{count} Rozet"
       more_badges:

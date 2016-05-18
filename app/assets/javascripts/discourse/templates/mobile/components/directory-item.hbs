@@ -1,0 +1,11 @@
+{{user-info user=item.user}}
+{{user-stat value=item.likes_received label="directory.likes_received" icon="heart"}}
+{{user-stat value=item.likes_given label="directory.likes_given" icon="heart"}}
+{{user-stat value=item.topic_count label="directory.topic_count"}}
+{{user-stat value=item.post_count label="directory.post_count"}}
+{{user-stat value=item.topics_entered label="directory.topics_entered"}}
+{{user-stat value=item.posts_read label="directory.posts_read"}}
+{{user-stat value=item.days_visited label="directory.days_visited"}}
+{{#if showTimeRead}}
+  <div class='time-read'>{{unbound item.time_read}}</div>
+{{/if}}

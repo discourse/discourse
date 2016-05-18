@@ -64,6 +64,28 @@ describe DiscourseSingleSignOn do
     expect(user).to_not be_nil
   end
 
+  it "can set admin and moderator" do
+    admin_group = Group[:admins]
+    mod_group = Group[:moderators]
+    staff_group = Group[:staff]
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "misteradmin"
+    sso.name = "Bob Admin"
+    sso.email = "admin@admin.com"
+    sso.external_id = "id"
+    sso.admin = true
+    sso.moderator = true
+
+    user = sso.lookup_or_create_user(ip_address)
+    staff_group.reload
+
+    expect(mod_group.users.where('users.id = ?', user.id).exists?).to eq(true)
+    expect(staff_group.users.where('users.id = ?', user.id).exists?).to eq(true)
+    expect(admin_group.users.where('users.id = ?', user.id).exists?).to eq(true)
+
+  end
+
   it "can override name / email / username" do
     admin = Fabricate(:admin)
 

@@ -33,7 +33,8 @@ class TopicViewSerializer < ApplicationSerializer
                         :word_count,
                         :deleted_at,
                         :pending_posts_count,
-                        :user_id
+                        :user_id,
+                        :tags
 
   attributes :draft,
              :draft_key,

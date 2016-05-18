@@ -1,4 +1,11 @@
-{{render "header"}}
+{{site-header canSignUp=canSignUp
+              showCreateAccount="showCreateAccount"
+              showLogin="showLogin"
+              showKeyboard="showKeyboardShortcutsHelp"
+              toggleMobileView="toggleMobileView"
+              toggleAnonymous="toggleAnonymous"
+              logout="logout"
+              showSearchHelp="showSearchHelp"}}
 
 <div id="main-outlet" class="wrap">
   <div class="container">
@@ -12,11 +19,12 @@
   {{render "user-card"}}
 </div>
 
+{{plugin-outlet "above-footer"}}
 {{#if showFooter}}
   {{custom-html "footer"}}
 {{/if}}
+{{plugin-outlet "below-footer"}}
 
 {{render "modal"}}
 {{render "topic-entrance"}}
 {{render "composer"}}
-

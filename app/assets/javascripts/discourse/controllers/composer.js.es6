@@ -77,9 +77,19 @@ export default Ember.Controller.extend({
     }
   }),
 
+  topicModel: Ember.computed.alias('controllers.topic.model'),
+
   _initializeSimilar: function() {
     this.set('similarTopics', []);
   }.on('init'),
+
+  @computed('model.canEditTitle', 'model.creatingPrivateMessage')
+  canEditTags(canEditTitle, creatingPrivateMessage) {
+    return !this.site.mobileView &&
+            this.site.get('can_tag_topics') &&
+            canEditTitle &&
+            !creatingPrivateMessage;
+  },
 
   @computed('model.action')
   canWhisper(action) {
@@ -244,7 +254,7 @@ export default Ember.Controller.extend({
     // if we are replying to a topic AND not on the topic pop the window up
     if (!force && composer.get('replyingToTopic')) {
 
-      const currentTopic = this.get('controllers.topic.model');
+      const currentTopic = this.get('topicModel');
       if (!currentTopic || currentTopic.get('id') !== composer.get('topic.id'))
       {
         const message = I18n.t("composer.posting_not_on_topic");
@@ -338,7 +348,7 @@ export default Ember.Controller.extend({
     });
 
     if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
-        composer.get('topic.id') === this.get('controllers.topic.model.id')) {
+        composer.get('topic.id') === this.get('topicModel.id')) {
       staged = composer.get('stagedPost');
     }
 
@@ -386,7 +396,7 @@ export default Ember.Controller.extend({
     let message = this.get('similarTopicsMessage');
     if (!message) {
       message = Discourse.ComposerMessage.create({
-        templateName: 'composer/similar_topics',
+        templateName: 'composer/similar-topics',
         extraClass: 'similar-topics'
       });
       this.set('similarTopicsMessage', message);

@@ -496,7 +496,6 @@ nl:
         set_password: "Stel wachtwoord in"
       change_about:
         title: "Wijzig bio"
-        error: "Het veranderen van deze waarde is mislukt."
       change_username:
         title: "Wijzig gebruikersnaam"
         confirm: "Het wijzigen van je gebruikersnaam kan consequenties hebben. Weet je zeker dat je dit wil doen?"
@@ -877,7 +876,6 @@ nl:
       link_description: "geef hier een omschrijving"
       link_dialog_title: "Voeg weblink toe"
       link_optional_text: "optionele titel"
-      link_placeholder: "http://example.com \"optional text\""
       quote_title: "Citaat"
       quote_text: "Citaat"
       code_title: "Opgemaakte tekst"
@@ -1324,7 +1322,6 @@ nl:
         create: "Sorry, er is iets misgegaan bij het plaatsen van je bericht. Probeer het nog eens."
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
         upload: "Sorry, er is iets misgegaan bij het uploaden van je bestand. Probeer het nog eens."
-        attachment_too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb)."
         file_too_large: "Sorry, het bestand dat je probeert te uploaden is te groot (maximum grootte is {{max_size_kb}}kb)."
         too_many_uploads: "Sorry, je kan maar één afbeelding tegelijk uploaden."
         too_many_dragged_and_dropped_files: "Sorry, je kan maar 10 bestanden tegelijk verslepen."
@@ -1898,14 +1895,6 @@ nl:
           backups: "Backups"
           logs: "Logs"
         none: "Geen backup beschikbaar."
-        read_only:
-          enable:
-            title: "Zet forum in read-only modus"
-            label: "Schakel read-only modus in"
-            confirm: "Weet je zeker dat je het forum in read-only modus wil zetten?"
-          disable:
-            title: "Schakel read-only modus uit"
-            label: "Schakel read-only modus uit"
         logs:
           none: "Nog geen logs..."
         columns:

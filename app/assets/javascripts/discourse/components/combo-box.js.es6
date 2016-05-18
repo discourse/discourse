@@ -46,7 +46,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('content.@each')
+  @observes('content.[]')
   _rerenderOnChange() {
     this.rerender();
   },

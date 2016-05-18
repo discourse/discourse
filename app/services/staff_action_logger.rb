@@ -40,16 +40,17 @@ class StaffActionLogger
   def log_post_deletion(deleted_post, opts={})
     raise Discourse::InvalidParameters.new(:deleted_post) unless deleted_post && deleted_post.is_a?(Post)
 
-    topic = deleted_post.topic || Topic.with_deleted.find(deleted_post.topic_id)
+    topic = deleted_post.topic || Topic.with_deleted.find_by(id: deleted_post.topic_id)
 
     username = deleted_post.user.try(:username) || "unknown"
     name = deleted_post.user.try(:name) || "unknown"
+    topic_title = topic.try(:title) || "not found"
 
     details = [
       "id: #{deleted_post.id}",
       "created_at: #{deleted_post.created_at}",
       "user: #{username} (#{name})",
-      "topic: #{topic.title}",
+      "topic: #{topic_title}",
       "post_number: #{deleted_post.post_number}",
       "raw: #{deleted_post.raw}"
     ]
@@ -330,6 +331,14 @@ class StaffActionLogger
     UserHistory.create(params(opts).merge({
       action: UserHistory.actions[:backup_operation],
       ip_address: @admin.ip_address.to_s
+    }))
+  end
+
+  def log_revoke_email(user, opts={})
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:revoke_email],
+      target_user_id: user.id,
+      details: user.email
     }))
   end
 

@@ -2,9 +2,17 @@ require 'rails_helper'
 
 describe Jobs::DashboardStats do
   it 'caches the stats' do
-    json = { "visited" => 10 }
-    AdminDashboardData.any_instance.expects(:as_json).returns(json)
-    $redis.expects(:setex).with(AdminDashboardData.stats_cache_key, 35.minutes, json.to_json)
-    expect(described_class.new.execute({})).to eq(json)
+    Timecop.freeze do
+      begin
+        stats = AdminDashboardData.fetch_stats.to_json
+        cache_key = AdminDashboardData.stats_cache_key
+
+        expect($redis.get(cache_key)).to eq(nil)
+        expect(described_class.new.execute({})).to eq(stats)
+        expect($redis.get(cache_key)).to eq(stats)
+      ensure
+        $redis.del(cache_key)
+      end
+    end
   end
 end

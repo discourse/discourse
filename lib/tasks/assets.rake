@@ -29,45 +29,15 @@ task 'assets:precompile:before' do
   include GlobalPath
 
   if $node_uglify
-    # monkey patch asset pipeline not to gzip, compress: false is broken
-    class ::Sprockets::Asset
-      # Save asset to disk.
-      def write_to(filename, options = {})
-        # Gzip contents if filename has '.gz'
-        return if File.extname(filename) == '.gz'
-
-        begin
-          FileUtils.mkdir_p File.dirname(filename)
-
-          File.open("#{filename}+", 'wb') do |f|
-            f.write to_s
-          end
-
-          # Atomic write
-          FileUtils.mv("#{filename}+", filename)
-
-          # Set mtime correctly
-          File.utime(mtime, mtime, filename)
-
-          nil
-        ensure
-          # Ensure tmp file gets cleaned up
-          FileUtils.rm("#{filename}+") if File.exist?("#{filename}+")
-        end
-      end
-
-
-    end
+    Rails.configuration.assets.js_compressor = nil
 
     module ::Sprockets
-
-      class UglifierCompressor
-
-        def evaluate(context, locals, &block)
-          # monkey patch cause we do this later, no idea how to cleanly disable
-          data
+      # TODO: https://github.com/rails/sprockets-rails/pull/342
+      # Rails.configuration.assets.gzip = false
+      class Base
+        def skip_gzip?
+          true
         end
-
       end
     end
   end
@@ -146,6 +116,16 @@ def compress(from,to)
   end
 end
 
+def concurrent?
+  if ENV["CONCURRENT"] == "1"
+    concurrent_compressors = []
+    yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute { block.call } })
+    concurrent_compressors.each(&:wait!)
+  else
+    yield(Proc.new { |&block| block.call })
+  end
+end
+
 task 'assets:precompile' => 'assets:precompile:before' do
   # Run after assets:precompile
   Rake::Task["assets:precompile:css"].invoke
@@ -154,30 +134,34 @@ task 'assets:precompile' => 'assets:precompile:before' do
     puts "Compressing Javascript and Generating Source Maps"
     manifest = Sprockets::Manifest.new(assets_path)
 
-    to_skip = Rails.configuration.assets.skip_minification || []
-    manifest.files
-            .select{|k,v| k =~ /\.js$/}
-            .each do |file, info|
+    concurrent? do |proc|
+      to_skip = Rails.configuration.assets.skip_minification || []
+      manifest.files
+              .select{|k,v| k =~ /\.js$/}
+              .each do |file, info|
 
-        path = "#{assets_path}/#{file}"
-        _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
-        _path = "#{assets_path}/#{_file}"
+          path = "#{assets_path}/#{file}"
+          _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
+          _path = "#{assets_path}/#{_file}"
 
-        if File.exists?(_path)
-          STDERR.puts "Skipping: #{file} already compressed"
-        else
-          STDERR.puts "Compressing: #{file}"
+          if File.exists?(_path)
+            STDERR.puts "Skipping: #{file} already compressed"
+          else
+            STDERR.puts "Compressing: #{file}"
 
-          # We can specify some files to never minify
-          unless (ENV["DONT_MINIFY"] == "1") || to_skip.include?(info['logical_path'])
-            FileUtils.mv(path, _path)
-            compress(_file,file)
+            proc.call do
+              # We can specify some files to never minify
+              unless (ENV["DONT_MINIFY"] == "1") || to_skip.include?(info['logical_path'])
+                FileUtils.mv(path, _path)
+                compress(_file,file)
+              end
+
+              info["size"] = File.size(path)
+              info["mtime"] = File.mtime(path).iso8601
+              gzip(path)
+            end
           end
-
-          info["size"] = File.size(path)
-          info["mtime"] = File.mtime(path).iso8601
-          gzip(path)
-        end
+      end
     end
 
     # protected

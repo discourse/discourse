@@ -6,6 +6,7 @@ require_dependency 'text_sentinel'
 require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
+require_dependency 'discourse_tagging'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -138,14 +139,12 @@ class Topic < ActiveRecord::Base
 
     # Query conditions
     condition = if ids.present?
-      ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
+      ["NOT read_restricted OR id IN (:cats)", cats: ids]
     else
-      ["NOT c.read_restricted"]
+      ["NOT read_restricted"]
     end
 
-    where("category_id IS NULL OR category_id IN (
-           SELECT c.id FROM categories c
-           WHERE #{condition[0]})", condition[1])
+    where("topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})", condition[1])
   }
 
   attr_accessor :ignore_category_auto_close
@@ -245,7 +244,7 @@ class Topic < ActiveRecord::Base
   end
 
   def best_post
-    posts.order('score desc').limit(1).first
+    posts.where(post_type: Post.types[:regular]).order('score desc nulls last').limit(1).first
   end
 
   def has_flags?
@@ -254,9 +253,13 @@ class Topic < ActiveRecord::Base
              .exists?
   end
 
+  def is_official_warning?
+    subtype == TopicSubtype.moderator_warning
+  end
+
   # all users (in groups or directly targetted) that are going to get the pm
   def all_allowed_users
-    moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? && has_flags?
+    moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? && (has_flags? || is_official_warning?)
     User.from("(#{allowed_users.to_sql} UNION #{allowed_group_users.to_sql}#{moderators_sql}) as users")
   end
 
@@ -1037,6 +1040,23 @@ SQL
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.exec.first["count"].to_i
+  end
+
+  def tags
+    result = custom_fields[DiscourseTagging::TAGS_FIELD_NAME]
+    [result].flatten unless result.blank?
+  end
+
+  def convert_to_public_topic(user)
+    public_topic = TopicConverter.new(self, user).convert_to_public_topic
+    add_small_action(user, "public_topic") if public_topic
+    public_topic
+  end
+
+  def convert_to_private_message(user)
+    private_topic = TopicConverter.new(self, user).convert_to_private_message
+    add_small_action(user, "private_topic") if private_topic
+    private_topic
   end
 
   private

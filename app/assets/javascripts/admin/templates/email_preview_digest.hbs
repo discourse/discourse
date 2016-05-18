@@ -3,7 +3,7 @@
 <div class='admin-controls'>
   <div class='span7 controls'>
     <label for='last-seen'>{{i18n 'admin.email.last_seen_user'}}</label>
-    {{input type="date" value=lastSeen id="last-seen"}}
+    {{date-picker-past value=lastSeen id="last-seen"}}
     <label>{{i18n 'admin.email.user'}}:</label>
     {{user-selector single="true" usernames=username}}
     <button class='btn' {{action "refresh"}}>{{i18n 'admin.email.refresh'}}</button>

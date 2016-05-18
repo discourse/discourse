@@ -21,17 +21,24 @@ module TopicGuardian
   def can_create_post_on_topic?(topic)
     # No users can create posts on deleted topics
     return false if topic.trashed?
+    return true if is_admin?
 
-    is_staff? || (authenticated? && user.has_trust_level?(TrustLevel[4])) || (not(topic.closed? || topic.archived? || topic.trashed?) && can_create_post?(topic))
+    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator?
+
+    (!(topic.closed? || topic.archived?) || trusted) && can_create_post?(topic)
   end
 
   # Editing Method
   def can_edit_topic?(topic)
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
     return false unless can_see?(topic)
-    return true if is_staff?
+
+    return true if is_admin?
+    return true if is_moderator? && can_create_post?(topic)
+
     # TL4 users can edit archived topics, but can not edit private messages
     return true if (topic.archived && !topic.private_message? && user.has_trust_level?(TrustLevel[4]) && can_create_post?(topic))
+
     # TL3 users can not edit archived topics and private messages
     return true if (!topic.archived && !topic.private_message? && user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic))
 
@@ -49,6 +56,12 @@ module TopicGuardian
     is_staff? &&
     !(Category.exists?(topic_id: topic.id)) &&
     !Discourse.static_doc_topic_ids.include?(topic.id)
+  end
+
+  def can_convert_topic?(topic)
+    return false if topic && topic.trashed?
+    return true if is_admin?
+    is_moderator? && can_create_post?(topic)
   end
 
   def can_reply_as_new_topic?(topic)

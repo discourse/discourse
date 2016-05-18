@@ -1,5 +1,6 @@
+import { keyDirty } from 'discourse/widgets/widget';
 import { diff, patch } from 'virtual-dom';
-import { WidgetClickHook } from 'discourse/widgets/click-hook';
+import { WidgetClickHook } from 'discourse/widgets/hooks';
 import { renderedKey, queryRegistry } from 'discourse/widgets/widget';
 
 const _cleanCallbacks = {};
@@ -13,13 +14,20 @@ export default Ember.Component.extend({
   _rootNode: null,
   _timeout: null,
   _widgetClass: null,
-  _afterRender: null,
+  _renderCallback: null,
+  _childEvents: null,
 
   init() {
     this._super();
     const name = this.get('widget');
 
     this._widgetClass = queryRegistry(name) || this.container.lookupFactory(`widget:${name}`);
+
+    if (!this._widgetClass) {
+      console.error(`Error: Could not find widget: ${name}`);
+    }
+
+    this._childEvents = [];
     this._connected = [];
   },
 
@@ -42,50 +50,68 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
+    this._childEvents.forEach(evt => this.appEvents.off(evt));
     Ember.run.cancel(this._timeout);
   },
 
+  afterRender() {
+  },
+
+  beforePatch() {
+  },
+
+  afterPatch() {
+  },
+
+  eventDispatched(eventName, key, refreshArg) {
+    const onRefresh = Ember.String.camelize(eventName.replace(/:/, '-'));
+    keyDirty(key, { onRefresh, refreshArg });
+    this.queueRerender();
+  },
+
+  dispatch(eventName, key) {
+    this._childEvents.push(eventName);
+    this.appEvents.on(eventName, refreshArg => {
+      this.eventDispatched(eventName, key, refreshArg);
+    });
+  },
+
   queueRerender(callback) {
-    if (callback && !this._afterRender) {
-      this._afterRender = callback;
+    if (callback && !this._renderCallback) {
+      this._renderCallback = callback;
     }
 
     Ember.run.scheduleOnce('render', this, this.rerenderWidget);
   },
 
+  buildArgs() {
+  },
+
   rerenderWidget() {
     Ember.run.cancel(this._timeout);
     if (this._rootNode) {
+      if (!this._widgetClass) { return; }
+
       const t0 = new Date().getTime();
 
+      const args = this.get('args') || this.buildArgs();
       const opts = { model: this.get('model') };
-      const newTree = new this._widgetClass(this.get('args'), this.container, opts);
+      const newTree = new this._widgetClass(args, this.container, opts);
 
       newTree._emberView = this;
       const patches = diff(this._tree || this._rootNode, newTree);
 
-      const $body = $(document);
-      const prevHeight = $body.height();
-      const prevScrollTop = $body.scrollTop();
-
+      this.beforePatch();
       this._rootNode = patch(this._rootNode, patches);
-
-      const height = $body.height();
-      const scrollTop = $body.scrollTop();
-
-      // This hack is for when swapping out many cloaked views at once
-      // when using keyboard navigation. It could suddenly move the
-      // scroll
-      if (prevHeight === height && scrollTop !== prevScrollTop) {
-        $body.scrollTop(prevScrollTop);
-      }
+      this.afterPatch();
 
       this._tree = newTree;
 
-      if (this._afterRender) {
-        this._afterRender();
-        this._afterRender = null;
+      if (this._renderCallback) {
+        this._renderCallback();
+        this._renderCallback = null;
       }
+      this.afterRender();
 
       renderedKey('*');
       if (this.profileWidget) {

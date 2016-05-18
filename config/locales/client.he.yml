@@ -291,8 +291,6 @@ he:
       title: "משתמשים"
       likes_given: "ניתנ/ו"
       likes_received: "התקבל/ו"
-      topics_entered: "כניסות"
-      topics_entered_long: "פוסטים אליהם נכנסת"
       time_read: "זמן קריאה"
       topic_count: "פוסטים"
       topic_count_long: "פוסטים שנוצרו"
@@ -468,7 +466,6 @@ he:
         set_password: "הזן סיסמה"
       change_about:
         title: "שינוי בנוגע אליי"
-        error: "הייתה שגיאה בשינוי הערך"
       change_username:
         title: "שנה שם משתמש"
         confirm: "אם תשנו את שם המשתמש/ת שלך, כל הציטוטים של ההודעות שלך ואזכורי @שם_המשתמש שלך יישברו. את/ה בטוחים לחלוטין שברצונך לשנות?"
@@ -814,7 +811,6 @@ he:
       link_description: "הזן תיאור קישור כאן"
       link_dialog_title: "הזן קישור"
       link_optional_text: "כותרת אופציונלית"
-      link_placeholder: "http://example.com \"טקסט אופציונלי\""
       quote_title: "ציטוט"
       quote_text: "ציטוט"
       code_title: "טקסט מעוצב"
@@ -1228,10 +1224,7 @@ he:
         create: "סליחה, הייתה שגיאה ביצירת ההודעה שלך. אנא נסה שנית."
         edit: "סליחה, הייתה שגיאה בעריכת ההודעה שלך. אנא נסה שנית."
         upload: "סליחה, הייתה שגיאה בהעלאת הקובץ שלך. אנא נסה שנית"
-        attachment_too_large: "סליחה, אך הקובץ שאתה מנסה להעלות גדול מידי (הגודל המקסימלי הוא {{max_size_kb}}kb)."
-        file_too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא {{max_size_kb}}kb)"
         too_many_uploads: "סליחה, אך ניתן להעלות רק קובץ אחת כל פעם."
-        too_many_dragged_and_dropped_files: "מצטערים, אתם יכולים לגרור ולהניח עד 10 קבצים בכל פעם."
         upload_not_authorized: "סליחה, אך סוג הקובץ שאתה מנסה להעלות אינו מורשה (סיומות מורשות: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות תמונות."
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
@@ -1639,7 +1632,6 @@ he:
           30_days_ago: "לפני 30 ימים"
           all: "הכל"
           view_table: "טבלא"
-          view_chart: "תרשים בר"
           refresh_report: "רענון דו\"ח"
           start_date: "תאריך התחלה"
           end_date: "תאריך סיום"
@@ -1771,14 +1763,6 @@ he:
           backups: "גיבויים"
           logs: "לוגים"
         none: "אין גיבויים זמינים."
-        read_only:
-          enable:
-            title: "אפשר מצב קריאה בלבד"
-            label: "אפשר מצב \"קריאה בלבד\""
-            confirm: "אתה בטוח שברצונך לאפשר את מצב קריאה בלבד??"
-          disable:
-            title: "בטל מצב קריאה בלבד"
-            label: "בטל מצב \"קריאה בלבד\""
         logs:
           none: "עדיין אין לוגים..."
         columns:

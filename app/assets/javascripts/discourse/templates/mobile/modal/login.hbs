@@ -9,7 +9,7 @@
               <label for='login-account-name'>{{i18n 'login.username'}}&nbsp;</label>
             </td>
             <td>
-              {{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off"}}
+              {{text-field value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off"}}
             </td>
           </tr>
           <tr>
@@ -31,7 +31,7 @@
     </form>
   {{/if}}
   {{authMessage}}
-  <div id='login-alert' {{bind-attr class="alertClass"}}>{{alert}}</div>
+  <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 </div>
 <div class="modal-footer">
   {{#if authenticate}}
@@ -39,7 +39,7 @@
   {{/if}}
   {{#if canLoginLocal}}
     <button class='btn btn-large btn-primary'
-      {{bind-attr disabled="loginDisabled"}}
+      disabled={{loginDisabled}}
       {{action "login"}}>
         <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>

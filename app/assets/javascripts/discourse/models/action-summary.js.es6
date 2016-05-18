@@ -59,6 +59,7 @@ export default RestModel.extend({
         id: this.get('flagTopic') ? this.get('flagTopic.id') : post.get('id'),
         post_action_type_id: this.get('id'),
         message: opts.message,
+        is_warning: opts.isWarning,
         take_action: opts.takeAction,
         flag_topic: this.get('flagTopic') ? true : false
       },

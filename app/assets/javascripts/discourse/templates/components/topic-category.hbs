@@ -2,5 +2,12 @@
   {{bound-category-link topic.category.parentCategory}}
 {{/if}}
 {{bound-category-link topic.category hideParent=true}}
+{{#if siteSettings.tagging_enabled}}
+  <div class="list-tags">
+    {{#each topic.tags as |t|}}
+      {{discourse-tag t}}
+    {{/each}}
+  </div>
+{{/if}}
 
 {{plugin-outlet "topic-category"}}

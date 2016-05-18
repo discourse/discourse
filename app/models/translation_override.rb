@@ -1,11 +1,19 @@
+require 'js_locale_helper'
+
 class TranslationOverride < ActiveRecord::Base
   validates_uniqueness_of :translation_key, scope: :locale
   validates_presence_of :locale, :translation_key, :value
 
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
-    row_count = where(params).update_all(value: value)
-    create!(params.merge(value: value)) if row_count == 0
+
+    data = { value: value }
+    if key.end_with?('_MF')
+      data[:compiled_js] = JsLocaleHelper.compile_message_format(locale, value)
+    end
+
+    row_count = where(params).update_all(data)
+    create!(params.merge(data)) if row_count == 0
     i18n_changed
   end
 

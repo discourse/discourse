@@ -43,9 +43,12 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
     if (this.get('userField.show_on_profile')) {
       ret.push(I18n.t('admin.user_fields.show_on_profile.enabled'));
     }
+    if (this.get('userField.show_on_user_card')) {
+      ret.push(I18n.t('admin.user_fields.show_on_user_card.enabled'));
+    }
 
     return ret.join(', ');
-  }.property('userField.editable', 'userField.required', 'userField.show_on_profile'),
+  }.property('userField.editable', 'userField.required', 'userField.show_on_profile', 'userField.show_on_user_card'),
 
   actions: {
     save() {
@@ -57,6 +60,7 @@ export default Ember.Component.extend(bufferedProperty('userField'), {
                                            'editable',
                                            'required',
                                            'show_on_profile',
+                                           'show_on_user_card',
                                            'options');
 
       this.get('userField').save(attrs).then(function() {

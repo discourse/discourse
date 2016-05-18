@@ -5,6 +5,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   editingTitle: false,
   originalPrimaryGroupId: null,
   availableGroups: null,
+  userTitleValue: null,
 
   showApproval: setting('must_approve_users'),
   showBadges: setting('enable_badges'),
@@ -26,10 +27,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
       });
     }
     return [];
-  }.property('model.user_fields.@each'),
+  }.property('model.user_fields.[]'),
 
   actions: {
     toggleTitleEdit() {
+      this.set('userTitleValue', this.get('model.title'));
       this.toggleProperty('editingTitle');
     },
 
@@ -37,12 +39,13 @@ export default Ember.Controller.extend(CanCheckEmails, {
       const self = this;
 
       return Discourse.ajax("/users/" + this.get('model.username').toLowerCase(), {
-        data: {title: this.get('model.title')},
+        data: {title: this.get('userTitleValue')},
         type: 'PUT'
       }).catch(function(e) {
         bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
       }).finally(function() {
-        self.send('toggleTitleEdit');
+        self.set('model.title', self.get('userTitleValue'));
+        self.toggleProperty('editingTitle');
       });
     },
 

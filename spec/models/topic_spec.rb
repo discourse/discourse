@@ -488,6 +488,13 @@ describe Topic do
           @topic.reload
         }.not_to change(@topic, :bumped_at)
       end
+
+      it "doesn't bump the topic when a post have invalid topic title while edit" do
+        expect {
+          @last_post.revise(Fabricate(:moderator), { title: 'invalid title' })
+          @topic.reload
+        }.not_to change(@topic, :bumped_at)
+      end
     end
   end
 
@@ -1363,6 +1370,12 @@ describe Topic do
 
     it 'includes moderators if flagged and a pm' do
       topic.stubs(:has_flags?).returns(true)
+      topic.stubs(:private_message?).returns(true)
+      expect(topic.all_allowed_users).to include moderator
+    end
+
+    it 'includes moderators if offical warning' do
+      topic.stubs(:subtype).returns(TopicSubtype.moderator_warning)
       topic.stubs(:private_message?).returns(true)
       expect(topic.all_allowed_users).to include moderator
     end

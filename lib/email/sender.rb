@@ -22,7 +22,7 @@ module Email
     end
 
     def send
-      return if SiteSetting.disable_emails
+      return if SiteSetting.disable_emails && @email_type.to_s != "admin_login"
 
       return if ActionMailer::Base::NullMail === @message
       return if ActionMailer::Base::NullMail === (@message.message rescue nil)
@@ -78,10 +78,16 @@ module Email
       if topic_id.present?
         email_log.topic_id = topic_id
 
+        incoming_email = IncomingEmail.find_by(post_id: post_id, topic_id: topic_id)
+
+        incoming_message_id = nil
+        incoming_message_id = "<#{incoming_email.message_id}>" if incoming_email.try(:message_id).present?
+
         topic_identifier = "<topic/#{topic_id}@#{host}>"
         post_identifier = "<topic/#{topic_id}/#{post_id}@#{host}>"
+
         @message.header['Message-ID'] = post_identifier
-        @message.header['In-Reply-To'] = topic_identifier
+        @message.header['In-Reply-To'] = incoming_message_id || topic_identifier
         @message.header['References'] = topic_identifier
 
         topic = Topic.where(id: topic_id).first
@@ -110,6 +116,15 @@ module Email
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
 
+      if SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+        email_log.bounce_key = SecureRandom.hex
+
+        # WARNING: RFC claims you can not set the Return Path header, this is 100% correct
+        # however Rails has special handling for this header and ends up using this value
+        # as the Envelope From address so stuff works as expected
+        @message.header[:return_path] = SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{email_log.bounce_key}")
+      end
+
       email_log.post_id = post_id if post_id.present?
       email_log.reply_key = reply_key if reply_key.present?
 
@@ -120,8 +135,8 @@ module Email
 
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails &&
-         @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
-         @message.html_part.body =~ /<img[^>]+>/
+        @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
+        @message.html_part.body =~ /<img[^>]+>/
         style = Email::Styles.new(@message.html_part.body.to_s)
         @message.html_part.body = style.strip_avatars_and_emojis
       end

@@ -1,4 +1,4 @@
-import { WidgetClickHook, WidgetClickOutsideHook } from 'discourse/widgets/click-hook';
+import { WidgetClickHook, WidgetClickOutsideHook, WidgetKeyUpHook } from 'discourse/widgets/hooks';
 import { h } from 'virtual-dom';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 
@@ -66,6 +66,11 @@ function drawWidget(builder, attrs, state) {
   if (this.buildAttributes) {
     properties.attributes = this.buildAttributes(attrs);
   }
+
+  if (this.keyUp) {
+    properties['widget-key-up'] = new WidgetKeyUpHook(this);
+  }
+
   if (this.clickOutside) {
     properties['widget-click-outside'] = new WidgetClickOutsideHook(this);
   }
@@ -75,8 +80,13 @@ function drawWidget(builder, attrs, state) {
 
   const attributes = properties['attributes'] || {};
   properties.attributes = attributes;
+
   if (this.title) {
-    attributes.title = I18n.t(this.title);
+    if (typeof this.title === 'function') {
+      attributes.title = this.title(attrs, state);
+    } else {
+      attributes.title = I18n.t(this.title);
+    }
   }
 
   let contents = this.html(attrs, state);
@@ -114,9 +124,20 @@ export default class Widget {
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
 
+    // Helps debug widgets
+    if (Ember.testing) {
+      const ds = this.defaultState(attrs);
+      if (typeof ds !== "object") {
+        Ember.warn(`defaultState must return an object`);
+      } else if (Object.keys(ds).length > 0 && !this.key) {
+        Ember.warn(`you need a key when using state ${this.name}`);
+      }
+    }
+
     this.site = container.lookup('site:main');
     this.siteSettings = container.lookup('site-settings:main');
     this.currentUser = container.lookup('current-user:main');
+    this.capabilities = container.lookup('capabilities:main');
     this.store = container.lookup('store:main');
     this.appEvents = container.lookup('app-events:main');
     this.keyValueStore = container.lookup('key-value-store:main');
@@ -138,7 +159,7 @@ export default class Widget {
   }
 
   render(prev) {
-    if (prev && prev.state) {
+    if (prev && prev.key && prev.key === this.key) {
       this.state = prev.state;
     } else {
       this.state = this.defaultState(this.attrs, this.state);
@@ -161,7 +182,7 @@ export default class Widget {
 
       const refreshAction = dirtyOpts.onRefresh;
       if (refreshAction) {
-        this.sendWidgetAction(refreshAction);
+        this.sendWidgetAction(refreshAction, dirtyOpts.refreshArg);
       }
     }
 
@@ -238,7 +259,7 @@ export default class Widget {
 
       if (target) {
         // TODO: Use ember closure actions
-        const actions = target._actions || target.actionHooks;
+        const actions = target._actions || target.actionHooks || {};
         const method = actions[actionName];
         if (method) {
           promise = method.call(target, param);
@@ -269,6 +290,16 @@ export default class Widget {
       return result.then(() => this.scheduleRerender());
     }
     return result;
+  }
+
+  sendWidgetEvent(name) {
+    const methodName = `${name}Event`;
+    return this.rerenderResult(() => {
+      const widget = this._findAncestorWithProperty(methodName);
+      if (widget) {
+        return widget[methodName]();
+      }
+    });
   }
 
   sendWidgetAction(name, param) {

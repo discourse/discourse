@@ -83,6 +83,10 @@ Fabricator(:post_with_large_image_and_title, from: :post) do
   raw '<img src="/uploads/default/1/1234567890123456.jpg" title="WAT">'
 end
 
+Fabricator(:post_with_large_image_on_subfolder, from: :post) do
+  raw '<img src="/subfolder/uploads/default/1/1234567890123456.jpg">'
+end
+
 Fabricator(:post_with_uploads, from: :post) do
   raw '
 <a href="/uploads/default/2/2345678901234567.jpg">Link</a>

@@ -316,6 +316,30 @@ describe Category do
       expect { @category.update_attributes(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
     end
 
+    it "creates permalink when category slug is changed" do
+      @category.update_attributes(slug: 'new-category')
+      expect(Permalink.count).to eq(1)
+    end
+
+    it "creates permalink when sub category slug is changed" do
+      sub_category = Fabricate(:category, slug: 'sub-category', parent_category_id: @category.id)
+      sub_category.update_attributes(slug: 'new-sub-category')
+      expect(Permalink.count).to eq(1)
+    end
+
+    it "deletes permalink when category slug is reused" do
+      Fabricate(:permalink, url: "/c/bikeshed-category")
+      Fabricate(:category, slug: 'bikeshed-category')
+      expect(Permalink.count).to eq(0)
+    end
+
+    it "deletes permalink when sub category slug is reused" do
+      Fabricate(:permalink, url: "/c/main-category/sub-category")
+      main_category = Fabricate(:category, slug: 'main-category')
+      Fabricate(:category, slug: 'sub-category', parent_category_id: main_category.id)
+      expect(Permalink.count).to eq(0)
+    end
+
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
       expect(category.topic.auto_close_at).to be_nil

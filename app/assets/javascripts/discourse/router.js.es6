@@ -15,7 +15,7 @@ export function mapRoutes() {
   // will be built automatically. You can supply a `resource` property to
   // automatically put it in that resource, such as `admin`. That way plugins
   // can define admin routes.
-  Ember.keys(requirejs._eak_seen).forEach(function(key) {
+  Object.keys(requirejs._eak_seen).forEach(function(key) {
     if (/route-map$/.test(key)) {
       var module = require(key, null, null, true);
       if (!module || !module.default) { throw new Error(key + ' must export a route map.'); }

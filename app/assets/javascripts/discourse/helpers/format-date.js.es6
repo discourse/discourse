@@ -1,4 +1,4 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse/lib/helpers';
 import { autoUpdatingRelativeAge } from 'discourse/lib/formatter';
 
 /**

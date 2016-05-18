@@ -210,7 +210,7 @@ describe SessionController do
         end
 
         it 'sends an activation email' do
-          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
           sso = get_sso('/a/')
           sso.external_id = '666' # the number of the beast
           sso.email = 'bob@bob.com'
@@ -632,7 +632,7 @@ describe SessionController do
       end
 
       it "enqueues an email" do
-        Jobs.expects(:enqueue).with(:user_email, has_entries(type: :forgot_password, user_id: user.id))
+        Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :forgot_password, user_id: user.id))
         xhr :post, :forgot_password, login: user.username
       end
     end

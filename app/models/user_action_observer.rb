@@ -79,6 +79,11 @@ class UserActionObserver < ActiveRecord::Observer
   end
 
   def log_topic(model)
+
+    # no action to log here, this can happen if a user is deleted
+    # then topic has no user_id
+    return unless model.user_id
+
     row = {
       action_type: model.archetype == Archetype.private_message ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
       user_id: model.user_id,

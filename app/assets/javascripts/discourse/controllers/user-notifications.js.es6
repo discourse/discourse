@@ -5,18 +5,16 @@ export default Ember.ArrayController.extend({
     this.set("controllers.application.showFooter", !this.get("model.canLoadMore"));
   }.observes("model.canLoadMore"),
 
-  showDismissButton: Ember.computed.gt('user.total_unread_notifications', 0),
-
   currentPath: Em.computed.alias('controllers.application.currentPath'),
 
   actions: {
-    resetNew: function() {
+    resetNew() {
       Discourse.ajax('/notifications/mark-read', { method: 'PUT' }).then(() => {
         this.setEach('read', true);
       });
     },
 
-    loadMore: function() {
+    loadMore() {
       this.get('model').loadMore();
     }
   }

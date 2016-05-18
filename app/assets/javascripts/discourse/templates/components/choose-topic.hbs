@@ -1,0 +1,23 @@
+<label for='choose-topic-title'>{{i18n 'choose_topic.title.search'}}</label>
+
+{{text-field value=topicTitle placeholderKey="choose_topic.title.placeholder" id="choose-topic-title"}}
+
+{{#if loading}}
+  <p>{{i18n 'loading'}}</p>
+{{else}}
+  {{#if noResults}}
+    <p>{{i18n 'choose_topic.none_found'}}</p>
+  {{else}}
+    {{#each topics as |t|}}
+      <div class='controls'>
+        <label class='radio'>
+        <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t}}>{{t.title}}
+        {{#if t.category.parentCategory}}
+          {{bound-category-link t.category.parentCategory}}
+        {{/if}}
+        {{bound-category-link t.category}}
+        </label>
+      </div>
+    {{/each}}
+  {{/if}}
+{{/if}}

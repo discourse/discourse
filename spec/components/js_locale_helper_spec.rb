@@ -54,7 +54,6 @@ describe JsLocaleHelper do
           other {# apples}
         }')
 
-
     expect(localize(NUM_RESULTS: 1, NUM_APPLES: 2)).to eq('1 result and 2 apples')
     expect(localize(NUM_RESULTS: 2, NUM_APPLES: 1)).to eq('2 results and 1 apple')
   end

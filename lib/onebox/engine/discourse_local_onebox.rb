@@ -3,7 +3,10 @@ module Onebox
     class DiscourseLocalOnebox
       include Engine
 
-      matches_regexp Regexp.new("^#{Discourse.base_url.gsub(".","\\.")}.*$", true)
+      # we need to allow for multisite here
+      def self.is_on_site?(url)
+        Regexp.new("^#{Discourse.base_url.gsub(".","\\.")}.*$", true) === url.to_s
+      end
 
       # Use this onebox before others
       def self.priority
@@ -17,10 +20,10 @@ module Onebox
             route = Rails.application.routes.recognize_path(uri.path.sub(Discourse.base_uri, ""))
             case route[:controller]
             when 'uploads'
-              super
+              is_on_site?(other)
             when 'topics'
               # super will use matches_regexp to match the domain name
-              super
+              is_on_site?(other)
             else
               false
             end
@@ -28,7 +31,7 @@ module Onebox
             false
           end
         else
-          super
+          is_on_site?(other)
         end
       end
 
@@ -93,7 +96,7 @@ module Onebox
 
             quote = post.excerpt(SiteSetting.post_onebox_maxlength)
             args = { original_url: url,
-                     title: PrettyText.unescape_emoji(topic.title),
+                     title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
                      avatar: PrettyText.avatar_img(topic.user.avatar_template, 'tiny'),
                      posts_count: topic.posts_count,
                      last_post: FreedomPatches::Rails4.time_ago_in_words(topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose'),

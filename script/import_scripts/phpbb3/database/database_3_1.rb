@@ -3,8 +3,8 @@ require_relative '../support/constants'
 
 module ImportScripts::PhpBB3
   class Database_3_1 < Database_3_0
-    def fetch_users(offset)
-      query(<<-SQL)
+    def fetch_users(last_user_id)
+      query(<<-SQL, :user_id)
         SELECT u.user_id, u.user_email, u.username,
           CASE WHEN u.user_password LIKE '$2y$%'
             THEN CONCAT('$2a$', SUBSTRING(u.user_password, 5))
@@ -20,10 +20,9 @@ module ImportScripts::PhpBB3
             u.user_id = b.ban_userid AND b.ban_exclude = 0 AND
             (b.ban_end = 0 OR b.ban_end >= UNIX_TIMESTAMP())
           )
-        WHERE u.user_type != #{Constants::USER_TYPE_IGNORE}
-        ORDER BY u.user_id ASC
+        WHERE u.user_id > #{last_user_id} AND u.user_type != #{Constants::USER_TYPE_IGNORE}
+        ORDER BY u.user_id
         LIMIT #{@batch_size}
-        OFFSET #{offset}
       SQL
     end
   end

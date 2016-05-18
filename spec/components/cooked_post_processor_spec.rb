@@ -128,6 +128,39 @@ describe CookedPostProcessor do
 
     end
 
+    context "with large images when using subfolders" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { Fabricate(:post_with_large_image_on_subfolder) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:base_url) { "http://test.localhost/subfolder" }
+      let(:base_uri) { "/subfolder" }
+
+      before do
+        SiteSetting.max_image_height = 2000
+        SiteSetting.create_thumbnails = true
+        Discourse.stubs(:base_url).returns(base_url)
+        Discourse.stubs(:base_uri).returns(base_uri)
+
+        Upload.expects(:get_from_url).returns(upload)
+        FastImage.stubs(:size).returns([1000, 2000])
+
+        # hmmm this should be done in a cleaner way
+        OptimizedImage.expects(:resize).returns(true)
+
+        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+      end
+
+      it "generates overlay information" do
+        cpp.post_process_images
+        expect(cpp.html).to match_html '<p><div class="lightbox-wrapper"><a data-download-href="/subfolder/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/subfolder/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/subfolder/uploads/default/optimized/1X/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_1_690x1380.png" width="690" height="1380"><div class="meta">
+<span class="filename">logo.png</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
+</div></a></div></p>'
+        expect(cpp).to be_dirty
+      end
+
+    end
+
     context "with title" do
 
       let(:upload) { Fabricate(:upload) }
@@ -474,6 +507,55 @@ describe CookedPostProcessor do
     it "is false when the image is not inside a link" do
       img = doc.css("img#standard_image").first
       expect(cpp.is_a_hyperlink?(img)).to eq(false)
+    end
+
+  end
+
+  context "extracts links" do
+      let(:post) { Fabricate(:post, raw: "sam has a blog at https://samsaffron.com") }
+      it "always re-extracts links on post process" do
+        TopicLink.destroy_all
+        CookedPostProcessor.new(post).post_process
+        expect(TopicLink.count).to eq(1)
+      end
+  end
+
+  context "grant badges" do
+
+    context "emoji inside a quote" do
+      let(:post) { Fabricate(:post, raw: "time to eat some sweet [quote]:candy:[/quote] mmmm") }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      it "doesn't award a badge when the emoji is in a quote" do
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstEmoji).exists?).to eq(false)
+      end
+    end
+
+    context "emoji in the text" do
+      let(:post) { Fabricate(:post, raw: "time to eat some sweet :candy: mmmm") }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      it "awards a badge for using an emoji" do
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstEmoji).exists?).to eq(true)
+      end
+    end
+
+    context "onebox" do
+      let(:user) { Fabricate(:user) }
+      let(:post) { Fabricate.build(:post, user: user, raw: "onebox me:\n\nhttps://www.youtube.com/watch?v=Wji-BZ0oCwg\n") }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      before do
+        Oneboxer.stubs(:onebox)
+      end
+
+      it "awards a badge for using an emoji" do
+        cpp.post_process_oneboxes
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(true)
+      end
     end
 
   end

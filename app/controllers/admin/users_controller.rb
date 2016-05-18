@@ -23,7 +23,8 @@ class Admin::UsersController < Admin::AdminController
                                     :primary_group,
                                     :generate_api_key,
                                     :revoke_api_key,
-                                    :anonymize]
+                                    :anonymize,
+                                    :reset_bounce_score]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -336,7 +337,7 @@ class Admin::UsersController < Admin::AdminController
     email_token = user.email_tokens.create(email: user.email)
 
     unless params[:send_email] == '0' || params[:send_email] == 'false'
-      Jobs.enqueue( :user_email,
+      Jobs.enqueue( :critical_user_email,
                     type: :account_created,
                     user_id: user.id,
                     email_token: email_token.token)
@@ -353,6 +354,12 @@ class Admin::UsersController < Admin::AdminController
     else
       render json: failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
     end
+  end
+
+  def reset_bounce_score
+    guardian.ensure_can_reset_bounce_score!(@user)
+    @user.user_stat.update_columns(bounce_score: 0, reset_bounce_score_after: nil)
+    render json: success_json
   end
 
   private

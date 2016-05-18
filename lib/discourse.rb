@@ -82,7 +82,7 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
   end
 
-  PIXEL_RATIOS ||= [1, 2, 3]
+  PIXEL_RATIOS ||= [1, 1.5, 2, 3]
 
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
@@ -283,7 +283,7 @@ module Discourse
   SYSTEM_USER_ID ||= -1
 
   def self.system_user
-    User.find_by(id: SYSTEM_USER_ID)
+    @system_user ||= User.find_by(id: SYSTEM_USER_ID)
   end
 
   def self.store

@@ -106,7 +106,8 @@ class StaticController < ApplicationController
         file.unlink
         data
       rescue => e
-        Rails.logger.warn("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
+        AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
+        Rails.logger.debug("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
         ""
       end
     end
