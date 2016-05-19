@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { shortDate, tinyDateYear } from 'discourse/lib/formatter';
+import { smartShortDate } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse/helpers/fa-icon';
 
 const SCROLLAREA_HEIGHT = 300;
@@ -46,7 +46,7 @@ createWidget('timeline-scroller', {
     ];
 
     if (date) {
-      contents.push(h('div.timeline-ago', shortDate(date)));
+      contents.push(h('div.timeline-ago', smartShortDate(date)));
     }
 
     return [ h('div.timeline-handle'), h('div.timeline-scroller-content', contents) ];
@@ -212,7 +212,7 @@ export default createWidget('topic-timeline', {
       return result.concat([
         this.attach('link', {
           className: 'start-date',
-          rawLabel: tinyDateYear(createdAt),
+          rawLabel: moment(createdAt).format(I18n.t('dates.timeline_start')),
           action: 'jumpTop'
         }),
         this.attach('timeline-scrollarea', attrs),
