@@ -413,11 +413,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     jumpTop() {
-      DiscourseURL.routeTo(this.get('model.firstPostUrl'));
+      DiscourseURL.routeTo(this.get('model.firstPostUrl'), { skipIfOnScreen: false });
     },
 
     jumpBottom() {
-      DiscourseURL.routeTo(this.get('model.lastPostUrl'));
+      DiscourseURL.routeTo(this.get('model.lastPostUrl'), { skipIfOnScreen: false });
     },
 
     selectAll() {
