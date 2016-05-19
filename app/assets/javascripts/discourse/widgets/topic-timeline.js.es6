@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { smartShortDate } from 'discourse/lib/formatter';
+import { smartShortDate, relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse/helpers/fa-icon';
 
 const SCROLLAREA_HEIGHT = 300;
@@ -205,7 +205,6 @@ export default createWidget('topic-timeline', {
       }));
     }
 
-
     const result = [ h('div.timeline-controls', controls) ];
     const stream = attrs.topic.get('postStream.stream');
     if (stream.length > 2) {
@@ -219,7 +218,7 @@ export default createWidget('topic-timeline', {
         this.attach('link', {
           className: 'now-date',
           icon: 'dot-circle-o',
-          label: 'topic.timeline.now',
+          rawLabel: relativeAge(new Date(topic.last_posted_at)),
           action: 'jumpBottom'
         })
       ]);

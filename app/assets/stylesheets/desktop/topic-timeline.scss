@@ -22,6 +22,7 @@
     }
 
     .start-date {
+      @include unselectable;
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
 
@@ -77,6 +78,7 @@
     }
 
     .now-date {
+      @include unselectable;
       display: inline-block;
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       margin-top: 0.5em;
