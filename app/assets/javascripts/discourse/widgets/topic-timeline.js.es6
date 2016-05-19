@@ -205,19 +205,26 @@ export default createWidget('topic-timeline', {
       }));
     }
 
-    return [h('div.timeline-controls', controls),
-            this.attach('link', {
-              className: 'start-date',
-              rawLabel: tinyDateYear(createdAt),
-              action: 'jumpTop'
-            }),
-            this.attach('timeline-scrollarea', attrs),
-            this.attach('link', {
-              className: 'now-date',
-              icon: 'dot-circle-o',
-              label: 'topic.timeline.now',
-              action: 'jumpBottom'
-            })
-           ];
+
+    const result = [ h('div.timeline-controls', controls) ];
+    const stream = attrs.topic.get('postStream.stream');
+    if (stream.length > 2) {
+      return result.concat([
+        this.attach('link', {
+          className: 'start-date',
+          rawLabel: tinyDateYear(createdAt),
+          action: 'jumpTop'
+        }),
+        this.attach('timeline-scrollarea', attrs),
+        this.attach('link', {
+          className: 'now-date',
+          icon: 'dot-circle-o',
+          label: 'topic.timeline.now',
+          action: 'jumpBottom'
+        })
+      ]);
+    }
+
+    return result;
   }
 });
