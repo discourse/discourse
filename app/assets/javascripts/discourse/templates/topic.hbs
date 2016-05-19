@@ -73,6 +73,7 @@
 
           {{#if showTimeline}}
             {{topic-timeline topic=model
+                             loading=model.postStream.loading
                              jumpTop="jumpTop"
                              jumpToPost="jumpToPost"
                              jumpBottom="jumpBottom"

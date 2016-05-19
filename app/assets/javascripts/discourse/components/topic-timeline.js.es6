@@ -12,6 +12,8 @@ export default MountWidget.extend(Docking, {
   },
 
   dockCheck(info) {
+    if (this.get('loading')) { return; }
+
     const topicBottom = $('#topic-bottom').offset().top;
     const $timeline = this.$('.timeline-container');
     const timelineHeight = $timeline.height();
