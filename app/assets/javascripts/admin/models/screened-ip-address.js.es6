@@ -1,38 +1,37 @@
+import computed from 'ember-addons/ember-computed-decorators';
+
 const ScreenedIpAddress = Discourse.Model.extend({
-  actionName: function() {
-    return I18n.t("admin.logs.screened_ips.actions." + this.get('action_name'));
-  }.property('action_name'),
+  @computed("action_name")
+  actionName(actionName) {
+    return I18n.t(`admin.logs.screened_ips.actions.${actionName}`);
+  },
 
-  isBlocked: function() {
-    return (this.get('action_name') === 'block');
-  }.property('action_name'),
+  isBlocked: Ember.computed.equal("action_name", "block"),
 
-  actionIcon: function() {
-    return (this.get('action_name') === 'block') ? 'ban' : 'check';
-  }.property('action_name'),
+  @computed("ip_address")
+  isRange(ipAddress) {
+    return ipAddress.indexOf("/") > 0;
+  },
 
-  save: function() {
+  save() {
     return Discourse.ajax("/admin/logs/screened_ip_addresses" + (this.id ? '/' + this.id : '') + ".json", {
       type: this.id ? 'PUT' : 'POST',
       data: {ip_address: this.get('ip_address'), action_name: this.get('action_name')}
     });
   },
 
-  destroy: function() {
+  destroy() {
     return Discourse.ajax("/admin/logs/screened_ip_addresses/" + this.get('id') + ".json", {type: 'DELETE'});
   }
 });
 
 ScreenedIpAddress.reopenClass({
-  findAll: function(filter) {
-    return Discourse.ajax("/admin/logs/screened_ip_addresses.json", { data: { filter: filter } }).then(function(screened_ips) {
-      return screened_ips.map(function(b) {
-        return ScreenedIpAddress.create(b);
-      });
-    });
+  findAll(filter) {
+    return Discourse.ajax("/admin/logs/screened_ip_addresses.json", { data: { filter: filter } })
+                    .then(screened_ips => screened_ips.map(b => ScreenedIpAddress.create(b)));
   },
 
-  rollUp: function() {
+  rollUp() {
     return Discourse.ajax("/admin/logs/screened_ip_addresses/roll_up", { type: "POST" });
   }
 });

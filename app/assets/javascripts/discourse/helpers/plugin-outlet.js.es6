@@ -46,13 +46,7 @@
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-
-// TODO: Add all plugin-outlet names dynamically
-const rewireableOutlets = [
-  'hamburger-admin'
-];
-
-const _rewires = {};
+import { registerHelper } from 'discourse/lib/helpers';
 
 let _connectorCache, _rawCache;
 
@@ -72,14 +66,6 @@ function findOutlets(collection, callback) {
       const segments = res.split("/");
       let outletName = segments[segments.length-2];
       const uniqueName = segments[segments.length-1];
-
-      const outletRewires = _rewires[outletName];
-      if (outletRewires) {
-        const newOutlet = outletRewires[uniqueName];
-        if (newOutlet) {
-          outletName = newOutlet;
-        }
-      }
 
       callback(outletName, res, uniqueName);
     }
@@ -144,7 +130,6 @@ function viewInjections(container) {
 
 // unbound version of outlets, only has a template
 Handlebars.registerHelper('plugin-outlet', function(name){
-
   if (!_rawCache) { buildConnectorCache(); }
 
   const functions = _rawCache[name];
@@ -160,7 +145,7 @@ Handlebars.registerHelper('plugin-outlet', function(name){
 
 });
 
-Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, env) {
+registerHelper('plugin-outlet', function(params, hash, options, env) {
   const connectionName = params[0];
 
   if (!_connectorCache) { buildConnectorCache(); }
@@ -190,11 +175,5 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
   }
 });
 
-// Allow plugins to rewire outlets to new outlets if they exist. For example, the akismet
-// plugin will use `hamburger-admin` if it exists, otherwise `site-menu-links`
-export function rewire(uniqueName, outlet, wantedOutlet) {
-  if (rewireableOutlets.indexOf(wantedOutlet) !== -1) {
-    _rewires[outlet] = _rewires[outlet] || {};
-    _rewires[outlet][uniqueName] = wantedOutlet;
-  }
-}
+// No longer used
+export function rewire() { }

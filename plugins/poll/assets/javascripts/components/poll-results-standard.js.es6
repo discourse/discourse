@@ -24,7 +24,7 @@ export default Em.Component.extend({
 
     options.forEach((option, i) => {
       const percentage = percentages[i];
-      const style = new Ember.Handlebars.SafeString(`width: ${percentage}%`);
+      const style = new Handlebars.SafeString(`width: ${percentage}%`);
 
       option.setProperties({
         percentage,

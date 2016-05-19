@@ -17,11 +17,11 @@
     </div>
 
     <div class='pull-right'>
-      {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=controller.showTopicPostBadges}}
+      {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=showTopicPostBadges}}
     </div>
 
     <div class="topic-item-stats clearfix">
-      {{#unless controller.hideCategory}}
+      {{#unless hideCategory}}
         <div class='category'>
           {{category-link topic.category}}
         </div>

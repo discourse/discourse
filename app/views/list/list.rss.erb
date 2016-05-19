@@ -12,12 +12,16 @@
       <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
       <% @topic_list.topics.each do |topic| %>
         <% topic_url = topic.url -%>
+        <% username = topic.user ? topic.user.username : "" %>
+        <% name = topic.user ? topic.user.name : "" %>
         <item>
           <title><%= topic.title %></title>
-          <dc:creator><![CDATA[<%= "@#{topic.user.username}#{" #{topic.user.name}" if (topic.user.name.present? && SiteSetting.enable_names?)}" -%>]]></dc:creator>
+          <dc:creator><![CDATA[<%= "@#{username}#{" #{name}" if (name.present? && SiteSetting.enable_names?)}" -%>]]></dc:creator>
           <category><%= topic.category.name %></category>
           <description><![CDATA[
-          <p><%= t('author_wrote', author: link_to("@#{topic.user.username}", "#{Discourse.base_url}/users/#{topic.user.username_lower}")).html_safe %></p>
+            <% if username.present? %>
+            <p><%= t('author_wrote', author: link_to("@#{username}", "#{Discourse.base_url}/users/#{topic.user.username_lower}")).html_safe %></p>
+            <% end %>
             <blockquote>
               <%= topic.posts.first.cooked.html_safe %>
             </blockquote>

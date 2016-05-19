@@ -1,5 +1,5 @@
-{{#if controller.link}}
-  <h3>{{view.title}}</h3>
+{{#if link}}
+  <h3>{{shareTitle}}</h3>
 
   {{#if date}}
     <span class="date">{{displayDate}}</span>
@@ -11,7 +11,7 @@
   </div>
 
   {{#each sources as |s|}}
-    {{share-source source=s title=view.title action="share"}}
+    {{share-source source=s title=title action="share"}}
   {{/each}}
 
   <div class='link'>

@@ -28,16 +28,16 @@ export default Ember.ArrayController.extend({
     doneTopicFlags(item) {
       this.send("disagreeFlags", item);
     },
-  },
 
-  loadMore(){
-    var flags = this.get("model");
-    return FlaggedPost.findAll(this.get("query"),flags.length+1).then(function(data){
-      if(data.length===0){
-        flags.set("allLoaded",true);
-      }
-      flags.addObjects(data);
-    });
+    loadMore(){
+      const flags = this.get('model');
+      return FlaggedPost.findAll(this.get('query'), flags.length+1).then(data => {
+        if (data.length===0) {
+          flags.set("allLoaded",true);
+        }
+        flags.addObjects(data);
+      });
+    }
   }
 
 });

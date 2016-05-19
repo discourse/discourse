@@ -31,18 +31,25 @@ module Email
 
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
+      @staged_users_created = 0
       @raw_email = mail_string
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
     end
 
     def process!
+      return if is_blacklisted?
       @from_email, @from_display_name = parse_from_field
       @incoming_email = find_or_create_incoming_email
       process_internal
     rescue => e
-      @incoming_email.update_columns(error: e.to_s)
+      @incoming_email.update_columns(error: e.to_s) if @incoming_email
       raise
+    end
+
+    def is_blacklisted?
+      return false if SiteSetting.ignore_by_title.blank?
+      Regexp.new(SiteSetting.ignore_by_title) =~ @mail.subject
     end
 
     def find_or_create_incoming_email
@@ -148,6 +155,8 @@ module Email
             elsif @mail.error_status.start_with?("5.")
               update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
             end
+          elsif is_auto_generated?
+            update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
           end
         end
       end
@@ -281,6 +290,7 @@ module Email
               name: display_name.presence || User.suggest_name(email),
               staged: true
             )
+            @staged_users_created += 1
           end
         rescue
           user = nil
@@ -474,6 +484,11 @@ module Email
                 if user && can_invite?(topic, user)
                   topic.topic_allowed_users.create!(user_id: user.id)
                   topic.add_small_action(sender, "invited_user", user.username)
+                end
+                # cap number of staged users created per email
+                if @staged_users_created > SiteSetting.maximum_staged_users_per_email
+                  topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"))
+                  return
                 end
               end
             rescue ActiveRecord::RecordInvalid

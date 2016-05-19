@@ -243,6 +243,10 @@
     color: $secondary;
   }
 
+  &:hover {
+    color: $secondary;
+  }
+
   // New posts
 
   &.new-posts, &.unread-posts {

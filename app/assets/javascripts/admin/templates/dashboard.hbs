@@ -192,9 +192,9 @@
     <div class="dashboard-stats detected-problems">
       <div class="look-here">{{fa-icon "exclamation-triangle"}}</div>
       <div class="problem-messages">
-        <p {{bind-attr class="loadingProblems:invisible"}}>
+        <p class="{{if loadingProblems 'invisible'}}">
           {{i18n 'admin.dashboard.problems_found'}}
-          <ul {{bind-attr class="loadingProblems:invisible"}}>
+          <ul class="{{if loadingProblems 'invisible'}}">
             {{#each problems as |problem|}}
               <li>{{{problem}}}</li>
             {{/each}}

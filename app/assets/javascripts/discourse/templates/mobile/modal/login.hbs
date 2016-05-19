@@ -31,7 +31,7 @@
     </form>
   {{/if}}
   {{authMessage}}
-  <div id='login-alert' {{bind-attr class="alertClass"}}>{{alert}}</div>
+  <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 </div>
 <div class="modal-footer">
   {{#if authenticate}}
@@ -39,7 +39,7 @@
   {{/if}}
   {{#if canLoginLocal}}
     <button class='btn btn-large btn-primary'
-      {{bind-attr disabled="loginDisabled"}}
+      disabled={{loginDisabled}}
       {{action "login"}}>
         <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>

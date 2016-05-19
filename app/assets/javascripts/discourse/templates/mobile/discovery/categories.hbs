@@ -16,7 +16,7 @@
       {{/if}}
 
       {{#each c.topics as |t|}}
-        <tr {{bind-attr class="t.archived :category-topic-link"}}>
+        <tr class="{{if t.archived 'archived'}} category-topic-link">
           <td class='main-link'>
             <div class='topic-inset'>
               {{topic-status topic=t}}

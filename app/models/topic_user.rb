@@ -125,16 +125,14 @@ class TopicUser < ActiveRecord::Base
       # In case of a race condition to insert, do nothing
     end
 
-    def track_visit!(topic,user)
-      topic_id = topic.is_a?(Topic) ? topic.id : topic
-      user_id = user.is_a?(User) ? user.id : topic
-
+    def track_visit!(topic_id, user_id)
       now = DateTime.now
       rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
+
       if rows == 0
         TopicUser.create(topic_id: topic_id, user_id: user_id, last_visited_at: now, first_visited_at: now)
       else
-        observe_after_save_callbacks_for topic_id, user_id
+        observe_after_save_callbacks_for(topic_id, user_id)
       end
     end
 

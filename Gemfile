@@ -52,7 +52,7 @@ gem 'ember-source', '1.12.2'
 gem 'barber'
 gem 'babel-transpiler'
 
-gem 'message_bus', '2.0.0.beta.8'
+gem 'message_bus', '2.0.0.beta.11'
 
 gem 'rails_multisite'
 
@@ -74,7 +74,7 @@ gem 'email_reply_trimmer', '0.1.3'
 gem 'image_optim', '0.20.2'
 gem 'multi_json'
 gem 'mustache'
-gem 'nokogiri'
+gem 'nokogiri', '1.6.8.rc3'
 gem 'omniauth'
 gem 'omniauth-openid'
 gem 'openid-redis-store'
@@ -168,6 +168,7 @@ gem 'htmlentities', require: false
 #  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
+gem 'fast_stack', require: false, platform: [:mri_20]
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
