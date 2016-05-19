@@ -1291,6 +1291,7 @@ en:
 
       timeline:
         replies: "%{current} / %{total} replies"
+        replies_short: "%{current} / %{total}"
 
       progress:
         title: topic progress
