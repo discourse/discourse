@@ -15,13 +15,14 @@ export default MountWidget.extend(Docking, {
     const topicBottom = $('#topic-bottom').offset().top;
     const $timeline = this.$('.timeline-container');
     const timelineHeight = $timeline.height();
+    const parentTop = $('.posts-wrapper').offset().top;
 
     const tTop = 140;
 
     const prev = this.dockAt;
     const pos = tTop + info.offset() + timelineHeight;
     if (pos > topicBottom) {
-      this.dockAt = topicBottom - timelineHeight - $timeline.offsetParent().offset().top;
+      this.dockAt = topicBottom - timelineHeight - parentTop;
     } else {
       this.dockAt = null;
     }
