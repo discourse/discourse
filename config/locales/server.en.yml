@@ -709,27 +709,27 @@ en:
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
-      yaxis: "Anonymous API Requests"
+      yaxis: "Anonymous Pageviews"
     page_view_logged_in_reqs:
       title: "Logged In"
       xaxis: "Day"
-      yaxis: "Logged In API Requests"
+      yaxis: "Logged In Pageviews"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Day"
-      yaxis: "Web Crawler API Requests"
+      yaxis: "Web Crawler Pageviews"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Day"
-      yaxis: "Total API Requests"
+      yaxis: "Total Pageviews"
     page_view_logged_in_mobile_reqs:
-      title: "Logged In API Requests"
+      title: "Logged In Pageviews"
       xaxis: "Day"
-      yaxis: "Mobile Logged In API Requests"
+      yaxis: "Mobile Logged In Pageviews"
     page_view_anon_mobile_reqs:
-      title: "Anon API Requests"
+      title: "Anon Pageviews"
       xaxis: "Day"
-      yaxis: "Mobile Anon API Requests"
+      yaxis: "Mobile Anon API Pageviews"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
