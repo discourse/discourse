@@ -30,7 +30,7 @@ export default MountWidget.extend({
   _currentPost: -1,
   _currentVisible: null,
 
-  args: Ember.computed(function() {
+  buildArgs() {
     return this.getProperties('posts',
                               'canCreatePost',
                               'multiSelect',
@@ -38,7 +38,7 @@ export default MountWidget.extend({
                               'selectedQuery',
                               'selectedPostsCount',
                               'searchService');
-  }).volatile(),
+  },
 
   beforePatch() {
     const $body = $(document);
