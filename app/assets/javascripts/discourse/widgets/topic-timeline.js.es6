@@ -169,6 +169,25 @@ createWidget('timeline-scrollarea', {
   }
 });
 
+createWidget('topic-timeline-container', {
+  tagName: 'div.timeline-container',
+  buildClasses(attrs) {
+    if (attrs.dockAt) { return 'timeline-docked'; }
+  },
+
+  buildAttributes(attrs) {
+    if (attrs.dockAt) {
+      return { style: `top: ${attrs.dockAt}px` };
+    };
+
+    return { style: 'top: 140px' };
+  },
+
+  html(attrs) {
+    return this.attach('topic-timeline', attrs);
+  }
+});
+
 export default createWidget('topic-timeline', {
   tagName: 'div.topic-timeline',
 

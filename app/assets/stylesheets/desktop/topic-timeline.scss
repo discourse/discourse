@@ -2,13 +2,16 @@
   width: 900px;
 }
 
-.fixed-gutter {
+.timeline-container {
   width: 100%;
   box-sizing: border-box;
   z-index: 1;
   margin-left: 757px;
   position: fixed;
-  top: 140px;
+
+  &.timeline-docked {
+    position: absolute;
+  }
 
   .topic-timeline {
     margin-left: 3em;
