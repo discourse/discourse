@@ -191,9 +191,13 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (!post) { return; }
 
       const postNumber = post.get('post_number');
-      this.set('model.currentPost', postNumber);
+      const model = this.get('model');
+      model.set('currentPost', postNumber);
       this.send('postChangedRoute', postNumber);
-      this.appEvents.trigger('topic:current-post-changed', postNumber);
+
+      const postStream = model.get('postStream');
+
+      this.appEvents.trigger('topic:current-post-changed', postStream.progressIndexOfPost(post));
     },
 
     // Called the the topmost visible post on the page changes.
@@ -391,25 +395,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
     },
 
+    jumpToIndex(index) {
+      this._jumpToPostId(this.get('model.postStream.stream')[index-1]);
+    },
+
     jumpToPost(postNumber) {
-      const topic = this.get('model');
-      const stream = topic.get('postStream');
-      const postId = stream.findPostIdForPostNumber(postNumber);
-
-      if (!postId) {
-        Em.Logger.warn("jump-post code broken - requested an index outside the stream array");
-        return;
-      }
-
-      const post = stream.findLoadedPost(postId);
-      if (post) {
-        DiscourseURL.routeTo(topic.urlForPostNumber(post.get('post_number')));
-      } else {
-        // need to load it
-        stream.findPostsByIds([postId]).then(arr => {
-          DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].get('post_number')));
-        });
-      }
+      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
     },
 
     jumpTop() {
@@ -644,6 +635,25 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     convertToPrivateMessage() {
       this.get('content').convertTopic("private");
+    }
+  },
+
+  _jumpToPostId(postId) {
+    if (!postId) {
+      Ember.Logger.warn("jump-post code broken - requested an index outside the stream array");
+      return;
+    }
+
+    const topic = this.get('model');
+    const postStream = topic.get('postStream');
+    const post = postStream.findLoadedPost(postId);
+    if (post) {
+      DiscourseURL.routeTo(topic.urlForPostNumber(post.get('post_number')));
+    } else {
+      // need to load it
+      postStream.findPostsByIds([postId]).then(arr => {
+        DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].get('post_number')));
+      });
     }
   },
 
