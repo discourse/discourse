@@ -1,5 +1,6 @@
 require 'rails_helper'
 require_dependency 'js_locale_helper'
+require 'mini_racer'
 
 describe JsLocaleHelper do
 
@@ -25,7 +26,7 @@ describe JsLocaleHelper do
   end
 
   def setup_message_format(format)
-    @ctx = V8::Context.new
+    @ctx = MiniRacer::Context.new
     @ctx.eval('MessageFormat = {locale: {}};')
     @ctx.load(Rails.root + 'lib/javascripts/locale/en.js')
     compiled = JsLocaleHelper.compile_message_format('en', format)
@@ -72,7 +73,7 @@ describe JsLocaleHelper do
   end
 
   it 'handles message format special keys' do
-    ctx = V8::Context.new
+    ctx = MiniRacer::Context.new
     ctx.eval("I18n = {};")
 
     JsLocaleHelper.set_translations 'en', {
@@ -149,7 +150,7 @@ describe JsLocaleHelper do
     SiteSetting.default_locale = 'ru'
     I18n.locale = :uk
 
-    ctx = V8::Context.new
+    ctx = MiniRacer::Context.new
     ctx.eval('var window = this;')
     ctx.load(Rails.root + 'app/assets/javascripts/locales/i18n.js')
     ctx.eval(JsLocaleHelper.output_locale(I18n.locale))
@@ -167,7 +168,7 @@ describe JsLocaleHelper do
   LocaleSiteSetting.values.each do |locale|
     it "generates valid date helpers for #{locale[:value]} locale" do
       js = JsLocaleHelper.output_locale(locale[:value])
-      ctx = V8::Context.new
+      ctx = MiniRacer::Context.new
       ctx.eval('var window = this;')
       ctx.load(Rails.root + 'app/assets/javascripts/locales/i18n.js')
       ctx.eval(js)

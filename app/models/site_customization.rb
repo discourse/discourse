@@ -59,7 +59,7 @@ SCRIPT
         begin
           code = transpile(node.inner_html, node['version'])
           node.replace("<script>#{code}</script>")
-        rescue Tilt::ES6ModuleTranspilerTemplate::JavaScriptError => ex
+        rescue MiniRacer::RuntimeError => ex
           node.replace("<script type='text/discourse-js-error'>#{ex.message}</script>")
         end
       end

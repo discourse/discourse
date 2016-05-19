@@ -154,15 +154,25 @@ module JsLocaleHelper
     result
   end
 
-  def self.compile_message_format(locale, format)
-    ctx = V8::Context.new
-    ctx.load(Rails.root + 'lib/javascripts/messageformat.js')
-    path = Rails.root + "lib/javascripts/locale/#{locale}.js"
-    ctx.load(path) if File.exists?(path)
-    ctx.eval("mf = new MessageFormat('#{locale}');")
-    ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
+  @mutex = Mutex.new
+  def self.with_context
+    @mutex.synchronize do
+      yield @ctx ||= begin
+               ctx = MiniRacer::Context.new
+               ctx.load(Rails.root + 'lib/javascripts/messageformat.js')
+               ctx
+             end
+    end
+  end
 
-  rescue V8::Error => e
+  def self.compile_message_format(locale, format)
+    with_context do |ctx|
+      path = Rails.root + "lib/javascripts/locale/#{locale}.js"
+      ctx.load(path) if File.exists?(path)
+      ctx.eval("mf = new MessageFormat('#{locale}');")
+      ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
+    end
+  rescue MiniRacer::EvalError => e
     message = "Invalid Format: " << e.message
     "function(){ return #{message.inspect};}"
   end
