@@ -178,6 +178,9 @@ createWidget('topic-timeline-container', {
 
   buildAttributes(attrs) {
     if (attrs.dockAt) {
+      if (this.capabilities.isIOS) {
+        return { style: `display: none` };
+      }
       return { style: `top: ${attrs.dockAt}px` };
     };
 

@@ -51,11 +51,12 @@ function findWidget(node, attrName) {
 let _watchingDocument = false;
 let _dragging;
 
-const DRAG_NAME = "mousemove.discourse-widget-drag";
+const DRAG_NAME       = "mousemove.discourse-widget-drag";
+const DRAG_NAME_TOUCH = "touchmove.discourse-widget-drag";
 
 function cancelDrag() {
   $('body').removeClass('widget-dragging');
-  $(document).off(DRAG_NAME);
+  $(document).off(DRAG_NAME).off(DRAG_NAME_TOUCH);
 
   if (_dragging) {
     if (_dragging.dragEnd) { _dragging.dragEnd(); }
@@ -66,17 +67,25 @@ function cancelDrag() {
 WidgetClickHook.setupDocumentCallback = function() {
   if (_watchingDocument) { return; }
 
-  $(document).on('mousedown.disource-widget', e => {
+  $(document).on('mousedown.discource-widget-drag, touchstart.discourse-widget-drag', e => {
     cancelDrag();
     const widget = findWidget(e.target, DRAG_ATTRIBUTE_NAME);
     if (widget) {
+      e.preventDefault();
+      e.stopPropagation();
       _dragging = widget;
       $('body').addClass('widget-dragging');
       $(document).on(DRAG_NAME, dragE => widget.drag(dragE));
+      $(document).on(DRAG_NAME_TOUCH, dragE => {
+        const tt = dragE.originalEvent.targetTouches[0];
+        if (tt) {
+          widget.drag(tt);
+        }
+      });
     }
   });
 
-  $(document).on('mouseup.discourse-widget-drag', () => cancelDrag());
+  $(document).on('mouseup.discourse-widget-drag, touchend.discourse-widget-drag', () => cancelDrag());
 
   $(document).on('click.discourse-widget', e => {
     nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, w => w.click(e));
