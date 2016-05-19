@@ -100,6 +100,8 @@ const DiscourseURL = Ember.Object.extend({
     keep the history intact.
   **/
   routeTo(path, opts) {
+    opts = opts || {};
+
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {
@@ -143,12 +145,12 @@ const DiscourseURL = Ember.Object.extend({
 
     rewrites.forEach(rw => path = path.replace(rw.regexp, rw.replacement));
 
-    if (this.navigatedToPost(oldPath, path)) { return; }
+    if (this.navigatedToPost(oldPath, path, opts)) { return; }
     // Schedule a DOM cleanup event
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
     // TODO: Extract into rules we can inject into the URL handler
-    if (this.navigatedToHome(oldPath, path)) { return; }
+    if (this.navigatedToHome(oldPath, path, opts)) { return; }
 
     if (oldPath === path) {
       // If navigating to the same path send an app event. Views can watch it
@@ -186,17 +188,11 @@ const DiscourseURL = Ember.Object.extend({
   },
 
   /**
-    @private
-
     If the URL is in the topic form, /t/something/:topic_id/:post_number
     then we want to apply some special logic. If the post_number changes within the
     same topic, use replaceState and instruct our controller to load more posts.
-
-    @method navigatedToPost
-    @param {String} oldPath the previous path we were on
-    @param {String} path the path we're navigating to
   **/
-  navigatedToPost(oldPath, path) {
+  navigatedToPost(oldPath, path, routeOpts) {
     const newMatches = this.TOPIC_REGEXP.exec(path);
     const newTopicId = newMatches ? newMatches[2] : null;
 
@@ -227,7 +223,7 @@ const DiscourseURL = Ember.Object.extend({
 
           this.appEvents.trigger('post:highlight', closest);
         }).then(() => {
-          DiscourseURL.jumpToPost(closest, {skipIfOnScreen: true});
+          DiscourseURL.jumpToPost(closest, {skipIfOnScreen: routeOpts.skipIfOnScreen});
         });
 
         // Abort routing, we have replaced our state.
