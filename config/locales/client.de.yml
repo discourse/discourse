@@ -1007,7 +1007,7 @@ de:
       result_count:
         one: "1 Ergebnis für <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} Ergebnisse für <span class='term'>\"{{term}}\"</span>"
-      title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
+      title: "Suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
       search_help: Hilfe zur Suche
