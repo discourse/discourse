@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/rails/execjs.git
+  revision: 22476229323cbec3befa8b690cc6c7c3957a0044
+  specs:
+    execjs (2.6.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -94,7 +100,6 @@ GEM
     erubis (2.7.0)
     eventmachine (1.2.0.1)
     excon (0.45.4)
-    execjs (2.6.0)
     exifr (1.2.4)
     fabrication (2.9.8)
     fakeweb (1.3.0)
@@ -144,7 +149,7 @@ GEM
     librarian (0.1.2)
       highline
       thor (~> 0.15)
-    libv8 (3.16.14.13)
+    libv8 (5.0.71.48.3)
     listen (0.7.3)
     logster (1.2.3)
     loofah (2.0.3)
@@ -159,6 +164,8 @@ GEM
     method_source (0.8.2)
     mime-types (2.99.1)
     mini_portile2 (2.1.0)
+    mini_racer (0.1.3)
+      libv8 (~> 5.0)
     minitest (5.8.4)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
@@ -284,7 +291,6 @@ GEM
     redis (3.3.0)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
-    ref (2.0.0)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
@@ -373,9 +379,6 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     stackprof (0.2.9)
-    therubyracer (0.12.2)
-      libv8 (~> 3.16.14.0)
-      ref
     thin (1.6.4)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -417,6 +420,7 @@ DEPENDENCIES
   ember-rails (= 0.18.5)
   ember-source (= 1.12.2)
   excon
+  execjs!
   fabrication (= 2.9.8)
   fakeweb (~> 1.3.0)
   fast_blank
@@ -439,6 +443,7 @@ DEPENDENCIES
   memory_profiler
   message_bus (= 2.0.0.beta.11)
   mime-types
+  mini_racer
   minitest
   mocha
   mock_redis
@@ -493,7 +498,6 @@ DEPENDENCIES
   sinatra
   spork-rails
   stackprof
-  therubyracer
   thin
   timecop
   uglifier

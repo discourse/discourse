@@ -1,21 +1,8 @@
 require 'execjs'
 require 'babel/transpiler'
+require 'mini_racer'
 
 module Tilt
-
-  class Console
-    def initialize(prefix=nil)
-      @prefix = prefix || ''
-    end
-
-    def log(msg)
-      Rails.logger.info("#{@prefix}#{msg}")
-    end
-
-    def error(msg)
-      Rails.logger.error("#{@prefix}#{msg}")
-    end
-  end
 
   class ES6ModuleTranspilerTemplate < Tilt::Template
     self.default_mime_type = 'application/javascript'
@@ -30,10 +17,19 @@ module Tilt
 
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
-      ctx = V8::Context.new(timeout: 15000)
+      ctx = MiniRacer::Context.new(timeout: 15000)
       ctx.eval("var self = this; #{File.read(Babel::Transpiler.script_path)}")
       ctx.eval("module = {}; exports = {};");
       ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
+      ctx.attach("rails.logger.info", proc{|err| Rails.logger.info(err.to_s)})
+      ctx.attach("rails.logger.error", proc{|err| Rails.logger.error(err.to_s)})
+      ctx.eval <<JS
+      console = {
+        prefix: "",
+        log: function(msg){ rails.logger.info(console.prefix + msg); },
+        error: function(msg){ rails.logger.error(console.prefix + msg); }
+      }
+JS
       ctx
     end
 
@@ -60,19 +56,9 @@ module Tilt
     end
 
     def self.protect
-      rval = nil
       @mutex.synchronize do
-        begin
-          rval = yield
-          # This may seem a bit odd, but we don't want to leak out
-          # objects that require locks on the v8 vm, to get a backtrace
-          # you need a lock, if this happens in the wrong spot you can
-          # deadlock a process
-        rescue V8::Error => e
-          raise JavaScriptError.new(e.message, e.backtrace)
-        end
+        yield
       end
-      rval
     end
 
     def whitelisted?(path)
@@ -98,7 +84,7 @@ module Tilt
     def babel_transpile(source)
       klass = self.class
       klass.protect do
-        klass.v8['console'] = Console.new("BABEL: babel-eval: ")
+        klass.v8.eval("console.prefix = 'BABEL: babel-eval: ';")
         @output = klass.v8.eval(babel_source(source))
       end
     end
@@ -108,7 +94,7 @@ module Tilt
 
       klass = self.class
       klass.protect do
-        klass.v8['console'] = Console.new("BABEL: #{scope.logical_path}: ")
+        klass.v8.eval("console.prefix = 'BABEL: #{scope.logical_path}: ';")
         @output = klass.v8.eval(generate_source(scope))
       end
 
