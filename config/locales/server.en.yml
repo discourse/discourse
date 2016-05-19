@@ -729,7 +729,7 @@ en:
     page_view_anon_mobile_reqs:
       title: "Anon Pageviews"
       xaxis: "Day"
-      yaxis: "Mobile Anon API Pageviews"
+      yaxis: "Mobile Anon Pageviews"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
