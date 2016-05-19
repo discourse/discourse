@@ -407,6 +407,7 @@ posting:
   min_private_message_title_length:
     client: true
     default: 2
+    min: 1
   allow_uncategorized_topics:
     client: true
     default: true
@@ -1218,4 +1219,3 @@ tags:
     client: true
   remove_muted_tags_from_latest:
     default: false
-
