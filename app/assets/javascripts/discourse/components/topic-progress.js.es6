@@ -171,7 +171,7 @@ export default Ember.Component.extend({
       }
       this.set('toPostIndex', postIndex);
       this.set('expanded', false);
-      this.sendAction('jumpToPost', postIndex);
+      this.sendAction('jumpToIndex', postIndex);
     },
 
     jumpTop() {

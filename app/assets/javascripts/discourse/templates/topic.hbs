@@ -76,12 +76,14 @@
                              loading=model.postStream.loading
                              jumpTop="jumpTop"
                              jumpToPost="jumpToPost"
+                             jumpToIndex="jumpToIndex"
                              jumpBottom="jumpBottom"
                              replyToPost="replyToPost"}}
           {{else}}
             {{topic-progress topic=model
                              jumpTop="jumpTop"
                              jumpToPost="jumpToPost"
+                             jumpToIndex="jumpToIndex"
                              jumpBottom="jumpBottom"}}
           {{/if}}
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
