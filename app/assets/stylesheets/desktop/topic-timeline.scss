@@ -57,7 +57,7 @@
     .timeline-scroller {
       @include unselectable;
       margin-left: -0.18em;
-      cursor: move;
+      cursor: ns-resize;
       display: flex;
       align-items: center;
     }
