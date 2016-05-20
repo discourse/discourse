@@ -210,6 +210,10 @@ export default createWidget('topic-timeline', {
       }));
     }
 
+    if (this.currentUser.get('canManageTopic')) {
+      controls.push(this.attach('topic-admin-menu-button', { topic }));
+    }
+
     const result = [ h('div.timeline-controls', controls) ];
     const stream = attrs.topic.get('postStream.stream');
     if (stream.length > 2) {

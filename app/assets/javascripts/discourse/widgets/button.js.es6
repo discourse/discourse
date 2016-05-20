@@ -40,11 +40,18 @@ export default createWidget('button', {
     return contents;
   },
 
-  click() {
+  click(e) {
     const attrs = this.attrs;
     if (attrs.disabled) { return; }
 
     $(`button.widget-button`).removeClass('d-hover').blur();
+    if (attrs.secondaryAction) {
+      this.sendWidgetAction(attrs.secondaryAction);
+    }
+
+    if (attrs.sendActionEvent) {
+      return this.sendWidgetAction(attrs.action, e);
+    }
     return this.sendWidgetAction(attrs.action);
   }
 });

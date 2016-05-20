@@ -21,6 +21,8 @@ export default Ember.Component.extend({
     this._super();
     const name = this.get('widget');
 
+    (this.get('delegated') || []).forEach(m => this.set(m, m));
+
     this._widgetClass = queryRegistry(name) || this.container.lookupFactory(`widget:${name}`);
 
     if (!this._widgetClass) {

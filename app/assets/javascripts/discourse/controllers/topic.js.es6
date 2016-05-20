@@ -17,13 +17,28 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
-  loadedAllPosts: Em.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
+  loadedAllPosts: Ember.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
   enteredAt: null,
   retrying: false,
-  adminMenuVisible: false,
 
-  showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
-  isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
+  topicDelegated: [
+    'toggleMultiSelect',
+    'deleteTopic',
+    'recoverTopic',
+    'toggleClosed',
+    'showAutoClose',
+    'showFeatureTopic',
+    'showChangeTimestamp',
+    'toggleArchived',
+    'toggleVisibility',
+    'convertToPublicTopic',
+    'convertToPrivateMessage',
+    'jumpTop',
+    'jumpToPost',
+    'jumpToIndex',
+    'jumpBottom',
+    'replyToPost'
+  ],
 
   @computed
   showTimeline() {
@@ -235,14 +250,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     removeAllowedUser(user) {
       return this.get('model.details').removeAllowedUser(user);
-    },
-
-    showTopicAdminMenu() {
-      this.set('adminMenuVisible', true);
-    },
-
-    hideTopicAdminMenu() {
-      this.set('adminMenuVisible', false);
     },
 
     deleteTopic() {
