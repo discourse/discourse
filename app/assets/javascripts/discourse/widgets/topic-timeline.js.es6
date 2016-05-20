@@ -82,8 +82,8 @@ createWidget('timeline-scrollarea', {
     return { style: `height: ${SCROLLAREA_HEIGHT}px` };
   },
 
-  defaultState() {
-    return { percentage: null, scrolledPost: 1 };
+  defaultState(attrs) {
+    return { percentage: this._percentFor(attrs.topic, attrs.topic.currentPost), scrolledPost: 1 };
   },
 
   position() {
@@ -164,10 +164,13 @@ createWidget('timeline-scrollarea', {
   topicCurrentPostChanged(postNumber) {
     // If the post number didn't change keep our scroll position
     if (postNumber !== this.state.scrolledPost) {
-      const total = this.attrs.topic.get('postStream.filteredPostsCount');
-      const perc = postNumber === 1 ? 0.0 : parseFloat(postNumber) / total;
-      this.state.percentage = perc;
+      this.state.percentage = this._percentFor(this.attrs.topic, postNumber);
     }
+  },
+
+  _percentFor(topic, postNumber) {
+    const total = topic.get('postStream.filteredPostsCount');
+    return postNumber === 1 ? 0.0 : parseFloat(postNumber) / total;
   }
 });
 
