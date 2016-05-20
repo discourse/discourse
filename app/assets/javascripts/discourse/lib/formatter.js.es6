@@ -56,8 +56,8 @@ function shortDateNoYear(date) {
 }
 
 // Suppress year if it's this year
-export function smartShortDate(date) {
-  return (date.getFullYear() === new Date().getFullYear()) ? shortDateNoYear(date) : tinyDateYear(date);
+export function smartShortDate(date, withYear=tinyDateYear) {
+  return (date.getFullYear() === new Date().getFullYear()) ? shortDateNoYear(date) : withYear(date);
 }
 
 export function tinyDateYear(date) {
@@ -220,7 +220,7 @@ function relativeAgeMedium(date, options) {
   if (distance < oneMinuteAgo) {
     displayDate = I18n.t("now");
   } else if (distance > fiveDaysAgo) {
-    displayDate = smartShortDate(date);
+    displayDate = smartShortDate(date, shortDate);
   } else {
     displayDate = relativeAgeMediumSpan(distance, leaveAgo);
   }
