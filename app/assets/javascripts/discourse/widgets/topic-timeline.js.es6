@@ -210,7 +210,8 @@ export default createWidget('topic-timeline', {
       }));
     }
 
-    if (this.currentUser.get('canManageTopic')) {
+    const { currentUser } = this;
+    if (currentUser && currentUser.get('canManageTopic')) {
       controls.push(this.attach('topic-admin-menu-button', { topic }));
     }
 
