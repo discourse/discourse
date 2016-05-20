@@ -32,6 +32,7 @@ export default Discourse.Route.extend({
 
       topicController.setProperties({
         'model.currentPost': closest,
+        enteredIndex: postStream.get('stream').indexOf(closestPost.get('id')),
         enteredAt: new Date().getTime().toString(),
       });
 

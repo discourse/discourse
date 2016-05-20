@@ -87,7 +87,7 @@ createWidget('timeline-scrollarea', {
   },
 
   defaultState(attrs) {
-    return { percentage: this._percentFor(attrs.topic, attrs.topic.currentPost), scrolledPost: 1 };
+    return { percentage: this._percentFor(attrs.topic, attrs.enteredIndex + 1), scrolledPost: 1 };
   },
 
   position() {
@@ -174,7 +174,12 @@ createWidget('timeline-scrollarea', {
 
   _percentFor(topic, postNumber) {
     const total = topic.get('postStream.filteredPostsCount');
-    return postNumber === 1 ? 0.0 : parseFloat(postNumber) / total;
+    console.log(postNumber, total);
+    let result = (postNumber === 1) ? 0.0 : parseFloat(postNumber) / total;
+
+    if (result < 0) { return 0.0; }
+    if (result > 1.0) { return 1.0; }
+    return result;
   }
 });
 

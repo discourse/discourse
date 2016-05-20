@@ -19,6 +19,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   queryParams: ['filter', 'username_filters', 'show_deleted'],
   loadedAllPosts: Ember.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
   enteredAt: null,
+  enteredIndex: null,
   retrying: false,
 
   topicDelegated: [

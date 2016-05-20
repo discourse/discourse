@@ -72,7 +72,10 @@
         <div class="posts-wrapper">
 
           {{#if showTimeline}}
-            {{topic-timeline topic=model loading=model.postStream.loading delegated=topicDelegated}}
+            {{topic-timeline topic=model
+                             enteredIndex=enteredIndex
+                             loading=model.postStream.loading
+                             delegated=topicDelegated}}
           {{else}}
             {{topic-progress topic=model delegated=topicDelegated}}
             {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
