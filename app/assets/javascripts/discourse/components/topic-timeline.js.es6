@@ -8,6 +8,7 @@ export default MountWidget.extend(Docking, {
   buildArgs() {
     return { topic: this.get('topic'),
              topicTrackingState: this.topicTrackingState,
+             enteredIndex: this.get('enteredIndex'),
              dockAt: this.dockAt };
   },
 
