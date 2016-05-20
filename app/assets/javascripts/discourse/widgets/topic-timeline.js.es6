@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { smartShortDate, relativeAge } from 'discourse/lib/formatter';
+import { relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse/helpers/fa-icon';
 
 const SCROLLAREA_HEIGHT = 300;
@@ -47,7 +47,11 @@ createWidget('timeline-scroller', {
     ];
 
     if (date) {
-      contents.push(h('div.timeline-ago', smartShortDate(date)));
+      const format = (date.getFullYear() === new Date().getFullYear()) ?
+                     'long_no_year_no_time' :
+                     'long_with_year_no_time';
+
+      contents.push(h('div.timeline-ago', moment(date).format(I18n.t(`dates.${format}`))));
     }
 
     return [ h('div.timeline-handle'), h('div.timeline-scroller-content', contents) ];
