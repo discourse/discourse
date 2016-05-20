@@ -41,7 +41,6 @@ class Upload < ActiveRecord::Base
     )
 
     if thumbnail
-      optimized_images << thumbnail
       self.width = width
       self.height = height
       save(validate: false)
