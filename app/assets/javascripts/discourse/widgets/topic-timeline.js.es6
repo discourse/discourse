@@ -83,7 +83,7 @@ createWidget('timeline-scrollarea', {
   },
 
   defaultState() {
-    return { percentage: 0, scrolledPost: 1 };
+    return { percentage: null, scrolledPost: 1 };
   },
 
   position() {
@@ -124,6 +124,8 @@ createWidget('timeline-scrollarea', {
 
     state.scrolledPost = position.current;
     const percentage = state.percentage;
+    if (percentage === null) { return; }
+
     const before = SCROLLAREA_REMAINING * percentage;
     const after = (SCROLLAREA_HEIGHT - before) - SCROLLER_HEIGHT;
 
@@ -132,7 +134,6 @@ createWidget('timeline-scrollarea', {
       this.attach('timeline-scroller', position),
       this.attach('timeline-padding', { height: after })
     ];
-
 
     if (position.lastRead && position.lastRead < attrs.topic.posts_count) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
