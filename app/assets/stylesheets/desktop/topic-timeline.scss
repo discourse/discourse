@@ -3,11 +3,11 @@
 }
 
 .timeline-container {
-  width: 100%;
   box-sizing: border-box;
   z-index: 1;
   margin-left: 757px;
   position: fixed;
+  -webkit-transform: translate3d(0,0,0);
 
   &.timeline-docked {
     position: absolute;
@@ -32,6 +32,7 @@
       border-left: 1px solid;
       border-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
       position: relative;
+      -webkit-transform: translate3d(0,0,0);
     }
 
     .timeline-padding {
