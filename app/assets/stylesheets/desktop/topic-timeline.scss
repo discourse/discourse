@@ -59,6 +59,10 @@
       padding-left: 1em;
     }
 
+    .timeline-ago {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
     .timeline-scroller {
       @include unselectable;
       margin-left: -0.18em;
