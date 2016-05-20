@@ -1,9 +1,3 @@
-GIT
-  remote: git://github.com/rails/execjs.git
-  revision: 22476229323cbec3befa8b690cc6c7c3957a0044
-  specs:
-    execjs (2.6.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -100,6 +94,7 @@ GEM
     erubis (2.7.0)
     eventmachine (1.2.0.1)
     excon (0.45.4)
+    execjs (2.7.0)
     exifr (1.2.4)
     fabrication (2.9.8)
     fakeweb (1.3.0)
@@ -420,7 +415,7 @@ DEPENDENCIES
   ember-rails (= 0.18.5)
   ember-source (= 1.12.2)
   excon
-  execjs!
+  execjs
   fabrication (= 2.9.8)
   fakeweb (~> 1.3.0)
   fast_blank
