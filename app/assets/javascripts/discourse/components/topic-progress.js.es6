@@ -10,6 +10,11 @@ export default Ember.Component.extend({
 
   postStream: Ember.computed.alias('topic.postStream'),
 
+  init() {
+    this._super();
+    (this.get('delegated') || []).forEach(m => this.set(m, m));
+  },
+
   @computed('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount', 'postStream.highest_post_number')
   streamPercentage(loaded, progressPosition, filteredPostsCount, highestPostNumber) {
     if (!loaded) { return 0; }
