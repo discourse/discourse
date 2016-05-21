@@ -9,6 +9,7 @@ class UserUpdater
   OPTION_ATTR = [
     :email_always,
     :mailing_list_mode,
+    :mailing_list_mode_frequency,
     :email_digests,
     :email_direct,
     :email_private_messages,
