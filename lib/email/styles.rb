@@ -90,6 +90,7 @@ module Email
       style('.rtl', 'direction: rtl;')
       style('td.body', 'padding-top:5px;', colspan: "2")
       style('.whisper td.body', 'font-style: italic; color: #9c9c9c;')
+      style('.lightbox-wrapper .meta', 'display: none')
       correct_first_body_margin
       correct_footer_style
       reset_tables
@@ -184,6 +185,17 @@ module Email
       end
 
       @fragment.to_s
+    end
+
+    def make_all_links_absolute
+      site_uri = URI(Discourse.base_url)
+      @fragment.css("a").each do |link|
+        begin
+          link["href"] = "#{site_uri}#{link['href']}" unless URI(link["href"].to_s).host.present?
+        rescue URI::InvalidURIError, URI::InvalidComponentError
+          # leave it
+        end
+      end
     end
 
     private

@@ -73,16 +73,27 @@ class UserNotifications < ActionMailer::Base
     end
   end
 
-  def digest(user, opts={})
-    @user = user
-    @base_url = Discourse.base_url
+  def mailing_list(user, opts={})
+    @since = opts[:since] || 1.day.ago
+    @since_formatted = short_date(@since)
 
+    @new_topic_posts      = Post.mailing_list_new_topics(user, @since).group_by(&:topic) || {}
+    @existing_topic_posts = Post.mailing_list_updates(user, @since).group_by(&:topic) || {}
+    @posts_by_topic       = @new_topic_posts.merge @existing_topic_posts
+    return unless @posts_by_topic.present?
+
+    build_summary_for(user)
+    build_email @user.email,
+                from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
+                subject: I18n.t('user_notifications.mailing_list.subject_template',
+                                site_name: @site_name,
+                                date: @date)
+  end
+
+  def digest(user, opts={})
+    build_summary_for(user)
     min_date = opts[:since] || @user.last_emailed_at || @user.last_seen_at || 1.month.ago
 
-    @site_name = SiteSetting.email_prefix.presence || SiteSetting.title
-
-    @header_color = ColorScheme.hex_for_name('header_background')
-    @anchor_color = ColorScheme.hex_for_name('tertiary')
     @last_seen_at = short_date(@user.last_seen_at || @user.created_at)
 
     # A list of topics to show the user
@@ -106,10 +117,8 @@ class UserNotifications < ActionMailer::Base
       end
 
       @featured_topics, @new_topics = @featured_topics[0..4], @featured_topics[5..-1]
-      @markdown_linker = MarkdownLinker.new(Discourse.base_url)
-      @unsubscribe_key = DigestUnsubscribeKey.create_key_for(@user)
 
-      build_email user.email,
+      build_email @user.email,
                   from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
                   subject: I18n.t('user_notifications.digest.subject_template',
                                   site_name: @site_name,
@@ -395,5 +404,18 @@ class UserNotifications < ActionMailer::Base
     TopicUser.change(user.id, post.topic_id, last_emailed_post_number: post.post_number)
 
     build_email(user.email, email_opts)
+  end
+
+  private
+
+  def build_summary_for(user)
+    @user            = user
+    @date            = short_date(Time.now)
+    @base_url        = Discourse.base_url
+    @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title
+    @header_color    = ColorScheme.hex_for_name('header_background')
+    @anchor_color    = ColorScheme.hex_for_name('tertiary')
+    @markdown_linker = MarkdownLinker.new(@base_url)
+    @unsubscribe_key = DigestUnsubscribeKey.create_key_for(@user)
   end
 end

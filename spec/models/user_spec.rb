@@ -596,6 +596,29 @@ describe User do
 
   end
 
+  describe "update_last_seen!" do
+    let (:user) { Fabricate(:user) }
+    let!(:first_visit_date) { Time.zone.now }
+    let!(:second_visit_date) { 2.hours.from_now }
+
+    it "should update the last seen value" do
+      expect(user.last_seen_at).to eq nil
+      user.update_last_seen!(first_visit_date)
+      expect(user.reload.last_seen_at).to be_within_one_second_of(first_visit_date)
+    end
+
+    it "should update the first seen value if it doesn't exist" do
+      user.update_last_seen!(first_visit_date)
+      expect(user.reload.first_seen_at).to be_within_one_second_of(first_visit_date)
+    end
+
+    it "should not update the first seen value if it doesn't exist" do
+      user.update_last_seen!(first_visit_date)
+      user.update_last_seen!(second_visit_date)
+      expect(user.reload.first_seen_at).to be_within_one_second_of(first_visit_date)
+    end
+  end
+
   describe "last_seen_at" do
     let(:user) { Fabricate(:user) }
 
