@@ -390,7 +390,7 @@ module PrettyText
     doc.css(".lightbox-wrapper .meta").remove
   end
 
-  def self.format_for_email(html, post, style: nil)
+  def self.format_for_email(html, post = nil, style: nil)
     Email::Styles.new(html, style: style).tap do |doc|
       doc.make_all_links_absolute
       doc.send :"format_#{style}" if style

@@ -305,34 +305,35 @@ HTML
 
   describe 'format_for_email' do
     let(:base_url) { "http://baseurl.net" }
+    let(:post) { Fabricate(:post) }
 
     before do
       Discourse.stubs(:base_url).returns(base_url)
     end
 
     it 'does not crash' do
-      PrettyText.format_for_email('<a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>')
+      PrettyText.format_for_email('<a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>', post)
     end
 
     it "adds base url to relative links" do
       html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
-      output = described_class.format_for_email(html)
+      output = described_class.format_for_email(html, post)
       expect(output).to eq("<p><a href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
     end
 
     it "doesn't change external absolute links" do
       html = "<p>Check out <a href=\"http://mywebsite.com/users/boss\">this guy</a>.</p>"
-      expect(described_class.format_for_email(html)).to eq(html)
+      expect(described_class.format_for_email(html, post)).to eq(html)
     end
 
     it "doesn't change internal absolute links" do
       html = "<p>Check out <a href=\"#{base_url}/users/boss\">this guy</a>.</p>"
-      expect(described_class.format_for_email(html)).to eq(html)
+      expect(described_class.format_for_email(html, post)).to eq(html)
     end
 
     it "can tolerate invalid URLs" do
       html = "<p>Check out <a href=\"not a real url\">this guy</a>.</p>"
-      expect { described_class.format_for_email(html) }.to_not raise_error
+      expect { described_class.format_for_email(html, post) }.to_not raise_error
     end
   end
 
