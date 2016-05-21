@@ -6,6 +6,10 @@ module Email
   class Styles
     @@plugin_callbacks = []
 
+    attr_accessor :fragment
+
+    delegate :css, to: :fragment
+
     def initialize(html, opts=nil)
       @html = html
       @opts = opts || {}
