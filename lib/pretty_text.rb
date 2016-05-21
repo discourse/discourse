@@ -390,11 +390,11 @@ module PrettyText
     doc.css(".lightbox-wrapper .meta").remove
   end
 
-  def self.format_for_email(html, post = nil, style: nil)
+  def self.format_for_email(html, post = nil, style = nil)
     Email::Styles.new(html, style: style).tap do |doc|
+      DiscourseEvent.trigger(:reduce_cooked, doc, post)
       doc.make_all_links_absolute
       doc.send :"format_#{style}" if style
-      DiscourseEvent.trigger(:reduce_cooked, doc, post)
     end.to_html
   end
 
