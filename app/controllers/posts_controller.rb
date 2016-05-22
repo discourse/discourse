@@ -545,7 +545,6 @@ class PostsController < ApplicationController
       :auto_track,
       :typing_duration_msecs,
       :composer_open_duration_msecs,
-      :created_at
     ]
 
     # param munging for WordPress
@@ -558,6 +557,10 @@ class PostsController < ApplicationController
 
       # We allow `embed_url` via the API
       permitted << :embed_url
+
+      # We allow `created_at` via the API
+      permitted << :created_at
+
     end
 
     params.require(:raw)
