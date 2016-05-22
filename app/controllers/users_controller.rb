@@ -211,7 +211,6 @@ class UsersController < ApplicationController
   def is_local_username
     usernames = params[:usernames]
     usernames = [params[:username]] if usernames.blank?
-    usernames.each(&:downcase!)
 
     groups = Group.where(name: usernames).pluck(:name)
     mentionable_groups =
@@ -223,6 +222,7 @@ class UsersController < ApplicationController
       end
 
     usernames -= groups
+    usernames.each(&:downcase!)
 
     result = User.where(staged: false)
                  .where(username_lower: usernames)
