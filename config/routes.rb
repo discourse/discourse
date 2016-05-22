@@ -108,6 +108,7 @@ Discourse::Application.routes.draw do
       get "leader_requirements" => "users#tl3_requirements"
       get "tl3_requirements"
       put "anonymize"
+      post "reset_bounce_score"
     end
     get "users/:id.json" => 'users#show', defaults: {format: 'json'}
     get 'users/:id/:username' => 'users#show'
@@ -124,6 +125,7 @@ Discourse::Application.routes.draw do
         post "test"
         get "sent"
         get "skipped"
+        get "bounced"
         get "received"
         get "rejected"
         get "/incoming/:id/raw" => "email#raw_email"
@@ -485,6 +487,7 @@ Discourse::Application.routes.draw do
   delete "t/:id" => "topics#destroy"
   put "t/:id/archive-message" => "topics#archive_message"
   put "t/:id/move-to-inbox" => "topics#move_to_inbox"
+  put "t/:id/convert-topic/:type" => "topics#convert_topic"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"

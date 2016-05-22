@@ -12,15 +12,24 @@ export default {
     if (Discourse.Utilities.selectedText() !== "") { return false; }
 
     var $link = $(e.currentTarget);
-    if ($link.hasClass('lightbox') || $link.hasClass('mention-group') || $link.hasClass('no-track-link')) { return true; }
+
+    // don't track lightboxes, group mentions or links with disabled tracking
+    if ($link.hasClass('lightbox') || $link.hasClass('mention-group') ||
+        $link.hasClass('no-track-link') || $link.hasClass('hashtag')) {
+      return true;
+    }
+
+    // don't track links in quotes or in elided part
+    if ($link.parents('aside.quote,.elided').length) { return true; }
 
     var href = $link.attr('href') || $link.data('href'),
-        $article = $link.closest('article'),
+        $article = $link.closest('article,.excerpt,#revisions'),
         postId = $article.data('post-id'),
-        topicId = $('#topic').data('topic-id'),
+        topicId = $('#topic').data('topic-id') || $article.data('topic-id'),
         userId = $link.data('user-id');
 
-    if (!href || href.trim().length === 0 || href.indexOf("mailto:") === 0) { return; }
+    if (!href || href.trim().length === 0) { return false; }
+    if (href.indexOf("mailto:") === 0) { return true; }
 
     if (!userId) userId = $article.data('user-id');
 

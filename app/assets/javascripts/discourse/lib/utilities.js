@@ -27,18 +27,6 @@ Discourse.Utilities = {
     return size;
   },
 
-  /**
-    Allows us to supply bindings without "binding" to a helper.
-  **/
-  normalizeHash: function(hash, hashTypes) {
-    for (var prop in hash) {
-      if (hashTypes[prop] === 'ID') {
-        hash[prop + 'Binding'] = hash[prop];
-        delete hash[prop];
-      }
-    }
-  },
-
   // Handlebars no longer allows spaces in its `escapeExpression` code which makes it
   // unsuitable for many of Discourse's uses. Use `Handlebars.Utils.escapeExpression`
   // when escaping an attribute in HTML, otherwise this one will do.
@@ -261,18 +249,27 @@ Discourse.Utilities = {
             .join(", ");
   },
 
+  uploadLocation: function(url) {
+    if (Discourse.CDN) {
+      return Discourse.CDN.startsWith('//') ? "http:" + Discourse.getURLWithCDN(url) : Discourse.getURLWithCDN(url);
+    } else if (Discourse.SiteSettings.enable_s3_uploads) {
+      return 'https:' + url;
+    } else {
+      var protocol = window.location.protocol + '//',
+        hostname = window.location.hostname,
+        port = ':' + window.location.port;
+        return protocol + hostname + port + url;
+    }
+  },
+
   getUploadMarkdown: function(upload) {
     if (Discourse.Utilities.isAnImage(upload.original_filename)) {
       return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
     } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav)$/i).test(upload.original_filename)) {
       // is Audio/Video
-      if (Discourse.CDN) {
-        return Discourse.CDN.startsWith('//') ? "http:" + Discourse.getURLWithCDN(upload.url) : Discourse.getURLWithCDN(upload.url);
-      } else {
-        return "http://" + Discourse.BaseUrl + upload.url;
-      }
+      return Discourse.Utilities.uploadLocation(upload.url);
     } else {
-      return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
+      return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')\n';
     }
   },
 

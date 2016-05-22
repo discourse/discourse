@@ -28,6 +28,7 @@ en:
       short_no_year: "%B %-d"
       # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
     month_names:
@@ -35,6 +36,8 @@ en:
     <<: *datetime_formats
   time:
     <<: *datetime_formats
+    am: "am"
+    pm: "pm"
 
   title: "Discourse"
   topics: "Topics"
@@ -51,6 +54,7 @@ en:
     incoming:
       default_subject: "Incoming email from %{email}"
       show_trimmed_content: "Show trimmed content"
+      maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
@@ -64,7 +68,7 @@ en:
         reply_user_not_matching_error: "Happens when a reply came in from a different email address the notification was sent to."
         topic_not_found_error: "Happens when a reply came in but the related topic has been deleted."
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
-        bounced_email_report: "Email is a bounced email report."
+        bounced_email_error: "Email is a bounced email report."
         auto_generated_email_reply: "Email contains a reply to an auto generated email."
         screened_email_error: "Happens when the sender's email address was already screened."
 
@@ -708,27 +712,27 @@ en:
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
-      yaxis: "Anonymous API Requests"
+      yaxis: "Anonymous Pageviews"
     page_view_logged_in_reqs:
       title: "Logged In"
       xaxis: "Day"
-      yaxis: "Logged In API Requests"
+      yaxis: "Logged In Pageviews"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Day"
-      yaxis: "Web Crawler API Requests"
+      yaxis: "Web Crawler Pageviews"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Day"
-      yaxis: "Total API Requests"
+      yaxis: "Total Pageviews"
     page_view_logged_in_mobile_reqs:
-      title: "Logged In API Requests"
+      title: "Logged In Pageviews"
       xaxis: "Day"
-      yaxis: "Mobile Logged In API Requests"
+      yaxis: "Mobile Logged In Pageviews"
     page_view_anon_mobile_reqs:
-      title: "Anon API Requests"
+      title: "Anon Pageviews"
       xaxis: "Day"
-      yaxis: "Mobile Anon API Requests"
+      yaxis: "Mobile Anon Pageviews"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -853,7 +857,7 @@ en:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Should the full url for the site (Discourse.base_url) be http or https? DO NOT ENABLE THIS UNLESS HTTPS IS ALREADY SET UP AND WORKING!"
+    use_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
@@ -1173,8 +1177,11 @@ en:
     delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
+    maximum_staged_users_per_email: "Maximum number of staged users created when processing an incoming email."
     auto_generated_whitelist: "List of email addresses that won't be checked for auto-generated content."
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
+    bounce_score_threshold: "Max score before we will stop emailing a user. Soft bounce adds 1, hard bounce adds 2, score reset 30 days after last bounce."
+    ignore_by_title: "Ignore incoming emails based on their title."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1296,6 +1303,7 @@ en:
     default_email_private_messages: "Send an email when someone messages the user by default."
     default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
     default_email_mailing_list_mode: "Send an email for every new post by default."
+    default_email_mailing_list_mode_frequency: "Users who enable mailing list mode will receive emails this often by default."
     disable_mailing_list_mode: "Disallow users from enabling mailing list mode."
     default_email_always: "Send an email notification even when the user is active by default."
     default_email_previous_replies: "Include previous replies in emails by default."
@@ -1605,11 +1613,11 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse
 
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] update available"
@@ -1619,11 +1627,11 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - Upgrade from your browser at [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
-      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse
 
       ### Release notes
 
@@ -1659,7 +1667,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your post was hidden.
+        This is an automated message from %{site_name} to let you know that your post was hidden.
 
         %{base_url}%{url}
 
@@ -2022,22 +2030,22 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been temporarily hidden because they were flagged by the community.
+        This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
 
         As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     blocked_by_staff:
-      subject_template: "Account temporarily blocked"
+      subject_template: "Account temporarily on hold"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been temporarily blocked as a precautionary measure.
+        This is an automated message from %{site_name} to let you know that your account has been temporarily placed on hold as a precautionary measure.
 
-        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your account. We apologize for the inconvenience.
+        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your most recent posts. We apologize for the inconvenience.
 
-        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     user_automatically_blocked:
       subject_template: "New user %{username} blocked due to community flags"
@@ -2062,11 +2070,11 @@ en:
         This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
 
     unblocked:
-      subject_template: "Account unblocked"
+      subject_template: "Account no longer on hold"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
+        This is an automated message from %{site_name} to let you know that your account is no longer on hold after staff review.
 
         You can now create new replies and topics again. Thank you for your patience.
 
@@ -2274,6 +2282,15 @@ en:
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
 
+    mailing_list:
+      why: "All activity on %{site_link} for %{date}"
+      subject_template: "[%{site_name}] Summary for %{date}"
+      unsubscribe: "This summary is sent daily due to mailing list mode being enabled. To unsubscribe %{unsubscribe_link}."
+      from: "%{site_name} summary"
+      new_topics: "New topics"
+      topic_updates: "Topic updates"
+      view_this_topic: "View this topic"
+      back_to_top: "Back to top"
     forgot_password:
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |
@@ -2410,6 +2427,7 @@ en:
     spam_hosts: "This new user tried to create multiple posts with links to the same domain (%{domain}). See the <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> site setting."
 
   email_log:
+    post_user_deleted: "User of the post has been deleted."
     no_user: "Can't find user with id %{user_id}"
     anonymous_user: "User is anonymous"
     suspended_not_pm: "User is suspended, not a message"
@@ -2420,7 +2438,8 @@ en:
     post_deleted: "post was deleted by the author"
     user_suspended: "user was suspended"
     already_read: "user has already read this post"
-    exceeded_limit: "Exceeded max_emails_per_day_per_user"
+    exceeded_emails_limit: "Exceeded max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Exceeded bounce_score_threshold"
     message_blank: "message is blank"
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
@@ -2780,17 +2799,18 @@ en:
       <h3>Options</h3>
       <p>
         <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+        <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
         <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
         </table>
       </p>
       <h3>Examples</h3>
       <p>
         <ul>
+          <li><code>rainbows #parks</code> will search for topics containing the word "rainbows" in the category "parks".</li>
           <li><code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.</li>
           <li><code>rainbows category:"parks and gardens" in:bookmarks</code> will search for topics containing the word "rainbows" in the category "parks and gardens" that are bookmarked by you.</li>
         </ul>
@@ -2981,17 +3001,17 @@ en:
       name: Thank You
       description: Has 20 liked posts and gave 10 likes
       long_description: |
-        This badge is granted when you've received 20 likes on your posts and have given 10 or more likes in return. When someone likes your posts, you find the time to like what other people are posting in return.
+            This badge is granted when you have 20 liked posts and give 10 or more likes in return. When someone likes your posts, you find the time to like what others are posting, too.
     gives_back:
       name: Gives Back
       description: Has 100 liked posts and gave 100 likes
       long_description: |
-        This badge is granted when you've received 100 likes and have given 100 or more likes in return. Thanks for paying it forward, and liking in return!
+            This badge is granted when you have 100 liked posts and give 100 or more likes in return. Thanks for paying it forward!
     empathetic:
       name: Empathetic
       description: Has 500 liked posts and gave 1000 likes
       long_description: |
-        This badge is granted when you've received 500 likes and have given 1000 or more likes in return. Wow! You're a model of generosity and mutual love :two_hearts:.
+            This badge is granted when you have 500 liked posts and give 1000 or more likes in return. Wow! You're a model of generosity and mutual appreciation :two_hearts:.
     first_emoji:
       name: First Emoji
       description: Used an Emoji in a Post
@@ -3023,6 +3043,7 @@ en:
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
 
   tags:
+    title: "Tags"
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
   rss_by_tag: "Topics tagged %{tag}"

@@ -4,7 +4,7 @@ class TopicList
   include ActiveModel::Serialization
 
   cattr_accessor :preloaded_custom_fields
-  self.preloaded_custom_fields = []
+  self.preloaded_custom_fields = Set.new
 
   attr_accessor :more_topics_url,
                 :prev_topics_url,
@@ -20,6 +20,8 @@ class TopicList
     @current_user = current_user
     @topics_input = topics
     @opts = opts || {}
+
+    preloaded_custom_fields << DiscourseTagging::TAGS_FIELD_NAME if SiteSetting.tagging_enabled
   end
 
   def preload_key
@@ -81,11 +83,8 @@ class TopicList
       ft.topic_list = self
     end
 
-    preload_custom_fields = TopicList.preloaded_custom_fields
-    preload_custom_fields << DiscourseTagging::TAGS_FIELD_NAME if SiteSetting.tagging_enabled
-
-    if preload_custom_fields.present?
-      Topic.preload_custom_fields(@topics, preload_custom_fields)
+    if preloaded_custom_fields.present?
+      Topic.preload_custom_fields(@topics, preloaded_custom_fields)
     end
 
     @topics

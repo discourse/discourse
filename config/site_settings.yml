@@ -122,7 +122,7 @@ basic:
   post_menu_hidden_items:
     client: true
     type: list
-    default: 'bookmark|edit|delete|admin'
+    default: 'flag|bookmark|edit|delete|admin'
     choices:
      - like
      - edit
@@ -231,10 +231,10 @@ login:
     default: false
   twitter_consumer_key:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]+$"
+    regex: "^[\\w+-]+$"
   twitter_consumer_secret:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]+$"
+    regex: "^[\\w+-]+$"
   enable_instagram_logins:
     client: true
     default: false
@@ -407,6 +407,7 @@ posting:
   min_private_message_title_length:
     client: true
     default: 2
+    min: 1
   allow_uncategorized_topics:
     client: true
     default: true
@@ -567,10 +568,18 @@ email:
     min: 0
   max_emails_per_day_per_user: 100
   enable_staged_users: true
+  maximum_staged_users_per_email: 10
   auto_generated_whitelist:
     default: ''
     type: list
   block_auto_generated_emails: true
+  bounce_score_threshold:
+    client: true
+    default: 4
+    min: 1
+  ignore_by_title:
+    type: list
+    default: ''
 
 
 files:
@@ -621,7 +630,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: '^[^A-Z_.]+$' # can't use '.' when using HTTPS
+    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -753,7 +762,7 @@ spam:
   num_flags_to_block_new_user: 3
   num_users_to_block_new_user: 3
   notify_mods_when_user_blocked: false
-  flag_sockpuppets: true
+  flag_sockpuppets: false
   newuser_spam_host_threshold: 3
   white_listed_spam_host_domains:
     default: ''
@@ -926,7 +935,7 @@ backups:
     shadowed_by_global: true
   s3_backup_bucket:
     default: ''
-    regex: "^[^A-Z_.]+$" # can't use '.' when using HTTPS
+    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
     shadowed_by_global: true
   s3_disable_cleanup:
     default: false
@@ -1119,6 +1128,9 @@ user_preferences:
   default_email_private_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false
+  default_email_mailing_list_mode_frequency:
+    enum: 'MailingListModeSiteSetting'
+    default: 1
   disable_mailing_list_mode:
     default: false
     client: true
@@ -1210,4 +1222,3 @@ tags:
     client: true
   remove_muted_tags_from_latest:
     default: false
-

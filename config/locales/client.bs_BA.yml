@@ -33,6 +33,7 @@ bs_BA:
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "Do.MMMM.YYYY."
       long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "MMM D, 'YY"
@@ -127,6 +128,7 @@ bs_BA:
         enabled: 'izlistan %{when}'
         disabled: 'sklonjen %{when}'
     topic_admin_menu: "topic admin actions"
+    emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Niti jedna notifikacija bilo kakve vrste neće biti poslana."
     edit: 'izmjeni naslov i kategoriju ove teme'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "Ne"
@@ -256,6 +258,7 @@ bs_BA:
         few: "Ova tema ima <b>{{count}}</b> postova koji čekaju odobrenje"
         other: "Ova tema ima <b>{{count}}</b> postova koji čekaju odobrenje"
       confirm: "Sačuvaj promjene"
+      delete_prompt: "Da li ste sigurni da želite da izbrišete <b>%{username}</b> nalog? Ovo će ukloniti svaku objavu tog naloga, te blokirati korisnikovu email adresu kao i njegov IP."
       approval:
         title: "Post treba odobrenje"
         description: "Primili smo Vaš novi post ali on treba biti odobren od strane moderatora prije nego bude javno dostupan. Molimo budite strpljivi."
@@ -283,8 +286,6 @@ bs_BA:
       title: "Korisnici"
       likes_given: "Dato"
       likes_received: "Primljeno"
-      topics_entered: "Posjećeno"
-      topics_entered_long: "Upisano Tema"
       time_read: "Pročitano puta"
       topic_count: "Teme"
       topic_count_long: "Kreirano Temi"
@@ -358,6 +359,7 @@ bs_BA:
         title: "Preuredi Kategorije"
         title_long: "Reorganizuj listu kategorija"
         fix_order: "Fixirane Pozicije"
+        fix_order_tooltip: "Nemaju sve kategorije poziciju, što može da dovede do nepredvidljivih rezultata."
         save: "Sačuvaj pozicije"
         apply_all: "Snimi"
         position: "Pozicija"
@@ -408,6 +410,7 @@ bs_BA:
         not_supported: "Notifikacije nisu podržane na ovom browseru."
         perm_default: "Upali notifikacije"
         perm_denied_btn: "Zabranje pristup"
+        perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
         disable: "Isključi notifikacije"
         enable: "Uključi notifikacije"
         each_browser_note: "Napomena: Ovu opciju morate promjeniti na svakom pregledniku."
@@ -429,7 +432,9 @@ bs_BA:
       github_profile: "Github"
       mailing_list_mode: "Receive an email for every new post (unless you mute the topic or category)"
       watched_categories: "Watched"
+      watched_categories_instructions: "Automatski ćete da pratite sve nove objave u ovom kategorijama. Bićete notifikovani o svim novim objavama i temama i broj novih objava će se pojaviti pored naziva teme."
       tracked_categories: "Tracked"
+      tracked_categories_instructions: "Automatski ćete da pratite sve nove objave u ovom kategorijama. Broj novih objava će se pojaviti pored naziva teme."
       muted_categories: "Muted"
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -439,7 +444,9 @@ bs_BA:
       admin_delete: "Izbriši"
       users: "Korisnici"
       muted_users: "Utišani"
+      muted_users_instructions: "Odbij sve notifikacije od ovih korisnika."
       muted_topics_link: "Prikaži utišane teme"
+      automatically_unpin_topics: "Automatski otkači temu kada dođem do dna"
       staff_counters:
         flags_given: "helpful flags"
         flagged_posts: "flagged posts"
@@ -491,6 +498,7 @@ bs_BA:
         cache_notice: "Uspješno ste promjenili sliku profila, možda potraje njeno prikazivanje zbog browser keš-a"
       change_profile_background:
         title: "Pozadina profila"
+        instructions: "Pozadinske slike profila će biti centrirane i imati širinu od 850px."
       email:
         title: "Email"
         instructions: "Nikada se ne pokazuje javno."
@@ -1089,7 +1097,6 @@ bs_BA:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        file_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
@@ -1371,7 +1378,6 @@ bs_BA:
           30_days_ago: "30 Days Ago"
           all: "All"
           view_table: "View as Table"
-          view_chart: "View as Bar Chart"
       commits:
         latest_changes: "Latest changes: please update often!"
         by: "by"

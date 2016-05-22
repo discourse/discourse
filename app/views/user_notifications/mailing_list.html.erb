@@ -1,0 +1,76 @@
+<div id="top"></div>
+<table style='width: 100%; border: 20px solid #eee;' cellspacing='0' cellpadding='0'>
+  <thead>
+    <td style='padding: 10px 10px; background-color: #<%= @header_color %>;'>
+      <a href='<%= Discourse.base_url %>' style='color: #<%= @anchor_color %>'>
+        <% if logo_url.blank? %>
+          <%= SiteSetting.title %>
+        <% else %>
+          <img src='<%= logo_url %>' style='max-height: 35px; min-height: 35px; height: 35px;' class='site-logo'></a>
+        <% end %>
+        <br />
+        <div style='padding-top: 10px;'>
+          <%= raw(t 'user_notifications.mailing_list.why', site_link: html_site_link(@anchor_color), date: @since_formatted) %>
+        </div>
+        <hr />
+      </a>
+    </td>
+  </thead>
+  <tr>
+    <td>
+      <h4 style="padding: 0 25px; margin: 10px 0;"><%= t('user_notifications.mailing_list.new_topics') %></h3>
+      <ul>
+        <% @new_topic_posts.keys.each do |topic| %>
+          <li>
+            <a href='<%= Discourse.base_url + topic.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw format_topic_title(topic.title) %></a>
+            <span><%= @new_topic_posts[topic].length %></span>
+            <%= category_badge(topic.category, inline_style: true, absolute_url: true) %>
+          </li>
+        <% end %>
+      </ul>
+      <h4 style="padding: 0 25px; margin: 10px 0;"><%= t('user_notifications.mailing_list.topic_updates') %></h3>
+      <ul>
+        <% @existing_topic_posts.keys.each do |topic| %>
+          <li>
+            <a href='<%= Discourse.base_url + topic.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw format_topic_title(topic.title) %></a>
+            <span><%= @existing_topic_posts[topic].length %></span>
+            <%= category_badge(topic.category, inline_style: true, absolute_url: true) %>
+          </li>
+        <% end %>
+      </ul>
+    </td>
+  </tr>
+</table>
+<table style='width: 100%; background: #eee;' cellspacing='0' cellpadding='0'>
+  <% @posts_by_topic.keys.each do |topic| %>
+    <tr>
+      <td>
+        <h3 style='padding: 20px 20px 10px; margin: 0;'>
+          <a href='<%= Discourse.base_url + topic.relative_url %>' style='color: #<%= @anchor_color %>'><%= raw format_topic_title(topic.title) %></a>
+        </h3>
+      </td>
+    </tr>
+    <tr>
+      <td style='border-left: 20px solid #eee; border-right: 20px solid #eee; border-bottom: 10px solid #eee; padding: 10px 10px; background: #fff;'>
+        <% @posts_by_topic[topic].each do |post| %>
+          <div>
+            <img style="float: left; width: 20px; padding-right: 5px;" src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
+            <p style="font-size: 15px; color: #888">
+              <a href='<%= [Discourse.base_url, :users, post.user.username].join('/') %>'><%= post.user.name || post.user.username %></a>
+              <span> - </span>
+              <span><%= I18n.l(post.created_at, format: :long) %></span>
+            </p>
+            <%= raw format_for_email(post, false, :notification) %>
+            <hr />
+          </div>
+        <% end %>
+        <a style='font-size: 12px; float: right;' href='<%= Discourse.base_url + topic.relative_url %>'><%= t('user_notifications.mailing_list.view_this_topic') %></a>
+      </td>
+    </tr>
+    <tr>
+      <td style='padding: 0 20px; font-size: 12px;'>
+        <a href="#top"><%= t('user_notifications.mailing_list.back_to_top') %></a>
+      </td>
+    </tr>
+  <% end %>
+</table>

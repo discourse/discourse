@@ -13,7 +13,22 @@ class TwitterApi
 
       text = link_hashtags_in link_handles_in text
 
-      Rinku.auto_link(text, :all, 'target="_blank"').to_s
+      result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
+
+      if tweet['extended_entities'] && media = tweet['extended_entities']['media']
+        result << "<div class='tweet-images'>"
+        media.each do |m|
+          if m['type'] == 'photo'
+            if large = m['sizes']['large']
+              result << "<img class='tweet-image' src='#{m['media_url_https']}' width='#{large['w']}' height='#{large['h']}'>"
+            end
+          end
+        end
+        result << "</div>"
+
+      end
+
+      result
     end
 
     def user_timeline(screen_name)

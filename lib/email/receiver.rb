@@ -31,18 +31,25 @@ module Email
 
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
+      @staged_users_created = 0
       @raw_email = mail_string
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
     end
 
     def process!
+      return if is_blacklisted?
       @from_email, @from_display_name = parse_from_field
       @incoming_email = find_or_create_incoming_email
       process_internal
     rescue => e
-      @incoming_email.update_columns(error: e.to_s)
+      @incoming_email.update_columns(error: e.to_s) if @incoming_email
       raise
+    end
+
+    def is_blacklisted?
+      return false if SiteSetting.ignore_by_title.blank?
+      Regexp.new(SiteSetting.ignore_by_title) =~ @mail.subject
     end
 
     def find_or_create_incoming_email
@@ -56,10 +63,6 @@ module Email
     end
 
     def process_internal
-      # temporarily disable processing automated replies to VERP
-      return if @mail.destinations.any? { |to| to[/\+verp-\h{32}@/i] }
-
-      raise BouncedEmailError  if @mail.bounced? && !@mail.retryable?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
       user = find_or_create_user(@from_email, @from_display_name)
@@ -68,6 +71,7 @@ module Email
 
       @incoming_email.update_columns(user_id: user.id)
 
+      raise BouncedEmailError if is_bounce?
       raise InactiveUserError if !user.active && !user.staged
       raise BlockedUserError  if user.blocked
 
@@ -129,6 +133,61 @@ module Email
                        post: email_log.post,
                        topic: email_log.post.topic)
         end
+      end
+    end
+
+    SOFT_BOUNCE_SCORE ||= 1
+    HARD_BOUNCE_SCORE ||= 2
+
+    def is_bounce?
+      return false unless @mail.bounced? || verp
+
+      @incoming_email.update_columns(is_bounce: true)
+
+      if verp
+        bounce_key = verp[/\+verp-(\h{32})@/, 1]
+        if bounce_key && (email_log = EmailLog.find_by(bounce_key: bounce_key))
+          email_log.update_columns(bounced: true)
+
+          if @mail.error_status.present?
+            if @mail.error_status.start_with?("4.")
+              update_bounce_score(email_log.user.email, SOFT_BOUNCE_SCORE)
+            elsif @mail.error_status.start_with?("5.")
+              update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
+            end
+          elsif is_auto_generated?
+            update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
+          end
+        end
+      end
+
+      true
+    end
+
+    def verp
+      @verp ||= all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
+    end
+
+    def update_bounce_score(email, score)
+      # only update bounce score once per day
+      key = "bounce_score:#{email}:#{Date.today}"
+
+      if $redis.setnx(key, "1")
+        $redis.expire(key, 25.hours)
+
+        if user = User.find_by(email: email)
+          user.user_stat.bounce_score += score
+          user.user_stat.reset_bounce_score_after = 30.days.from_now
+          user.user_stat.save
+
+          if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+            StaffActionLogger.new(Discourse.system_user).log_revoke_email(user)
+          end
+        end
+
+        true
+      else
+        false
       end
     end
 
@@ -231,6 +290,7 @@ module Email
               name: display_name.presence || User.suggest_name(email),
               staged: true
             )
+            @staged_users_created += 1
           end
         rescue
           user = nil
@@ -240,16 +300,18 @@ module Email
       user
     end
 
-    def destinations
-      [  @mail.destinations,
+    def all_destinations
+      @all_destinations ||= [
+        @mail.destinations,
         [@mail[:x_forwarded_to]].flatten.compact.map(&:decoded),
         [@mail[:delivered_to]].flatten.compact.map(&:decoded),
-      ].flatten
-       .select(&:present?)
-       .uniq
-       .lazy
-       .map { |d| check_address(d) }
-       .drop_while(&:blank?)
+      ].flatten.select(&:present?).uniq.lazy
+    end
+
+    def destinations
+      all_destinations
+        .map { |d| check_address(d) }
+        .drop_while(&:blank?)
     end
 
     def check_address(address)
@@ -422,6 +484,11 @@ module Email
                 if user && can_invite?(topic, user)
                   topic.topic_allowed_users.create!(user_id: user.id)
                   topic.add_small_action(sender, "invited_user", user.username)
+                end
+                # cap number of staged users created per email
+                if @staged_users_created > SiteSetting.maximum_staged_users_per_email
+                  topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"))
+                  return
                 end
               end
             rescue ActiveRecord::RecordInvalid

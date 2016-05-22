@@ -272,8 +272,6 @@ tr_TR:
       title: "Kullanıcılar"
       likes_given: "Verilen"
       likes_received: "Alınan"
-      topics_entered: "Açıldı"
-      topics_entered_long: "Açılan Konular"
       time_read: "Okuma Zamanı"
       topic_count: "Konular"
       topic_count_long: "Oluşturulan Konular"
@@ -540,6 +538,7 @@ tr_TR:
       like_notification_frequency:
         title: "Beğenildiğinde bildir"
         always: "Her zaman"
+        first_time: "İlk ileti beğenisi"
         never: "Asla"
       email_previous_replies:
         unless_emailed: "daha önce gönderilmediyse"
@@ -627,14 +626,12 @@ tr_TR:
           other: "oluşturulan konular"
         post_count:
           other: "oluşturmuş gönderiler"
-        likes_given:
-          other: "verilen beğeniler"
-        likes_received:
-          other: "alınan beğeniler"
         days_visited:
           other: "ziyaret edilen günler"
         posts_read:
           other: "okunmuş yazılar"
+        bookmark_count:
+          other: "yer imleri"
         top_replies: "Başlıca Yanıtları"
         no_replies: "Henüz yanıt bulunmuyor."
         more_replies: "Diğer Yanıtları"
@@ -644,6 +641,8 @@ tr_TR:
         top_badges: "Başlıca Rozetleri"
         no_badges: "Henüz rozet bulunmuyor."
         more_badges: "Diğer Rozetleri"
+        top_links: "Önemli Bağlantılar"
+        most_liked_users: "Popüler Beğenmeler"
       associated_accounts: "Girişler"
       ip_address:
         title: "Son IP Adresi"
@@ -857,6 +856,7 @@ tr_TR:
       link_description: "buraya bağlantı açıklamasını girin"
       link_dialog_title: "Bağlantı ekle"
       link_optional_text: "opsiyonel başlık"
+      link_url_placeholder: "http://ornek.com"
       quote_title: "Blok-alıntı"
       quote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
@@ -991,9 +991,7 @@ tr_TR:
         choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
-        change_tags: "Etiketleri değiştir"
-        choose_new_tags: "Bu konular için yeni etiket seç:"
-        changed_tags: "Seçtğiniz konular için etiketler değiştirildi."
+        change_tags: "Etiketleri Değiştir"
       none:
         unread: "Okunmamış konunuz yok."
         new: "Yeni konunuz yok."
@@ -1285,9 +1283,7 @@ tr_TR:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin. "
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
-        file_too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük. (en fazla boyut {{max_size_kb}}kb)"
         too_many_uploads: "Üzgünüz, aynı anda birden fazla dosya yükleyemezsiniz."
-        too_many_dragged_and_dropped_files: "Üzgünüz, sürükle bırak ile tek seferde en fazla 10 dosya yükleyebilirsiniz"
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya tipine izin verilmiyor. (izin verilen uzantılar: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemiyorlar."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya ekleyemiyorlar."
@@ -1695,7 +1691,6 @@ tr_TR:
           30_days_ago: "30 Gün Önce"
           all: "Hepsi"
           view_table: "tablo"
-          view_chart: "sütunlu grafik"
           refresh_report: "Raporu Yenile"
           start_date: "Başlangıç tarihi"
           end_date: "Bitiş Tarihi"
@@ -2084,8 +2079,6 @@ tr_TR:
             grant_moderation: "moderasyon yetkisi ver"
             revoke_moderation: "moderasyon yetkisini kaldır"
             backup_operation: "yedek operasyonu"
-            deleted_tag: "silinmiş etiket"
-            renamed_tag: "yeniden adlandırılmış etiket"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir aksiyon alınacak."
@@ -2562,26 +2555,3 @@ tr_TR:
       <button class="btn btn-primary">Google</button>
       </form>
       </p>
-    tagging:
-      all_tags: "Tüm etiketler"
-      changed: "Etiketler değişti:"
-      tags: "Etiketler"
-      choose_for_topic: "Bu konu için opsiyonel olarak bir etiket seçin"
-      delete_tag: "Etiketi sil"
-      delete_confirm: "Bu etiketi kaldırmak istediğinize emin misiniz?"
-      rename_tag: "Etiketi yeniden adlandır"
-      rename_instructions: "Etiket için yeni bir ad girin:"
-
-      notifications:
-        watching:
-          title: "Gözleniyor"
-          description: "Bu etikette ki her yeni gönderi için bir bildirim alacaksınız. Okunmamış ve yeni gönderilerin sayısı konunun yanında belirecek."
-        tracking:
-          title: "Takip Ediliyor"
-          description: "Bu etikette ki her yeni gönderi takip edilecek. Okunmamış ve yeni gönderilerin sayısı konunun yanında belirecek."
-        regular:
-          title: "Standart"
-          description: "Biri @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız."
-        muted:
-          title: "Susturuldu"
-          description: "Bu etiket okunmamışlar sekmenizde belirmeyecek, ve hakkında hiç bir bildirim almayacaksınız."

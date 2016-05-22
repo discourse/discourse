@@ -1,38 +1,42 @@
 <div class="col first ip_address">
   {{#if editing}}
-    {{text-field value=model.ip_address autofocus="autofocus"}}
+    {{text-field value=ip_address autofocus="autofocus"}}
   {{else}}
     <span {{action "edit" this}}>
       {{#if isRange}}
-        <strong>{{model.ip_address}}</strong>
+        <strong>{{ip_address}}</strong>
       {{else}}
-        {{model.ip_address}}
+        {{ip_address}}
       {{/if}}
     </span>
   {{/if}}
 </div>
 <div class="col action">
-  {{fa-icon model.actionIcon}}
-  {{model.actionName}}
+  {{#if isBlocked}}
+    {{fa-icon "ban"}}
+  {{else}}
+    {{fa-icon "check"}}
+  {{/if}}
+  {{actionName}}
 </div>
-<div class="col match_count">{{model.match_count}}</div>
+<div class="col match_count">{{match_count}}</div>
 <div class="col last_match_at">
-  {{#if model.last_match_at}}
-    {{age-with-tooltip model.last_match_at}}
+  {{#if last_match_at}}
+    {{age-with-tooltip last_match_at}}
   {{/if}}
 </div>
-<div class="col created_at">{{age-with-tooltip model.created_at}}</div>
+<div class="col created_at">{{age-with-tooltip created_at}}</div>
 <div class="col actions">
   {{#unless editing}}
-    <button class="btn btn-danger" {{action "destroy" this}}><i class="fa fa-trash-o"></i></button>
-    <button class="btn" {{action "edit" this}}><i class="fa fa-pencil"></i></button>
-    {{#if model.isBlocked}}
-    <button class="btn" {{action "allow" this}}>{{fa-icon "check"}} {{i18n 'admin.logs.screened_ips.actions.do_nothing'}}</button>
+    {{d-button action="destroy" actionParam=this icon="trash-o" class="btn-danger"}}
+    {{d-button action="edit" actionParam=this icon="pencil"}}
+    {{#if isBlocked}}
+      {{d-button action="allow" actionParam=this icon="check" label="admin.logs.screened_ips.actions.do_nothing"}}
     {{else}}
-    <button class="btn" {{action "block" this}}>{{fa-icon "ban"}} {{i18n 'admin.logs.screened_ips.actions.block'}}</button>
+      {{d-button action="block" actionParam=this icon="ban" label="admin.logs.screened_ips.actions.block"}}
     {{/if}}
   {{else}}
-    <button class="btn" {{action "save" this}}>{{i18n 'admin.logs.save'}}</button>
+    {{d-button action="save" actionParam=this label="admin.logs.save"}}
     <a {{action "cancel" this}}>{{i18n 'cancel'}}</a>
   {{/unless}}
 </div>

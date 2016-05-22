@@ -16,13 +16,13 @@
     <form class="form-horizontal">
       <div>
       <label>{{i18n 'admin.badges.badge'}}</label>
-      {{combo-box valueAttribute="id" value=controller.selectedBadgeId content=controller.grantableBadges nameProperty="name"}}
+      {{combo-box valueAttribute="id" value=selectedBadgeId content=grantableBadges nameProperty="name"}}
       </div>
       <label>
       <label>{{i18n 'admin.badges.reason'}}</label>
       {{input type="text" value=badgeReason}}<br><small>{{i18n 'admin.badges.reason_help'}}</small>
       </label>
-      <button class='btn btn-primary' {{action "grantBadge" controller.selectedBadgeId}}>{{i18n 'admin.badges.grant'}}</button>
+      <button class='btn btn-primary' {{action "grantBadge" selectedBadgeId}}>{{i18n 'admin.badges.grant'}}</button>
     </form>
     {{/if}}
 
@@ -35,7 +35,7 @@
         <th></th>
       </tr>
 
-      {{#each userBadge in groupedBadges}}
+      {{#each groupedBadges as |userBadge|}}
         <tr>
           <td>{{user-badge badge=userBadge.badge count=userBadge.count}}</td>
           <td>

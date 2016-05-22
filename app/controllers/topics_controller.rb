@@ -27,6 +27,7 @@ class TopicsController < ApplicationController
                                           :change_timestamps,
                                           :archive_message,
                                           :move_to_inbox,
+                                          :convert_topic,
                                           :bookmark]
 
   before_filter :consider_user_for_promotion, only: :show
@@ -510,6 +511,22 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
+  def convert_topic
+    params.require(:id)
+    params.require(:type)
+    topic = Topic.find_by(id: params[:id])
+    guardian.ensure_can_convert_topic!(topic)
+
+    if params[:type] == "public"
+      converted_topic = topic.convert_to_public_topic(current_user)
+    else
+      converted_topic = topic.convert_to_private_message(current_user)
+    end
+    render_topic_changes(converted_topic)
+  rescue ActiveRecord::RecordInvalid => ex
+    render_json_error(ex)
+  end
+
   private
 
   def toggle_mute
@@ -559,9 +576,7 @@ class TopicsController < ApplicationController
 
     Scheduler::Defer.later "Track Visit" do
       TopicViewItem.add(topic_id, ip, user_id)
-      if track_visit
-        TopicUser.track_visit! topic_id, user_id
-      end
+      TopicUser.track_visit!(topic_id, user_id) if track_visit
     end
 
   end

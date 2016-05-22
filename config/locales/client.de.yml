@@ -298,8 +298,6 @@ de:
       title: "Benutzer"
       likes_given: "Gegeben"
       likes_received: "Erhalten"
-      topics_entered: "Betrachtet"
-      topics_entered_long: "Betrachtete Themen"
       time_read: "Lesezeit"
       topic_count: "Themen"
       topic_count_long: "Erstellte Themen"
@@ -675,12 +673,6 @@ de:
         post_count:
           one: "Beitrag erstellt"
           other: "Beiträge erstellt"
-        likes_given:
-          one: "Like gegeben"
-          other: "Likes gegeben"
-        likes_received:
-          one: "Like bekommen"
-          other: "Likes bekommen"
         days_visited:
           one: "Tag vorbeigekommen"
           other: "Tage vorbeigekommen"
@@ -1052,9 +1044,6 @@ de:
         selected:
           one: "Du hast <b>ein</b> Thema ausgewählt."
           other: "Du hast <b>{{count}}</b> Themen ausgewählt."
-        change_tags: "Tags ändern"
-        choose_new_tags: "Wähle neue Tags für diese Themen:"
-        changed_tags: "Die Tags dieser Themen wurden geändert."
       none:
         unread: "Du hast alle Themen gelesen."
         new: "Es gibt für dich keine neuen Themen."
@@ -1368,9 +1357,7 @@ de:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
-        file_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
-        too_many_dragged_and_dropped_files: "Entschuldige, du kannst Drag & Drop gleichzeitig nur für bis zu 10 Dateien benutzen."
         upload_not_authorized: "Entschuldige, die Datei, die du hochladen wolltest, ist nicht erlaubt (erlaubte Endungen: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
@@ -1404,7 +1391,7 @@ de:
             other: "Willst du auch die {{count}} direkten Antworten auf diesen Beitrag löschen?"
           yes_value: "Ja, auch die Antworten löschen"
           no_value: "Nein, nur diesen Beitrag"
-        admin: "Aktionen für Administratoren"
+        admin: "Administrative Aktionen"
         wiki: "Wiki erstellen"
         unwiki: "Wiki entfernen"
         convert_to_moderator: "Mitarbeiter-Einfärbung hinzufügen"
@@ -1805,7 +1792,6 @@ de:
           30_days_ago: "vor 30 Tagen"
           all: "Gesamt"
           view_table: "Tabelle"
-          view_chart: "Balkendiagramm"
           refresh_report: "Bericht aktualisieren"
           start_date: "Startdatum"
           end_date: "Enddatum"
@@ -2207,8 +2193,6 @@ de:
             grant_moderation: "Moderation gewähren"
             revoke_moderation: "Moderation entziehen"
             backup_operation: "Backup läuft"
-            deleted_tag: "Tag löschen"
-            renamed_tag: "Tag umbenennen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -2380,7 +2364,6 @@ de:
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
-        stage_explanation: "Ein vorbereiteter Benutzer kann nur via E-Mail zu bestimmten Themen beitragen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
@@ -2704,32 +2687,3 @@ de:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
-
-    tagging:
-      all_tags: "Alle Tags"
-      selector_all_tags: "Alle Tags"
-      changed: "Tags geändert:"
-      tags: "Tags"
-      choose_for_topic: "Wähle optional Tags für dieses Thema"
-      topics_tagged: "Themen getaggt mit <span class='discourse-tag'>{{tag}}</span>"
-      delete_tag: "Tag löschen"
-      delete_confirm: "Bist du sicher, dass du das Tag löschen möchtest?"
-      rename_tag: "Tag umbenennen"
-      rename_instructions: "Wähle einen neuen Namen für das Tag:"
-      sort_by: "Sortieren nach:"
-      sort_by_count: "Anzahl"
-      sort_by_name: "Name"
-
-      notifications:
-        watching:
-          title: "Beobachten"
-          description: "Du wirst automatisch alle neuen Themen dieses Tags beobachten. Du wirst über jeden neuen Beitrag und jedes neue Thema benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
-        tracking:
-          title: "Verfolgen"
-          description: "Du wirst automatisch alle neuen Themen dieses Tags verfolgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
-        regular:
-          title: "Normal"
-          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
-        muted:
-          title: "Stummgeschaltet"
-          description: "Du erhältst keine Benachrichtigungen über neue Themen mit diesem Tag und es wird nicht in deiner Liste ungelesener Tags erscheinen."

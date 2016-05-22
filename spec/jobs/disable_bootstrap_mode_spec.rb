@@ -7,6 +7,8 @@ describe Jobs::DisableBootstrapMode do
 
     before do
       SiteSetting.bootstrap_mode_enabled = true
+      SiteSetting.default_trust_level = TrustLevel[1]
+      SiteSetting.default_email_digest_frequency = 1440
     end
 
     it 'does not execute if bootstrap mode is already disabled' do
@@ -18,6 +20,13 @@ describe Jobs::DisableBootstrapMode do
     it 'turns off bootstrap mode if bootstrap_mode_min_users is set to 0' do
       SiteSetting.bootstrap_mode_min_users = 0
       StaffActionLogger.any_instance.expects(:log_site_setting_change).times(3)
+      Jobs::DisableBootstrapMode.new.execute(user_id: admin.id)
+    end
+
+    it 'does not amend setting that is not in bootstrap state' do
+      SiteSetting.bootstrap_mode_min_users = 0
+      SiteSetting.default_trust_level = TrustLevel[3]
+      StaffActionLogger.any_instance.expects(:log_site_setting_change).twice
       Jobs::DisableBootstrapMode.new.execute(user_id: admin.id)
     end
 

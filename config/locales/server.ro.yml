@@ -16,7 +16,6 @@ ro:
   loading: "Încarcă"
   powered_by_html: 'Prin intermediul <a href="http://www.discourse.org">Discourse</a>, Vizualizare optimă cu JavaScript activat'
   log_in: "Autentificare"
-  purge_reason: "Cont automat şters ca abandonat, neactivat"
   disable_remote_images_download_reason: "Descărcarea de imagini la distanţă a fost dezactivată deoarece nu mai era spaţiu pe disc suficient."
   anonymous: "Anonim"
   errors: &errors
@@ -116,7 +115,6 @@ ro:
     delete_reason: "Şters via coadă de moderare"
   groups:
     errors:
-      can_not_modify_automatic: "Nu puteți modifica un grup automat"
       member_already_exist: "'%{username}' este deja membru al acestui grup"
     default_names:
       everyone: "toată lumea"
@@ -583,7 +581,6 @@ ro:
     ga_domain_name: "Numele de domeniu al Google analytics (ga.js), ex: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Codul de urmarie al Google Universal Analytics (analytics.js), ex: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Numele de domeniu al Google Universal Analytics (analytics.js) , ex: mysite.com; see http://google.com/analytics"
-    enable_escaped_fragments: "Întoarce-te la Google's Ajax-Crawling API dacă nu e detectat webcrawler-ul. See https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "Activează căutarea standardă a webcrawler-ului prin tagul noscript"
     allow_moderators_to_create_categories: "Permite moderatorilor să creeze noi categorii"
     post_menu: "Determină ce elemente apar în meniul de postare și în ce ordine . Exemple apreciere|editează|marchează|șterge|distribuie|semne de carte|răspunde"
@@ -678,7 +675,6 @@ ro:
     faq_url: "Dacă aveți un FAQ găzduit în altă parte pe care doriți să-l folosiți, postați întregul URL aici."
     tos_url: "Dacă aveți un document Termeni și condiții găzduit în altă parte pe care doriți să-l folosiți, postați întregul URL aici."
     privacy_policy_url: "Dacă aveți un document de Politica de Confidențialitate găzduit în altă parte, pe care a-ți dorii să-l folosiți, postați întregul URL aici."
-    newuser_spam_host_threshold: "De câte ori un utilizator poate posta o adresă către aceiași gazdă cu postarea `newuser_spam_host_posts` înainte de a fi considerat spam."
     white_listed_spam_host_domains: "O listă de domenii exclusă pentru testarea spam. Utilizatorii nu vor fi niciodată restricționați în a crea postări cu adrese către aceste domenii."
     staff_like_weight: "Cat de mare este factorul de adaos pentru a trimite aprecieri personalului."
     levenshtein_distance_spammer_emails: "Când se face potrivirea email-urilor spam, numărul de caractere diferite care permit o potrivire aproximată."
@@ -710,7 +706,7 @@ ro:
     autohighlight_all_code: "Forțează aplicarea de iluminat cod către toate preformatările de blocări de cod chiar când este explicit specificată limba."
     feed_polling_enabled: "DOAR ÎNCORPOREAZĂ: Să încorporeze un RSS/ATOM ca postare."
     feed_polling_url: "DOAR ÎNCORPOREAZĂ: URL de RSS/ATOM să încorporeze."
-    embed_by_username: "Numele de utilizator Discourse al utilizatorului ce creează discuții încorporate."
+    embed_by_username: "Utilizatorul care creează subiecte embedded."
     embed_username_key_from_feed: "Discourse username of the user who creates the embedded topics.."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Numărul maxim de postări de încorporat."
@@ -858,30 +854,12 @@ ro:
         ```
         %{logs}
         ```
-    too_many_spam_flags:
-      subject_template: "Cont nou blocat"
-      text_body_template: |
-        Salut,
-
-        Acesta e un mesaj automat din partea %{site_name} pentru a vă informa că postările dvs. au fos automat ascunse, fiindcă au fost marcate de către comunitate.
-
-        Ca măsură de precauție, noul dvs cont a fost blocat în a crea răspunsuri noi sau discuții până când un membru al personalului revizuiește contul dvs.
-
-        Pentru ajutor adițional, faceți referie la [regulile de comunitate](%{base_url}/).
-    blocked_by_staff:
-      subject_template: "Cont blocat"
     user_automatically_blocked:
       subject_template: "Noul utilizator %{username} a fost blocat datorită marcajelor date de comunitate"
     spam_post_blocked:
       subject_template: "Utilizatorul nou %{username} are postările blocate datorită adreselor repetate"
     unblocked:
       subject_template: "Cont deblocat"
-      text_body_template: |
-        Salut,
-
-        Acesta este un mesaj automat din partea %{site_name} pentru a vă informa cu privire la deblocarea contului dumneavoastră după o revizie a personalului.
-
-        Acum puteți crea discuții și răspunsuri noi.
     pending_users_reminder:
       text_body_template: |
         Exista înscrieri de noi utilizatori ce așteaptă să fie aprobate (sau respinse) înainte de a putea accesa forumul.
@@ -971,9 +949,6 @@ ro:
     store_failure: "Încercare de încărcare eșuată #%{upload_id} pentru utilizatorul #%{user_id}."
     images:
       size_not_found: "Ne pare rău, nu am putut determina mărimea imaginii. Poate este coruptă?"
-  flag_reason:
-    sockpuppet: "Un utilizator nou a creat o discuție, iar un alt utilizator cu același IP a răspuns. Vedeți setarea flag_sockpuppets în site."
-    spam_hosts: "Acest utilizator a încercat să creeze postări multiple ce conțin adrese către același domeniu. Vedeți setarea newuser_spam_host_threshold în site."
   email_log:
     no_user: "Nu pot găsii utilizatorul cu id-ul %{user_id}"
     anonymous_user: "Utilizatorul este anonim"

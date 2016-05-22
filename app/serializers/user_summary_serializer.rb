@@ -18,14 +18,16 @@ class UserSummarySerializer < ApplicationSerializer
     end
   end
 
-  class MostLikedByUserSerializer < BasicUserSerializer
-    attributes :likes, :name
+  class UserWithCountSerializer < BasicUserSerializer
+    attributes :count, :name
   end
 
   has_many :topics, serializer: TopicSerializer
   has_many :replies, serializer: ReplySerializer, embed: :object
   has_many :links, serializer: LinkSerializer, embed: :object
-  has_many :most_liked_by_users, serializer: MostLikedByUserSerializer, embed: :object
+  has_many :most_liked_by_users, serializer: UserWithCountSerializer, embed: :object
+  has_many :most_liked_users, serializer: UserWithCountSerializer, embed: :object
+  has_many :most_replied_to_users, serializer: UserWithCountSerializer, embed: :object
   has_many :badges, serializer: UserBadgeSerializer, embed: :object
 
   attributes :likes_given,
@@ -39,6 +41,10 @@ class UserSummarySerializer < ApplicationSerializer
 
   def include_badges?
     SiteSetting.enable_badges
+  end
+
+  def include_bookmark_count?
+    scope.authenticated? && object.user_id == scope.user.id
   end
 
   def time_read

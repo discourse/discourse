@@ -1,23 +1,7 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse/lib/helpers';
 import { longDate, autoUpdatingRelativeAge, number } from 'discourse/lib/formatter';
 
 const safe = Handlebars.SafeString;
-
-Em.Handlebars.helper('bound-avatar', (user, size) => {
-  if (Em.isEmpty(user)) {
-    return new safe("<div class='avatar-placeholder'></div>");
-  }
-
-  const avatar = Em.get(user, 'avatar_template');
-  return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: avatar }));
-}, 'username', 'avatar_template');
-
-/*
- * Used when we only have a template
- */
-Em.Handlebars.helper('bound-avatar-template', (at, size) => {
-  return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: at }));
-});
 
 registerUnbound('raw-date', dt => longDate(new Date(dt)));
 

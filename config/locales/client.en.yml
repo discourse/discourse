@@ -121,6 +121,8 @@ en:
       email: 'send this link in an email'
 
     action_codes:
+      public_topic: "made this topic public %{when}"
+      private_topic: "made this topic private %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
       removed_user: "removed %{who} %{when}"
@@ -336,8 +338,8 @@ en:
       title: "Users"
       likes_given: "Given"
       likes_received: "Received"
-      topics_entered: "Entered"
-      topics_entered_long: "Topics Entered"
+      topics_entered: "Viewed"
+      topics_entered_long: "Topics Viewed"
       time_read: "Time Read"
       topic_count: "Topics"
       topic_count_long: "Topics Created"
@@ -502,7 +504,17 @@ en:
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
       github_profile: "Github"
-      mailing_list_mode: "Send me an email for every new post (unless I mute the topic or category)"
+      email_activity_summary: "Activity Summary"
+      mailing_list_mode:
+        label: "Mailing list mode"
+        enabled: "Enable mailing list mode."
+        instructions: |
+          This setting overrides the activity summary.<br />
+          Muted topics and categories are not included in these emails.
+        daily: "Send daily updates."
+        individual: "Send an email for every new post."
+        many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)."
+        few_per_day: "Send me an email for every new post (less than 2 per day)."
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
@@ -771,6 +783,8 @@ en:
         top_links: "Top Links"
         no_links: "No links yet."
         most_liked_by: "Most Liked By"
+        most_liked_users: "Most Liked"
+        most_replied_to_users: "Most Replied To"
         no_likes: "No likes yet."
 
 
@@ -1344,6 +1358,8 @@ en:
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
+        make_public: "Make Public Topic"
+        make_private: "Make Private Message"
 
       feature:
         pin: "Pin Topic"
@@ -2303,6 +2319,7 @@ en:
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
+        bounced: "Bounced"
         received: "Received"
         rejected: "Rejected"
         sent_at: "Sent At"
@@ -2586,10 +2603,18 @@ en:
         block_failed: 'There was a problem blocking the user.'
         block_confirm: 'Are you sure you want to block this user? They will not be able to create any new topics or posts.'
         block_accept: 'Yes, block this user'
+        bounce_score: "Bounce Score"
+        reset_bounce_score:
+          label: "Reset"
+          title: "Reset bounce score back to 0"
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
-        stage_explanation: "A staged user can only post via email in specific topics."
+        staged_explanation: "A staged user can only post via email in specific topics."
+        bounce_score_explanation:
+          none: "No bounces were received recently from that email."
+          some: "Some bounces were received recently from that email."
+          threshold_reached: "Received too many bounces from that email."
         trust_level_change_failed: "There was a problem changing the user's trust level."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Trust Level 2 Users"
@@ -2809,6 +2834,7 @@ en:
         embed_truncate: "Truncate the embedded posts"
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
+        embed_classname_whitelist: "Allowed CSS class names"
         feed_polling_enabled: "Import posts via RSS/ATOM"
         feed_polling_url: "URL of RSS/ATOM feed to crawl"
         save: "Save Embedding Settings"
@@ -2982,4 +3008,3 @@ en:
           top: "There are no more top topics."
           bookmarks: "There are no more bookmarked topics."
           search: "There are no more search results."
-

@@ -4,7 +4,7 @@
 {{bound-category-link topic.category hideParent=true}}
 {{#if siteSettings.tagging_enabled}}
   <div class="list-tags">
-    {{#each t in topic.tags}}
+    {{#each topic.tags as |t|}}
       {{discourse-tag t}}
     {{/each}}
   </div>

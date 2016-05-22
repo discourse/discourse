@@ -21,9 +21,9 @@ task "avatars:clean" => :environment do
   puts "Cleaning up avatar thumbnails"
   puts
 
-  OptimizedImage.where("upload_id IN (SELECT custom_upload_id FROM user_avatars)")
-                .where("upload_id IN (SELECT gravatar_upload_id FROM user_avatars)")
-                .where("upload_id IN (SELECT uploaded_avatar_id FROM users)")
+  OptimizedImage.where("upload_id IN (SELECT custom_upload_id FROM user_avatars) OR
+                        upload_id IN (SELECT gravatar_upload_id FROM user_avatars) OR
+                        upload_id IN (SELECT uploaded_avatar_id FROM users)")
                 .find_each do |optimized_image|
     optimized_image.destroy!
     putc "." if (i += 1) % 10 == 0

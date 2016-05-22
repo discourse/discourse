@@ -2,6 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon';
 import { avatarImg } from 'discourse/widgets/post';
 import DiscourseURL from 'discourse/lib/url';
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 
 import { h } from 'virtual-dom';
 
@@ -11,6 +12,7 @@ const dropdown = {
   },
 
   click(e) {
+    if (wantsNewWindow(e)) { return; }
     e.preventDefault();
     if (!this.attrs.active) {
       this.sendWidgetAction(this.attrs.action);
@@ -43,7 +45,7 @@ createWidget('header-notifications', {
   }
 });
 
-createWidget('user-dropdown', jQuery.extend(dropdown, {
+createWidget('user-dropdown', jQuery.extend({
   tagName: 'li.header-dropdown-toggle.current-user',
 
   buildId() {
@@ -56,9 +58,9 @@ createWidget('user-dropdown', jQuery.extend(dropdown, {
     return h('a.icon', { attributes: { href: currentUser.get('path'), 'data-auto-route': true } },
              this.attach('header-notifications', attrs));
   }
-}));
+}, dropdown));
 
-createWidget('header-dropdown', jQuery.extend(dropdown, {
+createWidget('header-dropdown', jQuery.extend({
   tagName: 'li.header-dropdown-toggle',
 
   html(attrs) {
@@ -69,13 +71,13 @@ createWidget('header-dropdown', jQuery.extend(dropdown, {
       body.push(attrs.contents.call(this));
     }
 
-    return h('a.icon', { attributes: { href: '',
+    return h('a.icon', { attributes: { href: attrs.href,
                                        'data-auto-route': true,
                                        title,
                                        'aria-label': title,
                                        id: attrs.iconId } }, body);
   }
-}));
+}, dropdown));
 
 createWidget('header-icons', {
   tagName: 'ul.icons.clearfix',
@@ -227,11 +229,6 @@ export default createWidget('header', {
   togglePageSearch() {
     const { state } = this;
 
-    if (state.searchVisible) {
-      this.toggleSearchMenu();
-      return false;
-    }
-
     state.contextEnabled = false;
 
     const currentPath = this.container.lookup('controller:application').get('currentPath');
@@ -244,6 +241,11 @@ export default createWidget('header', {
     if (showSearch && currentPath.match(/^topic\./)) {
       showSearch = ($('.topic-post .cooked, .small-action:not(.time-gap)').length <
                     this.container.lookup('controller:topic').get('model.postStream.stream.length'));
+    }
+
+    if (state.searchVisible) {
+      this.toggleSearchMenu();
+      return showSearch;
     }
 
     if (showSearch) {

@@ -1,3 +1,7 @@
+<div class="container">
+  {{discourse-banner user=currentUser banner=site.banner}}
+</div>
+
 <div class="list-controls">
   <div class="container">
     {{#if tagNotification}}
@@ -38,7 +42,7 @@
   {{#unless loading}}
     {{#if list.topics}}
       {{#discovery-topics-list model=list refresh="refresh"}}
-      {{bulk-select-button selected=selected refreshTarget=controller}}
+      {{bulk-select-button selected=selected action="refresh"}}
 
       {{topic-list topics=list.topics
                    canBulkSelect=canBulkSelect

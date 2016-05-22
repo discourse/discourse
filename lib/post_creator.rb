@@ -151,7 +151,7 @@ class PostCreator
 
       trigger_after_events(@post)
 
-      auto_close
+      auto_close unless @opts[:import_mode]
     end
 
     if @post || @spam
@@ -317,8 +317,7 @@ class PostCreator
       topic_creator = TopicCreator.new(@user, guardian, @opts)
       @topic = topic_creator.create
     rescue ActiveRecord::Rollback
-      add_errors_from(topic_creator)
-      return
+      rollback_from_errors!(topic_creator)
     end
     @post.topic_id = @topic.id
     @post.topic = @topic
@@ -377,6 +376,8 @@ class PostCreator
   end
 
   def update_user_counts
+    return if @opts[:import_mode]
+
     @user.create_user_stat if @user.user_stat.nil?
 
     if @user.user_stat.first_post_created_at.nil?
@@ -439,11 +440,13 @@ class PostCreator
   end
 
   def auto_notify_for_tags
-    tags = DiscourseTagging.tags_for_saving(@opts[:tags], @guardian)
-    if tags.present?
-      @topic.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
-      @topic.save
-      DiscourseTagging.auto_notify_for(tags, @topic)
+    if SiteSetting.tagging_enabled
+      tags = DiscourseTagging.tags_for_saving(@opts[:tags], @guardian)
+      if tags.present?
+        @topic.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
+        @topic.save
+        DiscourseTagging.auto_notify_for(tags, @topic)
+      end
     end
   end
 

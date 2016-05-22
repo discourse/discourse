@@ -4,6 +4,9 @@
 
 body {
   background-color: $secondary;
+  textarea {
+    background-color:$secondary;
+  }
 }
 
 // This sets the space between the application content and the edge of the

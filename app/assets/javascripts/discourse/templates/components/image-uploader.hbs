@@ -2,11 +2,11 @@
   <div class="image-upload-controls">
     <label class="btn pad-left no-text {{if uploading 'disabled'}}">
       {{fa-icon "picture-o"}}
-      <input {{bind-attr disabled="uploading"}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
+      <input disabled={{uploading}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
     </label>
     {{#if backgroundStyle}}
       <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{fa-icon "trash-o"}}</button>
     {{/if}}
-    <span {{bind-attr class=":btn uploading::hidden"}}>{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
+    <span class="btn {{unless uploading 'hidden'}}">{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
   </div>
 </div>

@@ -298,8 +298,6 @@ pt_BR:
       title: "Usuários"
       likes_given: "Dados"
       likes_received: "Recebidos"
-      topics_entered: "Registrados"
-      topics_entered_long: "Tópicos Registrados"
       time_read: "Tempo Lido"
       topic_count: "Tópicos"
       topic_count_long: "Tópicos Criados"
@@ -674,12 +672,6 @@ pt_BR:
         post_count:
           one: "post criado"
           other: "posts criados"
-        likes_given:
-          one: "curtida dada"
-          other: "curtidas dadas"
-        likes_received:
-          one: "curtida recebida"
-          other: "curtidas recebidas"
         days_visited:
           one: "dia visitado"
           other: "dias visitados"
@@ -1049,9 +1041,6 @@ pt_BR:
         selected:
           one: "Você selecionou <b>1</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
-        change_tags: "Alterar Tags"
-        choose_new_tags: "Escolha novas tags para estes tópicos:"
-        changed_tags: "As tags desses tópicos foram alteradas."
       none:
         unread: "Não há nenhum tópico não lido."
         new: "Não há tópicos novos."
@@ -1352,9 +1341,7 @@ pt_BR:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
         upload: "Desculpe, houve um erro ao enviar esse arquivo. Por favor, tente outra vez."
-        file_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
-        too_many_dragged_and_dropped_files: "Desculpe, você pode arrastar & soltar apenas 10 arquivos por vez."
         upload_not_authorized: "Desculpe, o tipo de arquivo que você está tentando enviar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
@@ -1788,7 +1775,6 @@ pt_BR:
           30_days_ago: "30 Dias Atrás"
           all: "Tudo"
           view_table: "tabela"
-          view_chart: "Gráfico de barras"
           refresh_report: "Atualizar Relatório"
           start_date: "Data de Início"
           end_date: "Data do Final"
@@ -2151,8 +2137,6 @@ pt_BR:
             block_user: "bloquear usuário"
             unblock_user: "desbloquear usuário"
             backup_operation: "operação de backup"
-            deleted_tag: "tag removida"
-            renamed_tag: "tag renomeada"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de email serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -2633,52 +2617,3 @@ pt_BR:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
-    tagging:
-      all_tags: "Todas as Tags"
-      selector_all_tags: "todas as tags"
-      changed: "tags alteradas:"
-      tags: "Tags"
-      choose_for_topic: "escolha tags opcionais para este tópico"
-      delete_tag: "Remover Tag"
-      delete_confirm: "Você tem certeza que quer remover essa tag?"
-      rename_tag: "Renomear Tag"
-      rename_instructions: "Escolha um novo nome para a tag:"
-      sort_by: "Ordenar por:"
-      sort_by_count: "número"
-      sort_by_name: "nome"
-
-      notifications:
-        watching:
-          title: "Observando"
-          description: "Você vai observar automaticamente todos os novos tópicos dessa tag. Você será notificado de todas as novas mensagens e tópicos, e uma contagem de novas respostas será mostrada ao lado do tópico."
-        tracking:
-          title: "Monitorando"
-          description: "Você vai monitorar automaticamente todos os novos tópicos dessa tag. Uma contagem de novas respostas será mostrada ao lado do tópico."
-        regular:
-          title: "Normal"
-          description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
-        muted:
-          title: "Silenciado"
-          description: "Você nunca será notificado sobre novos tópicos nessa tag, e eles não aparecerão na sua aba não lidas."
-
-      topics:
-        none:
-          unread: "Você não possui tópicos não lidos."
-          new: "Você não possui novos tópicos."
-          read: "Você não leu nenhum tópico ainda."
-          posted: "Você não postou em nenhum tópico ainda."
-          latest: "Não há tópicos mais recentes."
-          hot: "Não há tópicos quentes."
-          bookmarks: "Você não possui tópicos favoritos ainda."
-          top: "Não há melhores tópicos."
-          search: "Nenhum resultado encontrado."
-        bottom:
-          latest: "Não há mais tópicos mais recentes."
-          hot: "Não há mais tópicos quentes."
-          posted: "Não há mais tópicos postados."
-          read: "Não há mais tópicos lidos."
-          new: "Não há mais tópicos novos."
-          unread: "Não há mais tópicos não lidos."
-          top: "Não há mais melhores tópicos."
-          bookmarks: "Não há mais tópicos favoritos."
-          search: "Não há mais resultados de busca."

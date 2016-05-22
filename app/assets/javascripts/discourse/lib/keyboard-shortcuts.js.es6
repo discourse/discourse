@@ -15,6 +15,7 @@ const bindings = {
   'd':               {postAction: 'deletePost'},
   'e':               {postAction: 'editPost'},
   'end':             {handler: 'goToLastPost', anonymous: true},
+  'command+down':    {handler: 'goToLastPost', anonymous: true},
   'f':               {handler: 'toggleBookmarkTopic'},
   'g h':             {path: '/', anonymous: true},
   'g l':             {path: '/latest', anonymous: true},
@@ -26,6 +27,7 @@ const bindings = {
   'g p':             {path: '/my/activity'},
   'g m':             {path: '/my/messages'},
   'home':            {handler: 'goToFirstPost', anonymous: true},
+  'command+up':      {handler: 'goToFirstPost', anonymous: true},
   'j':               {handler: 'selectDown', anonymous: true},
   'k':               {handler: 'selectUp', anonymous: true},
   'l':               {click: '.topic-post.selected button.toggle-like'},
@@ -203,7 +205,13 @@ export default {
       const post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
       if (post) {
         // TODO: Use ember closure actions
-        const result = topicController._actions[action].call(topicController, post);
+        let actionMethod = topicController._actions[action];
+        if (!actionMethod) {
+          const topicRoute = container.lookup('route:topic');
+          actionMethod = topicRoute._actions[action];
+        }
+
+        const result = actionMethod.call(topicController, post);
         if (result && result.then) {
           this.appEvents.trigger('post-stream:refresh', { id: selectedPostId });
         }
@@ -287,10 +295,6 @@ export default {
 
       $articles.removeClass('selected');
       $article.addClass('selected');
-
-      if ($article.is('.topic-list-item')) {
-        this.sendToTopicListItemView('select');
-      }
 
       if ($article.is('.topic-post')) {
         $('a.tabLoc', $article).focus();

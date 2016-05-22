@@ -14,14 +14,14 @@
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/quote
 //= require ./discourse/lib/key-value-store
+//= require ./discourse/lib/helpers
 //= require ./discourse/helpers/i18n
 //= require ./discourse/helpers/fa-icon
-//= require ./discourse/helpers/register-unbound
 //= require ./discourse/lib/ember_compat_handlebars
+//= require ./discourse/lib/helpers
 //= require ./discourse/lib/computed
 //= require ./discourse/lib/formatter
 //= require ./discourse/lib/eyeline
-//= require ./discourse/helpers/register-unbound
 //= require ./discourse/mixins/scrolling
 //= require ./discourse/models/model
 //= require ./discourse/models/rest
@@ -88,7 +88,6 @@
 //= require ./discourse/components/conditional-loading-spinner
 //= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class
-//= require ./discourse/helpers/capitalize
 //= require ./discourse/helpers/loading-spinner
 //= require ./discourse/helpers/category-link
 //= require ./discourse/lib/export-result

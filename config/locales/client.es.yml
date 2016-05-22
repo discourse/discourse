@@ -111,6 +111,8 @@ es:
       google+: 'comparte este enlace en Google+'
       email: 'comparte este enlace por email'
     action_codes:
+      public_topic: "hizo este tema público %{when}"
+      private_topic: "hizo este tema privado %{when}"
       split_topic: "separó este tema %{when}"
       invited_user: "invitó a %{who} %{when}"
       removed_user: "eliminó a %{who} %{when}"
@@ -134,6 +136,8 @@ es:
         disabled: 'quitado de la lista, invisible %{when}'
     topic_admin_menu: "acciones de administrador para el tema"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
+    bootstrap_mode_enabled: "Para lanzar tu nuevo sitio más fácilmente, estás en modo de arranque. A todos los nuevos usuarios se les concederá el nivel 1 de confianza y recibirán resúmenes diarios por email. Esto se desactivará automáticamente cuando el número total de usuarios exceda los %{min_users}."
+    bootstrap_mode_disabled: "El modo de arranque se desactivará en las próximas 24 horas."
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -298,8 +302,6 @@ es:
       title: "Usuarios"
       likes_given: "Dados"
       likes_received: "Recibidos"
-      topics_entered: "Vistos"
-      topics_entered_long: "Temas vistos"
       time_read: "Tiempo de Lectura"
       topic_count: "Temas"
       topic_count_long: "Temas creados"
@@ -676,17 +678,20 @@ es:
           one: "post publicado"
           other: "posts publicados"
         likes_given:
-          one: "me gusta dado"
-          other: "me gusta dados"
+          one: "<i class='fa fa-heart'></i> dado"
+          other: "<i class='fa fa-heart'></i> dados"
         likes_received:
-          one: "me gusta recibido"
-          other: "me gusta recibidos"
+          one: "<i class='fa fa-heart'></i> recibido"
+          other: "<i class='fa fa-heart'></i> recibidos"
         days_visited:
           one: "día visitado"
           other: "días visitados"
         posts_read:
           one: "post leído"
           other: "posts leídos"
+        bookmark_count:
+          one: "marcador"
+          other: "marcadores"
         top_replies: "Respuestas top"
         no_replies: "No hay respuestas aún."
         more_replies: "Más respuestas"
@@ -696,6 +701,12 @@ es:
         top_badges: "Distintivos top"
         no_badges: "No hay distintivos aún."
         more_badges: "Más distintivos"
+        top_links: "Top enlaces"
+        no_links: "No hay enlaces aún."
+        most_liked_by: "Los que dieron más me gusta"
+        most_liked_users: "De quien recibió más Me gusta"
+        most_replied_to_users: "A quienes más respondió"
+        no_likes: "No hay me gusta aún."
       associated_accounts: "Inicios de sesión"
       ip_address:
         title: "Última dirección IP"
@@ -1053,8 +1064,8 @@ es:
           one: "Has seleccionado <b>1</b> tema."
           other: "Has seleccionado <b>{{count}}</b> temas."
         change_tags: "Cambiar etiquetas"
-        choose_new_tags: "Elegir nuevas etiquetas para estos temas:"
-        changed_tags: "Las etiquetas de estos temas fueron cambiadas."
+        choose_new_tags: "Elige nuevas etiquetas para estos temas:"
+        changed_tags: "Las etiquetas de esos temas fueron cambiadas."
       none:
         unread: "No hay temas que sigas y que no hayas leído ya."
         new: "No tienes temas nuevos por leer."
@@ -1209,6 +1220,8 @@ es:
         invisible: "Hacer invisible"
         visible: "Hacer visible"
         reset_read: "Restablecer datos de lectura"
+        make_public: "Convertir en tema público"
+        make_private: "Convertir en Mensaje Privado"
       feature:
         pin: "Destacar tema"
         unpin: "Dejar de destacar tema"
@@ -1368,9 +1381,9 @@ es:
         create: "Lo sentimos, hubo un error al crear tu post. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
-        file_too_large: "Lo sentimos, el archivo que estas tratando de subir es demasiado grande (el tamaño máximo es de {{max_size_kb}}kb)"
+        file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es {{max_size_kb}}kb). ¿Quizá podrías subir el archivo a un servicio de almacenamiento en la nube y compartir aquí el enlace?"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
-        too_many_dragged_and_dropped_files: "Lo sentimos, solo puedes arrastrar 10 archivos a la vez."
+        too_many_dragged_and_dropped_files: "Lo sentimos, sólo puedes subir 10 archivos a la vez."
         upload_not_authorized: "Lo sentimos, el archivo que intenta cargar no está autorizado (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir archivos adjuntos."
@@ -1380,6 +1393,7 @@ es:
         no_value: "No, mantener"
         yes_value: "Sí, abandonar"
       via_email: "este post llegó por email"
+      via_auto_generated_email: "este post llegó a través de un email generado automáticamente"
       whisper: "esto post es un susurro privado para moderadores"
       wiki:
         about: "este post es tipo wiki"
@@ -1596,6 +1610,7 @@ es:
       action: 'Reportar post'
       take_action: "Tomar medidas"
       notify_action: 'Mensaje'
+      official_warning: 'Advertencia oficial'
       delete_spammer: "Borrar spammer"
       delete_confirm: "Estás a punto de eliminar <b>%{posts}</b> publicaciones y <b>%{topics}</b> temas de este usuario, borrar su cuenta, bloquear sus inicios de sesión desde su dirección IP <b>%{ip_address}</b>, y añadir su dirección de email <b>%{email}</b> a una lista de bloqueo permanente. ¿Estás seguro de que este usuario es realmente un spammer?"
       yes_delete_spammer: "Sí, borrar spammer"
@@ -1809,7 +1824,7 @@ es:
           30_days_ago: "Hace 30 días"
           all: "Todo"
           view_table: "tabla"
-          view_chart: "gráfico de barras"
+          view_graph: "gráfico"
           refresh_report: "Actualizar reporte"
           start_date: "Desde fecha"
           end_date: "Hasta fecha"
@@ -2102,6 +2117,7 @@ es:
         test_error: "Hubo un error al enviar el email de prueba. Por favor, revisa la configuración de correo, verifica que tu servicio de alojamiento no esté bloqueando los puertos de conexión de correo, y prueba de nuevo."
         sent: "Enviado"
         skipped: "Omitidos"
+        bounced: "Rebotado"
         received: "Recibidos"
         rejected: "Rechazados"
         sent_at: "Enviado a"
@@ -2381,10 +2397,18 @@ es:
         block_failed: 'Ha habido un problema bloqueando el usuario.'
         block_confirm: '¿Seguro que quieres bloquear a este usuario? No podrá crear nuevos temas ni publicar posts.'
         block_accept: 'Sí, bloquear este usuario'
+        bounce_score: "Puntuación de rebote"
+        reset_bounce_score:
+          label: "Restablecer"
+          title: "Restablece la puntuación de rebote de nuevo a 0"
         deactivate_explanation: "Un usuario desactivado debe rehabilitar su dirección de correo."
         suspended_explanation: "Un usuario suspendido no puede ingresar al sitio."
         block_explanation: "Un usuario bloqueado no puede publicar posts ni crear temas."
-        stage_explanation: "Un usuario provisional sólo puede publicar por email en temas específicos."
+        staged_explanation: "Un usuario provisional solo puede publicar por email en temas específicos."
+        bounce_score_explanation:
+          none: "No se han recibido rebotes recientemente desde ese email."
+          some: "Se han recibido algunos rebotes recientemente desde ese email."
+          threshold_reached: "Se recibieron muchos rebotes desde ese email."
         trust_level_change_failed: "Ha habido un problema cambiando el nivel de confianza del usuario."
         suspend_modal_title: "Suspender Usuario"
         trust_level_2_users: "Usuarios del nivel de Confianza 2"
@@ -2500,6 +2524,7 @@ es:
           login: "Login"
           plugins: "Plugins"
           user_preferences: "Preferencias de los Usuarios"
+          tags: "Etiquetas"
       badges:
         title: Distintivos
         new_badge: Nuevo distintivo
@@ -2708,7 +2733,6 @@ es:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
-
     tagging:
       all_tags: "Etiquetas"
       selector_all_tags: "etiquetas"
@@ -2716,13 +2740,15 @@ es:
       tags: "Etiquetas"
       choose_for_topic: "elegir etiquetas para este tema (opcional)"
       delete_tag: "Eliminar etiqueta"
-      delete_confirm: "¿Seguro que quieres eliminar esta etiqueta?"
+      delete_confirm: "¿Seguro que quieres eliminar esa etiqueta?"
       rename_tag: "Renombrar etiqueta"
       rename_instructions: "Elige un nuevo nombre para la etiqueta:"
       sort_by: "Ordenar por:"
-      sort_by_count: "volumen"
+      sort_by_count: "contador"
       sort_by_name: "nombre"
-
+      filters:
+        without_category: "%{filter} %{tag} temas"
+        with_category: "%{filter} %{tag} temas en %{category}"
       notifications:
         watching:
           title: "Vigilar"
@@ -2736,26 +2762,24 @@ es:
         muted:
           title: "Silenciar"
           description: "No se te notificará de nuevos temas con esta etiqueta, ni aparecerán en tu pestaña de temas no leídos."
-
       topics:
         none:
           unread: "No tienes temas sin leer."
-          new: "No hay temas nuevos."
+          new: "No tienes nuevos temas."
           read: "Aún no has leído ningún tema."
-          posted: "Aún no has publicado en ningún tema."
+          posted: "Aún no has publicado ningún tema."
           latest: "No hay temas recientes."
-          hot: "No hay temas candentes"
-          bookmarks: "Aún no has guardado temas en marcadores."
+          hot: "No hay temas populares."
+          bookmarks: "No hay temas guardados en marcadores aún."
           top: "No hay temas top."
-          search: "No hay resultados resultados de búsqueda."
+          search: "No hay resultados de búsqueda."
         bottom:
           latest: "No hay más temas recientes."
-          hot: "No hay más temas candentes."
-          posted: "No hay más temas en los que hayas publicado."
-          read: "No hay más temas que hayas leído."
+          hot: "No hay más temas populares."
+          posted: "No hay más temas publicados."
+          read: "No hay más temas leídos."
           new: "No hay más temas nuevos."
           unread: "No hay más temas sin leer."
           top: "No hay más temas top."
-          bookmarks: "No hay más temas en marcadores."
+          bookmarks: "No hay más temas guardados en marcadores."
           search: "No hay más resultados de búsqueda."
-

@@ -90,6 +90,15 @@ const DiscourseURL = Ember.Object.extend({
     });
   },
 
+  routeToTag(a) {
+    if (a && a.host !== document.location.host) {
+      document.location = a.href;
+      return false;
+    }
+
+    return this.routeTo(a.href);
+  },
+
   /**
     Our custom routeTo method is used to intelligently overwrite default routing
     behavior.
@@ -139,9 +148,7 @@ const DiscourseURL = Ember.Object.extend({
       }
     }
 
-    rewrites.forEach(function(rw) {
-      path = path.replace(rw.regexp, rw.replacement);
-    });
+    rewrites.forEach(rw => path = path.replace(rw.regexp, rw.replacement));
 
     if (this.navigatedToPost(oldPath, path)) { return; }
     // Schedule a DOM cleanup event

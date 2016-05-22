@@ -277,8 +277,6 @@ nb_NO:
       title: "Brukere"
       likes_given: "Gitt"
       likes_received: "Mottatt"
-      topics_entered: "Lest"
-      topics_entered_long: "Emner lest"
       time_read: "Tid lest"
       topic_count: "Emner"
       topic_count_long: "Emner startet"
@@ -899,9 +897,6 @@ nb_NO:
         selected:
           one: "Du har valgt <b>1</b> emne."
           other: "Du har valgt <b>{{count}}</b> emner."
-        change_tags: "Endre emneord"
-        choose_new_tags: "Velg nye emneord for disse emnene:"
-        changed_tags: "Emneord for disse emnene ble endret."
       none:
         unread: "Du har ingen uleste emner å lese."
         new: "Du har ingen nye emner å lese."
@@ -1182,9 +1177,7 @@ nb_NO:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Vennligst prøv igjen."
         edit: "Beklager, det oppstod en feil ved redigeringen av ditt innlegg. Vennligst prøv igjen."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        file_too_large: "Beklager, filen du prøver å laste opp er for stor (maximum size is {{max_size_kb}}kb)"
         too_many_uploads: "Beklager, du kan bare laste opp ett bilde om gangen."
-        too_many_dragged_and_dropped_files: "Beklager, du kan bare flytte opp til 10 filer om gangen."
         upload_not_authorized: "Beklager, filen du prøver å laste opp er ikke godkjent (godkjente filtyper: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."
@@ -1604,7 +1597,6 @@ nb_NO:
           30_days_ago: "30 Dager Siden"
           all: "Alle"
           view_table: "tabell"
-          view_chart: "stolpediagram"
           refresh_report: "Refresh Rapport"
           start_date: "Startdato"
           end_date: "Sluttdato"
@@ -1953,8 +1945,6 @@ nb_NO:
             roll_up: "rull opp IP-blokker"
             delete_category: "slett kategori"
             create_category: "opprett kategori"
-            deleted_tag: "Slettet emneord"
-            renamed_tag: "Endret emneord"
         screened_emails:
           title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
@@ -2379,27 +2369,3 @@ nb_NO:
           name: Annet
         posting:
           name: Posting
-    tagging:
-      all_tags: "Alle emneord"
-      changed: "emneord endret:"
-      tags: "Emneord"
-      choose_for_topic: "velg ekstra emneord for dette emnet"
-      delete_tag: "Slett emneord"
-      delete_confirm: "Er du sikker påat du ønsker å slette dette emneordet?"
-      rename_tag: "Endre emneord"
-      rename_instructions: "Velg et nytt navn på dette emneordet:"
-
-      notifications:
-        watching:
-          title: "Følger"
-          description: "Du vil automatisk følge alle nye emner med dette emneordet. Du vil bli varslet om alle nye innlegg og emner samt at antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
-        tracking:
-          title: "Følger"
-          description: "Du vil automatisk følge alle nye emner med dette emneordet. Antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
-        regular:
-          title: "Vanlig"
-          description: "Du vil bli varslet om noen nevnet ditt @navn eller svarer på din post."
-        muted:
-          title: "Dempet"
-          description: "Du vil ikke bli varslet om noe vedrørende disse emneneordene og de vil ikke vises i din ulest-liste."
-

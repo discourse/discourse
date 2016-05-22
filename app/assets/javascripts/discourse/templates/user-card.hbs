@@ -1,4 +1,4 @@
-{{#if controller.visible}}
+{{#if visible}}
 <div class="card-content">
 
   <a href={{user.path}} {{action "showUser"}} class="card-huge-avatar">{{bound-avatar avatar "huge"}}</a>
@@ -86,7 +86,7 @@
 
   {{#if publicUserFields}}
     <div class="public-user-fields">
-      {{#each uf in publicUserFields}}
+      {{#each publicUserFields as |uf|}}
         {{#if uf.value}}
           <div class="public-user-field {{uf.field.dasherized_name}}">
             <span class="user-field-name">{{uf.field.name}}:</span>
@@ -99,7 +99,7 @@
 
   {{#if showBadges}}
     <div class="badge-section">
-      {{#each ub in user.featured_user_badges}}
+      {{#each user.featured_user_badges as |ub|}}
         {{user-badge badge=ub.badge user=user}}
       {{/each}}
       {{#if showMoreBadges}}

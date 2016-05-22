@@ -360,6 +360,15 @@ const Composer = RestModel.extend({
     return before.length + text.length;
   },
 
+  prependText(text, opts) {
+    const reply = (this.get('reply') || '');
+
+    if (opts && opts.new_line && reply.length > 0) {
+      text = text.trim() + "\n\n";
+    }
+    this.set('reply', text + reply);
+  },
+
   applyTopicTemplate(oldCategoryId, categoryId) {
     if (this.get('action') !== CREATE_TOPIC) { return; }
     let reply = this.get('reply');

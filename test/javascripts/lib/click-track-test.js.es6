@@ -17,7 +17,7 @@ module("lib:click-track", {
     sandbox.stub(win, "focus");
 
     fixture().html(
-      `<div id="topic" id="1337">
+      `<div id="topic" data-topic-id="1337">
         <article data-post-id="42" data-user-id="3141">
           <a href="http://www.google.com">google.com</a>
           <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
@@ -31,6 +31,10 @@ module("lib:click-track", {
           <a id="same-site" href="http://discuss.domain.com">forum</a>
           <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
           <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
+          <a class="mailto" href="mailto:foo@bar.com">email-me</a>
+          <aside class="quote">
+            <a class="inside-quote" href="http://discuss.domain.com">foobar</a>
+          </aside>
         </article>
       </div>`);
   }
@@ -66,12 +70,20 @@ test("does not track clicks on back buttons", function() {
   ok(track(generateClickEventOn('.back')));
 });
 
+test("does not track clicks in quotes", function() {
+  ok(track(generateClickEventOn('.inside-quote')));
+});
+
 test("does not track clicks on quote buttons", function() {
   ok(track(generateClickEventOn('.quote-other-topic')));
 });
 
 test("does not track clicks on category badges", () => {
-  ok(!track(generateClickEventOn('.hashtag')));
+  ok(track(generateClickEventOn('.hashtag')));
+});
+
+test("does not track clicks on mailto", function() {
+  ok(track(generateClickEventOn('.mailto')));
 });
 
 test("removes the href and put it as a data attribute", function() {
@@ -132,7 +144,7 @@ test("right clicks change the href", function() {
 test("right clicks are tracked", function() {
   Discourse.SiteSettings.track_external_right_clicks = true;
   trackRightClick();
-  equal(fixture('a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42");
+  equal(fixture('a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337");
 });
 
 test("preventDefault is not called for right clicks", function() {
@@ -191,11 +203,11 @@ test("tracks custom urls when opening in another window", function() {
   var clickEvent = generateClickEventOn('a');
   sandbox.stub(Discourse.User, "currentProp").withArgs('external_links_in_new_tab').returns(true);
   ok(!track(clickEvent));
-  ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42', '_blank'));
+  ok(windowOpen.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337', '_blank'));
 });
 
 test("tracks custom urls when opening in another window", function() {
   var clickEvent = generateClickEventOn('a');
   ok(!track(clickEvent));
-  ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42'));
+  ok(redirectTo.calledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337'));
 });

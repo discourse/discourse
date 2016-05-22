@@ -298,8 +298,6 @@ fi:
       title: "Käyttäjät"
       likes_given: "Annetut"
       likes_received: "Saadut"
-      topics_entered: "Avatut"
-      topics_entered_long: "Avattuja ketjuja"
       time_read: "Lukuaika"
       topic_count: "Ketjut"
       topic_count_long: "Luotuja ketjuja"
@@ -1019,9 +1017,6 @@ fi:
         selected:
           one: "Olet valinnut <b>yhden</b> ketjun."
           other: "Olet valinnut <b>{{count}}</b> ketjua."
-        change_tags: "Muuta tagit"
-        choose_new_tags: "Valitse uudet tagit näille aiheille:"
-        changed_tags: "Aiheiden tagit on vaihdettu."
       none:
         unread: "Sinulla ei ole lukemattomia ketjuja."
         new: "Sinulla ei ole uusia ketjuja."
@@ -1335,9 +1330,7 @@ fi:
         create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
         edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
         upload: "Pahoittelut, tiedoston lähetys ei onnistunut. Ole hyvä ja yritä uudelleen."
-        file_too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on {{max_size_kb}}kb)"
         too_many_uploads: "Pahoittelut, voit ladata vain yhden tiedoston kerrallaan."
-        too_many_dragged_and_dropped_files: "Pahoittelut, voit raahata korkeintaan 10 tiedostoa kerrallaan."
         upload_not_authorized: "Pahoittelut, tiedostomuoto ei ole sallittu (sallitut tiedostopäätteet: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttjät eivät saa ladata kuvia."
         attachment_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttäjät eivät saa ladata liitteitä."
@@ -1776,7 +1769,6 @@ fi:
           30_days_ago: "30 päivää sitten"
           all: "Kaikki"
           view_table: "taulukko"
-          view_chart: "pylväsdiagrammi"
           refresh_report: "Päivitä raportti"
           start_date: "Alkupäivämäärä"
           end_date: "Loppupäivämäärä"
@@ -2169,8 +2161,6 @@ fi:
             grant_moderation: "myönnä valvojan oikeudet"
             revoke_moderation: "peru valvojan oikeudet"
             backup_operation: "varmuuskopiointi"
-            deleted_tag: "poistettu tagi"
-            renamed_tag: "uudelleennimetty tagi"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -2342,7 +2332,6 @@ fi:
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
-        stage_explanation: "Automaattisesti luotu käyttäjä voi vastata sähköpostilla vain erikseen määritettyihin ketjuihin."
         trust_level_change_failed: "Käyttäjän luottamustason vaihtamisessa tapahtui virhe."
         suspend_modal_title: "Hyllytä käyttäjä"
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
@@ -2662,26 +2651,4 @@ fi:
       </form>
       </p>
     tagging:
-      all_tags: "Kaikki tagit"
-      changed: "muutetut tagit:"
-      tags: "Tagit"
-      choose_for_topic: "valitse sopivat tagit aiheelle"
-      topics_tagged: "Aiheet tagattu <span class='discourse-tag'>{{tag}}</span>"
-      delete_tag: "Poista tagi"
-      delete_confirm: "Haluatko varmasti poistaa tagin?"
-      rename_tag: "Uudelleennimeä tagi"
-      rename_instructions: "Valitse tagin uusi nimi:"
-
-      notifications:
-        watching:
-          title: "Tarkkaile"
-          description: "Saat ilmoituksen kaikista uusista viesteistä ja ketjuista jotka käyttää tätä tagia. Uusien ja lukemattomien määrä näkyy ketjun yhteydessä."
-        tracking:
-          title: "Seuraa"
-          description: "Seuraat automaattisesti tämän tagin ketjuja ja viestejä. Uusien ja lukemattomien määrä näkyy ketjun yhteydessä."
-        regular:
-          title: "Tavallinen"
-          description: "Saat ilmoituksen kun joku mainitsee @nimesi tai vastaa ketjuun."
-        muted:
-          title: "Vaimenna"
-          description: "Et saa ilmoituksia, eikä se näy lukemattomissa."
+      sort_by_name: "nimi"

@@ -231,6 +231,10 @@ class Search
     end
   end
 
+  advanced_filter(/in:wiki/) do |posts,match|
+    posts.where(wiki: true)
+  end
+
   advanced_filter(/badge:(.*)/) do |posts,match|
     badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
     if badge_id
@@ -279,6 +283,24 @@ class Search
     end
   end
 
+  advanced_filter(/^\#([a-zA-Z0-9\-:]+)/) do |posts,match|
+    slug = match.to_s.split(":")
+    if slug[1]
+      # sub category
+      parent_category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
+      category_id = Category.where(slug: slug[1].downcase, parent_category_id: parent_category_id).pluck(:id).first
+    else
+      # main category
+      category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
+    end
+
+    if category_id
+      posts.where("topics.category_id = ?", category_id)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
   advanced_filter(/group:(.+)/) do |posts,match|
     group_id = Group.where('name ilike ? OR (id = ? AND id > 0)', match, match.to_i).pluck(:id).first
     if group_id
@@ -290,6 +312,15 @@ class Search
 
   advanced_filter(/user:(.+)/) do |posts,match|
     user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck(:id).first
+    if user_id
+      posts.where("posts.user_id = #{user_id}")
+    else
+      posts.where("1 = 0")
+    end
+  end
+
+  advanced_filter(/^\@([a-zA-Z0-9_\-.]+)/) do |posts,match|
+    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck(:id).first
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
@@ -481,7 +512,7 @@ class Search
       if @term.present?
         if is_topic_search
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
-          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
+          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{@term}%")
         else
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
           exact_terms = @term.scan(/"([^"]+)"/).flatten

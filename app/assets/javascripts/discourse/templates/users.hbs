@@ -26,22 +26,8 @@
               {{/if}}
             </thead>
             <tbody>
-              {{#each ic in model itemController="directory-item"}}
-                <tr class="{{if ic.me 'me'}}">
-                  {{#with ic.model as |it|}}
-                    <td>{{user-info user=it.user}}</td>
-                    <td>{{number it.likes_received}}</td>
-                    <td>{{number it.likes_given}}</td>
-                    <td>{{number it.topic_count}}</td>
-                    <td>{{number it.post_count}}</td>
-                    <td>{{number it.topics_entered}}</td>
-                    <td>{{number it.posts_read}}</td>
-                    <td>{{number it.days_visited}}</td>
-                    {{#if controller.parentController.showTimeRead}}
-                      <td><span class='time-read'>{{unbound it.time_read}}</span></td>
-                    {{/if}}
-                  {{/with}}
-                </tr>
+              {{#each model as |item|}}
+                {{directory-item item=item showTimeRead=showTimeRead}}
               {{/each}}
             </tbody>
           </table>

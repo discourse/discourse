@@ -4,7 +4,7 @@
 
 <%- if SiteSetting.tagging_enabled && @tag_id %>
   <h1>
-    <%= link_to "#{Discourse.base_url}/t/#{@tag_id}", itemprop: 'item' do %>
+    <%= link_to "#{Discourse.base_url}/tags/#{@tag_id}", itemprop: 'item' do %>
       <span itemprop='name'><%= @tag_id %></span>
     <% end %>
   </h1>

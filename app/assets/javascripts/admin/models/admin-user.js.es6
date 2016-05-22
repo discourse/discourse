@@ -1,3 +1,4 @@
+import computed from 'ember-addons/ember-computed-decorators';
 import { propertyNotEqual } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ApiKey from 'admin/models/api-key';
@@ -6,10 +7,46 @@ import TL3Requirements from 'admin/models/tl3-requirements';
 
 const AdminUser = Discourse.User.extend({
 
-  customGroups: Em.computed.filter("groups", (g) => !g.automatic && Group.create(g)),
-  automaticGroups: Em.computed.filter("groups", (g) => g.automatic && Group.create(g)),
+  customGroups: Ember.computed.filter("groups", g => !g.automatic && Group.create(g)),
+  automaticGroups: Ember.computed.filter("groups", g => g.automatic && Group.create(g)),
 
   canViewProfile: Ember.computed.or("active", "staged"),
+
+  @computed("bounce_score", "reset_bounce_score_after")
+  bounceScore(bounce_score, reset_bounce_score_after) {
+    if (bounce_score > 0) {
+      return `${bounce_score} - ${moment(reset_bounce_score_after).format('LL')}`;
+    } else {
+      return bounce_score;
+    }
+  },
+
+  @computed("bounce_score")
+  bounceScoreExplanation(bounce_score) {
+    if (bounce_score === 0) {
+      return I18n.t("admin.user.bounce_score_explanation.none");
+    } else if (bounce_score < Discourse.SiteSettings.bounce_score_threshold) {
+      return I18n.t("admin.user.bounce_score_explanation.some");
+    } else {
+      return I18n.t("admin.user.bounce_score_explanation.threshold_reached");
+    }
+  },
+
+  @computed
+  bounceLink() {
+    return Discourse.getURL("/admin/email/bounced");
+  },
+
+  canResetBounceScore: Ember.computed.gt("bounce_score", 0),
+
+  resetBounceScore() {
+    return Discourse.ajax(`/admin/users/${this.get("id")}/reset_bounce_score`, {
+      type: 'POST'
+    }).then(() => this.setProperties({
+      "bounce_score": 0,
+      "reset_bounce_score_after": null
+    }));
+  },
 
   generateApiKey() {
     const self = this;

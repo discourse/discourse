@@ -293,6 +293,23 @@ class PluginApi {
     return addFlagProperty(property);
   }
 
+  /**
+   * Adds a pluralization to the store
+   *
+   * Example:
+   *
+   * ```javascript
+   * api.addStorePluralization('mouse', 'mice');
+   * ```
+   *
+   * ```javascript
+   * this.store.find('mouse');
+   * ```
+   * will issue a request to `/mice.json`
+   **/
+  addStorePluralization(thing, plural) {
+    this.container.lookup("store:main").addPluralization(thing, plural);
+  }
 }
 
 let _pluginv01;

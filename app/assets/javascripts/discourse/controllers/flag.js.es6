@@ -49,7 +49,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('post', 'flagTopic', 'model.actions_summary.@each.can_act'),
 
   staffFlagsAvailable: function() {
-    return (this.get('model.flagsAvailable').length > 1);
+    return (this.get('model.flagsAvailable') && this.get('model.flagsAvailable').length > 1);
   }.property('post', 'flagTopic', 'model.actions_summary.@each.can_act'),
 
   submitEnabled: function() {

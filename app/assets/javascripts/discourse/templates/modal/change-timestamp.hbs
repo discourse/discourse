@@ -3,7 +3,7 @@
     {{i18n 'topic.change_timestamp.instructions'}}
   </p>
 
-  <p {{bind-attr class=":alert :alert-error validTimestamp::hidden"}}>
+  <p class="alert alert-error {{unless validTimestamp 'hidden'}}">
     {{i18n 'topic.change_timestamp.invalid_timestamp'}}
   </p>
 
@@ -16,5 +16,5 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" {{bind-attr disabled="buttonDisabled"}} {{action "changeTimestamp"}}>{{buttonTitle}}</button>
+  <button class="btn btn-primary" disabled={{buttonDisabled}} {{action "changeTimestamp"}}>{{buttonTitle}}</button>
 </div>
