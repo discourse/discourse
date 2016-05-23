@@ -49,9 +49,9 @@ export default function() {
   });
 
   this.resource('group', { path: '/groups/:name' }, function() {
+    this.route('posts');
     this.route('topics');
     this.route('mentions');
-    this.route('members');
     this.route('messages');
   });
 
