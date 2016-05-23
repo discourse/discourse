@@ -32,7 +32,7 @@ rvm:
 services:
   - redis-server
 
-sudo: false
+sudo: required
 dist: trusty
 
 cache:
