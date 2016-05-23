@@ -161,7 +161,7 @@ module BackupRestore
     end
 
     def unzip_archive
-      log "Unzipping archive..."
+      log "Unzipping archive, this may take a while..."
       FileUtils.cd(@tmp_directory) { `gzip --decompress '#{@archive_filename}'` }
     end
 

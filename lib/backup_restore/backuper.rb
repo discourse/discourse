@@ -257,12 +257,12 @@ module BackupRestore
         end
       end
 
-      log "Gzipping archive..."
+      log "Gzipping archive, this may take a while..."
       `gzip -5 #{tar_filename}`
     end
 
     def after_create_hook
-      log "Executing the after_create_hook for the backup"
+      log "Executing the after_create_hook for the backup..."
       backup = Backup.create_from_filename("#{File.basename(@archive_basename)}.tar.gz")
       backup.after_create_hook
     end
