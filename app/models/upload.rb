@@ -29,18 +29,16 @@ class Upload < ActiveRecord::Base
     thumbnail(width, height).present?
   end
 
-  def create_thumbnail!(width, height)
+  def create_thumbnail!(width, height, crop=false)
     return unless SiteSetting.create_thumbnails?
 
-    thumbnail = OptimizedImage.create_for(
-      self,
-      width,
-      height,
+    opts = {
       filename: self.original_filename,
-      allow_animation: SiteSetting.allow_animated_thumbnails
-    )
+      allow_animation: SiteSetting.allow_animated_thumbnails,
+      crop: crop && SiteSetting.crop_tall_images
+    }
 
-    if thumbnail
+    if thumbnail = OptimizedImage.create_for(self, width, height, opts)
       self.width = width
       self.height = height
       save(validate: false)

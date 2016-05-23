@@ -1094,6 +1094,7 @@ en:
     max_users_notified_per_group_mention: "Maximum number of users that may recieve a notification if a group is mentioned (if threshold is met no notifications will be raised)"
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
+    crop_tall_images: "When creating a thumbnail of a tall image, crop it instead of generating a thin thumbnail."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     private_email_time_window_seconds: "Wait (n) seconds before sending any private notification emails, to give users a chance to edit and finalize their messages."
