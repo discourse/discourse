@@ -12,6 +12,7 @@ export function iconHTML(icon, params) {
   params = params || {};
 
   var html = "<i class='" + iconClasses(icon, params) + "'";
+  if (params.title) { html += ` title='${I18n.t(params.title)}'`; }
   if (params.label) { html += " aria-hidden='true'"; }
   html += "></i>";
   if (params.label) {
