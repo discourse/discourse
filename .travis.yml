@@ -33,6 +33,7 @@ services:
   - redis-server
 
 sudo: false
+dist: trusty
 
 cache:
   directories:
