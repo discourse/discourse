@@ -613,7 +613,6 @@ files:
     type: list
     default: ''
   create_thumbnails: true
-  crop_tall_images: true
   clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours: 1
   purge_deleted_uploads_grace_period_days: 30

@@ -208,7 +208,7 @@ class CookedPostProcessor
     return if is_a_hyperlink?(img)
 
     crop = false
-    if SiteSetting.crop_tall_images && (original_width.to_f / original_height.to_f < 0.75)
+    if original_width.to_f / original_height.to_f < 0.75
       crop = true
       width, height = ImageSizer.crop(original_width, original_height)
       img["width"] = width

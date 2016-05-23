@@ -35,7 +35,7 @@ class Upload < ActiveRecord::Base
     opts = {
       filename: self.original_filename,
       allow_animation: SiteSetting.allow_animated_thumbnails,
-      crop: crop && SiteSetting.crop_tall_images
+      crop: crop
     }
 
     if thumbnail = OptimizedImage.create_for(self, width, height, opts)
