@@ -1,24 +1,11 @@
-export function buildIndex(type) {
-  return Discourse.Route.extend({
-    type,
+export default Discourse.Route.extend({
+  model() {
+    return this.modelFor("group");
+  },
 
-    model() {
-      return this.modelFor("group").findPosts({ type });
-    },
-
-    setupController(controller, model) {
-      this.controllerFor('group-index').setProperties({ model, type });
-      this.controllerFor("group").set("showing", type);
-    },
-
-    renderTemplate() {
-      this.render('group-index');
-    },
-
-    actions: {
-      didTransition() { return true; }
-    }
-  });
-}
-
-export default buildIndex('posts');
+  setupController(controller, model) {
+    this.controllerFor("group").set("showing", "members");
+    controller.set("model", model);
+    model.findMembers();
+  }
+});
