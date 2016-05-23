@@ -448,7 +448,7 @@ a.star {
   padding: 10px 10px 0 0;
   p {
     line-height: 32px;
-    color: $primary;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
   .btn {
     margin-bottom: 5px;
@@ -757,8 +757,16 @@ $topic-avatar-width: 45px;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-clip: padding-box;
-  span {font-size: 0.857em;}
-  .title {font-weight: bold; display: block; font-size: 1em;}
+  span {
+    font-size: 0.857em;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  }
+  span.title {
+    font-weight: bold;
+    display: block;
+    font-size: 1em;
+    color: $primary;
+  }
 }
 .dropdown-menu a {
   display: block;
