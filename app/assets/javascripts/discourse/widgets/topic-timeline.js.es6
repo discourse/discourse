@@ -21,6 +21,7 @@ createWidget('timeline-last-read', {
         className: 'btn btn-primary btn-small',
         icon: 'arrow-left',
         label: 'topic.timeline.back',
+        title: 'topic.timeline.back_description',
         action: 'goBack'
       })
     ];
