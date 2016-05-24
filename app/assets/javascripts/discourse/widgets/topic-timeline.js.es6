@@ -41,9 +41,8 @@ createWidget('timeline-scroller', {
   html(attrs) {
     const { current, total, date } = attrs;
 
-    const repliesKey = (total < 1000) ? 'replies' : 'replies_short';
     const contents = [
-      h('div.timeline-replies', I18n.t(`topic.timeline.${repliesKey}`, { current, total }))
+      h('div.timeline-replies', I18n.t(`topic.timeline.replies_short`, { current, total }))
     ];
 
     if (date) {
