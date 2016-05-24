@@ -1295,6 +1295,7 @@ en:
 
       timeline:
         back: "Back"
+        back_description: "Go back to first unread post"
         replies: "%{current} / %{total} replies"
         replies_short: "%{current} / %{total}"
 
