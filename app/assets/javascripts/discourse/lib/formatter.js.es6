@@ -125,43 +125,46 @@ export function autoUpdatingRelativeAge(date,options) {
   return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relAge  + "</span>";
 }
 
+function wrapAgo(dateStr) {
+  return I18n.t("dates.wrap_ago", { date: dateStr });
+}
 
-function relativeAgeTiny(date){
+function relativeAgeTiny(date, ageOpts) {
   const format = "tiny";
   const distance = Math.round((new Date() - date) / 1000);
   const distanceInMinutes = Math.round(distance / 60.0);
 
   let formatted;
-  const t = function(key,opts){
-    return I18n.t("dates." + format + "." + key, opts);
+  const t = function(key, opts) {
+    const result = I18n.t("dates." + format + "." + key, opts);
+    return (ageOpts && ageOpts.addAgo) ? wrapAgo(result) : result;
   };
 
-  switch(true){
-
-  case(distanceInMinutes < 1):
-    formatted = t("less_than_x_minutes", {count: 1});
-    break;
-  case(distanceInMinutes >= 1 && distanceInMinutes <= 44):
-    formatted = t("x_minutes", {count: distanceInMinutes});
-    break;
-  case(distanceInMinutes >= 45 && distanceInMinutes <= 89):
-    formatted = t("about_x_hours", {count: 1});
-    break;
-  case(distanceInMinutes >= 90 && distanceInMinutes <= 1409):
-    formatted = t("about_x_hours", {count: Math.round(distanceInMinutes / 60.0)});
-    break;
-  case(Discourse.SiteSettings.relative_date_duration === 0 && distanceInMinutes <= 525599):
-    formatted = shortDateNoYear(date);
-    break;
-  case(distanceInMinutes >= 1410 && distanceInMinutes <= 2519):
-    formatted = t("x_days", {count: 1});
-    break;
-  case(distanceInMinutes >= 2520 && distanceInMinutes <= ((Discourse.SiteSettings.relative_date_duration||14) * 1440)):
-    formatted = t("x_days", {count: Math.round(distanceInMinutes / 1440.0)});
-    break;
-  default:
-    formatted = smartShortDate(date);
-    break;
+  switch(true) {
+    case(distanceInMinutes < 1):
+      formatted = t("less_than_x_minutes", {count: 1});
+      break;
+    case(distanceInMinutes >= 1 && distanceInMinutes <= 44):
+      formatted = t("x_minutes", {count: distanceInMinutes});
+      break;
+    case(distanceInMinutes >= 45 && distanceInMinutes <= 89):
+      formatted = t("about_x_hours", {count: 1});
+      break;
+    case(distanceInMinutes >= 90 && distanceInMinutes <= 1409):
+      formatted = t("about_x_hours", {count: Math.round(distanceInMinutes / 60.0)});
+      break;
+    case(Discourse.SiteSettings.relative_date_duration === 0 && distanceInMinutes <= 525599):
+      formatted = shortDateNoYear(date);
+      break;
+    case(distanceInMinutes >= 1410 && distanceInMinutes <= 2519):
+      formatted = t("x_days", {count: 1});
+      break;
+    case(distanceInMinutes >= 2520 && distanceInMinutes <= ((Discourse.SiteSettings.relative_date_duration||14) * 1440)):
+      formatted = t("x_days", {count: Math.round(distanceInMinutes / 1440.0)});
+      break;
+    default:
+      formatted = smartShortDate(date);
+      break;
   }
 
   return formatted;
@@ -236,7 +239,7 @@ export function relativeAge(date, options) {
   options = options || {};
   const format = options.format || "tiny";
 
-  if(format === "tiny") {
+  if (format === "tiny") {
     return relativeAgeTiny(date, options);
   } else if (format === "medium") {
     return relativeAgeMedium(date, options);
