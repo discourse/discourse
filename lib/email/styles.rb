@@ -37,7 +37,7 @@ module Email
       @fragment.css('img').each do |img|
         next if img['class'] == 'site-logo'
 
-        if img['class'] == "emoji" || img['src'] =~ /plugins\/emoji/
+        if img['class'] == "emoji" || img['src'] =~ /(plugins|images)\/emoji/
           img['width'] = 20
           img['height'] = 20
         else
