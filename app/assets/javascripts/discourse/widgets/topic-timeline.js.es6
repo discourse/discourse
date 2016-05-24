@@ -48,7 +48,7 @@ createWidget('timeline-scroller', {
     if (date) {
       const format = (date.getFullYear() === new Date().getFullYear()) ?
                      'long_no_year_no_time' :
-                     'long_with_year_no_time';
+                     'timeline_diff_year';
 
       contents.push(h('div.timeline-ago', moment(date).format(I18n.t(`dates.${format}`))));
     }
