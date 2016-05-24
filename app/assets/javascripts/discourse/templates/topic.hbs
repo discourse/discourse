@@ -77,9 +77,11 @@
                              loading=model.postStream.loading
                              delegated=topicDelegated}}
           {{else}}
-            {{topic-progress topic=model delegated=topicDelegated}}
             {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
           {{/if}}
+
+          {{topic-progress topic=model delegated=topicDelegated}}
+
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
           {{plugin-outlet "topic-above-posts"}}

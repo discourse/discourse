@@ -21,6 +21,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   enteredAt: null,
   enteredIndex: null,
   retrying: false,
+  userTriggeredProgress: null,
 
   topicDelegated: [
     'toggleMultiSelect',
