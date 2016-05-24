@@ -167,11 +167,11 @@ class TagsController < ::ApplicationController
       parent_category_id = nil
       if parent_slug_or_id.present?
         parent_category_id = Category.query_parent_category(parent_slug_or_id)
-        raise Discourse::NotFound if parent_category_id.blank?
+        redirect_or_not_found and return if parent_category_id.blank?
       end
 
       @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
-      raise Discourse::NotFound if !@filter_on_category
+      redirect_or_not_found and return if !@filter_on_category
 
       guardian.ensure_can_see!(@filter_on_category)
     end
@@ -196,5 +196,18 @@ class TagsController < ::ApplicationController
       options[:slow_platform] = true if slow_platform?
 
       options
+    end
+
+    def redirect_or_not_found
+      # automatic redirects for renamed categories
+      url = params[:parent_category] ? "c/#{params[:parent_category]}/#{params[:category]}" : "c/#{params[:category]}"
+      permalink = Permalink.find_by_url(url)
+
+      if permalink.present? && permalink.category_id
+        redirect_to "#{Discourse::base_uri}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
+      else
+        # redirect to 404
+        raise Discourse::NotFound
+      end
     end
 end
