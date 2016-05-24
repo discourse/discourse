@@ -49,6 +49,9 @@ en:
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+
+      wrap_ago: "%{date} ago"
+
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
