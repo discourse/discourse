@@ -209,6 +209,9 @@ export default createWidget('topic-timeline', {
   html(attrs) {
     const { topic } = attrs;
     const createdAt = new Date(topic.created_at);
+    const stream = attrs.topic.get('postStream.stream');
+
+    if (stream.length < 3) { return; }
 
     const controls = [];
     if (attrs.topic.get('details.can_create_post')) {
@@ -225,25 +228,18 @@ export default createWidget('topic-timeline', {
       controls.push(this.attach('topic-admin-menu-button', { topic }));
     }
 
-    const result = [ h('div.timeline-controls', controls) ];
-    const stream = attrs.topic.get('postStream.stream');
-    if (stream.length > 2) {
-      return result.concat([
-        this.attach('link', {
-          className: 'start-date',
-          rawLabel: moment(createdAt).format(I18n.t('dates.timeline_start')),
-          action: 'jumpTop'
-        }),
-        this.attach('timeline-scrollarea', attrs),
-        this.attach('link', {
-          className: 'now-date',
-          icon: 'dot-circle-o',
-          rawLabel: relativeAge(new Date(topic.last_posted_at), { addAgo: true }),
-          action: 'jumpBottom'
-        })
-      ]);
-    }
-
-    return result;
+    return [ h('div.timeline-controls', controls),
+             this.attach('link', {
+               className: 'start-date',
+               rawLabel: moment(createdAt).format(I18n.t('dates.timeline_start')),
+               action: 'jumpTop'
+             }),
+             this.attach('timeline-scrollarea', attrs),
+             this.attach('link', {
+               className: 'now-date',
+               icon: 'dot-circle-o',
+               rawLabel: relativeAge(new Date(topic.last_posted_at), { addAgo: true }),
+               action: 'jumpBottom'
+             }) ];
   }
 });
