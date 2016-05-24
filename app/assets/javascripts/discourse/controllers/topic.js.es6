@@ -849,13 +849,24 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     if (topic.get('id') === topicId) {
 
+      let highestReadPostId = 0;
+
       // TODO identity map for postNumber
       postStream.get('posts').forEach(post => {
         if (!post.read && postNumbers.indexOf(post.post_number) !== -1) {
+          const id = post.get('id');
+          if (id > highestReadPostId) {
+            highestReadPostId = id;
+          }
+
           post.set('read', true);
-          this.appEvents.trigger('post-stream:refresh', { id: post.id });
+          this.appEvents.trigger('post-stream:refresh', { id });
         }
       });
+
+      if (highestReadPostId > 0) {
+        topic.set('last_read_post_id', highestReadPostId);
+      }
 
       const max = _.max(postNumbers);
       if (max > topic.get("last_read_post_number")) {
