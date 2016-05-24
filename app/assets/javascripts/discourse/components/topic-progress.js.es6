@@ -2,17 +2,30 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 
 export default Ember.Component.extend({
   elementId: 'topic-progress-wrapper',
-  classNameBindings: ['docked'],
+  classNameBindings: ['docked', 'hidden'],
   expanded: false,
   toPostIndex: null,
   docked: false,
   progressPosition: null,
-
   postStream: Ember.computed.alias('topic.postStream'),
+  userWantsToJump: null,
 
   init() {
     this._super();
     (this.get('delegated') || []).forEach(m => this.set(m, m));
+  },
+
+  @computed('userWantsToJump')
+  hidden(userWantsToJump) {
+    return !userWantsToJump && !this.site.mobileView;
+  },
+
+  keyboardTrigger(kbdEvent) {
+    if (kbdEvent.type === 'jump') {
+      this.set('expanded', true);
+      this.set('userWantsToJump', true);
+      Ember.run.scheduleOnce('afterRender', () => this.$('.jump-form input').focus());
+    }
   },
 
   @computed('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount', 'postStream.highest_post_number')
@@ -64,11 +77,8 @@ export default Ember.Component.extend({
                   .on("composer:resized", this, this._dock)
                   .on("composer:closed", this, this._dock)
                   .on("topic:scrolled", this, this._dock)
-                  .on('topic:current-post-changed', postNumber => this.set('progressPosition', postNumber));
-
-    // Reflows are expensive. Cache the jQuery selector
-    // and the width when inserted into the DOM
-    this._$topicProgress = this.$('#topic-progress');
+                  .on('topic:current-post-changed', postNumber => this.set('progressPosition', postNumber))
+                  .on('topic-progress:keyboard-trigger', this, this.keyboardTrigger);
 
     Ember.run.scheduleOnce('afterRender', this, this._updateProgressBar);
   },
@@ -79,18 +89,22 @@ export default Ember.Component.extend({
                   .off("composer:resized", this, this._dock)
                   .off("composer:closed", this, this._dock)
                   .off('topic:scrolled', this, this._dock)
-                  .off('topic:current-post-changed');
+                  .off('topic:current-post-changed')
+                  .off('topic-progress:keyboard-trigger');
   },
 
   _updateProgressBar() {
+    if (this.get('hidden')) { return; }
+
+    const $topicProgress = this.$('#topic-progress');
     // speeds up stuff, bypass jquery slowness and extra checks
     if (!this._totalWidth) {
-      this._totalWidth = this._$topicProgress[0].offsetWidth;
+      this._totalWidth = $topicProgress[0].offsetWidth;
     }
     const totalWidth = this._totalWidth;
     const progressWidth = this.get('streamPercentage') * totalWidth;
 
-    this._$topicProgress.find('.bg')
+    $topicProgress.find('.bg')
       .css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
       .width(progressWidth);
   },
@@ -143,6 +157,7 @@ export default Ember.Component.extend({
         this.send('jumpPost');
       } else if (e.keyCode === 27) {
         this.send('toggleExpansion');
+        this.set('userWantsToJump', false);
       }
     }
   },
@@ -151,6 +166,7 @@ export default Ember.Component.extend({
     toggleExpansion(opts) {
       this.toggleProperty('expanded');
       if (this.get('expanded')) {
+        this.set('userWantsToJump', false);
         this.set('toPostIndex', this.get('progressPosition'));
         if(opts && opts.highlight){
           // TODO: somehow move to view?
@@ -175,18 +191,23 @@ export default Ember.Component.extend({
         postIndex = this.get('postStream.filteredPostsCount');
       }
       this.set('toPostIndex', postIndex);
-      this.set('expanded', false);
+      this._beforeJump();
       this.sendAction('jumpToIndex', postIndex);
     },
 
     jumpTop() {
-      this.set('expanded', false);
+      this._beforeJump();
       this.sendAction('jumpTop');
     },
 
     jumpBottom() {
-      this.set('expanded', false);
+      this._beforeJump();
       this.sendAction('jumpBottom');
     }
+  },
+
+  _beforeJump() {
+    this.set('expanded', false);
+    this.set('userWantsToJump', false);
   }
 });

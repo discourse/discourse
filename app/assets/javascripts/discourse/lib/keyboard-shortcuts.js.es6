@@ -159,7 +159,7 @@ export default {
   },
 
   toggleProgress() {
-    this.container.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
+    this.appEvents.trigger('topic-progress:keyboard-trigger', { type: 'jump' });
   },
 
   toggleSearch(event) {
