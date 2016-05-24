@@ -2,8 +2,12 @@
 <html lang="<%= SiteSetting.default_locale %>">
   <head>
     <meta charset="utf-8">
-    <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
-    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <%
+    tagTitle = content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title
+    tagMetaDescription = @description_meta || SiteSetting.site_description
+    %>
+    <title><%= tagTitle[0..53] + '...' %></title>
+    <meta name="description" content="<%= tagMetaDescription[0..153] + '...' %>">
     <%= render partial: "layouts/head" %>
     <%- unless customization_disabled? %>
       <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
