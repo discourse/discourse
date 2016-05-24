@@ -47,6 +47,7 @@ class TopicViewSerializer < ApplicationSerializer
              :details,
              :highest_post_number,
              :last_read_post_number,
+             :last_read_post_id,
              :deleted_by,
              :has_deleted,
              :actions_summary,
@@ -164,8 +165,16 @@ class TopicViewSerializer < ApplicationSerializer
     object.highest_post_number
   end
 
+  def last_read_post_id
+    return nil unless object.filtered_post_stream && last_read_post_number
+    object.filtered_post_stream.each do |ps|
+      return ps[0] if ps[1] === last_read_post_number
+    end
+  end
+  alias_method :include_last_read_post_id?, :has_topic_user?
+
   def last_read_post_number
-    object.topic_user.last_read_post_number
+    @last_read_post_number ||= object.topic_user.last_read_post_number
   end
   alias_method :include_last_read_post_number?, :has_topic_user?
 

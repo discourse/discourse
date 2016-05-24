@@ -20,7 +20,7 @@ createWidget('timeline-last-read', {
       this.attach('button', {
         className: 'btn btn-primary btn-small',
         icon: 'arrow-left',
-        label: 'go_back',
+        label: 'topic.timeline.back',
         action: 'goBack'
       })
     ];
@@ -92,7 +92,8 @@ createWidget('timeline-scrollarea', {
   position() {
     const { attrs } = this;
     const percentage = this.state.percentage;
-    const postStream = attrs.topic.get('postStream');
+    const topic = attrs.topic;
+    const postStream = topic.get('postStream');
     const total = postStream.get('filteredPostsCount');
     let current = Math.round(total * percentage);
 
@@ -111,12 +112,13 @@ createWidget('timeline-scrollarea', {
       lastReadPercentage: null
     };
 
-    if (attrs.topicTrackingState) {
-      const lastRead = attrs.topicTrackingState.lastReadPostNumber(attrs.topic.id);
-      if (lastRead) {
-        result.lastRead = lastRead;
-        result.lastReadPercentage = lastRead === 1 ? 0.0 : parseFloat(lastRead) / total;
-      }
+    const lastReadId = topic.last_read_post_id;
+    const lastReadNumber = topic.last_read_post_number;
+
+    if (lastReadId && lastReadNumber) {
+      const idx = postStream.get('stream').indexOf(lastReadId) + 1;
+      result.lastRead = lastReadNumber;
+      result.lastReadPercentage = this._percentFor(topic, idx);
     }
 
     return result;
@@ -173,7 +175,6 @@ createWidget('timeline-scrollarea', {
 
   _percentFor(topic, postNumber) {
     const total = topic.get('postStream.filteredPostsCount');
-    console.log(postNumber, total);
     let result = (postNumber === 1) ? 0.0 : parseFloat(postNumber) / total;
 
     if (result < 0) { return 0.0; }
