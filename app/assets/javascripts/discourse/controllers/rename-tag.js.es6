@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import BufferedContent from 'discourse/mixins/buffered-content';
+import { extractError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend(ModalFunctionality, BufferedContent, {
 
@@ -19,14 +20,10 @@ export default Ember.Controller.extend(ModalFunctionality, BufferedContent, {
         if (result.responseJson.tag) {
           self.transitionToRoute('tags.show', result.responseJson.tag.id);
         } else {
-          self.flash(result.responseJson.errors || I18n.t('generic_error'), 'error');
+          self.flash(extractError(result.responseJson.errors[0]), 'error');
         }
-      }).catch(function(e) {
-        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-          self.flash(e.jqXHR.responseJSON.errors[0], 'error');
-        } else {
-          self.flash(I18n.t('generic_error'), 'error');
-        }
+      }).catch(function(error) {
+        self.flash(extractError(error), 'error');
       });
     }
   }
