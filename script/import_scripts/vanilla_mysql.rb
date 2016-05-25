@@ -320,7 +320,9 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     raw.gsub!(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
 
     # sanitize img tags
-    raw.gsub!(/\<img.*src\="([^\"]+)\".*\>/i) {"\n<img src='#{$1}'>\n"}
+    # This regexp removes everything between the first and last img tag. The .* is too much.
+    # If it's needed, it needs to be fixed.
+    # raw.gsub!(/\<img.*src\="([^\"]+)\".*\>/i) {"\n<img src='#{$1}'>\n"}
 
     raw
   end
