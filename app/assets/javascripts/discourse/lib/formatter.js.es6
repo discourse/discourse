@@ -163,7 +163,7 @@ function relativeAgeTiny(date, ageOpts) {
       formatted = t("x_days", {count: Math.round(distanceInMinutes / 1440.0)});
       break;
     default:
-      formatted = smartShortDate(date);
+      formatted = (ageOpts.defaultFormat || smartShortDate)(date);
       break;
   }
 
