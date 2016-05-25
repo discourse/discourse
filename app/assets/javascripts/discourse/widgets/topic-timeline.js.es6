@@ -238,7 +238,7 @@ export default createWidget('topic-timeline', {
              this.attach('link', {
                className: 'now-date',
                icon: 'dot-circle-o',
-               rawLabel: relativeAge(new Date(topic.last_posted_at), { addAgo: true }),
+               rawLabel: relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate }),
                action: 'jumpBottom'
              }) ];
   }
