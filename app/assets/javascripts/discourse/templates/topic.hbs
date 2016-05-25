@@ -71,16 +71,18 @@
       <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
         <div class="posts-wrapper">
 
-          {{#if showTimeline}}
-            {{topic-timeline topic=model
-                             enteredIndex=enteredIndex
-                             loading=model.postStream.loading
-                             delegated=topicDelegated}}
-          {{else}}
-            {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
-          {{/if}}
+          {{#topic-navigation as |showTimeline|}}
+            {{#if showTimeline}}
+              {{topic-timeline topic=model
+                               enteredIndex=enteredIndex
+                               loading=model.postStream.loading
+                               delegated=topicDelegated}}
+            {{else}}
+              {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
+            {{/if}}
 
-          {{topic-progress topic=model delegated=topicDelegated}}
+            {{topic-progress topic=model delegated=topicDelegated showTimeline=showTimeline}}
+          {{/topic-navigation}}
 
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 

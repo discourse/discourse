@@ -15,9 +15,9 @@ export default Ember.Component.extend({
     (this.get('delegated') || []).forEach(m => this.set(m, m));
   },
 
-  @computed('userWantsToJump')
-  hidden(userWantsToJump) {
-    return !userWantsToJump && !this.site.mobileView;
+  @computed('userWantsToJump', 'showTimeline')
+  hidden(userWantsToJump, showTimeline) {
+    return !userWantsToJump && showTimeline;
   },
 
   keyboardTrigger(kbdEvent) {

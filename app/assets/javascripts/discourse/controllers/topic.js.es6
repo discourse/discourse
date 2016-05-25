@@ -42,16 +42,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     'replyToPost'
   ],
 
-  @computed
-  showTimeline() {
-    return !this.site.mobileView;
-  },
-
-  @computed('showTimeline')
-  loadingClass(showTimeline) {
-    return showTimeline ? 'timeline-loading' : undefined;
-  },
-
   _titleChanged: function() {
     const title = this.get('model.title');
     if (!Ember.isEmpty(title)) {
