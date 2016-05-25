@@ -708,10 +708,16 @@ trust:
     default: 25
     min: 0
     max: 100
+  tl3_requires_topics_viewed_cap:
+    default: 500
+    min: 0
   tl3_requires_posts_read:
     default: 25
     min: 0
     max: 100
+  tl3_requires_posts_read_cap:
+    default: 20000
+    min: 0
   tl3_requires_topics_viewed_all_time:
     default: 200
     min: 0
