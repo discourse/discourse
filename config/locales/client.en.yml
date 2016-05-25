@@ -36,8 +36,7 @@ en:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      timeline_start: "MMMM YYYY"
-      timeline_diff_year: "MMM YYYY"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
