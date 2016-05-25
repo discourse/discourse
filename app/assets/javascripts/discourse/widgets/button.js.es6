@@ -30,12 +30,11 @@ export default createWidget('button', {
 
   html(attrs) {
     const contents = [];
-
     const left = !attrs.iconRight;
-    if (attrs.icon && left) { contents.push(iconNode(attrs.icon)); }
+    if (attrs.icon && left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
     if (attrs.label) { contents.push(I18n.t(attrs.label, attrs.labelOptions)); }
     if (attrs.contents) { contents.push(attrs.contents); }
-    if (attrs.icon && !left) { contents.push(iconNode(attrs.icon)); }
+    if (attrs.icon && !left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
 
     return contents;
   },

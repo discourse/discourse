@@ -225,7 +225,10 @@ export default createWidget('topic-timeline', {
 
     const { currentUser } = this;
     if (currentUser && currentUser.get('canManageTopic')) {
-      controls.push(this.attach('topic-admin-menu-button', { topic }));
+      if (currentUser.get('canManageTopic')) {
+        controls.push(this.attach('topic-admin-menu-button', { topic }));
+      }
+      controls.push(this.attach('topic-notifications-button', { topic }));
     }
 
     return [ h('div.timeline-controls', controls),
