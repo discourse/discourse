@@ -111,7 +111,6 @@ discourse_env_vars = %w(DISCOURSE_DUMP_HEAP RUBY_GC_HEAP_INIT_SLOTS RUBY_GC_HEAP
 
 if @include_env
   puts "Running with tuned environment"
-  ENV["RUBY_GC_MALLOC_LIMIT"] = "50_000_000"
   discourse_env_vars - %w(RUBY_GC_MALLOC_LIMIT).each do |v|
     ENV.delete v
   end
