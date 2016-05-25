@@ -4,7 +4,7 @@
 
 .timeline-container {
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 999;
   margin-left: 757px;
   position: fixed;
   -webkit-transform: translate3d(0,0,0);
@@ -22,6 +22,13 @@
 
       button {
         margin-right: 0.5em;
+      }
+
+      ul.dropdown-menu {
+        right: 0.5em;
+        top: 23px;
+        bottom: auto;
+        left: auto;
       }
     }
 
