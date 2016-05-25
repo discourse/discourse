@@ -3,7 +3,7 @@ export default Ember.Component.extend({
 
   _checkSize() {
     const width = $(window).width();
-    this.set('showTimeline', width > 1012);
+    this.set('showTimeline', width > 960);
   },
 
   didInsertElement() {

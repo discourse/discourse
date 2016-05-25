@@ -224,25 +224,29 @@ export default createWidget('topic-timeline', {
     }
 
     const { currentUser } = this;
-    if (currentUser && currentUser.get('canManageTopic')) {
-      if (currentUser.get('canManageTopic')) {
-        controls.push(this.attach('topic-admin-menu-button', { topic }));
-      }
+    if (currentUser) {
       controls.push(this.attach('topic-notifications-button', { topic }));
     }
 
-    return [ h('div.timeline-controls', controls),
-             this.attach('link', {
-               className: 'start-date',
-               rawLabel: timelineDate(createdAt),
-               action: 'jumpTop'
-             }),
-             this.attach('timeline-scrollarea', attrs),
-             this.attach('link', {
-               className: 'now-date',
-               icon: 'dot-circle-o',
-               rawLabel: relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate }),
-               action: 'jumpBottom'
-             }) ];
+    const rawLabel = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
+    const result = [ h('div.timeline-controls', controls),
+                     this.attach('link', {
+                       className: 'start-date',
+                       rawLabel: timelineDate(createdAt),
+                       action: 'jumpTop'
+                     }),
+                     this.attach('timeline-scrollarea', attrs),
+                     this.attach('link', {
+                       className: 'now-date',
+                       icon: 'dot-circle-o',
+                       rawLabel,
+                       action: 'jumpBottom'
+                     }) ];
+
+    if (currentUser && currentUser.get('canManageTopic')) {
+      result.push(h('div.timeline-footer-controls', this.attach('topic-admin-menu-button', { topic })));
+    }
+
+    return result;
   }
 });
