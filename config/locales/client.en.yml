@@ -1147,7 +1147,7 @@ en:
 
       context:
         user: "Search posts by @{{username}}"
-        category: "Search the \"{{category}}\" category"
+        category: "Search the #{{category}} category"
         topic: "Search this topic"
         private_messages: "Search messages"
 
