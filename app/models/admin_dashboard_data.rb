@@ -91,7 +91,7 @@ class AdminDashboardData
     ]
 
     add_problem_check :rails_env_check, :ruby_version_check, :host_names_check,
-                      :gc_checks, :ram_check, :google_oauth2_config_check,
+                      :ram_check, :google_oauth2_config_check,
                       :facebook_config_check, :twitter_config_check,
                       :github_config_check, :s3_config_check, :image_magick_check,
                       :failing_emails_check, :default_logo_check, :contact_email_check,
@@ -167,10 +167,6 @@ class AdminDashboardData
 
   def host_names_check
     I18n.t("dashboard.host_names_warning") if ['localhost', 'production.localhost'].include?(Discourse.current_hostname)
-  end
-
-  def gc_checks
-    I18n.t("dashboard.gc_warning") if ENV['RUBY_GC_MALLOC_LIMIT'].nil?
   end
 
   def sidekiq_check
