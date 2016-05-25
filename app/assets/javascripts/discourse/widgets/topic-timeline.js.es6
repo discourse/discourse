@@ -31,6 +31,11 @@ createWidget('timeline-last-read', {
   }
 });
 
+function timelineDate(date) {
+  const fmt = (date.getFullYear() === new Date().getFullYear()) ?  'long_no_year_no_time' : 'timeline_date';
+  return moment(date).format(I18n.t(`dates.${fmt}`));
+}
+
 createWidget('timeline-scroller', {
   tagName: 'div.timeline-scroller',
 
@@ -46,11 +51,7 @@ createWidget('timeline-scroller', {
     ];
 
     if (date) {
-      const format = (date.getFullYear() === new Date().getFullYear()) ?
-                     'long_no_year_no_time' :
-                     'timeline_diff_year';
-
-      contents.push(h('div.timeline-ago', moment(date).format(I18n.t(`dates.${format}`))));
+      contents.push(h('div.timeline-ago', timelineDate(date)));
     }
 
     return [ h('div.timeline-handle'), h('div.timeline-scroller-content', contents) ];
@@ -230,7 +231,7 @@ export default createWidget('topic-timeline', {
     return [ h('div.timeline-controls', controls),
              this.attach('link', {
                className: 'start-date',
-               rawLabel: moment(createdAt).format(I18n.t('dates.timeline_start')),
+               rawLabel: timelineDate(createdAt),
                action: 'jumpTop'
              }),
              this.attach('timeline-scrollarea', attrs),
