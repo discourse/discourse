@@ -14,7 +14,7 @@ export default Ember.Mixin.create({
     $(window).bind('scroll.discourse-dock', this._dockHandler);
     $(document).bind('touchmove.discourse-dock', this._dockHandler);
 
-    this._dockHandler();
+    this.dockCheck(helper);
   },
 
   willDestroyElement() {
