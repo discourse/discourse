@@ -134,6 +134,7 @@ end
 #  user_id                       :integer          not null, primary key
 #  email_always                  :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null
+#  mailing_list_mode_frequency   :integer          default(1), not null
 #  email_digests                 :boolean
 #  email_direct                  :boolean          default(TRUE), not null
 #  email_private_messages        :boolean          default(TRUE), not null
