@@ -124,7 +124,7 @@ sq:
         disabled: 'hapur %{when}'
       archived:
         enabled: 'arkivoi %{when}'
-        disabled: 'çarkivuar %{when}'
+        disabled: 'paarkivuar %{when}'
       pinned:
         enabled: 'mbërthyer %{when}'
         disabled: 'zbërthyer %{when}'

@@ -111,6 +111,8 @@ fi:
       google+: 'jaa tämä linkki Google+:ssa'
       email: 'lähetä tämä linkki sähköpostissa'
     action_codes:
+      public_topic: "teki ketjusta julkisen %{when}"
+      private_topic: "teki ketjusta yksityisen %{when}"
       split_topic: "pilkkoi tämän ketjun %{when}"
       invited_user: "kutsui käyttäjän %{who} %{when}"
       removed_user: "poisti käyttäjän %{who} %{when}"

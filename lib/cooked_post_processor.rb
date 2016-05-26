@@ -194,7 +194,10 @@ class CookedPostProcessor
     original_width, original_height = get_size(src)
 
     # can't reach the image...
-    if original_width.nil? || original_height.nil?
+    if original_width.nil? ||
+       original_height.nil? ||
+       original_width == 0 ||
+       original_height == 0
       Rails.logger.info "Can't reach '#{src}' to get its dimension."
       return
     end
@@ -204,8 +207,16 @@ class CookedPostProcessor
 
     return if is_a_hyperlink?(img)
 
+    crop = false
+    if original_width.to_f / original_height.to_f < 0.75
+      crop = true
+      width, height = ImageSizer.crop(original_width, original_height)
+      img["width"] = width
+      img["height"] = height
+    end
+
     if upload = Upload.get_from_url(src)
-      upload.create_thumbnail!(width, height)
+      upload.create_thumbnail!(width, height, crop)
     end
 
     add_lightbox!(img, original_width, original_height, upload)

@@ -159,8 +159,16 @@ it:
   rss_description:
     latest: "Argomenti più recenti"
     hot: "Argomenti caldi"
+    top: "Argomenti di punta"
     posts: "Ultimi messaggi"
+    private_posts: "Ultimi messaggi privati"
+    group_posts: "Ultimi messaggi da %{group_name}"
+    group_mentions: "Ultime menzioni da %{group_name}"
+    user_posts: "Ultimi messaggi di @%{username}"
+    user_topics: "Ultimi argomenti di @%{username}"
+    tag: "Argomenti etichettati"
   too_late_to_edit: "Questo messaggio è stato creato troppo tempo fa. Non può più essere modificato né cancellato."
+  revert_version_same: "La versione attuale è la stessa versione che stai cercando di ripristinare."
   excerpt_image: "immagine"
   queue:
     delete_reason: "Cancellato attraverso la coda di moderazione"
@@ -169,6 +177,7 @@ it:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
       member_already_exist: "'%{username}' è già membro di questo gruppo."
       invalid_domain: "'%{domain}' non è un dominio valido."
+      invalid_incoming_email: "'%{email}' non è un indirizzo email valido."
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -728,7 +737,7 @@ it:
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
     track_external_right_clicks: "Segui i collegamenti esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché riscrive le URL"
     site_contact_username: "Un utente dello staff valido da cui inviare tutti i messaggi automatici. Se lasciato vuoto verrà usato l'account System di default."
-    send_welcome_message: "nvia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
+    send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     suppress_reply_directly_below: "Non mostrare il conteggio espandibile delle risposte quando c'è una sola risposta sotto quel messaggio."
     suppress_reply_directly_above: "Non mostrare in-risposta-a espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio. "
     suppress_reply_when_quoting: "Non mostrare in-risposta-a espandibile in un messaggio quando il messaggio include la citazione."
@@ -1273,6 +1282,10 @@ it:
   privacy_topic:
     title: "Politica della Privacy"
   badges:
+    welcome:
+      description: Hai ricevuto un Mi piace
+    great_topic:
+      description: Hai ricevuto 50 Mi piace su 1 argomento
     first_like:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
@@ -1286,11 +1299,21 @@ it:
       name: Primo Collegamento
     first_quote:
       description: Ha citato un messaggio
+    appreciated:
+      description: Hai ricevuto 1 Mi piace su 20 messaggi
+    respected:
+      description: Hai ricevuto 2 Mi piace su 100 messaggi
+    admired:
+      description: Hai ricevuto 5 Mi piace su 300 messaggi
   admin_login:
     success: "email Inviata"
     error: "Errore!"
     email_input: "Email Amministratore"
     submit_button: "Invia Email"
+  tags:
+    title: "Etichette"
+    staff_tag_remove_disallowed: "L'etichetta \"%{tag}\" può essere cancellata soltanto dallo staff."
+  rss_by_tag: "Argomenti etichettati %{tag}"
   time:
     <<: *datetime_formats
   activemodel:

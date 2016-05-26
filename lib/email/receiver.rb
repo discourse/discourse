@@ -212,16 +212,21 @@ module Email
         text = fix_charset(@mail)
       end
 
-      # prefer text over html
-      text = trim_discourse_markers(text) if text.present?
-      text, elided = EmailReplyTrimmer.trim(text, true) if text.present?
-      return [text, elided] if text.present?
+      use_html = html.present? && (!text.present? || SiteSetting.incoming_email_prefer_html)
+      use_text = text.present? unless use_html
 
-      # clean the html if that's all we've got
-      html = Email::HtmlCleaner.new(html).output_html if html.present?
-      html = trim_discourse_markers(html) if html.present?
-      html, elided = EmailReplyTrimmer.trim(html, true) if html.present?
-      return [html, elided] if html.present?
+      if use_text
+        text = trim_discourse_markers(text)
+        text, elided = EmailReplyTrimmer.trim(text, true)
+        return [text, elided]
+      end
+
+      if use_html
+        html = Email::HtmlCleaner.new(html).output_html
+        html = trim_discourse_markers(html)
+        html, elided = EmailReplyTrimmer.trim(html, true)
+        return [html, elided]
+      end
     end
 
     def fix_charset(mail_part)

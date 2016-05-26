@@ -105,8 +105,8 @@ gem 'sidekiq-statistic'
 
 # for sidekiq web
 gem 'sinatra', require: false
-
-gem 'therubyracer'
+gem 'execjs', require: false
+gem 'mini_racer'
 gem 'thin', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security

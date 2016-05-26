@@ -83,12 +83,13 @@ a.loading-onebox {
 @mixin onebox-favicon($class, $image) {
   &.#{$class} .source {
     background: image-url("favicons/#{$image}.png") no-repeat;
+    background-size: 16px 16px;
     padding-left: 20px;
   }
 }
 
 aside.onebox {
-  @include post-aside;
+  border: 5px solid dark-light-diff($primary, $secondary, 90%, -85%);
 
   padding: 12px 25px 12px 12px;
   font-size: 1em;

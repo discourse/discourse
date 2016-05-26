@@ -28,6 +28,7 @@ en:
       short_no_year: "%B %-d"
       # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
     month_names:
@@ -35,6 +36,8 @@ en:
     <<: *datetime_formats
   time:
     <<: *datetime_formats
+    am: "am"
+    pm: "pm"
 
   title: "Discourse"
   topics: "Topics"
@@ -1065,7 +1068,9 @@ en:
     tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last (tl3 time period) days to qualify for promotion to trust level 3. Set higher than tl3 time period to disable promotions to tl3. (0 or higher)"
     tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last (tl3 time period) days to qualify for promotion to trust level 3. (0 or higher)"
     tl3_requires_topics_viewed: "The percentage of topics created in the last (tl3 time period) days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
+    tl3_requires_topics_viewed_cap: "The maximum required number of topics viewed in the last (tl3 time period) days."
     tl3_requires_posts_read: "The percentage of posts created in the last (tl3 time period) days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
+    tl3_requires_posts_read_cap: "The maximum required number of posts read in the last (tl3 time period) days."
     tl3_requires_topics_viewed_all_time: "The minimum total number of topics a user must have viewed to qualify for trust level 3."
     tl3_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for trust level 3."
     tl3_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last (tl3 time period) days to qualify for promotion to trust level 3, where x is this setting's value. (0 or higher)"
@@ -1161,6 +1166,7 @@ en:
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    incoming_email_prefer_html: "Use the HTML instead of the text for incoming email. May cause unexcpeted formatting issues!"
 
     disable_emails: "Prevent Discourse from sending any kind of emails"
 
@@ -1300,6 +1306,7 @@ en:
     default_email_private_messages: "Send an email when someone messages the user by default."
     default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
     default_email_mailing_list_mode: "Send an email for every new post by default."
+    default_email_mailing_list_mode_frequency: "Users who enable mailing list mode will receive emails this often by default."
     disable_mailing_list_mode: "Disallow users from enabling mailing list mode."
     default_email_always: "Send an email notification even when the user is active by default."
     default_email_previous_replies: "Include previous replies in emails by default."
@@ -2278,6 +2285,15 @@ en:
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
 
+    mailing_list:
+      why: "All activity on %{site_link} for %{date}"
+      subject_template: "[%{site_name}] Summary for %{date}"
+      unsubscribe: "This summary is sent daily due to mailing list mode being enabled. To unsubscribe %{unsubscribe_link}."
+      from: "%{site_name} summary"
+      new_topics: "New topics"
+      topic_updates: "Topic updates"
+      view_this_topic: "View this topic"
+      back_to_top: "Back to top"
     forgot_password:
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |

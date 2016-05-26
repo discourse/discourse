@@ -40,6 +40,7 @@ describe FileStore::LocalStore do
     it "moves the file to the tombstone" do
       FileUtils.expects(:mkdir_p)
       FileUtils.expects(:move)
+      File.expects(:exists?).returns(true)
       upload = Upload.new
       upload.stubs(:url).returns("/uploads/default/42/253dc8edf9d4ada1.png")
       store.remove_upload(upload)
@@ -52,6 +53,7 @@ describe FileStore::LocalStore do
     it "moves the file to the tombstone" do
       FileUtils.expects(:mkdir_p)
       FileUtils.expects(:move)
+      File.expects(:exists?).returns(true)
       oi = OptimizedImage.new
       oi.stubs(:url).returns("/uploads/default/_optimized/42/253dc8edf9d4ada1.png")
       store.remove_optimized_image(upload)

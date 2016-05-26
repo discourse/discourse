@@ -476,6 +476,7 @@ class User < ActiveRecord::Base
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
+    update_column(:first_seen_at, now) unless self.first_seen_at
   end
 
   def self.gravatar_template(email)

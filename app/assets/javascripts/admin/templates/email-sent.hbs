@@ -29,7 +29,10 @@
             &mdash;
           {{/if}}
         </td>
-        <td><a href='mailto:{{unbound l.to_address}}'>{{l.to_address}}</a></td>
+        <td>
+          {{#if l.bounced}}{{fa-icon "repeat" title="admin.email.bounced"}}{{/if}}
+          <a href='mailto:{{unbound l.to_address}}'>{{l.to_address}}</a>
+        </td>
         <td>{{l.email_type}}</td>
         <td class='post-link'>
           {{#if l.post_url}}

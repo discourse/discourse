@@ -141,6 +141,10 @@ header .discourse-tag {color: $tag-color !important; }
   margin: 5px 0;
 }
 
+.title-wrapper .tag-chooser {
+  width: 500px;
+}
+
 .admin-tag {
   position: relative;
   float: right;

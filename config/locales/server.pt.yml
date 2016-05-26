@@ -24,7 +24,7 @@ pt:
   loading: "A carregar"
   powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, e melhor visualizado com o JavaScript ativo'
   log_in: "Iniciar Sessão"
-  purge_reason: "Automaticamente eliminado devido a abandono, conta inativada"
+  purge_reason: "Conta removida automaticamente como conta abandonada, desactivada."
   disable_remote_images_download_reason: "O download remoto de imagens foi desativado por não haver espaço disponível no disco."
   anonymous: "Anónimo"
   emails:
@@ -35,7 +35,7 @@ pt:
         empty_email_error: "Acontece quando, a informação não processada, do email recebido veio em branco."
         no_message_id_error: "Acontece quando o email recebido não tem 'Message-Id' no cabeçalho da mensagem."
         auto_generated_email_error: "Acontece quando o cabeçalho 'precedence' é definida como: 'list', 'junk' ou 'auto_reply', ou quando algum cabeçalho contém: 'auto-submitted', 'auto-replied' ou 'auto-generated'."
-        no_body_detected_error: "Acontece quando não conseguimos extrair o corpo da mensagem e não existem anexos."
+        no_body_detected_error: "Acontece quando não se consegue obter um corpo de mensagem e não existem anexos."
         inactive_user_error: "Acontece quando o remetente não está activo."
         blocked_user_error: "Acontece quando o remetente está bloqueado."
         bad_destination_address: "Acontece quando nenhum dos endereços de email nos campos para/cc/bcc coincide com um endereço de email configurado."
@@ -44,6 +44,9 @@ pt:
         reply_user_not_matching_error: "Acontece quando uma resposta veio de um endereço de email diferente do destinatário da notificação."
         topic_not_found_error: "Acontece quando a resposta veio de um tópico relacionado mas o tópico relacionado foi apagado."
         topic_closed_error: "Acontece quando uma resposta chegou mas o tópico relacionado foi fechado."
+        bounced_email_error: "O email é um relatório devolvido."
+        auto_generated_email_reply: "O email contém uma resposta a um email gerado automaticamente."
+        screened_email_error: "Acontece quando a morada de email da pessoa que enviou já foi confirmada."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -174,6 +177,7 @@ pt:
     group_mentions: "Últimas menções em %{group_name}"
     user_posts: "Mensagens mais recentes criados por @%{username}"
     user_topics: "Tópicos mais recentes criados por @%{username}"
+    tag: "Tópicos etiquetados"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   revert_version_same: "A versão atual é o mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
@@ -181,7 +185,7 @@ pt:
     delete_reason: "Eliminado através da fila de moderação de mensagens"
   groups:
     errors:
-      can_not_modify_automatic: "Não pode modificar um grupo automático"
+      can_not_modify_automatic: "Não pode modificar um grupo automatico"
       member_already_exist: "'%{username}' já é membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
       invalid_incoming_email: "'%{email}' não é um endereço de email válido."
@@ -475,7 +479,7 @@ pt:
     continue_button: "Continuar para %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
-    missing_session: "Não conseguimos detetar se a sua conta foi criada, por favor assegure-se que tem os cookies ativos."
+    missing_session: "Não conseguimos detectar se a sua conta foi criada, pelo que pedimos que confirme que tem os cookies possibilitados."
   post_action_types:
     off_topic:
       title: 'Fora de Contexto'
@@ -721,6 +725,9 @@ pt:
     email_polling_errored_recently:
       one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
       other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='/logs' target='_blank'>os registos</a> para mais detalhes."
+    bad_favicon_url: "Não estamos a conseguir carregar o favicon. Pot favor, confirme a sua configuração favicon_url nas  <a href='/admin/site_settings'>Configurações do sítio</a>."
+    poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. Email de caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
+    poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='/admin/site_settings/category/email'>configuração de POP3</a>."
   site_settings:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
@@ -765,6 +772,7 @@ pt:
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
     onebox_domains_whitelist: "Lista de domínios que permitem colocar em caixa única; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
     logo_url: "A imagem do logótipo no canto superior esquerdo do seu sítio, deve ter uma forma retangular. Quando deixada em branco, o texto do título do sítio será exibido."
+    digest_logo_url: "O logotipo alternativo usado no topo do email de resumo do seu sítio. Deve ter um formato rectangular amplo. Não pode ser uma imagem em formato SVG. Se deixado em branco, `logo_url` será utilizado."
     logo_small_url: "A pequena imagem do logótipo no canto superior esquerdo do seu sítio, deve ter uma forma quadrada, visível quando arrastado para baixo. Quando deixado em branco, um glifo de início será exibido."
     favicon_url: "Um favicon para o seu sítio, veja http://en.wikipedia.org/wiki/Favicon, para trabalhar corretamente sobre um CDN deve ser um png"
     mobile_logo_url: "A imagem do logótipo com posição fixa utilizada no canto superior esquerdo do seu sítio móvel deve ter uma forma quadrada. Quando deixado em branco, `logo_url` será utilizado. ex: http://exemplo.com/uploads/default/logo.png"
@@ -785,6 +793,7 @@ pt:
     polling_interval: "Quando não está a ocorrer uma solicitação ao servidor, com que frequência devem os clientes ligados requerer uma atualização, em milissegundos"
     anon_polling_interval: "Com que frequência os clientes não registados podem fazer solicitações ao servidor, em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
+    flags_required_to_hide_post: "Número de bandeiras que fazem com que uma mensagem seja automaticamente escondida e uma mensagem enviada ao utilizador (0 se nunca)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que o utilizador deve esperar antes de poder editar uma mensagem oculta devido a sinalizações por parte da comunidade"
     max_topics_in_first_day: "O número máximo de tópicos que é o utilizador pode criar no seu primeiro dia no Fórum."
     max_replies_in_first_day: "Número máximo de mensagens que um utilizador pode criar no seu primeiro dia no Fórum."

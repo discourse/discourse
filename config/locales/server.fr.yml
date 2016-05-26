@@ -31,6 +31,7 @@ fr:
     incoming:
       default_subject: "Courriel arrivant de %{email}"
       show_trimmed_content: "Montrer le contenu raccourci"
+      maximum_staged_user_per_email_reached: "Vous avez atteint le nombre maximal d'utilisateurs qui peuvent être créés par mail."
       errors:
         empty_email_error: "Arrive quand le courriel reçu était vide."
         no_message_id_error: "Arrive quand le courrier n'a pas d'en-tête \"Message-Id\"."
@@ -44,7 +45,7 @@ fr:
         reply_user_not_matching_error: "Arrive quand une réponse est venue d'une adresse de courriel différente de celle où a été envoyée la notification."
         topic_not_found_error: "Arrive quand quelqu'un répond à un sujet qui a été supprimé."
         topic_closed_error: "Arrive quand quelqu'un répond mais le sujet lié a été fermé."
-        bounced_email_report: "Le courriel est un rapport de courriel rejeté."
+        bounced_email_error: "Le courriel est un rapport de courriel rejeté."
         auto_generated_email_reply: "Email contient une réponse à un email automatiquement généré."
         screened_email_error: "Arrive quand l'adresse courriel de l'expéditeur est déjà sous surveillance."
   errors: &errors
@@ -713,6 +714,9 @@ fr:
     site_contact_username_warning: "Saisissez le pseudo d'un responsable sympathique à partir duquel sera envoyé les messages importants. Mettez à jour site_contact_username dans les <a href='/admin/site_settings'>Paramètres du site</a>."
     notification_email_warning: "Les courriels de notification ne serot pas envoyés depuis une adresse de courriel valide sur votre domaine ; l'envoie des courriels sera aléatoire et peu fiable. Veuillez saisir une adresse de courriel locale dans notification_email  dans les <a href='/admin/site_settings'>Paramètres du site</a>."
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
+    email_polling_errored_recently:
+      one: "La vérification des mails a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
+      other: "La vérification des mails a généré %{count} erreurs au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
     bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon_url dans les <a href='/admin/site_settings'>paramètres du site</a>"
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
@@ -1105,10 +1109,8 @@ fr:
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
-    tagging_enabled: "Autoriser les utilisateurs à mettre des tags sur les sujets ?"
-    min_trust_to_create_tag: "Le niveau de confiance requis pour créer un tag."
-    max_tags_per_topic: "Le nombre maximum de tags qui peuvent être ajouté à un sujet."
-    max_tag_length: "The nombre maximum de caractères qui peuvent être utilisés pour un tag."
+    tagging_enabled: "Activer les tags sur les sujets ?"
+    tag_style: "Style visuel pour tag badges."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -1929,6 +1931,7 @@ fr:
   avatar:
     missing: "Désolé, nous ne parvenons pas à trouver un avatar associé à cette adresse mail. Pouvez-vous essayer de la télécharger à nouveau ?"
   email_log:
+    post_user_deleted: "L'auteur du message a été supprimé."
     no_user: "Impossible de trouver l'utilisateur avec l'id %{user_id}"
     anonymous_user: "L'utilisateur est anonyme"
     suspended_not_pm: "L'utilisateur est suspendu, pas de message"
@@ -2211,25 +2214,23 @@ fr:
         Ce badge est accordé lorsque vous utilisez tous les 50 de vos j'aime quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et d'apprécier encourager vos membres de la communauté pour créer encore plus de grandes discussions à l'avenir.
     higher_love:
       name: Amour plus fort
+      description: A utilisé 50 likes en un jour 5 fois
       long_description: |
         Ce badge est accordé lorsque vous utilisez tous les 50 j'aime par jour pendant 5 jours. Merci de prendre le temps activement d'encourager les meilleures conversations chaque jour!
     crazy_in_love:
       name: Fou amoureux
+      description: A utilisé 50 likes en un jour 20 fois
       long_description: |
         Ce badge est accordé lorsque vous utilisez tous les 50 de vos j'aime par jour pendant 20 jours. Hou la la! Vous êtes un modèle de régulièrement encourager vos membres de la communauté!
     thank_you:
       name: 'Merci '
       description: A 20 messages ayant reçu un j'aime et a donné 10 j'aime
-      long_description: "Ce badge vous est accordé quand vous avez reçu 20 j'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour. \n"
     gives_back:
       name: Redonne
       description: A 100 messages ayant reçu un j'aime et a donné 100 j'aime
-      long_description: |
-        Ce badge vous est accordé quand vous avez reçu 100 j'aime et en avez donné 100 ou plus en retour.  Merci pour tout cela.
     empathetic:
       name: Empathique
       description: A 500 messages ayant reçu un j'aime et a donné 1000 j'aime
-      long_description: "Ce badge vous est accordé quand vous avez reçu 500 j'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:. \n"
     first_emoji:
       name: Premier Emoji
       description: A utilisé un emoji dans un message
@@ -2253,9 +2254,10 @@ fr:
     initial_topic_title: Rapports de performances du site
   topic_invite:
     user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
+  tags:
+    title: "Tags"
   time:
     <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors
-  rss_by_tag: "Sujets portant le tag %{tag}"

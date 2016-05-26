@@ -1516,12 +1516,20 @@ describe UsersController do
   describe ".is_local_username" do
 
     let(:user) { Fabricate(:user) }
+    let(:group) { Fabricate(:group, name: "Discourse") }
 
     it "finds the user" do
       xhr :get, :is_local_username, username: user.username
       expect(response).to be_success
       json = JSON.parse(response.body)
       expect(json["valid"][0]).to eq(user.username)
+    end
+
+    it "finds the group" do
+      xhr :get, :is_local_username, username: group.name
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["valid_groups"][0]).to eq(group.name)
     end
 
     it "supports multiples usernames" do

@@ -269,7 +269,7 @@ Discourse.Utilities = {
       // is Audio/Video
       return Discourse.Utilities.uploadLocation(upload.url);
     } else {
-      return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')';
+      return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')\n';
     }
   },
 

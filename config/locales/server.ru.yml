@@ -12,7 +12,7 @@ ru:
     long_date: "D MMMM YYYY, HH:mm"
   datetime_formats: &datetime_formats
     formats:
-      short: "%m-%d-%Y"
+      short: "%d.%m.%Y"
   date:
     month_names: [null, Январь, Февраль, Март, Апрель, Май, Июнь, Июль, Август, Сентябрь, Октябрь, Ноябрь, Декабрь]
     <<: *datetime_formats
@@ -22,7 +22,7 @@ ru:
   loading: "Загрузка..."
   powered_by_html: 'При поддержке <a href="http://www.discourse.org">Discourse</a>, лучше всего использовать с включенным JavaScript'
   log_in: "Войти"
-  purge_reason: "Автоматически удален, как неактивная, неактивированная учетная запись"
+  purge_reason: "Деактивированная учетная запись будет автоматически удалена как заброшенная"
   disable_remote_images_download_reason: "Загрузка картинок была отключена из-за недостаточности места на диске."
   anonymous: "Гость"
   emails:

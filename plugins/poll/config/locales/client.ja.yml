@@ -24,7 +24,7 @@ ja:
           between_min_and_max_options: "<strong>%{min}</strong> と <strong>%{max}</strong> のオプションから選択することができます。"
       cast-votes:
         title: "投票する"
-        label: "すぐ投票！"
+        label: "今すぐ投票！"
       show-results:
         title: "投票結果を表示"
         label: "結果を表示"

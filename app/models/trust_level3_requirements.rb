@@ -95,7 +95,10 @@ class TrustLevel3Requirements
   end
 
   def min_topics_viewed
-    (TrustLevel3Requirements.num_topics_in_time_period.to_i * (SiteSetting.tl3_requires_topics_viewed.to_f / 100.0)).round
+    [
+      (TrustLevel3Requirements.num_topics_in_time_period.to_i * (SiteSetting.tl3_requires_topics_viewed.to_f / 100.0)).round,
+      SiteSetting.tl3_requires_topics_viewed_cap
+    ].min
   end
 
   def posts_read
@@ -103,7 +106,10 @@ class TrustLevel3Requirements
   end
 
   def min_posts_read
-    (TrustLevel3Requirements.num_posts_in_time_period.to_i * (SiteSetting.tl3_requires_posts_read.to_f / 100.0)).round
+    [
+      (TrustLevel3Requirements.num_posts_in_time_period.to_i * (SiteSetting.tl3_requires_posts_read.to_f / 100.0)).round,
+      SiteSetting.tl3_requires_posts_read_cap
+    ].min
   end
 
   def topics_viewed_all_time

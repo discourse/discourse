@@ -25,9 +25,13 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
       topic.reload.set_auto_close(nil).save
     end
 
-    # pick up the changes right away as opposed to waiting for
-    # the schedule
-    CategoryFeaturedTopic.feature_topics_for(topic.category)
+    # remove featured topics if we close/archive/make them invisible. Previously we used
+    # to run the whole featuring logic but that could be very slow and have concurrency
+    # errors on large sites with many autocloses and topics being created.
+    if ((status.enabled? && (status.autoclosed? || status.closed? || status.archived?)) ||
+        (status.disabled? && status.visible?))
+      CategoryFeaturedTopic.where(topic_id: topic.id).delete_all
+    end
   end
 
   def create_moderator_post_for(status, message=nil)
@@ -81,7 +85,7 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
   end
 
   Status = Struct.new(:name, :enabled) do
-    %w(pinned_globally pinned autoclosed closed).each do |status|
+    %w(pinned_globally pinned autoclosed closed visible archived).each do |status|
       define_method("#{status}?") { name == status }
     end
 

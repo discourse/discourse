@@ -544,6 +544,8 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
+  incoming_email_prefer_html:
+    default: false
   email_in:
     default: false
     client: true
@@ -698,6 +700,7 @@ trust:
   tl3_time_period:
     default: 100
     min: 1
+    max: 1000000
   tl3_requires_days_visited:
     default: 50
     min: 0
@@ -708,10 +711,16 @@ trust:
     default: 25
     min: 0
     max: 100
+  tl3_requires_topics_viewed_cap:
+    default: 500
+    min: 0
   tl3_requires_posts_read:
     default: 25
     min: 0
     max: 100
+  tl3_requires_posts_read_cap:
+    default: 20000
+    min: 0
   tl3_requires_topics_viewed_all_time:
     default: 200
     min: 0
@@ -1128,6 +1137,9 @@ user_preferences:
   default_email_private_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false
+  default_email_mailing_list_mode_frequency:
+    enum: 'MailingListModeSiteSetting'
+    default: 1
   disable_mailing_list_mode:
     default: false
     client: true

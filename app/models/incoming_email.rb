@@ -3,7 +3,7 @@ class IncomingEmail < ActiveRecord::Base
   belongs_to :topic
   belongs_to :post
 
-  scope :errored,  -> { where.not(error: nil) }
+  scope :errored,  -> { where("NOT is_bounce AND LENGTH(COALESCE(error,'')) > 0") }
 end
 
 # == Schema Information
