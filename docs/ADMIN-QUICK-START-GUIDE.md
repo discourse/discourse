@@ -92,8 +92,8 @@ Your welcome topic is important because it is the first thing you visitors will 
 
 Note that pinning topics works a little differently in Discourse:
 
-- Users can hide pins on topics once they have read them via the controls at the bottom of the topic, so they aren't always pinned forever for everyone.
-- When you pin a topic, you can choose to pin it globally to all topic lists, or pin it only within its category.
+- Once someone reads to the bottom of a pinned topic, it is automatically unpinned for them specifically. They can change this via the personal pin controls at the bottom of the topic.
+- When staff pins a topic, they can pin it globally to all topic lists, or just within its category.
 
 If a pin isn't visible enough, you can also turn one single topic into a **banner**. The banner topic floats on top of all topics and all primary pages. Users can permanently dismiss this floating banner by clicking the &times; in the upper right corner.
 
