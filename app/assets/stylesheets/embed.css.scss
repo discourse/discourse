@@ -154,3 +154,9 @@ aside.onebox {
     margin-bottom: 0 !important;
   }
 }
+
+// images large enough for the lightbox wrapper don't have bottom margins
+// either, unless we add one now
+div.lightbox-wrapper {
+  margin-bottom: 20px;
+}
