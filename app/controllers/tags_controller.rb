@@ -112,6 +112,11 @@ class TagsController < ::ApplicationController
       query = query.where('tags.name like ?', "%#{term}%")
     end
 
+    if params[:filterForInput] && !guardian.is_staff?
+      staff_tag_names = SiteSetting.staff_tags.split("|")
+      query = query.where('tags.name NOT IN (?)', staff_tag_names) if staff_tag_names.present?
+    end
+
     tags = query.count.map {|t, c| { id: t, text: t, count: c } }
 
     render json: { results: tags }
