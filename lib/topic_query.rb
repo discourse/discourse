@@ -455,14 +455,18 @@ class TopicQuery
       # ALL TAGS: something like this?
       # Topic.joins(:tags).where('tags.name in (?)', @options[:tags]).group('topic_id').having('count(*)=?', @options[:tags].size).select('topic_id')
 
-      if @options[:tags] && @options[:tags].size > 0
-        result = result.joins(:tags).preload(:tags)
+      if SiteSetting.tagging_enabled
+        result = result.preload(:tags)
 
-        # ANY of the given tags:
-        if @options[:tags][0].is_a?(Integer)
-          result = result.where("tags.id in (?)", @options[:tags])
-        else
-          result = result.where("tags.name in (?)", @options[:tags])
+        if @options[:tags] && @options[:tags].size > 0
+          result = result.joins(:tags)
+
+          # ANY of the given tags:
+          if @options[:tags][0].is_a?(Integer)
+            result = result.where("tags.id in (?)", @options[:tags])
+          else
+            result = result.where("tags.name in (?)", @options[:tags])
+          end
         end
       end
 

@@ -118,6 +118,10 @@ describe TopicQuery do
     let(:tag)       { Fabricate(:tag) }
     let(:other_tag) { Fabricate(:tag) }
 
+    before do
+      SiteSetting.tagging_enabled = true
+    end
+
     it "returns topics with the tag when filtered to it" do
       tagged_topic1 = Fabricate(:topic, {tags: [tag]})
       tagged_topic2 = Fabricate(:topic, {tags: [other_tag]})
