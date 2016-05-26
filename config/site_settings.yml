@@ -700,6 +700,7 @@ trust:
   tl3_time_period:
     default: 100
     min: 1
+    max: 1000000
   tl3_requires_days_visited:
     default: 50
     min: 0
