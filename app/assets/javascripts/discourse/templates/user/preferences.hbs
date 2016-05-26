@@ -195,6 +195,7 @@
           <div class='controls controls-dropdown'>
             {{combo-box valueAttribute="value" content=digestFrequencies value=model.user_option.digest_after_minutes}}
           </div>
+          {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}
         {{/if}}
       {{/if}}
     </div>
