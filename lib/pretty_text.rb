@@ -267,7 +267,7 @@ module PrettyText
     protect do
       v8.eval <<JS
       avatarTemplate = #{avatar_template.inspect};
-      size = #{size.to_i};
+      size = #{size.inspect};
 JS
       decorate_context(v8)
       v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
