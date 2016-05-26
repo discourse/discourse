@@ -31,6 +31,7 @@ es:
     incoming:
       default_subject: "Email entrante desde %{email}"
       show_trimmed_content: "Mostrar contenido recortado"
+      maximum_staged_user_per_email_reached: "Alcanzado el número máximo de usuarios provisionales creados por email."
       errors:
         empty_email_error: "Sucede cuando el texto en bruto del email que recibimos está en blanco."
         no_message_id_error: "Sucede cuando el email no tiene Id del mensaje en el encabezado."
@@ -44,7 +45,7 @@ es:
         reply_user_not_matching_error: "Sucede cuando una respuesta vino de una dirección de email diferente a la que fue enviada la notificación."
         topic_not_found_error: "Sucede cuando entró una respuesta pero el tema relacionado ha sido eliminado."
         topic_closed_error: "Sucede cuando entró una respuesta pero el tema relacionado ha sido cerrado. "
-        bounced_email_report: "El email es un reporte que ha rebotado."
+        bounced_email_error: "El email es un reporte de correo rebotado."
         auto_generated_email_reply: "El email contiene una respuesta a un correo autogenerado."
         screened_email_error: "Sucede cuando la dirección de email del remitente ya ha sido filtrada."
   errors: &errors
@@ -1120,6 +1121,8 @@ es:
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
     tagging_enabled: "¿Activar etiquetas para los temas?"
+    min_trust_to_create_tag: "El mínimo nivel de confianza requerido para crear una etiqueta."
+    max_tags_per_topic: "El máximo número de etiquetas que se pueden añadir a un tema."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "

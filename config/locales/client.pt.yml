@@ -111,6 +111,8 @@ pt:
       google+: 'partilhar esta hiperligação no Google+'
       email: 'enviar esta hiperligação por email'
     action_codes:
+      public_topic: "tornei este tópico publico %{when}"
+      private_topic: "tornei este tópico privado %{when}"
       split_topic: "dividir este tópico %{when}"
       invited_user: "Convidou %{who} %{when}"
       removed_user: "Removeu %{who} %{when}"
@@ -2115,6 +2117,7 @@ pt:
         test_error: "Occorreu um problema no envio do email de teste. Por favor verifique novamente as suas definições de email, verifique se o seu host não está a bloquear conexões de email, e tente novamente."
         sent: "Enviado"
         skipped: "Ignorado"
+        bounced: "Devolvida"
         received: "Recebido"
         rejected: "Rejeitado"
         sent_at: "Enviado em"
@@ -2765,3 +2768,10 @@ pt:
         bottom:
           latest: "Não há mais tópicos recentes."
           hot: "Não há mais tópicos quentes."
+          posted: "Não existem mais tópicos publicados."
+          read: "Não existem mais tópicos lidos."
+          new: "Não existem mais tópicos novos."
+          unread: "Não existem mais tópicos por ler."
+          top: "Não existem mais tópicos de topo."
+          bookmarks: "Não existem mais tópicos marcados."
+          search: "Não existem mais resultados de pesquisa."

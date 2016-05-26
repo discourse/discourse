@@ -2436,18 +2436,14 @@ zh_CN:
     thank_you:
       name: 感谢你
       description: 有 20 个被赞的帖子，给出过 10 个赞
-      long_description: |
-        该徽章授予给收到了 20 个赞，且赞过别人 10 次的你。当别人感谢你的帖子时，你也感谢他们的帖子。
     gives_back:
       name: 回馈
       description: 有 100 个被赞的帖子，给出过 100 个赞
-      long_description: |
-        该徽章授予给收到了 100 个赞，且赞过别人 100 次的你。感谢你回馈赞给社群！
     empathetic:
       name: 感性
       description: 有 500 个被赞的帖子，给出过 1000 个赞
-      long_description: |
-        该徽章授予给收到了 500 个赞，且赞过别人 1000 次的你。哇！你是一个富有同情心且会换位思考的模范。 :two_hearts:
+    first_emoji:
+      description: 在帖子中使用表情符号
   admin_login:
     success: "邮件已发送"
     error: "错误！"

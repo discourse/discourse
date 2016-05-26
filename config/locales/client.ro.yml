@@ -554,7 +554,7 @@ ro:
       username:
         title: "Nume Utilizator"
         instructions: "Numele de utilizator trebuie sa fie unic, fără spații, scurt."
-        short_instructions: "Ceilalți te pot numii @{{username}}."
+        short_instructions: "Ceilalți te pot menționa ca @{{username}}."
         available: "Numele de utilizator este valabil."
         global_match: "Emailul se potrivește numelui de utilizator înregistrat."
         global_mismatch: "Deja înregistrat. Încearcă:{{suggestion}}?"
@@ -1501,10 +1501,11 @@ ro:
         muted:
           title: "Silențios"
     flagging:
-      title: 'De ce marcați această postare ca fiind privată?'
+      title: 'Mulțumim că ne ajuți să păstrăm o comunitate civilizată!'
       action: 'Marcare'
       take_action: "Actionează"
       notify_action: 'Mesaj'
+      official_warning: 'Avertismen Oficial'
       delete_spammer: "Șterge spammer"
       delete_confirm: "Sunteți pe punctul de a șterge postarea <b>%{posts}</b> și postările <b>%{topics}</b> ale acestui uitilizator, de a-i anula contul, de a-i bloca autentificarea de la adresa IP <b>%{ip_address}</b>, adresa de email <b>%{email}</b> și de a bloca listarea permanent. Sunteți sigur ca acest utilizator este un spammer?"
       yes_delete_spammer: "Da, Șterge spammer"
@@ -1513,6 +1514,7 @@ ro:
       submit_tooltip: "Acceptă marcarea privată"
       take_action_tooltip: "Accesati permisiunea marcarii imediat, nu mai asteptati alte marcaje comune"
       cant: "Ne pare rău nu puteți marca această postare deocamdată."
+      notify_staff: 'Notifică un moderator în privat'
       formatted_name:
         off_topic: "În afară discuției"
         inappropriate: "Inadecvat"

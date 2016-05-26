@@ -24,7 +24,7 @@ pt_BR:
   loading: "Carregando"
   powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript ativado'
   log_in: "Entrar"
-  purge_reason: "A conta não verificada, foi excluída."
+  purge_reason: "Automaticamente eliminada por ser uma conta abandonada, não ativada"
   disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
   anonymous: "Anônimo"
   emails:

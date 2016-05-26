@@ -24,7 +24,7 @@ fi:
   loading: "Lataa"
   powered_by_html: 'Voimanlähteenä <a href="http://www.discourse.org">Discourse</a>, toimii parhaiten, kun JavaScript on käytössä'
   log_in: "Kirjaudu"
-  purge_reason: "Poistettu automaattisesti hylättynä, aktivoimattomana tilinä"
+  purge_reason: "Hylätty, aktivoimaton tili poistettiin automaattisesti"
   disable_remote_images_download_reason: "Linkattujen kuvien lataaminen poistettiin käytöstä vähäisen tallennustilan vuoksi."
   anonymous: "Anonyymejä"
   emails:
@@ -172,7 +172,8 @@ fi:
     private_posts: "Uusimmat yksityisviestit"
     group_posts: "Uusimmat viestit ryhmässä %{group_name}"
     group_mentions: "Uusimmat maininnat ryhmässä %{group_name}"
-    tag: "Tagatut aiheet"
+    user_posts: "Viimeisimmät viestit käyttäjältä @%{username}"
+    user_topics: "Viimeisimmät ketjut käyttäjältä @%{username}"
   too_late_to_edit: "Tämä viesti luotiin liian kauan sitten. Sitä ei voi enää muokata tai poistaa."
   revert_version_same: "Nykyinen revisio on sama, kuin jonka yrität palauttaa."
   excerpt_image: "kuva"

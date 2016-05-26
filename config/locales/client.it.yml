@@ -302,6 +302,8 @@ it:
       title: "Utenti"
       likes_given: "Dati"
       likes_received: "Ricevuti"
+      topics_entered: "Visualizzati"
+      topics_entered_long: "Argomenti Visualizzati"
       time_read: "Tempo di Lettura"
       topic_count: "Argomenti"
       topic_count_long: "Argomenti Creati"
@@ -701,6 +703,9 @@ it:
         top_badges: "Migliori Targhette"
         no_badges: "Ancora nessuna targhetta."
         more_badges: "Altre Targhette"
+        top_links: "Migliori Collegamenti"
+        no_links: "Ancora nessun collegamento."
+        no_likes: "Ancora nessun \"Mi piace\"."
       associated_accounts: "Login"
       ip_address:
         title: "Ultimo indirizzo IP"
@@ -2192,6 +2197,8 @@ it:
             grant_moderation: "assegna moderazione"
             revoke_moderation: "revoca moderazione"
             backup_operation: "operazione di backup"
+            deleted_tag: "etichetta cancellata"
+            renamed_tag: "etichetta rinominata"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -2478,6 +2485,7 @@ it:
           login: "Accesso"
           plugins: "Plugin"
           user_preferences: "Preferenze Utente"
+          tags: "Etichette"
       badges:
         title: Targhette
         new_badge: Nuova Targhetta
@@ -2686,3 +2694,29 @@ it:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+    tagging:
+      all_tags: "Tutte Le Etichette"
+      selector_all_tags: "tutte le etichette"
+      changed: "etichette cambiate:"
+      tags: "Etichette"
+      choose_for_topic: "scegli delle etichette opzionali per questo argomento"
+      delete_tag: "Cancella Etichetta"
+      delete_confirm: "Sicuro di voler eliminare l'etichetta?"
+      rename_tag: "Rinomina Etichetta"
+      rename_instructions: "Scegli un nome per l'etichetta:"
+      sort_by: "Ordina per:"
+      sort_by_count: "conteggio"
+      sort_by_name: "nome"
+      filters:
+        without_category: "%{filter} %{tag} argomenti"
+        with_category: "%{filter} %{tag} argomenti in %{category}"
+      topics:
+        bottom:
+          hot: "Non ci sono ulteriori argomenti caldi."
+          posted: "Non ci sono ulteriori argomenti pubblicati."
+          read: "Non ci sono ulteriori argomenti letti."
+          new: "Non ci sono ulteriori nuovi argomenti."
+          unread: "Non ci sono ulteriori argomenti non letti."
+          top: "Non ci sono ulteriori argomenti di punta."
+          bookmarks: "Non ci sono ulteriori argomenti aggiunti ai segnalibri."
+          search: "Non ci sono ulteriori risultati di ricerca."
