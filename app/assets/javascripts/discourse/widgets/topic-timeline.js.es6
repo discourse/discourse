@@ -210,41 +210,45 @@ export default createWidget('topic-timeline', {
     const { topic } = attrs;
     const createdAt = new Date(topic.created_at);
     const stream = attrs.topic.get('postStream.stream');
+    const { currentUser } = this;
 
     if (stream.length < 3) { return; }
 
-    const controls = [];
-    if (attrs.topic.get('details.can_create_post')) {
-      controls.push(this.attach('button', {
-        className: 'btn btn-primary create',
-        icon: 'reply',
-        label: 'topic.reply.title',
-        action: 'replyToPost'
-      }));
-    }
-
-    const { currentUser } = this;
-    if (currentUser) {
-      controls.push(this.attach('topic-notifications-button', { topic }));
-    }
-
     const rawLabel = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
-    const result = [ h('div.timeline-controls', controls),
-                     this.attach('link', {
-                       className: 'start-date',
-                       rawLabel: timelineDate(createdAt),
-                       action: 'jumpTop'
-                     }),
-                     this.attach('timeline-scrollarea', attrs),
-                     this.attach('link', {
-                       className: 'now-date',
-                       icon: 'dot-circle-o',
-                       rawLabel,
-                       action: 'jumpBottom'
-                     }) ];
 
+    let result = [];
     if (currentUser && currentUser.get('canManageTopic')) {
-      result.push(h('div.timeline-footer-controls', this.attach('topic-admin-menu-button', { topic })));
+      result.push(h('div.timeline-controls', this.attach('topic-admin-menu-button', { topic })));
+    }
+
+    result = result.concat([this.attach('link', {
+                              className: 'start-date',
+                              rawLabel: timelineDate(createdAt),
+                              action: 'jumpTop'
+                            }),
+                            this.attach('timeline-scrollarea', attrs),
+                            this.attach('link', {
+                              className: 'now-date',
+                              icon: 'dot-circle-o',
+                              rawLabel,
+                              action: 'jumpBottom'
+                            })]);
+
+    if (currentUser) {
+      const controls = [];
+      if (attrs.topic.get('details.can_create_post')) {
+        controls.push(this.attach('button', {
+          className: 'btn btn-primary create',
+          icon: 'reply',
+          label: 'topic.reply.title',
+          action: 'replyToPost'
+        }));
+      }
+
+      if (currentUser) {
+        controls.push(this.attach('topic-notifications-button', { topic }));
+      }
+      result.push(h('div.timeline-footer-controls', controls));
     }
 
     return result;
