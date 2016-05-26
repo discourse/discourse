@@ -22,6 +22,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   enteredIndex: null,
   retrying: false,
   userTriggeredProgress: null,
+  _progressIndex: null,
 
   topicDelegated: [
     'toggleMultiSelect',
@@ -204,7 +205,15 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       const postStream = model.get('postStream');
 
-      this.appEvents.trigger('topic:current-post-changed', postStream.progressIndexOfPost(post));
+      this._progressIndex = postStream.progressIndexOfPost(post);
+      this.appEvents.trigger('topic:current-post-changed', this._progressIndex);
+    },
+
+    currentPostScrolled(event) {
+      this.appEvents.trigger('topic:current-post-scrolled', {
+        postNumber: this._progressIndex,
+        percent: event.percent
+      });
     },
 
     // Called the the topmost visible post on the page changes.
