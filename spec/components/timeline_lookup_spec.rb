@@ -16,6 +16,11 @@ describe TimelineLookup do
     expect(result).to eq([[1, 10], [3, 8]])
   end
 
+  it "respects holes in the post numbers" do
+    result = TimelineLookup.build([[111, 1, 10], [222, 12, 10], [333, 30, 8]])
+    expect(result).to eq([[1, 10], [3, 8]])
+  end
+
   it "respects a `max_values` setting" do
     input = (1..100).map {|i| [1000+i, i, 100-i] }
 

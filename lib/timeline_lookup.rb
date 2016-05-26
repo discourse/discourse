@@ -11,10 +11,10 @@ module TimelineLookup
     tuples.each_with_index do |t, idx|
       next unless (idx % every) === 0
 
-      _, post_number, days_ago = t
+      days_ago = t[2]
 
       if (days_ago != last_days_ago)
-        result << [post_number, days_ago]
+        result << [idx+1, days_ago]
         last_days_ago = days_ago
       end
 
