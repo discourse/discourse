@@ -186,6 +186,10 @@ class CookedPostProcessor
   rescue URI::InvalidURIError
   end
 
+  # only crop when the image is taller than 16:9
+  # we only use 95% of that to allow for a small margin
+  MIN_RATIO_TO_CROP ||= (9.0 / 16.0) * 0.95
+
   def convert_to_link!(img)
     src = img["src"]
     return unless src.present?
@@ -208,7 +212,7 @@ class CookedPostProcessor
     return if is_a_hyperlink?(img)
 
     crop = false
-    if original_width.to_f / original_height.to_f < 0.75
+    if original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
       crop = true
       width, height = ImageSizer.crop(original_width, original_height)
       img["width"] = width
