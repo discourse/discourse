@@ -2602,8 +2602,8 @@ zh_CN:
       </form>
       </p>
     tagging:
-      all_tags: "所以标签"
-      selector_all_tags: "所以标签"
+      all_tags: "所有标签"
+      selector_all_tags: "所有标签"
       changed: "标签被修改"
       tags: "标签"
       choose_for_topic: "为主题选择可选标签"

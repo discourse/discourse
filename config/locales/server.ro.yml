@@ -340,7 +340,7 @@ ro:
     please_continue: "Noul dvs cont este confirmat, iar acum sunteți autentificat."
     continue_button: "Continuă cu %{site_name}"
     welcome_to: "Bine ați venit la %{site_name}!"
-    approval_required: "Un moderator trebuie să aprobe manual contul înaine să puteți accesa forumul. Veți primii un email când acesta a fost aprobat!"
+    approval_required: "Un moderator trebuie să aprobe manual contul înaine să puteți accesa forumul. Vei primi un email când acesta a fost aprobat!"
   post_action_types:
     off_topic:
       title: 'În afară discuției'
@@ -352,7 +352,7 @@ ro:
       long_form: 'marchează aceasta ca spam'
     inappropriate:
       title: 'Necorespunzător'
-      description: 'Această postare are conținut pe care o persoană normală l-ar numii ofesator, abuziv, sau o violare a <a href="/guidelines"> regulilor comune</a>.'
+      description: 'Această postare are conținut ce ar putea fi considerat drept ofesator, abuziv, sau o violare a <a href="/guidelines"> regulilor comune</a>.'
       long_form: 'marcat ca necorespunzător'
     notify_user:
       email_title: 'Despre postarea dvs din "%{title}"'
@@ -379,7 +379,7 @@ ro:
       long_form: 'Marchează asta ca spam'
     inappropriate:
       title: 'Necorespunzător'
-      description: 'Această discuție are conținut pe care o persoană normală l-ar numii ofesantor, abuziv, sau o violare a <a href="/guidelines"> regulilor comune</a>.'
+      description: 'Această discuție are conținut ce ar putea fi considerat drept ofesantor, abuziv, sau o violare a <a href="/guidelines"> regulilor comune</a>.'
       long_form: 'marcat ca necorespunzător'
     notify_moderators:
       title: "Notifică moderatori"
@@ -601,7 +601,7 @@ ro:
     invite_expiry_days: "Cat timp sun valabile cheile de invitație ale utilizatorilor, în zile"
     invite_passthrough_hours: "Cât timp un utilizator poate folosii o cheie de invitație recuperată anterior pentru autentificare, în ore"
     invite_only: "Înregistrarea publică este dezactivată, toți utilizatorii noi trebuie să fie exclusiv invitați de un alt membru sau personalul site-ului."
-    login_required: "Autentificarea e necesară pentru a citii conținutul site-ului, nu permite accesul anonim."
+    login_required: "Autentificarea este necesară pentru a citi conținutul site-ului, nu permite accesul anonim."
     min_password_length: "Lungimea minimă de caractere pentru parolă."
     block_common_passwords: "nu permite parole ce sunt în cele 10,000 cele mai cunoscute parole."
     enable_local_logins: "Activează numele de utilizator local și a conturilor bazate pe logare cu parola. (Notă: Aceasta trebuie activiată pentru invitații pt a funcționa)"
@@ -874,7 +874,7 @@ ro:
     previous_discussion: "Răspunsurile precedente"
     unsubscribe:
       title: "Dezabonare"
-      description: "Nu sunteți interesat în a primii aceste email-uri? Nicio problemă! Faceți clic dedesubt pentru a vă dezabona imediat:"
+      description: "Nu ești interesat în a primi aceste email-uri? Nicio problemă! Faceți click dedesubt pentru a vă dezabona imediat:"
     posted_by: "Postat de %{username} pe data %{post_date}"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"

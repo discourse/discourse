@@ -111,6 +111,7 @@ da:
       google+: 'del dette link på Google+'
       email: 'send dette link i en e-mail'
     action_codes:
+      public_topic: "offentliggjorde dette emne %{when}"
       split_topic: "delte dette emne op %{when}"
       invited_user: "Inviterede %{who} %{when}"
       removed_user: "fjernede %{who} %{when}"
@@ -285,6 +286,8 @@ da:
       title: "Brugere"
       likes_given: "Givet"
       likes_received: "Modtaget"
+      topics_entered: "Set"
+      topics_entered_long: "Læste emner"
       time_read: "Læsetid"
       topic_count: "Emner"
       topic_count_long: "Emner oprettet"

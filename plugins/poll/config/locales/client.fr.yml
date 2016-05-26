@@ -9,8 +9,8 @@ fr:
   js:
     poll:
       voters:
-        one: "voteur"
-        other: "voteurs"
+        one: "votant"
+        other: "votants"
       total_votes:
         one: "vote au total"
         other: "votes au total"
