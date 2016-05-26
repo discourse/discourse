@@ -27,8 +27,9 @@ export default MountWidget.extend({
   widget: 'post-stream',
   _topVisible: null,
   _bottomVisible: null,
-  _currentPost: -1,
+  _currentPost: null,
   _currentVisible: null,
+  _currentPercent: null,
 
   buildArgs() {
     return this.getProperties('posts',
@@ -82,12 +83,19 @@ export default MountWidget.extend({
     if (windowBottom > bodyHeight) { windowBottom = bodyHeight; }
     if (viewportBottom > bodyHeight) { viewportBottom = bodyHeight; }
 
-    let currentPost = -1;
+    let currentPost = null;
+    let percent = null;
 
     const offset = offsetCalculator();
+    const topCheck = Math.ceil(windowTop + offset);
     if (windowTop < offset) {
       currentPost = 0;
+      const $post = $($posts[0]);
+      percent = windowTop > 0 ? (topCheck - $post.offset().top) / $post.height() : 0;
     }
+
+    // uncomment to debug the eyeline
+    // $('.debug-eyeline').css({ height: '1px', width: '100%', backgroundColor: 'blue', position: 'absolute', top: `${topCheck}px` });
 
     let bottomView = topView;
     while (bottomView < $posts.length) {
@@ -97,7 +105,8 @@ export default MountWidget.extend({
       if (!$post) { break; }
 
       const viewTop = $post.offset().top;
-      const viewBottom = viewTop + $post.height() + 100;
+      const postHeight = $post.height();
+      const viewBottom = viewTop + postHeight;
 
       if (viewTop > viewportBottom) { break; }
 
@@ -105,7 +114,8 @@ export default MountWidget.extend({
         onscreen.push(bottomView);
       }
 
-      if (currentPost === -1 && (viewTop >= windowTop + offset)) {
+      if (currentPost === null && (viewTop <= topCheck) && (viewBottom > topCheck)) {
+        percent = (topCheck - viewTop) / postHeight;
         currentPost = bottomView;
       }
 
@@ -153,10 +163,16 @@ export default MountWidget.extend({
         this.sendAction('currentPostChanged', { post });
       }
 
+      if (percent !== null && this._currentPercent !== percent) {
+        this._currentPercent = percent;
+        this.sendAction('currentPostScrolled', { percent });
+      }
+
     } else {
       this._topVisible = null;
       this._bottomVisible = null;
-      this._currentPost = -1;
+      this._currentPost = null;
+      this._currentPercent = null;
     }
 
     const onscreenPostNumbers = [];

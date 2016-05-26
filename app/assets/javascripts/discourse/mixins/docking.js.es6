@@ -8,7 +8,7 @@ export default Ember.Mixin.create({
   init() {
     this._super();
     this.queueDockCheck = () => {
-      Ember.run.debounce(this, this.dockCheck, helper, 20);
+      Ember.run.debounce(this, this.dockCheck, helper, 5);
     };
   },
 
