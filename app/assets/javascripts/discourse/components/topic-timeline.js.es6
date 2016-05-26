@@ -1,5 +1,6 @@
 import MountWidget from 'discourse/components/mount-widget';
 import Docking from 'discourse/mixins/docking';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default MountWidget.extend(Docking, {
   widget: 'topic-timeline-container',
@@ -10,6 +11,11 @@ export default MountWidget.extend(Docking, {
              topicTrackingState: this.topicTrackingState,
              enteredIndex: this.get('enteredIndex'),
              dockAt: this.dockAt };
+  },
+
+  @observes('topic.highest_post_number')
+  newPostAdded() {
+    this.queueRerender(() => this.queueDockCheck());
   },
 
   dockCheck(info) {
@@ -31,6 +37,7 @@ export default MountWidget.extend(Docking, {
       this.dockAt = 0;
     } else if (pos > topicBottom) {
       this.dockAt = topicBottom - timelineHeight - parentTop;
+      if (this.dockAt < 0) { this.dockAt = 0; }
     } else {
       this.dockAt = null;
     }

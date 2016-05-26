@@ -3,23 +3,27 @@ const helper = {
 };
 
 export default Ember.Mixin.create({
-  _dockHandler: null,
+  queueDockCheck: null,
+
+  init() {
+    this._super();
+    this.queueDockCheck = () => {
+      Ember.run.debounce(this, this.dockCheck, helper, 20);
+    };
+  },
 
   didInsertElement() {
     this._super();
 
-    // Check the dock after the current run loop since reading sizes is slow
-    this._dockHandler = () => Ember.run.next(() => this.dockCheck(helper));
-
-    $(window).bind('scroll.discourse-dock', this._dockHandler);
-    $(document).bind('touchmove.discourse-dock', this._dockHandler);
+    $(window).bind('scroll.discourse-dock', this.queueDockCheck);
+    $(document).bind('touchmove.discourse-dock', this.queueDockCheck);
 
     this.dockCheck(helper);
   },
 
   willDestroyElement() {
     this._super();
-    $(window).unbind('scroll.discourse-dock', this._dockHandler);
-    $(document).unbind('touchmove.discourse-dock', this._dockHandler);
+    $(window).unbind('scroll.discourse-dock', this.queueDockCheck);
+    $(document).unbind('touchmove.discourse-dock', this.queueDockCheck);
   }
 });
