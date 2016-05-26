@@ -121,7 +121,7 @@ Right now [your FAQ](/faq) is the same Creative Commons [universal rules of civi
 
 However, if you want to set up a more detailed FAQ dealing with the specifics of *your* community, here's how:
 
-1. Create a new [meta topic](category/meta), titled "Frequently Asked Questions (FAQ)" or similar.
+1. Create a new [site feedback topic](category/site-feedback), titled "Frequently Asked Questions (FAQ)" or similar.
 
 2. Use the admin wrench icon below the post to make it a wiki post. This means the post is now editable to any user with a trust level of 1 or higher.
 
@@ -135,7 +135,7 @@ Now you have a community FAQ for your site that is collaboratively editable, and
 
 You have three default categories:
 
-1. [Meta](/category/meta) – general discussion about the site itself. [It's important!](https://meta.discourse.org/t/what-is-meta/5249)
+1. [Site Feedback](/category/site-feedback) – general discussion about the site itself. [It's important!](https://meta.discourse.org/t/5249)
 2. [Lounge](/category/lounge) – a perk for users at trust level 3 and higher
 3. [Staff](/category/staff) – visible only to staff (admins and moderators)
 
