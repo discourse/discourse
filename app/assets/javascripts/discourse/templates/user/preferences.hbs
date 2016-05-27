@@ -203,7 +203,7 @@
     {{#unless siteSettings.disable_mailing_list_mode}}
       <div class='control-group pref-mailing-list-mode'>
         <label class="control-label">{{i18n 'user.mailing_list_mode.label'}}</label>
-        {{preference-checkbox labelKey="user.mailing_list_mode.enabled" warning="checkMailingList" checked=model.user_option.mailing_list_mode}}
+        {{preference-checkbox labelKey="user.mailing_list_mode.enabled" checked=model.user_option.mailing_list_mode}}
         <div class='instructions'>{{{i18n 'user.mailing_list_mode.instructions'}}}</div>
         {{#if model.user_option.mailing_list_mode}}
           <div class='controls controls-dropdown'>
