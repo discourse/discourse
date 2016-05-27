@@ -4,13 +4,15 @@ import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default MountWidget.extend(Docking, {
   widget: 'topic-timeline-container',
+  dockBottom: null,
   dockAt: null,
 
   buildArgs() {
     return { topic: this.get('topic'),
              topicTrackingState: this.topicTrackingState,
              enteredIndex: this.get('enteredIndex'),
-             dockAt: this.dockAt };
+             dockAt: this.dockAt,
+             dockBottom: this.dockBottom };
   },
 
   @observes('topic.highest_post_number')
@@ -25,7 +27,7 @@ export default MountWidget.extend(Docking, {
     const topicBottom = $('#topic-bottom').offset().top;
     const $timeline = this.$('.timeline-container');
     const timelineHeight = $timeline.height();
-    const parentTop = $('.posts-wrapper').offset().top;
+    const footerHeight = $('.timeline-footer-controls').outerHeight(true) || 0;
 
     const tTop = 140;
 
@@ -33,10 +35,12 @@ export default MountWidget.extend(Docking, {
     const posTop = tTop + info.offset();
     const pos = posTop + timelineHeight;
 
+    this.dockBottom = false;
     if (posTop < topicTop) {
-      this.dockAt = 0;
+      this.dockAt = topicTop;
     } else if (pos > topicBottom) {
-      this.dockAt = topicBottom - timelineHeight - parentTop;
+      this.dockAt = (topicBottom - timelineHeight) + footerHeight;
+      this.dockBottom = true;
       if (this.dockAt < 0) { this.dockAt = 0; }
     } else {
       this.dockAt = null;

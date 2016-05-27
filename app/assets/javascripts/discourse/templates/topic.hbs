@@ -66,24 +66,23 @@
     <div class='selected-posts {{unless multiSelect 'hidden'}}'>
       {{partial "selected-posts"}}
     </div>
+    {{#topic-navigation as |showTimeline|}}
+      {{#if showTimeline}}
+        {{topic-timeline topic=model
+                         enteredIndex=enteredIndex
+                         loading=model.postStream.loading
+                         delegated=topicDelegated}}
+      {{else}}
+        {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
+      {{/if}}
+
+      {{topic-progress topic=model delegated=topicDelegated showTimeline=showTimeline}}
+    {{/topic-navigation}}
 
     <div class="row">
       <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
+
         <div class="posts-wrapper">
-
-          {{#topic-navigation as |showTimeline|}}
-            {{#if showTimeline}}
-              {{topic-timeline topic=model
-                               enteredIndex=enteredIndex
-                               loading=model.postStream.loading
-                               delegated=topicDelegated}}
-            {{else}}
-              {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
-            {{/if}}
-
-            {{topic-progress topic=model delegated=topicDelegated showTimeline=showTimeline}}
-          {{/topic-navigation}}
-
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
           {{plugin-outlet "topic-above-posts"}}
