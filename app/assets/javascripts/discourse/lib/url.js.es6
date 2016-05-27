@@ -1,6 +1,6 @@
 import offsetCalculator from 'discourse/lib/offset-calculator';
+import LockOn from 'discourse/lib/lock-on';
 
-/*global LockOn:true*/
 let _jumpScheduled = false;
 const rewrites = [];
 
