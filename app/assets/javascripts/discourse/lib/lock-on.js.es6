@@ -16,75 +16,70 @@
 // 1. onbeforeunload ensure we are scrolled to the right spot
 // 2. give up on the scrollbar and implement it ourselves (something that will happen)
 
-(function (exports) {
+const SCROLL_EVENTS = "scroll.lock-on touchmove.lock-on mousedown.lock-on wheel.lock-on DOMMouseScroll.lock-on mousewheel.lock-on keyup.lock-on";
 
-  var scrollEvents = "scroll.lock-on touchmove.lock-on mousedown.lock-on wheel.lock-on DOMMouseScroll.lock-on mousewheel.lock-on keyup.lock-on";
+function within(threshold, x, y) {
+  return Math.abs(x-y) < threshold;
+}
 
-  var LockOn = function(selector, options) {
+export default class LockOn {
+  constructor(selector, options) {
     this.selector = selector;
     this.options = options || {};
-  };
+    this.offsetTop = null;
+  }
 
-  LockOn.prototype.elementTop = function() {
-    var offsetCalculator = this.options.offsetCalculator,
-        selected = $(this.selector);
-
-    if (selected && selected.offset && selected.offset()) {
-      return selected.offset().top - (offsetCalculator ? offsetCalculator() : 0);
+  elementTop() {
+    const offsetCalculator = this.options.offsetCalculator;
+    if (this.offsetTop === null) {
+      this.offsetTop = offsetCalculator ? offsetCalculator() : 0;
     }
-  };
 
-  LockOn.prototype.lock = function() {
-    var self = this,
-        previousTop = this.elementTop(),
-        startedAt = new Date().getTime(),
-        i = 0;
+    const selected = $(this.selector);
+    if (selected && selected.offset && selected.offset()) {
+      return selected.offset().top - this.offsetTop;
+    }
+  }
+
+  clearLock(interval) {
+    $('body,html').off(SCROLL_EVENTS);
+    clearInterval(interval);
+  }
+
+  lock() {
+    let previousTop = this.elementTop();
+    const startedAt = new Date().getTime();
 
     $(window).scrollTop(previousTop);
 
-    var within = function(threshold,x,y) {
-      return Math.abs(x-y) < threshold;
-    };
-
-    var interval = setInterval(function() {
+    let i = 0;
+    const interval = setInterval(() => {
       i = i + 1;
 
-      var top = self.elementTop(),
-          scrollTop = $(window).scrollTop();
+      const top = this.elementTop();
+      const scrollTop = $(window).scrollTop();
 
       if (typeof(top) === "undefined") {
-        $('body,html').off(scrollEvents);
-        clearInterval(interval);
-        return;
+        return this.clearLock(interval);
       }
 
       if (!within(4, top, previousTop) || !within(4, scrollTop, top)) {
+        console.log(top, previousTop, scrollTop);
         $(window).scrollTop(top);
-        // animating = true;
-        // $('html,body').animate({scrollTop: parseInt(top,10)+'px'}, 200, 'swing', function(){
-        //   animating = false;
-        // });
         previousTop = top;
       }
 
       // We commit suicide after 3s just to clean up
-      var nowTime = new Date().getTime();
+      const nowTime = new Date().getTime();
       if (nowTime - startedAt > 1000) {
-        $('body,html').off(scrollEvents);
-        clearInterval(interval);
+        return this.clearLock(interval);
       }
-
     }, 50);
 
-    $('body,html').off(scrollEvents).on(scrollEvents, function(e){
+    $('body,html').off(SCROLL_EVENTS).on(SCROLL_EVENTS, e => {
       if ( e.which > 0 || e.type === "mousedown" || e.type === "mousewheel" || e.type === "touchmove") {
-        $('body,html').off(scrollEvents);
-        clearInterval(interval);
+        this.clearLock(interval);
       }
     });
-
-  };
-
-  exports.LockOn = LockOn;
-
-})(window);
+  }
+}
