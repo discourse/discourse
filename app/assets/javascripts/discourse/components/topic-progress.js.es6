@@ -20,6 +20,13 @@ export default Ember.Component.extend({
     return !userWantsToJump && showTimeline;
   },
 
+  @observes('hidden')
+  visibilityChanged() {
+    if (!this.get('hidden')) {
+      this._updateBar();
+    }
+  },
+
   keyboardTrigger(kbdEvent) {
     if (kbdEvent.type === 'jump') {
       this.set('expanded', true);
@@ -45,7 +52,6 @@ export default Ember.Component.extend({
   jumpBottomDisabled(filteredPostsCount, highestPostNumber, progressPosition) {
     return progressPosition >= filteredPostsCount || progressPosition >= highestPostNumber;
   },
-
 
   @computed('postStream.loaded', 'topic.currentPost', 'postStream.filteredPostsCount')
   hideProgress(loaded, currentPost, filteredPostsCount) {
