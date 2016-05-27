@@ -294,7 +294,8 @@ describe TopicUser do
     it "will receive email notification for every topic" do
       user1 = Fabricate(:user)
 
-      SiteSetting.stubs(:default_email_mailing_list_mode).returns(true)
+      SiteSetting.default_email_mailing_list_mode = true
+      SiteSetting.default_email_mailing_list_mode_frequency = 1
 
       user2 = Fabricate(:user)
       post = create_post
