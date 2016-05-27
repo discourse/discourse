@@ -12,6 +12,9 @@
   &.timeline-docked {
     position: absolute;
 
+  }
+
+  &.timeline-docked-bottom {
     .timeline-footer-controls {
       background-color: yellow;
       visibility: hidden;
