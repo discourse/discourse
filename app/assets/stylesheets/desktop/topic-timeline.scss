@@ -16,8 +16,7 @@
 
   &.timeline-docked-bottom {
     .timeline-footer-controls {
-      background-color: yellow;
-      visibility: hidden;
+      opacity: 0;
     }
   }
 
@@ -32,6 +31,7 @@
     .timeline-footer-controls {
       margin-top: 1em;
       line-height: 2.5em;
+      transition: opacity 0.2s ease-in;
 
       button {
         margin-right: 0.5em;
