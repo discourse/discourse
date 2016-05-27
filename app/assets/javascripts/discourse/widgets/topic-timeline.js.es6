@@ -187,7 +187,9 @@ createWidget('timeline-scrollarea', {
 createWidget('topic-timeline-container', {
   tagName: 'div.timeline-container',
   buildClasses(attrs) {
-    if (attrs.dockAt !== null) { return 'timeline-docked'; }
+    if (attrs.dockAt !== null) {
+      return attrs.dockAt > 0 ? 'timeline-docked timeline-docked-bottom' : 'timeline-docked';
+    }
   },
 
   buildAttributes(attrs) {
