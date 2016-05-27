@@ -94,6 +94,7 @@ export default Ember.Component.extend({
   },
 
   _updateProgressBar() {
+    if (this.isDestroyed || this.isDestroying) { return; }
     if (this.get('hidden')) { return; }
 
     const $topicProgress = this.$('#topic-progress');
