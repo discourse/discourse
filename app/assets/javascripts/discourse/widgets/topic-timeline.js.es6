@@ -234,7 +234,7 @@ export default createWidget('topic-timeline', {
                               action: 'jumpBottom'
                             })]);
 
-    if (currentUser && !attrs.dockAt) {
+    if (currentUser) {
       const controls = [];
       if (attrs.topic.get('details.can_create_post')) {
         controls.push(this.attach('button', {

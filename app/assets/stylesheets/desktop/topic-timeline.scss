@@ -11,6 +11,11 @@
 
   &.timeline-docked {
     position: absolute;
+
+    .timeline-footer-controls {
+      background-color: yellow;
+      visibility: hidden;
+    }
   }
 
   .topic-timeline {
