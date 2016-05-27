@@ -49,6 +49,6 @@ Discourse::Application.configure do
   require 'rbtrace'
 
   if emails = GlobalSetting.developer_emails
-    config.developer_emails = emails.split(",").map(&:strip)
+    config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 end
