@@ -3,7 +3,10 @@ require "rails_helper"
 describe Jobs::NotifyMailingListSubscribers do
 
   context "with mailing list on" do
-    before { SiteSetting.default_email_mailing_list_mode = true }
+    before do
+      SiteSetting.default_email_mailing_list_mode = true
+      SiteSetting.default_email_mailing_list_mode_frequency = 1
+    end
     let(:user) { Fabricate(:user) }
 
     context "SiteSetting.max_emails_per_day_per_user" do
