@@ -211,7 +211,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     currentPostScrolled(event) {
       this.appEvents.trigger('topic:current-post-scrolled', {
-        postNumber: this._progressIndex,
+        postIndex: this._progressIndex,
         percent: event.percent
       });
     },

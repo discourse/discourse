@@ -8,8 +8,13 @@ export default Ember.Mixin.create({
   init() {
     this._super();
     this.queueDockCheck = () => {
-      Ember.run.debounce(this, this.dockCheck, helper, 5);
+      Ember.run.debounce(this, this.safeDockCheck, 5);
     };
+  },
+
+  safeDockCheck() {
+    if (this.isDestroyed || this.isDestroying) { return; }
+    this.dockCheck(helper);
   },
 
   didInsertElement() {
