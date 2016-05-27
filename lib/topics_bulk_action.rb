@@ -137,12 +137,11 @@ class TopicsBulkAction
       topics.each do |t|
         if guardian.can_edit?(t)
           if tags.present?
-            t.custom_fields.update(DiscourseTagging::TAGS_FIELD_NAME => tags)
-            t.save
-            DiscourseTagging.auto_notify_for(tags, t)
+            DiscourseTagging.tag_topic_by_names(t, guardian, tags)
           else
-            t.custom_fields.delete(DiscourseTagging::TAGS_FIELD_NAME)
+            t.tags = []
           end
+          @changed_ids << t.id
         end
       end
     end

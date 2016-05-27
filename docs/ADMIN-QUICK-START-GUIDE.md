@@ -92,8 +92,8 @@ Your welcome topic is important because it is the first thing you visitors will 
 
 Note that pinning topics works a little differently in Discourse:
 
-- Users can hide pins on topics once they have read them via the controls at the bottom of the topic, so they aren't always pinned forever for everyone.
-- When you pin a topic, you can choose to pin it globally to all topic lists, or pin it only within its category.
+- Once someone reads to the bottom of a pinned topic, it is automatically unpinned for them specifically. They can change this via the personal pin controls at the bottom of the topic.
+- When staff pins a topic, they can pin it globally to all topic lists, or just within its category.
 
 If a pin isn't visible enough, you can also turn one single topic into a **banner**. The banner topic floats on top of all topics and all primary pages. Users can permanently dismiss this floating banner by clicking the &times; in the upper right corner.
 
@@ -121,7 +121,7 @@ Right now [your FAQ](/faq) is the same Creative Commons [universal rules of civi
 
 However, if you want to set up a more detailed FAQ dealing with the specifics of *your* community, here's how:
 
-1. Create a new [meta topic](category/meta), titled "Frequently Asked Questions (FAQ)" or similar.
+1. Create a new [site feedback topic](category/site-feedback), titled "Frequently Asked Questions (FAQ)" or similar.
 
 2. Use the admin wrench icon below the post to make it a wiki post. This means the post is now editable to any user with a trust level of 1 or higher.
 
@@ -135,7 +135,7 @@ Now you have a community FAQ for your site that is collaboratively editable, and
 
 You have three default categories:
 
-1. [Meta](/category/meta) – general discussion about the site itself. [It's important!](https://meta.discourse.org/t/what-is-meta/5249)
+1. [Site Feedback](/category/site-feedback) – general discussion about the site itself. [It's important!](https://meta.discourse.org/t/5249)
 2. [Lounge](/category/lounge) – a perk for users at trust level 3 and higher
 3. [Staff](/category/staff) – visible only to staff (admins and moderators)
 

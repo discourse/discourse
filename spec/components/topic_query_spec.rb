@@ -112,8 +112,51 @@ describe TopicQuery do
       end
 
     end
+  end
 
+  context 'tag filter' do
+    let(:tag)       { Fabricate(:tag) }
+    let(:other_tag) { Fabricate(:tag) }
 
+    before do
+      SiteSetting.tagging_enabled = true
+    end
+
+    it "returns topics with the tag when filtered to it" do
+      tagged_topic1 = Fabricate(:topic, {tags: [tag]})
+      tagged_topic2 = Fabricate(:topic, {tags: [other_tag]})
+      tagged_topic3 = Fabricate(:topic, {tags: [tag, other_tag]})
+      no_tags_topic = Fabricate(:topic)
+
+      expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+      expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+
+      two_tag_topic = TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.find { |t| t.id == tagged_topic3.id }
+      expect(two_tag_topic.tags.size).to eq(2)
+
+      # topics with ANY of the given tags:
+      expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+      expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+
+      # TODO: topics with ALL of the given tags:
+      # expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+      # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+    end
+
+    context "and categories too" do
+      let(:category1) { Fabricate(:category) }
+      let(:category2) { Fabricate(:category) }
+
+      it "returns topics in the given category with the given tag" do
+        tagged_topic1 = Fabricate(:topic, {category: category1, tags: [tag]})
+        tagged_topic2 = Fabricate(:topic, {category: category2, tags: [tag]})
+        tagged_topic3 = Fabricate(:topic, {category: category1, tags: [tag, other_tag]})
+        no_tags_topic = Fabricate(:topic, {category: category1})
+
+        expect(TopicQuery.new(moderator, category: category1.id, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, category: category2.id, tags: [other_tag.name]).list_latest.topics.size).to eq(0)
+      end
+    end
   end
 
   context 'muted categories' do

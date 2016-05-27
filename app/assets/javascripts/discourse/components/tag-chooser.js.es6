@@ -78,7 +78,7 @@ export default Ember.TextField.extend({
         url: Discourse.getURL("/tags/filter/search"),
         dataType: 'json',
         data: function (term) {
-          return { q: term, limit: self.siteSettings.max_tag_search_results };
+          return { q: term, limit: self.siteSettings.max_tag_search_results, filterForInput: true };
         },
         results: function (data) {
           if (self.siteSettings.tags_sort_alphabetically) {

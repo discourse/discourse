@@ -348,10 +348,10 @@ class Search
     tags = match.split(",")
 
     posts.where("topics.id IN (
-      SELECT tc.topic_id
-      FROM topic_custom_fields tc
-      WHERE tc.name = '#{DiscourseTagging::TAGS_FIELD_NAME}' AND
-                      tc.value in (?)
+      SELECT DISTINCT(tt.topic_id)
+      FROM topic_tags tt, tags
+      WHERE tt.tag_id = tags.id
+      AND tags.name in (?)
       )", tags)
   end
 

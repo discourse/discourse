@@ -507,12 +507,12 @@ en:
       email_activity_summary: "Activity Summary"
       mailing_list_mode:
         label: "Mailing list mode"
-        enabled: "Enable mailing list mode."
+        enabled: "Enable mailing list mode"
         instructions: |
           This setting overrides the activity summary.<br />
           Muted topics and categories are not included in these emails.
-        daily: "Send daily updates."
-        individual: "Send an email for every new post."
+        daily: "Send daily updates"
+        individual: "Send an email for every new post"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)."
         few_per_day: "Send me an email for every new post (less than 2 per day)."
       watched_categories: "Watched"
@@ -675,10 +675,6 @@ en:
 
       other_settings: "Other"
       categories_settings: "Categories"
-
-      enable_mailing_list:
-        one: "Are you sure you want to be emailed for every new post?"
-        other: "Are you sure you want to be emailed for every new post?<br><br>This will result in approximately <b>{{count}} emails</b> per day."
 
       new_topic_duration:
         label: "Consider topics new when"

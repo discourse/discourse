@@ -168,16 +168,6 @@
 
     <div class="control-group pref-email-settings">
       <label class="control-label">{{i18n 'user.email_settings'}}</label>
-      {{#if canReceiveDigest}}
-        {{preference-checkbox labelKey="user.email_digests.title" checked=model.user_option.email_digests}}
-        {{#if model.user_option.email_digests}}
-          <div class='controls controls-dropdown'>
-            {{combo-box valueAttribute="value" content=digestFrequencies value=model.user_option.digest_after_minutes}}
-          </div>
-          {{preference-checkbox labelKey="user.include_tl0_in_digests" checked=model.user_option.include_tl0_in_digests}}
-        {{/if}}
-      {{/if}}
-      <br/>
       <div class='controls controls-dropdown'>
         <label>{{i18n 'user.email_previous_replies.title'}}</label>
         {{combo-box valueAttribute="value" content=previousRepliesOptions value=model.user_option.email_previous_replies}}
@@ -205,6 +195,7 @@
           <div class='controls controls-dropdown'>
             {{combo-box valueAttribute="value" content=digestFrequencies value=model.user_option.digest_after_minutes}}
           </div>
+          {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}
         {{/if}}
       {{/if}}
     </div>
@@ -212,7 +203,7 @@
     {{#unless siteSettings.disable_mailing_list_mode}}
       <div class='control-group pref-mailing-list-mode'>
         <label class="control-label">{{i18n 'user.mailing_list_mode.label'}}</label>
-        {{preference-checkbox labelKey="user.mailing_list_mode.enabled" warning="checkMailingList" checked=model.user_option.mailing_list_mode}}
+        {{preference-checkbox labelKey="user.mailing_list_mode.enabled" checked=model.user_option.mailing_list_mode}}
         <div class='instructions'>{{{i18n 'user.mailing_list_mode.instructions'}}}</div>
         {{#if model.user_option.mailing_list_mode}}
           <div class='controls controls-dropdown'>
