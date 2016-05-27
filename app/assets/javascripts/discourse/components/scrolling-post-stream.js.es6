@@ -88,11 +88,6 @@ export default MountWidget.extend({
 
     const offset = offsetCalculator();
     const topCheck = Math.ceil(windowTop + offset);
-    if (windowTop < offset) {
-      currentPost = 0;
-      const $post = $($posts[0]);
-      percent = windowTop > 0 ? (topCheck - $post.offset().top) / $post.height() : 0;
-    }
 
     // uncomment to debug the eyeline
     // $('.debug-eyeline').css({ height: '1px', width: '100%', backgroundColor: 'blue', position: 'absolute', top: `${topCheck}px` });
@@ -106,15 +101,15 @@ export default MountWidget.extend({
 
       const viewTop = $post.offset().top;
       const postHeight = $post.height();
-      const viewBottom = viewTop + postHeight;
+      const viewBottom = Math.ceil(viewTop + postHeight);
 
       if (viewTop > viewportBottom) { break; }
 
-      if (viewBottom > windowTop && viewTop <= windowBottom) {
+      if (viewBottom >= windowTop && viewTop <= windowBottom) {
         onscreen.push(bottomView);
       }
 
-      if (currentPost === null && (viewTop <= topCheck) && (viewBottom > topCheck)) {
+      if (currentPost === null && (viewTop <= topCheck) && (viewBottom >= topCheck)) {
         percent = (topCheck - viewTop) / postHeight;
         currentPost = bottomView;
       }
@@ -163,9 +158,13 @@ export default MountWidget.extend({
         this.sendAction('currentPostChanged', { post });
       }
 
-      if (percent !== null && this._currentPercent !== percent) {
-        this._currentPercent = percent;
-        this.sendAction('currentPostScrolled', { percent });
+      if (percent !== null) {
+        if (percent > 1.0) { percent = 1.0; }
+
+        if (this._currentPercent !== percent) {
+          this._currentPercent = percent;
+          this.sendAction('currentPostScrolled', { percent });
+        }
       }
 
     } else {

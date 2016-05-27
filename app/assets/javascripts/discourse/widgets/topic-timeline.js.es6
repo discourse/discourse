@@ -96,7 +96,7 @@ createWidget('timeline-scrollarea', {
     const topic = attrs.topic;
     const postStream = topic.get('postStream');
     const total = postStream.get('filteredPostsCount');
-    let current = Math.floor(total * percentage);
+    let current = Math.floor(total * percentage) + 1;
 
     if (current < 1) { current = 1; }
     if (current > total) { current = total; }
@@ -168,15 +168,15 @@ createWidget('timeline-scrollarea', {
   },
 
   topicCurrentPostScrolled(event) {
-    const { postNumber, percent } = event;
+    const { postIndex, percent } = event;
 
     // If the post number didn't change keep our scroll position
-    this.state.percentage = this._percentFor(this.attrs.topic, parseFloat(postNumber) + percent);
+    this.state.percentage = this._percentFor(this.attrs.topic, parseFloat(postIndex) + percent);
   },
 
-  _percentFor(topic, postNumber) {
+  _percentFor(topic, postIndex) {
     const total = topic.get('postStream.filteredPostsCount');
-    let result = (postNumber === 1) ? 0.0 : parseFloat(postNumber) / total;
+    let result = parseFloat(postIndex - 1.0) / total;
 
     if (result < 0) { return 0.0; }
     if (result > 1.0) { return 1.0; }
