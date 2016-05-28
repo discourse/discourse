@@ -52,12 +52,6 @@ import:
   private_messages: true
   polls: true
 
-  # This tries to fix Private Messages that were imported from phpBB2 to phpBB3.
-  # You should enable this option if you see duplicate messages or lots of related
-  # messages as topics with just one post (e.g. 'Importer', 'Re: Importer', 'Re: Importer'
-  # should be one topic named 'Importer' and consist of 3 posts).
-  fix_private_messages: false
-
   # When true: each imported user will have the original username from phpBB as its name
   # When false: the name of each user will be blank
   username_as_name: false
