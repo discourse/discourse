@@ -247,6 +247,7 @@ export default createWidget('topic-timeline', {
           className: 'btn btn-primary create',
           icon: 'reply',
           label: 'topic.reply.title',
+          title: 'topic.reply.help',
           action: 'replyToPost'
         }));
       }
