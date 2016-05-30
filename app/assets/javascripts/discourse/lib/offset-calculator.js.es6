@@ -13,8 +13,10 @@ export default function offsetCalculator(y) {
   const $title = $('#topic-title');
   const rawWinHeight = $(window).height();
   const windowHeight = rawWinHeight - $title.height();
-  const expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
-  const ideal = $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
+  const eyeTarget = (windowHeight / 10);
+  const headerHeight = $header.outerHeight(true);
+  const expectedOffset = $title.height() - $header.find('.contents').height() + (eyeTarget * 2);
+  const ideal = headerHeight + ((expectedOffset < 0) ? 0 : expectedOffset);
 
   const $container = $('.posts-wrapper');
   const topPos = $container.offset().top;
@@ -23,7 +25,12 @@ export default function offsetCalculator(y) {
   const docHeight = $(document).height();
   const scrollPercent = (scrollTop / (docHeight-rawWinHeight));
 
-  const inter = topPos - scrollTop + ($container.height() * scrollPercent);
+  let inter = topPos - scrollTop + ($container.height() * scrollPercent);
+  if (inter < headerHeight + eyeTarget) {
+    inter = headerHeight + eyeTarget;
+  }
+
+
 
   if (inter > ideal) {
     const bottom = $('#topic-bottom').offset().top;
