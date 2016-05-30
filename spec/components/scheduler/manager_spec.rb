@@ -58,6 +58,14 @@ describe Scheduler::Manager do
     Scheduler::Manager.new(DiscourseRedis.new, enable_stats: false)
   }
 
+  it 'can disable stats' do
+    manager = Scheduler::Manager.new(DiscourseRedis.new, enable_stats: false)
+    expect(manager.enable_stats).to eq(false)
+
+    manager = Scheduler::Manager.new(DiscourseRedis.new)
+    expect(manager.enable_stats).to eq(true)
+  end
+
   before do
     $redis.del manager.class.lock_key
     $redis.del manager.class.queue_key
@@ -140,6 +148,7 @@ describe Scheduler::Manager do
       Testing::RandomJob.runs = 0
 
       info = manager.schedule_info(Testing::RandomJob)
+      manager.enable_stats = true
       info.next_run = Time.now.to_i - 1
       info.write!
 
@@ -151,11 +160,13 @@ describe Scheduler::Manager do
       expect(stat).to be_present
       expect(stat.duration_ms).to be > 0
       expect(stat.success).to be true
+      SchedulerStat.destroy_all
 
     end
 
     it 'should log when jobs start running' do
       info = manager.schedule_info(Testing::SuperLongJob)
+      manager.enable_stats = true
       info.next_run = Time.now.to_i - 1
       info.write!
 
@@ -164,6 +175,7 @@ describe Scheduler::Manager do
 
       stat = SchedulerStat.first
       expect(stat).to be_present
+      SchedulerStat.destroy_all
     end
 
     it 'should only run pending job once' do
