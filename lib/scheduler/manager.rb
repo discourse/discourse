@@ -12,11 +12,12 @@ module Scheduler
 
     class Runner
       def initialize(manager)
+        @stopped = false
         @mutex = Mutex.new
         @queue = Queue.new
         @manager = manager
         @reschedule_orphans_thread = Thread.new do
-          while true
+          while !@stopped
             sleep 1.minute
             @mutex.synchronize do
               reschedule_orphans
@@ -24,7 +25,7 @@ module Scheduler
           end
         end
         @keep_alive_thread = Thread.new do
-          while true
+          while !@stopped
             @mutex.synchronize do
               keep_alive
             end
@@ -32,8 +33,17 @@ module Scheduler
           end
         end
         @thread = Thread.new do
-          while true
-            process_queue
+          while !@stopped
+            if @manager.enable_stats
+              begin
+                RailsMultisite::ConnectionManagement.establish_connection(db: "default")
+                process_queue
+              ensure
+                ActiveRecord::Base.connection_handler.clear_active_connections!
+              end
+            else
+              process_queue
+            end
           end
         end
       end
@@ -60,6 +70,8 @@ module Scheduler
 
       def process_queue
         klass = @queue.deq
+        return unless klass
+
         # hack alert, I need to both deq and set @running atomically.
         @running = true
         failed = false
@@ -108,9 +120,17 @@ module Scheduler
 
       def stop!
         @mutex.synchronize do
-          @thread.kill
+          @stopped = true
+
           @keep_alive_thread.kill
           @reschedule_orphans_thread.kill
+
+          enq(nil)
+
+          Thread.new do
+            sleep 5
+            @thread.kill
+          end
         end
       end
 
