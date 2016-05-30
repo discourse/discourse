@@ -23,7 +23,7 @@ const DiscourseURL = Ember.Object.extend({
         return;
       }
 
-      const lockon = new LockOn(holderId, { offsetCalculator });
+      const lockon = new LockOn(holderId);
       const holder = $(holderId);
 
       if (holder.length > 0 && opts && opts.skipIfOnScreen){

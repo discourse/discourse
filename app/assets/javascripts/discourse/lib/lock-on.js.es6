@@ -1,3 +1,5 @@
+import { scrollTopFor } from 'discourse/lib/offset-calculator';
+
 // Dear traveller, you are entering a zone where we are at war with the browser
 // the browser is insisting on positioning scrollTop per the location it was in
 // the past, we are insisting on it being where we want it to be
@@ -30,14 +32,10 @@ export default class LockOn {
   }
 
   elementTop() {
-    const offsetCalculator = this.options.offsetCalculator;
-    if (this.offsetTop === null) {
-      this.offsetTop = offsetCalculator ? offsetCalculator() : 0;
-    }
-
     const selected = $(this.selector);
     if (selected && selected.offset && selected.offset()) {
-      return selected.offset().top - this.offsetTop;
+      const result = selected.offset().top;
+      return result - Math.round(scrollTopFor(result));
     }
   }
 
@@ -53,10 +51,11 @@ export default class LockOn {
     $(window).scrollTop(previousTop);
 
     let i = 0;
+
     const interval = setInterval(() => {
       i = i + 1;
 
-      const top = this.elementTop();
+      let top = this.elementTop();
       const scrollTop = $(window).scrollTop();
 
       if (typeof(top) === "undefined" || isNaN(top)) {
