@@ -104,18 +104,15 @@ class TagsController < ::ApplicationController
   end
 
   def search
-    query = self.class.tags_by_count(guardian, params.slice(:limit))
-    term = params[:q]
-    if term.present?
-      term.gsub!(/[^a-z0-9\.\-\_]*/, '')
-      term.gsub!("_", "\\_")
-      query = query.where('tags.name like ?', "%#{term}%")
-    end
-
-    if params[:filterForInput] && !guardian.is_staff?
-      staff_tag_names = SiteSetting.staff_tags.split("|")
-      query = query.where('tags.name NOT IN (?)', staff_tag_names) if staff_tag_names.present?
-    end
+    query = DiscourseTagging.filter_allowed_tags(
+      self.class.tags_by_count(guardian, params.slice(:limit)),
+      guardian,
+      {
+        for_input: params[:filterForInput],
+        term: params[:q],
+        category: params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
+      }
+    )
 
     tags = query.count.map {|t, c| { id: t, text: t, count: c } }
 

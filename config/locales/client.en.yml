@@ -1716,6 +1716,9 @@ en:
       general: 'General'
       settings: 'Settings'
       topic_template: "Topic Template"
+      tags: "Tags"
+      tags_allowed_tags: "Tags that can only be used in this category:"
+      tags_placeholder: "(Optional) list of allowed tags"
       delete: 'Delete Category'
       create: 'New Category'
       create_long: 'Create a new category'

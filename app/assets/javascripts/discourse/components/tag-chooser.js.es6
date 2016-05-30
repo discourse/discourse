@@ -6,7 +6,7 @@ function formatTag(t) {
 
 export default Ember.TextField.extend({
   classNameBindings: [':tag-chooser'],
-  attributeBindings: ['tabIndex'],
+  attributeBindings: ['tabIndex', 'placeholderKey', 'categoryId'],
 
   _setupTags: function() {
     const tags = this.get('tags') || [];
@@ -25,7 +25,7 @@ export default Ember.TextField.extend({
 
     this.$().select2({
       tags: true,
-      placeholder: I18n.t('tagging.choose_for_topic'),
+      placeholder: I18n.t(this.get('placeholderKey') || 'tagging.choose_for_topic'),
       maximumInputLength: this.siteSettings.max_tag_length,
       maximumSelectionSize: this.siteSettings.max_tags_per_topic,
       initSelection(element, callback) {
@@ -78,7 +78,7 @@ export default Ember.TextField.extend({
         url: Discourse.getURL("/tags/filter/search"),
         dataType: 'json',
         data: function (term) {
-          return { q: term, limit: self.siteSettings.max_tag_search_results, filterForInput: true };
+          return { q: term, limit: self.siteSettings.max_tag_search_results, filterForInput: true, categoryId: self.get('categoryId') };
         },
         results: function (data) {
           if (self.siteSettings.tags_sort_alphabetically) {
