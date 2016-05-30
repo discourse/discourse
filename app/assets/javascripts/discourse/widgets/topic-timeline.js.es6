@@ -157,18 +157,9 @@ createWidget('timeline-scrollarea', {
     const $area = $('.timeline-scrollarea');
     const areaTop = $area.offset().top;
 
-    const topic = this.attrs.topic;
-    const postStream = topic.get('postStream');
-    const total = postStream.get('filteredPostsCount');
     const percentage = clamp(parseFloat(y - areaTop) / $area.height());
-    const current = clamp(Math.floor(total * percentage) + 1, 1, total);
 
-    // If viewing the last post consider it 100%
-    if (current === total) {
-      this.state.percentage = 1.0;
-    } else {
-      this.state.percentage = this._percentFor(topic, parseFloat(current));
-    }
+    this.state.percentage = percentage;
   },
 
   commit() {
