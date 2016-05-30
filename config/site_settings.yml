@@ -582,6 +582,9 @@ email:
   ignore_by_title:
     type: list
     default: ''
+  mailgun_api_key:
+    default: ''
+    regex: '^pubkey-\h{32}$'
 
 
 files:
