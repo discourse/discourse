@@ -151,12 +151,12 @@ module Email
 
           if @mail.error_status.present?
             if @mail.error_status.start_with?("4.")
-              update_bounce_score(email_log.user.email, SOFT_BOUNCE_SCORE)
+              Email::Receiver.update_bounce_score(email_log.user.email, SOFT_BOUNCE_SCORE)
             elsif @mail.error_status.start_with?("5.")
-              update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
+              Email::Receiver.update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
             end
           elsif is_auto_generated?
-            update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
+            Email::Receiver.update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
           end
         end
       end
@@ -168,7 +168,7 @@ module Email
       @verp ||= all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
     end
 
-    def update_bounce_score(email, score)
+    def self.update_bounce_score(email, score)
       # only update bounce score once per day
       key = "bounce_score:#{email}:#{Date.today}"
 
