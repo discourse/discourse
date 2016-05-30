@@ -416,7 +416,7 @@ describe TopicQuery do
         TopicList.preloaded_custom_fields.clear
 
         # if we attempt to access non preloaded fields explode
-        expect{new_topic.custom_fields["boom"]}.to raise_error
+        expect{new_topic.custom_fields["boom"]}.to raise_error(StandardError)
 
       end
     end

@@ -204,7 +204,7 @@ describe User do
     describe 'has_trust_level?' do
 
       it "raises an error with an invalid level" do
-        expect { user.has_trust_level?(:wat) }.to raise_error
+        expect { user.has_trust_level?(:wat) }.to raise_error(InvalidTrustLevel)
       end
 
       it "is true for your basic level" do
@@ -1106,7 +1106,7 @@ describe User do
     end
 
     it "raises an error when passwords are too long" do
-      expect { hash(too_long, 'gravy') }.to raise_error
+      expect { hash(too_long, 'gravy') }.to raise_error(StandardError)
     end
 
   end

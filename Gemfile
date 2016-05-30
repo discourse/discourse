@@ -125,7 +125,7 @@ group :test do
 end
 
 group :test, :development do
-  gem 'rspec', '~> 3.2.0'
+  gem 'rspec'
   gem 'mock_redis'
   gem 'listen', '0.7.3', require: false
   gem 'certified', require: false

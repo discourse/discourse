@@ -78,13 +78,6 @@ Spork.prefork do
         SiteSetting.defaults[k] = v
       end
 
-      # Monkey patch for NoMethodError: undefined method `cache' for nil:NilClass
-      # https://github.com/rspec/rspec-rails/issues/1532#issuecomment-174679485
-      # fixed in Rspec 3.4.1
-      RSpec::Rails::ViewRendering::EmptyTemplatePathSetDecorator.class_eval do
-        alias_method :find_all_anywhere, :find_all
-      end
-
       require_dependency 'site_settings/local_process_provider'
       SiteSetting.provider = SiteSettings::LocalProcessProvider.new
     end
