@@ -93,3 +93,20 @@ class TagUser < ActiveRecord::Base
 
   private_class_method :apply_default_to_topic, :remove_default_from_topic
 end
+
+# == Schema Information
+#
+# Table name: tag_users
+#
+#  id                 :integer          not null, primary key
+#  tag_id             :integer          not null
+#  user_id            :integer          not null
+#  notification_level :integer          not null
+#  created_at         :datetime
+#  updated_at         :datetime
+#
+# Indexes
+#
+#  idx_tag_users_ix1  (user_id,tag_id,notification_level) UNIQUE
+#  idx_tag_users_ix2  (tag_id,user_id,notification_level) UNIQUE
+#
