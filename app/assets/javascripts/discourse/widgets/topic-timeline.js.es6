@@ -7,6 +7,10 @@ const SCROLLAREA_HEIGHT = 300;
 const SCROLLER_HEIGHT = 50;
 const SCROLLAREA_REMAINING = SCROLLAREA_HEIGHT - SCROLLER_HEIGHT;
 
+function clamp(p, min=0.0, max=1.0) {
+  return Math.max(Math.min(p, max), min);
+}
+
 createWidget('timeline-last-read', {
   tagName: 'div.timeline-last-read',
 
@@ -96,10 +100,8 @@ createWidget('timeline-scrollarea', {
     const topic = attrs.topic;
     const postStream = topic.get('postStream');
     const total = postStream.get('filteredPostsCount');
-    let current = Math.floor(total * percentage) + 1;
 
-    if (current < 1) { current = 1; }
-    if (current > total) { current = total; }
+    const current = clamp(Math.floor(total * percentage) + 1, 1, total);
 
     const daysAgo = postStream.closestDaysAgoFor(current);
     const date = new Date();
@@ -155,15 +157,24 @@ createWidget('timeline-scrollarea', {
     const $area = $('.timeline-scrollarea');
     const areaTop = $area.offset().top;
 
-    let percentage = parseFloat(y - areaTop) / $area.height();
-    if (percentage > 1.0) { percentage = 1.0; };
-    if (percentage < 0.0) { percentage = 0.0; };
+    const topic = this.attrs.topic;
+    const postStream = topic.get('postStream');
+    const total = postStream.get('filteredPostsCount');
+    const percentage = clamp(parseFloat(y - areaTop) / $area.height());
+    const current = clamp(Math.floor(total * percentage) + 1, 1, total);
 
-    this.state.percentage = percentage;
+    // If viewing the last post consider it 100%
+    if (current === total) {
+      this.state.percentage = 1.0;
+    } else {
+      this.state.percentage = this._percentFor(topic, parseFloat(current));
+    }
   },
 
   commit() {
     const position = this.position();
+    this.state.scrolledPost = position.current;
+
     this.sendWidgetAction('jumpToIndex', position.current);
   },
 
@@ -171,16 +182,14 @@ createWidget('timeline-scrollarea', {
     const { postIndex, percent } = event;
 
     // If the post number didn't change keep our scroll position
-    this.state.percentage = this._percentFor(this.attrs.topic, parseFloat(postIndex) + percent);
+    if (this.state.scrolledPost !== postIndex) {
+      this.state.percentage = this._percentFor(this.attrs.topic, parseFloat(postIndex) + percent);
+    }
   },
 
   _percentFor(topic, postIndex) {
     const total = topic.get('postStream.filteredPostsCount');
-    let result = parseFloat(postIndex - 1.0) / total;
-
-    if (result < 0) { return 0.0; }
-    if (result > 1.0) { return 1.0; }
-    return result;
+    return clamp(parseFloat(postIndex - 1.0) / total);
   }
 });
 
