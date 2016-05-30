@@ -613,7 +613,10 @@ class User < ActiveRecord::Base
   # Use this helper to determine if the user has a particular trust level.
   # Takes into account admin, etc.
   def has_trust_level?(level)
-    raise "Invalid trust level #{level}" unless TrustLevel.valid?(level)
+    unless TrustLevel.valid?(level)
+      raise InvalidTrustLevel.new("Invalid trust level #{level}")
+    end
+
     admin? || moderator? || staged? || TrustLevel.compare(trust_level, level)
   end
 
@@ -907,7 +910,7 @@ class User < ActiveRecord::Base
   end
 
   def hash_password(password, salt)
-    raise "password is too long" if password.size > User.max_password_length
+    raise StandardError.new("password is too long") if password.size > User.max_password_length
     Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
   end
 
