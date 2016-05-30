@@ -55,6 +55,9 @@ class Category < ActiveRecord::Base
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
 
+  has_many :category_tags
+  has_many :tags, through: :category_tags
+
   scope :latest, ->{ order('topic_count desc') }
 
   scope :secured, ->(guardian = nil) {
@@ -309,6 +312,12 @@ SQL
         category_groups.build(group_id: group_id, permission_type: permission_type)
       end
       @permissions = nil
+    end
+  end
+
+  def allowed_tags=(tag_names)
+    if self.tags.pluck(:name).sort != tag_names.sort
+      self.tags = Tag.where(name: tag_names).all
     end
   end
 

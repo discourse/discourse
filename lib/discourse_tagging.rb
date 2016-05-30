@@ -32,12 +32,14 @@ module DiscourseTagging
       end
 
       if tag_names.present?
-        tags = Tag.where(name: tag_names).all
-        if tags.size < tag_names.size
-          existing_names = tags.map(&:name)
+        category = topic.category
+        tags = filter_allowed_tags(Tag.where(name: tag_names), guardian, { for_input: true, category: category }).to_a
+
+        if tags.size < tag_names.size && (category.nil? || category.tags.count == 0)
           tag_names.each do |name|
-            next if existing_names.include?(name)
-            tags << Tag.create(name: name)
+            unless Tag.where(name: name).exists?
+              tags << Tag.create(name: name)
+            end
           end
         end
 
@@ -50,6 +52,34 @@ module DiscourseTagging
       end
     end
     true
+  end
+
+  # Options:
+  #   term: a search term to filter tags by name
+  #   for_input: result is for an input field, so only show permitted tags
+  #   category: a Category to which the object being tagged belongs
+  def self.filter_allowed_tags(query, guardian, opts={})
+    term = opts[:term]
+    if term.present?
+      term.gsub!(/[^a-z0-9\.\-\_]*/, '')
+      term.gsub!("_", "\\_")
+      query = query.where('tags.name like ?', "%#{term}%")
+    end
+
+    if opts[:for_input]
+      unless guardian.is_staff?
+        staff_tag_names = SiteSetting.staff_tags.split("|")
+        query = query.where('tags.name NOT IN (?)', staff_tag_names) if staff_tag_names.present?
+      end
+
+      if opts[:category] && opts[:category].tags.count > 0
+        query = query.where("tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?)", opts[:category].id)
+      elsif CategoryTag.exists?
+        query = query.where("tags.id NOT IN (SELECT tag_id FROM category_tags)")
+      end
+    end
+
+    query
   end
 
   def self.auto_notify_for(tags, topic)
@@ -78,17 +108,16 @@ module DiscourseTagging
 
     return unless tags.present?
 
-    tags.map! {|t| clean_tag(t) }
-    tags.delete_if {|t| t.blank? }
-    tags.uniq!
+    tag_names = tags.map {|t| clean_tag(t) }
+    tag_names.delete_if {|t| t.blank? }
+    tag_names.uniq!
 
     # If the user can't create tags, remove any tags that don't already exist
-    # TODO: this is doing a full count, it should just check first or use a cache
     unless guardian.can_create_tag?
-      tags = Tag.where(name: tags).pluck(:name)
+      tag_names = Tag.where(name: tag_names).pluck(:name)
     end
 
-    return tags[0...SiteSetting.max_tags_per_topic]
+    return tag_names[0...SiteSetting.max_tags_per_topic]
   end
 
   def self.notification_key(tag_id)

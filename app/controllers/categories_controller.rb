@@ -194,7 +194,8 @@ class CategoriesController < ApplicationController
                         :allow_badges,
                         :topic_template,
                         :custom_fields => [params[:custom_fields].try(:keys)],
-                        :permissions => [*p.try(:keys)])
+                        :permissions => [*p.try(:keys)],
+                        :allowed_tags => [])
       end
     end
 
