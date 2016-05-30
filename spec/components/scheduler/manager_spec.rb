@@ -133,6 +133,37 @@ describe Scheduler::Manager do
       expect(info.next_run).to be <= Time.now.to_i
     end
 
+    it 'should log when job finishes running' do
+
+      Testing::RandomJob.runs = 0
+
+      info = manager.schedule_info(Testing::RandomJob)
+      info.next_run = Time.now.to_i - 1
+      info.write!
+
+      manager = Scheduler::Manager.new(DiscourseRedis.new)
+      manager.blocking_tick
+      manager.stop!
+
+      stat = SchedulerStat.first
+      expect(stat).to be_present
+      expect(stat.duration_ms).to be > 0
+      expect(stat.success).to be true
+
+    end
+
+    it 'should log when jobs start running' do
+      info = manager.schedule_info(Testing::SuperLongJob)
+      info.next_run = Time.now.to_i - 1
+      info.write!
+
+      manager.tick
+      manager.stop!
+
+      stat = SchedulerStat.first
+      expect(stat).to be_present
+    end
+
     it 'should only run pending job once' do
 
       Testing::RandomJob.runs = 0

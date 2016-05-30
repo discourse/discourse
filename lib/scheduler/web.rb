@@ -22,6 +22,11 @@ module Scheduler
         end
       end
 
+      app.get "/scheduler/history" do
+        @scheduler_stats = SchedulerStat.order('started_at desc').limit(200)
+        erb File.read(File.join(VIEWS, 'history.erb')), locals: {view_path: VIEWS}
+      end
+
       app.post "/scheduler/:name/trigger" do
         halt 404 unless (name = params[:name])
 

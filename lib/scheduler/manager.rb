@@ -50,6 +50,14 @@ module Scheduler
         Discourse.handle_job_exception(ex, {message: "Scheduling manager orphan rescheduler"})
       end
 
+      def hostname
+        @hostname ||= begin
+                        `hostname`
+                      rescue
+                        "unknown"
+                      end
+      end
+
       def process_queue
         klass = @queue.deq
         # hack alert, I need to both deq and set @running atomically.
@@ -57,9 +65,17 @@ module Scheduler
         failed = false
         start = Time.now.to_f
         info = @mutex.synchronize { @manager.schedule_info(klass) }
+        stat = nil
         begin
           info.prev_result = "RUNNING"
           @mutex.synchronize { info.write! }
+          stat = SchedulerStat.create!(
+            name: klass.to_s,
+            hostname: hostname,
+            pid: Process.pid,
+            started_at: Time.zone.now,
+            live_slots_start: GC.stat[:heap_live_slots]
+          )
           klass.new.perform
         rescue Jobs::HandledExceptionWrapper
           # Discourse.handle_exception was already called, and we don't have any extra info to give
@@ -72,6 +88,11 @@ module Scheduler
         info.prev_duration = duration
         info.prev_result = failed ? "FAILED" : "OK"
         info.current_owner = nil
+        stat.update_columns(
+          duration_ms: duration,
+          live_slots_finish: GC.stat[:heap_live_slots],
+          success: !failed
+        )
         attempts(3) do
           @mutex.synchronize { info.write! }
         end
