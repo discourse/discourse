@@ -15,7 +15,7 @@
           <th style="width: 15%">Hostname:Pid</th>
           <th style="width: 15%">Live Slots delta</th>
           <th style="width: 15%">Started At</th>
-          <th style="width: 15%">Duration (ms)</th>
+          <th style="width: 15%">Duration</th>
           <th style="width: 15%"></th>
         </thead>
         <tbody>
@@ -28,11 +28,13 @@
                 <%= stat.live_slots_finish - stat.live_slots_start %>
               <% end %>
             </td>
-            <td><%= relative_time stat.started_at %></td>
-            <td><%= stat.duration_ms %></td>
+            <td><%= sane_time stat.started_at %></td>
+            <td><%= sane_duration stat.duration_ms %></td>
             <td>
-              <% if !stat.success  %>
-                <span>FAILED</span>
+              <% if stat.success.nil? %>
+                RUNNING
+              <% elsif !stat.success %>
+                FAILED
               <% end %>
             </td>
           </tr>
