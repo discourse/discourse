@@ -54,7 +54,9 @@ describe Scheduler::Manager do
     end
   end
 
-  let(:manager) { Scheduler::Manager.new(DiscourseRedis.new) }
+  let(:manager) {
+    Scheduler::Manager.new(DiscourseRedis.new, enable_stats: false)
+  }
 
   before do
     $redis.del manager.class.lock_key
@@ -79,7 +81,7 @@ describe Scheduler::Manager do
 
       hosts.map do |host|
 
-        manager = Scheduler::Manager.new(DiscourseRedis.new, hostname: host)
+        manager = Scheduler::Manager.new(DiscourseRedis.new, hostname: host, enable_stats: false)
         manager.ensure_schedule!(Testing::PerHostJob)
 
         info = manager.schedule_info(Testing::PerHostJob)
@@ -126,7 +128,7 @@ describe Scheduler::Manager do
 
       $redis.del manager.identity_key
 
-      manager = Scheduler::Manager.new(DiscourseRedis.new)
+      manager = Scheduler::Manager.new(DiscourseRedis.new, enable_stats: false)
       manager.reschedule_orphans!
 
       info = manager.schedule_info(Testing::SuperLongJob)
@@ -174,7 +176,7 @@ describe Scheduler::Manager do
 
       (0..5).map do
         Thread.new do
-          manager = Scheduler::Manager.new(DiscourseRedis.new)
+          manager = Scheduler::Manager.new(DiscourseRedis.new, enable_stats: false)
           manager.blocking_tick
           manager.stop!
         end
