@@ -59,12 +59,11 @@ export default class LockOn {
       const top = this.elementTop();
       const scrollTop = $(window).scrollTop();
 
-      if (typeof(top) === "undefined") {
+      if (typeof(top) === "undefined" || isNaN(top)) {
         return this.clearLock(interval);
       }
 
       if (!within(4, top, previousTop) || !within(4, scrollTop, top)) {
-        console.log(top, previousTop, scrollTop);
         $(window).scrollTop(top);
         previousTop = top;
       }
