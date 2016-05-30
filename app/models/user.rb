@@ -1037,6 +1037,7 @@ end
 #  registration_ip_address :inet
 #  trust_level_locked      :boolean          default(FALSE), not null
 #  staged                  :boolean          default(FALSE), not null
+#  first_seen_at           :datetime
 #
 # Indexes
 #

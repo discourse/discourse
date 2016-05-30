@@ -16,3 +16,18 @@ class Tag < ActiveRecord::Base
         .map {|name, count| name}
   end
 end
+
+# == Schema Information
+#
+# Table name: tags
+#
+#  id          :integer          not null, primary key
+#  name        :string           not null
+#  topic_count :integer          default(0), not null
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+# Indexes
+#
+#  index_tags_on_name  (name) UNIQUE
+#
