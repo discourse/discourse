@@ -13,9 +13,9 @@ module FileStore
       return unless is_relative?(url)
       path = public_dir + url
       return if !File.exists?(path)
-      tombstone = public_dir + url.sub("/uploads/", "/tombstone/")
-      FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
-      FileUtils.move(path, tombstone, :force => true)
+      tombstone = public_dir + url.sub("/uploads/", "/uploads/tombstone/")
+      FileUtils.mkdir_p(tombstone_dir)
+      FileUtils.move(path, tombstone, force: true)
     end
 
     def has_been_uploaded?(url)
@@ -85,7 +85,7 @@ module FileStore
     end
 
     def tombstone_dir
-      public_dir + relative_base_url.sub("/uploads/", "/tombstone/")
+      public_dir + relative_base_url.sub("/uploads/", "/uploads/tombstone/")
     end
 
   end
