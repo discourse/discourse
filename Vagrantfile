@@ -43,6 +43,6 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 1080, host: 4080 # Mailcatcher
 
   nfs_setting = RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/
-  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", :nfs => nfs_setting
+  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", type: { nfs_version: 4 }, nfs: nfs_setting
 
 end
