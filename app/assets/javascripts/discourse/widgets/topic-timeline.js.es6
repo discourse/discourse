@@ -194,11 +194,7 @@ createWidget('topic-timeline-container', {
   },
 
   buildAttributes(attrs) {
-    if (attrs.dockAt !== null) {
-      return { style: `top: ${attrs.dockAt}px` };
-    };
-
-    return { style: 'top: 140px' };
+    return { style: `top: ${attrs.top}px` };
   },
 
   html(attrs) {

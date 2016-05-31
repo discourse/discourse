@@ -2,6 +2,8 @@ import MountWidget from 'discourse/components/mount-widget';
 import Docking from 'discourse/mixins/docking';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
+const FIXED_POS = 85;
+
 export default MountWidget.extend(Docking, {
   widget: 'topic-timeline-container',
   dockBottom: null,
@@ -12,6 +14,7 @@ export default MountWidget.extend(Docking, {
              topicTrackingState: this.topicTrackingState,
              enteredIndex: this.get('enteredIndex'),
              dockAt: this.dockAt,
+             top: this.dockAt || FIXED_POS,
              dockBottom: this.dockBottom };
   },
 
@@ -29,10 +32,8 @@ export default MountWidget.extend(Docking, {
     const timelineHeight = $timeline.height();
     const footerHeight = $('.timeline-footer-controls').outerHeight(true) || 0;
 
-    const tTop = 140;
-
     const prev = this.dockAt;
-    const posTop = tTop + info.offset();
+    const posTop = FIXED_POS + info.offset();
     const pos = posTop + timelineHeight;
 
     this.dockBottom = false;
