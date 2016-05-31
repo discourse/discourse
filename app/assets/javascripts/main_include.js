@@ -67,7 +67,6 @@
 //= require ./discourse/views/button
 //= require ./discourse/components/dropdown-button
 //= require ./discourse/components/notifications-button
-//= require ./discourse/components/topic-notifications-button
 //= require ./discourse/lib/link-mentions
 //= require ./discourse/components/site-header
 //= require ./discourse/lib/utilities

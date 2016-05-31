@@ -39,19 +39,36 @@ export default createWidget('topic-notifications-button', {
 
   buttonFor(level) {
     const details = buttonDetails(level);
-    return this.attach('button', {
-      className: `btn no-text`,
+
+    const button = {
+      className: `btn`,
+      label: null,
       icon: details.icon,
       action: 'toggleDropdown',
       iconClass: details.key
-    });
+    };
+
+    if (this.attrs.showFullTitle) {
+      button.label = `topic.notifications.${details.key}.title`;
+    } else {
+      button.className = 'btn no-text notifications-dropdown';
+    }
+
+    return this.attach('button', button);
   },
 
   html(attrs, state) {
-    const result = [ this.buttonFor(attrs.topic.get('details.notification_level')) ];
+    const details = attrs.topic.get('details');
+    const result = [ this.buttonFor(details.get('notification_level')) ];
+
     if (state.expanded) {
       result.push(h('ul.dropdown-menu', all.map(l => this.attach('notification-option', l))));
     }
+
+    if (attrs.appendReason) {
+      result.push(h('p', details.get('notificationReasonText')));
+    }
+
 
     return result;
   },
