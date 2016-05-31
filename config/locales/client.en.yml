@@ -1310,6 +1310,7 @@ en:
         position: "post %{current} of %{total}"
 
       notifications:
+        title: change how often you get notified about this topic
         reasons:
           "3_6": 'You will receive notifications because you are watching this category.'
           "3_5": 'You will receive notifications because you started watching this topic automatically.'

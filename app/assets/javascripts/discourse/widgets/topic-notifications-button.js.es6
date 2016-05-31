@@ -33,6 +33,10 @@ export default createWidget('topic-notifications-button', {
     if (state.expanded) { return "open"; }
   },
 
+  buildAttributes() {
+    return { title: I18n.t('topic.notifications.title') };
+  },
+
   buttonFor(level) {
     const details = buttonDetails(level);
     return this.attach('button', {
