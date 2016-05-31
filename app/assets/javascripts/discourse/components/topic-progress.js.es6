@@ -118,25 +118,24 @@ export default Ember.Component.extend({
 
   _dock() {
     const maximumOffset = $('#topic-footer-buttons').offset(),
-        composerHeight = $('#reply-control').height() || 0,
-        $topicProgressWrapper = this.$(),
-        style = $topicProgressWrapper.attr('style') || '',
-        offset = window.pageYOffset || $('html').scrollTop();
+          composerHeight = $('#reply-control').height() || 0,
+          $topicProgressWrapper = this.$(),
+          offset = window.pageYOffset || $('html').scrollTop();
 
     let isDocked = false;
     if (maximumOffset) {
       const threshold = maximumOffset.top,
-          windowHeight = $(window).height(),
-          topicProgressHeight = $('#topic-progress').height();
+            windowHeight = $(window).height(),
+            topicProgressHeight = $('#topic-progress').height();
 
       isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
     }
 
+    const dockPos = $(document).height() - $('#topic-bottom').offset().top;
+
     if (composerHeight > 0) {
       if (isDocked) {
-        if (style.indexOf('bottom') >= 0) {
-          $topicProgressWrapper.css('bottom', '');
-        }
+        $topicProgressWrapper.css('bottom', dockPos);
       } else {
         const height = composerHeight + "px";
         if ($topicProgressWrapper.css('bottom') !== height) {
@@ -144,9 +143,7 @@ export default Ember.Component.extend({
         }
       }
     } else {
-      if (style.indexOf('bottom') >= 0) {
-        $topicProgressWrapper.css('bottom', '');
-      }
+      $topicProgressWrapper.css('bottom', isDocked ? dockPos : '');
     }
     this.set('docked', isDocked);
   },
