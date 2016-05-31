@@ -1,16 +1,15 @@
-import NotificationsButton from 'discourse/components/notifications-button';
+import MountWidget from 'discourse/components/mount-widget';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
-export default NotificationsButton.extend({
-  longDescription: Em.computed.alias('topic.details.notificationReasonText'),
-  hidden: Em.computed.alias('topic.deleted'),
-  notificationLevel: Em.computed.alias('topic.details.notification_level'),
-  i18nPrefix: 'topic.notifications',
+export default MountWidget.extend({
+  widget: 'topic-notifications-button',
 
-  i18nPostfix: function() {
-    return this.get('topic.isPrivateMessage') ? '_pm' : '';
-  }.property('topic.isPrivateMessage'),
+  buildArgs() {
+    return { topic: this.get('topic'), appendReason: true, showFullTitle: true };
+  },
 
-  clicked(id) {
-    this.get('topic.details').updateNotifications(id);
+  @observes('topic.details.notification_level')
+  _triggerRerender() {
+    this.queueRerender();
   }
 });

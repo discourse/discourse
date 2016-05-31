@@ -436,6 +436,9 @@ a.star {
     margin-right: 10px;
     .fa-bookmark.bookmarked { color: $tertiary; }
   }
+  .notification-options p {
+    display: inline-block;
+  }
 }
 
 #suggested-topics {
