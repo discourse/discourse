@@ -51,5 +51,10 @@ describe "category tag restrictions" do
       post = create_post(category: other_category, tags: [tag3.name, "newtag"])
       expect(post.topic.tags.map(&:name).sort).to eq([tag3.name, "newtag"].sort)
     end
+
+    it "can create tags when changing category settings" do
+      expect { other_category.update(allowed_tags: ['newtag']) }.to change { Tag.count }.by(1)
+      expect { other_category.update(allowed_tags: [tag1.name, 'tag-stuff', tag2.name, 'another-tag']) }.to change { Tag.count }.by(2)
+    end
   end
 end

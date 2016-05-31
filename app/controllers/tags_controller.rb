@@ -112,17 +112,25 @@ class TagsController < ::ApplicationController
   end
 
   def search
-    query = DiscourseTagging.filter_allowed_tags(
+    category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
+
+    tags_with_counts = DiscourseTagging.filter_allowed_tags(
       self.class.tags_by_count(guardian, params.slice(:limit)),
       guardian,
-      {
-        for_input: params[:filterForInput],
-        term: params[:q],
-        category: params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
-      }
+      { for_input: params[:filterForInput], term: params[:q], category: category }
     )
 
-    tags = query.count.map {|t, c| { id: t, text: t, count: c } }
+    tags = tags_with_counts.count.map {|t, c| { id: t, text: t, count: c } }
+
+    unused_tags = DiscourseTagging.filter_allowed_tags(
+      Tag.where(topic_count: 0),
+      guardian,
+      { for_input: params[:filterForInput], term: params[:q], category: category }
+    )
+
+    unused_tags.each do |t|
+      tags << { id: t.name, text: t.name, count: 0 }
+    end
 
     render json: { results: tags }
   end
