@@ -88,6 +88,13 @@ module SiteSettingExtension
     @validators ||= {}
   end
 
+  def override_setting_default(name_arg, default)
+    name = name_arg.to_sym
+    mutex.synchronize do
+      self.defaults[name] = default
+    end
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
     mutex.synchronize do
@@ -319,6 +326,8 @@ module SiteSettingExtension
     current[name] = convert(val, type, name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
+
+    SiteSetting.refresh_defaults! if name.to_sym == :default_locale
   end
 
   def notify_changed!
