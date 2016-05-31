@@ -39,7 +39,8 @@ createWidget('topic-admin-menu-button', {
     if (state.expanded) {
       result.push(this.attach('topic-admin-menu', { position: state.position,
                                                     fixed: attrs.fixed,
-                                                    topic: attrs.topic }));
+                                                    topic: attrs.topic,
+                                                    openUpwards: attrs.openUpwards }));
     }
 
     return result;
@@ -71,7 +72,12 @@ export default createWidget('topic-admin-menu', {
     const { top, left } = attrs.position;
     const position = attrs.fixed ? 'fixed' : 'absolute';
 
-    return { style: `position: ${position}; top: ${top}px; left: ${left}px;` };
+    if (attrs.openUpwards) {
+      const bottom = $(document).height() - top;
+      return { style: `position: ${position}; bottom: ${bottom}px; left: ${left}px;` };
+    } else {
+      return { style: `position: ${position}; top: ${top}px; left: ${left}px;` };
+    }
   },
 
   html(attrs) {
