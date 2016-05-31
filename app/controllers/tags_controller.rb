@@ -12,15 +12,23 @@ class TagsController < ::ApplicationController
   before_filter :set_category_from_params, except: [:index, :update, :destroy, :tag_feed, :search, :notifications, :update_notifications]
 
   def index
+    categories = Category.where("id in (select category_id from category_tags)")
+                         .where("id in (?)", guardian.allowed_category_ids)
+                         .preload(:tags)
+    category_tag_counts = categories.map { |c| {id: c.id, tags: self.class.tag_counts_json(Tag.category_tags_by_count_query(c, limit: 300).count)} }
+
     tag_counts = self.class.tags_by_count(guardian, limit: 300).count
-    @tags = tag_counts.map {|t, c| { id: t, text: t, count: c } }
+    @tags = self.class.tag_counts_json(tag_counts)
 
     respond_to do |format|
       format.html do
         render :index
       end
       format.json do
-        render json: { tags: @tags }
+        render json: {
+          tags: @tags,
+          extras: { categories: category_tag_counts }
+        }
       end
     end
   end
@@ -152,6 +160,10 @@ class TagsController < ::ApplicationController
 
     def self.tags_by_count(guardian, opts={})
       guardian.filter_allowed_categories(Tag.tags_by_count_query(opts))
+    end
+
+    def self.tag_counts_json(tag_counts)
+      tag_counts.map {|t, c| { id: t, text: t, count: c } }
     end
 
     def set_category_from_params
