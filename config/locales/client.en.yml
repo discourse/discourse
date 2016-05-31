@@ -663,7 +663,7 @@ en:
         always: "always"
         never: "never"
       email_digests:
-        title: "When I don't visit here, send an email digest of what's new:"
+        title: "When I don't visit here, send me an email summary of popular topics and replies to:"
         every_30_minutes: "every 30 minutes"
         every_hour: "hourly"
         daily: "daily"
@@ -671,7 +671,7 @@ en:
         weekly: "weekly"
         every_two_weeks: "every two weeks"
 
-      include_tl0_in_digests: "Include posts from new users in digest emails"
+      include_tl0_in_digests: "Include content from new users in summary emails"
       email_in_reply_to: "Include an excerpt of replied to post in emails"
       email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
       email_private_messages: "Send me an email when someone messages me"
