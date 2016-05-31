@@ -9,15 +9,16 @@ export default Ember.Component.extend({
   progressPosition: null,
   postStream: Ember.computed.alias('topic.postStream'),
   userWantsToJump: null,
+  composerVisible: null,
 
   init() {
     this._super();
     (this.get('delegated') || []).forEach(m => this.set(m, m));
   },
 
-  @computed('userWantsToJump', 'showTimeline')
-  hidden(userWantsToJump, showTimeline) {
-    return !userWantsToJump && showTimeline;
+  @computed('userWantsToJump', 'showTimeline', 'composerVisible')
+  hidden(userWantsToJump, showTimeline, composerVisible) {
+    return !userWantsToJump && !composerVisible && showTimeline;
   },
 
   @observes('hidden')
@@ -77,11 +78,23 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce('afterRender', this, this._updateProgressBar);
   },
 
+  _composerOpened() {
+    this.set('composerVisible', true);
+    this._dock();
+  },
+
+  _composerWillClose() {
+    this.set('composerVisible', false);
+  },
+
   didInsertElement() {
     this._super();
-    this.appEvents.on("composer:opened", this, this._dock)
-                  .on("composer:resized", this, this._dock)
-                  .on("composer:closed", this, this._dock)
+
+    this.appEvents.on('composer:opened', this, this._composerOpened);
+    this.appEvents.on('composer:will-close', this, this._composerWillClose);
+
+    this.appEvents.on("composer:resized", this, this._dock)
+                  .on('composer:closed', this, this._dock)
                   .on("topic:scrolled", this, this._dock)
                   .on('topic:current-post-changed', postNumber => this.set('progressPosition', postNumber))
                   .on('topic-progress:keyboard-trigger', this, this.keyboardTrigger);
@@ -91,9 +104,10 @@ export default Ember.Component.extend({
 
   willDestroyElement() {
     this._super();
-    this.appEvents.off("composer:opened", this, this._dock)
-                  .off("composer:resized", this, this._dock)
-                  .off("composer:closed", this, this._dock)
+    this.appEvents.off('composer:opened', this, this._composerOpened);
+    this.appEvents.off('composer:will-close', this, this._composerWillClose);
+    this.appEvents.off("composer:resized", this, this._dock)
+                  .off('composer:closed', this, this._dock)
                   .off('topic:scrolled', this, this._dock)
                   .off('topic:current-post-changed')
                   .off('topic-progress:keyboard-trigger');
@@ -111,9 +125,14 @@ export default Ember.Component.extend({
     const totalWidth = this._totalWidth;
     const progressWidth = this.get('streamPercentage') * totalWidth;
 
-    $topicProgress.find('.bg')
-      .css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
-      .width(progressWidth);
+    const borderSize = (progressWidth === totalWidth) ? "0px" : "1px";
+    const $bg = $topicProgress.find('.bg');
+    if ($bg.length === 0) {
+      const style = `border-right-width: ${borderSize}; width: ${progressWidth}px`;
+      $topicProgress.append(`<div class='bg' style="${style}">&nbsp;</div>`);
+    } else {
+      $bg.css("border-right-width", borderSize).width(progressWidth);
+    }
   },
 
   _dock() {
