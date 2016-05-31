@@ -15,6 +15,11 @@ class Tag < ActiveRecord::Base
     q
   end
 
+  def self.category_tags_by_count_query(category, opts={})
+    tags_by_count_query(opts).where("tags.id in (select tag_id from category_tags where category_id = ?)", category.id)
+                             .where("topics.category_id = ?", category.id)
+  end
+
   def self.top_tags(limit_arg=nil)
     self.tags_by_count_query(limit: limit_arg || SiteSetting.max_tags_in_filter_list)
         .count
