@@ -1,6 +1,7 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { all, buttonDetails } from 'discourse/lib/notification-levels';
 import { h } from 'virtual-dom';
+import RawHTML from 'discourse/widgets/raw-html';
 
 createWidget('notification-option', {
   buildKey: attrs => `topic-notifications-button-${attrs.id}`,
@@ -66,9 +67,8 @@ export default createWidget('topic-notifications-button', {
     }
 
     if (attrs.appendReason) {
-      result.push(h('p', details.get('notificationReasonText')));
+      result.push(new RawHTML({ html: `<p>${details.get('notificationReasonText')}</p>` }));
     }
-
 
     return result;
   },
