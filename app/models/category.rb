@@ -318,6 +318,12 @@ SQL
   def allowed_tags=(tag_names)
     if self.tags.pluck(:name).sort != tag_names.sort
       self.tags = Tag.where(name: tag_names).all
+      if self.tags.size < tag_names.size
+        new_tag_names = tag_names - self.tags.map(&:name)
+        new_tag_names.each do |name|
+          self.tags << Tag.create(name: name)
+        end
+      end
     end
   end
 
