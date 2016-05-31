@@ -180,6 +180,8 @@ class CategoriesController < ApplicationController
           end
         end
 
+        params[:allowed_tags] ||= [] if SiteSetting.tagging_enabled
+
         params.permit(*required_param_keys,
                         :position,
                         :email_in,
