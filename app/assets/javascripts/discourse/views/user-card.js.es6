@@ -4,8 +4,8 @@ import CleansUp from 'discourse/mixins/cleans-up';
 import afterTransition from 'discourse/lib/after-transition';
 
 const clickOutsideEventName = "mousedown.outside-user-card",
-  clickDataExpand = "click.discourse-user-card",
-  clickMention = "click.discourse-user-mention";
+      clickDataExpand = "click.discourse-user-card",
+      clickMention = "click.discourse-user-mention";
 
 export default Ember.View.extend(CleansUp, {
   elementId: 'user-card',

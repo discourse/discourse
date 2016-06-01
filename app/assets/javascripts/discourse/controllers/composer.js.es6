@@ -344,7 +344,7 @@ export default Ember.Controller.extend({
 
     }).catch(function(error) {
       composer.set('disableDrafts', false);
-      self.appEvents.one('composer:opened', () => bootbox.alert(error));
+      self.appEvents.one('composer:will-open', () => bootbox.alert(error));
     });
 
     if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
