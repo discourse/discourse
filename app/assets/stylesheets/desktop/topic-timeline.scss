@@ -12,6 +12,11 @@
   box-sizing: border-box;
   z-index: 999;
   margin-left: 757px;
+
+  @include large-width {
+    margin-left: 820px;
+  }
+
   position: fixed;
   -webkit-transform: translate3d(0,0,0);
 
