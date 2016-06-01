@@ -212,13 +212,13 @@ export default createWidget('topic-timeline', {
 
     if (stream.length < 3) { return; }
 
-    const rawLabel = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
 
     let result = [];
     if (currentUser && currentUser.get('canManageTopic')) {
       result.push(h('div.timeline-controls', this.attach('topic-admin-menu-button', { topic })));
     }
 
+    const bottomAge = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
     result = result.concat([this.attach('link', {
                               className: 'start-date',
                               rawLabel: timelineDate(createdAt),
@@ -227,8 +227,7 @@ export default createWidget('topic-timeline', {
                             this.attach('timeline-scrollarea', attrs),
                             this.attach('link', {
                               className: 'now-date',
-                              icon: 'dot-circle-o',
-                              rawLabel,
+                              rawLabel: bottomAge,
                               action: 'jumpBottom'
                             })]);
 
