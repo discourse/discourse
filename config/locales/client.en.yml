@@ -1312,6 +1312,7 @@ en:
       notifications:
         title: change how often you get notified about this topic
         reasons:
+          mailing_list_mode: "You have mailing list mode enabled, so you will be notified of replies to this topic via email."
           "3_6": 'You will receive notifications because you are watching this category.'
           "3_5": 'You will receive notifications because you started watching this topic automatically.'
           "3_2": 'You will receive notifications because you are watching this topic.'
