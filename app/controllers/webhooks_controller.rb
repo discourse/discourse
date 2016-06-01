@@ -37,6 +37,22 @@ class WebhooksController < ActionController::Base
     handled ? mailgun_success : mailgun_failure
   end
 
+  def sendgrid
+    params["_json"].each do |event|
+      if event["event"] == "bounce".freeze
+        if event["status"]["4."]
+          sendgrid_process(event, Email::Receiver::SOFT_BOUNCE_SCORE)
+        else
+          sendgrid_process(event, Email::Receiver::HARD_BOUNCE_SCORE)
+        end
+      elsif event["event"] == "dropped".freeze
+        sendgrid_process(event, Email::Receiver::HARD_BOUNCE_SCORE)
+      end
+    end
+
+    render nothing: true, status: 200
+  end
+
   private
 
     def mailgun_failure
@@ -72,6 +88,17 @@ class WebhooksController < ActionController::Base
       Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
 
       true
+    end
+
+    def sendgrid_process(event, bounce_score)
+      message_id = event["smtp-id"]
+      return if message_id.blank?
+
+      email_log = EmailLog.find_by(message_id: message_id.tr("<>", ""))
+      return if email_log.nil?
+
+      email_log.update_columns(bounced: true)
+      Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
     end
 
 end

@@ -17,6 +17,7 @@ Discourse::Application.routes.draw do
   get "/404-body" => "exceptions#not_found_body"
 
   post "webhooks/mailgun" => "webhooks#mailgun"
+  post "webhooks/sendgrid" => "webhooks#sendgrid"
 
   if Rails.env.development?
     mount Sidekiq::Web => "/sidekiq"
