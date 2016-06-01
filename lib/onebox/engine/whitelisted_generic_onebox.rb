@@ -82,6 +82,7 @@ module Onebox
           meetup.com
           mixcloud.com
           mlb.com
+          myshopify.com
           myspace.com
           nba.com
           nytimes.com
