@@ -1,0 +1,5 @@
+et:
+  site_settings:
+    enable_imgur: "Luba imgur api üleslaadimiseks, ära hoia faile lokaalselt"
+    imgur_client_id: "Sinu imgur.com kliendi-ID, vaja piltide üleslaadimiseks"
+    imgur_client_secret: "Sinu imgur.com kliendi saladus. Ei ole hetkel vaja piltide üleslaadimise toimimiseks aga võib tulevikus vajalikuks osutuda."

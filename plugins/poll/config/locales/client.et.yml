@@ -1,0 +1,41 @@
+et:
+  js:
+    poll:
+      voters:
+        one: "hääletaja"
+        other: "hääletajad"
+      total_votes:
+        one: "häält kokku"
+        other: "hääli kokku"
+      average_rating: "Keskmine hinnang: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Sa pead valima vähemalt <strong>1</strong> valiku."
+            other: "Sa võid valida vähemalt <strong>%{count}</strong> valikut."
+          up_to_max_options:
+            one: "Sa võid valida kuni <strong>1</strong> valiku."
+            other: "Sa võid valida kuni <strong>%{count}</strong> valikut."
+          x_options:
+            one: "Sa võid valima <strong>1</strong> valiku."
+            other: "Sa võid valida <strong>%{count}</strong> valikut."
+          between_min_and_max_options: "Sa võid valida vahemikus <strong>%{min}</strong> ja <strong>%{max}</strong>."
+      cast-votes:
+        title: "Anna oma hääl"
+        label: "Hääleta nüüd!"
+      show-results:
+        title: "Kuva hääletuse tulemused"
+        label: "Kuva tulemused"
+      hide-results:
+        title: "Tagasi sinu vastuse juurde"
+        label: "Peida tulemused"
+      open:
+        title: "Ava hääletus"
+        label: "Ava"
+        confirm: "Kas sa oled kindel, et soovid selle hääletuse avada?"
+      close:
+        title: "Sulge hääletus"
+        label: "Sulge"
+        confirm: "Kas sa oled kindel, et sa tahad antud hääletuse sulgeda?"
+      error_while_toggling_status: "Hääletuse staatuse muutmisel esines viga."
+      error_while_casting_votes: "Esines veateade teie hääle edastamisel."
