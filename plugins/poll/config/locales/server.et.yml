@@ -1,0 +1,32 @@
+et:
+  site_settings:
+    poll_enabled: "Lubada kasutajatel küsitlusi koostada?"
+    poll_maximum_options: "Maksimaalne valikute arv, mis on küsitluses lubatud."
+  poll:
+    multiple_polls_without_name: "Mitmed küsitlused on ilma nimeta. Kasuta atribuuti '<code>name</code>' küsitluse unikaalsuse tagamiseks."
+    multiple_polls_with_same_name: "Mitu küsitlust on sama nimega: <strong>%{name}</strong>. Kasuta atribuuti '<code>name</code>' küsitluse unikaalsuse tagamiseks."
+    default_poll_must_have_at_least_2_options: "Küsitlusel peab olema vähemalt 2 valikut."
+    named_poll_must_have_at_least_2_options: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähemalt 2 valikut."
+    default_poll_must_have_less_options:
+      one: "Küsitlusel peab olema vähemalt 1 valik."
+      other: "Küsitlusel peab olema vähem, kui %{count} valikut."
+    named_poll_must_have_less_options:
+      one: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähem kui 1 valik."
+      other: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähem kui %{count} valikut."
+    default_poll_must_have_different_options: "Küsitlusel peavad olema erinevad valikud."
+    named_poll_must_have_different_options: "Küsitlus nimega <strong>%{name}</strong> peab sisaldama erinevaid valikuid."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Erinevate valikutega küsitlusel pole korrektsed parameetrid."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Mitme valikuga küsitlusel nimega <strong>%{name}</strong> on vigaseid parameetreid."
+    requires_at_least_1_valid_option: "Pead tegema vähemalt 1 korrektse valiku."
+    cannot_change_polls_after_5_minutes: "Peale esimest 5 minutit ei saa küsitlust enam lisada, eemaldada ega ümber nimetada."
+    op_cannot_edit_options_after_5_minutes: "Peale esimest 5 minutit ei saa küsitluse valikuid lisada ega eemaldada. Palun võta ühendust moderaaatoriga, kui soovid küsitluse valikut muuta."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Peale esimest 5 minutit ei saa küsitluse valikuid lisada ega eemaldada. Peaksid antud teema sulgema ja uue looma."
+    no_polls_associated_with_this_post: "Postitusega pole seotud ühtegi küsitlust."
+    no_poll_with_this_name: "Küsitlust nimega <strong>%{name}</strong> pole selle teemaga seotud."
+    post_is_deleted: "Kustutatud postitusega ei saa midagi teha."
+    topic_must_be_open_to_vote: "Teema peab olema avatud, et hääletada."
+    poll_must_be_open_to_vote: "Hääletamiseks peab küsitlus olema avatud."
+    topic_must_be_open_to_toggle_status: "Teema peab olema avatud, et staatust muuta."
+    only_staff_or_op_can_toggle_status: "Ainult meeskonnaliige või postitaja ise saavad küsitluse staatust muuta."
+    email:
+      link_to_poll: "Vaata küsitlust"
