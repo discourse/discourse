@@ -141,6 +141,8 @@ module Email
         @message.html_part.body = style.strip_avatars_and_emojis
       end
 
+      email_log.message_id = @message.message_id
+
       begin
         @message.deliver_now
       rescue *SMTP_CLIENT_ERRORS => e
