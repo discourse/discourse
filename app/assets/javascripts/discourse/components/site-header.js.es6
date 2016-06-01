@@ -68,8 +68,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
   willDestroyElement() {
     this._super();
     $('body').off('keydown.header');
-    this.appEvents.off('notifications:changed');
-    this.appEvents.off('header:keyboard-trigger');
     $(window).off('resize.discourse-menu-panel');
 
     this.appEvents.off('header:show-topic');

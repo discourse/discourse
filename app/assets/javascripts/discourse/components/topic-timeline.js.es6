@@ -55,10 +55,5 @@ export default MountWidget.extend(Docking, {
   didInsertElement() {
     this._super();
     this.dispatch('topic:current-post-scrolled', 'timeline-scrollarea');
-  },
-
-  willDestroyElement() {
-    this._super();
-    this.appEvents.off('topic:current-post-scrolled');
   }
 });
