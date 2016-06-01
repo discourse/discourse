@@ -9,6 +9,7 @@ export default Ember.Component.extend({
   progressPosition: null,
   postStream: Ember.computed.alias('topic.postStream'),
   userWantsToJump: null,
+  _streamPercentage: null,
 
   init() {
     this._super();
@@ -33,14 +34,6 @@ export default Ember.Component.extend({
       this.set('userWantsToJump', true);
       Ember.run.scheduleOnce('afterRender', () => this.$('.jump-form input').focus());
     }
-  },
-
-  @computed('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount', 'postStream.highest_post_number')
-  streamPercentage(loaded, progressPosition, filteredPostsCount, highestPostNumber) {
-    if (!loaded) { return 0; }
-    if (highestPostNumber === 0) { return 0; }
-    const perc = progressPosition / filteredPostsCount;
-    return (perc > 1.0) ? 1.0 : perc;
   },
 
   @computed('progressPosition')
@@ -72,9 +65,15 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('streamPercentage', 'postStream.stream.[]')
+  @observes('postStream.stream.[]')
   _updateBar() {
     Ember.run.scheduleOnce('afterRender', this, this._updateProgressBar);
+  },
+
+  _topicScrolled(event) {
+    this.set('progressPosition', event.postIndex);
+    this._streamPercentage = event.percent;
+    this._updateBar();
   },
 
   didInsertElement() {
@@ -84,7 +83,7 @@ export default Ember.Component.extend({
                   .on("composer:resized", this, this._dock)
                   .on('composer:closed', this, this._dock)
                   .on("topic:scrolled", this, this._dock)
-                  .on('topic:current-post-changed', postNumber => this.set('progressPosition', postNumber))
+                  .on('topic:current-post-scrolled', this, this._topicScrolled)
                   .on('topic-progress:keyboard-trigger', this, this.keyboardTrigger);
 
     Ember.run.scheduleOnce('afterRender', this, this._updateProgressBar);
@@ -96,13 +95,12 @@ export default Ember.Component.extend({
                   .off("composer:resized", this, this._dock)
                   .off('composer:closed', this, this._dock)
                   .off('topic:scrolled', this, this._dock)
-                  .off('topic:current-post-changed')
+                  .off('topic:current-post-scrolled')
                   .off('topic-progress:keyboard-trigger');
   },
 
   _updateProgressBar() {
-    if (this.isDestroyed || this.isDestroying) { return; }
-    if (this.get('hidden')) { return; }
+    if (this.isDestroyed || this.isDestroying || this.get('hidden')) { return; }
 
     const $topicProgress = this.$('#topic-progress');
     // speeds up stuff, bypass jquery slowness and extra checks
@@ -110,7 +108,7 @@ export default Ember.Component.extend({
       this._totalWidth = $topicProgress[0].offsetWidth;
     }
     const totalWidth = this._totalWidth;
-    const progressWidth = this.get('streamPercentage') * totalWidth;
+    const progressWidth = (this._streamPercentage || 0) * totalWidth;
 
     const borderSize = (progressWidth === totalWidth) ? "0px" : "1px";
     const $bg = $topicProgress.find('.bg');

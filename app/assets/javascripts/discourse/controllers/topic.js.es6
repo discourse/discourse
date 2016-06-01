@@ -206,13 +206,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       const postStream = model.get('postStream');
 
       this._progressIndex = postStream.progressIndexOfPost(post);
-      this.appEvents.trigger('topic:current-post-changed', this._progressIndex);
     },
 
     currentPostScrolled(event) {
+      const total = this.get('model.postStream.filteredPostsCount');
+      const percent = (parseFloat(this._progressIndex + event.percent - 1) / total);
       this.appEvents.trigger('topic:current-post-scrolled', {
         postIndex: this._progressIndex,
-        percent: event.percent
+        percent: Math.max(Math.min(percent, 1.0), 0.0)
       });
     },
 
