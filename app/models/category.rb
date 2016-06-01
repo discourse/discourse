@@ -315,7 +315,8 @@ SQL
     end
   end
 
-  def allowed_tags=(tag_names)
+  def allowed_tags=(tag_names_arg)
+    tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user)) || []
     if self.tags.pluck(:name).sort != tag_names.sort
       self.tags = Tag.where(name: tag_names).all
       if self.tags.size < tag_names.size
