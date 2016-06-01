@@ -126,18 +126,17 @@ export default Ember.Component.extend({
     const maximumOffset = $('#topic-footer-buttons').offset(),
           composerHeight = $('#reply-control').height() || 0,
           $topicProgressWrapper = this.$(),
-          offset = window.pageYOffset || $('html').scrollTop();
+          offset = window.pageYOffset || $('html').scrollTop(),
+          topicProgressHeight = $('#topic-progress').height();
 
     let isDocked = false;
     if (maximumOffset) {
-      const threshold = maximumOffset.top,
-            windowHeight = $(window).height(),
-            topicProgressHeight = $('#topic-progress').height();
-
+      const threshold = maximumOffset.top;
+      const windowHeight = $(window).height();
       isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
     }
 
-    const dockPos = $(document).height() - $('#topic-bottom').offset().top;
+    const dockPos = $(document).height() - $('#topic-footer-main-buttons').offset().top - topicProgressHeight;
 
     if (composerHeight > 0) {
       if (isDocked) {
