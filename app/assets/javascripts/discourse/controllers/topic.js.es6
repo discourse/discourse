@@ -865,7 +865,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         }
       });
 
-      if (highestReadPostId > 0) {
+      if (highestReadPostId > 0 && highestReadPostId > (topic.get('last_read_post_id') || 0)) {
         topic.set('last_read_post_id', highestReadPostId);
       }
 

@@ -120,7 +120,7 @@ createWidget('timeline-scrollarea', {
 
     if (lastReadId && lastReadNumber) {
       const idx = postStream.get('stream').indexOf(lastReadId) + 1;
-      result.lastRead = lastReadNumber;
+      result.lastRead = idx;
       result.lastReadPercentage = this._percentFor(topic, idx);
     }
 
