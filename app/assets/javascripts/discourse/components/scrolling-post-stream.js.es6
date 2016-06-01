@@ -92,6 +92,8 @@ export default MountWidget.extend({
     // uncomment to debug the eyeline
     // $('.debug-eyeline').css({ height: '1px', width: '100%', backgroundColor: 'blue', position: 'absolute', top: `${topCheck}px` });
 
+    let allAbove = true;
+
     let bottomView = topView;
     while (bottomView < $posts.length) {
       const post = $posts[bottomView];
@@ -102,6 +104,8 @@ export default MountWidget.extend({
       const viewTop = $post.offset().top;
       const postHeight = $post.height();
       const viewBottom = Math.ceil(viewTop + postHeight);
+
+      allAbove = allAbove && (viewTop < topCheck);
 
       if (viewTop > viewportBottom) { break; }
 
@@ -115,8 +119,12 @@ export default MountWidget.extend({
       }
 
       nearby.push(bottomView);
-
       bottomView++;
+    }
+
+    if (allAbove) {
+      if (percent === null) { percent = 1.0; }
+      if (currentPost === null) { currentPost = bottomView - 1; }
     }
 
     const posts = this.posts;
