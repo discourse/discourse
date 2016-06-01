@@ -39,7 +39,7 @@ export default MountWidget.extend(Docking, {
     this.dockBottom = false;
     if (posTop < topicTop) {
       this.dockAt = topicTop;
-    } else if (pos > topicBottom) {
+    } else if (pos > topicBottom + footerHeight) {
       this.dockAt = (topicBottom - timelineHeight) + footerHeight;
       this.dockBottom = true;
       if (this.dockAt < 0) { this.dockAt = 0; }
