@@ -2,6 +2,12 @@
   width: 900px;
 }
 
+.composer-open {
+  .topic-timeline {
+    opacity: 0;
+  }
+}
+
 .timeline-container {
   box-sizing: border-box;
   z-index: 999;
@@ -11,7 +17,6 @@
 
   &.timeline-docked {
     position: absolute;
-
   }
 
   &.timeline-docked-bottom {
@@ -23,6 +28,7 @@
   .topic-timeline {
     margin-left: 3em;
     width: 150px;
+    transition: opacity 0.2s ease-in;
 
     .timeline-controls {
       margin-bottom: 1em;

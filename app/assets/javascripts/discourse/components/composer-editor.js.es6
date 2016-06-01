@@ -82,7 +82,7 @@ export default Ember.Component.extend({
     }
 
     this._bindUploadTarget();
-    this.appEvents.trigger('composer:opened');
+    this.appEvents.trigger('composer:will-open');
   },
 
   @computed('composer.reply', 'composer.replyLength', 'composer.missingReplyCharacters', 'composer.minimumPostLength', 'lastValidatedAt')

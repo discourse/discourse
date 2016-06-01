@@ -66,8 +66,8 @@
     <div class='selected-posts {{unless multiSelect 'hidden'}}'>
       {{partial "selected-posts"}}
     </div>
-    {{#topic-navigation as |showTimeline|}}
-      {{#if showTimeline}}
+    {{#topic-navigation as |info|}}
+      {{#if info.renderTimeline}}
         {{topic-timeline topic=model
                          enteredIndex=enteredIndex
                          loading=model.postStream.loading
@@ -76,7 +76,7 @@
         {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
       {{/if}}
 
-      {{topic-progress topic=model delegated=topicDelegated showTimeline=showTimeline}}
+      {{topic-progress topic=model delegated=topicDelegated showTimeline=info.showTimeline}}
     {{/topic-navigation}}
 
     <div class="row">

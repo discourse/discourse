@@ -92,7 +92,12 @@ const ComposerView = Ember.View.extend({
       onDrag: sizePx => this.movePanels(sizePx)
     });
 
-    afterTransition($replyControl, resize);
+    afterTransition($replyControl, () => {
+      resize();
+      if (this.get('composer.composeState') === Composer.OPEN) {
+        this.appEvents.trigger('composer:opened');
+      }
+    });
     positioningWorkaround(this.$());
   },
 
