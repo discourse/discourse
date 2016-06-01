@@ -13,8 +13,11 @@
   z-index: 999;
   margin-left: 757px;
 
-  @include large-width {
+  @media all and (min-width: 1140px) {
     margin-left: 820px;
+  }
+  @media all and (min-width: 1250px) {
+    margin-left: 900px;
   }
 
   position: fixed;
