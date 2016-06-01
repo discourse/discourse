@@ -870,7 +870,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
 
       const max = _.max(postNumbers);
-      if (max > topic.get("last_read_post_number")) {
+      if (max > (topic.get("last_read_post_number") || 0)) {
         topic.set("last_read_post_number", max);
       }
 

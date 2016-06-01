@@ -134,7 +134,9 @@ export default Ember.Component.extend({
       isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
     }
 
-    const dockPos = $(document).height() - $('#topic-footer-main-buttons').offset().top - topicProgressHeight;
+    const $mainButtons = $('#topic-footer-main-buttons');
+    const mainPos = $mainButtons.length > 0 ? $mainButtons.offset().top : 0;
+    const dockPos = $(document).height() - mainPos - topicProgressHeight;
 
     if (composerHeight > 0) {
       if (isDocked) {
