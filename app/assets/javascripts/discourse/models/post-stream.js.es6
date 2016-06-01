@@ -696,6 +696,7 @@ export default RestModel.extend({
       const postNumber = post.get('post_number');
       if (postNumber && postNumber > (this.get('topic.highest_post_number') || 0)) {
         this.set('topic.highest_post_number', postNumber);
+        this.set('topic.last_posted_at', post.get('created_at'));
       }
 
       if (existing) {
