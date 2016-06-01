@@ -1086,6 +1086,15 @@ describe Guardian do
           expect(Guardian.new(moderator).can_edit?(post)).to eq(false)
           expect(Guardian.new(moderator).can_edit?(topic)).to eq(false)
         end
+
+        it "returns false for trust level 3 if category is secured" do
+          topic.category.set_permissions(everyone: :create_post, staff: :full)
+          topic.category.save
+
+          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(admin).can_edit?(topic)).to eq(true)
+          expect(Guardian.new(moderator).can_edit?(topic)).to eq(true)
+        end
       end
 
       context 'private message' do
