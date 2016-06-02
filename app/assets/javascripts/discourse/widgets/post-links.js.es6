@@ -19,6 +19,7 @@ export default createWidget('post-links', {
       if (state.collapsed) {
         return this.attach('link', {
           labelCount: `post_links.title`,
+          title: "post_links.about",
           count: links.length,
           action: 'expandLinks',
           className: 'expand-links'
@@ -47,14 +48,6 @@ export default createWidget('post-links', {
         }
       });
     }
-
-    // if (attrs.canReplyAsNewTopic) {
-    //   result.push(h('li', this.attach('link', {
-    //                 className: 'reply-new',
-    //                 contents: () => [I18n.t('post.reply_as_new_topic'), iconNode('plus')],
-    //                 action: 'newTopicAction'
-    //               })));
-    // }
 
     return h('ul.post-links', result);
   },
