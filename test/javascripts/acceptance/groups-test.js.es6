@@ -4,12 +4,12 @@ acceptance("Groups");
 test("Browsing Groups", () => {
   visit("/groups/discourse");
   andThen(() => {
-    ok(count('.user-stream .item') > 0, "it has stream items");
+    ok(count('.group-members tr') > 0, "it lists group members");
   });
 
-  visit("/groups/discourse/members");
+  visit("/groups/discourse/posts");
   andThen(() => {
-    ok(count('.group-members tr') > 0, "it lists group members");
+    ok(count('.user-stream .item') > 0, "it lists stream items");
   });
 
   visit("/groups/discourse/topics");
