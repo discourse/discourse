@@ -4,7 +4,7 @@
 #
 Vagrant.configure("2") do |config|
   config.vm.box     = 'discourse-16.04'
-  config.vm.box_url = "https://www.dropbox.com/s/2132770g1e05c6d/discourse.box?dl=0"
+  config.vm.box_url = "https://www.dropbox.com/s/2132770g1e05c6d/discourse.box?dl=1"
 
   # Make this VM reachable on the host network as well, so that other
   # VM's running other browsers can access our dev server.
