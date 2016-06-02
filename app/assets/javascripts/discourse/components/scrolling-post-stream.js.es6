@@ -93,7 +93,6 @@ export default MountWidget.extend({
     // $('.debug-eyeline').css({ height: '1px', width: '100%', backgroundColor: 'blue', position: 'absolute', top: `${topCheck}px` });
 
     let allAbove = true;
-
     let bottomView = topView;
     while (bottomView < $posts.length) {
       const post = $posts[bottomView];
@@ -160,7 +159,8 @@ export default MountWidget.extend({
         this.sendAction('bottomVisibleChanged', { post: last, refresh });
       }
 
-      if (this._currentPost !== currentPost) {
+      const changedPost = this._currentPost !== currentPost;
+      if (changedPost) {
         this._currentPost = currentPost;
         const post = posts.objectAt(currentPost);
         this.sendAction('currentPostChanged', { post });
@@ -169,7 +169,7 @@ export default MountWidget.extend({
       if (percent !== null) {
         if (percent > 1.0) { percent = 1.0; }
 
-        if (this._currentPercent !== percent) {
+        if (changedPost || (this._currentPercent !== percent)) {
           this._currentPercent = percent;
           this.sendAction('currentPostScrolled', { percent });
         }
