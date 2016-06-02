@@ -233,6 +233,12 @@ class Invite < ActiveRecord::Base
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
+  def self.resend_all_invites_from(user_id)
+    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id).find_each do |invite|
+      invite.resend_invite unless invite.blank?
+    end
+  end
+
   def limit_invites_per_day
     RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
   end

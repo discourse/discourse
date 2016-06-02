@@ -580,6 +580,7 @@ Discourse::Application.routes.draw do
     end
   end
   post "invites/reinvite" => "invites#resend_invite"
+  post "invites/reinvite-all" => "invites#resend_all_invites"
   post "invites/link" => "invites#create_invite_link"
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
