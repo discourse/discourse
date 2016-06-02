@@ -84,7 +84,7 @@
     .timeline-handle {
       @include border-radius-all(0.8em);
       width: 0.35em;
-      background-color: $tertiary;
+      background-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
       height: 100%;
       float: left;
     }
@@ -99,7 +99,7 @@
 
     .timeline-scroller {
       @include unselectable;
-      margin-left: -0.18em;
+      margin-left: -0.19em;
       cursor: ns-resize;
       display: flex;
       align-items: center;
@@ -111,11 +111,11 @@
 
     .timeline-last-read {
       position: absolute;
-      margin-left: -0.18em;
+      margin-left: -0.19em;
 
       i.progress {
         font-size: 0.5em;
-        color: $tertiary;
+        color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
         margin-right: 1em;
       }
     }
