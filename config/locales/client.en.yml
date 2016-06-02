@@ -1828,6 +1828,7 @@ en:
         one: "1 click"
         other: "%{count} clicks"
     post_links:
+      about: "expand the links for this post"
       title:
         one: "1 post link"
         other: "%{count} post links"
