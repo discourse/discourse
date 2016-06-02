@@ -48,6 +48,10 @@ Invite.reopenClass({
   findInvitedCount(user) {
     if (!user) { return Em.RSVP.resolve(); }
     return Discourse.ajax("/users/" + user.get('username_lower') + "/invited_count.json").then(result => Em.Object.create(result.counts));
+  },
+
+  reinviteAll() {
+    return Discourse.ajax('/invites/reinvite-all', { type: 'POST' });
   }
 
 });
