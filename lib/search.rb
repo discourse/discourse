@@ -297,7 +297,12 @@ class Search
     if category_id
       posts.where("topics.category_id = ?", category_id)
     else
-      posts.where("1 = 0")
+      posts.where("topics.id IN (
+        SELECT DISTINCT(tt.topic_id)
+        FROM topic_tags tt, tags
+        WHERE tt.tag_id = tags.id
+        AND tags.name = ?
+        )", slug[0])
     end
   end
 

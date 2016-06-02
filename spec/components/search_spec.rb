@@ -536,7 +536,7 @@ describe Search do
 
     end
 
-    it 'supports category slug' do
+    it 'supports category slug and tags' do
       # main category
       category = Fabricate(:category, name: 'category 24', slug: 'category-24')
       topic = Fabricate(:topic, created_at: 3.months.ago, category: category)
@@ -552,6 +552,11 @@ describe Search do
 
       expect(Search.execute('testing again #category-24:sub-category').posts.length).to eq(1)
       expect(Search.execute('testing again #sub-category').posts.length).to eq(0)
+
+      # tags
+      topic.tags = [Fabricate(:tag, name: 'alpha')]
+      expect(Search.execute('this is a test #alpha').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('this is a test #beta').posts.size).to eq(0)
     end
 
     it "can find with tag" do
