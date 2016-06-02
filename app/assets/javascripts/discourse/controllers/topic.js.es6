@@ -199,13 +199,15 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (!post) { return; }
 
       const postNumber = post.get('post_number');
-      const model = this.get('model');
-      model.set('currentPost', postNumber);
+      const topic = this.get('model');
+      topic.set('currentPost', postNumber);
+      if (postNumber > (topic.get('last_read_post_number') || 0)) {
+        topic.set('last_read_post_id', post.get('id'));
+        topic.set('last_read_post_number', postNumber);
+      }
+
       this.send('postChangedRoute', postNumber);
-
-      const postStream = model.get('postStream');
-
-      this._progressIndex = postStream.progressIndexOfPost(post);
+      this._progressIndex = topic.get('postStream').progressIndexOfPost(post);
     },
 
     currentPostScrolled(event) {
@@ -849,38 +851,23 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     const postStream = topic.get("postStream");
 
     if (topic.get('id') === topicId) {
-
-      let highestReadPostId = 0;
-
-      // TODO identity map for postNumber
       postStream.get('posts').forEach(post => {
         if (!post.read && postNumbers.indexOf(post.post_number) !== -1) {
-          const id = post.get('id');
-          if (id > highestReadPostId) {
-            highestReadPostId = id;
-          }
-
           post.set('read', true);
-          this.appEvents.trigger('post-stream:refresh', { id });
+          this.appEvents.trigger('post-stream:refresh', { id: post.get('id') });
         }
       });
-
-      if (highestReadPostId > 0 && highestReadPostId > (topic.get('last_read_post_id') || 0)) {
-        topic.set('last_read_post_id', highestReadPostId);
-      }
-
-      const max = _.max(postNumbers);
-      if (max > (topic.get("last_read_post_number") || 0)) {
-        topic.set("last_read_post_number", max);
-      }
 
       if (this.siteSettings.automatically_unpin_topics &&
           this.currentUser &&
           this.currentUser.automatically_unpin_topics) {
+
         // automatically unpin topics when the user reaches the bottom
+        const max = _.max(postNumbers);
         if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
           Em.run.next(() => topic.clearPin());
         }
+
       }
     }
   },
