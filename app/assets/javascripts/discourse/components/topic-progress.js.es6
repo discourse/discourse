@@ -134,10 +134,7 @@ export default Ember.Component.extend({
       isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
     }
 
-    const $mainButtons = $('#topic-footer-main-buttons');
-    const mainPos = $mainButtons.length > 0 ? $mainButtons.offset().top : 0;
-    const dockPos = $(document).height() - mainPos - topicProgressHeight;
-
+    const dockPos = $(document).height() - $('#topic-bottom').offset().top;
     if (composerHeight > 0) {
       if (isDocked) {
         $topicProgressWrapper.css('bottom', dockPos);
