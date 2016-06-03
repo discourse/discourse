@@ -18,11 +18,14 @@ POLLS_CUSTOM_FIELD ||= "polls".freeze
 VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
 
 DATA_PREFIX ||= "data-poll-".freeze
-DEFAULT_POLL_NAME ||= "poll".freeze
 
 after_initialize do
 
   module ::DiscoursePoll
+    DEFAULT_POLL_NAME ||= "poll".freeze
+
+    autoload :PollsValidator, "#{Rails.root}/plugins/poll/lib/polls_validator"
+
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
       isolate_namespace DiscoursePoll
@@ -224,59 +227,8 @@ after_initialize do
     # only care when raw has changed!
     return unless self.raw_changed?
 
-    polls = {}
-
-    extracted_polls = DiscoursePoll::Poll::extract(self.raw, self.topic_id)
-
-    extracted_polls.each do |poll|
-      # polls should have a unique name
-      if polls.has_key?(poll["name"])
-        poll["name"] == DEFAULT_POLL_NAME ?
-          self.errors.add(:base, I18n.t("poll.multiple_polls_without_name")) :
-          self.errors.add(:base, I18n.t("poll.multiple_polls_with_same_name", name: poll["name"]))
-        return
-      end
-
-      # options must be unique
-      if poll["options"].map { |o| o["id"] }.uniq.size != poll["options"].size
-        poll["name"] == DEFAULT_POLL_NAME ?
-          self.errors.add(:base, I18n.t("poll.default_poll_must_have_different_options")) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_different_options", name: poll["name"]))
-        return
-      end
-
-      # at least 2 options
-      if poll["options"].size < 2
-        poll["name"] == DEFAULT_POLL_NAME ?
-          self.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_2_options")) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_2_options", name: poll["name"]))
-        return
-      end
-
-      # maximum # of options
-      if poll["options"].size > SiteSetting.poll_maximum_options
-        poll["name"] == DEFAULT_POLL_NAME ?
-          self.errors.add(:base, I18n.t("poll.default_poll_must_have_less_options", count: SiteSetting.poll_maximum_options)) :
-          self.errors.add(:base, I18n.t("poll.named_poll_must_have_less_options", name: poll["name"], count: SiteSetting.poll_maximum_options))
-        return
-      end
-
-      # poll with multiple choices
-      if poll["type"] == "multiple"
-        min = (poll["min"].presence || 1).to_i
-        max = (poll["max"].presence || poll["options"].size).to_i
-
-        if min > max || max <= 0 || max > poll["options"].size || min >= poll["options"].size
-          poll["name"] == DEFAULT_POLL_NAME ?
-            self.errors.add(:base, I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")) :
-            self.errors.add(:base, I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: poll["name"]))
-          return
-        end
-      end
-
-      # store the valid poll
-      polls[poll["name"]] = poll
-    end
+    validator = DiscoursePoll::PollsValidator.new(self)
+    return if !(polls = validator.validate_polls)
 
     # are we updating a post?
     if self.id.present?
