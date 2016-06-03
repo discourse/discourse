@@ -137,7 +137,7 @@
             </dd>
           {{/if}}
           {{#if model.displayGroups}}
-            <dt>{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
+            <dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
             <dd class='groups'>
               {{#each model.displayGroups as |group|}}
                 <span>{{#link-to 'group' group class="group-link"}}{{group.name}}{{/link-to}}</span>
