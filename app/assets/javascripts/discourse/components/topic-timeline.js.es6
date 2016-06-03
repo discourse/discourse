@@ -18,15 +18,13 @@ export default MountWidget.extend(Docking, {
              dockBottom: this.dockBottom };
   },
 
-  @observes('topic.highest_post_number')
+  @observes('topic.highest_post_number', 'loading')
   newPostAdded() {
     this.queueRerender(() => this.queueDockCheck());
   },
 
   dockCheck(info) {
-    if (this.get('loading')) { return; }
-
-    const topicTop = $('.container.posts').offset().top;
+    const topicTop = $('.container.posts').offset().top - $('#main').offset().top;
     const topicBottom = $('#topic-bottom').offset().top;
     const $timeline = this.$('.timeline-container');
     const timelineHeight = $timeline.height() || 400;
