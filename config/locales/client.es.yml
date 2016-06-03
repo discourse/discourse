@@ -460,7 +460,17 @@ es:
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
       github_profile: "Github"
-      mailing_list_mode: "Enviarme un e-mail para cada nuevo post (excepto las categorías o temas que tenga silenciadas)"
+      email_activity_summary: "Resumen de actividad"
+      mailing_list_mode:
+        label: "Modo lista de correo"
+        enabled: "Activar modo lista de correo"
+        instructions: |
+          Esta opción sobreescribe el resumen de actividad.<br />
+          Los temas y categorías silenciadas no se incluyen en estos emails.
+        daily: "Enviar actualizaciones diarias."
+        individual: "Enviar un email por cada nuevo post."
+        many_per_day: "Enviarme un correo por cada nuevo post  (en torno a {{dailyEmailEstimate}} por día)."
+        few_per_day: "Enviarme un correo por cada nuevo post (menos de 2 por día)."
       watched_categories: "Vigiladas"
       watched_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se te notificará de cada nuevo post y tema, y además, se añadirá un contador de posts nuevos y sin leer al lado del tema."
       tracked_categories: "Siguiendo"
@@ -499,7 +509,7 @@ es:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
         error: "(error)"
-        action: "Enviar E-mail para Restablecer la Contraseña"
+        action: "Enviar email para restablecer la contraseña"
         set_password: "Establecer contraseña"
       change_about:
         title: "Cambiar 'Acerca de mí'"
@@ -1036,7 +1046,7 @@ es:
       post_format: "#{{post_number}} por {{username}}"
       context:
         user: "Buscar posts por @{{username}}"
-        category: "Buscar en la categoría \"{{category}}\""
+        category: "Buscar la categoría #{{category}}"
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
     hamburger_menu: "ir a otra lista de temas o categoría"
