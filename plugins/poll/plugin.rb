@@ -14,17 +14,17 @@ register_asset "javascripts/poll_dialect.js", :server_side
 
 PLUGIN_NAME ||= "discourse_poll".freeze
 
-POLLS_CUSTOM_FIELD ||= "polls".freeze
-VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
-
 DATA_PREFIX ||= "data-poll-".freeze
 
 after_initialize do
 
   module ::DiscoursePoll
     DEFAULT_POLL_NAME ||= "poll".freeze
+    POLLS_CUSTOM_FIELD ||= "polls".freeze
+    VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
 
     autoload :PollsValidator, "#{Rails.root}/plugins/poll/lib/polls_validator"
+    autoload :PollsUpdater, "#{Rails.root}/plugins/poll/lib/polls_updater"
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -49,7 +49,7 @@ after_initialize do
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
           end
 
-          polls = post.custom_fields[POLLS_CUSTOM_FIELD]
+          polls = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
 
           raise StandardError.new I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
 
@@ -67,11 +67,11 @@ after_initialize do
           poll["voters"] = poll["anonymous_voters"] || 0
           all_options = Hash.new(0)
 
-          post.custom_fields[VOTES_CUSTOM_FIELD] ||= {}
-          post.custom_fields[VOTES_CUSTOM_FIELD]["#{user_id}"] ||= {}
-          post.custom_fields[VOTES_CUSTOM_FIELD]["#{user_id}"][poll_name] = options
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD] ||= {}
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"] ||= {}
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"][poll_name] = options
 
-          post.custom_fields[VOTES_CUSTOM_FIELD].each do |_, user_votes|
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].each do |_, user_votes|
             next unless votes = user_votes[poll_name]
             votes.each { |option| all_options[option] += 1 }
             poll["voters"] += 1 if (available_options & votes.to_set).size > 0
@@ -82,7 +82,7 @@ after_initialize do
             option["votes"] = all_options[option["id"]] + anonymous_votes
           end
 
-          post.custom_fields[POLLS_CUSTOM_FIELD] = polls
+          post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = polls
           post.save_custom_fields(true)
 
           MessageBus.publish("/polls/#{post.topic_id}", { post_id: post_id, polls: polls })
@@ -112,7 +112,7 @@ after_initialize do
             raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status")
           end
 
-          polls = post.custom_fields[POLLS_CUSTOM_FIELD]
+          polls = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
 
           raise StandardError.new I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
           raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if polls[poll_name].blank?
@@ -217,7 +217,7 @@ after_initialize do
       polls = self.polls
 
       DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post.id}") do
-        post.custom_fields[POLLS_CUSTOM_FIELD] = polls
+        post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = polls
         post.save_custom_fields(true)
       end
     end
@@ -232,74 +232,8 @@ after_initialize do
 
     # are we updating a post?
     if self.id.present?
-      post = self
-      DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post.id}") do
-        # load previous polls
-        previous_polls = post.custom_fields[POLLS_CUSTOM_FIELD] || {}
-
-        # extract options
-        current_options = polls.values.map { |p| p["options"].map { |o| o["id"] } }.flatten.sort
-        previous_options = previous_polls.values.map { |p| p["options"].map { |o| o["id"] } }.flatten.sort
-
-        # are the polls different?
-        if polls.keys != previous_polls.keys || current_options != previous_options
-
-          has_votes = previous_polls.keys.map { |p| previous_polls[p]["voters"].to_i }.sum > 0
-
-          # outside of the 5-minute edit window?
-          if post.created_at < 5.minutes.ago && has_votes
-            # cannot add/remove/rename polls
-            if polls.keys.sort != previous_polls.keys.sort
-              post.errors.add(:base, I18n.t("poll.cannot_change_polls_after_5_minutes"))
-              return
-            end
-
-            # deal with option changes
-            if User.staff.pluck(:id).include?(post.last_editor_id)
-              # staff can only edit options
-              polls.each_key do |poll_name|
-                if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size && previous_polls[poll_name]["voters"].to_i > 0
-                  post.errors.add(:base, I18n.t("poll.staff_cannot_add_or_remove_options_after_5_minutes"))
-                  return
-                end
-              end
-            else
-              # OP cannot edit poll options
-              post.errors.add(:base, I18n.t("poll.op_cannot_edit_options_after_5_minutes"))
-              return
-            end
-          end
-
-          # try to merge votes
-          polls.each_key do |poll_name|
-            next unless previous_polls.has_key?(poll_name)
-
-            # when the # of options has changed, reset all the votes
-            if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size
-              PostCustomField.where(post_id: post.id, name: VOTES_CUSTOM_FIELD).destroy_all
-              post.clear_custom_fields
-              next
-            end
-
-            polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
-            polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"] if previous_polls[poll_name].has_key?("anonymous_voters")
-
-            for o in 0...polls[poll_name]["options"].size
-              current_option = polls[poll_name]["options"][o]
-              previous_option = previous_polls[poll_name]["options"][o]
-
-              current_option["votes"] = previous_option["votes"]
-              current_option["anonymous_votes"] = previous_option["anonymous_votes"] if previous_option.has_key?("anonymous_votes")
-            end
-          end
-
-          # immediately store the polls
-          post.custom_fields[POLLS_CUSTOM_FIELD] = polls
-          post.save_custom_fields(true)
-
-          # publish the changes
-          MessageBus.publish("/polls/#{post.topic_id}", { post_id: post.id, polls: polls })
-        end
+      DistributedMutex.synchronize("#{PLUGIN_NAME}-#{self.id}") do
+        DiscoursePoll::PollsUpdater.update(self, polls)
       end
     else
       self.polls = polls
@@ -308,11 +242,11 @@ after_initialize do
     true
   end
 
-  Post.register_custom_field_type(POLLS_CUSTOM_FIELD, :json)
-  Post.register_custom_field_type(VOTES_CUSTOM_FIELD, :json)
+  Post.register_custom_field_type(DiscoursePoll::POLLS_CUSTOM_FIELD, :json)
+  Post.register_custom_field_type(DiscoursePoll::VOTES_CUSTOM_FIELD, :json)
 
   TopicView.add_post_custom_fields_whitelister do |user|
-    user ? [POLLS_CUSTOM_FIELD, VOTES_CUSTOM_FIELD] : [POLLS_CUSTOM_FIELD]
+    user ? [DiscoursePoll::POLLS_CUSTOM_FIELD, DiscoursePoll::VOTES_CUSTOM_FIELD] : [DiscoursePoll::POLLS_CUSTOM_FIELD]
   end
 
   on(:reduce_cooked) do |fragment, post|
@@ -328,20 +262,20 @@ after_initialize do
 
   # tells the front-end we have a poll for that post
   on(:post_created) do |post|
-    next if post.is_first_post? || post.custom_fields[POLLS_CUSTOM_FIELD].blank?
+    next if post.is_first_post? || post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].blank?
     MessageBus.publish("/polls/#{post.topic_id}", {
                          post_id: post.id,
-                         polls: post.custom_fields[POLLS_CUSTOM_FIELD]})
+                         polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]})
   end
 
-  add_to_serializer(:post, :polls, false) { post_custom_fields[POLLS_CUSTOM_FIELD] }
-  add_to_serializer(:post, :include_polls?) { post_custom_fields.present? && post_custom_fields[POLLS_CUSTOM_FIELD].present? }
+  add_to_serializer(:post, :polls, false) { post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] }
+  add_to_serializer(:post, :include_polls?) { post_custom_fields.present? && post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].present? }
 
-  add_to_serializer(:post, :polls_votes, false) { post_custom_fields[VOTES_CUSTOM_FIELD]["#{scope.user.id}"] }
+  add_to_serializer(:post, :polls_votes, false) { post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{scope.user.id}"] }
   add_to_serializer(:post, :include_polls_votes?) do
     return unless scope.user
     return unless post_custom_fields.present?
-    return unless post_custom_fields[VOTES_CUSTOM_FIELD].present?
-    post_custom_fields[VOTES_CUSTOM_FIELD].has_key?("#{scope.user.id}")
+    return unless post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].present?
+    post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].has_key?("#{scope.user.id}")
   end
 end

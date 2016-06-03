@@ -5,7 +5,7 @@ describe ::DiscoursePoll::PollsValidator do
   subject { described_class.new(post) }
 
   describe "#validate_polls" do
-    it "validate ensure that polls have unique names" do
+    it "should ensure that polls have unique names" do
       raw = <<~RAW
       [poll]
       * 1
