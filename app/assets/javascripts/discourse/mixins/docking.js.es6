@@ -1,5 +1,9 @@
 const helper = {
-  offset: () => (window.pageYOffset || $('html').scrollTop()) - $('#main').offset().top
+  offset() {
+    const mainOffset = $('#main').offset();
+    const offsetTop = mainOffset ? mainOffset.top : 0;
+    return (window.pageYOffset || $('html').scrollTop()) - offsetTop;
+  }
 };
 
 export default Ember.Mixin.create({
