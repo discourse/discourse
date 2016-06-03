@@ -14,6 +14,7 @@ Vagrant.configure("2") do |config|
   # use SSH private keys that are present on the host without copying
   # them into the VM.
   config.ssh.forward_agent = true
+  config.ssh.proxy_command = false
 
   config.vm.provider :virtualbox do |v|
     # This setting gives the VM 1024MB of RAM instead of the default 384.
@@ -44,5 +45,7 @@ Vagrant.configure("2") do |config|
 
   nfs_setting = RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/
   config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", :nfs => nfs_setting
+# If you use NFSv4, replace the previous line with this:
+#  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", :nfs => nfs_setting, :mount_options => ['vers=4']
 
 end
