@@ -12,12 +12,15 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
     whoami > /tmp/username
     sudo add-apt-repository ppa:chris-lea/redis-server
     sudo apt-get -yqq update
-    sudo apt-get -yqq install python-software-properties vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev imagemagick postgresql postgresql-contrib-9.5 libpq-dev postgresql-server-dev-9.5 redis-server advancecomp gifsicle jhead jpegoptim libjpeg-progs optipng pngcrush pngquant
+    sudo apt-get -yqq install python-software-properties vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev imagemagick postgresql postgresql-contrib-9.5 libpq-dev postgresql-server-dev-9.5 redis-server advancecomp gifsicle jhead jpegoptim libjpeg-turbo-progs optipng pngcrush pngquant
 
     # Ruby
     curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
-    \curl -sSL https://get.rvm.io | bash -s stable
+    curl -sSL https://get.rvm.io | bash -s stable
     echo 'gem: --no-document' >> ~/.gemrc
+
+    # Logout and back in to activate RVM installation
+
     rvm install 2.3.1
     rvm --default use 2.3.1 # If this error out check https://rvm.io/integration/gnome-terminal
     gem install bundler mailcatcher
@@ -31,6 +34,7 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
     psql -c "create database discourse_test        owner $(cat /tmp/username) encoding 'UTF8' TEMPLATE template0;"
     psql -d discourse_development -c "CREATE EXTENSION hstore;"
     psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
+    exit
 
     # Node
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
@@ -46,8 +50,8 @@ If everything goes alright, let's clone Discourse and start hacking:
     cd ~/discourse
     bundle install
     bundle exec rake db:create db:migrate db:test:prepare
-    bundle exec rake autospec # CTRL + C to stop
-    bundle exec rails server # Open browser on http://localhost:3000 and you should see Discourse
+    bundle exec rake autospec # CTRL + C to stop; Optional
+    bundle exec rails s -b 0.0.0.0 # Open browser on http://localhost:3000 and you should see Discourse
 
 Create a test account, and enable it with:
 
