@@ -532,6 +532,10 @@ export default Ember.Controller.extend({
       }
     }
 
+    if (opts.topicTags && !this.site.mobileView && this.site.get('can_tag_topics')) {
+      this.set('model.tags', opts.topicTags.split(","));
+    }
+
     if (opts.topicBody) {
       this.set('model.reply', opts.topicBody);
     }
