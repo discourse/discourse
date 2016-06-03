@@ -15,9 +15,11 @@
 
   @media all and (min-width: 1140px) {
     margin-left: 820px;
+    width: $large-width - 820px;
   }
   @media all and (min-width: 1250px) {
     margin-left: 900px;
+    width: $large-width - 900px;
   }
 
   position: fixed;
@@ -35,7 +37,6 @@
 
   .topic-timeline {
     margin-left: 3em;
-    width: 150px;
     transition: opacity 0.2s ease-in;
 
     .timeline-controls {
@@ -45,10 +46,16 @@
     .timeline-footer-controls {
       margin-top: 1em;
       line-height: 2.5em;
+      overflow: hidden;
       transition: opacity 0.2s ease-in;
 
       button {
         margin-right: 0.5em;
+        white-space: nowrap;
+
+        @media all and (max-width: 1140px) {
+          max-width: 140px;
+        }
       }
 
       ul.dropdown-menu {
