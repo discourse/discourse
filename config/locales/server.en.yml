@@ -2105,10 +2105,19 @@ en:
         [Please review and fix them](%{base_url}/admin).
 
   unsubscribe_link: |
-    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url})
+    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
 
-  unsubscribe_via_email_link: |
-    or, [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
+    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}).
+
+  unsubscribe_link_and_mail: |
+    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
+
+    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}) or [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
+
+  unsubscribe_mailing_list: |
+    You have mailing list mode enabled. To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
+
+    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}) or [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "
@@ -2124,11 +2133,11 @@ en:
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ''
-    reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond"
-    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond"
-    only_reply_by_email: "Reply to this email to respond"
-    visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond"
-    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond"
+    reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
+    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond."
+    only_reply_by_email: "Reply to this email to respond."
+    visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
+    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond."
 
     posted_by: "Posted by %{username} on %{post_date}"
 

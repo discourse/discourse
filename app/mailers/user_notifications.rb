@@ -381,7 +381,7 @@ class UserNotifications < ActionMailer::Base
       context: context,
       username: username,
       add_unsubscribe_link: !user.staged,
-      add_unsubscribe_via_email_link: user.user_option.mailing_list_mode,
+      mailing_list_mode: user.user_option.mailing_list_mode,
       unsubscribe_url: post.topic.unsubscribe_url,
       allow_reply_by_email: allow_reply_by_email,
       only_reply_by_email: allow_reply_by_email && user.staged,
