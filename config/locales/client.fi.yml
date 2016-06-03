@@ -456,7 +456,18 @@ fi:
       suspended_notice: "Tämä käyttäjätili on hyllytetty {{date}} asti."
       suspended_reason: "Syy:"
       github_profile: "GitHub"
-      mailing_list_mode: "Lähetä minulle sähköposti jokaisesta uudesta viestistä (paitsi jos vaimennan ketjun tai alueen)."
+      email_activity_summary: "Kooste tapahtumista"
+      mailing_list_mode:
+        label: "Sähköpostilistan kaltainen tila"
+        enabled: "Ota käyttöön sähköpostilistan kaltainen tila."
+        instructions: |+
+          Asetus syrjäyttää koosteet tapahtumista.<br />
+          Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
+
+        daily: "Lähetä päivittäin."
+        individual: "Lähetä sähköpostia jokaisesta uudesta viestistä."
+        many_per_day: "Lähetä sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)."
+        few_per_day: "Lähetä sähköpostia jokaisesta uudesta viestistä (alle 2 päivässä)."
       watched_categories: "Tarkkaillut"
       watched_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
       tracked_categories: "Seuratut"
@@ -473,7 +484,7 @@ fi:
       muted_users: "Vaimennetut"
       muted_users_instructions: "Älä näytä ilmoituksia näiltä käyttäjiltä"
       muted_topics_link: "Näytä vaimennetut ketjut"
-      automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, selattuani sen loppuun."
+      automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
       staff_counters:
         flags_given: "hyödyllistä liputusta"
         flagged_posts: "liputettuja viestejä"
@@ -499,6 +510,7 @@ fi:
         set_password: "Aseta salasana"
       change_about:
         title: "Muokkaa kuvaustasi"
+        error: "Arvon muuttamisessa tapahtui virhe."
       change_username:
         title: "Vaihda käyttäjätunnus"
         confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
@@ -664,12 +676,43 @@ fi:
       summary:
         title: "Yhteenveto"
         stats: "Tilastot"
+        time_read: "lukenut palstaa"
+        topic_count:
+          one: "avattu ketju"
+          other: "avattua ketjua"
+        post_count:
+          one: "kirjoitettu viesti"
+          other: "kirjoitettua viestiä"
+        likes_given:
+          one: "<i class='fa fa-heart'></i> annettu"
+          other: "<i class='fa fa-heart'></i> annettu"
+        likes_received:
+          one: "<i class='fa fa-heart'></i> saatu"
+          other: "<i class='fa fa-heart'></i> saatu"
+        days_visited:
+          one: "päivänä vieraillut"
+          other: "päivänä vieraillut"
+        posts_read:
+          one: "luettu viesti"
+          other: "luettua viestiä"
+        bookmark_count:
+          one: "kirjanmerkki"
+          other: "kirjanmerkkiä"
         top_replies: "Parhaat viestit"
+        no_replies: "Ei vastauksia toistaiseksi."
         more_replies: "Lisää viestejä"
         top_topics: "Parhaat ketjut"
+        no_topics: "Ei avattuja ketjuja toistaiseksi."
         more_topics: "Lisää ketjuja"
         top_badges: "Parhaat arvomerkit"
+        no_badges: "Ei arvomerkkejä toistaiseksi."
         more_badges: "Lisää arvomerkkejä"
+        top_links: "Suosituimmat linkit"
+        no_links: "Ei linkkejä toistaiseksi."
+        most_liked_by: "Eniten tykkäyksiä saatu"
+        most_liked_users: "Eniten tykkäyksiä annettu"
+        most_replied_to_users: "Useiten vastannut"
+        no_likes: "Ei tykkäyksiä toistaiseksi."
       associated_accounts: "Kirjautumiset"
       ip_address:
         title: "Viimeinen IP-osoite"
@@ -881,6 +924,7 @@ fi:
       link_description: "kirjoita linkin kuvaus tähän"
       link_dialog_title: "Lisää linkki"
       link_optional_text: "vaihtoehtoinen kuvaus"
+      link_url_placeholder: "http://example.com"
       quote_title: "Lainaus"
       quote_text: "Lainaus"
       code_title: "Teksti ilman muotoiluja"
@@ -990,7 +1034,6 @@ fi:
       post_format: "#{{post_number}} käyttäjältä {{username}}"
       context:
         user: "Etsi @{{username}} viestejä"
-        category: "Etsi alueelta \"{{category}}\""
         topic: "Etsi tästä ketjusta"
         private_messages: "Etsi viesteistä"
     hamburger_menu: "siirry toiseen ketjuun tai alueelle"
@@ -1019,6 +1062,9 @@ fi:
         selected:
           one: "Olet valinnut <b>yhden</b> ketjun."
           other: "Olet valinnut <b>{{count}}</b> ketjua."
+        change_tags: "Muuta tunnisteita"
+        choose_new_tags: "Valitse tunnisteet näille ketjuille:"
+        changed_tags: "Ketjujen tunnisteet muutettiin."
       none:
         unread: "Sinulla ei ole lukemattomia ketjuja."
         new: "Sinulla ei ole uusia ketjuja."
@@ -2334,6 +2380,7 @@ fi:
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
+        staged_explanation: "Esikäyttäjä voi kirjoittaa vain tiettyihin ketjuihin sähköpostin välityksellä."
         trust_level_change_failed: "Käyttäjän luottamustason vaihtamisessa tapahtui virhe."
         suspend_modal_title: "Hyllytä käyttäjä"
         trust_level_2_users: "Käyttäjät luottamustasolla 2"

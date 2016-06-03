@@ -1,15 +1,23 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 et:
   dates:
     short_date_no_year: "D. MMMM"
     short_date: "D. MMMM, YYYY"
     long_date: "D. MMMM, YYYY hh:mm"
-  datetime_formats:
+  datetime_formats: &datetime_formats
     formats:
       short: "%d.%m.%Y"
       short_no_year: "%-d. %B"
       date_only: "%-d. %B %Y"
   date:
     month_names: [null, jaanuar, veebruar, märts, aprill, mai, juuni, juuli, august, september, oktoober, november, detsember]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Teemad"
   posts: "postitused"
@@ -34,7 +42,7 @@ et:
         reply_user_not_matching_error: "Juhtub, kui vastus tuleb teistsuguselt meiliaadressilt kui see, millele märguanne saadeti."
         topic_not_found_error: "Juhtub, kui vastus tuli aga teema on juba kustutatud."
         topic_closed_error: "Juhtub, kui vastus tuli aga teema on juba suletud."
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "piirang on %{max} tähemärki; sina sisestasid %{length}."
@@ -253,6 +261,7 @@ et:
           attributes:
             hex:
               invalid: "pole korrektne värv"
+      <<: *errors
   vip_category_name: "Lounge"
   vip_category_description: "Liik, mis on eksklusiivne kasutajatele, kellel on usaldustase 3 või kõrgem."
   meta_category_name: "Saidi tagasiside."
@@ -559,3 +568,8 @@ et:
     error: "Viga!"
     email_input: "Admini kiri"
     submit_button: "Saada kiri"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors
