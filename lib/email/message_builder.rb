@@ -28,10 +28,11 @@ module Email
         site_name: SiteSetting.email_prefix.presence || SiteSetting.title,
         base_url: Discourse.base_url,
         user_preferences_url: "#{Discourse.base_url}/my/preferences",
+        hostname: Discourse.current_hostname,
       }.merge!(@opts)
 
       if @template_args[:url].present?
-        @template_args[:header_instructions] = I18n.t('user_notifications.header_instructions', locale: @opts[:locale])
+        @template_args[:header_instructions] = I18n.t('user_notifications.header_instructions', @template_args)
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''
@@ -44,6 +45,17 @@ module Email
           end
           @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)
         end
+
+        if @opts[:add_unsubscribe_link]
+          unsubscribe_string = if @opts[:mailing_list_mode]
+            "unsubscribe_mailing_list"
+          elsif SiteSetting.unsubscribe_via_email_footer
+            "unsubscribe_link_and_mail"
+          else
+            "unsubscribe_link"
+          end
+          @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, @template_args)
+        end
       end
     end
 
@@ -51,13 +63,13 @@ module Email
       if @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
         subject.gsub!("%{site_name}", @template_args[:site_name])
-        subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re', template_args) : '')
-        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? I18n.t('subject_pm', template_args) : '')
+        subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re', @template_args) : '')
+        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? I18n.t('subject_pm', @template_args) : '')
         subject.gsub!("%{optional_cat}", @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '')
         subject.gsub!("%{topic_title}", @template_args[:topic_title]) if @template_args[:topic_title] # must be last for safety
       else
         subject = @opts[:subject]
-        subject = I18n.t("#{@opts[:template]}.subject_template", template_args) if @opts[:template]
+        subject = I18n.t("#{@opts[:template]}.subject_template", @template_args) if @opts[:template]
       end
       subject
     end
@@ -65,42 +77,31 @@ module Email
     def html_part
       return unless html_override = @opts[:html_override]
 
-      if @opts[:add_unsubscribe_link]
-        unsubscribe_link = PrettyText.cook(I18n.t('unsubscribe_link', template_args), sanitize: false).html_safe
-        html_override.gsub!("%{unsubscribe_link}", unsubscribe_link)
-
-        if SiteSetting.unsubscribe_via_email_footer && @opts[:add_unsubscribe_via_email_link]
-          unsubscribe_via_email_link = PrettyText.cook(I18n.t('unsubscribe_via_email_link', hostname: Discourse.current_hostname, locale: @opts[:locale]), sanitize: false).html_safe
-          html_override.gsub!("%{unsubscribe_via_email_link}", unsubscribe_via_email_link)
-        else
-          html_override.gsub!("%{unsubscribe_via_email_link}", "")
-        end
+      if @template_args[:unsubscribe_instructions].present?
+        unsubscribe_instructions = PrettyText.cook(@template_args[:unsubscribe_instructions], sanitize: false).html_safe
+        html_override.gsub!("%{unsubscribe_instructions}", unsubscribe_instructions)
       else
-        html_override.gsub!("%{unsubscribe_link}", "")
-        html_override.gsub!("%{unsubscribe_via_email_link}", "")
+        html_override.gsub!("%{unsubscribe_instructions}", "")
       end
 
-      header_instructions = @template_args[:header_instructions]
-      if header_instructions.present?
-        header_instructions = PrettyText.cook(header_instructions, sanitize: false).html_safe
+      if @template_args[:header_instructions].present?
+        header_instructions = PrettyText.cook(@template_args[:header_instructions], sanitize: false).html_safe
         html_override.gsub!("%{header_instructions}", header_instructions)
       else
         html_override.gsub!("%{header_instructions}", "")
       end
 
-      if response_instructions = @template_args[:respond_instructions]
-        respond_instructions = PrettyText.cook(response_instructions, sanitize: false).html_safe
+      if @template_args[:respond_instructions].present?
+        respond_instructions = PrettyText.cook(@template_args[:respond_instructions], sanitize: false).html_safe
         html_override.gsub!("%{respond_instructions}", respond_instructions)
       else
         html_override.gsub!("%{respond_instructions}", "")
       end
 
-
       styled = Email::Styles.new(html_override, @opts)
       styled.format_basic
-
       if style = @opts[:style]
-        styled.send "format_#{style}"
+        styled.send("format_#{style}")
       end
 
       Mail::Part.new do
@@ -113,23 +114,22 @@ module Email
       body = @opts[:body]
       body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup if @opts[:template]
 
-      if @opts[:add_unsubscribe_link]
+      if @template_args[:unsubscribe_instructions].present?
         body << "\n"
-        body << I18n.t('unsubscribe_link', template_args)
-        if SiteSetting.unsubscribe_via_email_footer && @opts[:add_unsubscribe_via_email_link]
-          body << I18n.t('unsubscribe_via_email_link', hostname: Discourse.current_hostname, locale: @opts[:locale])
-        end
+        body << @template_args[:unsubscribe_instructions]
       end
 
       body
     end
 
     def build_args
-      { to: @to,
+      {
+        to: @to,
         subject: subject,
         body: body,
         charset: 'UTF-8',
-        from: from_value }
+        from: from_value
+      }
     end
 
     def header_args
