@@ -384,7 +384,7 @@ a.star {
       font-size: 0.929em;
     }
     i.fa-times {
-        color: color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
     }
   }
 
