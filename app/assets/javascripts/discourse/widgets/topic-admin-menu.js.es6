@@ -73,7 +73,7 @@ export default createWidget('topic-admin-menu', {
     const position = attrs.fixed ? 'fixed' : 'absolute';
 
     if (attrs.openUpwards) {
-      const bottom = $(document).height() - top;
+      const bottom = $(document).height() - top - $('#main').offset().top;
       return { style: `position: ${position}; bottom: ${bottom}px; left: ${left}px;` };
     } else {
       return { style: `position: ${position}; top: ${top}px; left: ${left}px;` };
