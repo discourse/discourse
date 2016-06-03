@@ -296,7 +296,7 @@ createWidget('post-contents', {
 });
 
 createWidget('post-body', {
-  tagName: 'div.topic-body',
+  tagName: 'div.topic-body.clearfix',
 
   html(attrs) {
     const postContents = this.attach('post-contents', attrs);

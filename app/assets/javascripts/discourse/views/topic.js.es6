@@ -137,7 +137,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 });
 
 function highlight(postNumber) {
-  const $contents = $('#post_' + postNumber +' .topic-body'),
+  const $contents = $(`#post_${postNumber} .topic-body`),
         origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
 
   $contents.data("orig-color", origColor)
