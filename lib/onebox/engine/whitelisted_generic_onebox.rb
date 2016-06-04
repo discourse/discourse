@@ -36,6 +36,7 @@ module Onebox
           cnet.com
           cnn.com
           collegehumor.com
+          consider.it
           coursera.org
           codepen.io
           cracked.com
