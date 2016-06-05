@@ -1650,7 +1650,7 @@ en:
     text_body_template: |
       Hello,
 
-      There are posts from new users that are waiting to be reviewed. [They can be approved or rejected here](%{base_url}/queued-posts).
+      Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/queued-posts).
 
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
