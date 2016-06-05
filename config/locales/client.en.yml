@@ -3026,3 +3026,21 @@ en:
           top: "There are no more top topics."
           bookmarks: "There are no more bookmarked topics."
           search: "There are no more search results."
+
+    invite:
+      custom_message: "Make your invite a little bit more personal by writing a custom message (optional)."
+      custom_message_placeholder: "Enter your custom message, use {invite_link} for specifying invite link."
+      custom_message_template: |
+        Hello,
+
+        You've been invited you to join
+
+        > **{site_title}**
+        >
+        > {site_description}
+
+        If you're interested, click the link below:
+
+        {invite_link}
+
+        This invitation is from a trusted user, so you won't need to log in.
