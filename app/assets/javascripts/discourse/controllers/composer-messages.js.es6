@@ -69,13 +69,17 @@ export default Ember.ArrayController.extend({
   queryFor(composer) {
     if (this.get('checkedMessages')) { return; }
 
-    const self = this;
-    var queuedForTyping = self.get('queuedForTyping');
+    const args = { composerAction: composer.get('action') };
+    const topicId = composer.get('topic.id');
+    const postId = composer.get('post.id');
 
-    Discourse.ComposerMessage.find(composer).then(messages => {
-      self.set('checkedMessages', true);
-      messages.forEach(msg => msg.wait_for_typing ? queuedForTyping.addObject(msg) : self.send("popup", msg));
+    if (topicId) { args.topic_id = topicId; }
+    if (postId)  { args.post_id = postId; }
+
+    const queuedForTyping = this.get('queuedForTyping');
+    this.store.findAll('composer-message', args).then(messages => {
+      this.set('checkedMessages', true);
+      messages.forEach(msg => msg.wait_for_typing ? queuedForTyping.addObject(msg) : this.send('popup', msg));
     });
   }
-
 });

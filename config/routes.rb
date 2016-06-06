@@ -249,7 +249,7 @@ Discourse::Application.routes.draw do
   get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
-  get "composer-messages" => "composer_messages#index"
+  get "composer_messages" => "composer_messages#index"
 
   resources :users, except: [:show, :update, :destroy] do
     collection do

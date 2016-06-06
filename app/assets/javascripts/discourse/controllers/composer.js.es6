@@ -43,7 +43,6 @@ function loadDraft(store, opts) {
 
 export default Ember.Controller.extend({
   needs: ['modal', 'topic', 'composer-messages', 'application'],
-
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_TOPIC_KEY),
   checkedMessages: false,
 
@@ -395,7 +394,8 @@ export default Ember.Controller.extend({
 
     let message = this.get('similarTopicsMessage');
     if (!message) {
-      message = Discourse.ComposerMessage.create({
+      message = this.store.createRecord('composer-message', {
+        id: 'similar_topics',
         templateName: 'composer/similar-topics',
         extraClass: 'similar-topics'
       });
