@@ -3,7 +3,11 @@ require_dependency 'email/message_builder'
 class InviteMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
-  def send_invite(invite)
+  class UserNotificationRenderer < ActionView::Base
+    include UserNotificationsHelper
+  end
+
+  def send_invite(invite, custom_message=nil)
     # Find the first topic they were invited to
     first_topic = invite.topics.order(:created_at).first
 
@@ -31,15 +35,29 @@ class InviteMailer < ActionMailer::Base
                   site_description: SiteSetting.site_description,
                   site_title: SiteSetting.title)
     else
+      html = nil
+      if custom_message.present? && custom_message =~ /{invite_link}/
+        custom_message.gsub!("{invite_link}", "#{Discourse.base_url}/invites/#{invite.invite_key}")
+        custom_message.gsub!("{site_title}", SiteSetting.title) if custom_message =~ /{site_title}/
+        custom_message.gsub!("{site_description}", SiteSetting.site_description) if custom_message =~ /{site_description}/
+
+        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+          template: 'email/invite',
+          format: :html,
+          locals: { message: PrettyText.cook(custom_message).html_safe,
+                    classes: 'custom-invite-email' }
+        )
+      end
+
       build_email(invite.email,
                   template: 'invite_forum_mailer',
+                  html_override: html,
                   invitee_name: invitee_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   site_description: SiteSetting.site_description,
                   site_title: SiteSetting.title)
     end
-
   end
 
   def send_password_instructions(user)

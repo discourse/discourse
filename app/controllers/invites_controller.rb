@@ -43,7 +43,7 @@ class InvitesController < ApplicationController
     end
 
     begin
-      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids)
+      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids, params[:custom_message])
         render json: success_json
       else
         render json: failed_json, status: 422

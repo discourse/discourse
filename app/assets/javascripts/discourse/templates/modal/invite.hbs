@@ -22,6 +22,12 @@
       <label>{{{groupInstructions}}}</label>
       {{group-selector groupFinder=groupFinder groupNames=model.groupNames placeholderKey="topic.invite_private.group_name"}}
     {{/if}}
+
+    {{#if showCustomMessage}}
+      <br><label><a {{action "showCustomMessageBox"}}>{{i18n 'invite.custom_message'}}</a></label>
+      {{#if hasCustomMessage}}{{textarea value=customMessage placeholder=customMessagePlaceholder}}{{/if}}
+    {{/if}}
+
   {{/if}}
 </div>
 <div class="modal-footer">
