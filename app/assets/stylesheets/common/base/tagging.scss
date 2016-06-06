@@ -201,3 +201,35 @@ header .discourse-tag {color: $tag-color !important; }
     color: $tag-color;
   }
 }
+
+.tags-admin-menu {
+  margin-top: 20px;
+  ul {
+    width: 320px;
+  }
+}
+
+.tag-groups-container {
+  margin-top: 20px;
+  .content-list {
+    width: 20%;
+    float: left;
+    margin: 20px 0;
+    ul {
+      margin-bottom: 10px;
+    }
+  }
+  .tag-group-content {
+    width: 75%;
+    float: right;
+  }
+  .group-tags-list .tag-chooser {
+    height: 150px !important;
+    .select2-choices {
+      height: 150px !important; // to fight with select2.scss's important
+    }
+  }
+  .saving {
+    margin-left: 10px;
+  }
+}

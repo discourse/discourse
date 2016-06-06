@@ -216,6 +216,44 @@ body {
   }
 }
 
+.content-list {
+
+  h3 {
+    color: dark-light-diff($primary, $secondary, 50%, -20%);
+    font-size: 1.071em;
+    padding-left: 5px;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+
+    li:first-of-type {
+      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    }
+    li {
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    }
+
+    li a {
+      display: block;
+      padding: 10px;
+      color: $primary;
+
+      &:hover {
+        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
+        color: $primary;
+      }
+
+      &.active {
+        font-weight: bold;
+        color: $primary;
+      }
+    }
+  }
+}
+
 // don't wrap relative dates, we want
 //
 // Jul 26, '15

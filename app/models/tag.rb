@@ -9,6 +9,9 @@ class Tag < ActiveRecord::Base
   has_many :category_tags, dependent: :destroy
   has_many :categories, through: :category_tags
 
+  has_many :tag_group_memberships
+  has_many :tag_groups, through: :tag_group_memberships
+
   def self.tags_by_count_query(opts={})
     q = TopicTag.joins(:tag, :topic).group("topic_tags.tag_id, tags.name").order('count_all DESC')
     q = q.limit(opts[:limit]) if opts[:limit]

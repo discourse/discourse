@@ -2986,6 +2986,8 @@ en:
       sort_by: "Sort by:"
       sort_by_count: "count"
       sort_by_name: "name"
+      manage_groups: "Manage Tag Groups"
+      manage_groups_description: "Define groups to organize tags"
 
       filters:
         without_category: "%{filter} %{tag} topics"
@@ -3004,6 +3006,14 @@ en:
         muted:
           title: "Muted"
           description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."
+
+      groups:
+        title: "Tag Groups"
+        about: "Add tags to groups to manage them more easily."
+        new: "New Group"
+        tags_label: "Tags in this group:"
+        new_name: "New Tag Group"
+        save: "Save"
 
       topics:
         none:

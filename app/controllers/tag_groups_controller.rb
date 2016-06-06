@@ -1,0 +1,62 @@
+class TagGroupsController < ApplicationController
+  skip_before_filter :check_xhr, only: [:index, :show]
+  before_filter :ensure_logged_in, except: [:index, :show]
+  before_filter :fetch_tag_group, only: [:show, :update, :destroy]
+
+  def index
+    tag_groups = TagGroup.order('name ASC').preload(:tags).all
+    serializer = ActiveModel::ArraySerializer.new(tag_groups, each_serializer: TagGroupSerializer, root: 'tag_groups')
+    respond_to do |format|
+      format.html do
+        store_preloaded "tagGroups", MultiJson.dump(serializer)
+        render "default/empty"
+      end
+      format.json { render_json_dump(serializer) }
+    end
+  end
+
+  def show
+    serializer = TagGroupSerializer.new(@tag_group)
+    respond_to do |format|
+      format.html do
+        store_preloaded "tagGroup", MultiJson.dump(serializer)
+        render "default/empty"
+      end
+      format.json { render_json_dump(serializer) }
+    end
+  end
+
+  def create
+    guardian.ensure_can_admin_tag_groups!
+    @tag_group = TagGroup.new(tag_groups_params)
+    if @tag_group.save
+      render_serialized(@tag_group, TagGroupSerializer)
+    else
+      return render_json_error(@tag_group)
+    end
+  end
+
+  def update
+    guardian.ensure_can_admin_tag_groups!
+    json_result(@tag_group, serializer: TagGroupSerializer) do |tag_group|
+      @tag_group.update(tag_groups_params)
+    end
+  end
+
+  def destroy
+    guardian.ensure_can_admin_tag_groups!
+    @tag_group.destroy
+    render json: success_json
+  end
+
+  private
+
+    def fetch_tag_group
+      @tag_group = TagGroup.find(params[:id])
+    end
+
+    def tag_groups_params
+      params[:tag_names] ||= []
+      params.permit(:id, :name, :tag_names => [])
+    end
+end
