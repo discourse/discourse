@@ -3,6 +3,7 @@ import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { relativeAge } from 'discourse/lib/formatter';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -46,7 +47,6 @@ export default Ember.Controller.extend({
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_TOPIC_KEY),
   checkedMessages: false,
   messageCount: null,
-
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
@@ -54,6 +54,8 @@ export default Ember.Controller.extend({
   lastValidatedAt: null,
   isUploading: false,
   topic: null,
+  linkLookup: null,
+
   showToolbar: Em.computed({
     get(){
       const keyValueStore = this.container.lookup('key-value-store:main');
@@ -104,6 +106,39 @@ export default Ember.Controller.extend({
   }.property('model.creatingPrivateMessage', 'model.targetUsernames'),
 
   actions: {
+    addLinkLookup(linkLookup) {
+      this.set('linkLookup', linkLookup);
+    },
+
+    afterRefresh($preview) {
+      const linkLookup = this.get('linkLookup');
+      if (linkLookup) {
+        const $links = $('a[href]', $preview);
+
+        $links.each((idx, l) => {
+          const href = $(l).prop('href');
+          if (href && href.length) {
+            const [warn, info] = linkLookup.check(href);
+
+            if (warn) {
+              const body = I18n.t('composer.duplicate_link', {
+                domain: info.domain,
+                username: info.username,
+                ago: relativeAge(new Date(info.posted_at), { format: 'medium' }),
+                href
+              });
+              this.appEvents.trigger('composer-messages:create', {
+                extraClass: 'custom-body',
+                templateName: 'custom-body',
+                body
+              });
+              return false;
+            }
+          }
+          return true;
+        });
+      }
+    },
 
     toggleWhisper() {
       this.toggleProperty('model.whisper');
@@ -435,6 +470,8 @@ export default Ember.Controller.extend({
 
   // Given a potential instance and options, set the model for this composer.
   _setModel(composerModel, opts) {
+    this.set('linkList', null);
+
     if (opts.draft) {
       composerModel = loadDraft(this.store, opts);
       if (composerModel) {

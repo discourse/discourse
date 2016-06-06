@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   @computed('message.templateName')
   defaultLayout(templateName) {
-    return this.container.lookup(`template:${templateName}`)
+    return this.container.lookup(`template:composer/${templateName}`)
   },
 
   didInsertElement() {

@@ -10,7 +10,7 @@ describe ComposerMessagesController do
 
     context 'when logged in' do
       let!(:user) { log_in }
-      let(:args) { {'topic_id' => '123', 'post_id' => '333', 'composerAction' => 'reply'} }
+      let(:args) { {'topic_id' => '123', 'post_id' => '333', 'composer_action' => 'reply'} }
 
       it 'redirects to your user preferences' do
         xhr :get, :index

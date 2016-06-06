@@ -459,6 +459,7 @@ export default Ember.Component.extend({
       // Paint oneboxes
       $('a.onebox', $preview).each((i, e) => Discourse.Onebox.load(e, refresh));
       this.trigger('previewRefreshed', $preview);
+      this.sendAction('afterRefresh', $preview);
     },
   }
 });

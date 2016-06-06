@@ -258,7 +258,7 @@ http://b.com/#{'a'*500}
     end
   end
 
-  describe 'counts_for and topic_map' do
+  describe 'query methods' do
     it 'returns blank without posts' do
       expect(TopicLink.counts_for(Guardian.new, nil, nil)).to be_blank
     end
@@ -274,6 +274,19 @@ http://b.com/#{'a'*500}
         TopicLink.counts_for(Guardian.new, post.topic, [post])
       end
 
+      it 'creates a valid topic lookup' do
+        TopicLink.extract_from(post)
+
+        lookup = TopicLink.duplicate_lookup(post.topic)
+        expect(lookup).to be_present
+        expect(lookup['google.com']).to be_present
+
+        ch = lookup['www.codinghorror.com/blog']
+        expect(ch).to be_present
+        expect(ch[:domain]).to eq('www.codinghorror.com')
+        expect(ch[:username]).to eq(post.username)
+        expect(ch[:posted_at]).to be_present
+      end
 
       it 'has the correct results' do
         TopicLink.extract_from(post)
@@ -285,7 +298,7 @@ http://b.com/#{'a'*500}
         expect(counts_for[post.id].first[:clicks]).to eq(1)
 
         array = TopicLink.topic_map(Guardian.new, post.topic_id)
-        expect(array.length).to eq(4)
+        expect(array.length).to eq(5)
         expect(array[0]["clicks"]).to eq("1")
       end
 

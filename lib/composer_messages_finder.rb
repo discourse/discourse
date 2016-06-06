@@ -29,7 +29,7 @@ class ComposerMessagesFinder
       education_posts_text = I18n.t('education.until_posts', count: SiteSetting.educate_until_posts)
       return {
         id: 'education',
-        templateName: 'composer/education',
+        templateName: 'education',
         wait_for_typing: true,
         body: PrettyText.cook(I18n.t(education_key, education_posts_text: education_posts_text, site_name: SiteSetting.title))
       }
@@ -44,7 +44,7 @@ class ComposerMessagesFinder
 
     {
       id: 'too_many_replies',
-      templateName: 'composer/education',
+      templateName: 'education',
       body: PrettyText.cook(I18n.t('education.too_many_replies', newuser_max_replies_per_topic: SiteSetting.newuser_max_replies_per_topic))
     }
   end
@@ -70,7 +70,7 @@ class ComposerMessagesFinder
     # Return the message
     {
       id: 'avatar',
-      templateName: 'composer/education',
+      templateName: 'education',
       body: PrettyText.cook(I18n.t('education.avatar', profile_path: "/users/#{@user.username_lower}"))
     }
   end
@@ -108,7 +108,7 @@ class ComposerMessagesFinder
 
     {
       id: 'sequential_replies',
-      templateName: 'composer/education',
+      templateName: 'education',
       wait_for_typing: true,
       extraClass: 'education-message',
       body: PrettyText.cook(I18n.t('education.sequential_replies'))
@@ -140,7 +140,7 @@ class ComposerMessagesFinder
 
     {
       id: 'dominating_topic',
-      templateName: 'composer/education',
+      templateName: 'education',
       wait_for_typing: true,
       extraClass: 'education-message',
       body: PrettyText.cook(I18n.t('education.dominating_topic', percent: (ratio * 100).round))
@@ -156,7 +156,7 @@ class ComposerMessagesFinder
 
     {
       id: 'reviving_old',
-      templateName: 'composer/education',
+      templateName: 'education',
       wait_for_typing: false,
       extraClass: 'education-message',
       body: PrettyText.cook(I18n.t('education.reviving_old_topic', days: (Time.zone.now - @topic.last_posted_at).round / 1.day))
@@ -166,11 +166,11 @@ class ComposerMessagesFinder
   private
 
     def creating_topic?
-      @details[:composerAction] == "createTopic"
+      @details[:composer_action] == "createTopic"
     end
 
     def replying?
-      @details[:composerAction] == "reply"
+      @details[:composer_action] == "reply"
     end
 
 end

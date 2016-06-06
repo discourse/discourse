@@ -78,6 +78,13 @@
   }
 }
 
+.custom-body {
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  p {
+    max-width: 98%;
+  }
+}
+
 .similar-topics {
   background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
 

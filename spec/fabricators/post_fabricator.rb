@@ -110,6 +110,7 @@ Fabricator(:post_with_external_links, from: :post) do
   raw "
 Here's a link to twitter: http://twitter.com
 And a link to google: http://google.com
+And a secure link to google: https://google.com
 And a markdown link: [forumwarz](http://forumwarz.com)
 And a markdown link with a period after it [codinghorror](http://www.codinghorror.com/blog).
   "
