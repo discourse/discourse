@@ -9,9 +9,9 @@
     {{/popup-menu}}
   {{/if}}
 
-  {{render "composer-messages"}}
-  <div class='control'>
+  {{composer-messages composer=model messageCount=messageCount}}
 
+  <div class='control'>
     {{#if site.mobileView}}
     <a href class='toggle-toolbar' {{action "toggleToolbar" bubbles=false}}></a>
     {{/if}}
