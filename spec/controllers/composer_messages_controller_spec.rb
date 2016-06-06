@@ -23,10 +23,6 @@ describe ComposerMessagesController do
         finder.expects(:find)
         xhr :get, :index, args
       end
-
     end
-
   end
-
 end
-

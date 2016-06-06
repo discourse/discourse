@@ -28,6 +28,7 @@ class ComposerMessagesFinder
     if count < SiteSetting.educate_until_posts
       education_posts_text = I18n.t('education.until_posts', count: SiteSetting.educate_until_posts)
       return {
+        id: 'education',
         templateName: 'composer/education',
         wait_for_typing: true,
         body: PrettyText.cook(I18n.t(education_key, education_posts_text: education_posts_text, site_name: SiteSetting.title))
@@ -42,6 +43,7 @@ class ComposerMessagesFinder
     return unless replying? && @user.posted_too_much_in_topic?(@details[:topic_id])
 
     {
+      id: 'too_many_replies',
       templateName: 'composer/education',
       body: PrettyText.cook(I18n.t('education.too_many_replies', newuser_max_replies_per_topic: SiteSetting.newuser_max_replies_per_topic))
     }
@@ -67,6 +69,7 @@ class ComposerMessagesFinder
 
     # Return the message
     {
+      id: 'avatar',
       templateName: 'composer/education',
       body: PrettyText.cook(I18n.t('education.avatar', profile_path: "/users/#{@user.username_lower}"))
     }
@@ -104,6 +107,7 @@ class ComposerMessagesFinder
                         topic_id: @details[:topic_id] )
 
     {
+      id: 'sequential_replies',
       templateName: 'composer/education',
       wait_for_typing: true,
       extraClass: 'education-message',
@@ -135,6 +139,7 @@ class ComposerMessagesFinder
                         topic_id: @details[:topic_id])
 
     {
+      id: 'dominating_topic',
       templateName: 'composer/education',
       wait_for_typing: true,
       extraClass: 'education-message',
@@ -150,6 +155,7 @@ class ComposerMessagesFinder
               @topic.last_posted_at > SiteSetting.warn_reviving_old_topic_age.days.ago
 
     {
+      id: 'reviving_old',
       templateName: 'composer/education',
       wait_for_typing: false,
       extraClass: 'education-message',
