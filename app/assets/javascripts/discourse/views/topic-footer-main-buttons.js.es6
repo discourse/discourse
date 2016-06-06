@@ -10,7 +10,7 @@ export default ContainerView.extend({
 
     const topic = this.get('topic');
 
-    if (!mobileView && this.currentUser.get('staff')) {
+    if (!mobileView && this.currentUser.get('canManageTopic')) {
       const viewArgs = { topic, delegated: this.get('topicDelegated'), openUpwards: true };
       this.attachViewWithArgs(viewArgs, 'topic-admin-menu-button');
     }
