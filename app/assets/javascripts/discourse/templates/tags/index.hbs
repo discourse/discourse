@@ -4,7 +4,9 @@
 
 <div class="list-controls">
   <div class="container">
-    {{tags-admin-dropdown}}
+    {{#if canAdminTags}}
+      {{tags-admin-dropdown}}
+    {{/if}}
     <h2>{{i18n "tagging.tags"}}</h2>
   </div>
 </div>
