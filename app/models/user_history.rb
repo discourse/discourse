@@ -87,7 +87,8 @@ class UserHistory < ActiveRecord::Base
                         :revoke_admin,
                         :grant_moderation,
                         :revoke_moderation,
-                        :backup_operation]
+                        :backup_operation,
+                        :revoke_email]
   end
 
   def self.staff_action_ids
