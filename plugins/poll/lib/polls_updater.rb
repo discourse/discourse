@@ -1,5 +1,7 @@
 module DiscoursePoll
   class PollsUpdater
+    VALID_POLLS_CONFIGS = %w{type min max}.map(&:freeze)
+
     def self.update(post, polls)
       # load previous polls
       previous_polls = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] || {}
@@ -9,15 +11,13 @@ module DiscoursePoll
       previous_options = extract_option_ids(previous_polls)
 
       # are the polls different?
-      if ((poll_names = polls.keys) != (previous_poll_names = previous_polls.keys)) ||
-         (current_options != previous_options)
-
+      if polls_updated?(polls, previous_polls) || (current_options != previous_options)
         has_votes = total_votes(previous_polls) > 0
 
         # outside of the 5-minute edit window?
         if post.created_at < 5.minutes.ago && has_votes
           # cannot add/remove/rename polls
-          if poll_names.sort != previous_poll_names.sort
+          if polls.keys.sort != previous_polls.keys.sort
             post.errors.add(:base, I18n.t("poll.cannot_change_polls_after_5_minutes"))
             return
           end
@@ -68,6 +68,20 @@ module DiscoursePoll
         # publish the changes
         MessageBus.publish("/polls/#{post.topic_id}", { post_id: post.id, polls: polls })
       end
+    end
+
+    def self.polls_updated?(current_polls, previous_polls)
+      return true if (current_polls.keys.sort != previous_polls.keys.sort)
+
+      current_polls.each_key do |poll_name|
+        if !previous_polls[poll_name] ||
+           (current_polls[poll_name].values_at(*VALID_POLLS_CONFIGS) != previous_polls[poll_name].values_at(*VALID_POLLS_CONFIGS))
+
+          return true
+        end
+      end
+
+      false
     end
 
     def self.extract_option_ids(polls)

@@ -44,8 +44,12 @@ describe DiscoursePoll::PollsUpdater do
     DiscoursePoll::PollsValidator.new(post).validate_polls
   end
 
-  let(:new_polls) do
+  let(:polls_with_3_options) do
     DiscoursePoll::PollsValidator.new(other_post).validate_polls
+  end
+
+  let(:two_polls) do
+    DiscoursePoll::PollsValidator.new(post_with_two_polls).validate_polls
   end
 
   describe '.update' do
@@ -66,12 +70,12 @@ describe DiscoursePoll::PollsUpdater do
     describe 'when post contains existing polls' do
       it "should be able to update polls correctly" do
         message = MessageBus.track_publish do
-          described_class.update(post, new_polls)
+          described_class.update(post, polls_with_3_options)
         end.first
 
-        expect(post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]).to eq(new_polls)
+        expect(post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]).to eq(polls_with_3_options)
         expect(message.data[:post_id]).to eq(post.id)
-        expect(message.data[:polls]).to eq(new_polls)
+        expect(message.data[:polls]).to eq(polls_with_3_options)
       end
     end
 
@@ -85,12 +89,54 @@ describe DiscoursePoll::PollsUpdater do
       end
     end
 
-    describe "when post has been created more than 5 minutes ago" do
-      let(:another_post) { Fabricate(:post, created_at: Time.zone.now - 10.minutes) }
+    context "polls of type 'multiple'" do
+      let(:min_2_post) do
+        raw = <<-RAW.strip_heredoc
+        [poll type=multiple min=2 max=3]
+        - Option 1
+        - Option 2
+        - Option 3
+        [/poll]
+        RAW
 
-      let(:more_polls) do
-        DiscoursePoll::PollsValidator.new(post_with_two_polls).validate_polls
+        Fabricate(:post, raw: raw)
       end
+
+      let(:min_2_poll) do
+        DiscoursePoll::PollsValidator.new(min_2_post).validate_polls
+      end
+
+      let(:min_1_post) do
+        raw = <<-RAW.strip_heredoc
+        [poll type=multiple min=1 max=2]
+        - Option 1
+        - Option 2
+        - Option 3
+        [/poll]
+        RAW
+
+        Fabricate(:post, raw: raw)
+      end
+
+      let(:min_1_poll) do
+        DiscoursePoll::PollsValidator.new(min_1_post).validate_polls
+      end
+
+      it "should be able to update options" do
+        min_2_poll
+
+        message = MessageBus.track_publish do
+          described_class.update(min_2_post, min_1_poll)
+        end.first
+
+        expect(min_2_post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]).to eq(min_1_poll)
+        expect(message.data[:post_id]).to eq(min_2_post.id)
+        expect(message.data[:polls]).to eq(min_1_poll)
+      end
+    end
+
+    describe "when post has been created more than 5 minutes ago" do
+      let(:another_post) { Fabricate(:post, created_at: Time.zone.now - 5.minutes) }
 
       before do
         polls.each { |key, value| value["voters"] = 2 }
@@ -99,7 +145,7 @@ describe DiscoursePoll::PollsUpdater do
 
       it "should not allow new polls to be added" do
         messages = MessageBus.track_publish do
-          described_class.update(another_post, more_polls)
+          described_class.update(another_post, two_polls)
         end
 
         expect(another_post.errors[:base]).to include(I18n.t(
@@ -109,9 +155,9 @@ describe DiscoursePoll::PollsUpdater do
         expect(messages).to eq([])
       end
 
-      it "should not allow users to edit options of current" do
+      it "should not allow users to edit options of current poll" do
         messages = MessageBus.track_publish do
-          described_class.update(another_post, new_polls)
+          described_class.update(another_post, polls_with_3_options)
         end
 
         expect(another_post.errors[:base]).to include(I18n.t(
@@ -126,7 +172,7 @@ describe DiscoursePoll::PollsUpdater do
           another_post.update_attributes!(last_editor_id: User.staff.first.id)
 
           messages = MessageBus.track_publish do
-            described_class.update(another_post, new_polls)
+            described_class.update(another_post, polls_with_3_options)
           end
 
           expect(another_post.errors[:base]).to include(I18n.t(
@@ -138,17 +184,17 @@ describe DiscoursePoll::PollsUpdater do
 
         it "should allow staff to add options if no votes have been casted" do
           post.update_attributes!(
-            created_at: Time.zone.now - 10.minutes,
+            created_at: Time.zone.now - 5.minutes,
             last_editor_id: User.staff.first.id
           )
 
           message = MessageBus.track_publish do
-            described_class.update(post, new_polls)
+            described_class.update(post, polls_with_3_options)
           end.first
 
-          expect(post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]).to eq(new_polls)
+          expect(post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]).to eq(polls_with_3_options)
           expect(message.data[:post_id]).to eq(post.id)
-          expect(message.data[:polls]).to eq(new_polls)
+          expect(message.data[:polls]).to eq(polls_with_3_options)
         end
 
         it "should allow staff to edit options if votes have been casted" do

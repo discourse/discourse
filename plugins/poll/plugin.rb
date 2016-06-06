@@ -228,7 +228,7 @@ after_initialize do
     return unless self.raw_changed?
 
     validator = DiscoursePoll::PollsValidator.new(self)
-    return if !(polls = validator.validate_polls)
+    return unless (polls = validator.validate_polls)
 
     # are we updating a post?
     if self.id.present?
