@@ -989,6 +989,7 @@ en:
       drafts_offline: "drafts offline"
 
       group_mentioned: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a>."
+      duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{href}}'>an earlier reply on {{ago}}</a>"
 
       error:
         title_missing: "Title is required"

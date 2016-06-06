@@ -1,3 +1,5 @@
+import LinkLookup from 'discourse/lib/link-lookup';
+
 export default Ember.Component.extend({
   classNameBindings: [':composer-popup-container', 'hidden'],
   checkedMessages: false,
@@ -17,6 +19,7 @@ export default Ember.Component.extend({
     this.appEvents.on('composer:opened', this, this._findMessages);
     this.appEvents.on('composer:find-similar', this, this._findSimilar);
     this.appEvents.on('composer-messages:close', this, this._closeTop);
+    this.appEvents.on('composer-messages:create', this, this._create);
   },
 
   willDestroyElement() {
@@ -24,6 +27,7 @@ export default Ember.Component.extend({
     this.appEvents.off('composer:opened', this, this._findMessages);
     this.appEvents.off('composer:find-similar', this, this._findSimilar);
     this.appEvents.off('composer-messages:close', this, this._closeTop);
+    this.appEvents.off('composer-messages:create', this, this._create);
   },
 
   _closeTop() {
@@ -82,20 +86,21 @@ export default Ember.Component.extend({
     this.get('queuedForTyping').forEach(msg => this.send("popup", msg));
   },
 
+  _create(info) {
+    this.reset();
+    this.send('popup', Ember.Object.create(info));
+  },
+
   groupsMentioned(groups) {
     // reset existing messages, this should always win it is critical
     this.reset();
     groups.forEach(group => {
-      const msg = I18n.t('composer.group_mentioned', {
+      const body = I18n.t('composer.group_mentioned', {
         group: "@" + group.name,
         count: group.user_count,
         group_link: Discourse.getURL(`/group/${group.name}/members`)
       });
-      this.send("popup",
-        Em.Object.create({
-          templateName: 'composer/group-mentioned',
-          body: msg})
-        );
+      this.send("popup", Ember.Object.create({ templateName: 'custom-body', body }));
     });
   },
 
@@ -123,7 +128,7 @@ export default Ember.Component.extend({
     const similarTopics = this.get('similarTopics');
     const message = this._similarTopicsMessage || composer.store.createRecord('composer-message', {
       id: 'similar_topics',
-      templateName: 'composer/similar-topics',
+      templateName: 'similar-topics',
       extraClass: 'similar-topics'
     });
 
@@ -147,7 +152,7 @@ export default Ember.Component.extend({
     if (this.get('checkedMessages')) { return; }
 
     const composer = this.get('composer');
-    const args = { composerAction: composer.get('action') };
+    const args = { composer_action: composer.get('action') };
     const topicId = composer.get('topic.id');
     const postId = composer.get('post.id');
 
@@ -156,6 +161,13 @@ export default Ember.Component.extend({
 
     const queuedForTyping = this.get('queuedForTyping');
     composer.store.find('composer-message', args).then(messages => {
+
+      // Checking composer messages on replies can give us a list of links to check for
+      // duplicates
+      if (messages.extras && messages.extras.duplicate_lookup) {
+        this.sendAction('addLinkLookup', new LinkLookup(messages.extras.duplicate_lookup));
+      }
+
       this.set('checkedMessages', true);
       messages.forEach(msg => msg.wait_for_typing ? queuedForTyping.addObject(msg) : this.send('popup', msg));
     });

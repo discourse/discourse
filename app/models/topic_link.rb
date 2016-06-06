@@ -214,6 +214,27 @@ class TopicLink < ActiveRecord::Base
   def crawl_link_title
     Jobs.enqueue(:crawl_topic_link, topic_link_id: id)
   end
+
+  def self.duplicate_lookup(topic)
+    builder = SqlBuilder.new("SELECT tl.url, tl.domain, u.username_lower, p.created_at
+                              FROM topic_links AS tl
+                              INNER JOIN posts AS p ON p.id = tl.post_id
+                              INNER JOIN users AS u ON p.user_id = u.id
+                              /*where*/
+                              ORDER BY p.created_at DESC
+                              LIMIT 200")
+
+    builder.where('tl.topic_id = :topic_id', topic_id: topic.id)
+
+    lookup = {}
+
+    builder.exec.to_a.each do |row|
+      normalized = row['url'].downcase.sub(/^https?:\/\//, '')
+      lookup[normalized] = {domain: row['domain'], username: row['username_lower'], posted_at: row['created_at']}
+    end
+
+    lookup
+  end
 end
 
 # == Schema Information
