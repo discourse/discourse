@@ -1,3 +1,5 @@
+require_dependency 'rate_limiter'
+
 class InvitesController < ApplicationController
 
   # TODO tighten this, why skip check on everything?
@@ -127,19 +129,26 @@ class InvitesController < ApplicationController
 
   def resend_invite
     params.require(:email)
+    RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
 
     invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.resend_invite
-
     render nothing: true
+
+  rescue RateLimiter::LimitExceeded
+    render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
   def resend_all_invites
     guardian.ensure_can_invite_to_forum!
+    RateLimiter.new(current_user, "resend-all-invites-per-day", 1, 1.day).performed!
 
     Invite.resend_all_invites_from(current_user.id)
     render nothing: true
+
+  rescue RateLimiter::LimitExceeded
+    render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
   def check_csv_chunk
