@@ -75,8 +75,6 @@ describe Scheduler::Manager do
   end
 
   before do
-    $redis.del manager.class.lock_key
-    $redis.del manager.class.queue_key
     manager.remove(Testing::RandomJob)
     manager.remove(Testing::SuperLongJob)
     manager.remove(Testing::PerHostJob)
@@ -87,6 +85,7 @@ describe Scheduler::Manager do
     manager.remove(Testing::RandomJob)
     manager.remove(Testing::SuperLongJob)
     manager.remove(Testing::PerHostJob)
+    $redis.flushall
   end
 
   describe 'per host jobs' do
