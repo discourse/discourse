@@ -42,16 +42,14 @@ function loadDraft(store, opts) {
 }
 
 export default Ember.Controller.extend({
-  needs: ['modal', 'topic', 'composer-messages', 'application'],
+  needs: ['modal', 'topic', 'application'],
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_TOPIC_KEY),
   checkedMessages: false,
+  messageCount: null,
 
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
-  similarTopics: null,
-  similarTopicsMessage: null,
-  lastSimilaritySearch: null,
   optionsVisible: false,
   lastValidatedAt: null,
   isUploading: false,
@@ -77,10 +75,6 @@ export default Ember.Controller.extend({
   }),
 
   topicModel: Ember.computed.alias('controllers.topic.model'),
-
-  _initializeSimilar: function() {
-    this.set('similarTopics', []);
-  }.on('init'),
 
   @computed('model.canEditTitle', 'model.creatingPrivateMessage')
   canEditTags(canEditTitle, creatingPrivateMessage) {
@@ -183,9 +177,8 @@ export default Ember.Controller.extend({
     },
 
     hitEsc() {
-      const messages = this.get('controllers.composer-messages.model');
-      if (messages.length) {
-        messages.popObject();
+      if ((this.get('messageCount') || 0) > 0) {
+        this.appEvents.trigger('composer-messages:close');
         return;
       }
 
@@ -359,60 +352,12 @@ export default Ember.Controller.extend({
     return promise;
   },
 
-  // Checks to see if a reply has been typed.
-  // This is signaled by a keyUp event in a view.
+  // Notify the composer messages controller that a reply has been typed. Some
+  // messages only appear after typing.
   checkReplyLength() {
     if (!Ember.isEmpty('model.reply')) {
-      // Notify the composer messages controller that a reply has been typed. Some
-      // messages only appear after typing.
-      this.get('controllers.composer-messages').typedReply();
+      this.appEvents.trigger('composer:typed-reply');
     }
-  },
-
-  // Fired after a user stops typing.
-  // Considers whether to check for similar topics based on the current composer state.
-  findSimilarTopics() {
-    // We don't care about similar topics unless creating a topic
-    if (!this.get('model.creatingTopic')) { return; }
-
-    let body = this.get('model.reply') || '';
-    const title = this.get('model.title') || '';
-
-    // Ensure the fields are of the minimum length
-    if (body.length < Discourse.SiteSettings.min_body_similar_length) { return; }
-    if (title.length < Discourse.SiteSettings.min_title_similar_length) { return; }
-
-    // TODO pass the 200 in from somewhere
-    body = body.substr(0, 200);
-
-    // Done search over and over
-    if ((title + body) === this.get('lastSimilaritySearch')) { return; }
-    this.set('lastSimilaritySearch', title + body);
-
-    const messageController = this.get('controllers.composer-messages'),
-          similarTopics = this.get('similarTopics');
-
-    let message = this.get('similarTopicsMessage');
-    if (!message) {
-      message = this.store.createRecord('composer-message', {
-        id: 'similar_topics',
-        templateName: 'composer/similar-topics',
-        extraClass: 'similar-topics'
-      });
-      this.set('similarTopicsMessage', message);
-    }
-
-    this.store.find('similar-topic', {title, raw: body}).then(function(newTopics) {
-      similarTopics.clear();
-      similarTopics.pushObjects(newTopics.get('content'));
-
-      if (similarTopics.get('length') > 0) {
-        message.set('similarTopics', similarTopics);
-        messageController.send("popup", message);
-      } else if (message) {
-        messageController.send("hideMessage", message);
-      }
-    });
   },
 
   /**
@@ -439,13 +384,10 @@ export default Ember.Controller.extend({
       this.set('scopedCategoryId', opts.categoryId);
     }
 
-    const composerMessages = this.get('controllers.composer-messages'),
-          self = this;
-
+    const self = this;
     let composerModel = this.get('model');
 
     this.setProperties({ showEditReason: false, editReason: null });
-    composerMessages.reset();
 
     // If we want a different draft than the current composer, close it and clear our model.
     if (composerModel &&
@@ -539,8 +481,6 @@ export default Ember.Controller.extend({
     if (opts.topicBody) {
       this.set('model.reply', opts.topicBody);
     }
-
-    this.get('controllers.composer-messages').queryFor(composerModel);
   },
 
   // View a new reply we've made
