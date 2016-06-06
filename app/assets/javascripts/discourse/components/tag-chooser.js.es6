@@ -18,6 +18,20 @@ export default Ember.TextField.extend({
     this.set('tags', tags);
   }.observes('value'),
 
+  _tagsChanged: function() {
+    const $tagChooser = this.$(),
+          val = this.get('value');
+
+    if ($tagChooser && val !== this.get('tags')) {
+      if (this.get('tags')) {
+        const data = this.get('tags').map((t) => {return {id: t, text: t};});
+        $tagChooser.select2('data', data);
+      } else {
+        $tagChooser.select2('data', []);
+      }
+    }
+  }.observes('tags'),
+
   _initializeTags: function() {
     const site = this.site,
           self = this,
@@ -27,7 +41,7 @@ export default Ember.TextField.extend({
       tags: true,
       placeholder: I18n.t(this.get('placeholderKey') || 'tagging.choose_for_topic'),
       maximumInputLength: this.siteSettings.max_tag_length,
-      maximumSelectionSize: this.siteSettings.max_tags_per_topic,
+      maximumSelectionSize: self.get('unlimitedTagCount') ? null : this.siteSettings.max_tags_per_topic,
       initSelection(element, callback) {
         const data = [];
 
@@ -78,7 +92,11 @@ export default Ember.TextField.extend({
         url: Discourse.getURL("/tags/filter/search"),
         dataType: 'json',
         data: function (term) {
-          return { q: term, limit: self.siteSettings.max_tag_search_results, filterForInput: true, categoryId: self.get('categoryId') };
+          const d = { q: term, limit: self.siteSettings.max_tag_search_results, categoryId: self.get('categoryId') };
+          if (!self.get('everyTag')) {
+            d.filterForInput = true;
+          }
+          return d;
         },
         results: function (data) {
           if (self.siteSettings.tags_sort_alphabetically) {
