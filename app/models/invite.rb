@@ -72,8 +72,8 @@ class Invite < ActiveRecord::Base
     end
   end
 
-  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
-    create_invite_by_email(email, invited_by, topic, group_ids, true)
+  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil, custom_message=nil)
+    create_invite_by_email(email, invited_by, topic, group_ids, true, custom_message)
   end
 
   # generate invite link
@@ -85,7 +85,7 @@ class Invite < ActiveRecord::Base
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.create_invite_by_email(email, invited_by, topic=nil, group_ids=nil, send_email=true)
+  def self.create_invite_by_email(email, invited_by, topic=nil, group_ids=nil, send_email=true, custom_message=nil)
     lower_email = Email.downcase(email)
     user = User.find_by(email: lower_email)
 
@@ -126,7 +126,7 @@ class Invite < ActiveRecord::Base
       end
     end
 
-    Jobs.enqueue(:invite_email, invite_id: invite.id) if send_email
+    Jobs.enqueue(:invite_email, invite_id: invite.id, custom_message: custom_message) if send_email
 
     invite.reload
     invite
