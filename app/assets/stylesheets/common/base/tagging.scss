@@ -229,7 +229,8 @@ header .discourse-tag {color: $tag-color !important; }
       height: 150px !important; // to fight with select2.scss's important
     }
   }
+  .btn {margin-left: 10px;}
   .saving {
-    margin-left: 10px;
+    margin-left: 20px;
   }
 }

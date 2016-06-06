@@ -7,7 +7,7 @@ const TagGroup = RestModel.extend({
     return Ember.isEmpty(this.get('name')) || Ember.isEmpty(this.get('tag_names')) || this.get('saving');
   },
 
-  save: function() {
+  save() {
     var url = "/tag_groups",
         self = this;
     if (this.get('id')) {
@@ -28,6 +28,10 @@ const TagGroup = RestModel.extend({
       self.set('savingStatus', I18n.t('saved'));
       self.set('saving', false);
     });
+  },
+
+  destroy() {
+    return Discourse.ajax("/tag_groups/" + this.get('id'), {type: "DELETE"});
   }
 });
 
