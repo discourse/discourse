@@ -201,7 +201,6 @@ module Email
     def select_body
       text = nil
       html = nil
-      elided = nil
 
       if @mail.multipart?
         text = fix_charset(@mail.text_part)
@@ -212,20 +211,17 @@ module Email
         text = fix_charset(@mail)
       end
 
-      use_html = html.present? && (!text.present? || SiteSetting.incoming_email_prefer_html)
-      use_text = text.present? unless use_html
-
-      if use_text
-        text = trim_discourse_markers(text)
-        text, elided = EmailReplyTrimmer.trim(text, true)
-        return [text, elided]
-      end
-
-      if use_html
+      if html.present? && (SiteSetting.incoming_email_prefer_html || text.blank?)
         html = Email::HtmlCleaner.new(html).output_html
         html = trim_discourse_markers(html)
         html, elided = EmailReplyTrimmer.trim(html, true)
         return [html, elided]
+      end
+
+      if text.present?
+        text = trim_discourse_markers(text)
+        text, elided = EmailReplyTrimmer.trim(text, true)
+        return [text, elided]
       end
     end
 
@@ -454,8 +450,11 @@ module Email
       # ensure posts aren't created in the future
       options[:created_at] = [@mail.date, DateTime.now].min
 
+      is_private_message = options[:archetype] == Archetype.private_message ||
+                           options[:topic].try(:private_message?)
+
       # only add elided part in messages
-      if @elided.present? && options[:topic].try(:private_message?)
+      if @elided.present? && is_private_message
         options[:raw] << "\n\n" << "<details class='elided'>" << "\n"
         options[:raw] << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
         options[:raw] << @elided << "\n"
