@@ -3014,6 +3014,8 @@ en:
         tags_label: "Tags in this group:"
         new_name: "New Tag Group"
         save: "Save"
+        delete: "Delete"
+        confirm_delete: "Are you sure you want to delete this tag group?"
 
       topics:
         none:

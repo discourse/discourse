@@ -8,5 +8,6 @@
   </div>
   <br/>
   <button {{action "save"}} disabled={{model.disableSave}} class='btn'>{{i18n 'tagging.groups.save'}}</button>
+  <button {{action "destroy"}} class='btn btn-danger'><i class="fa fa-trash-o"></i> {{i18n 'tagging.groups.delete'}}</button>
   <span class="saving {{unless model.savingStatus 'hidden'}}">{{model.savingStatus}}</span>
 </div>
