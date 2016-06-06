@@ -133,6 +133,11 @@ module Email
       @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
       @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
+      # it's the only way to pass the original message_id when using mailjet
+      if ActionMailer::Base.smtp_settings[:address][".mailjet.com"]
+        @message.header['X-MJ-CustomID'] = @message.message_id
+      end
+
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails &&
         @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&

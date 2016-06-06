@@ -16,8 +16,9 @@ Discourse::Application.routes.draw do
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
 
-  post "webhooks/mailgun" => "webhooks#mailgun"
+  post "webhooks/mailgun"  => "webhooks#mailgun"
   post "webhooks/sendgrid" => "webhooks#sendgrid"
+  post "webhooks/mailjet"  => "webhooks#mailjet"
 
   if Rails.env.development?
     mount Sidekiq::Web => "/sidekiq"

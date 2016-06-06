@@ -38,7 +38,8 @@ class WebhooksController < ActionController::Base
   end
 
   def sendgrid
-    params["_json"].each do |event|
+    events = params["_json"] || [params]
+    events.each do |event|
       if event["event"] == "bounce".freeze
         if event["status"]["4."]
           sendgrid_process(event, Email::Receiver::SOFT_BOUNCE_SCORE)
@@ -47,6 +48,21 @@ class WebhooksController < ActionController::Base
         end
       elsif event["event"] == "dropped".freeze
         sendgrid_process(event, Email::Receiver::HARD_BOUNCE_SCORE)
+      end
+    end
+
+    render nothing: true, status: 200
+  end
+
+  def mailjet
+    events = params["_json"] || [params]
+    events.each do |event|
+      if event["event"] == "bounce".freeze
+        if event["hard_bounce"]
+          mailjet_process(event, Email::Receiver::HARD_BOUNCE_SCORE)
+        else
+          mailjet_process(event, Email::Receiver::SOFT_BOUNCE_SCORE)
+        end
       end
     end
 
@@ -95,6 +111,17 @@ class WebhooksController < ActionController::Base
       return if message_id.blank?
 
       email_log = EmailLog.find_by(message_id: message_id.tr("<>", ""))
+      return if email_log.nil?
+
+      email_log.update_columns(bounced: true)
+      Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
+    end
+
+    def mailjet_process(event, bounce_score)
+      message_id = event["CustomID"]
+      return if message_id.blank?
+
+      email_log = EmailLog.find_by(message_id: message_id)
       return if email_log.nil?
 
       email_log.update_columns(bounced: true)
