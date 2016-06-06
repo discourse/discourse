@@ -988,7 +988,7 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
 
-      group_mentioned: "By using {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a>."
+      group_mentioned: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a>."
 
       error:
         title_missing: "Title is required"
