@@ -584,7 +584,7 @@ email:
     default: ''
   mailgun_api_key:
     default: ''
-    regex: '^pubkey-\h{32}$'
+    regex: '^key-\h{32}$'
 
 
 files:
