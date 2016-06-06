@@ -1,0 +1,12 @@
+<div class="tag-group-content">
+  <h1>{{text-field value=model.name}}</h1>
+  <br/>
+  <div class="group-tags-list">
+    <label>{{i18n 'tagging.groups.tags_label'}}</label>
+    <br/>
+    {{tag-chooser tags=model.tag_names everyTag="false" unlimitedTagCount="true"}}
+  </div>
+  <br/>
+  <button {{action "save"}} disabled={{model.disableSave}} class='btn'>{{i18n 'tagging.groups.save'}}</button>
+  <span class="saving {{unless model.savingStatus 'hidden'}}">{{model.savingStatus}}</span>
+</div>

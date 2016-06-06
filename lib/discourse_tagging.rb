@@ -120,10 +120,25 @@ module DiscourseTagging
     return tag_names[0...SiteSetting.max_tags_per_topic]
   end
 
+  def self.add_or_create_tags_by_name(taggable, tag_names_arg)
+    tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user)) || []
+    if taggable.tags.pluck(:name).sort != tag_names.sort
+      taggable.tags = Tag.where(name: tag_names).all
+      if taggable.tags.size < tag_names.size
+        new_tag_names = tag_names - taggable.tags.map(&:name)
+        new_tag_names.each do |name|
+          taggable.tags << Tag.create(name: name)
+        end
+      end
+    end
+  end
+
+  # TODO: this is unused?
   def self.notification_key(tag_id)
     "tags_notification:#{tag_id}"
   end
 
+  # TODO: this is unused?
   def self.muted_tags(user)
     return [] unless user
     UserCustomField.where(user_id: user.id, value: TopicUser.notification_levels[:muted]).pluck(:name).map { |x| x[0,17] == "tags_notification" ? x[18..-1] : nil}.compact

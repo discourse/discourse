@@ -131,4 +131,8 @@ export default function() {
       this.route('showParentCategory' + filter.capitalize(), {path: '/c/:parent_category/:category/:tag_id/l/' + filter});
     });
   });
+
+  this.resource('tagGroups', {path: '/tag_groups'}, function() {
+    this.route('show', {path: '/:id'});
+  });
 }

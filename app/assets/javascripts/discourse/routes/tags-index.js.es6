@@ -18,6 +18,11 @@ export default Discourse.Route.extend({
     didTransition() {
       this.controllerFor("application").set("showFooter", true);
       return true;
+    },
+
+    showTagGroups() {
+      this.transitionTo('tagGroups');
+      return true;
     }
   }
 });

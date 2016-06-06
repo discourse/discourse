@@ -316,16 +316,7 @@ SQL
   end
 
   def allowed_tags=(tag_names_arg)
-    tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user)) || []
-    if self.tags.pluck(:name).sort != tag_names.sort
-      self.tags = Tag.where(name: tag_names).all
-      if self.tags.size < tag_names.size
-        new_tag_names = tag_names - self.tags.map(&:name)
-        new_tag_names.each do |name|
-          self.tags << Tag.create(name: name)
-        end
-      end
-    end
+    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg)
   end
 
   def downcase_email
