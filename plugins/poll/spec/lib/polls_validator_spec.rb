@@ -6,7 +6,7 @@ describe ::DiscoursePoll::PollsValidator do
 
   describe "#validate_polls" do
     it "should ensure that polls have unique names" do
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll]
       * 1
       * 2
@@ -24,7 +24,7 @@ describe ::DiscoursePoll::PollsValidator do
         I18n.t("poll.multiple_polls_without_name")
       )
 
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll name=test]
       * 1
       * 2
@@ -44,7 +44,7 @@ describe ::DiscoursePoll::PollsValidator do
     end
 
     it 'should ensure that polls have unique options' do
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll]
       * 1
       * 1
@@ -57,7 +57,7 @@ describe ::DiscoursePoll::PollsValidator do
         I18n.t("poll.default_poll_must_have_different_options")
       )
 
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll name=test]
       * 1
       * 1
@@ -73,7 +73,7 @@ describe ::DiscoursePoll::PollsValidator do
 
 
     it 'should ensure that polls have at least 2 options' do
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll]
       * 1
       [/poll]
@@ -85,7 +85,7 @@ describe ::DiscoursePoll::PollsValidator do
         I18n.t("poll.default_poll_must_have_at_least_2_options")
       )
 
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll name=test]
       * 1
       [/poll]
@@ -101,7 +101,7 @@ describe ::DiscoursePoll::PollsValidator do
     it "should ensure that polls' options do not exceed site settings" do
       SiteSetting.poll_maximum_options = 2
 
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll]
       * 1
       * 2
@@ -116,7 +116,7 @@ describe ::DiscoursePoll::PollsValidator do
         count: SiteSetting.poll_maximum_options
       ))
 
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll name=test]
       * 1
       * 2
@@ -134,7 +134,7 @@ describe ::DiscoursePoll::PollsValidator do
 
     describe 'multiple type polls' do
       it "should ensure that min should not be greater than max" do
-        raw = <<~RAW
+        raw = <<-RAW.strip_heredoc
         [poll type=multiple min=2 max=1]
         * 1
         * 2
@@ -148,7 +148,7 @@ describe ::DiscoursePoll::PollsValidator do
           I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
         )
 
-        raw = <<~RAW
+        raw = <<-RAW.strip_heredoc
         [poll type=multiple min=2 max=1 name=test]
         * 1
         * 2
@@ -164,7 +164,7 @@ describe ::DiscoursePoll::PollsValidator do
       end
 
       it "should ensure max setting is greater than 0" do
-        raw = <<~RAW
+        raw = <<-RAW.strip_heredoc
         [poll type=multiple max=-2]
         * 1
         * 2
@@ -179,7 +179,7 @@ describe ::DiscoursePoll::PollsValidator do
       end
 
       it "should ensure that max settings is smaller or equal to the number of options" do
-        raw = <<~RAW
+        raw = <<-RAW.strip_heredoc
         [poll type=multiple max=3]
         * 1
         * 2
@@ -194,7 +194,7 @@ describe ::DiscoursePoll::PollsValidator do
       end
 
       it "should ensure that min settings is smaller than the number of options" do
-        raw = <<~RAW
+        raw = <<-RAW.strip_heredoc
         [poll type=multiple min=2]
         * 1
         * 2
@@ -207,7 +207,7 @@ describe ::DiscoursePoll::PollsValidator do
           I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
         )
 
-        raw = <<~RAW
+        raw = <<-RAW.strip_heredoc
         [poll type=multiple min=3]
         * 1
         * 2

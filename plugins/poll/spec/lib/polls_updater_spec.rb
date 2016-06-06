@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe DiscoursePoll::PollsUpdater do
   let(:post_with_two_polls) do
-    raw = <<~RAW
+    raw = <<-RAW.strip_heredoc
     [poll]
     * 1
     * 2
@@ -18,7 +18,7 @@ describe DiscoursePoll::PollsUpdater do
   end
 
   let(:post) do
-    raw = <<~RAW
+    raw = <<-RAW.strip_heredoc
     [poll]
     * 1
     * 2
@@ -29,7 +29,7 @@ describe DiscoursePoll::PollsUpdater do
   end
 
   let(:other_post) do
-    raw = <<~RAW
+    raw = <<-RAW.strip_heredoc
     [poll]
     * 3
     * 4
@@ -154,7 +154,7 @@ describe DiscoursePoll::PollsUpdater do
         it "should allow staff to edit options if votes have been casted" do
           another_post.update_attributes!(last_editor_id: User.staff.first.id)
 
-          raw = <<~RAW
+          raw = <<-RAW.strip_heredoc
           [poll]
           * 3
           * 4
@@ -178,7 +178,7 @@ describe DiscoursePoll::PollsUpdater do
         it "should allow staff to edit options if votes have not been casted" do
           post.update_attributes!(last_editor_id: User.staff.first.id)
 
-          raw = <<~RAW
+          raw = <<-RAW.strip_heredoc
           [poll]
           * 3
           * 4
@@ -210,7 +210,7 @@ describe DiscoursePoll::PollsUpdater do
 
   describe '.total_votes' do
     let!(:post) do
-      raw = <<~RAW
+      raw = <<-RAW.strip_heredoc
       [poll]
       * 1
       * 2
