@@ -338,7 +338,7 @@ class StaffActionLogger
     UserHistory.create(params(opts).merge({
       action: UserHistory.actions[:revoke_email],
       target_user_id: user.id,
-      details: user.email
+      details: "Won't be sending emails to '#{user.email}' until #{user.user_stat.reset_bounce_score_after}"
     }))
   end
 

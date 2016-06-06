@@ -2450,6 +2450,7 @@ en:
             backup_operation: "backup operation"
             deleted_tag: "deleted tag"
             renamed_tag: "renamed tag"
+            revoke_email: "revoke email"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
