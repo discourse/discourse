@@ -8,7 +8,7 @@ describe WebhooksController do
   context "mailgun" do
 
     it "works" do
-      SiteSetting.mailgun_api_key = "pubkey-8221462f0c915af3f6f2e2df7aa5a493"
+      SiteSetting.mailgun_api_key = "key-8221462f0c915af3f6f2e2df7aa5a493"
       token = "705a8ccd2ce932be8e98c221fe701c1b4a0afcb8bbd57726de"
 
       user = Fabricate(:user, email: email)
