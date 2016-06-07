@@ -335,6 +335,10 @@ aside.onebox.stackexchange .onebox-body img {
   max-width: 10%;
 }
 
+.onebox-metadata {
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+}
+
 // mobile specific style
 .mobile-view article.onebox-body {
   border-top: none;
