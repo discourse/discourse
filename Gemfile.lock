@@ -174,7 +174,7 @@ GEM
     multipart-post (2.0.0)
     mustache (1.0.3)
     netrc (0.11.0)
-    nokogiri (1.6.8.rc3)
+    nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
     nokogumbo (1.4.7)
@@ -444,7 +444,7 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
-  nokogiri (= 1.6.8.rc3)
+  nokogiri
   oj
   omniauth
   omniauth-facebook
