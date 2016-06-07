@@ -8,7 +8,7 @@ export default Ember.TextField.extend({
   classNameBindings: [':tag-chooser'],
   attributeBindings: ['tabIndex', 'placeholderKey', 'categoryId'],
 
-  _setupTags: function() {
+  _initValue: function() {
     const tags = this.get('tags') || [];
     this.set('value', tags.join(", "));
   }.on('init'),
@@ -79,7 +79,7 @@ export default Ember.TextField.extend({
         list.push(item);
       },
       formatSelection: function (data) {
-          return data ? renderTag(this.text(data)) : undefined;
+        return data ? renderTag(this.text(data)) : undefined;
       },
       formatSelectionCssClass: function(){
         return "discourse-tag-select2";

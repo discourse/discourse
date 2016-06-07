@@ -14,7 +14,8 @@ class CategorySerializer < BasicCategorySerializer
              :is_special,
              :allow_badges,
              :custom_fields,
-             :allowed_tags
+             :allowed_tags,
+             :allowed_tag_groups
 
   def group_permissions
     @group_permissions ||= begin
@@ -84,6 +85,14 @@ class CategorySerializer < BasicCategorySerializer
 
   def allowed_tags
     object.tags.pluck(:name)
+  end
+
+  def include_allowed_tag_groups?
+    SiteSetting.tagging_enabled
+  end
+
+  def allowed_tag_groups
+    object.tag_groups.pluck(:name)
   end
 
 end

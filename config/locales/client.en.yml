@@ -1732,7 +1732,9 @@ en:
       topic_template: "Topic Template"
       tags: "Tags"
       tags_allowed_tags: "Tags that can only be used in this category:"
+      tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
+      tag_groups_placeholder: "(Optional) list of allowed tag groups"
       delete: 'Delete Category'
       create: 'New Category'
       create_long: 'Create a new category'
