@@ -57,6 +57,7 @@ after_initialize do
 
           raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if poll.blank?
           raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll["status"] != "open"
+          public_poll = (poll["public"] == "true")
 
           # remove options that aren't available in the poll
           available_options = poll["options"].map { |o| o["id"] }.to_set
@@ -80,12 +81,30 @@ after_initialize do
           poll["options"].each do |option|
             anonymous_votes = option["anonymous_votes"] || 0
             option["votes"] = all_options[option["id"]] + anonymous_votes
+
+            if public_poll
+              option["voter_ids"] ||= []
+
+              if options.include?(option["id"])
+                option["voter_ids"] << user_id if !option["voter_ids"].include?(user_id)
+              else
+                option["voter_ids"].delete(user_id)
+              end
+            end
           end
 
           post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = polls
           post.save_custom_fields(true)
 
-          MessageBus.publish("/polls/#{post.topic_id}", { post_id: post_id, polls: polls })
+          payload = { post_id: post_id, polls: polls }
+
+          if public_poll
+            payload.merge!(
+              user: UserNameSerializer.new(User.find(user_id)).serializable_hash
+            )
+          end
+
+          MessageBus.publish("/polls/#{post.topic_id}", payload)
 
           return [poll, options]
         end
@@ -195,7 +214,6 @@ after_initialize do
         render_json_error e.message
       end
     end
-
   end
 
   DiscoursePoll::Engine.routes.draw do
@@ -271,11 +289,36 @@ after_initialize do
   add_to_serializer(:post, :polls, false) { post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] }
   add_to_serializer(:post, :include_polls?) { post_custom_fields.present? && post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].present? }
 
-  add_to_serializer(:post, :polls_votes, false) { post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{scope.user.id}"] }
+  add_to_serializer(:post, :polls_votes, false) do
+    post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{scope.user.id}"]
+  end
+
   add_to_serializer(:post, :include_polls_votes?) do
     return unless scope.user
     return unless post_custom_fields.present?
     return unless post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].present?
     post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].has_key?("#{scope.user.id}")
+  end
+
+  add_to_serializer(:post, :polls_voters) do
+    voters = {}
+
+    user_ids = post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].keys
+
+    User.where(id: user_ids).map do |user|
+      voters[user.id] = UserNameSerializer.new(user).serializable_hash
+    end
+
+    voters
+  end
+
+  add_to_serializer(:post, :include_polls_voters?) do
+    return unless post_custom_fields.present?
+    return unless post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].present?
+    return unless post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].present?
+
+    post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].any? do |_, value|
+      value["public"] == "true"
+    end
   end
 end

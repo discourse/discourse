@@ -1,6 +1,6 @@
 module DiscoursePoll
   class PollsUpdater
-    VALID_POLLS_CONFIGS = %w{type min max}.map(&:freeze)
+    VALID_POLLS_CONFIGS = %w{type min max public}.map(&:freeze)
 
     def self.update(post, polls)
       # load previous polls
@@ -53,11 +53,16 @@ module DiscoursePoll
           polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"] if previous_polls[poll_name].has_key?("anonymous_voters")
 
           previous_options = previous_polls[poll_name]["options"]
+          public_poll = polls[poll_name]["public"] == "true"
 
           polls[poll_name]["options"].each_with_index do |option, index|
             previous_option = previous_options[index]
             option["votes"] = previous_option["votes"]
             option["anonymous_votes"] = previous_option["anonymous_votes"] if previous_option.has_key?("anonymous_votes")
+
+            if public_poll && previous_option.has_key?("voter_ids")
+              option["voter_ids"] = previous_option["voter_ids"]
+            end
           end
         end
 

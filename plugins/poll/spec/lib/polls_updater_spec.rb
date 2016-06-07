@@ -89,6 +89,69 @@ describe DiscoursePoll::PollsUpdater do
       end
     end
 
+    context "public polls" do
+      let(:post) do
+        raw = <<-RAW.strip_heredoc
+        [poll public=true]
+        - A
+        - B
+        [/poll]
+        RAW
+
+        Fabricate(:post, raw: raw)
+      end
+
+      let(:private_poll) do
+        raw = <<-RAW.strip_heredoc
+        [poll]
+        - A
+        - B
+        [/poll]
+        RAW
+
+        DiscoursePoll::PollsValidator.new(Fabricate(:post, raw: raw)).validate_polls
+      end
+
+      let(:public_poll) do
+        raw = <<-RAW.strip_heredoc
+        [poll public=true]
+        - A
+        - C
+        [/poll]
+        RAW
+
+        DiscoursePoll::PollsValidator.new(Fabricate(:post, raw: raw)).validate_polls
+      end
+
+      let(:user) { Fabricate(:user) }
+
+      before do
+        DiscoursePoll::Poll.vote(post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+        post.reload
+      end
+
+      it "should retain voter_ids when options have been edited" do
+        described_class.update(post, public_poll)
+
+        polls = post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
+
+        expect(polls["poll"]["options"][0]["voter_ids"]).to eq([user.id])
+        expect(polls["poll"]["options"][1]["voter_ids"]).to eq([])
+      end
+
+      it "should delete voter_ids when poll is set to private" do
+        described_class.update(post, private_poll)
+
+        polls = post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
+
+        expect(post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
+          .to eq(private_poll)
+
+        expect(polls["poll"]["options"][0]["voter_ids"]).to eq(nil)
+        expect(polls["poll"]["options"][1]["voter_ids"]).to eq(nil)
+      end
+    end
+
     context "polls of type 'multiple'" do
       let(:min_2_post) do
         raw = <<-RAW.strip_heredoc
