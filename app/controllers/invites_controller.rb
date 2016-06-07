@@ -141,14 +141,10 @@ class InvitesController < ApplicationController
   end
 
   def resend_all_invites
-    guardian.ensure_can_invite_to_forum!
-    RateLimiter.new(current_user, "resend-all-invites-per-day", 1, 1.day).performed!
+    guardian.ensure_can_resend_all_invites!(current_user)
 
     Invite.resend_all_invites_from(current_user.id)
     render nothing: true
-
-  rescue RateLimiter::LimitExceeded
-    render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
   def check_csv_chunk

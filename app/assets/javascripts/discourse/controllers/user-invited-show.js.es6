@@ -35,7 +35,7 @@ export default Ember.Controller.extend({
   inviteRedeemed: Em.computed.equal('filter', 'redeemed'),
 
   showReinviteAllButton: function() {
-    return (this.get('filter') === "pending" && this.get('model').invites.length > 4);
+    return (this.get('filter') === "pending" && this.get('model').invites.length > 4 && this.currentUser.get('staff'));
   }.property('filter'),
 
   /**
