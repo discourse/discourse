@@ -377,7 +377,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_invite_to!(topic,group_ids)
 
     begin
-      if topic.invite(current_user, username_or_email, group_ids)
+      if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
         user = User.find_by_username_or_email(username_or_email)
         if user
           render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')

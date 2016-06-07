@@ -3043,10 +3043,10 @@ en:
       custom_message: "Make your invite a little bit more personal by writing a"
       custom_message_link: "custom message"
       custom_message_placeholder: "Enter your custom message, use {invite_link} for specifying invite link."
-      custom_message_template: |
+      custom_message_template_forum: |
         Hello,
 
-        You've been invited you to join
+        You've been invited to join
 
         > **{site_title}**
         >
@@ -3057,3 +3057,22 @@ en:
         {invite_link}
 
         This invitation is from a trusted user, so you won't need to log in.
+
+      custom_message_template_topic: |
+        Hello,
+
+        You've been invited to a discussion
+
+        > **{topic_title}**
+        >
+        > {topic_excerpt}
+
+        at
+
+        > {site_title} -- {site_description}
+
+        If you're interested, click the link below:
+
+        {invite_link}
+
+        This invitation is from a trusted user, so you can reply to the discussion immediately.
