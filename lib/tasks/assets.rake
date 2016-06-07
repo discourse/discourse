@@ -111,7 +111,8 @@ end
 def brotli(path)
   if ENV['COMPRESS_BROTLI']
     STDERR.puts "brotli #{path}"
-    STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.bl`
+    STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.br`
+    STDERR.puts `chmod +r #{path}.br`
   end
 end
 
