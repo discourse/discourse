@@ -75,7 +75,6 @@ function initializePolls(api) {
     const polls = post.get("pollsObject");
     if (!polls) { return; }
 
-    cleanUpPollViews();
     const postPollViews = {};
 
     $polls.each((idx, pollElem) => {
