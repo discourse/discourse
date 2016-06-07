@@ -7,11 +7,11 @@ module DiscoursePoll
       previous_polls = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] || {}
 
       # extract options
-      current_options = extract_option_ids(polls)
-      previous_options = extract_option_ids(previous_polls)
+      current_option_ids = extract_option_ids(polls)
+      previous_option_ids = extract_option_ids(previous_polls)
 
       # are the polls different?
-      if polls_updated?(polls, previous_polls) || (current_options != previous_options)
+      if polls_updated?(polls, previous_polls) || (current_option_ids != previous_option_ids)
         has_votes = total_votes(previous_polls) > 0
 
         # outside of the 5-minute edit window?
@@ -52,12 +52,12 @@ module DiscoursePoll
           polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
           polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"] if previous_polls[poll_name].has_key?("anonymous_voters")
 
-          for o in 0...polls[poll_name]["options"].size
-            current_option = polls[poll_name]["options"][o]
-            previous_option = previous_polls[poll_name]["options"][o]
+          previous_options = previous_polls[poll_name]["options"]
 
-            current_option["votes"] = previous_option["votes"]
-            current_option["anonymous_votes"] = previous_option["anonymous_votes"] if previous_option.has_key?("anonymous_votes")
+          polls[poll_name]["options"].each_with_index do |option, index|
+            previous_option = previous_options[index]
+            option["votes"] = previous_option["votes"]
+            option["anonymous_votes"] = previous_option["anonymous_votes"] if previous_option.has_key?("anonymous_votes")
           end
         end
 
