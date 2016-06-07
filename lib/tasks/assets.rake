@@ -105,7 +105,14 @@ end
 
 def gzip(path)
   STDERR.puts "gzip #{path}"
-  STDERR.puts `gzip -f -c -7 #{path} > #{path}.gz`
+  STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`
+end
+
+def brotli(path)
+  if ENV['COMPRESS_BROTLI']
+    STDERR.puts "brotli #{path}"
+    STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.bl`
+  end
 end
 
 def compress(from,to)
@@ -159,6 +166,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
               info["size"] = File.size(path)
               info["mtime"] = File.mtime(path).iso8601
               gzip(path)
+              brotli(path)
             end
           end
       end
