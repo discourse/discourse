@@ -193,7 +193,37 @@ describe ::DiscoursePoll::PollsValidator do
         )
       end
 
-      it "should ensure that min settings is smaller than the number of options" do
+      it "should ensure that min settings is not negative" do
+        raw = <<-RAW.strip_heredoc
+        [poll type=multiple min=-1]
+        * 1
+        * 2
+        [/poll]
+        RAW
+
+        expect(post.update_attributes(raw: raw)).to eq(false)
+
+        expect(post.errors[:base]).to include(
+          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
+        )
+      end
+
+      it "should ensure that min settings it not equal to zero" do
+        raw = <<-RAW.strip_heredoc
+        [poll type=multiple min=0]
+        * 1
+        * 2
+        [/poll]
+        RAW
+
+        expect(post.update_attributes(raw: raw)).to eq(false)
+
+        expect(post.errors[:base]).to include(
+          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
+        )
+      end
+
+      it "should ensure that min settings is not equal to the number of options" do
         raw = <<-RAW.strip_heredoc
         [poll type=multiple min=2]
         * 1
@@ -206,7 +236,9 @@ describe ::DiscoursePoll::PollsValidator do
         expect(post.errors[:base]).to include(
           I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
         )
+      end
 
+      it "should ensure that min settings is not greater than the number of options" do
         raw = <<-RAW.strip_heredoc
         [poll type=multiple min=3]
         * 1
