@@ -74,10 +74,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic')) && !Discourse.SiteSettings.enable_sso && Discourse.SiteSettings.enable_local_logins && !this.get('isMessage');
   }.property('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'isMessage', 'invitingToTopic'),
 
-  // Show Custom Message textarea? (only shown when inviting new user to forum)
   showCustomMessage: function() {
-    return this.get('model') === this.currentUser;
-  }.property('model'),
+    return (this.get('model') === this.currentUser || Discourse.Utilities.emailValid(this.get('emailOrUsername')));
+  }.property('emailOrUsername'),
 
   // Instructional text for the modal.
   inviteInstructions: function() {
@@ -228,7 +227,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
     showCustomMessageBox() {
       this.toggleProperty('hasCustomMessage');
       if (this.get('hasCustomMessage')) {
-        this.set('customMessage', I18n.t('invite.custom_message_template'));
+        if (this.get('model') === this.currentUser) {
+          this.set('customMessage', I18n.t('invite.custom_message_template_forum'));
+        } else {
+          this.set('customMessage', I18n.t('invite.custom_message_template_topic'));
+        }
       } else {
         this.set('customMessage', null);
       }
