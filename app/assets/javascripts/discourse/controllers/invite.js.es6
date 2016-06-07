@@ -110,11 +110,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   }.property('isMessage', 'invitingToTopic', 'emailOrUsername'),
 
-  // Instructional text for the group selection.
-  groupInstructions: function() {
-    return this.get('isPrivateTopic') ?
-            I18n.t('topic.automatically_add_to_groups_required') :
-            I18n.t('topic.automatically_add_to_groups_optional');
+  showGroupsClass: function() {
+    return this.get('isPrivateTopic') ? 'required' : 'optional';
   }.property('isPrivateTopic'),
 
   groupFinder(term) {

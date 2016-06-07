@@ -1423,8 +1423,7 @@ en:
         banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
 
       inviting: "Inviting..."
-      automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
-      automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
+      automatically_add_to_groups: "This invite also includes access to these groups:"
 
       invite_private:
         title: 'Invite to Message'
@@ -3041,7 +3040,8 @@ en:
           search: "There are no more search results."
 
     invite:
-      custom_message: "Make your invite a little bit more personal by writing a custom message (optional)."
+      custom_message: "Make your invite a little bit more personal by writing a"
+      custom_message_link: "custom message"
       custom_message_placeholder: "Enter your custom message, use {invite_link} for specifying invite link."
       custom_message_template: |
         Hello,
