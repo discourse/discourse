@@ -230,7 +230,18 @@ export default Ember.Controller.extend({
 
     groupsMentioned(groups) {
       if (!this.get('model.creatingPrivateMessage') && !this.get('model.topic.isPrivateMessage')) {
-        this.get('controllers.composer-messages').groupsMentioned(groups);
+        groups.forEach(group => {
+          const body = I18n.t('composer.group_mentioned', {
+            group: "@" + group.name,
+            count: group.user_count,
+            group_link: Discourse.getURL(`/group/${group.name}/members`)
+          });
+          this.appEvents.trigger('composer-messages:create', {
+            extraClass: 'custom-body',
+            templateName: 'custom-body',
+            body
+          });
+        });
       }
     }
 

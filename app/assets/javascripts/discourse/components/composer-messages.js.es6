@@ -91,19 +91,6 @@ export default Ember.Component.extend({
     this.send('popup', Ember.Object.create(info));
   },
 
-  groupsMentioned(groups) {
-    // reset existing messages, this should always win it is critical
-    this.reset();
-    groups.forEach(group => {
-      const body = I18n.t('composer.group_mentioned', {
-        group: "@" + group.name,
-        count: group.user_count,
-        group_link: Discourse.getURL(`/group/${group.name}/members`)
-      });
-      this.send("popup", Ember.Object.create({ templateName: 'custom-body', body }));
-    });
-  },
-
   _findSimilar() {
     const composer = this.get('composer');
 
