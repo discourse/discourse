@@ -124,7 +124,7 @@ def compress(from,to)
 end
 
 def concurrent?
-  if ENV["CONCURRENT"] == "1"
+  if ENV["SPROCKETS_CONCURRENT"] == "1"
     concurrent_compressors = []
     yield(Proc.new { |&block| concurrent_compressors << Concurrent::Future.execute { block.call } })
     concurrent_compressors.each(&:wait!)
