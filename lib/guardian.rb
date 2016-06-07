@@ -246,6 +246,10 @@ class Guardian
     user.staff?
   end
 
+  def can_resend_all_invites?(user)
+    user.staff?
+  end
+
   def can_see_private_messages?(user_id)
     is_admin? || (authenticated? && @user.id == user_id)
   end
