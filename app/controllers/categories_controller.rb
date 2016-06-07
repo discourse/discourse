@@ -180,7 +180,10 @@ class CategoriesController < ApplicationController
           end
         end
 
-        params[:allowed_tags] ||= [] if SiteSetting.tagging_enabled
+        if SiteSetting.tagging_enabled
+          params[:allowed_tags] ||= []
+          params[:allowed_tag_groups] ||= []
+        end
 
         params.permit(*required_param_keys,
                         :position,
@@ -197,7 +200,8 @@ class CategoriesController < ApplicationController
                         :topic_template,
                         :custom_fields => [params[:custom_fields].try(:keys)],
                         :permissions => [*p.try(:keys)],
-                        :allowed_tags => [])
+                        :allowed_tags => [],
+                        :allowed_tag_groups => [])
       end
     end
 

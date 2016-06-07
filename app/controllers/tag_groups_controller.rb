@@ -49,6 +49,19 @@ class TagGroupsController < ApplicationController
     render json: success_json
   end
 
+  def search
+    matches = if params[:q].present?
+      term = params[:q].strip.downcase
+      TagGroup.where('lower(name) like ?', "%#{term}%")
+    else
+      TagGroup.all
+    end
+
+    matches = matches.order('name').limit(params[:limit] || 5)
+
+    render json: { results: matches.map { |x| { id: x.name, text: x.name } } }
+  end
+
   private
 
     def fetch_tag_group

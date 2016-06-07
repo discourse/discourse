@@ -72,10 +72,33 @@ module DiscourseTagging
         query = query.where('tags.name NOT IN (?)', staff_tag_names) if staff_tag_names.present?
       end
 
-      if opts[:category] && opts[:category].tags.count > 0
-        query = query.where("tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?)", opts[:category].id)
-      elsif CategoryTag.exists?
-        query = query.where("tags.id NOT IN (SELECT tag_id FROM category_tags)")
+      # Filters for category-specific tags:
+
+      if opts[:category] && (opts[:category].tags.count > 0 || opts[:category].tag_groups.count > 0)
+        if opts[:category].tags.count > 0 && opts[:category].tag_groups.count > 0
+          tag_group_ids = opts[:category].tag_groups.pluck(:id)
+          query = query.where(
+            "tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?
+              UNION
+              SELECT tag_id FROM tag_group_memberships WHERE tag_group_id = ?)",
+            opts[:category].id, tag_group_ids
+          )
+        elsif opts[:category].tags.count > 0
+          query = query.where("tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?)", opts[:category].id)
+        else # opts[:category].tag_groups.count > 0
+          tag_group_ids = opts[:category].tag_groups.pluck(:id)
+          query = query.where("tags.id IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id = ?)", tag_group_ids)
+        end
+      else
+        # exclude tags that are restricted to other categories
+        if CategoryTag.exists?
+          query = query.where("tags.id NOT IN (SELECT tag_id FROM category_tags)")
+        end
+
+        if CategoryTagGroup.exists?
+          tag_group_ids = CategoryTagGroup.pluck(:tag_group_id).uniq
+          query = query.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id = ?)", tag_group_ids)
+        end
       end
     end
 

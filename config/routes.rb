@@ -636,7 +636,12 @@ Discourse::Application.routes.draw do
       end
     end
   end
-  resources :tag_groups, except: [:new, :edit]
+
+  resources :tag_groups, except: [:new, :edit] do
+    collection do
+      get '/filter/search' => 'tag_groups#search'
+    end
+  end
 
   Discourse.filters.each do |filter|
     root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), :as => "list_#{filter}"

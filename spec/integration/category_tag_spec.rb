@@ -4,6 +4,11 @@ require 'rails_helper'
 require_dependency 'post_creator'
 
 describe "category tag restrictions" do
+
+  def sorted_tag_names(tag_records)
+    tag_records.map(&:name).sort
+  end
+
   let!(:tag1) { Fabricate(:tag) }
   let!(:tag2) { Fabricate(:tag) }
   let!(:tag3) { Fabricate(:tag) }
@@ -55,6 +60,39 @@ describe "category tag restrictions" do
     it "can create tags when changing category settings" do
       expect { other_category.update(allowed_tags: ['newtag']) }.to change { Tag.count }.by(1)
       expect { other_category.update(allowed_tags: [tag1.name, 'tag-stuff', tag2.name, 'another-tag']) }.to change { Tag.count }.by(2)
+    end
+  end
+
+  context "tag groups restricted to a category" do
+    let!(:tag_group1)     { Fabricate(:tag_group) }
+    let(:category)        { Fabricate(:category) }
+    let(:other_category)  { Fabricate(:category) }
+
+    before do
+      tag_group1.tags = [tag1, tag2]
+    end
+
+    it "tags in the group are used by category tag restrictions" do
+      category.allowed_tag_groups = [tag_group1.name]
+      category.reload
+
+      expect(sorted_tag_names(DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), {for_input: true, category: category}))).to eq(sorted_tag_names([tag1, tag2]))
+      expect(sorted_tag_names(DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), {for_input: true}))).to eq(sorted_tag_names([tag3, tag4]))
+
+      tag_group1.tags = [tag2, tag3, tag4]
+      expect(sorted_tag_names(DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), {for_input: true, category: category}))).to eq(sorted_tag_names([tag2, tag3, tag4]))
+      expect(sorted_tag_names(DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), {for_input: true}))).to eq(sorted_tag_names([tag1]))
+      expect(sorted_tag_names(DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), {for_input: true, category: other_category}))).to eq(sorted_tag_names([tag1]))
+    end
+
+    it "groups and individual tags can be mixed" do
+      category.allowed_tag_groups = [tag_group1.name]
+      category.allowed_tags = [tag4.name]
+      category.reload
+
+      expect(sorted_tag_names(DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), {for_input: true, category: category}))).to eq(sorted_tag_names([tag1, tag2, tag4]))
+      expect(sorted_tag_names(DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), {for_input: true}))).to eq(sorted_tag_names([tag3]))
+      expect(sorted_tag_names(DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), {for_input: true, category: other_category}))).to eq(sorted_tag_names([tag3]))
     end
   end
 end
