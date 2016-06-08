@@ -5,7 +5,7 @@
   var DATA_PREFIX = "data-poll-";
   var DEFAULT_POLL_NAME = "poll";
 
-  var WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status"];
+  var WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status", "public"];
 
   var ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
