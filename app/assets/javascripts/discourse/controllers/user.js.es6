@@ -41,7 +41,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return viewingSelf || staff;
   },
 
-  @computed('model.user.name')
+  @computed('model.name')
   nameFirst(name) {
     return !this.get('siteSettings.prioritize_username_in_ux') && name && name.trim().length > 0;
   },
