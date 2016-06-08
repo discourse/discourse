@@ -344,6 +344,9 @@ users:
   show_email_on_profile:
     client: true
     default: false
+  prioritize_username_in_ux:
+    client: true
+    default: true
   email_token_valid_hours:
     default: 24
     min: 1
