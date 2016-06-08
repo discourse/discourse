@@ -111,17 +111,19 @@ export default Ember.Controller.extend({
     },
 
     afterRefresh($preview) {
+
       const linkLookup = this.get('linkLookup');
       if (linkLookup) {
-        const $links = $('a[href]', $preview);
+        const post = this.get('model.post');
+        if (post && post.get('user_id') !== this.currentUser.id) { return; }
 
+        const $links = $('a[href]', $preview);
         $links.each((idx, l) => {
           const href = $(l).prop('href');
           if (href && href.length) {
-            const [warn, info] = linkLookup.check(href);
+            const [warn, info] = linkLookup.check(post, href);
 
             if (warn) {
-              console.log(info);
               const body = I18n.t('composer.duplicate_link', {
                 domain: info.domain,
                 username: info.username,
@@ -482,7 +484,7 @@ export default Ember.Controller.extend({
 
   // Given a potential instance and options, set the model for this composer.
   _setModel(composerModel, opts) {
-    this.set('linkList', null);
+    this.set('linkLookup', null);
 
     if (opts.draft) {
       composerModel = loadDraft(this.store, opts);
