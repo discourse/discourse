@@ -11,45 +11,52 @@ export default createWidget('post-links', {
     return { collapsed: true };
   },
 
+  linkHtml(link) {
+    const linkBody = [new RawHtml({html: `<span>${Discourse.Emoji.unescape(Handlebars.Utils.escapeExpression(link.title))}</span>`})];
+    if (link.clicks) {
+      linkBody.push(h('span.badge.badge-notification.clicks', link.clicks.toString()));
+    }
+
+    return h('li',
+      h('a.track-link', {
+        className: link.reflection ? 'inbound' : 'outbound',
+        attributes: {href: link.url}
+      }, [linkBody, iconNode(link.reflection ? 'arrow-left' : 'arrow-right')])
+    );
+  },
+
   html(attrs, state) {
     const links = this.attrs.links || [];
+    const dedupedLinks = _.uniq(links, true, l => l.title);
+    const incomingLinks = dedupedLinks.filter(l => l.reflection);
+
+    // if all links are outgoing, don't show any
+    if (incomingLinks.length === 0) { return; }
 
     const result = [];
-    if (links.length) {
 
-      const seenTitles = {};
-
-      let titleCount = 0;
-
-      let hasMore = links.any((l) => {
-        if (state.collapsed && titleCount === 5) { return true; }
-
-        let title = l.title;
-        if (title && !seenTitles[title]) {
-          seenTitles[title] = true;
-          titleCount++;
-          const linkBody = [new RawHtml({html: `<span>${Discourse.Emoji.unescape(Handlebars.Utils.escapeExpression(title))}</span>`})];
-          if (l.clicks) {
-            linkBody.push(h('span.badge.badge-notification.clicks', l.clicks.toString()));
-          }
-
-          result.push(h('li',
-            h('a.track-link', {
-              className: l.reflection ? 'inbound' : 'outbound',
-              attributes: {href: l.url}
-            }, [linkBody, iconNode(l.reflection ? 'arrow-left' : 'arrow-right')])
-          ));
+    if (dedupedLinks.length <= 5) {
+      // show all links
+      _.each(dedupedLinks, l => result.push(this.linkHtml(l)));
+    } else {
+      // show up to 5 *incoming* links when collapsed
+      if (state.collapsed) {
+        const max = Math.min(5, incomingLinks.length);
+        for (let i = 0; i < max; i++) {
+          result.push(this.linkHtml(incomingLinks[i]));
         }
-      });
-
-      if (hasMore) {
-        result.push(h('li', this.attach('link', {
-          labelCount: `post_links.title`,
-          title: "post_links.about",
-          count: links.length,
-          action: 'expandLinks',
-          className: 'expand-links'
-        })));
+        // 'show more' link
+        if (dedupedLinks.length > 5) {
+          result.push(h('li', this.attach('link', {
+            labelCount: `post_links.title`,
+            title: "post_links.about",
+            count: links.length,
+            action: 'expandLinks',
+            className: 'expand-links'
+          })));
+        }
+      } else {
+        _.each(dedupedLinks, l => result.push(this.linkHtml(l)));
       }
     }
 
