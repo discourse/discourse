@@ -357,7 +357,7 @@ describe PostRevisor do
           revisor.revise!(newuser, { title: 'this is a test topic' })
         end
 
-        message = messages.find { |message| message.channel == "/topic/#{topic.id}" }
+        message = messages.find { |m| m.channel == "/topic/#{topic.id}" }
         payload = message.data
         expect(payload[:reload_topic]).to eq(true)
       end

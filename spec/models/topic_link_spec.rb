@@ -113,20 +113,9 @@ http://b.com/#{'a'*500}
         expect(reflection.link_post_id).to eq(linked_post.id)
 
         expect(reflection.user_id).to eq(link.user_id)
-      end
 
-      context 'removing a link' do
-
-        before do
-          post.revise(post.user, { raw: "no more linkies" })
-          TopicLink.extract_from(post)
-        end
-
-        it 'should remove the link' do
-          expect(topic.topic_links.where(post_id: post.id)).to be_blank
-          # should remove the reflected link
-          expect(other_topic.topic_links).to be_blank
-        end
+        linked_post.revise(post.user, { raw: "no more linkies https://eviltrout.com" })
+        expect(other_topic.topic_links.where(link_post_id: linked_post.id)).to be_blank
       end
     end
 
@@ -249,8 +238,7 @@ http://b.com/#{'a'*500}
       alternate_uri = URI.parse(Discourse.base_url)
 
       url = "http://#{alternate_uri.host}:5678/t/topic-slug/#{other_topic.id}"
-      post = topic.posts.create(user: user,
-                                raw: "Link to another topic: #{url}")
+      post = topic.posts.create(user: user, raw: "Link to another topic: #{url}")
       TopicLink.extract_from(post)
       reflection = other_topic.topic_links.first
 
