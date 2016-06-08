@@ -4,13 +4,13 @@ describe WebhooksController do
   before { $redis.flushall }
 
   let(:email) { "em@il.com" }
+  let(:message_id) { "12345@il.com" }
 
   context "mailgun" do
 
     it "works" do
       SiteSetting.mailgun_api_key = "key-8221462f0c915af3f6f2e2df7aa5a493"
 
-      message_id = "12345@il.com"
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id)
 
@@ -19,7 +19,7 @@ describe WebhooksController do
       post :mailgun, "token" => "705a8ccd2ce932be8e98c221fe701c1b4a0afcb8bbd57726de",
                      "timestamp" => Time.now.to_i,
                      "event" => "dropped",
-                     "message-id" => message_id
+                     "Message-Id" => "<12345@il.com>"
 
       expect(response).to be_success
 
@@ -34,7 +34,7 @@ describe WebhooksController do
 
     it "works" do
       user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: "12345@il.com")
+      email_log = Fabricate(:email_log, user: user, message_id: message_id)
 
       post :sendgrid, "_json" => [
         {
@@ -57,7 +57,6 @@ describe WebhooksController do
   context "mailjet" do
 
     it "works" do
-      message_id = "12345@il.com"
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id)
 
