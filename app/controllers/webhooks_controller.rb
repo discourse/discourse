@@ -7,7 +7,7 @@ class WebhooksController < ActionController::Base
     return mailgun_failure if SiteSetting.mailgun_api_key.blank?
 
     # token is a random string of 50 characters
-    token = params.delete("token")
+    token = params["token"]
     return mailgun_failure if token.blank? || token.size != 50
 
     # prevent replay attack
@@ -16,14 +16,14 @@ class WebhooksController < ActionController::Base
     $redis.expire(key, 10.minutes)
 
     # ensure timestamp isn't too far from current time
-    timestamp = params.delete("timestamp")
+    timestamp = params["timestamp"]
     return mailgun_failure if (Time.at(timestamp.to_i) - Time.now).abs > 24.hours.to_i
 
     # check the signature
     return mailgun_failure unless mailgun_verify(timestamp, token, params["signature"])
 
-    event = params.delete("event")
-    message_id = params.delete("message-id")
+    event = params["event"]
+    message_id = params["Message-Id"].tr("<>", "")
 
     # only handle soft bounces, because hard bounces are also handled
     # by the "dropped" event and we don't want to increase bounce score twice
