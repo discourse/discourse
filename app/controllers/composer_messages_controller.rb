@@ -8,7 +8,7 @@ class ComposerMessagesController < ApplicationController
     finder = ComposerMessagesFinder.new(current_user, params.slice(:composer_action, :topic_id, :post_id))
     json = { composer_messages: [finder.find].compact }
 
-    if params[:composer_action] == "reply" && params[:topic_id].present?
+    if params[:topic_id].present?
       topic = Topic.where(id: params[:topic_id]).first
       if guardian.can_see?(topic)
         json[:extras] = {duplicate_lookup: TopicLink.duplicate_lookup(topic)}
