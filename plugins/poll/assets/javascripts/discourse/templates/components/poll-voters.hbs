@@ -2,7 +2,7 @@
   {{#each users as |user|}}
     <li>
       <a data-user-card={{unbound user.username}}>
-        {{avatar user imageSize="tiny"}}
+        {{avatar user imageSize="tiny" ignoreTitle="true"}}
       </a>
     </li>
   {{/each}}
