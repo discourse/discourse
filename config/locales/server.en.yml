@@ -887,6 +887,8 @@ en:
 
     num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
     num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    num_tl3_flags_to_block_new_user: "If a new user's posts get this many flags from num_tl3_users_to_block_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
+    num_tl3_users_to_block_new_user: "If a new user's posts get num_tl3_flags_to_block_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
 
@@ -2031,9 +2033,8 @@ en:
         Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
 
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
-
     too_many_spam_flags:
-      subject_template: "New account blocked due to community flags"
+      subject_template: "New account on hold"
       text_body_template: |
         Hello,
 
@@ -2042,7 +2043,16 @@ en:
         As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    too_many_tl3_flags:
+      subject_template: "New account on hold"
+      text_body_template: |
+        Hello,
 
+        This is an automated message from %{site_name} to let you know you that your account has been placed on hold due to a large number of community flags.
+
+        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.  We apologize for the inconvenience.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Account temporarily on hold"
       text_body_template: |
