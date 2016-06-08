@@ -1545,6 +1545,29 @@ en:
 
       This invitation is from a trusted user, so you can reply to the discussion immediately.
 
+  custom_invite_mailer:
+    subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} invited you to a discussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      at
+
+      > %{site_title} -- %{site_description}
+
+      Message from %{invitee_name}:
+
+      %{user_custom_message}
+
+      If you're interested, click the link below:
+
+      %{invite_link}
+
+      This invitation is from a trusted user, so you can reply to the discussion immediately.
+
   invite_forum_mailer:
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
     text_body_template: |
@@ -1553,6 +1576,25 @@ en:
       > **%{site_title}**
       >
       > %{site_description}
+
+      If you're interested, click the link below:
+
+      %{invite_link}
+
+      This invitation is from a trusted user, so you won't need to log in.
+
+  custom_invite_forum_mailer:
+    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} invited you to join
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Message from %{invitee_name}:
+
+      %{user_custom_message}
 
       If you're interested, click the link below:
 
