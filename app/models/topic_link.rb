@@ -106,7 +106,7 @@ class TopicLink < ActiveRecord::Base
     TopicLink.transaction do
 
       added_urls = []
-      reflected_urls = []
+      reflected_ids = []
 
       PrettyText
         .extract_links(post.cooked)
@@ -167,8 +167,7 @@ class TopicLink < ActiveRecord::Base
                            internal: internal,
                            link_topic_id: topic_id,
                            link_post_id: reflected_post.try(:id),
-                           quote: link.is_quote
-                          )
+                           quote: link.is_quote)
 
           # Create the reflection if we can
           if topic_id.present?
@@ -179,17 +178,17 @@ class TopicLink < ActiveRecord::Base
               prefix = Discourse.base_url_no_prefix
 
               reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
+              tl = TopicLink.create(user_id: post.user_id,
+                                    topic_id: topic_id,
+                                    post_id: reflected_post.try(:id),
+                                    url: reflected_url,
+                                    domain: Discourse.current_hostname,
+                                    reflection: true,
+                                    internal: true,
+                                    link_topic_id: post.topic_id,
+                                    link_post_id: post.id)
 
-              reflected_urls << reflected_url
-              TopicLink.create(user_id: post.user_id,
-                                     topic_id: topic_id,
-                                     post_id: reflected_post.try(:id),
-                                     url: reflected_url,
-                                     domain: Discourse.current_hostname,
-                                     reflection: true,
-                                     internal: true,
-                                     link_topic_id: post.topic_id,
-                                     link_post_id: post.id)
+              reflected_ids << tl.try(:id)
             end
           end
 
@@ -203,7 +202,14 @@ class TopicLink < ActiveRecord::Base
       # Remove links that aren't there anymore
       if added_urls.present?
         TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)", urls: added_urls, post_id: post.id]
-        TopicLink.delete_all ["(url not in (:urls)) AND (link_post_id = :post_id AND reflection)", urls: reflected_urls, post_id: post.id]
+
+        reflected_ids.compact!
+        if reflected_ids.present?
+          TopicLink.delete_all ["(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
+                                reflected_ids: reflected_ids, post_id: post.id]
+        else
+          TopicLink.delete_all ["link_post_id = :post_id AND reflection", post_id: post.id]
+        end
       else
         TopicLink.delete_all ["(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)", post_id: post.id]
       end
