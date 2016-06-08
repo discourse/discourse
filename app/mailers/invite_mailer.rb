@@ -17,21 +17,6 @@ class InviteMailer < ActionMailer::Base
       invitee_name = "#{invite.invited_by.name} (#{invite.invited_by.username})"
     end
 
-    # custom message
-    html = nil
-    if custom_message.present? && custom_message =~ /{invite_link}/
-      custom_message.gsub!("{invite_link}", "#{Discourse.base_url}/invites/#{invite.invite_key}")
-      custom_message.gsub!("{site_title}", SiteSetting.title) if custom_message =~ /{site_title}/
-      custom_message.gsub!("{site_description}", SiteSetting.site_description) if custom_message =~ /{site_description}/
-
-      html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
-        template: 'email/invite',
-        format: :html,
-        locals: { message: PrettyText.cook(custom_message).html_safe,
-                  classes: 'custom-invite-email' }
-      )
-    end
-
     # If they were invited to a topic
     if first_topic.present?
       # get topic excerpt
@@ -40,28 +25,35 @@ class InviteMailer < ActionMailer::Base
         topic_excerpt = first_topic.excerpt.gsub("\n", " ")
       end
 
-      html.gsub!("{topic_title}", first_topic.try(:title)) if html.present? && html =~ /{topic_title}/
-      html.gsub!("{topic_excerpt}", topic_excerpt) if html.present? && html =~ /{topic_excerpt}/
+      template = 'invite_mailer'
+      if custom_message.present?
+        template = 'custom_invite_mailer'
+      end
 
       build_email(invite.email,
-                  template: 'invite_mailer',
-                  html_override: html,
+                  template: template,
                   invitee_name: invitee_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   topic_title: first_topic.try(:title),
                   topic_excerpt: topic_excerpt,
                   site_description: SiteSetting.site_description,
-                  site_title: SiteSetting.title)
+                  site_title: SiteSetting.title,
+                  user_custom_message: custom_message)
     else
+      template = 'invite_forum_mailer'
+      if custom_message.present?
+        template = 'custom_invite_forum_mailer'
+      end
+
       build_email(invite.email,
-                  template: 'invite_forum_mailer',
-                  html_override: html,
+                  template: template,
                   invitee_name: invitee_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   site_description: SiteSetting.site_description,
-                  site_title: SiteSetting.title)
+                  site_title: SiteSetting.title,
+                  user_custom_message: custom_message)
     end
   end
 
