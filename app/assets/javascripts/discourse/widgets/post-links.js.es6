@@ -50,7 +50,7 @@ export default createWidget('post-links', {
         result.push(h('li', this.attach('link', {
           labelCount: 'post_links.title',
           title: 'post_links.about',
-          count: links.length,
+          count: dedupedLinks.length - max,
           action: 'expandLinks',
           className: 'expand-links'
         })));
