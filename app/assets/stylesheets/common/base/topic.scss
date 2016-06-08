@@ -86,8 +86,7 @@
   .post-links {
     margin-top: 1em;
     padding: 1em 1em 0;
-    background: blend-primary-secondary(4%);
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   }
 
   .expand-links {
@@ -113,8 +112,9 @@
         margin-left: 0.5em;
       }
       i {
+        float: left;
         font-size: 0.857em;
-        margin-left: 0.5em;
+        margin: 0.3em 0.5em 0 0;
       }
     }
   }
