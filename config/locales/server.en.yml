@@ -920,6 +920,7 @@ en:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     top_page_default_timeframe: "Default timeframe for the top view page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
+    prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."

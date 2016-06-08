@@ -29,6 +29,11 @@ export default Ember.Controller.extend({
   linkWebsite: Em.computed.not('user.isBasic'),
   hasLocationOrWebsite: Em.computed.or('user.location', 'user.website_name'),
 
+  @computed('user.name')
+  nameFirst(name) {
+    return !this.get('siteSettings.prioritize_username_in_ux') && name && name.trim().length > 0;
+  },
+
   @computed('user.user_fields.@each.value')
   publicUserFields() {
     const siteUserFields = this.site.get('user_fields');
