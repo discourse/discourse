@@ -124,7 +124,7 @@ export default Ember.Controller.extend({
               const body = I18n.t('composer.duplicate_link', {
                 domain: info.domain,
                 username: info.username,
-                ago: relativeAge(new Date(info.posted_at), { format: 'medium' }),
+                ago: relativeAge(moment(info.posted_at).toDate(), { format: 'medium' }),
                 href
               });
               this.appEvents.trigger('composer-messages:create', {
