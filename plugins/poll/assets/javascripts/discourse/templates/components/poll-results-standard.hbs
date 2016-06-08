@@ -9,5 +9,9 @@
     <div class="bar-back">
       <div class="bar" style={{option.style}}></div>
     </div>
+
+    {{#if poll.public}}
+      {{poll-results-standard-voters option=option pollsVoters=pollsVoters}}
+    {{/if}}
   </li>
 {{/each}}
