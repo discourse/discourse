@@ -203,7 +203,7 @@ function relativeAgeMediumSpan(distance, leaveAgo) {
     formatted = t("x_days", {count: Math.round((distanceInMinutes - 720.0) / 1440.0)});
     break;
   }
-  return formatted || '&mdash';
+  return formatted || '&mdash;';
 }
 
 function relativeAgeMedium(date, options) {
