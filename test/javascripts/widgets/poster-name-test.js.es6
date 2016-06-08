@@ -59,9 +59,11 @@ widgetTest('disable display name on posts', {
 widgetTest("doesn't render a name if it's similar to the username", {
   template: '{{mount-widget widget="poster-name" args=args}}',
   setup() {
+    this.siteSettings.prioritize_username_in_ux = true;
+    this.siteSettings.display_name_on_posts = true;
     this.set('args', { username: 'eviltrout', name: 'evil-trout' });
   },
   test(assert) {
-    assert.equal(this.$('.full-name').length, 0);
+    assert.equal(this.$('.second').length, 0);
   }
 });
