@@ -52,7 +52,7 @@ export default createWidget('topic-notifications-button', {
     if (this.attrs.showFullTitle) {
       button.label = `topic.notifications.${details.key}.title`;
     } else {
-      button.className = 'btn no-text notifications-dropdown';
+      button.className = 'btn notifications-dropdown';
     }
 
     return this.attach('button', button);
