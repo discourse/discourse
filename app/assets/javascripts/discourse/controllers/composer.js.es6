@@ -121,11 +121,12 @@ export default Ember.Controller.extend({
             const [warn, info] = linkLookup.check(href);
 
             if (warn) {
+              console.log(info);
               const body = I18n.t('composer.duplicate_link', {
                 domain: info.domain,
                 username: info.username,
-                ago: relativeAge(moment(info.posted_at).toDate(), { format: 'medium' }),
-                href
+                post_url: info.post_url,
+                ago: relativeAge(moment(info.posted_at).toDate(), { format: 'medium' })
               });
               this.appEvents.trigger('composer-messages:create', {
                 extraClass: 'custom-body',
