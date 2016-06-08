@@ -29,7 +29,7 @@ createWidget('topic-admin-menu-button', {
 
     const result = [];
     result.push(this.attach('button', {
-      className: 'btn no-text' + (attrs.fixed ? " show-topic-admin" : ""),
+      className: 'btn ' + (attrs.fixed ? " show-topic-admin" : ""),
       title: 'topic_admin_menu',
       icon: 'wrench',
       action: 'showAdminMenu',

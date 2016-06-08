@@ -4,8 +4,14 @@ import { iconNode } from 'discourse/helpers/fa-icon';
 export default createWidget('button', {
   tagName: 'button.widget-button',
 
-  buildClasses() {
-    if (this.attrs.className) { return this.attrs.className; }
+  buildClasses(attrs) {
+    const className = this.attrs.className || '';
+
+    if (!attrs.label && !attrs.contents) {
+      return className + ' no-text';
+    }
+
+    return className;
   },
 
   buildAttributes() {
