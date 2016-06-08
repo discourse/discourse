@@ -22,7 +22,7 @@ export default createWidget('post-links', {
       let titleCount = 0;
 
       let hasMore = links.any((l) => {
-        if (this.state.collapsed && titleCount === 5) { return true; }
+        if (state.collapsed && titleCount === 5) { return true; }
 
         let title = l.title;
         if (title && !seenTitles[title]) {
