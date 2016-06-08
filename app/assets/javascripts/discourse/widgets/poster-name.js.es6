@@ -27,7 +27,7 @@ export default createWidget('poster-name', {
   html(attrs) {
     const username = attrs.username;
     const name = attrs.name;
-    const nameFirst = !this.siteSettings.prioritize_username_in_ux && name && name.length > 0;
+    const nameFirst = this.siteSettings.display_name_on_posts && !this.siteSettings.prioritize_username_in_ux && name && name.length > 0;
     const classNames = nameFirst ? ['first','full-name'] : ['first','username'];
 
     if (attrs.staff) { classNames.push('staff'); }
