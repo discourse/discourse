@@ -1,4 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
+import { observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   isMultiple: Ember.computed.equal("poll.type", "multiple"),
@@ -14,6 +15,11 @@ export default Ember.Controller.extend({
 
   showResultsDisabled: Em.computed.equal("poll.voters", 0),
   hideResultsDisabled: Em.computed.or("isClosed", "post.topic.archived"),
+
+  @observes("post.polls")
+  _updatePoll() {
+    this.set("model", this.get("post.pollsObject")[this.get("model.name")]);
+  },
 
   @computed("model", "vote", "model.voters", "model.options", "model.status")
   poll(poll, vote) {
