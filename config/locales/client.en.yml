@@ -1832,10 +1832,10 @@ en:
         one: "1 click"
         other: "%{count} clicks"
     post_links:
-      about: "expand the links for this post"
+      about: "expand more links for this post"
       title:
-        one: "1 post link"
-        other: "%{count} post links"
+        one: "1 more"
+        other: "%{count} more"
 
     topic_statuses:
       warning:

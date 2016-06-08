@@ -14,10 +14,7 @@ widgetTest("duplicate links", {
     });
   },
   test(assert) {
-    click('.expand-links');
-    andThen(() => {
-      assert.equal(this.$('.post-links a.track-link').length, 1, 'it hides the dupe link');
-    });
+    assert.equal(this.$('.post-links a.track-link').length, 1, 'it hides the dupe link');
   }
 });
 
@@ -38,7 +35,7 @@ widgetTest("collapsed links", {
     });
   },
   test(assert) {
-    assert.ok(this.$('.expand-links').length, 'collapsed by default');
+    assert.ok(this.$('.expand-links').length === 1, 'collapsed by default');
     click('a.expand-links');
     andThen(() => {
       assert.equal(this.$('.post-links a.track-link').length, 7);

@@ -16,20 +16,14 @@ export default createWidget('post-links', {
 
     const result = [];
     if (links.length) {
-      if (state.collapsed) {
-        return this.attach('link', {
-          labelCount: `post_links.title`,
-          title: "post_links.about",
-          count: links.length,
-          action: 'expandLinks',
-          className: 'expand-links'
-        });
-      }
 
       const seenTitles = {};
 
       let titleCount = 0;
-      links.forEach(function(l) {
+
+      let hasMore = links.any((l) => {
+        if (this.state.collapsed && titleCount === 5) { return true; }
+
         let title = l.title;
         if (title && !seenTitles[title]) {
           seenTitles[title] = true;
@@ -47,9 +41,21 @@ export default createWidget('post-links', {
           ));
         }
       });
+
+      if (hasMore) {
+        result.push(h('li', this.attach('link', {
+          labelCount: `post_links.title`,
+          title: "post_links.about",
+          count: links.length,
+          action: 'expandLinks',
+          className: 'expand-links'
+        })));
+      }
     }
 
-    return h('ul.post-links', result);
+    if (result.length) {
+      return h('ul.post-links', result);
+    }
   },
 
   expandLinks() {
