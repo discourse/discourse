@@ -1,5 +1,4 @@
-import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   isMultiple: Ember.computed.equal("poll.type", "multiple"),
