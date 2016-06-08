@@ -428,7 +428,7 @@ describe Search do
 
     it 'supports wiki' do
       topic = Fabricate(:topic)
-      wiki_post = Fabricate(:post, raw: 'this is a test 248', wiki: true, topic: topic)
+      Fabricate(:post, raw: 'this is a test 248', wiki: true, topic: topic)
 
       expect(Search.execute('test 248 in:wiki').posts.length).to eq(1)
     end
@@ -543,14 +543,17 @@ describe Search do
       post = Fabricate(:post, raw: 'hi this is a test 123', topic: topic)
 
       expect(Search.execute('this is a test #category-24').posts.length).to eq(1)
+      expect(Search.execute("this is a test category:#{category.id}").posts.length).to eq(1)
       expect(Search.execute('this is a test #category-25').posts.length).to eq(0)
 
       # sub category
       sub_category = Fabricate(:category, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
       second_topic = Fabricate(:topic, created_at: 3.months.ago, category: sub_category)
-      second_topic_post = Fabricate(:post, raw: 'hi testing again 123', topic: second_topic)
+      Fabricate(:post, raw: 'hi testing again 123', topic: second_topic)
 
       expect(Search.execute('testing again #category-24:sub-category').posts.length).to eq(1)
+      expect(Search.execute("testing again category:#{category.id}").posts.length).to eq(2)
+      expect(Search.execute("testing again category:#{sub_category.id}").posts.length).to eq(1)
       expect(Search.execute('testing again #sub-category').posts.length).to eq(0)
 
       # tags
@@ -562,7 +565,7 @@ describe Search do
     it "can find with tag" do
       topic1 = Fabricate(:topic, title: 'Could not, would not, on a boat')
       topic1.tags = [Fabricate(:tag, name: 'eggs'), Fabricate(:tag, name: 'ham')]
-      post1 = Fabricate(:post, topic: topic1)
+      Fabricate(:post, topic: topic1)
       post2 = Fabricate(:post, topic: topic1, raw: "It probably doesn't help that they're green...")
 
       expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post2.id])

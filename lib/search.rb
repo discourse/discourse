@@ -275,9 +275,9 @@ class Search
   end
 
   advanced_filter(/category:(.+)/) do |posts,match|
-    category_id = Category.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
-    if category_id
-      posts.where("topics.category_id = ?", category_id)
+    category_ids = Category.where('name ilike ? OR id = ? OR parent_category_id = ?', match, match.to_i, match.to_i).pluck(:id)
+    if category_ids.present?
+      posts.where("topics.category_id IN (?)", category_ids)
     else
       posts.where("1 = 0")
     end
