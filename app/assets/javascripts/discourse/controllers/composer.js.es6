@@ -111,36 +111,39 @@ export default Ember.Controller.extend({
     },
 
     afterRefresh($preview) {
-
+      const topic = this.get('model.topic');
       const linkLookup = this.get('linkLookup');
-      if (linkLookup) {
-        const post = this.get('model.post');
-        if (post && post.get('user_id') !== this.currentUser.id) { return; }
+      if (!topic || !linkLookup) { return; }
 
-        const $links = $('a[href]', $preview);
-        $links.each((idx, l) => {
-          const href = $(l).prop('href');
-          if (href && href.length) {
-            const [warn, info] = linkLookup.check(post, href);
+      // Don't check if there's only one post
+      if (topic.get('posts_count') === 1) { return; }
 
-            if (warn) {
-              const body = I18n.t('composer.duplicate_link', {
-                domain: info.domain,
-                username: info.username,
-                post_url: info.post_url,
-                ago: relativeAge(moment(info.posted_at).toDate(), { format: 'medium' })
-              });
-              this.appEvents.trigger('composer-messages:create', {
-                extraClass: 'custom-body',
-                templateName: 'custom-body',
-                body
-              });
-              return false;
-            }
+      const post = this.get('model.post');
+      if (post && post.get('user_id') !== this.currentUser.id) { return; }
+
+      const $links = $('a[href]', $preview);
+      $links.each((idx, l) => {
+        const href = $(l).prop('href');
+        if (href && href.length) {
+          const [warn, info] = linkLookup.check(post, href);
+
+          if (warn) {
+            const body = I18n.t('composer.duplicate_link', {
+              domain: info.domain,
+              username: info.username,
+              post_url: topic.urlForPostNumber(info.post_number),
+              ago: relativeAge(moment(info.posted_at).toDate(), { format: 'medium' })
+            });
+            this.appEvents.trigger('composer-messages:create', {
+              extraClass: 'custom-body',
+              templateName: 'custom-body',
+              body
+            });
+            return false;
           }
-          return true;
-        });
-      }
+        }
+        return true;
+      });
     },
 
     toggleWhisper() {
