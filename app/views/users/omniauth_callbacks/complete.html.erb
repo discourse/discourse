@@ -22,7 +22,9 @@
     <p><%=t "login.close_window" %></p>
 
     <script type="text/javascript">
-       window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
+       if (window.opener) {
+         window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
+       }
 
        // On facebook browser, just redirect and don't close
        var ua = navigator.userAgent || navigator.vendor || window.opera;
