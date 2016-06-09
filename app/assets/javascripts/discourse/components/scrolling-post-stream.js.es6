@@ -94,6 +94,7 @@ export default MountWidget.extend({
 
     let allAbove = true;
     let bottomView = topView;
+    let lastBottom = 0;
     while (bottomView < $posts.length) {
       const post = $posts[bottomView];
       const $post = $(post);
@@ -112,11 +113,14 @@ export default MountWidget.extend({
         onscreen.push(bottomView);
       }
 
-      if (currentPost === null && (viewTop <= topCheck) && (viewBottom >= topCheck)) {
+      if ((currentPost === null) &&
+          ((viewTop <= topCheck && viewBottom >= topCheck) ||
+           (lastBottom <= topCheck && viewTop >= topCheck))) {
         percent = (topCheck - viewTop) / postHeight;
         currentPost = bottomView;
       }
 
+      lastBottom = viewBottom;
       nearby.push(bottomView);
       bottomView++;
     }
