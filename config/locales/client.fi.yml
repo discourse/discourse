@@ -458,14 +458,12 @@ fi:
       github_profile: "GitHub"
       email_activity_summary: "Kooste tapahtumista"
       mailing_list_mode:
-        label: "Sähköpostilistan kaltainen tila"
-        enabled: "Ota käyttöön sähköpostilistan kaltainen tila."
+        label: "Postituslistatila"
+        enabled: "Ota käyttöön postituslistatila"
         instructions: |+
           Asetus syrjäyttää koosteet tapahtumista.<br />
           Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
 
-        daily: "Lähetä päivittäin."
-        individual: "Lähetä sähköpostia jokaisesta uudesta viestistä."
         many_per_day: "Lähetä sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)."
         few_per_day: "Lähetä sähköpostia jokaisesta uudesta viestistä (alle 2 päivässä)."
       watched_categories: "Tarkkaillut"
@@ -513,7 +511,6 @@ fi:
         error: "Arvon muuttamisessa tapahtui virhe."
       change_username:
         title: "Vaihda käyttäjätunnus"
-        confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
         taken: "Pahoittelut, tuo nimi on jo käytössä."
         error: "Käyttäjätunnuksen vaihdossa tapahtui virhe."
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
@@ -597,14 +594,12 @@ fi:
         always: "aina"
         never: "ei koskaan"
       email_digests:
-        title: "Lähetä tiivistelmä uusista viesteistä sähköpostilla, jos en käy sivustolla "
         every_30_minutes: "puolen tunnin välein"
         every_hour: "tunneittain"
         daily: "päivittäin"
         every_three_days: "joka kolmas päivä"
         weekly: "viikottain"
         every_two_weeks: "joka toinen viikko"
-      include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostitiivistelmiin oletuksena."
       email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
       email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni, tai kutsuu minut viestiketjuun"
       email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
@@ -810,10 +805,10 @@ fi:
       title: "Luo uusi tunnus"
       failed: "Jotain meni pieleen. Ehkäpä tämä sähköpostiosoite on jo rekisteröity, kokeile salasana unohtui -linkkiä."
     forgot_password:
-      title: "Salasanan nollaus"
+      title: "Salasanan uusiminen"
       action: "Unohdin salasanani"
-      invite: "Syötä käyttäjätunnuksesi tai sähköpostiosoitteesi, niin lähetämme sinulle salasanan nollausviestin."
-      reset: "Nollaa salasana"
+      invite: "Syötä käyttäjätunnuksesi tai sähköpostiosoitteesi, niin lähetämme sinulle salasanan uusimisviestin."
+      reset: "Uusi salasana"
       complete_username: "Jos käyttäjätunnusta <b>%{username}</b> vastaava tili löytyy, saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
       complete_email: "Jos sähköpostiosoitetta <b>%{email}</b> vastaava tili löytyy, saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
       complete_username_found: "Käyttäjätunnusta <b>%{username}</b> vastaava tili löytyi. Saat kohta sähköpostin, jossa on lisäohjeet salasanan uusimiseen."
@@ -829,7 +824,7 @@ fi:
       error: "Tuntematon virhe"
       rate_limit: "Ole hyvä ja odota hetki ennen kuin yrität kirjautua uudelleen."
       blank_username_or_password: "Kirjoita sähköpostiosoite tai käyttäjänimi ja salasana."
-      reset_password: 'Nollaa salasana'
+      reset_password: 'Uusi salasana'
       logging_in: "Kirjaudutaan..."
       or: "Tai"
       authenticating: "Autentikoidaan..."
@@ -1167,6 +1162,7 @@ fi:
         position: "viesti %{current} / %{total}"
       notifications:
         reasons:
+          mailing_list_mode: "Olet postituslistatilassa, joten saat sähköpostia tähän ketjuun lähetyistä vastauksista."
           '3_6': 'Saat ilmoituksia, koska olet asettanut tämän alueen tarkkailuun.'
           '3_5': 'Saat ilmoituksia, koska ketju on asetettu tarkkailuun automaattisesti.'
           '3_2': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'

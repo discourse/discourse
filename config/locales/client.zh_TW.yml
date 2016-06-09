@@ -404,7 +404,6 @@ zh_TW:
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
       github_profile: "Github"
-      mailing_list_mode: "每當有新文章時，寄給我郵件通知。(除非我將該討論話題或分類設為靜音)"
       watched_categories: "關注"
       tracked_categories: "追蹤"
       muted_categories: "靜音"
@@ -438,7 +437,6 @@ zh_TW:
         title: "修改關於我"
       change_username:
         title: "修改用戶名稱"
-        confirm: "如果你修改了你的用戶名稱，之前引用你的文章或以 @用戶名稱 提到你的連結都將失效，你確定要修改嗎？"
         taken: "抱歉，此用戶名稱已經有人使用。"
         error: "修改你的用戶名稱時發生錯誤。"
         invalid: "此用戶名稱無效，只能使用數字與英文字母。"
@@ -506,7 +504,6 @@ zh_TW:
       website: "網站"
       email_settings: "電子郵件"
       email_digests:
-        title: "當我很久沒來此網站時，以電子郵件通知我最近有什麼新文章："
         daily: "每天"
         every_three_days: "每三天"
         weekly: "每週"
@@ -821,7 +818,6 @@ zh_TW:
       post_format: "#{{post_number}} {{username}}"
       context:
         user: "搜尋 @{{username}} 的文章"
-        category: "搜尋 \"{{category}}\" 分類"
         topic: "搜尋此討論話題"
         private_messages: "搜尋訊息"
     new_item: "新增"

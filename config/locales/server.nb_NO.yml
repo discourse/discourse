@@ -16,7 +16,6 @@ nb_NO:
   loading: "Laster"
   powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript på'
   log_in: "Logg inn"
-  purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
   errors: &errors
@@ -98,7 +97,6 @@ nb_NO:
   user_is_suspended: "Utviste brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet har blitt lukket eller slettet samtidig som du har sett på det?"
   just_posted_that: "er for likt det du nylig postet."
-  has_already_been_used: "har allerede blitt brukt"
   invalid_characters: "inneholder ugyldige tegn"
   is_invalid: "er ugyldig; prøv å være litt mer beskrivende"
   next_page: "neste side →"
@@ -123,7 +121,6 @@ nb_NO:
     delete_reason: "Slettet via køen for innleggmoderering"
   groups:
     errors:
-      can_not_modify_automatic: "Du kan ikke gjøre endringer på en automatisk gruppe"
       member_already_exist: "'%{username}' er allerede medlem av denne gruppen."
     default_names:
       everyone: "alle"
@@ -369,7 +366,6 @@ nb_NO:
     continue_button: "Fortsett til %{site_name}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en epost når kontoen din er godkjent!"
-    missing_session: "Vi kan ikke se hvorvidt kontoen din ble opprettet. Venligst påse at du har cookies aktivert."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -522,23 +518,17 @@ nb_NO:
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
-      yaxis: "Anonymt API-kall"
     page_view_logged_in_reqs:
       title: "Innlogget"
       xaxis: "Dag"
-      yaxis: "Innlogget API-kall"
     page_view_crawler_reqs:
       title: "Web crawlere"
       xaxis: "Dag"
-      yaxis: "Web crawler API-kall"
     page_view_total_reqs:
       title: "Totalt"
       xaxis: "Dag"
-      yaxis: "Totale API-kall"
     page_view_logged_in_mobile_reqs:
-      title: "Innlogget API-forespørsler"
       xaxis: "Dag"
-      yaxis: "Innlogget API-forespørsler fra mobil"
     page_view_anon_mobile_reqs:
       xaxis: "Dag"
     http_background_reqs:

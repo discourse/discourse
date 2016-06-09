@@ -444,7 +444,6 @@ da:
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
       suspended_reason: "Begrundelse: "
       github_profile: "Github"
-      mailing_list_mode: "Send mig en email for hvert nye indlæg (med mindre, at jeg muter emnet eller kategorien)"
       watched_categories: "Overvåget"
       watched_categories_instructions: "Du overvåger automatisk alle emner i disse kategorier. Du vil få en notifikation ved alle nye indlæg og emner, og antallet af ulæste og nye indlæg vil også stå ved siden af emnet."
       tracked_categories: "Fulgt"
@@ -488,7 +487,6 @@ da:
         title: "Skift “Om mig”"
       change_username:
         title: "Skift brugernavn"
-        confirm: "Der kan være konsekvenser ved at skifte brugernavn. Er du sikker på at du vil skifte?"
         taken: "Beklager, det brugernavn er optaget."
         error: "Der skete en fejl i forbindelse med skift af dit brugernavn."
         invalid: "Det brugernavn er ugyldigt. Det må kun bestå af bogstaver og tal."
@@ -572,14 +570,12 @@ da:
         always: "altid"
         never: "aldrig"
       email_digests:
-        title: "Når jeg ikke besøger her, send mig en email med nyheder."
         every_30_minutes: "hvert 30. minut"
         every_hour: "hver time"
         daily: "dagligt"
         every_three_days: "hver tredje dag"
         weekly: "ugenligt"
         every_two_weeks: "hver anden uge"
-      include_tl0_in_digests: "Inkluder indlæg fra nye brugere i opsummerings-mails"
       email_in_reply_to: "Inkluder et uddrag af svaret indlæg i emails"
       email_direct: "Send mig en email når nogen citerer mig, svarer på mit indlæg, nævner mit @brugernavn eller inviterer mig til et emne"
       email_private_messages: "Send mig en email når nogen sender mig en besked"
@@ -977,7 +973,6 @@ da:
       post_format: "#{{post_number}} af {{username}}"
       context:
         user: "Søg i indlæg fra @{{username}}"
-        category: "Søg i kategorien \"{{category}}\""
         topic: "Søg i dette emne"
         private_messages: "Søg i beskeder"
     hamburger_menu: "gå til en anden emneliste eller kategori"

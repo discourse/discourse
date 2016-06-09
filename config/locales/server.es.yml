@@ -158,7 +158,6 @@ es:
   user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
   topic_not_found: "Algo ha salido mal. ¿Tal vez este tema ha sido cerrado o eliminado mientras estabas lo estabas mirando?"
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
-  has_already_been_used: "ya ha sido utilizado"
   invalid_characters: "contiene caracteres no válidos"
   is_invalid: "no es válido, intenta ser un poco más descriptivo"
   next_page: "siguiente página →"
@@ -260,6 +259,8 @@ es:
     attributes:
       category:
         name: "Nombre de la categoría"
+      topic:
+        title: 'Título'
       post:
         raw: "Body"
       user_profile:
@@ -780,7 +781,6 @@ es:
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
     summary_percent_filter: "Cuando un usuario hace clic en 'Resumen de este tema', se muestra el n % mejores posts"
     summary_max_results: "Máximo de posts devueltos en \"Resumen de este  tema\""
-    enable_private_messages: "Permitir a los usuarios de nivel 1 (configurable vía nivel de confianza para enviar mensajes) crear y responder mensajes"
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     long_polling_base_url: "URL base usada para el 'long polling' (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al 'pull' de origen) ejemplo: http://origin.site.com"
     long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos enviados (solamente usuarios con sesión iniciada)."
@@ -835,7 +835,6 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
-    forgot_password_strict: "No informar de la existencia de la cuenta de un usuario cuando ellos use la opción de olvidar contraseña."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
@@ -1021,7 +1020,6 @@ es:
     short_email_length: "e-mail corto longitud en Bytes"
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de emails"
     unsubscribe_via_email: "Permitir a los usuarios darse de baja de los emails respondiendo con el texto 'unsubscribe' en el asunto o el cuerpo del mensaje"
-    unsubscribe_via_email_footer: "Adjuntar un enlace para darse de baja al pie de los emails enviados"
     delete_email_logs_after_days: "Eliminar logs de email después de (N) días. Si es 0 permanecerán de forma indefinida."
     max_emails_per_day_per_user: "Máximo número de emails a enviar a los usuarios por día. Establece 0 para desactivar el límite"
     enable_staged_users: "Crear cuentas provisionales automáticamente al procesar emails entrantes."
@@ -1529,10 +1527,6 @@ es:
     download_remote_images_disabled:
       subject_template: "Inhabilitar la descarga de imágenes remotas"
       text_body_template: "La opción `download_remote_images_to_local` ha sido inhabilitada porque se ha llegado al límite de espacio en disco configurado en `download_remote_images_threshold`."
-  unsubscribe_link: |
-    Para no recibir más notificaciones de este tema en particular, [haz clic aquí](%{unsubscribe_url}). Para darte de baja de estos emails, cambia tus [preferencias](%{user_preferences_url})
-  unsubscribe_via_email_link: |
-    o, [haz clic aquí](mailto:reply@%{hostname}?subject=unsubscribe) para darte de baja por email.
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1541,11 +1535,6 @@ es:
     unsubscribe:
       title: "Darse de baja"
       description: "¿No estás interesado en recibir estos emails? ¡No hay problema! Haz clic abajo para darte de baja de forma instantánea:"
-    reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este email para comentar"
-    reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este email para comentar"
-    only_reply_by_email: "Responde a este email para comentar"
-    visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para comentar"
-    visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para comentar"
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"

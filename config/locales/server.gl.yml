@@ -81,7 +81,6 @@ gl:
       one: "Unha resposta"
       other: "%{count} respostas"
   no_mentions_allowed: "Sentímolo pero non podes mencionar outros usuarios"
-  has_already_been_used: "xa está en uso"
   invalid_characters: "contén caracteres incorrectos"
   next_page: "páxina seguinte →"
   prev_page: "← páxina anterior"
@@ -351,18 +350,15 @@ gl:
     page_view_anon_reqs:
       title: "Anónimo"
       xaxis: "Día"
-      yaxis: "Peticións API anónimas"
     page_view_logged_in_reqs:
       title: "Sesión iniciada"
       xaxis: "Día"
     page_view_crawler_reqs:
       title: "Extractores web"
       xaxis: "Día"
-      yaxis: "Peticións API dos extractores web"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Día"
-      yaxis: "Total de peticións API"
     page_view_logged_in_mobile_reqs:
       xaxis: "Día"
     page_view_anon_mobile_reqs:

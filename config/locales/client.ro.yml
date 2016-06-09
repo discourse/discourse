@@ -322,8 +322,8 @@ ro:
       title: "Utilizatori"
       likes_given: "Oferite"
       likes_received: "Primite"
-      topics_entered: "Subiecte"
-      topics_entered_long: "Vizitate"
+      topics_entered: "Văzute"
+      topics_entered_long: "Subiecte văzute"
       time_read: "Timp citit"
       topic_count: "Subiecte"
       topic_count_long: "Subiecte create"
@@ -361,6 +361,8 @@ ro:
         mods_and_admins: "Doar moderatorii și adminii"
         members_mods_and_admins: "Doar membri grupului, moderatorii și adminii"
         everyone: "Toată lumea"
+      trust_levels:
+        none: "Nimic"
       notifications:
         watching:
           title: "Urmărit"
@@ -472,7 +474,13 @@ ro:
       suspended_notice: "Acest user este suspendat păna la {{date}}."
       suspended_reason: "Motiv: "
       github_profile: "Github"
-      mailing_list_mode: "Trimite un email pentru fiecare postare (dacă nu am setat modul tăcut pentru discuţie sau categorie)"
+      email_activity_summary: "Sumarul activității"
+      mailing_list_mode:
+        label: " "
+        daily: "Trimite actualizări zilnice"
+        individual: "Trimite un email pentru fiecare postare nouă"
+        many_per_day: "Trimite-mi un email pentru fiecare postare nouă (aproximativ {{dailyEmailEstimate}}/zi)"
+        few_per_day: "Trimite-mi un email pentru fiecare postare nouă (mai puțin de 2/zi)"
       watched_categories: "Văzut"
       tracked_categories: "Tracked"
       muted_categories: "Muted"
@@ -512,7 +520,6 @@ ro:
         title: "Schimbă la Profil"
       change_username:
         title: "Schimbă numele utilizatorului"
-        confirm: "Dacă schimbi numele utilizatorului, toate citatele din posturile precedente inclusiv @mențiunile nu vor mai funcționa. Ești absolut sigur?"
         taken: "Acest nume de utilizator este deja folosit."
         error: "S-a intâmpinat o eroare pe parcursul schimbării numelui de utilizator."
         invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
@@ -587,7 +594,6 @@ ro:
         always: "întotdeauna"
         never: "niciodată"
       email_digests:
-        title: "Cand nu vizitez site-ul, trimite-mi un email cu rezumatul noutăților:"
         every_30_minutes: "La fiecare 30 de minute "
         daily: "zilnic"
         every_three_days: "la fiecare trei zile"
@@ -660,6 +666,21 @@ ro:
       summary:
         title: "Sumar"
         stats: "Statistici"
+        time_read: "timp de citit"
+        top_replies: "Top răspunsuri"
+        no_replies: "Nici un răspuns încă."
+        more_replies: "Mai multe răspunsuri"
+        top_topics: "Top discuții"
+        no_topics: "Nici o discuție încă."
+        more_topics: "Mai multe discuții"
+        top_badges: "Top insigne"
+        no_badges: "Nici o insignă încă"
+        more_badges: "Mai multe insigne"
+        top_links: "Top link-uri"
+        no_links: "Nici un link încă."
+        most_liked_by: "Cele mai apreciate de către"
+        most_liked_users: "Cele mai apreciate"
+        most_replied_to_users: "Cele mai răspune pentru"
       associated_accounts: "Conectări"
       ip_address:
         title: "Ultima adresă de IP"
@@ -814,6 +835,7 @@ ro:
       emoji: "Emoji :)"
       more_emoji: "mai multe..."
       options: "Optiuni"
+      whisper: "soapta"
       add_warning: "Această este o avertizare oficială."
       posting_not_on_topic: "Cărei discuții vrei să-i răspunzi?"
       saving_draft_tip: "salvează..."
@@ -858,6 +880,7 @@ ro:
       link_description: "adaugă aici descrierea adresei hyper"
       link_dialog_title: "Introdu adresă hyper"
       link_optional_text: "titlu opțional"
+      link_url_placeholder: "http://example.com"
       quote_title: "Citat-bloc"
       quote_text: "Citat-bloc"
       code_title: "Text preformatat"
@@ -913,6 +936,8 @@ ro:
         quoted: "Citat de"
         replied: "Raspuns"
         posted: "Postat de"
+        private_message: "Mesaj privat de la"
+        linked: "Link spre postarea ta"
       popup:
         mentioned: '{{username}} te-a menţionat în "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} te-a menţionat în "{{topic}}" - {{site_title}}'
@@ -927,6 +952,8 @@ ro:
       from_my_computer: "din dispozitivul meu"
       from_the_web: "De pe web"
       remote_tip: "adresă către imagine http://example.com/image.jpg"
+      local_tip: "selectează imagini de pe dispozitivul tău"
+      local_tip_with_attachments: "selectează imagini sau fișiere de pe dispozitivul tău {{authorized_extensions}}"
       hint: "(puteți să trageți și să aruncați în editor pentru a le încărca)"
       uploading: "Încarcă"
       select_file: "Slectează fișier"
@@ -949,7 +976,6 @@ ro:
       post_format: "#{{post_number}} de {{username}}"
       context:
         user: "Caută postări după @{{username}}"
-        category: "Caută în categoria\"{{category}}\" "
         topic: "Caută în această discuție"
         private_messages: "Caută mesaje"
     new_item: "nou"
@@ -1538,6 +1564,12 @@ ro:
         one: "1 click"
         few: "%{count} click-uri"
         other: "%{count} click-uri"
+    post_links:
+      about: "Extinde link-urile pentru acest post"
+      title:
+        one: "Un link"
+        few: "%{count} link-uri"
+        other: "%{count} de link-uri"
     topic_statuses:
       warning:
         help: "Aceasta este o avertizare oficială."

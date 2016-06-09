@@ -430,7 +430,6 @@ bs_BA:
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
       github_profile: "Github"
-      mailing_list_mode: "Receive an email for every new post (unless you mute the topic or category)"
       watched_categories: "Watched"
       watched_categories_instructions: "Automatski ćete da pratite sve nove objave u ovom kategorijama. Bićete notifikovani o svim novim objavama i temama i broj novih objava će se pojaviti pored naziva teme."
       tracked_categories: "Tracked"
@@ -475,7 +474,6 @@ bs_BA:
         error: "Desila se greška prilikom promjene."
       change_username:
         title: "Change Username"
-        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
@@ -547,7 +545,6 @@ bs_BA:
         always: "uvijek"
         never: "nikad"
       email_digests:
-        title: "Kada ne dolazite na sajt, šaljevo vam email sa novim temama:"
         every_30_minutes: "svakih 30. min"
         every_hour: "po satu"
         daily: "dnevno"
@@ -883,7 +880,6 @@ bs_BA:
       post_format: "#{{post_number}} od {{username}}"
       context:
         user: "Traži postove od @{{username}}"
-        category: "Traži \"{{category}}\" kategoriju"
         topic: "Pretraži ovu temu"
         private_messages: "Pretraži poruke"
     new_item: "novo"

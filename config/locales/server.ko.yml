@@ -24,7 +24,6 @@ ko:
   loading: "로딩중"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "로그인"
-  purge_reason: "비활성화된 계정은 자동적으로 삭제됩니다."
   disable_remote_images_download_reason: "디스크저장공간이 부족하여 원격 이미지 다운로드 기능이 비활성화 되었습니다."
   anonymous: "익명"
   emails:
@@ -105,7 +104,6 @@ ko:
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 글 보려는 도중에 글타래가 닫혔거나 지워진 건 아닐까요?"
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
-  has_already_been_used: "이미 사용되었습니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
   is_invalid: "사용할 수 없습니다. 조금더 자세하게 적어주세요."
   next_page: "다음 페이지 →"
@@ -131,7 +129,6 @@ ko:
     delete_reason: "운영팀이 글을 지웠습니다."
   groups:
     errors:
-      can_not_modify_automatic: "자동 그룹은 수정 하실 수 없습니다."
       member_already_exist: "'%{username}'은 이미 이 그룹의 멤버입니다."
       invalid_domain: "'%{domain}'은 유효한 도메인이 아닙니다."
     default_names:
@@ -344,7 +341,6 @@ ko:
     continue_button: "%{site_name}으로 가기"
     welcome_to: "%{site_name}에 오신것을 환영합니다."
     approval_required: "이 포럼을 사용하기 위해선 운영자가 수동으로 당신의 새로운 계정을 수락해야 합니다. 계정이 수락이 되면 자동으로 이메일이 발송됩니다."
-    missing_session: "계정이 생성되었는지 확인을 못 하고 있습니다. 쿠키 설정이 켜졌는지 다시 한번 확인바랍니다."
   post_action_types:
     off_topic:
       title: '오프 글타래'
@@ -503,19 +499,15 @@ ko:
     page_view_anon_reqs:
       title: "익명"
       xaxis: "일"
-      yaxis: "익명 API 요청"
     page_view_logged_in_reqs:
       title: "로그인됨"
       xaxis: "일"
-      yaxis: "API 요청 로그인됨"
     page_view_crawler_reqs:
       title: "웹크롤러"
       xaxis: "일"
-      yaxis: "웹크롤러 API 요청"
     page_view_total_reqs:
       title: "총"
       xaxis: "일"
-      yaxis: "총 API 요청"
     page_view_logged_in_mobile_reqs:
       xaxis: "일"
     page_view_anon_mobile_reqs:
@@ -622,7 +614,6 @@ ko:
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
     email_subject: "일반 메일을 위한 제목 커스터마이징. 이곳을 참고 https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "사이트의 사이트의 전체 url((Discourse.base_url)이 http인가 아니면 https인가? 이미 HTTPS를 설정하고 동작중이 아니라면 활성화하지 마세요."
     summary_score_threshold: "요약본에 포함되기 위한 글의 최소 점수 값"
     summary_posts_required: "하나의 글타래에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 글 수"
     summary_likes_required: "하나의 글타래에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 좋아요 수"
@@ -652,7 +643,6 @@ ko:
     ga_domain_name: "Google analytics (ga.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
-    enable_escaped_fragments: "구형의 검색엔진 및 크롤러도 잘 동작하게 하기 위한 동작을 활성화. https://support.google.com/webmasters/answer/174992?hl=en 참고하세요."
     enable_noscript_support: "당신의 사이트를 검색하기 위한 noscript 태그를 이용한 일반적인 웹 크롤러를 활성화"
     allow_moderators_to_create_categories: "운영자가 새로운 카테고리를 만드는 것을 허용"
     cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다.  DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
@@ -677,7 +667,6 @@ ko:
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "가입하려면 반드시 사용해야하는 이메일 도메인 목록, 파이프 기호로 구분. 경고: 이 목록외의 도메인으로는 가입이 안됩니다!"
-    forgot_password_strict: "비밀번호 찾기에서 아이디의 존재유무를 사용자에게 알리지 않습니다."
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
     version_checks: "Dicousre Hub에 ping을 날려 버전 업데이트와 새 버전 알림을 /admin 대시보드에 보이게 합니다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
@@ -805,7 +794,6 @@ ko:
     faq_url: "FAQ주소가 있으면 전체 URL을 적어주세요."
     tos_url: "이용약관이 있으면 전체 URL을 적어주세요."
     privacy_policy_url: "개인정보 보호가 있으면 전체 URL을 적어주세요."
-    newuser_spam_host_threshold: "스팸인가 결정하는 새로운 사용자가 게시한 같은 링크 수 `newuser_spam_host_posts`"
     white_listed_spam_host_domains: "스팸 호스트 테스트로부터 제외할 도메인 리스트. 새로운 사용자는 새로운 사용자는 헤당 도메인에 대한 링크를 포함하는 글를 생성하는데 제한되지 않는다."
     staff_like_weight: "스태프가 좋아요를 눌렀을 때 부여할 가산점"
     levenshtein_distance_spammer_emails: "스패머 메일을 체크할 때, 허용할 다른 글자 개수(fuzzy match)"
@@ -1057,20 +1045,6 @@ ko:
   system_messages:
     post_hidden:
       subject_template: "포럼 신고로 인한 글 숨김"
-      text_body_template: |
-        안녕하세요,
-
-        %{site_name}에서 내 글이 숨겨진 것을 알리기 위해 보내진 자동 메세입니다..
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        이 글이 가려지기 전에 커뮤니티 여러 사용자가 신고를 했습니다. 사용자들의 피드백을 반영해 글을 수정해주세요. **%{edit_delay}분 뒤에 글을 수정할 수 있으며 자동으로 숨김 해제됩니다..**
-
-        하지만 글이 한번 더 커뮤니티에서 숨김이 된 경우 스태프가 풀어주기 전까지 숨김해제가 안되며 계정 정지 등의 조치가 취해질 수 있습니다.
-
-        조언을 얻기 위해, [커뮤니티 가이드라인](%{base_url}/guidelines)을 참고해 주세요.
     usage_tips:
       text_body_template: |
         시작하기 위한 몇 가지 간단한 팁을 알려드릴께요:
@@ -1270,30 +1244,10 @@ ko:
       subject_template: "[%{site_name}] 이메일 문제 -- 자동 생성된 답글"
     email_error_notification:
       subject_template: "[%{site_name}] 이메일 문제 -- POP 인증 오류"
-    too_many_spam_flags:
-      subject_template: "새로운 계정은 블락되었습니다."
-      text_body_template: |
-        안녕하세요
-
-        %{site_name}에서 글이 신고가 접수되어 자동으로 숨겨져 이 알림 메세지를 보냅니다.
-
-        만일의 사태를 대비하기 위해 이 계정은 새 답글이나 글타래를 다는 것을 막았으며 스태프가 확인 후 풀어드립니다.
-
-        추가적인 조언은 [커뮤니티 가이드라인](%{base_url}/guidelines)에서 확인하실 수 있습니다.
-    blocked_by_staff:
-      subject_template: "계정이 블락"
     user_automatically_blocked:
       subject_template: "%{username} 신규가입자가 커뮤니티 신고로 블락됨"
     spam_post_blocked:
       subject_template: "%{username} 신규가입자가 연속 링크로 블락됨"
-    unblocked:
-      subject_template: "계정 블락 해제"
-      text_body_template: |
-        안녕하세요.
-
-        이 메세지는 당신의 계정이 <b>블락 해제</b> 되었다는 것을 알리기 위해 %{site_name}에서 자동으로 생성되었습니다.
-
-        당신은 이제 새로운 글타래과 답글을 게시할 수 있습니다.
     pending_users_reminder:
       subject_template:
         other: "%{count}명의 새로운 사용자가 가입 승인 대기중 입니다."
@@ -1419,9 +1373,6 @@ ko:
     images:
       too_large: "죄송합니다, 업로드하려는 이미지가 너무 큽니다. (최대 크기 %{max_size_kb}KB). 크기를 줄여서 다시 시도해보세요."
       size_not_found: "죄송합니다. 이미지 사이즈가 잘못 되었습니다. 혹시 깨진 이미지가 아닌가요?"
-  flag_reason:
-    sockpuppet: "새로운 사용자가 글타래를 만들었습니다. 그리고 같은 IP를 사용하는 새 사용자가 답글을 달았습니다. 사이트 설정의 flag_sockpuppets를 확인하세요."
-    spam_hosts: "이 신규 가입자가 같은 주소로 여러번 게시하려고 했습니다. 사이트 설정의 newuser_spam_host_threshold 항목을 참고하세요."
   email_log:
     no_user: "ID %{user_id} 인 사용자를 찾을 수 없습니다"
     anonymous_user: "유저가 익명임"

@@ -21,7 +21,6 @@ fa_IR:
   loading: "بارگذاری..."
   powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://discours.ir/t/1-0/33"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
   log_in: "ورود"
-  purge_reason: "بطور خودکار پاک شد بدلیل استفاده نشدن٬ حساب کاربری غیرفعال"
   disable_remote_images_download_reason: "عکس های ریموت دانلود شده غیرفعال شدند زیرا آنجا فضای کافی در دیسک وجود نداشت"
   anonymous: "ناشناس"
   errors: &errors
@@ -115,7 +114,6 @@ fa_IR:
   user_is_suspended: "کاربر تعلیق شده نمی‌تواند نوشته ای بگذارد."
   topic_not_found: "یک مشکلی وجود دارد.  شاید این جستار بسته شده یا پاک شده همزمان که داشتی نگاهش می کردی ؟"
   just_posted_that: "به آن‌چه که به‌تازگی فرستادید بسیار نزدیک است"
-  has_already_been_used: "پیش‌تر استفاده شده است"
   invalid_characters: "نویسه‌های نامعتبر در بر دارد."
   is_invalid: "نامعتبر است. تلاش کنید که کمی بیش‌ترتوضیح بگذارید."
   next_page: "صفحه بعد ←"
@@ -134,14 +132,12 @@ fa_IR:
     latest: "آخرین ارسال ها"
     hot: "جستارهای داغ"
     posts: "آخرین نوشته‌ها"
-    tag: "موضوعات برچسب خورد"
   too_late_to_edit: "ارسالی مورد نظر مربوط به زمان بسیار گذشته می باشد. امکان ویرایش و حذف آن وجود ندارد."
   excerpt_image: "تصویر"
   queue:
     delete_reason: "پاک شد از طریق پست صف میانه "
   groups:
     errors:
-      can_not_modify_automatic: "شما امکان تغییر یک گروه خودکار را ندارید."
       member_already_exist: "%{username}' در حال حاضر عضو این گروه است."
       invalid_domain: "'%{domain}' یک دامنه معتبر نیست."
     default_names:
@@ -370,7 +366,6 @@ fa_IR:
     continue_button: "برو به %{site_name}"
     welcome_to: "به %{site_name} خوش آمدید!"
     approval_required: "مدیر باید حساب کاربری را بصورت دستی تایید کند برای دسترسی به این انجمن. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
-    missing_session: "ما نمی‌توانیم تشخیص دهیم که آیا حساب شما ایجاد شده است یا خیر، لطفا از فعال بودن کوکی‌ها اطمینان حاصل کنید."
   post_action_types:
     off_topic:
       title: 'جستار های قدیمی'
@@ -531,24 +526,18 @@ fa_IR:
     page_view_anon_reqs:
       title: "ناشناس"
       xaxis: "روز"
-      yaxis: "درخواست های ناشناس API"
     page_view_logged_in_reqs:
       title: "وارد شده در"
       xaxis: "روز"
-      yaxis: "وارد شده در درخواست های API"
     page_view_crawler_reqs:
       title: "خزنده وب"
       xaxis: "روز"
-      yaxis: "API درخواست وب زنجیره ای "
     page_view_total_reqs:
       title: "کل"
       xaxis: "روز"
-      yaxis: "تمام درخواست API"
     page_view_logged_in_mobile_reqs:
-      title: "وارد شده در درخواست های API"
       xaxis: "روز"
     page_view_anon_mobile_reqs:
-      title: "درخواست های ناشناس API"
       xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
@@ -652,7 +641,6 @@ fa_IR:
     notification_email: "از : ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM  داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "لیست  pipe-delimited از هدر ایمیل سفارشی "
     email_subject: "قالب موضوع قابل تنظیم برای ایمیل های استاندارد. این را ببین https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "url  برای سایت  (Discourse.base_url)  باید  http یا https ؟ این را بکار نبر مگر اینکه HTTPS از قبل نصب شده و کار می کند!"
     summary_score_threshold: "حداقل امتیاز برای یک نوشته که بتواند شامل \" خلاصه این جستار\" شود"
     summary_posts_required: "حداقل نوشته ها در این جستار قبل از اینکه \" خلاصه این جستار\" فعال شود"
     summary_likes_required: "حداقل پسندها در این جستار قبل از اینکه \" خلاصه این جستار\" فعال شود"
@@ -681,7 +669,6 @@ fa_IR:
     ga_domain_name: "Google analytics (ga.js) اسم دامنه٬ eg: mysite.com; این را ببین http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) کد پیگری کد٬ UA-12345678-9; این را ببین http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) اسم دامنه٬‌ eg: mysite.com; این را ببین  http://google.com/analytics"
-    enable_escaped_fragments: "عقب نشینی به Google's Ajax-Crawling API اگر webcrawler  شناسایی نشد. این را ببین https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "webcrawler  موتور جستجوی  استاندارد را فعال کناز طریق تگ noscript"
     allow_moderators_to_create_categories: "اجازه دادن به مدیران برای ساخت دسته‌بندی‌های جدید"
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS  env باید متغیر باشد برای تنظیم به کارگیری CORS. "
@@ -706,7 +693,6 @@ fa_IR:
     allow_index_in_robots_txt: "مشخص کردن در robots.txt که به این سایت اجازه می دهد به نمایه شدن برای موتورهای جستجوی وب."
     email_domains_blacklist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت نام کنند. برای مثال:  mailinator.com|trashmail.net"
     email_domains_whitelist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه های ایمیلی به غیر از آنهایی که در لیست هستند اجازه ندارند. "
-    forgot_password_strict: "به کاربران حساب های کاربری موجود اطلاع نده وقتی آنها از رمز عبور فراموش شده محاوره ای استفاده می کنند. "
     log_out_strict: "وقتی از سیستم خارج می شود٬ کاربر را از تمام جلسات بر روی تمام دستگاه ها خارج کن "
     version_checks: "Discourse Hub را پینگ کن برای  نسخه بروزرسانی و پیام نسخه جدید را صفحه آمار ادمین نشان بده."
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید  Discourse موجود است. "
@@ -832,7 +818,6 @@ fa_IR:
     faq_url: "اگر هاستی برای پرسش و پاسخ در جای دیگری برای استفاده داری٬ URL را اینجا ارائه کن. "
     tos_url: "اگر هاست شرایط و ضوابط استفاده از سرویس برای استفاده در جای دیگری داری٬ URL را اینجا ارائه کن. "
     privacy_policy_url: "اگر هاست سند حفظ حریم خصوصی  برای استفاده در جای دیگری داری٬ URL را اینجا ارائه کن. "
-    newuser_spam_host_threshold: "چندبار کاربر جدید می تواند پیوندی را در یک فضا پست کند قبل از اینکه هرزنامه شناخته شوند. "
     white_listed_spam_host_domains: "لیست دامنه ها محروم از هرزنامه ی تست میزبان.  هرگز از ساخت پست جدید با پیوند هایی از این دامنه ها محدود نمی شوند. "
     staff_like_weight: "چقدر عوامل بیشتر تا به مدیران پسند داده بشود."
     levenshtein_distance_spammer_emails: "هنگامی که تطبیق ایمیل هرزنامه باشد٬ تعداد کاراکترهای متفاوت  که هنوز هم  به یک تطبق مبهم اجازه خواهد داد."
@@ -914,10 +899,6 @@ fa_IR:
     emoji_set: "می‌خواهید ایموجی شما چطور باشد؟"
     enforce_square_emoji: "تحمیل نسبت ابعاد مربع به تمام شکلک ها emojis . "
     approve_unless_trust_level: "نوشته ها برای کاربران پایین ت از این سطح اعتماد نیاز به تایید دارد. "
-    tagging_enabled: "کاربران اجازه انتخاب برچسب برای موضوعات داشته باشند?"
-    min_trust_to_create_tag: "حداقل سطح اعتماد مورد نیاز برای انتخاب برچسب؟."
-    max_tags_per_topic: "حداکثر تعداد برچسب انتخابی برای موضوع."
-    max_tag_length: "حداقل کراکتر یک نوشته برای برچسب انتخابی."
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام کاربری وجود ندارد."
@@ -1064,20 +1045,6 @@ fa_IR:
   system_messages:
     post_hidden:
       subject_template: "پست مخفی شده بدلیل پرچم گزاری انجمن "
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your post was hidden.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
-
-        However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
-
-        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     welcome_user:
       subject_template: "به %{site_name} خوش آمدید!"
       text_body_template: "ممنون برای عضویت%{site_name},٬ و خوش آمدید \n\n\n%{new_user_tips}\n\n\nما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines). \n\n\nاز بودنتان در انجمن لذت ببرید!\n\n\n(اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید.)\n"
@@ -1140,18 +1107,10 @@ fa_IR:
       subject_template: "[%{site_name}] مشکل ایمیل  -- پاسخ خودکار"
     email_error_notification:
       subject_template: "[%{site_name}] مشکل ایمیل  -- ایراد تصدیق POP "
-    too_many_spam_flags:
-      subject_template: "حساب جدید کاربری انسداد شد "
-      text_body_template: "سلام \n\nاین یک پیغام خوکار است از  %{site_name}  برای تایید اینکه نوشته های شما بطور خودکار مخفی شده اند زیرا آنها توسط انجمن پرچم گزاری شده اند. \n\n\nبه عنوان یک اقدام احتیاطی٬ حساب کاربری جدید شما مسدود شده است از ساختن پاسخ های جدید یا جستارهای جدید تا قبل از اینکه یک مدیران حساب کاربری شما را بررسی کند.\n\n\nبرای راهنمایی بیشتر به[ دستور عمل های انجمن]  مراجعه کنید. (%{base_url}/guidelines).\n"
-    blocked_by_staff:
-      subject_template: "حساب کاربری مسدود شد"
     user_automatically_blocked:
       subject_template: "کاربر جدید%{username}  مسدود شد بخاطر پرچم های انجمن"
     spam_post_blocked:
       subject_template: "کاربر جدید%{username} نوشته مسدود شده است بدلیل پیوند های تکراری"
-    unblocked:
-      subject_template: "حساب کاربری رفع انسداد شد "
-      text_body_template: "سلام \n\nاین یک پیام خودکار هست از طرف  %{site_name} برای تایید باز شدن حساب کاربری شما بعد از بررسی مدیران. \n\n\nشما می توانید دوباره پاسخ ها و جستارهای جدید را بوجود بیاورید.\n"
     pending_users_reminder:
       subject_template:
         other: "%{count} کاربران منتظر تایید"
@@ -1243,9 +1202,6 @@ fa_IR:
     images:
       too_large: "با عرض پوزش٬ عکسی را که تلاش برای بارگزاری آن دارید بسیار بزرگ است ( حداکثر اندازه %{max_size_kb}KB ) لطفا آن را تغییر اندازه دهید و دوباره امتحان کنید. "
       size_not_found: "با عرض پوزش٬ ولی ما نتوانستیم اندازه عکس را مشخص کنیم. شاید عکس شما خراب است. "
-  flag_reason:
-    sockpuppet: "یک کاربر جدید یک جستار جدید ساخته٬ و کاربر جدید دیگری با  همان آدرس  IP پاسخ داده. نگاه کن به گزارش٬ sockpuppets  تنظیمات سایت "
-    spam_hosts: "این کاربر جدید چند نوشته جدید بوجود آورده با پیوندهایی به همان  دامنه. کارابران جدید را ببین _اسپم_میزبان_بخش تنظیمات سایت"
   email_log:
     no_user: "کاربری با این ID پیدا نمی شود%{user_id}"
     anonymous_user: "کاربر ناشناس است"
@@ -1296,4 +1252,3 @@ fa_IR:
   activemodel:
     errors:
       <<: *errors
-  rss_by_tag: "موضوعات برچسب خورد %{tag}"

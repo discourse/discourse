@@ -10,14 +10,24 @@ ja:
     short_date_no_year: "MMM D"
     short_date: "YYYY MMM D"
     long_date: "YYYY MMMM D h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%Y-%d-%m"
+      short_no_year: "%B %-d"
   date:
     month_names: [null, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    <<: *datetime_formats
+  time:
+    am: "午前"
+    pm: "午後"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
   loading: "読み込み中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "ログイン"
+  purge_reason: "放棄されていたため自動的に削除、アカウントを停止しました。"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   anonymous: "匿名"
   emails:
@@ -42,8 +52,8 @@ ja:
       greater_than_or_equal_to: は%{count}以上の値にしてください
       has_already_been_used: "は既に使用されています"
       inclusion: は一覧にありません
-      invalid: は不正な値です
-      is_invalid: "は不正です。もう少し説明を追加してください"
+      invalid: は正しくありません
+      is_invalid: "に問題があります。長さなど、不備が無いか確認してください。"
       less_than: は%{count}より小さい値にしてください
       less_than_or_equal_to: は%{count}以下の値にしてください
       not_a_number: は数値で入力してください
@@ -66,6 +76,8 @@ ja:
         other: '%{model} の保存中に%{count} 個のエラーが発生しました'
     embed:
       load_from_remote: "投稿の読み込みに失敗しました。"
+    site_settings:
+      min_username_length_range: "最小値を最大値より上にすることはできません。"
   bulk_invite:
     file_should_be_csv: "アップロードするファイルは、csv または txt 形式である必要があります。"
   backup:
@@ -76,11 +88,13 @@ ja:
   not_found: "リクエストされたURL、リソースは見つかりませんでした"
   invalid_access: "リクエストしたリソースの閲覧が許可されていません"
   read_only_mode_enabled: "このサイトは閲覧専用状態です。変更などの操作は無効になっています。"
+  reading_time: "閲覧時間"
+  likes: "いいね！"
   too_many_replies:
     other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
   embed:
-    start_discussion: "議論の開始"
-    continue: "議論を続ける"
+    start_discussion: "会話をする"
+    continue: "会話を続ける"
     more_replies:
       other: "%{count} 以上の返信"
     loading: "会話を読み込んでいます…"
@@ -92,12 +106,11 @@ ja:
   no_mentions_allowed: "あなたは他のユーザへメンションを送ることができません。"
   no_images_allowed: "新規ユーザは投稿に画像を付ける事はできません。"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
-  user_is_suspended: "アカウントが凍結中のユーザーは投稿ができません。"
+  user_is_suspended: "凍結中のユーザは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
-  just_posted_that: "はあなたの最近の投稿と内容がほぼ一緒です"
-  has_already_been_used: "は既に使用中です"
-  invalid_characters: "は不正なキャラクターを含んでいます"
-  is_invalid: "は不正です。もう少し説明を追加してください"
+  just_posted_that: "は最近の投稿と内容がほぼ一緒です"
+  invalid_characters: "は不正な文字を含んでいます"
+  is_invalid: "に問題があります。長さなど、不備が無いか確認してください。"
   next_page: "次のページ →"
   prev_page: "← 前のページ"
   page_num: "%{num} ページ"
@@ -144,14 +157,15 @@ ja:
 
       - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このパネルは最初から %{education_posts_text} 回目までの投稿のときにだけ表示されます。
     new-reply: "%{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!** \n- あなたの回答は議論に何らかの形で貢献していますか?\n - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。\n - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。 \n詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。\n"
-    sequential_replies: |
+    sequential_replies: |+
       ### 一度に複数の投稿に返信する
 
       トピックにたくさん返信する代わりに、以前の投稿への @name メンションや引用などを活用して返信を一つの投稿にまとめましょう。
 
-      テキストをハイライトし、表示された<b>引用返信</b>ボタンを選択することで、前の返信を引用を追加し、編集することができます。
+      文章を選択し、<b>引用して返信</b>ボタンをクリックすることで、文章を引用して編集することができます。
 
-      細かく返信するより、しっかりとした内容で少ない返信をした方が見やすさも話しやすさも良くなります。
+      こまごまと何度も返信するより、まとまって返信をすることで、より見やすく、より話しやすくなります。
+
     dominating_topic: |
       ### 他のユーザも議論に参加させてあげましょう
 
@@ -325,6 +339,7 @@ ja:
       description: 'この投稿は、誹謗中傷、恫喝、名誉毀損、わいせつ、犯罪行為など他人を不快にさせる内容を含んでいる。'
       long_form: '不適切として通報する'
     notify_user:
+      title: '@{{username}}へメッセージを送る'
       long_form: 'メッセージが送られたユーザ'
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
@@ -391,10 +406,13 @@ ja:
       title: "新規ユーザ"
       xaxis: "日"
       yaxis: "新規ユーザ数"
+    profile_views:
+      xaxis: "日"
+      yaxis: "ユーザプロフィールの閲覧数"
     topics:
       title: "トピック"
       xaxis: "日"
-      yaxis: "新規トピック数"
+      yaxis: "新しいトピックの数"
     posts:
       title: "投稿"
       xaxis: "日"
@@ -461,27 +479,27 @@ ja:
     page_view_anon_reqs:
       title: "匿名ユーザ"
       xaxis: "日"
-      yaxis: "Anonymous API Requests"
+      yaxis: "匿名ユーザからの閲覧数"
     page_view_logged_in_reqs:
       title: "ログイン"
       xaxis: "日"
-      yaxis: "Logged In API Requests"
+      yaxis: "ログインユーザからの閲覧数"
     page_view_crawler_reqs:
       title: "クローラー"
       xaxis: "日"
-      yaxis: "クローラーAPI Requests"
+      yaxis: "ウェブクローラからの閲覧数"
     page_view_total_reqs:
       title: "全体"
       xaxis: "日"
-      yaxis: "Total API Requests"
+      yaxis: "合計閲覧数"
     page_view_logged_in_mobile_reqs:
-      title: "ログインAPIリクエスト"
+      title: "ログインユーザからの閲覧数"
       xaxis: "日"
-      yaxis: "モバイルログインAPIリクエスト"
+      yaxis: "モバイルでログインしているユーザからの閲覧数"
     page_view_anon_mobile_reqs:
-      title: "匿名APIリクエスト"
+      title: "匿名ユーザからの閲覧数"
       xaxis: "日"
-      yaxis: "モバイル匿名APIリクエスト"
+      yaxis: "モバイルで閲覧している匿名ユーザの閲覧数"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -567,12 +585,12 @@ ja:
     download_remote_images_to_local: "リモート画像をダウンロードしてローカル画像に変換する。破損した画像を防ぎます"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクスペースの最低残容量 (パーセント)"
     disabled_image_download_domains: "これらのドメインからは、リモート画像のダウンロードを行いません。パイプ区切りのリスト"
-    post_edit_time_limit: "作者は投稿から(N)分間、編集と削除が可能。0を設定すると無期限です"
+    post_edit_time_limit: "投稿者は投稿から(N)分間、編集と削除が可能。0を設定すると無期限です"
     edit_history_visible_to_public: "すべてのユーザに対して投稿の編集履歴を許可する。無効の場合はスタッフメンバーのみが確認できます"
-    delete_removed_posts_after: "投稿は作者が削除してから(N)時間後に削除されます。0を設定すると、すぐに削除されます"
+    delete_removed_posts_after: "投稿者は投稿を削除してから(N)時間後に削除されます。0を設定すると、すぐに削除されます"
     max_image_width: "投稿内での画像サムネイルの最大の幅"
     max_image_height: "投稿内での画像サムネイルの最大の高さ"
-    category_featured_topics: "/categories ページに表示されるカテゴリ毎のトピック数"
+    category_featured_topics: "/categories ページに表示されるカテゴリ毎のトピックの数。変更後、カテゴリページの更新におよそ15分程かかります。"
     show_subcategory_list: "カテゴリを表示する際にトピック一覧の代わりにサブカテゴリ一覧を表示"
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
     fixed_category_positions_on_create: "チェックすると、トピック作成ダイアログ上でカテゴリの順序が維持されます(fixed category positions が必要)。"
@@ -593,7 +611,6 @@ ja:
     summary_likes_required: "'トピックサマリー'が有効になるために必要な最小「いいね!」数"
     summary_percent_filter: "ユーザが'トピックサマリー'をクリックしたとき, 上位何パーセントのポストを表示するか"
     summary_max_results: "'トピックサマリー'として返却される最大ポスト数"
-    enable_private_messages: "トラストレベル1のユーザにメッセージの作成と返信を許可する(最小のトラストレベルを介して設定可能なメッセージを送信します)"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_base_url: "ロングポーリングのベースURL(CDNが動的コンテンツを配信している場合、これをoriginに指定してください) eg: http://origin.site.com"
     long_polling_interval: "ユーザに送信するデータが存在しないとき、サーバが待機する時間(ログインユーザーのみ)"
@@ -641,7 +658,6 @@ ja:
     allow_index_in_robots_txt: "サーチエンジンにインデックスを許可するようにrobots.txtを指定する"
     email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
     email_domains_whitelist: "ユーザー登録に必要なパイプ区切りのメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
-    forgot_password_strict: "パスワードリマインダダイアログで、アカウントの存在を通知しない"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     version_checks: "Discourse Hubからのアップデートを確認し、管理ページにバージョンやアップデートメッセージを表示する"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
@@ -711,6 +727,7 @@ ja:
     s3_region: "画像をアップロードする Amazon S3 のリージョン名"
     s3_cdn_url: "s3アセットに利用するCDNのURL(例: https://cdn.somewhere.com) 警告: 変更後は過去の投稿をrebakeする必要があります"
     avatar_sizes: "自動生成するアバターサイズのリスト"
+    external_system_avatars_enabled: "外部のアバターシステムサービスを使用します。"
     enable_flash_video_onebox: "onebox で、swf の埋め込みと flv(Adobe Flash) リンクを許可する。注意: セキュリティリスクになる可能性があります"
     default_invitee_trust_level: "招待したユーザのデフォルトトラストレベル(0-4)"
     default_trust_level: "新規ユーザのデフォルトトラストレベル(0-4) 警告: 変更すると深刻なスパムのリスクがあります"
@@ -724,6 +741,7 @@ ja:
     tl2_requires_likes_received: "トラストレベル2に昇格するためにもらわなければならない「いいね!」の数"
     tl2_requires_likes_given: "トラストレベル2に昇格するためにしなければならない「いいね!」の数"
     tl2_requires_topic_reply_count: "トラストレベル2に昇格するために回答しなければいけないトピックの数"
+    tl3_time_period: "トラストレベル3に必要な期間(日単位)"
     tl3_requires_topics_viewed_all_time: "トラストレベル3に昇格するために必要な、トピックを閲覧した合計"
     tl3_requires_posts_read_all_time: "トラストレベル3に昇格するために必要なユーザが閲覧したポストの合計"
     tl3_promotion_min_duration: "トラストレベル3に昇格したユーザが、トラストレベル2に降格しない日数"
@@ -743,6 +761,7 @@ ja:
     title_max_word_length: "トピックタイトルの最大文字数"
     title_min_entropy: "トピックタイトルの最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
     body_min_entropy: "ポスト本文の最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
+    allow_uppercase_posts: "タイトル/本文内で大文字のみの文章を許可する。"
     title_fancy_entities: "トピックタイトルの一般的な ASCII 文字をファンシーな HTML エンティティに変換する; SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"
     min_body_similar_length: "類似トピックのチェックに必要なポスト本文の最小長"
@@ -799,7 +818,7 @@ ja:
     email_in_min_trust: "メールでのトピック作成を許可する最低トラストレベル"
     email_prefix: "メールのタイトルに使用される[ラベル]。空白の場合、タイトルがデフォルトで使用されます"
     email_site_title: "サイトからのメールの送信者として使用されるタイトル。 空白の場合、タイトルがデフォルトで使用されます。タイトルにメールの送信者として使用できない文字列が含まれている場合、この設定を使用します"
-    minimum_topics_similar: "類似トピック表示のために存在しなければならないトピック数"
+    minimum_topics_similar: "類似トピック表示のために存在しなければならないトピックの数"
     relative_date_duration: "ポスト投稿後、ポスト投稿日が相対表示 (例: 7d)から絶対表示(例: Feb 20)に変わるまでの日数"
     delete_user_max_post_age: "最初のポストが(x)日よりも古いユーザは削除しない"
     delete_all_posts_max: "すべてのポストを削除ボタンで一度に削除可能な最大ポスト数。ユーザがここで指定した以上のポストを投稿していた場合は、一度に全ポストを削除することができません。またユーザも削除されません。"
@@ -947,7 +966,7 @@ ja:
     suspended: "%{date} までログインできません。"
     suspended_with_reason: "%{date} までアカウントが凍結されました: %{reason}"
     errors: "%{errors}"
-    not_available: "利用できません。%{suggestion} を試してみては?"
+    not_available: "それは利用できません。\"%{suggestion}\" はどうですか？"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
     omniauth_error: "あなたの アカウントの認可に失敗しました。アカウントの認可を許可したか確認してください"
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
@@ -962,7 +981,7 @@ ja:
     username:
       short: "少なくとも%{min}文字は必要です"
       long: "%{max}文字以下である必要があります"
-      characters: "は英数字のみである必要があります"
+      characters: "英数字/アンダースコア/ハイフン/ドットのみ使用できます"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
     email:
@@ -1060,7 +1079,6 @@ ja:
   system_messages:
     post_hidden:
       subject_template: "通報により、投稿が非表示になりました"
-      text_body_template: "こんにちは \n\nこれは  あなたの投稿が非表示になったことを　%{site_name}%　からのメッセージです\n\n%{base_url}%{url}\n\n%{flag_reason}\n\n複数のコミュニティメンバーによりこのポストにフラグが立てられた結果としてポストが非表示になったことを理解し、ポスト内容を修正することを検討してください。\nポスト内容の編集は %{edit_delay}後より行うことができます。編集後、非表示状態は解除されます。\n\n編集後、非表示状態は解除されます。 ただし、再度あなたのポストがコミュニティによってフラグ立てされた場合、モデレータに通知が行われます。この結果アカウントの凍結などの処置が行われる可能性もあります。\n\n詳しいガイドラインは、 [community guidelines]を参照してください (%{base_url}/guidelines).\n"
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
       text_body_template: |2
@@ -1103,10 +1121,10 @@ ja:
         %{logs}
         ```
     bulk_invite_succeeded:
-      subject_template: "一括ユーザー招待が正常に処理されました"
-      text_body_template: "一括ユーザー招待が処理され、%{sent}通の招待メールを送信しました"
+      subject_template: "ユーザの一括招待に成功しました。"
+      text_body_template: "ユーザの一括招待が処理され、%{sent}通の招待メールを送信しました"
     bulk_invite_failed:
-      subject_template: "一括ユーザー招待がエラーを含み処理されました"
+      subject_template: "ユーザの一括招待中にエラーが発生しました"
       text_body_template: |
         一括ユーザ招待が処理され、%{sent} 通の招待メールが送信され、%{failed}個のエラーが発生しました
 
@@ -1151,8 +1169,6 @@ ja:
       subject_template: "新規ユーザの%{username}が通報によってブロックされました"
     spam_post_blocked:
       subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
-    unblocked:
-      subject_template: "アカウントのブロック解除"
     pending_users_reminder:
       subject_template:
         other: "%{count} 人のユーザか承認を待っています。"
@@ -1298,35 +1314,6 @@ ja:
     title: "利用規約"
   privacy_topic:
     title: "プライバシーポリシー"
-  static:
-    search_help: |
-      <h3>マメ知識</h3>
-      <p>
-      <ul>
-      <li>検索はタイトルが優先されます。 &ndash; 迷った時はタイトルを調べてみましょう。</li>
-      <li>調べたい物特有の、他にはない言葉で調べると良いでしょう。</li>
-      <li>特定のカテゴリ、トピック、ユーザーページにて検索してみましょう。</li>
-      </ul>
-      </p>
-      <h3>オプション</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
-      </table>
-      </p>
-      <h3>サンプル</h3>
-      <p>
-      <ul>
-      <li><code>rainbows #parks</code> で、"parks"カテゴリの"rainbows"という言葉を含むトピックを検索します。</li>
-      <li><code>rainbows category:parks status:open order:latest</code> 最終投稿の日付順に並べ替え、”parks”カテゴリの"rainbows"を含むクローズ/アーカイブされていないトピックを検索します。</li>
-      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> ブックマークされている"parks and gardens"カテゴリの中で、"rainbows"という言葉を含むトピックを検索します。</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: 編集者

@@ -15,8 +15,13 @@ it:
       short: "%d-%m-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      long: "%-d %B %Y, %l:%M%P"
   date:
     month_names: [null, Gennaio, Febbraio, Marzo, Aprile, Maggio, Giugno, Luglio, Agosto, Settembre, Ottobre, Novembre, Dicembre]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
     <<: *datetime_formats
   title: "Discourse"
   topics: "Argomenti"
@@ -141,7 +146,6 @@ it:
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
-  has_already_been_used: "è già stato usato"
   invalid_characters: "contiene caratteri non validi"
   is_invalid: "non è valido; prova ad essere un po' più descrittivo"
   next_page: "pagina seguente →"
@@ -202,7 +206,7 @@ it:
 
       - Le critiche costruttive sono benvenute, ma critica le *idee* non le persone.
 
-      Per maggiori informazioni, [guarda le nostre linee guida delle community](/guidelines). Questo pannello sarà visualizzato soltanto per i primi %{education_posts_text}.
+      Per maggiori informazioni, [leggi le linee guida della nostra comunità](/guidelines). Questo pannello sarà visualizzato soltanto per i primi %{education_posts_text}.
     avatar: "### Che ne dici di un'immagine per il tuo account? \n\nHai pubblicato alcuni argomenti e risposte, ma l'immagine del tuo profilo non è speciale quanto te -- è solo una lettera. \n\nPerché non **[accedi al tuo profilo utente](%{profile_path})** e carichi un'immagine che ti rappresenta? \n\nÈ più facile seguire le discussioni e trovare persone interessanti nelle conversazioni se tutti hanno un'immagine profilo univoca!\n"
     sequential_replies: "### Considera la possibilità di rispondere a più messaggi contemporaneamente\n\nPiuttosto che inviare più risposte di seguito ad un messaggio, considera la possibilità di inserire un'unica risposta con citazioni o riferimenti @nome ai messaggi precedenti. \n\nPuoi modificare la tua precedente risposta per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Rispondi citando<b> che compare. \n\nE' più facile per chiunque leggere argomenti che hanno poche risposte più dettagliate, rispetto a molte brevi risposte individuali.\n"
     dominating_topic: |
@@ -227,6 +231,8 @@ it:
     attributes:
       category:
         name: "Nome Categoria"
+      topic:
+        title: 'Titolo'
       post:
         raw: "Contenuto"
       user_profile:
@@ -408,7 +414,6 @@ it:
     continue_button: "Procedi su %{site_name}."
     welcome_to: "Benvenuto su %{site_name}!"
     approval_required: "Un moderatore deve approvare manualmente il tuo account prima che tu possa accedere al forum. Riceverai un'email quando il tuo account sarà approvato!"
-    missing_session: "Non possiamo verificare se il tuo account è stato creato, per favore assicurati di avere abilitato i cookie."
   post_action_types:
     off_topic:
       title: 'Fuori Tema'
@@ -569,27 +574,19 @@ it:
     page_view_anon_reqs:
       title: "Anonimo"
       xaxis: "Giorno"
-      yaxis: "Richieste API Anonime"
     page_view_logged_in_reqs:
       title: "Collegato"
       xaxis: "Giorno"
-      yaxis: "Richieste API Registrate"
     page_view_crawler_reqs:
       title: "Web Crawler"
       xaxis: "Giorno"
-      yaxis: "Richieste API da Web Crawler"
     page_view_total_reqs:
       title: "Totali"
       xaxis: "Giorno"
-      yaxis: "Richieste API Totali"
     page_view_logged_in_mobile_reqs:
-      title: "Richieste API registrate"
       xaxis: "Giorno"
-      yaxis: "Richieste API da mobile registrate"
     page_view_anon_mobile_reqs:
-      title: "Richieste anonime API"
       xaxis: "Giorno"
-      yaxis: "Richieste anonime API da mobile"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -699,7 +696,6 @@ it:
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
     email_subject: "Formato personalizzabile dell'oggetto per le email standard. Vedi https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "La URL completa del sito (Discourse.base_url) deve essere http o https? NON ATTIVARE SE HTTPS NON E' GIA' CONFIGURATO E FUNZIONANTE!"
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
     summary_posts_required: "Minimo numero di messaggi in un argomento affinché venga abilitato 'Riassumi Questo Argomento' "
     summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento affinché venga abilitato 'Riassumi Questo Argomento'"
@@ -727,7 +723,6 @@ it:
     ga_domain_name: "Nome del dominio Google analytics (ga.js), esempio: miosito.com; vedi http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; vedi http://google.com/analytics"
     ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: miosito.com; vedi http://google.com/analytics"
-    enable_escaped_fragments: "Usa le Ajax-Crawling API di Google se non viene rilevato un webcrawler. Vedi https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "Abilita il supporto standard ai webcrawler dei motori di ricerca attraverso il tag noscript"
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
@@ -751,7 +746,6 @@ it:
     enable_badges: "Attiva il sistema a targhette"
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
     email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
-    forgot_password_strict: "Non informare gli utenti dell'esistenza dell'account quando richiamano la finestra per la password dimenticata."
     log_out_strict: "Quando si fa logout, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
@@ -877,7 +871,6 @@ it:
     faq_url: "Se vuoi usare un documento sulle FAQ ospitato da qualche altra parte, fornisci qui la sua URL completa."
     tos_url: "Se vuoi usare un documento dei Termini di Servizio ospitato da qualche altra parte, fornisci qui la sua URL completa."
     privacy_policy_url: "Se vuoi usare un documento sulle Politiche di Privacy ospitato da qualche altra parte, fornisci qui la sua URL completa."
-    newuser_spam_host_threshold: "Quante volte un nuovo utente può inviare un collegamento verso lo stesso host compreso nei messaggi `newuser_spam_host_posts` prima che venga considerato spam."
     white_listed_spam_host_domains: "Una lista di domini esclusi dal controllo antispam. Ai nuovi utenti non verrà mai impedito di creare messaggi con collegamenti a tali domini."
     staff_like_weight: "Peso extra attribuito ai \"mi piace\" dati dallo staff."
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
@@ -1064,7 +1057,7 @@ it:
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-      text_body_template: "Salve,\n\nquesto è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio è stato nascosto.\n\n%{base_url}%{url}\n\n%{flag_reason}\n\nVari membri della comunità hanno segnalato il messaggio prima che venisse nascosto, quindi per favore pensa come modificarlo alla luce di queste osservazioni. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente ripubblicato.** \n\nTuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account.\n\nPer ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).\n"
+      text_body_template: "Salve,\n\nquesto è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio è stato nascosto. \n\n%{base_url}%{url} \n\n%{flag_reason} \n\nVari membri della comunità hanno segnalato il messaggio prima che venisse nascosto, quindi per favore pensa come modificarlo alla luce di queste osservazioni. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente ripubblicato.** \n\nTuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account. \n\nPer ulteriori informazioni, puoi far riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).\n"
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: "Grazie per esserti unito a %{site_name}, e benvenuto!\n\n%{new_user_tips} \n\nNoi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre. Buona permanenza!\n\n(Se desideri comunicare con [i membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.)\n"
@@ -1123,22 +1116,11 @@ it:
     email_error_notification:
       subject_template: "[%{site_name}] Problema relativo all'email -- Errore di autenticazione POP"
     too_many_spam_flags:
-      subject_template: "Nuovo account bloccato"
-      text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
-    blocked_by_staff:
-      subject_template: "Account bloccato"
+      text_body_template: "Salve, \n\nquesto è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati temporaneamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. Ci scusiamo per il disagio.\n\nPer ulteriori informazioni, ti rimandiamo alle [linee guida della comunità](%{base_url}/guidelines).\n"
     user_automatically_blocked:
       subject_template: "Nuovo utente %{username} bloccato a causa delle segnalazioni"
     spam_post_blocked:
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
-    unblocked:
-      subject_template: "Account sbloccato"
-      text_body_template: |
-        Ciao,
-
-        questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato sbloccato a seguito di revisione da parte dello staff.
-
-        Ora puoi nuovamente creare argomenti e risposte.
     pending_users_reminder:
       subject_template:
         one: "1 utente in attesa di approvazione"
@@ -1246,9 +1228,6 @@ it:
     images:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. E' forse danneggiata?"
-  flag_reason:
-    sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto con lo stesso indirizzo IP. Controlla le impostazioni di flag_sockpuppets."
-    spam_hosts: "Questo nuovo utente ha tentato di creare più messaggi con collegamenti allo stesso dominio. Guarda l'impostazione newuser_spam_host_threeshold."
   email_log:
     no_user: "Non trovo l'utente con l'id %{user_id}"
     anonymous_user: "L'utente è anonimo"
@@ -1282,8 +1261,19 @@ it:
   privacy_topic:
     title: "Politica della Privacy"
   badges:
+    member:
+      name: Membro
+    regular:
+      name: Assiduo
+    leader:
+      name: Veterano
     welcome:
+      name: Benvenuto
       description: Hai ricevuto un Mi piace
+    autobiographer:
+      name: Autobiografo
+    anniversary:
+      name: Compleanno
     great_topic:
       description: Hai ricevuto 50 Mi piace su 1 argomento
     first_like:
@@ -1314,8 +1304,6 @@ it:
     title: "Etichette"
     staff_tag_remove_disallowed: "L'etichetta \"%{tag}\" può essere cancellata soltanto dallo staff."
   rss_by_tag: "Argomenti etichettati %{tag}"
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

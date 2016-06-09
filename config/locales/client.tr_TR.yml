@@ -420,7 +420,6 @@ tr_TR:
       suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
       suspended_reason: "Neden:"
       github_profile: "Github"
-      mailing_list_mode: "(Konuyu veya kategoriyi susturmadığım takdirde) her yeni gönderi için bana bir e-posta yolla"
       watched_categories: "Gözlendi"
       watched_categories_instructions: "Bu kategorilerdeki tüm yeni konuları otomatik olarak gözleyeceksiniz. Tüm yeni gönderi ve konular size bildirilecek. Ayrıca, okunmamış ve yeni gönderilerin sayısı ilgili konunun yanında belirecek."
       tracked_categories: "Takip edildi"
@@ -464,7 +463,6 @@ tr_TR:
         title: "Hakkımda'yı Değiştir"
       change_username:
         title: "Kullanıcı Adını Değiştir"
-        confirm: "Kullanıcı adınızı degiştirmeniz halinde, eski gönderilerinizden yapılan tüm alıntılar ve @isim bahsedilişler bozulacak. Bunu yapmak istediginize gerçekten emin misiniz?"
         taken: "Üzgünüz, bu kullanıcı adı alınmış."
         error: "Kullanıcı adınızı değiştirirken bir hata oluştu."
         invalid: "Bu kullanıcı adı geçersiz. Sadece sayı ve harf içermelidir."
@@ -545,7 +543,6 @@ tr_TR:
         always: "her zaman"
         never: "asla"
       email_digests:
-        title: "Burayı ziyaret etmediğim zamanlarda bana yeni şeylerin özetini içeren bir email yolla:"
         every_30_minutes: "30 dakikada bir"
         every_hour: "saatte bir"
         daily: "günlük"
@@ -963,7 +960,6 @@ tr_TR:
       post_format: "{{username}} tarafından #{{post_number}}"
       context:
         user: "@{{username}} kullancısına ait gönderilerde ara"
-        category: "\"{{category}}\" kategorisinde ara"
         topic: "Bu konuda ara"
         private_messages: "Mesajlarda ara"
     hamburger_menu: "bir diğer konu ya da kategoriye git"

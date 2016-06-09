@@ -16,7 +16,6 @@ te:
   loading: "లోడవుతోంది"
   powered_by_html: ' <a href="http://www.discourse.org">డిస్కౌర్స్</a> చేత శక్తివంతం చేయబడింది, జావాస్క్రిప్ట్ చేతనం చేస్తే బాగా కనిపిస్తుంది. '
   log_in: "లాగిన్"
-  purge_reason: "వదిలేసినదిగా స్వీయంగా కనుగొను, చేతనం చేయని ఖాతా"
   disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
   errors: &errors
     format: '%{attribute} %{message}'
@@ -92,7 +91,6 @@ te:
   user_is_suspended: "సస్పెండైన సభ్యులు టపా రాయుట వీలవదు"
   topic_not_found: "ఏదో తప్పు జరిగింది. బహుశా ఈ అంశం ముగిసింది లేదా మీరు చూస్తూ ఉండగా తొలగించబడింది?"
   just_posted_that: "ఇది ఇప్పుడే రాసిన విషయంలా ఉంది. డూప్లికేటు టపా?"
-  has_already_been_used: "ఇప్పటికే వాడుకలో ఉంది."
   invalid_characters: "చెల్లని  అక్షరాలు ఉన్నాయి."
   is_invalid: "చెల్లనిది. మరింత వివరణాత్మకంగా ఉండేట్టు చూడండి."
   next_page: "తరువాతి పుట →"
@@ -110,8 +108,6 @@ te:
   too_late_to_edit: "ఈ టపా పురాతన కాలంలో సృష్టించబడింది. ఇప్పుడు ఇహ సవరించలేము లేదా తొలగించలేము."
   excerpt_image: "బొమ్మ"
   groups:
-    errors:
-      can_not_modify_automatic: "మీరు ఒక ఆటోమేటిక్ గుంపును మార్చలేరు"
     default_names:
       everyone: "ప్రతీఒక్కరూ"
       admins: "అధికారులు"
@@ -437,7 +433,6 @@ te:
     page_view_anon_reqs:
       title: "అనామక"
       xaxis: "రోజు"
-      yaxis: "అనామక API అభ్యర్ధనలు"
     page_view_logged_in_reqs:
       title: "లాగిన్ అయిన"
       xaxis: "రోజు"
@@ -447,7 +442,6 @@ te:
     page_view_total_reqs:
       title: "మొత్తం"
       xaxis: "రోజు"
-      yaxis: "మొత్తం API అభ్యర్ధనలు"
     http_background_reqs:
       title: "వెనుతలం"
       xaxis: "రోజు"
@@ -572,8 +566,6 @@ te:
       subject_template: "%{site_name} కు సుస్వాగతం!"
     welcome_invite:
       subject_template: "%{site_name} కు సుస్వాగతం!"
-    too_many_spam_flags:
-      subject_template: "కొత్త ఖాతా బ్లాక్ చేశారు"
   user_notifications:
     previous_discussion: "గత జవాబులు"
     user_replied:

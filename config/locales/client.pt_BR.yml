@@ -454,7 +454,6 @@ pt_BR:
       suspended_notice: "Esse usuário está suspenso até {{date}}."
       suspended_reason: "Motivo:"
       github_profile: "Github"
-      mailing_list_mode: "Me envie um email para cada novo post (a menos que eu torne o tópico ou a categoria mudos)"
       watched_categories: "Acompanhados"
       watched_categories_instructions: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado do tópico."
       tracked_categories: "Monitorado"
@@ -499,7 +498,6 @@ pt_BR:
         title: "Modificar Sobre Mim"
       change_username:
         title: "Alterar Nome de Usuário"
-        confirm: "Se você mudar seu Nome de Usuário, todas as citações das suas respostas e as menções ao seu @nome vão quebrar. Você tem certeza?"
         taken: "Desculpe, esse Nome de Usuário já está sendo usado."
         error: "Houve um erro ao alterar o seu Nome de Usuário."
         invalid: "Esse Nome de Usuário é inválido. Deve conter apenas números e letras."
@@ -583,23 +581,18 @@ pt_BR:
         always: "sempre"
         never: "nunca"
       email_digests:
-        title: "Quando eu não visitar aqui, envie um resumo via email do que há de novo:"
         every_30_minutes: "a cada 30 minutos"
         every_hour: "a cada hora"
         daily: "diariamente"
         every_three_days: "a cada três dias"
         weekly: "semanalmente"
         every_two_weeks: "a cada duas semanas"
-      include_tl0_in_digests: "Incluir posts de novos usuários em emails de resumos"
       email_in_reply_to: "Incluir um excerto das respostas ao post nos emails"
       email_direct: "Me envie um email quando alguém me citar, responder minhas mensagens, mencionar meu @usuário, ou me convidar para um tópico"
       email_private_messages: "Me envie um email quando alguém me enviar mensagem particular"
       email_always: "Envie-me notificações mesmo quando eu estiver ativo no site."
       other_settings: "Outros"
       categories_settings: "Categorias"
-      enable_mailing_list:
-        one: "Você tem certeza de que deseja receber um email para cada novo post?"
-        other: "Você tem certeza de que deseja receber um email para cada novo post?<br><br>Isso vai resultar em aproximadamente <b>{{count}} emails</b> por dia."
       new_topic_duration:
         label: "Considerar tópicos como novos quando"
         not_viewed: "Eu ainda não os vi"
@@ -1012,7 +1005,6 @@ pt_BR:
       post_format: "#{{post_number}} por {{username}}"
       context:
         user: "Procurar respostas de @{{username}}"
-        category: "Procurar a categoria \"{{category}}\""
         topic: "Procurar nesse tópico"
         private_messages: "Procurar mensagens"
     hamburger_menu: "ir para outra listagem de tópicos ou categoria"
