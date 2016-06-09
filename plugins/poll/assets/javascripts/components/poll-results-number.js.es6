@@ -2,8 +2,6 @@ import round from "discourse/lib/round";
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Em.Component.extend({
-  tagName: "span",
-
   @computed("poll.options.@each.{html,votes}")
   totalScore() {
     return _.reduce(this.get("poll.options"), function(total, o) {
