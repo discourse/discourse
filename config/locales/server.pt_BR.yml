@@ -18,11 +18,15 @@ pt_BR:
   date:
     month_names: [null, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
     <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tópicos"
   posts: "postagens"
   loading: "Carregando"
-  powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript ativado'
+  powered_by_html: 'Movido a <a href="http://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript ativado'
   log_in: "Entrar"
   purge_reason: "Automaticamente eliminada por ser uma conta abandonada, não ativada"
   disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
@@ -30,18 +34,22 @@ pt_BR:
   emails:
     incoming:
       default_subject: "Email recebido de %{email}"
+      show_trimmed_content: "Exibir conteúdo abreviado"
+      maximum_staged_user_per_email_reached: "Atingido número máximo de usuários de teste criados por email."
       errors:
         empty_email_error: "Ocorre quando o email bruto recebido estiver em branco."
         no_message_id_error: "Ocorre quando o email não possui cabeçalho 'id-mensagem'."
         auto_generated_email_error: "Ocorre quando o cabeçalho 'precedência' estiver definido como: lista, lixo eletrônico, lote ou resposta_automática, ou quando outro cabeçalho contiver: enviado_automaticamente, respondido_automaticamente ou gerado_automaticamente."
-        no_body_detected_error: "Ocorre quando não foi possível extrair o corpo de texto e não havia anexos."
+        no_body_detected_error: "Ocorre quando não conseguimos extrair um corpo e não há anexos."
         inactive_user_error: "Ocorre quando o remetente não está ativo."
         blocked_user_error: "Ocorre quando o remetente foi bloqueado."
         bad_destination_address: "Ocorre quando nenhum dos endereços de email nos campos Para/Cc/Cco era correspondente ao endereço de email recebido."
         strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
+        insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria onde não possui nível de confiança necessário."
         reply_user_not_matching_error: "Ocorre quando uma resposta chega em um endereço de email diferente ao da notificação enviada."
         topic_not_found_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi excluído."
         topic_closed_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi fechado."
+        auto_generated_email_reply: "O email contém uma resposta a um email gerado automaticamente."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -147,7 +155,6 @@ pt_BR:
   user_is_suspended: "Usuários suspensos não tem permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
   just_posted_that: "é demasiado similar ao que postaste recentemente"
-  has_already_been_used: "já foi usado"
   invalid_characters: "contém caracteres inválidos"
   is_invalid: "é inválido; tenta ser um bocado mais descritivo"
   next_page: "próxima página →"
@@ -168,9 +175,11 @@ pt_BR:
     top: "Principais tópicos"
     posts: "Últimos tópicos"
     private_posts: "Últimas mensagens privadas"
+    group_posts: "Últimos posts de %{group_name}"
+    group_mentions: "Últimas citações de %{group_name}"
     user_posts: "Últimos posts por @%{username}"
     user_topics: "Últimos tópicos por @%{username}"
-    tag: "Tópicos com tag"
+    tag: "Tópicos marcados"
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   excerpt_image: "imagem"
   queue:
@@ -181,6 +190,8 @@ pt_BR:
       member_already_exist: "'%{username}' já é um membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
       invalid_incoming_email: "'%{email}' não é um endereço de e-mail válido."
+      email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
     default_names:
       everyone: "todos"
       admins: "admins"
@@ -243,6 +254,8 @@ pt_BR:
     attributes:
       category:
         name: "Nome da Categoria"
+      topic:
+        title: 'Título'
       post:
         raw: "Corpo"
       user_profile:
@@ -310,6 +323,8 @@ pt_BR:
       self_parent: "A subcategoria mãe não pode ser ela mesma"
       depth: "Você não pode aninhar uma subcategoria sob outra"
       invalid_email_in: "'%{email}' não é um endereço de e-mail válido."
+      email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
+      email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Não é possível excluir Sem categoria"
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
@@ -338,6 +353,7 @@ pt_BR:
       first_day_topics_per_day: "Você atingiu o número máximo de tópicos que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
       create_topic: "Você está criando tópicos muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
       create_post: "Você está respondendo muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
+      delete_post: "Você está removendo posts muito rapidamente. Por favor, aguarde %{time_left} antes de tentar novamente."
       topics_per_day: "Você atingiu o número máximo de novos tópicos hoje. Por favor aguarde %{time_left} antes de tentar novamente."
       pms_per_day: "Você alcançou o número máximo de mensagens por hoje. Por favor aguarde %{time_left} antes de tentar de novo."
       create_like: "Você atingiu o número máximo de curtidas hoje. Por favor aguarde% {time_left} antes de tentar novamente."
@@ -448,7 +464,6 @@ pt_BR:
     continue_button: "Continuar no %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
-    missing_session: "Nós não podemos detectar se sua conta foi criada. Por favor certifique-se que você seu navegador está com os cookies habilitados."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -609,27 +624,27 @@ pt_BR:
     page_view_anon_reqs:
       title: "Anônimo"
       xaxis: "Dia"
-      yaxis: "Solicitações Anônimas de API"
+      yaxis: "Visualizações anônimas"
     page_view_logged_in_reqs:
       title: "Logado"
       xaxis: "Dia"
-      yaxis: "Solicitações de Logados de API"
+      yaxis: "Visualizações autenticadas"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Dia"
-      yaxis: "Solicitações de API de Web Crawler"
+      yaxis: "Visualizações por indexadores web"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Dia"
-      yaxis: "Solicitações Totais de API"
+      yaxis: "Visualizações totais"
     page_view_logged_in_mobile_reqs:
-      title: "Requisições de API de usuários logados"
+      title: "Visualizações autenticadas"
       xaxis: "Dia"
-      yaxis: "Requisições de API de usuários logados mobile"
+      yaxis: "Visualizações autenticadas em dispositivos móveis"
     page_view_anon_mobile_reqs:
-      title: "Requisições de API de anônimos"
+      title: "Visualizações anônimas"
       xaxis: "Dia"
-      yaxis: "Requisições de API de anônimos mobile"
+      yaxis: "Visualizações anônimas em dispositivos móveis"
     http_background_reqs:
       title: "Background"
       xaxis: "Dia"
@@ -732,7 +747,6 @@ pt_BR:
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     email_subject: "Customizar o formato do assunto dos emails padrões. \nRef https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Deverá a URL completa para o site (Discourse.base_url) ser http ou https? Não ative isso a MENOS QUE O HTTPS ESTEJA CONFIGURADO E FUNCIONANDO!"
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída no \"Resuma este tópico\" "
     summary_posts_required: "Mensagens mínimas em um tópico antes de 'Resumir este tópico' ficar habilitado"
     summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
@@ -761,7 +775,6 @@ pt_BR:
     ga_domain_name: "Nome do domínio para o Google analytics (ga.js), ex: mysite.com; veja http://google.com/analytics"
     ga_universal_tracking_code: "Código de monitoramento Google Universal Analytics (analytics.js), ex: UA-12345678-9; veja http://google.com/analytics"
     ga_universal_domain_name: "Nome de domínio do Google Universal Analytics (analytics.js), ex: meusite.com; veja http://google.com/analytics"
-    enable_escaped_fragments: "Recuar para a Google's Ajax-Crawling API se nenhum webcrawler é detectado. Vide https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
     allow_moderators_to_create_categories: "Permitir a criação de categorias por moderadores"
     cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://.  A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
@@ -786,7 +799,6 @@ pt_BR:
     allow_index_in_robots_txt: "Especificar no robots.txt que este site é permitido de ser indexado por sistemas de busca na web."
     email_domains_blacklist: "Lista delimitada por barras (|) de domínios de email que não são permitidos registros de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
-    forgot_password_strict: "Não informar usuários da existência de uma conta quando eles usam o diálogo de esquecimento de senha."
     log_out_strict: "Quando deslogando, deslogar TODAS as sessões do usuário em todos os dispositivos"
     version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
     new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."
@@ -916,7 +928,6 @@ pt_BR:
     faq_url: "Se você possui um FAQ hospedado em outro local e que você queira usar, forneça a URL completa aqui."
     tos_url: "Se você tem um documento de Termos de Serviço hospedado em algum outro local que você queira usar, forneça a URL completa aqui."
     privacy_policy_url: "Se você tem um documento de Política de Privacidade hospedado em algum outro local que você queira usar, forneça a URL completa aqui."
-    newuser_spam_host_threshold: "Quantas vezes um usuário pode postar um link para o mesmo site dentro de`newuser_spam_host_posts` posts antes de ser considerado spam."
     white_listed_spam_host_domains: "Uma lista de domínios excluídas do teste de spam. Usuários novos nunca serão restringidos de criar posts com links para estes domínios."
     staff_like_weight: "Qual o fator de ênfase extra a dar para likes da staff."
     levenshtein_distance_spammer_emails: "Ao equiparar emails de spammers, o número da diferença de caracteres que ainda assim irá permitir uma equiparação imprecisa."
@@ -1003,19 +1014,6 @@ pt_BR:
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
-    tagging_enabled: "Permitir que usuários coloquem tags em tópicos?"
-    min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma tag."
-    max_tags_per_topic: "O número máximo de tags que podem ser aplicados a um tópico."
-    max_tag_length: "O número máximo de caracteres que pode ser usado em uma tag."
-    max_tag_search_results: "Quando buscando por tags, o número máximo de resultados a exibir."
-    show_filter_by_tag: "Exibir um dropdown para filtrar uma lista de tópicos por uma tag."
-    max_tags_in_filter_list: "Número máximo de tags no filtro do dropdown. As tags mais utilizadas serão exibidas."
-    tags_sort_alphabetically: "Exibir tags em ordem alfabetica. O padrão é exibí-las em ordem de popularidade."
-    tag_style: "Estilo visual para as insígnias de tag."
-    staff_tags: "Uma lista de tags que só podem ser aplicadas por membros da moderação"
-    min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para aplicar uma tag"
-    suppress_overlapping_tags_in_list: "Esconder tags das visualizações de lista, se elas se sobreporem ao título"
-    remove_muted_tags_from_latest: "Não mostrar tópicos com tags silenciadas na lista de tópicos recentes."
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."
@@ -1310,30 +1308,10 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com email -- Resposta Gerada Automaticamente"
     email_error_notification:
       subject_template: "[%{site_name}] Problema com email -- Erro de autenticação POP"
-    too_many_spam_flags:
-      subject_template: "Nova conta bloqueada"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática do %{site_name} para informá-lo de que suas mensagens foram automaticamente escondidas porque foram sinalizados pela comunidade.
-
-        Como medida de precaução, a sua nova conta foi bloqueada para a criação de novas respostas ou tópicos até que um membro da equipe possa rever sua conta.
-
-        Para informações adicionais, por favor consulte as nossas [diretrizes da comunidade](%{base_url}/guidelines).
-    blocked_by_staff:
-      subject_template: "Conta bloqueada"
     user_automatically_blocked:
       subject_template: "Novo usuário %{username} foi bloqueado devido a denúncias da comunidade"
     spam_post_blocked:
       subject_template: "Novo usuário %{username} teve postagem bloqueada por repetidos links"
-    unblocked:
-      subject_template: "Conta desbloqueada"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informar que sua conta foi desbloqueada após avaliação da staff.
-
-        Agora você pode responder e criar novos tópicos de novo.
     pending_users_reminder:
       subject_template:
         one: "1 usuário aguardando aprovação"
@@ -1451,9 +1429,6 @@ pt_BR:
     images:
       too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor a redimensione e tente novamente."
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
-  flag_reason:
-    sockpuppet: "Um novo usuário criou um tópico e outro novo usuário no mesmo endereço IP respondeu. Veja a configuração flag_sockpuppets."
-    spam_hosts: "Esse novo usuário tentou criar múltiplas postagens com links do mesmo domínio. Veja a configuração newuser_spam_host_threshold do site."
   email_log:
     no_user: "Não foi possível encontrar usuário com id %{user_id}"
     anonymous_user: "Usuário é anônimo"
@@ -1515,6 +1490,13 @@ pt_BR:
       name: Por Amor
     crazy_in_love:
       name: Apaixonado
+    first_emoji:
+      name: Primeiro emoji
+      description: Utilizou um emoji em uma publicação
+    first_mention:
+      name: Primeira menção
+      description: Mencionou um usuário em uma publicação
+      long_description: Este emblema é concedido na primeira vez em que você menciona o @nomedeusuaio de alguém em uma publicação. Cada menção gera uma notificação para a pessoa de forma que ela saiba o que você publicou. Simplesmente comece a digitar "@" (arroba) para mencionar qualquer usuário ou, caso permitido, um grupo -- é uma maneira conveniente de chamar a atenção de alguém.
   admin_login:
     success: "Email Enviado"
     error: "Erro!"
@@ -1525,12 +1507,13 @@ pt_BR:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de performance diários de seu site.
     initial_topic_title: Relatórios de performance do Site
-  time:
-    <<: *datetime_formats
+  topic_invite:
+    user_exists: "Desculpe, este usuário já foi convidado. Você pode convidar um usuário para um tópico apenas uma única vez."
+  tags:
+    title: "Marcações"
+    staff_tag_disallowed: "A marcação \"%{tag}\" pode ser aplicada somente pelo pessoal de apoio."
+    staff_tag_remove_disallowed: "A marcação \"%{tag}\" pode ser removida somente pelo pessoal de apoio."
+  rss_by_tag: "Tópicos marcados com %{tag}"
   activemodel:
     errors:
       <<: *errors
-  tags:
-    staff_tag_disallowed: "A tag \"%{tag}\" só pode ser aplicada pela moderação."
-    staff_tag_remove_disallowed: "A tag \"%{tag}\" só pode ser removida pela moderação."
-  rss_by_tag: "Tópicos com a tag %{tag}"

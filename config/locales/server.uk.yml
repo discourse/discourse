@@ -29,7 +29,6 @@ uk:
     imported_from: "Discussion topic for the original blog entry at: %{link}"
   spamming_host: "Даруйте, Ви не можете вставити посилання на цей хост."
   just_posted_that: "це дуже схоже на те, що ви нещодавно дописували"
-  has_already_been_used: "вже було використано"
   invalid_characters: "містить неприпустимі символи"
   is_invalid: "є неприпустимим; спробуйте бути трохи більше наочним"
   next_page: "наступна сторінка →"
@@ -47,8 +46,6 @@ uk:
     hot: "Гарячі теми"
   too_late_to_edit: "Цей допис було створено надто давно. Його вже не можна редагувати або видалити."
   groups:
-    errors:
-      can_not_modify_automatic: "You can not modify an automatic group"
     default_names:
       admins: "адміністратори"
       moderators: "модератори"
@@ -270,7 +267,6 @@ uk:
     show_subcategory_list: "Показувати перелік підкатегорій замість переліку тем при вході у категорію."
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
-    use_https: "Чи повинна повна адреса сайта (Discourse.base_url) використовувати https (чи просто http)? ВМИКАЙТЕ ЦЕ ТІЛЬКИ ЯКЩО HTTPS ВЖЕ НАЛАШТОВАНО І ВІН ПРАЦЮЄ!"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     max_topics_in_first_day: "Максимальна кількість тем, які користувач може створити на сайті в перший день"
@@ -310,7 +306,6 @@ uk:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %{reply_key}@reply.myforum.com"
     email_in_min_trust: "Мінімальний рівень довіри, який потрібен користувачу для дозволу створювати нові теми через email. "
     delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
@@ -392,18 +387,6 @@ uk:
       subject_template: "Масове запрошення користувачів оброблено успішно"
     bulk_invite_failed:
       subject_template: "Масове запрошення користувачів оброблено з помилками"
-    too_many_spam_flags:
-      subject_template: "Новий обліковий запис заблоковано"
-    blocked_by_staff:
-      subject_template: "Обліковий запис заблоковано"
-    unblocked:
-      subject_template: "Обліковий запис розблоковано"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
-
-        You can now create new replies and topics again.
     pending_users_reminder:
       text_body_template: |
         Є нові користувачі, що зареєструвалися і очікують на схвалення (або відхилення) перед тим, як зможуть отримати доступ до цього форуму.
@@ -479,8 +462,6 @@ uk:
     store_failure: "Не вдалося зберегти завантаження #%{upload_id} для користувача #%{user_id}."
     images:
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
-  flag_reason:
-    sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
   email_log:
     no_user: "Can't find user with id %{user_id}"
     seen_recently: "User was seen recently"

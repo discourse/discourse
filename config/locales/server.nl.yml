@@ -24,7 +24,6 @@ nl:
   loading: "Laden"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, werkt het beste met JavaScript ingeschakeld'
   log_in: "Inloggen"
-  purge_reason: "Automatisch verwijderd, account is nooit geactiveerd"
   disable_remote_images_download_reason: "Het downloaden van plaatjes is uitgeschakeld omdat er niet genoeg schijfruimte beschikbaar is."
   anonymous: "Anoniem"
   emails:
@@ -34,7 +33,6 @@ nl:
         empty_email_error: "Gebeurt wanneer de mail die wij ontvangen hebben leeg is."
         no_message_id_error: "Gebeurt wanneer de mail geen  'Message-Id' header heeft."
         auto_generated_email_error: "Gebeurt wanneer de 'voorrang' header is ingesteld op: lijst, ongewenst, bulk of automatisch auto_reply, of wanneer een andere header bevat: auto-submitted, auto-replied of auto-generated."
-        no_body_detected_error: "Gebeurt wanneer wij de body niet konden uitpakken en er geen bijlages zijn."
         inactive_user_error: "Gebeurt wanneer de zender niet actief is."
         blocked_user_error: "Gebeurt wanneer de zender is geblokkeerd."
         bad_destination_address: "Gebeurt wanneer geen van de E-mail adressen in de To/Cc/Bcc velden gelijk zijn aan de geconfigureerde inkomende E-mail adressen."
@@ -148,7 +146,6 @@ nl:
   user_is_suspended: "Geschorste gebruikers mogen geen berichten meer plaatsen."
   topic_not_found: "Er is iets fout gegaan. Wellicht is het topic gesloten of verwijderd terwijl je er naar keek?"
   just_posted_that: "lijkt teveel op het bericht dat je net geschreven hebt"
-  has_already_been_used: "is al eens gebruikt"
   invalid_characters: "bevat ongeldige tekens"
   is_invalid: "is niet geldig; probeer het iets beter te omschrijven"
   next_page: "volgende pagina →"
@@ -174,7 +171,6 @@ nl:
     delete_reason: "Verwijderd via de bericht moderatie wachtrij"
   groups:
     errors:
-      can_not_modify_automatic: "Je kunt automatische groepen niet wijzigen"
       member_already_exist: "'%{username}' is al lid van deze groep."
       invalid_domain: "%{domain}' is geen geldig domein."
     default_names:
@@ -446,7 +442,6 @@ nl:
     continue_button: "Ga verder naar %{site_name}"
     welcome_to: "Welkom bij %{site_name}!"
     approval_required: "Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!"
-    missing_session: "We kunnen niet detecteren of je account gemaakt is, zorg er a.u.b. voor dat u cookies toestaat."
   post_action_types:
     off_topic:
       title: 'Off-topic'
@@ -607,27 +602,19 @@ nl:
     page_view_anon_reqs:
       title: "Anoniem"
       xaxis: "Dag"
-      yaxis: "Anonieme API Aanvragen"
     page_view_logged_in_reqs:
       title: "Ingelogd"
       xaxis: "Dag"
-      yaxis: "API Aanvragen Ingelogd"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Dag"
-      yaxis: "API Aanvragen Web Crawler"
     page_view_total_reqs:
       title: "Totaal"
       xaxis: "Dag"
-      yaxis: "Totaal API Aanvragen"
     page_view_logged_in_mobile_reqs:
-      title: "API Aanvragen Ingelogd"
       xaxis: "Dag"
-      yaxis: "API Aanvragen Mobiel Ingelogd"
     page_view_anon_mobile_reqs:
-      title: "Anonieme API Aanvragen"
       xaxis: "Dag"
-      yaxis: "Anonieme AIP Aanvragen Mobiel"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
@@ -738,13 +725,11 @@ nl:
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     email_subject: "Wijzigbaar onderwerp formaat voor standaard emails. Bekijk https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 voor meer informatie"
-    use_https: "Gebruik http of https voor de volledige url van de site (Discourse.base_url)? GEBRUIK DIT NIET ALS HTTPS NOG NIET OPGEZET IS!"
     summary_score_threshold: "De minimum score voor een bericht om opgenomen te worden in 'Samenvatting Topic' "
     summary_posts_required: "Minimum aantal berichten in een topic voor weergave ´Samenvatting Topic´"
     summary_likes_required: "Minimum aantal Likes in een topic voor weergave ´Samenvatting Topic´"
     summary_percent_filter: "Als iemand op 'Samenvatting Topic' klikt, laat dan de top % van de berichten zien"
     summary_max_results: "Maximaal aantal berichten in weergave ´Samenvatting Topic´"
-    enable_private_messages: "Sta toe dat vertrouwensniveau 1 (configureerbaar via min vertrouwensniveau om berichten te versturen) gebruikers berichten mogen maken en mogen antwoorden op berichten"
     enable_long_polling: "De 'message bus' die gebruikt wordt voor notificaties kan 'long polling' gebruiken."
     long_polling_base_url: "Basis URL voor ´long polling´ (indien via een CDN dynamische content wordt toegepast, kies hier dan 'origin pull´) b.v. http://originele.website.com"
     long_polling_interval: "De hoeveelheid tijd die de server zou moeten wachten voordat het clients beantwoord als er geen data te verzenden is (alleen voor ingelogde gebruikers)"
@@ -770,7 +755,6 @@ nl:
     ga_domain_name: "Google analytics (ga.js) domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) trackingcode, bijv. UA-12345678-9; zie http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
-    enable_escaped_fragments: "Val terug naar Google's Ajax-Crawling API als er geen webcrawler is gedetecteerd. Bekijk https://support.google.com/webmasters/answer/174992?hl=en voor meer info."
     enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
     allow_moderators_to_create_categories: "Moderators mogen nieuwe categorieën maken"
     cors_origins: "Toegestane domeinen voor ´cross-origin requests´ (CORS). Elk domein moet http:// of https:// bevatten. De DISCOURSE_ENABLE_CORS omgevingsvariabele moet staan ingesteld op ´WAAR´ om CORS te kunnen gebruiken."
@@ -798,7 +782,6 @@ nl:
     allow_index_in_robots_txt: "Specificeer in robots.txt dat de site geïndexeerd mag worden door zoekmachines."
     email_domains_blacklist: "Een lijst van e-maildomeinen gescheiden door een vertikaal streepje (pipe), die niet worden toegestaan. Voorbeeld: mailingen.com|trashmail.net"
     email_domains_whitelist: "Een lijst van e-maildomeinen gescheiden door een vertikaal streepje (pipe), die zijn voorgeschreven om te worden toegelaten. WAARSCHUWING: Gebruikers met andere e-maildomeinen dan opgenomen in de lijst worden NIET toegelaten."
-    forgot_password_strict: "Gebruikers niet informeren dat een account bestaat tijdens het gebruik van het wachtwoord vergeten menu. "
     log_out_strict: "Sluit bij het uitloggen ALLE sessies voor de gebruiker op alle apparaten."
     version_checks: "Ping de Discourse-Hub voor updates en laat meldingen van nieuwe versies zien op het dashboard van de beheerder."
     new_version_emails: "Stuur een email naar het contact_email adres wanneer een nieuwe versie van Discourse beschikbaar is."
@@ -941,7 +924,6 @@ nl:
     faq_url: "Heb je je FAQ ergens extern staan, geef hier dan de volledige url op."
     tos_url: "Heb je je Algemene Voorwaarden ergens extern staan, geef hier dan de volledige url op."
     privacy_policy_url: "Heb je je Privacy Voorwaarden ergens extern staan, geef hier dan de volledige url op."
-    newuser_spam_host_threshold: "Hoe vaak kan een gebruiker linken naar dezelfde host in hun `newuser_spam_host_posts` berichten voordat deze links als spam gezien worden."
     white_listed_spam_host_domains: "Een lijst met domeinen die niet op spam gecontroleerd worden. Nieuwe gebruikers kunnen ongelimiteerd links plaatsen naar deze domeinen."
     staff_like_weight: "Hoeveel zwaarder de weegfactor moet zijn voor likes gegeven door staf."
     topic_view_duration_hours: "Tel een nieuw topic bekeken één keer per IP/Gebruiker elke N uur."
@@ -964,7 +946,6 @@ nl:
     strip_images_from_short_emails: "Verwijder afbeeldingen met grootte van minder dan 2800 Bytes uit e-mails."
     short_email_length: "Korte e-mail lengte in Bytes"
     display_name_on_email_from: "Toon de volledige naam in het afzenderveld van e-mails."
-    unsubscribe_via_email_footer: "Voeg in de voettekst van verstuurde e-mails een link toe waarmee de ontvanger zich kan uitschrijven."
     pop3_polling_enabled: "Poll via POP3 voor antwoorden per e-mail."
     pop3_polling_ssl: "Gebruik SSL bij de verbinding naar de POP3 server. (Aanbevolen)"
     pop3_polling_period_mins: "De periode in minuten tussen controleren van het POP3 account voor e-mail. LET OP: vereist een herstart."
@@ -1266,20 +1247,6 @@ nl:
   system_messages:
     post_hidden:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te laten weten dat je bericht is verborgen.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Voordat dit bericht werd verborgen, hebben meerdere gebruikers het als ongewenst aangemeld. Denk er daarom goed over na hoe je je bericht aan de hand van hun commentaar aan kan passen. **Je kan je bericht na %{edit_delay} minuten wijzigen, waarna het automatisch weer zichtbaar wordt.**
-
-        Maar als je bericht nogmaals door de gemeenschap wordt verborgen, blijft het verborgen tot een moderator of beheerder ernaar kijkt. Zij kunnen verder actie ondernemen, inclusief het mogelijk schorsen van je account.
-
-        Voor meer hulp verwijzen we je door naar onze [richtlijnen](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Welkom bij %{site_name}!"
     welcome_invite:
@@ -1405,30 +1372,10 @@ nl:
       subject_template: "[%{site_name}] E-mailprobleem -- Automatisch gegenereerde reactie"
     email_error_notification:
       subject_template: "[%{site_name}] Email probleem -- POP authenticatie fout"
-    too_many_spam_flags:
-      subject_template: "Account geblokkeerd"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te informeren dat je berichten verborgen zijn omdat ze gemarkeerd zijn door de community.
-
-        Uit voorzorg is je nieuwe account geblokkeerd waardoor je geen berichten meer kan plaatsen tot iemand van de staf je account opnieuw beoordeeld.
-
-        Kijk voor verdere uitleg in de [community richtlijnen](%{base_url}/guidelines).
-    blocked_by_staff:
-      subject_template: "Account geblokkeerd"
     user_automatically_blocked:
       subject_template: "Nieuwe gebruiker %{username} geblokkeerd wegens meldingen van andere gebruikers"
     spam_post_blocked:
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
-    unblocked:
-      subject_template: "Account gedeblokkeerd"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te informeren dat je account gedeblokkeerd is.
-
-        Je kunt weer berichten plaatsen
     pending_users_reminder:
       subject_template:
         one: "1 gebruiker wacht op goedkeuring"
@@ -1560,9 +1507,6 @@ nl:
     images:
       too_large: "De afbeelding die je wil uploaden is te groot (maximum grootte is %{max_size_kb}%KB). Verklein de afbeelding en probeer het opnieuw."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
-  flag_reason:
-    sockpuppet: "Een nieuwe gebruiker maakte een nieuwe topic en een andere gebruiker reageerde - vanaf hetzelfde IP-adres. Zie de flag_sockpuppets instelling."
-    spam_hosts: "Deze nieuwe gebruiker probeerde om meerdere berichten met links naar hetzelfde domein te plaatsen. Zie de newuser_spam_host_threshold instelling."
   email_log:
     no_user: "Kan geen gebruiker met id %{user_id} vinden"
     anonymous_user: "Gebruiker is anoniem"

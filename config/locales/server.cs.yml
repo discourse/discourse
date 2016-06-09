@@ -24,7 +24,6 @@ cs:
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
-  purge_reason: "Automaticky smazán jako opuštěný, neaktivovaný účet"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   errors: &errors
@@ -114,7 +113,6 @@ cs:
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
-  has_already_been_used: "je již použito"
   invalid_characters: "obsahuje neplatné znaky"
   is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
   next_page: "další strana →"
@@ -136,7 +134,6 @@ cs:
   excerpt_image: "obrázek"
   groups:
     errors:
-      can_not_modify_automatic: "Automatickou skupinu nelze upravit"
       member_already_exist: "'%{username}' je už členem této skupiny."
     default_names:
       everyone: "kdokoliv"
@@ -513,7 +510,6 @@ cs:
     page_view_anon_reqs:
       title: "Anonymní"
       xaxis: "Den"
-      yaxis: "Anonymní API požadavky"
     page_view_logged_in_reqs:
       title: "Přihlášen"
       xaxis: "Den"
@@ -522,7 +518,6 @@ cs:
     page_view_total_reqs:
       title: "Celkem"
       xaxis: "Den"
-      yaxis: "Celkem API požadavků"
     page_view_logged_in_mobile_reqs:
       xaxis: "Den"
     page_view_anon_mobile_reqs:
@@ -581,7 +576,6 @@ cs:
     category_featured_topics: "Počet témat zobrazených v seznamu kategorií"
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
-    use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
@@ -627,7 +621,6 @@ cs:
     faq_url: "Pokud máte dokument FAQ hostovaný samostatně, napište sem jeho plnou URL."
     tos_url: "Pokud máte dokument 'Podmínky Používání' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
-    newuser_spam_host_threshold: "Kolikrát smí uživatel zaslat odkaz na stejný server v rámci příspěvků z nastavení 'newuser_spam_host_posts', než budou příspěvky považovány za spam."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com"
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
     username_change_period: "Počet dní od registrace za kolik si uživatel může změnit svoje uživatelské jméno (0 pokud chcete změnu uživatelského jména úplně zakázat)."
@@ -708,18 +701,6 @@ cs:
       subject_template: "Exportování dat dokončeno"
     csv_export_failed:
       subject_template: "Exportování dat selhalo"
-    too_many_spam_flags:
-      subject_template: "Účet zablokován"
-    blocked_by_staff:
-      subject_template: "Účet zablokován"
-    unblocked:
-      subject_template: "Účet odblokován"
-      text_body_template: |
-        Ahoj,
-
-        Toto je automatizovaná zpráva z %{site_name}, která vás má informovat o tom, že váš účet byl odblokován na základě rozhodnutí moderátora.
-
-        Nyní můžete opět vytvářet nové odpovědi a témata.
     pending_users_reminder:
       subject_template:
         one: "1 user waiting for approval"
@@ -803,8 +784,6 @@ cs:
     pasted_image_filename: "Vložený obrázek"
     images:
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
-  flag_reason:
-    sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
   email_log:
     no_user: "Can't find user with id %{user_id}"
     seen_recently: "User was seen recently"

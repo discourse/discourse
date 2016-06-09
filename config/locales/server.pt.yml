@@ -15,6 +15,7 @@ pt:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
     <<: *datetime_formats
@@ -156,7 +157,6 @@ pt:
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
   just_posted_that: "é demasiado semelhante ao que publicaste recentemente"
-  has_already_been_used: "já foi usado"
   invalid_characters: "contem caracteres inválidos"
   is_invalid: "é inválido; tente ser um pouco mais descritivo"
   next_page: "próxima página →"
@@ -269,6 +269,8 @@ pt:
     attributes:
       category:
         name: "Nome da Categoria"
+      topic:
+        title: 'Título'
       post:
         raw: "Corpo"
       user_profile:
@@ -790,7 +792,6 @@ pt:
     summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores %  de mensagens"
     summary_max_results: "Número máximo de mensagens devolvidas por 'Resumo deste Tópico'"
-    enable_private_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base usada para solicitação ao servidor (quando um CDN serve conteúdo dinâmico, certifique-se de configurá-lo para a 'pull' original) ex: http://origem.sítio.com"
     long_polling_interval: "Quantidade de tempo que um servidor deve esperar antes de notificar os clientes quando não há dados para serem enviados (apenas utilizadores ligados)"
@@ -845,7 +846,6 @@ pt:
     allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
     email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
-    forgot_password_strict: "Não informar os utilizadores da existência da conta quando estes utilizam o diálogo de password esquecida."
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     version_checks: "Fazer o ping do Discourse Hub para atualização de versões e mostrar mensagens sobre novas versões no painel de administração"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
@@ -1031,7 +1031,6 @@ pt:
     short_email_length: "Comprimento de email curto, em Bytes"
     display_name_on_email_from: "Exibir nomes completos em campos do formulário de email"
     unsubscribe_via_email: "Permitir aos utilizadores cancelar a subscrição de emails enviando um email com \"unsubscribe\" no assunto ou no corpo do email"
-    unsubscribe_via_email_footer: "Adicionar uma hiperligação de cancelamento de subscrição ao rodapé de emails enviados"
     delete_email_logs_after_days: "Apagar registos de email após (N) dias. 0 para os manter indefinidamente"
     max_emails_per_day_per_user: "Número máximo de emails para enviar aos utilizadores. 0 para desligar o limite"
     auto_generated_whitelist: "Lista de endereços de email que não serão verificados para conteúdo gerado automáticamente."
@@ -1596,10 +1595,6 @@ pt:
     download_remote_images_disabled:
       subject_template: "Descarregamento de imagens remotas desativado"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
-  unsubscribe_link: |
-    Para parar de receber notificações para este tópico em particular, [clique aqui](%{unsubscribe_url}). Para cancelar a subscrição destes emails, altere as suas [preferências de utilizador](%{user_preferences_url}).
-  unsubscribe_via_email_link: |
-    ou, [carregue aqui](mailto:reply@%{hostname}?subject=unsubscribe) para cancelar a subscrição via email.
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1611,11 +1606,6 @@ pt:
     unsubscribe:
       title: "Cancelar a Subscrição"
       description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
-    reply_by_email: "[Consultar Tópico](%{base_url}%{url}) ou responda a este email para responder"
-    reply_by_email_pm: "[Consultar Mensagem](%{base_url}%{url}) ou responda a este email para responder"
-    only_reply_by_email: "Responda a este email para responder"
-    visit_link_to_respond: "[Consultar Tópico](%{base_url}%{url}) para responder"
-    visit_link_to_respond_pm: "[Consultar Mensagem](%{base_url}%{url}) para responder"
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
@@ -1641,6 +1631,9 @@ pt:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
     digest:
       why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
       subject_template: "Resumo [%{site_name}]"
@@ -1653,6 +1646,11 @@ pt:
       read_more: "Leia Mais"
       more_topics: "Houve %{new_topics_since_seen} outros novos tópicos."
       more_topics_category: "Mais novos tópicos:"
+    mailing_list:
+      new_topics: "Novos tópicos"
+      topic_updates: "Atualizações de tópico"
+      view_this_topic: "Ver este tópico"
+      back_to_top: "Voltar ao topo"
     forgot_password:
       subject_template: "[%{site_name}] Repor palavra-passe"
       text_body_template: |
@@ -1768,6 +1766,7 @@ pt:
       too_large: "Pedimos desculpa, a imagem que está a tentar carregar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor redimensione-a e tente novamente."
       size_not_found: "Pedimos desculpa, mas não conseguimos determinar o tamanho da imagem. É possível que seu ficheiro de imagem esteja corrompido?"
   email_log:
+    post_user_deleted: "O utilizador do artigo foi eliminado."
     no_user: "Não foi possível encontrar o utilizador com o id %{user_id}"
     anonymous_user: "Utilizador é anónimo"
     suspended_not_pm: "O utilizador está suspenso, sem mensagens"
@@ -1802,6 +1801,102 @@ pt:
   privacy_topic:
     title: "Política de Privacidade"
     body: "<a name=\"collect\"></a> \n\n## [Que informações reunimos?](#reunião) \n\nReunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado. \n\nAo inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email. \n\nAo inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor. \n\n<a name=\"use\"></a> \n\n## [Para que usamos as suas informações?](#usar) \n\nTodas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras: \n\n* Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si. \n* Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte. \n* Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões. \n\n<a name=\"protect\"></a> \n\n## [Como protegemos a sua informação?](#protect)\n\nImplementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal. \n\n<a name=\"data-retention\"></a> \n\n## [Qual é a sua política de retenção de dados?](#retenção-dados)\n\nIremos fazer um esforço de boa fé para: \n\n* Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias. \n* Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos. \n\n<a name=\"cookies\"></a> \n\n## [Usamos cookies?](#cookies) \n\nSim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa. \n\nUsamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio. \n\n<a name=\"disclose\"></a> \n\n## [Divulgamos informação com partes exteriores?](#divulgar) \n\nNão vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos. \n\n<a name=\"third-party\"></a> \n\n## [Hiperligações de Terceiras Partes](#terceira-parte) \n\nOcasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios. \n\n<a name=\"coppa\"></a> \n\n## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa) \n\nO nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio. \n\n<a name=\"online\"></a> \n\n## [Política de Privacidade Online](#online) \n\nEstas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline. \n\n<a name=\"consent\"></a> \n\n## [O seu consentimento](#consentimento) \n\nAo utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio. \n\n<a name=\"changes\"></a> \n\n## [Mudanças à nossa Política de Privacidade](#mudanças) \n\nSe decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.\n"
+  badges:
+    editor:
+      name: Editor
+      description: Primeira edição de artigo
+    basic_user:
+      name: Básico
+    member:
+      name: Membro
+    regular:
+      name: Regular
+    leader:
+      name: Líder
+    welcome:
+      name: Bem-vindo
+      description: Recebeu um gosto
+    autobiographer:
+      name: Autobiógrafo
+    anniversary:
+      name: Aniversário
+      description: Membro ativo há um ano, publicou pelo menos uma vez
+    nice_post:
+      name: Boa Resposta
+      description: Recebeu 10 gostos numa resposta
+    good_post:
+      name: Boa Resposta
+      description: Recebeu 25 gostos numa resposta
+    great_post:
+      name: Excelente Resposta
+      description: Recebeu 50 gostos numa resposta
+    nice_topic:
+      name: Bom Tópico
+      description: Recebeu 10 gostos num tópico
+    good_topic:
+      name: Ótimo Tópico
+      description: Recebeu 25 gostos num tópico
+    great_topic:
+      name: Excelente Tópico
+      description: Recebeu 50 gostos num tópico
+    nice_share:
+      name: Boa Partilha
+      description: Partilhou um artigo com 25 visitantes únicos
+    good_share:
+      name: Ótima Partilha
+      description: Partilhou um artigo com 300 visitantes únicos
+    great_share:
+      name: Excelente Partilha
+      description: Partilhou um artigo com 1000 visitantes únicos
+    first_like:
+      name: Primeiro Gosto
+      description: Gostou de um artigo
+    first_flag:
+      name: Primeira Sinalização
+      description: Sinalizou um artigo
+    promoter:
+      name: Promotor
+      description: Convidou um utilizador
+    campaigner:
+      description: Convidou 3 utilizadores básicos
+    champion:
+      name: Campeão
+      description: Convidou 5 membros
+    first_share:
+      name: Primeira Partilha
+      description: Partilhou um artigo
+    first_link:
+      name: Primeira Hiperligação
+      description: Adicionou uma hiperligação para outro tópico
+    first_quote:
+      name: Primeira Citação
+      description: Citou um artigo
+    read_guidelines:
+      name: Ler Diretrizes
+      description: Ler as <a href="/guidelines">diretrizes da comunidade</a>
+    reader:
+      name: Leitor
+      description: Ler todas as respostas num tópico com mais de 100 respostas
+    popular_link:
+      name: Hiperligação Popular
+      description: Publicou uma hiperligação externa com 50 cliques
+    famous_link:
+      name: Hiperligação Famosa
+      description: Publicou uma hiperligação externa com 1000 cliques
+    appreciated:
+      description: Recebeu 1 gosto em 20 artigos
+    respected:
+      description: Recebeu 2 gostos em 100 artigos
+    out_of_love:
+      description: Utilizou 50 gostos num dia
+    higher_love:
+      description: Utilizou 50 gostos num dia 5 vezes
+    crazy_in_love:
+      description: Utilizou 50 gostos num dia 20 vezes
+    thank_you:
+      name: Obrigado
+    first_mention:
+      name: Primeira Menção
   admin_login:
     success: "Email Enviado"
     error: "Erro!"
@@ -1814,6 +1909,8 @@ pt:
     initial_topic_title: Relatórios de desempenho do sítio
   topic_invite:
     user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode apenas convidar um utilizador para um tópico uma vez."
+  tags:
+    title: "Etiquetas"
   activemodel:
     errors:
       <<: *errors

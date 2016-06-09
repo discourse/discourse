@@ -438,7 +438,6 @@ cs:
       suspended_notice: "Uživatel je suspendován do {{date}}."
       suspended_reason: "Důvod: "
       github_profile: "Github"
-      mailing_list_mode: "Upozornit emailem na každý nový příspěvek (kromě ztišených témat a kategorií)."
       watched_categories: "Hlídané"
       watched_categories_instructions: "Budete automaticky sledovat všechna nová témata v těchto kategoriích. Na všechny nové příspěvky a témata budete upozorněni. Počet nových příspěvků se zobrazí vedle tématu."
       tracked_categories: "Sledované"
@@ -474,7 +473,6 @@ cs:
         title: "Změna o mně"
       change_username:
         title: "Změnit uživatelské jméno"
-        confirm: "Změna uživatelského jména může mít vážné následky. Opravdu to chcete udělat?"
         taken: "Toto uživatelské jméno je již zabrané."
         error: "Nastala chyba při změně uživatelského jména."
         invalid: "Uživatelské jméno je neplatné. Musí obsahovat pouze písmena a číslice."
@@ -548,7 +546,6 @@ cs:
       website: "Webová stránka"
       email_settings: "Emailová upozornění"
       email_digests:
-        title: "Když tady dlouho nebudu, chci emailem zaslat co je nového:"
         daily: "denně"
         every_three_days: "každé tři dny"
         weekly: "týdně"
@@ -922,7 +919,6 @@ cs:
       post_format: "#{{post_number}} od {{username}}"
       context:
         user: "Vyhledat příspěvky od @{{username}}"
-        category: "Vyhledat v kategorii „{{category}}“"
         topic: "Vyhledat v tomto tématu"
         private_messages: "Hledat ve zprávách"
     hamburger_menu: "jít na jiný seznam témat nebo kategorii"

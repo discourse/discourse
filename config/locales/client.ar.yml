@@ -31,6 +31,7 @@ ar:
         millions: "{{number}} مليون"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
@@ -574,7 +575,6 @@ ar:
       suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
       suspended_reason: "سبب"
       github_profile: "Github"
-      mailing_list_mode: "استقبال بريد الكتروني لكل مشاركة  جديدة (إلا إذا كتمت الموضوع أو التصنيف)"
       watched_categories: "مراقبة"
       watched_categories_instructions: "ستتم مراقبة جميع المواضيع الجديدة في هذه التصانيف. سيتم اشعارك بجميع المشاركات والمواضيع الجديدة، بالاضافة الى  عدد المشاركات الجديدة الذي سيظهر بجانب الموضوع."
       tracked_categories: "متابعة"
@@ -619,7 +619,6 @@ ar:
         title: "تعديل معلومات عنّي"
       change_username:
         title: "تغيير اسم المستخدم"
-        confirm: "إذا قمت بتغيير الاسم المستعار، فإن جميع المشاركات التي قمت بالمشاركة بها سيتم الغائها. هل أنت متأكد بقيامك على هذه الخطوة؟"
         taken: "نأسف، اسم المستخدم مأخوذ."
         error: "حدث خطأ عند تغيير اسم المستخدم."
         invalid: "اسم المستخدم غير صالح. يجب ان يحتوي على ارقام وحروف فقط "
@@ -707,7 +706,6 @@ ar:
         always: "دائماً"
         never: "ابداً"
       email_digests:
-        title: "إرسال رسالة إلكترونية تحتوي على جديد الموقع عندما لا أزور الموقع"
         every_30_minutes: "بعد 30 دقيقه"
         every_hour: "كل ساعه "
         daily: "يومي"
@@ -1117,7 +1115,6 @@ ar:
       post_format: "#{{post_number}} بواسطة {{username}}"
       context:
         user: "البحث عن مواضيع @{{username}}"
-        category: "البحث في التصنيف \"{{category}}\""
         topic: "بحث في هذا الموضوع"
         private_messages: "البحث في الرسائل الخاصة"
     hamburger_menu: "أذهب لقائمة موضوع أخر أو فئة"

@@ -454,7 +454,6 @@ gl:
       suspended_notice: "Este usuario está suspendido até o {{date}}."
       suspended_reason: "Razón:"
       github_profile: "Github"
-      mailing_list_mode: "Enviar un correo por cada nova publicación (a non ser que eu silencie o tema ou categoría)"
       watched_categories: "Visto"
       watched_categories_instructions: "Verás automaticamente todos os temas novos nestas categorías. Notificaránseche todas as novas publicacións e temas, e o número de novas publicacións aparecerá tamén preto do tema."
       tracked_categories: "Seguido"
@@ -499,7 +498,6 @@ gl:
         title: "Cambiar «Verbo de min»"
       change_username:
         title: "Cambiar o nome do usuario"
-        confirm: "Se cambias o nome de usuario, todas as citas anteriores das túas publicacións e as mencións ao teu @nome romperanse. Estás totalmente seguro?"
         taken: "Sentímolo pero este nome xa está en uso."
         error: "Produciuse un erro cambiando o teu nome de usuario."
         invalid: "Este usuario é incorrecto. Só pode contar números e letras."
@@ -583,7 +581,6 @@ gl:
         always: "sempre"
         never: "nunca"
       email_digests:
-        title: "Cando non veña por aquí, enviarme un compendio das novidade por correo-e:"
         every_30_minutes: "cada 30 minutos"
         every_hour: "cada hora"
         daily: "diariamente"
@@ -987,7 +984,6 @@ gl:
       post_format: "#{{post_number}} de {{username}}"
       context:
         user: "Buscar publicacións de @{{username}}"
-        category: "Buscar na categoría \"{{category}}\""
         topic: "Buscar neste tema"
         private_messages: "Buscar mensaxes"
     hamburger_menu: "ir a outra lista de temas ou categoría"
