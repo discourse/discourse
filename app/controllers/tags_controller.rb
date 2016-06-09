@@ -117,7 +117,12 @@ class TagsController < ::ApplicationController
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
       self.class.tags_by_count(guardian, params.slice(:limit)),
       guardian,
-      { for_input: params[:filterForInput], term: params[:q], category: category }
+      {
+        for_input: params[:filterForInput],
+        term: params[:q],
+        category: category,
+        selected_tags: params[:selected_tags]
+      }
     )
 
     tags = tags_with_counts.count.map {|t, c| { id: t, text: t, count: c } }
@@ -125,7 +130,7 @@ class TagsController < ::ApplicationController
     unused_tags = DiscourseTagging.filter_allowed_tags(
       Tag.where(topic_count: 0),
       guardian,
-      { for_input: params[:filterForInput], term: params[:q], category: category }
+      { for_input: params[:filterForInput], term: params[:q], category: category, selected_tags: params[:selected_tags] }
     )
 
     unused_tags.each do |t|

@@ -20,7 +20,9 @@ const TagGroup = RestModel.extend({
     return Discourse.ajax(url, {
       data: {
         name: this.get('name'),
-        tag_names: this.get('tag_names')
+        tag_names: this.get('tag_names'),
+        parent_tag_name: this.get('parent_tag_name') ? this.get('parent_tag_name') : undefined,
+        one_per_topic: this.get('one_per_topic')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     }).then(function(result) {

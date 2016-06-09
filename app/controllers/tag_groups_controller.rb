@@ -69,7 +69,10 @@ class TagGroupsController < ApplicationController
     end
 
     def tag_groups_params
-      params[:tag_names] ||= []
-      params.permit(:id, :name, :tag_names => [])
+      result = params.permit(:id, :name, :one_per_topic, :tag_names => [], :parent_tag_name => [])
+      result[:tag_names] ||= []
+      result[:parent_tag_name] ||= []
+      result[:one_per_topic] = (params[:one_per_topic] == "true")
+      result
     end
 end
