@@ -101,7 +101,7 @@ describe DiscoursePoll::PollsUpdater do
         Fabricate(:post, raw: raw)
       end
 
-      let(:private_poll) do
+      let(:private_poll_post) do
         raw = <<-RAW.strip_heredoc
         [poll]
         - A
@@ -109,7 +109,11 @@ describe DiscoursePoll::PollsUpdater do
         [/poll]
         RAW
 
-        DiscoursePoll::PollsValidator.new(Fabricate(:post, raw: raw)).validate_polls
+        Fabricate(:post, raw: raw)
+      end
+
+      let(:private_poll) do
+        DiscoursePoll::PollsValidator.new(private_poll_post).validate_polls
       end
 
       let(:public_poll) do
@@ -128,6 +132,21 @@ describe DiscoursePoll::PollsUpdater do
       before do
         DiscoursePoll::Poll.vote(post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
         post.reload
+      end
+
+      it "should not allow a private poll with votes to be made public" do
+        DiscoursePoll::Poll.vote(private_poll_post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+        private_poll_post.reload
+
+        messages = MessageBus.track_publish do
+          described_class.update(private_poll_post, public_poll)
+        end
+
+        expect(messages).to eq([])
+
+        expect(private_poll_post.errors[:base]).to include(
+          I18n.t("poll.default_cannot_be_made_public")
+        )
       end
 
       it "should retain voter_ids when options have been edited" do
