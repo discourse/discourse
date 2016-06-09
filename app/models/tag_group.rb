@@ -9,7 +9,7 @@ class TagGroup < ActiveRecord::Base
   belongs_to :parent_tag, class_name: 'Tag'
 
   def tag_names=(tag_names_arg)
-    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg)
+    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
   end
 
   def parent_tag_name=(tag_names_arg)

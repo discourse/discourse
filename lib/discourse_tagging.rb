@@ -166,7 +166,7 @@ module DiscourseTagging
     tag_diff.present? ? tag_diff : nil
   end
 
-  def self.tags_for_saving(tags, guardian)
+  def self.tags_for_saving(tags, guardian, opts={})
 
     return [] unless guardian.can_tag_topics?
 
@@ -181,11 +181,11 @@ module DiscourseTagging
       tag_names = Tag.where(name: tag_names).pluck(:name)
     end
 
-    return tag_names[0...SiteSetting.max_tags_per_topic]
+    return opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
   end
 
-  def self.add_or_create_tags_by_name(taggable, tag_names_arg)
-    tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user)) || []
+  def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts={})
+    tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user), opts) || []
     if taggable.tags.pluck(:name).sort != tag_names.sort
       taggable.tags = Tag.where(name: tag_names).all
       if taggable.tags.size < tag_names.size
