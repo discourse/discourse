@@ -84,6 +84,17 @@ class PostRevisor
     end
   end
 
+  track_topic_field(:tags_empty_array) do |tc, val|
+    if val.present? && tc.guardian.can_tag_topics?
+      prev_tags = tc.topic.tags.map(&:name)
+      if !DiscourseTagging.tag_topic_by_names(tc.topic, tc.guardian, [])
+        tc.check_result(false)
+        next
+      end
+      tc.record_change('tags', prev_tags, nil)
+    end
+  end
+
   # AVAILABLE OPTIONS:
   # - revised_at: changes the date of the revision
   # - force_new_version: bypass ninja-edit window
