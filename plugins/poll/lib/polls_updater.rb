@@ -41,6 +41,7 @@ module DiscoursePoll
         # try to merge votes
         polls.each_key do |poll_name|
           next unless previous_polls.has_key?(poll_name)
+          return if has_votes && private_to_public_poll?(post, previous_polls, polls, poll_name)
 
           # when the # of options has changed, reset all the votes
           if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size
@@ -95,6 +96,27 @@ module DiscoursePoll
 
     def self.total_votes(polls)
       polls.map { |key, value| value["voters"].to_i }.sum
+    end
+
+    private
+
+    def self.private_to_public_poll?(post, previous_polls, current_polls, poll_name)
+      previous_poll = previous_polls[poll_name]
+      current_poll = current_polls[poll_name]
+
+      if previous_polls["public"].nil? && current_poll["public"] == "true"
+        error =
+          if poll_name == DiscoursePoll::DEFAULT_POLL_NAME
+            I18n.t("poll.default_cannot_be_made_public")
+          else
+            I18n.t("poll.named_cannot_be_made_public", name: poll_name)
+          end
+
+        post.errors.add(:base, error)
+        return true
+      end
+
+      false
     end
   end
 end
