@@ -36,12 +36,19 @@ export default Ember.TextField.extend({
     const site = this.site,
           self = this,
           filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
+    var limit = this.siteSettings.max_tags_per_topic;
+
+    if (this.get('unlimitedTagCount')) {
+      limit = null;
+    } else if (this.get('limit')) {
+      limit = parseInt(this.get('limit'));
+    }
 
     this.$().select2({
       tags: true,
       placeholder: I18n.t(this.get('placeholderKey') || 'tagging.choose_for_topic'),
       maximumInputLength: this.siteSettings.max_tag_length,
-      maximumSelectionSize: self.get('unlimitedTagCount') ? null : this.siteSettings.max_tags_per_topic,
+      maximumSelectionSize: limit,
       initSelection(element, callback) {
         const data = [];
 
@@ -92,7 +99,12 @@ export default Ember.TextField.extend({
         url: Discourse.getURL("/tags/filter/search"),
         dataType: 'json',
         data: function (term) {
-          const d = { q: term, limit: self.siteSettings.max_tag_search_results, categoryId: self.get('categoryId') };
+          const d = {
+            q: term,
+            limit: self.siteSettings.max_tag_search_results,
+            categoryId: self.get('categoryId'),
+            selected_tags: self.get('tags')
+          };
           if (!self.get('everyTag')) {
             d.filterForInput = true;
           }

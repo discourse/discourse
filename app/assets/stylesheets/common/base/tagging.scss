@@ -222,6 +222,14 @@ header .discourse-tag {color: $tag-color !important; }
   .tag-group-content {
     width: 75%;
     float: right;
+    section {
+      margin-bottom: 20px;
+    }
+    label {
+      font-size: 1em;
+      display: inline-block;
+      margin-right: 10px;
+    }
   }
   .group-tags-list .tag-chooser {
     height: 150px !important;
@@ -232,5 +240,11 @@ header .discourse-tag {color: $tag-color !important; }
   .btn {margin-left: 10px;}
   .saving {
     margin-left: 20px;
+  }
+  .parent-tag-section {
+    .tag-chooser {
+      width: 200px;
+      margin-right: 10px;
+    }
   }
 }
