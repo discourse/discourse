@@ -16,8 +16,8 @@ export default class LinkLookup {
 
     const linkInfo = this._links[normalized];
     if (linkInfo) {
-      // Skip edits to the same URL
-      if (post && post.get('url') === linkInfo.post_url) { return NO_RESULT; }
+      // Skip edits to the same post
+      if (post && post.get('post_number') === linkInfo.post_number) { return NO_RESULT; }
 
       _warned[href] = true;
       _warned[normalized] = true;

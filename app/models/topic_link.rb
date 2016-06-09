@@ -232,8 +232,8 @@ class TopicLink < ActiveRecord::Base
       normalized = tl.url.downcase.sub(/^https?:\/\//, '').sub(/\/$/, '')
       lookup[normalized] = { domain: tl.domain,
                              username: tl.post.user.username_lower,
-                             post_url: tl.post.url,
-                             posted_at: tl.post.created_at }
+                             posted_at: tl.post.created_at,
+                             post_number: tl.post.post_number }
     end
 
     lookup
