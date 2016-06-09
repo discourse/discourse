@@ -115,7 +115,7 @@ Discourse::Application.routes.draw do
       post "reset_bounce_score"
     end
     get "users/:id.json" => 'users#show', defaults: {format: 'json'}
-    get 'users/:id/:username' => 'users#show'
+    get 'users/:id/:username' => 'users#show', constraints: {username: USERNAME_ROUTE_FORMAT}
     get 'users/:id/:username/badges' => 'users#show'
 
 
