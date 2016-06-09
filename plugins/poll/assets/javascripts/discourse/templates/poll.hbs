@@ -29,6 +29,12 @@
         <p>{{{multipleHelpText}}}</p>
       {{/if}}
     {{/if}}
+
+    {{#if isPublic}}
+      {{#unless showingResults}}
+        <p>{{i18n "poll.public.title"}}</p>
+      {{/unless}}
+    {{/if}}
   </div>
 </div>
 

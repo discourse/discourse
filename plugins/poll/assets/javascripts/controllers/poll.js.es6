@@ -5,6 +5,7 @@ export default Ember.Controller.extend({
   isNumber: Ember.computed.equal("poll.type", "number"),
   isRandom : Ember.computed.equal("poll.order", "random"),
   isClosed: Ember.computed.equal("poll.status", "closed"),
+  isPublic: Ember.computed.equal("poll.public", "true"),
   pollsVoters: Ember.computed.alias("post.polls_voters"),
 
   // shows the results when
