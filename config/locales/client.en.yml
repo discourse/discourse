@@ -842,8 +842,8 @@ en:
     too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
     too_few_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     logs_error_rate_notice:
-      reached: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has reached site settings's limit of %{siteSettingRate}."
-      exceeded: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has exceeded site settings's limit of %{siteSettingRate}."
+      reached: "<b>[%{relativeAge}]</b> Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has reached site settings's limit of %{siteSettingRate}."
+      exceeded: "<b>[%{relativeAge}]</b> Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has exceeded site settings's limit of %{siteSettingRate}."
       rate:
         one: "1 error/%{duration}"
         other: "%{count} errors/%{duration}"
