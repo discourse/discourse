@@ -415,6 +415,14 @@ describe PostRevisor do
             expect(post.topic.tags.size).to eq(0)
           end
 
+          it "can remove all tags using tags_empty_array" do
+            topic.tags = [Fabricate(:tag, name: "stuff")]
+            result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags_empty_array: "true" })
+            expect(result).to eq(true)
+            post.reload
+            expect(post.topic.tags.size).to eq(0)
+          end
+
           it "can't add staff-only tags" do
             SiteSetting.staff_tags = "important"
             result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: ['important', 'stuff'] })
