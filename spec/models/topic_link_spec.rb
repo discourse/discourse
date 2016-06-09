@@ -274,7 +274,7 @@ http://b.com/#{'a'*500}
         expect(ch[:domain]).to eq('www.codinghorror.com')
         expect(ch[:username]).to eq(post.username)
         expect(ch[:posted_at]).to be_present
-        expect(ch[:post_url]).to be_present
+        expect(ch[:post_number]).to be_present
       end
 
       it 'has the correct results' do
