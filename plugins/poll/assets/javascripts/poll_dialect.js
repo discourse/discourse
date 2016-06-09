@@ -138,6 +138,10 @@
         if (help) { info.push(["p", help]); }
       }
 
+      if (attributes[DATA_PREFIX + "public"] === "true") {
+        info.push(["p", I18n.t("poll.public.title")]);
+      }
+
       poll.push(info);
 
       // 3 - BUTTONS
