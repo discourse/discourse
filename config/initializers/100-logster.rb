@@ -28,11 +28,17 @@ if Rails.env.production?
     # suppress unconditionally for now
     /^Can't verify CSRF token authenticity$/,
 
-    # 404s can be dealt with elsewise
-    /^ActiveRecord::RecordNotFound /,
+    # Yandex bot triggers this JS error a lot
+    /^Uncaught ReferenceError: I18n is not defined/,
+
+    # related to browser plugins somehow, we don't care
+    /Error calling method on NPObject/,
+
+    # 404s can be dealt with elsewhere
+    /^ActiveRecord::RecordNotFound/,
 
     # bad asset requested, no need to log
-    /^ActionController::BadRequest /
+    /^ActionController::BadRequest/
   ]
 end
 
