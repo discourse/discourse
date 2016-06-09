@@ -22,17 +22,14 @@
     <p><%=t "login.close_window" %></p>
 
     <script type="text/javascript">
-       if (window.opener) {
-         window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
-       }
-
        // On facebook browser, just redirect and don't close
        var ua = navigator.userAgent || navigator.vendor || window.opera;
-       // if ((ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1)) {
-       //   window.location.href = '<%= Discourse.base_url.html_safe %>';
-       // } else {
+       if ((ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1)) {
+         window.location.href = '<%= Discourse.base_url.html_safe %>';
+       } else {
+         window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
          window.close();
-       // }
+       }
     </script>
   </div>
 </body>
