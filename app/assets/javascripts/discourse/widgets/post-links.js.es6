@@ -20,37 +20,42 @@ export default createWidget('post-links', {
 
     return h('li',
       h('a.track-link', {
-        className: link.reflection ? 'inbound' : 'outbound',
+        className: 'inbound',
         attributes: { href: link.url }
-      }, [iconNode(link.reflection ? 'arrow-left' : 'arrow-right'), linkBody])
+      }, [iconNode('arrow-left'), linkBody])
     );
   },
 
   html(attrs, state) {
-    const links = this.attrs.links || [];
-    const dedupedLinks = _.uniq(links, true, l => l.title);
-    const incomingLinks = dedupedLinks.filter(l => l.reflection);
+    if (!this.attrs.links || this.attrs.links.length == 0) {
+      // shortcut all work
+      return;
+    }
 
-    // if all links are outgoing, don't show any
-    if (incomingLinks.length === 0) { return; }
+    // only show incoming
+    const links = _(this.attrs.links)
+                      .filter(l => l.reflection)
+                      .uniq(true, l => l.title)
+                      .value();
+
+    if (links.length === 0) { return; }
 
     const result = [];
 
     // show all links
-    if (dedupedLinks.length <= 5 || !state.collapsed) {
-      _.each(dedupedLinks, l => result.push(this.linkHtml(l)));
+    if (links.length <= 5 || !state.collapsed) {
+      _.each(links, l => result.push(this.linkHtml(l)));
     } else {
-      // show up to 5 *incoming* links when collapsed
-      const max = Math.min(5, incomingLinks.length);
+      const max = Math.min(5, links.length);
       for (let i = 0; i < max; i++) {
-        result.push(this.linkHtml(incomingLinks[i]));
+        result.push(this.linkHtml(links[i]));
       }
       // 'show more' link
-      if (dedupedLinks.length > max) {
+      if (links.length > max) {
         result.push(h('li', this.attach('link', {
           labelCount: 'post_links.title',
           title: 'post_links.about',
-          count: dedupedLinks.length - max,
+          count: links.length - max,
           action: 'expandLinks',
           className: 'expand-links'
         })));
