@@ -27,7 +27,7 @@ export default createWidget('post-links', {
   },
 
   html(attrs, state) {
-    if (!this.attrs.links || this.attrs.links.length == 0) {
+    if (!this.attrs.links || this.attrs.links.length === 0) {
       // shortcut all work
       return;
     }
