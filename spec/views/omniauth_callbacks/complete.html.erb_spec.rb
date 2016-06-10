@@ -6,7 +6,7 @@ require_dependency "auth/result"
 describe "users/omniauth_callbacks/complete.html.erb" do
 
   let :rendered_data do
-    returned = JSON.parse(rendered.match(/window.opener.Discourse.authenticationComplete\((.*)\)/)[1])
+    JSON.parse(rendered.match(/var authResult = (.*);/)[1])
   end
 
   it "renders auth info" do
