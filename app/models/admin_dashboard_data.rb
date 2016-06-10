@@ -90,7 +90,7 @@ class AdminDashboardData
       'dashboard.poll_pop3_auth_error'
     ]
 
-    add_problem_check :rails_env_check, :ruby_version_check, :host_names_check,
+    add_problem_check :rails_env_check, :host_names_check,
                       :ram_check, :google_oauth2_config_check,
                       :facebook_config_check, :twitter_config_check,
                       :github_config_check, :s3_config_check, :image_magick_check,
@@ -247,10 +247,6 @@ class AdminDashboardData
 
   def notification_email_check
     I18n.t('dashboard.notification_email_warning') if !SiteSetting.notification_email.present? || SiteSetting.notification_email == SiteSetting.defaults[:notification_email]
-  end
-
-  def ruby_version_check
-    I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
   end
 
   def subfolder_ends_in_slash_check
