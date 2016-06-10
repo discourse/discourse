@@ -22,12 +22,15 @@
     <p><%=t "login.close_window" %></p>
 
     <script type="text/javascript">
+       var authResult = <%=@auth_result.to_client_hash.to_json.html_safe%>;
+
        // On facebook browser, just redirect and don't close
        var ua = navigator.userAgent || navigator.vendor || window.opera;
        if ((ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1)) {
-         window.location.href = '<%= Discourse.base_url.html_safe %>';
+         localStorage.setItem('lastAuthResult', JSON.stringify(authResult));
+         window.location.href = '<%= Discourse.base_url.html_safe %>?authComplete=true';
        } else {
-         window.opener.Discourse.authenticationComplete(<%=@auth_result.to_client_hash.to_json.html_safe%>);
+         window.opener.Discourse.authenticationComplete(authResult);
          window.close();
        }
     </script>
