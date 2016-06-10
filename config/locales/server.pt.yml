@@ -15,8 +15,13 @@ pt:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
     <<: *datetime_formats
   title: "Discourse"
   topics: "Tópicos"
@@ -152,7 +157,6 @@ pt:
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
   just_posted_that: "é demasiado semelhante ao que publicaste recentemente"
-  has_already_been_used: "já foi usado"
   invalid_characters: "contem caracteres inválidos"
   is_invalid: "é inválido; tente ser um pouco mais descritivo"
   next_page: "próxima página →"
@@ -265,6 +269,8 @@ pt:
     attributes:
       category:
         name: "Nome da Categoria"
+      topic:
+        title: 'Título'
       post:
         raw: "Corpo"
       user_profile:
@@ -640,27 +646,27 @@ pt:
     page_view_anon_reqs:
       title: "Anónimo"
       xaxis: "Dia"
-      yaxis: "Pedidos de API Anónimos"
+      yaxis: "Visualizações Anónimas"
     page_view_logged_in_reqs:
       title: "Com Sessão Iniciada"
       xaxis: "Dia"
-      yaxis: "Pedidos API de Sessão Iniciada"
+      yaxis: "Visualizações com Login"
     page_view_crawler_reqs:
       title: "Rastreador Web"
       xaxis: "Dia"
-      yaxis: "Pedidos API de Rastreadores Web"
+      yaxis: "Visualizações de Web Crawler"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Dia"
-      yaxis: "Total de Pedidos API"
+      yaxis: "Total de Visualizações"
     page_view_logged_in_mobile_reqs:
-      title: "Pedidos API de Início de Sessão"
+      title: "Visualizações com Login"
       xaxis: "Dia"
-      yaxis: "Pedidos API Mobile de Início de Sessão"
+      yaxis: "Visualizações com Login Móvel"
     page_view_anon_mobile_reqs:
-      title: "Pedidos API Anon"
+      title: "Visualizações Anónimas"
       xaxis: "Dia"
-      yaxis: "Pedidos API Anon Mobile"
+      yaxis: "Visualizações Anónimas em Móvel"
     http_background_reqs:
       title: "Fundo"
       xaxis: "Dia"
@@ -780,13 +786,12 @@ pt:
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para emails padrão. Veja https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Deverá o url completo do sítio (Discourse.base_url) ser http ou https? NÃO ATIVAR ISTO A NÃO SER QUE HTTPS JÁ ESTEJA CONFIGURADO E A FUNCIONAR!"
+    use_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional. Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
     summary_posts_required: "Número mínimo de mensagens num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores %  de mensagens"
     summary_max_results: "Número máximo de mensagens devolvidas por 'Resumo deste Tópico'"
-    enable_private_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base usada para solicitação ao servidor (quando um CDN serve conteúdo dinâmico, certifique-se de configurá-lo para a 'pull' original) ex: http://origem.sítio.com"
     long_polling_interval: "Quantidade de tempo que um servidor deve esperar antes de notificar os clientes quando não há dados para serem enviados (apenas utilizadores ligados)"
@@ -813,7 +818,7 @@ pt:
     ga_domain_name: "Nome de domínio da Google Analytics (ga.js), ex: omeusitio.com; ver http://google.com/analytics"
     ga_universal_tracking_code: "Código de acompanhamento do Google Universal Analytics (analytics.js), ex: UA-12345678-9; ver http://google.com/analytics"
     ga_universal_domain_name: "Nome de domínio do Google Universal Analytics (analytics.js), ex: omeusitio.com; ver http://google.com/analytics"
-    enable_escaped_fragments: "Ir à API do Google Ajax-Crawling se nenhum webcrawler for detetado. Ver https://support.google.com/webmasters/answer/174992?hl=en"
+    enable_escaped_fragments: "Reverter para a Google Ajax-Crawling API se nenhum webcrawler for detectado. Ver https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Ativar o suporte básico para pesquisas em motores de pesquisa através da etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir que os moderadores criem novas categorias"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
@@ -841,7 +846,6 @@ pt:
     allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
     email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
-    forgot_password_strict: "Não informar os utilizadores da existência da conta quando estes utilizam o diálogo de password esquecida."
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     version_checks: "Fazer o ping do Discourse Hub para atualização de versões e mostrar mensagens sobre novas versões no painel de administração"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
@@ -858,7 +862,9 @@ pt:
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
     enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
+    verbose_sso_logging: "Gravar diagnósticos de SSO para /logs"
     enable_sso_provider: "Implementar o protocolo do provedor SSO do Discourse no caminho /session/sso_provider, requer que sso_secret seja configurado"
+    sso_url: "URL da terminação de single-sign-on (tem de incluir http:// ou https://)"
     sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou  mais caracteres"
     sso_overrides_email: "Substitui o email local por um email de um sítio externo a partir de um SSO em cada início de sessão, e previne mudanças locais. (AVISO: podem ocorrer discrepâncias devido à normalização de emails locais) "
     sso_overrides_username: "Substitui nomes de utilizadores locais por nomes de utilizadores de sítios externos a partir de um SSO em cada início de sessão, e previne mudanças locais. (AVISO: podem ocorrer discrepâncias devido a diferenças no comprimento/requisitos do nome de utilizador)"
@@ -1001,7 +1007,7 @@ pt:
     faq_url: "Se possui uma FAQ alojada noutro local e que queira usar, forneça a URL completa aqui."
     tos_url: "Se tem um documento de Termos de Serviço alojado noutro local e que queira usar, forneça a URL completa aqui."
     privacy_policy_url: "Se tem um documento de Política de Privacidade alojado noutro local e que queira usar, forneça a URL completa aqui."
-    newuser_spam_host_threshold: "Quantas vezes um novo utilizador pode publicar uma hiperligação no mesmo servidor dentro das suas mensagens `newuser_spam_host_posts` antes de ser considerada como spam."
+    newuser_spam_host_threshold: "Quantas vezes um novo utilizador pode colocar um link para o mesmo endereço dentro do número de respostas `newuser_spam_host_threshold` , antes de ser considerado spam."
     white_listed_spam_host_domains: "Lista de domínios excluídos dos testes de spam. Novos utilizadores nunca irão ser restritos da criação de mensagens com hiperligações a esses domínios."
     staff_like_weight: "Quanto é o fator de ponderação extra a dar aos gostos provenientes do pessoal."
     topic_view_duration_hours: "Contar uma nova visualização do tópico uma vez por IP/Utilizador a cada N horas"
@@ -1025,9 +1031,11 @@ pt:
     short_email_length: "Comprimento de email curto, em Bytes"
     display_name_on_email_from: "Exibir nomes completos em campos do formulário de email"
     unsubscribe_via_email: "Permitir aos utilizadores cancelar a subscrição de emails enviando um email com \"unsubscribe\" no assunto ou no corpo do email"
-    unsubscribe_via_email_footer: "Adicionar uma hiperligação de cancelamento de subscrição ao rodapé de emails enviados"
     delete_email_logs_after_days: "Apagar registos de email após (N) dias. 0 para os manter indefinidamente"
     max_emails_per_day_per_user: "Número máximo de emails para enviar aos utilizadores. 0 para desligar o limite"
+    auto_generated_whitelist: "Lista de endereços de email que não serão verificados para conteúdo gerado automáticamente."
+    block_auto_generated_emails: "Bloquear emails recebidos que sejam identificados como gerados automáticamente."
+    ignore_by_title: "Ignorar emails recebidos com base no seu título."
     manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
     pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
     pop3_polling_ssl: "Utilize SSL ao ligar a um servidor POP3. (Recomendado)"
@@ -1056,6 +1064,7 @@ pt:
     digest_topics: "Número máximo de tópicos a serem apresentados no resumo do email."
     digest_min_excerpt_length: "Tamanho mínimo do excerto da mensagem no resumo do email, em caracteres."
     delete_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
+    digest_suppress_categories: "Não incluir estas categorias nos emails digest."
     disable_digest_emails: "Desativar os emails de resumo para todos os utilizadores."
     detect_custom_avatars: "Se deve ou não verificar que os utilizadores carregaram fotografias de perfil personalizadas."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá verificar o Gravatar para avatars personalizados, por dia"
@@ -1078,6 +1087,7 @@ pt:
     disable_edit_notifications: "Desativa notificações de edição do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
+    topic_page_title_includes_category: "Título da página do tópico inclui o nome da categoria."
     full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
@@ -1101,6 +1111,7 @@ pt:
     enable_cdn_js_debugging: "Permitir que /logs exiba erros próprios ao adicionar permissões de origem-cruzada em todos os js incluídos."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
+    bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de bootstrap (coloque 0 para desactivar)"
     vacuum_db_days: "Executar VACUUM ANALYZE para reclamar espaço na BD após as migrações (configurar a 0 para desativar)"
     prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
@@ -1109,11 +1120,15 @@ pt:
     enforce_square_emoji: "Forçar uma relação de aspecto quadrado para todos os emojis."
     approve_post_count: "A quantidade de mensagens de um novo utilizador ou utilizador básico que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
+    notify_about_queued_posts_after: "Se houver mensagens a aguardar revisão após tantas horas, enviar email para `contact_email`. Configurar a 0 para desactivar."
+    auto_close_messages_post_count: "Número máximo de respostas numa mensagem  antes de a fechar automáticamente (configurar a 0 para desactivar)"
+    auto_close_topics_post_count: "Número máximo de mensagens num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     default_email_digest_frequency: "Por defeito, quantas vezes os utilizadores recebem emails de resumo."
     default_include_tl0_in_digests: "Incluir mensagens de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
     default_email_private_messages: "Por defeito, enviar um email quando alguém envia mensagens ao utilizador."
     default_email_direct: "Por defeito, enviar um email quando alguém cita/responde a/menciona ou convida o utilizador."
     default_email_mailing_list_mode: "Por defeito, enviar um email por cada nova mensagem."
+    default_email_mailing_list_mode_frequency: "Utilizadores que activem o mode de mailing list receberão mails com esta frequência, por defeito."
     disable_mailing_list_mode: "Não permitir aos utilizadores habilitar o modo de lista de distribuição."
     default_email_always: "Por defeito, enviar notificações por email mesmo quando o utilizador está ativo."
     default_email_previous_replies: "Incluir respostas previas nos emails por defeito."
@@ -1130,6 +1145,18 @@ pt:
     default_categories_watching: "Lista de categorias que por defeito são vigiadas."
     default_categories_tracking: "Lista de categorias que por defeito são acompanhadas."
     default_categories_muted: "Lista de categorias que por defeito são mudas."
+    tagging_enabled: "Permitir tags em tópicos?"
+    min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma tag."
+    max_tags_per_topic: "O numero máximo de tags que podem ser aplicadas a um tópico."
+    max_tag_length: "O número máximo de caracteres que pode ser usado numa tag."
+    max_tag_search_results: "Número máximo de resultados a mostrar quando pesquisar por tags."
+    show_filter_by_tag: "Mostrar filtro de tags para a lista de tópicos."
+    max_tags_in_filter_list: "Número máximo de tags a mostrar no filtro de tags. As tags mais utilizadas serão mostradas."
+    tags_sort_alphabetically: "Mostrar tags por ordem alfabética. Por defeito, ordenar por popularidade."
+    tag_style: "Estilo visual dos distintivos de tags."
+    staff_tags: "Lista de tags que só pode ser aplicadas por membros do staff."
+    min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir tags a tópicos."
+    suppress_overlapping_tags_in_list: "Esconder tags das listagens, caso se sobreponham ao título."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1172,6 +1199,11 @@ pt:
       category: 'Categorias'
       topic: 'Resultados'
       user: 'Utilizadores'
+  sso:
+    not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
+    account_not_approved: "A sua conta ainda não foi aprovada por um membro da equipa. Receberá uma notificação por email quando a sua conta for aprovada."
+    unknown_error: "Existe um problema com a sua conta. Por favor contacte o administrador do site."
+    timeout_expired: "Expirou o tempo de login, por favor tente de novo."
   original_poster: "Participante Original"
   most_posts: "Maior parte das mensagens"
   most_recent_poster: "Participante Mais Recente"
@@ -1325,7 +1357,6 @@ pt:
       (Se a hiperligação acima tiver expirado, escolha "Esqueci a minha palavra-passe" ao iniciar sessão com o seu endereço de email.)
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
-    text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n- *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**.\n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF.\n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.\n\n- Recomendamos vivamente que **envie um email de teste para [mail-tester.com][mt]** para verificar que tudo mencionado em cima está a funcionar correctamente.\n\n(A maneira *fácil* é criar uma conta grátis em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que fornecem grátis, generosamente grátis, pacotes de envio de emails  e será suficiente para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!)\n\nEsperamos que tenha recebido este teste de entrega de email sem problemas!\n\nBoa sorte, \n\nDos seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[sg]: https://sendgrid.com/\n[sp]: https://www.sparkpost.com/\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n[mt]: http://www.mail-tester.com/\n"
   new_version_mailer:
     subject_template: "[%{site_name}]  Nova versão Discourse, atualização disponível"
   new_version_mailer_with_notes:
@@ -1353,7 +1384,6 @@ pt:
   system_messages:
     post_hidden:
       subject_template: "Mensagem oculta devido a sinalizações da comunidade"
-      text_body_template: "Olá,\n\nEsta é uma mensagem automática de %{site_name} para informá-lo que a sua mensagem foi oculta. \n\n%{base_url}%{url} \n\n%{flag_reason}\n\nMúltiplos membros da comunidade sinalizaram esta mensagem antes de ser escondida, por isso considere como poderá rever a sua mensagem para refletir o seu feedback. **Pode editar a sua mensagem após %{edit_delay} minutos, e esta será automaticamente exibida.**\n\nContudo, se a mensagem for escondida pela comunidade uma segunda vez, irá manter-se escondida até ser tratada pelo pessoal – e poderão ainda ocorrer ações, incluindo uma possível suspensão da sua conta.\n\nPara orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).\n"
     usage_tips:
       text_body_template: "Aqui ficam algumas dicas para que possa começar:\n\n## Leitura \n\nPara ler mais, **simplesmente continue a arrastar para baixo!** \n\nÀ medida que novas mensagens ou novos tópicos surgem, estes irão surgir automaticamente – não é necessário actualizar a página.\n\n## Navegação\n\nPara pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **o ícone no canto superior direito**.\n\n- A selecção de um título do tópico leva-o sempre para a **próxima resposta não lida** no tópico. Para entrar na parte superior ou inferior, seleccione a contagem de resposta ou última data de resposta em seu lugar.\n\n    <img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Ao ler um tópico, selecione a barra de progresso no canto inferior direito para controlos de navegação completos. Salte rapidamente para o topo ao selecionar o título do tópico. Pressione <kbd>?</kbd> para uma lista rápida de atalhos do teclado.\n\n    <img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Responder\n\n- Para responder ao **tópico em geral**, utilize <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> no final de cada tópico.\n\n- Para responder a uma **pessoa específica**, utilize <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> nas suas mensagens.\n\n- Para responder com um **novo tópico**, utilize <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\"> à direita desta mensagem. Tanto os tópicos antigos como os novos serão ligados automaticamente.\n\nA sua resposta pode ser formatada com HTML simplificado, BBCode ou [Markdown](http://commonmark.org/help/):\n\n    Isto é **negrito**.\n    Isto é <b>negrito</b>.\n    Isto é [b]negrito[/b].\n\nQuer aprender Markdown [Faça o nosso curso interactivo de 10 minutos!](http://commonmark.org/help/tutorial/)\n\nPara inserir uma citação, seleccione o texto que deseja citar e de seguida pressione qualquer botão de Resposta. Repetir para múltiplas citações.\n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar alguém da sua resposta, mencione o seu nome. Digite `@` para começar a seleccionar um nome de utilizador.\n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\nPara utilizar [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` para encontrar por nome, ou os tradicionais risonhos `;)`\n\n<img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\nPara gerar um sumário para uma hiperligação, cole-o numa linha por si só:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n## Acções\n\nExistem botões de acção no final de cada mensagem:\n\n<img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara deixar alguém saber que gostou e apreciou as suas mensagens, utilize o botão **gosto**. Partilhe o amor!\n\nSe vir um problema com uma mensagem de alguém, avise a pessoa em privado, ou avise [o nosso pessoal](%{base_url}/about), sobre a mesma utilizando o botão **sinalizar**. Pode também **partilhar** uma hiperligação para uma mensagem, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.\n\n## Notificações\n\nQuando alguém lhe responde, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o para aceder às suas **notificações**.\n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nNão se preocupe em falhar uma resposta – irá receber notificações por email que chegam quando está ausente.\n\n## As Suas Preferências\n\n  - Todos os tópicos com menos de **dois dias** são considerados novos.\n\n  - Qualquer tópico em que tenha **participado activamente** (respondido, criado, ou lido por um extenso período) será acompanhado automaticamente.\n\nVerá o indicador numérico e o indicador azul novo junto desses tópicos:\n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nPode alterar as suas notificações para qualquer tópico através do controlo de notificações no final do tópico.\n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nPode também configurar estados de notificação por categoria, se quer observar cada novo tópico numa categoria específica.\n\nTo change any of these settings, see [your user preferences](%{base_url}/my/preferences).\n\n## Confiança da Comunidade\n\nÀ medida que for participando aqui, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e limitações de novos utilizadores serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar novas capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
     welcome_user:
@@ -1541,28 +1571,6 @@ pt:
         Por favor certifique-se que configurou correctamente as credenciais POP em [configurações do sítio](%{base_url}/admin/site_settings/category/email).
 
         Se existe uma interface web para a sua conta de POP de email pode necessitar se iniciar sessão na interface web e verificar a suas configurações aí.
-    too_many_spam_flags:
-      subject_template: "Nova conta bloqueada"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informá-lo que as suas mensagens foram automaticamente eliminadas por terem sido sinalizadas por parte da comunidade.
-
-        Como medida de precaução, a sua nova conta foi bloqueada de criar novas respostas ou tópicos até que um membro do pessoal possa revê-la.
-
-        Para orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).
-    blocked_by_staff:
-      subject_template: "Conta bloqueada"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informá-lo de que a sua conta foi bloqueada por um membro do pessoal.
-
-        Por favor tome atenção que não poderá criar novas respostas ou tópicos até um membro do pessoal desbloquear a sua conta.
-
-        Se tem questões sobre este bloqueio, por favor contacte um [membro do pessoal](%{base_url}/about)
-
-        Para orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Novo utilizador %{username}  bloqueado devido a sinalizações da comunidade."
       text_body_template: |
@@ -1576,14 +1584,6 @@ pt:
     spam_post_blocked:
       subject_template: "Novas mensagens do novo utilizador %{username} foram bloqueadas devido a hiperligações repetidas"
       text_body_template: "Esta é uma mensagem automática.\n\nO novo utilizador [%{username}](%{user_url}) tentou criar múltiplas mensagens com hiperligações para %{domains}, mas estas foram bloqueadas para evitar spam. O utilizador ainda pode criar novas mensagens sem hiperligação a %{domains}. \n\nPor favor [reveja o utilizador](%{user_url}).\n\nIsto pode ser modificado através de `newuser_spam_host_threshold` e `white_listed_spam_host_domains` nas configurações do sítio.\n"
-    unblocked:
-      subject_template: "Conta desbloqueada"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informar que a sua conta foi desbloqueada após avaliação da staff.
-
-        Pode agora voltar a responder e criar novos tópicos.
     pending_users_reminder:
       subject_template:
         one: "1 utilizador espera a aprovação"
@@ -1595,10 +1595,6 @@ pt:
     download_remote_images_disabled:
       subject_template: "Descarregamento de imagens remotas desativado"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
-  unsubscribe_link: |
-    Para parar de receber notificações para este tópico em particular, [clique aqui](%{unsubscribe_url}). Para cancelar a subscrição destes emails, altere as suas [preferências de utilizador](%{user_preferences_url}).
-  unsubscribe_via_email_link: |
-    ou, [carregue aqui](mailto:reply@%{hostname}?subject=unsubscribe) para cancelar a subscrição via email.
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1610,11 +1606,6 @@ pt:
     unsubscribe:
       title: "Cancelar a Subscrição"
       description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
-    reply_by_email: "[Consultar Tópico](%{base_url}%{url}) ou responda a este email para responder"
-    reply_by_email_pm: "[Consultar Mensagem](%{base_url}%{url}) ou responda a este email para responder"
-    only_reply_by_email: "Responda a este email para responder"
-    visit_link_to_respond: "[Consultar Tópico](%{base_url}%{url}) para responder"
-    visit_link_to_respond_pm: "[Consultar Mensagem](%{base_url}%{url}) para responder"
     posted_by: "Publicado por %{username} em %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem '%{topic_title}'"
@@ -1624,100 +1615,25 @@ pt:
       subject_template: "[%{site_name}] %{username} convidou-o para '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_replied_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
         %{message}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
       subject_template: "Resumo [%{site_name}]"
@@ -1730,6 +1646,11 @@ pt:
       read_more: "Leia Mais"
       more_topics: "Houve %{new_topics_since_seen} outros novos tópicos."
       more_topics_category: "Mais novos tópicos:"
+    mailing_list:
+      new_topics: "Novos tópicos"
+      topic_updates: "Atualizações de tópico"
+      view_this_topic: "Ver este tópico"
+      back_to_top: "Voltar ao topo"
     forgot_password:
       subject_template: "[%{site_name}] Repor palavra-passe"
       text_body_template: |
@@ -1844,10 +1765,8 @@ pt:
     images:
       too_large: "Pedimos desculpa, a imagem que está a tentar carregar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor redimensione-a e tente novamente."
       size_not_found: "Pedimos desculpa, mas não conseguimos determinar o tamanho da imagem. É possível que seu ficheiro de imagem esteja corrompido?"
-  flag_reason:
-    sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP respondeu. Veja as configurações de flag_sockpuppets"
-    spam_hosts: "Este novo utilizador tentou criar múltiplas mensagens com hiperligações ao mesmo domínio. Verifique as configurações do sítio em newuser_spam_host_threshold."
   email_log:
+    post_user_deleted: "O utilizador do artigo foi eliminado."
     no_user: "Não foi possível encontrar o utilizador com o id %{user_id}"
     anonymous_user: "Utilizador é anónimo"
     suspended_not_pm: "O utilizador está suspenso, sem mensagens"
@@ -1858,7 +1777,6 @@ pt:
     post_deleted: "a mensagem foi eliminada pelo autor"
     user_suspended: "o utilizador foi suspenso"
     already_read: "o utilizador já leu esta mensagem"
-    exceeded_limit: "Excedeu max_emails_per_day_per_user"
     message_blank: "a mensagem está em branco"
     message_to_blank: "message.to está em branco"
     text_part_body_blank: "text_part.body está em branco"
@@ -1883,34 +1801,102 @@ pt:
   privacy_topic:
     title: "Política de Privacidade"
     body: "<a name=\"collect\"></a> \n\n## [Que informações reunimos?](#reunião) \n\nReunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado. \n\nAo inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email. \n\nAo inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor. \n\n<a name=\"use\"></a> \n\n## [Para que usamos as suas informações?](#usar) \n\nTodas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras: \n\n* Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si. \n* Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte. \n* Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões. \n\n<a name=\"protect\"></a> \n\n## [Como protegemos a sua informação?](#protect)\n\nImplementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal. \n\n<a name=\"data-retention\"></a> \n\n## [Qual é a sua política de retenção de dados?](#retenção-dados)\n\nIremos fazer um esforço de boa fé para: \n\n* Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias. \n* Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos. \n\n<a name=\"cookies\"></a> \n\n## [Usamos cookies?](#cookies) \n\nSim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa. \n\nUsamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio. \n\n<a name=\"disclose\"></a> \n\n## [Divulgamos informação com partes exteriores?](#divulgar) \n\nNão vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos. \n\n<a name=\"third-party\"></a> \n\n## [Hiperligações de Terceiras Partes](#terceira-parte) \n\nOcasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios. \n\n<a name=\"coppa\"></a> \n\n## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa) \n\nO nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio. \n\n<a name=\"online\"></a> \n\n## [Política de Privacidade Online](#online) \n\nEstas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline. \n\n<a name=\"consent\"></a> \n\n## [O seu consentimento](#consentimento) \n\nAo utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio. \n\n<a name=\"changes\"></a> \n\n## [Mudanças à nossa Política de Privacidade](#mudanças) \n\nSe decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página. \n\nEste documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.\n"
-  static:
-    search_help: |
-      <h3>Dicas</h3>
-      <p>
-      <ul>
-        <li>A correspondência de títulos está priorizada &ndash; em caso de dúvida, pesquise por títulos</li>
-        <li>Palavras únicas e incomuns irão sempre produzir os melhores resultados</li>
-        <li>Tente pesquisar dentro de uma categoria, utilizador ou tópico em particular</li>
-      </ul>
-      </p>
-      <h3>Opções</h3>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code><td></td><td colspan=2></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td></td></tr>
-        <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
-        </table>
-      </p>
-      <h3>Exemplos</h3>
-      <p>
-        <ul>
-          <li><code>rainbows category:parks status:open order:latest</code> irá retornar uma pesquisa por tópicos que contêm a palavra "rainbows" na categoria "parks" que não estão fechados ou arquivados, ordenados pela data da última mensagem.</li>
-          <li><code>rainbows category:"parks and gardens" in:bookmarks</code> irá retornar uma pesquisa de tópicos que contêm a palavra “rainbows” na categoria “parks and gardens” e que estão marcados por si.</li>
-        </ul>
-      </p>
+  badges:
+    editor:
+      name: Editor
+      description: Primeira edição de artigo
+    basic_user:
+      name: Básico
+    member:
+      name: Membro
+    regular:
+      name: Regular
+    leader:
+      name: Líder
+    welcome:
+      name: Bem-vindo
+      description: Recebeu um gosto
+    autobiographer:
+      name: Autobiógrafo
+    anniversary:
+      name: Aniversário
+      description: Membro ativo há um ano, publicou pelo menos uma vez
+    nice_post:
+      name: Boa Resposta
+      description: Recebeu 10 gostos numa resposta
+    good_post:
+      name: Boa Resposta
+      description: Recebeu 25 gostos numa resposta
+    great_post:
+      name: Excelente Resposta
+      description: Recebeu 50 gostos numa resposta
+    nice_topic:
+      name: Bom Tópico
+      description: Recebeu 10 gostos num tópico
+    good_topic:
+      name: Ótimo Tópico
+      description: Recebeu 25 gostos num tópico
+    great_topic:
+      name: Excelente Tópico
+      description: Recebeu 50 gostos num tópico
+    nice_share:
+      name: Boa Partilha
+      description: Partilhou um artigo com 25 visitantes únicos
+    good_share:
+      name: Ótima Partilha
+      description: Partilhou um artigo com 300 visitantes únicos
+    great_share:
+      name: Excelente Partilha
+      description: Partilhou um artigo com 1000 visitantes únicos
+    first_like:
+      name: Primeiro Gosto
+      description: Gostou de um artigo
+    first_flag:
+      name: Primeira Sinalização
+      description: Sinalizou um artigo
+    promoter:
+      name: Promotor
+      description: Convidou um utilizador
+    campaigner:
+      description: Convidou 3 utilizadores básicos
+    champion:
+      name: Campeão
+      description: Convidou 5 membros
+    first_share:
+      name: Primeira Partilha
+      description: Partilhou um artigo
+    first_link:
+      name: Primeira Hiperligação
+      description: Adicionou uma hiperligação para outro tópico
+    first_quote:
+      name: Primeira Citação
+      description: Citou um artigo
+    read_guidelines:
+      name: Ler Diretrizes
+      description: Ler as <a href="/guidelines">diretrizes da comunidade</a>
+    reader:
+      name: Leitor
+      description: Ler todas as respostas num tópico com mais de 100 respostas
+    popular_link:
+      name: Hiperligação Popular
+      description: Publicou uma hiperligação externa com 50 cliques
+    famous_link:
+      name: Hiperligação Famosa
+      description: Publicou uma hiperligação externa com 1000 cliques
+    appreciated:
+      description: Recebeu 1 gosto em 20 artigos
+    respected:
+      description: Recebeu 2 gostos em 100 artigos
+    out_of_love:
+      description: Utilizou 50 gostos num dia
+    higher_love:
+      description: Utilizou 50 gostos num dia 5 vezes
+    crazy_in_love:
+      description: Utilizou 50 gostos num dia 20 vezes
+    thank_you:
+      name: Obrigado
+    first_mention:
+      name: Primeira Menção
   admin_login:
     success: "Email Enviado"
     error: "Erro!"
@@ -1923,8 +1909,8 @@ pt:
     initial_topic_title: Relatórios de desempenho do sítio
   topic_invite:
     user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode apenas convidar um utilizador para um tópico uma vez."
-  time:
-    <<: *datetime_formats
+  tags:
+    title: "Etiquetas"
   activemodel:
     errors:
       <<: *errors

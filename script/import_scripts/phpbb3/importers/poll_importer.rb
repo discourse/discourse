@@ -1,7 +1,5 @@
 module ImportScripts::PhpBB3
   class PollImporter
-    POLL_PLUGIN_NAME = 'poll'
-
     # @param lookup [ImportScripts::LookupContainer]
     # @param database [ImportScripts::PhpBB3::Database_3_0 | ImportScripts::PhpBB3::Database_3_1]
     # @param text_processor [ImportScripts::PhpBB3::TextProcessor]
@@ -9,11 +7,6 @@ module ImportScripts::PhpBB3
       @lookup = lookup
       @database = database
       @text_processor = text_processor
-
-      poll_plugin = Discourse.plugins.find { |p| p.metadata.name == POLL_PLUGIN_NAME }.singleton_class
-      @default_poll_name = poll_plugin.const_get(:DEFAULT_POLL_NAME)
-      @polls_field = poll_plugin.const_get(:POLLS_CUSTOM_FIELD)
-      @votes_field = poll_plugin.const_get(:VOTES_CUSTOM_FIELD)
     end
 
     # @param poll [ImportScripts::PhpBB3::Poll]
@@ -79,7 +72,7 @@ module ImportScripts::PhpBB3
     def extract_default_poll(topic_id, poll_text)
       extracted_polls = DiscoursePoll::Poll::extract(poll_text, topic_id)
       extracted_polls.each do |poll|
-        return poll if poll['name'] == @default_poll_name
+        return poll if poll['name'] == DiscoursePoll::DEFAULT_POLL_NAME
       end
 
       puts "Failed to extract poll for topic id #{topic_id}. The poll text is:"
@@ -107,7 +100,7 @@ module ImportScripts::PhpBB3
 
     # @param custom_fields [Hash]
     def add_poll_to_custom_fields(custom_fields, extracted_poll)
-      custom_fields[@polls_field] = {@default_poll_name => extracted_poll}
+      custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] = {DiscoursePoll::DEFAULT_POLL_NAME => extracted_poll}
     end
 
     # @param custom_fields [Hash]
@@ -122,12 +115,12 @@ module ImportScripts::PhpBB3
 
         if option_id.present? && user_id.present?
           user_votes = votes["#{user_id}"] ||= {}
-          user_votes = user_votes[@default_poll_name] ||= []
+          user_votes = user_votes[DiscoursePoll::DEFAULT_POLL_NAME] ||= []
           user_votes << option_id
         end
       end
 
-      custom_fields[@votes_field] = votes
+      custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD] = votes
     end
   end
 

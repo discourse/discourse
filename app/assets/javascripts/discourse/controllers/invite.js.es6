@@ -6,6 +6,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
   // If this isn't defined, it will proxy to the user model on the preferences
   // page which is wrong.
   emailOrUsername: null,
+  hasCustomMessage: false,
+  customMessage: null,
   inviteIcon: "envelope",
 
   isAdmin: function(){
@@ -27,6 +29,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'model.groupNames', 'model.saving'),
 
   disabledCopyLink: function() {
+    if (this.get('hasCustomMessage')) return true;
     if (this.get('model.saving')) return true;
     if (Ember.isEmpty(this.get('emailOrUsername'))) return true;
     const emailOrUsername = this.get('emailOrUsername').trim();
@@ -37,7 +40,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     // when inviting to private topic via email, group name must be specified
     if (this.get('isPrivateTopic') && Ember.isEmpty(this.get('model.groupNames')) && Discourse.Utilities.emailValid(emailOrUsername)) return true;
     return false;
-  }.property('emailOrUsername', 'model.saving', 'isPrivateTopic', 'model.groupNames'),
+  }.property('emailOrUsername', 'model.saving', 'isPrivateTopic', 'model.groupNames', 'hasCustomMessage'),
 
   buttonTitle: function() {
     return this.get('model.saving') ? 'topic.inviting' : 'topic.invite_reply.action';
@@ -71,6 +74,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic')) && !Discourse.SiteSettings.enable_sso && Discourse.SiteSettings.enable_local_logins && !this.get('isMessage');
   }.property('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'isMessage', 'invitingToTopic'),
 
+  showCustomMessage: function() {
+    return (this.get('model') === this.currentUser || Discourse.Utilities.emailValid(this.get('emailOrUsername')));
+  }.property('emailOrUsername'),
+
   // Instructional text for the modal.
   inviteInstructions: function() {
     if (Discourse.SiteSettings.enable_sso || !Discourse.SiteSettings.enable_local_logins) {
@@ -102,11 +109,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   }.property('isMessage', 'invitingToTopic', 'emailOrUsername'),
 
-  // Instructional text for the group selection.
-  groupInstructions: function() {
-    return this.get('isPrivateTopic') ?
-            I18n.t('topic.automatically_add_to_groups_required') :
-            I18n.t('topic.automatically_add_to_groups_optional');
+  showGroupsClass: function() {
+    return this.get('isPrivateTopic') ? 'required' : 'optional';
   }.property('isPrivateTopic'),
 
   groupFinder(term) {
@@ -136,9 +140,15 @@ export default Ember.Controller.extend(ModalFunctionality, {
             'topic.invite_private.email_or_username_placeholder';
   }.property(),
 
+  customMessagePlaceholder: function() {
+    return I18n.t('invite.custom_message_placeholder');
+  }.property(),
+
   // Reset the modal to allow a new user to be invited.
   reset() {
     this.set('emailOrUsername', null);
+    this.set('hasCustomMessage', false);
+    this.set('customMessage', null);
     this.get('model').setProperties({
       groupNames: null,
       error: false,
@@ -147,7 +157,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
       inviteLink: null
     });
   },
-
   actions: {
 
     createInvite() {
@@ -162,7 +171,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       model.setProperties({ saving: true, error: false });
 
-      return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames).then(result => {
+      return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames, this.get('customMessage')).then(result => {
               model.setProperties({ saving: false, finished: true });
               if (!this.get('invitingToTopic')) {
                 Invite.findInvitedBy(this.currentUser, userInvitedController.get('filter')).then(invite_model => {
@@ -213,6 +222,19 @@ export default Ember.Controller.extend(ModalFunctionality, {
               }
               model.setProperties({ saving: false, error: true });
             });
+    },
+
+    showCustomMessageBox() {
+      this.toggleProperty('hasCustomMessage');
+      if (this.get('hasCustomMessage')) {
+        if (this.get('model') === this.currentUser) {
+          this.set('customMessage', I18n.t('invite.custom_message_template_forum'));
+        } else {
+          this.set('customMessage', I18n.t('invite.custom_message_template_topic'));
+        }
+      } else {
+        this.set('customMessage', null);
+      }
     }
   }
 

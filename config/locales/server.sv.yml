@@ -24,7 +24,6 @@ sv:
   loading: "Laddar"
   powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript påslaget'
   log_in: "Logga in"
-  purge_reason: "Automatiskt raderat i och med att kontot var övergivet och icke-aktiverat"
   disable_remote_images_download_reason: "Fjärrbilds nedladdning är inaktiverad eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   anonymous: "Anonym"
   errors: &errors
@@ -137,7 +136,6 @@ sv:
     delete_reason: "Raderad via modereringskön för inlägg"
   groups:
     errors:
-      can_not_modify_automatic: "Du kan inte modifiera en automatisk grupp"
       member_already_exist: "'%{username}' är redan medlem i denna grupp."
     default_names:
       everyone: "alla"
@@ -368,7 +366,6 @@ sv:
     continue_button: "Fortsätt till %{site_name}"
     welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få ett mail när ditt konto har godkänts!"
-    missing_session: "Vi kan inte upptäcka om ditt konto skapades. Se till att ha cookies aktiverade."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -519,17 +516,14 @@ sv:
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
-      yaxis: "Anonyma API-anrop"
     page_view_logged_in_reqs:
       title: "Inloggad"
       xaxis: "Dag"
-      yaxis: "Inloggade API-anrop"
     page_view_crawler_reqs:
       xaxis: "Dag"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Dag"
-      yaxis: "Totala API-anrop"
     page_view_logged_in_mobile_reqs:
       xaxis: "Dag"
     page_view_anon_mobile_reqs:
@@ -576,7 +570,7 @@ sv:
     contact_email_invalid: "Webbplatsens e-postadress för kontakt är ogiltig. Uppdatera den i  <a href='/admin/site_settings'>Inställningar</a>."
     title_nag: "Ange namnet på webbplatsen. Uppdatera titel i <a href='/admin/site_settings'>Inställningar</a>."
     site_description_missing: "Ange en beskrivning om din webbplats i en mening, som dyker upp i sökresultat. Uppdatera site_description i <a href='/admin/site_settings'>Inställningar</a>."
-    consumer_email_warning: "Din sida är konfigurerad till att använda Gmail (eller någon annan konsumenttjänst) för att skicka email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
+    consumer_email_warning: "Din sida är konfigurerad till att använda Gmail (eller någon annan konsumenttjänst) för att skicka email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail begränsar antalet e-mail du kan skicka</a>. Överväg att använda en tjänsteleverantör som exempelvis mandrill.com för att säkerställa att alla mail kommer fram."
   site_settings:
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
@@ -883,19 +877,6 @@ sv:
       text_body_template: "Återställningen lyckades."
     restore_failed:
       subject_template: "Återställningen misslyckades"
-    too_many_spam_flags:
-      subject_template: "Nytt konto blockerat"
-    blocked_by_staff:
-      subject_template: "Konto blockerat"
-    unblocked:
-      subject_template: "Konto avblockerat"
-      text_body_template: |+
-        Hej,
-
-        Det här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt konto har blivit avblockerat efter en granskning från personalen.
-
-        Du kan nu skapa nya svar och ämnen igen.
-
     pending_users_reminder:
       subject_template:
         one: "1 användare väntar på godkännande"

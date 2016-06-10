@@ -129,7 +129,7 @@ class Topic < ActiveRecord::Base
   # Return private message topics
   scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
-  scope :listable_topics, -> { where('topics.archetype <> ?', [Archetype.private_message]) }
+  scope :listable_topics, -> { where('topics.archetype <> ?', Archetype.private_message) }
 
   scope :by_newest, -> { order('topics.created_at desc, topics.id desc') }
 
@@ -591,7 +591,7 @@ class Topic < ActiveRecord::Base
   end
 
   # Invite a user to the topic by username or email. Returns success/failure
-  def invite(invited_by, username_or_email, group_ids=nil)
+  def invite(invited_by, username_or_email, group_ids=nil, custom_message=nil)
     if private_message?
       # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
@@ -616,7 +616,7 @@ class Topic < ActiveRecord::Base
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
       # NOTE callers expect an invite object if an invite was sent via email
-      invite_by_email(invited_by, username_or_email, group_ids)
+      invite_by_email(invited_by, username_or_email, group_ids, custom_message)
     else
       # invite existing member to a topic
       user = User.find_by_username(username_or_email)
@@ -639,8 +639,8 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def invite_by_email(invited_by, email, group_ids=nil)
-    Invite.invite_by_email(email, invited_by, self, group_ids)
+  def invite_by_email(invited_by, email, group_ids=nil, custom_message=nil)
+    Invite.invite_by_email(email, invited_by, self, group_ids, custom_message)
   end
 
   def email_already_exists_for?(invite)

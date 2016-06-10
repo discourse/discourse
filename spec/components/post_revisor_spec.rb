@@ -357,7 +357,7 @@ describe PostRevisor do
           revisor.revise!(newuser, { title: 'this is a test topic' })
         end
 
-        message = messages.find { |message| message.channel == "/topic/#{topic.id}" }
+        message = messages.find { |m| m.channel == "/topic/#{topic.id}" }
         payload = message.data
         expect(payload[:reload_topic]).to eq(true)
       end
@@ -410,6 +410,14 @@ describe PostRevisor do
           it "can remove all tags" do
             topic.tags = [Fabricate(:tag, name: "super"), Fabricate(:tag, name: "stuff")]
             result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags: [] })
+            expect(result).to eq(true)
+            post.reload
+            expect(post.topic.tags.size).to eq(0)
+          end
+
+          it "can remove all tags using tags_empty_array" do
+            topic.tags = [Fabricate(:tag, name: "stuff")]
+            result = subject.revise!(Fabricate(:user), { raw: "lets totally update the body", tags_empty_array: "true" })
             expect(result).to eq(true)
             post.reload
             expect(post.topic.tags.size).to eq(0)

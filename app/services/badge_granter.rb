@@ -327,7 +327,7 @@ class BadgeGranter
 
     badge.reset_grant_count!
   rescue => ex
-    Rails.logger.error("Failed to backfill '#{badge.type}' badge: #{opts}")
+    Rails.logger.error("Failed to backfill '#{badge.name}' badge: #{opts}")
     raise ex
   end
 

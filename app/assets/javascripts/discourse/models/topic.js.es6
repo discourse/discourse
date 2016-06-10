@@ -309,10 +309,10 @@ const Topic = RestModel.extend({
     });
   },
 
-  createInvite(emailOrUsername, groupNames) {
+  createInvite(user, group_names, custom_message) {
     return Discourse.ajax("/t/" + this.get('id') + "/invite", {
       type: 'POST',
-      data: { user: emailOrUsername, group_names: groupNames }
+      data: { user, group_names, custom_message }
     });
   },
 

@@ -3,7 +3,11 @@ require_dependency 'email/message_builder'
 class InviteMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
-  def send_invite(invite)
+  class UserNotificationRenderer < ActionView::Base
+    include UserNotificationsHelper
+  end
+
+  def send_invite(invite, custom_message=nil)
     # Find the first topic they were invited to
     first_topic = invite.topics.order(:created_at).first
 
@@ -21,25 +25,36 @@ class InviteMailer < ActionMailer::Base
         topic_excerpt = first_topic.excerpt.gsub("\n", " ")
       end
 
+      template = 'invite_mailer'
+      if custom_message.present?
+        template = 'custom_invite_mailer'
+      end
+
       build_email(invite.email,
-                  template: 'invite_mailer',
+                  template: template,
                   invitee_name: invitee_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   topic_title: first_topic.try(:title),
                   topic_excerpt: topic_excerpt,
                   site_description: SiteSetting.site_description,
-                  site_title: SiteSetting.title)
+                  site_title: SiteSetting.title,
+                  user_custom_message: custom_message)
     else
+      template = 'invite_forum_mailer'
+      if custom_message.present?
+        template = 'custom_invite_forum_mailer'
+      end
+
       build_email(invite.email,
-                  template: 'invite_forum_mailer',
+                  template: template,
                   invitee_name: invitee_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   site_description: SiteSetting.site_description,
-                  site_title: SiteSetting.title)
+                  site_title: SiteSetting.title,
+                  user_custom_message: custom_message)
     end
-
   end
 
   def send_password_instructions(user)

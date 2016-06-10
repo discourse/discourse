@@ -55,6 +55,11 @@ class Category < ActiveRecord::Base
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
 
+  has_many :category_tags, dependent: :destroy
+  has_many :tags, through: :category_tags
+  has_many :category_tag_groups, dependent: :destroy
+  has_many :tag_groups, through: :category_tag_groups
+
   scope :latest, ->{ order('topic_count desc') }
 
   scope :secured, ->(guardian = nil) {
@@ -310,6 +315,14 @@ SQL
       end
       @permissions = nil
     end
+  end
+
+  def allowed_tags=(tag_names_arg)
+    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg)
+  end
+
+  def allowed_tag_groups=(group_names)
+    self.tag_groups = TagGroup.where(name: group_names).all.to_a
   end
 
   def downcase_email

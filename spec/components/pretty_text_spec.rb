@@ -263,7 +263,7 @@ HTML
 
     it "should have an option to preserve emoji codes" do
       emoji_code = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
-      expect(PrettyText.excerpt(emoji_code, 100, { keep_emoji_codes: true })).to eq(":heart:")
+      expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
   end

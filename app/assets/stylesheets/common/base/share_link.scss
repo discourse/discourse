@@ -47,7 +47,7 @@
     float: right;
     font-size: 1.429em;
     a {
-      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
   }
 

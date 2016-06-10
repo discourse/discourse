@@ -29,7 +29,7 @@ describe PostAction do
 
       expect {
         PostAction.act(eviltrout, post, PostActionType.types[:like])
-      }.to raise_error
+      }.to raise_error(RateLimiter::LimitExceeded)
 
     end
   end

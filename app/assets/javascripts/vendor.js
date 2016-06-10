@@ -34,7 +34,6 @@
 //= require mousetrap.js
 //= require rsvp.js
 //= require show-html.js
-//= require lock-on.js
 //= require break_string
 //= require buffered-proxy
 //= require jquery.autoellipsis-1.0.10.min.js

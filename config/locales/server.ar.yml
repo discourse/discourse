@@ -24,7 +24,6 @@ ar:
   loading: "يحمّل"
   powered_by_html: 'تدعمه <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه وجافاسكرِبت مفعّل'
   log_in: "تسجيل الدخول"
-  purge_reason: "حُذف آليا باعتباره حسابا إما مهجورا أو غير منشّطا"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
   anonymous: "مجهول"
   emails:
@@ -34,7 +33,6 @@ ar:
       errors:
         empty_email_error: "يحدث عندما يكون البريد المستلم فارغ"
         no_message_id_error: "يحدث عندما لا يحتوي البريد على  'Message-Id' في العنوان"
-        no_body_detected_error: "يحدث عندما لا نستطيع اقتباس المحتوى و لا يوجد مرفق ."
         inactive_user_error: "يحدث عندما يكون المرسل غير نشط "
         blocked_user_error: "يحدث عندما يكون المرسل محظور"
         bad_destination_address: "يحدع عندما لا يكون اي من عنوان البريد االكتروني في حقول  To/Cc/Bcc تتطابق مع كون البريد القادم"
@@ -196,7 +194,6 @@ ar:
   user_is_suspended: "ليس مسموحا للمستخدمين المعلّقة عضويتهم النشر."
   topic_not_found: "حدث خطب ما. قد يكون الموضوع أُغلق أو حُذف وأنت تشاهده؟"
   just_posted_that: "هذا مماثل لما شاركته مؤخرا"
-  has_already_been_used: "هو مستخدم بالفعل"
   invalid_characters: "يحتوي احرف غير صالحة "
   is_invalid: "غير صالح حاول ان تضع وصف اكثر"
   next_page: "الصفحة التالية ←"
@@ -224,7 +221,6 @@ ar:
     delete_reason: "حذف عبر طابور مشاركة معتدل"
   groups:
     errors:
-      can_not_modify_automatic: "لا يمكنك تعديل مجموعة تلقائية"
       member_already_exist: " '%{username}' هو عضو في هذه المجموعة بالفعل."
       invalid_domain: "'%{domain}' ليس نطاقا صالحا."
       invalid_incoming_email: "'%{email_in}' ليس عنوان بريد الكتروني صالح ."
@@ -614,7 +610,6 @@ ar:
     continue_button: "تابع إلى %{site_name}"
     welcome_to: "مرحبا بك في %{site_name}!"
     approval_required: "يجب على المشرف أن يقبل حسابك الجديد قبل أن تستطيع الدخول لهذا المنتدى. سوف تتلقى بريد إلكتروني عندما يتم قبول حسابك."
-    missing_session: "يتعذّر علينا معرفة إن كان حسابك قد أُنشئ أم لا، من فضلك تحقّق من أن الكعكات/الكوكيز مفعّلة."
   post_action_types:
     off_topic:
       title: 'خارج الموضوع'
@@ -775,27 +770,19 @@ ar:
     page_view_anon_reqs:
       title: "مجهولون"
       xaxis: "يوم"
-      yaxis: "طلبات API مجهولة "
     page_view_logged_in_reqs:
       title: "مسجل دخول"
       xaxis: "يوم"
-      yaxis: "سجل طلبات API"
     page_view_crawler_reqs:
       title: "عناكب اﻹنترنت"
       xaxis: "يوم"
-      yaxis: "طلبات API من عناكب الإنترنت"
     page_view_total_reqs:
       title: "مجموع"
       xaxis: "يوم"
-      yaxis: "مجموع طلبات API"
     page_view_logged_in_mobile_reqs:
-      title: "سجل طلبات API"
       xaxis: "يوم"
-      yaxis: "سجل API لطلبات الهواتف  "
     page_view_anon_mobile_reqs:
-      title: "طلبات API مجهولة"
       xaxis: "اليوم"
-      yaxis: "طلبات API مجهولة الهواتف"
     http_background_reqs:
       title: "خلفية"
       xaxis: "اليوم"
@@ -906,13 +893,11 @@ ar:
     notification_email: "لمن:  يستخدم عنوان البريد الالكتروني عند  إرسال كل رسائل النظام الأساسي. المجال الخاص هنا يجب أن يكون SPF, DKIM وسجلات PTR عكسي تضبط بشكل صحيح لوصول البريد الالكتروني."
     email_custom_headers: "قائمة قناة محددة لرؤوس بريد إلكتروني مخصص."
     email_subject: "لتخصيص تنسيق عناوين رسائل البريد الالكتروني القياسية. انظر  https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "يجب ان يكون رابط url كامل للموقع(Discourse.base_url) يكون http او  https؟ لا تشغل هذا الا اذا  تم ضبطه و يعمل!"
     summary_score_threshold: "الحد الأدنى للنقاط المطلوبة لتضمين مشاركة في \"تلخيص هذا الموضوع\""
     summary_posts_required: "الحد الأدنى للمشاركات في الموضوع قبل \"تلخيص هذا الموضوع\" مفعل."
     summary_likes_required: "الحد الأدنى للإعجابات في الموضوع قبل \"تلخيص هذا الموضوع\" مفعل."
     summary_percent_filter: "عندما يضغط المستخدم على \"تلخيص هذا الموضوع\"، يظهر أعلى % o المشاركات."
     summary_max_results: "الحد الأقصى للمشاركات العائدة بـ 'ملخص هذا الموضوع'"
-    enable_private_messages: "يسمح مستوى الثقة 1 (قابل للتغيير من خيار ادنى مستويات الثقة لارسال الرسائل ) للمستخدمين بإنشاء والرد على الرسائل"
     enable_long_polling: "ناقل الرسالة المستخدم للاشعارات يمكن أن يستخدم التصويت الطويل."
     long_polling_base_url: "قاعدة URL تستخدم للتصويت الطويل (عندما CDN يخدم المحتوى الديناميكي, تأكد لتعيين هذا لسحب الأصل) eg: http://origin.site.com"
     long_polling_interval: "المدة الزمنية التي سينتظرها الخادم قبل الرد على العملاء في حالة عدم وجود أية بيانات لارسالها (للأعضاء المسجلين فقط)"
@@ -938,7 +923,6 @@ ar:
     ga_domain_name: "تحليلات Google (ga.js) تتعقب اسم المجال، مثال: mysite.com; انظر http://google.com/analytics"
     ga_universal_tracking_code: "تحليلات Google العالمية (analytics.js) تتعقب رمز الشيفرة، مثال: UA-12345678-9; انظر http://google.com/analytics"
     ga_universal_domain_name: "تحليلات Google العالمية (analytics.js) تتعقب اسم المجال، مثال: mysite.com; انظر http://google.com/analytics"
-    enable_escaped_fragments: "تراجع لـGoogle's Ajax-Crawling API إذا لم يكشف عن webcrawler. أنظر https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "فعل دعم محرك بحث webcrawler عبر علامة غير نصية."
     allow_moderators_to_create_categories: "السماح للمشرفين إنشاء قسم جديد"
     cors_origins: "اسمح بالأصول للطلبات عبر المنشأ (CORS). كل أصل يجب أن يتضمن http:// أو https://. متغير env لـ DISCOURSE_ENABLE_CORS يجب أن يعين إلى true ليعمل CORS."
@@ -966,7 +950,6 @@ ar:
     allow_index_in_robots_txt: "تحديد في ملف robots.txt أن يسمح هذا الموقع ليتم فهرستها من قبل محركات البحث على شبكة الإنترنت."
     email_domains_blacklist: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"
     email_domains_whitelist: "قائمة pipe-delimited من مجالات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات مع. تحذير: لن يسمح للمستخدمين مع مجالات البريد الإلكتروني الأخرى غير المذكورة هنا!"
-    forgot_password_strict: "لم يكن لإبلاغ المستخدمين من الوجود حساب عند استخدامهم الحوار كلمة المرور نسيت."
     log_out_strict: "عند تسجيل الخروج، تسجيل الخروج ALL جلسات للمستخدم على جميع الأجهزة"
     version_checks: "Ping ديسكورس مركزا لتحديثات الإصدار وإظهار الرسائل النسخة الجديدة على لوحة القيادة / مسؤول"
     new_version_emails: "إرسال بريد إلكتروني إلى عنوان contact_email عندما نسخة جديدة من ديسكورس هو متاح."
@@ -1111,7 +1094,6 @@ ar:
     faq_url: "إذا كانت لديك معلومات حول إضافة أخرى تريد استخدامها, فضلًا قم بتوفير العنوان كاملاً هنا."
     tos_url: "اذا كان لديك وثيقه شروط خدمه مستضيفها في مكان اخر و تريد استخدمها, وفر url الكامل هنا"
     privacy_policy_url: "اذا كان لديك وثيقه سياسه خصوصيه مستضيفها في مكان ما و نريد استخدمها. وفر url  الكامل هنا"
-    newuser_spam_host_threshold: "كم عدد مرات التي يستطيع فيها المستخدم نشر رابط في نفس المضيف  ضمن newuser_spam_host_posts  قبل ان  يعتبر غير هام"
     white_listed_spam_host_domains: "قائمة النطاقات المستثناة من اختبار مضيف البريد المزعج. لن يتم تقييد المستخدمين الجدد من إنشاء المشاركات مع الروابط إلى هذه النطاقات."
     staff_like_weight: "كم عدد مرات الترجيح الاضافيه لمنح اعجابات الطاقم "
     topic_view_duration_hours: "احسب عدد المواضيع التي تمت مشاهدتها مره واحده عبر ip/مستخدم كل N ساعات"
@@ -1135,7 +1117,6 @@ ar:
     short_email_length: "طول أقصر بريد الكتروني بـ Bytes."
     display_name_on_email_from: "أعرض الاسماء كاملة في البريد الالكتروني من المجال."
     unsubscribe_via_email: "أسمح للمستخدمين بالغاء الاشتراك لرسائل البريد الالكتروني عن طريق أرسال بريد الكتروني يحتوي على 'unsubscribe' في العنوان او محتوى البريد"
-    unsubscribe_via_email_footer: "أرفق رابط الغاء الاشتراك الى اخر البريد المرسل "
     delete_email_logs_after_days: "حذف سجل البريد بعد (ن) يوم. 0 لحفظ السجل للابد"
     pop3_polling_enabled: "تصويت عبرPOP3 لردود البريد الإلكتروني."
     pop3_polling_ssl: "أستخدم SSL عند الأتصال بمخدم POP3.(مُستحسن)"
@@ -1475,20 +1456,6 @@ ar:
   system_messages:
     post_hidden:
       subject_template: "تم إخفاء المنشور بسبب حظر المجتمع"
-      text_body_template: |
-        مرحبا,
-
-        هذه رسالة تلقائية من %{site_name} لتحيطك علما بأن مشاركتك اختفت.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        افراد المجتمع المتعددون بلغوا عن هذه المشاركة قبل اختفائها, لذا رجاء فكر كيف يمكنك تعديل مشاركتك لتغيير ملاحظاتهم. **يمكنك تعديل مشاركتك قبل %{edit_delay} دقائق, وسيتم تم إظهارها تلقائيا.**
-
-        أيضا, إذا اختفت المشاركة مرة ثانية, ستظل مخفية حتى يتم التعامل معها من قبل الموظفين وربما يكون هناك مزيد من العمل, بما في ذلك من الممكن أن يعلق حسابك.
-
-        لمزيد من الإرشادات، يرجى الرجوع لموقعنا[دليل المجتمع](%{base_url}/guidelines).
     welcome_user:
       subject_template: "مرحبا بك في %{site_name}!"
       text_body_template: |
@@ -1597,29 +1564,10 @@ ar:
       subject_template: "[%{site_name}] بريد الكتروني -- توليد رد آلي"
     email_error_notification:
       subject_template: "[%{site_name}] بريد الكتروني -- خطأ مصادقة POP"
-    too_many_spam_flags:
-      subject_template: "حساب جديد مقفول"
-      text_body_template: |
-        مرحبا,
-
-        هذه رساله اليه من %{site_name} لاعلاماك ان مشاركتك تم اخفاها اليا لانها كانت مؤشره من قبل المجتمع.
-         كجراء وقائي تم حظر حسابك من انشاء ردود جديده او مواضيع حتي يقوم اعضاء الطاقم بمراجعه حسابك.
-        للمعلومات الاضافيه.الرجاء مراجعه [قوانين مجتمعنا] (%{base_url}/guidelines).
-    blocked_by_staff:
-      subject_template: "الحساب مُعطل"
     user_automatically_blocked:
       subject_template: "العضو الجديد %{username} تم حجبه بسبب تبليغات عليه في المجتمع"
     spam_post_blocked:
       subject_template: "العضو الجديد %{username} تم حجب مشاركاته بسبب تكرار الروابط "
-    unblocked:
-      subject_template: "الحساب مُفعل "
-      text_body_template: |+
-        مرحبا,
-
-        هذه رساله اليه من %{site_name} لاعلامك انه قد تم فك حظر حسابك بعد مراجعه الطاقم
-
-        يمكنك الان انشاء ردود جديده و مواضيع مجددا.
-
     pending_users_reminder:
       subject_template:
         zero: "لا يوجد أعضاء تنتظر الموافقة."
@@ -1649,88 +1597,18 @@ ar:
       subject_template: "[%{site_name}] %{username} دعاك للرسالة '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
-    user_replied_pm:
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [مساءً] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
       subject_template: "[%{site_name}] الخلاصة"
@@ -1828,9 +1706,6 @@ ar:
     images:
       too_large: "نعتذر، الصورة الذي تريد رفعها كبيرة جداً ( الحد الاقصى هو  %{max_size_kb} كيلوبايت )،يرجى اعادة تغيير حجمها ثم حاول مرة اخرى."
       size_not_found: "نعتذر، لكننا لا يمكن تحديد حجم الصورة. ربما صورتك تالفة؟"
-  flag_reason:
-    sockpuppet: "عضو جديد إنشاء موضوع , وعضو أخر جديد في نفس عنوان IP . شاهد  flag_sockpuppets إعداد الموقع"
-    spam_hosts: "حاول هذا العضو الجديد إنشاء مشاركات متعددة لها روابط بنفس المجال. شاهد newuser_spam_host_threshold إعداد الموقع."
   email_log:
     no_user: "لا يمكنك إيجاد عضو بواسطة id %{user_id}"
     anonymous_user: "المستخدم مجهول"

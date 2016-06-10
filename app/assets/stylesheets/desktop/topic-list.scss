@@ -272,11 +272,13 @@ button.dismiss-read {
   margin-left: 10px;
 }
 
-.category-notification-menu .dropdown-menu {
-  right: 0;
-  top: 30px;
-  bottom: auto;
-  left: auto;
+.category-notification-menu, .tags-admin-menu {
+  .dropdown-menu {
+    right: 0;
+    top: 30px;
+    bottom: auto;
+    left: auto;
+  }
 }
 
 .category-heading {

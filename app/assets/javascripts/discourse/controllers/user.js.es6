@@ -41,7 +41,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return viewingSelf || staff;
   },
 
-  @computed("content.badge_count")
+  @computed('model.name')
+  nameFirst(name) {
+    return !this.get('siteSettings.prioritize_username_in_ux') && name && name.trim().length > 0;
+  },
+
+  @computed("model.badge_count")
   showBadges(badgeCount) {
     return Discourse.SiteSettings.enable_badges && badgeCount > 0;
   },

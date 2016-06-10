@@ -151,12 +151,12 @@ module Email
 
           if @mail.error_status.present?
             if @mail.error_status.start_with?("4.")
-              update_bounce_score(email_log.user.email, SOFT_BOUNCE_SCORE)
+              Email::Receiver.update_bounce_score(email_log.user.email, SOFT_BOUNCE_SCORE)
             elsif @mail.error_status.start_with?("5.")
-              update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
+              Email::Receiver.update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
             end
           elsif is_auto_generated?
-            update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
+            Email::Receiver.update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
           end
         end
       end
@@ -168,7 +168,7 @@ module Email
       @verp ||= all_destinations.select { |to| to[/\+verp-\h{32}@/] }.first
     end
 
-    def update_bounce_score(email, score)
+    def self.update_bounce_score(email, score)
       # only update bounce score once per day
       key = "bounce_score:#{email}:#{Date.today}"
 
@@ -201,7 +201,6 @@ module Email
     def select_body
       text = nil
       html = nil
-      elided = nil
 
       if @mail.multipart?
         text = fix_charset(@mail.text_part)
@@ -212,20 +211,17 @@ module Email
         text = fix_charset(@mail)
       end
 
-      use_html = html.present? && (!text.present? || SiteSetting.incoming_email_prefer_html)
-      use_text = text.present? unless use_html
-
-      if use_text
-        text = trim_discourse_markers(text)
-        text, elided = EmailReplyTrimmer.trim(text, true)
-        return [text, elided]
-      end
-
-      if use_html
+      if html.present? && (SiteSetting.incoming_email_prefer_html || text.blank?)
         html = Email::HtmlCleaner.new(html).output_html
         html = trim_discourse_markers(html)
         html, elided = EmailReplyTrimmer.trim(html, true)
         return [html, elided]
+      end
+
+      if text.present?
+        text = trim_discourse_markers(text)
+        text, elided = EmailReplyTrimmer.trim(text, true)
+        return [text, elided]
       end
     end
 
@@ -331,15 +327,26 @@ module Email
 
       # reply
       match = reply_by_email_address_regex.match(address)
-      if match && match[1].present?
-        email_log = EmailLog.for(match[1])
-        return { type: :reply, obj: email_log } if email_log
+      if match && match.captures
+        match.captures.each do |c|
+          next if c.blank?
+          email_log = EmailLog.for(c)
+          return { type: :reply, obj: email_log } if email_log
+        end
       end
     end
 
     def reply_by_email_address_regex
-      @reply_by_email_address_regex ||= Regexp.new Regexp.escape(SiteSetting.reply_by_email_address)
-                                                         .gsub(Regexp.escape("%{reply_key}"), "([[:xdigit:]]{32})")
+      @reply_by_email_address_regex ||= begin
+        reply_addresses = [
+           SiteSetting.reply_by_email_address,
+          *SiteSetting.alternative_reply_by_email_addresses.split("|")
+        ]
+        escaped_reply_addresses = reply_addresses.select { |a| a.present? }
+                                                 .map { |a| Regexp.escape(a) }
+                                                 .map { |a| a.gsub(Regexp.escape("%{reply_key}"), "([[:xdigit:]]{32})") }
+        Regexp.new(escaped_reply_addresses.join("|"))
+      end
     end
 
     def group_incoming_emails_regex
@@ -454,8 +461,11 @@ module Email
       # ensure posts aren't created in the future
       options[:created_at] = [@mail.date, DateTime.now].min
 
+      is_private_message = options[:archetype] == Archetype.private_message ||
+                           options[:topic].try(:private_message?)
+
       # only add elided part in messages
-      if @elided.present? && options[:topic].try(:private_message?)
+      if @elided.present? && is_private_message
         options[:raw] << "\n\n" << "<details class='elided'>" << "\n"
         options[:raw] << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
         options[:raw] << @elided << "\n"

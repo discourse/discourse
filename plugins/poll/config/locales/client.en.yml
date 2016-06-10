@@ -27,6 +27,9 @@ en:
 
       average_rating: "Average rating: <strong>%{average}</strong>."
 
+      public:
+        title: "Votes submitted to this poll will be made public."
+
       multiple:
         help:
           at_least_min_options:

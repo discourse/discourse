@@ -12,15 +12,23 @@ class TagsController < ::ApplicationController
   before_filter :set_category_from_params, except: [:index, :update, :destroy, :tag_feed, :search, :notifications, :update_notifications]
 
   def index
+    categories = Category.where("id in (select category_id from category_tags)")
+                         .where("id in (?)", guardian.allowed_category_ids)
+                         .preload(:tags)
+    category_tag_counts = categories.map { |c| {id: c.id, tags: self.class.tag_counts_json(Tag.category_tags_by_count_query(c, limit: 300).count)} }
+
     tag_counts = self.class.tags_by_count(guardian, limit: 300).count
-    @tags = tag_counts.map {|t, c| { id: t, text: t, count: c } }
+    @tags = self.class.tag_counts_json(tag_counts)
 
     respond_to do |format|
       format.html do
         render :index
       end
       format.json do
-        render json: { tags: @tags }
+        render json: {
+          tags: @tags,
+          extras: { categories: category_tag_counts }
+        }
       end
     end
   end
@@ -104,20 +112,30 @@ class TagsController < ::ApplicationController
   end
 
   def search
-    query = self.class.tags_by_count(guardian, params.slice(:limit))
-    term = params[:q]
-    if term.present?
-      term.gsub!(/[^a-z0-9\.\-\_]*/, '')
-      term.gsub!("_", "\\_")
-      query = query.where('tags.name like ?', "%#{term}%")
-    end
+    category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
 
-    if params[:filterForInput] && !guardian.is_staff?
-      staff_tag_names = SiteSetting.staff_tags.split("|")
-      query = query.where('tags.name NOT IN (?)', staff_tag_names) if staff_tag_names.present?
-    end
+    tags_with_counts = DiscourseTagging.filter_allowed_tags(
+      self.class.tags_by_count(guardian, params.slice(:limit)),
+      guardian,
+      {
+        for_input: params[:filterForInput],
+        term: params[:q],
+        category: category,
+        selected_tags: params[:selected_tags]
+      }
+    )
 
-    tags = query.count.map {|t, c| { id: t, text: t, count: c } }
+    tags = tags_with_counts.count.map {|t, c| { id: t, text: t, count: c } }
+
+    unused_tags = DiscourseTagging.filter_allowed_tags(
+      Tag.where(topic_count: 0),
+      guardian,
+      { for_input: params[:filterForInput], term: params[:q], category: category, selected_tags: params[:selected_tags] }
+    )
+
+    unused_tags.each do |t|
+      tags << { id: t.name, text: t.name, count: 0 }
+    end
 
     render json: { results: tags }
   end
@@ -155,6 +173,10 @@ class TagsController < ::ApplicationController
 
     def self.tags_by_count(guardian, opts={})
       guardian.filter_allowed_categories(Tag.tags_by_count_query(opts))
+    end
+
+    def self.tag_counts_json(tag_counts)
+      tag_counts.map {|t, c| { id: t, text: t, count: c } }
     end
 
     def set_category_from_params

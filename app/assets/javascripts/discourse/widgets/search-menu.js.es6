@@ -3,6 +3,14 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 
+const searchData = {
+  loading: false,
+  results: {},
+  noResults: false,
+  term: undefined,
+  typeFilter: null
+};
+
 // Helps with debouncing and cancelling promises
 const SearchHelper = {
   _activeSearch: null,
@@ -29,23 +37,22 @@ const SearchHelper = {
       this._activeSearch = null;
     }
 
-    const { state } = widget;
-    const { term, typeFilter, contextEnabled } = state;
+    const { term, typeFilter, contextEnabled } = searchData;
     const searchContext = contextEnabled ? widget.searchContext() : null;
     const fullSearchUrl = widget.fullSearchUrl();
 
     if (!isValidSearchTerm(term)) {
-      state.noResults = true;
-      state.results = [];
-      state.loading = false;
+      searchData.noResults = true;
+      searchData.results = [];
+      searchData.loading = false;
       widget.scheduleRerender();
     } else {
       this._activeSearch = searchForTerm(term, { typeFilter, searchContext, fullSearchUrl });
       this._activeSearch.then(content => {
-        state.noResults = content.resultTypes.length === 0;
-        state.results = content;
+        searchData.noResults = content.resultTypes.length === 0;
+        searchData.results = content;
       }).finally(() => {
-        state.loading = false;
+        searchData.loading = false;
         widget.scheduleRerender();
         this._activeSearch = null;
       });
@@ -55,19 +62,9 @@ const SearchHelper = {
 
 export default createWidget('search-menu', {
   tagName: 'div.search-menu',
-  buildKey: () => 'search-menu',
-
-  defaultState() {
-    return { loading: false,
-             results: {},
-             noResults: false,
-             term: null,
-             typeFilter: null };
-  },
 
   fullSearchUrl() {
-    const state = this.state;
-    const contextEnabled = state.contextEnabled;
+    const contextEnabled = searchData.contextEnabled;
 
     const ctx = contextEnabled ? this.searchContext() : null;
     const type = Ember.get(ctx, 'type');
@@ -76,7 +73,7 @@ export default createWidget('search-menu', {
       return;
     }
 
-    let url = '/search?q=' + encodeURIComponent(state.term);
+    let url = '/search?q=' + encodeURIComponent(searchData.term);
     if (contextEnabled) {
       if (ctx.id.toString().toLowerCase() === this.currentUser.username_lower &&
           type === "private_messages") {
@@ -90,18 +87,17 @@ export default createWidget('search-menu', {
   },
 
   panelContents() {
-    const { state } = this;
-    const contextEnabled = state.contextEnabled;
+    const contextEnabled = searchData.contextEnabled;
 
-    const results = [this.attach('search-term', { value: state.term, contextEnabled }),
+    const results = [this.attach('search-term', { value: searchData.term, contextEnabled }),
                      this.attach('search-context', { contextEnabled })];
 
-    if (state.loading) {
+    if (searchData.loading) {
       results.push(h('div.searching', h('div.spinner')));
     } else {
-      results.push(this.attach('search-menu-results', { term: state.term,
-                                                        noResults: state.noResults,
-                                                        results: state.results }));
+      results.push(this.attach('search-menu-results', { term: searchData.term,
+                                                        noResults: searchData.noResults,
+                                                        results: searchData.results }));
     }
 
     return results;
@@ -121,8 +117,8 @@ export default createWidget('search-menu', {
     return this._searchContext;
   },
 
-  html(attrs, state) {
-    state.contextEnabled = attrs.contextEnabled;
+  html(attrs) {
+    searchData.contextEnabled = attrs.contextEnabled;
 
     return this.attach('menu-panel', { maxWidth: 500, contents: () => this.panelContents() });
   },
@@ -132,38 +128,36 @@ export default createWidget('search-menu', {
   },
 
   triggerSearch() {
-    const { state } = this;
-
-    state.noResults = false;
-    if (isValidSearchTerm(state.term)) {
-      this.searchService().set('highlightTerm', state.term);
-      state.loading = true;
+    searchData.noResults = false;
+    if (isValidSearchTerm(searchData.term)) {
+      this.searchService().set('highlightTerm', searchData.term);
+      searchData.loading = true;
       Ember.run.debounce(SearchHelper, SearchHelper.perform, this, 400);
     } else {
-      state.results = [];
+      searchData.results = [];
     }
   },
 
   moreOfType(type) {
-    this.state.typeFilter = type;
+    searchData.typeFilter = type;
     this.triggerSearch();
   },
 
   searchContextChanged(enabled) {
-    this.state.typeFilter = null;
+    searchData.typeFilter = null;
     this.sendWidgetAction('searchMenuContextChanged', enabled);
-    this.state.contextEnabled = enabled;
+    searchData.contextEnabled = enabled;
     this.triggerSearch();
   },
 
   searchTermChanged(term) {
-    this.state.typeFilter = null;
-    this.state.term = term;
+    searchData.typeFilter = null;
+    searchData.term = term;
     this.triggerSearch();
   },
 
   fullSearch() {
-    if (!isValidSearchTerm(this.state.term)) { return; }
+    if (!isValidSearchTerm(searchData.term)) { return; }
 
     SearchHelper.cancel();
     const url = this.fullSearchUrl();

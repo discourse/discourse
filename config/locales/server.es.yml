@@ -15,8 +15,13 @@ es:
       short: "%d-%m-%Y"
       short_no_year: "%-d %B"
       date_only: "%-d %B, %Y"
+      long: "%-d %B, %Y, %l:%M%P"
   date:
     month_names: [null, Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
     <<: *datetime_formats
   title: "Discourse"
   topics: "Temas"
@@ -153,7 +158,6 @@ es:
   user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
   topic_not_found: "Algo ha salido mal. ¿Tal vez este tema ha sido cerrado o eliminado mientras estabas lo estabas mirando?"
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
-  has_already_been_used: "ya ha sido utilizado"
   invalid_characters: "contiene caracteres no válidos"
   is_invalid: "no es válido, intenta ser un poco más descriptivo"
   next_page: "siguiente página →"
@@ -255,6 +259,8 @@ es:
     attributes:
       category:
         name: "Nombre de la categoría"
+      topic:
+        title: 'Título'
       post:
         raw: "Body"
       user_profile:
@@ -629,27 +635,27 @@ es:
     page_view_anon_reqs:
       title: "Anónimas"
       xaxis: "Día"
-      yaxis: "Peticiones a la API anónimas"
+      yaxis: "Páginas vistas anónimas"
     page_view_logged_in_reqs:
       title: "Registrados"
       xaxis: "Día"
-      yaxis: "Peticiones a la API de usuarios logueados"
+      yaxis: "Páginas vistas de usuarios logueados"
     page_view_crawler_reqs:
       title: "Rastreadores web"
       xaxis: "Día"
-      yaxis: "Peticiones a la API de rastreadores web"
+      yaxis: "Páginas vistas de rastreadores web"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Día"
-      yaxis: "Total peticiones a la API"
+      yaxis: "Total páginas vistas"
     page_view_logged_in_mobile_reqs:
-      title: "Peticiones de API con sesión iniciada"
+      title: "Páginas vistas de usuarios logueados"
       xaxis: "Día"
-      yaxis: "Peticiones de API con sesión iniciada desde móvil"
+      yaxis: "Páginas vistas de usuarios logueados a través de móvil"
     page_view_anon_mobile_reqs:
-      title: "Peticiones de API anónimas"
+      title: "Páginas vistas anónimas"
       xaxis: "Día"
-      yaxis: "Peticiones de API anónimas desde móvil"
+      yaxis: "Páginas vistas anónimas desde móvil"
     http_background_reqs:
       title: "Background"
       xaxis: "Día"
@@ -769,13 +775,12 @@ es:
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
     email_subject: "Formato de asunto personalizable para emails estándar. Mira https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "¿Debería ser la URL completa del sitio (Discourse.base_url) http o https? ¡NO ACTIVES ESTO A MENOS QUE HTTPS ESTÉ CONFIGURADO Y FUNCIONANDO!"
+    use_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
     summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
     summary_percent_filter: "Cuando un usuario hace clic en 'Resumen de este tema', se muestra el n % mejores posts"
     summary_max_results: "Máximo de posts devueltos en \"Resumen de este  tema\""
-    enable_private_messages: "Permitir a los usuarios de nivel 1 (configurable vía nivel de confianza para enviar mensajes) crear y responder mensajes"
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     long_polling_base_url: "URL base usada para el 'long polling' (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al 'pull' de origen) ejemplo: http://origin.site.com"
     long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos enviados (solamente usuarios con sesión iniciada)."
@@ -830,7 +835,6 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
-    forgot_password_strict: "No informar de la existencia de la cuenta de un usuario cuando ellos use la opción de olvidar contraseña."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
@@ -847,7 +851,9 @@ es:
     min_admin_password_length: "Longitud mínima de la contraseña para un Admin."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
     enable_sso: "Activar single sign on a través de un sitio externo (AVISO: ¡LAS DIRECCIONES DE EMAIL SERÁN VALIDADAS POR EL SITIO EXTERNO!)"
+    verbose_sso_logging: "Registrar diagnósticos detallados sobre el SSO en /logs"
     enable_sso_provider: "Implementar el protocolo del proveedor de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
+    sso_url: "URL del endpoint para el single sign on (debe incluir http:// o https://)"
     sso_secret: "Cadena secreta utilizada para autenticar criptográficamente la información del SSO, asegúrate de que es de 10 caracteres o más"
     sso_overrides_email: "Sobreescribe el email local con el email que provea sitio externo desde el payload del SSO en cada registro, y previene cambios locales. (AVISO: pueden ocasionarse discrepancias debido a la normalización de los emails locales)"
     sso_overrides_username: "Sobreescribe el usuario local con el usuario que provea el payload del SSO en cada registro, y previene cambios locales. (AVISO: pueden ocasionarse discrepancias debido a las diferencias en los requirimientos/longitud del usuario)"
@@ -990,6 +996,7 @@ es:
     faq_url: "Si tienes un documento de Preguntas Frecuentes alojado que quieras utilizar, introduce la URL completa aquí."
     tos_url: "Si tienes un documento de Condiciones de Servicio alojado en algún sitio quieras utilizar, facilita la URL aquí."
     privacy_policy_url: "Si tienes un documento de Preguntas Frecuentes alojado en algún sitio quieras utilizar, facilita la URL aquí."
+    newuser_spam_host_threshold: "¿Cuántas veces un nuevo usuario puede publicar un enlace al mismo host en `newuser_spam_host_threshold` posts antes de ser considerado spam."
     white_listed_spam_host_domains: "Una lista de dominios a excluir de las pruebas de spam. A los nuevos usuarios no se les restringirá la posibilidad de crear posts con enlaces a estos dominios."
     staff_like_weight: "Qué ponderación extra otorgan los me gusta provenientes de los miembros del Staff."
     topic_view_duration_hours: "Contar una visita a un nuevo tema por IP/Usuario cada N horas"
@@ -1013,10 +1020,14 @@ es:
     short_email_length: "e-mail corto longitud en Bytes"
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de emails"
     unsubscribe_via_email: "Permitir a los usuarios darse de baja de los emails respondiendo con el texto 'unsubscribe' en el asunto o el cuerpo del mensaje"
-    unsubscribe_via_email_footer: "Adjuntar un enlace para darse de baja al pie de los emails enviados"
     delete_email_logs_after_days: "Eliminar logs de email después de (N) días. Si es 0 permanecerán de forma indefinida."
     max_emails_per_day_per_user: "Máximo número de emails a enviar a los usuarios por día. Establece 0 para desactivar el límite"
     enable_staged_users: "Crear cuentas provisionales automáticamente al procesar emails entrantes."
+    maximum_staged_users_per_email: "Máximo número de usuarios provisionales creados al procesar un email entrante."
+    auto_generated_whitelist: "Lista de direcciones de email que no serán revisadas para contenido auto-generado."
+    block_auto_generated_emails: "Bloquear emails entrantes identificadas como auto generados."
+    bounce_score_threshold: "Máxima puntuación antes de parar de enviar correos a un usuario. Un rebote soft añade 1, rebote hard añade 2, la puntuación se restablece 30 días después del último rebote."
+    ignore_by_title: "Ignorar emails entrantes por su título."
     manual_polling_enabled: "Lanza emails usando la API para las respuestas por email."
     pop3_polling_enabled: "Poll vía POP3 para respuestas de e-mail."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
@@ -1068,6 +1079,7 @@ es:
     disable_edit_notifications: "Inhabilitar editar notificaciones por el usuario system cuando 'download_remote_images_to_local' este activo."
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
+    topic_page_title_includes_category: "El título de la página del tema incluye el nombre de la categoría."
     full_name_required: "El nombre completo es un campo obligatorio del perfil de usuario."
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y emails. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
@@ -1091,6 +1103,7 @@ es:
     enable_cdn_js_debugging: "Permitir /logs mostrar los errores correctamente, añadiendo permisos crossorigin en todas las inclusiones de js"
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
+    bootstrap_mode_min_users: "Mínimo número de usuarios requerido para desactivar el modo bootstrap (pon 0 para desactivar esta opción)"
     vacuum_db_days: "Ejecutar VACUUM ANALYZE para reclamar espacio en la base de datos después de las migraciones. (Poner en 0 para inhabilitar)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
     slug_generation_method: "Elegir un método de generación de slug. 'encoded' generará cadenas con código porciento. 'none' hara que no se genere slug."
@@ -1099,11 +1112,15 @@ es:
     enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
     approve_post_count: "La cantidad de posts que deben ser aprobados de usuarios nuevos o de nivel básico"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
+    notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, se enviará un email a la dirección de contacto del sitio. Pon 0 para desactivar estos emails."
+    auto_close_messages_post_count: "Máximo número de publicaciones permitidas en un mensaje antes de que sea cerrado automáticamente (0 para desactivar)"
+    auto_close_topics_post_count: "Máximo número de publicaciones permitidas en un tema antes de que sea cerrado automáticamente (0 para desactivar)"
     default_email_digest_frequency: "Frecuencia por defecto con la que se reciben los emails resumen."
     default_include_tl0_in_digests: "Incluir posts de nuevos usuarios en los emails de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
     default_email_private_messages: "Enviar un email cuando alguien envíe un mensaje al usuario por defecto."
     default_email_direct: "Enviar un email cuando alguien cite/responda/mencione o invite al usuario por defecto."
     default_email_mailing_list_mode: "Enviar un email por cada nuevo post por defecto."
+    default_email_mailing_list_mode_frequency: "Los usuarios que activen el modo lista de correo recibirán correos con esta frecuencia por defecto."
     disable_mailing_list_mode: "No permitir a los usuarios que activen el modo lista de correo."
     default_email_always: "Enviar una notificación por email aunque el usuario esté activo por defecto."
     default_email_previous_replies: "Incluir por defecto respuestas previas en los emails."
@@ -1123,6 +1140,16 @@ es:
     tagging_enabled: "¿Activar etiquetas para los temas?"
     min_trust_to_create_tag: "El mínimo nivel de confianza requerido para crear una etiqueta."
     max_tags_per_topic: "El máximo número de etiquetas que se pueden añadir a un tema."
+    max_tag_length: "Máximo número de caracteres que puede tener una etiqueta."
+    max_tag_search_results: "Al buscar por etiquetas, este será el máximo de resultados a mostrar."
+    show_filter_by_tag: "Mostrar un desplegable para filtrar una lista de temas por etiqueta."
+    max_tags_in_filter_list: "Máximo número de etiquetas en el desplegable. Se mostrarán primero aquellas más utilizadas."
+    tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
+    tag_style: "Estilo visual de las etiquetas."
+    staff_tags: "Una lista de etiquetas que sólo pueden ser aplicadas por administradores o moderadores"
+    min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
+    suppress_overlapping_tags_in_list: "Ocultar etiquetas de la vista de lista si se solapan con el título"
+    remove_muted_tags_from_latest: "No mostrar temas con etiquetas silenciadas en la lista de temas recientes."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1142,6 +1169,8 @@ es:
       pop3_polling_password_is_empty: "Debes establecer una contraseña de 'pop3 polling' antes de activar el polling POP3."
       pop3_polling_authentication_failed: "La autenticación POP3 falló. Por favor, verifica tus credenciales pop3."
       reply_by_email_address_is_empty: "Debes establecer el campo 'reply by email address' antes de activar respuesta por email."
+      email_polling_disabled: "Debes activar el polling POP3 o bien el manual antes de activar la respuesta por email."
+      user_locale_not_enabled: "Debes activar primero 'allow user locale' antes de activar esta opción."
   notification_types:
     group_mentioned: "%{group_name} ha sido mencionado en %{link}"
     mentioned: "%{display_username} te ha mencionado en %{link}"
@@ -1163,6 +1192,11 @@ es:
       category: 'Categorías'
       topic: 'Resultados'
       user: 'Usuarios'
+  sso:
+    not_found: "No se pudo encontrar tu cuenta. Por favor contacta al administrador del sitio."
+    account_not_approved: "Tu cuenta está pendiente de aprobación. Recibirás una notificación por email cuando se apruebe."
+    unknown_error: "Hay un problema con tu cuenta. Por favor contacta al administrador del sitio."
+    timeout_expired: "Se superó el tiempo para el inicio de sesión, por favor inténtalo de nuevo."
   original_poster: "Autor original"
   most_posts: "Con más posts"
   most_recent_poster: "Autor más reciente"
@@ -1189,6 +1223,12 @@ es:
     archived_disabled: "Este tema se ha desarchivado. Se desparaliza y ahora puede ser cambiado."
     closed_enabled: "Este tema está ahora cerrado. No se admiten nuevas respuestas."
     closed_disabled: "Este tema ahora está abierto. Se admiten nuevas respuestas."
+    autoclosed_message_max_posts:
+      one: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de 1 respuesta."
+      other: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuestas."
+    autoclosed_topic_max_posts:
+      one: "Este tema fue cerrado automáticamente al alcanzar el límite máximo de 1 respuesta."
+      other: "Este tema fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuestas."
     autoclosed_enabled_days:
       one: "Este tema se cerró automáticamente después de 1 día. No se permiten nuevas respuestas."
       other: "Este tema se cerró automáticamente después de %{count} días. No se permiten nuevas respuestas."
@@ -1332,20 +1372,6 @@ es:
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
-      text_body_template: |
-        Hola,
-
-        Este es un mensaje automático de %{site_name} para informarte que tu post se ha ocultado.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Varios miembros de la comunidad reportaron este post antes de que fuera ocultado, por lo que por favor, considera cómo podrías revisarlo y reflejar su feedback. **Puedes editar tu post antes de %{edit_delay} minutos, y se mostrará de nuevo automáticamente.**
-
-        Sin embargo, si el post fuera ocultado por la comunidad una segunda vez, permanecerá oculto hasta que sea revisado por un moderador – y en ese caso puede que se tomen medidas, incluyendo la posible suspesión de tu cuenta.
-
-        Para más información, por favor consulta nuestras [directrices](%{base_url}/guidelines).
     usage_tips:
       text_body_template: "Aquí tienes unos breves consejos para empezar:\n\n## Lectura\n\nPara leer más, **¡tan solo tienes que hacer scroll!**\n\nTan pronto como se publiquen nuevas respuestas o temas, aparecerán automáticamente – sin necesidad de actualizar la página.\n\n## Navegación\n\n- Para realizar una búsqueda, ver tu perfil de usuario, o el menú <kbd>☰</kbd>, usa los **botones de la esquina superior derecha**.\n\n- Entrar a un tema desde su título te llevará a la **última respuesta sin leer** del hilo. Para ir al primer o al último post, haz clic en el contador de respuestas o en la fecha de última respuesta..\n\n    <img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Mientras lees un tema, selecciona la barra de progreso en la esquina inferior derecha para ver los controles de navegación. Podrás ir al inicio del hilo seleccionando su título. Teclea <kbd>?</kbd> para ver una lista de rápidos atajos de teclado.\n\n    <img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Participación\n\n- Para responder al **tema en general**, utiliza <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> al final del hilo.\n\n- Para responder a **una persona en específico**, utiliza <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> en su post.\n\n- Para responder **creando un nuevo tema**, utiliza <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\">  la derecha del post. Tanto el tema original como el nuevo serán enlazados entre sí automáticamente.\n\nTu respuesta puede estar en varios formatos como HTML simple, BBCode, o [Markdown](http://commonmark.org/help/):\n\n    Esto es **negrita**.\n    Esto es <b>negrita</b>.\n    Esto es [b]negrita[/b].\n\n¿Quieres aprender Markdown? [¡Echa un vistazo a nuestro divertido tutorial interactivo de 10 minutos!](http://commonmark.org/help/tutorial/)\n\nPara escribir una cita, selecciona el texto que quieres citar, después haz clic en el botón citar. ¡Puedes repetir para realizar múltiples citas!\n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar a alguien en tu respuesta, menciónale. Empieza a escribir `@` para elegir su nombre de usuario.\n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\nPara usar [Emojis](http://www.emoji.codes/), teclea `:` para elegir por nombre, o usa los tradicionales smileys `;)`\n\n<img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\nPara generar un extracto desde un enlace, pégalo en una línea aparte para él solo:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n## Acciones\n\nHay algunos botones de acción al final de cada post:\n\n<img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara hacerle saber a alguien que aprecias su post, utiliza el botón de **Me gusta**. ¡Compartir es amor!\n\nSi ves algún problema en la publicación de alguien, escríbele un privado, o házselo saber [a nuestros moderadores](%{base_url}/about), con el botón **reporte**. También puedes **compartir** un enlace a un post, o guardarlo en **marcadores** para tenerlo de referencia en tu página de perfil.\n\n## Notificaciones\n\nCuando alguien te responde, cita tu post, o bien menciona tu `@usuario`, inmediatamente aparecerá un número en la esquina superior derecha de la página. Usa ese botón para acceder a tus **notificaciones**.\n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nNo te preocupes si te pierdes alguna respuesta – te enviaremos un email con las notificaciones que lleguen cuando estés fuera.\n\n## Tus preferencias\n\n  - Todos los temas creados hace menos de **dos días** se consideran nuevos..\n\n  - Aquellos temas en los que hayas **participado activamente** (porque lo hayas creado, o respondido o leído durante un período razonable) serán seguidos por tu usuario automáticamente. \n\nVerás los indicadores de temas nuevos o número de respuestas no leídas al lado de estos temas::\n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nPuedes cambiar tus notificaciones para cualquier tema mediante el control de notificaciones al final del tema.\n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nTambién puedes establecer el estado de notificación de una categoría entera, si quieres vigilar cualquier nuevo tema en una categoría específica.\n\nPara cambiar cualquiera de estas opciones, puedes ver [tus preferencias](%{base_url}/my/preferences).\n\n## Confianza y comunidad\n\nAl participar aquí, con el tiempo te ganarás la confianza de la comunidad, te convertirás en usuario de pleno derecho y te serán retiradas las limitaciones de nuevo usuario. Llegado a un punto de un alto [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), obtendrás además nuevas habilidades para ayudarnos a gestionar la comunidad juntos.\n"
     welcome_user:
@@ -1490,8 +1516,6 @@ es:
         Por favor, [echa un vistazo al usuario](%{user_url}).
 
         Esto puede ser modificado con los ajustes`newuser_spam_host_threshold` y`white_listed_spam_host_domains`.
-    unblocked:
-      subject_template: "Cuenta desbloqueada"
     pending_users_reminder:
       subject_template:
         one: "1 usuario esperando aprobación"
@@ -1503,10 +1527,6 @@ es:
     download_remote_images_disabled:
       subject_template: "Inhabilitar la descarga de imágenes remotas"
       text_body_template: "La opción `download_remote_images_to_local` ha sido inhabilitada porque se ha llegado al límite de espacio en disco configurado en `download_remote_images_threshold`."
-  unsubscribe_link: |
-    Para no recibir más notificaciones de este tema en particular, [haz clic aquí](%{unsubscribe_url}). Para darte de baja de estos emails, cambia tus [preferencias](%{user_preferences_url})
-  unsubscribe_via_email_link: |
-    o, [haz clic aquí](mailto:reply@%{hostname}?subject=unsubscribe) para darte de baja por email.
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1515,11 +1535,6 @@ es:
     unsubscribe:
       title: "Darse de baja"
       description: "¿No estás interesado en recibir estos emails? ¡No hay problema! Haz clic abajo para darte de baja de forma instantánea:"
-    reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este email para comentar"
-    reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este email para comentar"
-    only_reply_by_email: "Responde a este email para comentar"
-    visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para comentar"
-    visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para comentar"
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
@@ -1642,6 +1657,15 @@ es:
       read_more: "Leer más"
       more_topics: "Se han publicado otros %{new_topics_since_seen} nuevos temas."
       more_topics_category: "Más temas nuevos:"
+    mailing_list:
+      why: "Actividad en %{site_link} a %{date}"
+      subject_template: "[%{site_name}] Resumen del %{date}"
+      unsubscribe: "Este resumen se envía diariamente dado que el modo lista de correo está activado. Puedes darte de baja %{unsubscribe_link}."
+      from: "%{site_name} resumen"
+      new_topics: "Nuevos temas"
+      topic_updates: "Actualizaciones del tema"
+      view_this_topic: "Visita este tema"
+      back_to_top: "Volver al inicio"
     forgot_password:
       subject_template: "[%{site_name}] Restablecer contraseña"
       text_body_template: |
@@ -1741,6 +1765,7 @@ es:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Por favor, modifica sus dimensiones y prueba otra vez."
       size_not_found: "Lo sentimos, pero no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
   email_log:
+    post_user_deleted: "El autor de la publicación ha sido eliminado."
     no_user: "No se puede encontrar al usuario con id %{user_id}"
     anonymous_user: "El usuario es anónimo"
     suspended_not_pm: "El usuario está suspendido, no mensaje"
@@ -1751,6 +1776,8 @@ es:
     post_deleted: "el post fue eliminado por su autor"
     user_suspended: "el usuario fue suspendido"
     already_read: "el usuario ya ha leído este post"
+    exceeded_emails_limit: "Se ha excedido el max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Se ha excedido el bounce_score_threshold"
     message_blank: "el mensaje está en blanco"
     message_to_blank: "message.to está en blanco"
     text_part_body_blank: "text_part.body está en blanco"
@@ -2192,7 +2219,7 @@ es:
       name: Agradecido/a
       description: 'Ha recibido me gusta en 20 posts y dado a 10 '
       long_description: |
-        Este distintivo se concede cuando has recibido 20 Me gusta en tus posts y has dado 10 o más de vuelta. Cuando alguien le gustan tus posts, encuentras el tiempo para agradecer los posts de otras personas.
+        Este distintivo se concede cuando has recibido 20 Me gusta en tus posts y has dado 10 o más de vuelta. Cuando a alguien le gustan tus posts, encuentras el tiempo para agradecer los posts de otras personas.
     gives_back:
       name: Cómplice
       description: Ha recibido me gusta en 100 posts y dado a 100
@@ -2233,8 +2260,6 @@ es:
     staff_tag_disallowed: "La etiqueta \"%{tag}\" solo puede ser insertada por moderadores."
     staff_tag_remove_disallowed: "La etiqueta \"%{tag}\" solo puede ser eliminada por moderadores."
   rss_by_tag: "Temas con la etiqueta %{tag}"
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

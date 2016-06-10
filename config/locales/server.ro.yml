@@ -91,7 +91,6 @@ ro:
   spamming_host: "Ne pare rău, nu puteți adăuga o adresă acestei gazde."
   user_is_suspended: "Utilizatorii suspendați nu au dreptul de a posta."
   just_posted_that: "este prea similar cu ceea ce ați postat recent"
-  has_already_been_used: "deja este în folosința"
   invalid_characters: "conține caractere invalide"
   is_invalid: "este invalid; încercați o descriere mai detaliată"
   next_page: "urmatoarea pagină →"
@@ -132,15 +131,15 @@ ro:
       few: "%{count} postări"
       other: "%{count} postări"
     new-reply: |
-      Bine ați venit la %{site_name} &mdash; **Mulțumim pentru contribuție!**
+      Bine ai venit la %{site_name} &mdash; **Mulțumim pentru contribuție!**
 
-      - Răspunsul dvs îmbunatațește discuția în vreun fel?
+      - Răspunsul tău îmbunatațește discuția în vreun fel?
 
-      - Fiți amabili cu membrii comunitații.
+      - Fii amabil cu membri comunității.
 
-      - Critica constructivă e bine venită, criticați *ideea*, nu oamenii.
+      - Critica constructivă e binevenită, criticați *ideea*, nu oamenii.
 
-      Pentru detalii, [verificați regulile comune](/reguli). Acest panel v-a apărea doar pentru prima %{education_posts_text}.
+      Pentru detalii, [verifică regulile comune](/reguli). Acest panel va apărea doar pentru prima %{education_posts_text}.
     dominating_topic: |
       ### Permite și altora să se alăture la conversație
 
@@ -156,9 +155,9 @@ ro:
     reviving_old_topic: |
       ### Reînvie această discuție?
 
-      Ultimul răspuns la această discuție a fost dat acum %{days} de zile. Răspunsul dvs v-a merge în capătul listei și toată lumea ce a fost implicată precedent în discuție v-a fi notificată.
+      Ultimul răspuns la această discuție a fost dat acum %{days} de zile. Răspunsul tăuva merge în capătul listei și toată lumea ce a fost implicată în discuție va fi notificată.
 
-      Sunteți sigur că doriți să continuați această conversație veche?
+      Ești sigur că dorești să continui această conversație?
   activerecord:
     attributes:
       category:
@@ -402,7 +401,7 @@ ro:
     error: "Eroare la dezabonare"
     preferences_link: "Vă puteți dezabona și de la mailurile-rezumat din <a href='/my/preferences'>pagina de preferințe</a>"
     different_user_description: "Acum sunteți autentificat ca drept alt utilizator decât acela căruia i-a fost tirmis mailul-rezumat. Vă rugăm schimbați utilizatorul și încercați iar."
-    not_found_description: "Ne pare rău, nu v-am putut dezabona. Este posibil ca adresa din email să fi expirat."
+    not_found_description: "Ne pare rău, nu te-am putut dezabona. Este posibil ca adresa din email să fi expirat."
   resubscribe:
     action: "Reabonare"
     title: "Reabonat!"
@@ -562,7 +561,6 @@ ro:
     apple_touch_icon_url: "Iconiță folosită pentru dispozitivele Apple. Mărimea recomandată este 144px pe 144px."
     notification_email: "Adresa autorului emailu-ului este folosită când se trimit emailuri esențiale de sistem. Domeniul specificat aici trebuie să aibă SPF, DKIM și rapoarte PTR inversate, setate corect pentru că email-ul să ajungă la destinație."
     email_custom_headers: "O listă delimitată vertical a capetelor de email preferențiale"
-    use_https: "Ar trebuii ca întregul URL de site(Discourse.base_url) să fie http sau http-uri? NU ACTIVA ACEASTĂ DECÂT DACĂ HTTP-URILE SUNT DEJA FINCȚIONABILE!"
     summary_score_threshold: "Scorul mimim necesar pentru o postare să fie inclus în 'Sumarul acestei postări'"
     summary_posts_required: "Minimul de postări într-o discuție înainte de 'Sumarul acestei discuții' este activat"
     summary_likes_required: "Minimul de aprecieri într-o discuție înainte de 'Sumarul acestei discuții' este activat"
@@ -813,11 +811,11 @@ ro:
       >
       > %{site_description}
 
-      Dacă sunteți interesat, click pe adresa de dedesubt:
+      Dacă ești interesat, apasă pe adresa de dedesubt:
 
       %{invite_link}
 
-      Aceasta invitație este de la un utilizator de încredere, nu este neapărată nevoie să fii autentificat.
+      Aceasta invitație este de la un utilizator de încredere, nu este nevoie să fii autentificat.
   invite_password_instructions:
     subject_template: "Setaţi parolă pentru contul dvs. %{site_name}"
   test_mailer:
@@ -828,7 +826,7 @@ ro:
     subject_template: "[%{site_name}] update Actualizare valabilă"
   flags_dispositions:
     agreed: "Mulțumim pentru avertizare. Suntem de acord că există o problemă și ne vom interesa."
-    agreed_and_deleted: "Mulțumim pentru avertizare. Suntem de acord că este o problemă și postarea v-a fi eliminată."
+    agreed_and_deleted: "Mulțumim pentru avertizare. Suntem de acord că este o problemă și postarea va fi eliminată."
     disagreed: "Mulțumim pentru avertizare. Ne vom interesa."
   system_messages:
     post_hidden:
@@ -858,8 +856,6 @@ ro:
       subject_template: "Noul utilizator %{username} a fost blocat datorită marcajelor date de comunitate"
     spam_post_blocked:
       subject_template: "Utilizatorul nou %{username} are postările blocate datorită adreselor repetate"
-    unblocked:
-      subject_template: "Cont deblocat"
     pending_users_reminder:
       text_body_template: |
         Exista înscrieri de noi utilizatori ce așteaptă să fie aprobate (sau respinse) înainte de a putea accesa forumul.

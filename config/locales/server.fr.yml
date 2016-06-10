@@ -15,6 +15,7 @@ fr:
       short: "%d-%m-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, janvier, février, mars, avril, mai, juin, juillet, août, septembre, octobre, novembre, décembre]
     <<: *datetime_formats
@@ -153,7 +154,6 @@ fr:
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez?"
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
-  has_already_been_used: "a déjà été utilisé"
   invalid_characters: "contient des caractères invalides"
   is_invalid: "est invalide; essayez d'être plus précis"
   next_page: "page suivante →"
@@ -178,6 +178,7 @@ fr:
     group_mentions: "Dernières mentions de %{group_name}"
     user_posts: "Derniers messages par @%{username}"
     user_topics: "Derniers sujets par @%{username}"
+    tag: "Sujets avec tag"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"
@@ -258,6 +259,8 @@ fr:
     attributes:
       category:
         name: "Nom de la catégorie"
+      topic:
+        title: 'Titre'
       post:
         raw: "Corps"
       user_profile:
@@ -632,27 +635,20 @@ fr:
     page_view_anon_reqs:
       title: "Anonyme"
       xaxis: "Jour"
-      yaxis: "Requêtes API anonymes"
     page_view_logged_in_reqs:
       title: "Connecté"
       xaxis: "Jour"
-      yaxis: "Requêtes API connectées"
     page_view_crawler_reqs:
       title: "Crawlers Web"
       xaxis: "Jour"
-      yaxis: "Requêtes API de crawler web"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Jour"
-      yaxis: "Requêtes API total"
+      yaxis: "Total des pages vues"
     page_view_logged_in_mobile_reqs:
-      title: "Requêtes API connectées"
       xaxis: "Jour"
-      yaxis: "Requêtes API connectées mobiles"
     page_view_anon_mobile_reqs:
-      title: "Requêtes API anonymes"
       xaxis: "Jour"
-      yaxis: "Requêtes API anonymes mobiles"
     http_background_reqs:
       title: "Arrière plan"
       xaxis: "Jour"
@@ -768,13 +764,11 @@ fr:
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
     email_subject: "format du sujet personnalisable pour les courriels standards. Voir https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Est-ce que l'URL complète du site (Discourse.base_url) être http ou https? N'ACTIVEZ PAS CECI A MOINS QUE HTTPS SOIT DEJA ACTIF ET FONCTIONNEL !"
     summary_score_threshold: "Le score minimum requis pour qu'un message soit inclus dans le 'Résumé de ce sujet'"
     summary_posts_required: "Nombre minimum de messages dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur 'Résumé du sujet', montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par 'Résumé de ce sujet'"
-    enable_private_messages: "Autorise les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages)."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'url utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple: http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
@@ -800,7 +794,6 @@ fr:
     ga_domain_name: "Google Analytics (ga.js) de noms de domaine, par exemple: monsite.com; voir http://google.com/analytics"
     ga_universal_tracking_code: "Google Analytics Universal (analytics.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
     ga_universal_domain_name: "Google Analytics Universal (analytics.js) nom de domaine, par exemple: monsite.com; voir http://google.com/analytics"
-    enable_escaped_fragments: "Revenir à l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir https://support.google.com/webmasters/answer/174992?hl=fr"
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
@@ -828,7 +821,6 @@ fr:
     allow_index_in_robots_txt: "Spécifier dans robots.txt que le site est autorisé à être indexer par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisé lors de la création de compte, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer."
-    forgot_password_strict: "Ne pas tenir informé de l'existance d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions pour l'utilisateur sur tous les appareils"
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
@@ -980,7 +972,6 @@ fr:
     faq_url: "Si vous disposez déjà d'une FAQ/Règles de la communauté, hébergée ailleurs, que vous souhaitez utiliser, vous pouvez renseigner l'URL complète ici."
     tos_url: "Si vous disposez déjà de CGU, hébergées ailleurs, que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une Politique de Confidentialité, hébergée ailleurs, que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
-    newuser_spam_host_threshold: "Limite du nombre de liens vers un même host compris dans `newuser_spam_host_posts` qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un spam."
     white_listed_spam_host_domains: "Une liste des domaines exclus des hôtes testés comme spam. Les nouveaux utilisateurs ne seront jamais restreint dans la création de message contenant des liens vers ses domaines. "
     staff_like_weight: "Quel poids supplémentaire donner aux J'aime de l'équipe."
     topic_view_duration_hours: "Compte la vue d'un sujet une seule fois par IP ou par utilisateur toutes les N heures"
@@ -1004,7 +995,6 @@ fr:
     short_email_length: "Taille des courriels courts en Octets"
     display_name_on_email_from: "Affiche les noms complets dans le champ From du courriel."
     unsubscribe_via_email: "Autorise les utilisateurs à se désinscrire des courriels en envoyant un courriel avec \"unsubscribe\" dans le sujet ou le corps du message."
-    unsubscribe_via_email_footer: "Ajoute un lien pour se désinscrire dans le pied des courriels envoyés"
     delete_email_logs_after_days: "Efface les journaux de messagerie après (N) jours. 0 pour conserver indéfiniment."
     max_emails_per_day_per_user: "Nombre maximum de courriels à envoyer aux utilisateurs par jour. 0 pour désactiver la limite"
     enable_staged_users: "Créer automatiquement les utilisateurs en attente lors du traitement des courriels entrants."
@@ -1315,46 +1305,6 @@ fr:
       (Si le lien est expiré, choisissez "J'ai oublié mon mot de passe" lorsque vous essayez de vous connecter avec votre adresse mail.)
   test_mailer:
     subject_template: "[%{site_name}] Test de délivrabilité d'un courriel"
-    text_body_template: |
-      Ceci est un courriel de test de
-
-      [**%{base_url}**][0]
-
-       Assurer la distribution de courriel est compliqué. Voici un certain nombre de points importants que vous devez vérifier au préalable :
-
-       - Soyez *certain* de renseigner le champs from: de la `notification par email` correctement dans votre configuration. **Le nom de domaine renseigné dans l'addresse "from" des courriels que vous envoyez sera le nom de domaine utilisé pour la validation**.
-
-       - Sachez comment consulter le format brut d'un courriel dans votre client de courriel, pour vous permettre de consulter les entêtes pour obtenirs des indices importants. Dans Gmail, c'est l'option "show original" dans le menu contextuel situé en haut à droite de chaque courriel.
-
-       - **IMPORTANT:** Votre FAI a-t-il un enregistrement DNS inverse renseigné pour associer les noms de domaine et les adresses IP depuis lesquelles vous envoyez des courriels ? [Testez votre enregistrement inverse PTR][2] ici. Si votre FAI n'a pas renseigné correctement votre enregistrement DNS inverse, il est très improbable que vos courriels soient délivrés.
-
-       - L'[enregistrement SPF][8] de votre nom de domaine est-il correct ? [Testez votre enregistrement SPF][1] ici. Veuillez noter que le type officiel d'enregistrement est TXT pour le SPF.
-
-       - L'[enregistrement DKIM][3] de votre nom de domaine est-il correct ? Ceci augmentera de manière significative la bonne distribution de vos courriels. [Testez votre enregistrement DKIM][7] ici.
-
-       - Si vous maintenez votre propre serveur de courriel, assurez-vous que les IPs de votre serveur [liste noire de courriel][4]. Vérifiez également qu'il envoie un "fully qualified hostname" résolvable en DNS dans son message HELO. Si ce n'est pas le cas, vos courriels seront rejetés par de nombreux services de courriel.
-
-      - Nous vous recommandons chaudement d'**envoyer un courriel de test à [mail-tester.com][mt]** pour vérifier que tout ce qui est mentionné ci-dessus fonctionne bien.
-
-
-      (La manière *la plus facile* est de créer un compte gratuit sur [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], qui ont de généreuses options gratuites et qui seront parfaits pour de petites communautés. Vous devrez quand même configurer les entrées SPF et DKIM dans votre DNS !)
-
-      Nous espérons que vous avez bien reçu ce courriel de test de distribution !
-
-      Bonne chance, vos amis de [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://sendgrid.com/
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
   new_version_mailer_with_notes:
@@ -1382,21 +1332,6 @@ fr:
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
-      text_body_template: |+
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} qui informe que votre message a été caché.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Plusieurs membres de la communauté ont signalé ce message avant qu'il soit masqué, merci de modifier votre message en fonction des raisons invoquées. **Vous pouvez modifier votre message après %{edit_delay} minutes, il sera alors automatiquement démasqué.**
-
-        Cependant, si votre message est masqué par la communauté une seconde fois, il restera masqué jusqu'à ce qu'un membre de l'équipe s'en occupe – et il est possible que des actions supplémentaires soient entreprises, ceci pouvant mener à la suspension de votre compte.
-
-        Afin d'être guider, merci de vous référer à notre  [charte](%{base_url}/guidelines).
-
     usage_tips:
       text_body_template: |
         Vous trouverez ci-dessous quelques astuces pour vous aider à démarrer :
@@ -1548,6 +1483,10 @@ fr:
       text_body_template: "Nous sommes désolés, l'exportation de vos données a échoué. Veuillez consultez les logs ou contactez un modérateur."
     email_reject_insufficient_trust_level:
       subject_template: "[%{site_name}] Incident d'email -- Niveau de confiance insuffisant "
+    email_reject_user_not_found:
+      subject_template: "[%{site_name}] Erreur de courriel -- L'utilisateur est introuvable"
+    email_reject_screened_email:
+      subject_template: "[%{site_name}] Erreur de courriel -- Courriel bloqué"
     email_reject_inactive_user:
       subject_template: "[%{site_name}] Erreur de courriel -- Compte inactivé"
       text_body_template: |
@@ -1658,12 +1597,6 @@ fr:
       text_body_template: "Ceci est un message automatique.\n\nLe nouvel utilisateur [%{username}](%{user_url}) tente de créer de multiples messages avec des liens vers %{domains}, mais que ces messages ont été bloqués pour éviter le spam. Cet utilisateur est toujours capable de créer des messages qui ne contiennent pas de liens vers %{domains}.\n\nMerci de [review the user](%{user_url}).\n\nCeci peut être modifier via les options `newuser_spam_host_threshold` et white_listed_spam_host_domains`. \n"
     unblocked:
       subject_template: "Compte débloqué"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que vos messages ont été débloqués après vérification de l'équipe.
-
-        Vous pouvez désormais créer de nouveaux messages et sujets.
     pending_users_reminder:
       subject_template:
         one: "1 utilisateur en attente d'approbation"
@@ -1677,10 +1610,6 @@ fr:
       text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
     dashboard_problems:
       subject_template: "Des problèmes ont été trouvé"
-  unsubscribe_link: |
-    Pour ne plus recevoir de notifications pour ce sujet, [cliquez ici](%{unsubscribe_url}). Pour ne plus recevoir ces courriels, visitez vos [préférences utilisateur](%{user_preferences_url}).
-  unsubscribe_via_email_link: |
-    ou, [cliquer ici](mailto:reply@%{hostname}?subject=unsubscribe) pour se désinscrire par courriel.
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1689,11 +1618,6 @@ fr:
     unsubscribe:
       title: "Désabonnement"
       description: "Ces courriels ne vous intéressent pas ? Aucun problème ! Cliquez ci-dessous pour vous désabonner immédiatement :"
-    reply_by_email: "[Visiter sujet](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
-    reply_by_email_pm: "[Visiter message](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
-    only_reply_by_email: "Répondre à ce courriel pour répondre"
-    visit_link_to_respond: "[Visiter sujet](%{base_url}%{url}) pour répondre."
-    visit_link_to_respond_pm: "[Visiter message](%{base_url}%{url}) pour répondre."
     posted_by: "Ecrit par %{username} le %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} vous a invité dans la conversation '%{topic_title}'"
@@ -1722,7 +1646,6 @@ fr:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_replied_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
@@ -1733,7 +1656,6 @@ fr:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1744,7 +1666,6 @@ fr:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1755,7 +1676,6 @@ fr:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1766,7 +1686,6 @@ fr:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1777,7 +1696,6 @@ fr:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1788,7 +1706,6 @@ fr:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
@@ -1799,16 +1716,12 @@ fr:
 
         %{context}
 
-        ---
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
         %{message}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Voici un bref résumé de ce qu'il s'est passé sur %{site_link} depuis votre dernière visite le %{last_seen_at}"
       subject_template: "[%{site_name}] Résumé"
@@ -1821,6 +1734,12 @@ fr:
       read_more: "Lire la suite"
       more_topics: "Il y a eu %{new_topics_since_seen} nouveaux sujets."
       more_topics_category: "Plus de nouveaux sujets :"
+    mailing_list:
+      subject_template: "[%{site_name}] Résumé du %{date}"
+      from: "%{site_name} résumé"
+      new_topics: "Nouveaux sujets"
+      view_this_topic: "Voir ce sujet"
+      back_to_top: "Aller en haut"
     forgot_password:
       subject_template: "[%{site_name}] Réinitialisation du mot de passe"
       text_body_template: |
@@ -2172,17 +2091,16 @@ fr:
       name: Règlement lu
       description: A lu le <a href="/guidelines">règlement de la communauté</a>
       long_description: |
-        Ce badge est accordé pour <a href="/guidelines">en lisant la communauté des directives</a>. En suivant et en partageant ces lignes directrices simples qui aident à construire une communauté sûre, sympa et durable pour tout le monde. Rappelez-vous toujours qu'il y a un autre être humain, très bien comme vous, de l'autre côté de cet écran. Soyez sympa!
+        Ce badge est accordé pour <a href="/guidelines">en lisant la communauté des directives</a>. En suivant et en partageant ces lignes directrices simples qui aident à construire une communauté sûre, sympa et durable pour tout le monde. Rappelez-vous toujours qu'il y a un autre être humain, un être humain comme vous, de l'autre côté de cet écran. Soyez sympa!
     reader:
       name: Lecteur
       description: A lu tous les messages d'un sujet contenant plus de 100 messages
-      long_description: |
-        Ce badge est accordé la première fois que vous lisez un long sujet avec plus de 100 réponses. Lire une conversation attentivement, vous aide à suivre la discussion, comprendre différents points de vue, et conduit à des conversations plus intéressantes. Plus vous lisez, mieux la conversation devient. Comme nous aimons le dire, la lecture est fondamentale! : sourire timide:
+      long_description: "Ce badge est accordé la première fois que vous lisez un long sujet avec plus de 100 réponses. Lire une conversation attentivement vous aide à suivre la discussion, comprendre différents points de vue, et conduit à des conversations plus intéressantes. Plus vous lisez, mieux la conversation devient. \n"
     popular_link:
       name: Lien populaire
       description: A posté un lien externe avec au moins 50 clics
       long_description: |
-        Ce badge est accordé quand un lien que vous avez partagé obtient 50 clics. Merci de poster un lien utile qui a ajouté  un contexte intéressant à la conversation!
+        Ce badge est accordé quand un lien que vous avez partagé obtient 50 clics. Merci de poster un lien utile qui a ajouté un contexte intéressant à la conversation!
     hot_link:
       name: Lien tendance
       description: A posté un lien externe avec au moins 300 clics
@@ -2196,12 +2114,12 @@ fr:
       name: Apprécié
       description: A recu 1 j'aime sur 20 messages
       long_description: |
-        Ce badge est accordé lorsque vous recevez au moins un j'aime sur 20 postes différents. La communauté connaît vos contributions aux conversations ici!
+        Ce badge est accordé lorsque vous recevez au moins un j'aime sur 20 postes différents. La communauté apprécie vos contributions aux conversations ici!
     respected:
       name: Respecté
       description: A reçu 2 j'aime sur 100 messages
       long_description: |
-        Ce badge est accordé lorsque vous recevez au moins 2 j'aime sur 100 postes différents. La communauté est en croissance de respecter vos nombreuses contributions aux conversations ici
+        Ce badge est accordé lorsque vous recevez au moins 2 j'aime sur 100 postes différents. La communauté a de plus en plus de respect pour vos nombreuses contributions aux conversations ici
     admired:
       name: Admiré
       description: A reçu 5 j'aime sur 300 messages
@@ -2211,17 +2129,17 @@ fr:
       name: Trop d'amour
       description: A utilisé 50 j'aime en une journée
       long_description: |
-        Ce badge est accordé lorsque vous utilisez tous les 50 de vos j'aime quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et d'apprécier encourager vos membres de la communauté pour créer encore plus de grandes discussions à l'avenir.
+        Ce badge est accordé lorsque vous utilisez tous les 50 de vos j'aime quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et que vous appréciez. Cela encourage les autres membres de la communauté à créer encore plus de supers discussions à l'avenir.
     higher_love:
       name: Amour plus fort
-      description: A utilisé 50 likes en un jour 5 fois
+      description: A utilisé 50 J'aime en un jour 5 fois
       long_description: |
-        Ce badge est accordé lorsque vous utilisez tous les 50 j'aime par jour pendant 5 jours. Merci de prendre le temps activement d'encourager les meilleures conversations chaque jour!
+        Ce badge est accordé lorsque vous utilisez l'entier de vos 50 j'aime par jour pendant 5 jours. Merci de prendre le temps d'encourager activement les meilleures conversations chaque jour!
     crazy_in_love:
       name: Fou amoureux
       description: A utilisé 50 likes en un jour 20 fois
       long_description: |
-        Ce badge est accordé lorsque vous utilisez tous les 50 de vos j'aime par jour pendant 20 jours. Hou la la! Vous êtes un modèle de régulièrement encourager vos membres de la communauté!
+        Ce badge est accordé lorsque vous utilisez l'entier de vos 50 j'aime par jour pendant 20 jours. Hou la la! Vous êtes un modèle de d'encouragement régulier des membres de la communauté!
     thank_you:
       name: 'Merci '
       description: A 20 messages ayant reçu un j'aime et a donné 10 j'aime

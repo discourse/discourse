@@ -1,10 +1,12 @@
+require_dependency 'rate_limiter'
+
 class InvitesController < ApplicationController
 
   # TODO tighten this, why skip check on everything?
   skip_before_filter :check_xhr, :preload_json
   skip_before_filter :redirect_to_login_if_required
 
-  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :check_csv_chunk, :upload_csv_chunk]
+  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :resend_all_invites, :check_csv_chunk, :upload_csv_chunk]
   before_filter :ensure_new_registrations_allowed, only: [:show, :redeem_disposable_invite]
   before_filter :ensure_not_logged_in, only: [:show, :redeem_disposable_invite]
 
@@ -43,7 +45,7 @@ class InvitesController < ApplicationController
     end
 
     begin
-      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids)
+      if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids, params[:custom_message])
         render json: success_json
       else
         render json: failed_json, status: 422
@@ -127,11 +129,21 @@ class InvitesController < ApplicationController
 
   def resend_invite
     params.require(:email)
+    RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
 
     invite = Invite.find_by(invited_by_id: current_user.id, email: params[:email])
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.resend_invite
+    render nothing: true
 
+  rescue RateLimiter::LimitExceeded
+    render_json_error(I18n.t("rate_limiter.slow_down"))
+  end
+
+  def resend_all_invites
+    guardian.ensure_can_resend_all_invites!(current_user)
+
+    Invite.resend_all_invites_from(current_user.id)
     render nothing: true
   end
 

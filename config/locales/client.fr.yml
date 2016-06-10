@@ -27,6 +27,7 @@ fr:
         millions: "{{number}}M"
     dates:
       time: "H:mm"
+      timeline_date: "MMM YYYY"
       long_no_year: "DD MMM H:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
@@ -38,6 +39,7 @@ fr:
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      wrap_ago: "il y a %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -460,7 +462,7 @@ fr:
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
       github_profile: "Github"
-      mailing_list_mode: "M'envoyer un courriel pour tous les nouveaux messages (sauf si vous avez rendu silencieux le sujet ou la catégorie)"
+      email_activity_summary: "Résumé d'activité"
       watched_categories: "Surveillés"
       watched_categories_instructions: "Vous surveillerez automatiquement les nouveaux sujets de ces catégories. Vous serez averti de tous les nouveaux messages et sujets. De plus, le nombre de messages non lus apparaîtra en regard de la liste des sujets."
       tracked_categories: "Suivies"
@@ -506,7 +508,6 @@ fr:
         error: "Il y avait une erreur lors de la modification de cette valeur."
       change_username:
         title: "Modifier le pseudo"
-        confirm: "Si vous modifiez votre pseudo, toutes les citations de vos messages et les mentions @pseudo seront cassées. Êtes-vous absolument sûr de vouloir le faire ?"
         taken: "Désolé, ce pseudo est déjà pris."
         error: "Il y a eu une erreur lors du changement de votre pseudo."
         invalid: "Ce pseudo est invalide. Il ne doit être composé que de lettres et de chiffres."
@@ -590,23 +591,18 @@ fr:
         always: "toujours"
         never: "jamais"
       email_digests:
-        title: "Quand je ne visite pas ce site, m'envoyer un résumé des nouveautés par courriel:"
         every_30_minutes: "toutes les 30 minutes"
         every_hour: "toutes les heures"
         daily: "quotidien"
         every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
         every_two_weeks: "toutes les deux semaines"
-      include_tl0_in_digests: "Inclure les messages de nouveaux utilisateurs dans courriels de résumé"
       email_in_reply_to: "Inclure un extrait du message auquel il a été répondu dans les courriels"
       email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
       email_always: "Recevoir des notifications par email même lorsque je suis actif sur le site"
       other_settings: "Autre"
       categories_settings: "Catégories"
-      enable_mailing_list:
-        one: "Etes-vous sûr que vous souhaitez recevoir un courriel pour chaque nouveau message?"
-        other: "Etes-vous sûr que vous souhaitez recevoir un email pour chaque nouveau message?<br><br>Ceci équivaudra à environ <b>{{count}} courriels</b> par jour."
       new_topic_duration:
         label: "Considérer les sujets comme nouveau quand"
         not_viewed: "Je ne les ai pas encore vus"
@@ -648,7 +644,9 @@ fr:
         rescind: "Supprimer"
         rescinded: "Invitation annulée"
         reinvite: "Envoyer de nouveau l'invitation"
+        reinvite_all: "Renvoyer invitations"
         reinvited: "Invitation renvoyée"
+        reinvited_all: "Invitations renvoyées!"
         time_read: "Temps de lecture"
         days_visited: "Ratio de présence"
         account_age_days: "Âge du compte en jours"
@@ -1036,7 +1034,6 @@ fr:
       post_format: "#{{post_number}} par {{username}}"
       context:
         user: "Chercher dans les messages de @{{username}}"
-        category: "Rechercher dans la catégorie \"{{category}}\""
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages"
     hamburger_menu: "se rendre dans une autre liste de sujet ou catégorie"

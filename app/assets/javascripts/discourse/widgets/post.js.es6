@@ -296,13 +296,14 @@ createWidget('post-contents', {
 });
 
 createWidget('post-body', {
-  tagName: 'div.topic-body',
+  tagName: 'div.topic-body.clearfix',
 
   html(attrs) {
     const postContents = this.attach('post-contents', attrs);
     const result = [this.attach('post-meta-data', attrs), postContents];
 
     result.push(this.attach('actions-summary', attrs));
+    result.push(this.attach('post-links', attrs));
     if (attrs.showTopicMap) {
       result.push(this.attach('topic-map', attrs));
     }
@@ -341,9 +342,7 @@ createWidget('post-article', {
       rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
     }
 
-    rows.push(h('div.row', [this.attach('post-avatar', attrs),
-                            this.attach('post-body', attrs),
-                            this.attach('post-gutter', attrs)]));
+    rows.push(h('div.row', [this.attach('post-avatar', attrs), this.attach('post-body', attrs)]));
     return rows;
   },
 

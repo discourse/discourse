@@ -266,4 +266,11 @@ class AdminDashboardData
     I18n.t('dashboard.email_polling_errored_recently', count: errors) if errors > 0
   end
 
+  def missing_mailgun_api_key
+    return unless SiteSetting.reply_by_email_enabled
+    return unless ActionMailer::Base.smtp_settings[:address]["smtp.mailgun.org"]
+    return unless SiteSetting.mailgun_api_key.blank?
+    I18n.t('dashboard.missing_mailgun_api_key')
+  end
+
 end

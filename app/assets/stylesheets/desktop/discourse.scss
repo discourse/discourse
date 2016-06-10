@@ -17,6 +17,10 @@ header {
   margin-bottom: 15px;
 }
 
+body.widget-dragging {
+  cursor: ns-resize;
+}
+
 body {
 
   .boxed {

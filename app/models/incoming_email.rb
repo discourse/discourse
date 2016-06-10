@@ -24,10 +24,13 @@ end
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  rejection_message :text
+#  is_auto_generated :boolean          default(FALSE)
+#  is_bounce         :boolean          default(FALSE), not null
 #
 # Indexes
 #
 #  index_incoming_emails_on_created_at  (created_at)
 #  index_incoming_emails_on_error       (error)
 #  index_incoming_emails_on_message_id  (message_id)
+#  index_incoming_emails_on_post_id     (post_id)
 #

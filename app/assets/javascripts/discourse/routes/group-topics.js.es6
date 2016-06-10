@@ -1,3 +1,3 @@
-import { buildIndex } from 'discourse/routes/group-index';
+import { buildGroupPage } from 'discourse/routes/group-posts';
 
-export default buildIndex('topics');
+export default buildGroupPage('topics');

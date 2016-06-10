@@ -61,7 +61,7 @@ gem 'fast_xs'
 gem 'fast_xor'
 
 # while we sort out https://github.com/sdsykes/fastimage/pull/46
-gem 'discourse_fastimage', require: 'fastimage'
+gem 'discourse_fastimage', '2.0.2', require: 'fastimage'
 gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
@@ -74,7 +74,7 @@ gem 'email_reply_trimmer', '0.1.3'
 gem 'image_optim', '0.20.2'
 gem 'multi_json'
 gem 'mustache'
-gem 'nokogiri', '1.6.8.rc3'
+gem 'nokogiri'
 gem 'omniauth'
 gem 'omniauth-openid'
 gem 'openid-redis-store'
@@ -125,7 +125,7 @@ group :test do
 end
 
 group :test, :development do
-  gem 'rspec', '~> 3.2.0'
+  gem 'rspec'
   gem 'mock_redis'
   gem 'listen', '0.7.3', require: false
   gem 'certified', require: false

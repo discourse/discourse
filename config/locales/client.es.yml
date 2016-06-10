@@ -27,6 +27,7 @@ es:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -38,6 +39,7 @@ es:
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      wrap_ago: "hace %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -460,7 +462,17 @@ es:
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
       github_profile: "Github"
-      mailing_list_mode: "Enviarme un e-mail para cada nuevo post (excepto las categorías o temas que tenga silenciadas)"
+      email_activity_summary: "Resumen de actividad"
+      mailing_list_mode:
+        label: "Modo lista de correo"
+        enabled: "Activar modo lista de correo"
+        instructions: |
+          Esta opción sobreescribe el resumen de actividad.<br />
+          Los temas y categorías silenciadas no se incluyen en estos emails.
+        daily: "Enviar actualizaciones diariamente"
+        individual: "Enviar un email por cada nuevo post"
+        many_per_day: "Enviarme un correo por cada nuevo post  (en torno a {{dailyEmailEstimate}} por día)."
+        few_per_day: "Enviarme un correo por cada nuevo post (menos de 2 por día)."
       watched_categories: "Vigiladas"
       watched_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se te notificará de cada nuevo post y tema, y además, se añadirá un contador de posts nuevos y sin leer al lado del tema."
       tracked_categories: "Siguiendo"
@@ -499,14 +511,14 @@ es:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
         error: "(error)"
-        action: "Enviar E-mail para Restablecer la Contraseña"
+        action: "Enviar email para restablecer la contraseña"
         set_password: "Establecer contraseña"
       change_about:
         title: "Cambiar 'Acerca de mí'"
         error: "Hubo un error al cambiar este valor."
       change_username:
         title: "Cambiar Nombre de Usuario"
-        confirm: "Si cambias tu nombre de usuario, todas las citas de tus publicaciones y tus menciones desaparecerán. ¿Estás totalmente seguro de querer cambiarlo?"
+        confirm: "Si cambias tu nombre de usuario, todas las citas de tus posts y @menciones se romperán, y tu parte de tu historial será interrumpido. ¿Seguro que quieres cambiarlo?"
         taken: "Lo sentimos, ese nombre de usuario ya está siendo usado."
         error: "Ha ocurrido un error al cambiar tu nombre de usuario."
         invalid: "Este nombre de usuario no es válido. Debe incluir sólo números y letras"
@@ -590,23 +602,20 @@ es:
         always: "siempre"
         never: "nunca"
       email_digests:
-        title: "Cuando no visite la página, enviarme un correo con las últimas novedades."
+        title: "Cuando no visite el sitio, envíame un resumen por email de los temas populares y las respuestas a:"
         every_30_minutes: "cada 30 minutos"
         every_hour: "cada hora"
         daily: "diariamente"
         every_three_days: "cada tres días"
         weekly: "semanalmente"
         every_two_weeks: "cada dos semanas"
-      include_tl0_in_digests: "Incluir posts de nuevos usuarios en los resúmenes por email"
+      include_tl0_in_digests: "Incluir contenido de nuevos usuarios en los emails de resumen"
       email_in_reply_to: "Incluir un extracto del post al que se responde en los emails"
       email_direct: "Envíame un email cuando alguien me cite, responda a mis posts, mencione mi @usuario o me invite a un tema"
       email_private_messages: "Notifícame por email cuando alguien me envíe un mensaje"
       email_always: "Quiero recibir notificaciones por email incluso cuando esté de forma activa por el sitio"
       other_settings: "Otros"
       categories_settings: "Categorías"
-      enable_mailing_list:
-        one: "¿Seguro que quieres recibir un email por cada nuevo post?"
-        other: "¿Seguro que quieres recibir un email por cada nuevo post?<br><br>Esto resultará en aproximadamente <b>{{count}} emails</b> al día."
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "No los he visto todavía"
@@ -648,7 +657,9 @@ es:
         rescind: "Remover"
         rescinded: "Invitación eliminada"
         reinvite: "Reenviar Invitación"
+        reinvite_all: "Reenviar todas las invitaciones"
         reinvited: "Invitación reenviada"
+        reinvited_all: "¡Todas las invitaciones han sido reenviadas!"
         time_read: "Tiempo de Lectura"
         days_visited: "Días Visitados"
         account_age_days: "Antigüedad de la cuenta en días"
@@ -1036,7 +1047,7 @@ es:
       post_format: "#{{post_number}} por {{username}}"
       context:
         user: "Buscar posts por @{{username}}"
-        category: "Buscar en la categoría \"{{category}}\""
+        category: "Buscar la categoría #{{category}}"
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
     hamburger_menu: "ir a otra lista de temas o categoría"
@@ -1158,6 +1169,11 @@ es:
       auto_close_save: "Guardar"
       auto_close_remove: "No Auto-Cerrar Este Tema"
       auto_close_immediate: "El último mensaje tiene %{hours} horas de antigüedad, por lo que será cerrado inmediatamente."
+      timeline:
+        back: "Volver"
+        back_description: "Volver al último post sin leer"
+        replies: "%{current} / %{total} respuestas"
+        replies_short: "%{current} / %{total}"
       progress:
         title: avances
         go_top: "arriba"
@@ -1169,7 +1185,9 @@ es:
         current: post actual
         position: "post %{current} de %{total}"
       notifications:
+        title: cambiar con qué frecuencia se te notifica de este tema
         reasons:
+          mailing_list_mode: "El modo lista de correo se encuentra activado, por lo que se te notificará de las respuestas a este tema vía email."
           '3_6': 'Recibirás notificaciones porque estás vigilando esta categoría.'
           '3_5': 'Recibirás notificaciones porque has empezado a vigilar este tema automáticamente.'
           '3_2': 'Recibirás notificaciones porque estás vigilando este tema.'
@@ -1551,6 +1569,9 @@ es:
       general: 'General'
       settings: 'Ajustes'
       topic_template: "Plantilla de tema"
+      tags: "Etiquetas"
+      tags_allowed_tags: "Las únicas etiquetas que pueden aplicarse en esta categoría:"
+      tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
       create_long: 'Crear una nueva categoría'
@@ -1605,7 +1626,7 @@ es:
           title: "Normal"
           description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
         muted:
-          title: "Silenciadas"
+          title: "Silenciar"
           description: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de mensajes recientes."
     flagging:
       title: '¡Gracias por ayudar a mantener una comunidad civilizada!'
@@ -1644,6 +1665,11 @@ es:
       clicks:
         one: "1 clic"
         other: "%{count} clics"
+    post_links:
+      about: "expandir los enlaces de este post"
+      title:
+        one: "1 enlace de este post"
+        other: "%{count} enlaces en este post"
     topic_statuses:
       warning:
         help: "Ésta es una advertencia oficial."

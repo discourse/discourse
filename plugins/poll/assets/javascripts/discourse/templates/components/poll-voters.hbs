@@ -1,0 +1,19 @@
+<div class="poll-voters">
+  {{#each users as |user|}}
+    <li>
+      <a data-user-card={{unbound user.username}}>
+        {{avatar user imageSize="tiny" ignoreTitle="true"}}
+      </a>
+    </li>
+  {{/each}}
+
+  <div class="poll-voters-toggle-expand">
+    {{#if showMore}}
+      {{#if isExpanded}}
+        <a {{action "toggleExpand"}}>{{fa-icon "chevron-up"}}</a>
+      {{else}}
+        <a {{action "toggleExpand"}}>{{fa-icon "chevron-down"}}</a>
+      {{/if}}
+    {{/if}}
+  </div>
+</div>

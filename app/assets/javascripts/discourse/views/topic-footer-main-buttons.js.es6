@@ -8,12 +8,13 @@ export default ContainerView.extend({
   createButtons() {
     const mobileView = this.site.mobileView;
 
-    if (!mobileView && this.currentUser.get('staff')) {
-      const viewArgs = {action: 'showTopicAdminMenu', title: 'topic_admin_menu', icon: 'wrench', position: 'absolute'};
-      this.attachViewWithArgs(viewArgs, 'show-popup-button');
+    const topic = this.get('topic');
+
+    if (!mobileView && this.currentUser.get('canManageTopic')) {
+      const viewArgs = { topic, delegated: this.get('topicDelegated'), openUpwards: true };
+      this.attachViewWithArgs(viewArgs, 'topic-admin-menu-button');
     }
 
-    const topic = this.get('topic');
     if (!topic.get('isPrivateMessage')) {
       if (mobileView) {
         this.attachViewWithArgs({ topic }, 'topic-footer-mobile-dropdown');

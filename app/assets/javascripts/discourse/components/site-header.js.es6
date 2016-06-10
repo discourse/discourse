@@ -1,5 +1,6 @@
 import MountWidget from 'discourse/components/mount-widget';
 import { observes } from 'ember-addons/ember-computed-decorators';
+import Docking from 'discourse/mixins/docking';
 
 const _flagProperties = [];
 function addFlagProperty(prop) {
@@ -8,45 +9,37 @@ function addFlagProperty(prop) {
 
 const PANEL_BODY_MARGIN = 30;
 
-const SiteHeaderComponent = MountWidget.extend({
+const SiteHeaderComponent = MountWidget.extend(Docking, {
   widget: 'header',
   docAt: null,
   dockedHeader: null,
   _topic: null,
-
-  // profileWidget: true,
-  // classNameBindings: ['editingTopic'],
 
   @observes('currentUser.unread_notifications', 'currentUser.unread_private_messages')
   _notificationsChanged() {
     this.queueRerender();
   },
 
-  examineDockHeader() {
+  dockCheck(info) {
+    if (this.docAt === null) {
+      const outlet = $('#main-outlet');
+      if (!(outlet && outlet.length === 1)) return;
+      this.docAt = outlet.offset().top;
+    }
+
     const $body = $('body');
-
-    // Check the dock after the current run loop. While rendering,
-    // it's much slower to calculate `outlet.offset()`
-    Ember.run.next(() => {
-      if (this.docAt === null) {
-        const outlet = $('#main-outlet');
-        if (!(outlet && outlet.length === 1)) return;
-        this.docAt = outlet.offset().top;
+    const offset = info.offset();
+    if (offset >= this.docAt) {
+      if (!this.dockedHeader) {
+        $body.addClass('docked');
+        this.dockedHeader = true;
       }
-
-      const offset = window.pageYOffset || $('html').scrollTop();
-      if (offset >= this.docAt) {
-        if (!this.dockedHeader) {
-          $body.addClass('docked');
-          this.dockedHeader = true;
-        }
-      } else {
-        if (this.dockedHeader) {
-          $body.removeClass('docked');
-          this.dockedHeader = false;
-        }
+    } else {
+      if (this.dockedHeader) {
+        $body.removeClass('docked');
+        this.dockedHeader = false;
       }
-    });
+    }
   },
 
   setTopic(topic) {
@@ -56,8 +49,6 @@ const SiteHeaderComponent = MountWidget.extend({
 
   didInsertElement() {
     this._super();
-    $(window).bind('scroll.discourse-dock', () => this.examineDockHeader());
-    $(document).bind('touchmove.discourse-dock', () => this.examineDockHeader());
     $(window).on('resize.discourse-menu-panel', () => this.afterRender());
 
     this.appEvents.on('header:show-topic', topic => this.setTopic(topic));
@@ -72,16 +63,11 @@ const SiteHeaderComponent = MountWidget.extend({
         this.eventDispatched('dom:clean', 'header');
       }
     });
-
-    this.examineDockHeader();
   },
 
   willDestroyElement() {
     this._super();
-    $(window).unbind('scroll.discourse-dock');
-    $(document).unbind('touchmove.discourse-dock');
     $('body').off('keydown.header');
-    this.appEvents.off('notifications:changed');
     $(window).off('resize.discourse-menu-panel');
 
     this.appEvents.off('header:show-topic');
