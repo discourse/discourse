@@ -534,7 +534,9 @@ email:
     validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
-    validator: "ReplyByEmailAddressValidator"
+    validator: "AlternativeReplyByEmailAddressesValidator"
+  alternative_reply_by_email_addresses:
+    default: ''
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
