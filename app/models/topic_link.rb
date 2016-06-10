@@ -183,11 +183,7 @@ class TopicLink < ActiveRecord::Base
                                      post_id: reflected_post.try(:id),
                                      url: reflected_url)
 
-              if tl
-                tl.update_columns(domain: Discourse.current_hostname,
-                                  link_topic_id: post.topic.id,
-                                  link_post_id: post.id)
-              else
+              unless tl
                 tl = TopicLink.create(user_id: post.user_id,
                                     topic_id: topic_id,
                                     post_id: reflected_post.try(:id),
