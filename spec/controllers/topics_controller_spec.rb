@@ -532,6 +532,22 @@ describe TopicsController do
     end
   end
 
+  describe 'show unlisted' do
+    it 'returns 404 unless exact correct URL' do
+      topic = Fabricate(:topic, visible: false)
+      Fabricate(:post, topic: topic)
+
+      xhr :get, :show, topic_id: topic.id, slug: topic.slug
+      expect(response).to be_success
+
+      xhr :get, :show, topic_id: topic.id, slug: "just-guessing"
+      expect(response.code).to eq("404")
+
+      xhr :get, :show, id: topic.slug
+      expect(response.code).to eq("404")
+    end
+  end
+
   describe 'show' do
 
     let(:topic) { Fabricate(:post).topic }
