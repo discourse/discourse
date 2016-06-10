@@ -327,15 +327,26 @@ module Email
 
       # reply
       match = reply_by_email_address_regex.match(address)
-      if match && match[1].present?
-        email_log = EmailLog.for(match[1])
-        return { type: :reply, obj: email_log } if email_log
+      if match && match.captures
+        match.captures.each do |c|
+          next if c.blank?
+          email_log = EmailLog.for(c)
+          return { type: :reply, obj: email_log } if email_log
+        end
       end
     end
 
     def reply_by_email_address_regex
-      @reply_by_email_address_regex ||= Regexp.new Regexp.escape(SiteSetting.reply_by_email_address)
-                                                         .gsub(Regexp.escape("%{reply_key}"), "([[:xdigit:]]{32})")
+      @reply_by_email_address_regex ||= begin
+        reply_addresses = [
+           SiteSetting.reply_by_email_address,
+          *SiteSetting.alternative_reply_by_email_addresses.split("|")
+        ]
+        escaped_reply_addresses = reply_addresses.select { |a| a.present? }
+                                                 .map { |a| Regexp.escape(a) }
+                                                 .map { |a| a.gsub(Regexp.escape("%{reply_key}"), "([[:xdigit:]]{32})") }
+        Regexp.new(escaped_reply_addresses.join("|"))
+      end
     end
 
     def group_incoming_emails_regex
