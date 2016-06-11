@@ -22,7 +22,7 @@ export default createWidget('post-links', {
       h('a.track-link', {
         className: 'inbound',
         attributes: { href: link.url }
-      }, [iconNode('arrows-h'), linkBody])
+      }, [iconNode('link'), linkBody])
     );
   },
 
