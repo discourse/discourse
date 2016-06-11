@@ -1,3 +1,5 @@
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+
 const Invite = Discourse.Model.extend({
 
   rescind() {
@@ -9,11 +11,13 @@ const Invite = Discourse.Model.extend({
   },
 
   reinvite() {
-    Discourse.ajax('/invites/reinvite', {
+    const self = this;
+    return Discourse.ajax('/invites/reinvite', {
       type: 'POST',
       data: { email: this.get('email') }
-    });
-    this.set('reinvited', true);
+    }).then(function() {
+      self.set('reinvited', true);
+    }).catch(popupAjaxError);
   }
 
 });
@@ -48,6 +52,10 @@ Invite.reopenClass({
   findInvitedCount(user) {
     if (!user) { return Em.RSVP.resolve(); }
     return Discourse.ajax("/users/" + user.get('username_lower') + "/invited_count.json").then(result => Em.Object.create(result.counts));
+  },
+
+  reinviteAll() {
+    return Discourse.ajax('/invites/reinvite-all', { type: 'POST' });
   }
 
 });

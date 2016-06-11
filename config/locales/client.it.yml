@@ -27,6 +27,7 @@ it:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"
@@ -38,6 +39,7 @@ it:
       long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
+      wrap_ago: "%{date} fa"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -302,6 +304,8 @@ it:
       title: "Utenti"
       likes_given: "Dati"
       likes_received: "Ricevuti"
+      topics_entered: "Visualizzati"
+      topics_entered_long: "Argomenti Visualizzati"
       time_read: "Tempo di Lettura"
       topic_count: "Argomenti"
       topic_count_long: "Argomenti Creati"
@@ -458,7 +462,6 @@ it:
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
-      mailing_list_mode: "Inviami una email per ogni nuovo messaggio (a meno che io non ignori l'argomento o la categoria)"
       watched_categories: "Osservate"
       watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
       tracked_categories: "Seguite"
@@ -504,7 +507,6 @@ it:
         error: "Si è verificato un errore durante la modifica del valore."
       change_username:
         title: "Cambia Utente"
-        confirm: "Se modifichi il tuo nome utente, non funzioneranno più le precedenti citazioni ai tuoi messaggi e le menzioni @nome. Sei sicuro di volerlo fare?"
         taken: "Spiacenti, questo nome utente è già riservato."
         error: "C'è stato un problema nel cambio del tuo nome utente."
         invalid: "Nome utente non valido: usa solo lettere e cifre"
@@ -588,23 +590,18 @@ it:
         always: "sempre"
         never: "mai"
       email_digests:
-        title: "Quando non visito il sito, invia un riassunto delle novità per email: "
         every_30_minutes: "ogni 30 minuti"
         every_hour: "ogni ora"
         daily: "ogni giorno"
         every_three_days: "ogni tre giorni"
         weekly: "ogni settimana"
         every_two_weeks: "ogni due settimane"
-      include_tl0_in_digests: "Includi messaggi dai nuovi utenti nelle email riepilogative"
       email_in_reply_to: "Nelle email includi un estratto delle risposte al messaggio"
       email_direct: "Inviami un'email quando qualcuno mi cita, risponde a un mio messaggio, menziona il mio @nome o mi invita ad un argomento"
       email_private_messages: "Inviami una email quando qualcuno mi scrive un messaggio"
       email_always: "Inviami notifiche via email anche quando sono collegato al sito"
       other_settings: "Altro"
       categories_settings: "Categorie"
-      enable_mailing_list:
-        one: "Sei sicuro di voler essere avvisato per email per ogni nuovo post?"
-        other: "Sei sicuro di voler essere avvisato via email per ogni nuovo post?<br><br> Questo significherà approssimativamente <b>{{somma}} emails</b> ogni giorno."
       new_topic_duration:
         label: "Considera un argomento \"nuovo\" se"
         not_viewed: "non ancora visti"
@@ -701,6 +698,9 @@ it:
         top_badges: "Migliori Targhette"
         no_badges: "Ancora nessuna targhetta."
         more_badges: "Altre Targhette"
+        top_links: "Migliori Collegamenti"
+        no_links: "Ancora nessun collegamento."
+        no_likes: "Ancora nessun \"Mi piace\"."
       associated_accounts: "Login"
       ip_address:
         title: "Ultimo indirizzo IP"
@@ -1014,7 +1014,6 @@ it:
       post_format: "#{{post_number}} da {{username}}"
       context:
         user: "Cerca messaggi di @{{username}}"
-        category: "Cerca nella categoria \"{{category}}\""
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
     hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
@@ -1521,6 +1520,7 @@ it:
       general: 'Generale'
       settings: 'Impostazioni'
       topic_template: "Modello di Argomento"
+      tags: "Etichette"
       delete: 'Elimina Categoria'
       create: 'Crea Categoria'
       create_long: 'Crea una nuova categoria'
@@ -2192,6 +2192,8 @@ it:
             grant_moderation: "assegna moderazione"
             revoke_moderation: "revoca moderazione"
             backup_operation: "operazione di backup"
+            deleted_tag: "etichetta cancellata"
+            renamed_tag: "etichetta rinominata"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -2478,6 +2480,7 @@ it:
           login: "Accesso"
           plugins: "Plugin"
           user_preferences: "Preferenze Utente"
+          tags: "Etichette"
       badges:
         title: Targhette
         new_badge: Nuova Targhetta
@@ -2686,3 +2689,29 @@ it:
           <button class="btn btn-primary">Google</button>
         </form>
       </p>
+    tagging:
+      all_tags: "Tutte Le Etichette"
+      selector_all_tags: "tutte le etichette"
+      changed: "etichette cambiate:"
+      tags: "Etichette"
+      choose_for_topic: "scegli delle etichette opzionali per questo argomento"
+      delete_tag: "Cancella Etichetta"
+      delete_confirm: "Sicuro di voler eliminare l'etichetta?"
+      rename_tag: "Rinomina Etichetta"
+      rename_instructions: "Scegli un nome per l'etichetta:"
+      sort_by: "Ordina per:"
+      sort_by_count: "conteggio"
+      sort_by_name: "nome"
+      filters:
+        without_category: "%{filter} %{tag} argomenti"
+        with_category: "%{filter} %{tag} argomenti in %{category}"
+      topics:
+        bottom:
+          hot: "Non ci sono ulteriori argomenti caldi."
+          posted: "Non ci sono ulteriori argomenti pubblicati."
+          read: "Non ci sono ulteriori argomenti letti."
+          new: "Non ci sono ulteriori nuovi argomenti."
+          unread: "Non ci sono ulteriori argomenti non letti."
+          top: "Non ci sono ulteriori argomenti di punta."
+          bookmarks: "Non ci sono ulteriori argomenti aggiunti ai segnalibri."
+          search: "Non ci sono ulteriori risultati di ricerca."

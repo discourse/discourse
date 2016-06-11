@@ -24,7 +24,6 @@ sk:
   loading: "Načítava sa"
   powered_by_html: 'Systém beží na <a href="http://www.discourse.org">Discourse</a>, najlepšie funguje so zapnutým JavaScriptom'
   log_in: "Prihlásenie"
-  purge_reason: "Automaticky vymazaný ako opustený, neaktivovaný účet"
   disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."
   anonymous: "Anonymný"
   emails:
@@ -150,7 +149,6 @@ sk:
   user_is_suspended: "Suspendovaní užívatelia nemôžu vkladať príspevky"
   topic_not_found: "Niečo sa pokazilo. Téma mohla byť napríklad uzavretá, alebo zmazaná kým ste ju prezerali."
   just_posted_that: "je to príliš podobné Vášmu predchádzajúcemu príspevku"
-  has_already_been_used: "je už použité"
   invalid_characters: "obsahuje neplatné znaky"
   is_invalid: "je nesprávne; skúste opísať lepšie"
   next_page: "nasledujúca stránka →"
@@ -175,7 +173,6 @@ sk:
     delete_reason: "Zmazané moderátorom"
   groups:
     errors:
-      can_not_modify_automatic: "Nemôžte upravovať automatickú skupinu"
       member_already_exist: "'%{username}' už je členom tejto skupiny."
       invalid_domain: "'%{domain}' nie je platnou doménou."
     default_names:
@@ -478,7 +475,6 @@ sk:
     continue_button: "Pokračujte na %{site_name}"
     welcome_to: "Vitajte na %{site_name}!"
     approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum.  O schválení prístupu budete upovedomení emailom."
-    missing_session: "Nevieme zistiť či Váš účet bol vytvorený, prosím uistite sa že máte v prehliadači povolené cookies."
   post_action_types:
     off_topic:
       title: 'Mimo témy'
@@ -639,27 +635,19 @@ sk:
     page_view_anon_reqs:
       title: "Anonymný"
       xaxis: "Deň"
-      yaxis: "Anonymné  požiadavky API"
     page_view_logged_in_reqs:
       title: "Prihlásený"
       xaxis: "Deň"
-      yaxis: "Zaznamenané API požiadavky"
     page_view_crawler_reqs:
       title: "Webové prehľadávače"
       xaxis: "Deň"
-      yaxis: "API dotazy web robota"
     page_view_total_reqs:
       title: "Celkovo"
       xaxis: "Deň"
-      yaxis: "Všetky API požiadavky"
     page_view_logged_in_mobile_reqs:
-      title: "Zaznamenané API požiadavky"
       xaxis: "Deň"
-      yaxis: "Zaznamenané API požiadavky cez mobil"
     page_view_anon_mobile_reqs:
-      title: "Anonymné  požiadavky API"
       xaxis: "Deň"
-      yaxis: "Zaznamenané API požiadavky cez mobil"
     http_background_reqs:
       title: "Pozadie"
       xaxis: "Deň"
@@ -771,13 +759,11 @@ sk:
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     email_subject: "Voliteľný formát predmetu emailu pre štandardné emaily. Pozrite https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Má byť url stránok  (Discourse.base_url) http alebo https? NEZAPÍNAJTE MOŽNOSŤ AK HTTPS NIE JE NASTAVENÉ A FUNKČNÉ!"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
     summary_posts_required: "Minimálny počet príspevkou predtým ako je zapnuté 'Sumarizuj túto tému'"
     summary_likes_required: "Minimálny počet páči sa mi predtým ako je zapnuté 'Sumarizuj túto tému'"
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
     summary_max_results: "Maximálny počet príspevkov vrátených pomocou 'Sumarizuj túto tému'"
-    enable_private_messages: "Umožni používateľom s úrovňou dôvery 1 (nastaviteľné pomocou min úroveň dôvery na posielanie správ)  vytvárať správy a odpovedať na ne"
     enable_long_polling: "Zbernica správ pre upozornenia môže používať techniku long-polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
     long_polling_interval: "Ako dlho má server čakať pred odpovedaním klientom ak nie sú na zaslanie žiadne dáta  (iba pre prihlásených používateľov)"
@@ -803,7 +789,6 @@ sk:
     ga_domain_name: "Google analytics (ga.js) názov domény, napr: mysite.com; pozri http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) sledovaní kód, napr: UA-12345678-9; pozri http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) názov domény, napr: mysite.com; pozri http://google.com/analytics"
-    enable_escaped_fragments: "Ak nie je zistený vyhľadávač, použi Google's Ajax-Crawling API. Viac na https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "Zapnúť štandardnú podporu prehľadávačov pomocou značky noscript"
     allow_moderators_to_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
@@ -831,7 +816,6 @@ sk:
     allow_index_in_robots_txt: "V súbore robots.txt nastaviť, že tieto stránky je povolené indexovať vyhľadávačmi."
     email_domains_blacklist: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
     email_domains_whitelist: "Rúrou oddelený zoznam emailových domén, s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
-    forgot_password_strict: "Neinformovať užívateľov o existencii účtu ked použíjú dialóg pre zabudnuté heslo."
     log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
     version_checks: "Zisťovať aktualizácie na Discourse Hub a zobrazovať správy o novej verzii na stránke admina"
     new_version_emails: "Poslať email na kontaktnú emailovú adresu ak je zistená nová verzia Discourse."
@@ -975,7 +959,6 @@ sk:
     faq_url: "Ak máte FAQ stránku uloženú na iných stránkach, napište sem plný odkaz na ňu."
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
-    newuser_spam_host_threshold: "Koľkokrát môže nový používateľ pridať odkaz na rovnaký server v jeho `newuser_spam_host_posts` príspevkoch predtým, než to bude považované za spam."
     white_listed_spam_host_domains: "Zoznam domén vylúčených z testovania spamových zdrojov. Novým používateľom nebude nikdy zabránené vytvárať príspevky s odkazmi na tieto domény."
     staff_like_weight: "Koľkonásobne viac sa má dať zamestnaneckým páči sa mi."
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
@@ -999,7 +982,6 @@ sk:
     short_email_length: "Dĺžka krátkeho emailu v bytoch."
     display_name_on_email_from: "V emailovom poli Od zobraziť plné mená"
     unsubscribe_via_email: "Umožniť používateľom odhlásiť sa z emailov pomocou zaslania emailu s textom 'unsubscribe' v predmete alebo v tele emailu"
-    unsubscribe_via_email_footer: "Do päty stránky posielaných emailov pridať odkaz na odhlásenie sa"
     delete_email_logs_after_days: "Zmazať logy o emailoch po (N) dňoch. 0 pre neobmedzene. "
     pop3_polling_enabled: "Získavať emailové odpovede pomocou POP3"
     pop3_polling_ssl: "Na spojenie s POP3 serverom použiť SSL. (Doporučované)"
@@ -1317,20 +1299,6 @@ sk:
   system_messages:
     post_hidden:
       subject_template: "Príspevok skrytý z dôvodu konumitného označenia vlajkou"
-      text_body_template: |
-        Dobrý deň,
-
-        toto je automaticky generovaná správa od %{site_name}, aby ste boli informovaní, že váš príspevok bol skrytý.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Viacero členov komunity označilo tento príspevok predtým, ako bol skrytý, takže skúste, prosím, zvážiť, ako by ste mohli príspevok upraviť, aby odrážal ich spätnú väzbu. **Váš príspevok môžete upraviť po %{edit_delay} minútach a bude automaticky opäť zobrazený.**
-
-        Avšak pokiaľ bude príspevok skrytý komunitou druhýkrát, ostane skrytý dovtedy, pokiaľ sa o to nepostarajú moderátori – a tam môže dôjsť k ďalším akciám, ako napr. možné pozastavenie vášho účtu.
-
-        Ohľadom ďalšieho poradenstva si, prosím, pozrite naše [community guidelines](%{base_url}/pokyny).
     usage_tips:
       text_body_template: |
         Tu je niekoľko rád, ako začať:
@@ -1513,22 +1481,10 @@ sk:
       subject_template: "[%{site_name}] Problém s emailom -- Automaticky generovaná odpoveď"
     email_error_notification:
       subject_template: "[%{site_name}] Problém s emailom -- Chyba pri POP autentifikácií"
-    too_many_spam_flags:
-      subject_template: "Nový účet je zablokovaný"
-    blocked_by_staff:
-      subject_template: "Účet je zablokovaný"
     user_automatically_blocked:
       subject_template: "Nový uživateľ %{username} je zablokovaný kôli označeniu komunitou"
     spam_post_blocked:
       subject_template: "Nový uživateľ %{username} je zablokovaný kôli opakovaným odkazom"
-    unblocked:
-      subject_template: "Učet je odblokovaný"
-      text_body_template: |
-        Dobrý deň,
-
-        Toto je automatická správa z %{site_name} . Oznamujeme Vám, že Váš účet bol odblokovaný po kontrole obsluhou.
-
-        Znova môžete vytvárať nové témy a odpovede.
     pending_users_reminder:
       subject_template:
         one: "1 užívateľ čaká na schválenie"
@@ -1536,9 +1492,6 @@ sk:
         other: "%{count} užívateľov čaká na schválenie"
     download_remote_images_disabled:
       subject_template: "Sťahovanie vzdialených obrázkov je zablokované."
-  unsubscribe_via_email_link: |+
-    alebo, [kliknite sem](mailto:reply@%{hostname}?subject=unsubscribe) pre odhlásenie prostredníctvom emailu.
-
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1546,10 +1499,6 @@ sk:
     unsubscribe:
       title: "Odhlásiť"
       description: "Nezaujímajú Vás už tieto emaily? Žiadny problém! Pre okamžité odhlásenie kliknite nižšie: "
-    reply_by_email: "[Pozrite tému](%{base_url}%{url}), alebo zareagujte odpoveďou na tento email"
-    reply_by_email_pm: "[Pozrite správu](%{base_url}%{url}), alebo zareagujte odpoveďou na tento email"
-    visit_link_to_respond: "[Pozrite tému](%{base_url}%{url}) pre reakciu"
-    visit_link_to_respond_pm: "[Pozrite správu](%{base_url}%{url}) pre reakciu"
     posted_by: "Príspevok od %{username} dňa %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
@@ -1557,89 +1506,20 @@ sk:
       subject_template: "[%{site_name}] %{username} Vás pozval k správe '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_replied_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
-      text_body_template: |
-        %{header_instructions}
-
-        %{message}
-
-        %{context}
-
-        ---
-        %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
-
-        ---
-        %{respond_instructions}
     digest:
       why: "Krátky súhrn zo stránky  %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
       subject_template: "[%{site_name}] Výber"
@@ -1697,9 +1577,6 @@ sk:
     images:
       too_large: "Ľutujeme, obrázok, ktorý sa pokúšate nahrať, je príliš veľký (maximálna veľkosť je %{max_size_kb}KB), prosím zmenšite ho a skúste znovu. "
       size_not_found: "Ľutujeme, ale nepodarilo sa nám zistiť veľkosť obrázku. Nie je nahodou poškodený?"
-  flag_reason:
-    sockpuppet: "Nový užívateľ vytvoril tému, a iný nový užívateľ odpovedal z tej istej adresy. Pozrite flag_sockpuppets v nastaveniach stránky."
-    spam_hosts: "Tento nový užívateľ sa pokúsil vytvoriť viacero príspevkov s odkazom na rovnakú doménu. Pozrite newuser_spam_host_threshold v nastaveniach stránky."
   email_log:
     no_user: "Nepodarilo sa nájsť užívateľa s id %{user_id}"
     anonymous_user: "Používateľ je anonymný"

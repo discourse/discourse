@@ -12,7 +12,11 @@
   {{/if}}
 </div>
 <div class="col action">
-  {{fa-icon actionIcon}}
+  {{#if isBlocked}}
+    {{fa-icon "ban"}}
+  {{else}}
+    {{fa-icon "check"}}
+  {{/if}}
   {{actionName}}
 </div>
 <div class="col match_count">{{match_count}}</div>
@@ -24,15 +28,15 @@
 <div class="col created_at">{{age-with-tooltip created_at}}</div>
 <div class="col actions">
   {{#unless editing}}
-    <button class="btn btn-danger" {{action "destroy" this}}><i class="fa fa-trash-o"></i></button>
-    <button class="btn" {{action "edit" this}}><i class="fa fa-pencil"></i></button>
+    {{d-button action="destroy" actionParam=this icon="trash-o" class="btn-danger"}}
+    {{d-button action="edit" actionParam=this icon="pencil"}}
     {{#if isBlocked}}
-      <button class="btn" {{action "allow" this}}>{{fa-icon "check"}} {{i18n 'admin.logs.screened_ips.actions.do_nothing'}}</button>
+      {{d-button action="allow" actionParam=this icon="check" label="admin.logs.screened_ips.actions.do_nothing"}}
     {{else}}
-      <button class="btn" {{action "block" this}}>{{fa-icon "ban"}} {{i18n 'admin.logs.screened_ips.actions.block'}}</button>
+      {{d-button action="block" actionParam=this icon="ban" label="admin.logs.screened_ips.actions.block"}}
     {{/if}}
   {{else}}
-    <button class="btn" {{action "save" this}}>{{i18n 'admin.logs.save'}}</button>
+    {{d-button action="save" actionParam=this label="admin.logs.save"}}
     <a {{action "cancel" this}}>{{i18n 'cancel'}}</a>
   {{/unless}}
 </div>

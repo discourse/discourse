@@ -263,7 +263,7 @@ HTML
 
     it "should have an option to preserve emoji codes" do
       emoji_code = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
-      expect(PrettyText.excerpt(emoji_code, 100, { keep_emoji_codes: true })).to eq(":heart:")
+      expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
   end
@@ -286,41 +286,6 @@ HTML
     end
   end
 
-  describe "make_all_links_absolute" do
-    let(:base_url) { "http://baseurl.net" }
-
-    def make_abs_string(html)
-      doc = Nokogiri::HTML.fragment(html)
-      described_class.make_all_links_absolute(doc)
-      doc.to_html
-    end
-
-    before do
-      Discourse.stubs(:base_url).returns(base_url)
-    end
-
-    it "adds base url to relative links" do
-      html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
-      output = make_abs_string(html)
-      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
-    end
-
-    it "doesn't change external absolute links" do
-      html = "<p>Check out <a href=\"http://mywebsite.com/users/boss\">this guy</a>.</p>"
-      expect(make_abs_string(html)).to eq(html)
-    end
-
-    it "doesn't change internal absolute links" do
-      html = "<p>Check out <a href=\"#{base_url}/users/boss\">this guy</a>.</p>"
-      expect(make_abs_string(html)).to eq(html)
-    end
-
-    it "can tolerate invalid URLs" do
-      html = "<p>Check out <a href=\"not a real url\">this guy</a>.</p>"
-      expect { make_abs_string(html) }.to_not raise_error
-    end
-  end
-
   describe "strip_image_wrapping" do
     def strip_image_wrapping(html)
       doc = Nokogiri::HTML.fragment(html)
@@ -339,8 +304,36 @@ HTML
   end
 
   describe 'format_for_email' do
+    let(:base_url) { "http://baseurl.net" }
+    let(:post) { Fabricate(:post) }
+
+    before do
+      Discourse.stubs(:base_url).returns(base_url)
+    end
+
     it 'does not crash' do
-      PrettyText.format_for_email('<a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>')
+      PrettyText.format_for_email('<a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>', post)
+    end
+
+    it "adds base url to relative links" do
+      html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
+      output = described_class.format_for_email(html, post)
+      expect(output).to eq("<p><a href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
+    end
+
+    it "doesn't change external absolute links" do
+      html = "<p>Check out <a href=\"http://mywebsite.com/users/boss\">this guy</a>.</p>"
+      expect(described_class.format_for_email(html, post)).to eq(html)
+    end
+
+    it "doesn't change internal absolute links" do
+      html = "<p>Check out <a href=\"#{base_url}/users/boss\">this guy</a>.</p>"
+      expect(described_class.format_for_email(html, post)).to eq(html)
+    end
+
+    it "can tolerate invalid URLs" do
+      html = "<p>Check out <a href=\"not a real url\">this guy</a>.</p>"
+      expect { described_class.format_for_email(html, post) }.to_not raise_error
     end
   end
 
@@ -424,11 +417,11 @@ HTML
   describe "tag and category links" do
 
     it "produces tag links" do
-      # TODO where is our tags table?
-      TopicCustomField.create!(topic_id: 1, name: DiscourseTagging::TAGS_FIELD_NAME, value: "known")
-      # TODO does it make sense to generate hashtags for tags that are missing in action?
+      Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})
       expect(PrettyText.cook(" #unknown::tag #known::tag")).to match_html("<p> <span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>")
     end
+
+    # TODO does it make sense to generate hashtags for tags that are missing in action?
 
   end
 

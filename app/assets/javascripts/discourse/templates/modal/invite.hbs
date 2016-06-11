@@ -19,9 +19,15 @@
       {{text-field value=emailOrUsername placeholderKey="topic.invite_reply.email_placeholder"}}
     {{/if}}
     {{#if showGroups}}
-      <label>{{{groupInstructions}}}</label>
+      <label><span class={{showGroupsClass}}>{{i18n 'topic.automatically_add_to_groups'}}</span></label>
       {{group-selector groupFinder=groupFinder groupNames=model.groupNames placeholderKey="topic.invite_private.group_name"}}
     {{/if}}
+
+    {{#if showCustomMessage}}
+      <br><label><span class='optional'>{{i18n 'invite.custom_message'}}</span> <a {{action "showCustomMessageBox"}}>{{i18n 'invite.custom_message_link'}}</a>.</label>
+      {{#if hasCustomMessage}}{{textarea value=customMessage placeholder=customMessagePlaceholder}}{{/if}}
+    {{/if}}
+
   {{/if}}
 </div>
 <div class="modal-footer">

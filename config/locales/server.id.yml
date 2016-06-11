@@ -119,7 +119,6 @@ id:
   user_is_suspended: "Pengguna yang dalam masa suspensi tidak diperbolehkan untuk membuat posting."
   topic_not_found: "Ada yang salah. Mungkin topik ini ditutup atau dihapus ketika Anda sedang menjelajahinya?"
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
-  has_already_been_used: "telah digunakan"
   invalid_characters: "memuat karakter yang tidak valid"
   is_invalid: "tidak valid; cobalah dengan sesuatu yang lebih deskriptif"
   next_page: "halaman berikutnya →"

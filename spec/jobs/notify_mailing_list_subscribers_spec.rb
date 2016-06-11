@@ -3,7 +3,10 @@ require "rails_helper"
 describe Jobs::NotifyMailingListSubscribers do
 
   context "with mailing list on" do
-    before { SiteSetting.default_email_mailing_list_mode = true }
+    before do
+      SiteSetting.default_email_mailing_list_mode = true
+      SiteSetting.default_email_mailing_list_mode_frequency = 1
+    end
     let(:user) { Fabricate(:user) }
 
     context "SiteSetting.max_emails_per_day_per_user" do
@@ -34,8 +37,15 @@ describe Jobs::NotifyMailingListSubscribers do
     context "with a valid post" do
       let!(:post) { Fabricate(:post, user: user) }
 
-      it "sends the email to the user" do
+      it "sends the email to the user if the frequency is set to 'always'" do
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
         UserNotifications.expects(:mailing_list_notify).with(user, post).once
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+      end
+
+      it "does not send the email to the user if the frequency is set to 'daily'" do
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
+        UserNotifications.expects(:mailing_list_notify).never
         Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
       end
     end

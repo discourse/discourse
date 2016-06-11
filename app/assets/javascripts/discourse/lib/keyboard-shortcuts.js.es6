@@ -1,5 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import Composer from 'discourse/models/composer';
+import { scrollTopFor } from 'discourse/lib/offset-calculator';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
@@ -15,6 +16,7 @@ const bindings = {
   'd':               {postAction: 'deletePost'},
   'e':               {postAction: 'editPost'},
   'end':             {handler: 'goToLastPost', anonymous: true},
+  'command+down':    {handler: 'goToLastPost', anonymous: true},
   'f':               {handler: 'toggleBookmarkTopic'},
   'g h':             {path: '/', anonymous: true},
   'g l':             {path: '/latest', anonymous: true},
@@ -26,6 +28,7 @@ const bindings = {
   'g p':             {path: '/my/activity'},
   'g m':             {path: '/my/messages'},
   'home':            {handler: 'goToFirstPost', anonymous: true},
+  'command+up':      {handler: 'goToFirstPost', anonymous: true},
   'j':               {handler: 'selectDown', anonymous: true},
   'k':               {handler: 'selectUp', anonymous: true},
   'l':               {click: '.topic-post.selected button.toggle-like'},
@@ -114,7 +117,7 @@ export default {
 
   _jumpTo(direction) {
     if ($('.container.posts').length) {
-      this.container.lookup('controller:topic-progress').send(direction);
+      this.container.lookup('controller:topic').send(direction);
     }
   },
 
@@ -157,7 +160,7 @@ export default {
   },
 
   toggleProgress() {
-    this.container.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
+    this.appEvents.trigger('topic-progress:keyboard-trigger', { type: 'jump' });
   },
 
   toggleSearch(event) {
@@ -296,10 +299,17 @@ export default {
 
       if ($article.is('.topic-post')) {
         $('a.tabLoc', $article).focus();
-      }
+        this._scrollToPost($article);
 
-      this._scrollList($article, direction);
+      } else {
+        this._scrollList($article, direction);
+      }
     }
+  },
+
+  _scrollToPost($article) {
+    const pos = $article.offset();
+    $(window).scrollTop(Math.ceil(pos.top - scrollTopFor(pos.top)));
   },
 
   _scrollList($article) {

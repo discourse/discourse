@@ -12,11 +12,10 @@ module FileStore
     def remove_file(url)
       return unless is_relative?(url)
       path = public_dir + url
-      tombstone = public_dir + url.sub("/uploads/", "/tombstone/")
-      FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
-      FileUtils.move(path, tombstone, :force => true)
-    rescue Errno::ENOENT
-      # don't care if the file isn't there
+      return if !File.exists?(path)
+      tombstone = public_dir + url.sub("/uploads/", "/uploads/tombstone/")
+      FileUtils.mkdir_p(tombstone_dir)
+      FileUtils.move(path, tombstone, force: true)
     end
 
     def has_been_uploaded?(url)
@@ -86,7 +85,7 @@ module FileStore
     end
 
     def tombstone_dir
-      public_dir + relative_base_url.sub("/uploads/", "/tombstone/")
+      public_dir + relative_base_url.sub("/uploads/", "/uploads/tombstone/")
     end
 
   end

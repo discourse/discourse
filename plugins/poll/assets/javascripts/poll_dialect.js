@@ -5,7 +5,7 @@
   var DATA_PREFIX = "data-poll-";
   var DEFAULT_POLL_NAME = "poll";
 
-  var WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status"];
+  var WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status", "public"];
 
   var ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
@@ -136,6 +136,10 @@
         }
 
         if (help) { info.push(["p", help]); }
+      }
+
+      if (attributes[DATA_PREFIX + "public"] === "true") {
+        info.push(["p", I18n.t("poll.public.title")]);
       }
 
       poll.push(info);

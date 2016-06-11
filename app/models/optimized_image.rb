@@ -45,6 +45,8 @@ class OptimizedImage < ActiveRecord::Base
         if extension =~ /\.svg$/i
           FileUtils.cp(original_path, temp_path)
           resized = true
+        elsif opts[:crop]
+          resized = crop(original_path, temp_path, width, height, opts)
         else
           resized = resize(original_path, temp_path, width, height, opts)
         end
@@ -124,6 +126,25 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
+  def self.crop_instructions(from, to, dimensions, opts={})
+    %W{
+      convert
+      #{from}[0]
+      -gravity north
+      -background transparent
+      -thumbnail #{opts[:width]}
+      -crop #{dimensions}+0+0
+      -unsharp 2x0.5+0.7+0
+      -quality 98
+      -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
+      #{to}
+    }
+  end
+
+  def self.crop_instructions_animated(from, to, dimensions, opts={})
+    resize_instructions_animated(from, to, dimensions, opts)
+  end
+
   def self.downsize_instructions(from, to, dimensions, opts={})
     %W{
       convert
@@ -142,6 +163,11 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.resize(from, to, width, height, opts={})
     optimize("resize", from, to, "#{width}x#{height}", opts)
+  end
+
+  def self.crop(from, to, width, height, opts={})
+    opts[:width] = width
+    optimize("crop", from, to, "#{width}x#{height}", opts)
   end
 
   def self.downsize(from, to, dimensions, opts={})

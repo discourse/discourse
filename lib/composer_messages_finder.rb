@@ -28,7 +28,8 @@ class ComposerMessagesFinder
     if count < SiteSetting.educate_until_posts
       education_posts_text = I18n.t('education.until_posts', count: SiteSetting.educate_until_posts)
       return {
-        templateName: 'composer/education',
+        id: 'education',
+        templateName: 'education',
         wait_for_typing: true,
         body: PrettyText.cook(I18n.t(education_key, education_posts_text: education_posts_text, site_name: SiteSetting.title))
       }
@@ -42,7 +43,8 @@ class ComposerMessagesFinder
     return unless replying? && @user.posted_too_much_in_topic?(@details[:topic_id])
 
     {
-      templateName: 'composer/education',
+      id: 'too_many_replies',
+      templateName: 'education',
       body: PrettyText.cook(I18n.t('education.too_many_replies', newuser_max_replies_per_topic: SiteSetting.newuser_max_replies_per_topic))
     }
   end
@@ -67,7 +69,8 @@ class ComposerMessagesFinder
 
     # Return the message
     {
-      templateName: 'composer/education',
+      id: 'avatar',
+      templateName: 'education',
       body: PrettyText.cook(I18n.t('education.avatar', profile_path: "/users/#{@user.username_lower}"))
     }
   end
@@ -104,7 +107,8 @@ class ComposerMessagesFinder
                         topic_id: @details[:topic_id] )
 
     {
-      templateName: 'composer/education',
+      id: 'sequential_replies',
+      templateName: 'education',
       wait_for_typing: true,
       extraClass: 'education-message',
       body: PrettyText.cook(I18n.t('education.sequential_replies'))
@@ -135,7 +139,8 @@ class ComposerMessagesFinder
                         topic_id: @details[:topic_id])
 
     {
-      templateName: 'composer/education',
+      id: 'dominating_topic',
+      templateName: 'education',
       wait_for_typing: true,
       extraClass: 'education-message',
       body: PrettyText.cook(I18n.t('education.dominating_topic', percent: (ratio * 100).round))
@@ -150,7 +155,8 @@ class ComposerMessagesFinder
               @topic.last_posted_at > SiteSetting.warn_reviving_old_topic_age.days.ago
 
     {
-      templateName: 'composer/education',
+      id: 'reviving_old',
+      templateName: 'education',
       wait_for_typing: false,
       extraClass: 'education-message',
       body: PrettyText.cook(I18n.t('education.reviving_old_topic', days: (Time.zone.now - @topic.last_posted_at).round / 1.day))
@@ -160,11 +166,11 @@ class ComposerMessagesFinder
   private
 
     def creating_topic?
-      @details[:composerAction] == "createTopic"
+      @details[:composer_action] == "createTopic"
     end
 
     def replying?
-      @details[:composerAction] == "reply"
+      @details[:composer_action] == "reply"
     end
 
 end

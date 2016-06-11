@@ -64,9 +64,7 @@ const ComposerView = Ember.View.extend({
     Ember.run.cancel(this._lastKeyTimeout);
     this._lastKeyTimeout = Ember.run.later(() => {
       if (lastKeyUp !== this._lastKeyUp) { return; }
-
-      // Search for similar topics if the user pauses typing
-      controller.findSimilarTopics();
+      this.appEvents.trigger('composer:find-similar');
     }, 1000);
   },
 
@@ -92,7 +90,17 @@ const ComposerView = Ember.View.extend({
       onDrag: sizePx => this.movePanels(sizePx)
     });
 
-    afterTransition($replyControl, resize);
+    const triggerOpen = () => {
+      if (this.get('composer.composeState') === Composer.OPEN) {
+        this.appEvents.trigger('composer:opened');
+      }
+    };
+    triggerOpen();
+
+    afterTransition($replyControl, () => {
+      resize();
+      triggerOpen();
+    });
     positioningWorkaround(this.$());
   },
 

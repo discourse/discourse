@@ -39,6 +39,8 @@ class TopicCreator
 
   def create
     topic = Topic.new(setup_topic_params)
+    setup_tags(topic)
+
     DiscourseEvent.trigger(:before_create_topic, topic, self)
 
     setup_auto_close_time(topic)
@@ -90,8 +92,11 @@ class TopicCreator
     end
 
     unless topic.private_message?
+      # In order of importance:
       CategoryUser.auto_watch_new_topic(topic)
       CategoryUser.auto_track_new_topic(topic)
+      TagUser.auto_watch_new_topic(topic)
+      TagUser.auto_track_new_topic(topic)
     end
   end
 
@@ -139,6 +144,10 @@ class TopicCreator
     else
       Category.find_by(name_lower: @opts[:category].try(:downcase))
     end
+  end
+
+  def setup_tags(topic)
+    DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
   end
 
   def setup_auto_close_time(topic)

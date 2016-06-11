@@ -92,6 +92,18 @@ div.poll {
     }
   }
 
+  .poll-voters-list {
+    li {
+      display: inline;
+    }
+
+    margin: 5px 0;
+  }
+
+  .poll-voters-toggle-expand {
+    text-align: center;
+  }
+
   .results {
 
     .option {
@@ -120,9 +132,11 @@ div.poll {
 
   &[data-poll-type="number"] {
 
-    li {
+    li[data-poll-option-id] {
       display: inline-block;
-      margin: 0 12px 15px 5px;
+      text-align: center;
+      width: 25px;
+      margin-right: 5px;
     }
 
   }

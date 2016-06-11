@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
   has_many :category_users, dependent: :destroy
+  has_many :tag_users, dependent: :destroy
   has_many :topics
   has_many :user_open_ids, dependent: :destroy
   has_many :user_actions, dependent: :destroy
@@ -476,6 +477,7 @@ class User < ActiveRecord::Base
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
+    update_column(:first_seen_at, now) unless self.first_seen_at
   end
 
   def self.gravatar_template(email)
@@ -611,7 +613,10 @@ class User < ActiveRecord::Base
   # Use this helper to determine if the user has a particular trust level.
   # Takes into account admin, etc.
   def has_trust_level?(level)
-    raise "Invalid trust level #{level}" unless TrustLevel.valid?(level)
+    unless TrustLevel.valid?(level)
+      raise InvalidTrustLevel.new("Invalid trust level #{level}")
+    end
+
     admin? || moderator? || staged? || TrustLevel.compare(trust_level, level)
   end
 
@@ -905,7 +910,7 @@ class User < ActiveRecord::Base
   end
 
   def hash_password(password, salt)
-    raise "password is too long" if password.size > User.max_password_length
+    raise StandardError.new("password is too long") if password.size > User.max_password_length
     Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
   end
 
@@ -1035,6 +1040,7 @@ end
 #  registration_ip_address :inet
 #  trust_level_locked      :boolean          default(FALSE), not null
 #  staged                  :boolean          default(FALSE), not null
+#  first_seen_at           :datetime
 #
 # Indexes
 #

@@ -43,8 +43,8 @@ describe TopicView do
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
 
     let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin)
-    }
+    let(:admin) { Fabricate(:admin) }
+
     it "it can find the best responses" do
 
       best2 = TopicView.new(topic.id, coding_horror, best: 2)

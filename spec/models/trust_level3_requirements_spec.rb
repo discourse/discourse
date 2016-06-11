@@ -35,10 +35,24 @@ describe TrustLevel3Requirements do
       expect(tl3_requirements.min_topics_viewed).to eq(23)
     end
 
+    it "min_topics_viewed is capped" do
+      SiteSetting.tl3_requires_topics_viewed = 75
+      described_class.stubs(:num_topics_in_time_period).returns(31)
+      SiteSetting.tl3_requires_topics_viewed_cap = 20
+      expect(tl3_requirements.min_topics_viewed).to eq(20)
+    end
+
     it "min_posts_read depends on site setting and number of posts created" do
       SiteSetting.stubs(:tl3_requires_posts_read).returns(66)
       described_class.stubs(:num_posts_in_time_period).returns(1234)
       expect(tl3_requirements.min_posts_read).to eq(814)
+    end
+
+    it "min_posts_read is capped" do
+      SiteSetting.tl3_requires_posts_read = 66
+      described_class.stubs(:num_posts_in_time_period).returns(1234)
+      SiteSetting.tl3_requires_posts_read_cap = 600
+      expect(tl3_requirements.min_posts_read).to eq(600)
     end
 
     it "min_topics_viewed_all_time depends on site setting" do
@@ -243,7 +257,7 @@ describe TrustLevel3Requirements do
     end
   end
 
-  describe "requirements" do
+  context "requirements with defaults" do
 
     before do
       tl3_requirements.stubs(:min_days_visited).returns(50)

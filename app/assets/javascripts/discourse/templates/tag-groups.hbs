@@ -1,0 +1,16 @@
+<div class="container tag-groups-container">
+  <h2>{{i18n "tagging.groups.title"}}</h2>
+
+  <div class='content-list'>
+    <ul>
+      {{#each model as |tagGroup|}}
+        <li><a {{action "selectTagGroup" tagGroup}} class="{{if tagGroup.selected 'active'}}">{{tagGroup.name}}</a></li>
+      {{/each}}
+    </ul>
+    <button {{action "newTagGroup"}} class='btn'><i class="fa fa-plus"></i>{{i18n 'tagging.groups.new'}}</button>
+  </div>
+
+  {{outlet}}
+
+  <div class="clearfix" />
+</div>

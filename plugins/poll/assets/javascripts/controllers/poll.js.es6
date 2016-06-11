@@ -1,10 +1,12 @@
-import computed from "ember-addons/ember-computed-decorators";
+import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   isMultiple: Ember.computed.equal("poll.type", "multiple"),
   isNumber: Ember.computed.equal("poll.type", "number"),
   isRandom : Ember.computed.equal("poll.order", "random"),
   isClosed: Ember.computed.equal("poll.status", "closed"),
+  isPublic: Ember.computed.equal("poll.public", "true"),
+  pollsVoters: Ember.computed.alias("post.polls_voters"),
 
   // shows the results when
   //   - poll is closed
@@ -14,6 +16,11 @@ export default Ember.Controller.extend({
 
   showResultsDisabled: Em.computed.equal("poll.voters", 0),
   hideResultsDisabled: Em.computed.or("isClosed", "post.topic.archived"),
+
+  @observes("post.polls")
+  _updatePoll() {
+    this.set("model", this.get("post.pollsObject")[this.get("model.name")]);
+  },
 
   @computed("model", "vote", "model.voters", "model.options", "model.status")
   poll(poll, vote) {
@@ -139,8 +146,16 @@ export default Ember.Controller.extend({
           options: this.get("selectedOptions"),
         }
       }).then(results => {
-        this.setProperties({ vote: results.vote, showResults: true });
-        this.set("model", Em.Object.create(results.poll));
+        const poll = results.poll;
+        const votes = results.vote;
+        const currentUser = this.currentUser;
+
+        this.setProperties({ vote: votes, showResults: true });
+        this.set("model", Em.Object.create(poll));
+
+        if (poll.public) {
+          this.get("pollsVoters")[currentUser.get("id")] = currentUser;
+        }
       }).catch(() => {
         bootbox.alert(I18n.t("poll.error_while_casting_votes"));
       }).finally(() => {

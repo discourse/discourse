@@ -8,7 +8,7 @@
     <% else %>
       <%=form_tag({}, method: :put) do %>
         <%= label_tag(:email, t('admin_login.email_input')) %>
-        <%= text_field_tag(:email) %><br><br>
+        <%= text_field_tag(:email, nil, autofocus: true) %><br><br>
         <%= submit_tag t('admin_login.submit_button') %>
       <% end %>
     <% end %>

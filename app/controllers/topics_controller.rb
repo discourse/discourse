@@ -65,7 +65,7 @@ class TopicsController < ApplicationController
     rescue Discourse::NotFound
       if params[:id]
         topic = Topic.find_by(slug: params[:id].downcase)
-        return redirect_to_correct_topic(topic, opts[:post_number]) if topic
+        return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
       end
       raise Discourse::NotFound
     end
@@ -77,7 +77,14 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    redirect_to_correct_topic(@topic_view.topic, opts[:post_number]) && return if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+    if !@topic_view.topic.visible && @topic_view.topic.slug != params[:slug]
+      raise Discourse::NotFound
+    end
+
+    if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+      redirect_to_correct_topic(@topic_view.topic, opts[:post_number])
+      return
+    end
 
     track_visit_to_topic
 
@@ -377,7 +384,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_invite_to!(topic,group_ids)
 
     begin
-      if topic.invite(current_user, username_or_email, group_ids)
+      if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
         user = User.find_by_username_or_email(username_or_email)
         if user
           render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')

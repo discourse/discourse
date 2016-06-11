@@ -155,6 +155,7 @@ const User = RestModel.extend({
 
     [       'email_always',
             'mailing_list_mode',
+            'mailing_list_mode_frequency',
             'external_links_in_new_tab',
             'email_digests',
             'email_direct',
@@ -320,10 +321,10 @@ const User = RestModel.extend({
            Discourse.SiteSettings['newuser_max_' + type + 's'] > 0;
   },
 
-  createInvite(email, group_names) {
+  createInvite(email, group_names, custom_message) {
     return Discourse.ajax('/invites', {
       type: 'POST',
-      data: { email, group_names }
+      data: { email, group_names, custom_message }
     });
   },
 

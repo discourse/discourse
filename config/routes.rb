@@ -16,6 +16,10 @@ Discourse::Application.routes.draw do
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
 
+  post "webhooks/mailgun"  => "webhooks#mailgun"
+  post "webhooks/sendgrid" => "webhooks#sendgrid"
+  post "webhooks/mailjet"  => "webhooks#mailjet"
+
   if Rails.env.development?
     mount Sidekiq::Web => "/sidekiq"
     mount Logster::Web => "/logs"
@@ -111,7 +115,7 @@ Discourse::Application.routes.draw do
       post "reset_bounce_score"
     end
     get "users/:id.json" => 'users#show', defaults: {format: 'json'}
-    get 'users/:id/:username' => 'users#show'
+    get 'users/:id/:username' => 'users#show', constraints: {username: USERNAME_ROUTE_FORMAT}
     get 'users/:id/:username/badges' => 'users#show'
 
 
@@ -245,7 +249,7 @@ Discourse::Application.routes.draw do
   get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
-  get "composer-messages" => "composer_messages#index"
+  get "composer_messages" => "composer_messages#index"
 
   resources :users, except: [:show, :update, :destroy] do
     collection do
@@ -577,6 +581,7 @@ Discourse::Application.routes.draw do
     end
   end
   post "invites/reinvite" => "invites#resend_invite"
+  post "invites/reinvite-all" => "invites#resend_all_invites"
   post "invites/link" => "invites#create_invite_link"
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
@@ -629,6 +634,12 @@ Discourse::Application.routes.draw do
         get "/c/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
         get "/c/:parent_category/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
       end
+    end
+  end
+
+  resources :tag_groups, except: [:new, :edit] do
+    collection do
+      get '/filter/search' => 'tag_groups#search'
     end
   end
 

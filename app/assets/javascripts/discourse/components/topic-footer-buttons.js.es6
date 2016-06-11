@@ -1,16 +1,15 @@
 import ContainerView from 'discourse/views/container';
-import { on } from 'ember-addons/ember-computed-decorators';
 
 export default ContainerView.extend({
   elementId: 'topic-footer-buttons',
 
-  @on('init')
-  createButtons() {
-    const topic = this.get('topic');
-    const currentUser = this.get('controller.currentUser');
+  init() {
+    this._super();
 
-    if (currentUser) {
-      const viewArgs = { topic, currentUser };
+    if (this.currentUser) {
+      const viewArgs = this.getProperties('topic', 'topicDelegated');
+      viewArgs.currentUser = this.currentUser;
+
       this.attachViewWithArgs(viewArgs, 'topic-footer-main-buttons');
       this.attachViewWithArgs(viewArgs, 'pinned-button');
       this.attachViewWithArgs(viewArgs, 'topic-notifications-button');

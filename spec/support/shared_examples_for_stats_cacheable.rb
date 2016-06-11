@@ -1,7 +1,7 @@
 shared_examples_for 'stats cachable' do
   describe 'fetch_cached_stats' do
     after do
-      $redis.flushall
+      $redis.del(described_class.stats_cache_key)
     end
 
     it 'returns the cached stats' do

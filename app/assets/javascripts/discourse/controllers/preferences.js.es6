@@ -62,6 +62,24 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
   },
 
+  @computed()
+  frequencyEstimate() {
+    var estimate = this.get('model.mailing_list_posts_per_day');
+    if (!estimate || estimate < 2) {
+      return I18n.t('user.mailing_list_mode.few_per_day');
+    } else {
+      return I18n.t('user.mailing_list_mode.many_per_day', { dailyEmailEstimate: estimate });
+    }
+  },
+
+  @computed()
+  mailingListModeOptions() {
+    return [
+      {name: I18n.t('user.mailing_list_mode.daily'), value: 0},
+      {name: this.get('frequencyEstimate'), value: 1}
+    ];
+  },
+
   previousRepliesOptions: [
     {name: I18n.t('user.email_previous_replies.always'), value: 0},
     {name: I18n.t('user.email_previous_replies.unless_emailed'), value: 1},
@@ -111,22 +129,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
   passwordProgress: null,
 
   actions: {
-
-    checkMailingList(){
-      Em.run.next(()=>{
-        const postsPerDay = this.get('model.mailing_list_posts_per_day');
-        if (!postsPerDay || postsPerDay < 2) {
-          this.set('model.user_option.mailing_list_mode', true);
-          return;
-        }
-
-        bootbox.confirm(I18n.t("user.enable_mailing_list", {count: postsPerDay}), I18n.t("no_value"), I18n.t("yes_value"), (success) => {
-          if (success) {
-            this.set('model.user_option.mailing_list_mode', true);
-          }
-        });
-      });
-    },
 
     save() {
       this.set('saved', false);

@@ -9,9 +9,9 @@
     {{/popup-menu}}
   {{/if}}
 
-  {{render "composer-messages"}}
-  <div class='control'>
+  {{composer-messages composer=model messageCount=messageCount addLinkLookup="addLinkLookup"}}
 
+  <div class='control'>
     {{#if site.mobileView}}
     <a href class='toggle-toolbar' {{action "toggleToolbar" bubbles=false}}></a>
     {{/if}}
@@ -92,13 +92,14 @@
                           importQuote="importQuote"
                           showOptions="showOptions"
                           showToolbar=showToolbar
-                          showUploadSelector="showUploadSelector"}}
+                          showUploadSelector="showUploadSelector"
+                          afterRefresh="afterRefresh"}}
 
         {{#if currentUser}}
           <div class='submit-panel'>
             {{plugin-outlet "composer-fields-below"}}
             {{#if canEditTags}}
-              {{tag-chooser tags=model.tags tabIndex="4"}}
+              {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
             {{/if}}
             <button {{action "save"}} tabindex="5" class="btn btn-primary create {{if disableSubmit 'disabled'}}" title="{{i18n 'composer.title'}}">{{{model.saveIcon}}}{{model.saveText}}</button>
             <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>

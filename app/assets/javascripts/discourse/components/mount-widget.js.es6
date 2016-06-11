@@ -21,6 +21,8 @@ export default Ember.Component.extend({
     this._super();
     const name = this.get('widget');
 
+    (this.get('delegated') || []).forEach(m => this.set(m, m));
+
     this._widgetClass = queryRegistry(name) || this.container.lookupFactory(`widget:${name}`);
 
     if (!this._widgetClass) {
@@ -93,7 +95,6 @@ export default Ember.Component.extend({
       if (!this._widgetClass) { return; }
 
       const t0 = new Date().getTime();
-
       const args = this.get('args') || this.buildArgs();
       const opts = { model: this.get('model') };
       const newTree = new this._widgetClass(args, this.container, opts);
@@ -117,8 +118,6 @@ export default Ember.Component.extend({
       if (this.profileWidget) {
         console.log(new Date().getTime() - t0);
       }
-
     }
   }
-
 });

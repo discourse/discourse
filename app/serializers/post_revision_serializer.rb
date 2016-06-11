@@ -41,6 +41,7 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   add_compared_field :wiki
+  add_compared_field :tags
 
   def previous_hidden
     previous["hidden"]
@@ -149,6 +150,10 @@ class PostRevisionSerializer < ApplicationSerializer
     }
   end
 
+  def include_tags_changes?
+    SiteSetting.tagging_enabled
+  end
+
   protected
 
     def post
@@ -182,6 +187,10 @@ class PostRevisionSerializer < ApplicationSerializer
         if topic.respond_to?(field)
           latest_modifications[field.to_s] = [topic.send(field)]
         end
+      end
+
+      if SiteSetting.tagging_enabled
+        latest_modifications["tags"] = post.topic.tags.map(&:name)
       end
 
       post_revisions << PostRevision.new(
