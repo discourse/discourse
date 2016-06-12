@@ -1583,7 +1583,7 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you won't need to log in.
+      This invitation is from a trusted user, so an account will be created for you automatically.
 
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
@@ -1602,7 +1602,7 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you won't need to log in.
+      This invitation is from a trusted user, so an account will be created for you automatically.
 
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
