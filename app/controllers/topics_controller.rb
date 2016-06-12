@@ -77,7 +77,7 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    if !@topic_view.topic.visible && @topic_view.topic.slug != params[:slug]
+    if !@topic_view.topic.visible && @topic_view.topic.slug != params[:slug] && !request.format.json?
       raise Discourse::NotFound
     end
 
