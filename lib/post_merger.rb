@@ -16,14 +16,14 @@ class PostMerger
     post = @posts.last
     changes = {
       raw: postContent.join("\n\n"),
-      edit_reason: "Merged #{@posts.length} posts by #{@posts.first.user.name}"
+      edit_reason: "Merged #{@posts.length} posts by #{@user.name}"
     }
     revisor = PostRevisor.new(post, post.topic)
     revisor.revise!(@user, changes, {})
 
     Post.transaction do
       @posts.each_with_index  do |p, index|
-        # do not delete the last post since in will have the content of the merged posts
+        # do not delete the last post since it will have the content of the merged posts
         if index < @posts.length - 1
           PostDestroyer.new(@user, p).destroy
         end

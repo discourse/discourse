@@ -280,6 +280,9 @@ class PostsController < ApplicationController
     posts = Post.where(id: post_ids_including_replies).order(:id)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
 
+    # Make sure we can delete the posts
+    posts.each {|p| guardian.ensure_can_delete!(p) }
+
     PostMerger.new(current_user, posts).merge
 
     render nothing: true
