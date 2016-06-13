@@ -159,7 +159,7 @@ class TopicLink < ActiveRecord::Base
           next if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
 
           added_urls << url
-          TopicLink.create(post_id: post.id,
+          TopicLink.create!(post_id: post.id,
                            user_id: post.user_id,
                            topic_id: post.topic_id,
                            url: url,
@@ -184,7 +184,7 @@ class TopicLink < ActiveRecord::Base
                                      url: reflected_url)
 
               unless tl
-                tl = TopicLink.create(user_id: post.user_id,
+                tl = TopicLink.create!(user_id: post.user_id,
                                     topic_id: topic_id,
                                     post_id: reflected_post.try(:id),
                                     url: reflected_url,
