@@ -94,12 +94,12 @@ module Email
 
         # http://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
-          list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{host}>"
+          list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
           # subcategory case
           if !topic.category.parent_category_id.nil?
             parent_category_name = Category.find_by(id: topic.category.parent_category_id).name
-            list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{parent_category_name.downcase.gsub(' ', '-')}.#{host}>"
+            list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{parent_category_name.downcase.tr(' ', '-')}.#{host}>"
           end
         else
           list_id = "<#{host}>"

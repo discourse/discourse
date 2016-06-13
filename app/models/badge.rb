@@ -203,7 +203,7 @@ SQL
   end
 
   def i18n_name
-    self.name.downcase.gsub(' ', '_')
+    self.name.downcase.tr(' ', '_')
   end
 end
 
