@@ -6,7 +6,7 @@
       {{#each popupMenuOptions as |option|}}
         {{#if option.condition}}
           <li>
-          {{d-button action=option.action icon=option.icon label=option.label}}
+            {{d-button action=option.action icon=option.icon label=option.label}}
           </li>
         {{/if}}
       {{/each}}
@@ -90,6 +90,7 @@
                           composer=model
                           lastValidatedAt=lastValidatedAt
                           canWhisper=canWhisper
+                          popupMenuOptions=popupMenuOptions
                           draftStatus=model.draftStatus
                           isUploading=isUploading
                           groupsMentioned="groupsMentioned"
