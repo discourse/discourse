@@ -71,6 +71,23 @@ class WebhooksController < ActionController::Base
     render nothing: true, status: 200
   end
 
+  def mandrill
+    events = params["mandrill_events"]
+    events.each do |event|
+      message_id = event["msg"]["metadata"]["message_id"] rescue nil
+      next unless message_id
+
+      case event["event"]
+      when "hard_bounce"
+        process_bounce(message_id, Email::Receiver::HARD_BOUNCE_SCORE)
+      when "soft_bounce"
+        process_bounce(message_id, Email::Receiver::SOFT_BOUNCE_SCORE)
+      end
+    end
+
+    render nothing: true, status: 200
+  end
+
   private
 
     def mailgun_failure

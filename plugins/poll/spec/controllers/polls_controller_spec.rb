@@ -173,5 +173,4 @@ describe ::DiscoursePoll::PollsController do
     end
 
   end
-
 end

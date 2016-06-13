@@ -133,7 +133,7 @@ class TopicLink < ActiveRecord::Base
             # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'
 
-            topic_id = route[:topic_id]
+            topic_id = route[:topic_id].to_i
             post_number = route[:post_number] || 1
 
             # Store the canonical URL
@@ -159,15 +159,22 @@ class TopicLink < ActiveRecord::Base
           next if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
 
           added_urls << url
-          TopicLink.create(post_id: post.id,
-                           user_id: post.user_id,
-                           topic_id: post.topic_id,
-                           url: url,
-                           domain: parsed.host || Discourse.current_hostname,
-                           internal: internal,
-                           link_topic_id: topic_id,
-                           link_post_id: reflected_post.try(:id),
-                           quote: link.is_quote)
+
+          topic_link = TopicLink.find_by(topic_id: post.topic_id,
+                                         user_id: post.user_id,
+                                         url: url)
+
+          unless topic_link
+            TopicLink.create!(post_id: post.id,
+                              user_id: post.user_id,
+                              topic_id: post.topic_id,
+                              url: url,
+                              domain: parsed.host || Discourse.current_hostname,
+                              internal: internal,
+                              link_topic_id: topic_id,
+                              link_post_id: reflected_post.try(:id),
+                              quote: link.is_quote)
+          end
 
           # Create the reflection if we can
           if topic_id.present?
@@ -184,7 +191,7 @@ class TopicLink < ActiveRecord::Base
                                      url: reflected_url)
 
               unless tl
-                tl = TopicLink.create(user_id: post.user_id,
+                tl = TopicLink.create!(user_id: post.user_id,
                                     topic_id: topic_id,
                                     post_id: reflected_post.try(:id),
                                     url: reflected_url,
@@ -230,16 +237,18 @@ class TopicLink < ActiveRecord::Base
   end
 
   def self.duplicate_lookup(topic)
-
     results = TopicLink
-                .includes(:post => :user)
-                .where(topic_id: topic.id).limit(200)
+                .includes(:post, :user)
+                .joins(:post, :user)
+                .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
+                .where(topic_id: topic.id, reflection: false)
+                .last(200)
 
     lookup = {}
     results.each do |tl|
       normalized = tl.url.downcase.sub(/^https?:\/\//, '').sub(/\/$/, '')
       lookup[normalized] = { domain: tl.domain,
-                             username: tl.post.user.username_lower,
+                             username: tl.user.username_lower,
                              posted_at: tl.post.created_at,
                              post_number: tl.post.post_number }
     end

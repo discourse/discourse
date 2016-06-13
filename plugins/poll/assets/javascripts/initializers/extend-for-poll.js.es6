@@ -29,10 +29,6 @@ function initializePolls(api) {
         const post = this.get('model.postStream').findLoadedPost(msg.post_id);
         if (post) {
           post.set('polls', msg.polls);
-
-          if (msg.user) {
-            post.set(`polls_voters.${msg.user.id}`, msg.user);
-          }
         }
       });
     },
@@ -80,7 +76,6 @@ function initializePolls(api) {
     const post = helper.getModel();
     api.preventCloak(post.id);
     const votes = post.get('polls_votes') || {};
-    post.set("polls_voters", (post.get("polls_voters") || {}));
 
     post.pollsChanged();
 

@@ -18,10 +18,14 @@ module Jobs
         end
       end
 
-      badge = Badge.find(Badge::FirstEmoji)
       to_award.each do |user_id, opts|
-        BadgeGranter.grant(badge, User.find(user_id), opts)
+        user = User.where(id: user_id).first
+        BadgeGranter.grant(badge, user, opts) if user
       end
+    end
+
+    def badge
+      @badge ||= Badge.find(Badge::FirstEmoji)
     end
 
   end

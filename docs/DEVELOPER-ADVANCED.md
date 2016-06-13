@@ -6,7 +6,7 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 
 # Preparing a fresh Ubuntu install
 
-To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Discourse plugins follow the commands below. We assume and English install of Ubuntu.
+To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Discourse plugins follow the commands below. We assume an English install of Ubuntu.
 
     # Basics
     whoami > /tmp/username

@@ -341,7 +341,7 @@ class UserNotifications < ActionMailer::Base
       else
         invite_template = "user_notifications.invited_to_topic_body"
       end
-      topic_excerpt = post.excerpt.gsub("\n", " ") if post.is_first_post? && post.excerpt
+      topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
       message = I18n.t(invite_template, username: username, topic_title: title, topic_excerpt: topic_excerpt, site_title: SiteSetting.title, site_description: SiteSetting.site_description)
       html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
         template: 'email/invite',

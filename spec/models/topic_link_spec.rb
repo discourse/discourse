@@ -16,6 +16,8 @@ describe TopicLink do
     topic.user
   end
 
+  let(:post) { Fabricate(:post) }
+
   it "can't link to the same topic" do
     ftl = TopicLink.new(url: "/t/#{topic.id}",
                               topic_id: topic.id,
@@ -319,6 +321,31 @@ http://b.com/#{'a'*500}
         expect(TopicLink.counts_for(Guardian.new(admin), post.topic, [post]).length).to eq(1)
       end
 
+    end
+
+    describe ".duplicate_lookup" do
+      let(:user) { Fabricate(:user, username: "junkrat") }
+
+      let(:post_with_internal_link) do
+        Fabricate(:post, user: user, raw: "Check out this topic #{post.topic.url}/122131")
+      end
+
+      it "should return the right response" do
+        TopicLink.extract_from(post_with_internal_link)
+
+        result = TopicLink.duplicate_lookup(post_with_internal_link.topic)
+        expect(result.count).to eq(1)
+
+        lookup = result["test.localhost/t/#{post.topic.slug}/#{post.topic.id}/122131"]
+
+        expect(lookup[:domain]).to eq("test.localhost")
+        expect(lookup[:username]).to eq("junkrat")
+        expect(lookup[:posted_at].to_s).to eq(post_with_internal_link.created_at.to_s)
+        expect(lookup[:post_number]).to eq(1)
+
+        result = TopicLink.duplicate_lookup(post.topic)
+        expect(result).to eq({})
+      end
     end
   end
 

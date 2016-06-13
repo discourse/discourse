@@ -400,6 +400,20 @@ Badge.seed do |b|
   b.system = true
 end
 
+Badge.seed do |b|
+  b.id = Badge::FirstReplyByEmail
+  b.default_name = "First Reply By Email"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.show_posts = true
+  b.query = nil
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
+  b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostProcessed
+  b.system = true
+end
+
 Badge.where("NOT system AND id < 100").each do |badge|
   new_id = [Badge.maximum(:id) + 1, 100].max
   old_id = badge.id
