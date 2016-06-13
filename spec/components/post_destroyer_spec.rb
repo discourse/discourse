@@ -162,6 +162,34 @@ describe PostDestroyer do
       post_action = author.user_actions.where(action_type: UserAction::REPLY, target_post_id: reply.id).first
       expect(post_action).to be_present
     end
+
+    describe "post_count recovery" do
+      before do
+        post
+        @user = post.user
+        expect(@user.user_stat.post_count).to eq(1)
+      end
+
+      context "recovered by user" do
+        it "should increment the user's post count" do
+          PostDestroyer.new(@user, post).destroy
+          expect(@user.user_stat.post_count).to eq(1)
+
+          PostDestroyer.new(@user, post.reload).recover
+          expect(@user.reload.user_stat.post_count).to eq(1)
+        end
+      end
+
+      context "recovered by admin" do
+        it "should increment the user's post count" do
+          PostDestroyer.new(moderator, post).destroy
+          expect(@user.user_stat.post_count).to eq(0)
+
+          PostDestroyer.new(admin, post).recover
+          expect(@user.reload.user_stat.post_count).to eq(1)
+        end
+      end
+    end
   end
 
   describe 'basic destroying' do
