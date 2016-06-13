@@ -8,9 +8,29 @@
       {{/if}}
     {{else}}
       <ul>
-        {{#each poll.options as |option|}}
-          {{poll-option option=option toggle="toggleOption"}}
-        {{/each}}
+        {{#if isMultiple}}
+          {{#each poll.options as |option|}}
+            {{#poll-option option=option toggle="toggleOption"}}
+              {{#if option.selected}}
+                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+              {{else}}
+                <i class="fa fa-square-o" aria-hidden="true"></i>
+              {{/if}}
+              {{option.html}}
+            {{/poll-option}}
+          {{/each}}
+        {{else}}
+          {{#each poll.options as |option|}}
+            {{#poll-option option=option toggle="toggleOption"}}
+              {{#if option.selected}}
+                <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+              {{else}}
+                <i class="fa fa-circle-o" aria-hidden="true"></i>
+              {{/if}}
+              {{option.html}}
+            {{/poll-option}}
+          {{/each}}
+        {{/if}}
       </ul>
     {{/if}}
   </div>
