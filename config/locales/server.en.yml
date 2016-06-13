@@ -3095,6 +3095,11 @@ en:
       name: First Onebox
       description: Posted a link that was oneboxed
       long_description: This badge is granted the first time you post a link on a line by itself, which was then automatically expanded into a onebox with a brief summary of the link, a title, and (when available) a picture.
+    first_reply_by_email:
+      name: First Reply By Email
+      description: Replied to a Post via email
+      long_description: |
+        This badge is granted the first time you reply to a post via email :e-mail:.
 
   admin_login:
     success: "Email Sent"
