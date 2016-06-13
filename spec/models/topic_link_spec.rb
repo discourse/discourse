@@ -344,7 +344,7 @@ http://b.com/#{'a'*500}
         expect(lookup[:post_number]).to eq(1)
 
         result = TopicLink.duplicate_lookup(post.topic)
-        expect(result.count).to eq(0)
+        expect(result).to eq({})
       end
     end
   end
