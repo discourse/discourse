@@ -233,7 +233,8 @@ class TopicLink < ActiveRecord::Base
 
     results = TopicLink
                 .includes(:post => :user)
-                .where(topic_id: topic.id).limit(200)
+                .where(topic_id: topic.id, reflection: false)
+                .limit(200)
 
     lookup = {}
     results.each do |tl|
