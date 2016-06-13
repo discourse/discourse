@@ -19,6 +19,7 @@ Discourse::Application.routes.draw do
   post "webhooks/mailgun"  => "webhooks#mailgun"
   post "webhooks/sendgrid" => "webhooks#sendgrid"
   post "webhooks/mailjet"  => "webhooks#mailjet"
+  post "webhooks/mandrill" => "webhooks#mandrill"
 
   if Rails.env.development?
     mount Sidekiq::Web => "/sidekiq"
