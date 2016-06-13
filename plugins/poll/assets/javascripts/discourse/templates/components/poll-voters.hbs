@@ -1,5 +1,5 @@
 <div class="poll-voters">
-  {{#each users as |user|}}
+  {{#each pollsVoters as |user|}}
     <li>
       <a data-user-card={{unbound user.username}}>
         {{avatar user imageSize="tiny" ignoreTitle="true"}}
@@ -8,12 +8,10 @@
   {{/each}}
 
   <div class="poll-voters-toggle-expand">
-    {{#if showMore}}
-      {{#if isExpanded}}
-        <a {{action "toggleExpand"}}>{{fa-icon "chevron-up"}}</a>
-      {{else}}
-        <a {{action "toggleExpand"}}>{{fa-icon "chevron-down"}}</a>
-      {{/if}}
+    {{#if canLoadMore}}
+      {{#conditional-loading-spinner condition=loading size="small"}}
+        <a {{action "loadMore"}}>{{fa-icon "chevron-down"}}</a>
+      {{/conditional-loading-spinner}}
     {{/if}}
   </div>
 </div>
