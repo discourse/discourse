@@ -237,17 +237,18 @@ class TopicLink < ActiveRecord::Base
   end
 
   def self.duplicate_lookup(topic)
-
     results = TopicLink
-                .includes(:post => :user)
+                .includes(:post, :user)
+                .joins(:post, :user)
+                .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
                 .where(topic_id: topic.id, reflection: false)
-                .limit(200)
+                .last(200)
 
     lookup = {}
     results.each do |tl|
       normalized = tl.url.downcase.sub(/^https?:\/\//, '').sub(/\/$/, '')
       lookup[normalized] = { domain: tl.domain,
-                             username: tl.post.user.username_lower,
+                             username: tl.user.username_lower,
                              posted_at: tl.post.created_at,
                              post_number: tl.post.post_number }
     end
