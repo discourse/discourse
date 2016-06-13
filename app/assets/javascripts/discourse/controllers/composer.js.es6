@@ -64,7 +64,6 @@ export default Ember.Controller.extend({
 
   init() {
     this._super();
-    const self = this
 
     addPopupMenuOptionsCallback(function() {
       return {
@@ -114,14 +113,12 @@ export default Ember.Controller.extend({
 
   @computed("model.composeState")
   popupMenuOptions(composeState) {
-    const self = this;
-
     if (composeState === 'open') {
       return _popupMenuOptionsCallbacks.map(callback => {
         let option = callback();
 
         if (option.condition) {
-          option.condition = self.get(option.condition);
+          option.condition = this.get(option.condition);
         } else {
           option.condition = true;
         }
@@ -193,7 +190,8 @@ export default Ember.Controller.extend({
       this.toggleProperty('showToolbar');
     },
 
-    showOptions(loc) {
+    showOptions(toolbarEvent, loc) {
+      this.set('toolbarEvent', toolbarEvent);
       this.appEvents.trigger('popup-menu:open', loc);
       this.set('optionsVisible', true);
     },
