@@ -133,7 +133,7 @@ class TopicLink < ActiveRecord::Base
             # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'
 
-            topic_id = route[:topic_id]
+            topic_id = route[:topic_id].to_i
             post_number = route[:post_number] || 1
 
             # Store the canonical URL
@@ -159,15 +159,22 @@ class TopicLink < ActiveRecord::Base
           next if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
 
           added_urls << url
-          TopicLink.create!(post_id: post.id,
-                           user_id: post.user_id,
-                           topic_id: post.topic_id,
-                           url: url,
-                           domain: parsed.host || Discourse.current_hostname,
-                           internal: internal,
-                           link_topic_id: topic_id,
-                           link_post_id: reflected_post.try(:id),
-                           quote: link.is_quote)
+
+          topic_link = TopicLink.find_by(topic_id: post.topic_id,
+                                         user_id: post.user_id,
+                                         url: url)
+
+          unless topic_link
+            TopicLink.create!(post_id: post.id,
+                              user_id: post.user_id,
+                              topic_id: post.topic_id,
+                              url: url,
+                              domain: parsed.host || Discourse.current_hostname,
+                              internal: internal,
+                              link_topic_id: topic_id,
+                              link_post_id: reflected_post.try(:id),
+                              quote: link.is_quote)
+          end
 
           # Create the reflection if we can
           if topic_id.present?
