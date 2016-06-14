@@ -16,6 +16,7 @@ export default Ember.Component.extend({
   _widgetClass: null,
   _renderCallback: null,
   _childEvents: null,
+  _dispatched: null,
 
   init() {
     this._super();
@@ -31,6 +32,7 @@ export default Ember.Component.extend({
 
     this._childEvents = [];
     this._connected = [];
+    this._dispatched = [];
   },
 
   didInsertElement() {
@@ -52,7 +54,10 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._childEvents.forEach(evt => this.appEvents.off(evt));
+    this._dispatched.forEach(evt => {
+      const [eventName, caller] = evt;
+      this.appEvents.off(eventName, caller);
+    });
     Ember.run.cancel(this._timeout);
   },
 
@@ -73,9 +78,10 @@ export default Ember.Component.extend({
 
   dispatch(eventName, key) {
     this._childEvents.push(eventName);
-    this.appEvents.on(eventName, refreshArg => {
-      this.eventDispatched(eventName, key, refreshArg);
-    });
+
+    const caller = refreshArg => this.eventDispatched(eventName, key, refreshArg);
+    this._dispatched.push([eventName, caller]);
+    this.appEvents.on(eventName, caller);
   },
 
   queueRerender(callback) {
