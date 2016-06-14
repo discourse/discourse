@@ -1,5 +1,6 @@
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from 'discourse/lib/click-track';
+import { selectedText } from 'discourse/lib/utilities';
 
 export default Ember.Component.extend(LoadMore, {
   loading: false,
@@ -19,7 +20,7 @@ export default Ember.Component.extend(LoadMore, {
       // bypass if we are selecting stuff
       const selection = window.getSelection && window.getSelection();
       if (selection.type === "Range" || selection.rangeCount > 0) {
-        if (Discourse.Utilities.selectedText() !== "") {
+        if (selectedText() !== "") {
           return true;
         }
       }

@@ -11,8 +11,6 @@ register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
 
-register_asset "javascripts/poll_dialect.js", :server_side
-
 PLUGIN_NAME ||= "discourse_poll".freeze
 
 DATA_PREFIX ||= "data-poll-".freeze

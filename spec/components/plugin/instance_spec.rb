@@ -133,16 +133,13 @@ describe Plugin::Instance do
 
       plugin.register_asset("code.js")
 
-      plugin.register_asset("server_side.js", :server_side)
-
       plugin.register_asset("my_admin.js", :admin)
       plugin.register_asset("my_admin2.js", :admin)
 
       plugin.activate!
 
-      expect(DiscoursePluginRegistry.javascripts.count).to eq(3)
+      expect(DiscoursePluginRegistry.javascripts.count).to eq(2)
       expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
-      expect(DiscoursePluginRegistry.server_side_javascripts.count).to eq(1)
       expect(DiscoursePluginRegistry.desktop_stylesheets.count).to eq(2)
       expect(DiscoursePluginRegistry.sass_variables.count).to eq(2)
       expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)

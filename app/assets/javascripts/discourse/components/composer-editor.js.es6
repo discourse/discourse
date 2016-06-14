@@ -3,6 +3,12 @@ import { default as computed, on } from 'ember-addons/ember-computed-decorators'
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
 import { fetchUnseenTagHashtags, linkSeenTagHashtags } from 'discourse/lib/link-tag-hashtag';
+import { load } from 'pretty-text/oneboxer';
+
+import { tinyAvatar,
+         displayErrorForUpload,
+         getUploadMarkdown,
+         validateUploadedFiles } from 'discourse/lib/utilities';
 
 export default Ember.Component.extend({
   classNames: ['wmd-controls'],
@@ -60,7 +66,7 @@ export default Ember.Component.extend({
         if (posts && topicId === topic.get('id')) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
-            return Discourse.Utilities.tinyAvatar(quotedPost.get('avatar_template'));
+            return tinyAvatar(quotedPost.get('avatar_template'));
           }
         }
       }
@@ -199,7 +205,7 @@ export default Ember.Component.extend({
     });
 
     $element.on('fileuploadsubmit', (e, data) => {
-      const isUploading = Discourse.Utilities.validateUploadedFiles(data.files);
+      const isUploading = validateUploadedFiles(data.files);
       data.formData = { type: "composer" };
       this.setProperties({ uploadProgress: 0, isUploading });
       return isUploading;
@@ -227,7 +233,7 @@ export default Ember.Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        Discourse.Utilities.displayErrorForUpload(data);
+        displayErrorForUpload(data);
       }
     });
 
@@ -235,7 +241,7 @@ export default Ember.Component.extend({
       // replace upload placeholder
       if (upload && upload.url) {
         if (!this._xhr || !this._xhr._userCancelled) {
-          const markdown = Discourse.Utilities.getUploadMarkdown(upload);
+          const markdown = getUploadMarkdown(upload);
           this.set('composer.reply', this.get('composer.reply').replace(uploadPlaceholder, markdown));
           this._resetUpload(false);
         } else {
@@ -243,7 +249,7 @@ export default Ember.Component.extend({
         }
       } else {
         this._resetUpload(true);
-        Discourse.Utilities.displayErrorForUpload(upload);
+        displayErrorForUpload(upload);
       }
     });
 
@@ -492,7 +498,7 @@ export default Ember.Component.extend({
       }
 
       // Paint oneboxes
-      $('a.onebox', $preview).each((i, e) => Discourse.Onebox.load(e, refresh));
+      $('a.onebox', $preview).each((i, e) => load(e, refresh));
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },

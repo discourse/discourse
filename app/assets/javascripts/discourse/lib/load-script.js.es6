@@ -1,5 +1,3 @@
-/* global assetPath */
-
 const _loaded = {};
 const _loading = {};
 
@@ -26,7 +24,7 @@ export default function loadScript(url, opts) {
   opts = opts || {};
 
   return new Ember.RSVP.Promise(function(resolve) {
-    url = Discourse.getURL((assetPath && assetPath(url)) || url);
+    url = Discourse.getURL(url);
 
     // If we already loaded this url
     if (_loaded[url]) { return resolve(); }

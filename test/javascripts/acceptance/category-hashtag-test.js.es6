@@ -11,9 +11,6 @@ acceptance("Category hashtag", {
       ];
     };
 
-    server.get('/category_hashtags/check', () => { //eslint-disable-line
-      return response({ valid: [{ slug: "bug", url: '/c/bugs' }] });
-    });
   }
 });
 

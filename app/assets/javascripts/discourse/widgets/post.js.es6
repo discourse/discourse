@@ -6,10 +6,11 @@ import { transformBasicPost } from 'discourse/lib/transform-post';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 import { dateNode } from 'discourse/helpers/node';
+import { translateSize, avatarUrl } from 'discourse/lib/utilities';
 
 export function avatarImg(wanted, attrs) {
-  const size = Discourse.Utilities.translateSize(wanted);
-  const url = Discourse.Utilities.avatarUrl(attrs.template, size);
+  const size = translateSize(wanted);
+  const url = avatarUrl(attrs.template, size);
 
   // We won't render an invalid url
   if (!url || url.length === 0) { return; }

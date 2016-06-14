@@ -6,6 +6,8 @@
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
+//= require ./discourse/lib/utilities
+//= require ./discourse/lib/text
 //= require ./discourse/lib/hash
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
@@ -33,7 +35,6 @@
 //= require ./discourse/models/user-action-group
 //= require ./discourse/models/category
 //= require ./discourse/lib/ajax-error
-//= require ./discourse/lib/markdown
 //= require ./discourse/lib/search
 //= require ./discourse/lib/user-search
 //= require ./discourse/lib/export-csv
@@ -69,11 +70,8 @@
 //= require ./discourse/components/notifications-button
 //= require ./discourse/lib/link-mentions
 //= require ./discourse/components/site-header
-//= require ./discourse/lib/utilities
-//= require ./discourse/dialects/dialect
-//= require ./discourse/lib/emoji/emoji
-//= require ./discourse/lib/emoji/emoji-groups
-//= require ./discourse/lib/emoji/emoji-toolbar
+//= require ./discourse/lib/emoji/groups
+//= require ./discourse/lib/emoji/toolbar
 //= require ./discourse/components/d-editor
 //= require ./discourse/views/composer
 //= require ./discourse/lib/show-modal
@@ -95,7 +93,6 @@
 //= require_tree ./discourse/lib
 //= require ./discourse/router
 
-//= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers
 //= require_tree ./discourse/models
 //= require_tree ./discourse/components

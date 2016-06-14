@@ -2,6 +2,7 @@ import { translateResults, searchContextDescription, getSearchKey, isValidSearch
 import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 const SortOrders = [
   {name: I18n.t('search.relevance'), id: 0},
@@ -75,7 +76,7 @@ export default Ember.Controller.extend({
         }
       });
     }
-    return Discourse.Utilities.escapeExpression(q);
+    return escapeExpression(q);
   },
 
   _searchOnSortChange: true,
