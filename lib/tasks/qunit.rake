@@ -52,6 +52,7 @@ task "qunit:test" => :environment do
     begin
       sh(cmd)
     rescue
+      exit if ENV['RETRY'].present? && ENV['RETRY'] == 'false'
       sleep 2
       tries += 1
       retry unless tries == 10
