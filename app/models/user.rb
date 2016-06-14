@@ -952,6 +952,8 @@ class User < ActiveRecord::Base
   end
 
   def set_default_categories_preferences
+    return if self.staged?
+
     values = []
 
     %w{watching tracking muted}.each do |s|

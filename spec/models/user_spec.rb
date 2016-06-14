@@ -1235,6 +1235,13 @@ describe User do
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([3])
     end
+
+    it "does not set category preferences for staged users" do
+      user = Fabricate(:user, staged: true)
+      expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([])
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([])
+      expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([])
+    end
   end
 
   context UserOption do

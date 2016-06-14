@@ -42,7 +42,6 @@ class UserOption < ActiveRecord::Base
 
     self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
 
-
     if SiteSetting.default_email_digest_frequency.to_i <= 0
       self.email_digests = false
     else
