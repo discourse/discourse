@@ -70,7 +70,6 @@ export default Ember.Controller.extend({
   @computed("isMultiple", "isNumber", "pollOptionsCount", "pollMin", "pollStep")
   pollMaxOptions(isMultiple, isNumber, count, pollMin, pollStep) {
     if (!isMultiple && !isNumber) return;
-    var range = [];
     const pollMinInt = parseInt(pollMin);
 
     if (isMultiple) {
@@ -84,7 +83,6 @@ export default Ember.Controller.extend({
   @computed("isNumber", "pollMax")
   pollStepOptions(isNumber, pollMax) {
     if (!isNumber) return;
-
     return this._comboboxOptions(1, parseInt(pollMax) + 1);
   },
 
@@ -99,7 +97,7 @@ export default Ember.Controller.extend({
     if (pollMax) pollHeader += ` max=${pollMax}`;
     if (isNumber) pollHeader += ` step=${pollStep}`;
     if (publicPoll) pollHeader += ' public=true';
-    pollHeader += ']'
+    pollHeader += ']';
     output += `${pollHeader}\n`;
 
     if (pollOptions.length > 0 && !isNumber) {
@@ -112,11 +110,7 @@ export default Ember.Controller.extend({
 
   @computed("pollOptionsCount", "isNumber")
   disableInsert(count, isNumber) {
-    if (isNumber) {
-      return false;
-    } else {
-      return count < 2;
-    }
+    return isNumber ? false : (count < 2);
   },
 
   @computed("disableInsert")
@@ -132,8 +126,8 @@ export default Ember.Controller.extend({
 
   _comboboxOptions(start_index, end_index) {
     return _.range(start_index, end_index).map(number => {
-      return { value: number, name: number }
-    })
+      return { value: number, name: number };
+    });
   },
 
   _setupPoll() {
