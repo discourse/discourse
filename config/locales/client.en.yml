@@ -1979,6 +1979,183 @@ en:
       create_post: "Reply / See"
       readonly: "See"
 
+    lightbox:
+      download: "download"
+
+    search_help:
+      title: 'Search Help'
+
+    keyboard_shortcuts_help:
+      title: 'Keyboard Shortcuts'
+      jump_to:
+        title: 'Jump To'
+        home: '<b>g</b>, <b>h</b> Home'
+        latest: '<b>g</b>, <b>l</b> Latest'
+        new: '<b>g</b>, <b>n</b> New'
+        unread: '<b>g</b>, <b>u</b> Unread'
+        categories: '<b>g</b>, <b>c</b> Categories'
+        top: '<b>g</b>, <b>t</b> Top'
+        bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
+        profile: '<b>g</b>, <b>p</b> Profile'
+        messages: '<b>g</b>, <b>m</b> Messages'
+      navigation:
+        title: 'Navigation'
+        jump: '<b>#</b> Go to post #'
+        back: '<b>u</b> Back'
+        up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
+        open: '<b>o</b> or <b>Enter</b> Open selected topic'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Next/previous section'
+      application:
+        title: 'Application'
+        create: '<b>c</b> Create a new topic'
+        notifications: '<b>n</b> Open notifications'
+        hamburger_menu: '<b>=</b> Open hamburger menu'
+        user_profile_menu: '<b>p</b> Open user menu'
+        show_incoming_updated_topics: '<b>.</b> Show updated topics'
+        search: '<b>/</b> Search'
+        help: '<b>?</b> Open keyboard help'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
+        dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
+      actions:
+        title: 'Actions'
+        bookmark_topic: '<b>f</b> Toggle bookmark topic'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
+        share_topic: '<b>shift</b>+<b>s</b> Share topic'
+        share_post: '<b>s</b> Share post'
+        reply_as_new_topic: '<b>t</b> Reply as linked topic'
+        reply_topic: '<b>shift</b>+<b>r</b> Reply to topic'
+        reply_post: '<b>r</b> Reply to post'
+        quote_post: '<b>q</b> Quote post'
+        like: '<b>l</b> Like post'
+        flag: '<b>!</b> Flag post'
+        bookmark: '<b>b</b> Bookmark post'
+        edit: '<b>e</b> Edit post'
+        delete: '<b>d</b> Delete post'
+        mark_muted: '<b>m</b>, <b>m</b> Mute topic'
+        mark_regular: '<b>m</b>, <b>r</b> Regular (default) topic'
+        mark_tracking: '<b>m</b>, <b>t</b> Track topic'
+        mark_watching: '<b>m</b>, <b>w</b> Watch topic'
+
+    badges:
+      earned_n_times:
+        one: "Earned this badge 1 time"
+        other: "Earned this badge %{count} times"
+      granted_on: "Granted %{date}"
+      others_count: "Others with this badge (%{count})"
+      title: Badges
+      allow_title: "available title"
+      multiple_grant: "awarded multiple times"
+      badge_count:
+        one:   "1 Badge"
+        other: "%{count} Badges"
+      more_badges:
+        one:   "+1 More"
+        other: "+%{count} More"
+      granted:
+        one:   "1 granted"
+        other: "%{count} granted"
+      select_badge_for_title: Select a badge to use as your title
+      none: "<none>"
+      badge_grouping:
+        getting_started:
+          name: Getting Started
+        community:
+          name: Community
+        trust_level:
+          name: Trust Level
+        other:
+          name: Other
+        posting:
+          name: Posting
+
+    google_search: |
+      <h3>Search with Google</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>
+
+    tagging:
+      all_tags: "All Tags"
+      selector_all_tags: "all tags"
+      changed: "tags changed:"
+      tags: "Tags"
+      choose_for_topic: "choose optional tags for this topic"
+      delete_tag: "Delete Tag"
+      delete_confirm: "Are you sure you want to delete that tag?"
+      rename_tag: "Rename Tag"
+      rename_instructions: "Choose a new name for the tag:"
+      sort_by: "Sort by:"
+      sort_by_count: "count"
+      sort_by_name: "name"
+      manage_groups: "Manage Tag Groups"
+      manage_groups_description: "Define groups to organize tags"
+
+      filters:
+        without_category: "%{filter} %{tag} topics"
+        with_category: "%{filter} %{tag} topics in %{category}"
+
+      notifications:
+        watching:
+          title: "Watching"
+          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+        tracking:
+          title: "Tracking"
+          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
+        regular:
+          title: "Regular"
+          description: "You will be notified if someone mentions your @name or replies to your post."
+        muted:
+          title: "Muted"
+          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."
+
+      groups:
+        title: "Tag Groups"
+        about: "Add tags to groups to manage them more easily."
+        new: "New Group"
+        tags_label: "Tags in this group:"
+        parent_tag_label: "Parent tag:"
+        parent_tag_placeholder: "Optional"
+        parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
+        one_per_topic_label: "Limit one tag per topic from this group"
+        new_name: "New Tag Group"
+        save: "Save"
+        delete: "Delete"
+        confirm_delete: "Are you sure you want to delete this tag group?"
+
+      topics:
+        none:
+          unread: "You have no unread topics."
+          new: "You have no new topics."
+          read: "You haven't read any topics yet."
+          posted: "You haven't posted in any topics yet."
+          latest: "There are no latest topics."
+          hot: "There are no hot topics."
+          bookmarks: "You have no bookmarked topics yet."
+          top: "There are no top topics."
+          search: "There are no search results."
+        bottom:
+          latest: "There are no more latest topics."
+          hot: "There are no more hot topics."
+          posted: "There are no more posted topics."
+          read: "There are no more read topics."
+          new: "There are no more new topics."
+          unread: "There are no more unread topics."
+          top: "There are no more top topics."
+          bookmarks: "There are no more bookmarked topics."
+          search: "There are no more search results."
+
+    invite:
+      custom_message: "Make your invite a little bit more personal by writing a"
+      custom_message_link: "custom message"
+      custom_message_placeholder: "Enter your custom message"
+      custom_message_template_forum: "Hey, you should join this forum!"
+      custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -2876,179 +3053,5 @@ en:
           add: "Add"
           filter: "Search (URL or External URL)"
 
-    lightbox:
-      download: "download"
-
-    search_help:
-      title: 'Search Help'
-
-    keyboard_shortcuts_help:
-      title: 'Keyboard Shortcuts'
-      jump_to:
-        title: 'Jump To'
-        home: '<b>g</b>, <b>h</b> Home'
-        latest: '<b>g</b>, <b>l</b> Latest'
-        new: '<b>g</b>, <b>n</b> New'
-        unread: '<b>g</b>, <b>u</b> Unread'
-        categories: '<b>g</b>, <b>c</b> Categories'
-        top: '<b>g</b>, <b>t</b> Top'
-        bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
-        profile: '<b>g</b>, <b>p</b> Profile'
-        messages: '<b>g</b>, <b>m</b> Messages'
-      navigation:
-        title: 'Navigation'
-        jump: '<b>#</b> Go to post #'
-        back: '<b>u</b> Back'
-        up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Next/previous section'
-      application:
-        title: 'Application'
-        create: '<b>c</b> Create a new topic'
-        notifications: '<b>n</b> Open notifications'
-        hamburger_menu: '<b>=</b> Open hamburger menu'
-        user_profile_menu: '<b>p</b> Open user menu'
-        show_incoming_updated_topics: '<b>.</b> Show updated topics'
-        search: '<b>/</b> Search'
-        help: '<b>?</b> Open keyboard help'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
-        dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
-      actions:
-        title: 'Actions'
-        bookmark_topic: '<b>f</b> Toggle bookmark topic'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
-        share_topic: '<b>shift</b>+<b>s</b> Share topic'
-        share_post: '<b>s</b> Share post'
-        reply_as_new_topic: '<b>t</b> Reply as linked topic'
-        reply_topic: '<b>shift</b>+<b>r</b> Reply to topic'
-        reply_post: '<b>r</b> Reply to post'
-        quote_post: '<b>q</b> Quote post'
-        like: '<b>l</b> Like post'
-        flag: '<b>!</b> Flag post'
-        bookmark: '<b>b</b> Bookmark post'
-        edit: '<b>e</b> Edit post'
-        delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b>, <b>m</b> Mute topic'
-        mark_regular: '<b>m</b>, <b>r</b> Regular (default) topic'
-        mark_tracking: '<b>m</b>, <b>t</b> Track topic'
-        mark_watching: '<b>m</b>, <b>w</b> Watch topic'
-
-    badges:
-      earned_n_times:
-        one: "Earned this badge 1 time"
-        other: "Earned this badge %{count} times"
-      granted_on: "Granted %{date}"
-      others_count: "Others with this badge (%{count})"
-      title: Badges
-      allow_title: "available title"
-      multiple_grant: "awarded multiple times"
-      badge_count:
-        one:   "1 Badge"
-        other: "%{count} Badges"
-      more_badges:
-        one:   "+1 More"
-        other: "+%{count} More"
-      granted:
-        one:   "1 granted"
-        other: "%{count} granted"
-      select_badge_for_title: Select a badge to use as your title
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: Getting Started
-        community:
-          name: Community
-        trust_level:
-          name: Trust Level
-        other:
-          name: Other
-        posting:
-          name: Posting
-
-    google_search: |
-      <h3>Search with Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
-
-    tagging:
-      all_tags: "All Tags"
-      selector_all_tags: "all tags"
-      changed: "tags changed:"
-      tags: "Tags"
-      choose_for_topic: "choose optional tags for this topic"
-      delete_tag: "Delete Tag"
-      delete_confirm: "Are you sure you want to delete that tag?"
-      rename_tag: "Rename Tag"
-      rename_instructions: "Choose a new name for the tag:"
-      sort_by: "Sort by:"
-      sort_by_count: "count"
-      sort_by_name: "name"
-      manage_groups: "Manage Tag Groups"
-      manage_groups_description: "Define groups to organize tags"
-
-      filters:
-        without_category: "%{filter} %{tag} topics"
-        with_category: "%{filter} %{tag} topics in %{category}"
-
-      notifications:
-        watching:
-          title: "Watching"
-          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
-        tracking:
-          title: "Tracking"
-          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
-        regular:
-          title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post."
-        muted:
-          title: "Muted"
-          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."
-
-      groups:
-        title: "Tag Groups"
-        about: "Add tags to groups to manage them more easily."
-        new: "New Group"
-        tags_label: "Tags in this group:"
-        parent_tag_label: "Parent tag:"
-        parent_tag_placeholder: "Optional"
-        parent_tag_description: "Tags from this group can't be used unless the parent tag is present."
-        one_per_topic_label: "Limit one tag per topic from this group"
-        new_name: "New Tag Group"
-        save: "Save"
-        delete: "Delete"
-        confirm_delete: "Are you sure you want to delete this tag group?"
-
-      topics:
-        none:
-          unread: "You have no unread topics."
-          new: "You have no new topics."
-          read: "You haven't read any topics yet."
-          posted: "You haven't posted in any topics yet."
-          latest: "There are no latest topics."
-          hot: "There are no hot topics."
-          bookmarks: "You have no bookmarked topics yet."
-          top: "There are no top topics."
-          search: "There are no search results."
-        bottom:
-          latest: "There are no more latest topics."
-          hot: "There are no more hot topics."
-          posted: "There are no more posted topics."
-          read: "There are no more read topics."
-          new: "There are no more new topics."
-          unread: "There are no more unread topics."
-          top: "There are no more top topics."
-          bookmarks: "There are no more bookmarked topics."
-          search: "There are no more search results."
-
-    invite:
-      custom_message: "Make your invite a little bit more personal by writing a"
-      custom_message_link: "custom message"
-      custom_message_placeholder: "Enter your custom message"
-      custom_message_template_forum: "Hey, you should join this forum!"
-      custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
+# WARNING! Keys added here will be in the admin_js section.
+#          Keys that don't belong in admin should be placed earlier in the file.
