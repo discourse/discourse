@@ -29,6 +29,11 @@ export default Ember.Controller.extend({
       return false;
     },
 
+    replyAsNewTopic() {
+      this.get("controllers.topic").send("replyAsNewTopic");
+      this.send("close");
+    },
+
     share(source) {
       var url = source.generateUrl(this.get('link'), this.get('title'));
       if (source.shouldOpenInPopup) {
