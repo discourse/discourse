@@ -1,16 +1,27 @@
 /* global Int8Array:true */
 import { blank } from 'helpers/qunit-helpers';
+import {
+  emailValid,
+  isAnImage,
+  avatarUrl,
+  allowsAttachments,
+  getRawSize,
+  avatarImg,
+  defaultHomepage,
+  validateUploadedFiles,
+  getUploadMarkdown,
+  caretRowCol,
+  setCaretPosition
+} from 'discourse/lib/utilities';
 
-module("Discourse.Utilities");
-
-var utils = Discourse.Utilities;
+module("lib:utilities");
 
 test("emailValid", function() {
-  ok(utils.emailValid('Bob@example.com'), "allows upper case in the first part of emails");
-  ok(utils.emailValid('bob@EXAMPLE.com'), "allows upper case in the email domain");
+  ok(emailValid('Bob@example.com'), "allows upper case in the first part of emails");
+  ok(emailValid('bob@EXAMPLE.com'), "allows upper case in the email domain");
 });
 
-var validUpload = utils.validateUploadedFiles;
+var validUpload = validateUploadedFiles;
 
 test("validateUploadedFiles", function() {
   not(validUpload(null), "no files are invalid");
@@ -80,8 +91,8 @@ test("allows valid uploads to go through", function() {
   not(bootbox.alert.calledOnce);
 });
 
-var getUploadMarkdown = function(filename) {
-  return utils.getUploadMarkdown({
+var testUploadMarkdown = function(filename) {
+  return getUploadMarkdown({
     original_filename: filename,
     filesize: 42,
     width: 100,
@@ -91,26 +102,26 @@ var getUploadMarkdown = function(filename) {
 };
 
 test("getUploadMarkdown", function() {
-  ok(getUploadMarkdown("lolcat.gif") === '<img src="/uploads/123/abcdef.ext" width="100" height="200">');
-  ok(getUploadMarkdown("important.txt") === '<a class="attachment" href="/uploads/123/abcdef.ext">important.txt</a> (42 Bytes)\n');
+  ok(testUploadMarkdown("lolcat.gif") === '<img src="/uploads/123/abcdef.ext" width="100" height="200">');
+  ok(testUploadMarkdown("important.txt") === '<a class="attachment" href="/uploads/123/abcdef.ext">important.txt</a> (42 Bytes)\n');
 });
 
 test("isAnImage", function() {
   _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "ico"], function(extension) {
     var image = "image." + extension;
-    ok(utils.isAnImage(image), image + " is recognized as an image");
-    ok(utils.isAnImage("http://foo.bar/path/to/" + image), image + " is recognized as an image");
+    ok(isAnImage(image), image + " is recognized as an image");
+    ok(isAnImage("http://foo.bar/path/to/" + image), image + " is recognized as an image");
   });
-  not(utils.isAnImage("file.txt"));
-  not(utils.isAnImage("http://foo.bar/path/to/file.txt"));
-  not(utils.isAnImage(""));
+  not(isAnImage("file.txt"));
+  not(isAnImage("http://foo.bar/path/to/file.txt"));
+  not(isAnImage(""));
 });
 
 test("avatarUrl", function() {
-  var rawSize = utils.getRawSize;
-  blank(utils.avatarUrl('', 'tiny'), "no template returns blank");
-  equal(utils.avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + rawSize(20) + ".png", "simple avatar url");
-  equal(utils.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + rawSize(45) +  ".png", "different size");
+  var rawSize = getRawSize;
+  blank(avatarUrl('', 'tiny'), "no template returns blank");
+  equal(avatarUrl('/fake/template/{size}.png', 'tiny'), "/fake/template/" + rawSize(20) + ".png", "simple avatar url");
+  equal(avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + rawSize(45) +  ".png", "different size");
 });
 
 var setDevicePixelRatio = function(value) {
@@ -126,19 +137,19 @@ test("avatarImg", function() {
   setDevicePixelRatio(2);
 
   var avatarTemplate = "/path/to/avatar/{size}.png";
-  equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny'}),
+  equal(avatarImg({avatarTemplate: avatarTemplate, size: 'tiny'}),
         "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
         "it returns the avatar html");
 
-  equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', title: 'evilest trout'}),
+  equal(avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', title: 'evilest trout'}),
         "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout'>",
         "it adds a title if supplied");
 
-  equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', extraClasses: 'evil fish'}),
+  equal(avatarImg({avatarTemplate: avatarTemplate, size: 'tiny', extraClasses: 'evil fish'}),
         "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
         "it adds extra classes if supplied");
 
-  blank(utils.avatarImg({avatarTemplate: "", size: 'tiny'}),
+  blank(avatarImg({avatarTemplate: "", size: 'tiny'}),
         "it doesn't render avatars for invalid avatar template");
 
   setDevicePixelRatio(oldRatio);
@@ -146,18 +157,18 @@ test("avatarImg", function() {
 
 test("allowsAttachments", function() {
   Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
-  not(utils.allowsAttachments(), "no attachments allowed by default");
+  not(allowsAttachments(), "no attachments allowed by default");
 
   Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|*";
-  ok(utils.allowsAttachments(), "attachments are allowed when all extensions are allowed");
+  ok(allowsAttachments(), "attachments are allowed when all extensions are allowed");
 
   Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
-  ok(utils.allowsAttachments(), "attachments are allowed when at least one extension is not an image extension");
+  ok(allowsAttachments(), "attachments are allowed when at least one extension is not an image extension");
 });
 
 test("defaultHomepage", function() {
   Discourse.SiteSettings.top_menu = "latest|top|hot";
-  equal(utils.defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
+  equal(defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
 });
 
 test("caretRowCol", () => {
@@ -167,9 +178,9 @@ test("caretRowCol", () => {
   document.body.appendChild(textarea);
 
   const assertResult = (setCaretPos, expectedRowNum, expectedColNum) => {
-    Discourse.Utilities.setCaretPosition(textarea, setCaretPos);
+    setCaretPosition(textarea, setCaretPos);
 
-    const result = Discourse.Utilities.caretRowCol(textarea);
+    const result = caretRowCol(textarea);
     equal(result.rowNum, expectedRowNum, "returns the right row of the caret");
     equal(result.colNum, expectedColNum,  "returns the right col of the caret");
   };

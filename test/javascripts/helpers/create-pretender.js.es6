@@ -101,6 +101,10 @@ export default function() {
       return response({ post_reply_histories: [{ id: 1234, cooked: 'wat' }] });
     });
 
+    this.get('/category_hashtags/check', () => {
+      return response({ valid: [{ slug: "bug", url: '/c/bugs' }] });
+    });
+
     this.put('/categories/:category_id', request => {
       const category = parsePostData(request.requestBody);
       return response({category});

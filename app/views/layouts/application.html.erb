@@ -26,9 +26,11 @@
     <%= script "locales/#{I18n.locale}" %>
     <%= script "ember_jquery" %>
     <%= script "vendor" %>
+    <%= script "pretty-text-bundle" %>
     <%= script "application" %>
+
     <%- if staff? %>
-      <%= script "admin"%>
+      <%= script "admin" %>
     <%- end %>
 
     <%- unless customization_disabled? %>

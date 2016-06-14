@@ -1,4 +1,5 @@
 import { queryParams } from 'discourse/controllers/discovery-sortable';
+import { defaultHomepage } from 'discourse/lib/utilities';
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
@@ -77,7 +78,7 @@ export default function(filter, extras) {
     },
 
     titleToken() {
-      if (filter === Discourse.Utilities.defaultHomepage()) { return; }
+      if (filter === defaultHomepage()) { return; }
 
       const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title');
       return I18n.t('filters.with_topics', {filter: filterText});

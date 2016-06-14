@@ -5,7 +5,6 @@ app/assets/javascripts/preload_store.js
 app/assets/javascripts/pagedown_custom.js
 app/assets/javascripts/vendor.js
 app/assets/javascripts/locales/i18n.js
-app/assets/javascripts/defer/html-sanitizer-bundle.js
 app/assets/javascripts/ember-addons/
 app/assets/javascripts/discourse/lib/autosize.js.es6
 lib/javascripts/locale/

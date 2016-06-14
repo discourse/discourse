@@ -5,6 +5,8 @@ import { longDate } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
 import ActionSummary from 'discourse/models/action-summary';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { censor } from 'pretty-text/censored-words';
+import { emojiUnescape } from 'discourse/lib/text';
 
 export function loadTopicView(topic, args) {
   const topicId = topic.get('id');
@@ -45,9 +47,11 @@ const Topic = RestModel.extend({
 
   @computed('fancy_title')
   fancyTitle(title) {
-    title = title || "";
-    title = Discourse.Emoji.unescape(title);
-    return Discourse.CensoredWords.censor(title);
+    // TODO: `siteSettings` should always be present, but there are places in the code
+    // that call Discourse.Topic.create instead of using the store. When the store is
+    // used, remove this.
+    const siteSettings = this.siteSettings || Discourse.SiteSettings;
+    return censor(emojiUnescape(title || ""), siteSettings.censored_words);
   },
 
   // returns createdAt if there's no bumped date

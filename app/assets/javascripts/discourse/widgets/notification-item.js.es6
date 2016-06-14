@@ -3,6 +3,8 @@ import RawHtml from 'discourse/widgets/raw-html';
 import { createWidget } from 'discourse/widgets/widget';
 import DiscourseURL from 'discourse/lib/url';
 import { h } from 'virtual-dom';
+import { emojiUnescape } from 'discourse/lib/text';
+import { postUrl, escapeExpression } from 'discourse/lib/utilities';
 
 const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
@@ -38,7 +40,7 @@ createWidget('notification-item', {
 
     const topicId = attrs.topic_id;
     if (topicId) {
-      return Discourse.Utilities.postUrl(attrs.slug, topicId, attrs.post_number);
+      return postUrl(attrs.slug, topicId, attrs.post_number);
     }
 
     if (attrs.notification_type === INVITED_TYPE) {
@@ -53,10 +55,10 @@ createWidget('notification-item', {
   description() {
     const data = this.attrs.data;
     const badgeName = data.badge_name;
-    if (badgeName) { return Discourse.Utilities.escapeExpression(badgeName); }
+    if (badgeName) { return escapeExpression(badgeName); }
 
     const title = data.topic_title;
-    return Ember.isEmpty(title) ? "" : Discourse.Utilities.escapeExpression(title);
+    return Ember.isEmpty(title) ? "" : escapeExpression(title);
   },
 
   text(notificationType, notName) {
@@ -90,7 +92,7 @@ createWidget('notification-item', {
     const lookup = this.site.get('notificationLookup');
     const notName = lookup[notificationType];
 
-    const contents = new RawHtml({ html: `<div>${Discourse.Emoji.unescape(this.text(notificationType, notName))}</div>` });
+    const contents = new RawHtml({ html: `<div>${emojiUnescape(this.text(notificationType, notName))}</div>` });
     const href = this.url();
     const alt = I18n.t(`notifications.alt.${notName}`);
     return href ? h('a', { attributes: { href, alt, 'data-auto-route': true } }, contents) : contents;

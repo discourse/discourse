@@ -197,6 +197,7 @@ export default Ember.Object.extend({
     // TODO: Have injections be automatic
     obj.topicTrackingState = this.container.lookup('topic-tracking-state:main');
     obj.keyValueStore = this.container.lookup('key-value-store:main');
+    obj.siteSettings = this.container.lookup('site-settings:main');
 
     const klass = this.container.lookupFactory('model:' + type) || RestModel;
     const model = klass.create(obj);

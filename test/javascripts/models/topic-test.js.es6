@@ -1,4 +1,6 @@
 import { blank, present } from 'helpers/qunit-helpers';
+import { IMAGE_VERSION as v} from 'pretty-text/emoji';
+
 module("model:topic");
 
 import Topic from 'discourse/models/topic';
@@ -75,7 +77,6 @@ test("recover", function() {
 
 test('fancyTitle', function() {
   var topic = Topic.create({ fancy_title: ":smile: with all :) the emojis :pear::peach:" });
-  const v = Discourse.Emoji.ImageVersion;
 
   equal(topic.get('fancyTitle'),
         `<img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> with all <img src='/images/emoji/emoji_one/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'> the emojis <img src='/images/emoji/emoji_one/pear.png?v=${v}' title='pear' alt='pear' class='emoji'><img src='/images/emoji/emoji_one/peach.png?v=${v}' title='peach' alt='peach' class='emoji'>`,

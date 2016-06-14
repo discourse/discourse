@@ -26,7 +26,7 @@ window.Discourse = Ember.Application.extend(Discourse.Ajax, {
   },
 
   getURLWithCDN: function(url) {
-    url = this.getURL(url);
+    url = Discourse.getURL(url);
     // only relative urls
     if (Discourse.CDN && /^\/[^\/]/.test(url)) {
       url = Discourse.CDN + url;
@@ -142,6 +142,15 @@ window.Discourse = Ember.Application.extend(Discourse.Ajax, {
         }
       });
     });
+
+    var utils = require('discourse/lib/utilities');
+    Discourse.Utilities = {};
+    Object.keys(utils).forEach(function(k) {
+      Discourse.Utilities[k] = function() {
+        Ember.warn('Discourse.Utilities is deprecated. Import it as a module');
+        return utils[k].apply(utils, arguments);
+      };
+    });
   },
 
   requiresRefresh: function(){
@@ -170,20 +179,17 @@ window.Discourse = Ember.Application.extend(Discourse.Ajax, {
   })
 }).create();
 
-function RemovedObject(name) {
-  this._removedName = name;
-}
 
-function methodMissing() {
-  console.warn("The " + this._removedName + " object has been removed from Discourse " +
-               "and your plugin needs to be updated.");
+Discourse.Markdown = {
+  whiteListTag: Ember.K,
+  whiteListIframe: Ember.K
 };
 
-Discourse.RemovedObject = RemovedObject;
-
-['reopen', 'registerButton', 'on', 'off'].forEach(function(m) { RemovedObject.prototype[m] = methodMissing; });
-
-['discourse/views/post', 'discourse/components/post-menu'].forEach(function(moduleName) {
-  define(moduleName, [], function() { return new RemovedObject(moduleName); });
-});
-
+Discourse.Dialect = {
+  inlineRegexp: Ember.K,
+  addPreProcessor: Ember.K,
+  replaceBlock: Ember.K,
+  inlineReplace: Ember.K,
+  registerInline: Ember.K,
+  registerEmoji: Ember.K
+};

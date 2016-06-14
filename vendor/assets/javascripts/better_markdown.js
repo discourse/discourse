@@ -429,6 +429,7 @@
     if ( attrs && attrs.references )
       refs = attrs.references;
 
+
     var html = convert_tree_to_html( input, refs , options );
     merge_text_nodes( html );
     return html;
