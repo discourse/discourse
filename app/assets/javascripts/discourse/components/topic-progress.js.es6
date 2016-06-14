@@ -95,7 +95,7 @@ export default Ember.Component.extend({
                   .off("composer:resized", this, this._dock)
                   .off('composer:closed', this, this._dock)
                   .off('topic:scrolled', this, this._dock)
-                  .off('topic:current-post-scrolled')
+                  .off('topic:current-post-scrolled', this, this._topicScrolled)
                   .off('topic-progress:keyboard-trigger');
   },
 
