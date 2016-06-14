@@ -384,7 +384,7 @@ export default createWidget('post', {
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.height ? { style: `height: ${attrs.height}px` } : undefined;
+    return attrs.height ? { style: `min-height: ${attrs.height}px` } : undefined;
   },
 
   buildId(attrs) {
