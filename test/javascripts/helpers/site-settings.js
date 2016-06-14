@@ -60,7 +60,7 @@ Discourse.SiteSettingsOriginal = {
   "newuser_max_attachments":0,
   "display_name_on_posts":true,
   "short_progress_text_threshold":10000,
-  "default_code_lang":"lang-auto",
+  "default_code_lang":"auto",
   "autohighlight_all_code":false,
   "email_in":false,
   "authorized_extensions":".jpg|.jpeg|.png|.gif|.svg|.txt|.ico|.yml",

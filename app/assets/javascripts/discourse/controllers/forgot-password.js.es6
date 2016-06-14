@@ -1,4 +1,5 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default Ember.Controller.extend(ModalFunctionality, {
 
@@ -23,7 +24,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       var success = function(data) {
         // don't tell people what happened, this keeps it more secure (ensure same on server)
-        var escaped = Discourse.Utilities.escapeExpression(self.get('accountEmailOrUsername'));
+        var escaped = escapeExpression(self.get('accountEmailOrUsername'));
         var isEmail = self.get('accountEmailOrUsername').match(/@/);
 
         var key = 'forgot_password.complete_' + (isEmail ? 'email' : 'username');

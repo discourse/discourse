@@ -127,6 +127,7 @@ class CookedPostProcessor
     w, h = get_size_from_attributes(img) ||
            get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
            get_size(img["src"])
+
     # limit the size of the thumbnail
     img["width"], img["height"] = ImageSizer.resize(w, h)
   end

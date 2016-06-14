@@ -33,15 +33,10 @@ function AcceptanceModal(option, _relatedTarget) {
 window.bootbox.$body = $('#ember-testing');
 $.fn.modal = AcceptanceModal;
 
-var oldAvatar = Discourse.Utilities.avatarImg;
-
 function acceptance(name, options) {
   module("Acceptance: " + name, {
     setup() {
       resetMobile();
-
-      // Don't render avatars in acceptance tests, it's faster and no 404s
-      Discourse.Utilities.avatarImg = () => "";
 
       // For now don't do scrolling stuff in Test Mode
       HeaderComponent.reopen({examineDockHeader: Ember.K});
@@ -79,7 +74,6 @@ function acceptance(name, options) {
       Discourse.User.resetCurrent();
       Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, fixtures['site.json'].site)));
 
-      Discourse.Utilities.avatarImg = oldAvatar;
       Discourse.reset();
     }
   });

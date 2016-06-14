@@ -22,9 +22,9 @@
 //= require htmlparser.js
 
 // Stuff we need to load first
+//= require pretty-text-bundle
 //= require main_include
 //= require admin
-//= require_tree ../../app/assets/javascripts/defer
 
 //= require sinon-1.7.1
 //= require sinon-qunit-1.0.0
@@ -42,12 +42,6 @@
 //= require jquery.magnific-popup-min.js
 
 window.inTestEnv = true;
-
-window.assetPath = function(url) {
-  if (url.indexOf('defer') === 0) {
-    return "/assets/" + url;
-  }
-};
 
 // Stop the message bus so we don't get ajax calls
 window.MessageBus.stop();
@@ -137,3 +131,5 @@ Object.keys(requirejs.entries).forEach(function(entry) {
     require(entry, null, null, true);
   }
 });
+require('mdtest/mdtest', null, null, true);
+

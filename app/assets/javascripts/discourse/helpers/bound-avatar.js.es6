@@ -1,4 +1,5 @@
 import { htmlHelper } from 'discourse/lib/helpers';
+import { avatarImg } from 'discourse/lib/utilities';
 
 export default htmlHelper((user, size) => {
   if (Ember.isEmpty(user)) {
@@ -6,5 +7,5 @@ export default htmlHelper((user, size) => {
   }
 
   const avatarTemplate = Em.get(user, 'avatar_template');
-  return Discourse.Utilities.avatarImg({ size, avatarTemplate });
+  return avatarImg({ size, avatarTemplate });
 });

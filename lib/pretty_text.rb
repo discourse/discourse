@@ -1,84 +1,13 @@
 require 'mini_racer'
 require 'nokogiri'
+require 'erb'
 require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
 require_dependency 'post'
 require_dependency 'discourse_tagging'
+require_dependency 'pretty_text/helpers'
 
 module PrettyText
-
-  module Helpers
-    extend self
-
-    def t(key, opts)
-      key = "js." + key
-      unless opts
-        I18n.t(key)
-      else
-        str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-        opts.each { |k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
-        str
-      end
-    end
-
-    # functions here are available to v8
-    def avatar_template(username)
-      return "" unless username
-      user = User.find_by(username_lower: username.downcase)
-      return "" unless user.present?
-
-      # TODO: Add support for ES6 and call `avatar-template` directly
-      if !user.uploaded_avatar_id
-        avatar_template = User.default_template(username)
-      else
-        avatar_template = user.avatar_template
-      end
-
-      UrlHelper.schemaless UrlHelper.absolute avatar_template
-    end
-
-    def mention_lookup(name)
-      return false   if name.blank?
-      return "group" if Group.where(name: name).exists?
-      return "user"  if User.where(username_lower: name.downcase).exists?
-      nil
-    end
-
-    def category_hashtag_lookup(category_slug)
-      if category = Category.query_from_hashtag_slug(category_slug)
-        [category.url_with_id, category_slug]
-      else
-        nil
-      end
-    end
-
-    def get_topic_info(topic_id)
-      return unless Fixnum === topic_id
-      # TODO this only handles public topics, secured one do not get this
-      topic = Topic.find_by(id: topic_id)
-      if topic && Guardian.new.can_see?(topic)
-        {
-          title: topic.title,
-          href: topic.url
-        }
-      end
-    end
-
-    def category_tag_hashtag_lookup(text)
-      tag_postfix = '::tag'
-      is_tag = text =~ /#{tag_postfix}$/
-
-      if !is_tag && category = Category.query_from_hashtag_slug(text)
-        [category.url_with_id, text]
-      elsif is_tag && tag = Tag.find_by_name(text.gsub!("#{tag_postfix}", ''))
-        ["#{Discourse.base_url}/tags/#{tag.name}", text]
-      else
-        nil
-      end
-    end
-
-  end
-
   @mutex = Mutex.new
   @ctx_init = Mutex.new
 
@@ -86,58 +15,81 @@ module PrettyText
     Rails.root
   end
 
-  def self.create_new_context
-    # timeout any eval that takes longer than 15 seconds
+  def self.find_file(root, filename)
+    return filename if File.file?("#{root}#{filename}")
+
+    es6_name = "#{filename}.js.es6"
+    return es6_name if File.file?("#{root}#{es6_name}")
+
+    js_name = "#{filename}.js"
+    return js_name if File.file?("#{root}#{js_name}")
+
+    erb_name = "#{filename}.js.es6.erb"
+    return erb_name if File.file?("#{root}#{erb_name}")
+  end
+
+  def self.apply_es6_file(ctx, root_path, part_name)
+    filename = find_file(root_path, part_name)
+    if filename
+      source = File.read("#{root_path}#{filename}")
+
+      if filename =~ /\.erb$/
+        source = ERB.new(source).result(binding)
+      end
+
+      template = Tilt::ES6ModuleTranspilerTemplate.new {}
+      transpiled = template.module_transpile(source, "#{Rails.root}/app/assets/javascripts/", part_name)
+      ctx.eval(transpiled)
+    else
+      # Look for vendored stuff
+      vendor_root = "#{Rails.root}/vendor/assets/javascripts/"
+      filename = find_file(vendor_root, part_name)
+      if filename
+        ctx.eval(File.read("#{vendor_root}#{filename}"))
+      end
+    end
+  end
+
+  def self.create_es6_context
     ctx = MiniRacer::Context.new(timeout: 15000)
 
-    Helpers.instance_methods.each do |method|
-      ctx.attach("helpers.#{method}", Helpers.method(method))
+    ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
+
+    if Rails.env.development? || Rails.env.test?
+      ctx.attach("console.log", proc{|l| p l })
     end
 
-    ctx_load(ctx,
-      "vendor/assets/javascripts/md5.js",
-      "vendor/assets/javascripts/lodash.js",
-      "vendor/assets/javascripts/Markdown.Converter.js",
-      "lib/headless-ember.js",
-      "vendor/assets/javascripts/rsvp.js",
-      Rails.configuration.ember.handlebars_location
-    )
-
-    ctx.eval("var Discourse = {}; Discourse.SiteSettings = {};")
-    ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
-    ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
-
-    ctx.eval("var modules = {};")
-
-    decorate_context(ctx)
-
-    ctx_load(ctx,
-      "vendor/assets/javascripts/better_markdown.js",
-      "app/assets/javascripts/defer/html-sanitizer-bundle.js",
-      "app/assets/javascripts/discourse/lib/utilities.js",
-      "app/assets/javascripts/discourse/dialects/dialect.js",
-      "app/assets/javascripts/discourse/lib/censored-words.js",
-      "app/assets/javascripts/discourse/lib/markdown.js",
-    )
-
-    Dir["#{app_root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
-      ctx.load(dialect) unless dialect =~ /\/dialect\.js$/
-    end
-
-    # emojis
-    emoji = ERB.new(File.read("#{app_root}/app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
-    ctx.eval(emoji.result)
-
-    # Load server side javascripts
-    if DiscoursePluginRegistry.server_side_javascripts.present?
-      DiscoursePluginRegistry.server_side_javascripts.each do |ssjs|
-        if(ssjs =~ /\.erb/)
-          erb = ERB.new(File.read(ssjs))
-          erb.filename = ssjs
-          ctx.eval(erb.result)
-        else
-          ctx.load(ssjs)
+    ctx_load(ctx, "vendor/assets/javascripts/loader.js")
+    ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
+    manifest = File.read("#{Rails.root}/app/assets/javascripts/pretty-text-bundle.js")
+    root_path = "#{Rails.root}/app/assets/javascripts/"
+    manifest.each_line do |l|
+      if l =~ /\/\/= require (\.\/)?(.*)$/
+        apply_es6_file(ctx, root_path, Regexp.last_match[2])
+      elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
+        path = Regexp.last_match[2]
+        Dir["#{root_path}/#{path}/**"].each do |f|
+          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js.es6$/, ''))
         end
+      end
+    end
+
+    apply_es6_file(ctx, root_path, "discourse/lib/utilities")
+
+    PrettyText::Helpers.instance_methods.each do |method|
+      ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
+    end
+    ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
+    ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
+
+    to_load = []
+    DiscoursePluginRegistry.each_globbed_asset do |a|
+      to_load << a if File.file?(a) && a =~ /discourse-markdown/
+    end
+    to_load.uniq.each do |f|
+      if f =~ /^.+assets\/javascripts\//
+        root = Regexp.last_match[0]
+        apply_es6_file(ctx, root, f.sub(root, '').sub(/\.js\.es6$/, ''))
       end
     end
 
@@ -150,7 +102,7 @@ module PrettyText
     # ensure we only init one of these
     @ctx_init.synchronize do
       return @ctx if @ctx
-      @ctx = create_new_context
+      @ctx = create_es6_context
     end
 
     @ctx
@@ -162,36 +114,6 @@ module PrettyText
     end
   end
 
-  def self.decorate_context(context)
-    context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
-    context.eval("Discourse.BaseUrl = '#{RailsMultisite::ConnectionManagement.current_hostname}'.replace(/:[\d]*$/,'');")
-    context.eval("Discourse.BaseUri = '#{Discourse::base_uri}';")
-    context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
-
-    context.eval("Discourse.getURL = function(url) {
-      if (!url) return url;
-      if (!/^\\/[^\\/]/.test(url)) return url;
-
-      var u = (Discourse.BaseUri === undefined ? '/' : Discourse.BaseUri);
-
-      if (u[u.length-1] === '/') u = u.substring(0, u.length-1);
-      if (url.indexOf(u) !== -1) return url;
-      if (u.length > 0  && url[0] !== '/') url = '/' + url;
-
-      return u + url;
-    };")
-
-    context.eval("Discourse.getURLWithCDN = function(url) {
-      url = this.getURL(url);
-      if (Discourse.CDN && /^\\/[^\\/]/.test(url)) {
-        url = Discourse.CDN + url;
-      } else if (Discourse.S3CDN) {
-        url = url.replace(Discourse.S3BaseUrl, Discourse.S3CDN);
-      }
-      return url;
-    };")
-  end
-
   def self.markdown(text, opts=nil)
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
@@ -200,43 +122,41 @@ module PrettyText
 
     protect do
       context = v8
-      # we need to do this to work in a multi site environment, many sites, many settings
-      decorate_context(context)
 
-      context_opts = opts || {}
-      context_opts[:sanitize] = true unless context_opts[:sanitize] == false
+      paths = {
+        baseUri: Discourse::base_uri,
+        CDN: Rails.configuration.action_controller.asset_host,
+      }
 
-      context.eval("opts = #{context_opts.to_json};")
-      context.eval("raw = #{text.inspect};")
-
-      if Post.white_listed_image_classes.present?
-        Post.white_listed_image_classes.each do |klass|
-          context.eval("Discourse.Markdown.whiteListClass('#{klass}')")
+      if SiteSetting.enable_s3_uploads?
+        if SiteSetting.s3_cdn_url.present?
+          paths[:S3CDN] = SiteSetting.s3_cdn_url
         end
+        paths[:S3BaseUrl] = Discourse.store.absolute_base_url
       end
 
-      if SiteSetting.enable_emoji?
-        context.eval("Discourse.Dialect.setUnicodeReplacements(#{Emoji.unicode_replacements_json})");
-      else
-        context.eval("Discourse.Dialect.setUnicodeReplacements(null)");
+      context.eval("__optInput = {};")
+      context.eval("__optInput.siteSettings = #{SiteSetting.client_settings_json};")
+      context.eval("__paths = #{paths.to_json};")
+
+      if opts[:topicId]
+        context.eval("__optInput.topicId = #{opts[:topicId].to_i};")
       end
 
-      # reset emojis (v8 context is shared amongst multisites)
-      context.eval("Discourse.Dialect.resetEmojis();")
-      # custom emojis
-      Emoji.custom.each do |emoji|
-        context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
-      end
-      # plugin emojis
-      context.eval("Discourse.Emoji.applyCustomEmojis();")
+      context.eval("__optInput.getURL = __getURL;")
+      context.eval("__optInput.lookupAvatar = __lookupAvatar;")
+      context.eval("__optInput.getTopicInfo = __getTopicInfo;")
+      context.eval("__optInput.categoryHashtagLookup = __categoryLookup;")
+      context.eval("__optInput.mentionLookup = __mentionLookup;")
 
-      context.eval('opts["mentionLookup"] = function(u){return helpers.mention_lookup(u);}')
-      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_hashtag_lookup(c);}')
-      context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
-      context.eval('opts["getTopicInfo"] = function(i){return helpers.get_topic_info(i)};')
-      context.eval('opts["categoryHashtagLookup"] = function(c){return helpers.category_tag_hashtag_lookup(c);}')
+      custom_emoji = {}
+      Emoji.custom.map {|e| custom_emoji[e.name] = e.url}
+      context.eval("__optInput.customEmoji = #{custom_emoji.to_json};")
+
+      opts = context.eval("__pt = new __PrettyText(__buildOptions(__optInput));")
+
       DiscourseEvent.trigger(:markdown_context, context)
-      baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
+      baked = context.eval("__pt.cook(#{text.inspect})")
     end
 
     if baked.blank? && !(opts || {})[:skip_blank_test]
@@ -258,19 +178,16 @@ module PrettyText
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
     protect do
-      v8.eval <<JS
-      avatarTemplate = #{avatar_template.inspect};
-      size = #{size.inspect};
-JS
-      decorate_context(v8)
-      v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
+      v8.eval("__utils.avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);")
     end
   end
 
   def self.unescape_emoji(title)
+    return title unless SiteSetting.enable_emoji?
+
+    set = SiteSetting.emoji_set.inspect
     protect do
-      decorate_context(v8)
-      v8.eval("Discourse.Emoji.unescape(#{title.inspect})")
+      v8.eval("__performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set} })")
     end
   end
 

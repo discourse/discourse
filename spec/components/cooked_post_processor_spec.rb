@@ -59,7 +59,8 @@ describe CookedPostProcessor do
       context "valid" do
         let(:image_sizes) { {"http://foo.bar/image.png" => {"width" => 111, "height" => 222}} }
 
-        it "use them" do
+        it "uses them" do
+
           # adds the width from the image sizes provided when no dimension is provided
           expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="111" height="222"/)
           # adds the width from the image sizes provided

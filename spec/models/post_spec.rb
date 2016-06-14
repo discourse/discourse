@@ -369,6 +369,7 @@ describe Post do
     end
 
     it "finds links from HTML" do
+
       expect(post_two_links.link_count).to eq(2)
     end
 

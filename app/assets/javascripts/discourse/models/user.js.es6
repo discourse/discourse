@@ -11,6 +11,7 @@ import UserActionStat from 'discourse/models/user-action-stat';
 import UserAction from 'discourse/models/user-action';
 import Group from 'discourse/models/group';
 import Topic from 'discourse/models/topic';
+import { emojiUnescape } from 'discourse/lib/text';
 
 const User = RestModel.extend({
 
@@ -228,7 +229,7 @@ const User = RestModel.extend({
         if ((this.get('stream.filter') || ua.action_type) !== ua.action_type) return;
         if (!this.get('stream.filter') && !this.inAllStream(ua)) return;
 
-        ua.title = Discourse.Emoji.unescape(Handlebars.Utils.escapeExpression(ua.title));
+        ua.title = emojiUnescape(Handlebars.Utils.escapeExpression(ua.title));
         const action = UserAction.collapseStream([UserAction.create(ua)]);
         stream.set('itemsLoaded', stream.get('itemsLoaded') + 1);
         stream.get('content').insertAt(0, action[0]);

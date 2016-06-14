@@ -7,8 +7,6 @@
 enabled_site_setting :details_enabled
 
 register_asset "javascripts/details.js"
-register_asset "javascripts/details_dialect.js", :server_side
-
 register_asset "stylesheets/details.scss"
 
 after_initialize do

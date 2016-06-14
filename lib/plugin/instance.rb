@@ -138,12 +138,6 @@ class Plugin::Instance
       assets << [path]
     end
 
-    automatic_server_assets.each do |path, contents|
-      write_asset(path, contents)
-      paths << path
-      assets << [path, :server_side]
-    end
-
     delete_extra_automatic_assets(paths)
 
     assets
@@ -262,39 +256,6 @@ class Plugin::Instance
       hash = Digest::SHA1.hexdigest asset
       ["#{auto_generated_path}/plugin_#{hash}.#{extension}", asset]
     end
-  end
-
-  def automatic_server_assets
-    js = ""
-
-    unless emojis.blank?
-      js << "Discourse.Emoji.addCustomEmojis(function() {" << "\n"
-
-      if @enabled_site_setting.present?
-        js << "if (Discourse.SiteSettings.#{@enabled_site_setting}) {" << "\n"
-      end
-
-      emojis.each do |name, url|
-        js << "Discourse.Dialect.registerEmoji('#{name}', '#{url}');" << "\n"
-      end
-
-      if @enabled_site_setting.present?
-        js << "}" << "\n"
-      end
-
-      js << "});" << "\n"
-    end
-
-    result = []
-
-    if js.present?
-      # Generate an IIFE for the JS
-      asset = "(function(){#{js}})();"
-      hash = Digest::SHA1.hexdigest(asset)
-      result << ["#{auto_generated_path}/plugin_#{hash}.js", asset]
-    end
-
-    result
   end
 
   # note, we need to be able to parse seperately to activation.

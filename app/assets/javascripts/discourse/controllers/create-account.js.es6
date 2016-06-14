@@ -2,6 +2,7 @@ import debounce from 'discourse/lib/debounce';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { setting } from 'discourse/lib/computed';
 import { on } from 'ember-addons/ember-computed-decorators';
+import { emailValid } from 'discourse/lib/utilities';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   needs: ['login'],
@@ -120,7 +121,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       });
     }
 
-    if (Discourse.Utilities.emailValid(email)) {
+    if (emailValid(email)) {
       return Discourse.InputValidation.create({
         ok: true,
         reason: I18n.t('user.email.ok')

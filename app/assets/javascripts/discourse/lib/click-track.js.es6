@@ -1,5 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
+import { selectedText } from 'discourse/lib/utilities';
 
 export function isValidLink($link) {
   return ($link.hasClass("track-link") ||
@@ -9,7 +10,7 @@ export function isValidLink($link) {
 export default {
   trackClick(e) {
     // cancel click if triggered as part of selection.
-    if (Discourse.Utilities.selectedText() !== "") { return false; }
+    if (selectedText() !== "") { return false; }
 
     var $link = $(e.currentTarget);
 

@@ -1,5 +1,6 @@
 /* global ace:true */
 import loadScript from 'discourse/lib/load-script';
+import escapeExpression from 'discourse/lib/utilities';
 
 export default Ember.Component.extend({
   mode: 'css',
@@ -16,7 +17,7 @@ export default Ember.Component.extend({
   render(buffer) {
     buffer.push("<div class='ace'>");
     if (this.get('content')) {
-      buffer.push(Discourse.Utilities.escapeExpression(this.get('content')));
+      buffer.push(escapeExpression(this.get('content')));
     }
     buffer.push("</div>");
   },

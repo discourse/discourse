@@ -1,10 +1,11 @@
 import { iconHTML } from 'discourse/helpers/fa-icon';
 import { htmlHelper } from 'discourse/lib/helpers';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default htmlHelper((user, args) => {
   if (!user) { return; }
 
-  const name = Discourse.Utilities.escapeExpression(user.get('name'));
+  const name = escapeExpression(user.get('name'));
   const currentUser = args.hash.currentUser;
 
   if (currentUser && user.get('admin') && currentUser.get('staff')) {

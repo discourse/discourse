@@ -1,11 +1,4 @@
 <script>
-  window.assetPath = (function(){
-    var map = <%= deferred_scripts %>;
-    return function(asset) { return map[asset]; };
-  })();
-</script>
-
-<script>
   Ember.RSVP.configure('onerror', function(e) {
     // Ignore TransitionAborted exceptions that bubble up
     if (e && e.message === "TransitionAborted") { return; }
@@ -52,9 +45,6 @@
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
   Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
   I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
-  PreloadStore.get("customEmoji").forEach(function(emoji) {
-    Discourse.Dialect.registerEmoji(emoji.name, emoji.url);
-  });
   Discourse.start();
   Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
   Discourse.Session.currentProp("disableCustomCSS", <%= loading_admin? %>);
