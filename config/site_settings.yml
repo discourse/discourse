@@ -135,7 +135,7 @@ basic:
   share_links:
     client: true
     type: list
-    default: 'twitter|facebook|google+|email'
+    default: 'twitter|facebook|email'
     choices:
      - twitter
      - facebook
