@@ -6,6 +6,7 @@ export default Ember.Controller.extend({
   needs: ['topic'],
 
   title: Ember.computed.alias('controllers.topic.model.title'),
+  canReplyAsNewTopic: Ember.computed.alias('controllers.topic.model.details.can_reply_as_new_topic'),
 
   @computed('type', 'postNumber')
   shareTitle(type, postNumber) {
