@@ -94,6 +94,8 @@ const User = RestModel.extend({
 
   mutedTopicsPath: url('/latest?state=muted'),
 
+  watchingTopicsPath: url('/latest?state=watching'),
+
   @computed("username")
   username_lower(username) {
     return username.toLowerCase();
