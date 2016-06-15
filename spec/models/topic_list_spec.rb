@@ -5,6 +5,10 @@ describe TopicList do
   let(:user) { topic.user }
   let(:topic_list) { TopicList.new("liked", user, [topic]) }
 
+  before do
+    TopicList.preloaded_custom_fields.clear
+  end
+
   after do
     TopicList.preloaded_custom_fields.clear
   end

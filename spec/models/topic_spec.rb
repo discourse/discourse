@@ -443,7 +443,7 @@ describe Topic do
 
     expect {
       topic.invite(topic.user, "user@example.com")
-    }.to raise_exception
+    }.to raise_error(RateLimiter::LimitExceeded)
   end
 
   context 'bumping topics' do
@@ -1483,7 +1483,7 @@ describe Topic do
     freeze_time(start + 10.minutes)
     expect {
       create_post(user: user)
-    }.to raise_exception
+    }.to raise_error(RateLimiter::LimitExceeded)
 
     freeze_time(start + 20.minutes)
     create_post(user: user, topic_id: topic_id)
@@ -1492,7 +1492,7 @@ describe Topic do
 
     expect {
       create_post(user: user, topic_id: topic_id)
-    }.to raise_exception
+    }.to raise_error(RateLimiter::LimitExceeded)
   end
 
   describe ".count_exceeds_minimun?" do

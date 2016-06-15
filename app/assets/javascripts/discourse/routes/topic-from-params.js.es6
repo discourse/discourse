@@ -15,7 +15,6 @@ export default Discourse.Route.extend({
           topic = this.modelFor('topic'),
           postStream = topic.get('postStream'),
           topicController = this.controllerFor('topic'),
-          topicProgressController = this.controllerFor('topic-progress'),
           composerController = this.controllerFor('composer');
 
     // I sincerely hope no topic gets this many posts
@@ -28,18 +27,13 @@ export default Discourse.Route.extend({
       // we need better handling and logging for this condition.
 
       // The post we requested might not exist. Let's find the closest post
-      const closestPost = postStream.closestPostForPostNumber(params.nearPost || 1),
-            closest = closestPost.get('post_number'),
-            progress = postStream.progressIndexOfPost(closestPost);
+      const closestPost = postStream.closestPostForPostNumber(params.nearPost || 1);
+      const closest = closestPost.get('post_number');
 
       topicController.setProperties({
         'model.currentPost': closest,
+        enteredIndex: postStream.get('stream').indexOf(closestPost.get('id')),
         enteredAt: new Date().getTime().toString(),
-      });
-
-      topicProgressController.setProperties({
-        progressPosition: progress,
-        expanded: false
       });
 
       // Highlight our post after the next render

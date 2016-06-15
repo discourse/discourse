@@ -175,11 +175,11 @@ module Jobs
     # If this email has a related post, don't send an email if it's been deleted or seen recently.
     def skip_email_for_post(post, user)
       if post
-        return I18n.t('email_log.topic_nil')           if post.topic.blank?
-        return I18n.t('email_log.post_user_deleted')   if post.user.blank?
-        return I18n.t('email_log.post_deleted')        if post.user_deleted?
-        return I18n.t('email_log.user_suspended')      if (user.suspended? && !post.user.try(:staff?))
-        return I18n.t('email_log.already_read')        if PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
+        return I18n.t('email_log.topic_nil')          if post.topic.blank?
+        return I18n.t('email_log.post_user_deleted')  if post.user.blank?
+        return I18n.t('email_log.post_deleted')       if post.user_deleted?
+        return I18n.t('email_log.user_suspended')     if (user.suspended? && !post.user.try(:staff?))
+        return I18n.t('email_log.already_read')       if PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
       else
         false
       end

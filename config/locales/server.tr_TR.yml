@@ -24,7 +24,6 @@ tr_TR:
   loading: "Yükleniyor"
   powered_by_html: 'Gücünü <a href="http://www.discourse.org">Discourse</a> ''tan alır, en iyi görünüm için JavaScript etkinleştirmeniz gerekir'
   log_in: "Giriş Yap"
-  purge_reason: "Bırakılmış, etkinleştirilmemiş hesap olarak otomatik silindi"
   disable_remote_images_download_reason: "Yeterli disk alanı kalmaması sebebiyle uzaktan görüntü indirme devre dışı bırakıldı."
   anonymous: "Anonim"
   emails:
@@ -124,7 +123,6 @@ tr_TR:
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
   just_posted_that: "yakın zamanda yaptığınız bir gönderiye çok benziyor"
-  has_already_been_used: "önceden kullanıldı"
   invalid_characters: "geçersiz karakterler barındırıyor"
   is_invalid: "geçersiz; biraz daha açıklayıcı olmaya çalışın"
   next_page: "sonraki sayfa →"
@@ -145,14 +143,12 @@ tr_TR:
     top: "En iyi konular"
     posts: "Son gönderiler"
     private_posts: "Son özel mesajlar"
-    tag: "Etiketlenmiş konular"
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
   excerpt_image: "resim"
   queue:
     delete_reason: "Gönderi yönetim sırası aracılığıyla silindi"
   groups:
     errors:
-      can_not_modify_automatic: "Otomatik oluşturulan grubu düzenleyemezsiniz"
       member_already_exist: "'%{username}' zaten grubun bir üyesi."
       invalid_domain: "'%{domain}' geçerli bir alan adı değil."
       invalid_incoming_email: "Bu '%{email}' e-posta geçerli değil."
@@ -379,7 +375,6 @@ tr_TR:
     continue_button: "%{site_name} adresine devam edin"
     welcome_to: "%{site_name} sitesine hoşgeldiniz!"
     approval_required: "Bu foruma erişebilmeniz için yeni hesabınızın bir moderatör tarafından manuel olarak onaylanması gerekir. Hesabınız onaylandığında e-posta ile bilgilendirileceksiniz!"
-    missing_session: "Hesabınızın oluşturulup oluşturulamadığını tespit edemedik, lütfen çerezlerin etkin olduğundan emin olun."
   post_action_types:
     off_topic:
       title: 'Konu dışı'
@@ -540,27 +535,19 @@ tr_TR:
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Gün"
-      yaxis: "Anonim API istekleri"
     page_view_logged_in_reqs:
       title: "Oturum açıldı"
       xaxis: "Gün"
-      yaxis: "Giriş Yapmış Kişilerden API İstekleri"
     page_view_crawler_reqs:
       title: "Arama botları"
       xaxis: "Gün"
-      yaxis: "Bot API istekleri"
     page_view_total_reqs:
       title: "Toplam"
       xaxis: "Gün"
-      yaxis: "Tüm API istekleri"
     page_view_logged_in_mobile_reqs:
-      title: "Giriş Yapmış Kişilerden API İstekleri"
       xaxis: "Gün"
-      yaxis: "Mobilden Giriş Yapmış Kişilerden API İstekleri"
     page_view_anon_mobile_reqs:
-      title: "Anonim API İstekleri"
       xaxis: "Gün"
-      yaxis: "Mobil Anonim API İstekleri"
     http_background_reqs:
       title: "Arkaplan"
       xaxis: "Gün"
@@ -672,13 +659,11 @@ tr_TR:
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
     email_subject: "Standart e-postaları için özelleştirilebilir konu formatı. Bakınız https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Sitenizin tam url'i (Discourse.base_url) http mi yoksa https uzantılı mı olmalı? HTTPS AYARLARINIZ TAMAMLANMADIYSA VE HENÜZ ÇALIŞMIYORSA BUNU ETKİNLEŞTİRMEYİN! "
     summary_score_threshold: "Bir gönderinin 'Bu Konuyu Özetle' içinde yer alması için gereken en az skor."
     summary_posts_required: "'Bu Konuyu Özetle'nin etkinleştirilmesi için konuda olması gereken en az gönderi sayısı"
     summary_likes_required: "'Bu Konuyu Özetle'nin etkinleştirilmesi için konuda olması gereken en az beğeni sayısı"
     summary_percent_filter: "Kullanıcı 'Bu Konuyu Özetle'ye tıkladığında, gönderinin ilk % kısmını göster"
     summary_max_results: "'Bu Konuyu Özetle'den dönen en fazla gönderi sayısı"
-    enable_private_messages: "Güven seviyesi 1 (mesaj göndermek için gereken minimum güven düzeyi seçeneğinden ayarlanabilir) olan kullanıcıların mesaj oluşturmasına ve mesajlara ve cevap verebilmesine izin ver."
     enable_long_polling: "Bildiri için kullanılan message bus uzun sorgular yapabilir"
     long_polling_base_url: "Uzun sorgular için kullanılan baz URL (CDN dinamik içerik sunuyorsa, bunu origin olarak ayarladığına emin ol) ör: http://origin.site.com"
     long_polling_interval: "Gönderilecek bilgi olmadığı zaman sunucunun kullanıcılara geri dönmeden önce beklemesi gereken zaman (sadece giriş yapmış kullanıcın için)"
@@ -704,7 +689,6 @@ tr_TR:
     ga_domain_name: "Google analytics (ga.js) alan adı, ör: mysite.com; bakınız http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) takip kodu, ör: UA-12345678-9; bakınız http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) alan adı, ör: mysite.com; bakınız http://google.com/analytics"
-    enable_escaped_fragments: "Webcrawler algılanmadığı zaman Google'ın Ajax-Crawling API'sine başvur. Bakınız https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "Noscript etiketi üzerinden standart webcrawler arama motoru desteğini etkinleştir"
     allow_moderators_to_create_categories: "Moderatörlerin yeni kategoriler oluşturmasına izin ver"
     cors_origins: "Cross-origin isteklerin (CORS) izin verilen originler. Her origin http:// veya https:// içermeli. CORS'u etkinleştirebilmek için DISCOURSE_ENABLE_CORS env değişkeni doğru olarak ayarlanmalı."
@@ -732,7 +716,6 @@ tr_TR:
     allow_index_in_robots_txt: "robots.txt dosyasında bu sitenin arama motorları tarafından indekslenmesine izin verildiğini belirt."
     email_domains_blacklist: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     email_domains_whitelist: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
-    forgot_password_strict: "Parolamı unuttum alanını kullanırlarken, kullanıcıları hesabın varlığından haberdar etme. "
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
     version_checks: "Discourse Hub'a versiyon güncellemeleri için ping yolla ve yeni versiyon mesajlarına /admin gösterge panelinde yer ver"
     new_version_emails: "Discourse'un yeni versiyonu çıktığında contact_email adresine e-posta gönder."
@@ -873,7 +856,6 @@ tr_TR:
     faq_url: "Başka yerde barındırılan bir SSS'i kullanmak istiyorsanız, ilgili URL adresini buraya eksiksiz şekilde girin."
     tos_url: "Başka yerde barındırılan bir Üyelik Sözleşmesi dökümanını kullanmak istiyorsanız, ilgili URL adresini buraya eksiksiz şekilde girin."
     privacy_policy_url: "Başka yerde barındırılan bir Gizlilik İlkeleri dökümanını kullanmak istiyorsanız, ilgili URL adresini buraya eksiksiz şekilde girin."
-    newuser_spam_host_threshold: "Yeni bir kullanıcı, `newuser_spam_host_posts` gönderileri içerisinde aynı makineye, kaç kere bağlantı paylaşınca spam olarak algılansın."
     white_listed_spam_host_domains: "Spam barındırma testinden hariç tutulan alan adı listesi. Yeni kullanıcıların, bu alan adlarına bağlantı içeren gönderi oluşturmaları hiç bir zaman engellenmeyecek."
     staff_like_weight: "Görevlilerin beğenilere verilecek ekstra ağırlık faktörü."
     topic_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni konu görüntülemesi say"
@@ -985,10 +967,6 @@ tr_TR:
     default_categories_watching: "Öntanımlı olarak, izlenen kategorilerin listesi."
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
-    tagging_enabled: "Kullanıcılar konularına etiket ekleyebilsinler mi?"
-    min_trust_to_create_tag: "Etiket oluşturmak için gereken minumum güven seviyesi."
-    max_tags_per_topic: "Bir konu en fazla kaç adet etiket eklenebilir."
-    max_tag_length: "Bir etiket en fazla kaç karakterde oluşabilir."
     errors:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
@@ -1160,20 +1138,6 @@ tr_TR:
   system_messages:
     post_hidden:
       subject_template: "Topluluk tarafından bayraklandığı için gönderiniz gizlendi"
-      text_body_template: |
-        Merhaba,
-
-        Bu, gönderinizin gizlendiğini haber vermek için %{site_name} sitesinden gönderilmiş otomatik bir mesajdır.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Gönderiniz gizlenmeden önce birden fazla kullanıcı tarafından bayraklandı. Lütfen, bu geri bildirimler doğrultusunda gönderinizi nasıl düzelteceğinizi düşünün. **Gönderinizi %{edit_delay} dakika sonra düzenleyebilirsiniz, otomatik olarak tekrar yayına alınacaktır.**
-
-        Ancak, eğer gönderiniz kullanıcılar tarafından ikinci kere gizlenirse, görevliler tarafından incelenene kadar gizli kalacaktır - ve hesabınızın askıya alınması dahil olmak üzere farklı önlemler alınabilir.
-
-        Daha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
       text_body_template: "%{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!\n\n%{new_user_tips}\n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nZiyaretinizin keyfini çıkarın!\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)\n"
@@ -1250,30 +1214,10 @@ tr_TR:
       subject_template: "[%{site_name}] E-posta sorunu -- Otomatik Üretilmiş Cevap"
     email_error_notification:
       subject_template: "[%{site_name}] E-posta sorunu -- POP doğrulama hatası"
-    too_many_spam_flags:
-      subject_template: "Yeni hesap engellendi"
-      text_body_template: |
-        Merhaba.
-
-        Bu, %{site_name} sitesinin, gönderilerinizin topluluk tarafından bayraklanması sonucu otomatik olarak gizlendiğini bildirmek için gönderdiği otomatik bir mesajdır.
-
-        Önlem olarak, bir görevli tarafından incelenene kadar yeni hesabınız üzerinden yeni cevap ya da konu oluşturmanız engellendi.
-
-        Daha fazla bilgi için lütfen [topluluk yönergelerine](%{base_url}/guidelines) bakın.
-    blocked_by_staff:
-      subject_template: "Hesap engellendi"
     user_automatically_blocked:
       subject_template: "Topluluk bayrakları nedeniyle yeni kullanıcı %{username} engellendi"
     spam_post_blocked:
       subject_template: "Üst üste aynı bağlantıların paylaşılmasından ötürü %{username} adlı yeni kullanıcının gönderileri engelledi"
-    unblocked:
-      subject_template: "Hesabın engeli kaldırıldı"
-      text_body_template: |
-        Merhaba,
-
-        Bu, %{site_name} sitesinin, görevlilerin değerlendirmeleri sonucunda hesabınızındaki engelin kaldırıldığını bildirmek için gönderdiği otomatik bir mesajdır.
-
-        Artık, eskisi gibi yeni cevaplar ve konular oluşturabilirsiniz.
     pending_users_reminder:
       subject_template:
         other: "%{count} kullanıcı onay bekliyor"
@@ -1386,9 +1330,6 @@ tr_TR:
     images:
       too_large: "Üzgünüz, yüklemeye çalıştığınız resim çok büyük (en fazla %{max_size_kb}KB olabilir), lütfen küçültüp tekrar deneyin."
       size_not_found: "Üzgünüz, resminizin büyüklüğünü tespit edemedik. Dosya bozuk olabilir mi?"
-  flag_reason:
-    sockpuppet: "Yeni bir kullanıcı bir konu oluşturdu ve aynı IP adresinden başka bir yeni kullanıcı cevap yazdı. Site ayarları sayfasında flag_sockpuppets değerine göz atın."
-    spam_hosts: "Bu yeni kullanıcı aynı alan adına bağlantı içeren birden fazla gönderi oluşturmaya çalıştı. Site ayarları sayfasındaki newuser_spam_host_threshold değerine göz atın."
   email_log:
     no_user: "%{user_id} id'sine sahip bir kullanıcı bulunamadı"
     anonymous_user: "Kullanıcı anonim"
@@ -1457,4 +1398,3 @@ tr_TR:
   activemodel:
     errors:
       <<: *errors
-  rss_by_tag: "Konu %{tag} ile etiketlenmiştir."

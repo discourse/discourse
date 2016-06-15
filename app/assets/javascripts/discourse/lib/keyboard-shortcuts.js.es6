@@ -1,5 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import Composer from 'discourse/models/composer';
+import { scrollTopFor } from 'discourse/lib/offset-calculator';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
@@ -116,7 +117,7 @@ export default {
 
   _jumpTo(direction) {
     if ($('.container.posts').length) {
-      this.container.lookup('controller:topic-progress').send(direction);
+      this.container.lookup('controller:topic').send(direction);
     }
   },
 
@@ -159,7 +160,7 @@ export default {
   },
 
   toggleProgress() {
-    this.container.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
+    this.appEvents.trigger('topic-progress:keyboard-trigger', { type: 'jump' });
   },
 
   toggleSearch(event) {
@@ -298,10 +299,17 @@ export default {
 
       if ($article.is('.topic-post')) {
         $('a.tabLoc', $article).focus();
-      }
+        this._scrollToPost($article);
 
-      this._scrollList($article, direction);
+      } else {
+        this._scrollList($article, direction);
+      }
     }
+  },
+
+  _scrollToPost($article) {
+    const pos = $article.offset();
+    $(window).scrollTop(Math.ceil(pos.top - scrollTopFor(pos.top)));
   },
 
   _scrollList($article) {

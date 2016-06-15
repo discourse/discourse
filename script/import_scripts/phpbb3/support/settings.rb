@@ -18,7 +18,6 @@ module ImportScripts::PhpBB3
     attr_reader :import_remote_avatars
     attr_reader :import_gallery_avatars
 
-    attr_reader :fix_private_messages
     attr_reader :use_bbcode_to_md
 
     attr_reader :original_site_prefix
@@ -45,7 +44,6 @@ module ImportScripts::PhpBB3
       @import_remote_avatars = avatar_settings['remote']
       @import_gallery_avatars = avatar_settings['gallery']
 
-      @fix_private_messages = import_settings['fix_private_messages']
       @use_bbcode_to_md =import_settings['use_bbcode_to_md']
 
       @original_site_prefix = import_settings['site_prefix']['original']

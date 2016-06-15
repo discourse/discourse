@@ -36,6 +36,9 @@ module TopicGuardian
     return true if is_admin?
     return true if is_moderator? && can_create_post?(topic)
 
+    # can't edit topics in secured categories where you don't have permission to create topics
+    return false if !can_create_topic_on_category?(topic.category)
+
     # TL4 users can edit archived topics, but can not edit private messages
     return true if (topic.archived && !topic.private_message? && user.has_trust_level?(TrustLevel[4]) && can_create_post?(topic))
 

@@ -448,7 +448,7 @@ SQL
     post = Post.with_deleted.where(id: post_id).first
     PostAction.auto_close_if_threshold_reached(post.topic)
     PostAction.auto_hide_if_needed(user, post, post_action_type_key)
-    SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
+    SpamRulesEnforcer.enforce!(post.user)
   end
 
   def notify_subscribers

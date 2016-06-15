@@ -3,7 +3,8 @@ function ignoreElements(e) {
   const $target = $(e.target);
   return $target.hasClass('quote-button') ||
          $target.closest('.create').length ||
-         $target.closest('.reply-new').length;
+         $target.closest('.reply-new').length ||
+         $target.closest('.share').length;
 }
 
 export default Ember.View.extend({

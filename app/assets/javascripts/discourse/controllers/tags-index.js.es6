@@ -1,7 +1,7 @@
 export default Ember.Controller.extend({
   sortProperties: ['count:desc', 'id'],
 
-  sortedTags: Ember.computed.sort('model', 'sortProperties'),
+  canAdminTags: Ember.computed.alias("currentUser.staff"),
 
   actions: {
     sortByCount() {

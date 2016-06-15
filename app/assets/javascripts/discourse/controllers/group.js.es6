@@ -15,7 +15,7 @@ var Tab = Em.Object.extend({
 
 export default Ember.Controller.extend({
   counts: null,
-  showing: 'posts',
+  showing: 'members',
 
   @observes('counts')
   countsChanged() {
@@ -35,10 +35,10 @@ export default Ember.Controller.extend({
   },
 
   tabs: [
-    Tab.create({ name: 'posts', active: true, 'location': 'group.index' }),
+    Tab.create({ name: 'members', active: true, 'location': 'group.index' }),
+    Tab.create({ name: 'posts' }),
     Tab.create({ name: 'topics' }),
     Tab.create({ name: 'mentions' }),
-    Tab.create({ name: 'members' }),
     Tab.create({ name: 'messages' }),
   ]
 });

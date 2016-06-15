@@ -42,7 +42,7 @@ export default function() {
 
     this.get('/admin/plugins', () => response({ plugins: [] }));
 
-    this.get('/composer-messages', () => response([]));
+    this.get('/composer_messages', () => response({ composer_messages: [] }));
 
     this.get("/latest.json", () => {
       const json = fixturesByUrl['/latest.json'];

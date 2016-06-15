@@ -434,7 +434,6 @@ he:
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
-      mailing_list_mode: "שלחו לי דוא\"ל על כל פרסום חדש (אלא אם אשתיק את המעקב אחר הפוסט או הקטגוריה)"
       watched_categories: "עוקב"
       watched_categories_instructions: "תעקבו באופן אוטומטי אחרי כל הפוסטים החדשים בקטגוריות אלה. תקבלו התראה על כל פרסום ופוסט חדש."
       tracked_categories: "רגיל+"
@@ -468,7 +467,6 @@ he:
         title: "שינוי בנוגע אליי"
       change_username:
         title: "שנה שם משתמש"
-        confirm: "אם תשנו את שם המשתמש/ת שלך, כל הציטוטים של ההודעות שלך ואזכורי @שם_המשתמש שלך יישברו. את/ה בטוחים לחלוטין שברצונך לשנות?"
         taken: "סליחה, שם המשתמש הזה תפוס."
         error: "ארעה שגיאה בשינוי שם המשתמש שלך."
         invalid: "שם המשתמש אינו תקין. עליו לכלול רק אותיות באנגלית ומספרים."
@@ -537,7 +535,6 @@ he:
       website: "אתר"
       email_settings: "דואר אלקטרוני"
       email_digests:
-        title: "כשאיני מבקר/ת כאן, שלחו לי מייל עם תקציר העדכונים:"
         daily: "יומית"
         every_three_days: "כל שלושה ימים"
         weekly: "שבועית"
@@ -908,7 +905,6 @@ he:
       post_format: "#{{post_number}} מאת {{username}}"
       context:
         user: "חיפוש פרסומים לפי @{{username}}"
-        category: "חיפוש בקטגוריה \"{{category}}\""
         topic: "חפשו בפוסט זה"
         private_messages: "חיפוש הודעות"
     hamburger_menu: "עבור לרשימת פוסטים אחרת או קטגוריה"

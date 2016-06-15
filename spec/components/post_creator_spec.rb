@@ -265,6 +265,59 @@ describe PostCreator do
 
       end
 
+      context "tags" do
+        let(:tag_names) { ['art', 'science', 'dance'] }
+        let(:creator_with_tags) { PostCreator.new(user, basic_topic_params.merge(tags: tag_names)) }
+
+        context "tagging disabled" do
+          before do
+            SiteSetting.tagging_enabled = false
+          end
+
+          it "doesn't create tags" do
+            expect { @post = creator_with_tags.create }.to change { Tag.count }.by(0)
+            expect(@post.topic.tags.size).to eq(0)
+          end
+        end
+
+        context "tagging enabled" do
+          before do
+            SiteSetting.tagging_enabled = true
+          end
+
+          context "can create tags" do
+            before do
+              SiteSetting.min_trust_to_create_tag = 0
+              SiteSetting.min_trust_level_to_tag_topics = 0
+            end
+
+            it "can create all tags if none exist" do
+              expect { @post = creator_with_tags.create }.to change { Tag.count }.by( tag_names.size )
+              expect(@post.topic.tags.map(&:name).sort).to eq(tag_names.sort)
+            end
+
+            it "creates missing tags if some exist" do
+              existing_tag1 = Fabricate(:tag, name: tag_names[0])
+              existing_tag1 = Fabricate(:tag, name: tag_names[1])
+              expect { @post = creator_with_tags.create }.to change { Tag.count }.by( tag_names.size - 2 )
+              expect(@post.topic.tags.map(&:name).sort).to eq(tag_names.sort)
+            end
+          end
+
+          context "cannot create tags" do
+            before do
+              SiteSetting.min_trust_to_create_tag = 4
+              SiteSetting.min_trust_level_to_tag_topics = 0
+            end
+
+            it "only uses existing tags" do
+              existing_tag1 = Fabricate(:tag, name: tag_names[1])
+              expect { @post = creator_with_tags.create }.to change { Tag.count }.by(0)
+              expect(@post.topic.tags.map(&:name)).to eq([existing_tag1.name])
+            end
+          end
+        end
+      end
     end
 
     context 'when auto-close param is given' do

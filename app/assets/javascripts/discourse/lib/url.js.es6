@@ -1,4 +1,6 @@
-/*global LockOn:true*/
+import offsetCalculator from 'discourse/lib/offset-calculator';
+import LockOn from 'discourse/lib/lock-on';
+
 let _jumpScheduled = false;
 const rewrites = [];
 
@@ -14,14 +16,6 @@ const DiscourseURL = Ember.Object.extend({
   // Jumps to a particular post in the stream
   jumpToPost(postNumber, opts) {
     const holderId = `#post_${postNumber}`;
-    const offset = () => {
-      const $header = $('header');
-      const $title = $('#topic-title');
-      const windowHeight = $(window).height() - $title.height();
-      const expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
-
-      return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
-    };
 
     Em.run.schedule('afterRender', () => {
       if (postNumber === 1) {
@@ -29,15 +23,14 @@ const DiscourseURL = Ember.Object.extend({
         return;
       }
 
-      const lockon = new LockOn(holderId, {offsetCalculator: offset});
+      const lockon = new LockOn(holderId);
       const holder = $(holderId);
 
       if (holder.length > 0 && opts && opts.skipIfOnScreen){
-        // if we are on screen skip
-        const elementTop = lockon.elementTop(),
-              scrollTop = $(window).scrollTop(),
-              windowHeight = $(window).height()-offset(),
-              height = holder.height();
+        const elementTop = lockon.elementTop();
+        const scrollTop = $(window).scrollTop();
+        const windowHeight = $(window).height() - offsetCalculator();
+        const height = holder.height();
 
         if (elementTop > scrollTop && (elementTop + height) < (scrollTop + windowHeight)) {
           return;
@@ -107,6 +100,8 @@ const DiscourseURL = Ember.Object.extend({
     keep the history intact.
   **/
   routeTo(path, opts) {
+    opts = opts || {};
+
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {
@@ -150,12 +145,12 @@ const DiscourseURL = Ember.Object.extend({
 
     rewrites.forEach(rw => path = path.replace(rw.regexp, rw.replacement));
 
-    if (this.navigatedToPost(oldPath, path)) { return; }
+    if (this.navigatedToPost(oldPath, path, opts)) { return; }
     // Schedule a DOM cleanup event
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
     // TODO: Extract into rules we can inject into the URL handler
-    if (this.navigatedToHome(oldPath, path)) { return; }
+    if (this.navigatedToHome(oldPath, path, opts)) { return; }
 
     if (oldPath === path) {
       // If navigating to the same path send an app event. Views can watch it
@@ -166,11 +161,11 @@ const DiscourseURL = Ember.Object.extend({
     return this.handleURL(path, opts);
   },
 
-  rewrite: function(regexp, replacement) {
-    rewrites.push({ regexp: regexp, replacement: replacement });
+  rewrite(regexp, replacement) {
+    rewrites.push({ regexp, replacement });
   },
 
-  redirectTo: function(url) {
+  redirectTo(url) {
     window.location = Discourse.getURL(url);
   },
 
@@ -193,17 +188,11 @@ const DiscourseURL = Ember.Object.extend({
   },
 
   /**
-    @private
-
     If the URL is in the topic form, /t/something/:topic_id/:post_number
     then we want to apply some special logic. If the post_number changes within the
     same topic, use replaceState and instruct our controller to load more posts.
-
-    @method navigatedToPost
-    @param {String} oldPath the previous path we were on
-    @param {String} path the path we're navigating to
   **/
-  navigatedToPost(oldPath, path) {
+  navigatedToPost(oldPath, path, routeOpts) {
     const newMatches = this.TOPIC_REGEXP.exec(path);
     const newTopicId = newMatches ? newMatches[2] : null;
 
@@ -232,14 +221,9 @@ const DiscourseURL = Ember.Object.extend({
             enteredAt: new Date().getTime().toString()
           });
 
-          const closestPost = postStream.closestPostForPostNumber(closest);
-          const progress = postStream.progressIndexOfPost(closestPost);
-          const progressController = container.lookup('controller:topic-progress');
-
-          progressController.set('progressPosition', progress);
           this.appEvents.trigger('post:highlight', closest);
         }).then(() => {
-          DiscourseURL.jumpToPost(closest, {skipIfOnScreen: true});
+          DiscourseURL.jumpToPost(closest, {skipIfOnScreen: routeOpts.skipIfOnScreen});
         });
 
         // Abort routing, we have replaced our state.

@@ -77,8 +77,8 @@ module PrettyText
 
       if !is_tag && category = Category.query_from_hashtag_slug(text)
         [category.url_with_id, text]
-      elsif is_tag && tag = TopicCustomField.find_by(name: DiscourseTagging::TAGS_FIELD_NAME, value: text.gsub!("#{tag_postfix}", ''))
-        ["#{Discourse.base_url}/tags/#{tag.value}", text]
+      elsif is_tag && tag = Tag.find_by_name(text.gsub!("#{tag_postfix}", ''))
+        ["#{Discourse.base_url}/tags/#{tag.name}", text]
       else
         nil
       end
@@ -267,7 +267,7 @@ module PrettyText
     protect do
       v8.eval <<JS
       avatarTemplate = #{avatar_template.inspect};
-      size = #{size.to_i};
+      size = #{size.inspect};
 JS
       decorate_context(v8)
       v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
