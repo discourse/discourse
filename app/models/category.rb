@@ -27,6 +27,8 @@ class Category < ActiveRecord::Base
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
+  has_and_belongs_to_many :web_hooks
+
   validates :user_id, presence: true
   validates :name, if: Proc.new { |c| c.new_record? || c.name_changed? },
                    presence: true,
