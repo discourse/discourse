@@ -70,12 +70,12 @@ export default Ember.Controller.extend({
   @computed("isMultiple", "isNumber", "pollOptionsCount", "pollMin", "pollStep")
   pollMaxOptions(isMultiple, isNumber, count, pollMin, pollStep) {
     if (!isMultiple && !isNumber) return;
-    const pollMinInt = parseInt(pollMin);
+    const pollMinInt = parseInt(pollMin) || 1;
 
     if (isMultiple) {
       return this._comboboxOptions(pollMinInt + 1, count + 1);
     } else if (isNumber) {
-      const pollStepInt = parseInt(pollStep);
+      const pollStepInt = parseInt(pollStep) || 1;
       return this._comboboxOptions(pollMinInt + 1, pollMinInt + (this.siteSettings.poll_maximum_options * pollStepInt));
     }
   },
@@ -83,7 +83,7 @@ export default Ember.Controller.extend({
   @computed("isNumber", "pollMax")
   pollStepOptions(isNumber, pollMax) {
     if (!isNumber) return;
-    return this._comboboxOptions(1, parseInt(pollMax) + 1);
+    return this._comboboxOptions(1, (parseInt(pollMax) || 1) + 1);
   },
 
   @computed("isNumber", "showMinMax", "pollName", "pollType", "publicPoll", "pollOptions", "pollMin", "pollMax", "pollStep")
