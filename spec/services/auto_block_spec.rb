@@ -4,7 +4,7 @@ describe SpamRule::AutoBlock do
 
   before do
     SiteSetting.flags_required_to_hide_post = 0 # never
-    SiteSetting.num_flags_to_block_new_user = 2
+    SiteSetting.num_spam_flags_to_block_new_user = 2
     SiteSetting.num_users_to_block_new_user = 2
   end
 
@@ -228,8 +228,8 @@ describe SpamRule::AutoBlock do
         expect(subject.block?).to be_falsey
       end
 
-      it 'returns false if num_flags_to_block_new_user is 0' do
-        SiteSetting.num_flags_to_block_new_user = 0
+      it 'returns false if num_spam_flags_to_block_new_user is 0' do
+        SiteSetting.num_spam_flags_to_block_new_user = 0
         subject.stubs(:num_spam_flags_against_user).returns(100)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(100)
         expect(subject.block?).to be_falsey
