@@ -1,4 +1,6 @@
 .poll-ui-builder-form {
+  margin: 0px;
+
   .input-group {
     padding: 10px;
   }
@@ -6,6 +8,11 @@
   label {
     font-weight: bold;
     display: inline;
+  }
+
+  .input-group-label {
+    display: inline-block;
+    width: 45px;
   }
 
   .combobox {

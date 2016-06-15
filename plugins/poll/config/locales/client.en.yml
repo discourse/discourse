@@ -72,14 +72,13 @@ en:
       ui_builder:
         title: Poll Builder
         insert: Insert Poll
-        reset: Reset Poll
         help:
           options_count: You must provide a minimum of 2 options.
         poll_name:
-          label: Poll Name
-          placeholder: Enter Poll Name
+          label: Name
+          placeholder: Enter Name
         poll_type:
-          label: Poll Type
+          label: Type
           regular: regular
           multiple: multiple
           number: number
@@ -88,6 +87,6 @@ en:
           min: Min
           step: Step
         poll_public:
-          label: Make Public Poll
+          label: Show who voted
         poll_options:
-          label: "Poll Choices: (one option per line)"
+          label: Enter one poll option per line
