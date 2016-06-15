@@ -45,6 +45,7 @@ before_install:
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
   - eslint --ext .es6 test/javascripts
+  - eslint --ext .es6 plugins/**/assets/javascripts
   - eslint test/javascripts
 
 before_script:

@@ -147,7 +147,6 @@ export default Ember.Controller.extend({
       }).then(results => {
         const poll = results.poll;
         const votes = results.vote;
-        const currentUser = this.currentUser;
 
         this.setProperties({ vote: votes, showResults: true });
         this.set("model", Em.Object.create(poll));

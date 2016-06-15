@@ -42,6 +42,12 @@ function loadDraft(store, opts) {
   }
 }
 
+const _popupMenuOptionsCallbacks = [];
+
+export function addPopupMenuOptionsCallback(callback) {
+  _popupMenuOptionsCallbacks.push(callback);
+}
+
 export default Ember.Controller.extend({
   needs: ['modal', 'topic', 'application'],
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_TOPIC_KEY),
@@ -55,6 +61,19 @@ export default Ember.Controller.extend({
   isUploading: false,
   topic: null,
   linkLookup: null,
+
+  init() {
+    this._super();
+
+    addPopupMenuOptionsCallback(function() {
+      return {
+        action: 'toggleWhisper',
+        icon: 'eye-slash',
+        label: 'composer.toggle_whisper',
+        condition: "canWhisper"
+      };
+    });
+  },
 
   showToolbar: Em.computed({
     get(){
@@ -90,6 +109,23 @@ export default Ember.Controller.extend({
   canWhisper(action) {
     const currentUser = this.currentUser;
     return currentUser && currentUser.get('staff') && this.siteSettings.enable_whispers && action === Composer.REPLY;
+  },
+
+  @computed("model.composeState")
+  popupMenuOptions(composeState) {
+    if (composeState === 'open') {
+      return _popupMenuOptionsCallbacks.map(callback => {
+        let option = callback();
+
+        if (option.condition) {
+          option.condition = this.get(option.condition);
+        } else {
+          option.condition = true;
+        }
+
+        return option;
+      });
+    }
   },
 
   showWarning: function() {
@@ -154,7 +190,8 @@ export default Ember.Controller.extend({
       this.toggleProperty('showToolbar');
     },
 
-    showOptions(loc) {
+    showOptions(toolbarEvent, loc) {
+      this.set('toolbarEvent', toolbarEvent);
       this.appEvents.trigger('popup-menu:open', loc);
       this.set('optionsVisible', true);
     },
