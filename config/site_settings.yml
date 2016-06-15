@@ -776,7 +776,7 @@ spam:
   add_rel_nofollow_to_user_content: true
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
-  num_flags_to_block_new_user: 3
+  num_spam_flags_to_block_new_user: 3
   num_users_to_block_new_user: 3
   num_tl3_flags_to_block_new_user: 6
   num_tl3_users_to_block_new_user: 4
