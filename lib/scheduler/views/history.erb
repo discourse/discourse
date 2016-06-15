@@ -1,0 +1,47 @@
+<header class="row">
+  <div class="col-sm-12">
+    <h3>Scheduler History</h3>
+  </div>
+</header>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <% if @scheduler_stats.length > 0 %>
+
+      <table class="table table-striped table-bordered table-white" style="width: 100%; margin: 0; table-layout:fixed;">
+        <thead>
+          <th style="width: 30%">Job Name</th>
+          <th style="width: 15%">Hostname:Pid</th>
+          <th style="width: 15%">Live Slots delta</th>
+          <th style="width: 15%">Started At</th>
+          <th style="width: 15%">Duration</th>
+          <th style="width: 15%"></th>
+        </thead>
+        <tbody>
+          <% @scheduler_stats.each do |stat| %>
+          <tr>
+            <td><%= stat.name %></td>
+            <td><%= stat.hostname %>:<%= stat.pid %></td>
+            <td>
+              <% if stat.live_slots_start && stat.live_slots_finish %>
+                <%= stat.live_slots_finish - stat.live_slots_start %>
+              <% end %>
+            </td>
+            <td><%= sane_time stat.started_at %></td>
+            <td><%= sane_duration stat.duration_ms %></td>
+            <td>
+              <% if stat.success.nil? %>
+                RUNNING
+              <% elsif !stat.success %>
+                FAILED
+              <% end %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% end %>
+    </div>
+  </div>
+</div>

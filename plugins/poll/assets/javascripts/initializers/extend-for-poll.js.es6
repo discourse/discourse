@@ -1,11 +1,17 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
+import { observes } from "ember-addons/ember-computed-decorators";
 
-function createPollView(container, post, poll, vote) {
+function createPollView(container, post, poll, vote, publicPoll) {
   const controller = container.lookup("controller:poll", { singleton: false });
   const view = container.lookup("view:poll");
 
-  controller.set("vote", vote);
-  controller.setProperties({ model: poll, post });
+  controller.setProperties({
+    model: poll,
+    vote: vote,
+    public: publicPoll,
+    post
+  });
+
   view.set("controller", controller);
 
   return view;
@@ -38,7 +44,8 @@ function initializePolls(api) {
     pollsObject: null,
 
     // we need a proper ember object so it is bindable
-    pollsChanged: function(){
+    @observes("polls")
+    pollsChanged() {
       const polls = this.get("polls");
       if (polls) {
         this._polls = this._polls || {};
@@ -52,7 +59,7 @@ function initializePolls(api) {
         });
         this.set("pollsObject", this._polls);
       }
-    }.observes("polls")
+    }
   });
 
   function cleanUpPollViews() {
@@ -75,7 +82,6 @@ function initializePolls(api) {
     const polls = post.get("pollsObject");
     if (!polls) { return; }
 
-    cleanUpPollViews();
     const postPollViews = {};
 
     $polls.each((idx, pollElem) => {
@@ -83,8 +89,16 @@ function initializePolls(api) {
       const $poll = $(pollElem);
 
       const pollName = $poll.data("poll-name");
+      const publicPoll = $poll.data("poll-public");
       const pollId = `${pollName}-${post.id}`;
-      const pollView = createPollView(helper.container, post, polls[pollName], votes[pollName]);
+
+      const pollView = createPollView(
+        helper.container,
+        post,
+        polls[pollName],
+        votes[pollName],
+        publicPoll
+      );
 
       $poll.replaceWith($div);
       Em.run.next(() => pollView.renderer.replaceIn(pollView, $div[0]));

@@ -17,5 +17,8 @@ bs_BA:
         few: "ukupno glasova"
         other: "ukupno glasova"
       average_rating: "Prosječna ocjena: <strong>%{average}</strong>."
+      cast-votes:
+        title: "ukupno glasova"
+        label: "Glasaj"
       close:
         label: "Zatvori"

@@ -23,7 +23,6 @@ zh_TW:
   loading: "載入中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, 請啟用 Javascript 以獲得最佳瀏覽效果'
   log_in: "登入"
-  purge_reason: "自動刪除被遺棄、未啟用賬戶"
   disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
   anonymous: "匿名"
   errors: &errors
@@ -100,7 +99,6 @@ zh_TW:
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
   just_posted_that: "與你最近發表的內容太相似"
-  has_already_been_used: "已經被使用"
   invalid_characters: "包含無效字詞"
   is_invalid: "無效，請再仔細描述"
   next_page: "下一頁 &rarr;"
@@ -123,7 +121,6 @@ zh_TW:
   excerpt_image: "圖片"
   groups:
     errors:
-      can_not_modify_automatic: "你無法修改自動群組"
       member_already_exist: "'%{username}' 已經是群組成員了。"
       invalid_domain: "'%{domain}' 不是有效的域名."
     default_names:
@@ -438,19 +435,15 @@ zh_TW:
     page_view_anon_reqs:
       title: "匿名"
       xaxis: "天"
-      yaxis: "匿名的API訪問"
     page_view_logged_in_reqs:
       title: "已登入"
       xaxis: "天"
-      yaxis: "已登入的API訪問"
     page_view_crawler_reqs:
       title: "網絡爬蟲"
       xaxis: "天"
-      yaxis: "網絡爬蟲API請求"
     page_view_total_reqs:
       title: "總數"
       xaxis: "天"
-      yaxis: "API 請求總數"
     page_view_logged_in_mobile_reqs:
       xaxis: "天"
     page_view_anon_mobile_reqs:
@@ -547,7 +540,6 @@ zh_TW:
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
     email_subject: "標準郵件的自定義主題格式。參見 https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "使用 SSL 安全套接層來瀏覽本站嗎？"
     summary_score_threshold: "將一個帖子包含在“概括主題”中所需的最少分數"
     summary_posts_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小的文章的數量"
     summary_likes_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小得到\"讚\"的數量"
@@ -572,7 +564,6 @@ zh_TW:
     ga_domain_name: "穀歌分析功能變數名稱，例如：mysite.com；參考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用 Analytics (分析) 追蹤代碼（analytics.js）追蹤代碼，例如：UA-12345678-9；參考 http://google.com/analytics"
     ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
-    enable_escaped_fragments: "如未偵測到爬蟲，退回使用 Google Ajax-Crawling API。參見 https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "開啟noscript來對網路爬蟲來做標準的支援"
     allow_moderators_to_create_categories: "允許板主建立新分類"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
@@ -593,7 +584,6 @@ zh_TW:
     email_token_grace_period_hours: "\"忘記密碼\" / \"重啟帳號\" 的 token 在使用後仍舊有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
-    forgot_password_strict: "在找回密碼對話框中不告知用戶帳戶的存在。"
     log_out_strict: "登出時，登出用戶所有設備上的所有時段"
     version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示新版本訊息"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
@@ -707,7 +697,6 @@ zh_TW:
     faq_url: "如果你的 FAQ 文件存放在外部，那麼請在此填寫其完整的 URL 地址。"
     tos_url: "如果你想要使用一個部署在某個地方的服務條款文檔，那麼請在此填寫其完整URL地址。"
     privacy_policy_url: "如果你想要使用一個部署在某個地方的隱私政策文檔，那麼請在此填寫其完整URL地址。"
-    newuser_spam_host_threshold: "用戶在一篇文章中能添加多少此指向同一主機的連結，取決於之前該使用者有`newuser_spam_host_threshold`篇文章被認為是垃圾文章。"
     white_listed_spam_host_domains: "域名的白名單列表，新用戶可以任意連結到這些主機，而不會因防止廣告的測試過濾被檔下"
     staff_like_weight: "管理員按讚時所給予的額外加權係數。"
     levenshtein_distance_spammer_emails: "當比對廣告Email時，數字與文字將仍使用模糊比對"
@@ -866,16 +855,10 @@ zh_TW:
       subject_template: "資料匯出完成"
     csv_export_failed:
       subject_template: "資料匯出失敗"
-    too_many_spam_flags:
-      subject_template: "新帳號已封鎖"
-    blocked_by_staff:
-      subject_template: "帳號已被封鎖"
     user_automatically_blocked:
       subject_template: "新用戶 %{username} 由於社群的投訴已被封鎖"
     spam_post_blocked:
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
-    unblocked:
-      subject_template: "帳號解除封鎖"
     pending_users_reminder:
       subject_template:
         other: "%{count} 個用戶等待審核"
@@ -952,8 +935,6 @@ zh_TW:
     store_failure: "用戶 #%{user_id} 上傳 #%{upload_id} 儲存失敗"
     images:
       size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"
-  flag_reason:
-    spam_hosts: "此新用戶嘗試發表多篇含有指向相同網域之連結的文章。請見網站設定中的 newuser_spam_host_threshold。"
   email_log:
     no_user: "無法找到 ID 為 %{user_id} 的使用者"
     anonymous_user: "匿名用戶"

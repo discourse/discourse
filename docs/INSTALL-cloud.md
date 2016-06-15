@@ -138,6 +138,8 @@ Do you want...
 
 - A firewall on your server? [Configure firewall](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
 
+- A user friendly [offline page when rebuilding or upgrading?](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
+
 - To embed Discourse [in your WordPress install](https://github.com/discourse/wp-discourse), or [on your static HTML site](https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963)?
 
 Help us improve this guide! Feel free to ask about it on [meta.discourse.org][meta], or even better, submit a pull request.

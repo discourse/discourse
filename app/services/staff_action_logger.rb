@@ -65,10 +65,12 @@ class StaffActionLogger
   def log_topic_deletion(deleted_topic, opts={})
     raise Discourse::InvalidParameters.new(:deleted_topic) unless deleted_topic && deleted_topic.is_a?(Topic)
 
+    user = deleted_topic.user ? "#{deleted_topic.user.username} (#{deleted_topic.user.name})" : "(deleted user)"
+
     details = [
       "id: #{deleted_topic.id}",
       "created_at: #{deleted_topic.created_at}",
-      "user: #{deleted_topic.user.username} (#{deleted_topic.user.name})",
+      "user: #{user}",
       "title: #{deleted_topic.title}"
     ]
 
@@ -338,7 +340,7 @@ class StaffActionLogger
     UserHistory.create(params(opts).merge({
       action: UserHistory.actions[:revoke_email],
       target_user_id: user.id,
-      details: user.email
+      details: "Won't be sending emails to '#{user.email}' until #{user.user_stat.reset_bounce_score_after}"
     }))
   end
 

@@ -39,7 +39,6 @@ class PostgreSQLFallbackHandler
             end
 
             Discourse.disable_readonly_mode
-            Discourse.clear_readonly!
             self.master = true
           end
         rescue => e
@@ -80,7 +79,7 @@ class PostgreSQLFallbackHandler
   end
 
   def verify?
-    !master && !running && !recently_checked?
+    !master && !running
   end
 
   private

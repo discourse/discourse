@@ -111,6 +111,10 @@ nb_NO:
       google+: 'del denne lenken på Google+'
       email: 'del denne lenken i en e-post'
     action_codes:
+      public_topic: "gjorde dette emnet offentlig %{when}"
+      private_topic: "gjorde dette emnet privat %{when}"
+      invited_user: "inviterte %{who} %{when}"
+      removed_user: "fjernet %{who} %{when}"
       autoclosed:
         enabled: 'lukket %{when}'
         disabled: 'åpnet %{when}'
@@ -277,6 +281,7 @@ nb_NO:
       title: "Brukere"
       likes_given: "Gitt"
       likes_received: "Mottatt"
+      topics_entered_long: "Emner Sett"
       time_read: "Tid lest"
       topic_count: "Emner"
       topic_count_long: "Emner startet"
@@ -305,6 +310,7 @@ nb_NO:
       members: "Medlemmer"
       topics: "Emner"
       posts: "Innlegg"
+      mentions: "Omtalelser"
       messages: "Meldinger"
       alias_levels:
         nobody: "Ingen"
@@ -322,6 +328,8 @@ nb_NO:
         regular:
           title: "Normal"
           description: "Du vil bli varslet hvis noen nevner ditt @navn eller svarer deg."
+        muted:
+          title: "Dempet"
     user_action_groups:
       '1': "Liker tildelt"
       '2': "Liker mottatt"
@@ -340,6 +348,8 @@ nb_NO:
       all_subcategories: "alle"
       no_subcategory: "ingen"
       category: "Kategori"
+      reorder:
+        save: "Lagre Rekkefølge"
       posts: "Innlegg"
       topics: "Emner"
       latest: "Siste"
@@ -411,7 +421,6 @@ nb_NO:
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
-      mailing_list_mode: "Send meg en e-post for hvert nye innlegg (hvis ikke emnet eller kategorien er dempet)"
       watched_categories: "Følger"
       watched_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner. Antallet uleste og nye emner vil også vises."
       tracked_categories: "Sporet"
@@ -437,6 +446,8 @@ nb_NO:
         inbox: "Innboks"
         sent: "Sendt"
         groups: "Mine grupper"
+        bulk_select: "Velg meldinger"
+        move_to_inbox: "Flytt til inboks"
         select_all: "Velg Alle"
       change_password:
         success: "(e-post sendt)"
@@ -516,6 +527,7 @@ nb_NO:
       website: "Nettsted"
       email_settings: "E-post"
       like_notification_frequency:
+        title: "Varsle når likt"
         always: "Alltid"
         first_time_and_daily: "Første gnag et innlegg blir likt og daglig"
         first_time: "Første gang et innlegg blir likt"
@@ -525,6 +537,7 @@ nb_NO:
         never: "aldri"
       email_digests:
         title: "Send meg sammendrag av hva som er nytt på e-post når jeg ikke er ofte innom:"
+        every_30_minutes: "hvert 30 minutt"
         every_hour: "hver time"
         daily: "daglig"
         every_three_days: "hver tredje dag"
@@ -874,7 +887,6 @@ nb_NO:
       post_format: "#{{post_number}} av {{username}}"
       context:
         user: "Søk innleggene av @{{username}}"
-        category: "Søk i kategorien \"{{category}}\""
         topic: "Søk i dette emnet"
         private_messages: "Søk i meldinger"
     hamburger_menu: "gå til en annen emneliste eller kategori"
@@ -1083,6 +1095,7 @@ nb_NO:
         success: "Vi har invitert denne brukeren til å delta i denne meldingen."
         error: "Beklager, det oppstod en feil ved å invitere den brukeren."
         group_name: "gruppenavn"
+      controls: "Emnefunksjoner"
       invite_reply:
         title: 'Inviter'
         username_placeholder: "brukernavn"
@@ -1235,6 +1248,8 @@ nb_NO:
           like: "Angre liker"
           vote: "Angre stemme"
         people:
+          spam: "flagget dette som spam"
+          inappropriate: "flagget dette som upassende"
           notify_moderators: "varslet moderatorer"
           notify_user: "sendte en melding"
           like: "likte dette"
@@ -1388,6 +1403,7 @@ nb_NO:
       action: 'Rapporter innlegg'
       take_action: "Ta Handling"
       notify_action: 'Melding'
+      official_warning: 'Offisiell Advarsel'
       delete_spammer: "Slett spammer"
       delete_confirm: "Du er i ferd med å slette <b>%{posts}</b> innlegg og <b>%{topics}</b> emner av denne brukeren, slette brukerens konto, blokkere registrering fra brukerens IP-adresse <b>%{ip_address}</b>, og legge brukerens e-postadresse <b>%{email}</b> i en permanent svarteliste. Er du sikker på at denne brukeren virkelig er en spammer?"
       yes_delete_spammer: "Ja, slett spammer"
@@ -1597,6 +1613,7 @@ nb_NO:
           30_days_ago: "30 Dager Siden"
           all: "Alle"
           view_table: "tabell"
+          view_graph: "graf"
           refresh_report: "Refresh Rapport"
           start_date: "Startdato"
           end_date: "Sluttdato"
@@ -1690,6 +1707,9 @@ nb_NO:
         automatic_membership_retroactive: "Benytt samme epostdomeneregel for å legge til eksisterende brukere"
         default_title: "Standardtittel for alle brukere i denne gruppen"
         primary_group: "Sett som primærgruppe automatisk"
+        group_owners: Eiere
+        add_owners: Legg til eiere
+        incoming_email_placeholder: "oppgi epostadresse"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det er ingen aktive API-nøkler akkurat nå."
@@ -1855,6 +1875,7 @@ nb_NO:
             name: 'liker'
             description: "Fargen til Liker-knappen."
       email:
+        title: "Eposter"
         settings: "Instillinger"
         preview_digest: "Forhåndsvis Oppsummering"
         sending_test: "Sender e-post for testing"
@@ -1880,6 +1901,7 @@ nb_NO:
         skipped_reason: "Hopp over grunn"
         incoming_emails:
           from_address: "Fra"
+          to_addresses: "Til"
           subject: "Emne"
           error: "Feil"
           filters:
@@ -2369,3 +2391,11 @@ nb_NO:
           name: Annet
         posting:
           name: Posting
+    tagging:
+      sort_by: "Sorter etter:"
+      notifications:
+        muted:
+          title: "Dempet"
+      topics:
+        none:
+          unread: "Du har ingen uleste emner"

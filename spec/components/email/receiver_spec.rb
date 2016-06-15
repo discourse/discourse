@@ -6,6 +6,7 @@ describe Email::Receiver do
   before do
     SiteSetting.email_in = true
     SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
+    SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
   end
 
   def process(email_name)
@@ -169,6 +170,18 @@ describe Email::Receiver do
     it "prefers text over html" do
       expect { process(:text_and_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is the *text* part.")
+    end
+
+    it "prefers html over text when site setting is enabled" do
+      SiteSetting.incoming_email_prefer_html = true
+      expect { process(:text_and_html_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq('This is the <b>html</b> part.')
+    end
+
+    it "uses text when prefer_html site setting is enabled but no html is available" do
+      SiteSetting.incoming_email_prefer_html = true
+      expect { process(:text_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a text reply :)")
     end
 
     it "removes the 'on <date>, <contact> wrote' quoting line" do

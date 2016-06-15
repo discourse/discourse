@@ -6,6 +6,7 @@ export default Ember.Controller.extend({
   needs: ['topic'],
 
   title: Ember.computed.alias('controllers.topic.model.title'),
+  canReplyAsNewTopic: Ember.computed.alias('controllers.topic.model.details.can_reply_as_new_topic'),
 
   @computed('type', 'postNumber')
   shareTitle(type, postNumber) {
@@ -27,6 +28,15 @@ export default Ember.Controller.extend({
     close() {
       this.setProperties({ link: '', postNumber: '' });
       return false;
+    },
+
+    replyAsNewTopic() {
+      const topicController = this.get("controllers.topic");
+      const postStream = topicController.get("model.postStream");
+      const postId = postStream.findPostIdForPostNumber(this.get("postNumber"));
+      const post = postStream.findLoadedPost(postId);
+      topicController.send("replyAsNewTopic", post);
+      this.send("close");
     },
 
     share(source) {

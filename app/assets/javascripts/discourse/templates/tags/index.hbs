@@ -2,7 +2,14 @@
   {{discourse-banner user=currentUser banner=site.banner}}
 </div>
 
-<h2>{{i18n "tagging.all_tags"}}</h2>
+<div class="list-controls">
+  <div class="container">
+    {{#if canAdminTags}}
+      {{tags-admin-dropdown}}
+    {{/if}}
+    <h2>{{i18n "tagging.tags"}}</h2>
+  </div>
+</div>
 
 <div class='tag-sort-options'>
   {{i18n "tagging.sort_by"}}
@@ -10,10 +17,10 @@
   <a {{action "sortById"}}>{{i18n "tagging.sort_by_name"}}</a>
 </div>
 
-<div class='tag-list'>
-  {{#each sortedTags as |tag|}}
-    <div class='tag-box'>
-      {{discourse-tag tag.id}} <span class='tag-count'>x {{tag.count}}</span>
-    </div>
-  {{/each}}
-</div>
+<hr/>
+
+{{#each model.extras.categories as |category|}}
+  {{tag-list tags=category.tags sortProperties=sortProperties categoryId=category.id}}
+{{/each}}
+
+{{tag-list tags=model sortProperties=sortProperties titleKey="tagging.all_tags"}}

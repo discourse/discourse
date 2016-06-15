@@ -5,6 +5,7 @@ require_dependency 'guardian/topic_guardian'
 require_dependency 'guardian/user_guardian'
 require_dependency 'guardian/post_revision_guardian'
 require_dependency 'guardian/group_guardian'
+require_dependency 'guardian/tag_guardian'
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
@@ -15,6 +16,7 @@ class Guardian
   include UserGuardian
   include PostRevisionGuardian
   include GroupGuardian
+  include TagGuardian
 
   class AnonymousUser
     def blank?; true; end
@@ -244,6 +246,10 @@ class Guardian
     user.staff?
   end
 
+  def can_resend_all_invites?(user)
+    user.staff?
+  end
+
   def can_see_private_messages?(user_id)
     is_admin? || (authenticated? && @user.id == user_id)
   end
@@ -277,17 +283,6 @@ class Guardian
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
   end
 
-  def can_create_tag?
-    user && user.has_trust_level?(SiteSetting.min_trust_to_create_tag.to_i)
-  end
-
-  def can_tag_topics?
-    user && user.has_trust_level?(SiteSetting.min_trust_level_to_tag_topics.to_i)
-  end
-
-  def can_admin_tags?
-    is_staff?
-  end
 
   private
 

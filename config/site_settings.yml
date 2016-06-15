@@ -135,7 +135,7 @@ basic:
   share_links:
     client: true
     type: list
-    default: 'twitter|facebook|google+|email'
+    default: 'twitter|facebook|email'
     choices:
      - twitter
      - facebook
@@ -344,6 +344,9 @@ users:
   show_email_on_profile:
     client: true
     default: false
+  prioritize_username_in_ux:
+    client: true
+    default: true
   email_token_valid_hours:
     default: 24
     min: 1
@@ -531,7 +534,9 @@ email:
     validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
-    validator: "ReplyByEmailAddressValidator"
+    validator: "AlternativeReplyByEmailAddressesValidator"
+  alternative_reply_by_email_addresses:
+    default: ''
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
@@ -544,6 +549,8 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
+  incoming_email_prefer_html:
+    default: false
   email_in:
     default: false
     client: true
@@ -580,6 +587,9 @@ email:
   ignore_by_title:
     type: list
     default: ''
+  mailgun_api_key:
+    default: ''
+    regex: '^key-\h{32}$'
 
 
 files:
@@ -698,6 +708,7 @@ trust:
   tl3_time_period:
     default: 100
     min: 1
+    max: 1000000
   tl3_requires_days_visited:
     default: 50
     min: 0
@@ -765,8 +776,10 @@ spam:
   add_rel_nofollow_to_user_content: true
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
-  num_flags_to_block_new_user: 3
+  num_spam_flags_to_block_new_user: 3
   num_users_to_block_new_user: 3
+  num_tl3_flags_to_block_new_user: 6
+  num_tl3_users_to_block_new_user: 4
   notify_mods_when_user_blocked: false
   flag_sockpuppets: false
   newuser_spam_host_threshold: 3
@@ -1136,7 +1149,7 @@ user_preferences:
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
     enum: 'MailingListModeSiteSetting'
-    default: 1
+    default: 0
   disable_mailing_list_mode:
     default: false
     client: true

@@ -25,7 +25,7 @@
           <tr class="input">
                 <td class="label"><label for='new-account-username'>{{i18n 'user.username.title'}}</label></td>
                 <td>
-                {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength}}
+                {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="off"}}
                 &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
                 </td>
           </tr>

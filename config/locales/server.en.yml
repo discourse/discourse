@@ -191,7 +191,6 @@ en:
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
 
   just_posted_that: "is too similar to what you recently posted"
-  has_already_been_used: "has already been used"
   invalid_characters: "contains invalid characters"
   is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "next page →"
@@ -314,6 +313,8 @@ en:
     attributes:
       category:
         name: "Category Name"
+      topic:
+        title: 'Title'
       post:
         raw: "Body"
       user_profile:
@@ -620,8 +621,8 @@ en:
     description: "You have been unsubscribed. We won't contact you again!"
     oops: "In case you didn't mean to do this, click below."
     error: "Error Unsubscribing"
-    preferences_link: "You can also unsubscribe from digest emails on your <a href='/my/preferences'>preferences page</a>"
-    different_user_description: "You are currently logged in as a different user than the one who the digest was mailed to. Please log out and try again."
+    preferences_link: "You can also unsubscribe from summary emails on your <a href='/my/preferences'>preferences page</a>"
+    different_user_description: "You are currently logged in as a different user than the one who the summary was mailed to. Please log out and try again."
     not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
 
   resubscribe:
@@ -798,6 +799,7 @@ en:
     email_polling_errored_recently:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
+    missing_mailgun_api_key: "The server is configured to send emails via mailgun but you haven't provided an API key used the verify the webhook messages."
     bad_favicon_url: "The favicon is failing to load. Check your favicon_url setting in <a href='/admin/site_settings'>Site Settings</a>."
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
@@ -848,7 +850,7 @@ en:
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
 
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
-    digest_logo_url: "The alternate logo image used at the top of your site's email digest. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
+    digest_logo_url: "The alternate logo image used at the top of your site's email summary. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
     logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon, to work correctly over a CDN it must be a png"
     mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. Should be a square shape. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
@@ -864,7 +866,7 @@ en:
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
-    enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages"
+    enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -883,8 +885,10 @@ en:
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
 
-    num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
-    num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    num_spam_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
+    num_users_to_block_new_user: "If a new user's posts get num_spam_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    num_tl3_flags_to_block_new_user: "If a new user's posts get this many flags from num_tl3_users_to_block_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
+    num_tl3_users_to_block_new_user: "If a new user's posts get num_tl3_flags_to_block_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
 
@@ -918,6 +922,7 @@ en:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     top_page_default_timeframe: "Default timeframe for the top view page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
+    prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
@@ -928,7 +933,7 @@ en:
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
-    forgot_password_strict: "Don't inform users of an account's existance when they use the forgot password dialog."
+    forgot_password_strict: "Don't inform users of an account's existence when they use the forgot password dialog."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
@@ -1166,6 +1171,8 @@ en:
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "List of alternative templates for reply by email incoming email addresses."
+    incoming_email_prefer_html: "Use the HTML instead of the text for incoming email. May cause unexcpeted formatting issues!"
 
     disable_emails: "Prevent Discourse from sending any kind of emails"
 
@@ -1174,7 +1181,7 @@ en:
     display_name_on_email_from: "Display full names on email from fields"
 
     unsubscribe_via_email: "Allow users to unsubscribe from emails by sending an email with 'unsubscribe' in the subject or body"
-    unsubscribe_via_email_footer: "Attach an unsubscribe link to the footer of sent emails"
+    unsubscribe_via_email_footer: "Attach an unsubscribe via email mailto: link to the footer of sent emails"
 
     delete_email_logs_after_days: "Delete email logs after (N) days. 0 to keep indefinitely"
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
@@ -1184,6 +1191,7 @@ en:
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
     bounce_score_threshold: "Max score before we will stop emailing a user. Soft bounce adds 1, hard bounce adds 2, score reset 30 days after last bounce."
     ignore_by_title: "Ignore incoming emails based on their title."
+    mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1213,11 +1221,11 @@ en:
     allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
-    digest_topics: "The maximum number of topics to display in the email digest."
-    digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
-    delete_digest_email_after_days: "Suppress digest emails for users not seen on the site for more than (n) days."
-    digest_suppress_categories: "Suppress these categories from digest emails."
-    disable_digest_emails: "Disable digest emails for all users."
+    digest_topics: "The maximum number of topics to display in the email summary."
+    digest_min_excerpt_length: "Minimum post excerpt in the email summary, in characters."
+    delete_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
+    digest_suppress_categories: "Suppress these categories from summary emails."
+    disable_digest_emails: "Disable summary emails for all users."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
@@ -1300,8 +1308,8 @@ en:
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
 
-    default_email_digest_frequency: "How often users receive digest emails by default."
-    default_include_tl0_in_digests: "Include posts from new users in digest emails by default. Users can change this in their preferences."
+    default_email_digest_frequency: "How often users receive summary emails by default."
+    default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
     default_email_private_messages: "Send an email when someone messages the user by default."
     default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
     default_email_mailing_list_mode: "Send an email for every new post by default."
@@ -1356,6 +1364,7 @@ en:
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
+      invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
       pop3_polling_host_is_empty: "You must set a 'pop3 polling host' before enabling POP3 polling."
       pop3_polling_username_is_empty: "You must set a 'pop3 polling username' before enabling POP3 polling."
       pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
@@ -1538,6 +1547,29 @@ en:
 
       This invitation is from a trusted user, so you can reply to the discussion immediately.
 
+  custom_invite_mailer:
+    subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} invited you to a discussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      at
+
+      > %{site_title} -- %{site_description}
+
+      Message from %{invitee_name}:
+
+      %{user_custom_message}
+
+      If you're interested, click the link below:
+
+      %{invite_link}
+
+      This invitation is from a trusted user, so you can reply to the discussion immediately.
+
   invite_forum_mailer:
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
     text_body_template: |
@@ -1551,7 +1583,26 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you won't need to log in.
+      This invitation is from a trusted user, so an account will be created for you automatically.
+
+  custom_invite_forum_mailer:
+    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} invited you to join
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Message from %{invitee_name}:
+
+      %{user_custom_message}
+
+      If you're interested, click the link below:
+
+      %{invite_link}
+
+      This invitation is from a trusted user, so an account will be created for you automatically.
 
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
@@ -1646,7 +1697,7 @@ en:
     text_body_template: |
       Hello,
 
-      There are posts from new users that are waiting to be reviewed. [They can be approved or rejected here](%{base_url}/queued-posts).
+      Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/queued-posts).
 
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
@@ -1695,33 +1746,23 @@ en:
 
         - For search, your user page, or the <kbd>☰</kbd> menu, use the **icon buttons at upper right**.
 
-        - Selecting a topic title will always take you to the **next unread reply** in the topic. To enter at the top or bottom, select the reply count or last reply date instead.
+        - Selecting a topic title will always take you to your **next unread reply** in the topic. To enter at the top or bottom instead, select the reply count or last reply date.
 
             <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
 
-        - While reading a topic, select the progress bar at the bottom right for full navigation controls. Quickly jump back to the top by selecting the topic title. Press <kbd>?</kbd> for a list of super-speedy keyboard shortcuts.
+        - While reading a topic, use the timeline on the right to jump to the top, bottom, or your last read position. On smaller screens, select the progress bar at bottom right to expand it:
 
             <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
 
+            You can also press <kbd>?</kbd> on your keyboard for a list of super-speedy keyboard shortcuts.
+
         ## Replying
 
-        - To reply to the **topic in general**, use <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">  at the very bottom of the topic.
-
-        - To reply to a **specific person**, use <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> on their post.
-
-        - To reply with **a new topic**, use <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> to the right of the post. Both old and new topics will be automatically linked together.
-
-        Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
-
-            This is **bold**.
-            This is <b>bold</b>.
-            This is [b]bold[/b].
-
-        Want to learn Markdown? [Take our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
-
-        To insert a quote, select the text you wish to quote, then press any Reply button. Repeat for multiple quotes.
+        To insert a quote, select the text you wish to quote, then press any <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Reply button to open the editor. Repeat for multiple quotes.
 
         <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        You can always continue reading while you compose your reply, and we automatically save drafts as you write.
 
         To notify someone about your reply, mention their name. Type `@` to begin selecting a username.
 
@@ -1735,45 +1776,55 @@ en:
 
         <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
 
+        Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
+
+            This is **bold**.
+            This is <b>bold</b>.
+            This is [b]bold[/b].
+
+        For more formatting tips, [try our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
+
         ## Actions
 
         There are action buttons at the bottom of each post:
 
         <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
 
-        To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
+        - To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
 
-        If you see a problem with someone's post, privately let them, or [our staff](%{base_url}/about), know about it with the **flag** button. You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
+        - Grab a copy-pasteable link to any reply or topic via the **link** button.
+
+        - Use the <kbd>&hellip;</kbd> show more button to reveal more actions. **Flag** to privately let the author, or [our staff](%{base_url}/about), know about a problem. **Bookmark** to find this post later on your profile page.
 
         ## Notifications
 
-        When someone replies to you, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it to access your **notifications**.
+        When someone replies to you, quotes your post, mentions your `@username`, or even links to your post, a number will immediately appear at the top right of the page. Select it to access your **notifications**.
 
         <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
 
         Don't worry about missing a reply – you'll be emailed any notifications that arrive when you are away.
 
-        ## Your Preferences
+        ## Preferences
 
           - All topics less than **two days old** are considered new.
 
-          - Any topic you've **actively participated in** (by creating, replying, or reading for an extended period) will be automatically tracked.
+          - Any topic you've **actively participated in** (by creating it, replying to it, or reading it for an extended period) will be automatically tracked on your behalf.
 
-        You will see the blue new and unread number indicators next to these topics:
+        You will see the new and unread number indicators next to these topics:
 
         <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
 
-        You can change your notifications for any topic via the notification control at the bottom of the topic.
+        You can change your notifications for any topic via the notification control at the bottom, and right hand side, of each topic.
 
         <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
 
-        You can also set notification state per category, if you want to watch every new topic in a specific category.
+        You can also set notification state per category, if you want to watch or mute every new topic in a specific category.
 
         To change any of these settings, see [your user preferences](%{base_url}/my/preferences).
 
         ## Community Trust
 
-        As you participate here, over time you'll gain the trust of the community, become a full citizen, and new user limitations will be lifted. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain new abilities to help us manage our community together.
+        It's great to meet you! As you participate here, over time we'll get to know you, and your temporary new user limitations will be lifted. Keep participating, and over time you'll gain new [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
 
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
@@ -2026,9 +2077,8 @@ en:
         Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
 
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
-
     too_many_spam_flags:
-      subject_template: "New account blocked due to community flags"
+      subject_template: "New account on hold"
       text_body_template: |
         Hello,
 
@@ -2037,7 +2087,16 @@ en:
         As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    too_many_tl3_flags:
+      subject_template: "New account on hold"
+      text_body_template: |
+        Hello,
 
+        This is an automated message from %{site_name} to let you know you that your account has been placed on hold due to a large number of community flags.
+
+        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.  We apologize for the inconvenience.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Account temporarily on hold"
       text_body_template: |
@@ -2101,10 +2160,19 @@ en:
         [Please review and fix them](%{base_url}/admin).
 
   unsubscribe_link: |
-    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}). To unsubscribe from these emails, change your [user preferences](%{user_preferences_url})
+    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
 
-  unsubscribe_via_email_link: |
-    or, [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
+    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}).
+
+  unsubscribe_link_and_mail: |
+    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
+
+    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}) or [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
+
+  unsubscribe_mailing_list: |
+    You have mailing list mode enabled. To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
+
+    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}) or [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "
@@ -2120,11 +2188,11 @@ en:
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ''
-    reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond"
-    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond"
-    only_reply_by_email: "Reply to this email to respond"
-    visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond"
-    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond"
+    reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
+    reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond."
+    only_reply_by_email: "Reply to this email to respond."
+    visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
+    visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond."
 
     posted_by: "Posted by %{username} on %{post_date}"
 
@@ -2273,13 +2341,13 @@ en:
 
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
-      subject_template: "[%{site_name}] Digest"
+      subject_template: "[%{site_name}] Summary"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Popular posts"
       other_new_topics: "Popular topics"
-      unsubscribe: "This digest is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
+      unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
-      from: "%{site_name} digest"
+      from: "%{site_name} summary"
       read_more: "Read More"
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
@@ -2806,7 +2874,7 @@ en:
         <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
         <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-        <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td> <td colspan=2></td></tr>
+        <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
         </table>
       </p>
       <h3>Examples</h3>
@@ -3027,6 +3095,11 @@ en:
       name: First Onebox
       description: Posted a link that was oneboxed
       long_description: This badge is granted the first time you post a link on a line by itself, which was then automatically expanded into a onebox with a brief summary of the link, a title, and (when available) a picture.
+    first_reply_by_email:
+      name: First Reply By Email
+      description: Replied to a Post via email
+      long_description: |
+        This badge is granted the first time you reply to a post via email :e-mail:.
 
   admin_login:
     success: "Email Sent"

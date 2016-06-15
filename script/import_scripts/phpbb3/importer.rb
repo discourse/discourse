@@ -118,18 +118,13 @@ module ImportScripts::PhpBB3
     end
 
     def import_private_messages
-      if @settings.fix_private_messages
-        puts '', 'fixing private messages'
-        @database.calculate_fixed_messages
-      end
-
       puts '', 'creating private messages'
-      total_count = @database.count_messages(@settings.fix_private_messages)
+      total_count = @database.count_messages
       importer = @importers.message_importer
       last_msg_id = 0
 
       batches do |offset|
-        rows, last_msg_id = @database.fetch_messages(@settings.fix_private_messages, last_msg_id)
+        rows, last_msg_id = @database.fetch_messages(last_msg_id)
         break if rows.size < 1
 
         next if all_records_exist?(:posts, importer.map_to_import_ids(rows))

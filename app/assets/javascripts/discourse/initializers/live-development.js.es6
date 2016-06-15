@@ -1,4 +1,5 @@
 import loadScript from 'discourse/lib/load-script';
+import DiscourseURL from 'discourse/lib/url';
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -29,6 +30,11 @@ export default {
         return header.html(data);
       });
     });
+
+    // Useful to export this for debugging purposes
+    if (Discourse.Environment === 'development' && !Ember.testing) {
+      window.DiscourseURL = DiscourseURL;
+    }
 
     // Observe file changes
     messageBus.subscribe("/file-change", function(data) {

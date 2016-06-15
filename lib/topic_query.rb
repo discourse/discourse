@@ -20,6 +20,7 @@ class TopicQuery
                      topic_ids
                      visible
                      category
+                     tags
                      order
                      ascending
                      no_subcategories
@@ -449,6 +450,24 @@ class TopicQuery
           result = result.where('categories.id = :category_id OR (categories.parent_category_id = :category_id AND categories.topic_id <> topics.id)', category_id: category_id)
         end
         result = result.references(:categories)
+      end
+
+      # ALL TAGS: something like this?
+      # Topic.joins(:tags).where('tags.name in (?)', @options[:tags]).group('topic_id').having('count(*)=?', @options[:tags].size).select('topic_id')
+
+      if SiteSetting.tagging_enabled
+        result = result.preload(:tags)
+
+        if @options[:tags] && @options[:tags].size > 0
+          result = result.joins(:tags)
+
+          # ANY of the given tags:
+          if @options[:tags][0].is_a?(Integer)
+            result = result.where("tags.id in (?)", @options[:tags])
+          else
+            result = result.where("tags.name in (?)", @options[:tags])
+          end
+        end
       end
 
       result = apply_ordering(result, options)

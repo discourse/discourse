@@ -94,6 +94,8 @@ const User = RestModel.extend({
 
   mutedTopicsPath: url('/latest?state=muted'),
 
+  watchingTopicsPath: url('/latest?state=watching'),
+
   @computed("username")
   username_lower(username) {
     return username.toLowerCase();
@@ -321,10 +323,10 @@ const User = RestModel.extend({
            Discourse.SiteSettings['newuser_max_' + type + 's'] > 0;
   },
 
-  createInvite(email, group_names) {
+  createInvite(email, group_names, custom_message) {
     return Discourse.ajax('/invites', {
       type: 'POST',
-      data: { email, group_names }
+      data: { email, group_names, custom_message }
     });
   },
 

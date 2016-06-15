@@ -4,8 +4,14 @@ import { iconNode } from 'discourse/helpers/fa-icon';
 export default createWidget('button', {
   tagName: 'button.widget-button',
 
-  buildClasses() {
-    if (this.attrs.className) { return this.attrs.className; }
+  buildClasses(attrs) {
+    const className = this.attrs.className || '';
+
+    if (!attrs.label && !attrs.contents) {
+      return className + ' no-text';
+    }
+
+    return className;
   },
 
   buildAttributes() {
@@ -30,21 +36,27 @@ export default createWidget('button', {
 
   html(attrs) {
     const contents = [];
-
     const left = !attrs.iconRight;
-    if (attrs.icon && left) { contents.push(iconNode(attrs.icon)); }
+    if (attrs.icon && left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
     if (attrs.label) { contents.push(I18n.t(attrs.label, attrs.labelOptions)); }
     if (attrs.contents) { contents.push(attrs.contents); }
-    if (attrs.icon && !left) { contents.push(iconNode(attrs.icon)); }
+    if (attrs.icon && !left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
 
     return contents;
   },
 
-  click() {
+  click(e) {
     const attrs = this.attrs;
     if (attrs.disabled) { return; }
 
     $(`button.widget-button`).removeClass('d-hover').blur();
+    if (attrs.secondaryAction) {
+      this.sendWidgetAction(attrs.secondaryAction);
+    }
+
+    if (attrs.sendActionEvent) {
+      return this.sendWidgetAction(attrs.action, e);
+    }
     return this.sendWidgetAction(attrs.action);
   }
 });

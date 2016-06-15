@@ -20,9 +20,9 @@ module Slug
   private
 
   def self.ascii_generator(string)
-    string.gsub("'", "")
+    string.tr("'", "")
           .parameterize
-          .gsub("_", "-")
+          .tr("_", "-")
   end
 
   def self.encoded_generator(string)

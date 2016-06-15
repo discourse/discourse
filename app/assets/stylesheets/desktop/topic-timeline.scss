@@ -1,0 +1,137 @@
+.timeline-loading {
+  width: 900px;
+}
+
+.composer-open {
+  .topic-timeline {
+    opacity: 0;
+  }
+}
+
+.timeline-container {
+  box-sizing: border-box;
+  z-index: 499;
+  margin-left: 757px;
+
+  @media all and (min-width: 1140px) {
+    margin-left: 820px;
+  }
+  @media all and (min-width: 1250px) {
+    margin-left: 900px;
+  }
+
+  position: fixed;
+  -webkit-transform: translate3d(0,0,0);
+
+  &.timeline-docked {
+    position: absolute;
+  }
+
+  &.timeline-docked-bottom {
+    .timeline-footer-controls {
+      opacity: 0;
+    }
+  }
+
+  .topic-timeline {
+    margin-left: 3em;
+    width: 150px;
+    transition: opacity 0.2s ease-in;
+
+    .timeline-controls {
+      margin-bottom: 1em;
+    }
+
+    .timeline-footer-controls {
+      margin-top: 1em;
+      line-height: 2.5em;
+      transition: opacity 0.2s ease-in;
+
+      button {
+        margin-right: 0.5em;
+      }
+
+      ul.dropdown-menu {
+        right: 0.5em;
+        top: auto;
+        bottom: 25px;
+        left: auto;
+      }
+    }
+
+    .start-date {
+      @include unselectable;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
+    .timeline-scrollarea {
+      margin-top: 0.5em;
+      margin-left: 0.5em;
+      border-left: 1px solid;
+      border-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+      position: relative;
+      -webkit-transform: translate3d(0,0,0);
+    }
+
+    .timeline-padding {
+      transition: height 0.15s ease-out;
+      cursor: pointer;
+      .widget-dragging & {
+        transition: none;
+      }
+    }
+
+    .timeline-handle {
+      @include border-radius-all(0.8em);
+      width: 0.35em;
+      background-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+      height: 100%;
+      float: left;
+    }
+
+    .timeline-scroller-content {
+      padding-left: 1em;
+    }
+
+    .timeline-ago {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
+    .timeline-scroller {
+      @include unselectable;
+      margin-left: -0.19em;
+      cursor: ns-resize;
+      display: flex;
+      align-items: center;
+    }
+
+    .timeline-replies {
+      font-weight: bold;
+    }
+
+    .timeline-last-read {
+      position: absolute;
+      margin-left: -0.19em;
+
+      .btn-small {
+        padding: 2px 5px;
+      }
+
+      i.progress {
+        font-size: 0.5em;
+        color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+        margin-right: 1em;
+      }
+    }
+
+    .now-date {
+      @include unselectable;
+      display: inline-block;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      margin-top: 0.5em;
+      i {
+        margin-left: 0.15em;
+      }
+    }
+  }
+}

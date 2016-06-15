@@ -25,7 +25,7 @@
 
             {{#if canEditTags}}
               <br>
-              {{tag-chooser tags=buffered.tags}}
+              {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
             {{/if}}
 
             {{plugin-outlet "edit-topic"}}
@@ -66,13 +66,23 @@
     <div class='selected-posts {{unless multiSelect 'hidden'}}'>
       {{partial "selected-posts"}}
     </div>
+    {{#topic-navigation as |info|}}
+      {{#if info.renderTimeline}}
+        {{topic-timeline topic=model
+                         enteredIndex=enteredIndex
+                         loading=model.postStream.loading
+                         delegated=topicDelegated}}
+      {{else}}
+        {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
+      {{/if}}
+
+      {{topic-progress topic=model delegated=topicDelegated showTimeline=info.showTimeline}}
+    {{/topic-navigation}}
 
     <div class="row">
       <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
+
         <div class="posts-wrapper">
-
-          {{render "topic-progress"}}
-
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
           {{plugin-outlet "topic-above-posts"}}
@@ -105,6 +115,8 @@
               removeAllowedUser="removeAllowedUser"
               showInvite="showInvite"
               topVisibleChanged="topVisibleChanged"
+              currentPostChanged="currentPostChanged"
+              currentPostScrolled="currentPostScrolled"
               bottomVisibleChanged="bottomVisibleChanged"
               selectPost="toggledSelectedPost"
               selectReplies="toggledSelectedPostReplies"
@@ -122,7 +134,7 @@
               {{! replace "Log In to Reply" with the infobox }}
               {{signup-cta}}
             {{else}}
-              {{topic-footer-buttons topic=model}}
+              {{topic-footer-buttons topic=model topicDelegated=topicDelegated}}
             {{/if}}
 
             {{#if model.pending_posts_count}}
@@ -198,78 +210,3 @@
   {{render "quote-button"}}
 {{/if}}
 
-{{#if currentUser.canManageTopic}}
-  {{show-popup-button action="showTopicAdminMenu" class="show-topic-admin" title="topic_admin_menu" icon="wrench"}}
-  {{#popup-menu visible=adminMenuVisible hide="hideTopicAdminMenu" title="admin_title" extraClasses="topic-admin-popup-menu"}}
-    <li class="topic-admin-multi-select">
-      {{d-button action="toggleMultiSelect" icon="tasks" label="topic.actions.multi_select"}}
-    </li>
-
-    {{#if model.details.can_delete}}
-      <li class="topic-admin-delete">
-        {{d-button action="deleteTopic" icon="trash-o" label="topic.actions.delete" class="btn-danger"}}
-      </li>
-    {{/if}}
-
-    {{#if showRecover}}
-      <li class="topic-admin-recover">
-        {{d-button action="recoverTopic" icon="undo" label="topic.actions.recover"}}
-      </li>
-    {{/if}}
-
-    <li class="topic-admin-autoclose">
-      {{#if model.closed}}
-        {{d-button action="toggleClosed" icon="unlock" label="topic.actions.open"}}
-      {{else}}
-        {{d-button action="toggleClosed" icon="lock" label="topic.actions.close"}}
-        {{d-button action="showAutoClose" icon="clock-o" label="topic.actions.auto_close"}}
-      {{/if}}
-    </li>
-
-    {{#unless model.isPrivateMessage}}
-      {{#if model.visible}}
-        <li class="topic-admin-pin">
-          {{#if isFeatured}}
-            {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.unpin"}}
-          {{else}}
-            {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.pin"}}
-          {{/if}}
-        </li>
-      {{/if}}
-    {{/unless}}
-
-    <li class="topic-admin-change-timestamp">
-      {{d-button action="showChangeTimestamp" icon="calendar" label="topic.change_timestamp.title"}}
-    </li>
-
-    <li class="topic-admin-archive">
-      {{#if model.archived}}
-        {{d-button action="toggleArchived" icon="folder" label="topic.actions.unarchive"}}
-      {{else}}
-        {{#unless model.isPrivateMessage}}
-        {{d-button action="toggleArchived" icon="folder" label="topic.actions.archive"}}
-        {{/unless}}
-      {{/if}}
-    </li>
-
-    <li class="topic-admin-visible">
-      {{#if model.visible}}
-        {{d-button action="toggleVisibility" icon="eye-slash" label="topic.actions.invisible"}}
-      {{else}}
-        {{d-button action="toggleVisibility" icon="eye" label="topic.actions.visible"}}
-      {{/if}}
-    </li>
-
-    {{#if currentUser.staff}}
-      <li class="topic-admin-convert">
-        {{#if model.isPrivateMessage}}
-          {{d-button action="convertToPublicTopic" icon="comment" label="topic.actions.make_public"}}
-        {{else}}
-          {{d-button action="convertToPrivateMessage" icon="envelope" label="topic.actions.make_private"}}
-        {{/if}}
-      </li>
-    {{/if}}
-
-    {{plugin-outlet "topic-admin-menu-buttons"}}
-  {{/popup-menu}}
-{{/if}}

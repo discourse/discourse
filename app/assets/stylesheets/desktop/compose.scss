@@ -78,6 +78,13 @@
   }
 }
 
+.custom-body {
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  p {
+    max-width: 98%;
+  }
+}
+
 .similar-topics {
   background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
 
@@ -142,7 +149,7 @@
     right: 1px;
     position: absolute;
     font-size: 1.071em;
-    color: $primary;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     padding: 0 10px 5px 10px;
     &:before {
       font-family: "FontAwesome";

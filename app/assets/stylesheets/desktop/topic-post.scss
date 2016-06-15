@@ -47,25 +47,6 @@ h1 .topic-statuses .topic-status i {
   }
 }
 
-.topic-post {
-  .gutter {
-    .reply-new {
-      .discourse-no-touch & {
-        opacity:0;
-        transition: opacity 0.7s ease-in-out;
-      }
-      .discourse-touch & {opacity: 1;}
-    }
-  }
-
-  &:hover .gutter, .selected .gutter {
-    .reply-new,
-    .track-link {
-      opacity:1;
-    }
-  }
-}
-
 section.post-menu-area {
   position: relative;
 }
@@ -403,7 +384,7 @@ a.star {
       font-size: 0.929em;
     }
     i.fa-times {
-        color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
     }
   }
 
@@ -454,6 +435,9 @@ a.star {
     margin-bottom: 5px;
     margin-right: 10px;
     .fa-bookmark.bookmarked { color: $tertiary; }
+  }
+  .notification-options p {
+    display: inline-block;
   }
 }
 
@@ -635,51 +619,6 @@ blockquote {
     }
   }
 
-}
-
-
-
-.gutter {
-  margin-top: 13px;
-  width: 100%;
-  box-sizing: border-box;
-  z-index: 1;
-  padding-left: 757px;
-
-  ul {margin: 0;}
-  li {margin-bottom: 10px;}
-  i {font-size: 0.857em;}
-
-  .reply-new {
-    padding-left: 27px;
-    display: inline-block;
-    overflow:hidden;
-  }
-
-  .track-link {
-    padding-left: 10px;
-    display: inline-block;
-    overflow: hidden;
-    }
-
-  .post-links {
-    list-style-type: none;
-    position: relative;
-    line-height: 18px;
-    word-wrap: break-word;
-    a i {
-      position: relative;
-      margin-right: 7px;
-      margin-top: -2px;
-      margin-left: -17px;
-    }
-
-    a.toggle-more {
-      display: block;
-      text-align: right;
-    }
-
-  }
 }
 
 // variables are used to calculate the width of .gap
@@ -925,17 +864,17 @@ a.attachment:before {
 }
 
 .private_message .gutter, .deleted-topic .gutter,.read_restricted .gutter {
-    position: relative;
+  position: relative;
 }
 
 .deleted-topic .gutter:before {
-    display: block;
-    position: absolute;
-    left: 767px;
-    color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
-    font: 6.429em/1 FontAwesome;
-    content: "\f014";
-    z-index: -5;
+  display: block;
+  position: absolute;
+  left: 767px;
+  color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
+  font: 6.429em/1 FontAwesome;
+  content: "\f014";
+  z-index: -5;
 }
 
 .topic-meta-data {
@@ -1003,7 +942,7 @@ and (max-width : 870px) {
 
   .gutter {
     display: none;
-    }
+  }
 
   .topic-avatar {
     width: 45px;

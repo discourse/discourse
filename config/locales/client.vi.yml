@@ -424,7 +424,6 @@ vi:
       suspended_notice: "Thành viên này bị đình chỉ cho đến ngày {{date}}. "
       suspended_reason: "Lý do: "
       github_profile: "Github"
-      mailing_list_mode: "Gửi email cho tôi mỗi bài viết mới (trừ khi tôi tắt chủ đề hoặc chuyên mục)"
       watched_categories: "Xem"
       watched_categories_instructions: "Bạn sẽ tự động xem tất cả các chủ đề mới trong các chuyên mục này. Bạn sẽ được thông báo về tất các các bài viết mới, và một số các bài viết mới cũng sẽ xuất hiện ở chủ đề kế tiếp."
       tracked_categories: "Theo dõi"
@@ -470,7 +469,6 @@ vi:
         error: "Có lỗi xảy ra khi thay đổi giá trị này."
       change_username:
         title: "Thay Username"
-        confirm: "Nếu bạn thay đổi tên đăng nhập, tất cả những câu nói của bạn ở bài viết trước và @tên bạn sẽ được đề cập sẽ bị phá vỡ. Bạn có chắc bạn muốn tiếp tục không?"
         taken: "Xin lỗi, đã có username này."
         error: "Có lỗi trong khi thay đổi username của bạn."
         invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự  là chữ cái và chữ số. "
@@ -553,22 +551,18 @@ vi:
         always: "luôn luôn"
         never: "không"
       email_digests:
-        title: "Khi tôi không truy cập, gửi email gợi ý những cái mới cho tôi:"
         every_30_minutes: "mỗi 30 phút"
         every_hour: "hàng giờ"
         daily: "hàng ngày"
         every_three_days: "ba ngày một"
         weekly: "hàng tuần"
         every_two_weeks: "hai tuần một"
-      include_tl0_in_digests: "Kèm theo bài viết của các thành viên mới trong tập san email"
       email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
       email_direct: "Gửi cho tôi một email khi có người trích dẫn, trả lời cho bài viết của tôi, đề cập đến @username của tôi, hoặc mời tôi đến một chủ đề"
       email_private_messages: "Gửi cho tôi email khi có ai đó nhắn tin cho tôi"
       email_always: "Gửi email thông báo cho tôi mỗi khi tôi kích hoạt trên website này"
       other_settings: "Khác"
       categories_settings: "Chuyên mục"
-      enable_mailing_list:
-        other: "Bạn có chắc chắn muốn nhận email mỗi khi có bài viết mới?<br><br>Ước lượng sẽ có khoảng <b>{{count}} emails</b> mỗi ngày."
       new_topic_duration:
         label: "Để ý tới chủ đề mới khi"
         not_viewed: "Tôi chưa từng xem họ"
@@ -973,7 +967,6 @@ vi:
       post_format: "#{{post_number}} bởi {{username}}"
       context:
         user: "Tìm bài viết của @{{username}}"
-        category: "Tìm  danh mục \"{{category}}\""
         topic: "Tìm trong chủ đề này"
         private_messages: "Tìm tin nhắn"
     hamburger_menu: "đi đến danh sách chủ đề hoặc danh mục khác"

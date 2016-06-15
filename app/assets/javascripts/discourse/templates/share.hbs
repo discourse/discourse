@@ -14,6 +14,12 @@
     {{share-source source=s title=title action="share"}}
   {{/each}}
 
+  {{#if canReplyAsNewTopic}}
+    <div class='reply-as-new-topic'>
+      <a href {{action "replyAsNewTopic"}} aria-label='{{i18n 'post.reply_as_new_topic'}}' title='{{i18n 'post.reply_as_new_topic'}}'>{{fa-icon "plus"}}{{i18n 'topic.create'}}</a>
+    </div>
+  {{/if}}
+
   <div class='link'>
     <a href {{action "close"}} aria-label='{{i18n 'share.close'}}' title='{{i18n 'share.close'}}'>{{fa-icon "close"}}</a>
   </div>

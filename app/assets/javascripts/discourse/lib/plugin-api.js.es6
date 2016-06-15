@@ -10,6 +10,7 @@ import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
+import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
 
 class PluginApi {
   constructor(version, container) {
@@ -222,6 +223,26 @@ class PluginApi {
    **/
   onToolbarCreate(callback) {
     addToolbarCallback(callback);
+  }
+
+  /**
+   * Add a new button in the options popup menu.
+   *
+   * Example:
+   *
+   * ```
+   * api.addToolbarPopupMenuOptionsCallback(function(controller) {
+   *  return {
+   *    action: 'toggleWhisper',
+   *    icon: 'eye-slash',
+   *    label: 'composer.toggle_whisper',
+   *    condition: "canWhisper"
+   *  };
+   * });
+   * ```
+  **/
+  addToolbarPopupMenuOptionsCallback(callback) {
+    addPopupMenuOptionsCallback(callback);
   }
 
   /**

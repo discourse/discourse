@@ -58,8 +58,8 @@
           </section>
 
           <div class="primary-textual">
-            <h1>{{model.username}} {{user-status model currentUser=currentUser}}</h1>
-            <h2>{{model.name}}</h2>
+            <h1 class="{{if nameFirst "full-name" "username"}}">{{if nameFirst model.name model.username}} {{user-status model currentUser=currentUser}}</h1>
+            <h2 class="{{if nameFirst "username" "full-name"}}">{{#if nameFirst}}{{model.username}}{{else}}{{model.name}}{{/if}}</h2>
             {{#if model.title}}
               <h3>{{model.title}}</h3>
             {{/if}}
@@ -137,7 +137,7 @@
             </dd>
           {{/if}}
           {{#if model.displayGroups}}
-            <dt>{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
+            <dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
             <dd class='groups'>
               {{#each model.displayGroups as |group|}}
                 <span>{{#link-to 'group' group class="group-link"}}{{group.name}}{{/link-to}}</span>

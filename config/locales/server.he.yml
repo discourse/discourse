@@ -24,7 +24,6 @@ he:
   loading: "טוען"
   powered_by_html: 'מונע ע"י <a href="http://www.discourse.org">Discourse</a>, פועל מיטבית עם Javascript'
   log_in: "התחברות"
-  purge_reason: "נמחק באופן אוטומטי כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אכסון פנוי."
   anonymous: "אנונימי"
   errors: &errors
@@ -120,7 +119,6 @@ he:
   user_is_suspended: "משתמשים מושעים אינפ  מורשים לפרסם"
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראת אותו?"
   just_posted_that: "דומה מידי למה שפורסם לאחרונה"
-  has_already_been_used: "כבר בשימוש"
   invalid_characters: "מכיל תווים לא חוקיים"
   is_invalid: "אינו תקין: נסה יותר פירוט"
   next_page: "עמוד הבא ←"
@@ -145,7 +143,6 @@ he:
     delete_reason: "נמחק באמצעות בקרה על תור הפרסומים"
   groups:
     errors:
-      can_not_modify_automatic: "אתה לא יכול לשנות קבוצה אוטומטית"
       member_already_exist: "'%{username}'  הוא כבר חבר בקבוצה הזו."
     default_names:
       everyone: "כולם"
@@ -395,7 +392,6 @@ he:
     continue_button: "המשך ל-%{site_name}"
     welcome_to: "ברוכים הבאים ל-%{site_name}!"
     approval_required: "מנהל צריך לאשר את החשבון שלך ידנית לפני שתוכל להיכנס לפורום הזה. יישלח אליך דואר אלקטרוני כשהחשבון שלך יאושר!"
-    missing_session: "אנחנו לא יכולים לזהות אם החשבון שלך נוצר, בבקשה בדוק שאפשרת עוגיות (cookies)."
   post_action_types:
     off_topic:
       title: 'אוף-טופיק'
@@ -550,27 +546,19 @@ he:
     page_view_anon_reqs:
       title: "אנונימי"
       xaxis: "יום"
-      yaxis: "בקשות API אנונימיות"
     page_view_logged_in_reqs:
       title: "מחובר/ת"
       xaxis: "יום"
-      yaxis: "בקשות API עם חיבור"
     page_view_crawler_reqs:
       title: "זחלן רשת"
       xaxis: "יום"
-      yaxis: "בקשות API של זחלני רשת"
     page_view_total_reqs:
       title: "סה\"כ"
       xaxis: "יום"
-      yaxis: "סך כל בקשות ה-API"
     page_view_logged_in_mobile_reqs:
-      title: "בקשות API עם חיבור"
       xaxis: "יום"
-      yaxis: "בקשות API להתחברות עם מובייל "
     page_view_anon_mobile_reqs:
-      title: "בקשות API אנונימיות"
       xaxis: "יום"
-      yaxis: "בקשות API להתחברות עם מובייל אנונימות"
     http_background_reqs:
       title: "רקע"
       xaxis: "יום"
@@ -679,7 +667,6 @@ he:
     notification_email: "הטופס: נעשה שימוש בכתובת הדוא\"ל כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "התאמה עצמית של מבנה נושא למיילים סטנדרטיים. ראו:\nhttps://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Should the full url for the site (Discourse.base_url) be http or https? DO NOT ENABLE THIS UNLESS HTTPS IS ALREADY SET UP AND WORKING!"
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפרסום ייכלל ב\"סיכום נושא זה\""
     summary_posts_required: "מספר הפרסומים המנימאלי בנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
@@ -708,7 +695,6 @@ he:
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_escaped_fragments: "חזרה ל-AJAX-Crawling API של גוגל אם לא אותר webcrawler. ראו https://support.google.com/webmasters/answer/174992?hl=he"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
@@ -734,7 +720,6 @@ he:
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
-    forgot_password_strict: "אל תעדכנו משתמשים על קיום חשבון כאשר הם משתמשים ב\"שכחתי סיסמא\"."
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמ/ת בכל המכשירים"
     version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה של האדמין"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסא חדשה של Discourse זמינה."
@@ -868,7 +853,6 @@ he:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     white_listed_spam_host_domains: "רשימה של מתחמים (domain) שיוחרגו מבדיקת הספאם. משתמשים חדשים לעולם לא יוגבלו ביצירת פרסומים חדשים עם קישורים למתחמים אלו."
     staff_like_weight: "כמה משקל עודף יש להעניק ללייקים של הצוות."
     levenshtein_distance_spammer_emails: "כאשר מתאימים דוא\"ל של ספאמרים, מספר ההבדלים בתווים שעדיין מאפשרים התאמה מטושטשת."
@@ -1167,7 +1151,6 @@ he:
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
-      text_body_template: "שלום,\n\nזו הודעה אוטומטית מ %{site_name}  לידע אותך שהפרסום שלך הוסתר. \n\n%{base_url}%{url}\n\n%{flag_reason}\n\nמספר חברי קהילה סימנו את הפרסום הזה לפני שהוסתר, אז בבקשה תשקול איך תוכל לשנות את הפרסום בהתאם להערותיהם. \n\n**תוכל לערוך את הפרסום אחרי %{edit_delay}  דקות, והוא יוצג באופן אוומטי**\n\nאולם, אם הפרסום יוסתר על ידי הקהילה פעם נוספת, הוא ישאר מוסתר עד לטיפול של צוות האתר, ותתכן תגובה נוספת, כולל השהייה של חשבונך. \n\nלהדכה נוספת,   [קווים מנחים](%{base_url}/guidelines).\n"
     welcome_user:
       subject_template: "ברוכים הבאים ל %{site_name}!"
       text_body_template: |
@@ -1247,30 +1230,10 @@ he:
       subject_template: "[%{site_name}]  בעיית מייל -- תגובה נוצרה אוטומטית"
     email_error_notification:
       subject_template: "[%{site_name}]  בעיית מייל -- בעיית אימות POP"
-    too_many_spam_flags:
-      subject_template: "New account blocked"
-      text_body_template: |
-        שלום,
-
-        זוהי הודעה אוטומטית שנשלחת מ%{site_name} כדי להודיע לך שהפרסומים שלך הוסתרו באופן אוטומטי משום שהם סומנו על ידי הקהילה.
-
-        כאמצעי זהירות, החשבון שלך נחסם לפרסום תגובות או נושאים חדשים עד שמישהו מהצוות שלנו יבדוק את העניין.
-
-        לפרטים נוספים, אנא פנו אל [כללי ההתנהלות הקהילתיים] [community guidelines](%{base_url}/guidelines) שלנו.
-    blocked_by_staff:
-      subject_template: "Account blocked"
     user_automatically_blocked:
       subject_template: "המשתמש/ת החדשים %{username} נחסמו בשל התראות מהקהילה."
     spam_post_blocked:
       subject_template: "הודעות של המשתמש/ת החדש/ה %{username} נחסמו בשל קישורים חוזרים."
-    unblocked:
-      subject_template: "Account unblocked"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
-
-        You can now create new replies and topics again.
     pending_users_reminder:
       subject_template:
         one: "1 user waiting for approval"
@@ -1379,9 +1342,6 @@ he:
     images:
       too_large: "סליחה, אך התמונה שאתה מנסה להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנה את הגודל ונסה שנית."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
-  flag_reason:
-    sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
-    spam_hosts: "המשתמש/ת החדשים ניסו ליצור כמה פרסומים עם קישורים לאותו מתחם (domain)ץ ראו את הגדרות האתר (newuser_spam_host_threshold)."
   email_log:
     no_user: "Can't find user with id %{user_id}"
     anonymous_user: "המשתמש הוא אנונימי"

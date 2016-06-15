@@ -5,13 +5,17 @@
 
   <div class="names">
     <span>
-      <h1 class="{{staff}} {{new_user}}">
-        <a href={{user.path}} {{action "showUser"}}>{{username}} {{user-status user currentUser=currentUser}}</a>
+      <h1 class="{{staff}} {{new_user}} {{if nameFirst "full-name" "username"}}">
+        <a href={{user.path}} {{action "showUser"}}>{{if nameFirst user.name username}} {{user-status user currentUser=currentUser}}</a>
       </h1>
 
-      {{#if user.name}}
-        <h2>{{user.name}}</h2>
-      {{/if}}
+      {{#unless nameFirst}}
+        {{#if user.name}}
+          <h2 class='full-name'>{{user.name}}</h2>
+        {{/if}}
+      {{else}}
+        <h2 class='username'>{{username}}</h2>
+      {{/unless}}
 
       {{#if user.title}}
         <h2>{{user.title}}</h2>

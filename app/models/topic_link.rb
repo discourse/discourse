@@ -106,7 +106,7 @@ class TopicLink < ActiveRecord::Base
     TopicLink.transaction do
 
       added_urls = []
-      reflected_urls = []
+      reflected_ids = []
 
       PrettyText
         .extract_links(post.cooked)
@@ -133,7 +133,7 @@ class TopicLink < ActiveRecord::Base
             # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'
 
-            topic_id = route[:topic_id]
+            topic_id = route[:topic_id].to_i
             post_number = route[:post_number] || 1
 
             # Store the canonical URL
@@ -159,16 +159,22 @@ class TopicLink < ActiveRecord::Base
           next if parsed && parsed.host && parsed.host.length > TopicLink.max_domain_length
 
           added_urls << url
-          TopicLink.create(post_id: post.id,
-                           user_id: post.user_id,
-                           topic_id: post.topic_id,
-                           url: url,
-                           domain: parsed.host || Discourse.current_hostname,
-                           internal: internal,
-                           link_topic_id: topic_id,
-                           link_post_id: reflected_post.try(:id),
-                           quote: link.is_quote
-                          )
+
+          topic_link = TopicLink.find_by(topic_id: post.topic_id,
+                                         post_id: post.id,
+                                         url: url)
+
+          unless topic_link
+            TopicLink.create!(post_id: post.id,
+                              user_id: post.user_id,
+                              topic_id: post.topic_id,
+                              url: url,
+                              domain: parsed.host || Discourse.current_hostname,
+                              internal: internal,
+                              link_topic_id: topic_id,
+                              link_post_id: reflected_post.try(:id),
+                              quote: link.is_quote)
+          end
 
           # Create the reflection if we can
           if topic_id.present?
@@ -180,16 +186,24 @@ class TopicLink < ActiveRecord::Base
 
               reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
 
-              reflected_urls << reflected_url
-              TopicLink.create(user_id: post.user_id,
-                                     topic_id: topic_id,
+              tl = TopicLink.find_by(topic_id: topic_id,
                                      post_id: reflected_post.try(:id),
-                                     url: reflected_url,
-                                     domain: Discourse.current_hostname,
-                                     reflection: true,
-                                     internal: true,
-                                     link_topic_id: post.topic_id,
-                                     link_post_id: post.id)
+                                     url: reflected_url)
+
+              unless tl
+                tl = TopicLink.create!(user_id: post.user_id,
+                                    topic_id: topic_id,
+                                    post_id: reflected_post.try(:id),
+                                    url: reflected_url,
+                                    domain: Discourse.current_hostname,
+                                    reflection: true,
+                                    internal: true,
+                                    link_topic_id: post.topic_id,
+                                    link_post_id: post.id)
+
+              end
+
+              reflected_ids << tl.try(:id)
             end
           end
 
@@ -203,7 +217,14 @@ class TopicLink < ActiveRecord::Base
       # Remove links that aren't there anymore
       if added_urls.present?
         TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)", urls: added_urls, post_id: post.id]
-        TopicLink.delete_all ["(url not in (:urls)) AND (link_post_id = :post_id AND reflection)", urls: reflected_urls, post_id: post.id]
+
+        reflected_ids.compact!
+        if reflected_ids.present?
+          TopicLink.delete_all ["(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
+                                reflected_ids: reflected_ids, post_id: post.id]
+        else
+          TopicLink.delete_all ["link_post_id = :post_id AND reflection", post_id: post.id]
+        end
       else
         TopicLink.delete_all ["(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)", post_id: post.id]
       end
@@ -213,6 +234,26 @@ class TopicLink < ActiveRecord::Base
   # Crawl a link's title after it's saved
   def crawl_link_title
     Jobs.enqueue(:crawl_topic_link, topic_link_id: id)
+  end
+
+  def self.duplicate_lookup(topic)
+    results = TopicLink
+                .includes(:post, :user)
+                .joins(:post, :user)
+                .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
+                .where(topic_id: topic.id, reflection: false)
+                .last(200)
+
+    lookup = {}
+    results.each do |tl|
+      normalized = tl.url.downcase.sub(/^https?:\/\//, '').sub(/\/$/, '')
+      lookup[normalized] = { domain: tl.domain,
+                             username: tl.user.username_lower,
+                             posted_at: tl.post.created_at,
+                             post_number: tl.post.post_number }
+    end
+
+    lookup
   end
 end
 

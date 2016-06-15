@@ -17,6 +17,13 @@
             {{#if canBulkInvite}}
               {{resumable-upload target="/invites/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
             {{/if}}
+            {{#if showReinviteAllButton}}
+              {{#if reinvitedAll}}
+                {{i18n 'user.invited.reinvited_all'}}
+              {{else}}
+                {{d-button icon="refresh" action="reinviteAll" class="btn" label="user.invited.reinvite_all"}}
+              {{/if}}
+            {{/if}}
           </div>
         </div>
       {{/if}}
