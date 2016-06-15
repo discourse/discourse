@@ -265,3 +265,20 @@ export function number(val) {
   }
   return val.toString();
 }
+
+export function ensureJSON(json) {
+  return typeof json === 'string' ? JSON.parse(json) : json;
+}
+
+export function plainJSON(val) {
+  let json = ensureJSON(val);
+  let headers = '';
+  Object.keys(json).forEach(k => {
+    headers += `${k}: ${json[k]}\n`;
+  });
+  return headers;
+}
+
+export function prettyJSON(json) {
+  return JSON.stringify(ensureJSON(json), null, 2);
+}
