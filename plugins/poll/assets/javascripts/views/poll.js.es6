@@ -1,5 +1,3 @@
-import { on } from "ember-addons/ember-computed-decorators";
-
 export default Em.View.extend({
   templateName: "poll",
   classNames: ["poll"],

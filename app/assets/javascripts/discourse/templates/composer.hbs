@@ -3,9 +3,13 @@
 
   {{#if currentUser.staff}}
     {{#popup-menu visible=optionsVisible hide="hideOptions" title="composer.options"}}
-      <li>
-        {{d-button action="toggleWhisper" icon="eye-slash" label="composer.toggle_whisper"}}
-      </li>
+      {{#each popupMenuOptions as |option|}}
+        {{#if option.condition}}
+          <li>
+            {{d-button action=option.action icon=option.icon label=option.label}}
+          </li>
+        {{/if}}
+      {{/each}}
     {{/popup-menu}}
   {{/if}}
 
@@ -86,6 +90,7 @@
                           composer=model
                           lastValidatedAt=lastValidatedAt
                           canWhisper=canWhisper
+                          popupMenuOptions=popupMenuOptions
                           draftStatus=model.draftStatus
                           isUploading=isUploading
                           groupsMentioned="groupsMentioned"
