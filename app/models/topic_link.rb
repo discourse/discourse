@@ -161,7 +161,7 @@ class TopicLink < ActiveRecord::Base
           added_urls << url
 
           topic_link = TopicLink.find_by(topic_id: post.topic_id,
-                                         user_id: post.user_id,
+                                         post_id: post.id,
                                          url: url)
 
           unless topic_link

@@ -121,6 +121,16 @@ http://b.com/#{'a'*500}
           expect(reflection.user_id).to eq(link.user_id)
         end
 
+        PostOwnerChanger.new(
+          post_ids: [linked_post.id],
+          topic_id: topic.id,
+          acting_user: user,
+          new_owner: Fabricate(:user)
+        ).change_owner!
+
+        TopicLink.extract_from(linked_post)
+        expect(topic.topic_links.first.url).to eq(url)
+
         linked_post.revise(post.user, { raw: "no more linkies https://eviltrout.com" })
         expect(other_topic.topic_links.where(link_post_id: linked_post.id)).to be_blank
       end
