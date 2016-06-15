@@ -65,7 +65,7 @@ class StaffActionLogger
   def log_topic_deletion(deleted_topic, opts={})
     raise Discourse::InvalidParameters.new(:deleted_topic) unless deleted_topic && deleted_topic.is_a?(Topic)
 
-    user = delete_topic.user ? "#{deleted_topic.user.username} (#{deleted_topic.user.name})" : "(deleted user)"
+    user = deleted_topic.user ? "#{deleted_topic.user.username} (#{deleted_topic.user.name})" : "(deleted user)"
 
     details = [
       "id: #{deleted_topic.id}",
