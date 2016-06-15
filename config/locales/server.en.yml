@@ -350,7 +350,10 @@ en:
         post_reply:
           base:
             different_topic: "Post and reply must belong to the same topic."
-
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL is invalid. URL should includes http:// or https://. And no blank is allowed."
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"

@@ -1,0 +1,26 @@
+<div class="web-hook-direction">
+  {{#link-to 'adminWebHooks' tagName='button' classNames='btn'}}
+    {{fa-icon 'list'}} {{i18n 'admin.web_hooks.events.go_list'}}
+  {{/link-to}}
+  {{d-button icon="send" label="admin.web_hooks.events.ping" action="ping"}}
+  {{#link-to 'adminWebHooks.show' model.extras.web_hook_id tagName='button' classNames='btn'}}
+    {{fa-icon 'edit'}} {{i18n 'admin.web_hooks.events.go_details'}}
+  {{/link-to}}
+</div>
+
+<div class='web-hook-events-listing'>
+{{#if model}}
+  {{#load-more selector=".web-hook-events li" action="loadMore"}}
+    <div class='web-hook-events content-list'>
+      <ul>
+        {{#each model as |webHookEvent|}}
+          {{admin-web-hook-event model=webHookEvent}}
+        {{/each}}
+      </ul>
+    </div>
+    {{conditional-loading-spinner condition=model.loadingMore}}
+  {{/load-more}}
+{{else}}
+  <p>{{i18n 'admin.web_hooks.events.none'}}</p>
+{{/if}}
+</div>

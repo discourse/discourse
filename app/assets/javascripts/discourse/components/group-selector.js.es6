@@ -1,15 +1,20 @@
-export default Ember.Component.extend({
-  placeholder: function(){
-    return I18n.t(this.get("placeholderKey"));
-  }.property("placeholderKey"),
+import { on, default as computed } from 'ember-addons/ember-computed-decorators';
 
-  _initializeAutocomplete: function() {
+export default Ember.Component.extend({
+  @computed('placeholderKey')
+  placeholder(placeholderKey) {
+    return placeholderKey ? I18n.t(placeholderKey) : '';
+  },
+
+  @on('didInsertElement')
+  _initializeAutocomplete() {
     var self = this;
     var selectedGroups;
 
     var template = this.container.lookup('template:group-selector-autocomplete.raw');
     self.$('input').autocomplete({
       allowAny: false,
+      items: this.get('groupNames'),
       onChangeItems: function(items){
         selectedGroups = items;
         self.set("groupNames", items.join(","));
@@ -31,5 +36,5 @@ export default Ember.Component.extend({
       },
       template: template
     });
-  }.on('didInsertElement')
+  }
 });
