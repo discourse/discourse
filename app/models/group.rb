@@ -10,6 +10,8 @@ class Group < ActiveRecord::Base
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
 
+  has_and_belongs_to_many :web_hooks
+
   before_save :downcase_incoming_email
 
   after_save :destroy_deletions
