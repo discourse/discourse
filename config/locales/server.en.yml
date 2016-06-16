@@ -1720,7 +1720,7 @@ en:
 
   system_messages:
     post_hidden:
-      subject_template: "Post hidden due to community flagging"
+      subject_template: "Post hidden by community flags"
       text_body_template: |
         Hello,
 
@@ -2113,7 +2113,7 @@ en:
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     user_automatically_blocked:
-      subject_template: "New user %{username} blocked due to community flags"
+      subject_template: "New user %{username} blocked by community flags"
       text_body_template: |
         This is an automated message.
 
