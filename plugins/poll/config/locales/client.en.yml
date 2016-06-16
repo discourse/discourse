@@ -73,7 +73,7 @@ en:
         title: Poll Builder
         insert: Insert Poll
         help:
-          options_count: You must provide a minimum of 2 options.
+          options_count: Enter at least 2 options
         poll_name:
           label: Name
           placeholder: Enter Name
