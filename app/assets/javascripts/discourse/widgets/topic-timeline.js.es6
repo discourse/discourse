@@ -234,7 +234,7 @@ export default createWidget('topic-timeline', {
       const controls = [];
       if (attrs.topic.get('details.can_create_post')) {
         controls.push(this.attach('button', {
-          className: 'btn btn-primary create',
+          className: 'btn create',
           icon: 'reply',
           title: 'topic.reply.help',
           action: 'replyToPost'
