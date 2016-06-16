@@ -388,6 +388,9 @@ export default Ember.Component.extend({
         left = replyWidth - popupWidth - 40;
       }
 
+      const selected = toolbarEvent.selected;
+      toolbarEvent.selectText(selected.start, selected.end - selected.start);
+
       this.sendAction('showOptions', toolbarEvent,
         { position: "absolute", left, top });
     },
