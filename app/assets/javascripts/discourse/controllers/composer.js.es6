@@ -62,19 +62,6 @@ export default Ember.Controller.extend({
   topic: null,
   linkLookup: null,
 
-  init() {
-    this._super();
-
-    addPopupMenuOptionsCallback(() => {
-      return {
-        action: 'toggleWhisper',
-        icon: 'eye-slash',
-        label: 'composer.toggle_whisper',
-        condition: "canWhisper"
-      };
-    });
-  },
-
   showToolbar: Em.computed({
     get(){
       const keyValueStore = this.container.lookup('key-value-store:main');
@@ -116,20 +103,35 @@ export default Ember.Controller.extend({
     return popupMenuOptions ? popupMenuOptions.some(option => option.condition) : false;
   },
 
+  _setupPopupMenuOption(callback) {
+    let option = callback();
+
+    if (option.condition) {
+      option.condition = this.get(option.condition);
+    } else {
+      option.condition = true;
+    }
+
+    return option;
+  },
+
   @computed("model.composeState")
   popupMenuOptions(composeState) {
     if (composeState === 'open') {
-      return _popupMenuOptionsCallbacks.map(callback => {
-        let option = callback();
+      let options = [];
 
-        if (option.condition) {
-          option.condition = this.get(option.condition);
-        } else {
-          option.condition = true;
-        }
+      options.push(this._setupPopupMenuOption(() => {
+        return {
+          action: 'toggleWhisper',
+          icon: 'eye-slash',
+          label: 'composer.toggle_whisper',
+          condition: "canWhisper"
+        };
+      }));
 
-        return option;
-      });
+      return options.concat(_popupMenuOptionsCallbacks.map(callback => {
+        return this._setupPopupMenuOption(callback);
+      }));
     }
   },
 
