@@ -297,8 +297,8 @@ en:
     revert: "Revert"
     failed: "Failed"
 
-    switch_to_anon: "Anonymous Mode"
-    switch_from_anon: "Exit Anonymous"
+    switch_to_anon: "Enter Anonymous Mode"
+    switch_from_anon: "Exit Anonymous Mode"
 
     banner:
       close: "Dismiss this banner."
