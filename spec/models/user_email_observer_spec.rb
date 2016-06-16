@@ -19,7 +19,6 @@ describe UserEmailObserver do
     end
 
     context "inactive user" do
-
       before { notification.user.active = false }
 
       it "doesn't enqueue a job" do
@@ -32,7 +31,19 @@ describe UserEmailObserver do
         Jobs.expects(:enqueue_in).with(delay, :user_email, UserEmailObserver::EmailUser.notification_params(notification,type))
         UserEmailObserver.process_notification(notification)
       end
+    end
 
+    context "active but unapproved user" do
+      before do
+        SiteSetting.must_approve_users = true
+        notification.user.approved = false
+        notification.user.active = true
+      end
+
+      it "doesn't enqueue a job" do
+        Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
+        UserEmailObserver.process_notification(notification)
+      end
     end
 
     context "small action" do
