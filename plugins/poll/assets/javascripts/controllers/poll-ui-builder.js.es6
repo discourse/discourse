@@ -91,7 +91,7 @@ export default Ember.Controller.extend({
     let pollHeader = '[poll';
     let output = '';
 
-    if (pollName) pollHeader += ` name=${pollName.replace(' ', '-')}`;
+    if (pollName) pollHeader += ` name=${pollName.trim().replace(/\s/g, '-')}`;
     if (pollType) pollHeader += ` type=${pollType}`;
     if (pollMin && showMinMax) pollHeader += ` min=${pollMin}`;
     if (pollMax) pollHeader += ` max=${pollMax}`;
