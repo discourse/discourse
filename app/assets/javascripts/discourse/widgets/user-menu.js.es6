@@ -47,6 +47,9 @@ createWidget('user-menu-links', {
                       icon: 'user-secret' });
       } else {
         glyphs.push({ action: 'toggleAnonymous',
+                      label: 'switch_from_anon',
+                      className: 'disable-anonymous',
+                      icon: 'ban' });
       }
     }
 
