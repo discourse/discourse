@@ -16,18 +16,22 @@
 
 en:
   dates:
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
     short_date: "D MMM, YYYY"
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
     long_date: "MMMM D, YYYY h:mma"
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
       short: "%m-%d-%Y"
-      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
       short_no_year: "%B %-d"
-      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
       date_only: "%B %-d, %Y"
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
       long: "%B %-d, %Y, %l:%M%P"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".

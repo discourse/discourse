@@ -18,7 +18,9 @@ en:
   js:
     number:
       format:
+        # symbol used to separate the integer part from the fractional part of a number
         separator: "."
+        # symbol for the thousands separator used in digit grouping
         delimiter: ","
       human:
         storage_units:
@@ -35,18 +37,31 @@ en:
         thousands: "{{number}}k"
         millions: "{{number}}M"
     dates:
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       time: "h:mm a"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_no_year: "MMM D h:mm a"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_no_year_no_time: "MMM D"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       full_no_year_no_time: "MMMM Do"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_with_year: "MMM D, YYYY h:mm a"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_with_year_no_time: "MMM D, YYYY"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       full_with_year_no_time: "MMMM Do, YYYY"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_date_with_year: "MMM D, 'YY LT"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_date_without_year: "MMM D, LT"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_date_with_year_without_time: "MMM D, 'YY"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
 
       wrap_ago: "%{date} ago"
