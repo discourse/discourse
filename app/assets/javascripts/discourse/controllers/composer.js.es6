@@ -65,7 +65,7 @@ export default Ember.Controller.extend({
   init() {
     this._super();
 
-    addPopupMenuOptionsCallback(function() {
+    addPopupMenuOptionsCallback(() => {
       return {
         action: 'toggleWhisper',
         icon: 'eye-slash',
