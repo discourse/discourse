@@ -50,14 +50,14 @@ describe EmailController do
       user = Fabricate(:user)
       key = UnsubscribeKey.create_key_for(user, "all")
 
-      user.user_option.update_columns(email_always: true)
+      user.user_option.update_columns(mailing_list_mode: true)
 
       post :perform_unsubscribe, key: key, disable_mailing_list: "1"
       expect(response.status).to eq(302)
 
       user.user_option.reload
 
-      expect(user.user_option.email_always).to eq(false)
+      expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
     it 'can disable digest' do
@@ -136,7 +136,7 @@ describe EmailController do
       user = Fabricate(:user)
       key = UnsubscribeKey.create_key_for(user, "digest")
 
-      user.user_option.update_columns(email_always: true)
+      user.user_option.update_columns(mailing_list_mode: true)
 
       get :unsubscribe, key: key
       expect(response.body).to include(I18n.t("unsubscribe.mailing_list_mode"))
@@ -146,7 +146,7 @@ describe EmailController do
       get :unsubscribe, key: key
       expect(response.body).not_to include(I18n.t("unsubscribe.mailing_list_mode"))
 
-      user.user_option.update_columns(email_always: false)
+      user.user_option.update_columns(mailing_list_mode: false)
       SiteSetting.disable_mailing_list_mode = false
 
       get :unsubscribe, key: key

@@ -43,6 +43,7 @@ class EmailController < ApplicationController
     if @user.blank?
       @not_found = true
     end
+
   end
 
   def perform_unsubscribe
@@ -87,7 +88,7 @@ class EmailController < ApplicationController
     end
 
     if params["disable_mailing_list"]
-      user.user_option.update_columns(email_always: false)
+      user.user_option.update_columns(mailing_list_mode: false)
       updated = true
     end
 

@@ -43,7 +43,7 @@
         <% end %>
       <% end %>
 
-      <% if @user.user_option.email_always && !SiteSetting.disable_mailing_list_mode %>
+      <% if @user.user_option.mailing_list_mode && !SiteSetting.disable_mailing_list_mode %>
         <p>
         <label>
         <%= check_box_tag 'disable_mailing_list' %>
