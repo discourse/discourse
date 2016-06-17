@@ -126,7 +126,9 @@ module Email
         when :reply
           email_log = destination[:obj]
 
-          raise ReplyUserNotMatchingError if email_log.user_id != user.id
+          if email_log.user_id != user.id
+            raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+          end
 
           create_reply(user: user,
                        raw: body,
