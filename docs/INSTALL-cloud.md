@@ -53,6 +53,7 @@ Answer the following questions when prompted:
     Email address for admin account? [me@example.com]: 
     SMTP server address? [smtp.example.com]: 
     SMTP user name? [postmaster@discourse.example.com]: 
+    SMTP port [587]:
     SMTP password? []: 
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse.
@@ -92,7 +93,7 @@ You should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This
 We strongly suggest you:
 
 - Turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command.
-- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package.
+- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package. We also recommend `apt-get install fail2ban` which will default block any IP addresses for 10 minutes that attempt more than 3 password retries.
 
 You will get email reminders as new versions of Discourse are released. Please stay current to get the latest features and security fixes. To **upgrade Discourse to the latest version**, visit `/admin/upgrade` in your browser and click the Upgrade button.
 
