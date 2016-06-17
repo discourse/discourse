@@ -21,6 +21,6 @@ end
 #  description       :string           not null
 #  required          :boolean          default(TRUE), not null
 #  show_on_profile   :boolean          default(FALSE), not null
-#  show_on_user_card :boolean          default(FALSE), not null
 #  position          :integer          default(0)
+#  show_on_user_card :boolean          default(FALSE), not null
 #
