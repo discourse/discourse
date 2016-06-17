@@ -113,7 +113,7 @@ export default Ember.Controller.extend({
 
   @computed("popupMenuOptions")
   showPopupMenu(popupMenuOptions) {
-    return popupMenuOptions.some(option => option.condition);
+    return popupMenuOptions ? popupMenuOptions.some(option => option.condition) : false;
   },
 
   @computed("model.composeState")
