@@ -86,5 +86,13 @@ export default createWidget('topic-notifications-button', {
   notificationLevelChanged(id) {
     this.state.expanded = false;
     return this.attrs.topic.get('details').updateNotifications(id);
+  },
+
+  topicNotificationsButtonKeyboardTrigger(msg) {
+    switch(msg.type) {
+      case 'notification':
+        this.notificationLevelChanged(msg.id);
+        break;
+    }
   }
 });
