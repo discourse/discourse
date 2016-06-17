@@ -1,7 +1,7 @@
 {{#if visible}}
 <div class='contents'>
 
-  {{#if currentUser.staff}}
+  {{#if showPopupMenu}}
     {{#popup-menu visible=optionsVisible hide="hideOptions" title="composer.options"}}
       {{#each popupMenuOptions as |option|}}
         {{#if option.condition}}
@@ -90,7 +90,7 @@
                           composer=model
                           lastValidatedAt=lastValidatedAt
                           canWhisper=canWhisper
-                          popupMenuOptions=popupMenuOptions
+                          showPopupMenu=showPopupMenu
                           draftStatus=model.draftStatus
                           isUploading=isUploading
                           groupsMentioned="groupsMentioned"
