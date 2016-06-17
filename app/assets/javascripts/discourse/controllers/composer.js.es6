@@ -111,6 +111,11 @@ export default Ember.Controller.extend({
     return currentUser && currentUser.get('staff') && this.siteSettings.enable_whispers && action === Composer.REPLY;
   },
 
+  @computed("popupMenuOptions")
+  showPopupMenu(popupMenuOptions) {
+    return popupMenuOptions.some(option => option.condition);
+  },
+
   @computed("model.composeState")
   popupMenuOptions(composeState) {
     if (composeState === 'open') {
