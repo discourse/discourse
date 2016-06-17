@@ -461,7 +461,7 @@ export default Ember.Component.extend({
 
         this.set('value', `${pre}${contents}${post}`);
         if (lines.length === 1 && tlen > 0) {
-          this._selectText(sel.start + hlen, contents.length - hlen - hlen);
+          this._selectText(sel.start + hlen, sel.value.length);
         } else {
           this._selectText(sel.start, contents.length);
         }
