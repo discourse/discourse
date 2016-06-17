@@ -110,9 +110,6 @@ module Email
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px')
 
-      # regular post quotes
-      style('aside .title', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0; padding-left: 1em; padding-top: 10px;')
-      style('aside .title img', 'margin-left: 5px;')
       style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
       style('blockquote > p', 'padding: 1em;')
 
