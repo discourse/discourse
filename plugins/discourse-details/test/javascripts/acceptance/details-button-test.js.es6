@@ -1,6 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance('composer', { loggedIn: true });
+acceptance('Details Button', { loggedIn: true });
 
 function findTextarea() {
   return find(".d-editor-input")[0];
