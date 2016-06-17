@@ -2,7 +2,7 @@ import { on, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   tagName: 'select',
-  attributeBindings: ['tabindex'],
+  attributeBindings: ['tabindex', 'disabled'],
   classNames: ['combobox'],
   valueAttribute: 'id',
   nameProperty: 'name',
