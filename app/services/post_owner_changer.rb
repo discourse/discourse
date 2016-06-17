@@ -12,7 +12,8 @@ class PostOwnerChanger
   def change_owner!
     ActiveRecord::Base.transaction do
       @post_ids.each do |post_id|
-        post = Post.with_deleted.find(post_id)
+        post = Post.with_deleted.where(id: post_id, topic_id: @topic.id).first
+        next if post.blank?
         @topic.user = @new_owner if post.is_first_post?
 
         if post.user == nil
