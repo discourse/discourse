@@ -629,7 +629,7 @@ en:
     title: "Unsubscribe"
     stop_watching_topic: "Stop watching this topic, %{link}"
     mute_topic: "Mute all notifications for this topic, %{link}"
-    unwatch_category: "Stop watching any topics in %{category}"
+    unwatch_category: "Stop watching all topics in %{category}"
     mailing_list_mode: "Turn off mailing list mode"
     disable_digest_emails: "Stop sending me summary emails"
     all: "Don't send me any mail from %{sitename}"
