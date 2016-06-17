@@ -532,8 +532,8 @@ en:
           Muted topics and categories are not included in these emails.
         daily: "Send daily updates"
         individual: "Send an email for every new post"
-        many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)."
-        few_per_day: "Send me an email for every new post (less than 2 per day)."
+        many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
+        few_per_day: "Send me an email for every new post (about 2 per day)"
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
@@ -679,7 +679,7 @@ en:
         always: "always"
         never: "never"
       email_digests:
-        title: "When I don't visit here, send me an email summary of popular topics and replies to:"
+        title: "When I don't visit here, send me an email summary of popular topics and replies"
         every_30_minutes: "every 30 minutes"
         every_hour: "hourly"
         daily: "daily"
