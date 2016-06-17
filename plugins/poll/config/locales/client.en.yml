@@ -70,7 +70,7 @@ en:
       error_while_fetching_voters: "There was an error while displaying the voters."
 
       ui_builder:
-        title: Poll Builder
+        title: Build Poll
         insert: Insert Poll
         help:
           options_count: Enter at least 2 options
