@@ -231,7 +231,7 @@ class PluginApi {
    * Example:
    *
    * ```
-   * api.addToolbarPopupMenuOptionsCallback(function() {
+   * api.addToolbarPopupMenuOptionsCallback(() => {
    *  return {
    *    action: 'toggleWhisper',
    *    icon: 'eye-slash',
