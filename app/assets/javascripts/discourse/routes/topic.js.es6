@@ -206,6 +206,9 @@ const TopicRoute = Discourse.Route.extend({
 
     this.searchService.set('searchContext', model.get('searchContext'));
 
+    // close the multi select when switching topics
+    controller.set('multiSelect', false);
+
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');
     controller.subscribe();
