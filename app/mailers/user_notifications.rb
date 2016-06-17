@@ -382,7 +382,7 @@ class UserNotifications < ActionMailer::Base
       username: username,
       add_unsubscribe_link: !user.staged,
       mailing_list_mode: user.user_option.mailing_list_mode,
-      unsubscribe_url: post.topic.unsubscribe_url,
+      unsubscribe_url: post.unsubscribe_url(user),
       allow_reply_by_email: allow_reply_by_email,
       only_reply_by_email: allow_reply_by_email && user.staged,
       use_site_subject: use_site_subject,
@@ -416,6 +416,6 @@ class UserNotifications < ActionMailer::Base
     @header_color    = ColorScheme.hex_for_name('header_background')
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
-    @unsubscribe_key = DigestUnsubscribeKey.create_key_for(@user)
+    @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
   end
 end
