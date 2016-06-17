@@ -621,18 +621,21 @@ en:
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
 
   unsubscribed:
-    title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
-    oops: "In case you didn't mean to do this, click below."
-    error: "Error Unsubscribing"
-    preferences_link: "You can also unsubscribe from summary emails on your <a href='/my/preferences'>preferences page</a>"
-    different_user_description: "You are currently logged in as a different user than the one who the summary was mailed to. Please log out and try again."
-    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
+    title: "Unsubscribed!"
+    description: "You have been unsubscribed. If you wish to change your email settings visit your <a href='%{url}'>user preferences</a>."
+    topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
 
-  resubscribe:
-    action: "Re-Subscribe"
-    title: "Re-Subscribed!"
-    description: "You have been re-subscribed."
+  unsubscribe:
+    title: "Unsubscribe"
+    stop_watching_topic: "Stop watching this topic, %{link}"
+    mute_topic: "Mute all notifications for this topic, %{link}"
+    unwatch_category: "Stop watching any topics in %{category}"
+    mailing_list_mode: "Disable mailing list mode"
+    disable_digest_emails: "Stop sending me digest emails"
+    all: "Don't send me any mail from %{sitename}"
+    different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out and try again."
+    not_found_description: "Sorry, we couldn't find the unsubscription. It's possible the link in your email has expired."
+    log_out: "Log Out"
 
   reports:
     visits:
@@ -2164,19 +2167,19 @@ en:
         [Please review and fix them](%{base_url}/admin).
 
   unsubscribe_link: |
-    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
-
-    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}).
+    To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
   unsubscribe_link_and_mail: |
-    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
+    To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
-    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}) or [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
+    Alternarively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   unsubscribe_mailing_list: |
-    You have mailing list mode enabled. To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
+    You are receiving these emails cause you have enabled mailing list mode.
 
-    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}) or [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
+    To unsubscribe from these emails, [click here](%{unsubscribe_url}).
+
+    Alternatively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "

@@ -4,7 +4,7 @@ require_dependency 'single_sign_on'
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
-  skip_before_filter :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider']
+  skip_before_filter :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider', 'destroy']
 
   def csrf
     render json: {csrf: form_authenticity_token }
@@ -237,7 +237,11 @@ class SessionController < ApplicationController
   def destroy
     reset_session
     log_off_user
-    render nothing: true
+    if request.xhr?
+      render nothing: true
+    else
+      redirect_to (params[:return_url] || path("/"))
+    end
   end
 
   private
