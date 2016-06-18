@@ -15,12 +15,14 @@
 
   .search-category {
     float:right;
+    padding-top:5px;
   }
 
   margin-bottom: 28px;
-  max-width: 675px;
+  max-width: 780px;
   .topic {
      padding-bottom: 2px;
+     max-width:695px;
   }
   .avatar {
     margin-right: 14px;
@@ -46,6 +48,7 @@
     line-height: 20px;
     margin-left: 60px;
     word-wrap: break-word;
+    max-width: 640px;
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     .date {
       color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
@@ -54,6 +57,10 @@
     .search-highlight {
       color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
     }
+  }
+
+  .discourse-tag {
+    font-size: 0.8em;
   }
 }
 
@@ -108,7 +115,7 @@
     margin-bottom: 4px;
   }
   margin: 10px 0 15px;
-  max-width: 675px;
+  max-width: 780px;
   border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
   width: 100%;
   .sort-by {
