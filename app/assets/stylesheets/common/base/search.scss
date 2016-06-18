@@ -15,14 +15,14 @@
 
   .search-category {
     float:right;
-    padding-top:5px;
+    padding-top:3px;
   }
 
   margin-bottom: 28px;
   max-width: 780px;
   .topic {
      padding-bottom: 2px;
-     max-width:695px;
+     max-width:700px;
   }
   .avatar {
     margin-right: 14px;
@@ -39,7 +39,7 @@
     .topic-statuses {
       float: none;
       display: inline-block;
-      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       font-size: 1.0em;
     }
   }
