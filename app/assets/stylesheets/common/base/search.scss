@@ -30,7 +30,8 @@
   }
   .search-link {
     .topic-statuses, .topic-title {
-      font-size: 1.25em;
+      font-size: 1.3em;
+      line-height: 25px;
     }
 
     .topic-statuses {
@@ -43,7 +44,7 @@
   .blurb {
     font-size: 1.0em;
     line-height: 20px;
-    margin-left: 80px;
+    margin-left: 60px;
     word-wrap: break-word;
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     .date {
