@@ -1,5 +1,9 @@
 .fps-result {
 
+  .author {
+    float: left;
+  }
+
   .like-count {
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     .fa { color: $love; font-size: 12px; }
@@ -10,7 +14,7 @@
   }
 
   .search-category {
-    margin-top: 3px;
+    float:right;
   }
 
   margin-bottom: 28px;
@@ -19,9 +23,7 @@
      padding-bottom: 2px;
   }
   .avatar {
-    position: relative;
-    top: -3px;
-    margin-right: 4px;
+    margin-right: 14px;
   }
   a.search-link:visited .topic-title {
     color: scale-color($tertiary, $lightness: 15%);
@@ -41,8 +43,8 @@
   .blurb {
     font-size: 1.0em;
     line-height: 20px;
+    margin-left: 80px;
     word-wrap: break-word;
-    clear: both;
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     .date {
       color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
