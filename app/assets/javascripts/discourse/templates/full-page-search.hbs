@@ -60,11 +60,13 @@
 
   {{#each model.posts as |result|}}
     <div class='fps-result'>
+        <div class='author'>
+            {{avatar result imageSize="small"}}
+        </div>
         <div class='topic'>
           {{#if bulkSelectEnabled}}
             {{track-selected selectedList=selected selectedId=result.topic}}
           {{/if}}
-          {{avatar result imageSize="tiny"}}
           <a class='search-link' href='{{unbound result.url}}'>
             {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
           </a>
