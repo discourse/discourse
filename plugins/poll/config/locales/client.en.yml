@@ -79,9 +79,9 @@ en:
           placeholder: Enter Name
         poll_type:
           label: Type
-          regular: regular
-          multiple: multiple
-          number: number
+          regular: Single Choice
+          multiple: Multiple Choice
+          number: Number Rating
         poll_config:
           max: Max
           min: Min
