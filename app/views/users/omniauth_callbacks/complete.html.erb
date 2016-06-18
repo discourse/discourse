@@ -26,9 +26,12 @@
 
        // On facebook browser, just redirect and don't close
        var ua = navigator.userAgent || navigator.vendor || window.opera;
-       if ((ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (window.opener.Discourse == undefined)) {
+       if ((ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1)) {
          localStorage.setItem('lastAuthResult', JSON.stringify(authResult));
          window.location.href = '<%= Discourse.base_url.html_safe %>?authComplete=true';
+       } else if (window.opener == null){
+         localStorage.setItem('lastAuthResult', JSON.stringify(authResult));
+         window.location.href = '<%= Discourse.base_url.html_safe %>';         
        } else {
          window.opener.Discourse.authenticationComplete(authResult);
          window.close();
