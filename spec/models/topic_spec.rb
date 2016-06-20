@@ -6,6 +6,7 @@ require_dependency 'post_destroyer'
 describe Topic do
 
   let(:now) { Time.zone.local(2013,11,20,8,0) }
+  let(:user) { Fabricate(:user) }
 
   it { is_expected.to validate_presence_of :title }
 
@@ -312,8 +313,6 @@ describe Topic do
       end
 
       context "secure categories" do
-
-        let(:user) { Fabricate(:user) }
         let(:category) { Fabricate(:category, read_restricted: true) }
 
         before do
@@ -518,20 +517,36 @@ describe Topic do
   end
 
   context 'moderator posts' do
-    before do
-      @moderator = Fabricate(:moderator)
-      @topic = Fabricate(:topic)
-      @mod_post = @topic.add_moderator_post(@moderator, "Moderator did something. http://discourse.org", post_number: 999)
-    end
+    let(:moderator) { Fabricate(:moderator) }
+    let(:topic) { Fabricate(:topic) }
 
     it 'creates a moderator post' do
-      expect(@mod_post).to be_present
-      expect(@mod_post.post_type).to eq(Post.types[:moderator_action])
-      expect(@mod_post.post_number).to eq(999)
-      expect(@mod_post.sort_order).to eq(999)
-      expect(@topic.topic_links.count).to eq(1)
-      @topic.reload
-      expect(@topic.moderator_posts_count).to eq(1)
+      mod_post = topic.add_moderator_post(
+        moderator,
+        "Moderator did something. http://discourse.org",
+        post_number: 999
+      )
+
+      expect(mod_post).to be_present
+      expect(mod_post.post_type).to eq(Post.types[:moderator_action])
+      expect(mod_post.post_number).to eq(999)
+      expect(mod_post.sort_order).to eq(999)
+      expect(topic.topic_links.count).to eq(1)
+      expect(topic.reload.moderator_posts_count).to eq(1)
+    end
+
+    context "when moderator post fails to be created" do
+      before do
+        user.toggle!(:blocked)
+      end
+
+      it "should not increment moderator_posts_count" do
+        expect(topic.moderator_posts_count).to eq(0)
+
+        topic.add_moderator_post(user, "winter is never coming")
+
+        expect(topic.moderator_posts_count).to eq(0)
+      end
     end
   end
 
