@@ -1208,6 +1208,14 @@ describe Guardian do
       expect(Guardian.new(user).can_moderate?(nil)).to be_falsey
     end
 
+    context 'when user is blocked' do
+      it 'returns false' do
+        user.toggle!(:blocked)
+        expect(Guardian.new(user).can_moderate?(post)).to be(false)
+        expect(Guardian.new(user).can_moderate?(topic)).to be(false)
+      end
+    end
+
     context 'a Topic' do
 
       it 'returns false when not logged in' do

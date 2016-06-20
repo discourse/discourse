@@ -25,6 +25,7 @@ class Guardian
     def moderator?; false; end
     def approved?; false; end
     def staged?; false; end
+    def blocked?; false; end
     def secure_category_ids; []; end
     def topic_create_allowed_category_ids; []; end
     def has_trust_level?(level); false; end
@@ -60,6 +61,10 @@ class Guardian
 
   def is_moderator?
     @user.moderator?
+  end
+
+  def is_blocked?
+    @user.blocked?
   end
 
   def is_developer?
@@ -112,7 +117,7 @@ class Guardian
   end
 
   def can_moderate?(obj)
-    obj && authenticated? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
+    obj && authenticated? && !is_blocked? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
@@ -269,7 +274,7 @@ class Guardian
     # Can't send PMs to suspended users
     (is_staff? || target.is_a?(Group) || !target.suspended?) &&
     # Blocked users can only send PM to staff
-    (!@user.blocked? || target.staff?)
+    (!is_blocked? || target.staff?)
   end
 
   def can_see_emails?
