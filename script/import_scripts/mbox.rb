@@ -24,13 +24,30 @@ class ImportScripts::Mbox < ImportScripts::Base
     SQLite3::Database.new("#{MBOX_DIR}/index.db")
   end
 
+  def each_line(f)
+    infile = File.open(f, 'r')
+    if f.ends_with?('.gz')
+      gz = Zlib::GzipReader.new(infile)
+      gz.each_line do |line|
+        yield line
+      end
+    else
+      infile.each_line do |line|
+        yield line
+      end
+    end
+  ensure
+    infile.close
+  end
+
   def all_messages
     files = Dir["#{MBOX_DIR}/messages/*"]
 
     files.each_with_index do |f, idx|
       if SPLIT_AT.present?
         msg = ""
-        File.foreach(f).with_index do |line, line_num|
+
+        each_line(f) do |line|
           line = line.scrub
           if line =~ SPLIT_AT
             if !msg.empty?
