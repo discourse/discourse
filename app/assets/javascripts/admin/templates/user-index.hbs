@@ -54,6 +54,19 @@
       </div>
     </div>
 
+    <div class="display-row bounce-score">
+      <div class='field'><a href="{{model.bounceLink}}">{{i18n 'admin.user.bounce_score'}}</a></div>
+      <div class='value'>{{model.bounceScore}}</div>
+      <div class='controls'>
+        {{#if model.canResetBounceScore}}
+          <button class='btn' {{action "resetBounceScore" target="content"}} title={{i18n "admin.user.reset_bounce_score.title"}}>
+            {{i18n "admin.user.reset_bounce_score.label"}}
+          </button>
+        {{/if}}
+        {{model.bounceScoreExplanation}}
+      </div>
+    </div>
+
     <div class='display-row associations'>
       <div class='field'>{{i18n 'user.associated_accounts'}}</div>
       <div class='value'>
@@ -351,19 +364,6 @@
     <div class='field'>{{i18n 'admin.user.staged'}}</div>
     <div class='value'>{{model.staged}}</div>
     <div class='controls'>{{i18n 'admin.user.staged_explanation'}}</div>
-  </div>
-
-  <div class="display-row">
-    <div class='field'><a href="{{model.bounceLink}}">{{i18n 'admin.user.bounce_score'}}</a></div>
-    <div class='value'>{{model.bounceScore}}</div>
-    <div class='controls'>
-      {{#if model.canResetBounceScore}}
-        <button class='btn' {{action "resetBounceScore" target="content"}} title={{i18n "admin.user.reset_bounce_score.title"}}>
-          {{i18n "admin.user.reset_bounce_score.label"}}
-        </button>
-      {{/if}}
-      {{model.bounceScoreExplanation}}
-    </div>
   </div>
 </section>
 
