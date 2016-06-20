@@ -17,9 +17,9 @@ function initializeDetails(api) {
     actions: {
       insertDetails() {
         this.get("toolbarEvent").applySurround(
-          "[details=",
-          `]${I18n.t("composer.details_text")}[/details]`,
-          "details_title")
+          `[details=${I18n.t("composer.details_title")}]`,
+          "[/details]",
+          "details_text")
         ;
       }
     }

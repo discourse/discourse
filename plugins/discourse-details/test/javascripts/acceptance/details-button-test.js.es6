@@ -39,13 +39,13 @@ test('details button', () => {
   andThen(() => {
     equal(
       find(".d-editor-input").val(),
-      `[details=This is my title]${I18n.t("composer.details_text")}[/details]`,
+      `[details=${I18n.t("composer.details_title")}]This is my title[/details]`,
       'it should contain the right output'
     );
 
     const textarea = findTextarea();
-    equal(textarea.selectionStart, 9, 'it should start highlighting at the right position');
-    equal(textarea.selectionEnd, 25, 'it should end highlighting at the right position');
+    equal(textarea.selectionStart, 17, 'it should start highlighting at the right position');
+    equal(textarea.selectionEnd, 33, 'it should end highlighting at the right position');
   });
 
   fillIn('.d-editor-input', "Before some text in between After");
@@ -62,13 +62,13 @@ test('details button', () => {
   andThen(() => {
     equal(
       find(".d-editor-input").val(),
-      `Before [details=some text in between]${I18n.t("composer.details_text")}[/details] After`,
+      `Before [details=${I18n.t("composer.details_title")}]some text in between[/details] After`,
       'it should contain the right output'
     );
 
     const textarea = findTextarea();
-    equal(textarea.selectionStart, 16, 'it should start highlighting at the right position');
-    equal(textarea.selectionEnd, 36, 'it should end highlighting at the right position');
+    equal(textarea.selectionStart, 24, 'it should start highlighting at the right position');
+    equal(textarea.selectionEnd, 44, 'it should end highlighting at the right position');
   });
 
   fillIn('.d-editor-input', "Before\nsome text in between\nAfter");
@@ -85,12 +85,12 @@ test('details button', () => {
   andThen(() => {
     equal(
       find(".d-editor-input").val(),
-      `Before\n[details=some text in between]${I18n.t("composer.details_text")}[/details]\nAfter`,
+      `Before\n[details=${I18n.t("composer.details_title")}]some text in between[/details]\nAfter`,
       'it should contain the right output'
     );
 
     const textarea = findTextarea();
-    equal(textarea.selectionStart, 16, 'it should start highlighting at the right position');
-    equal(textarea.selectionEnd, 36, 'it should end highlighting at the right position');
+    equal(textarea.selectionStart, 24, 'it should start highlighting at the right position');
+    equal(textarea.selectionEnd, 44, 'it should end highlighting at the right position');
   });
 });
