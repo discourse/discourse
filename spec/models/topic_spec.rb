@@ -1499,34 +1499,53 @@ describe Topic do
     end
   end
 
-  it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
-    SiteSetting.stubs(:max_topics_in_first_day).returns(1)
-    SiteSetting.stubs(:max_replies_in_first_day).returns(1)
-    SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
-    RateLimiter.stubs(:rate_limit_create_topic).returns(100)
-    RateLimiter.stubs(:disabled?).returns(false)
-    RateLimiter.clear_all!
+  context "new user limits" do
+    before do
+      SiteSetting.max_topics_in_first_day = 1
+      SiteSetting.max_replies_in_first_day = 1
+      SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
+      RateLimiter.stubs(:rate_limit_create_topic).returns(100)
+      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.clear_all!
+    end
 
-    start = Time.now.tomorrow.beginning_of_day
+    it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
+      start = Time.now.tomorrow.beginning_of_day
 
-    freeze_time(start)
+      freeze_time(start)
 
-    user = Fabricate(:user)
-    topic_id = create_post(user: user).topic_id
+      user = Fabricate(:user)
+      topic_id = create_post(user: user).topic_id
 
-    freeze_time(start + 10.minutes)
-    expect {
-      create_post(user: user)
-    }.to raise_error(RateLimiter::LimitExceeded)
+      freeze_time(start + 10.minutes)
+      expect { create_post(user: user) }.to raise_error(RateLimiter::LimitExceeded)
 
-    freeze_time(start + 20.minutes)
-    create_post(user: user, topic_id: topic_id)
-
-    freeze_time(start + 30.minutes)
-
-    expect {
+      freeze_time(start + 20.minutes)
       create_post(user: user, topic_id: topic_id)
-    }.to raise_error(RateLimiter::LimitExceeded)
+
+      freeze_time(start + 30.minutes)
+      expect { create_post(user: user, topic_id: topic_id) }.to raise_error(RateLimiter::LimitExceeded)
+    end
+
+    it "starts counting when they make their first post/topic" do
+      start = Time.now.tomorrow.beginning_of_day
+
+      freeze_time(start)
+
+      user = Fabricate(:user)
+
+      freeze_time(start + 25.hours)
+      topic_id = create_post(user: user).topic_id
+
+      freeze_time(start + 26.hours)
+      expect { create_post(user: user) }.to raise_error(RateLimiter::LimitExceeded)
+
+      freeze_time(start + 27.hours)
+      create_post(user: user, topic_id: topic_id)
+
+      freeze_time(start + 28.hours)
+      expect { create_post(user: user, topic_id: topic_id) }.to raise_error(RateLimiter::LimitExceeded)
+    end
   end
 
   describe ".count_exceeds_minimun?" do
