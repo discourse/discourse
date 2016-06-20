@@ -152,6 +152,7 @@ export default Ember.Controller.extend({
     insertPoll() {
       this.get("toolbarEvent").addText(this.get("pollOutput"));
       this.send("closeModal");
+      this._setupPoll();
     }
   }
 });
