@@ -47,7 +47,7 @@ export default Ember.View.extend({
       return true;
     });
 
-    function showPanel($target, url, postNumber, date) {
+    function showPanel($target, url, postNumber, date, postId) {
       const $currentTargetOffset = $target.offset();
       const $shareLink = $('#share-link');
 
@@ -77,6 +77,7 @@ export default Ember.View.extend({
 
       self.set('controller.link', url);
       self.set('controller.postNumber', postNumber);
+      self.set('controller.postId', postId);
       self.set('controller.date', date);
     }
 
@@ -91,8 +92,9 @@ export default Ember.View.extend({
       const $currentTarget = $(e.currentTarget),
             url = $currentTarget.data('share-url'),
             postNumber = $currentTarget.data('post-number'),
+            postId = $currentTarget.data('post-id'),
             date = $currentTarget.children().data('time');
-      showPanel($currentTarget, url, postNumber, date);
+      showPanel($currentTarget, url, postNumber, date, postId);
       return false;
     });
 
