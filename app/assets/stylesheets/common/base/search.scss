@@ -1,7 +1,8 @@
 .fps-result {
 
   .author {
-    float: left;
+    display: inline-block;
+    vertical-align: top;
   }
 
   .like-count {
@@ -14,7 +15,6 @@
   }
 
   .search-category {
-    float:right;
     padding-top:3px;
   }
 
@@ -46,7 +46,6 @@
   .blurb {
     font-size: 1.0em;
     line-height: 20px;
-    margin-left: 60px;
     word-wrap: break-word;
     max-width: 640px;
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
@@ -62,6 +61,10 @@
   .discourse-tag {
     font-size: 0.8em;
   }
+}
+
+.fps-topic {
+  display: inline-block;
 }
 
 .fps-select {
