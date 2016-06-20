@@ -577,6 +577,19 @@ class Topic < ActiveRecord::Base
     changed_to_category(cat)
   end
 
+  def remove_allowed_group(removed_by, name)
+    if group = Group.find_by(name: name)
+      group_user = topic_allowed_groups.find_by(group_id: group.id)
+      if group_user
+        group_user.destroy
+        add_small_action(removed_by, "removed_group", group.name)
+        return true
+      end
+    end
+
+    false
+  end
+
   def remove_allowed_user(removed_by, username)
     if user = User.find_by(username: username)
       topic_user = topic_allowed_users.find_by(user_id: user.id)
@@ -588,6 +601,19 @@ class Topic < ActiveRecord::Base
     end
 
     false
+  end
+
+  def invite_group(user, group)
+    TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
+
+    last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
+    if last_post
+      # ensure all the notifications are out
+      PostAlerter.new.after_save_post(last_post)
+      add_small_action(user, "invited_group", group.name)
+    end
+
+    true
   end
 
   # Invite a user to the topic by username or email. Returns success/failure

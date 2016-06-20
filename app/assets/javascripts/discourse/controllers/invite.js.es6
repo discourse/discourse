@@ -121,6 +121,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
   successMessage: function() {
     if (this.get('model.inviteLink')) {
       return I18n.t('user.invited.generated_link_message', {inviteLink: this.get('model.inviteLink'), invitedEmail: this.get('emailOrUsername')});
+    } else if (this.get('hasGroups')) {
+      return I18n.t('topic.invite_private.success_group');
     } else if (this.get('isMessage')) {
       return I18n.t('topic.invite_private.success');
     } else if ( Discourse.Utilities.emailValid(this.get('emailOrUsername')) ) {
@@ -171,7 +173,23 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       model.setProperties({ saving: true, error: false });
 
-      return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames, this.get('customMessage')).then(result => {
+      const onerror = function(e) {
+        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+          self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+        } else {
+          self.set("errorMessage", self.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error'));
+        }
+        model.setProperties({ saving: false, error: true });
+      };
+
+      if (this.get('hasGroups')) {
+        return this.get('model').createGroupInvite(this.get('emailOrUsername').trim()).then(result => {
+          model.setProperties({ saving: false, finished: true });
+        }).catch(onerror);
+
+      } else {
+
+        return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames, this.get('customMessage')).then(result => {
               model.setProperties({ saving: false, finished: true });
               if (!this.get('invitingToTopic')) {
                 Invite.findInvitedBy(this.currentUser, userInvitedController.get('filter')).then(invite_model => {
@@ -181,14 +199,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
               } else if (this.get('isMessage') && result && result.user) {
                 this.get('model.details.allowed_users').pushObject(Ember.Object.create(result.user));
               }
-            }).catch(function(e) {
-              if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-                self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
-              } else {
-                self.set("errorMessage", self.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error'));
-              }
-              model.setProperties({ saving: false, error: true });
-            });
+            }).catch(onerror);
+      }
     },
 
     generateInvitelink() {
