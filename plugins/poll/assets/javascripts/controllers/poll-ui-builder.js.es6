@@ -2,27 +2,32 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 
 export default Ember.Controller.extend({
   needs: ['modal'],
+  numberPollType: 'number',
+  multiplePollType: 'multiple',
 
   init() {
     this._super();
     this._setupPoll();
   },
 
-  @computed
-  pollTypes() {
-    return [I18n.t("poll.ui_builder.poll_type.number"), I18n.t("poll.ui_builder.poll_type.multiple")].map(type => {
-      return { name: type, value: type };
-    });
+  @computed("numberPollType", "multiplePollType")
+  pollTypes(numberPollType, multiplePollType) {
+    let types = [];
+
+    types.push({ name: I18n.t("poll.ui_builder.poll_type.number"), value: numberPollType });
+    types.push({ name: I18n.t("poll.ui_builder.poll_type.multiple"), value: multiplePollType });
+
+    return types;
   },
 
-  @computed("pollType", "pollOptionsCount")
-  isMultiple(pollType, count) {
-    return (pollType === I18n.t("poll.ui_builder.poll_type.multiple")) && count > 0;
+  @computed("pollType", "pollOptionsCount", "multiplePollType")
+  isMultiple(pollType, count, multiplePollType) {
+    return (pollType === multiplePollType) && count > 0;
   },
 
-  @computed("pollType")
-  isNumber(pollType) {
-    return pollType === I18n.t("poll.ui_builder.poll_type.number");
+  @computed("pollType", "numberPollType")
+  isNumber(pollType, numberPollType) {
+    return pollType === numberPollType;
   },
 
   @computed("isNumber", "isMultiple")

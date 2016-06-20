@@ -6,7 +6,7 @@ test("isMultiple", function() {
   const controller = this.subject();
 
   controller.setProperties({
-    pollType: I18n.t("poll.ui_builder.poll_type.multiple"),
+    pollType: controller.get("multiplePollType"),
     pollOptionsCount: 1
   });
 
@@ -29,7 +29,7 @@ test("isNumber", function() {
 
   equal(controller.get("isNumber"), false, "it should be false");
 
-  controller.set("pollType", I18n.t("poll.ui_builder.poll_type.number"));
+  controller.set("pollType", controller.get("numberPollType"));
 
   equal(controller.get("isNumber"), true, "it should be true");
 });
@@ -159,7 +159,7 @@ test("number pollOutput", function() {
 
   controller.setProperties({
     isNumber: true,
-    pollType: I18n.t("poll.ui_builder.poll_type.number"),
+    pollType: controller.get("numberPollType"),
     pollMin: 1
   });
 
@@ -208,7 +208,7 @@ test("multiple pollOutput", function() {
 
   controller.setProperties({
     isMultiple: true,
-    pollType: I18n.t("poll.ui_builder.poll_type.multiple"),
+    pollType: controller.get("multiplePollType"),
     pollMin: 1,
     pollOptions: "1\n2"
   });
