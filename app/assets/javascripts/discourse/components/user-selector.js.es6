@@ -13,10 +13,13 @@ export default TextField.extend({
         allowedUsers = this.get('allowedUsers') === 'true';
 
     function excludedUsernames() {
+      // hack works around some issues with allowAny eventing
+      const usernames = self.get('single') ? [] : selected;
+
       if (currentUser && self.get('excludeCurrentUser')) {
-        return selected.concat([currentUser.get('username')]);
+        return usernames.concat([currentUser.get('username')]);
       }
-      return selected;
+      return usernames;
     }
 
     this.$().val(this.get('usernames')).autocomplete({

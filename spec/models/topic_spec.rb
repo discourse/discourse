@@ -372,6 +372,25 @@ describe Topic do
       context 'existing user' do
         let(:walter) { Fabricate(:walter_white) }
 
+        context 'by group name' do
+
+          it 'can add admin to allowed groups' do
+            admins = Group[:admins]
+            admins.alias_level = Group::ALIAS_LEVELS[:everyone]
+            admins.save
+
+            expect(topic.invite_group(topic.user, admins)).to eq(true)
+
+            expect(topic.allowed_groups.include?(admins)).to eq(true)
+
+            expect(topic.remove_allowed_group(topic.user, 'admins')).to eq(true)
+            topic.reload
+
+            expect(topic.allowed_groups.include?(admins)).to eq(false)
+          end
+
+        end
+
         context 'by username' do
 
           it 'adds and removes walter to the allowed users' do

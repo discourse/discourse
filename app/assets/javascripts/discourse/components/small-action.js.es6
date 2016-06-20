@@ -3,7 +3,15 @@ import { autoUpdatingRelativeAge } from 'discourse/lib/formatter';
 export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);
   const when = autoUpdatingRelativeAge(dt, { format: 'medium-with-ago' });
-  const who = username ? `<a class="mention" href="/users/${username}">@${username}</a>` : "";
+
+  var who = "";
+  if (username) {
+    if (actionCode === "invited_group" || actionCode === "removed_group") {
+      who = `<a class="mention-group" href="/groups/${username}">@${username}</a>`;
+    } else {
+      who = `<a class="mention" href="/users/${username}">@${username}</a>`;
+    }
+  }
   return I18n.t(`action_codes.${actionCode}`, { who, when }).htmlSafe();
 }
 

@@ -20,7 +20,9 @@ const icons = {
   'visible.disabled': 'eye-slash',
   'split_topic': 'sign-out',
   'invited_user': 'plus-circle',
+  'invited_group': 'plus-circle',
   'removed_user': 'minus-circle',
+  'removed_group': 'minus-circle',
   'public_topic': 'comment',
   'private_topic': 'envelope'
 };

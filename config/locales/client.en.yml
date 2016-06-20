@@ -144,7 +144,9 @@ en:
       private_topic: "made this topic private %{when}"
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
+      invited_group: "invited %{who} %{when}"
       removed_user: "removed %{who} %{when}"
+      removed_group: "removed %{who} %{when}"
       autoclosed:
         enabled: 'closed %{when}'
         disabled: 'opened %{when}'
@@ -908,6 +910,7 @@ en:
       title: "Message"
       invite: "Invite Others..."
       remove_allowed_user: "Do you really want to remove {{name}} from this message?"
+      remove_allowed_group: "Do you really want to remove {{name}} from this message?"
 
     email: 'Email'
     username: 'Username'
@@ -1448,6 +1451,7 @@ en:
         email_or_username_placeholder: "email address or username"
         action: "Invite"
         success: "We've invited that user to participate in this message."
+        success_group: "We've invited that group to participate in this message."
         error: "Sorry, there was an error inviting that user."
         group_name: "group name"
 
