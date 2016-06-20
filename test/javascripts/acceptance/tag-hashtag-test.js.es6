@@ -38,6 +38,6 @@ test("tag is cooked properly", () => {
 
   click('#reply-control .btn.create');
   andThen(() => {
-    ok(find('.topic-post:last .cooked').html().trim().includes("<p>this is a tag hashtag <a href=\"/tags/monkey\" class=\"hashtag\">#<span>monkey</span></a></p>"));
+    equal(find('.topic-post:last .cooked').html().trim(), "<p>this is a tag hashtag <a href=\"/tags/monkey\" class=\"hashtag\">#<span>monkey</span></a></p>");
   });
 });
