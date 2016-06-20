@@ -410,10 +410,10 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password, salt)
   end
 
-  def first_day_user?
+  def new_user_posting_on_first_day?
     !staff? &&
     trust_level < TrustLevel[2] &&
-    created_at >= 24.hours.ago
+    (self.first_post_created_at.nil? || self.first_post_created_at >= 24.hours.ago)
   end
 
   def new_user?
