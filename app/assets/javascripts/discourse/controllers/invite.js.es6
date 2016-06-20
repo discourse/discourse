@@ -183,7 +183,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       };
 
       if (this.get('hasGroups')) {
-        return this.get('model').createGroupInvite(this.get('emailOrUsername').trim()).then(result => {
+        return this.get('model').createGroupInvite(this.get('emailOrUsername').trim()).then(() => {
           model.setProperties({ saving: false, finished: true });
         }).catch(onerror);
 
