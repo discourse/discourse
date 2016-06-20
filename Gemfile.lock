@@ -148,7 +148,7 @@ GEM
       thor (~> 0.15)
     libv8 (5.0.71.48.3)
     listen (0.7.3)
-    logster (1.2.3)
+    logster (1.2.4)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
