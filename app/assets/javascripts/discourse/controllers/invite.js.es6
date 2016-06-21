@@ -183,8 +183,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
       };
 
       if (this.get('hasGroups')) {
-        return this.get('model').createGroupInvite(this.get('emailOrUsername').trim()).then(() => {
+        return this.get('model').createGroupInvite(this.get('emailOrUsername').trim()).then((data) => {
           model.setProperties({ saving: false, finished: true });
+          this.get('model.details.allowed_groups').pushObject(Ember.Object.create(data.group));
+          this.appEvents.trigger('post-stream:refresh');
+
         }).catch(onerror);
 
       } else {
@@ -198,6 +201,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 });
               } else if (this.get('isMessage') && result && result.user) {
                 this.get('model.details.allowed_users').pushObject(Ember.Object.create(result.user));
+                this.appEvents.trigger('post-stream:refresh');
               }
             }).catch(onerror);
       }
