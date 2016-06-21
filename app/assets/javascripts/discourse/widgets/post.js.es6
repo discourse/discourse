@@ -268,7 +268,9 @@ createWidget('post-contents', {
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
-      result.push(h('section.embedded-posts.bottom', repliesBelow.map(p => this.attach('embedded-post', p))));
+      result.push(h('section.embedded-posts.bottom', repliesBelow.map(p => {
+        return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
+      })));
     }
 
     return result;
@@ -339,7 +341,10 @@ createWidget('post-article', {
   html(attrs, state) {
     const rows = [h('a.tabLoc', { attributes: { href: ''} })];
     if (state.repliesAbove.length) {
-      const replies = state.repliesAbove.map(p => this.attach('embedded-post', p, { state: { above: true } }));
+      const replies = state.repliesAbove.map(p => {
+        return this.attach('embedded-post', p, { model: this.store.createRecord('post', p), state: { above: true } });
+      });
+
       rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
     }
 

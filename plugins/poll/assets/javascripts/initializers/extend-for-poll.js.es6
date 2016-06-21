@@ -108,6 +108,7 @@ function initializePolls(api) {
     _pollViews = postPollViews;
   }
 
+  api.includePostAttributes("polls", "polls_votes");
   api.decorateCooked(createPollViews, { onlyStream: true });
   api.cleanupStream(cleanUpPollViews);
 }
