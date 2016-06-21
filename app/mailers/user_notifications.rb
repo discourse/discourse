@@ -83,11 +83,9 @@ class UserNotifications < ActionMailer::Base
     return unless @posts_by_topic.present?
 
     build_summary_for(user)
-    build_email @user.email,
-                from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
-                subject: I18n.t('user_notifications.mailing_list.subject_template',
-                                site_name: @site_name,
-                                date: @date)
+    apply_notification_styles build_email @user.email,
+      from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
+      subject:    I18n.t('user_notifications.mailing_list.subject_template', site_name: @site_name, date: @date)
   end
 
   def digest(user, opts={})
@@ -417,5 +415,13 @@ class UserNotifications < ActionMailer::Base
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
+  end
+
+  def apply_notification_styles(email)
+    email.html_part.body = Email::Styles.new(email.html_part.body.to_s).tap do |styles|
+      styles.format_basic
+      styles.format_notification
+    end.to_html
+    email
   end
 end
