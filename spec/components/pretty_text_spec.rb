@@ -318,7 +318,7 @@ HTML
     it "adds base url to relative links" do
       html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
       output = described_class.format_for_email(html, post)
-      expect(output).to eq("<p><a href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
+      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
     end
 
     it "doesn't change external absolute links" do
