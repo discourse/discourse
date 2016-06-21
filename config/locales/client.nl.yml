@@ -111,6 +111,8 @@ nl:
       google+: 'deel deze link op Google+'
       email: 'deel deze link via e-mail'
     action_codes:
+      public_topic: "Onderwerp gepubliceerd op %{when}"
+      private_topic: "Onderwerp privé gemarkeerd op %{when}"
       split_topic: "deze topic splitsen %{when}"
       invited_user: "uitgenodigd %{who} %{when}"
       removed_user: "verwijderd %{who} %{when}"
@@ -134,6 +136,8 @@ nl:
         disabled: 'niet zichtbaar %{when}'
     topic_admin_menu: "Adminacties voor topic"
     emails_are_disabled: "Alle uitgaande e-mails zijn uitgeschakeld door een beheerder. Geen enkele vorm van e-mail notificatie wordt verstuurd."
+    bootstrap_mode_enabled: "Om het lanceren van een website makkelijker te maken, zit je nu in bootstrap modus. Alle nieuwe gebruikers krijgen vertrouwens level 1 en zullen dagelijkse email updates krijgen. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal hoger dan %{min_users} gebruikers wordt."
+    bootstrap_mode_disabled: "Bootstrap modus zal uitgeschakeld worden in de komende 24 uur."
     s3:
       regions:
         us_east_1: "US Oost (N. Virginia)"
@@ -298,6 +302,8 @@ nl:
       title: "Leden"
       likes_given: "Gegeven"
       likes_received: "Ontvangen"
+      topics_entered: "Gezien"
+      topics_entered_long: "Topics bekeken"
       time_read: "Tijd gelezen"
       topic_count: "Topics"
       topic_count_long: "Topics gemaakt"
@@ -326,7 +332,10 @@ nl:
         one: "groep"
         other: "groepen"
       members: "Leden"
+      topics: "Onderwerpen"
       posts: "Berichten"
+      mentions: "Genoemd door"
+      messages: "Berichten"
       alias_levels:
         title: "Wie kan deze groep een bericht sturen en taggen?"
         nobody: "Niemand"
@@ -451,6 +460,17 @@ nl:
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
       github_profile: "Github"
+      email_activity_summary: "Activiteiten samenvatting"
+      mailing_list_mode:
+        label: "Mail lijst modus"
+        enabled: "Schakel mail lijst modus in"
+        instructions: |
+          Deze instelling overschrijft de activiteiten samenvatting.<br />
+          Gedempte onderwerpen en categorieëm zitten niet in deze emails.
+        daily: "Verzend dagelijkse updates"
+        individual: "Verstuur een email voor elk nieuw bericht"
+        many_per_day: "Stuur mij een email voor elk nieuw bericht (ongeveer {{dailyEmailEstimate}} per dag)."
+        few_per_day: "Stuur mij een email voor elk nieuw bericht (minder dan 2 per dag)."
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Je krijgt automatisch alle nieuwe topics in deze categorie te zien. Je ontvangt notificaties bij nieuwe berichten en topics, naast het topic wordt het aantal nieuwe berichten weergegeven. "
       tracked_categories: "Gevolgd"
@@ -493,8 +513,10 @@ nl:
         set_password: "Stel wachtwoord in"
       change_about:
         title: "Wijzig bio"
+        error: "Er is iets fouts gegaan met het wijzigen van deze waarde."
       change_username:
         title: "Wijzig gebruikersnaam"
+        confirm: "Als je je gebruikersnaam wijzigt, worden alle vorige quotaties van je berichten en @naam roepingen verbroken, en je berichtgeschiedenis zal worden onderbroken, weet je zeker dat je dit wil doen?"
         taken: "Sorry, maar die gebruikersnaam is al in gebruik."
         error: "Het wijzigen van je gebruikersnaam is mislukt."
         invalid: "Die gebruikersnaam is ongeldig. Gebruik alleen nummers en letters."
@@ -567,6 +589,7 @@ nl:
       website: "Website"
       email_settings: "E-mail"
       like_notification_frequency:
+        title: "Stuur mij een bericht wanneer het wordt ge-liked"
         always: "Altijd"
         first_time_and_daily: "De eerste keer dat iemand een bericht leuk vond en dagelijks"
         first_time: "De eerste keer dat iemand een bericht leuk vond"
@@ -577,12 +600,14 @@ nl:
         always: "altijd"
         never: "nooit"
       email_digests:
+        title: "Als ik dit niet bezoek, stuur mij dan een email samenvatting van populaire berichten en antwoorden naar:"
         every_30_minutes: "elke dertig minuten"
         every_hour: "elk uur"
         daily: "dagelijks"
         every_three_days: "elke drie dagen"
         weekly: "wekelijks"
         every_two_weeks: "elke twee weken"
+      include_tl0_in_digests: "Bevat inhoud van nieuwe gebruikers in samenvattings emails"
       email_in_reply_to: "Voeg een deel van de reactie toe in de emails"
       email_direct: "Stuur me een e-mail wanneer iemand me citeert, reageert op mijn bericht, mijn @gebruikersnaam noemt of uitnodigt voor een topic."
       email_private_messages: "Ontvang een mail wanneer iemand je een bericht heeft gestuurd."
@@ -630,7 +655,9 @@ nl:
         rescind: "Verwijder"
         rescinded: "Uitnodiging verwijderd"
         reinvite: "Stuur uitnodiging opnieuw"
+        reinvite_all: "Stuur uitnodigingen opnieuw"
         reinvited: "Uitnodiging opnieuw verstuurd"
+        reinvited_all: "All uitnodigingen opnieuw verstuurd !"
         time_read: "Leestijd"
         days_visited: "Dagen bezocht"
         account_age_days: "leeftijd van account in dagen"
@@ -654,12 +681,43 @@ nl:
       summary:
         title: "Overzicht "
         stats: "Statistieken "
+        time_read: "leestijd"
+        topic_count:
+          one: "Onderwerp gemaakt"
+          other: "Onderwerpen gemaakt"
+        post_count:
+          one: "Bericht gemaakt"
+          other: "Berichten gemaakt"
+        likes_given:
+          one: "<i class='fa fa-heart'></i> gegeven"
+          other: "<i class='fa fa-heart'></i> gegeven"
+        likes_received:
+          one: "<i class='fa fa-heart'></i> ontvangen"
+          other: "<i class='fa fa-heart'></i> ontvangen"
+        days_visited:
+          one: "Dag bezocht"
+          other: "Dagen bezocht"
+        posts_read:
+          one: "Bericht gelezen"
+          other: "Berichten gelezen"
+        bookmark_count:
+          one: "Bladwijzer"
+          other: "Bladwijzers"
         top_replies: "Beste Reacties"
+        no_replies: "Nog geen antwoorden."
         more_replies: "Meer Antwoorden"
         top_topics: "Top Topics"
+        no_topics: "Nog geen onderwerpen."
         more_topics: "Meer Topics"
         top_badges: "Top Badges"
+        no_badges: "Nog geen insignes."
         more_badges: "Meer Badges"
+        top_links: "Populaire links"
+        no_links: "Nog geen links."
+        most_liked_by: "Meest geliked door"
+        most_liked_users: "Meest geliked"
+        most_replied_to_users: "Meest geantwoord op"
+        no_likes: "Nog geen likes"
       associated_accounts: "Logins"
       ip_address:
         title: "Laatste IP-adres"
@@ -708,6 +766,12 @@ nl:
     too_few_topics_and_posts_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     too_few_topics_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics en <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     too_few_posts_notice: "Laten  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a>. Er zijn al <strong>%{currentPosts} / %{requiredPosts}</strong> posts Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
+    logs_error_rate_notice:
+      reached: "<b>[%{relativeAge}]</b> Huidige tarief <a href='%{url}' target='_blank'>%{rate}</a> heeft het site instellingen limiet van %{siteSettingRate} bereikt."
+      exceeded: "<b>[%{relativeAge}]</b> Huidige tarief <a href='%{url}' target='_blank'>%{rate}</a> heeft het site instellingen limiet van %{siteSettingRate} bereikt."
+      rate:
+        one: "1 error/%{duration}"
+        other: "%{count} errors/%{duration}"
     learn_more: "leer meer..."
     year: 'jaar'
     year_desc: 'topics die in de afgelopen 365 dagen gemaakt zijn'

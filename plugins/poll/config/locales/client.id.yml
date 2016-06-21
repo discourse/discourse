@@ -11,7 +11,7 @@ id:
       voters:
         other: "pemilih"
       total_votes:
-        other: "jumlah pemilih"
+        other: "jumlah suara"
       average_rating: "Rata-rata rating: <strong>%{average}</strong>."
       multiple:
         help:
@@ -41,3 +41,4 @@ id:
         confirm: "Apakah Anda yakin  ingin menutup akun ini?"
       error_while_toggling_status: "Terjadi kesalahan ketika merubah status polling ini."
       error_while_casting_votes: "Terjadi kesalahan ketika merubah status."
+      error_while_fetching_voters: "terjadi kesalahan saat menampilkan pemilih"

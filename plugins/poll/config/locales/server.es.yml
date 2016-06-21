@@ -25,6 +25,8 @@ es:
     default_poll_with_multiple_choices_has_invalid_parameters: "La encuesta con múltiples opciones tiene parámetros no válidos."
     named_poll_with_multiple_choices_has_invalid_parameters: "La encuesta llamada <strong>%{name}</strong> con múltiples opciones tiene párametros no válidos."
     requires_at_least_1_valid_option: "Debes escoger al menos 1 opción válida."
+    default_cannot_be_made_public: "La encuesta con votos ya registrados no puede hacerse pública."
+    named_cannot_be_made_public: "La encuesta llamada <strong>%{name}</strong> tiene votos ya registrados por lo que no puede hacerse pública."
     cannot_change_polls_after_5_minutes: "No se puede modificar, eliminar o renombrar una encuesta una vez transcurridos 5 minutos después de su creación. "
     op_cannot_edit_options_after_5_minutes: "No se puede modificar, eliminar o renombrar una encuesta una vez transcurridos 5 minutos después de su creación. Por favor, contacta un moderador si necesitas editar las opciones de la encuesta."
     staff_cannot_add_or_remove_options_after_5_minutes: "No se pueden añadir o eliminar opciones de una encuesta después de los primeros 5 minutos. Podrías cerrar este tema y crear uno nuevo."

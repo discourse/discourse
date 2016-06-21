@@ -111,6 +111,8 @@ pt_BR:
       google+: 'compartilhe este link no Google+'
       email: 'enviar esse link para um email'
     action_codes:
+      public_topic: "tornou este tópico público em %{when}"
+      private_topic: "tornou este tópico privado em %{when}"
       split_topic: "dividiu este tópico %{when}"
       invited_user: "convidou %{who} %{when}"
       removed_user: "removido %{who} %{when}"
@@ -298,6 +300,8 @@ pt_BR:
       title: "Usuários"
       likes_given: "Dados"
       likes_received: "Recebidos"
+      topics_entered: "Visualizados"
+      topics_entered_long: "Tópicos Vizualizados"
       time_read: "Tempo Lido"
       topic_count: "Tópicos"
       topic_count_long: "Tópicos Criados"
@@ -454,6 +458,9 @@ pt_BR:
       suspended_notice: "Esse usuário está suspenso até {{date}}."
       suspended_reason: "Motivo:"
       github_profile: "Github"
+      email_activity_summary: "Sumário de Atividades"
+      mailing_list_mode:
+        daily: "Enviar atualizações diárias"
       watched_categories: "Acompanhados"
       watched_categories_instructions: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado do tópico."
       tracked_categories: "Monitorado"
@@ -496,6 +503,7 @@ pt_BR:
         set_password: "Definir Senha"
       change_about:
         title: "Modificar Sobre Mim"
+        error: "Houve um erro ao alterar esse valor."
       change_username:
         title: "Alterar Nome de Usuário"
         taken: "Desculpe, esse Nome de Usuário já está sendo usado."
@@ -634,7 +642,9 @@ pt_BR:
         rescind: "Remover"
         rescinded: "Convite removido"
         reinvite: "Reenviar convite"
-        reinvited: "Convite re-enviado"
+        reinvite_all: "Reenviar todos os convites"
+        reinvited: "Convite reenviado"
+        reinvited_all: "Todos os convites foram reenviados!"
         time_read: "Tempo de leitura"
         days_visited: "Dias visitados"
         account_age_days: "Idade da conta em dias"
@@ -1033,6 +1043,8 @@ pt_BR:
         selected:
           one: "Você selecionou <b>1</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
+        choose_new_tags: "Escolha novas tags para esses tópicos:"
+        changed_tags: "As tags para esses tópicos foram alteradas."
       none:
         unread: "Não há nenhum tópico não lido."
         new: "Não há tópicos novos."
@@ -1123,6 +1135,9 @@ pt_BR:
       auto_close_save: "Salvar"
       auto_close_remove: "Não fechar automaticamente este tópico"
       auto_close_immediate: "O último tópico postado foi há %{hours} horas, então o tópico será fechado imadiatamente.."
+      timeline:
+        back: "Voltar"
+        back_description: "Volte para a sua última postagem não lida"
       progress:
         title: progresso do tópico
         go_top: "topo"
@@ -1224,8 +1239,7 @@ pt_BR:
         remove_banner: "Remover o banner que aparece no inicio de todas as páginas."
         banner_note: "Usuários podem dispensar o banner fechando-o. Apenas um tópico pode ser colocado como banner a cada momento."
       inviting: "Convidando..."
-      automatically_add_to_groups_optional: "Esse convite também inclui o acesso a esses grupos:  (<b>Opacional</b>, admins apenas)"
-      automatically_add_to_groups_required: "Esse convite também inclui o acesso a esses grupos:  (<b>Necessário</b>, admins apenas)"
+      automatically_add_to_groups: "Este convite também inclui acesso para esses grupos:"
       invite_private:
         title: 'Convidar para Conversa Privada'
         email_or_username: "Email ou Nome de Usuário do convidado"
@@ -1234,6 +1248,7 @@ pt_BR:
         success: "Nós convidamos aquele usuário para participar desta mensagem privada."
         error: "Desculpe, houve um erro ao convidar esse usuário."
         group_name: "nome do grupo"
+      controls: "Controles do Tópico"
       invite_reply:
         title: 'Convite'
         username_placeholder: "nome de usuário"
@@ -1329,11 +1344,15 @@ pt_BR:
         one: "{{count}} pessoa curtiu esta mensagem"
         other: "{{count}} pessoas curtiram esta mensagem"
       has_likes_title_only_you: "você curtiu esta postagem"
+      has_likes_title_you:
+        one: "você e mais 1 pessoa gostaram dessa postagem"
+        other: "você e mais {{count}} outras pessoas gostaram dessa postagem"
       errors:
         create: "Desculpe, houve um erro ao criar sua resposta. Por favor, tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua resposta. Por favor, tente outra vez."
         upload: "Desculpe, houve um erro ao enviar esse arquivo. Por favor, tente outra vez."
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
+        too_many_dragged_and_dropped_files: "Desculpe, você só pode subir até 10 arquivos de cada vez."
         upload_not_authorized: "Desculpe, o tipo de arquivo que você está tentando enviar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."

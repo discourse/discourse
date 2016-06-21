@@ -478,7 +478,7 @@ it:
       muted_users: "Silenziati"
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       muted_topics_link: "Mostra argomenti silenziati"
-      automatically_unpin_topics: "Spunta automaticamente gli argomenti quando raggiungo il fondo."
+      automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -493,7 +493,7 @@ it:
         groups: "I Miei Gruppi"
         bulk_select: "Seleziona messaggi"
         move_to_inbox: "Sposta in arrivo"
-        move_to_archive: "Archivio"
+        move_to_archive: "Archivia"
         failed_to_move: "Errore nello spostare i messaggi selezionati (forse la tua connessione non è attiva)"
         select_all: "Seleziona Tutti"
       change_password:
@@ -682,7 +682,7 @@ it:
           other: "<i class='fa fa-heart'></i> ricevuti"
         days_visited:
           one: "Giorno visitato"
-          other: "Giorni Frequenza"
+          other: "giorni di frequenza"
         posts_read:
           one: "messaggio letto"
           other: "messaggi letti"
@@ -1497,7 +1497,7 @@ it:
           last: "Ultima revisione"
           hide: "Nascondi revisione"
           show: "Mostra revisione"
-          revert: "Ritorna alla revisione"
+          revert: "Ritorna a questa revisione"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -2110,7 +2110,7 @@ it:
           error: "Errore"
           none: "Nessuna email in entrata."
           modal:
-            title: "In arrivo dettagli email"
+            title: "Dettagli posta in arrivo"
             error: "Errore"
             headers: "Intestazione"
             subject: "Oggetto"
@@ -2295,7 +2295,7 @@ it:
         moderator: "Moderatore?"
         admin: "Amministratore?"
         blocked: "Bloccato?"
-        staged: "Organizzato?"
+        staged: "Temporaneo?"
         show_admin_profile: "Amministratore"
         edit_title: "Modifica Titolo"
         save_title: "Salva Titolo"

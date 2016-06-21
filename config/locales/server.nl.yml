@@ -24,6 +24,7 @@ nl:
   loading: "Laden"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, werkt het beste met JavaScript ingeschakeld'
   log_in: "Inloggen"
+  purge_reason: "Automatisch verwijderd, account gedeactiveerd."
   disable_remote_images_download_reason: "Het downloaden van plaatjes is uitgeschakeld omdat er niet genoeg schijfruimte beschikbaar is."
   anonymous: "Anoniem"
   emails:
@@ -41,6 +42,7 @@ nl:
         reply_user_not_matching_error: "Gebeurt wanneer een reactie kwam van een ander E-mail adres dan waar de notificatie was heen gestuurd. "
         topic_not_found_error: "Gebeurt wanneer een reactie binnen kwam, maar het topic al is verwijdert."
         topic_closed_error: "Gebeurt wanneer een reactie binnen kwam, maar het verwante topic is gesloten."
+        auto_generated_email_reply: "Email bevat een antwoord naar een automatisch gegenereerd bericht."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -165,6 +167,9 @@ nl:
     hot: "Hot topics"
     top: "Top topics"
     posts: "Nieuwste berichten"
+    private_posts: "Laatste privé berichten"
+    group_posts: "Meest recente posts van %{group_name}"
+    tag: "Gemarkeerde onderwerpen"
   too_late_to_edit: "Dat bericht is lang geleden geschreven. Het kan niet meer gewijzigd of verwijderd worden."
   excerpt_image: "afbeelding"
   queue:
