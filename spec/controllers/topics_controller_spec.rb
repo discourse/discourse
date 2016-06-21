@@ -950,6 +950,35 @@ describe TopicsController do
     end
   end
 
+  describe 'invite_group' do
+    let :admins do
+      Group[:admins]
+    end
+
+    let! :admin do
+      log_in :admin
+    end
+
+    before do
+      admins.alias_level = Group::ALIAS_LEVELS[:everyone]
+      admins.save!
+    end
+
+    it "disallows inviting a group to a topic" do
+      topic = Fabricate(:topic)
+      xhr :post, :invite_group, topic_id: topic.id, group: 'admins'
+      expect(response.status).to eq(422)
+    end
+
+    it "allows inviting a group to a PM" do
+      topic = Fabricate(:private_message_topic)
+      xhr :post, :invite_group, topic_id: topic.id, group: 'admins'
+
+      expect(response.status).to eq(200)
+      expect(topic.allowed_groups.first.id).to eq(admins.id)
+    end
+  end
+
   describe 'invite' do
 
     describe "group invites" do

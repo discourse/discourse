@@ -83,11 +83,9 @@ class UserNotifications < ActionMailer::Base
     return unless @posts_by_topic.present?
 
     build_summary_for(user)
-    build_email @user.email,
-                from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
-                subject: I18n.t('user_notifications.mailing_list.subject_template',
-                                site_name: @site_name,
-                                date: @date)
+    apply_notification_styles build_email @user.email,
+      from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
+      subject:    I18n.t('user_notifications.mailing_list.subject_template', site_name: @site_name, date: @date)
   end
 
   def digest(user, opts={})
@@ -341,7 +339,7 @@ class UserNotifications < ActionMailer::Base
       else
         invite_template = "user_notifications.invited_to_topic_body"
       end
-      topic_excerpt = post.excerpt.gsub("\n", " ") if post.is_first_post? && post.excerpt
+      topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
       message = I18n.t(invite_template, username: username, topic_title: title, topic_excerpt: topic_excerpt, site_title: SiteSetting.title, site_description: SiteSetting.site_description)
       html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
         template: 'email/invite',
@@ -382,7 +380,7 @@ class UserNotifications < ActionMailer::Base
       username: username,
       add_unsubscribe_link: !user.staged,
       mailing_list_mode: user.user_option.mailing_list_mode,
-      unsubscribe_url: post.topic.unsubscribe_url,
+      unsubscribe_url: post.unsubscribe_url(user),
       allow_reply_by_email: allow_reply_by_email,
       only_reply_by_email: allow_reply_by_email && user.staged,
       use_site_subject: use_site_subject,
@@ -416,6 +414,14 @@ class UserNotifications < ActionMailer::Base
     @header_color    = ColorScheme.hex_for_name('header_background')
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
-    @unsubscribe_key = DigestUnsubscribeKey.create_key_for(@user)
+    @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
+  end
+
+  def apply_notification_styles(email)
+    email.html_part.body = Email::Styles.new(email.html_part.body.to_s).tap do |styles|
+      styles.format_basic
+      styles.format_notification
+    end.to_html
+    email
   end
 end

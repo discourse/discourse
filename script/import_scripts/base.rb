@@ -198,10 +198,14 @@ class ImportScripts::Base
   def all_records_exist?(type, import_ids)
     return false if import_ids.empty?
 
-    Post.exec_sql('CREATE TEMP TABLE import_ids(val varchar(200) PRIMARY KEY)')
+    orig_conn = ActiveRecord::Base.connection
+    conn = orig_conn.raw_connection
+
+    conn.exec('CREATE TEMP TABLE import_ids(val varchar(200) PRIMARY KEY)')
 
     import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
-    Post.exec_sql("INSERT INTO import_ids VALUES #{import_id_clause}")
+
+    conn.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
 
     existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
     existing = existing.joins('JOIN import_ids ON val = value')
@@ -211,7 +215,7 @@ class ImportScripts::Base
       return true
     end
   ensure
-    Post.exec_sql('DROP TABLE import_ids')
+    conn.exec('DROP TABLE import_ids')
   end
 
   # Iterate through a list of user records to be imported.
@@ -366,7 +370,7 @@ class ImportScripts::Base
           params[:parent_category_id] = top.id if top
         end
 
-        new_category = create_category(params, params[:id])
+        create_category(params, params[:id])
 
         created += 1
       end

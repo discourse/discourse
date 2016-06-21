@@ -63,6 +63,18 @@ const TopicDetails = RestModel.extend({
     });
   },
 
+  removeAllowedGroup(group) {
+    const groups = this.get('allowed_groups');
+    const name = group.name;
+
+    return Discourse.ajax("/t/" + this.get('topic.id') + "/remove-allowed-group", {
+      type: 'PUT',
+      data: { name: name }
+    }).then(() => {
+      groups.removeObject(groups.findProperty('name', name));
+    });
+  },
+
   removeAllowedUser(user) {
     const users = this.get('allowed_users');
     const username = user.get('username');

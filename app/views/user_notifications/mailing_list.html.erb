@@ -60,7 +60,7 @@
               <span> - </span>
               <span><%= I18n.l(post.created_at, format: :long) %></span>
             </p>
-            <%= raw format_for_email(post, false, :notification) %>
+            <%= raw format_for_email(post, false) %>
             <hr />
           </div>
         <% end %>

@@ -11,5 +11,10 @@ export default MountWidget.extend({
   @observes('topic.details.notification_level')
   _triggerRerender() {
     this.queueRerender();
+  },
+
+  didInsertElement() {
+    this._super();
+    this.dispatch('topic-notifications-button:keyboard-trigger', 'topic-notifications-button');
   }
 });

@@ -15,6 +15,8 @@ de:
         one: "abgegebene Stimme"
         other: "abgegebene Stimmen"
       average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
+      public:
+        title: "Abgegebene Stimmen dieser Umfrage werden veröffentlicht."
       multiple:
         help:
           at_least_min_options:
@@ -46,3 +48,4 @@ de:
         confirm: "Möchtest du diese Umfrage wirklich beenden?"
       error_while_toggling_status: "Beim Ändern des Status der Umfrage ist ein Fehler aufgetreten."
       error_while_casting_votes: "Beim Abstimmen ist ein Fehler aufgetreten."
+      error_while_fetching_voters: "Beim Anzeigen der Teilnehmer ist ein Fehler aufgetreten"

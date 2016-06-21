@@ -11,9 +11,22 @@
     <label>{{inviteInstructions}}</label>
     {{#if allowExistingMembers}}
       {{#if isPrivateTopic}}
-        {{user-selector single="true" allowAny=true excludeCurrentUser="true" usernames=emailOrUsername allowedUsers="true" topicId=topicId placeholderKey=placeholderKey}}
+        {{user-selector single="true"
+                        allowAny=true
+                        excludeCurrentUser="true"
+                        usernames=emailOrUsername
+                        allowedUsers="true"
+                        topicId=topicId
+                        placeholderKey=placeholderKey}}
       {{else}}
-        {{user-selector single="true" allowAny=true excludeCurrentUser="true" usernames=emailOrUsername placeholderKey=placeholderKey}}
+        {{user-selector
+            single="true"
+            allowAny=true
+            excludeCurrentUser="true"
+            includeMentionableGroups="true"
+            hasGroups=hasGroups
+            usernames=emailOrUsername
+            placeholderKey=placeholderKey}}
       {{/if}}
     {{else}}
       {{text-field value=emailOrUsername placeholderKey="topic.invite_reply.email_placeholder"}}

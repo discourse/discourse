@@ -22,7 +22,7 @@ class InviteMailer < ActionMailer::Base
       # get topic excerpt
       topic_excerpt = ""
       if first_topic.excerpt
-        topic_excerpt = first_topic.excerpt.gsub("\n", " ")
+        topic_excerpt = first_topic.excerpt.tr("\n", " ")
       end
 
       template = 'invite_mailer'

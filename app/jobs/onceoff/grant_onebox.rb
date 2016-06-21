@@ -28,11 +28,14 @@ module Jobs
 
       end
 
-      badge = Badge.find(Badge::FirstOnebox)
       to_award.each do |user_id, opts|
         user = User.where(id: user_id).first
         BadgeGranter.grant(badge, user, opts) if user
       end
+    end
+
+    def badge
+      @badge ||= Badge.find(Badge::FirstOnebox)
     end
 
   end

@@ -806,17 +806,29 @@ describe User do
 
   end
 
-  describe "#first_day_user?" do
+  describe "#new_user_posting_on_first_day?" do
 
     def test_user?(opts={})
-      Fabricate.build(:user, {created_at: Time.now}.merge(opts)).first_day_user?
+      Fabricate.build(:user, {created_at: Time.zone.now}.merge(opts)).new_user_posting_on_first_day?
     end
 
-    it "works" do
+    it "handles when user has never posted" do
       expect(test_user?).to eq(true)
       expect(test_user?(moderator: true)).to eq(false)
       expect(test_user?(trust_level: TrustLevel[2])).to eq(false)
-      expect(test_user?(created_at: 2.days.ago)).to eq(false)
+      expect(test_user?(created_at: 2.days.ago)).to eq(true)
+    end
+
+    it "is true for a user who posted less than 24 hours ago but was created over 1 day ago" do
+      u = Fabricate(:user, created_at: 28.hours.ago)
+      u.user_stat.first_post_created_at = 1.hour.ago
+      expect(u.new_user_posting_on_first_day?).to eq(true)
+    end
+
+    it "is false if first post was more than 24 hours ago" do
+      u = Fabricate(:user, created_at: 28.hours.ago)
+      u.user_stat.first_post_created_at = 25.hours.ago
+      expect(u.new_user_posting_on_first_day?).to eq(false)
     end
   end
 
@@ -1234,6 +1246,13 @@ describe User do
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([1])
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([3])
+    end
+
+    it "does not set category preferences for staged users" do
+      user = Fabricate(:user, staged: true)
+      expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([])
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([])
+      expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([])
     end
   end
 

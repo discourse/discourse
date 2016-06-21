@@ -243,8 +243,7 @@
 
     .details {
       padding: 15px 10px 4px 10px;
-      background-color: dark-light-choose(rgba($primary, .9), rgba($secondary, .9));
-      opacity: 0.8;
+      background: rgba($secondary, .85);
 
       blockquote {
         background-color: dark-light-diff($secondary, $primary, 30%, -70%);
@@ -293,7 +292,7 @@
         width: 100%;
         position: relative;
         float: left;
-        color: dark-light-choose(scale-color($secondary, $lightness: 75%), blend-primary-secondary(90%));
+        color: $primary;
 
         h1 {font-weight: bold;}
 
@@ -301,18 +300,17 @@
           float: left;
           padding-left: 15px;
           a[href] {
-            color: dark-light-diff($secondary, $primary, 75%, -10%);
+            color: $primary;
           }
         }
 
         .bio {
-          color: dark-light-diff($secondary, $primary, 75%, 0%);
+          color: $primary;
           max-height: 300px;
           overflow: auto;
           max-width: 700px;
 
           a[href] {
-            color: dark-light-diff($secondary, $primary, 75%, 0%);
             text-decoration: underline;
           }
 
@@ -356,7 +354,7 @@
     .details {
       padding: 12px 15px 2px 15px;
       margin-top: 0;
-      background: dark-light-choose(rgba($primary, 1), blend-primary-secondary(5%));
+      background: rgba($secondary, .85);
       .bio { display: none; }
 
       .primary {

@@ -7,6 +7,7 @@
 enabled_site_setting :poll_enabled
 
 register_asset "stylesheets/common/poll.scss"
+register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
 
@@ -185,7 +186,7 @@ after_initialize do
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
-    before_filter :ensure_logged_in
+    before_filter :ensure_logged_in, except: [:voters]
 
     def vote
       post_id   = params.require(:post_id)
@@ -214,11 +215,22 @@ after_initialize do
         render_json_error e.message
       end
     end
+
+    def voters
+      user_ids = params.require(:user_ids)
+
+      users = User.where(id: user_ids).map do |user|
+        UserNameSerializer.new(user).serializable_hash
+      end
+
+      render json: { users: users }
+    end
   end
 
   DiscoursePoll::Engine.routes.draw do
     put "/vote" => "polls#vote"
     put "/toggle_status" => "polls#toggle_status"
+    get "/voters" => 'polls#voters'
   end
 
   Discourse::Application.routes.append do
@@ -298,27 +310,5 @@ after_initialize do
     return unless post_custom_fields.present?
     return unless post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].present?
     post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].has_key?("#{scope.user.id}")
-  end
-
-  add_to_serializer(:post, :polls_voters) do
-    voters = {}
-
-    user_ids = post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].keys
-
-    User.where(id: user_ids).map do |user|
-      voters[user.id] = UserNameSerializer.new(user).serializable_hash
-    end
-
-    voters
-  end
-
-  add_to_serializer(:post, :include_polls_voters?) do
-    return unless post_custom_fields.present?
-    return unless post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].present?
-    return unless post_custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].present?
-
-    post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].any? do |_, value|
-      value["public"] == "true"
-    end
   end
 end

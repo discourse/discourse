@@ -7,6 +7,7 @@ describe PostOwnerChanger do
     let(:user_a) { Fabricate(:user) }
     let(:p1) { Fabricate(:post, topic_id: topic.id) }
     let(:p2) { Fabricate(:post, topic_id: topic.id) }
+    let(:p3) { Fabricate(:post) }
 
     it "raises an error with a parameter missing" do
       expect {
@@ -39,6 +40,15 @@ describe PostOwnerChanger do
       expect(p1.user).not_to eq(nil)
       expect(p1.user).to eq(user_a)
       expect(p1.user).to eq(p2.user)
+    end
+
+    it "ignores posts in other topics" do
+      described_class.new(post_ids: [p1.id, p3.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      p1.reload; p3.reload
+      expect(p1.user).to eq(user_a)
+
+      expect(p3.topic_id).not_to eq(p1.topic_id)
+      expect(p2.user).not_to eq(user_a)
     end
 
     context "integration tests" do

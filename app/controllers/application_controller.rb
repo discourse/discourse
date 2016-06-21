@@ -296,13 +296,12 @@ class ApplicationController < ActionController::Base
   def fetch_user_from_params(opts=nil)
     opts ||= {}
     user = if params[:username]
-      username_lower = params[:username].downcase
-      username_lower.gsub!(/\.json$/, '')
+      username_lower = params[:username].downcase.chomp('.json')
       find_opts = { username_lower: username_lower }
       find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
       User.find_by(find_opts)
     elsif params[:external_id]
-      external_id = params[:external_id].gsub(/\.json$/, '')
+      external_id = params[:external_id].chomp('.json')
       SingleSignOnRecord.find_by(external_id: external_id).try(:user)
     end
     raise Discourse::NotFound if user.blank?
@@ -335,9 +334,9 @@ class ApplicationController < ActionController::Base
         # Rails I18n uses underscores between the locale and the region; the request
         # headers use hyphens.
         require 'http_accept_language' unless defined? HttpAcceptLanguage
-        available_locales = I18n.available_locales.map { |locale| locale.to_s.gsub(/_/, '-') }
+        available_locales = I18n.available_locales.map { |locale| locale.to_s.tr('_', '-') }
         parser = HttpAcceptLanguage::Parser.new(request.env["HTTP_ACCEPT_LANGUAGE"])
-        parser.language_region_compatible_from(available_locales).gsub(/-/, '_')
+        parser.language_region_compatible_from(available_locales).tr('-', '_')
       rescue
         # If Accept-Language headers are not set.
         I18n.default_locale
@@ -493,7 +492,7 @@ class ApplicationController < ActionController::Base
       @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
-      @slug.gsub!('-',' ')
+      @slug.tr!('-',' ')
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
     end
 

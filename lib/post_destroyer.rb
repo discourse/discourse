@@ -64,6 +64,12 @@ class PostDestroyer
 
   def staff_recovered
     @post.recover!
+
+    if author = @post.user
+      author.user_stat.post_count += 1
+      author.user_stat.save!
+    end
+
     @post.publish_change_to_clients! :recovered
     TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.post_number == 1
   end

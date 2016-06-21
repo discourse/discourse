@@ -362,7 +362,7 @@ export default Ember.Component.extend({
       this._resetUpload(true);
     },
 
-    showOptions() {
+    showOptions(toolbarEvent) {
       // long term we want some smart positioning algorithm in popup-menu
       // the problem is that positioning in a fixed panel is a nightmare
       // cause offsetParent can end up returning a fixed element and then
@@ -388,9 +388,11 @@ export default Ember.Component.extend({
         left = replyWidth - popupWidth - 40;
       }
 
-      this.sendAction('showOptions', { position: "absolute",
-                                       left: left,
-                                       top: top });
+      const selected = toolbarEvent.selected;
+      toolbarEvent.selectText(selected.start, selected.end - selected.start);
+
+      this.sendAction('showOptions', toolbarEvent,
+        { position: "absolute", left, top });
     },
 
     showUploadModal(toolbarEvent) {
@@ -420,7 +422,7 @@ export default Ember.Component.extend({
         sendAction: 'showUploadModal'
       });
 
-      if (this.get('canWhisper')) {
+      if (this.get("showPopupMenu")) {
         toolbar.addButton({
           id: 'options',
           group: 'extras',

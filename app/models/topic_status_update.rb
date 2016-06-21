@@ -102,7 +102,7 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
     end
 
     def locale_key
-      "topic_statuses.#{action_code.gsub('.', '_')}"
+      "topic_statuses.#{action_code.tr('.', '_')}"
     end
 
     def reopening_topic?

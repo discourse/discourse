@@ -75,7 +75,8 @@ export default createWidget('search-menu', {
 
     let url = '/search?q=' + encodeURIComponent(searchData.term);
     if (contextEnabled) {
-      if (ctx.id.toString().toLowerCase() === this.currentUser.username_lower &&
+      if (this.currentUser &&
+          ctx.id.toString().toLowerCase() === this.currentUser.username_lower &&
           type === "private_messages") {
         url += ' in:private';
       } else {

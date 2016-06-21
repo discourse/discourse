@@ -57,6 +57,7 @@ createWidget('topic-admin-menu-button', {
     const $button = $(e.target).closest('button');
     const position = $button.position();
     position.left = position.left;
+    position.outerHeight = $button.outerHeight();
 
     if (this.attrs.fixed) {
       position.left += $button.width() - 203;
@@ -69,11 +70,18 @@ export default createWidget('topic-admin-menu', {
   tagName: 'div.popup-menu.topic-admin-popup-menu',
 
   buildAttributes(attrs) {
-    const { top, left } = attrs.position;
+    const { top, left, outerHeight } = attrs.position;
     const position = attrs.fixed ? 'fixed' : 'absolute';
 
     if (attrs.openUpwards) {
-      const bottom = $(document).height() - top - $('#main').offset().top;
+      const documentHeight = $(document).height();
+      const mainHeight = $('#main').height();
+      let bottom = documentHeight - top - $('#main').offset().top;
+
+      if (documentHeight > mainHeight) {
+        bottom = bottom - (documentHeight - mainHeight) - outerHeight;
+      }
+
       return { style: `position: ${position}; bottom: ${bottom}px; left: ${left}px;` };
     } else {
       return { style: `position: ${position}; top: ${top}px; left: ${left}px;` };

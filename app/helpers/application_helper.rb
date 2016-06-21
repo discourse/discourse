@@ -38,7 +38,7 @@ module ApplicationHelper
   def script(*args)
     if SiteSetting.enable_cdn_js_debugging && GlobalSetting.cdn_url
       tags = javascript_include_tag(*args, "crossorigin" => "anonymous")
-      tags.gsub!("/assets/", "/cdn_asset/#{Discourse.current_hostname.gsub(".","_")}/")
+      tags.gsub!("/assets/", "/cdn_asset/#{Discourse.current_hostname.tr(".","_")}/")
       tags.gsub!(".js\"", ".js?v=1&origin=#{CGI.escape request.base_url}\"")
       tags.html_safe
     else

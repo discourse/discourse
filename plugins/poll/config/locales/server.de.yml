@@ -25,6 +25,8 @@ de:
     default_poll_with_multiple_choices_has_invalid_parameters: "Die Mehrfachauswahl-Umfrage hat ungültige Parameter."
     named_poll_with_multiple_choices_has_invalid_parameters: "Die Mehrfachauswahl-Umfrage mit dem Namen <strong>%{name}</strong> hat ungültige Parameter."
     requires_at_least_1_valid_option: "Du musst mindestens eine gültige Option auswählen."
+    default_cannot_be_made_public: "Umfragen mit abgegebenen Stimmen können nicht öffentlich gemacht werden."
+    named_cannot_be_made_public: "Die Umfrage <strong>%{name}</strong> hat Stimmen und kann nicht öffentlich gemacht werden."
     cannot_change_polls_after_5_minutes: "Du kannst Umfragen nur in den ersten 5 Minuten hinzufügen, entfernen oder umbenennen."
     op_cannot_edit_options_after_5_minutes: "Du kannst Umfrageoptionen nur in den ersten 5 Minuten hinzufügen oder entfernen. Kontaktiere bitte einen Moderator, wenn du Optionen ändern möchtest."
     staff_cannot_add_or_remove_options_after_5_minutes: "Du kannst Umfrageoptionen nur in den ersten 5 Minuten hinzufügen oder entfernen. Du solltest dieses Thema schließen und stattdessen ein neues erstellen."

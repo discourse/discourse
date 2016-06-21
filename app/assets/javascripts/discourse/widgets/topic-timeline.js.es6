@@ -143,7 +143,7 @@ createWidget('timeline-scrollarea', {
       this.attach('timeline-padding', { height: after })
     ];
 
-    if (position.lastRead) {
+    if (position.lastRead && position.lastRead !== position.total) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
       if ((lastReadTop > (before + SCROLLER_HEIGHT)) && (lastReadTop < (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT))) {
         result.push(this.attach('timeline-last-read', { top: lastReadTop, lastRead: position.lastRead }));
@@ -234,7 +234,7 @@ export default createWidget('topic-timeline', {
       const controls = [];
       if (attrs.topic.get('details.can_create_post')) {
         controls.push(this.attach('button', {
-          className: 'btn btn-primary create',
+          className: 'btn create',
           icon: 'reply',
           title: 'topic.reply.help',
           action: 'replyToPost'

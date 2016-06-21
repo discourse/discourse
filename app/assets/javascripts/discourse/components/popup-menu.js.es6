@@ -7,6 +7,10 @@ export default Ember.Component.extend({
   _setup() {
     this.appEvents.on("popup-menu:open", this, "_changeLocation");
 
+    $('html').on(`keydown.popup-menu-${this.get('elementId')}`, () => {
+      this.sendAction('hide');
+    });
+
     $('html').on(`mouseup.popup-menu-${this.get('elementId')}`, (e) => {
       const $target = $(e.target);
       if ($target.is("button") || this.$().has($target).length === 0) {
@@ -18,6 +22,7 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _cleanup() {
     $('html').off(`mouseup.popup-menu-${this.get('elementId')}`);
+    $('html').off(`keydown.popup-menu-${this.get('elementId')}`);
     this.appEvents.off("popup-menu:open", this, "_changeLocation");
   },
 

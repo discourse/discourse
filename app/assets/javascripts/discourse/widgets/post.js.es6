@@ -161,7 +161,8 @@ createWidget('post-meta-data', {
           attributes: {
             href: attrs.shareUrl,
             'data-share-url': attrs.shareUrl,
-            'data-post-number': attrs.post_number
+            'data-post-number': attrs.post_number,
+            'data-post-id': attrs.id,
           }
         }, dateNode(createdAt))
       ));
@@ -384,7 +385,7 @@ export default createWidget('post', {
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.cloaked ? { style: `height: ${attrs.height}px` } : undefined;
+    return attrs.height ? { style: `min-height: ${attrs.height}px` } : undefined;
   },
 
   buildId(attrs) {

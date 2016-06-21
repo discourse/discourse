@@ -114,6 +114,7 @@ registerButton('replies', (attrs, state, siteSettings) => {
 registerButton('share', attrs => {
   return {
     action: 'share',
+    className: 'share',
     title: 'post.controls.share',
     icon: 'link',
     data: {

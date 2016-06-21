@@ -461,7 +461,7 @@ export default Ember.Component.extend({
 
         this.set('value', `${pre}${contents}${post}`);
         if (lines.length === 1 && tlen > 0) {
-          this._selectText(sel.start + hlen, contents.length - hlen - hlen);
+          this._selectText(sel.start + hlen, sel.value.length);
         } else {
           this._selectText(sel.start, contents.length);
         }
@@ -507,6 +507,7 @@ export default Ember.Component.extend({
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
+        selectText: (from, length) => this._selectText(from, length),
         applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
         applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
         addText: text => this._addText(selected, text),

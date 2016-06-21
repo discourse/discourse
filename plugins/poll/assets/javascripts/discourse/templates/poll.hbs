@@ -2,9 +2,9 @@
   <div class="poll-container">
     {{#if showingResults}}
       {{#if isNumber}}
-        {{poll-results-number poll=poll pollsVoters=pollsVoters}}
+        {{poll-results-number poll=poll}}
       {{else}}
-        {{poll-results-standard poll=poll pollsVoters=pollsVoters}}
+        {{poll-results-standard poll=poll}}
       {{/if}}
     {{else}}
       <ul>

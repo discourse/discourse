@@ -42,6 +42,14 @@
     float: left;
     font-size: 1.571em;
   }
+  .reply-as-new-topic {
+    float: left;
+    line-height: 22px;
+    margin-left: 8px;
+    .fa {
+      margin-right: 5px;
+    }
+  }
   .link {
     margin-right: 2px;
     float: right;

@@ -6,7 +6,6 @@ export default Ember.Controller.extend({
   isRandom : Ember.computed.equal("poll.order", "random"),
   isClosed: Ember.computed.equal("poll.status", "closed"),
   isPublic: Ember.computed.equal("poll.public", "true"),
-  pollsVoters: Ember.computed.alias("post.polls_voters"),
 
   // shows the results when
   //   - poll is closed
@@ -148,14 +147,9 @@ export default Ember.Controller.extend({
       }).then(results => {
         const poll = results.poll;
         const votes = results.vote;
-        const currentUser = this.currentUser;
 
         this.setProperties({ vote: votes, showResults: true });
         this.set("model", Em.Object.create(poll));
-
-        if (poll.public) {
-          this.get("pollsVoters")[currentUser.get("id")] = currentUser;
-        }
       }).catch(() => {
         bootbox.alert(I18n.t("poll.error_while_casting_votes"));
       }).finally(() => {

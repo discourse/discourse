@@ -25,6 +25,7 @@ fi:
     default_poll_with_multiple_choices_has_invalid_parameters: "Kysely, jossa on useita vaihtoehtoja sisältää epäkelpoja parametreja."
     named_poll_with_multiple_choices_has_invalid_parameters: "Kysely nimeltä <strong>%{name}</strong>, jossa on useampia vaihtoehtoja sisältää epäkelpoja parametreja"
     requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
+    default_cannot_be_made_public: "Kyselyä, johon on vastattu, ei voi muuttaa julkiseksi."
     cannot_change_polls_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen."
     op_cannot_edit_options_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen. Ota yhteyttä valvojaan, jos sinun täytyy muokata kyselyn vaihtoehtoja."
     staff_cannot_add_or_remove_options_after_5_minutes: "Et voi lisätä, poistaa tai muuttaa kyselyn vaihtoehtoja ensimmäisen 5 minuutin jälkeen. Sinun tulee poistaa tämä ketju ja luoda uusi sen sijaan."

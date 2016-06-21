@@ -53,6 +53,7 @@ Answer the following questions when prompted:
     Email address for admin account? [me@example.com]: 
     SMTP server address? [smtp.example.com]: 
     SMTP user name? [postmaster@discourse.example.com]: 
+    SMTP port [587]:
     SMTP password? []: 
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse.
@@ -89,10 +90,9 @@ You should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This
 
 ### Post-Install Maintenance
 
-We strongly suggest you:
-
-- Turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command.
-- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package.
+- We strongly suggest you turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command.
+- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package. We also recommend `apt-get install fail2ban` which will default block any IP addresses for 10 minutes that attempt more than 3 password retries.
+- If you need or want a default firewall, [turn on ufw](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
 
 You will get email reminders as new versions of Discourse are released. Please stay current to get the latest features and security fixes. To **upgrade Discourse to the latest version**, visit `/admin/upgrade` in your browser and click the Upgrade button.
 
@@ -135,8 +135,6 @@ Do you want...
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857). We recommend [Fastly](http://www.fastly.com/).
 
 - Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/master/script/import_scripts).
-
-- A firewall on your server? [Configure firewall](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
 
 - A user friendly [offline page when rebuilding or upgrading?](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
 

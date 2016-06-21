@@ -258,6 +258,8 @@ fi:
     attributes:
       category:
         name: "Alueen nimi"
+      topic:
+        title: 'Otsikko'
       post:
         raw: "Leipäteksti"
       user_profile:

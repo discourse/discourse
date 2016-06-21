@@ -28,17 +28,17 @@ de:
     dates:
       time: "HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D. MMM um HH:mm"
+      long_no_year: "D. MMM [um] HH:mm"
       long_no_year_no_time: "D. MMM"
       full_no_year_no_time: "D. MMMM"
-      long_with_year: "D. MMM YYYY um HH:mm"
+      long_with_year: "D. MMM YYYY [um] HH:mm"
       long_with_year_no_time: "D. MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "D. MMM YYYY um HH:mm"
-      long_date_without_year: "D. MMM um HH:mm"
-      long_date_with_year_without_time: "D. MMM 'YY"
+      long_date_with_year: "D. MMM YYYY [um] HH:mm"
+      long_date_without_year: "D. MMM [um] HH:mm"
+      long_date_with_year_without_time: "D. MMM YYYY"
       long_date_without_year_with_linebreak: "D. MMM<br/>HH:mm"
-      long_date_with_year_with_linebreak: "D. MMM 'YY<br/>HH:mm"
+      long_date_with_year_with_linebreak: "D. MMM YYYY<br/>HH:mm"
       wrap_ago: "vor %{date}"
       tiny:
         half_a_minute: "< 1min"
@@ -769,8 +769,8 @@ de:
     too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     logs_error_rate_notice:
-      reached: "%{timestamp}: Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die Begrenzung von %{siteSettingRate} in den Website-Einstellungen erreicht."
-      exceeded: "%{timestamp}: Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die Begrenzung von %{siteSettingRate} in den Website-Einstellungen überschritten."
+      reached: "<b>[%{relativeAge}]</b> Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze der Seite von %{siteSettingRate} erreicht."
+      exceeded: "<b>[%{relativeAge}]</b> Aktuelle Rate vpm <a href='%{url}' target='_blank'>%{rate}</a> hhat die eingestellte Grenze der Seite von %{siteSettingRate} erreicht."
       rate:
         one: "1 Fehler/%{duration}"
         other: "%{count} Fehler/%{duration}"
@@ -899,7 +899,8 @@ de:
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit..."
       drafts_offline: "Entwürfe offline"
-      group_mentioned: "Durch Verwendung von {{group}} werden <a href='{{group_link}}'>{{count}} Personen</a> benachrichtigt."
+      group_mentioned: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>{{count}} Personen</a> zu benachrichtigen – bist du dir sicher?"
+      duplicate_link: "Es sieht so aus als wäre dein Link zu <b>{{domain}}</b> in dem Thema bereits von <b>@{{username}}</b> in <a href='{{post_url}}'>einer Antwort {{ago}}</a> geteilt worden – möchtest du ihn wirklich erneut teilen? "
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -986,7 +987,7 @@ de:
       invited_to_topic: "<i title='zu Thema eingeladen' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='Einladung angenommen' class='fa fa-user'></i><p><span>{{username}}</span> hat deine Einladung angenommen</p>"
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
-      linked: "<i title='Beitrag verlinkt' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> Eine Nachricht in deinem {{group_name}} Postfach</p>"
@@ -1288,8 +1289,7 @@ de:
         no_banner_exists: "Es gibt kein Ankündigungsbanner."
         banner_exists: "Es <strong class='badge badge-notification unread'>gibt bereits</strong> ein anderes Ankündigungsbanner."
       inviting: "Einladungen werden gesendet..."
-      automatically_add_to_groups_optional: "Diese Einladung beinhaltet auch Zugang zu den folgenden Gruppen: (optional, nur Admin)"
-      automatically_add_to_groups_required: "Diese Einladung beinhaltet auch Zugang zu folgenden Gruppen: (<b>erforderlich</b>, nur Admin)"
+      automatically_add_to_groups: "Diese Einladung beinhaltet auch Zugang zu den folgenden Gruppen:"
       invite_private:
         title: 'Zu einer Unterhaltung einladen'
         email_or_username: "E-Mail-Adresse oder Benutzername des Eingeladenen"
@@ -1571,7 +1571,9 @@ de:
       topic_template: "Themenvorlage"
       tags: "Schlagwörter"
       tags_allowed_tags: "Schlagwörter, die nur in dieser Kategorie verwendet werden können:"
+      tags_allowed_tag_groups: "Schlagwortgruppen, die nur in dieser Kategorie verwendet werden können:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
+      tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
       delete: 'Kategorie löschen'
       create: 'Neue Kategorie'
       create_long: 'Eine neue Kategorie erstellen'
@@ -1666,10 +1668,10 @@ de:
         one: "1 Klick"
         other: "%{count} Klicks"
     post_links:
-      about: "Erweitere die Links für diesen Beitrag"
+      about: "weitere Links für diesen Beitrag aufklappen"
       title:
-        one: "1 Beitragslink"
-        other: "%{count} Beitragslinks"
+        one: "ein weiterer"
+        other: "%{count} weitere"
     topic_statuses:
       warning:
         help: "Dies ist eine offizielle Warnung."
@@ -1801,6 +1803,172 @@ de:
       full: "Erstellen / Antworten / Ansehen"
       create_post: "Antworten / Ansehen"
       readonly: "Ansehen"
+    lightbox:
+      download: "herunterladen"
+    search_help:
+      title: 'Hilfe durchsuchen'
+    keyboard_shortcuts_help:
+      title: 'Tastenkombinationen'
+      jump_to:
+        title: 'Springe zu'
+        home: '<b>g</b>, <b>h</b> Startseite'
+        latest: '<b>g</b>, <b>l</b> Neueste Beiträge'
+        new: '<b>g</b>, <b>n</b> Neue Beiträge'
+        unread: '<b>g</b>, <b>u</b> Ungelesene Beiträge'
+        categories: '<b>g</b>, <b>c</b> Kategorien'
+        top: '<b>g</b>, <b>t</b> Top-Beiträge'
+        bookmarks: '<b>g</b>, <b>b</b> Lesezeichen'
+        profile: '<b>g</b>, <b>p</b> Profil'
+        messages: '<b>g</b>, <b>m</b> Nachrichten'
+      navigation:
+        title: 'Navigation'
+        jump: '<b>#</b> Gehe zu Beitrag #'
+        back: '<b>u</b> Zurück'
+        up_down: '<b>k</b>/<b>j</b> Auswahl bewegen &uarr; &darr;'
+        open: '<b>o</b> or <b>Enter</b> Ausgewähltes Thema öffnen'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Nächster/vorheriger Abschnitt'
+      application:
+        title: 'Anwendung'
+        create: '<b>c</b> Neues Thema erstellen'
+        notifications: '<b>n</b> Benachrichtigungen öffnen'
+        hamburger_menu: '<b>=</b> „Hamburger“-Menü öffnen'
+        user_profile_menu: '<b>p</b> Benutzermenü öffnen'
+        show_incoming_updated_topics: '<b>.</b> Aktualisierte Themen anzeigen'
+        search: '<b>/</b> Suche'
+        help: '<b>?</b> Tastaturhilfe öffnen'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Neue/ausgewählte Beiträge ausblenden'
+        dismiss_topics: '<b>x</b>, <b>t</b> Themen ausblenden'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Abmelden'
+      actions:
+        title: 'Aktionen'
+        bookmark_topic: '<b>f</b> Lesezeichen hinzufügen/entfernen'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Thema hervorheben/nicht mehr hervorheben'
+        share_topic: '<b>shift</b>+<b>s</b> Thema teilen'
+        share_post: '<b>s</b> Beitrag teilen'
+        reply_as_new_topic: '<b>t</b> Mit verknüpftem Thema antworten'
+        reply_topic: '<b>shift</b>+<b>r</b> Auf Thema antworten'
+        reply_post: '<b>r</b> Auf Beitrag antworten'
+        quote_post: '<b>q</b> Beitrag zitieren'
+        like: '<b>l</b> Beitrag mit „Gefällt mir“ markieren'
+        flag: '<b>!</b> Beitrag melden'
+        bookmark: '<b>b</b> Lesezeichen auf Beitrag setzen'
+        edit: '<b>e</b> Beitrag bearbeiten'
+        delete: '<b>d</b> Beitrag löschen'
+        mark_muted: '<b>m</b>, <b>m</b> Thema stummschalten'
+        mark_regular: '<b>m</b>, <b>r</b> Thema auf Normal setzen'
+        mark_tracking: '<b>m</b>, <b>t</b> Thema verfolgen'
+        mark_watching: '<b>m</b>, <b>w</b> Thema beobachten'
+    badges:
+      earned_n_times:
+        one: "Abzeichen 1-mal erhalten"
+        other: "Abzeichen %{count}-mal erhalten"
+      granted_on: "Verliehen am %{date}"
+      others_count: "Andere mit diesem Abzeichen (%{count})"
+      title: Abzeichen
+      allow_title: "kann als Titel verwendet werden"
+      multiple_grant: "kann mehrfach verliehen werden"
+      badge_count:
+        one: "1 Abzeichen"
+        other: "%{count} Abzeichen"
+      more_badges:
+        one: "+1 weiteres"
+        other: "+%{count} weitere"
+      granted:
+        one: "1-mal verliehen"
+        other: "%{count}-mal verliehen"
+      select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
+      none: "<keines>"
+      badge_grouping:
+        getting_started:
+          name: Erste Schritte
+        community:
+          name: Community
+        trust_level:
+          name: Vertrauensstufe
+        other:
+          name: Andere
+        posting:
+          name: Schreiben
+    google_search: |
+      <h3>Mit Google suchen</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>
+    tagging:
+      all_tags: "Alle Schlagwörter"
+      selector_all_tags: "Alle Schlagwörter"
+      changed: "Geänderte Schlagwörter:"
+      tags: "Schlagwörter"
+      choose_for_topic: "Optionale Schlagwörter für dieses Thema wählen"
+      delete_tag: "Schlagwört löschen"
+      delete_confirm: "Möchtest du wirklich dieses Schlagwort löschen?"
+      rename_tag: "Schlagwort umbenennen"
+      rename_instructions: "Neuen Namen für das Schlagwort wählen:"
+      sort_by: "Sortieren nach:"
+      sort_by_count: "Anzahl"
+      sort_by_name: "Name"
+      manage_groups: "Schlagwort-Gruppen verwalten"
+      manage_groups_description: "Gruppen definieren, um Schlagwörter zu organisieren"
+      filters:
+        without_category: "%{filter} %{tag} Themen"
+        with_category: "%{filter} %{tag} Themen in %{category}"
+      notifications:
+        watching:
+          title: "Beobachten"
+          description: "Du wirst automatisch alle neuen Themen mit diesem Schlagwort beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Thema erscheinen."
+        tracking:
+          title: "Verfolgen"
+          description: "Du wirst automatisch alle neuen Themen mit diesem Schlagwort folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
+        regular:
+          title: "Allgemein"
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+        muted:
+          title: "Stummgeschaltet"
+          description: "Du wirst nicht über neue Themen mit diesem Schlagwort benachrichtigt und sie werden nicht in deinen ungelesenen Beiträgen auftauchen."
+      groups:
+        title: "Schlagwort-Gruppen"
+        about: "Schlagwörter zu Gruppen hinzufügen, um sie einfacher zu verwalten."
+        new: "Neue Gruppe"
+        tags_label: "Schlagwörter in dieser Gruppe:"
+        parent_tag_label: "Übergeordnetes Schlagwort"
+        parent_tag_placeholder: "Optional"
+        parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort zugeordnet ist."
+        one_per_topic_label: "Beschränke diese Gruppe auf ein Schlagwort pro Thema"
+        new_name: "Neue Schlagwort-Gruppe"
+        save: "Speichern"
+        delete: "Löschen"
+        confirm_delete: "Möchtest du wirklich diese Schlagwort-Gruppe löschen?"
+      topics:
+        none:
+          unread: "Du hast keine ungelesenen Themen."
+          new: "Du hast keine neuen Themen."
+          read: "Du hast noch keine Themen gelesen."
+          posted: "Du hast noch keine Beiträge verfasst."
+          latest: "Es gibt keine aktuellen Themen."
+          hot: "Es gibt keine beliebten Themen."
+          bookmarks: "Du hast noch keine Themen, in denen du ein Lesezeichen gesetzt hast."
+          top: "Es gibt keine Top-Themen."
+          search: "Es wurden keine Suchergebnisse gefunden."
+        bottom:
+          latest: "Das waren die aktuellen Themen."
+          hot: "Das waren alle beliebten Themen."
+          posted: "Das waren alle deine Themen."
+          read: "Das waren alle gelesenen Themen."
+          new: "Das waren alle neuen Themen."
+          unread: "Das waren alle ungelesen Themen."
+          top: "Das waren alle Top-Themen."
+          bookmarks: "Das waren alle Themen mit Lesezeichen."
+          search: "Es gibt keine weiteren Suchergebnisse."
+    invite:
+      custom_message: "Mache deine Einladung ein bisschen mehr persönlich, indem du etwas schreibst:"
+      custom_message_link: "persönliche Nachricht"
+      custom_message_placeholder: "Gib deine persönliche Nachricht ein"
+      custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
+      custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben..."
     admin:
@@ -2253,6 +2421,7 @@ de:
             backup_operation: "Backup läuft"
             deleted_tag: "Schlagwort gelöscht"
             renamed_tag: "Schlagwort umbenannt"
+            revoke_email: "E-Mail widerrufen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."

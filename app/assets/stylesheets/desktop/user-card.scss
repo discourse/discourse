@@ -1,8 +1,8 @@
 // styles that apply to the "share" popup when sharing a link to a post or topic
 // Colors should mostly be absolute here, it will look the same in dark & light themes
 
-$user_card_primary: #fff;
-$user_card_background: #222;
+$user_card_primary: $primary;
+$user_card_background: $secondary;
 
 #user-card {
   position: absolute;
@@ -10,7 +10,7 @@ $user_card_background: #222;
   left: -9999px;
   top: -9999px;
   z-index: 990;
-  box-shadow: 0 2px 12px rgba($primary, .6);
+  box-shadow: 1px 2px 6px rgba(0,0,0, .25);
   margin-top: -2px;
   color: $user_card_primary;
   background: $user_card_background center center;
@@ -94,7 +94,7 @@ $user_card_background: #222;
     font-size: 0.929em;
     font-weight: normal;
     margin-top: 0;
-    color: scale-color($user_card_primary, $lightness: 25%);
+    color: scale-color($user_card_primary, $lightness: 20%);
     overflow: hidden;
     text-overflow: ellipsis;
     a {
@@ -121,7 +121,7 @@ $user_card_background: #222;
       display: inline;
       margin-right: 5px;
       .desc, a {
-        color: scale-color($user_card_primary, $lightness: 50%);
+        color: scale-color($user_card_primary, $lightness: 35%);
       }
     }
     div {display: inline; color: scale-color($user_card_background, $lightness: 50%);
@@ -139,7 +139,7 @@ $user_card_background: #222;
   }
 
   .bio {
-    padding: 15px 0 0 0;
+    padding: 10px 0 0 0;
     clear: left;
 
     a {
@@ -161,9 +161,11 @@ $user_card_background: #222;
 
   .location-and-website {
     clear: left;
-
+    margin-top: 5px;
+    .location {margin-right: 10px;}
     .website-name {
       a {
+        text-decoration: underline;
         color: $user_card_primary;
       }
     }
@@ -204,7 +206,6 @@ $user_card_background: #222;
       height: 60px;
       position: relative;
       width: 45%;
-      margin-top: 11px;
 
       span {
         position: absolute;
@@ -222,9 +223,9 @@ $user_card_background: #222;
       margin-top: 5px;
 
       .user-badge {
-        background: transparent;
-        color: scale-color($user_card_background, $lightness: 50%);
-        border-color: scale-color($user_card_background, $lightness: 50%);
+        background: scale-color($user_card_background, $lightness: -5%);
+        border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+        color: $user_card_primary;
       }
 
       h3 {

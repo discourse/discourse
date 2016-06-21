@@ -59,6 +59,32 @@ class Upload < ActiveRecord::Base
   # list of image types that will be cropped
   CROPPED_IMAGE_TYPES ||= %w{avatar profile_background card_background}
 
+  WHITELISTED_SVG_ELEMENTS ||= %w{
+    circle
+    clippath
+    defs
+    ellipse
+    g
+    line
+    linearGradient
+    path
+    polygon
+    polyline
+    radialGradient
+    rect
+    stop
+    svg
+    text
+    textpath
+    tref
+    tspan
+    use
+  }
+
+  def self.svg_whitelist_xpath
+    @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+  end
+
   # options
   #   - content_type
   #   - origin (url)
@@ -68,17 +94,20 @@ class Upload < ActiveRecord::Base
     DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
       # do some work on images
       if FileHelper.is_image?(filename) && is_actual_image?(file)
-        if filename =~ /\.svg$/i
-          svg = Nokogiri::XML(file).at_css("svg")
-          w = svg["width"].to_i
-          h = svg["height"].to_i
+        if filename[/\.svg$/i]
+          # whitelist svg elements
+          doc = Nokogiri::XML(file)
+          doc.xpath(svg_whitelist_xpath).remove
+          File.write(file.path, doc.to_s)
+          file.rewind
         else
           # fix orientation first
           fix_image_orientation(file.path) if should_optimize?(file.path)
-          # retrieve image info
-          image_info = FastImage.new(file) rescue nil
-          w, h = *(image_info.try(:size) || [0, 0])
         end
+
+        # retrieve image info
+        image_info = FastImage.new(file)
+        w, h = *(image_info.try(:size) || [0, 0])
 
         # default size
         width, height = ImageSizer.resize(w, h)
@@ -107,7 +136,7 @@ class Upload < ActiveRecord::Base
           end
         end
 
-        # optimize image (except GIFs and large PNGs)
+        # optimize image (except GIFs, SVGs and large PNGs)
         if should_optimize?(file.path)
           ImageOptim.new.optimize_image!(file.path) rescue nil
           # update the file size
@@ -178,8 +207,8 @@ class Upload < ActiveRecord::Base
   LARGE_PNG_SIZE ||= 3.megabytes
 
   def self.should_optimize?(path)
-    # don't optimize GIFs
-    return false if path =~ /\.gif$/i
+    # don't optimize GIFs or SVGs
+    return false if path =~ /\.(gif|svg)$/i
     return true  if path !~ /\.png$/i
     image_info = FastImage.new(path) rescue nil
     w, h = *(image_info.try(:size) || [0, 0])

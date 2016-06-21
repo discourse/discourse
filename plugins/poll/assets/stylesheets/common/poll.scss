@@ -81,7 +81,7 @@ div.poll {
     vertical-align: middle;
     padding: 10px;
 
-    & > span {
+    .poll-results-number-rating {
       font-size: 2em;
     }
   }
@@ -97,10 +97,11 @@ div.poll {
       display: inline;
     }
 
-    margin: 5px 0;
+    margin-top: 10px;
   }
 
   .poll-voters-toggle-expand {
+    width: 100%;
     text-align: center;
   }
 

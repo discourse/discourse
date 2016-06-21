@@ -16,18 +16,22 @@
 
 en:
   dates:
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
     short_date: "D MMM, YYYY"
+    # Use Moment.js format string: http://momentjs.com/docs/#/displaying/format/
     long_date: "MMMM D, YYYY h:mma"
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
       short: "%m-%d-%Y"
-      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
       short_no_year: "%B %-d"
-      # Format directives: http://ruby-doc.org/core-2.2.0/Time.html#method-i-strftime
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
       date_only: "%B %-d, %Y"
+      # Format directives: http://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
       long: "%B %-d, %Y, %l:%M%P"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
@@ -617,18 +621,21 @@ en:
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
 
   unsubscribed:
-    title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
-    oops: "In case you didn't mean to do this, click below."
-    error: "Error Unsubscribing"
-    preferences_link: "You can also unsubscribe from summary emails on your <a href='/my/preferences'>preferences page</a>"
-    different_user_description: "You are currently logged in as a different user than the one who the summary was mailed to. Please log out and try again."
-    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
+    title: "Unsubscribed!"
+    description: "You have been unsubscribed. If you wish to change your email settings visit your <a href='%{url}'>user preferences</a>."
+    topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
 
-  resubscribe:
-    action: "Re-Subscribe"
-    title: "Re-Subscribed!"
-    description: "You have been re-subscribed."
+  unsubscribe:
+    title: "Unsubscribe"
+    stop_watching_topic: "Stop watching this topic, %{link}"
+    mute_topic: "Mute all notifications for this topic, %{link}"
+    unwatch_category: "Stop watching all topics in %{category}"
+    mailing_list_mode: "Turn off mailing list mode"
+    disable_digest_emails: "Stop sending me summary emails"
+    all: "Don't send me any mail from %{sitename}"
+    different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
+    not_found_description: "Sorry, we couldn't find this unsubscribe. It's possible the link in your email has expired?"
+    log_out: "Log Out"
 
   reports:
     visits:
@@ -878,15 +885,15 @@ en:
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and message sent to the user (0 for never)"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
 
-    max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
-    max_replies_in_first_day: "The maximum number of replies a user is allowed to create in their first day on the site"
+    max_topics_in_first_day: "The maximum number of topics a user is allowed to create in the 24 hour period after creating their first post"
+    max_replies_in_first_day: "The maximum number of replies a user is allowed to create in the 24 hour period after creating their first post"
 
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
 
-    num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
-    num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    num_spam_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
+    num_users_to_block_new_user: "If a new user's posts get num_spam_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_block_new_user: "If a new user's posts get this many flags from num_tl3_users_to_block_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_block_new_user: "If a new user's posts get num_tl3_flags_to_block_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
@@ -1583,7 +1590,7 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you won't need to log in.
+      This invitation is from a trusted user, so an account will be created for you automatically.
 
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
@@ -1602,7 +1609,7 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you won't need to log in.
+      This invitation is from a trusted user, so an account will be created for you automatically.
 
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
@@ -1716,7 +1723,7 @@ en:
 
   system_messages:
     post_hidden:
-      subject_template: "Post hidden due to community flagging"
+      subject_template: "Post hidden by community flags"
       text_body_template: |
         Hello,
 
@@ -1746,33 +1753,23 @@ en:
 
         - For search, your user page, or the <kbd>☰</kbd> menu, use the **icon buttons at upper right**.
 
-        - Selecting a topic title will always take you to the **next unread reply** in the topic. To enter at the top or bottom, select the reply count or last reply date instead.
+        - Selecting a topic title will always take you to your **next unread reply** in the topic. To enter at the top or bottom instead, select the reply count or last reply date.
 
             <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
 
-        - While reading a topic, select the progress bar at the bottom right for full navigation controls. Quickly jump back to the top by selecting the topic title. Press <kbd>?</kbd> for a list of super-speedy keyboard shortcuts.
+        - While reading a topic, use the timeline on the right to jump to the top, bottom, or your last read position. On smaller screens, select the progress bar at bottom right to expand it:
 
             <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
 
+            You can also press <kbd>?</kbd> on your keyboard for a list of super-speedy keyboard shortcuts.
+
         ## Replying
 
-        - To reply to the **topic in general**, use <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">  at the very bottom of the topic.
-
-        - To reply to a **specific person**, use <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> on their post.
-
-        - To reply with **a new topic**, use <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> to the right of the post. Both old and new topics will be automatically linked together.
-
-        Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
-
-            This is **bold**.
-            This is <b>bold</b>.
-            This is [b]bold[/b].
-
-        Want to learn Markdown? [Take our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
-
-        To insert a quote, select the text you wish to quote, then press any Reply button. Repeat for multiple quotes.
+        To insert a quote, select the text you wish to quote, then press any <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Reply button to open the editor. Repeat for multiple quotes.
 
         <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        You can always continue reading while you compose your reply, and we automatically save drafts as you write.
 
         To notify someone about your reply, mention their name. Type `@` to begin selecting a username.
 
@@ -1786,45 +1783,55 @@ en:
 
         <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
 
+        Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
+
+            This is **bold**.
+            This is <b>bold</b>.
+            This is [b]bold[/b].
+
+        For more formatting tips, [try our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
+
         ## Actions
 
         There are action buttons at the bottom of each post:
 
         <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
 
-        To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
+        - To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
 
-        If you see a problem with someone's post, privately let them, or [our staff](%{base_url}/about), know about it with the **flag** button. You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
+        - Grab a copy-pasteable link to any reply or topic via the **link** button.
+
+        - Use the <kbd>&hellip;</kbd> show more button to reveal more actions. **Flag** to privately let the author, or [our staff](%{base_url}/about), know about a problem. **Bookmark** to find this post later on your profile page.
 
         ## Notifications
 
-        When someone replies to you, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it to access your **notifications**.
+        When someone replies to you, quotes your post, mentions your `@username`, or even links to your post, a number will immediately appear at the top right of the page. Select it to access your **notifications**.
 
         <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
 
         Don't worry about missing a reply – you'll be emailed any notifications that arrive when you are away.
 
-        ## Your Preferences
+        ## Preferences
 
           - All topics less than **two days old** are considered new.
 
-          - Any topic you've **actively participated in** (by creating, replying, or reading for an extended period) will be automatically tracked.
+          - Any topic you've **actively participated in** (by creating it, replying to it, or reading it for an extended period) will be automatically tracked on your behalf.
 
-        You will see the blue new and unread number indicators next to these topics:
+        You will see the new and unread number indicators next to these topics:
 
         <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
 
-        You can change your notifications for any topic via the notification control at the bottom of the topic.
+        You can change your notifications for any topic via the notification control at the bottom, and right hand side, of each topic.
 
         <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
 
-        You can also set notification state per category, if you want to watch every new topic in a specific category.
+        You can also set notification state per category, if you want to watch or mute every new topic in a specific category.
 
         To change any of these settings, see [your user preferences](%{base_url}/my/preferences).
 
         ## Community Trust
 
-        As you participate here, over time you'll gain the trust of the community, become a full citizen, and new user limitations will be lifted. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain new abilities to help us manage our community together.
+        It's great to meet you! As you participate here, over time we'll get to know you, and your temporary new user limitations will be lifted. Keep participating, and over time you'll gain new [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
 
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
@@ -2109,7 +2116,7 @@ en:
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     user_automatically_blocked:
-      subject_template: "New user %{username} blocked due to community flags"
+      subject_template: "New user %{username} blocked by community flags"
       text_body_template: |
         This is an automated message.
 
@@ -2160,19 +2167,19 @@ en:
         [Please review and fix them](%{base_url}/admin).
 
   unsubscribe_link: |
-    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
-
-    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}).
+    To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
   unsubscribe_link_and_mail: |
-    To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
+    To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
-    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}) or [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
+    Alternarively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   unsubscribe_mailing_list: |
-    You have mailing list mode enabled. To stop receiving notifications for this particular topic, [click here](%{unsubscribe_url}).
+    You are receiving these emails cause you have enabled mailing list mode.
 
-    To unsubscribe from these emails, change your [user preferences](%{user_preferences_url}) or [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
+    To unsubscribe from these emails, [click here](%{unsubscribe_url}).
+
+    Alternatively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "
@@ -3095,6 +3102,11 @@ en:
       name: First Onebox
       description: Posted a link that was oneboxed
       long_description: This badge is granted the first time you post a link on a line by itself, which was then automatically expanded into a onebox with a brief summary of the link, a title, and (when available) a picture.
+    first_reply_by_email:
+      name: First Reply By Email
+      description: Replied to a Post via email
+      long_description: |
+        This badge is granted the first time you reply to a post via email :e-mail:.
 
   admin_login:
     success: "Email Sent"

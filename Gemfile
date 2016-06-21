@@ -52,7 +52,7 @@ gem 'ember-source', '1.12.2'
 gem 'barber'
 gem 'babel-transpiler'
 
-gem 'message_bus', '2.0.0.beta.11'
+gem 'message_bus'
 
 gem 'rails_multisite'
 
@@ -61,7 +61,7 @@ gem 'fast_xs'
 gem 'fast_xor'
 
 # while we sort out https://github.com/sdsykes/fastimage/pull/46
-gem 'discourse_fastimage', '2.0.2', require: 'fastimage'
+gem 'discourse_fastimage', '2.0.3', require: 'fastimage'
 gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false

@@ -6,6 +6,7 @@ require_dependency 'post_destroyer'
 describe Topic do
 
   let(:now) { Time.zone.local(2013,11,20,8,0) }
+  let(:user) { Fabricate(:user) }
 
   it { is_expected.to validate_presence_of :title }
 
@@ -312,8 +313,6 @@ describe Topic do
       end
 
       context "secure categories" do
-
-        let(:user) { Fabricate(:user) }
         let(:category) { Fabricate(:category, read_restricted: true) }
 
         before do
@@ -371,6 +370,25 @@ describe Topic do
 
       context 'existing user' do
         let(:walter) { Fabricate(:walter_white) }
+
+        context 'by group name' do
+
+          it 'can add admin to allowed groups' do
+            admins = Group[:admins]
+            admins.alias_level = Group::ALIAS_LEVELS[:everyone]
+            admins.save
+
+            expect(topic.invite_group(topic.user, admins)).to eq(true)
+
+            expect(topic.allowed_groups.include?(admins)).to eq(true)
+
+            expect(topic.remove_allowed_group(topic.user, 'admins')).to eq(true)
+            topic.reload
+
+            expect(topic.allowed_groups.include?(admins)).to eq(false)
+          end
+
+        end
 
         context 'by username' do
 
@@ -499,20 +517,36 @@ describe Topic do
   end
 
   context 'moderator posts' do
-    before do
-      @moderator = Fabricate(:moderator)
-      @topic = Fabricate(:topic)
-      @mod_post = @topic.add_moderator_post(@moderator, "Moderator did something. http://discourse.org", post_number: 999)
-    end
+    let(:moderator) { Fabricate(:moderator) }
+    let(:topic) { Fabricate(:topic) }
 
     it 'creates a moderator post' do
-      expect(@mod_post).to be_present
-      expect(@mod_post.post_type).to eq(Post.types[:moderator_action])
-      expect(@mod_post.post_number).to eq(999)
-      expect(@mod_post.sort_order).to eq(999)
-      expect(@topic.topic_links.count).to eq(1)
-      @topic.reload
-      expect(@topic.moderator_posts_count).to eq(1)
+      mod_post = topic.add_moderator_post(
+        moderator,
+        "Moderator did something. http://discourse.org",
+        post_number: 999
+      )
+
+      expect(mod_post).to be_present
+      expect(mod_post.post_type).to eq(Post.types[:moderator_action])
+      expect(mod_post.post_number).to eq(999)
+      expect(mod_post.sort_order).to eq(999)
+      expect(topic.topic_links.count).to eq(1)
+      expect(topic.reload.moderator_posts_count).to eq(1)
+    end
+
+    context "when moderator post fails to be created" do
+      before do
+        user.toggle!(:blocked)
+      end
+
+      it "should not increment moderator_posts_count" do
+        expect(topic.moderator_posts_count).to eq(0)
+
+        topic.add_moderator_post(user, "winter is never coming")
+
+        expect(topic.moderator_posts_count).to eq(0)
+      end
     end
   end
 
@@ -1465,34 +1499,53 @@ describe Topic do
     end
   end
 
-  it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
-    SiteSetting.stubs(:max_topics_in_first_day).returns(1)
-    SiteSetting.stubs(:max_replies_in_first_day).returns(1)
-    SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
-    RateLimiter.stubs(:rate_limit_create_topic).returns(100)
-    RateLimiter.stubs(:disabled?).returns(false)
-    RateLimiter.clear_all!
+  context "new user limits" do
+    before do
+      SiteSetting.max_topics_in_first_day = 1
+      SiteSetting.max_replies_in_first_day = 1
+      SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
+      RateLimiter.stubs(:rate_limit_create_topic).returns(100)
+      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.clear_all!
+    end
 
-    start = Time.now.tomorrow.beginning_of_day
+    it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
+      start = Time.now.tomorrow.beginning_of_day
 
-    freeze_time(start)
+      freeze_time(start)
 
-    user = Fabricate(:user)
-    topic_id = create_post(user: user).topic_id
+      user = Fabricate(:user)
+      topic_id = create_post(user: user).topic_id
 
-    freeze_time(start + 10.minutes)
-    expect {
-      create_post(user: user)
-    }.to raise_error(RateLimiter::LimitExceeded)
+      freeze_time(start + 10.minutes)
+      expect { create_post(user: user) }.to raise_error(RateLimiter::LimitExceeded)
 
-    freeze_time(start + 20.minutes)
-    create_post(user: user, topic_id: topic_id)
-
-    freeze_time(start + 30.minutes)
-
-    expect {
+      freeze_time(start + 20.minutes)
       create_post(user: user, topic_id: topic_id)
-    }.to raise_error(RateLimiter::LimitExceeded)
+
+      freeze_time(start + 30.minutes)
+      expect { create_post(user: user, topic_id: topic_id) }.to raise_error(RateLimiter::LimitExceeded)
+    end
+
+    it "starts counting when they make their first post/topic" do
+      start = Time.now.tomorrow.beginning_of_day
+
+      freeze_time(start)
+
+      user = Fabricate(:user)
+
+      freeze_time(start + 25.hours)
+      topic_id = create_post(user: user).topic_id
+
+      freeze_time(start + 26.hours)
+      expect { create_post(user: user) }.to raise_error(RateLimiter::LimitExceeded)
+
+      freeze_time(start + 27.hours)
+      create_post(user: user, topic_id: topic_id)
+
+      freeze_time(start + 28.hours)
+      expect { create_post(user: user, topic_id: topic_id) }.to raise_error(RateLimiter::LimitExceeded)
+    end
   end
 
   describe ".count_exceeds_minimun?" do

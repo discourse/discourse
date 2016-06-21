@@ -1,27 +1,3 @@
-{{bread-crumbs categories=categories
-               category=category
-               noSubcategories=noSubcategories
-               hideSubcategories=showingSubcategoryList}}
-
-{{navigation-bar navItems=navItems filterMode=filterMode}}
-
-{{#if currentUser}}
-  {{category-notifications-button category=category}}
-{{/if}}
-
-{{#if canCreateTopic}}
-  {{d-button  id="create-topic"
-              class="btn-default"
-              action="createTopic"
-              icon="plus"
-              label="topic.create"
-              disabled=cannotCreateTopicOnCategory}}
-{{/if}}
-
-{{#if canEditCategory}}
-  {{d-button class="btn-default edit-category" action="editCategory" actionParam=category icon="wrench" label="category.edit_long"}}
-{{/if}}
-
 <section class='category-heading'>
   {{#if category.logo_url}}
     {{cdn-img src=category.logo_url class="category-logo"}}
@@ -30,3 +6,29 @@
     {{/if}}
   {{/if}}
 </section>
+
+<div class='category-navigation'>
+  {{bread-crumbs categories=categories
+                 category=category
+                 noSubcategories=noSubcategories
+                 hideSubcategories=showingSubcategoryList}}
+
+  {{navigation-bar navItems=navItems filterMode=filterMode}}
+
+  {{#if currentUser}}
+    {{category-notifications-button category=category}}
+  {{/if}}
+
+  {{#if canCreateTopic}}
+    {{d-button  id="create-topic"
+                class="btn-default"
+                action="createTopic"
+                icon="plus"
+                label="topic.create"
+                disabled=cannotCreateTopicOnCategory}}
+  {{/if}}
+
+  {{#if canEditCategory}}
+    {{d-button class="btn-default edit-category" action="editCategory" actionParam=category icon="wrench" label="category.edit_long"}}
+  {{/if}}
+</div>

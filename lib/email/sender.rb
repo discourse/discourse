@@ -94,12 +94,12 @@ module Email
 
         # http://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
-          list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{host}>"
+          list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
           # subcategory case
           if !topic.category.parent_category_id.nil?
             parent_category_name = Category.find_by(id: topic.category.parent_category_id).name
-            list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{parent_category_name.downcase.gsub(' ', '-')}.#{host}>"
+            list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{parent_category_name.downcase.tr(' ', '-')}.#{host}>"
           end
         else
           list_id = "<#{host}>"
@@ -133,9 +133,12 @@ module Email
       @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
       @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
-      # it's the only way to pass the original message_id when using mailjet
-      if ActionMailer::Base.smtp_settings[:address][".mailjet.com"]
+      # pass the original message_id when using mailjet/mandrill
+      case ActionMailer::Base.smtp_settings[:address]
+      when /\.mailjet\.com/
         @message.header['X-MJ-CustomID'] = @message.message_id
+      when "smtp.mandrillapp.com"
+        @message.header['X-MC-Metadata'] = { message_id: @message.message_id }.to_json
       end
 
       # Suppress images from short emails

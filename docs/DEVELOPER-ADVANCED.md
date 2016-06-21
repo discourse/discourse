@@ -6,7 +6,7 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 
 # Preparing a fresh Ubuntu install
 
-To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Discourse plugins follow the commands below. We assume and English install of Ubuntu.
+To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Discourse plugins follow the commands below. We assume an English install of Ubuntu.
 
     # Basics
     whoami > /tmp/username
@@ -64,7 +64,7 @@ Create a test account, and enable it with:
 Discourse does a lot of stuff async, so it's better to run sidekiq even on development mode:
 
     ruby $(mailcatcher) # open http://localhost:1080 to see the emails, stop with pkill -f mailcatcher
-    bundle exec sidekiq -d -l log/sidekiq.log # open http://localhost:3000/sidekiq to see the queue, stop with pkill -f sidekiq
+    bundle exec sidekiq -q critical,low,default -d -l log/sidekiq.log # open http://localhost:3000/sidekiq to see the queue, stop with pkill -f sidekiq
     bundle exec rails server
 
 And happy hacking!
