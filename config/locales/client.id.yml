@@ -26,6 +26,7 @@ id:
         millions: "{{number}}M"
     dates:
       time: "j:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "BBB H j:mm a"
       long_no_year_no_time: "BBB H"
       full_no_year_no_time: "MMMM Do"
@@ -37,6 +38,7 @@ id:
       long_date_with_year_without_time: "BBB H, 'TT"
       long_date_without_year_with_linebreak: "BBB H <br/>LT"
       long_date_with_year_with_linebreak: "BBB H, 'TT <br/>LT"
+      wrap_ago: "%{date} lalu"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -378,6 +380,7 @@ id:
       other_accounts: "Akun lain dengan alamat IP ini: "
       delete_other_accounts: "Hapus %{count}"
       username: "username"
+      trust_level: "TL"
       read_time: "waktu baca"
       topics_entered: "memasuki topik"
       post_count: "# post"
@@ -464,6 +467,7 @@ id:
         bulk_select: "Pilih Pesan"
         move_to_inbox: "Pindah ke Kotak Masuk"
         move_to_archive: "Arsip"
+        failed_to_move: "Gagal memindahkan pesan terpilih (mungkin internet kamu putus ?)"
         select_all: "Pilih Semua"
       change_password:
         success: "(surel terkirim)"
@@ -488,6 +492,7 @@ id:
         title: "Ganti gambar profil anda"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, berdasarkan "
         gravatar_title: "Ganti avatar anda di website Gravatar"
+        refresh_gravatar_title: "Segarkan Gravatas kamu"
         uploaded_avatar: "Gambar kustom"
         uploaded_avatar_empty: "Tambah gambar kustom"
         upload_title: "Unggah gambar anda"
@@ -571,6 +576,7 @@ id:
         after_5_minutes: "setelah 5 menit"
         after_10_minutes: "setelah 10 menit"
       invited:
+        sent: "Terkirim"
         pending: "Undangan yang tertunda"
         pending_tab: "Tertunda"
         pending_tab_with_count: "Tertunda ({{count}})"
@@ -580,14 +586,29 @@ id:
         rescind: "Hapus"
         rescinded: "Undangan dihapus"
         reinvite: "Kirim Ulang Undangan"
+        reinvited: "Undangan sudah dikirim ulang"
+        reinvited_all: "Semua Undangan sudah dikirim ulang"
         time_read: "Waktu Baca"
         days_visited: "Hari Berkunjung"
         account_age_days: "Umur akun dalam hari"
         create: "Kirim Undangan"
         generate_link: "Salin Tautan Undangan"
+        bulk_invite:
+          uploading: "Mengunggah..."
       password:
         title: "Password"
         too_short: "Password kamu terlalu pendek."
+        common: "Password terlalu umum"
+        same_as_username: "Password dan nama pengguna kamu sama"
+        same_as_email: "Password dan email kamu sama"
+      summary:
+        title: "Ringkasan"
+        days_visited:
+          other: "hari berkunjung"
+        top_replies: "Balasan Teratas"
+        no_replies: "Belum ada balasan"
+        more_replies: "Balasan lebih banyak"
+        top_topics: "Topik teratas"
       ip_address:
         title: "Alamat IP terakhir"
       registration_ip_address:
@@ -610,16 +631,22 @@ id:
         not_found: "Halaman Tidak Ditemukan"
       desc:
         network: "Harap cek koneksi internet anda"
+        server: "Kode kesalahan: {{status}}"
+        unknown: "Terjadi kesalahan"
       buttons:
         back: "Kembali"
         again: "Coba Lagi"
     close: "Tutup"
+    refresh: "Segarkan"
     year: 'tahun'
     month: 'bulan'
     week: 'minggu'
+    day: 'hari'
     last_reply_lowercase: balasan terakhir
     signup_cta:
       hide_forever: "tidak, terima kasih"
+    private_message_info:
+      title: "Pesan"
     email: 'Surel'
     username: 'Nama Pengguna'
     last_seen: 'Terlihat'

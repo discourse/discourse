@@ -38,6 +38,7 @@ sv:
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      wrap_ago: "%{date} sedan"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -131,13 +132,18 @@ sv:
       pinned_globally:
         enabled: 'globalt klistrad %{when}'
         disabled: 'avklistrad %{when}'
+      visible:
+        enabled: 'listades %{when}'
+        disabled: 'avlistades %{when}'
     topic_admin_menu: "ämne administratörs åtgärder"
     emails_are_disabled: "All utgående e-post har blivit globalt deaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
+    bootstrap_mode_disabled: "Bootstrap-läge otillgängliggörs i 24 timmar."
     s3:
       regions:
         us_east_1: "Östra USA (N. Virginia)"
         us_west_1: "Västra USA (N. Kalifornien)"
         us_west_2: "Västra USA (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "EU (Irland)"
         eu_central_1: "EU (Frankfurt)"
         sa_east_1: "Sydamerika (Sao Paulo)"
@@ -264,6 +270,7 @@ sv:
         one: "Detta ämne har <b>1</b> ämne som inväntar godkännande"
         other: "Detta ämne har <b>{{count}}</b> inlägg som inväntar godkännande"
       confirm: "Spara ändringar"
+      delete_prompt: "Vill du verkligen ta bort <b>%{username}</b>? Dennes alla poster kommer att tas bort samt epost och IP-adress kommer blockeras."
       approval:
         title: "Inlägget behöver godkännande"
         description: "Vi har mottagit ditt nya inlägg men det behöver bli godkänt av en moderator innan det kan visas. Ha tålamod."
@@ -307,8 +314,11 @@ sv:
         other: "%{count} användare"
     groups:
       empty:
+        posts: "Det finns inga inlägg från medlemmar in denna grupp."
         members: "Det finns ingen medlem i den här gruppen."
+        mentions: "Det finns ingen omnämnande i denna grupp."
         messages: "Det finns inget meddelande för den här gruppen."
+        topics: "Det finns inget ämne från medlemmar i denna grupp."
       add: "Lägg till"
       selector_placeholder: "Lägg till medlemmar"
       owner: "ägare"
@@ -440,8 +450,7 @@ sv:
       suspended_reason: "Anledning:"
       github_profile: "Github"
       mailing_list_mode:
-        daily: "Skicka dagliga uppdateringar."
-        individual: "Skicka ett epostmeddelande för varje nytt inlägg."
+        individual: "Skicka ett e-postmeddelande för varje nytt inlägg."
         many_per_day: "Skicka ett epostmeddelande för varje nytt inlägg (ungefär {{dailyEmailEstimate}} per dag)."
         few_per_day: "Skicka ett epostmeddelande för varje nytt inlägg (mindre än 2 per dag)."
       watched_categories: "Tittade på"
@@ -449,6 +458,7 @@ sv:
       tracked_categories: "Bevakade"
       tracked_categories_instructions: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet nya inlägg visas bredvid ämnet."
       muted_categories: "Tystad"
+      muted_categories_instructions: "Du kommer inte att få notifieringar om nya ämnen inom dessa kategorier, och de kommer inte att visas under bland dina olästa ämnen. "
       delete_account: "Radera mitt konto"
       delete_account_confirm: "Är du säker på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har tagits bort."

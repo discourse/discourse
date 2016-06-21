@@ -26,6 +26,7 @@ tr_TR:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "AAA YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"
@@ -272,6 +273,8 @@ tr_TR:
       title: "Kullanıcılar"
       likes_given: "Verilen"
       likes_received: "Alınan"
+      topics_entered: "Görüntülendi"
+      topics_entered_long: "Konu Görüntülendi"
       time_read: "Okuma Zamanı"
       topic_count: "Konular"
       topic_count_long: "Oluşturulan Konular"
@@ -420,6 +423,8 @@ tr_TR:
       suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
       suspended_reason: "Neden:"
       github_profile: "Github"
+      mailing_list_mode:
+        daily: "Günlük güncellemeleri gönder"
       watched_categories: "Gözlendi"
       watched_categories_instructions: "Bu kategorilerdeki tüm yeni konuları otomatik olarak gözleyeceksiniz. Tüm yeni gönderi ve konular size bildirilecek. Ayrıca, okunmamış ve yeni gönderilerin sayısı ilgili konunun yanında belirecek."
       tracked_categories: "Takip edildi"

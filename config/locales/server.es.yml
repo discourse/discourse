@@ -546,7 +546,7 @@ es:
     oops: "En caso de que no quieras hacer esto, haz clic abajo."
     error: "Error al darse de baja"
     preferences_link: "También puedes darte de baja de los emails de resumen en tu <a href='/my/preferences'>página de preferencias</a>"
-    different_user_description: "Actualmente estás logueado/a con un usuario diferente al que se le ha enviado el email de resumen. Por favor, cierra sesión e inténtalo de nuevo."
+    different_user_description: "Actualmente has iniciado sesión con un usuario diferente que el que recibía este resumen por email. Por favor, cierra sesión e inténtalo de nuevo."
     not_found_description: "Lo sentimos no hemos podido darte de baja. Es posible que el link en tu mail haya expirado."
   resubscribe:
     action: "Volver a suscribirse"
@@ -720,6 +720,7 @@ es:
     email_polling_errored_recently:
       one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
       other: "El email polling ha generado %{count} errores en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
+    missing_mailgun_api_key: "El servidor está configurado para enviar emails vía mailgun pero no se ha proporcionado una API key para verificar los mensajes webhook."
     bad_favicon_url: "El favicon está dando fallos en su carga. Revisa la opción favicon_url en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     poll_pop3_timeout: "La conexión al servidor POP3 está rebasando el tiempo de espera. Los emails entrantes no han podido ser recogidos. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
     poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes POP3</a>."
@@ -767,7 +768,7 @@ es:
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
     onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
     logo_url: "El logo situado en la esquina superior izquierda de tu sitio, debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se mostrará un texto con el título del sitio."
-    digest_logo_url: "El logo alternativo que irá arriba en los emails de resumen de tu sitio. Debería encajar en las dimensiones de un rectángulo ancho. Si se deja en blanco, se utilizará `logo_url`."
+    digest_logo_url: "La imagen de logo alterno utilizado en la parte superior del resumen del sitio enviado por email. Debería encajar en las dimensiones de un rectángulo. No debería ser una imagen SVG. Si se deja en blanco, se utilizará `logo_url`."
     logo_small_url: "El logo pequeño situado en la esquina superior izquierda del sitio, debería encajar en las dimensiones de un cuadrado y se muestra cuando se hace scroll hacia abajo. Si se deja en blanco, se mostrará un glifo de una casita."
     favicon_url: "Un favicon para tu sitio, mira más info en http://es.wikipedia.org/wiki/Favicon - para que funcione correctamente sobre un CDN debe ser un png"
     mobile_logo_url: "El logo con posición fija utilizado en la esquina superior izquierda de la versión móvil de tu sitio. Debería encajar en las dimensiones de un cuadrado. Si se deja en blanco, se mostrará el campo introducido en `logo_url`. Ejemplo: http://example.com/uploads/default/logo.png"
@@ -781,6 +782,7 @@ es:
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
     summary_percent_filter: "Cuando un usuario hace clic en 'Resumen de este tema', se muestra el n % mejores posts"
     summary_max_results: "Máximo de posts devueltos en \"Resumen de este  tema\""
+    enable_private_messages: "Permitir a los usuarios con nivel 1 de confianza (configurable vía mínimo nivel para enviar mensajes) crear y responder a mensajes directos. Ten en cuenta que el staff siempre puede enviar mensajes directos."
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     long_polling_base_url: "URL base usada para el 'long polling' (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al 'pull' de origen) ejemplo: http://origin.site.com"
     long_polling_interval: "Cantidad de tiempo que el servidor debe de esperar antes de responder a los clientes que no hay datos enviados (solamente usuarios con sesión iniciada)."
@@ -2243,6 +2245,11 @@ es:
       name: Primer Onebox
       description: Publicó un enlace expandido vía Onebox
       long_description: Este distintivo se concede la primera vez que publicas un enlace en una línea aparte, que fue automáticamente expandido vía Onebox con un resumen del enlace, un título y (si estuvo disponible) una imagen.
+    first_reply_by_email:
+      name: Primera respuesta por email
+      description: Respondió a un post vía email
+      long_description: |
+        Este distintivo se concede la primera vez que respondes a un post por email :e-mail:.
   admin_login:
     success: "Email enviado"
     error: "¡Error!"

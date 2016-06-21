@@ -638,7 +638,7 @@ it:
     s3_config_warning: 'Il server è configurato per caricare file su s3, ma almeno uno dei seguenti parametri non è impostato: s3_access_key_id, s3_secret_access_key, s3_upload_bucket. Vai nelle <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna i parametri. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_backup_bucket. Vai nelle <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     image_magick_warning: 'Il server è configurato per creare miniature di immagini grandi, ma ImageMagick non è installato. Installa ImageMagick usando il tuo package manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
-    failing_emails_warning: 'Ci sono %{num_failed_jobs} email job falliti. Controlla il tuo app.yml e assicurati che le impostazioni del server mail siano corrette. <a href="/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
+    failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il file app.yml e assicurati che le impostazioni del mail server siano corrette. <a href="/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
     default_logo_warning: "Non hai personalizzato il logo del tuo sito. Aggiorna logo_url, logo_small_url e favicon_url nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     contact_email_missing: "Inserisci un indirizzo email di contatto per il sito, in modo da essere raggiungibile per questioni urgenti riguardanti il sito. Aggiornalo nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     contact_email_invalid: "La email di contatto non è valida. Aggiornala nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
@@ -1269,13 +1269,13 @@ it:
       name: Veterano
     welcome:
       name: Benvenuto
-      description: Hai ricevuto un Mi piace
+      description: Ha ricevuto un "Mi piace"
     autobiographer:
       name: Autobiografo
     anniversary:
       name: Compleanno
     great_topic:
-      description: Hai ricevuto 50 Mi piace su 1 argomento
+      description: Ha ricevuto 50 "Mi piace" in un argomento
     first_like:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
@@ -1290,11 +1290,11 @@ it:
     first_quote:
       description: Ha citato un messaggio
     appreciated:
-      description: Hai ricevuto 1 Mi piace su 20 messaggi
+      description: Ha ricevuto 1 "Mi piace" su 20 messaggi
     respected:
-      description: Hai ricevuto 2 Mi piace su 100 messaggi
+      description: Ha ricevuto 2 "Mi piace" su 100 messaggi
     admired:
-      description: Hai ricevuto 5 Mi piace su 300 messaggi
+      description: Ha ricevuto 5 "Mi piace" su 300 messaggi
   admin_login:
     success: "email Inviata"
     error: "Errore!"
