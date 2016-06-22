@@ -81,7 +81,7 @@ module Email
         client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
         Email::Sender.new(client_message, message_template).send
       else
-        Discourse.handle_job_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))
+        Rails.logger.error("Unrecognized error type (#{e}) when processing incoming email\n\nMail:\n#{mail_string}")
       end
 
       client_message
