@@ -209,12 +209,14 @@ export default createWidget('topic-timeline', {
     const stream = attrs.topic.get('postStream.stream');
     const { currentUser } = this;
 
-    if (stream.length < 3) { return; }
-
 
     let result = [];
     if (currentUser && currentUser.get('canManageTopic')) {
       result.push(h('div.timeline-controls', this.attach('topic-admin-menu-button', { topic })));
+    }
+
+    if (stream.length < 3) {
+      return result;
     }
 
     const bottomAge = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
