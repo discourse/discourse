@@ -150,15 +150,17 @@ module Email
         bounce_key = verp[/\+verp-(\h{32})@/, 1]
         if bounce_key && (email_log = EmailLog.find_by(bounce_key: bounce_key))
           email_log.update_columns(bounced: true)
-
-          if @mail.error_status.present?
-            if @mail.error_status.start_with?("4.")
-              Email::Receiver.update_bounce_score(email_log.user.email, SOFT_BOUNCE_SCORE)
-            elsif @mail.error_status.start_with?("5.")
-              Email::Receiver.update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
+          email = email_log.user.try(:email) || @from_email
+          if email.present?
+            if @mail.error_status.present?
+              if @mail.error_status.start_with?("4.")
+                Email::Receiver.update_bounce_score(email, SOFT_BOUNCE_SCORE)
+              elsif @mail.error_status.start_with?("5.")
+                Email::Receiver.update_bounce_score(email, HARD_BOUNCE_SCORE)
+              end
+            elsif is_auto_generated?
+              Email::Receiver.update_bounce_score(email, HARD_BOUNCE_SCORE)
             end
-          elsif is_auto_generated?
-            Email::Receiver.update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
           end
         end
       end
