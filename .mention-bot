@@ -1,5 +1,8 @@
 {
-  "maxReviewers": 2,
-  "message": "Thanks @pullRequester for your pull request :+1:. By analyzing the blame information on this pull request, I identified @reviewers to be potential reviewers.",
-  "requiredOrgs": ["discourse"]
+	"maxReviewers": 2,
+	"message": "Thanks @pullRequester for your pull request :+1:. By analyzing the blame information on this pull request, I identified @reviewers to be potential reviewers.",
+	"requiredOrgs": ["discourse"],
+	"skipCollaboratorPR": true,
+	"delayed": true,
+	"delayedUntil": "6d"
 }
