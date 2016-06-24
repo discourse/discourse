@@ -124,7 +124,7 @@ class ImportScripts::Mbox < ImportScripts::Base
     if mail.from.present?
       from_email = mail.from.dup
       if from_email.kind_of?(Array)
-        from_email = from_email.first
+        from_email = from_email.first.dup
       end
 
       from_email.gsub!(/ at /, '@')
