@@ -11,17 +11,17 @@ class PostMerger
   def merge
     postContent = []
 
-    @posts.each {|p| postContent.push(p.raw) }
+    @posts.each { |p| postContent.push(p.raw) }
 
     post = @posts.last
     changes = {
       raw: postContent.join("\n\n"),
       edit_reason: "Merged #{@posts.length} posts by #{@user.name}"
     }
-    revisor = PostRevisor.new(post, post.topic)
-    revisor.revise!(@user, changes, {})
 
     Post.transaction do
+      revisor = PostRevisor.new(post, post.topic)
+      revisor.revise!(@user, changes, {})
       @posts.each_with_index  do |p, index|
         # do not delete the last post since it will have the content of the merged posts
         if index < @posts.length - 1

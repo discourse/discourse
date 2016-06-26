@@ -522,7 +522,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         if (result) {
           const selectedPosts = this.get('selectedPosts');
 
-          Discourse.Post.mergePosts(selectedPosts);
+          Post.mergePosts(selectedPosts);
           this.send('toggleMultiSelect');
         }
       });
@@ -709,12 +709,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     // Must be able to delete all of the posts, this makes it so
     // that the main post of a topic can't be part of the merged posts
     const selectedPosts = this.get('selectedPosts');
-    let canDelete = true;
-    selectedPosts.forEach(function(p) {
-      if (!p.get('can_delete')) {
-        canDelete = false;
-      }
-    });
+    let canDelete = selectedPosts.every(p => p.get('can_delete'));
     if(!canDelete) return false;
     // All the posts must have the same creator
     return this.get('selectedPostsUsername') !== undefined;

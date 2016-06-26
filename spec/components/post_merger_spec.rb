@@ -16,9 +16,19 @@ describe PostMerger do
     it "merges 3 posts" do
       Fabricate(:admin)
       topic = post.topic
-      reply1 = create_post(topic: topic)
-      reply2 = create_post(topic: topic)
-      reply3 = create_post(topic: topic)
+      reply1 = create_post(topic: topic, raw: 'The first reply')
+      reply2 = create_post(topic: topic, raw: %q{The second reply
+Second line}
+)
+      reply3 = create_post(topic: topic, raw: 'The third reply')
+
+      expected_output = %q{The first reply
+
+The second reply
+Second line
+
+The third reply}
+
 
       replies = []
       replies.push(reply1)
@@ -34,7 +44,7 @@ describe PostMerger do
       expect(reply2.deleted_at).not_to eq(nil)
       expect(reply3.deleted_at).to eq(nil)
       expect(reply3.edit_reason).to eq("Merged 3 posts by " + admin.name)
-      expect(reply3.raw).to eq(postContent.join("\n\n"))
+      expect(reply3.raw).to eq(expected_output)
     end
 
     it "does not merge 1 topic and 2 posts" do
