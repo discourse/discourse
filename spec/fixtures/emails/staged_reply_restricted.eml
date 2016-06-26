@@ -1,0 +1,9 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Fri, 15 Jun 2016 00:12:43 +0100
+Message-ID: <54@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+This is a reply from a staged user in a topic in a restricted category.
