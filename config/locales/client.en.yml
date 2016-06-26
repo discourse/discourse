@@ -1055,6 +1055,7 @@ en:
       quote_text: "Blockquote"
       code_title: "Preformatted text"
       code_text: "indent preformatted text by 4 spaces"
+      paste_code_text: "type or paste code here"
       upload_title: "Upload"
       upload_description: "enter upload description here"
       olist_title: "Numbered List"
