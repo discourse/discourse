@@ -522,11 +522,11 @@ export default Ember.Component.extend({
     formatCode() {
       const sel = this._getSelected();
       if (sel.value.indexOf("\n") !== -1) {
-        return (this.siteSettings.code_formatting_style == "4-spaces-indent") ?
+        return (this.siteSettings.code_formatting_style === "4-spaces-indent") ?
                 this._applySurround(sel, '    ', '', 'code_text') :
                 this._addText(sel, '```\n' + sel.value + '\n```');
       } else {
-        return (this.siteSettings.code_formatting_style == "4-spaces-indent") ?
+        return (this.siteSettings.code_formatting_style === "4-spaces-indent") ?
                 this._applySurround(sel, '`', '`', 'code_text') :
                 this._applySurround(sel, '```\n', '\n```', 'paste_code_text');
       }
