@@ -162,7 +162,6 @@ createWidget('post-meta-data', {
             href: attrs.shareUrl,
             'data-share-url': attrs.shareUrl,
             'data-post-number': attrs.post_number,
-            'data-post-id': attrs.id,
           }
         }, dateNode(createdAt))
       ));
