@@ -3,12 +3,33 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { avatarFor } from 'discourse/widgets/post';
 
+createWidget('pm-remove-group-link', {
+  tagName: 'a.remove-invited',
+
+  html() {
+    return iconNode('times');
+  },
+
+  click() {
+    bootbox.confirm(I18n.t("private_message_info.remove_allowed_group", {name: this.attrs.name}), (confirmed) => {
+      if (confirmed) { this.sendWidgetAction('removeAllowedGroup', this.attrs); }
+    });
+  }
+});
+
 createWidget('pm-map-user-group', {
   tagName: 'div.user.group',
 
   html(attrs) {
-    const link = h('a', { attributes: { href: Discourse.getURL(`/groups/${attrs.name}`) } }, attrs.name);
-    return [iconNode('users'), ' ', link];
+    const link = h('a', { attributes: { href: Discourse.getURL(`/groups/${attrs.group.name}`) } }, attrs.group.name);
+    const result = [iconNode('users'), ' ', link];
+
+    if (attrs.canRemoveAllowedUsers) {
+      result.push(' ');
+      result.push(this.attach('pm-remove-group-link', attrs.group));
+    }
+
+    return result;
   }
 });
 
@@ -51,12 +72,12 @@ export default createWidget('private-message-map', {
     const participants = [];
 
     if (attrs.allowedGroups.length) {
-      participants.push(attrs.allowedGroups.map(ag => this.attach('pm-map-user-group', ag)));
+      participants.push(attrs.allowedGroups.map(ag => this.attach('pm-map-user-group', {group: ag, canRemoveAllowedUsers: attrs.canRemoveAllowedUsers})));
     }
 
     if (attrs.allowedUsers.length) {
-      participants.push(attrs.allowedUsers.map(ag => {
-        return this.attach('pm-map-user', { user: ag, canRemoveAllowedUsers: attrs.canRemoveAllowedUsers });
+      participants.push(attrs.allowedUsers.map(au => {
+        return this.attach('pm-map-user', { user: au, canRemoveAllowedUsers: attrs.canRemoveAllowedUsers });
       }));
     }
 

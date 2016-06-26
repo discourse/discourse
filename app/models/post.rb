@@ -109,7 +109,7 @@ class Post < ActiveRecord::Base
   end
 
   def limit_posts_per_day
-    if user && user.first_day_user? && post_number && post_number > 1
+    if user && user.new_user_posting_on_first_day? && post_number && post_number > 1
       RateLimiter.new(user, "first-day-replies-per-day", SiteSetting.max_replies_in_first_day, 1.day.to_i)
     end
   end
@@ -383,6 +383,10 @@ class Post < ActiveRecord::Base
     else
       "/404"
     end
+  end
+
+  def unsubscribe_url(user)
+    "#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.create_key_for(user, self)}"
   end
 
   def self.url(slug, topic_id, post_number)

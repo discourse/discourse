@@ -197,6 +197,8 @@ tr_TR:
     attributes:
       category:
         name: "Kategori Adı"
+      topic:
+        title: 'Başlık'
       post:
         raw: "İçerik"
       user_profile:

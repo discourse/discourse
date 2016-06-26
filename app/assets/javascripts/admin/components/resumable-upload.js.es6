@@ -60,7 +60,7 @@ const ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, 
 
   _initialize: function() {
     this.resumable = new Resumable({
-      target: this.get("target"),
+      target: Discourse.getURL(this.get("target")),
       maxFiles: 1, // only 1 file at a time
       headers: { "X-CSRF-Token": $("meta[name='csrf-token']").attr("content") }
     });

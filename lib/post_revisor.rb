@@ -80,7 +80,7 @@ class PostRevisor
         tc.check_result(false)
         next
       end
-      tc.record_change('tags', prev_tags, tags)
+      tc.record_change('tags', prev_tags, tags) unless prev_tags.sort == tags.sort
     end
   end
 

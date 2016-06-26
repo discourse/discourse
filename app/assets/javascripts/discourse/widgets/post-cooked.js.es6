@@ -162,12 +162,7 @@ export default class PostCooked {
         // If it's the same topic as ours, build the URL from the topic object
         if (this.attrs.topicId === asideTopicId) {
           navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
-        } else {
-          // Made up slug should be replaced with canonical URL
-          const asideLink = Discourse.getURL("/t/via-quote/") + asideTopicId + "/" + postNumber;
-          navLink = `<a href='${asideLink}' title='${quoteTitle}' class='quote-other-topic'></a>`;
         }
-
       } else {
         // assume the same topic
         navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;

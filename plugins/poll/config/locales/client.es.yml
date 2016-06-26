@@ -15,6 +15,8 @@ es:
         one: "voto total"
         other: "votos totales"
       average_rating: "Puntuación media: <strong>%{average}</strong>."
+      public:
+        title: "Los votos en esta encuesta serán públicos."
       multiple:
         help:
           at_least_min_options:
@@ -46,3 +48,4 @@ es:
         confirm: "¿Seguro que quieres cerrar esta encuesta?"
       error_while_toggling_status: "Ha ocurrido un error mientras se cambiaba el estado de esta encuesta."
       error_while_casting_votes: "Ha ocurrido un error a la hora de enviar los votos."
+      error_while_fetching_voters: "Hubo un error al mostrar los votantes."

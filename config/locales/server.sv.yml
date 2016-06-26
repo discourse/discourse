@@ -18,14 +18,39 @@ sv:
   date:
     month_names: [null, Januari, Februari, Mars, April, Maj, Juni, Juli, Augusti, September, Oktober, November, December]
     <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Ämnen"
   posts: "inlägg"
   loading: "Laddar"
   powered_by_html: 'Drivs av <a href="http://www.discourse.org">Discourse</a>, visas bäst med JavaScript påslaget'
   log_in: "Logga in"
+  purge_reason: "Automatiskt borttaget som övergett, avaktiverat konto"
   disable_remote_images_download_reason: "Fjärrbilds nedladdning är inaktiverad eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   anonymous: "Anonym"
+  emails:
+    incoming:
+      default_subject: "Inkommande e-post från %{email}"
+      show_trimmed_content: "Visa trimmat innehåll"
+      maximum_staged_user_per_email_reached: "Uppnått maximalt antal iscensatta användare skapade per e-post."
+      errors:
+        empty_email_error: "Händer när rådata vi mottagit är tomt."
+        no_message_id_error: "Händer när e-post saknar 'Message-Id'-rubrik."
+        auto_generated_email_error: "Händer när 'precedence'-rubriken är satt till: list, skräp, mass eller auto-reply, eller när någon annan rubrik innehåller: auto-submitted, auto-replied eller auto-generated."
+        no_body_detected_error: "Händer när vi inte kunde extrahera någon huvuddel och det inte fanns några bilagor."
+        inactive_user_error: "Händer när sändaren inte är aktiv."
+        blocked_user_error: "Händer när sändare har blivit blockerad."
+        bad_destination_address: "Händer när inga av e-postadresserna i Till/Cc/Bcc-fälten matchar en konfigurerad inkommande e-postadress."
+        strangers_not_allowed_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare inte är en medlem av."
+        insufficient_trust_level_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare saknar förtroendenivå för."
+        reply_user_not_matching_error: "Händer när ett svar kommer in från en annan e-postadress än den notificieringen skickades till."
+        topic_not_found_error: "Händer när ett svar kommer in men ämnet har raderats."
+        topic_closed_error: "Händer när ett svar kommer in men ämnet har stängts."
+        auto_generated_email_reply: "E-post innehåller ett svar till ett autogenerat e-post. "
+        screened_email_error: "Händer när sändarens e-postadress redan har kontrollerats."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -52,6 +77,9 @@ sv:
       not_an_integer: måste vara ett tal
       odd: måste vara udda
       record_invalid: 'Validering misslyckades: %{errors}'
+      restrict_dependent_destroy:
+        one: "Kan inte radera förteckning på grund av att ett beroende %{record} existerar"
+        many: "Kan inte radera förteckning på grund av att beroende %{record} existerar"
       too_long:
         one: är för lång (maximum är 1 tecken)
         other: är för lång (maximum är %{count} tecken)
@@ -70,7 +98,11 @@ sv:
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av artikeln."
     site_settings:
+      min_username_length_exists: "Du kan inte sätta kortast tillåtna längd på användarnamn högre än det kortaste användarnamnet. "
       min_username_length_range: "Du kan inte sätta minimum högre än maximum"
+      max_username_length_exists: "Du kan inte sätta högsta tillåtna längd på användarnamn lägre än det längsta användarnamnet."
+      max_username_length_range: "Du kan inte sätta maximum högre än minimum."
+      default_categories_already_selected: "Du kan inte välja en kategori som används i en annan lista. "
       s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "Den uppladdade filen ska vara i csv eller txt format."
@@ -83,6 +115,7 @@ sv:
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   read_only_mode_enabled: "Webbplatsen är i read only läge. Interaktioner är inaktiverade."
   reading_time: "Lästid"
+  likes: "Gillningar"
   too_many_replies:
     one: "Vi är ledsna men nya användare är tillfälligt begränsade till 1 svar i samma diskussion."
     other: "Vi är ledsna men nya användare är tillfälligt begränsade till &{count} svar i samma ämne."
@@ -99,6 +132,14 @@ sv:
     replies:
       one: "1 svar"
       other: "%{count} svar"
+  no_mentions_allowed: "Tyvärr, du kan inte omnämna andra användare."
+  too_many_mentions:
+    one: "Tyvärr, du kan bara omnämna en annan användare i ett inlägg."
+    other: "Tyvärr, du kan bara omnämna %{count} användare i ett inlägg."
+  no_mentions_allowed_newuser: "Tyvärr, nya användare kan inte omnämna andra användare."
+  too_many_mentions_newuser:
+    one: "Tyvärr, besökare kan bara omnämna en annan användare i ett inlägg."
+    other: "Tyvärr, besökare kan bara omnämna %{count} användare i ett inlägg."
   no_images_allowed: "Tyvärr, nya användare kan inte infoga bilder i inlägg."
   too_many_images:
     one: "Tyvärr, nya användare kan bara infoga en bild i ett inlägg."
@@ -107,11 +148,14 @@ sv:
   too_many_attachments:
     one: "Tyvärr, nya användare kan bara bifoga en filer i ett inlägg."
     other: "Tyvärr, nya användare kan bara bifoga %{count} filer i ett inlägg."
+  no_links_allowed: "Tyvärr, nya användare kan inte ha länkar i inlägg."
+  too_many_links:
+    one: "Tyvärr, besökare kan bara ha en länk i ett inlägg."
+    other: "Tyvärr, nya användare kan bara ha %{count} länkar i ett inlägg."
   spamming_host: "Tyvärr, du kan inte posta en länk till det värdnamnet."
   user_is_suspended: "Avstängda användare är inte tillåtna att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske ämnet stängts eller raderats medan du tittade på det?"
   just_posted_that: "är för likt det du nyligen postade"
-  has_already_been_used: "har redan använts"
   invalid_characters: "innehåller otillåtna tecken"
   is_invalid: "är ogiltig; försök att skriva lite mer detaljerad"
   next_page: "nästa sida →"
@@ -130,13 +174,23 @@ sv:
     latest: "Aktuella ämnen"
     hot: "Heta ämnen"
     posts: "Senaste inläggen"
+    private_posts: "Senaste privata meddelanden"
+    group_posts: "Senaste inläggen från %{group_name}"
+    user_posts: "Senaste inlägggen av @%{username}"
+    user_topics: "Senaste ämnena av @%{username}"
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte lägre redigeras eller tas bort."
+  revert_version_same: "Den nuvarande versionen är samma som den du försöker återgå till."
   excerpt_image: "bild"
   queue:
     delete_reason: "Raderad via modereringskön för inlägg"
   groups:
     errors:
+      can_not_modify_automatic: "Du kan inte modifiera en automatisk grupp"
       member_already_exist: "'%{username}' är redan medlem i denna grupp."
+      invalid_domain: "'%{domain}' är inte ett giltigt domän."
+      invalid_incoming_email: "'%{email}' är inte en giltig e-postadress."
+      email_already_used_in_group: "'%{email}' är redan använd av gruppen '%{group_name}'."
+      email_already_used_in_category: "'%{email}' är redan använd av kategorin '%{category_name}'."
     default_names:
       everyone: "alla"
       admins: "administratörer"
@@ -171,6 +225,7 @@ sv:
       - Konstruktiv kritik välkomnas, men kritisera då *idéer* och inte personer.
 
       För mer, [läs våra riktlinjer](/guidelines). Detta meddelande syns enbart vid dina första %{education_posts_text}.
+    avatar: "### Vad sägs om en ny bild för ditt konto? \n\nDu har skapat några ämnen och postat några svar, men din profilbild är inte lika unik som dig - det är samma standardbild som alla nya användare får. \n\nHar du inte funderat på att **[besöka din användarprofil](%{profile_path})** och ladda upp ett eget foto som representerar dig? \n\nDet är lättare att följa diskussioner och hitta intressanta personer i konversationer när alla har en unik profilbild!\n"
     sequential_replies: |
       ### Överväg att svara på flera inlägg på en och samma gång
 
@@ -201,6 +256,8 @@ sv:
     attributes:
       category:
         name: "Kategorinamn"
+      topic:
+        title: 'Titel'
       post:
         raw: "Inlägg"
       user_profile:
@@ -238,12 +295,18 @@ sv:
   assets_topic_body: "Detta är ett permanent ämne, endast synligt för personal, med syfte att lagra bilder och filer som ska användas till webbplatsens design. Radera ej detta ämne!\n\n\nSå här fungerar det:\n\n\n1. Svara på detta ämne.\n2. Ladda upp alla bilder du vill använda som logotyp, favicon och så vidare här. (Använd verktygfältets uppladdningsikon i inläggsredigeraren, eller dra-och-släpp eller klistra in bilder)\n3. Skicka ditt svar för att posta det.\n4. Högerklicka på bilderna i ditt nya inlägg för att få sökvägen till de uppladdade bilderna, eller klicka på redigera-ikonen för att redigera inlägget och på så sätt hämta sökvägen till bilderna. Kopiera bildernas sökväg. \n5. Klistra in bildernas sökvägar i de [grundläggande inställningarna](/admin/site_settings/category/required).\n\n\nOm du behöver möjliggöra uppladdning av flera olika filtyper, redigera `authorized_extensions` i [inställningarna för filer](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Välkommen till loungen"
+    body: "\nGrattis! :confetti_ball:\n\nOm du kan se det här ämnet så har du nyligen blivit upphöjd till **regelbunden** användare (förtroendenivå 3). \n\nDu kan nu &hellip;\n\n* Redigera rubriken för alla ämnen\n* Ändra kategorin för alla ämnen\n* Få alla dina länkar följda ([automatiskt nofollow](http://en.wikipedia.org/wiki/Nofollow) är borttagna)\n* Få åtkomst till en privat Lounge-kategori som endast är synlig för användare som har förtroendenivå 3 eller högre\n* Gömma spam med en enda flagga\n\nHär är den [aktuella listan över regelbundna användare](/badges/3/regular). Glöm inte att hälsa.\n\nTack för att du är en viktig del av det här forumet!\n\n(För mer information om förtroendenivåer, [se det här ämnet][trust]. Notera att endast medlemmar som fortsätter att tillfredställa kraven över tid kommer att fortsätta vara regelbundna medlemmar.)\n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
   category:
     topic_prefix: "Om kategorin %{category}"
+    replace_paragraph: "(Byt ut den här första paragrafen med en sammanfattad beskrivning av din nya kategori. Den här vägledningen kommer att dyka upp i kategorins urvalsområde, så försök att hålla det kortare än 200 tecken. **Tills du har redigerat den här beskrivningen eller skapat nya ämnen så kommer den här kategorin inte att synas på kategorisidan.**)"
+    post_template: "%{replace_paragraph}\n\nAnvänd följande paragrafer för en längre beskrivning, eller för att etablera regler eller riktlinjer för kategorin:\n\n- Varför ska medlemmar använda den här kategorin? Vad är den till för?\n\n- Exat hur är den olik befintliga kategorier?\n\n- Vad borde ämnen i den här kategorin generellt innehålla?\n\n- Behövs den här kategorin? Kan vi sammanfoga den med en annan kategori, eller underkategori?\n"
     errors:
       uncategorized_parent: "Kategorin \"Okategoriserat\" kan inte ha en föräldrar kategori."
       self_parent: "En underkategori kan inte ha sig själv som förälder."
       depth: "Du kan inte nästla en underkategori under en annan"
+      invalid_email_in: "'%{email}' är inte en giltig e-postadress."
+      email_already_used_in_group: "'%{email}' är redan använd av gruppen '%{group_name}'."
+      email_already_used_in_category: "'%{email}' är redan använd av kategorin '%{category_name}'."
     cannot_delete:
       uncategorized: "Du kan inte ta bort kategorin \"Okategoriserat\""
       has_subcategories: "Du kan inte ta bort den här kategorin för att den har under-kategorier."
@@ -251,6 +314,7 @@ sv:
         one: "Kan inte ta bort den här kategorien eftersom den innehåller ett ämne. Ämnet är %{topic_link}."
         other: "Kan inte ta bort den här kategorien eftersom den innehåller %{count} ämnen. Äldsta ämnet är %{topic_link}."
       topic_exists_no_oldest: "Kan inte ta bort den här kategorin efter antalet ämnen är %{count}."
+    uncategorized_description: "Ämnen som inte behöver en kategori, eller som inte passar in i någon annan befintlig kategori."
   trust_levels:
     newuser:
       title: "besökare"
@@ -266,6 +330,20 @@ sv:
   rate_limiter:
     slow_down: "Du har utfört den här handlingen för många gånger, försök igen senare."
     too_many_requests: "Du gör det där för ofta. Var god vänta %{time_left} innan du försöker igen."
+    by_type:
+      first_day_replies_per_day: "Du har uppnått maximalt antal inlägg en ny användare kan göra under första dagen. Var god vänta %{time_left} innan du försöker igen."
+      first_day_topics_per_day: "Du har uppnått maximalt antal nya ämnen som nya användare kan skapa under första dagen. Var god vänta %{time_left} innan du försöker igen."
+      create_topic: "Du skapar nya ämnen för snabbt. Var god vänta %{time_left} innan du försöker igen."
+      create_post: "Du svarar för snabbt. Var god vänta %{time_left} innan du försöker igen."
+      delete_post: "Du raderar inlägg för snabbt. Var god vänta %{time_left} innan du försöker igen."
+      topics_per_day: "Du har uppnått maximalt antal nya ämnen idag. Var god vänta %{time_left} innan du försöker igen."
+      pms_per_day: "Du har uppnått maximalt antal inlägg idag. Var god vänta %{time_left} innan du försöker igen."
+      create_like: "Du har uppnått maximalt antal gillningar idag. Var god vänta %{time_left} innan du försöker igen."
+      create_bookmark: "Du har uppnått maximalt antal bokmärken idag. Var god vänta %{time_left} innan du försöker igen."
+      edit_post: "Du har uppnått maximalt antal redigeringar idag. Var god vänta %{time_left} innan du försöker igen. "
+      live_post_counts: "Du ber om uppdateringar för ofta. Var god vänta %{time_left} innan du försöker igen."
+      unsubscribe_via_email: "Du har uppnått maximalt antal avregistreringar via e-post idag. Var god vänta %{time_left} innan du försöker igen."
+      topic_invitations_per_day: "Du har uppnått maximalt antal inbjudningar till ämnen idag. Var god vänta %{time_left} innan du försöker igen."
     hours:
       one: "1 timme"
       other: "%{count} timmar"
@@ -347,6 +425,7 @@ sv:
         one: "nästan 1 år sedan"
         other: "nästan %{count} år sedan"
   password_reset:
+    no_token: "Tyvärr, din lösenordslänk har löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
     choose_new: "Var god välj ett nytt lösenord"
     choose: "Var god välj ett lösenord"
     update: 'Uppdatera Lösenord'
@@ -359,6 +438,11 @@ sv:
     confirmed: "Din e-post har uppdaterats."
     please_continue: "Fortsätt till %{site_name}"
     error: "Det uppstod ett fel med ändringen av din e-postadress. Adressen kanske redan används?"
+    error_staged: "Ett problem uppstod vid ändring av din e-postadress. Adressen används redan av en annan användare. "
+    already_done: "Tyvärr har den här aktiveringslänken löpt ut. Kan är din e-postadress redan ändrad? "
+    authorizing_old:
+      title: "Tack för att du bekräftar din nuvarande e-postadress"
+      description: "Vi skickar nu e-post för bekräftelse till din nya adress "
   activation:
     action: "Klicka här för att aktivera ditt konto"
     already_done: "Tyvärr, denna kontoaktiveringslänk är inte längre giltig. Kanske är ditt konto redan aktiverat?"
@@ -366,6 +450,7 @@ sv:
     continue_button: "Fortsätt till %{site_name}"
     welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få ett mail när ditt konto har godkänts!"
+    missing_session: "Vi kan inte upptäcka om ditt konto skapades, var god se till att du ha kakor aktiverade."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -382,10 +467,16 @@ sv:
       description: 'Detta inläggs innehåll är inkluderar saker som som en förnuftig person skulle betrakta som stötande, kränkande eller överträdelse av <a href="/guidelines"> våra community riktlinjer</a>r.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
+      title: 'Notifiera @{{username}} '
+      description: 'Jag vill prata med den här personen direkt och privat om inlägget. '
+      long_form: 'notifierad användare'
       email_title: 'Du postade i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Övrigt"
+      description: 'Det här inlägget kräver en moderators uppmärksamhet av ett annat skäl än de som nämns ovan.'
+      long_form: 'flaggade det här för granskning av moderatorer'
+      email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från personalen'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bokmärk'
@@ -410,6 +501,7 @@ sv:
       long_form: 'flaggad som olämplig'
     notify_moderators:
       title: "Annat"
+      description: 'Det här inlägget kräver generell uppmärksamhet från personalen baserat på  <a href="/guidelines">riktlinjerna</a>, <a href="%{tos_url}">användarvillkoren</a> eller på grund av en annan anledning som inte finns med ovan.'
       long_form: 'flaggade det här för granskning av moderator'
       email_title: 'Ämnet "%{title}" kräver moderators uppmärksamhet'
       email_body: "%{link}\n\n%{message}"
@@ -420,6 +512,7 @@ sv:
     regular:
       title: "Vanligt ämne"
     banner:
+      title: "Banderollämne"
       message:
         make: "Detta ämne är nu en banner. Den dyker upp i toppen av alla sidor tills den blir avfärdad av användaren."
         remove: "Detta ämne är inte längre en banner. Den kommer inte att dyka upp i toppen av varje sida."
@@ -428,7 +521,8 @@ sv:
     description: "Du har blivit avprenumererad. Vi kommer inte att kontakta dig igen!"
     oops: "Om du inte menade att göra detta, klicka nedan."
     error: "Fel vid avprenumeration"
-    preferences_link: "Du kan också avprenumerera från sammanfattningsmejlen via dina<a href='/my/preferences'>inställningar</a>"
+    preferences_link: "Du kan också avprenumerera från sammanfattningar i e-posten via dina<a href='/my/preferences'>inställningar</a>"
+    different_user_description: "Du är för tillfället inloggad som en annan användare än den som sammanfattningen skickades till. Var god logga ut och försök igen."
     not_found_description: "Tyvärr, vi kunde inte avprenumerera dig. Det är möjligt att länken i ditt mail har löpt ut."
   resubscribe:
     action: "Återprenumerera"
@@ -605,7 +699,10 @@ sv:
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "How long user invitation keys are valid, in days"
+    reserved_usernames: "Användarnamn som inte tillåter registrering."
     min_password_length: "Minsta lösenordslängd."
+    min_admin_password_length: "Högsta lösenordslängd för administratör."
+    block_common_passwords: "Tillåt inte lösenord som är bland de 10000 vanligaste lösenorden."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
@@ -697,6 +794,7 @@ sv:
       invalid_string_min: "Måste vara minst %{min} tecken."
       invalid_string_max: "Måste vara högst %{max} tecken."
   notification_types:
+    group_mentioned: "%{group_name} nämndes i %{link}"
     mentioned: "%{display_username} nämnde dig i %{link}"
     liked: "%{display_username} gillade ditt inlägg i %{link}"
     replied: "%{display_username} svarade på ditt inlägg i %{link}"
@@ -706,6 +804,7 @@ sv:
     moved_post: "%{display_username} flyttade ditt inlägg till %{link}"
     private_message: "%{display_username} har skickat ett meddelande till dig: %{link}"
     invited_to_private_message: "%{display_username} har bjudit in dig till en privat konversation: %{link}"
+    invited_to_topic: "%{display_username} har bjudit in dig till %{link}"
     invitee_accepted: "%{display_username} accepterade din inbjudan"
     linked: "%{display_username} länkade dig i %{link}"
     granted_badge: "Du förtjänade %{link}"
@@ -715,15 +814,41 @@ sv:
       category: 'Kategorier'
       topic: 'Resultat'
       user: 'Användare'
+  sso:
+    account_not_approved: "Ditt konto inväntar godkännande. Du kommer få en e-postnotifiering när ditt konto är godkänt."
+    unknown_error: "Det har uppstått ett problem med ditt konto. Var vänlig kontakta forumets administratör."
+    timeout_expired: "Inloggningen avbröts, försök logga in på nytt."
   original_poster: "Ursprunglig skribent"
   most_posts: "Mest inlägg"
   most_recent_poster: "Senaste skribent"
   frequent_poster: "Flitig skribent"
+  redirected_to_top_reasons:
+    new_user: "Välkommen till vårt forum! De här är våra mest populära nya ämnen."
+    not_seen_in_a_month: "Välkommen tillbaka! Vi har inte sett dig på ett tag. Dessa ämnen har varit mest aktiva med du har varit borta. "
+  move_posts:
+    new_topic_moderator_post:
+      one: "Ett inlägg har delats in i ett nytt ämne: %{topic_link}"
+      other: "%{count} inlägg delades in i ett nytt ämne: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "Ett inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
+      other: "%{count} inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
+  change_owner:
+    deleted_user: "en raderad användare"
+  emoji:
+    errors:
+      name_already_exists: "Tyvärr används redan namnet '%{name}' av en annan emoji."
+      error_while_storing_emoji: "Tyvärr uppstod ett fel vid lagring av emojin."
   topic_statuses:
     archived_enabled: "Detta ämne är nu arkiverat. Det är fryst och kan inte förändras på något sätt."
     archived_disabled: "Detta ämne är nu oarkiverat. Det är inte längre fruset, och kan ändras."
     closed_enabled: "Detta ämne är nu stängt. Nya svar tillåts inte längre."
     closed_disabled: "Detta ämne är nu öppnat. Nya svar är tillåtna."
+    autoclosed_message_max_posts:
+      one: "Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av 1 inlägg."
+      other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
+    autoclosed_topic_max_posts:
+      one: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av 1 inlägg."
+      other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
     autoclosed_enabled_days:
       one: "Detta ämne stängdes automatiskt efter 1 dag. Nya svar är ej längre tillåtet."
       other: "Detta ämne stängdes automatiskt efter %{count} dagar. Nya svar är ej längre tillåtna."
@@ -746,11 +871,16 @@ sv:
     autoclosed_disabled_lastpost: "Detta ämne är nu öppnat. Nya svar är tillåtna."
     pinned_enabled: "Detta ämne är nu klistrat. Det dyker upp i toppen av dess kategori tills den blir avklistrad av personal för alla, eller av enskilda användare för de själva."
     pinned_disabled: "Detta ämne är nu oklistrat. Det dyker längre inte upp i toppen av dess kategori."
+    pinned_globally_enabled: "Det här ämnet är nu klistrat globalt. Det dyker upp i toppen av dess kategori och alla andra ämnen tills den blir avklistrad av personal för all, eller av enskilda användare för de själva."
+    pinned_globally_disabled: "Det här ämnet är nu oklistrat. Det dyker inte längre upp i toppen av dess kategori."
+    visible_enabled: "Det här ämnet är nu listat. Det kommer att visas i ämneslistorna."
+    visible_disabled: "Det här ämnet är nu olistat, det kommer inte längre att visas i några ämneslistor och kan bara nås via en direktlänk."
   login:
     not_approved: "Ditt konto har inte blivit godkänt ännu. Du kommer att meddelas via e-post när du kan logga in."
     incorrect_username_email_or_password: "Felaktigt användarnamn, e-post eller lösenord"
     wait_approval: "Tack för din registrering. Vi meddelar dig när ditt konto blivit godkänt."
     active: "Ditt konto är aktiverat och redo att användas."
+    activate_email: "<p>Du är nästan klar! Vi skickade ett e-post med aktivering till <b>%{email}</b>. Var god följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte mottar e-posten, kontrollera skräpposten eller försök logga in igen för att skicka ett nytt aktiveringsbrev. </p>"
     not_activated: "Du kan inte logga in ännu. Vi har skickat ett aktiveringsmejl till dig. Vänligen följ instruktionerna i mejlet för att aktivera ditt konto."
     not_allowed_from_ip_address: "Du kan inte logga in som %{username} från den IP-adressen."
     admin_not_allowed_from_ip_address: "Du kan inte logga in som admin från den IP-adressen."
@@ -759,9 +889,15 @@ sv:
     errors: "%{errors}"
     not_available: "Inte tillgänglig. Testa %{suggestion}?"
     something_already_taken: "Något gick fel. Kanske är användarnamnet eller e-postadressen redan registrerat. Testa glömt lösenord-länken."
+    omniauth_error: "Tyvärr uppstod ett fel vid aktiveringen av ditt konto. Har du godkänt auktoriseringen?"
     omniauth_error_unknown: "Något gick fel med din inloggning, var god och försök igen."
+    new_registrations_disabled: "Nya kontoregistreringar är för närvarande inte tillåtna."
     password_too_long: "Lösenord har en gräns på 200 tecken."
+    email_too_long: "E-postadressen du tillhandahöll är för lång. E-postadresser kan på sin höjd vara 254 tecken och domännamn inte mer än 253 tecken."
+    reserved_username: "Användarnamnet är inte tillåtet."
     missing_user_field: "Du har inte fyllt i alla användarfält"
+    close_window: "Autentiseringen är färdig. Stäng det här fönstret för att fortsätta."
+    already_logged_in: "Hoppsan, det ser ut som att du försöker acceptera en inbjudan för en annan användare. Logga ut och försök igen om du inte är %{current_user}. "
   user:
     no_accounts_associated: "Inga kopplade konton"
     username:
@@ -770,6 +906,10 @@ sv:
       characters: "får endast innehålla nummer, bokstäver och understreck"
       unique: "måste vara unikt"
       blank: "måste finnas"
+      must_begin_with_alphanumeric_or_underscore: "måste börja med en bostav, en siffra eller ett understreck"
+      must_end_with_alphanumeric: "måste avslutas med en bokstav eller en siffra"
+      must_not_contain_two_special_chars_in_seq: "får inte innehålla en sekvens av 2 eller fler specialtecken (.-_)"
+      must_not_end_with_confusing_suffix: "får inte avslutas med ett förvirrande suffix som .json eller .png etc."
     email:
       not_allowed: "är inte en tillåten e-postleverantör. Vänligen använd en annan e-postadress."
       blocked: "är inte tillåtet."
@@ -777,9 +917,22 @@ sv:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtet från din IP-adress (maxgräns uppnådd). Kontakta personal."
   flags_reminder:
+    flags_were_submitted:
+      one: "Flaggor insändes för mer än en timme sedan. Var god och granska den. "
+      other: "Flaggor insändes för mer än %{count} timmar sedan. Var god och granska dem. "
     subject_template:
       one: "1 flagga väntar på att bli hanterad"
       other: "%{count} flaggor väntar på att bli hanterade"
+  unsubscribe_mailer:
+    subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
+    text_body_template: |
+      Någon (kanske du?) begärde att inte längre motta e-postuppdateringar från %{site_domain_name}  till den här adressen.
+      Om du önskar bekräfta det, klicka på länken nedanför:
+
+      %{confirm_unsubscribe_link}
+
+
+      Om du vill fortsätta att motta e-postuppdateringar så kan du bortse från det här meddelandet.
   invite_mailer:
     subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
     text_body_template: |
@@ -798,28 +951,81 @@ sv:
       %{invite_link}
 
       Denna inbjudan är från en betrodd användare, så du kan direkt delta och svara i diskussionen.
-  invite_forum_mailer:
-    subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
+  custom_invite_mailer:
+    subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} har bjudit in dig till
+      %{invitee_name} har bjudit in dig till en diskussion
 
-      > **%{site_title}**
+      > **%{topic_title}**
       >
-      > %{site_description}
+      > %{topic_excerpt}
 
-      Om du är intresserad, klicka på länken nedan:
+      på
+
+      > %{site_title} -- %{site_description}
+
+      Meddelande från %{invitee_name}:
+
+      %{user_custom_message}
+
+      Om du är intresserad, klick på länken nedan:
 
       %{invite_link}
 
-      Denna inbjudan kommer från en betrodd användare, så du behöver inte logga in.
+      Denna inbjudan är från en betrodd användare, så du kan direkt delta och svara i diskussionen.
+  invite_forum_mailer:
+    subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
+  custom_invite_forum_mailer:
+    subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Ange lösenord för ditt konto på %{site_name}"
+    text_body_template: |
+      Tack för att du har accepterat inbjudan till %{site_name} -- välkommen hit!
+
+      Klicka på länken nedanför för att bestämma ett nytt lösenord nu:
+      %{base_url}/users/password-reset/%{email_token}
+
+      (Om länken ovanför har löpt ut, klicka på "jag har glömt mitt lösenord" när du loggar in med din e-postadress).
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
   new_version_mailer:
     subject_template: "[%{site_name}] Ny version av Discourse, uppdatering tillgänglig"
+    text_body_template: |
+      Hurra, en ny version av [Discourse](http://www.discourse.org) är tillgänglig!
+
+      Din version: %{installed_version}
+      Ny version: **%{new_version}**
+
+      - Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** i din webbläsare.
+
+      - Se uppdateringarna i [GitHubs ändringslogg](https://github.com/discourse/discourse/commits/master)
+
+      - Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera och besöka kundtjänsten för Discourse
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] uppdatering tillgänglig"
+    text_body_template: |
+      Hurra, en ny version av [Discourse](http://www.discourse.org) är tillgänglig!
+
+      Din version: %{installed_version}
+      Ny version: **%{new_version}**
+
+      - Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** i din webbläsare.
+
+      - Se uppdateringarna i [GitHubs ändringslogg](https://github.com/discourse/discourse/commits/master)
+
+      - Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera och få support för Discourse
+
+      ### Versionsinformation
+
+      %{notes}
+  queued_posts_reminder:
+    subject_template:
+      one: "[%{site_name}] 1 användare väntar på att granskas"
+      other: "[%{site_name}] %{count} användare väntar på att granskas"
+    text_body_template: |
+      Hej!
+
+      Meddelanden från nya användare väntar för närvarande på att granskas. [Godkänn eller avvisa dem här](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Ditt inlägg blev flaggat som **off-topic**. Medlemmarna i forumet kände att det inte är passande för ämnet, som definieras av titeln och det första inlägget."
     inappropriate: "Ditt inlägg blev flaggat som **olämpligt**. Medlemmarna i forumet kände att det är störande, kränkande eller att det strider mot [våra riktlinjer](/guidelines)."
@@ -835,6 +1041,7 @@ sv:
   system_messages:
     post_hidden:
       subject_template: "Post hidden due to community flagging"
+      text_body_template: "Hej!\n\nDet här är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt meddelande har dolts.\n\n%{base_url}%{url}\n\n%{flag_reason}\n\nEtt flertal forummedlemmar flaggade det här meddelandet innan det doldes. Var vänlig och begrunda hur du kan se över ditt meddelande för att reflektera deras respons. **Du kan redigera ditt meddelande efter %{edit_delay} minuter, då kommer det automatiskt att visas igen.**\n\nOm meddelandet flaggas av medlemmarna och döljs en andra gång så kommer det att fortsätta döljas tills det har hanterats av personal – och det är möjligt att det leder till andra åtgärder, bland annat avstängning av ditt konto. \n\nFör ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).\n"
     welcome_user:
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: |
@@ -871,41 +1078,328 @@ sv:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Säkerhetskopia skapades utan problem"
+      text_body_template: "Säkerhetskopieringen lyckades.\nBesök [admin > säkerhetskopiering](%{base_url}/admin/backups) för att hämta den nya säkerhetskopian."
     backup_failed:
       subject_template: "Säkerhetskopiering misslyckades"
+      text_body_template: |
+        Säkerhetskopieringen misslyckades.
+
+        Här är loggen:
+
+        ```
+        %{logs}
+        ```
     restore_succeeded:
+      subject_template: "Återställningen lyckades!"
       text_body_template: "Återställningen lyckades."
     restore_failed:
       subject_template: "Återställningen misslyckades"
+      text_body_template: |
+        Återställningen misslyckades.
+
+        Här är loggen:
+        ```
+        %{logs}
+        ```
+    bulk_invite_succeeded:
+      subject_template: "Massinbjudning av användare behandlades utan fel "
+      text_body_template: "Din massinbjudning av användare behandlades, %{sent} inbjudningar skickades."
+    bulk_invite_failed:
+      subject_template: "Massrekrytering av användare genererade fel"
+      text_body_template: |
+        Din massrekrytering av användare behandlades, %{sent} inbjudningar skickades med %{failed} fel.
+
+        Här är loggen:
+
+        ```
+        %{logs}
+        ```
+    csv_export_succeeded:
+      subject_template: "Dataexport lyckades"
+      text_body_template: "Din dataexport lyckades! :dvd:\n\n<a class=\"attachment\" href=\"%{download_link}\">%{file_name}</a> (%{file_size})\n\nLänken ovanför löper ut om 48 timmar. \n"
+    csv_export_failed:
+      subject_template: "Dataexport misslyckades"
+      text_body_template: "Tyvärr har din dataexport misslyckats. Var god kontrollera loggarna eller kontakta personal."
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] E-postfel -- Otillräcklig förtroendenivå"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Ditt konto har inte tillräckligt hög förtroendenivå för att skriva nya inlägg från den e-postadressen. Kontakta personal om du tror att det här är ett misstag.
+    email_reject_user_not_found:
+      subject_template: "[%{site_name}] E-postfel --  Okänd användare"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nDitt svarsmeddelande skickades från en okänd e-postadress. Försök skicka meddelandet från en annan e-postadress, eller kontakta personal. \n"
+    email_reject_screened_email:
+      subject_template: "[%{site_name}] E-postfel -- Blockerad e-postadress"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.\n\nDitt svarsmeddelande skickades från en blockerad e-postadress. Försök skicka svaret från en annan e-postadress eller kontakta personal. \n"
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] E-postfel -- Inaktiv användare"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nKontot associerat till den här e-postadressen är inte aktiverat. Var god se till att ditt konto är aktiverat innan du skickar e-post. \n"
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] E-postfel -- Användare blockerad"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Kontot associerat till den här e-postadressen har blockerats.
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] E-postfel -- Svar matchar inte användare"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nDitt svarsmeddelande skickades från en annan e-postadress än den vi väntat oss, så vi är inte säkra på att det är från samma person. Försök skicka svaret från en annan e-postadress eller kontakta personal.\n"
+    email_reject_no_account:
+      subject_template: "[%{site_name}] E-postfel -- Okänt konto"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Vi kan inte hitta något konto som matchar din e-postadress. Försök skicka meddelandet från en annan e-postadress eller kontakta personal.
+    email_reject_empty:
+      subject_template: "[%{site_name}] E-postfel -- Innehåll saknas"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Vi kunde inte se något innehåll i ditt e-postmeddelande.
+
+        Om du har fått det här meddelandet och vet att du _har_ skrivit ett svar, försök igen med simplare formattering.
+    email_reject_parsing:
+      subject_template: "[%{site_name}] E-postfel -- Innehåll oigenkänningsbart"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Vi kunde inte hitta något svar i ditt e-postmeddelande. **Se till att ditt svar är högst upp i e-postmeddelandet** -- vi kan inte hantera inbäddad text.
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] E-postfel -- Ogiltig åtkomst"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Ditt konto har inte rättighet att skriva nya inlägg i den kategorin. Kontakta personal om du tror att det här är ett misstag.
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] E-postfel -- Ogiltig åtkomst"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas. \n\nKategorin som du skickat e-postmeddelandet till godkänner endast inlägg från användare med giltiga konton och kända e-postadresser. Kontakta personal om du tror att det här är ett misstag.\n"
+    email_reject_invalid_post:
+      subject_template: "[%{site_name}] E-postfel -- Inläggsfel"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.\n\nNågra möjliga anledningar är: för komplex formattering, meddelandet är för stort, meddelandet är för litet. Var vänlig försök igen, eller gör ett inlägg via hemsidan om problemet fortsätter. \n"
+    email_reject_invalid_post_specified:
+      subject_template: "[%{site_name}] E-postfel -- Inläggsfel"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Orsak:
+
+        %{post_error}
+
+        Om du kan åtgärda problemet, var vänlig försök igen.
+    email_reject_reply_key:
+      subject_template: "[%{site_name}] E-postfel -- Okänd svarsnyckel"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.\n\nSvarsnyckeln i e-postmeddelandet är ogiltigt eller okänt, så vi vet inte vad det är e-postmeddelandet är ett svar till. Kontakta personal. \n"
+    email_reject_bad_destination_address:
+      subject_template: "[%{site_name}] E-postfel -- Okänd mottagaradress"
+      text_body_template: "Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.\n\nInga av mottagaradresserna kunde identifieras. Var god se till att du skickar till en korrekt e-postadress tillhandahållen av personalen. \n"
+    email_reject_topic_not_found:
+      subject_template: "[%{site_name}] E-postfel -- Okänd tråd"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Tråden du försöker svara i finns inte längre, kanske har den raderats? Kontakta personal om du tror att det här är ett misstag.
+    email_reject_topic_closed:
+      subject_template: "[%{site_name}] E-postfel -- Tråd avstängd"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Tråden som du svarar i är för närvarande avstängd och tar inte emot svarsmeddelanden. Kontakta personal om du tror att det här är ett misstag.
+    email_reject_auto_generated:
+      subject_template: "[%{site_name}] E-postfel -- Autogenererat svar"
+      text_body_template: |
+        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
+
+        Ditt e-postmeddelande har flaggats som "autogenererat", vilket betyder att e-postmeddelandet är skapat av en dator och inte skrivet av en människa. Vi kan tyvärr inte acceptera den typen av e-post. Kontakta personal om du tror att det här är ett misstag.
+    email_error_notification:
+      subject_template: "[%{site_name}] E-postfel --  POP autentisieringsfel"
+    too_many_spam_flags:
+      subject_template: "Nytt konto pausat"
+      text_body_template: "Hej!\n\nDet här är ett automatiserat meddelande från %{site_name} för att informera dig om att dina inlägg temporärt har dolts på grund av att de flaggades av medlemmar. \n\nSom en förebyggande åtgärd har ditt nya konto blockerats från att skapa nya inlägg eller trådar tills det har granskats av personal. Vi ber om ursäkt för besväret. \n\nFör ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).\n"
+    too_many_tl3_flags:
+      subject_template: "Nytt konto pausat"
+      text_body_template: "Hej! \n\nDet här är ett automatiserat meddelande från %{site_name} för att informera dig om att dina inlägg temporärt har dolts på grund av att de flaggades av ett stort antal medlemmar. \n\nSom en förebyggande åtgärd har ditt nya konto blockerats från att skapa nya inlägg eller trådar tills det har granskats av personal. Vi ber om ursäkt för besväret. \n\nFör ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).\n"
+    blocked_by_staff:
+      subject_template: "Konto tillfälligt pausat"
+      text_body_template: "Hej!\n\nDet här är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt konto tillfälligt har pausats som en försiktighetsåtgärd. \n\nDet går bra att fortsätta besöka sidan men du kommer inte att kunna svara i trådar eller skapa nya ämnen förrän [personalen](%{base_url}/about) granskar dina senaste inlägg. Vi ber om ursäkt för besväret. \n\nFör mer information, se våra [användarvillkor](%{base_url}/guidelines).\n"
+    user_automatically_blocked:
+      subject_template: "Ny användare %{username} blockerad pga. att användaren flaggats av medlemmar"
+      text_body_template: "Det här är ett automatiserat meddelande.\n\nDen nya användaren [%{username}](%{user_url}) blockerades automatiskt på grund av att ett flertal medlemmar flaggat användaren %{username}s inlägg.\n\nVar vänlig och [granska inläggen](%{base_url}/admin/flags). Om %{username} har blockerats på felaktig grund, var god och klicka på avblockeringsknappen [på administrationssidan för den här användaren](%{user_url}).\n\nDu kan också modifiera inställningen `block_new_user` via Webbplatsinställningar. \n"
+    spam_post_blocked:
+      subject_template: "Ny användare %{username} har fått meddelanden blockerade pga. upprepade länkar "
+      text_body_template: "Det här är ett automatiserat meddelande. \n\nDen nya användaren [%{username}](%{user_url}) försökte skriva flera inlägg med länkar till %{domains}, men inläggen blockerades för att undvika spam. Användaren kan fortfarande skriva nya inlägg som inte länkar till %{domains}.\n\nVar vänlig och [granska användaren](%{user_url}).\n\nDu kan också modifiera webbplatsinställningarna `newuser_spam_host_threshold`och `white_listed_spam_host_domains`.\n"
+    unblocked:
+      subject_template: "Konto ej längre pausat"
+      text_body_template: "Hej!\n\nDet här är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt konto inte längre är pausat efter att personal har granskat ärendet. \n\nDu kan nu svara i trådar och skapa nya ämnen igen. Tack för ditt tålamod. \n"
     pending_users_reminder:
       subject_template:
         one: "1 användare väntar på godkännande"
         other: "%{count} användare väntar på godkännande"
+      text_body_template: "Det finns nya användarregistreringar att godkänna (eller avvisa) innan de kan få tillträde till forumet. \n\n[Var vänlig och granska dem på administratörssidan](%{base_url}/admin/users/list/pending).\n"
+    download_remote_images_disabled:
+      subject_template: "Nedladdning av externa bilder har avaktiverats"
+      text_body_template: "Inställningen `download_remote_images_to_local` har avaktiverats eftersom att diskutrymmet har nått sin övre gräns."
+    dashboard_problems:
+      subject_template: "Problem har upptäckts"
+      text_body_template: "Några problem har rapporterats på din översiktspanel på administrationssidorna. \n\n[Var vänlig och granska och lös dem](%{base_url}/admin).\n"
+  unsubscribe_link: |
+    [Klicka här ](%{unsubscribe_url}) för att inte längre mottaga notifikationer för det här ämnet.
+
+    För att säga upp de här e-postmeddelandena, ändra dina [användarinställningar](%{user_preferences_url}).
+  unsubscribe_link_and_mail: "[Klicka här](%{unsubscribe_url}) för att inte längre mottaga notifikationer för det här ämnet. \n\nFör att säga upp de här e-postmeddelandena, ändra dina [användarinställningar](%{user_preferences_url}) eller [klicka här](mailto:reply@%{hostname}?subject=unsubscribe) för att säga upp dem via e-post.\n"
   subject_re: "Sv:"
+  subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Föregående Svar"
+    reached_limit:
+      one: "VARNING: du har nått den övre gränsen för dagliga e-postmeddelanden. Ytterligare e-postnotifikationer kommer att undertryckas. "
+      other: "VARNING: du har nått den övre gränsen av %{count} dagliga e-postmeddelanden. Ytterligare e-postnotifikationer kommer att undertryckas. "
+    in_reply_to: "Som svar till:"
     unsubscribe:
       title: "Unsubscribe"
       description: "Inte intresserad av att få dessa mejl? Inga problem! Klicka nedan för att avprenumerera."
+    reply_by_email: "[Besök ämnet](%{base_url}%{url}) eller svara på det här e-postmeddelandet för att ge din respons. "
+    reply_by_email_pm: "[Besök meddelanden](%{base_url}%{url}) eller svara på det här e-postmeddelandet för att ge din respons."
+    only_reply_by_email: "Besvara det här e-postmeddelandet för att ge din respons. "
+    visit_link_to_respond: "[Besök ämnet](%{base_url}%{url}) för att ge din respons. "
+    visit_link_to_respond_pm: "[Besök meddelanden](%{base_url}%{url}) för att ge din respons."
     posted_by: "Postat av %{username} den %{post_date}"
+    invited_to_private_message_body: "%{username} bjöd in dit till ett meddelande\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n"
+    invited_to_topic_body: |
+      %{username} bjöd in dig till en diskussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      vid
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} har bjudit in dig till en privat konversation '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm_staged:
+      subject_template: "[%{site_name}] %{username} bjöd in dig till ett meddelande '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} bjöd in dig till '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
     digest:
+      why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök på %{last_seen_at}"
       new_activity: "Ny aktivitet i dina ämnen och inlägg:"
       top_topics: "Populära inlägg"
       other_new_topics: "Populära ämnen"
       click_here: "klicka här"
-      from: "%{site_name} sammanfattning"
-      read_more: "Läs Mer"
+      read_more: "Läs mer"
+      more_topics: "Det finns %{new_topics_since_seen} nya ämnen."
       more_topics_category: "Fler nya ämnen:"
+    mailing_list:
+      why: "All aktivitet på %{site_link} den %{date}"
+      subject_template: "[%{site_name}] Sammanfattning för %{date}"
+      from: "%{site_name} sammanfattning"
+      new_topics: "Nya ämnen"
+      topic_updates: "Uppdatering av ämnen"
+      view_this_topic: "Se det här ämnet"
+      back_to_top: "Tillbaka till början"
     forgot_password:
       subject_template: "[%{site_name}] Återställning av lösenord"
       text_body_template: |
@@ -917,15 +1411,33 @@ sv:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Ange lösenord"
+      text_body_template: "Någon har begärt att lägga till ett lösenord till ditt konto på [%{site_name}](%{base_url}). Du kan också logga in genom att använda någon av våra alternativa onlinetjänster (Google eller Facebook) som är kopplat till din validerade e-postadress. \n\nOm det inte var på din begäran så kan du utan problem ignorera det här e-postmeddelandet.\n\nFölj nedanstående länk för att välja ett nytt lösenord:\n%{base_url}/users/password-reset/%{email_token}\n"
     admin_login:
       subject_template: "[%{site_name}] Logga in"
+      text_body_template: "Någon bad om att få återställa ditt lösenord på [%{site_name}](%{base_url}). \n\nOm det inte var på din begäran kan du utan problem ignorera detta mejl. \n\nKlicka på följande länk för att logga in: \n%{base_url}/users/password-reset/%{email_token}\n"
     account_created:
       subject_template: "[%{site_name}] Ditt nya konto"
+      text_body_template: "Ett nytt konto har skapats för dig på %{site_name}\n\nKlicka på följande länk för att välja ett nytt lösenord för ditt nya konto: \n%{base_url}/users/password-reset/%{email_token}\n"
+    confirm_new_email:
+      subject_template: "[%{site_name}] Bekräfta din nya e-postadress"
+      text_body_template: |
+        Bekräfta din nya e-postadress för %{site_name} genom att klicka på länken nedanför:
+
+        %{base_url}/users/authorize-email/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] Bekräfta din nuvarande e-postadress"
+      text_body_template: "Vänligen bekräfta att du kontrollerar den här e-postadressen innan vi ändrar din e-postadress.  \n\nDu kan bekräfta e-postadressen för %{site_name} genom att följa länken nedan:\n\n%{base_url}/users/authorize-email/%{email_token}\n"
+    notify_old_email:
+      subject_template: "[%{site_name}] Din e-postadress har ändrats "
+      text_body_template: "Det här är ett automatiserat meddelande för att informera dig om att din e-postadress för %{site_name} har ändrats. Var vänlig kontakta en administratör om det inte var din avsikt. \n\nDin e-postadress har ändrats till: \n\n%{new_email}\n"
     signup_after_approval:
       subject_template: "Du har blivit godkänd på %{site_name}!"
+      text_body_template: "Välkommen till %{site_name}! \n\nEn administratör har godkänt ditt konto på %{site_name}.\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto: \n%{base_url}/users/activate-account/%{email_token} \n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.\n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse! \n\n(Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande.)\n"
     signup:
+      subject_template: "[%{site_name}] Verifiera ditt nya konto"
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
   page_not_found:
+    title: "Hoppsan! Den sidan finns inte eller så är den privat."
     popular_topics: "Populära"
     recent_topics: "Senaste"
     see_more: "Mer"
@@ -940,20 +1452,39 @@ sv:
     signup_form_message: 'Jag har läst och accepterat <a href="/tos" target="_blank">Användarvillkoren</a>.'
   deleted: 'raderad'
   upload:
+    edit_reason: "nedladdade lokala kopior av bilder"
+    unauthorized: "Tyvärr, filen du försöker ladda upp är inte tillåten (tillåtna filtyper: %{authorized_extensions})."
     pasted_image_filename: "Inklistrad bild"
+    store_failure: "Lagringen av den uppladdade filen #%{upload_id} som användaren #%{user_id} gjort misslyckades."
+    file_missing: "Tyvärr, du måste tillhandahålla en fil för uppladdning. "
     attachments:
       too_large: "Tyvärr, filen du försöker ladda upp är för stor (maxstorlek är %{max_size_kb}kb)."
     images:
       too_large: "Tyvärr, bilden du försöker ladda upp är för stor (maxstorlek är %{max_size_kb}kb). Ändra storleken och försök igen."
       size_not_found: "Vi beklagar, men vi kunde inte avgöra bildens storlek. Kanske är din bildfil skadad?"
+  avatar:
+    missing: "Tyvärr, vi kunde inte hitta någon avatar associerad med den e-postadressen. Kan du försöka ladda upp den igen?"
+  flag_reason:
+    sockpuppet: "En ny användare skapade ett ämne, och en annan ny användare på samma IP-adress (%{ip_address}) svarade. Granska webbplatsinställningen <a href='/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
+    spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän (%{domain}). Granska webbplatsinställningen <a href='/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   email_log:
+    post_user_deleted: "Användaren som skrivit inlägget har raderats."
     no_user: "Kan inte hitta användare med id %{user_id}"
     anonymous_user: "Användare är anonym"
+    suspended_not_pm: "Användaren är avstängd, inte ett meddelande"
     seen_recently: "Användare sågs senast"
     post_not_found: "Kan inte hitta ett inlägg med id %{post_id}"
+    notification_already_read: "Notificieringen som e-posten handlar om har redan blivit läst"
+    topic_nil: "post.topic är nil"
     post_deleted: "inlägg raderades av författaren"
     user_suspended: "användare blev avstängd"
+    already_read: "användaren har redan läst det här inlägget"
+    exceeded_emails_limit: "Översteg max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Översteg bounce_score_threshold"
     message_blank: "meddelande är tomt"
+    message_to_blank: "message.to är tomt"
+    text_part_body_blank: "text_part.body är tomt"
+    body_blank: "huvuddelen är tom"
   about: "Om"
   guidelines: "Riktlinjer"
   privacy: "Integritet"
@@ -961,17 +1492,99 @@ sv:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nej"
+  static_topic_first_reply: |
+    Redigera det första inlägget i det här ämnet för att ändra innehållet i %{page_name} sidan.
   guidelines_topic:
     title: "FAQ/Riktlinjer"
+    body: "<a name=\"civilized\"></a>\n\n## [Det här är ett civiliserat forum för allmän diskussion](#civilized)\n\nVar snäll och behandla det här diskussionsforumet med samma respekt som du skulle en allmän park. Vi är också ett samhälle och en plats för att dela kompetens, kunskap och intresse genom fortgående konversationer. \n\nDet som följer är inte fasta regler utan snarare hjälpmedel till det mänskliga bedömandet av forumet. Använd de här riktlinjerna för att hålla forumet städat, välupplyst och en plats för civiliserad diskussion.  \n\n<a name=\"improve\"></a>\n\n## [Förbättra diskussionen](#improve)\n\nHjälp oss göra det här till en fantastisk plats för diskussion genom att alltid medverka till att förbättra diskussionen på något sätt, oavsett hur litet. Om du inte är säker på hur ditt inlägg bidrar till diskussionen, fundera över vad du vill ha sagt och försök igen senare. \n\nÄmnena som diskuteras här är av betydelse för oss, och vi vill att du beter dig som att de har betydelse också för dig. Var respektful mot ämnena och personerna som diskuterar dem, även om du inte håller med en del av det som har sagts. \n\nEtt sätt att främja diskussionen är genom att upptäcka de som redan äger rum. Var snäll och ta litet tid till att bläddra igenom ämnen här innan du svarar eller startar egna så kommer du ha en bättre chans att träffa andra som delar dina intressen. \n\n<a name=\"agreeable\"></a>\n\n## [Var angenäm, även när du inte håller med](#agreeable)\n\nDu kanske vill svara på något genom att visa att du inte håller med det som står. Det är okej, men kom ihåg att _kritisera idéer, inte människor_. Försök undvika:\n\n* Smutskastande.\n* Ad hominem attacker.\n* Att svara på ett inläggs ton istället för det faktiska innehållet.\n* Ogenomtänkta motsägelser.\n\nFörsök istället komma med förnuftiga motargument som förbättrar diskussionen. \n\n<a name=\"participate\"></a>\n\n## [Din medverkan spelar roll](#participate)\n\nKonversationerna vi har här sätter tonen för alla. Hjälp oss influera framtiden för det här forumet genom att välja hur vi engagerar oss i diskussioner som gör det här forumet till ett intressant ställe att vara på &mdash; och undviker dem som inte gör det. \n\nDiscourse tillhandahåller verktyg som möjliggör att forumet kollektivt kan identifiera de bästa (och sämsta) insatserna: favoriter, bokmärken, gillningar, flaggningar, inlägg, redigeringar och så vidare. Använd de här verktygen för att förbättra din egen upplevelse, och alla andras också. \n\nFörsök att lämna den här parken lite bättre än när vi hittade den. \n\n<a name=\"flag-problems\"></a>\n\n## [Om du ser ett problem, flagga det](#flag-problems)\n\nModeratorer har speciell auktoritet, de är ansvariga för det här forumet. Det är dock också du. Med din hjälp kan moderatörerna vara samhällshjälpredor, inte bara vaktmästare eller polis. \n\nNär du ser dåligt beteende, svara inte. Det uppmuntrar det dåliga beteendet genom att uppmärksamma det. Det konsumerar också din energi och slösar allas tid. _Flagga det bara_. Om tillräckligt många flaggningar tillkommer så kommer det leda till handling, antingen automatiskt eller en moderators ingripande. \n\nFör att upprätthålla forumet så reserverar moderatorerna rätten att ta bort allt material och alla användarkonton för alla skäl vid alla tillfällen. Moderatorer kontrollerar inte nya inlägg på något sätt, moderatorer och sidansvariga hålls inte ansvariga för något innehåll upplagt av användarna. \n\n<a name=\"be-civil\"></a>\n\n## [Var alltid hövlig](#be-civil)\n\nIngenting saboterar hälsosamma konversationer som oförskämdhet:\n\n* Var hövlig. Skriv ingenting här som en förnuftig människa skulle tycka var stötande, kränkande eller hotfullt.\n* Håll det rent. Lägg inte upp något här som är obscent eller sexuellt anstötande.\n* Respektera varandra. Ofreda ingen, ge dig inte ut för att vara någon annan och röj inte känslig information om någon. \n* Respektera forumet. Spamma inte, eller på något annat sätt vandalisera forumet. \n\nDessa är inte konkreta termer med precisa definitioner &mdash; undvik ens _framställningen_ av någon av de här sakerna. Om du är osäker, fråga dig själv hur du skulle känna om ditt inlägg var presenterat på framsidan av New York Times eller liknande. \n\nDet här är ett publikt forum och söktjänster indexerar de här diskussionerna. Håll språket, länkarna och bilderna säkra för familj och vänner. \n\n<a name=\"keep-tidy\"></a>\n\n## [Håll det rent](#keep-tidy)\n\nFörsök att lägga saker på rätt plats, så att vi kan lägga mer tid på att diskutera och mindre på att städa upp.\n\n* Starta inte ämnen i fel kategori.\n* Skriv inte identiska inlägg i flera ämnen.\n* Skriv inte inlägg utan substans.\n* Omdirigera inte ett ämne genom att ändra det mitt i.\n* Signera inte dina inlägg &mdash; varje inlägg har din profilinformation anslutit till sig.\n\nIstället för att skriva ett inlägg med “+1” eller “Håller med”, använd gilla-knappen. Istället för att driva ett ämne åt ett helt annat håll, använd Svara som ett länkat ämne. \n\n<a name=\"stealing\"></a>\n\n## [Skriv bara dina egna tankar](#stealing)\n\nDet är inte accepterat att lägga upp något digitalt som tillhör någon annan utan tillåtelse. Du får inte lägga upp beskrivningar av, länkar till eller metoder för att stjäla någons immateriella egendom (mjukvara, video, audio, bilder), eller för att bryta mot någon annan lag.  \n\n<a name=\"power\"></a>\n\n## [Driven av användarna](#power)\n\nDen här hemsidan är driven av er [vänliga personal](/about) och *er*, användarna. Om du har några ytterligare frågor om hur saker borde fungera här, starta ett nytt ämne i [site feedback-kategorin](/c/site-feedback) så kan vi diskutera saken! Om det finns något kritiskt eller brådskande ärende som inte kan hanteras av en metadiskussion eller en flaggning så kan du kontakta oss via [om oss-sidan](/about).\n\n<a name=\"tos\"></a>\n\n## [Användarvillkor](#tos)\n\nJa, vi vet att juristspråk är tråkigt men vi måste skydda oss själva &ndash; och i förlängningen du och din data &ndash; mot otrevliga människor. Vi har [användarvillkor](/tos) som beskriver din (och våra) uppföranden och rättigheter relaterat till innehåll, integritet och lagar. För att använda den här tjänsten måste du samtycka till våra [användarvillkor](/tos).\n\n\n"
   tos_topic:
     title: "Villkor"
+  badges:
+    editor:
+      name: Redigerare
+      description: Första inläggsredigeringen
+      long_description: |
+        Den här utmärkelsen beviljas första gången som du redigerar något av dina inlägg. Även om du inte kan redigera dina inlägg förevigt så är redigering alltid en god idé — du kan förbättra dina inlägg, fixa små misstag eller lägga till något som du missade när du först skrev inlägget. Redigera dina inlägg för att göra dem ännu bättre!
+    basic_user:
+      name: Grundläggande
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Beviljad</a> alla väsentliga forumfunktioner
+      long_description: |
+        Den här utmärkelsen beviljas när du uppnår förtroendenivå 1. Tack för att du har följt med en stund och läst några ämnen för att lära dig vad vårt forum handlar om. Dina användarrestriktioner som ny användare har lyfts och du har nu tillgång till alla väsentliga forumfunktioner, bland annat personliga meddelanden, flaggningar, redigering av wikin och möjligheten att posta flertalet bilder och länkar
+    member:
+      name: Medlem
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Beviljad</a> inbjudningar, gruppmeddelanden, fler gillningar
+      long_description: |
+        Den här utmärkelsen beviljas när du når förtroendenivå 2. Tack för att har varit en del av forumet de senaste veckorna. Du kan nu skicka inbjudningar från din användarsida eller från individuella ämnen, skicka gruppmeddelanden och ha några fler gillningar varje dag.
+    regular:
+      name: Regelbunden
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Beviljad</a> omkategorisera, döpa om, följa länkar, wiki, fler gillningar
+      long_description: |
+        Den här utmärkelsen beviljas när du når förtroendenivå 3. Tack för att du regelbundet har varit en del av forumet de senaste månaderna. Du är nu en av våra mest aktiva läsare och en tillförlitlig bidragsgivare som gör forumet fantastiskt. Du kan nu omkategorisera och döpa om ämnen, använda mer kraftfulla verktyg som skräppost-flaggor, få tillgång till ett privat delforum och du får också massor av fler gillningar varje dag.
+    leader:
+      name: Ledare
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Beviljad</a> globala redigeringar, klistra, stänga, arkivera, splitta och sammanfoga, fler gillningar
+      long_description: |
+        Den här utmärkelsen beviljas när du når förtroendenivå 4. Du är en ledare för det här forumet speciellt utvald av personalen och du är en fin förebild genom dina handlingar och ord här. Du har möjlighet att ändra alla inlägg, använda vanliga moderingsverktyg för ämnen såsom att klistra, stänga, olista, arkivera, splitta och sammanfoga, och du har massor av fler gillningar varje dag.
+    welcome:
+      name: Välkommen
+      description: Fick en gilla
+      long_description: |
+        Den här utmärkelsen beviljas när du får din första gillning på ett inlägg. Grattis, du har skrivit något som en av medlemmarna på forumet tyckte var intressant, coolt eller användbart!
+    autobiographer:
+      name: Självbiograf
+      description: 'Fyllde ut sin <a href="/my/preferences">profilinformation</a> '
+      long_description: "Den här utmärkelsen beviljas för att ha fyllt i din <a href=\"/my/preferences\">profilinformation</a> och valt en profilbild. Genom att låta oss få lära känna dig bättre och vad du är intresserad av så blir forumet bättre och mer förenat. \n"
+    anniversary:
+      name: Årsdag
+      description: Aktiv medlem ett år, har skrivit minst en gång
+      long_description: |
+        Den här utmärkelsen beviljas när du har varit en medlem i ett år med minst ett inlägg under det året. Tack för att du har varit en del av och bidragit till forumet. Vi kunde inte ha gjort det utan dig.
+    nice_post:
+      name: Bra svar
+      description: Fick 10 gillningar på ett inlägg
+      long_description: |
+        Den här utmärkelsen beviljas när ett av dina inlägg får 10 gillningar. Ditt inlägg gjorde verkligen ett intryck på forumet och hjälpte konversationen!
+    good_post:
+      description: Fick 25 gillningar på ett inlägg
+      long_description: |
+        Den här utmärkelsen beviljas när ett av dina inlägg får 25 gillningar. Ditt inlägg var exceptionellt och gjorde den här konversationen mycket bättre för alla!
+    great_post:
+      description: Fick 50 gillningar på ett inlägg
+      long_description: |
+        Den här utmärkelsen beviljas när ett inlägg får 50 gillningar. Wow! Ditt inlägg var inspirerande, fascinerande, superroligt eller insiktsfullt och forumet älskade det.
+    nice_topic:
+      name: Bra ämne
+      description: Fick 10 gillningar på ett ämne
+      long_description: |
+        Den här utmärkelsen beviljas när ditt ämne får 10 gillningar. Du startade en intressant konversation som forumet uppskattade!
+    good_topic:
+      description: Fick 25 gillningar på ett ämne
+      long_description: |
+        Den här utmärkelsen beviljas när ditt ämne får 25 gillningar. Du startade en livfull konversation som forumet flockades kring och älskade!
+    great_topic:
+      description: Fick 50 gillningar på ett ämne
+      long_description: |
+        Den här utmärkelsen beviljas när ditt ämne får 50 gillningar. Du startade en fascinerande konversation och forumet uppskattade den dynamiska konversationen som följde!
+    nice_share:
+      description: Delade ett inlägg med 25 unika besökare
+      long_description: |
+        Den här utmärkelsen beviljas för att du delade en länk som klickades på av 25 besökare. Tack för att du sprider ordet om våra diskussioner och det här forumet!
+    good_share:
+      description: Delade ett inlägg med 300 unika besökare
+    great_share:
+      description: Delade ett inlägg med 1000 unika besökare
+      long_description: |
+        Den här utmärkelsen beviljas för att du delade en länk som klickades på av 1000 besökare. Wow! Du har visat upp en intressant diskussion för en helt ny public och hjälpt forumet växa enormt!
+    first_like:
+      name: Första gillning
+      description: Gillade ett inlägg
+      long_description: |
+        Den här utmärkelsen beviljas när du gillar ett inlägg med :heart:-knappen för första gången. Att gilla ett inlägg är ett utmärkt sätt att visa för andra att du uppskattade deras inlägg, att det var intressant, användbart, coolt eller roligt. Sprid kärleken!
   admin_login:
     success: "E-post skickat"
     error: "Fel!"
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

@@ -1,5 +1,4 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import User from 'discourse/models/user';
 import PollVoters from 'discourse/plugins/poll/components/poll-voters';
 
 export default PollVoters.extend({

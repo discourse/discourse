@@ -52,7 +52,7 @@ class Admin::EmailController < Admin::AdminController
 
   def handle_mail
     params.require(:email)
-    Email::Receiver.new(params[:email]).process!
+    Email::Processor.process!(params[:email])
     render text: "email was processed"
   end
 

@@ -1,3 +1,4 @@
+require 'sqlite3'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Mbox < ImportScripts::Base
@@ -5,96 +6,199 @@ class ImportScripts::Mbox < ImportScripts::Base
 
   BATCH_SIZE = 1000
   CATEGORY_ID = 6
-  MBOX_DIR = "/tmp/mbox-input"
-  USER_INDEX_PATH = "#{MBOX_DIR}/user-index.json"
-  TOPIC_INDEX_PATH = "#{MBOX_DIR}/topic-index.json"
-  REPLY_INDEX_PATH = "#{MBOX_DIR}/replies-index.json"
+  MBOX_DIR = File.expand_path("~/import/site")
+
+  # Remove to not split individual files
+  SPLIT_AT = /^From (.*) at/
 
   def execute
-    create_indices
+    create_email_indices
+    create_user_indices
+    massage_indices
     import_users
     create_forum_topics
     import_replies
   end
 
-  def all_messages
+  def open_db
+    SQLite3::Database.new("#{MBOX_DIR}/index.db")
+  end
 
-    files = Dir["#{MBOX_DIR}/*/*"]
+  def each_line(f)
+    infile = File.open(f, 'r')
+    if f.ends_with?('.gz')
+      gz = Zlib::GzipReader.new(infile)
+      gz.each_line do |line|
+        yield line
+      end
+    else
+      infile.each_line do |line|
+        yield line
+      end
+    end
+  ensure
+    infile.close
+  end
+
+  def all_messages
+    files = Dir["#{MBOX_DIR}/messages/*"]
 
     files.each_with_index do |f, idx|
-      raw = File.read(f)
-      mail = Mail.read_from_string(raw)
-      yield mail, f
-      print_status(idx, files.size)
+      if SPLIT_AT.present?
+        msg = ""
+
+        each_line(f) do |line|
+          line = line.scrub
+          if line =~ SPLIT_AT
+            if !msg.empty?
+              mail = Mail.read_from_string(msg)
+              yield mail
+              print_status(idx, files.size)
+              msg = ""
+            end
+          end
+          msg << line
+        end
+
+        if !msg.empty?
+          mail = Mail.read_from_string(msg)
+          yield mail
+          print_status(idx, files.size)
+          msg = ""
+        end
+      else
+        raw = File.read(f)
+        mail = Mail.read_from_string(raw)
+        yield mail
+        print_status(idx, files.size)
+      end
+
     end
   end
 
-  def create_indices
-    return if File.exist?(USER_INDEX_PATH) && File.exist?(TOPIC_INDEX_PATH) && File.exist?(REPLY_INDEX_PATH)
-    puts "", "creating indices"
-    users = {}
+  def massage_indices
+    db = open_db
+    db.execute "UPDATE emails SET reply_to = null WHERE reply_to = ''"
 
-    topics = []
+    rows = db.execute "SELECT msg_id, title, reply_to FROM emails ORDER BY email_date ASC"
 
-    topic_lookup = {}
-    topic_titles = {}
-    replies = []
+    msg_ids = {}
+    titles = {}
+    rows.each do |row|
+      msg_ids[row[0]] = true
+      titles[row[1]] = row[0]
+    end
 
-    all_messages do |mail, filename|
-      users[mail.from.first] = mail[:from].display_names.first
-
-      msg_id = mail['Message-ID'].to_s
-      reply_to = mail['In-Reply-To'].to_s
-      title = clean_title(mail['Subject'].to_s)
-      date = Time.parse(mail['date'].to_s).to_i
+    # First, any replies where the parent doesn't exist should have that field cleared
+    not_found = []
+    rows.each do |row|
+      msg_id, _, reply_to = row
 
       if reply_to.present?
-        topic = topic_lookup[reply_to] || reply_to
-        topic_lookup[msg_id] = topic
-        replies << {id: msg_id, topic: topic, file: filename, title: title, date: date}
-      else
-        topics << {id: msg_id, file: filename, title: title, date: date}
-        topic_titles[title] ||= msg_id
+        not_found << msg_id if msg_ids[reply_to].blank?
       end
     end
 
-    replies.sort! {|a, b| a[:date] <=> b[:date]}
-    topics.sort! {|a, b| a[:date] <=> b[:date]}
-
-    # Replies without parents should be hoisted to topics
-    to_hoist = []
-    replies.each do |r|
-      to_hoist << r if !topic_lookup[r[:topic]]
+    puts "#{not_found.size} records couldn't be associated with parents"
+    if not_found.present?
+      db.execute "UPDATE emails SET reply_to = NULL WHERE msg_id IN (#{not_found.map {|nf| "'#{nf}'"}.join(',')})"
     end
 
-    to_hoist.each do |h|
-      replies.delete(h)
-      topics << {id: h[:id], file: h[:file], title: h[:title], date: h[:date]}
-      topic_titles[h[:title]] ||= h[:id]
+    dupe_titles = db.execute "SELECT title, COUNT(*) FROM emails GROUP BY title HAVING count(*) > 1"
+    puts "#{dupe_titles.size} replies to wire up"
+    dupe_titles.each do |t|
+      title = t[0]
+      first = titles[title]
+      db.execute "UPDATE emails SET reply_to = ? WHERE title = ? and msg_id <> ?", [first, title, first]
     end
 
-    # Topics with duplicate replies should be replies
-    to_group = []
-    topics.each do |t|
-      first = topic_titles[t[:title]]
-      to_group << t if first && first != t[:id]
+  ensure
+    db.close
+  end
+
+  def extract_name(mail)
+    from_name = nil
+    from = mail[:from]
+
+    from_email = nil
+    if mail.from.present?
+      from_email = mail.from.dup
+      if from_email.kind_of?(Array)
+        from_email = from_email.first
+      end
+
+      from_email.gsub!(/ at /, '@')
+      from_email.gsub!(/ \(.*$/, '')
     end
 
-    to_group.each do |t|
-      topics.delete(t)
-      replies << {id: t[:id], topic: topic_titles[t[:title]], file: t[:file], title: t[:title], date: t[:date]}
+    display_names = from.try(:display_names)
+    if display_names.present?
+      from_name = display_names.first
     end
 
-    replies.sort! {|a, b| a[:date] <=> b[:date]}
-    topics.sort! {|a, b| a[:date] <=> b[:date]}
+    if from_name.blank? && from.to_s =~ /\(([^\)]+)\)/
+      from_name = Regexp.last_match[1]
+    end
+    from_name = from.to_s if from_name.blank?
 
+    [from_email, from_name]
+  end
 
-    File.write(USER_INDEX_PATH, {users: users}.to_json)
-    File.write(TOPIC_INDEX_PATH, {topics: topics}.to_json)
-    File.write(REPLY_INDEX_PATH, {replies: replies}.to_json)
+  def create_email_indices
+    db = open_db
+    db.execute "DROP TABLE IF EXISTS emails"
+    db.execute <<-SQL
+      CREATE TABLE emails (
+        msg_id VARCHAR(995) PRIMARY KEY,
+        from_email VARCHAR(255) NOT NULL,
+        from_name VARCHAR(255) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        reply_to VARCHAR(955) NULL,
+        email_date DATETIME NOT NULL,
+        message TEXT NOT NULL
+      );
+    SQL
+
+    db.execute "CREATE INDEX by_title ON emails (title)"
+    db.execute "CREATE INDEX by_email ON emails (from_email)"
+
+    puts "", "creating indices"
+
+    all_messages do |mail|
+      msg_id = mail['Message-ID'].to_s
+
+      # Many ways to get a name
+      from_email, from_name = extract_name(mail)
+
+      title = clean_title(mail['Subject'].to_s)
+      reply_to = mail['In-Reply-To'].to_s
+      email_date = mail['date'].to_s
+
+      db.execute "INSERT OR IGNORE INTO emails (msg_id, from_email, from_name, title, reply_to, email_date, message)
+                  VALUES (?, ?, ?, ?, ?, ?, ?)",
+                 [msg_id, from_email, from_name, title, reply_to, email_date, mail.to_s]
+    end
+  ensure
+    db.close
+  end
+
+  def create_user_indices
+    db = open_db
+    db.execute "DROP TABLE IF EXISTS users"
+    db.execute <<-SQL
+      CREATE TABLE users (
+        email VARCHAR(995) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL
+      );
+    SQL
+
+    db.execute "INSERT OR IGNORE INTO users (email, name) SELECT from_email, from_name FROM emails"
+  ensure
+    db.close
   end
 
   def clean_title(title)
+    title ||= ""
     #Strip mailing list name from subject
     title = title.gsub(/\[[^\]]+\]+/, '').strip
 
@@ -119,30 +223,36 @@ class ImportScripts::Mbox < ImportScripts::Base
     end
   end
 
-  def clean_raw(raw)
-    raw.gsub(/-- \nYou received this message because you are subscribed to the Google Groups "[^"]*" group.\nTo unsubscribe from this group and stop receiving emails from it, send an email to [^+@]+\+unsubscribe@googlegroups.com\.\nFor more options, visit https:\/\/groups\.google\.com\/groups\/opt_out\./, '')
+  def clean_raw(input)
+
+    raw = input.dup
+    raw.gsub!(/-- \nYou received this message because you are subscribed to the Google Groups "[^"]*" group.\nTo unsubscribe from this group and stop receiving emails from it, send an email to [^+@]+\+unsubscribe@googlegroups.com\.\nFor more options, visit https:\/\/groups\.google\.com\/groups\/opt_out\./, '')
+
+    raw
   end
 
   def import_users
     puts "", "importing users"
+    db = open_db
 
-    all_users = ::JSON.parse(File.read(USER_INDEX_PATH))['users']
-    user_keys = all_users.keys
-    total_count = user_keys.size
+    all_users = db.execute("SELECT name, email FROM users")
+    total_count = all_users.size
 
     batches(BATCH_SIZE) do |offset|
-      users = user_keys[offset..offset+BATCH_SIZE-1]
+      users = all_users[offset..offset+BATCH_SIZE-1]
       break if users.nil?
-      next if all_records_exist? :users, users
+      next if all_records_exist? :users, users.map {|u| u[1]}
 
-      create_users(users, total: total_count, offset: offset) do |email|
+      create_users(users, total: total_count, offset: offset) do |u|
         {
-          id:           email,
-          email:        email,
-          name:         all_users[email]
+          id:           u[1],
+          email:        u[1],
+          name:         u[0]
         }
       end
     end
+  ensure
+    db.close
   end
 
   def parse_email(msg)
@@ -157,23 +267,34 @@ class ImportScripts::Mbox < ImportScripts::Base
   def create_forum_topics
     puts "", "creating forum topics"
 
-    all_topics = ::JSON.parse(File.read(TOPIC_INDEX_PATH))['topics']
+    db = open_db
+    all_topics = db.execute("SELECT msg_id,
+                                    from_email,
+                                    from_name,
+                                    title,
+                                    email_date,
+                                    message
+                            FROM emails
+                            WHERE reply_to IS NULL")
+
     topic_count = all_topics.size
 
     batches(BATCH_SIZE) do |offset|
       topics = all_topics[offset..offset+BATCH_SIZE-1]
       break if topics.nil?
 
-      next if all_records_exist? :posts, topics.map {|t| t['id']}
+      next if all_records_exist? :posts, topics.map {|t| t[0]}
 
       create_posts(topics, total: topic_count, offset: offset) do |t|
-        raw_email = File.read(t['file'])
+        raw_email = t[5]
         receiver = Email::Receiver.new(raw_email)
         mail = Mail.read_from_string(raw_email)
         mail.body
 
+        from_email, _ = extract_name(mail)
         selected = receiver.select_body
         next unless selected
+        selected = selected.join('') if selected.kind_of?(Array)
 
         raw = selected.force_encoding(selected.encoding).encode("UTF-8")
 
@@ -186,7 +307,7 @@ class ImportScripts::Mbox < ImportScripts::Base
             # read attachment
             File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
             # create the upload for the user
-            upload = Upload.create_for(user_id_from_imported_user_id(mail.from.first) || Discourse::SYSTEM_USER_ID, tmp, attachment.filename, tmp.size )
+            upload = Upload.create_for(user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID, tmp, attachment.filename, tmp.size )
             if upload && upload.errors.empty?
               raw << "\n\n#{receiver.attachment_markdown(upload)}\n\n"
             end
@@ -195,43 +316,60 @@ class ImportScripts::Mbox < ImportScripts::Base
           end
         end
 
-        { id: t['id'],
+        { id: t[0],
           title: clean_title(title),
-          user_id: user_id_from_imported_user_id(mail.from.first) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID,
           created_at: mail.date,
           category: CATEGORY_ID,
           raw: clean_raw(raw),
           cook_method: Post.cook_methods[:email] }
       end
     end
+  ensure
+    db.close
   end
 
   def import_replies
     puts "", "creating topic replies"
 
-    replies = ::JSON.parse(File.read(REPLY_INDEX_PATH))['replies']
+    db = open_db
+    replies = db.execute("SELECT msg_id,
+                                 from_email,
+                                 from_name,
+                                 title,
+                                 email_date,
+                                 message,
+                                 reply_to
+                          FROM emails
+                          WHERE reply_to IS NOT NULL")
+
     post_count = replies.size
 
     batches(BATCH_SIZE) do |offset|
       posts = replies[offset..offset+BATCH_SIZE-1]
       break if posts.nil?
 
-      next if all_records_exist? :posts, posts.map {|p| p['id']}
+      next if all_records_exist? :posts, posts.map {|p| p[0]}
 
       create_posts(posts, total: post_count, offset: offset) do |p|
-        parent_id = p['topic']
-        id = p['id']
+        parent_id = p[6]
+        id = p[0]
 
         topic = topic_lookup_from_imported_post_id(parent_id)
         topic_id = topic[:topic_id] if topic
         next unless topic_id
 
-        raw_email = File.read(p['file'])
+        raw_email = p[5]
         receiver = Email::Receiver.new(raw_email)
         mail = Mail.read_from_string(raw_email)
         mail.body
 
+        from_email, _ = extract_name(mail)
+
         selected = receiver.select_body
+        selected = selected.join('') if selected.kind_of?(Array)
+        next unless selected
+
         raw = selected.force_encoding(selected.encoding).encode("UTF-8")
 
         # import the attachments
@@ -241,7 +379,7 @@ class ImportScripts::Mbox < ImportScripts::Base
             # read attachment
             File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
             # create the upload for the user
-            upload = Upload.create_for(user_id_from_imported_user_id(mail.from.first) || Discourse::SYSTEM_USER_ID, tmp, attachment.filename, tmp.size )
+            upload = Upload.create_for(user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID, tmp, attachment.filename, tmp.size )
             if upload && upload.errors.empty?
               raw << "\n\n#{receiver.attachment_markdown(upload)}\n\n"
             end
@@ -252,12 +390,14 @@ class ImportScripts::Mbox < ImportScripts::Base
 
         { id: id,
           topic_id: topic_id,
-          user_id: user_id_from_imported_user_id(mail.from.first) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID,
           created_at: mail.date,
           raw: clean_raw(raw),
           cook_method: Post.cook_methods[:email] }
       end
     end
+  ensure
+    db.close
   end
 end
 

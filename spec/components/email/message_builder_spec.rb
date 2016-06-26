@@ -187,8 +187,8 @@ describe Email::MessageBuilder do
         expect(message_with_unsubscribe.header_args['List-Unsubscribe']).to be_present
       end
 
-      it "has the user preferences url in the body" do
-        expect(message_with_unsubscribe.body).to match(builder.template_args[:user_preferences_url])
+      it "has the unsubscribe url in the body" do
+        expect(message_with_unsubscribe.body).to match('/t/1234/unsubscribe')
       end
 
       it "can add an unsubscribe via email link" do

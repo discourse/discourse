@@ -1,5 +1,10 @@
 .fps-result {
 
+  .author {
+    display: inline-block;
+    vertical-align: top;
+  }
+
   .like-count {
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     .fa { color: $love; font-size: 12px; }
@@ -10,31 +15,31 @@
   }
 
   .search-category {
-    margin-top: 3px;
+    padding-top:3px;
   }
 
   margin-bottom: 28px;
-  max-width: 675px;
+  max-width: 780px;
   .topic {
      padding-bottom: 2px;
+     max-width:700px;
   }
   .avatar {
-    position: relative;
-    top: -3px;
-    margin-right: 4px;
+    margin-right: 14px;
   }
   a.search-link:visited .topic-title {
     color: scale-color($tertiary, $lightness: 15%);
   }
   .search-link {
     .topic-statuses, .topic-title {
-      font-size: 1.25em;
+      font-size: 1.3em;
+      line-height: 25px;
     }
 
     .topic-statuses {
       float: none;
       display: inline-block;
-      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       font-size: 1.0em;
     }
   }
@@ -42,16 +47,24 @@
     font-size: 1.0em;
     line-height: 20px;
     word-wrap: break-word;
-    clear: both;
+    max-width: 640px;
     color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
     .date {
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
     }
 
     .search-highlight {
-      color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
+      color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
     }
   }
+
+  .discourse-tag {
+    font-size: 0.8em;
+  }
+}
+
+.fps-topic {
+  display: inline-block;
 }
 
 .fps-select {
@@ -105,7 +118,7 @@
     margin-bottom: 4px;
   }
   margin: 10px 0 15px;
-  max-width: 675px;
+  max-width: 780px;
   border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
   width: 100%;
   .sort-by {

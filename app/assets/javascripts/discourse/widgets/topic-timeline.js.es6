@@ -143,7 +143,7 @@ createWidget('timeline-scrollarea', {
       this.attach('timeline-padding', { height: after })
     ];
 
-    if (position.lastRead) {
+    if (position.lastRead && position.lastRead !== position.total) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
       if ((lastReadTop > (before + SCROLLER_HEIGHT)) && (lastReadTop < (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT))) {
         result.push(this.attach('timeline-last-read', { top: lastReadTop, lastRead: position.lastRead }));
@@ -209,12 +209,14 @@ export default createWidget('topic-timeline', {
     const stream = attrs.topic.get('postStream.stream');
     const { currentUser } = this;
 
-    if (stream.length < 3) { return; }
-
 
     let result = [];
     if (currentUser && currentUser.get('canManageTopic')) {
       result.push(h('div.timeline-controls', this.attach('topic-admin-menu-button', { topic })));
+    }
+
+    if (stream.length < 3) {
+      return result;
     }
 
     const bottomAge = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
@@ -234,7 +236,7 @@ export default createWidget('topic-timeline', {
       const controls = [];
       if (attrs.topic.get('details.can_create_post')) {
         controls.push(this.attach('button', {
-          className: 'btn btn-primary create',
+          className: 'btn create',
           icon: 'reply',
           title: 'topic.reply.help',
           action: 'replyToPost'

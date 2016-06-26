@@ -56,6 +56,9 @@ class DiscourseSingleSignOn < SingleSignOn
       sso_record = user.single_sign_on_record
     end
 
+    # ensure it's not staged anymore
+    user.staged = false
+
     # if the user isn't new or it's attached to the SSO record we might be overriding username or email
     unless user.new_record?
       change_external_attributes_and_override(sso_record, user)

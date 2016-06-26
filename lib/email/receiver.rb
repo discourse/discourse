@@ -32,7 +32,7 @@ module Email
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
       @staged_users_created = 0
-      @raw_email = mail_string
+      @raw_email = try_to_encode(mail_string, "UTF-8") || try_to_encode(mail_string, "ISO-8859-1") || mail_string
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
     end
@@ -126,7 +126,9 @@ module Email
         when :reply
           email_log = destination[:obj]
 
-          raise ReplyUserNotMatchingError if email_log.user_id != user.id
+          if email_log.user_id != user.id
+            raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+          end
 
           create_reply(user: user,
                        raw: body,
@@ -148,15 +150,17 @@ module Email
         bounce_key = verp[/\+verp-(\h{32})@/, 1]
         if bounce_key && (email_log = EmailLog.find_by(bounce_key: bounce_key))
           email_log.update_columns(bounced: true)
-
-          if @mail.error_status.present?
-            if @mail.error_status.start_with?("4.")
-              Email::Receiver.update_bounce_score(email_log.user.email, SOFT_BOUNCE_SCORE)
-            elsif @mail.error_status.start_with?("5.")
-              Email::Receiver.update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
+          email = email_log.user.try(:email) || @from_email
+          if email.present?
+            if @mail.error_status.present?
+              if @mail.error_status.start_with?("4.")
+                Email::Receiver.update_bounce_score(email, SOFT_BOUNCE_SCORE)
+              elsif @mail.error_status.start_with?("5.")
+                Email::Receiver.update_bounce_score(email, HARD_BOUNCE_SCORE)
+              end
+            elsif is_auto_generated?
+              Email::Receiver.update_bounce_score(email, HARD_BOUNCE_SCORE)
             end
-          elsif is_auto_generated?
-            Email::Receiver.update_bounce_score(email_log.user.email, HARD_BOUNCE_SCORE)
           end
         end
       end
@@ -232,14 +236,16 @@ module Email
 
       return nil if string.blank?
 
-      # 1) use the charset provided
-      if mail_part.charset.present?
-        fixed = try_to_encode(string, mail_part.charset)
+      # common encodings
+      encodings = ["UTF-8", "ISO-8859-1"]
+      encodings.unshift(mail_part.charset) if mail_part.charset.present?
+
+      encodings.uniq.each do |encoding|
+        fixed = try_to_encode(string, encoding)
         return fixed if fixed.present?
       end
 
-      # 2) try most used encodings
-      try_to_encode(string, "UTF-8") || try_to_encode(string, "ISO-8859-1")
+      nil
     end
 
     def try_to_encode(string, encoding)

@@ -60,14 +60,20 @@
 
   {{#each model.posts as |result|}}
     <div class='fps-result'>
+      <div class='author'>
+        {{avatar result imageSize="large"}}
+      </div>
+
+      <div class='fps-topic'>
         <div class='topic'>
           {{#if bulkSelectEnabled}}
             {{track-selected selectedList=selected selectedId=result.topic}}
           {{/if}}
-          {{avatar result imageSize="tiny"}}
+
           <a class='search-link' href='{{unbound result.url}}'>
             {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
           </a>
+
           <div class='search-category'>
             {{category-link result.topic.category}}
             {{#each result.topic.tags as |tag|}}
@@ -76,26 +82,30 @@
             {{plugin-outlet "full-page-search-category"}}
           </div>
         </div>
+
         <div class='blurb container'>
           <span class='date'>
-          {{format-age result.created_at}}
-          {{#if result.blurb}}
-          -
-          {{/if}}
+            {{format-age result.created_at}}
+            {{#if result.blurb}}
+            -
+            {{/if}}
           </span>
+
           {{#if result.blurb}}
             {{#highlight-text highlight=q}}
               {{{unbound result.blurb}}}
             {{/highlight-text}}
           {{/if}}
         </div>
+
         {{#if showLikeCount}}
-        {{#if result.like_count}}
-        <span class='like-count'>
-          {{result.like_count}} <i class="icon fa fa-heart"></i>
-        </span>
+          {{#if result.like_count}}
+            <span class='like-count'>
+              {{result.like_count}} <i class="icon fa fa-heart"></i>
+            </span>
+          {{/if}}
         {{/if}}
-        {{/if}}
+      </div>
     </div>
   {{/each}}
 

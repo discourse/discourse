@@ -256,6 +256,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return this.get('model.details').removeAllowedUser(user);
     },
 
+    removeAllowedGroup(group) {
+      return this.get('model.details').removeAllowedGroup(group);
+    },
+
     deleteTopic() {
       this.deleteTopic();
     },
@@ -586,10 +590,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     replyAsNewTopic(post) {
-      const composerController = this.get('controllers.composer'),
-            quoteController = this.get('controllers.quote-button'),
-            quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
-            self = this;
+      const composerController = this.get('controllers.composer');
+      const quoteController = this.get('controllers.quote-button');
+      post = post || quoteController.get('post');
+      const quotedText = Quote.build(post, quoteController.get('buffer'));
 
       quoteController.deselectText();
 
@@ -601,7 +605,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return Em.isEmpty(quotedText) ? "" : quotedText;
       }).then(q => {
         const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
-        const postLink = `[${Handlebars.escapeExpression(self.get('model.title'))}](${postUrl})`;
+        const postLink = `[${Handlebars.escapeExpression(this.get('model.title'))}](${postUrl})`;
         composerController.get('model').prependText(`${I18n.t("post.continue_discussion", { postLink })}\n\n${q}`, {new_line: true});
       });
     },
@@ -754,7 +758,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   },
 
   deleteTopic() {
-    this.unsubscribe();
     this.get('content').destroy(Discourse.User.current());
   },
 

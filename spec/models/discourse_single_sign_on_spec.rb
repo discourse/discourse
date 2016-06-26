@@ -64,6 +64,21 @@ describe DiscourseSingleSignOn do
     expect(user).to_not be_nil
   end
 
+  it "unstaged users" do
+    email = "staged@user.com"
+    Fabricate(:user, staged: true, email: email)
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "staged"
+    sso.name = "Staged User"
+    sso.email = email
+    sso.external_id = "B"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user).to_not be_nil
+    expect(user.staged).to be(false)
+  end
+
   it "can set admin and moderator" do
     admin_group = Group[:admins]
     mod_group = Group[:moderators]
@@ -83,7 +98,6 @@ describe DiscourseSingleSignOn do
     expect(mod_group.users.where('users.id = ?', user.id).exists?).to eq(true)
     expect(staff_group.users.where('users.id = ?', user.id).exists?).to eq(true)
     expect(admin_group.users.where('users.id = ?', user.id).exists?).to eq(true)
-
   end
 
   it "can override name / email / username" do
@@ -156,7 +170,6 @@ describe DiscourseSingleSignOn do
   end
 
   it "generates a correct sso url" do
-
     url, payload = DiscourseSingleSignOn.generate_url.split("?")
     expect(url).to eq @sso_url
 

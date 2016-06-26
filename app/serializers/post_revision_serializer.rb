@@ -22,7 +22,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :edit_reason,
              :body_changes,
              :title_changes,
-             :user_changes
+             :user_changes,
+             :tags_changes
 
 
   # Creates a field called field_name_changes with previous and
@@ -41,7 +42,6 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   add_compared_field :wiki
-  add_compared_field :tags
 
   def previous_hidden
     previous["hidden"]
@@ -150,8 +150,12 @@ class PostRevisionSerializer < ApplicationSerializer
     }
   end
 
+  def tags_changes
+    { previous: previous["tags"], current: current["tags"] }
+  end
+
   def include_tags_changes?
-    SiteSetting.tagging_enabled
+    SiteSetting.tagging_enabled && previous["tags"] != current["tags"]
   end
 
   protected
@@ -190,7 +194,7 @@ class PostRevisionSerializer < ApplicationSerializer
       end
 
       if SiteSetting.tagging_enabled
-        latest_modifications["tags"] = post.topic.tags.map(&:name)
+        latest_modifications["tags"] = [post.topic.tags.map(&:name)]
       end
 
       post_revisions << PostRevision.new(

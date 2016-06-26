@@ -1,10 +1,8 @@
+# Generates posts and topics
 class Populate < Thor
-
-  MAX_ERRORS = 5
-
-  desc "posts", "Generate posts in a topic"
+  desc "posts", "Generate posts"
   long_desc <<-LONGDESC
-    Create a topic with any number of posts, or add posts to an existing topic.
+    Create topics with any number of posts, or add posts to an existing topic.
 
     Examples:
 
@@ -16,94 +14,95 @@ class Populate < Thor
 
     > $ thor populate:posts -n 10 -u batman spiderman -i 123
 
+    Generate 10 topics with 5 posts:
+
+    > $ thor populate:posts -p 10 -n 5
+
   LONGDESC
   method_option :num_posts, aliases: '-n',  type: :numeric, required: true, desc: "Number of posts to make"
-  method_option :users,     aliases: '-u',  required: true, type: :array, desc: "Usernames of users who will make the posts"
+  method_option :users,     aliases: '-u',  type: :array, desc: "Usernames of users who will make the posts"
   method_option :title,     aliases: '-t',  desc: "The title of the topic, if making a new topic"
   method_option :topic_id,  aliases: '-i', type: :numeric, desc: "The id of the topic where the posts will be added"
+  method_option :num_topics, aliases: '-p', type: :numeric, default: 1, desc: "Number of topics to create"
+
   def posts
     require './config/environment'
-
-    users = options[:users].map { |u| User.find_by_username(u.downcase) }
-    if users.length != options[:users].length
-      not_found = options[:users].map(&:downcase) - users.map(&:username_lower)
-      puts "No user found for these usernames: #{not_found.join(', ')}"
-      exit 1
-    end
-
-    RateLimiter.disable
-
-    topic = nil
-    start_post = 1
-    if options[:topic_id]
-      topic = Topic.find(options[:topic_id])
-      puts "Adding more posts to '#{topic.title}'"
+    users = []
+    if options[:users]
+      options[:users].each do |u|
+        provided_user = User.find_by_username(u.downcase)
+        puts "No user found: #{provided_user}" if provided_user.nil?
+        users << provided_user if provided_user
+      end
     else
-      topic_title = options[:title] || hipster_words.sample(6).join(' ')
-
-      puts "Making a new topic: '#{topic_title}'"
-
-      post_creator = PostCreator.new(users[0], title: topic_title, raw: hipster_words.sample(10).join(' '))
-      first_post = post_creator.create
-      if post_creator.errors.present?
-        puts "ERROR creating the topic!"
-        puts post_creator.errors.full_messages
-        exit 1
-      end
-      topic = first_post.topic
-      start_post = 2
-    end
-
-    puts "Making #{options[:num_posts]} posts"
-
-    num_errors = 0
-
-    (start_post..options[:num_posts]).each do |num|
-      print '.'
-      raw = rand(4) == 0 ? (rand(2) == 0 ? image_posts.sample : wikipedia_posts.sample ) : hipster_words.sample(20).join(' ')
-      post_creator = PostCreator.new(users[num % (users.length)], topic_id: topic.id, raw: raw)
-      post_creator.create
-      if post_creator.errors.present?
-        # It's probably a "Body is too similar to what you recently posted" error.
-        # Try one more time using more random words.
-        post_creator = PostCreator.new(users[num % (users.length)], topic_id: topic.id, raw: hipster_words.sample(40).join(' '))
-        post_creator.create
-        if post_creator.errors.present?
-          # Still failing! Show the error.
-          puts '', "--------------------------"
-          puts "ERROR creating a post!"
-          puts post_creator.errors.full_messages
-          puts "--------------------------"
-
-          # Stop looping after MAX_ERRORS errors
-          num_errors += 1
-          if num_errors > MAX_ERRORS
-            puts "Giving up. Too many errors."
-            exit 1
-          end
-        end
+      10.times do
+        user = create_user(generate_email)
+        users << user
       end
     end
-
-    puts ''
-
-    puts "Done. Topic id = #{topic.id}"
+    RateLimiter.disable
+    options[:num_topics].times do
+      topic = Topic.find_by(id: options[:topic_id])
+      start_post = 1
+      topic = create_topic(users) unless topic
+      puts "Adding posts to '#{topic.title}'"
+      puts "Making #{options[:num_posts]} posts"
+      (start_post..options[:num_posts]).each do
+        create_post(users, topic)
+      end
+      puts ''
+      puts "Done. Topic id = #{topic.id}"
+    end
   ensure
     RateLimiter.enable
   end
 
   private
 
-    def hipster_words
-      @hipster_words ||= "retro put a bird on it wolf vegan gluten-free swag trust fund master cleanse four loko synth gentrify literally lomo bitters Keytar try-hard semiotics gastropub marfa YOLO bicycle rights street art authentic DIY fashion axe Chia letterpress twee mlkshk Typewriter umami Etsy keffiyeh direct trade Distillery Odd Future narwhal Pitchfork roof party pork belly Austin McSweeney's cliche Dreamcatcher +1 drinking vinegar Neutra Vice pickled Brooklyn Williamsburg hella small batch ennui squid Schlitz Kale chips food truck butcher vinyl ethnic fixie shabby chic iPhone Terry Richardson Deep v hoodie forage Retro fanny pack wayfarers messenger bag pug you probably haven't heard of them Art disrupt High Life hashtag chambray readymade selfies sartorial PBR leggings flexitarian chillwave Cosby sweater Marfa typewriter freegan chia biodiesel 8-bit occupy Tonx sustainable cray PBR&B Yr skateboard Tumblr 3 moon fingerstache Intelligentsia plaid Thundercats XOXO craft beer mustache Shoreditch Next level Godard actually mumblecore keytar stumptown irony Disrupt tofu scenester lo-fi single-origin coffee kogi beard yr tattooed viral 90's aesthetic pop-up mixtape Pinterest Asymmetrical kitsch farm-to-table photo booth cardigan Squid Helvetica Direct kale salvia American Apparel artisan tousled".split(' ') +
-                          (["\n\n"] * 20)
+  def create_user(user_email)
+    unless User.find_by_email(user_email)
+      puts "Creating new account: #{user_email}"
+      user = User.create!(email: user_email, password: SecureRandom.hex, username: UserNameSuggester.suggest(user_email))
     end
+    user.active = true
+    user.save!
+    user
+  end
 
-    def image_posts
-      @image_posts ||= ["http://i.imgur.com/CnRF48R.jpg\n\n", "http://i.imgur.com/2iaeK.png\n\n", "http://i.imgur.com/WSD5t61.jpg\n\n", "http://i.imgur.com/GUldmUd.jpg\n\n", "http://i.imgur.com/nJnb6Bj.jpg\n\n", "http://i.imgur.com/eljDYjm.jpg\n\n", "http://i.imgur.com/5yZMWyY.png\n\n", "http://i.imgur.com/2iCPGm2.jpg\n\n"]
-    end
+  def create_topic(users)
+    topic_title = options[:title] || generate_sentence(5)
+    puts "Making a new topic: '#{topic_title}'"
+    post_creator = PostCreator.new(users.sample, title: topic_title, raw: generate_sentence(7))
+    first_post = post_creator.create
+    topic = first_post.topic
+    start_post = 2
+    topic
+  end
 
-    def wikipedia_posts
-      @wikipedia_posts ||= ["http://en.wikipedia.org/wiki/Dwarf_fortress\n\n", "http://en.wikipedia.org/wiki/Action_plan\n\n", "http://en.wikipedia.org/wiki/Chang%27e_3\n\n", "http://en.wikipedia.org/wiki/Carl_sagan\n\n", "http://en.wikipedia.org/wiki/Chasmosaurus\n\n", "http://en.wikipedia.org/wiki/Indian_Space_Research_Organisation\n\n", "http://en.wikipedia.org/wiki/Rockstar_Consortium\n\n", "http://en.wikipedia.org/wiki/Manitoulin_island\n\n"]
-    end
+  def create_post(users, topic)
+    print '.'
+    raw = rand(4) == 0 ? (rand(2) == 0 ? image_posts.sample : wikipedia_posts.sample) : generate_sentence(7)
+    post_creator = PostCreator.new(users.sample, topic_id: topic.id, raw: raw)
+    post_creator.create
+  end
+
+  def hipster_words
+    @hipster_words ||= ['etsy', 'twee', 'hoodie', 'Banksy', 'retro', 'synth', 'single-origin', 'coffee', 'art', 'party', 'cliche', 'artisan', 'Williamsburg', 'squid', 'helvetica', 'keytar', 'American Apparel', 'craft beer', 'food truck', "you probably haven't heard of them", 'cardigan', 'aesthetic', 'raw denim', 'sartorial', 'gentrify', 'lomo', 'Vice', 'Pitchfork', 'Austin', 'sustainable', 'salvia', 'organic', 'thundercats', 'PBR', 'iPhone', 'lo-fi', 'skateboard', 'jean shorts', 'next level', 'beard', 'tattooed', 'trust fund', 'Four Loko', 'master cleanse', 'ethical', 'high life', 'wolf moon', 'fanny pack', 'Terry Richardson', '8-bit', 'Carles', 'Shoreditch', 'seitan', 'freegan', 'keffiyeh', 'biodiesel', 'quinoa', 'farm-to-table', 'fixie', 'viral', 'chambray', 'scenester', 'leggings', 'readymade', 'Brooklyn', 'Wayfarers', 'Marfa', 'put a bird on it', 'dreamcatcher', 'photo booth', 'tofu', 'mlkshk', 'vegan', 'vinyl', 'DIY', 'banh mi', 'bicycle rights', 'before they sold out', 'gluten-free', 'yr butcher blog', 'whatever', '+1', 'Cosby Sweater', 'VHS', 'messenger bag', 'cred', 'locavore', 'mustache', 'tumblr', 'Portland', 'mixtape', 'fap', 'letterpress', "McSweeney's", 'stumptown', 'brunch', 'Wes Anderson', 'irony', 'echo park']
+  end
+
+  def generate_sentence(num_words)
+    hipster_words.sample(num_words).join(' ').capitalize + '.'
+  end
+
+  def generate_email
+    hipster_words.sample.delete(' ') + '@' + hipster_words.sample.delete(' ') + '.com'
+  end
+
+  def image_posts
+    @image_posts ||= ["http://i.imgur.com/CnRF48R.jpg\n\n", "http://i.imgur.com/2iaeK.png\n\n", "http://i.imgur.com/WSD5t61.jpg\n\n", "http://i.imgur.com/GUldmUd.jpg\n\n", "http://i.imgur.com/nJnb6Bj.jpg\n\n", "http://i.imgur.com/eljDYjm.jpg\n\n", "http://i.imgur.com/5yZMWyY.png\n\n", "http://i.imgur.com/2iCPGm2.jpg\n\n"]
+  end
+
+  def wikipedia_posts
+    @wikipedia_posts ||= ["http://en.wikipedia.org/wiki/Dwarf_fortress\n\n", "http://en.wikipedia.org/wiki/Action_plan\n\n", "http://en.wikipedia.org/wiki/Chang%27e_3\n\n", "http://en.wikipedia.org/wiki/Carl_sagan\n\n", "http://en.wikipedia.org/wiki/Chasmosaurus\n\n", "http://en.wikipedia.org/wiki/Indian_Space_Research_Organisation\n\n", "http://en.wikipedia.org/wiki/Rockstar_Consortium\n\n", "http://en.wikipedia.org/wiki/Manitoulin_island\n\n"]
+  end
 end

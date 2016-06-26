@@ -375,6 +375,33 @@ class TopicsController < ApplicationController
     end
   end
 
+  def remove_allowed_group
+    params.require(:name)
+    topic = Topic.find_by(id: params[:topic_id])
+    guardian.ensure_can_remove_allowed_users!(topic)
+
+    if topic.remove_allowed_group(current_user, params[:name])
+      render json: success_json
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
+  def invite_group
+    group = Group.find_by(name: params[:group])
+    raise Discourse::NotFound unless group
+
+    topic = Topic.find_by(id: params[:topic_id])
+
+    if topic.private_message?
+      guardian.ensure_can_send_private_message!(group)
+      topic.invite_group(current_user, group)
+      render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: 'group')
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
   def invite
     username_or_email = params[:user] ? fetch_username : fetch_email
 
