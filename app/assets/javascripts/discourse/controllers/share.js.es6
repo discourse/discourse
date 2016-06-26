@@ -33,7 +33,8 @@ export default Ember.Controller.extend({
     replyAsNewTopic() {
       const topicController = this.get("controllers.topic");
       const postStream = topicController.get("model.postStream");
-      const post = postStream.findLoadedPost(this.get("postId"));
+      const postId = this.get("postId") || postStream.findPostIdForPostNumber(1);
+      const post = postStream.findLoadedPost(postId);
       topicController.send("replyAsNewTopic", post);
       this.send("close");
     },
