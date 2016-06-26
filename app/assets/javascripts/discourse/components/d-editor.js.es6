@@ -63,18 +63,7 @@ class Toolbar {
       perform: e => e.applySurround('> ', '', 'code_text')
     });
 
-    this.addButton({
-      id: 'code',
-      group: 'insertions',
-      shortcut: 'Shift+C',
-      perform(e) {
-        if (e.selected.value.indexOf("\n") !== -1) {
-          e.applySurround('    ', '', 'code_text');
-        } else {
-          e.applySurround('`', '`', 'code_text');
-        }
-      },
-    });
+    this.addButton({id: 'code', group: 'insertions', shortcut: 'Shift+C', action: 'formatCode'});
 
     this.addButton({
       id: 'bullet',
@@ -528,6 +517,19 @@ export default Ember.Component.extend({
     showLinkModal() {
       this._lastSel = this._getSelected();
       this.set('insertLinkHidden', false);
+    },
+
+    formatCode() {
+      const sel = this._getSelected();
+      if (sel.value.indexOf("\n") !== -1) {
+        return (this.siteSettings.code_formatting_style == "4-spaces-indent") ?
+                this._applySurround(sel, '    ', '', 'code_text') :
+                this._addText(sel, '```\n' + sel.value + '\n```');
+      } else {
+        return (this.siteSettings.code_formatting_style == "4-spaces-indent") ?
+                this._applySurround(sel, '`', '`', 'code_text') :
+                this._applySurround(sel, '```\n', '\n```', 'paste_code_text');
+      }
     },
 
     insertLink() {
