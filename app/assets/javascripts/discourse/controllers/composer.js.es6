@@ -70,7 +70,7 @@ export default Ember.Controller.extend({
         // iPhone 6 is 375, anything narrower and toolbar should
         // be default disabled.
         // That said we should remember the state
-        this._toolbarEnabled = $(window).width() > 370;
+        this._toolbarEnabled = $(window).width() > 370 && !this.capabilities.isAndroid;
       }
       return this._toolbarEnabled || storedVal === "true";
     },
