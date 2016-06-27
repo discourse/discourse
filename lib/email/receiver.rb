@@ -429,6 +429,9 @@ module Email
     def create_post_with_attachments(options={})
       # deal with attachments
       @mail.attachments.each do |attachment|
+        # always strip S/MIME signatures
+        next if attachment.content_type == "application/pkcs7-mime".freeze
+
         tmp = Tempfile.new("discourse-email-attachment")
         begin
           # read attachment
