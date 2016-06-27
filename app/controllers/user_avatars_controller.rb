@@ -120,7 +120,7 @@ class UserAvatarsController < ApplicationController
   def proxy_avatar(url)
 
     if url[0..1] == "//"
-      url = (SiteSetting.use_https ? "https:" : "http:") + url
+      url = (SiteSetting.force_https ? "https:" : "http:") + url
     end
 
     sha = Digest::SHA1.hexdigest(url)
