@@ -19,7 +19,7 @@ export function includeAttributes(...attributes) {
 export function transformBasicPost(post) {
   // Note: it can be dangerous to not use `get` in Ember code, but this is significantly
   // faster and has tests to confirm it works. We only call `get` when the property is a CP
-  return {
+  const postAtts = {
     id: post.id,
     hidden: post.hidden,
     deleted: post.get('deleted'),
@@ -73,6 +73,9 @@ export function transformBasicPost(post) {
     replyCount: post.reply_count,
   };
 
+  _additionalAttributes.forEach(a => postAtts[a] = post[a]);
+
+  return postAtts;
 }
 
 
