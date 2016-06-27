@@ -37,7 +37,7 @@
             {{#if canEdit}}
               {{#if showEditReason}}
                 <div class="edit-reason-input">
-                  {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                  {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
                 </div>
               {{else}}
                 <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
