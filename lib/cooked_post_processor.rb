@@ -321,20 +321,24 @@ class CookedPostProcessor
     if SiteSetting.login_required
       @doc.css("a.attachment[href]").each do |a|
         href = a["href"].to_s
-        a["href"] = UrlHelper.schemaless UrlHelper.absolute(href, nil) if UrlHelper.is_local(href)
+        a["href"] = UrlHelper.schemaless UrlHelper.absolute_without_cdn(href) if UrlHelper.is_local(href)
       end
     end
 
+    use_s3_cdn = SiteSetting.s3_cdn_url.present? && SiteSetting.enable_s3_uploads
+
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
-        href = a["#{selector}"].to_s
-        a["#{selector}"] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
+        href = a[selector].to_s
+        a[selector] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
+        a[selector] = a[selector].sub(Discourse.store.absolute_base_url, SiteSetting.s3_cdn_url) if use_s3_cdn
       end
     end
 
     @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
+      img["src"] = img["src"].sub(Discourse.store.absolute_base_url, SiteSetting.s3_cdn_url) if use_s3_cdn
     end
   end
 

@@ -296,7 +296,7 @@ JS
       add_rel_nofollow_to_user_content(doc)
     end
 
-    if SiteSetting.s3_cdn_url.present? && SiteSetting.enable_s3_uploads
+    if SiteSetting.enable_s3_uploads && SiteSetting.s3_cdn_url.present?
       add_s3_cdn(doc)
     end
 
