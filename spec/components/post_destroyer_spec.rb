@@ -195,7 +195,7 @@ describe PostDestroyer do
   describe 'basic destroying' do
 
     it "as the creator of the post, doesn't delete the post" do
-      SiteSetting.stubs(:unique_posts_mins).returns(5)
+      SiteSetting.stubs(:unique_posts_mins).returns(0)
       SiteSetting.stubs(:delete_removed_posts_after).returns(24)
 
       post2 = create_post # Create it here instead of with "let" so unique_posts_mins can do its thing
@@ -446,4 +446,3 @@ describe PostDestroyer do
   end
 
 end
-
