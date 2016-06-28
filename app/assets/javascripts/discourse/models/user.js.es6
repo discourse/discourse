@@ -368,7 +368,7 @@ const User = RestModel.extend({
     return {
       add: _.difference(ids, oldIds),
       remove: _.difference(oldIds, ids),
-    }
+    };
   },
 
   @computed("can_delete_account", "reply_count", "topic_count")
