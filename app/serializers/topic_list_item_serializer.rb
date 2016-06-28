@@ -67,6 +67,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   def include_tags?
     SiteSetting.tagging_enabled
   end
+
   def tags
     object.tags.map(&:name)
   end
