@@ -90,15 +90,6 @@ describe Jobs::PollMailbox do
       )
     end
 
-    it "does not reply to an email containing a reply to an auto generated email" do
-      expect { process_popmail(:bounced_email_2) }.to_not change { ActionMailer::Base.deliveries.count }
-
-      incoming_email = IncomingEmail.last
-
-      expect(incoming_email.rejection_message).to eq(
-        I18n.t("emails.incoming.errors.auto_generated_email_reply")
-      )
-    end
   end
 
 end
