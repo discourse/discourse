@@ -48,13 +48,7 @@
           {{#if model.canEditTitle}}
             <div class='form-element clearfix'>
               {{#if model.creatingPrivateMessage}}
-                {{user-selector topicId=topicModel.id
-                                excludeCurrentUser="true"
-                                id="private-message-users"
-                                includeMentionableGroups="true"
-                                class="span8"
-                                placeholderKey="composer.users_placeholder"
-                                tabindex="1"
+                {{composer-user-selector topicId=topicModel.id
                                 usernames=model.targetUsernames
                                 hasGroups=model.hasTargetGroups
                                 }}
