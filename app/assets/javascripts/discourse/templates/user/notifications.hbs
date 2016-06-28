@@ -1,4 +1,3 @@
-
 <section class='user-navigation'>
   {{#mobile-nav class='notifications-nav' desktopClass='notification-list action-list nav-stacked' currentPath=currentPath}}
     {{#if model}}
@@ -25,5 +24,6 @@
 <section class='user-right'>
   {{#load-more class="notification-history user-stream" selector=".user-stream .notification" action="loadMore"}}
     {{outlet}}
+    {{conditional-loading-spinner condition=model.loadingMore}}
   {{/load-more}}
 </section>
