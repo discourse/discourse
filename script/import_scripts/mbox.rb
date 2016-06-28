@@ -5,19 +5,33 @@ class ImportScripts::Mbox < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
   BATCH_SIZE = 1000
-  CATEGORY_ID = 6
   MBOX_DIR = File.expand_path("~/import/site")
 
   # Remove to not split individual files
   SPLIT_AT = /^From (.*) at/
 
+  # Will create a category if it doesn't exist
+  CATEGORY_MAPPINGS = {
+    "default" => "uncategorized",
+    # ex: "jobs-folder" => "jobs"
+  }
+
   def execute
+    import_categories
     create_email_indices
     create_user_indices
     massage_indices
     import_users
     create_forum_topics
     import_replies
+  end
+
+  def import_categories
+    mappings = CATEGORY_MAPPINGS.values - ['uncategorized']
+
+    create_categories(mappings) do |c|
+      {id: c, name: c}
+    end
   end
 
   def open_db
@@ -43,6 +57,12 @@ class ImportScripts::Mbox < ImportScripts::Base
   def all_messages
     files = Dir["#{MBOX_DIR}/messages/*"]
 
+    CATEGORY_MAPPINGS.keys.each do |k|
+      files << Dir["#{MBOX_DIR}/#{k}/*"]
+    end
+
+    files.flatten!
+
     files.each_with_index do |f, idx|
       if SPLIT_AT.present?
         msg = ""
@@ -52,7 +72,7 @@ class ImportScripts::Mbox < ImportScripts::Base
           if line =~ SPLIT_AT
             if !msg.empty?
               mail = Mail.read_from_string(msg)
-              yield mail
+              yield mail, f
               print_status(idx, files.size)
               msg = ""
             end
@@ -62,14 +82,14 @@ class ImportScripts::Mbox < ImportScripts::Base
 
         if !msg.empty?
           mail = Mail.read_from_string(msg)
-          yield mail
+          yield mail, f
           print_status(idx, files.size)
           msg = ""
         end
       else
         raw = File.read(f)
         mail = Mail.read_from_string(raw)
-        yield mail
+        yield mail, f
         print_status(idx, files.size)
       end
 
@@ -155,7 +175,8 @@ class ImportScripts::Mbox < ImportScripts::Base
         title VARCHAR(255) NOT NULL,
         reply_to VARCHAR(955) NULL,
         email_date DATETIME NOT NULL,
-        message TEXT NOT NULL
+        message TEXT NOT NULL,
+        category VARCHAR(255) NOT NULL
       );
     SQL
 
@@ -164,7 +185,12 @@ class ImportScripts::Mbox < ImportScripts::Base
 
     puts "", "creating indices"
 
-    all_messages do |mail|
+    all_messages do |mail, filename|
+
+      directory = filename.sub("#{MBOX_DIR}/", '').split("/")[0]
+
+      category = CATEGORY_MAPPINGS[directory] || CATEGORY_MAPPINGS['default'] || 'uncategorized'
+
       msg_id = mail['Message-ID'].to_s
 
       # Many ways to get a name
@@ -174,9 +200,16 @@ class ImportScripts::Mbox < ImportScripts::Base
       reply_to = mail['In-Reply-To'].to_s
       email_date = mail['date'].to_s
 
-      db.execute "INSERT OR IGNORE INTO emails (msg_id, from_email, from_name, title, reply_to, email_date, message)
-                  VALUES (?, ?, ?, ?, ?, ?, ?)",
-                 [msg_id, from_email, from_name, title, reply_to, email_date, mail.to_s]
+      db.execute "INSERT OR IGNORE INTO emails (msg_id,
+                                                from_email,
+                                                from_name,
+                                                title,
+                                                reply_to,
+                                                email_date,
+                                                message,
+                                                category)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                 [msg_id, from_email, from_name, title, reply_to, email_date, mail.to_s, category]
     end
   ensure
     db.close
@@ -273,7 +306,8 @@ class ImportScripts::Mbox < ImportScripts::Base
                                     from_name,
                                     title,
                                     email_date,
-                                    message
+                                    message,
+                                    category
                             FROM emails
                             WHERE reply_to IS NULL")
 
@@ -320,7 +354,7 @@ class ImportScripts::Mbox < ImportScripts::Base
           title: clean_title(title),
           user_id: user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID,
           created_at: mail.date,
-          category: CATEGORY_ID,
+          category: t[6],
           raw: clean_raw(raw),
           cook_method: Post.cook_methods[:email] }
       end
