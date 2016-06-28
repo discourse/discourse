@@ -122,16 +122,15 @@
   // name hacky so lastpass does not freak out
   // -search- means it is bypassed
   #add-user-to-group {
-      button, .ac-wrap {
-        float: left;
-      }
-      button {
-        margin-top: 3px;
-        margin-left: 10px;
-      }
-      #user-search-selector {
-        width: 400px;
-      }
+    button, .ac-wrap {
+      float: left;
+    }
+    button {
+      margin-top: 5px;
+    }
+    #user-search-selector {
+      width: 400px;
+    }
    }
 
   table.group-members {
@@ -249,7 +248,7 @@
 
     &.group {
       .details {
-        padding: 15px;
+        padding: 15px 0px;
         margin: 0;
         color: dark-light-choose(lighten($primary, 10%), $secondary);
       }
