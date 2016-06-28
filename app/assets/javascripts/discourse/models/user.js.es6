@@ -141,7 +141,7 @@ const User = RestModel.extend({
     return Discourse.User.create(this.getProperties(Object.keys(this)));
   },
 
-  save() {
+  save(options) {
     const data = this.getProperties(
             'bio_raw',
             'website',
@@ -177,8 +177,12 @@ const User = RestModel.extend({
       data[s] = this.get(`user_option.${s}`);
     });
 
+    var updatedState = {};
+
     ['muted','watched','tracked'].forEach(s => {
       let cats = this.get(s + 'Categories').map(c => c.get('id'));
+      updatedState[s + '_category_ids'] = cats;
+
       // HACK: denote lack of categories
       if (cats.length === 0) { cats = [-1]; }
       data[s + '_category_ids'] = cats;
@@ -186,6 +190,10 @@ const User = RestModel.extend({
 
     if (!Discourse.SiteSettings.edit_history_visible_to_public) {
       data['edit_history_public'] = this.get('user_option.edit_history_public');
+    }
+
+    if (options && options.unwatchCategoryTopics) {
+      data.unwatch_category_topics = options.unwatchCategoryTopics;
     }
 
     // TODO: We can remove this when migrated fully to rest model.
@@ -197,6 +205,7 @@ const User = RestModel.extend({
       this.set('bio_excerpt', result.user.bio_excerpt);
       const userProps = Em.getProperties(this.get('user_option'),'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
+      this.setProperties(updatedState);
     }).finally(() => {
       this.set('isSaving', false);
     });
@@ -350,6 +359,16 @@ const User = RestModel.extend({
   @observes("watched_category_ids")
   updateWatchedCategories() {
     this.set("watchedCategories", Discourse.Category.findByIds(this.watched_category_ids));
+  },
+
+  changedCategoryNotifications: function(type) {
+    const ids = this.get(type + "Categories").map(c => c.id);
+    const oldIds = this.get(type + "_category_ids");
+
+    return {
+      add: _.difference(ids, oldIds),
+      remove: _.difference(oldIds, ids),
+    }
   },
 
   @computed("can_delete_account", "reply_count", "topic_count")

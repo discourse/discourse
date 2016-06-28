@@ -574,6 +574,13 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
 
+      warn_unwatch:
+        message: "Also stop watching previously watched topics in {{categories}}?"
+        yes_value: "Yes, unwatch topics"
+        no_value:
+          one: "No, only unwatch category"
+          other: "No, only unwatch categories"
+
       change_password:
         success: "(email sent)"
         in_progress: "(sending email)"
