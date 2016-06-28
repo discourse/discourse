@@ -59,6 +59,32 @@ class TopicUser < ActiveRecord::Base
       topic_user.save
     end
 
+    def unwatch_categories!(user, category_ids)
+
+      track_threshold = user.user_option.auto_track_topics_after_msecs
+
+      sql = <<SQL
+      UPDATE topic_users tu
+      SET notification_level = CASE
+        WHEN t.user_id = :user_id THEN :watching
+        WHEN total_msecs_viewed > :track_threshold AND :track_threshold >= 0 THEN :tracking
+        ELSE :regular
+      end
+      FROM topics t
+      WHERE t.id = tu.topic_id AND tu.notification_level <> :muted AND category_id IN (:category_ids) AND tu.user_id = :user_id
+SQL
+
+     exec_sql(sql,
+                  watching: notification_levels[:watching],
+                  tracking: notification_levels[:tracking],
+                  regular: notification_levels[:regular],
+                  muted: notification_levels[:muted],
+                  category_ids: category_ids,
+                  user_id: user.id,
+                  track_threshold: track_threshold
+     )
+    end
+
     # Find the information specific to a user in a forum topic
     def lookup_for(user, topics)
       # If the user isn't logged in, there's no last read posts

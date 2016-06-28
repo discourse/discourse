@@ -89,6 +89,10 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
+    if params[:unwatch_category_topics]
+      TopicUser.unwatch_categories!(user, params[:unwatch_category_topics])
+    end
+
     if params[:user_fields].present?
       params[:custom_fields] = {} unless params[:custom_fields].present?
 
