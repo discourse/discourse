@@ -101,13 +101,16 @@ export default function(options) {
     transformed = _.isArray(transformedItem) ? transformedItem : [transformedItem || item];
 
     var divs = transformed.map(function(itm) {
-      var d = $("<div class='item'><span>" + itm + "<a class='remove' href><i class='fa fa-times'></i></a></span></div>");
-      var prev = me.parent().find('.item:last');
+      let d = $(`<div class='item'><span>${itm}<a class='remove' href><i class='fa fa-times'></i></a></span></div>`);
+      const $parent = me.parent();
+      const prev = $parent.find('.item:last');
+
       if (prev.length === 0) {
         me.parent().prepend(d);
       } else {
         prev.after(d);
       }
+
       inputSelectedItems.push(itm);
       return d[0];
     });
