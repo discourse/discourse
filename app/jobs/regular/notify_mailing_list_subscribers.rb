@@ -44,7 +44,7 @@ module Jobs
                 user_id: user.id,
                 post_id: post.id,
                 skipped: true,
-                skipped_reason: "[MailingList] #{I18n.t('email_log.exceeded_limit')}"
+                skipped_reason: "[MailingList] #{I18n.t('email_log.exceeded_emails_limit')}"
               )
             else
               message = UserNotifications.mailing_list_notify(user, post)
