@@ -62,6 +62,9 @@ GEM
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
+    bullet (5.0.0)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.9.0)
     byebug (8.2.1)
     certified (1.0.0)
     coderay (1.1.0)
@@ -395,6 +398,7 @@ GEM
     unicorn (5.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
+    uniform_notifier (1.9.0)
 
 PLATFORMS
   ruby
@@ -407,6 +411,7 @@ DEPENDENCIES
   barber
   better_errors
   binding_of_caller
+  bullet
   byebug
   certified
   discourse-qunit-rails
