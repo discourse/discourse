@@ -86,36 +86,45 @@ describe Discourse do
   end
 
   context 'readonly mode' do
-    let(:readonly_channel) { Discourse.readonly_channel }
-    let(:readonly_key) { Discourse.readonly_mode_key }
+    let(:readonly_mode_key) { Discourse::READONLY_MODE_KEY }
     let(:readonly_mode_ttl) { Discourse::READONLY_MODE_KEY_TTL }
+    let(:user_readonly_mode_key) { Discourse::USER_READONLY_MODE_KEY }
 
     after do
-      $redis.del(readonly_key)
+      $redis.del(readonly_mode_key)
+      $redis.del(user_readonly_mode_key)
     end
 
-    def assert_readonly_mode(message, channel, key, ttl)
-      expect(message.channel).to eq(channel)
+    def assert_readonly_mode(message, key, ttl = -1)
+      expect(message.channel).to eq(Discourse.readonly_channel)
       expect(message.data).to eq(true)
       expect($redis.get(key)).to eq("1")
       expect($redis.ttl(key)).to eq(ttl)
     end
 
-    def assert_readonly_mode_disabled(message, channel, key)
-      expect(message.channel).to eq(channel)
+    def assert_readonly_mode_disabled(message, key)
+      expect(message.channel).to eq(Discourse.readonly_channel)
       expect(message.data).to eq(false)
       expect($redis.get(key)).to eq(nil)
     end
 
-    context ".enable_readonly_mode" do
+    describe ".enable_readonly_mode" do
       it "adds a key in redis and publish a message through the message bus" do
-        expect($redis.get(readonly_key)).to eq(nil)
+        expect($redis.get(readonly_mode_key)).to eq(nil)
         message = MessageBus.track_publish { Discourse.enable_readonly_mode }.first
-        assert_readonly_mode(message, readonly_channel, readonly_key, readonly_mode_ttl)
+        assert_readonly_mode(message, readonly_mode_key, readonly_mode_ttl)
+      end
+
+      context 'user enabled readonly mode' do
+        it "adds a key in redis and publish a message through the message bus" do
+          expect($redis.get(user_readonly_mode_key)).to eq(nil)
+          message = MessageBus.track_publish { Discourse.enable_readonly_mode(user_enabled: true) }.first
+          assert_readonly_mode(message, user_readonly_mode_key)
+        end
       end
     end
 
-    context ".disable_readonly_mode" do
+    describe ".disable_readonly_mode" do
       it "removes a key from redis and publish a message through the message bus" do
         Discourse.enable_readonly_mode
 
@@ -123,17 +132,25 @@ describe Discourse do
           Discourse.disable_readonly_mode
         end.first
 
-        assert_readonly_mode_disabled(message, readonly_channel, readonly_key)
+        assert_readonly_mode_disabled(message, readonly_mode_key)
+      end
+
+      context 'user disabled readonly mode' do
+        it "removes readonly key in redis and publish a message through the message bus" do
+          Discourse.enable_readonly_mode(user_enabled: true)
+          message = MessageBus.track_publish { Discourse.disable_readonly_mode(user_enabled: true) }.first
+          assert_readonly_mode_disabled(message, user_readonly_mode_key)
+        end
       end
     end
 
-    context ".readonly_mode?" do
+    describe ".readonly_mode?" do
       it "is false by default" do
         expect(Discourse.readonly_mode?).to eq(false)
       end
 
       it "returns true when the key is present in redis" do
-        $redis.set(readonly_key, 1)
+        $redis.set(readonly_mode_key, 1)
         expect(Discourse.readonly_mode?).to eq(true)
       end
 
@@ -143,7 +160,7 @@ describe Discourse do
       end
     end
 
-    context ".received_readonly!" do
+    describe ".received_readonly!" do
       it "sets the right time" do
         time = Discourse.received_readonly!
         expect(Discourse.last_read_only['default']).to eq(time)
