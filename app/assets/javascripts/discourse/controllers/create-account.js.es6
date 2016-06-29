@@ -67,6 +67,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   usernameRequired: Ember.computed.not('authOptions.omit_username'),
 
+  fullnameRequired: function() {
+    return this.get('siteSettings.full_name_required') || this.get('siteSettings.enable_names');
+  }.property(),
+
   passwordRequired: function() {
     return Ember.isEmpty(this.get('authOptions.auth_provider'));
   }.property('authOptions.auth_provider'),
