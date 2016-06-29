@@ -216,11 +216,18 @@ module Discourse
   end
 
   READONLY_MODE_KEY_TTL ||= 60
+  READONLY_MODE_KEY ||= 'readonly_mode'.freeze
+  USER_READONLY_MODE_KEY ||= 'readonly_mode:user'.freeze
 
-  def self.enable_readonly_mode
-    $redis.setex(readonly_mode_key, READONLY_MODE_KEY_TTL, 1)
+  def self.enable_readonly_mode(user_enabled: false)
+    if user_enabled
+      $redis.set(USER_READONLY_MODE_KEY, 1)
+    else
+      $redis.setex(READONLY_MODE_KEY, READONLY_MODE_KEY_TTL, 1)
+      keep_readonly_mode
+    end
+
     MessageBus.publish(readonly_channel, true)
-    keep_readonly_mode
     true
   end
 
@@ -228,20 +235,21 @@ module Discourse
     # extend the expiry by 1 minute every 30 seconds
     Thread.new do
       while readonly_mode?
-        $redis.expire(readonly_mode_key, READONLY_MODE_KEY_TTL)
+        $redis.expire(READONLY_MODE_KEY, READONLY_MODE_KEY_TTL)
         sleep 30.seconds
       end
     end
   end
 
-  def self.disable_readonly_mode
-    $redis.del(readonly_mode_key)
+  def self.disable_readonly_mode(user_enabled: false)
+    key = user_enabled ? USER_READONLY_MODE_KEY : READONLY_MODE_KEY
+    $redis.del(key)
     MessageBus.publish(readonly_channel, false)
     true
   end
 
   def self.readonly_mode?
-    recently_readonly? || !!$redis.get(readonly_mode_key)
+    recently_readonly? || !!$redis.get(READONLY_MODE_KEY)
   end
 
   def self.request_refresh!
@@ -308,10 +316,6 @@ module Discourse
 
   def self.asset_host
     Rails.configuration.action_controller.asset_host
-  end
-
-  def self.readonly_mode_key
-    "readonly_mode"
   end
 
   def self.readonly_channel

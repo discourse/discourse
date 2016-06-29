@@ -95,7 +95,7 @@ class Admin::BackupsController < Admin::AdminController
 
   def readonly
     enable = params.fetch(:enable).to_s == "true"
-    enable ? Discourse.enable_readonly_mode : Discourse.disable_readonly_mode
+    enable ? Discourse.enable_readonly_mode(user_enabled: true) : Discourse.disable_readonly_mode(user_enabled: true)
     render nothing: true
   end
 
