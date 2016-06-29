@@ -70,17 +70,41 @@ describe SiteSetting do
   end
 
   describe "scheme" do
+    before do
+      SiteSetting.force_https = true
+    end
+
 
     it "returns http when ssl is disabled" do
-      SiteSetting.use_https = false
+      SiteSetting.force_https = false
       expect(SiteSetting.scheme).to eq("http")
     end
 
     it "returns https when using ssl" do
-      SiteSetting.expects(:use_https).returns(true)
       expect(SiteSetting.scheme).to eq("https")
     end
 
   end
 
+  context 'deprecated site settings' do
+    before do
+      SiteSetting.force_https = true
+    end
+
+    after do
+      SiteSetting.force_https = false
+    end
+
+    describe '#use_https' do
+      it 'should act as a proxy to the new methods' do
+        expect(SiteSetting.use_https).to eq(true)
+        expect(SiteSetting.use_https?).to eq(true)
+
+        SiteSetting.use_https = false
+
+        expect(SiteSetting.force_https).to eq(false)
+        expect(SiteSetting.force_https?).to eq(false)
+      end
+    end
+  end
 end

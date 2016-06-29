@@ -765,7 +765,7 @@ de:
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-E-Mails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine durch senkrechte Striche getrennte Liste von eigenen E-Mail Headerzeilen"
     email_subject: "Format der Betreffzeile in Standard-E-Mails. Siehe https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Erzwinge HTTPS für deine Seite. ACHTUNG: aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
+    force_https: "Erzwinge HTTPS für deine Seite. ACHTUNG: aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
     summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\"-Funktion aktiviert wird."
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."

@@ -18,7 +18,7 @@ class About
   end
 
   def https
-    SiteSetting.use_https
+    SiteSetting.force_https
   end
 
   def title
