@@ -38,7 +38,7 @@ class PostgreSQLFallbackHandler
               RailsMultisite::ConnectionManagement.establish_connection(db: namespace)
             end
 
-            Discourse.disable_readonly_mode
+            Discourse.disable_maintenance_readonly_mode
             self.master = true
           end
         rescue => e
@@ -121,7 +121,7 @@ module ActiveRecord
         }))
 
         verify_replica(connection)
-        Discourse.enable_readonly_mode
+        Discourse.enable_maintenance_readonly_mode
       else
         begin
           connection = postgresql_connection(config)

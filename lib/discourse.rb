@@ -215,31 +215,52 @@ module Discourse
     base_url_no_prefix + base_uri
   end
 
-  def self.enable_readonly_mode
-    $redis.set(readonly_mode_key, 1)
+  MAINTENANCE_READONLY_MODE_KEY ||= "readonly_mode:maintenance".freeze
+  READONLY_MODE_KEY_TTL ||= 60
+
+  def self.enable_maintenance_readonly_mode
+    enable_readonly_mode(MAINTENANCE_READONLY_MODE_KEY)
+  end
+
+  def self.disable_maintenance_readonly_mode
+    disable_readonly_mode(MAINTENANCE_READONLY_MODE_KEY)
+  end
+
+  def self.enable_readonly_mode(key = readonly_mode_key)
+    $redis.setex(key, READONLY_MODE_KEY_TTL, 1)
     MessageBus.publish(readonly_channel, true)
-    keep_readonly_mode
+    keep_readonly_mode(key)
     true
   end
 
-  def self.keep_readonly_mode
+  def self.keep_readonly_mode(key)
     # extend the expiry by 1 minute every 30 seconds
     Thread.new do
       while readonly_mode?
-        $redis.expire(readonly_mode_key, 1.minute)
+        $redis.expire(key, READONLY_MODE_KEY_TTL)
         sleep 30.seconds
       end
     end
   end
 
-  def self.disable_readonly_mode
-    $redis.del(readonly_mode_key)
+  def self.disable_readonly_mode(key = readonly_mode_key)
+    $redis.del(key)
     MessageBus.publish(readonly_channel, false)
     true
   end
 
+  def self.activate_readonly
+    if !!$redis.get(readonly_mode_key)
+      enable_readonly_mode
+    elsif !!$redis.get(MAINTENANCE_READONLY_MODE_KEY)
+      enable_maintenance_readonly_mode
+    end
+  end
+
   def self.readonly_mode?
-    recently_readonly? || !!$redis.get(readonly_mode_key)
+    recently_readonly? ||
+      !!$redis.get(readonly_mode_key) ||
+      !!$redis.get(MAINTENANCE_READONLY_MODE_KEY)
   end
 
   def self.request_refresh!

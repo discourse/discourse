@@ -7,6 +7,7 @@ reload_settings = lambda {
   RailsMultisite::ConnectionManagement.each_connection do
     begin
       SiteSetting.refresh!
+      Discourse.activate_readonly
     rescue ActiveRecord::StatementInvalid
       # This will happen when migrating a new database
     rescue => e
