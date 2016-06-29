@@ -45,7 +45,7 @@ module Onebox
         case route[:controller]
         when 'uploads'
 
-          url.gsub!("http:", "https:") if SiteSetting.use_https
+          url.gsub!("http:", "https:") if SiteSetting.force_https
           if File.extname(uri.path) =~ /^.(mov|mp4|webm|ogv)$/
             return "<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>"
           elsif File.extname(uri.path) =~ /^.(mp3|ogg|wav)$/

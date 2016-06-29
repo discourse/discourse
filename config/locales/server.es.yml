@@ -776,7 +776,7 @@ es:
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
     email_subject: "Formato de asunto personalizable para emails estándar. Mira https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
+    force_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
     summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"

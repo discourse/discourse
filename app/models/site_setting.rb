@@ -23,6 +23,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
+  setup_deprecated_methods
 
   unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
@@ -85,7 +86,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.scheme
-    use_https? ? "https" : "http"
+    force_https? ? "https" : "http"
   end
 
   def self.default_categories_selected
@@ -108,7 +109,6 @@ class SiteSetting < ActiveRecord::Base
   def self.email_polling_enabled?
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
-
 end
 
 # == Schema Information

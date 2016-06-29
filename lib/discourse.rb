@@ -198,7 +198,7 @@ module Discourse
     default_port = 80
     protocol = "http"
 
-    if SiteSetting.use_https?
+    if SiteSetting.force_https?
       protocol = "https"
       default_port = 443
     end
