@@ -215,8 +215,10 @@ module Discourse
     base_url_no_prefix + base_uri
   end
 
+  READONLY_MODE_KEY_TTL ||= 60
+
   def self.enable_readonly_mode
-    $redis.set(readonly_mode_key, 1)
+    $redis.setex(readonly_mode_key, READONLY_MODE_KEY_TTL, 1)
     MessageBus.publish(readonly_channel, true)
     keep_readonly_mode
     true
@@ -226,7 +228,7 @@ module Discourse
     # extend the expiry by 1 minute every 30 seconds
     Thread.new do
       while readonly_mode?
-        $redis.expire(readonly_mode_key, 1.minute)
+        $redis.expire(readonly_mode_key, READONLY_MODE_KEY_TTL)
         sleep 30.seconds
       end
     end
