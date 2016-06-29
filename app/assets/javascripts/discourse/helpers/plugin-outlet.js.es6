@@ -86,13 +86,12 @@ function buildConnectorCache() {
   });
 
   findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
-    _connectorCache[outletName] = _connectorCache[outletName] || [];
-
     const mixin = {templateName: resource.replace('javascripts/', '')};
     let viewClass = uniqueViews[uniqueName];
 
     if (viewClass) {
       // We are going to add it back with the proper template
+      _connectorCache[outletName] = _connectorCache[outletName] || [];
       _connectorCache[outletName].removeObject(viewClass);
     } else {
       if (!/\.raw$/.test(uniqueName)) {
@@ -101,6 +100,7 @@ function buildConnectorCache() {
     }
 
     if (viewClass) {
+      _connectorCache[outletName] = _connectorCache[outletName] || [];
       _connectorCache[outletName].pushObject(viewClass.extend(mixin));
     } else {
       // we have a raw template
