@@ -211,7 +211,7 @@ module Onebox
       end
 
       def generic_html
-        return data[:html] if html_type?
+        return add_thumbnail_class(data[:html]) if html_type?
         return layout.to_html if article_type?
         return html_for_video(data[:video]) if data[:video]
         return image_html if photo_type?
@@ -333,6 +333,17 @@ module Onebox
           val = video[attribute].first[:_value]
           html << " #{attribute.to_s}=\"#{val}\""
         end
+      end
+
+      def add_thumbnail_class(data)
+        fragment = Nokogiri::HTML::fragment(data)
+        if fragment
+          fragment.search('img').each do |img|
+            img['class'] = "thumbnail"
+          end
+        end
+
+        return fragment.to_html
       end
     end
   end
