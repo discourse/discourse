@@ -26,6 +26,7 @@ class TopicListSerializer < ApplicationSerializer
   def include_tags?
     SiteSetting.tagging_enabled && SiteSetting.show_filter_by_tag
   end
+
   def tags
     Tag.top_tags
   end
