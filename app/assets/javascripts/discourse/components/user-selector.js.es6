@@ -1,9 +1,11 @@
+import { observes } from 'ember-addons/ember-computed-decorators';
 import TextField from 'discourse/components/text-field';
 import userSearch from 'discourse/lib/user-search';
 
 export default TextField.extend({
 
-  _initializeAutocomplete: function() {
+  didInsertElement() {
+    this._super();
     var self = this,
         selected = [],
         groups = [],
@@ -63,6 +65,7 @@ export default TextField.extend({
         self.set('hasGroups', hasGroups);
 
         selected = items;
+        if (self.get('onChangeCallback')) self.sendAction('onChangeCallback');
       },
 
       reverseTransform: function(i) {
@@ -70,19 +73,21 @@ export default TextField.extend({
       }
 
     });
-  }.on('didInsertElement'),
+  },
 
-  _removeAutocomplete: function() {
+  willDestroyElement() {
+    this._super();
     this.$().autocomplete('destroy');
-  }.on('willDestroyElement'),
+  },
 
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
+  @observes('usernames')
   _clearInput: function() {
     if (arguments.length > 1) {
       if (Em.isEmpty(this.get("usernames"))) {
         this.$().parent().find("a").click();
       }
     }
-  }.observes("usernames")
+  }
 
 });
