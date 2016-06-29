@@ -569,6 +569,9 @@ test("censoring", function() {
   cooked("you are a whizzer! I love cheesewhiz. Whiz.",
          "<p>you are a &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
          "it censors words even if previous partial matches exist.");
+  cooked("The link still works. [whiz](http://www.whiz.com)",
+         "<p>The link still works. <a href=\"http://www.whiz.com\">&#9632;&#9632;&#9632;&#9632;</a></p>",
+         "it won't break links by censoring them.");
 });
 
 test("code blocks/spans hoisting", function() {
