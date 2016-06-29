@@ -355,10 +355,10 @@ class TopicQuery
       options = @options
       options.reverse_merge!(per_page: per_page_setting)
 
-      result = Topic
+      result = Topic.includes(:tags)
 
       if type == :group
-        result = result.includes(:allowed_groups)
+        result = result.includes(:allowed_users)
         result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_groups
                                               WHERE group_id IN (
                                                   SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}) AND
