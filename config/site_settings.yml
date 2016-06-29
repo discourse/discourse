@@ -289,6 +289,7 @@ login:
   pending_users_reminder_delay:
     min: -1
     default: 8
+  permanent_session_cookie: true
 
 users:
   min_username_length:
