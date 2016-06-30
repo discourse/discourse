@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 export default Ember.ArrayController.extend({
   needs: ["adminBackups"],
   status: Ember.computed.alias("controllers.adminBackups"),
@@ -39,7 +40,7 @@ export default Ember.ArrayController.extend({
 
   _toggleReadOnlyMode(enable) {
     var site = this.site;
-    Discourse.ajax("/admin/backups/readonly", {
+    ajax("/admin/backups/readonly", {
       type: "PUT",
       data: { enable: enable }
     }).then(function() {

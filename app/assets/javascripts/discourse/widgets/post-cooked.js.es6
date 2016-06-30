@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { isValidLink } from 'discourse/lib/click-track';
 import { number } from 'discourse/lib/formatter';
 
@@ -130,7 +131,7 @@ export default class PostCooked {
       const postId = parseInt($aside.data('post'), 10);
       topicId = parseInt(topicId, 10);
 
-      Discourse.ajax(`/posts/by_number/${topicId}/${postId}`).then(result => {
+      ajax(`/posts/by_number/${topicId}/${postId}`).then(result => {
         const div = $("<div class='expanded-quote'></div>");
         div.html(result.cooked);
         div.highlight(originalText, {caseSensitive: true, element: 'span', className: 'highlighted'});

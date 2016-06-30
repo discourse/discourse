@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import showModal from 'discourse/lib/show-modal';
 import { setting } from 'discourse/lib/computed';
@@ -55,7 +56,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       this.set('loggingIn', true);
 
-      Discourse.ajax("/session", {
+      ajax("/session", {
         data: { login: this.get('loginName'), password: this.get('loginPassword') },
         type: 'POST'
       }).then(function (result) {

@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 const BufferedProxy = window.BufferedProxy; // import BufferedProxy from 'ember-buffered-proxy/proxy';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
@@ -90,7 +91,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
       this.get('categoriesBuffered').forEach((cat) => {
         data[cat.get('id')] = cat.get('position');
       });
-      Discourse.ajax('/categories/reorder',
+      ajax('/categories/reorder',
         {type: 'POST', data: {mapping: JSON.stringify(data)}}).
         then(() => this.send("closeModal")).
         catch(popupAjaxError);

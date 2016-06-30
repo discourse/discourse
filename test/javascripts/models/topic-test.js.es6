@@ -55,24 +55,18 @@ test("destroy", function() {
   var user = Discourse.User.create({username: 'eviltrout'});
   var topic = Topic.create({id: 1234});
 
-  sandbox.stub(Discourse, 'ajax');
-
   topic.destroy(user);
   present(topic.get('deleted_at'), 'deleted at is set');
   equal(topic.get('deleted_by'), user, 'deleted by is set');
-  //ok(Discourse.ajax.calledOnce, "it called delete over the wire");
 });
 
 test("recover", function() {
   var user = Discourse.User.create({username: 'eviltrout'});
   var topic = Topic.create({id: 1234, deleted_at: new Date(), deleted_by: user});
 
-  sandbox.stub(Discourse, 'ajax');
-
   topic.recover();
   blank(topic.get('deleted_at'), "it clears deleted_at");
   blank(topic.get('deleted_by'), "it clears deleted_by");
-  //ok(Discourse.ajax.calledOnce, "it called recover over the wire");
 });
 
 test('fancyTitle', function() {

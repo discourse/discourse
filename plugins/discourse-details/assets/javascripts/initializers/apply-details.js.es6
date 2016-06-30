@@ -11,7 +11,7 @@ function initializeDetails(api) {
     };
   });
 
-  const ComposerController = api.container.lookup("controller:composer");
+  const ComposerController = api.container.lookupFactory("controller:composer");
   ComposerController.reopen({
     actions: {
       insertDetails() {
@@ -27,7 +27,6 @@ function initializeDetails(api) {
 
 export default {
   name: "apply-details",
-  after: 'inject-objects',
 
   initialize() {
     withPluginApi('0.5', initializeDetails);

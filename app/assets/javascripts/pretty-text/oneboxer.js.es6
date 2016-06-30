@@ -10,7 +10,7 @@ const failedCache = {};
 
 // Perform a lookup of a onebox based an anchor element. It will insert a loading
 // indicator and remove it when the loading is complete or fails.
-export function load(e, refresh) {
+export function load(e, refresh, ajax) {
   var $elem = $(e);
 
   // If the onebox has loaded, return
@@ -34,7 +34,7 @@ export function load(e, refresh) {
   $elem.addClass('loading-onebox');
 
   // Retrieve the onebox
-  return Discourse.ajax("/onebox", {
+  return ajax("/onebox", {
     dataType: 'html',
     data: { url, refresh },
     cache: true

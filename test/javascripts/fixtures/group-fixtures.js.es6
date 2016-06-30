@@ -86,7 +86,7 @@ export default {
   "/groups/discourse/posts.json":[
     {
       "id":94607,
-      "cooked":"<p>Right now we have two entirely different styles for new topics and new posts within a topic... we can probably fix that pretty easily. </p>\n\n<p><img src=\"//meta-discourse.global.ssl.fastly.net/uploads/default/38088/55cb4f3595adf4d8.png\" width=\"460\" height=\"147\"> </p>\n\n<p>So the simple change would be:</p>\n\n<p><img src=\"//meta-discourse.global.ssl.fastly.net/uploads/default/38090/a6c1bc4d470c8b9b.png\" width=\"454\" height=\"144\"> </p>\n\n<p>but... while the dot makes the \"• new\" stand out more... it doesn't communicate any information other than \"look at me\" — can we add more context without adding more noise? </p>\n\n<p><img src=\"//meta-discourse.global.ssl.fastly.net/uploads/default/38089/4e910bbbc03c77d5.png\" width=\"458\" height=\"144\"></p>",
+      "cooked":"<p>I don't know how to pronounce that in English, but this makes me think of the French word \"disquette\" (floppy disk)</p>",
       "created_at":"2015-01-23T15:13:01.935Z",
       "title":"Consistent new indicator",
       "url":"/t/consistent-new-indicator/24355/1",
@@ -186,7 +186,7 @@ export default {
     },
     {
       "id":94601,
-      "cooked":"<p>Yeah I think this category arrangement is the way to go at the very least - much easier to scan two columns...</p>\n\n<p>Also, maybe square off the bars? </p>\n\n<p><img src=\"//meta-discourse.global.ssl.fastly.net/uploads/default/38086/0931384a1feb4467.png\" width=\"382\" height=\"489\"> </p>\n\n<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//meta-discourse.global.ssl.fastly.net/uploads/default/0eb77e51ba5428f28c6b4899da1b4e7483607f3e\" href=\"//meta-discourse.global.ssl.fastly.net/uploads/default/38085/4bf843ad43673f3e.png\" class=\"lightbox\" title=\"Screenshot 2015-01-23 09.44.48.png\"><img src=\"//meta-discourse.global.ssl.fastly.net/uploads/default/_optimized/1c1/959/751ac06f4d_690x376.png\" width=\"690\" height=\"376\"><div class=\"meta\">\n<span class=\"filename\">Screenshot 2015-01-23 09.44.48.png</span><span class=\"informations\">1211x661 180 KB</span><span class=\"expand\"></span>\n</div></a></div></p>",
+      "cooked":"<p>Agree that the markup isn't ideal - it's kind of hacked together at the moment; especially because we have two different styles. I think once we settle on the specifics it can be re-written entirely.</p>",
       "created_at":"2015-01-23T14:51:55.497Z",
       "title":"The end of Clown Vomit, or, simplified category styles",
       "url":"/t/the-end-of-clown-vomit-or-simplified-category-styles/24249/62",
@@ -236,7 +236,7 @@ export default {
     },
     {
       "id":94577,
-      "cooked":"<p>Yup, that's the latest version <img src=\"//meta-discourse.global.ssl.fastly.net/images/emoji/twitter/wink.png?v=1\" title=\":wink:\" class=\"emoji\" alt=\"wink\" width=\"20\" height=\"20\"></p>\n\n<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//meta-discourse.global.ssl.fastly.net/uploads/default/aa5ecd62e1730fccf29aac1fd082e3a4ca07cae4\" href=\"//meta-discourse.global.ssl.fastly.net/uploads/default/38076/ad330f8cff1b7982.gif\" class=\"lightbox\" title=\"quote reply.gif\"><img src=\"//meta-discourse.global.ssl.fastly.net/uploads/default/_optimized/df1/df0/99b737a0e4_690x385.gif\" width=\"690\" height=\"385\"><div class=\"meta\">\n<span class=\"filename\">quote reply.gif</span><span class=\"informations\">1307x731 426 KB</span><span class=\"expand\"></span>\n</div></a></div></p>\n\n<p>(<em>click to view animated version</em>)</p>",
+      "cooked":"<p>Agree that the markup isn't ideal - it's kind of hacked together at the moment; especially because we have two different styles. I think once we settle on the specifics it can be re-written entirely.</p>",
       "created_at":"2015-01-23T10:50:55.846Z",
       "title":"Quote reply insertion at cursor position",
       "url":"/t/quote-reply-insertion-at-cursor-position/24344/4",
@@ -286,7 +286,7 @@ export default {
     },
     {
       "id":94574,
-      "cooked":"<aside class=\"quote\" data-post=\"1\" data-topic=\"24344\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"/user_avatar/meta.discourse.org/tonninseteli/40/37409.png\" class=\"avatar\">tonninseteli:</div>\n<blockquote><p>I've noticed that quoted text is always inserted at the end of the message</p></blockquote></aside>\n\n<p>It used to be that but that was fixed a while ago. Are you running a recent version?</p>",
+      "cooked":"<p>Agree that the markup isn't ideal - it's kind of hacked together at the moment; especially because we have two different styles. I think once we settle on the specifics it can be re-written entirely.</p>",
       "created_at":"2015-01-23T10:31:29.222Z",
       "title":"Quote reply insertion at cursor position",
       "url":"/t/quote-reply-insertion-at-cursor-position/24344/2",
@@ -336,7 +336,7 @@ export default {
     },
     {
       "id":94572,
-      "cooked":"<aside class=\"quote\" data-post=\"26\" data-topic=\"22546\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"/user_avatar/meta.discourse.org/etewiah/40/2527.png\" class=\"avatar\">etewiah:</div>\n<blockquote><p>I'm not sure exactly which update introduced that change.</p></blockquote></aside>\n\n<p>That's an Ember update that introduced this change.</p>",
+      "cooked":"<p>Agree that the markup isn't ideal - it's kind of hacked together at the moment; especially because we have two different styles. I think once we settle on the specifics it can be re-written entirely.</p>",
       "created_at":"2015-01-23T09:46:00.901Z",
       "title":"Translations frequently broken",
       "url":"/t/translations-frequently-broken/22546/27",
@@ -386,7 +386,7 @@ export default {
     },
     {
       "id":94555,
-      "cooked":"<p>I don't know how to pronounce that in English, but this makes me think of the French word \"disquette\" (floppy disk) <img src=\"//meta-discourse.global.ssl.fastly.net/images/emoji/twitter/smile.png?v=1\" title=\":smile:\" class=\"emoji\" alt=\"smile\" width=\"72\" height=\"72\"></p>",
+      "cooked":"<p>I don't know how to pronounce that in English, but this makes me think of the French word \"disquette\" (floppy disk)</p>",
       "created_at":"2015-01-23T08:17:31.700Z",
       "title":"Introducing Discette - a minimal ember-cli front end to Discourse",
       "url":"/t/introducing-discette-a-minimal-ember-cli-front-end-to-discourse/24321/3",
@@ -636,7 +636,7 @@ export default {
     },
     {
       "id":94521,
-      "cooked":"<aside class=\"quote\" data-post=\"46\" data-topic=\"24249\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"/user_avatar/meta.discourse.org/clay/40/5265.png\" class=\"avatar\">clay:</div>\n<blockquote><p>the only thing that really stands out to me is the green used for the post counter widget navigator thing:</p></blockquote></aside>\n\n<p>Yeah probably.</p>\n\n<aside class=\"quote\" data-post=\"55\" data-topic=\"24249\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"/user_avatar/meta.discourse.org/geek/40/5255.png\" class=\"avatar\">geek:</div>\n<blockquote><p>So why not just make all the subcategory colors a lighter version of the parent category?</p></blockquote></aside>\n\n<p>Definitely a good idea. We have seen some eye melting color schemes people have picked for categories.. Much less subcategories.</p>\n\n<aside class=\"quote\" data-post=\"47\" data-topic=\"24249\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"/user_avatar/meta.discourse.org/abarker/40/33014.png\" class=\"avatar\">abarker:</div>\n<blockquote><p>Black is still a strong color. Have you tried with more muted colors? (Think along the lines of pastels, for example.)</p></blockquote></aside>\n\n<p>Sure try <a href=\"http://talk.folksy.com\">http://talk.folksy.com</a> -- it's still too much color in boxes. Particularly anywhere a bunch of categories are displayed together, which is a lot of places considering the topic list is the main form of nav, both on the homepage default of latest and in suggested topics at the bottom of every topic...</p>\n\n<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//meta-discourse.global.ssl.fastly.net/uploads/default/a6482c9da01bdc4d88e989f1d26a8c197b862d7f\" href=\"//meta-discourse.global.ssl.fastly.net/uploads/default/38068/fb86421cedd9ff0c.jpg\" class=\"lightbox\" title=\"image.jpg\"><img src=\"//meta-discourse.global.ssl.fastly.net/uploads/default/_optimized/282/0db/b355bd85ba_666x500.jpg\" width=\"666\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">image.jpg</span><span class=\"informations\">2048x1536 377 KB</span><span class=\"expand\"></span>\n</div></a></div></p>",
+      "cooked":"<p><a class=\"mention\" href=\"/users/techapj\">@techapj</a> fixed this for 1.2.</p>",
       "created_at":"2015-01-23T02:58:27.451Z",
       "title":"The end of Clown Vomit, or, simplified category styles",
       "url":"/t/the-end-of-clown-vomit-or-simplified-category-styles/24249/57",
@@ -886,7 +886,7 @@ export default {
     },
     {
       "id":94515,
-      "cooked":"<p>Liked just for the word \"Discettes\" which is adorable <img src=\"//meta-discourse.global.ssl.fastly.net/images/emoji/twitter/heart_eyes.png?v=1\" title=\":heart_eyes:\" class=\"emoji\" alt=\"heart_eyes\" width=\"72\" height=\"72\"></p>",
+      "cooked":"<p>I would worry about getting your expenses down to $5 per month, that seems more likely over time as hosting for Docker compliant sites gets cheaper.</p>",
       "created_at":"2015-01-23T02:38:29.185Z",
       "title":"Introducing Discette - a minimal ember-cli front end to Discourse",
       "url":"/t/introducing-discette-a-minimal-ember-cli-front-end-to-discourse/24321/2",
@@ -936,7 +936,7 @@ export default {
     },
     {
       "id":94514,
-      "cooked":"<aside class=\"quote\" data-post=\"1\" data-topic=\"24328\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"/user_avatar/meta.discourse.org/riordan/40/12270.png\" class=\"avatar\">riordan:</div>\n<blockquote><p>building a custom Onebox for it seems like a great way to bring the content into the discussion.</p></blockquote></aside>\n\n<p>This is a good idea, are the documents public web URLs? Perhaps we could help build this onebox if so.</p>\n\n<aside class=\"quote\" data-post=\"1\" data-topic=\"24328\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"/user_avatar/meta.discourse.org/riordan/40/12270.png\" class=\"avatar\">riordan:</div>\n<blockquote><p>Would there be a relatively simple way to have a \"reverse onebox\", so that if a link to one of those whitelisted assets is found in a post, the other server can be notified of what threads its in?</p></blockquote></aside>\n\n<p>Hmm. I suspect this could be done via the API. Query all new topics (assuming older topics are already synced), and for those with a certain URL within the topic (first post only? All posts?) ping those URLs.</p>\n\n<p>This could potentially be done with a webhook on save on the Discourse side.</p>\n\n<p>Let us know how we can help, very interested in public projects like this.</p>",
+      "cooked":"<p>I would worry about getting your expenses down to $5 per month, that seems more likely over time as hosting for Docker compliant sites gets cheaper.</p>",
       "created_at":"2015-01-23T02:37:39.518Z",
       "title":"How to do \"Object Oriented Discussion\" through Oneboxes?",
       "url":"/t/how-to-do-object-oriented-discussion-through-oneboxes/24328/2",

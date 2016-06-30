@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import AdminUser from 'admin/models/admin-user';
 import { escapeExpression } from 'discourse/lib/utilities';
 
@@ -56,7 +57,7 @@ StaffActionLog.reopenClass({
   },
 
   findAll: function(filters) {
-    return Discourse.ajax("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
+    return ajax("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
       return staff_actions.map(function(s) {
         return StaffActionLog.create(s);
       });

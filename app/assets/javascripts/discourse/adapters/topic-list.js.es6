@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import RestAdapter from 'discourse/adapters/rest';
 
 export function finderFor(filter, params) {
@@ -19,7 +20,7 @@ export function finderFor(filter, params) {
         url += "?" + encoded.join('&');
       }
     }
-    return Discourse.ajax(url);
+    return ajax(url);
   };
 }
 

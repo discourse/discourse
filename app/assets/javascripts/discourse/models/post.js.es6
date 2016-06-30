@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ActionSummary from 'discourse/models/action-summary';
@@ -67,7 +68,7 @@ const Post = RestModel.extend({
     const data = {};
     data[field] = value;
 
-    return Discourse.ajax(`/posts/${this.get('id')}/${field}`, { type: 'PUT', data }).then(() => {
+    return ajax(`/posts/${this.get('id')}/${field}`, { type: 'PUT', data }).then(() => {
       this.set(field, value);
       this.incrementProperty("version");
     }).catch(popupAjaxError);
@@ -119,7 +120,7 @@ const Post = RestModel.extend({
   // Expands the first post's content, if embedded and shortened.
   expand() {
     const self = this;
-    return Discourse.ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
+    return ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
       self.set('cooked', "<section class='expanded-embed'>" + post.cooked + "</section>" );
     });
   },
@@ -136,7 +137,7 @@ const Post = RestModel.extend({
       can_delete: false
     });
 
-    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
+    return ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
       post.setProperties({
         cooked: data.cooked,
         raw: data.raw,
@@ -198,7 +199,7 @@ const Post = RestModel.extend({
 
   destroy(deletedBy) {
     this.setDeletedState(deletedBy);
-    return Discourse.ajax("/posts/" + this.get('id'), {
+    return ajax("/posts/" + this.get('id'), {
       data: { context: window.location.pathname },
       type: 'DELETE'
     });
@@ -232,17 +233,17 @@ const Post = RestModel.extend({
   },
 
   expandHidden() {
-    return Discourse.ajax("/posts/" + this.get('id') + "/cooked.json").then(result => {
+    return ajax("/posts/" + this.get('id') + "/cooked.json").then(result => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
   },
 
   rebake() {
-    return Discourse.ajax("/posts/" + this.get("id") + "/rebake", { type: "PUT" });
+    return ajax("/posts/" + this.get("id") + "/rebake", { type: "PUT" });
   },
 
   unhide() {
-    return Discourse.ajax("/posts/" + this.get("id") + "/unhide", { type: "PUT" });
+    return ajax("/posts/" + this.get("id") + "/unhide", { type: "PUT" });
   },
 
   toggleBookmark() {
@@ -277,7 +278,7 @@ const Post = RestModel.extend({
   },
 
   revertToRevision(version) {
-    return Discourse.ajax(`/posts/${this.get('id')}/revisions/${version}/revert`, { type: 'PUT' });
+    return ajax(`/posts/${this.get('id')}/revisions/${version}/revert`, { type: 'PUT' });
   }
 
 });
@@ -311,14 +312,14 @@ Post.reopenClass({
   },
 
   updateBookmark(postId, bookmarked) {
-    return Discourse.ajax("/posts/" + postId + "/bookmark", {
+    return ajax("/posts/" + postId + "/bookmark", {
       type: 'PUT',
       data: { bookmarked: bookmarked }
     });
   },
 
   deleteMany(selectedPosts, selectedReplies) {
-    return Discourse.ajax("/posts/destroy_many", {
+    return ajax("/posts/destroy_many", {
       type: 'DELETE',
       data: {
         post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
@@ -328,27 +329,27 @@ Post.reopenClass({
   },
 
   loadRevision(postId, version) {
-    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json")
+    return ajax("/posts/" + postId + "/revisions/" + version + ".json")
                     .then(result => Ember.Object.create(result));
   },
 
   hideRevision(postId, version) {
-    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + "/hide", { type: 'PUT' });
+    return ajax("/posts/" + postId + "/revisions/" + version + "/hide", { type: 'PUT' });
   },
 
   showRevision(postId, version) {
-    return Discourse.ajax("/posts/" + postId + "/revisions/" + version + "/show", { type: 'PUT' });
+    return ajax("/posts/" + postId + "/revisions/" + version + "/show", { type: 'PUT' });
   },
 
   loadQuote(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(result => {
+    return ajax("/posts/" + postId + ".json").then(result => {
       const post = Discourse.Post.create(result);
       return Quote.build(post, post.get('raw'), {raw: true, full: true});
     });
   },
 
   loadRawEmail(postId) {
-    return Discourse.ajax(`/posts/${postId}/raw-email.json`);
+    return ajax(`/posts/${postId}/raw-email.json`);
   }
 
 });

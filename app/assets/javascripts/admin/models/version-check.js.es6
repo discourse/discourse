@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 const VersionCheck = Discourse.Model.extend({
 
   noCheckPerformed: function() {
@@ -33,7 +34,7 @@ const VersionCheck = Discourse.Model.extend({
 
 VersionCheck.reopenClass({
   find: function() {
-    return Discourse.ajax('/admin/version_check').then(function(json) {
+    return ajax('/admin/version_check').then(function(json) {
       return VersionCheck.create(json);
     });
   }

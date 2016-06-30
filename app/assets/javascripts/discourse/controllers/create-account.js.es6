@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import debounce from 'discourse/lib/debounce';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { setting } from 'discourse/lib/computed';
@@ -336,7 +337,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @on('init')
   fetchConfirmationValue() {
-    return Discourse.ajax('/users/hp.json').then(json => {
+    return ajax('/users/hp.json').then(json => {
       this.set('accountPasswordConfirm', json.value);
       this.set('accountChallenge', json.challenge.split("").reverse().join(""));
     });

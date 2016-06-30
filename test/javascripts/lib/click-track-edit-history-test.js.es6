@@ -12,7 +12,6 @@ module("lib:click-track-edit-history", {
     // Prevent any of these tests from navigating away
     win = {focus: function() { } };
     redirectTo = sandbox.stub(DiscourseURL, "redirectTo");
-    sandbox.stub(Discourse, "ajax");
     windowOpen = sandbox.stub(window, "open").returns(win);
     sandbox.stub(win, "focus");
 
@@ -141,7 +140,6 @@ var testOpenInANewTab = function(description, clickEventModifier) {
     clickEventModifier(clickEvent);
     sandbox.stub(clickEvent, "preventDefault");
     ok(track(clickEvent));
-    ok(Discourse.ajax.calledOnce);
     ok(!clickEvent.preventDefault.calledOnce);
   });
 };
@@ -167,7 +165,6 @@ test("tracks via AJAX if we're on the same site", function() {
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   ok(!track(generateClickEventOn('#same-site')));
-  ok(Discourse.ajax.calledOnce);
   ok(DiscourseURL.routeTo.calledOnce);
 });
 
