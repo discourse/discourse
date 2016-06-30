@@ -109,8 +109,8 @@ HTML
     c = SiteCustomization.create!(user_id: -1, name: "test", head_tag: with_template, body_tag: with_template)
     expect(c.head_tag_baked).to match(/HTMLBars/)
     expect(c.body_tag_baked).to match(/HTMLBars/)
-    expect(c.body_tag_baked).to match(/EmberCompatHandlebars/)
-    expect(c.head_tag_baked).to match(/EmberCompatHandlebars/)
+    expect(c.body_tag_baked).to match(/RawHandlebars/)
+    expect(c.head_tag_baked).to match(/RawHandlebars/)
   end
 
   it 'should create body_tag_baked on demand if needed' do

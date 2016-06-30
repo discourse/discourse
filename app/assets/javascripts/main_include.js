@@ -21,7 +21,7 @@
 //= require ./discourse/lib/helpers
 //= require ./discourse/helpers/i18n
 //= require ./discourse/helpers/fa-icon
-//= require ./discourse/lib/ember_compat_handlebars
+//= require ./discourse/lib/raw-handlebars
 //= require ./discourse/lib/helpers
 //= require ./discourse/lib/computed
 //= require ./discourse/lib/formatter

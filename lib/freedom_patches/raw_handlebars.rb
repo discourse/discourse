@@ -2,19 +2,36 @@
 
 class Barber::Precompiler
   def sources
-    [File.open("#{Rails.root}/vendor/assets/javascripts/handlebars.js"), precompiler]
+    [File.open("#{Rails.root}/vendor/assets/javascripts/handlebars.js"),
+     precompiler]
   end
 
   def precompiler
-  @precompiler ||= StringIO.new <<END
-    var Discourse = {};
-    #{File.read(Rails.root + "app/assets/javascripts/discourse/lib/ember_compat_handlebars.js")}
-    var Barber = {
-      precompile: function(string) {
-        return Discourse.EmberCompatHandlebars.precompile(string,false).toString();
-      }
-    };
+    if !@precompiler
+
+      source = File.read("#{Rails.root}/app/assets/javascripts/discourse/lib/raw-handlebars.js.es6")
+      template = Tilt::ES6ModuleTranspilerTemplate.new {}
+      transpiled = template.babel_transpile(source)
+
+      # very hacky but lets us use ES6. I'm ashamed of this code -RW
+      transpiled.gsub!(/^export .*$/, '')
+
+      @precompiler = StringIO.new <<END
+      var __RawHandlebars;
+      (function() {
+        #{transpiled};
+        __RawHandlebars = RawHandlebars;
+      })();
+
+      Barber = {
+        precompile: function(string) {
+          return __RawHandlebars.precompile(string, false).toString();
+        }
+      };
 END
+    end
+
+    @precompiler
   end
 end
 
@@ -27,7 +44,7 @@ module Discourse
         end
 
         def compile_handlebars(string)
-          "Discourse.EmberCompatHandlebars.compile(#{indent(string).inspect});"
+          "require('discourse/lib/raw-handlebars').compile(#{indent(string).inspect});"
         end
       end
     end
