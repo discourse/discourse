@@ -5,6 +5,7 @@ import Composer from 'discourse/models/composer';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { relativeAge } from 'discourse/lib/formatter';
 import { escapeExpression } from 'discourse/lib/utilities';
+import InputValidation from 'discourse/models/input-validation';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -645,7 +646,7 @@ export default Ember.Controller.extend({
   @computed('model.categoryId', 'lastValidatedAt')
   categoryValidation(categoryId, lastValidatedAt) {
     if( !this.siteSettings.allow_uncategorized_topics && !categoryId) {
-      return Discourse.InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
+      return InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
     }
   },
 
