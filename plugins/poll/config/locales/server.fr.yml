@@ -25,6 +25,8 @@ fr:
     default_poll_with_multiple_choices_has_invalid_parameters: "Le sondage à choix multiples possède des paramètres invalides."
     named_poll_with_multiple_choices_has_invalid_parameters: "Le sondage <strong>%{name}</strong> à choix multiples possède des paramètres invalides."
     requires_at_least_1_valid_option: "Vous devez sélectionner au moins une des options valables."
+    default_cannot_be_made_public: "Un sondage avec des votes ne peut pas être rendu public."
+    named_cannot_be_made_public: "Le sondage <strong>%{name}</strong> a des votes et ne peut être rendu public."
     cannot_change_polls_after_5_minutes: "Vous ne pouvez pas ajouter, supprimer ou renommer les sondages après cinq minutes."
     op_cannot_edit_options_after_5_minutes: "Vous ne pouvez pas ajouter ou supprimer les options d'un sondage après cinq minutes. Merci de contacter un modérateur si vous avez besoin de le faire."
     staff_cannot_add_or_remove_options_after_5_minutes: "Vous ne pouvez pas ajouter ou supprimer des options dans un sondage après cinq minutes. Vous devez fermer ce sujet et en créer un nouveau à la place."

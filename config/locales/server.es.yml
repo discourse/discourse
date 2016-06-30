@@ -776,7 +776,7 @@ es:
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
     email_subject: "Formato de asunto personalizable para emails estándar. Mira https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    force_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
+    use_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
     summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
@@ -798,6 +798,7 @@ es:
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 4 (líder) multiplicando por este número"
     num_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     num_users_to_block_new_user: "Si los posts de un nuevo usuario obtienen tanto reportes como se establece en num_flags_to_block_new_user, por este número de diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
+    num_tl3_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
@@ -1055,11 +1056,6 @@ es:
     allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
     default_avatars: "URLs de avatares que se utilizarán por defecto para nuevos usuarios."
     automatically_download_gravatars: "Descargar Gravatars para usuarios cuando se creen una cuenta o cambien el email."
-    digest_topics: "El número máximo de temas a mostrar en el resumen por email."
-    digest_min_excerpt_length: "La extensión mínima, en caracteres, del extracto de un post en el resumen por email."
-    delete_digest_email_after_days: "Omitir los emails de resumen para usuarios que no hayan visto el sitio después de (n) días."
-    digest_suppress_categories: "Ocultar estas categorías de los emails de resumen."
-    disable_digest_emails: "Inhabilitar e-mails de resumen para todos los usuarios."
     detect_custom_avatars: "Verificar o no que los usuarios han subido una imagen de perfil."
     max_daily_gravatar_crawls: "Máximo número de veces que Discourse comprobará Gravatar en busca de avatares personalizados en un día"
     public_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados públicamente."
@@ -1117,8 +1113,6 @@ es:
     notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, se enviará un email a la dirección de contacto del sitio. Pon 0 para desactivar estos emails."
     auto_close_messages_post_count: "Máximo número de publicaciones permitidas en un mensaje antes de que sea cerrado automáticamente (0 para desactivar)"
     auto_close_topics_post_count: "Máximo número de publicaciones permitidas en un tema antes de que sea cerrado automáticamente (0 para desactivar)"
-    default_email_digest_frequency: "Frecuencia por defecto con la que se reciben los emails resumen."
-    default_include_tl0_in_digests: "Incluir posts de nuevos usuarios en los emails de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
     default_email_private_messages: "Enviar un email cuando alguien envíe un mensaje al usuario por defecto."
     default_email_direct: "Enviar un email cuando alguien cite/responda/mencione o invite al usuario por defecto."
     default_email_mailing_list_mode: "Enviar un email por cada nuevo post por defecto."
@@ -1335,7 +1329,6 @@ es:
       Esta invitación proviene de un usuario de confianza, por lo que puedes comentar en el tema inmediatamente.
   invite_forum_mailer:
     subject_template: "%{invitee_name} te invitó a unirte a %{site_domain_name}"
-    text_body_template: "%{invitee_name} te ha invitado a unirte a\n\n > **%{site_title}**\n\n > %{site_description}\n\n Si te interesa, haz clic en el siguiente enlace: \n\n %{invite_link}\n\nEsta invitación procede de un usuario de confianza, por lo que no necesitarás autenticarte.\n"
   invite_password_instructions:
     subject_template: "Asigna una contraseña para tu cuenta en %{site_name}"
     text_body_template: |
@@ -1355,10 +1348,6 @@ es:
     subject_template:
       one: "[%{site_name}] 1 post esperando ser revisado"
       other: "[%{site_name}] %{count} posts esperando ser revisados"
-    text_body_template: |
-      Hola,
-
-      Hay posts de nuevos usuarios que están esperando a ser revisados. [Pueden aprobarse o rechazarse aquí](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Tu post fue reportado como **off-topic**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o el primer post."
     inappropriate: "Tu post fue reportado como **inapropiado**: la comunidad piensa que es ofensivo, abusivo o que vulnera alguna de [nuestros consejos de uso](/guidelines)."
@@ -1374,8 +1363,6 @@ es:
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
-    usage_tips:
-      text_body_template: "Aquí tienes unos breves consejos para empezar:\n\n## Lectura\n\nPara leer más, **¡tan solo tienes que hacer scroll!**\n\nTan pronto como se publiquen nuevas respuestas o temas, aparecerán automáticamente – sin necesidad de actualizar la página.\n\n## Navegación\n\n- Para realizar una búsqueda, ver tu perfil de usuario, o el menú <kbd>☰</kbd>, usa los **botones de la esquina superior derecha**.\n\n- Entrar a un tema desde su título te llevará a la **última respuesta sin leer** del hilo. Para ir al primer o al último post, haz clic en el contador de respuestas o en la fecha de última respuesta..\n\n    <img src=\"%{base_url}/images/welcome/topic-list-select-areas-2x.png\" width=\"593\" height=\"59\">\n\n- Mientras lees un tema, selecciona la barra de progreso en la esquina inferior derecha para ver los controles de navegación. Podrás ir al inicio del hilo seleccionando su título. Teclea <kbd>?</kbd> para ver una lista de rápidos atajos de teclado.\n\n    <img src=\"%{base_url}/images/welcome/progress-bar-2x.png\" width=\"153\" height=\"181\">\n\n## Participación\n\n- Para responder al **tema en general**, utiliza <img src=\"%{base_url}/images/welcome/reply-topic-2x.png\" width=\"25\" height=\"23\"> al final del hilo.\n\n- Para responder a **una persona en específico**, utiliza <img src=\"%{base_url}/images/welcome/reply-post-2x.png\" width=\"25\" height=\"23\"> en su post.\n\n- Para responder **creando un nuevo tema**, utiliza <img src=\"%{base_url}/images/welcome/reply-as-linked-topic-2x.png\" width=\"20\" height=\"25\">  la derecha del post. Tanto el tema original como el nuevo serán enlazados entre sí automáticamente.\n\nTu respuesta puede estar en varios formatos como HTML simple, BBCode, o [Markdown](http://commonmark.org/help/):\n\n    Esto es **negrita**.\n    Esto es <b>negrita</b>.\n    Esto es [b]negrita[/b].\n\n¿Quieres aprender Markdown? [¡Echa un vistazo a nuestro divertido tutorial interactivo de 10 minutos!](http://commonmark.org/help/tutorial/)\n\nPara escribir una cita, selecciona el texto que quieres citar, después haz clic en el botón citar. ¡Puedes repetir para realizar múltiples citas!\n\n<img src=\"%{base_url}/images/welcome/quote-reply-2x.png\" width=\"326\" height=\"128\">\n\nPara notificar a alguien en tu respuesta, menciónale. Empieza a escribir `@` para elegir su nombre de usuario.\n\n<img src=\"%{base_url}/images/welcome/username-completion-2x.png\" width=\"191\" height=\"125\">\n\nPara usar [Emojis](http://www.emoji.codes/), teclea `:` para elegir por nombre, o usa los tradicionales smileys `;)`\n\n<img src=\"%{base_url}/images/welcome/emoji-completion-2x.png\" width=\"144\" height=\"153\">\n\nPara generar un extracto desde un enlace, pégalo en una línea aparte para él solo:\n\n<img src=\"%{base_url}/images/welcome/link-oneboxing-animation.gif\" width=\"480\" height=\"228\">\n\n## Acciones\n\nHay algunos botones de acción al final de cada post:\n\n<img src=\"%{base_url}/images/welcome/like-link-flag-bookmark-2x.png\" width=\"162\" height=\"42\">\n\nPara hacerle saber a alguien que aprecias su post, utiliza el botón de **Me gusta**. ¡Compartir es amor!\n\nSi ves algún problema en la publicación de alguien, escríbele un privado, o házselo saber [a nuestros moderadores](%{base_url}/about), con el botón **reporte**. También puedes **compartir** un enlace a un post, o guardarlo en **marcadores** para tenerlo de referencia en tu página de perfil.\n\n## Notificaciones\n\nCuando alguien te responde, cita tu post, o bien menciona tu `@usuario`, inmediatamente aparecerá un número en la esquina superior derecha de la página. Usa ese botón para acceder a tus **notificaciones**.\n\n<img src=\"%{base_url}/images/welcome/notification-panel-2x.png\" width=\"160\" height=\"54\">\n\nNo te preocupes si te pierdes alguna respuesta – te enviaremos un email con las notificaciones que lleguen cuando estés fuera.\n\n## Tus preferencias\n\n  - Todos los temas creados hace menos de **dos días** se consideran nuevos..\n\n  - Aquellos temas en los que hayas **participado activamente** (porque lo hayas creado, o respondido o leído durante un período razonable) serán seguidos por tu usuario automáticamente. \n\nVerás los indicadores de temas nuevos o número de respuestas no leídas al lado de estos temas::\n\n<img src=\"%{base_url}/images/welcome/topics-new-unread-2x.png\" width=\"341\" height=\"106\">\n\nPuedes cambiar tus notificaciones para cualquier tema mediante el control de notificaciones al final del tema.\n\n<img src=\"%{base_url}/images/welcome/topic-notification-control-2x.png\" width=\"608\" height=\"312\">\n\nTambién puedes establecer el estado de notificación de una categoría entera, si quieres vigilar cualquier nuevo tema en una categoría específica.\n\nPara cambiar cualquiera de estas opciones, puedes ver [tus preferencias](%{base_url}/my/preferences).\n\n## Confianza y comunidad\n\nAl participar aquí, con el tiempo te ganarás la confianza de la comunidad, te convertirás en usuario de pleno derecho y te serán retiradas las limitaciones de nuevo usuario. Llegado a un punto de un alto [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), obtendrás además nuevas habilidades para ayudarnos a gestionar la comunidad juntos.\n"
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1649,13 +1636,10 @@ es:
         %{message}
     digest:
       why: "Un breve resumen de %{site_link} desde tu última visita el %{last_seen_at}"
-      subject_template: "Resumen de [%{site_name}]"
       new_activity: "Actividad nueva en tus temas y posts:"
       top_topics: "Posts populares"
       other_new_topics: "Temas populares"
-      unsubscribe: "Este resumen es enviado desde %{site_link} cuando pasa un tiempo desde tu última visita. Para cancelar tu suscripción %{unsubscribe_link}."
       click_here: "clic aquí"
-      from: "resumen de %{site_name}"
       read_more: "Leer más"
       more_topics: "Se han publicado otros %{new_topics_since_seen} nuevos temas."
       more_topics_category: "Más temas nuevos:"
