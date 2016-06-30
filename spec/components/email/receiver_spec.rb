@@ -435,4 +435,25 @@ describe Email::Receiver do
 
   end
 
+  context "new topic in a category that allows strangers" do
+
+    let!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: true) }
+
+    it "lets an email in from a stranger" do
+      expect { process(:new_user) }.to change(Topic, :count)
+    end
+
+    it "lets an email in from a high-TL user" do
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
+      expect { process(:tl4_user) }.to change(Topic, :count)
+    end
+
+    it "fails on email from a low-TL user" do
+      SiteSetting.email_in_min_trust = 4
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
+      expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
+    end
+
+  end
+
 end
