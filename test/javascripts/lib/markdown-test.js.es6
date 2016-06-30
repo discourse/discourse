@@ -574,6 +574,19 @@ test("censoring", function() {
          "it won't break links by censoring them.");
 });
 
+test("blocking", function() {
+  Discourse.SiteSettings.blocked_urls = "forbidden|notsafe";
+  cooked("[bad link](http://www.forbidden.com)[bad link](http://www.notsafe.com)",
+         "<p><a>bad link</a><a>bad link</a></p>",
+         "it blocks urls in the Site Settings");
+  cooked("[good link](http://www.safe.com/)[bad link](http://www.safe.com/notsafe)",
+         "<p><a href=\"http://www.safe.com/\">good link</a><a>bad link</a></p>",
+         "it blocks urls when a blocked word is anywhere in the url");
+  cooked("[bad link](http://www.theforbiddenkingdom.com/)",
+         "<p><a>bad link</a></p>",
+         "it blocks urls with partial matches");
+});
+
 test("code blocks/spans hoisting", function() {
   cooked("```\n\n    some code\n```",
          "<p><pre><code class=\"lang-auto\">    some code</code></pre></p>",
