@@ -1,3 +1,4 @@
+require "uri"
 require_dependency "file_store/base_store"
 require_dependency "file_store/local_store"
 require_dependency "s3_helper"
@@ -23,8 +24,8 @@ module FileStore
     #   - content_type
     #   - cache_locally
     def store_file(file, path, opts={})
-      filename      = opts[:filename].presence
-      content_type  = opts[:content_type].presence
+      filename     = opts[:filename].presence
+      content_type = opts[:content_type].presence
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
       # stored uploaded are public by default
@@ -48,9 +49,13 @@ module FileStore
 
     def has_been_uploaded?(url)
       return false if url.blank?
-      return true if url.start_with?(absolute_base_url)
-      return true if SiteSetting.s3_cdn_url.present? && url.start_with?(SiteSetting.s3_cdn_url)
-      false
+
+      base_hostname = URI.parse(absolute_base_url).hostname
+      return true if url[base_hostname]
+
+      return false if SiteSetting.s3_cdn_url.blank?
+      cdn_hostname = URI.parse(SiteSetting.s3_cdn_url || "").hostname
+      cdn_hostname.presence && url[cdn_hostname]
     end
 
     def absolute_base_url
@@ -72,12 +77,13 @@ module FileStore
 
     def path_for(upload)
       url = upload.try(:url)
-      FileStore::LocalStore.new.path_for(upload) if url && url[0] == "/" && url[1] != "/"
+      FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
     end
 
     def cdn_url(url)
       return url if SiteSetting.s3_cdn_url.blank?
-      url.sub(absolute_base_url, SiteSetting.s3_cdn_url)
+      schema = url[/^(https?:)?\/\//, 1]
+      url.sub("#{schema}#{absolute_base_url}", SiteSetting.s3_cdn_url)
     end
 
     def cache_avatar(avatar, user_id)
@@ -91,9 +97,10 @@ module FileStore
     end
 
     def s3_bucket
-      return @s3_bucket if @s3_bucket
-      raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
-      @s3_bucket = SiteSetting.s3_upload_bucket.downcase
+      @s3_bucket ||= begin
+        raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
+        SiteSetting.s3_upload_bucket.downcase
+      end
     end
 
   end

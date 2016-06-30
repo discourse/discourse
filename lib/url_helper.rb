@@ -18,7 +18,7 @@ class UrlHelper
   end
 
   def self.schemaless(url)
-    url.sub(/^http:/, "")
+    url.sub(/^http:/i, "")
   end
 
 end
