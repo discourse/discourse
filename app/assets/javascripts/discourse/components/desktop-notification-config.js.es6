@@ -1,7 +1,8 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import KeyValueStore from 'discourse/lib/key-value-store';
+import { context } from 'discourse/lib/desktop-notifications';
 
-const keyValueStore = new KeyValueStore("discourse_desktop_notifications_");
+const keyValueStore = new KeyValueStore(context);
 
 export default Ember.Component.extend({
   classNames: ['controls'],
