@@ -1,3 +1,5 @@
+import { get } from 'discourse/lib/raw-handlebars';
+
 // `Ember.Helper` is only available in versions after 1.12
 export function htmlHelper(fn) {
   if (Ember.Helper) {
@@ -14,8 +16,6 @@ export function htmlHelper(fn) {
 export function registerHelper(name, fn) {
   Ember.HTMLBars._registerHelper(name, fn);
 }
-
-const get = Discourse.EmberCompatHandlebars.get;
 
 function resolveParams(ctx, options) {
   let params = {};
