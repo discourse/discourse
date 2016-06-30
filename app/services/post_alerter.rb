@@ -341,7 +341,7 @@ class PostAlerter
      # we may have an invalid post somehow, dont blow up
      post_url = original_post.url rescue nil
      if post_url
-        MessageBus.publish("/notification-alert/#{user.id}", {
+        payload = {
           notification_type: type,
           post_number: original_post.post_number,
           topic_title: original_post.topic.title,
@@ -349,7 +349,10 @@ class PostAlerter
           excerpt: original_post.excerpt(400, text_entities: true, strip_links: true),
           username: original_username,
           post_url: post_url
-        }, user_ids: [user.id])
+        }
+
+        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        DiscourseEvent.trigger(:post_notification_alert, user, payload)
      end
    end
 

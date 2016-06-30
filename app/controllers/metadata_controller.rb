@@ -3,7 +3,17 @@ class MetadataController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, :redirect_to_login_if_required
 
   def manifest
-    manifest = {
+    render json: default_manifest.to_json
+  end
+
+  def opensearch
+    render file: "#{Rails.root}/app/views/metadata/opensearch.xml"
+  end
+
+  private
+
+  def default_manifest
+    {
       name: SiteSetting.title,
       short_name: SiteSetting.title,
       display: 'standalone',
@@ -19,11 +29,5 @@ class MetadataController < ApplicationController
         }
       ]
     }
-
-    render json: manifest.to_json
-  end
-
-  def opensearch
-    render file: "#{Rails.root}/app/views/metadata/opensearch.xml"
   end
 end
