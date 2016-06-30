@@ -4,6 +4,7 @@ import showModal from 'discourse/lib/show-modal';
 import OpenComposer from "discourse/mixins/open-composer";
 import Category from 'discourse/models/category';
 import mobile from 'discourse/lib/mobile';
+import { findAll } from 'discourse/models/login-method';
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -202,7 +203,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   _autoLogin(modal, modalClass, notAuto) {
-    const methods = Em.get('Discourse.LoginMethod.all');
+    const methods = findAll(this.siteSettings);
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor('login').send('externalLogin', methods[0]);
     } else {

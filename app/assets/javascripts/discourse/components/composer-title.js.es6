@@ -1,4 +1,5 @@
 import { default as computed, on } from 'ember-addons/ember-computed-decorators';
+import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Component.extend({
   classNames: ['title-input'],
@@ -23,7 +24,7 @@ export default Ember.Component.extend({
     }
 
     if (reason) {
-      return Discourse.InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
+      return InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
     }
   }
 });

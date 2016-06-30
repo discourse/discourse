@@ -4,6 +4,7 @@ import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentio
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
 import { fetchUnseenTagHashtags, linkSeenTagHashtags } from 'discourse/lib/link-tag-hashtag';
 import { load } from 'pretty-text/oneboxer';
+import InputValidation from 'discourse/models/input-validation';
 
 import { tinyAvatar,
          displayErrorForUpload,
@@ -121,7 +122,7 @@ export default Ember.Component.extend({
     }
 
     if (reason) {
-      return Discourse.InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
+      return InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
     }
   },
 
