@@ -306,7 +306,12 @@ JS
   def self.add_s3_cdn(doc)
     doc.css("img").each do |img|
       next unless img["src"]
-      img["src"] = img["src"].sub(Discourse.store.absolute_base_url, SiteSetting.s3_cdn_url)
+      if img["src"].include? Discourse.store.absolute_base_url
+        src = img["src"].sub(Discourse.store.absolute_base_url, SiteSetting.s3_cdn_url)
+        # absolute is // style so we may have added an extra https:// here
+        src = src.sub(/https?:h/, "h")
+        img["src"] = src
+      end
     end
   end
 
