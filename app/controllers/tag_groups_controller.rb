@@ -4,7 +4,7 @@ class TagGroupsController < ApplicationController
   before_filter :fetch_tag_group, only: [:show, :update, :destroy]
 
   def index
-    tag_groups = TagGroup.order('name ASC').preload(:tags).all
+    tag_groups = TagGroup.order('name ASC').includes(:parent_tag).all
     serializer = ActiveModel::ArraySerializer.new(tag_groups, each_serializer: TagGroupSerializer, root: 'tag_groups')
     respond_to do |format|
       format.html do

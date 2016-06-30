@@ -1,14 +1,18 @@
 # Available options:
 #
-# default   - The default value of the setting.
-# client    - Set to true if the javascript should have access to this setting's value.
-# refresh   - Set to true if clients should refresh when the setting is changed.
-# min       - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max       - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex     - A regex that the value must match.
-# validator - The name of the class that will be use to validate the value of the setting.
-# enum      - The setting has a fixed set of allowed values, and only one can be chosen.
-#             Set to the class name that defines the set.
+# default            - The default value of the setting.
+# client             - Set to true if the javascript should have access to this setting's value.
+# refresh            - Set to true if clients should refresh when the setting is changed.
+# min                - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max                - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex              - A regex that the value must match.
+# validator          - The name of the class that will be use to validate the value of the setting.
+# enum               - The setting has a fixed set of allowed values, and only one can be chosen.
+#                      Set to the class name that defines the set.
+# shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
+#                      exists it will be used instead of the setting and the setting will be hidden.
+#                      Useful for things like API keys on multisite.
+#
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
@@ -289,6 +293,7 @@ login:
   pending_users_reminder_delay:
     min: -1
     default: 8
+  permanent_session_cookie: true
 
 users:
   min_username_length:
@@ -511,6 +516,13 @@ posting:
     min: 0
   auto_close_messages_post_count: 500
   auto_close_topics_post_count: 10000
+  code_formatting_style:
+    client: true
+    type: enum
+    default: '4-spaces-indent'
+    choices:
+     - 4-spaces-indent
+     - code-fences
 
 email:
   email_time_window_mins:
@@ -534,9 +546,9 @@ email:
     validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
-    validator: "AlternativeReplyByEmailAddressesValidator"
   alternative_reply_by_email_addresses:
     default: ''
+    validator: "AlternativeReplyByEmailAddressesValidator"
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
@@ -753,7 +765,9 @@ trust:
     client: true
 
 security:
-  use_https: false
+  force_https:
+    default: false
+    shadowed_by_global: true
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   enable_noscript_support: true

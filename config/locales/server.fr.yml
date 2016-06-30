@@ -545,7 +545,7 @@ fr:
     description: "Vous avez été désabonné. Nous ne vous contacterons plus !"
     oops: "Si vous vous êtes trompé, cliquez dessous."
     error: "Erreur lors de la désinscription"
-    preferences_link: "Vous pouvez aussi vous désinscrire des courriels de résumé sur votre <a href='/my/preferences'>page de préférence</a>"
+    preferences_link: "Vous pouvez aussi vous désinscrire des courriels de résumé sur votre <a href='/my/preferences'>page de préférences</a>"
     different_user_description: "Vous êtes actuellement connecté avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter et essayer à nouveau."
     not_found_description: "Désolé, nous ne pouvons pas vous désabonner. Il est possible que le lien de votre courriel soit expiré."
   resubscribe:
@@ -635,20 +635,27 @@ fr:
     page_view_anon_reqs:
       title: "Anonyme"
       xaxis: "Jour"
+      yaxis: "Nombre de vues par les utilisateurs non connectés"
     page_view_logged_in_reqs:
       title: "Connecté"
       xaxis: "Jour"
+      yaxis: "Nombre de vues par les utilisateurs connectés"
     page_view_crawler_reqs:
       title: "Crawlers Web"
       xaxis: "Jour"
+      yaxis: "Nombre de vues par les robots d'indexation"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Jour"
       yaxis: "Total des pages vues"
     page_view_logged_in_mobile_reqs:
+      title: "Nombre de vues par les utilisateurs connectés"
       xaxis: "Jour"
+      yaxis: "Nombre de vues par les utilisateurs connectés sur mobile"
     page_view_anon_mobile_reqs:
+      title: "Nombre de vues par les utilisateurs non connectés"
       xaxis: "Jour"
+      yaxis: "Nombre de vues par les utilisateurs non connectés sur mobile"
     http_background_reqs:
       title: "Arrière plan"
       xaxis: "Jour"
@@ -713,7 +720,10 @@ fr:
     email_polling_errored_recently:
       one: "La vérification des mails a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
       other: "La vérification des mails a généré %{count} erreurs au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
+    missing_mailgun_api_key: "Le serveur est configuré pour envoyer des courriels via mailgun mais vous n'avez pas spécifié de clef API utilisée pour vérifier les messages du webhook."
     bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon_url dans les <a href='/admin/site_settings'>paramètres du site</a>"
+    poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
+    poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a>."
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
@@ -764,17 +774,20 @@ fr:
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
     email_subject: "format du sujet personnalisable pour les courriels standards. Voir https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
+    use_https: "Forcer votre site en HTTPS uniquement. MISE EN GARDE : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré absolument partout ! Avez-vous vérifié que vos CDN, vos connexions via réseaux sociaux ainsi que des logos/dépendances tiers sont compatibles HTTPS eux aussi ?"
     summary_score_threshold: "Le score minimum requis pour qu'un message soit inclus dans le 'Résumé de ce sujet'"
     summary_posts_required: "Nombre minimum de messages dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur 'Résumé du sujet', montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par 'Résumé de ce sujet'"
+    enable_private_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que l'équipe peut toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'url utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple: http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
     polling_interval: "À quelle fréquence les clients connectés devraient-ils requêter le serveur, en millisecondes (sans utiliser les requêtes longues)"
     anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes"
     background_polling_interval: "À quelle fréquence les clients devraient-ils requêter le serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
+    flags_required_to_hide_post: "Les messages seront automatiquement cachés lorsque le compteur de signalements atteint cette limite (0 pour jamais) et un avertissement sera envoyé à l'auteur"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué via un signalement de la communauté"
     max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer lors de son premier jour sur le site"
     max_replies_in_first_day: "Le nombre maximum de réponses qu'un utilisateur est autorisé à créer lors de son premier jour sur le site"
@@ -794,6 +807,7 @@ fr:
     ga_domain_name: "Google Analytics (ga.js) de noms de domaine, par exemple: monsite.com; voir http://google.com/analytics"
     ga_universal_tracking_code: "Google Analytics Universal (analytics.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
     ga_universal_domain_name: "Google Analytics Universal (analytics.js) nom de domaine, par exemple: monsite.com; voir http://google.com/analytics"
+    enable_escaped_fragments: "Revenir à l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
@@ -821,6 +835,7 @@ fr:
     allow_index_in_robots_txt: "Spécifier dans robots.txt que le site est autorisé à être indexer par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisé lors de la création de compte, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer."
+    forgot_password_strict: "Ne pas tenir informé de l'existance d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions pour l'utilisateur sur tous les appareils"
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
@@ -838,6 +853,7 @@ fr:
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
     enable_sso: "Activer l'authentification unique via un site externe (ATTENTION: LES ADRESSES EMAIL *DOIVENT* ÊTRE VALIDÉES PAR LE SITE EXTERNE !)"
     enable_sso_provider: "Implémenter le procotole Discourse de provider SSO à /session/sso_provider, requiert sso_secret"
+    sso_url: "URL de l'authentification unique SSO (doit inclure http:// ou http://)"
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
     sso_overrides_email: "Surcharger les emails locaux avec les emails externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION : Des écarts peuvent se produire dus aux règles locales sur les emails)"
     sso_overrides_username: "Surcharger les pseudos locaux avec les pseudos externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION: Des écarts peuvent se produire dus aux différences de longueur et d'exigences sur les pseudos)"
@@ -923,6 +939,10 @@ fr:
     tl2_requires_likes_received: "Combien de J'aime un utilisateur doit recevoir pour être promu au niveau de confiance 2."
     tl2_requires_likes_given: "Combien de J'aime un utilisateur doit donner pour être promu au niveau de confiance 2."
     tl2_requires_topic_reply_count: "A combien de sujet un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
+    tl3_time_period: "Période de temps requise pour accéder au Niveau de confiance 3 (en jours)"
+    tl3_requires_days_visited: "Nombre minimum de jours qu'un utilisateur doit avoir passé sur le site dans les 100 derniers jours pour être éligible au niveau de confiance 3. Fixer à plus que la période TL3 pour désactiver les promotions (0 ou plus)"
+    tl3_requires_topics_replied_to: "Nombre minimum de sujets auquel un utilisateur doit avoir répondu dans les 100 derniers jours pour être promu au niveau de confiance 3. (0 à 100)"
+    tl3_requires_topics_viewed: "le pourcentage de sujets créés dans les 100 derniers jours qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3. (0 à 100)"
     tl3_requires_topics_viewed_all_time: "Nombre minimum de sujets qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3."
     tl3_requires_posts_read_all_time: "Nombre minimum de messages qu'un utilisateur doit avoir vu pour être promu au niveau de confiance 3."
     tl3_promotion_min_duration: "Nombre minimum de jours qu'un utilisateur restera promu au niveau de confiance 3 avant de pouvoir être rétrogradé au niveau de confiance 2."
@@ -1024,9 +1044,8 @@ fr:
     allow_animated_thumbnails: "Créer des aperçus animés pour les gifs animés."
     default_avatars: "URLs des avatars qui seront utilisés par défaut pour les nouveaux utilisateurs jusqu'à ce qu'ils les modifient."
     automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou de la modification de courriel."
-    digest_topics: "Nombre maximum de sujets à afficher dans le courriel de résumé."
-    digest_min_excerpt_length: "Taille minimum du résumé des messages dans les courriels, en caractères."
     delete_digest_email_after_days: "Ne pas envoyer de résumés courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
+    digest_suppress_categories: "Ne pas inclure ces catégories dans les résumés courriel."
     disable_digest_emails: "Désactiver les résumés par courriels pour tous les utilisateurs."
     detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
@@ -1044,6 +1063,7 @@ fr:
     disable_avatar_education_message: "Désactiver le message incitant à changer l'avatar."
     daily_performance_report: "Analyser les logs de NGINX quotidiennement et poster un sujet Responsables Uniquement avec les détails"
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets."
+    permalink_normalizations: "Appliquer l'expression régulière suivante avant de faire correspondre les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les query strings des routes des sujets. Le format est regex+string, utilisez \\1 etc. pour accéder aux captures"
     global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le cacher (HTML autorisé)."
     disable_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
     automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
@@ -1079,7 +1099,10 @@ fr:
     enforce_square_emoji: "Forcer tous les emojiis à être carrés."
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
-    default_email_digest_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les courriels par défaut."
+    notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, un email sera envoyé à l'email de contact. Désactivez ces emails en indiquant 0."
+    auto_close_messages_post_count: "Nombre maximum de messages dans un message direct avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
+    auto_close_topics_post_count: "Nombre maximum de messages dans une discussion avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
+    default_email_digest_frequency: "À quelle fréquence les utilisateurs reçoivent-ils les résumés par courriel par défaut."
     default_email_private_messages: "Envoyer un courriel quand quelqu'un envoie un message à un utilisateur."
     default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
     default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
@@ -1100,6 +1123,8 @@ fr:
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
     tagging_enabled: "Activer les tags sur les sujets ?"
+    max_tags_per_topic: "Nombre maximum de mots-clefs par sujet."
+    max_tag_length: "Longueur maximale de lettres pouvant être utilisée dans un mot-clef."
     tag_style: "Style visuel pour tag badges."
     errors:
       invalid_email: "Adresse de courriel invalide."
@@ -1282,18 +1307,6 @@ fr:
       Cette invitation provient d'un utilisateur de confiance, vous pouvez donc répondre immédiatement.
   invite_forum_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name}  vous a invité(e) à rejoindre
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous:
-
-      %{invite_link}
-
-      Cette invitation provient d'un utilisateur de confiance, vous n'avez pas besoin de vous connecter.
   invite_password_instructions:
     subject_template: "Renseignez le mot de passe pour votre compte utilisateur %{site_name} "
     text_body_template: |
@@ -1313,10 +1326,6 @@ fr:
     subject_template:
       one: "[%{site_name}] 1 message en attente de modération"
       other: "[%{site_name}] %{count} messages en attente de modération"
-    text_body_template: |
-      Bonjour,
-
-      Des messages de nouveaux utilisateurs sont en attente de modération. [Ils peuvent être approuvés ou rejetés ici](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet**: la communauté considère qu'il ne correspond au sujet en discussion, qui est fixé par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié**: la communauté considère que son contenu est offensif, abusif ou enfreint notre [charte](/guidelines)."
@@ -1332,99 +1341,6 @@ fr:
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
-    usage_tips:
-      text_body_template: |
-        Vous trouverez ci-dessous quelques astuces pour vous aider à démarrer :
-
-        ## Lire
-
-        Pour en lire plus, **faites défiler vers le bas !**
-
-        Lorsque de nouveaux sujets ou de nouvelles réponses sont publiés, ils apparaissent automatiquement ; inutile de rafraîchir la page.
-
-        ## Navigation
-
-        - Pour effectuer une recherche, accéder à votre profil ou utiliser le menu <kbd>☰</kbd>, cliquez sur les **icônes en haut à droite**.
-
-        - Sélectionner le titre d'un article, vous dirigera toujours vers **la nouvelle réponse non lue** dans celui-ci. Pour aller au début ou à la fin, sélectionnez le compteur de réponses ou la date de la dernière réponse.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Pendant la lecture d'un article, sélectionnez la barre de progression en bas à droite pour utiliser les commandes de navigation. Revenez directement au début en cliquant sur le titre de l'article. Appuyez sur <kbd>?</kbd> pour afficher la liste des raccourcis clavier.
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        ## Répondre
-
-        - Pour répondre **de manière générale à un sujete**, utilisez <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23"> tout en bas de celle-ci.
-
-        - Pour répondre à **une personne en particulier**, utilisez <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> sur leur message.
-
-        - Pour répondre en initiant **un nouveau sujet**, utilisez <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25"> qui se trouve à la droite du message. L'ancien et le nouveau sujet seront alors automatiquement liés.
-
-        Votre réponse peut être mise page en utilisant soit du HTML simple, soit les syntaxes BBCode ou [Markdown](http://commonmark.org/help/) :
-
-        Ceci est **gras**.
-        Ceci est <b>gras</b>.
-        Ceci est [b]gras<[/b].
-
-        Vous voulez apprendre Markdown ? [Suivez notre tutoriel interactif amusant de 10 minutes !](http://commonmark.org/help/tutorial/)
-
-        Pour insérer une citation, sélectionnez le texte que vous souhaitez citer, puis cliquez sur n'importe quel bouton Répondre. Répétez l'opération pour insérer d'autres citations.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Pour signaler à quelqu'un votre réponse, mentionnez son nom. Tapez un `@` pour commencer à choisir un utilisateur.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Pour insérer un [émoticône standard Emoji](http://www.emoji.codes/), utilisez le caractère `:` et tapez son nom ou utilisez des des émoticônes traditionnels comme `;)`.
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Pour générer l'aperçu d'un lien, mettez le lien seul sur une ligne.
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        ## Actions
-
-        Il y a des boutons d'actions en bas de chaque commentaire :
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        Pour prévenir quelqu'un que vous appréciez son commentaire, cliquez **sur le cœur**. Partagez votre amour !
-
-        Si un commentaire vous pose problème, prévenez soit son auteur en privé, soit [l'équipe de modération](%{base_url}/about) grâce au bouton **drapeau**.
-
-        ## Notifications
-
-        Quand quelqu'un vous répond, vous cite ou mentionne votre `@pseudo`, un numéro apparaîtra immédiatement en haut à droite de la page. Cliquez dessus pour accéder à vos **notifications**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        N'ayez pas la crainte de manquer une réponse ; vous serez notifié par courriel de toutes les notifications survenant pendant que vous n'êtes pas connecté.
-
-        ## Vos préférences
-
-        - Tout article vieux de **moins de 2 jours** est considéré comme nouveau.
-
-        - Tout sujet auquel vous avez **participé** (création, réponses ou lecture pendant une période prolongée) sera automatiquement suivi.
-
-        En face de ces articles, vous verrez en bleu la mention "nouveau" ou bien le nombre de messages non lues :
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Vous pouvez changer les paramètres de notification de chaque article en utilisant la commande de notification, en bas de l'article.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Vous pouvez aussi configurer les notifications par catégorie, si vous voulez voir chaque nouvel article d'une catégorie spécifique.
-
-        Pour changer n'importe lequel de ces paramètres, allez dans [vos préférences](%{base_url}/my/preferences).
-
-        ## Une communauté basé sur la confiance
-
-        Au fur et à mesure de votre participation, vous allez progressivement gagner la confiance de la communauté, vous deviendrez un membre à part entière et les limitations fonctionnelles propres à chaque nouvel utilisateur seront levées. À un niveau de confiance [suffisamment élevé](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous aurez accès à de nouvelles fonctionnalités vous permettant de nous aider à gérer la communauté.
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: "Merci d'avoir rejoint %{site_name} et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)\n"
@@ -1578,8 +1494,6 @@ fr:
         Assurez-vous que les paramètres de connexion POP sont corrects dans les [paramètres du site](%{base_url}/admin/site_settings/category/email).
 
         S'il y a une interface web pour le compte POP, vous devrez peut-être vous y connecter pour vérifier les paramètres.
-    too_many_spam_flags:
-      subject_template: "Nouveau compte bloqué en raison de signalements communautaires."
     blocked_by_staff:
       subject_template: "Compte bloqué temporairement"
     user_automatically_blocked:
@@ -1618,6 +1532,8 @@ fr:
     unsubscribe:
       title: "Désabonnement"
       description: "Ces courriels ne vous intéressent pas ? Aucun problème ! Cliquez ci-dessous pour vous désabonner immédiatement :"
+    visit_link_to_respond: "[Voir le sujet](%{base_url}%{url}) pour répondre."
+    visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre."
     posted_by: "Ecrit par %{username} le %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} vous a invité dans la conversation '%{topic_title}'"
@@ -1724,13 +1640,10 @@ fr:
         %{message}
     digest:
       why: "Voici un bref résumé de ce qu'il s'est passé sur %{site_link} depuis votre dernière visite le %{last_seen_at}"
-      subject_template: "[%{site_name}] Résumé"
       new_activity: "Nouvelles activités sur vos sujets et messages :"
       top_topics: "Messages populaires"
       other_new_topics: "Sujets populaires"
-      unsubscribe: "Ce courriel résumé vous est transmis par %{site_link} car nous ne vous avons pas vu depuis quelques temps. Pour vous désabonner %{unsubscribe_link}."
       click_here: "cliquez ici"
-      from: "Résumé de %{site_name}"
       read_more: "Lire la suite"
       more_topics: "Il y a eu %{new_topics_since_seen} nouveaux sujets."
       more_topics_category: "Plus de nouveaux sujets :"
@@ -2091,11 +2004,11 @@ fr:
       name: Règlement lu
       description: A lu le <a href="/guidelines">règlement de la communauté</a>
       long_description: |
-        Ce badge est accordé pour <a href="/guidelines">en lisant la communauté des directives</a>. En suivant et en partageant ces lignes directrices simples qui aident à construire une communauté sûre, sympa et durable pour tout le monde. Rappelez-vous toujours qu'il y a un autre être humain, un être humain comme vous, de l'autre côté de cet écran. Soyez sympa!
+        Ce badge est accordé après <a href="/guidelines">lecture de la charte de la communauté</a>. Respecter et partager ces règles simples permet de construire une communauté sure, agréable et durable. Souvenez-vous toujours qu'il y a un autre être humain, tout comme vous, de l'autre côté de cet écran. Soyez courtois !
     reader:
       name: Lecteur
       description: A lu tous les messages d'un sujet contenant plus de 100 messages
-      long_description: "Ce badge est accordé la première fois que vous lisez un long sujet avec plus de 100 réponses. Lire une conversation attentivement vous aide à suivre la discussion, comprendre différents points de vue, et conduit à des conversations plus intéressantes. Plus vous lisez, mieux la conversation devient. \n"
+      long_description: "Ce badge est accordé la première fois que vous lisez un long sujet avec plus de 100 réponses. Lire une conversation attentivement vous aide à suivre la discussion, comprendre différents points de vue, et conduit à des conversations plus intéressantes. Plus vous lisez, meilleure la conversation devient. \n"
     popular_link:
       name: Lien populaire
       description: A posté un lien externe avec au moins 50 clics
@@ -2143,23 +2056,34 @@ fr:
     thank_you:
       name: 'Merci '
       description: A 20 messages ayant reçu un j'aime et a donné 10 j'aime
+      long_description: "Ce badge vous est accordé quand vous avez reçu 20 J'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour. \n"
     gives_back:
       name: Redonne
       description: A 100 messages ayant reçu un j'aime et a donné 100 j'aime
+      long_description: |
+        Ce badge vous est accordé quand vous avez reçu 100 J'aime et en avez donné 100 ou plus en retour. Whaou ! Merci de rendre ce lieu meilleur !
     empathetic:
       name: Empathique
       description: A 500 messages ayant reçu un j'aime et a donné 1000 j'aime
+      long_description: "Ce badge vous est accordé quand vous avez reçu 500 j'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:. \n"
     first_emoji:
       name: Premier Emoji
       description: A utilisé un emoji dans un message
       long_description: |
-        Ce badge est accordé la première fois que vous ajoutez un Emoji à votre message: pouce en l'air :. Les Emoji vous permettent de transmettre de l'émotion dans vos messages, du bonheur: smiley: à la tristesse: angoissé: à la colère: colère: et tout le reste: lunettes de soleil:. Il suffit de taper un: (deux points) ou appuyez sur le bouton de la barre d'outils Emoji dans l'éditeur de choisir parmi des centaines de choix: ok_hand:
+        Ce badge est accordé la première fois que vous ajoutez un Emoji à votre message :thumbsup:. Les Emoji vous permettent de transmettre de l'émotion dans vos messages, du bonheur :smiley: à la tristesse :anguished: en passant par la colère :angry: et tout le reste :sunglasses:. Il suffit de taper : (deux points) ou d'appuyer sur le bouton de la barre d'outils Emoji dans l'éditeur et de choisir parmi des centaines de choix :ok_hand:
     first_mention:
       name: Première mention
       description: A mentionné un utilisateur dans un message
-      long_description: Ce badge est accordé la première fois que vous mentionnez le @username de quelqu'un dans votre post. Chaque mention génère une notification à cette personne, de sorte qu'ils savent au sujet de votre poste. Il suffit de commencer à taper @ (arobase) de mentionner tout utilisateur ou, si autorisé, groupe - c'est un moyen pratique d'apporter quelque chose à leur attention.
+      long_description: Ce badge est accordé la première fois que vous mentionnez le @nomdutilisateur de quelqu'un dans votre post. Chaque mention génère une notification à cette personne, de sorte qu'elle est informée de votre message. Il suffit de commencer à taper @ (arobase) pour mentionner tout utilisateur ou, si autorisé, tout groupe - c'est un moyen pratique d'apporter quelque chose à leur attention.
     first_onebox:
+      name: Premier Onebox
+      description: Ecrit un message qui a été emboîté
       long_description: Ce badge est accordé la première fois que vous publiez un lien en ligne par lui-même, qui a ensuite été développé automatiquement dans un onebox avec un bref résumé du lien, un titre, et (le cas échéant) une image.
+    first_reply_by_email:
+      name: Première réponse par courriel
+      description: Repondu à un message par courriel
+      long_description: |
+        Ce badge vous est accordé la première fois que vous répondez à un message par courriel :e-mail:
   admin_login:
     success: "Courriel envoyé"
     error: "Erreur !"
@@ -2174,6 +2098,9 @@ fr:
     user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
   tags:
     title: "Tags"
+    staff_tag_disallowed: "Le tag \"%{tag}\" ne peut être mis que par un responsable."
+    staff_tag_remove_disallowed: "Le tag \"%{tag}\" ne peut être retiré que par un responsable."
+  rss_by_tag: "Sujets avec le tag %{tag}"
   time:
     <<: *datetime_formats
   activemodel:

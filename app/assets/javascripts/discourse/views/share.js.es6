@@ -92,7 +92,7 @@ export default Ember.View.extend({
       const $currentTarget = $(e.currentTarget),
             url = $currentTarget.data('share-url'),
             postNumber = $currentTarget.data('post-number'),
-            postId = $currentTarget.data('post-id'),
+            postId = $currentTarget.closest('article').data('post-id'),
             date = $currentTarget.children().data('time');
       showPanel($currentTarget, url, postNumber, date, postId);
       return false;

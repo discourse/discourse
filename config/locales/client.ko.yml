@@ -37,6 +37,7 @@ ko:
       long_date_with_year_without_time: "'YY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "'YY MMM D <br/>LT"
+      wrap_ago: "%{date} 전"
       tiny:
         half_a_minute: "< 1분"
         less_than_x_seconds:
@@ -272,6 +273,8 @@ ko:
       title: "사용자"
       likes_given: "제공한"
       likes_received: "받은"
+      topics_entered: "읽음"
+      topics_entered_long: "읽은 토픽"
       time_read: "읽은 시간"
       topic_count: "토픽"
       topic_count_long: "생성된 토픽"
@@ -424,6 +427,7 @@ ko:
       suspended_notice: "이 회원은 {{date}}까지 접근 금지 되었습니다."
       suspended_reason: "이유: "
       github_profile: "Github"
+      email_activity_summary: "활동 요약"
       watched_categories: "지켜보기"
       watched_categories_instructions: "이 카테고리 내의 새로운 토픽들을 지켜보도록 자동으로 설정됩니다. 새로운 게시글이나 토픽에 대하여 알림을 받게되며 토픽 옆에 읽지 않은 게시글의 수가 표시됩니다."
       tracked_categories: "추적하기"
@@ -542,6 +546,7 @@ ko:
       like_notification_frequency:
         title: "누군가 '좋아요' 해주면 알려주기"
         always: "항상"
+        never: "절대"
       email_previous_replies:
         title: "이메일 밑부분에 이전 댓글을 포함합니다."
         unless_emailed: "예전에 발송된 것이 아닌 한"
@@ -549,6 +554,7 @@ ko:
         never: "절대"
       email_digests:
         every_30_minutes: "매 30분 마다"
+        every_hour: "매 시간"
         daily: "매일"
         every_three_days: "매 3일마다"
         weekly: "매주"
@@ -623,6 +629,15 @@ ko:
       summary:
         title: "요약"
         stats: "통계"
+        time_read: "읽은 시간"
+        topic_count:
+          other: "작성 시간"
+        post_count:
+          other: "작성 시간"
+        likes_given:
+          other: "좋아요"
+        likes_received:
+          other: "받음"
         top_replies: "인기 댓글"
         more_replies: "답글 더 보기"
         top_topics: "인기 토픽"
@@ -797,7 +812,6 @@ ko:
       saved_local_draft_tip: "로컬로 저장됩니다."
       similar_topics: "작성하려는 내용과 비슷한 토픽들..."
       drafts_offline: "초안"
-      group_mentioned: "{{group}}을 이용해서 <a href='{{group_link}}'>{{count}} 명의 회원에게</a> 알림을 보내려고 합니다."
       error:
         title_missing: "제목은 필수 항목입니다"
         title_too_short: "제목은 최소 {{min}} 글자 이상이어야 합니다."
@@ -878,7 +892,6 @@ ko:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>'{{description}}' 배지를 받았습니다.</p>"
       group_message_summary:
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{group_name}} 메시지상자에 {{count}}개의 메시지가 있습니다</p>"
@@ -1156,8 +1169,6 @@ ko:
         no_banner_exists: "배너 토픽이 없습니다."
         banner_exists: "현재 배너 토픽이 <strong class='badge badge-notification unread'>있습니다</strong>."
       inviting: "초대 중..."
-      automatically_add_to_groups_optional: "이 초대는 다음 그룹에 대한 접근 권한을 포함합니다: (선택, 관리자만 가능)"
-      automatically_add_to_groups_required: "이 초대는 다음 그룹에 대한 접근 권한을 포함합니다: (필수, 관리자만 가능)"
       invite_private:
         title: '초대 메시지'
         email_or_username: "초대하려는 이메일 또는 아이디"
@@ -1609,6 +1620,9 @@ ko:
       full: "생성 / 답글 / 보기"
       create_post: "답글 / 보기"
       readonly: "보기"
+    keyboard_shortcuts_help:
+      jump_to:
+        title: '이동'
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:
@@ -2425,90 +2439,3 @@ ko:
           label: "새로운:"
           add: "추가"
           filter: "검색 (URL 혹은 외부 URL)"
-    lightbox:
-      download: "download"
-    search_help:
-      title: '검색 도움말'
-    keyboard_shortcuts_help:
-      title: '키보드 단축키'
-      jump_to:
-        title: 'Jump To'
-        home: '<b>g</b>, <b>h</b> 홈'
-        latest: '<b>g</b>, <b>l</b> 최신'
-        new: '<b>g</b>, <b>n</b> 새로운'
-        unread: '<b>g</b>, <b>u</b> 읽지 않은'
-        categories: '<b>g</b>, <b>c</b> 카테고리'
-        top: '<b>g</b>, <b>t</b> 인기글'
-        bookmarks: '<b>g</b>, <b>b</b> 북마크'
-        profile: '<b>g</b>, <b>p</b> 프로필'
-        messages: '<b>g</b>, <b>m</b> 메시지'
-      navigation:
-        title: 'Navigation'
-        jump: '<b>#</b> 글 번호로'
-        back: '<b>u</b> Back'
-        up_down: '<b>k</b>/<b>j</b> 선택된 글 이동 &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> 선택한 토픽에 들어갑니다.'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 이전/다음 섹션'
-      application:
-        title: 'Application'
-        create: '<b>c</b> 새 토픽을 만듭니다.'
-        notifications: '<b>n</b> Open notifications'
-        hamburger_menu: '<b>=</b> 햄버거 메뉴 열기'
-        user_profile_menu: '<b>p</b> 사용자 메뉴 열기'
-        show_incoming_updated_topics: '<b>.</b> 갱신된 토픽 보기'
-        search: '<b>/</b> Search'
-        help: '<b>?</b> 키보드 도움말 열기'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> 새글을 읽은 상태로 표시하기'
-        dismiss_topics: '<b>x</b>, <b>t</b> 토픽 무시하기'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> 로그아웃'
-      actions:
-        title: 'Actions'
-        bookmark_topic: '<b>f</b> 토글 북마크 토픽'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> 핀고정/핀해제'
-        share_topic: '<b>shift</b>+<b>s</b> 토픽 공유'
-        share_post: '<b>s</b> 글 공유'
-        reply_as_new_topic: '<b>t</b> 연결된 토픽으로 답글 작성하기'
-        reply_topic: '<b>shift</b>+<b>r</b> 토픽에 답글 달기'
-        reply_post: '<b>r</b> 글에 답글 달기'
-        quote_post: '<b>q</b> 인용 글'
-        like: '<b>l</b> Like post'
-        flag: '<b>!</b> Flag post'
-        bookmark: '<b>b</b> Bookmark post'
-        edit: '<b>e</b> Edit post'
-        delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b>, <b>m</b> 토픽 알람 : 끄기'
-        mark_regular: '<b>m</b>, <b>r</b> 토픽 알람 : 일반(기본)으로 설정하기'
-        mark_tracking: '<b>m</b>, <b>t</b> 토픽 알람 : 추적하기'
-        mark_watching: '<b>m</b>, <b>w</b> 토픽 알람 : 주시하기'
-    badges:
-      earned_n_times:
-        other: "이 배지를 %{count}번 받았습니다"
-      title: 배지
-      badge_count:
-        other: "배지 %{count}개"
-      more_badges:
-        other: "+%{count} More"
-      granted:
-        other: "%{count} 개 부여"
-      select_badge_for_title: 칭호로 사용할 배지를 선택하세요
-      none: "<없음>"
-      badge_grouping:
-        getting_started:
-          name: 시작하기
-        community:
-          name: 커뮤니티
-        trust_level:
-          name: 회원등급
-        other:
-          name: 기타
-        posting:
-          name: 글 관련 배지
-    google_search: |
-      <h3>Google 검색</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">구글</button>
-        </form>
-      </p>

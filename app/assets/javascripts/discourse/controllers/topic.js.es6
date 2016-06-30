@@ -758,7 +758,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   },
 
   deleteTopic() {
-    this.unsubscribe();
     this.get('content').destroy(Discourse.User.current());
   },
 

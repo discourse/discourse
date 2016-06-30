@@ -509,7 +509,7 @@ en:
         enable: "Enable Notifications"
         currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
-      dismiss_notifications: "Mark all as Read"
+      dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
@@ -573,6 +573,13 @@ en:
         move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
+
+      warn_unwatch:
+        message: "Also stop watching previously watched topics in {{categories}}?"
+        yes_value: "Yes, unwatch topics"
+        no_value:
+          one: "No, only unwatch category"
+          other: "No, only unwatch categories"
 
       change_password:
         success: "(email sent)"
@@ -1055,6 +1062,7 @@ en:
       quote_text: "Blockquote"
       code_title: "Preformatted text"
       code_text: "indent preformatted text by 4 spaces"
+      paste_code_text: "type or paste code here"
       upload_title: "Upload"
       upload_description: "enter upload description here"
       olist_title: "Numbered List"

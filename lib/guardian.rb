@@ -78,6 +78,10 @@ class Guardian
     )
   end
 
+  def is_staged?
+    @user.staged?
+  end
+
   # Can the user see the object?
   def can_see?(obj)
     if obj

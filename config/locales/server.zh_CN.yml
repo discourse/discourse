@@ -159,6 +159,7 @@ zh_CN:
     group_mentions: "%{group_name}组最近的提及"
     user_posts: "最新贴子由@%{username}发表"
     user_topics: "最新主题由@%{username}发表"
+    tag: "主题标签"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
   excerpt_image: "图片"
@@ -498,8 +499,6 @@ zh_CN:
     description: "你已经取消订阅，我们不会再发送邮件给你！"
     oops: "如果你并不想取消订阅，请点击下方的按钮。"
     error: "取消订阅时出错"
-    preferences_link: "你也可以在你的<a href='/my/preferences'>参数设置页面</a>取消订阅摘要邮件"
-    different_user_description: "你现在正以另一个用户的身份登录，而非摘要邮件寄给的用户。请登出并再试一次。"
     not_found_description: "抱歉，我们无法帮你取消订阅。可能你的邮件里的链接已过期。"
   resubscribe:
     action: "重新订阅"
@@ -982,11 +981,6 @@ zh_CN:
     allow_animated_thumbnails: "为动画 gif 生成动态缩略图。"
     default_avatars: "在用户更改头像前的默认头像 URL"
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
-    digest_topics: "邮件摘要中显示的最大主题数目。"
-    digest_min_excerpt_length: "在邮件摘要中每个帖子最少显示的字符数量。"
-    delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户"
-    digest_suppress_categories: "不在摘要邮件中显示关注这个分类的任何内容。"
-    disable_digest_emails: "为所有用户禁用摘要邮件。"
     detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
     public_user_custom_fields: "可公开显示的用户自定义属性白名单"
@@ -1039,8 +1033,6 @@ zh_CN:
     enforce_square_emoji: "强制为所有 emojis 设置正方形比例。"
     approve_post_count: "新用户或基础用户需要被审核的帖子数量"
     approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
-    default_email_digest_frequency: "用户默认收到摘要邮件的默认频率。"
-    default_include_tl0_in_digests: "用户在摘要邮件中是否收到新用户帖子的默认设置。用户可以在参数设置中更改这个设置。"
     default_email_private_messages: "默认在有人发消息给用户时发送一封邮件通知。"
     default_email_direct: "默认在有人引用、回复、提及或者邀请用户时发送一封邮件通知。"
     default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
@@ -1227,18 +1219,6 @@ zh_CN:
       这封邀请来组于受信任的用户，所以你可以立即回复。
   invite_forum_mailer:
     subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} 邀请你加入
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      如果你感兴趣，请点击下面的链接加入：
-
-      %{invite_link}
-
-      你是被一个受信任的用户邀请的，所以你可以不用登录。
   invite_password_instructions:
     subject_template: "为 %{site_name} 账户设置密码"
     text_body_template: |
@@ -1257,10 +1237,6 @@ zh_CN:
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 个帖子等待审核"
-    text_body_template: |
-      你好，
-
-      新用户的帖子等待被审核。[你可以审核通过或者禁止他们](%{base_url}/queued-posts)。
   flag_reasons:
     off_topic: "你的帖子被标记为 **偏离主题**：鉴于当前的主题标题和第一个帖子，社群成员们感觉它不适合处于这个主题中。"
     inappropriate: "你的帖子被标记为 **不恰当**：社群成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社群准则](/guidelines)。"
@@ -1276,99 +1252,6 @@ zh_CN:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了你的帖子"
-    usage_tips:
-      text_body_template: |
-        这一条消息是一些使用的小技巧：
-
-        ## 阅读
-
-        要阅读更多，**只需要继续向下滚动页面！**
-
-        当有新的回复或者新主题时，他们将自动出现 —— 不用刷新页面。
-
-        ## 导航
-
-        - 想要搜索，用你的用户页面，或者点<kbd>☰</kbd>菜单，这个在页面**右上角的图标**。
-
-        - 点击主题标题会跳转至至这个主题中**你还没有读的**那个帖子。要找主题顶部或底部，分别点击回复数量或者最后一次回复时间。
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - 当在阅读主题时，点击右下角的进度条打开导航控制。点击帖子标题可回到顶部。按键盘上的 <kbd>?</kbd> 键获取快速键盘快捷键列表。
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        ## 回复
-
-        - 要泛泛地回复**整个主题**，使用主题最底下的 <img src="%{base_url}/images/welcome/reply-topic-2x.png" width="25" height="23">。
-
-        - 要回复**特定的人**，使用他们帖子里的 <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23">。
-
-        - 要用**一个新主题**回复，使用帖子右边的 <img src="%{base_url}/images/welcome/reply-as-linked-topic-2x.png" width="20" height="25">。老的和新的主题将自动关联至一起。
-
-        你可以用简单的 HTML 标签、BBCode 或者 [Markdown](http://commonmark.cn/help/) 来格式化：
-
-            这是**加粗**。
-            这是<b>加粗</b>。
-            这是[b]加粗[b]。
-
-        想学习 Markdown？[试试我们有趣的 10 分钟交互教程！](http://commonmark.cn/help/tutorial/)
-
-        要插入引用，先选择想要引用的文字，然后点击任意地方的回复按钮。重复以上步骤创建多个引用！
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        要提醒某人关注你的回复，你需要提及他们的名字。键入 `@` 开始选择一个用户名。
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        想使用[标准绘文字（Emoji）](http://www.emoji.codes/)，只要键入 `:`，然后用名字匹配，或使用传统表情符 `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        要生成链接概要，直接将链接粘贴至单独的一行：
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation-2x.png" width="480" height="228">
-
-        ## 操作
-
-        每一个帖子底部有几个操作按钮：
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        要让别人知道你喜欢并且感谢他们的帖子，使用**赞**按钮。分享爱！
-
-        如果你觉得某人的帖子有问题，使用**标记**按钮私下告诉他，或者找[我们的管理人员](%{base_url}/about)。你还可以**分享**至该帖子的链接，或者标记**书签**，这样你之后可以在你的用户页查看。
-
-        ## 通知
-
-        当有人回复你、引用你的帖子或者提到`@你`的时候，一个数字将会立即出现在页面右上角。使用它查看**通知**。
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        不用担心错过别人的回复 —— 当你不怎么逛的时后，你会收到邮件提醒。
-
-        ## 你的设置
-
-        - 所有小于**两天**的主题算新主题。
-
-        - 任何你**积极参与**（指你创建、回复或者阅读较长时间）的主题将被自动追踪。
-
-        你将会在主题名字后见到蓝色的新主题提示和未读帖子数字指示：
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        你可以通过主题下方的通知控制改变通知设置。
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        你也可以为每个分类设置通知状态，比如你可以监控某分类中的每个新主题。
-
-        要修改以上任何设置，见[你的用户设置页面](%{base_url}/my/preferences)。
-
-        ## 社群信任
-
-        只要你参与社群，随着时间推移你会慢慢获得社群信任，成为一个真正的公民，那些针对新用户的限制将被移除。当达到了一个足够的[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)时，你将会得到适当的能力一起帮助管理社群。
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
@@ -1625,13 +1508,10 @@ zh_CN:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "在你上一次于 %{last_seen_at}访问后，%{site_link}的新内容摘要。"
-      subject_template: "[%{site_name}] 摘要"
       new_activity: "在你的主题和帖子里的动态："
       top_topics: "热门帖子"
       other_new_topics: "热门主题"
-      unsubscribe: "这是封来自%{site_link}的摘要邮件，因为你长时间没有访问而发送。%{unsubscribe_link}取消订阅。"
       click_here: "点击此处"
-      from: "%{site_name} 摘要"
       read_more: "阅读更多"
       more_topics: "有其他 %{new_topics_since_seen} 个新主题。"
       more_topics_category: "更多新主题："

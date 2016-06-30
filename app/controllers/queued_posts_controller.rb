@@ -25,13 +25,17 @@ class QueuedPostsController < ApplicationController
     end
 
     state = params[:queued_post][:state]
-    if state == 'approved'
-      qp.approve!(current_user)
-    elsif state == 'rejected'
-      qp.reject!(current_user)
-      if params[:queued_post][:delete_user] == 'true' && guardian.can_delete_user?(qp.user)
-        UserDestroyer.new(current_user).destroy(qp.user, user_deletion_opts)
+    begin
+      if state == 'approved'
+        qp.approve!(current_user)
+      elsif state == 'rejected'
+        qp.reject!(current_user)
+        if params[:queued_post][:delete_user] == 'true' && guardian.can_delete_user?(qp.user)
+          UserDestroyer.new(current_user).destroy(qp.user, user_deletion_opts)
+        end
       end
+    rescue StandardError => e
+      return render_json_error e.message
     end
 
     render_serialized(qp, QueuedPostSerializer, root: :queued_posts)

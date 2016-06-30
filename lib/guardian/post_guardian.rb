@@ -76,7 +76,6 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
-
     (!SpamRule::AutoBlock.block?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||

@@ -18,7 +18,7 @@ describe Discourse do
   context 'base_url' do
     context 'when https is off' do
       before do
-        SiteSetting.expects(:use_https?).returns(false)
+        SiteSetting.expects(:force_https?).returns(false)
       end
 
       it 'has a non https base url' do
@@ -28,7 +28,7 @@ describe Discourse do
 
     context 'when https is on' do
       before do
-        SiteSetting.expects(:use_https?).returns(true)
+        SiteSetting.expects(:force_https?).returns(true)
       end
 
       it 'has a non-ssl base url' do

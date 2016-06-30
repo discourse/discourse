@@ -89,6 +89,10 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
+    if params[:unwatch_category_topics]
+      TopicUser.unwatch_categories!(user, params[:unwatch_category_topics])
+    end
+
     if params[:user_fields].present?
       params[:custom_fields] = {} unless params[:custom_fields].present?
 
@@ -675,8 +679,9 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.permit(:name, :email, :password, :username, :active)
-            .merge(ip_address: request.remote_ip, registration_ip_address: request.remote_ip,
+      params.permit(:name, :email, :password, :username, :active, :staged)
+            .merge(ip_address: request.remote_ip,
+                   registration_ip_address: request.remote_ip,
                    locale: user_locale)
     end
 

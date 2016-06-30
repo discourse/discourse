@@ -251,7 +251,8 @@ Discourse.Utilities = {
 
   uploadLocation: function(url) {
     if (Discourse.CDN) {
-      return Discourse.CDN.startsWith('//') ? "http:" + Discourse.getURLWithCDN(url) : Discourse.getURLWithCDN(url);
+      url = Discourse.getURLWithCDN(url);
+      return url.startsWith('//') ? 'http:' + url : url;
     } else if (Discourse.SiteSettings.enable_s3_uploads) {
       return 'https:' + url;
     } else {

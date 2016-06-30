@@ -37,6 +37,7 @@ zh_CN:
       long_date_with_year_without_time: "YY年MMMDo"
       long_date_without_year_with_linebreak: "MMMDo<br/>LT"
       long_date_with_year_with_linebreak: "YY年MMMDo<br/>LT"
+      wrap_ago: "%{date}前"
       tiny:
         half_a_minute: "< 1 分钟"
         less_than_x_seconds:
@@ -275,6 +276,7 @@ zh_CN:
       title: "用户"
       likes_given: "赞"
       likes_received: "被赞"
+      topics_entered: "查看"
       topics_entered_long: "已查看的主题"
       time_read: "阅读时间"
       topic_count: "主题"
@@ -428,6 +430,16 @@ zh_CN:
       suspended_notice: "该用户将被禁止登录，直至 {{date}}。"
       suspended_reason: "原因："
       github_profile: "Github"
+      email_activity_summary: "活动摘要"
+      mailing_list_mode:
+        label: "邮件列表模式"
+        enabled: "启用邮件列表模式"
+        instructions: |
+          此设置将覆盖活动摘要。<br />
+          已屏蔽的主题和类别不包含在这些邮件中。
+        daily: "发送每日更新"
+        individual: "为每个新帖发送一封邮件通知"
+        many_per_day: "为每个新帖给我发送邮件通知 (大约 {{dailyEmailEstimate}} 每天)."
       watched_categories: "已关注"
       watched_categories_instructions: "你将会自动监视这些分类中的所有新主题。你会收到新帖子或新主题的通知，并且新帖数量也将在每个主题后显示。"
       tracked_categories: "已追踪"
@@ -555,6 +567,7 @@ zh_CN:
         always: "总是"
         never: "从不"
       email_digests:
+        title: "当我不访问这里时，给我发送热门主题和回复的邮件摘要："
         every_30_minutes: "每半小时"
         every_hour: "每小时"
         daily: "每天"
@@ -654,6 +667,7 @@ zh_CN:
         top_links: "热门链接"
         no_links: "暂无链接"
         most_liked_by: "被最多赞"
+        most_liked_users: "最赞"
         no_likes: "暂无赞"
       associated_accounts: "登录"
       ip_address:
@@ -704,8 +718,6 @@ zh_CN:
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
     too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     logs_error_rate_notice:
-      reached: "%{timestamp}：目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已经达到了站点设置中的 %{siteSettingRate}。"
-      exceeded: "%{timestamp}：目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已经超出了站点设置中的 %{siteSettingRate}。"
       rate:
         other: "%{count} 错误/%{duration}"
     learn_more: "了解更多..."
@@ -832,7 +844,6 @@ zh_CN:
       saved_local_draft_tip: "已本地保存"
       similar_topics: "你的主题有些类似于..."
       drafts_offline: "离线草稿"
-      group_mentioned: "使用{{group}}，你可以通知<a href='{{group_link}}'>{{count}}人</a>。"
       error:
         title_missing: "缺少标题"
         title_too_short: "标题太短，至少 {{min}} 个字符"
@@ -918,7 +929,6 @@ zh_CN:
       invited_to_topic: "<i title='邀请至主题' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='已接受你的邀请' class='fa fa-user'></i><p><span>{{username}}</span> 已接受你的邀请</p>"
       moved_post: "<i title='移动了帖子' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移动了 {{description}}</p>"
-      linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>获得“{{description}}”</p>"
       group_message_summary:
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} 条消息在你的{{group_name}}组内的收件箱中</p>"
@@ -1091,6 +1101,9 @@ zh_CN:
       auto_close_save: "保存"
       auto_close_remove: "不要自动关闭该主题"
       auto_close_immediate: "主题中的上个帖子是 %{hours} 小时前发出的，所以主题将会立即关闭。"
+      timeline:
+        back: "返回"
+        back_description: "回到你的最后一个未读帖子"
       progress:
         title: 主题进度
         go_top: "顶部"
@@ -1201,8 +1214,6 @@ zh_CN:
         no_banner_exists: "没有横幅主题。"
         banner_exists: "当前有<strong class='badge badge-notification unread'>一个</strong>横幅主题。"
       inviting: "邀请中..."
-      automatically_add_to_groups_optional: "这个邀请也包括了这些群组的权限：（可选，仅管理员）"
-      automatically_add_to_groups_required: "这个邀请也包括了访问这些群组的权限：（<b>可选</b>，仅管理员）"
       invite_private:
         title: '邀请消息交流'
         email_or_username: "受邀人的电子邮箱或用户名"
@@ -2501,144 +2512,3 @@ zh_CN:
           label: "新："
           add: "添加"
           filter: "搜索（URL 或外部 URL）"
-    lightbox:
-      download: "下载"
-    search_help:
-      title: '搜索帮助'
-    keyboard_shortcuts_help:
-      title: '键盘快捷键'
-      jump_to:
-        title: '跳转'
-        home: '<b>g</b> 然后 <b>h</b> 主页'
-        latest: '<b>g</b> 然后 <b>l</b> 最新内容'
-        new: '<b>g</b> 然后 <b>n</b> 近期主题'
-        unread: '<b>g</b> 然后 <b>u</b> 未读主题'
-        categories: '<b>g</b> 然后 <b>c</b> 分类列表'
-        top: '<b>g</b> 然后 <b>t</b> 顶部'
-        bookmarks: '<b>g</b> 然后 <b>b</b> 书签'
-        profile: '<b>g</b> 然后 <b>p</b> 个人页面'
-        messages: '<b>g</b> 然后 <b>m</b> 消息'
-      navigation:
-        title: '导航'
-        jump: '<b>#</b> 跳转到帖子 #'
-        back: '<b>u</b> 返回'
-        up_down: '<b>k</b> 或 <b>j</b> 移动选择焦点 &uarr; &darr;'
-        open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'
-        next_prev: '<b>shift</b>+<b>j</b> 或 <b>shift</b>+<b>k</b> 下一个/前一个段落'
-      application:
-        title: '应用'
-        create: '<b>c</b> 创建一个新主题'
-        notifications: '<b>n</b> 打开通知菜单'
-        hamburger_menu: '<b>=</b> 打开汉堡菜单'
-        user_profile_menu: '<b>p</b> 打开用户菜单'
-        show_incoming_updated_topics: '<b>.</b> 显示更新过的主题'
-        search: '<b>/</b> 搜索'
-        help: '<b>?</b> 打开键盘快捷键帮助'
-        dismiss_new_posts: '<b>x</b> 然后 <b>r</b> 解除新/帖子提示'
-        dismiss_topics: '<b>x</b> 然后 <b>t</b> 解除主题提示'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> 登出'
-      actions:
-        title: '动作'
-        bookmark_topic: '<b>f</b> 切换主题收藏状态'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> 置顶/截至置顶主题'
-        share_topic: '<b>shift</b>+<b>s</b> 分享主题'
-        share_post: '<b>s</b> 分享帖子'
-        reply_as_new_topic: '<b>t</b> 回复为联结主题'
-        reply_topic: '<b>shift</b>+<b>r</b> 回复主题'
-        reply_post: '<b>r</b> 回复帖子'
-        quote_post: '<b>q</b> 引用帖子'
-        like: '<b>l</b> 赞帖子'
-        flag: '<b>!</b> 标记帖子'
-        bookmark: '<b>b</b> 给帖子添加书签'
-        edit: '<b>e</b> 编辑帖子'
-        delete: '<b>d</b> 删除帖子'
-        mark_muted: '<b>m</b> 然后 <b>m</b> 免打扰主题'
-        mark_regular: '<b>m</b> 然后 <b>r</b> 设为常规主题'
-        mark_tracking: '<b>m</b> 然后 <b>t</b> 追踪主题'
-        mark_watching: '<b>m</b> 然后 <b>w</b> 关注主题'
-    badges:
-      earned_n_times:
-        other: "授予徽章 %{count} 次"
-      granted_on: "授予于%{date}"
-      others_count: "其他有该徽章的人（%{count}）"
-      title: 徽章
-      allow_title: "能用作头衔"
-      multiple_grant: "能被授予多次"
-      badge_count:
-        other: "%{count} 个徽章"
-      more_badges:
-        other: "+%{count} 更多"
-      granted:
-        other: "%{count} 个已授予"
-      select_badge_for_title: 选择一个徽章用作你的头衔
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: 开始
-        community:
-          name: 社群
-        trust_level:
-          name: 信任等级
-        other:
-          name: 其它
-        posting:
-          name: 发帖
-    google_search: |
-      <h3>用 Google 搜索</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
-    tagging:
-      all_tags: "所有标签"
-      selector_all_tags: "所有标签"
-      changed: "标签被修改"
-      tags: "标签"
-      choose_for_topic: "为主题选择可选标签"
-      delete_tag: "删除标签"
-      delete_confirm: "你确定要删除这个标签吗？"
-      rename_tag: "重命名标签"
-      rename_instructions: "为该标签选择一个新名字"
-      sort_by: "排序按"
-      sort_by_count: "计数"
-      sort_by_name: "名称"
-      filters:
-        without_category: "%{filter} %{tag} 主题"
-        with_category: "%{category}的%{filter} %{tag}主题"
-      notifications:
-        watching:
-          title: "关注"
-          description: "你将会自动监视包含这些标签的所有新主题。你会收到新帖子或新主题的通知，未读和新帖数量将出现在每个主题后。"
-        tracking:
-          title: "追踪"
-          description: "你将会自动追踪这些标签的所有新主题。未读和新帖子数量将出现在每个主题后。"
-        regular:
-          title: "常规"
-          description: "当有人@你或者回复你的帖子时，你才会收到通知。"
-        muted:
-          title: "免打扰"
-          description: "你不会收到这些标签的任何新主题通知，并且他们将不会出现在你的未读列表中。"
-      topics:
-        none:
-          unread: "你没有未读主题。"
-          new: "你没有新主题可读"
-          read: "你尚未阅读任何主题。"
-          posted: "你尚未在任何主题中发帖。"
-          latest: "没有最新主题。"
-          hot: "没有热门主题。"
-          bookmarks: "你没有收藏任何主题。"
-          top: "没有最佳主题。"
-          search: "没有搜索结果。"
-        bottom:
-          latest: "没有更多主题可看了"
-          hot: "没有更多热门主题可看了"
-          posted: "没有更多已发布主题可看了"
-          read: "没有更多已阅主题可看了"
-          new: "没有更多新主题可看了。"
-          unread: "没有更多未读主题了。"
-          top: "没有更多最佳主题了。"
-          bookmarks: "没有更多书签主题了。"
-          search: "没有更多搜索结果"

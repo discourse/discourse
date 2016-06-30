@@ -103,6 +103,13 @@ const ComposerView = Ember.View.extend({
       triggerOpen();
     });
     positioningWorkaround(this.$());
+
+    this.appEvents.on('composer:resize', this, this.resize);
+  },
+
+  willDestroyElement() {
+    this._super();
+    this.appEvents.off('composer:resize', this, this.resize);
   },
 
   click() {
