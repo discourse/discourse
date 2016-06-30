@@ -131,7 +131,7 @@ module Discourse
   end
 
   def self.disabled_plugin_names
-    plugins.select {|p| !p.enabled?}.map(&:name)
+    plugins.select { |p| !p.enabled? }.map(&:name)
   end
 
   def self.plugins
@@ -179,36 +179,18 @@ module Discourse
 
   # Get the current base URL for the current site
   def self.current_hostname
-    if SiteSetting.force_hostname.present?
-      SiteSetting.force_hostname
-    else
-      RailsMultisite::ConnectionManagement.current_hostname
-    end
+    SiteSetting.force_hostname.presence || RailsMultisite::ConnectionManagement.current_hostname
   end
 
   def self.base_uri(default_value = "")
-    if !ActionController::Base.config.relative_url_root.blank?
-      ActionController::Base.config.relative_url_root
-    else
-      default_value
-    end
+    ActionController::Base.config.relative_url_root.presence || default_value
   end
 
   def self.base_url_no_prefix
-    default_port = 80
-    protocol = "http"
-
-    if SiteSetting.force_https?
-      protocol = "https"
-      default_port = 443
-    end
-
-    result = "#{protocol}://#{current_hostname}"
-
-    port = SiteSetting.port.present? && SiteSetting.port.to_i > 0 ? SiteSetting.port.to_i : default_port
-
-    result << ":#{SiteSetting.port}" if port != default_port
-    result
+    protocol, default_port = SiteSetting.force_https? ? ["https", 443] : ["http", 80]
+    url = "#{protocol}://#{current_hostname}"
+    url << ":#{SiteSetting.port}" if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
+    url
   end
 
   def self.base_url
