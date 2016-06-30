@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
 
 const Group = Discourse.Model.extend({
@@ -49,7 +50,7 @@ const Group = Discourse.Model.extend({
 
   removeOwner(member) {
     var self = this;
-    return Discourse.ajax('/admin/groups/' + this.get('id') + '/owners.json', {
+    return ajax('/admin/groups/' + this.get('id') + '/owners.json', {
       type: "DELETE",
       data: { user_id: member.get("id") }
     }).then(function() {
@@ -60,7 +61,7 @@ const Group = Discourse.Model.extend({
 
   removeMember(member) {
     var self = this;
-    return Discourse.ajax('/groups/' + this.get('id') + '/members.json', {
+    return ajax('/groups/' + this.get('id') + '/members.json', {
       type: "DELETE",
       data: { user_id: member.get("id") }
     }).then(function() {
@@ -71,7 +72,7 @@ const Group = Discourse.Model.extend({
 
   addMembers(usernames) {
     var self = this;
-    return Discourse.ajax('/groups/' + this.get('id') + '/members.json', {
+    return ajax('/groups/' + this.get('id') + '/members.json', {
       type: "PUT",
       data: { usernames: usernames }
     }).then(function() {
@@ -81,7 +82,7 @@ const Group = Discourse.Model.extend({
 
   addOwners(usernames) {
     var self = this;
-    return Discourse.ajax('/admin/groups/' + this.get('id') + '/owners.json', {
+    return ajax('/admin/groups/' + this.get('id') + '/owners.json', {
       type: "PUT",
       data: { usernames: usernames }
     }).then(function() {
@@ -105,18 +106,18 @@ const Group = Discourse.Model.extend({
 
   create() {
     var self = this;
-    return Discourse.ajax("/admin/groups", { type: "POST", data: this.asJSON() }).then(function(resp) {
+    return ajax("/admin/groups", { type: "POST", data: this.asJSON() }).then(function(resp) {
       self.set('id', resp.basic_group.id);
     });
   },
 
   save() {
-    return Discourse.ajax("/admin/groups/" + this.get('id'), { type: "PUT", data: this.asJSON() });
+    return ajax("/admin/groups/" + this.get('id'), { type: "PUT", data: this.asJSON() });
   },
 
   destroy() {
     if (!this.get('id')) { return; }
-    return Discourse.ajax("/admin/groups/" + this.get('id'), { type: "DELETE" });
+    return ajax("/admin/groups/" + this.get('id'), { type: "DELETE" });
   },
 
   findPosts(opts) {
@@ -127,7 +128,7 @@ const Group = Discourse.Model.extend({
     var data = {};
     if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
 
-    return Discourse.ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
+    return ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
       return posts.map(p => {
         p.user = Discourse.User.create(p.user);
         p.topic = Discourse.Topic.create(p.topic);
@@ -138,7 +139,7 @@ const Group = Discourse.Model.extend({
 
   setNotification(notification_level) {
     this.set("notification_level", notification_level);
-    return Discourse.ajax(`/groups/${this.get("name")}/notifications`, {
+    return ajax(`/groups/${this.get("name")}/notifications`, {
       data: { notification_level },
       type: "POST"
     });
@@ -147,21 +148,21 @@ const Group = Discourse.Model.extend({
 
 Group.reopenClass({
   findAll(opts) {
-    return Discourse.ajax("/admin/groups.json", { data: opts }).then(function (groups){
+    return ajax("/admin/groups.json", { data: opts }).then(function (groups){
       return groups.map(g => Group.create(g));
     });
   },
 
   findGroupCounts(name) {
-    return Discourse.ajax("/groups/" + name + "/counts.json").then(result => Em.Object.create(result.counts));
+    return ajax("/groups/" + name + "/counts.json").then(result => Em.Object.create(result.counts));
   },
 
   find(name) {
-    return Discourse.ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
+    return ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
   },
 
   loadMembers(name, offset, limit) {
-    return Discourse.ajax('/groups/' + name + '/members.json', {
+    return ajax('/groups/' + name + '/members.json', {
       data: {
         limit: limit || 50,
         offset: offset || 0

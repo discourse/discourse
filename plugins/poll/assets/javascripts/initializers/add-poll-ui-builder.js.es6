@@ -1,8 +1,8 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import showModal from 'discourse/lib/show-modal';
-import ComposerController from 'discourse/controllers/composer';
 
 function initializePollUIBuilder(api) {
+  const ComposerController = api.container.lookupFactory("controller:composer");
   ComposerController.reopen({
     actions: {
       showPollBuilder() {

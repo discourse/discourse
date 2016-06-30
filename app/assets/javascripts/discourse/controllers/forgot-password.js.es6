@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { escapeExpression } from 'discourse/lib/utilities';
 
@@ -49,7 +50,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         self.flash(e.responseJSON.errors[0], 'error');
       };
 
-      Discourse.ajax('/session/forgot_password', {
+      ajax('/session/forgot_password', {
         data: { login: this.get('accountEmailOrUsername').trim() },
         type: 'POST'
       }).then(success, fail).finally(function(){

@@ -8,7 +8,7 @@ define('ember', ['exports'], function(__exports__) {
 
 var _pluginCallbacks = [];
 
-window.Discourse = Ember.Application.extend(Discourse.Ajax, {
+window.Discourse = Ember.Application.extend({
   rootElement: '#main',
   _docTitle: document.title,
   __TAGS_INCLUDED__: true,
@@ -178,6 +178,12 @@ window.Discourse = Ember.Application.extend(Discourse.Ajax, {
     }
   })
 }).create();
+
+Discourse.ajax = function() {
+  var ajax = require('discourse/lib/ajax').ajax;
+  Ember.warn("Discourse.ajax is deprecated. Import the module and use it instead");
+  return ajax.apply(this, arguments);
+};
 
 Discourse.Markdown = {
   whiteListTag: Ember.K,

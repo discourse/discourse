@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { setting } from 'discourse/lib/computed';
 import logout from 'discourse/lib/logout';
 import showModal from 'discourse/lib/show-modal';
@@ -28,13 +29,13 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   actions: {
 
     showSearchHelp() {
-      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(model => {
+      ajax("/static/search_help.html", { dataType: 'html' }).then(model => {
         showModal('searchHelp', { model });
       });
     },
 
     toggleAnonymous() {
-      Discourse.ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
+      ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
         window.location.reload();
       });
     },

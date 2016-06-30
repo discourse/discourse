@@ -4,6 +4,7 @@ import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentio
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
 import { fetchUnseenTagHashtags, linkSeenTagHashtags } from 'discourse/lib/link-tag-hashtag';
 import { load } from 'pretty-text/oneboxer';
+import { ajax } from 'discourse/lib/ajax';
 import InputValidation from 'discourse/models/input-validation';
 
 import { tinyAvatar,
@@ -499,7 +500,7 @@ export default Ember.Component.extend({
       }
 
       // Paint oneboxes
-      $('a.onebox', $preview).each((i, e) => load(e, refresh));
+      $('a.onebox', $preview).each((i, e) => load(e, refresh, ajax));
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },

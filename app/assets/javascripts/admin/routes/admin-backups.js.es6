@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import showModal from 'discourse/lib/show-modal';
 import BackupStatus from 'admin/models/backup-status';
 import Backup from 'admin/models/backup';
@@ -31,7 +32,7 @@ export default Discourse.Route.extend({
 
   model() {
     return PreloadStore.getAndRemove("operations_status", function() {
-      return Discourse.ajax("/admin/backups/status.json");
+      return ajax("/admin/backups/status.json");
     }).then(status => {
       return BackupStatus.create({
         isOperationRunning: status.is_operation_running,

@@ -1,4 +1,3 @@
-//= require ./discourse/mixins/ajax
 //= require ./discourse
 
 // Stuff we need to load first
@@ -7,6 +6,7 @@
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
 //= require ./discourse/lib/utilities
+//= require ./discourse/lib/ajax
 //= require ./discourse/lib/text
 //= require ./discourse/lib/hash
 //= require ./discourse/lib/load-script

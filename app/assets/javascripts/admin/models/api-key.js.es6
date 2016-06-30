@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 const ApiKey = Discourse.Model.extend({
 
   /**
@@ -8,7 +9,7 @@ const ApiKey = Discourse.Model.extend({
   **/
   regenerate: function() {
     var self = this;
-    return Discourse.ajax('/admin/api/key', {type: 'PUT', data: {id: this.get('id')}}).then(function (result) {
+    return ajax('/admin/api/key', {type: 'PUT', data: {id: this.get('id')}}).then(function (result) {
       self.set('key', result.api_key.key);
       return self;
     });
@@ -21,7 +22,7 @@ const ApiKey = Discourse.Model.extend({
     @returns {Promise} a promise that resolves when the key has been revoked
   **/
   revoke: function() {
-    return Discourse.ajax('/admin/api/key', {type: 'DELETE', data: {id: this.get('id')}});
+    return ajax('/admin/api/key', {type: 'DELETE', data: {id: this.get('id')}});
   }
 
 });
@@ -51,7 +52,7 @@ ApiKey.reopenClass({
     @returns {Promise} a promise that resolves to the array of `ApiKey` instances
   **/
   find: function() {
-    return Discourse.ajax("/admin/api").then(function(keys) {
+    return ajax("/admin/api").then(function(keys) {
       return keys.map(function (key) {
         return ApiKey.create(key);
       });
@@ -65,7 +66,7 @@ ApiKey.reopenClass({
     @returns {Promise} a promise that resolves to a master `ApiKey`
   **/
   generateMasterKey: function() {
-    return Discourse.ajax("/admin/api/key", {type: 'POST'}).then(function (result) {
+    return ajax("/admin/api/key", {type: 'POST'}).then(function (result) {
       return ApiKey.create(result.api_key);
     });
   }

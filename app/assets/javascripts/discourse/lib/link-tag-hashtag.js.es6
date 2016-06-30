@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { replaceSpan } from 'discourse/lib/category-hashtags';
 import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
 
@@ -42,7 +43,7 @@ export function linkSeenTagHashtags($elem) {
 };
 
 export function fetchUnseenTagHashtags(tagValues) {
-  return Discourse.ajax("/tags/check", { data: { tag_values: tagValues } })
+  return ajax("/tags/check", { data: { tag_values: tagValues } })
     .then((response) => {
       response.valid.forEach((tag) => {
         validTagHashtags[tag.value] = tag.url;
