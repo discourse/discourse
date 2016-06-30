@@ -1,18 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Category hashtag", {
-  loggedIn: true,
-  setup() {
-    const response = (object) => {
-      return [
-        200,
-        {"Content-Type": "application/json"},
-        object
-      ];
-    };
-
-  }
-});
+acceptance("Category hashtag", { loggedIn: true });
 
 test("category hashtag is cooked properly", () => {
   visit("/t/internationalization-localization/280");
