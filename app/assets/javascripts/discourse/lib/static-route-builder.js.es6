@@ -1,4 +1,5 @@
 import DiscourseURL from 'discourse/lib/url';
+import StaticPage from 'discourse/models/static-page';
 
 const configs = {
   "faq": "faq_url",
@@ -27,7 +28,7 @@ export default function(page) {
     },
 
     model() {
-      return Discourse.StaticPage.find(page);
+      return StaticPage.find(page);
     },
 
     setupController(controller, model) {

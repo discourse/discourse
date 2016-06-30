@@ -234,7 +234,22 @@ class Plugin::Instance
 
     auth_providers.each do |auth|
 
-      js << "Discourse.LoginMethod.register(Discourse.LoginMethod.create(#{auth.to_json}));\n"
+      auth_json = auth.to_json
+      hash = Digest::SHA1.hexdigest(auth_json)
+      js << <<JS
+define("discourse/initializers/login-method-#{hash}",
+  ["discourse/models/login-method", "exports"],
+  function(module, __exports__) {
+    "use strict";
+    __exports__["default"] = {
+      name: "login-method-#{hash}",
+      after: "inject-objects",
+      initialize: function() {
+        module.register(#{auth_json});
+      }
+    };
+  });
+JS
 
       if auth.glyph
         css << ".btn-social.#{auth.name}:before{ content: '#{auth.glyph}'; }\n"

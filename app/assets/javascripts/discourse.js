@@ -179,7 +179,6 @@ window.Discourse = Ember.Application.extend(Discourse.Ajax, {
   })
 }).create();
 
-
 Discourse.Markdown = {
   whiteListTag: Ember.K,
   whiteListIframe: Ember.K
