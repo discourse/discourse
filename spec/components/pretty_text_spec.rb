@@ -360,8 +360,17 @@ HTML
     SiteSetting.s3_cdn_url = "https://awesome.cdn"
 
     # add extra img tag to ensure it does not blow up
-    raw = "<img><img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'"
-    cooked = "<p><img><img src='https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'></p>"
+    raw = <<HTML
+  <img>
+  <img src='https:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+  <img src='http:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+  <img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+
+HTML
+
+    cooked = <<HTML
+<p>  <img><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
+HTML
 
     expect(PrettyText.cook(raw)).to match_html(cooked)
   end
