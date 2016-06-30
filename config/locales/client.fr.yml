@@ -463,6 +463,16 @@ fr:
       suspended_reason: "Raison :"
       github_profile: "Github"
       email_activity_summary: "Résumé d'activité"
+      mailing_list_mode:
+        label: "Mode mailing list"
+        enabled: "Activer le mode mailing list"
+        instructions: |
+          Ce réglage outrepasse le résumé d'activités.<br />
+          Les sujets et catégories passés en silencieux ne sont pas cités dans ces courriels.
+        daily: "Envoyer des informations quotidiennes"
+        individual: "Envoyer un courriel pour chaque nouveau message."
+        many_per_day: "M'en voyer un courriel pour chaque nouveau message (environ {{dailyEmailEstimate}} par jour)."
+        few_per_day: "M'envoyer un courriel pour chaque nouveau sujet (moins de 2 par jour)."
       watched_categories: "Surveillés"
       watched_categories_instructions: "Vous surveillerez automatiquement les nouveaux sujets de ces catégories. Vous serez averti de tous les nouveaux messages et sujets. De plus, le nombre de messages non lus apparaîtra en regard de la liste des sujets."
       tracked_categories: "Suivies"
@@ -508,6 +518,7 @@ fr:
         error: "Il y avait une erreur lors de la modification de cette valeur."
       change_username:
         title: "Modifier le pseudo"
+        confirm: "Si vous modifiez votre pseudo, toutes les citations de vos messages et toutes les mentions de votre @pseudo seront invalides, et votre historique sera interrompu. Etes-vous vraiment sûr de vouloir continuer ?"
         taken: "Désolé, ce pseudo est déjà pris."
         error: "Il y a eu une erreur lors du changement de votre pseudo."
         invalid: "Ce pseudo est invalide. Il ne doit être composé que de lettres et de chiffres."
@@ -591,12 +602,14 @@ fr:
         always: "toujours"
         never: "jamais"
       email_digests:
+        title: "Lorsque je ne visite pas le site, m'envoyer un résumé des sujets tendances et les \"répondre à\" me concernant à :"
         every_30_minutes: "toutes les 30 minutes"
         every_hour: "toutes les heures"
         daily: "quotidien"
         every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
         every_two_weeks: "toutes les deux semaines"
+      include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les courriels récapitulatifs"
       email_in_reply_to: "Inclure un extrait du message auquel il a été répondu dans les courriels"
       email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
@@ -756,8 +769,7 @@ fr:
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     logs_error_rate_notice:
-      reached: "%{timestamp}: Le taux actuel de <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite des paramètres du site de %{siteSettingRate}."
-      exceeded: "%{timestamp}: Le taux actuel de <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite des paramètres du site de %{siteSettingRate}."
+      reached: "<b>[%{relativeAge}]</b> Le taux actuel de <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite définie dans les paramètres du site, actuellement à : %{siteSettingRate}."
       rate:
         one: "1 erreur/%{duration}"
         other: "%{count} erreurs/%{duration}"
@@ -886,7 +898,8 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre message est similaire à..."
       drafts_offline: "sauvegardé hors ligne"
-      group_mentioned: "En utilisant {{group}}, vous allez notifier  <a href='{{group_link}}'>{{count}} personnes</a>."
+      group_mentioned: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>{{count}} personnes</a> – êtes-vous sûr ?"
+      duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été partagé par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse {{ago}}</a> – êtes vous sûr de vouloir le partager à nouveau ?"
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -973,7 +986,7 @@ fr:
       invited_to_topic: "<i title='invité' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='invitation accepté' class='fa fa-user'></i><p><span>{{username}}</span> a accepté votre invitation</p>"
       moved_post: "<i title='message déplacé' class='fa fa-sign-out'></i><p><span>{{username}}</span> a déplacé {{description}}</p>"
-      linked: "<i title='message lié' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge décerné' class='fa fa-certificate'></i><p>Vous avez gagné {{description}}</p>"
       group_message_summary:
         one: "<i title='message dans la boite de réception de groupe' class='fa fa-group'></i><p>{{count}} message dans votre boite de réception {{group_name}} </p>"
@@ -1034,6 +1047,7 @@ fr:
       post_format: "#{{post_number}} par {{username}}"
       context:
         user: "Chercher dans les messages de @{{username}}"
+        category: "Rechercher dans la #{{category}} catégorie"
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages"
     hamburger_menu: "se rendre dans une autre liste de sujet ou catégorie"
@@ -1155,6 +1169,11 @@ fr:
       auto_close_save: "Sauvegarder"
       auto_close_remove: "Ne pas fermer automatiquement ce sujet"
       auto_close_immediate: "Le dernier message dans ce sujet a déjà %{hours} heures, alors le sujet sera fermé immédiatement."
+      timeline:
+        back: "Retour"
+        back_description: "Retourner sur votre dernier sujet non-lu"
+        replies: "%{current} / %{total} réponses"
+        replies_short: "%{current} / %{total}"
       progress:
         title: progression dans le sujet
         go_top: "haut"
@@ -1166,7 +1185,9 @@ fr:
         current: message courant
         position: "message %{current} sur %{total}"
       notifications:
+        title: Modifier la fréquence de vos notifications concernant ce sujet
         reasons:
+          mailing_list_mode: "Vous avez activé le mode mailing list, vous serez donc notifié des réponses à ce sujet par courriel."
           '3_6': 'Vous recevrez des notifications parce que vous surveillez cette catégorie.'
           '3_5': 'Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement.'
           '3_2': 'Vous recevrez des notifications car vous surveillez ce sujet.'
@@ -1267,8 +1288,7 @@ fr:
         no_banner_exists: "Il n'y a pas actuellement de sujet en gros titre."
         banner_exists: "Il y <strong class='badge badge-notification unread'>a</strong> actuellement un sujet en gros titre."
       inviting: "Invitation en cours…"
-      automatically_add_to_groups_optional: "Cette invitation inclus l'accès à ces groupes: (optionnel, administrateur uniquement)"
-      automatically_add_to_groups_required: "Cette invitation inclus l'accès à ces groupes: (<b>Requis</b>, administrateur uniquement)"
+      automatically_add_to_groups: "Cette invitation inclut également l'accès aux groupes suivants :"
       invite_private:
         title: 'Inviter dans la discussion'
         email_or_username: "Adresse de courriel ou @pseudo de l'invité"
@@ -1548,6 +1568,11 @@ fr:
       general: 'Général'
       settings: 'Paramètres'
       topic_template: "Modèle de Sujet"
+      tags: "Tags"
+      tags_allowed_tags: "Tags qui ne peuvent être utilisés que dans cette catégorie :"
+      tags_allowed_tag_groups: "Groupes de tags autorisés uniquement au sein de cette catégorie :"
+      tags_placeholder: "(Facultatif) liste des tags autorisés"
+      tag_groups_placeholder: "(Facultatif) liste des groups de tags autorisés"
       delete: 'Supprimer la catégorie'
       create: 'Nouvelle catégorie'
       create_long: 'Créer une nouvelle catégorie'
@@ -1641,6 +1666,8 @@ fr:
       clicks:
         one: "1 clic"
         other: "%{count} clics"
+    post_links:
+      about: "Dévelloper plus de liens pour ce sujet"
     topic_statuses:
       warning:
         help: "Ceci est un avertissement officiel."
@@ -1776,6 +1803,131 @@ fr:
       full: "Créer / Répondre / Voir"
       create_post: "Répondre / Voir"
       readonly: "Voir"
+    lightbox:
+      download: "télécharger"
+    search_help:
+      title: 'Aide à la recherche'
+    keyboard_shortcuts_help:
+      title: 'Raccourcis clavier'
+      jump_to:
+        title: 'Aller à'
+        home: '<b>g</b>, <b>h</b> Accueil'
+        latest: '<b>g</b>, <b>l</b> Derniers'
+        new: '<b>g</b>, <b>n</b> Nouveaux'
+        unread: '<b>g</b>, <b>u</b> Non lus'
+        categories: '<b>g</b>, <b>c</b> Catégories'
+        top: '<b>g</b>, <b>t</b> Top'
+        bookmarks: '<b>g</b>, <b>b</b> Signets'
+        profile: '<b>g</b>, <b>p</b> Profil'
+        messages: '<b>g</b>, <b>m</b> Messages'
+      navigation:
+        title: 'Navigation'
+        jump: '<b>#</b> Aller au sujet #'
+        back: '<b>u</b> Retour'
+        up_down: '<b>k</b>/<b>j</b> Déplacer la sélection &uarr; &darr;'
+        open: '<b>o</b> ou <b>Entrée</b> Ouvrir le sujet sélectionné'
+        next_prev: '<b>MAJ.</b>+<b>j</b>/<b>MAJ.</b>+<b>k</b> Prochaîne/précédente section'
+      application:
+        title: 'Application'
+        create: '<b>c</b> Créer un nouveau sujet'
+        notifications: '<b>n</b> Ouvrir les notifications'
+        hamburger_menu: '<b>=</b> Ouvrir le menu hambergeur'
+        user_profile_menu: '<b>p</b>Ouvrir le menu utilisateur'
+        show_incoming_updated_topics: '<b>.</b> Montrer les sujets mis à jours récemment'
+        search: '<b>/</b> Rechercher'
+        help: '<b>?</b> Ouvrir l''aide du clavier'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Ignorer Nouveaux/Sujets'
+        dismiss_topics: '<b>x</b>, <b>t</b> Ignorer les sujets'
+        log_out: '<b>MAJ.</b>+<b>z</b> <b>MAJ.</b>+<b>z</b> Se déconnecter'
+      actions:
+        title: 'Actions'
+        bookmark_topic: '<b>f</b> Modifier le signet du sujet'
+        pin_unpin_topic: '<b>MAJ.</b>+<b>p</b> Epingler/Desépingler le sujet'
+        share_topic: '<b>MAJ.</b>+<b>s</b> Partager le sujet'
+        share_post: '<b>s</b> Partager le message'
+        reply_as_new_topic: '<b>t</b> Répondre en tant que sujet lié'
+        reply_topic: '<b>MAJ.</b>+<b>r</b> Répondre au sujet'
+        reply_post: '<b>r</b> Répondre au message'
+        quote_post: '<b>q</b>Citer le message'
+        like: '<b>l</b> Aimer le message'
+        flag: '<b>!</b> Signaler le message'
+        bookmark: '<b>b</b> Mettre le sujet en favoris'
+        edit: '<b>e</b> Editer le sujet'
+        delete: '<b>d</b> Supprimer le sujet'
+        mark_muted: '<b>m</b>, <b>m</b> Faire taire le sujet'
+    badges:
+      earned_n_times:
+        one: "A reçu ce badge 1 fois"
+        other: "A reçu ce badge %{count} fois"
+      granted_on: "Accordé le %{date}"
+      others_count: "Autres yant ce badge (%{count})"
+      title: Badges
+      allow_title: "titre disponible"
+      multiple_grant: "donné plusieurs fois"
+      badge_count:
+        one: "1 badge"
+        other: "%{count} badges"
+      more_badges:
+        one: "+1 autre"
+        other: "+%{count} autres"
+      select_badge_for_title: Choisissez un badge comme titre
+      none: "<none>"
+      badge_grouping:
+        getting_started:
+          name: Pour commencer
+        community:
+          name: Communauté
+        trust_level:
+          name: Niveau de confiance
+        other:
+          name: Autre
+        posting:
+          name: En train d'écrire un message
+    google_search: |
+      <h3>Rechercher avec Google</h3>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>
+    tagging:
+      all_tags: "Tous les tags"
+      selector_all_tags: "tous les tags"
+      changed: "tags modifiés :"
+      tags: "Tags"
+      choose_for_topic: "(facultatif) choisir des tags pour ce sujet"
+      delete_tag: "Supprimer le tag"
+      delete_confirm: "Êtes-vous certain de vouloir supprimer ce tag ?"
+      rename_tag: "Renommer ce tag"
+      rename_instructions: "Choisir un nouveau nom pour ce tag :"
+      sort_by: "Trier par :"
+      sort_by_count: "nombre"
+      sort_by_name: "nom"
+      manage_groups: "Gérer les groupes de tags"
+      manage_groups_description: "Définir des groupes pour organiser les tags"
+      filters:
+        without_category: "%{filter} %{tag} sujets"
+        with_category: "%{filter} %{tag} sujets dans %{category}"
+      notifications:
+        muted:
+          description: "Vous ne recevrez aucune notification sur des nouveaux sujets dans ce tag, et ils n'apparaitront pas sur mon onglet non-lus."
+      groups:
+        about: "Ajout des tags aux groupes pour les gérer plus facilement."
+        new: "Nouveau groupe"
+        tags_label: "Tags dans ce groupe :"
+        parent_tag_label: "Tag parent :"
+        parent_tag_placeholder: "Facultatif"
+      topics:
+        none:
+          unread: "Vous n'avez aucun sujet non lu."
+          new: "Vous n'avez aucun nouveau sujet."
+          read: "Vous n'avez lu aucun sujet pour le moment."
+          posted: "Vous n'avez écrit aucun message pour le moment."
+          latest: "Il n'y a pas de sujets récents."
+    invite:
+      custom_message: "Rendez votre invitation plus personnelle en écrivant un"
   admin_js:
     type_to_filter: "Commencez à taper pour filtrer..."
     admin:
@@ -2638,148 +2790,3 @@ fr:
           label: "Nouveau :"
           add: "Ajouter"
           filter: "Rechercher (URL ou URL externe)"
-    lightbox:
-      download: "télécharger"
-    search_help:
-      title: 'Aide à la recherche'
-    keyboard_shortcuts_help:
-      title: 'Raccourcis clavier'
-      jump_to:
-        title: 'Aller à'
-        home: '<b>g</b>, <b>h</b> Accueil'
-        latest: '<b>g</b>, <b>l</b> Récents'
-        new: '<b>g</b>, <b>n</b> Nouveau'
-        unread: '<b>g</b>, <b>u</b> Non lus'
-        categories: '<b>g</b>, <b>c</b> Catégories'
-        top: '<b>g</b>, <b>t</b> Haut'
-        bookmarks: '<b>g</b>, <b>b</b> Favoris'
-        profile: '<b>g</b>, <b>p</b> Profil'
-        messages: '<b>g</b>, <b>m</b> Messages'
-      navigation:
-        title: 'Navigation'
-        jump: '<b>#</b> Aller au message #'
-        back: '<b>u</b> Retour'
-        up_down: '<b>k</b>/<b>j</b> Déplacer la sélection &uarr; &darr;'
-        open: '<b>o</b> ou <b>Entrée</b> Ouvrir le sujet sélectionné'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Section Suivante/précédente'
-      application:
-        title: 'Application'
-        create: '<b>c</b> Créer un nouveau sujet'
-        notifications: '<b>n</b> Ouvrir les notifications'
-        hamburger_menu: '<b>=</b> Ouvrir le menu hamburger'
-        user_profile_menu: '<b>p</b> Ouvrir le menu de votre profil'
-        show_incoming_updated_topics: '<b>.</b> Afficher les sujets mis à jour'
-        search: '<b>/</b> Rechercher'
-        help: '<b>?</b> Ouvrir l''aide au clavier'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Marquer comme lu les nouveaux messages'
-        dismiss_topics: '<b>x</b>, <b>r</b> Marquer comme lu les sujets'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Se déconnecter'
-      actions:
-        title: 'Actions'
-        bookmark_topic: '<b>f</b> Modifier signet pour ce sujet'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Épingler/De-épingler le sujet'
-        share_topic: '<b>shift</b>+<b>s</b> Partager un sujet'
-        share_post: '<b>s</b> Partager un message'
-        reply_as_new_topic: '<b>t</b> Répondre en créant un sujet lié'
-        reply_topic: '<b>shift</b>+<b>r</b> Répondre au sujet'
-        reply_post: '<b>r</b> Répondre à un message'
-        quote_post: '<b>q</b> Citer un message'
-        like: '<b>l</b> Aimer un message'
-        flag: '<b>!</b> Signaler un message'
-        bookmark: '<b>b</b> Ajouter ce message à vos signets'
-        edit: '<b>e</b> Editer un message'
-        delete: '<b>d</b> Supprimer un message'
-        mark_muted: '<b>m</b>, <b>m</b> Marquer le suivi du sujet comme silencieux'
-        mark_regular: '<b>m</b>, <b>r</b> Marquer le suivi du sujet comme normale'
-        mark_tracking: '<b>m</b>, <b>t</b> Marquer le sujet comme suivi'
-        mark_watching: '<b>m</b>, <b>w</b> Marquer le sujet comme surveillé'
-    badges:
-      earned_n_times:
-        one: "A reçu ce badge 1 fois"
-        other: "A reçu ce badge %{count} fois"
-      granted_on: "Accordé %{date}"
-      others_count: "Autres utilisateurs avec ce badge (%{count})"
-      title: Badges
-      allow_title: "titre disponible"
-      multiple_grant: "attribué plusieurs fois"
-      badge_count:
-        one: "1 badge"
-        other: "%{count} badges"
-      more_badges:
-        one: "+1 autre"
-        other: "+%{count} autres"
-      granted:
-        one: "1 décerné"
-        other: "%{count} décernés"
-      select_badge_for_title: Sélectionner un badge pour l'utiliser comme votre titre
-      none: "<vide>"
-      badge_grouping:
-        getting_started:
-          name: Pour commencer
-        community:
-          name: Communauté
-        trust_level:
-          name: Niveau de confiance
-        other:
-          name: Autre
-        posting:
-          name: Message
-    google_search: |
-      <h3>Rechercher avec Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
-    tagging:
-      all_tags: "Tous les Tags"
-      selector_all_tags: "tous les tags"
-      changed: "tags modifiés :"
-      tags: "Tags"
-      choose_for_topic: "choisir des tags optionnels pour ce sujet"
-      delete_tag: "Supprimer le Tag"
-      delete_confirm: "Êtes-vous sûr de vouloir supprimer ce tag ?"
-      rename_tag: "Renommer le Tag"
-      rename_instructions: "Choisir un nouveau nom pour le tag :"
-      sort_by: "Trier par :"
-      sort_by_count: "nombre"
-      sort_by_name: "nom"
-      filters:
-        without_category: "%{filter} %{tag} sujets"
-        with_category: "%{filter} %{tag} sujets dans %{category}"
-      notifications:
-        watching:
-          title: "Suivie"
-          description: "Vous serez automatiquement abonné aux nouveaux sujets de ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, et le décompte des messages non-lus et nouveaux aussi à côté de chaque sujet."
-        tracking:
-          title: "Suivi"
-          description: "Vous allez suivre automatiquement tous les nouveaux sujets dans ce tag. Le nombre de messages nouveaux et non lus apparaîtra à côté du sujet."
-        regular:
-          title: "Habitué"
-          description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
-        muted:
-          title: "Silencieux"
-          description: "Vous ne recevrez aucune notification sur les sujets de ces catégories, et ils n'apparaîtront pas dans votre onglet \"non-lus\"."
-      topics:
-        none:
-          unread: "Vous n'avez aucun sujet non lu."
-          new: "Vous n'avez aucun nouveau sujet."
-          read: "Vous n'avez lu aucun sujet pour le moment."
-          posted: "Vous n'avez écrit aucun message pour le moment."
-          latest: "Il n'y a pas de sujets récents."
-          hot: "Il n'y a pas de sujets populaires."
-          bookmarks: "Vous n'avez pas encore de sujets ajoutés aux signets."
-          top: "Il n'y a pas de meilleurs sujets."
-          search: "Il n'y a pas de résultats de recherche."
-        bottom:
-          latest: "Il n'y a plus de sujets récents."
-          hot: "Il n'y a plus de sujets populaires."
-          posted: "Il n'y a plus de sujets publiés."
-          read: "Il n'y a plus de sujets lus."
-          new: "Il n'y a plus de nouveaux sujets."
-          unread: "Il n'y a plus de sujets non lus."
-          top: "Il n'y a plus de meilleurs sujets."
-          bookmarks: "Il n'y a plus de sujets ajoutés aux signets."
-          search: "Il n'y a plus de résultats de recherche."

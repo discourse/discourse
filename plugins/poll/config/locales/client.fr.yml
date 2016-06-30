@@ -15,6 +15,8 @@ fr:
         one: "vote au total"
         other: "votes au total"
       average_rating: "Notation moyenne : <strong>%{average}</strong>"
+      public:
+        title: "Les votes sur ce sondage seront publics."
       multiple:
         help:
           at_least_min_options:
@@ -46,3 +48,4 @@ fr:
         confirm: "Êtes-vous sûr de vouloir fermer ce sondage ?"
       error_while_toggling_status: "Une erreur s'est produite lors du changement de statut de ce sondage."
       error_while_casting_votes: "Une erreur s'est produite lors de la distribution de vos votes."
+      error_while_fetching_voters: "Une erreur s'est produite lors de l'affichage des votants."
