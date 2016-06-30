@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 export default Ember.Component.extend({
   layoutName: "components/poll-voters",
   tagName: 'ul',
@@ -16,7 +17,7 @@ export default Ember.Component.extend({
   _fetchUsers() {
     this.set("loading", true);
 
-    Discourse.ajax("/polls/voters.json", {
+    ajax("/polls/voters.json", {
       type: "get",
       data: { user_ids: this.get("voterIds") }
     }).then(result => {

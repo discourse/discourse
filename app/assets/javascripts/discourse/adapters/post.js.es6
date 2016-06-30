@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import RestAdapter from 'discourse/adapters/rest';
 import { Result } from 'discourse/adapters/rest';
 
@@ -12,7 +13,7 @@ export default RestAdapter.extend({
   createRecord(store, type, args) {
     const typeField = Ember.String.underscore(type);
     args.nested_post = true;
-    return Discourse.ajax(this.pathFor(store, type), { method: 'POST', data: args }).then(function (json) {
+    return ajax(this.pathFor(store, type), { method: 'POST', data: args }).then(function (json) {
       return new Result(json[typeField], json);
     });
   }

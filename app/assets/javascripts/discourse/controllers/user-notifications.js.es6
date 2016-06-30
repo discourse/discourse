@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.ArrayController.extend({
@@ -12,7 +13,7 @@ export default Ember.ArrayController.extend({
 
   actions: {
     resetNew() {
-      Discourse.ajax('/notifications/mark-read', { method: 'PUT' }).then(() => {
+      ajax('/notifications/mark-read', { method: 'PUT' }).then(() => {
         this.setEach('read', true);
       });
     },

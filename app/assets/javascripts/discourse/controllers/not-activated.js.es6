@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -9,7 +10,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     sendActivationEmail: function() {
-      Discourse.ajax('/users/action/send_activation_email', {data: {username: this.get('username')}, type: 'POST'});
+      ajax('/users/action/send_activation_email', {data: {username: this.get('username')}, type: 'POST'});
       this.set('emailSent', true);
     }
   }

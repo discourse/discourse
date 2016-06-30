@@ -5,6 +5,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { h } from 'virtual-dom';
 import { emojiUnescape } from 'discourse/lib/text';
 import { postUrl, escapeExpression } from 'discourse/lib/utilities';
+import { setTransientHeader } from 'discourse/lib/ajax';
 
 const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
@@ -101,7 +102,7 @@ createWidget('notification-item', {
   click(e) {
     this.attrs.set('read', true);
     const id = this.attrs.id;
-    Discourse.setTransientHeader("Discourse-Clear-Notifications", id);
+    setTransientHeader("Discourse-Clear-Notifications", id);
     if (document && document.cookie) {
       document.cookie = `cn=${id}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
     }

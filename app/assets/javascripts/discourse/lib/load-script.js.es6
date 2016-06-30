@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 const _loaded = {};
 const _loading = {};
 
@@ -58,7 +59,7 @@ export default function loadScript(url, opts) {
     if (opts.scriptTag) {
       loadWithTag(cdnUrl, cb);
     } else {
-      Discourse.ajax({url: cdnUrl, dataType: "script", cache: true}).then(cb);
+      ajax({url: cdnUrl, dataType: "script", cache: true}).then(cb);
     }
   });
 }

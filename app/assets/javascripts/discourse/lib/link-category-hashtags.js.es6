@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { replaceSpan } from 'discourse/lib/category-hashtags';
 
 const validCategoryHashtags = {};
@@ -41,7 +42,7 @@ export function linkSeenCategoryHashtags($elem) {
 };
 
 export function fetchUnseenCategoryHashtags(categorySlugs) {
-  return Discourse.ajax("/category_hashtags/check", { data: { category_slugs: categorySlugs } })
+  return ajax("/category_hashtags/check", { data: { category_slugs: categorySlugs } })
     .then((response) => {
       response.valid.forEach((category) => {
         validCategoryHashtags[category.slug] = category.url;

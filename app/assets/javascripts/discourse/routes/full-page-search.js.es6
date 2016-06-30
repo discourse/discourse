@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 import Composer from 'discourse/models/composer';
 
@@ -25,7 +26,7 @@ export default Discourse.Route.extend({
 
     return PreloadStore.getAndRemove("search", function() {
       if (isValidSearchTerm(params.q)) {
-        return Discourse.ajax("/search", { data: args });
+        return ajax("/search", { data: args });
       } else {
         return null;
       }

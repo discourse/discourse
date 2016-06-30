@@ -245,6 +245,7 @@ define("discourse/initializers/login-method-#{hash}",
       name: "login-method-#{hash}",
       after: "inject-objects",
       initialize: function() {
+        if (Ember.testing) { return; }
         module.register(#{auth_json});
       }
     };

@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 
 export function translateResults(results, opts) {
 
@@ -82,7 +83,7 @@ function searchForTerm(term, opts) {
     };
   }
 
-  var promise = Discourse.ajax('/search/query', { data: data });
+  var promise = ajax('/search/query', { data: data });
 
   promise.then(function(results){
     return translateResults(results, opts);

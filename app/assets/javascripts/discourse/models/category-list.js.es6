@@ -1,3 +1,5 @@
+import { ajax } from 'discourse/lib/ajax';
+
 const CategoryList = Ember.ArrayProxy.extend({
   init() {
     this.set('content', []);
@@ -34,7 +36,7 @@ CategoryList.reopenClass({
   },
 
   listForParent(store, category) {
-    return Discourse.ajax(`/categories.json?parent_category_id=${category.get("id")}`).then(result => {
+    return ajax(`/categories.json?parent_category_id=${category.get("id")}`).then(result => {
       return CategoryList.create({
         categories: this.categoriesFrom(store, result),
         parentCategory: category
@@ -43,7 +45,7 @@ CategoryList.reopenClass({
   },
 
   list(store) {
-    const getCategories = () => Discourse.ajax("/categories.json");
+    const getCategories = () => ajax("/categories.json");
     return PreloadStore.getAndRemove("categories_list", getCategories).then(result => {
       return CategoryList.create({
         categories: this.categoriesFrom(store, result),

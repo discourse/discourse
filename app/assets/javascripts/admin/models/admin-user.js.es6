@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
 import { propertyNotEqual } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
@@ -40,7 +41,7 @@ const AdminUser = Discourse.User.extend({
   canResetBounceScore: Ember.computed.gt("bounce_score", 0),
 
   resetBounceScore() {
-    return Discourse.ajax(`/admin/users/${this.get("id")}/reset_bounce_score`, {
+    return ajax(`/admin/users/${this.get("id")}/reset_bounce_score`, {
       type: 'POST'
     }).then(() => this.setProperties({
       "bounce_score": 0,
@@ -50,7 +51,7 @@ const AdminUser = Discourse.User.extend({
 
   generateApiKey() {
     const self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/generate_api_key", {
+    return ajax("/admin/users/" + this.get('id') + "/generate_api_key", {
       type: 'POST'
     }).then(function (result) {
       const apiKey = ApiKey.create(result.api_key);
@@ -60,20 +61,20 @@ const AdminUser = Discourse.User.extend({
   },
 
   groupAdded(added) {
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/groups", {
+    return ajax("/admin/users/" + this.get('id') + "/groups", {
       type: 'POST',
       data: { group_id: added.id }
     }).then(() => this.get('groups').pushObject(added));
   },
 
   groupRemoved(groupId) {
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/groups/" + groupId, {
+    return ajax("/admin/users/" + this.get('id') + "/groups/" + groupId, {
       type: 'DELETE'
     }).then(() => this.set('groups.[]', this.get('groups').rejectBy("id", groupId)));
   },
 
   revokeApiKey() {
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {
+    return ajax("/admin/users/" + this.get('id') + "/revoke_api_key", {
       type: 'DELETE'
     }).then(() => this.set('api_key', null));
   },
@@ -104,7 +105,7 @@ const AdminUser = Discourse.User.extend({
             "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("admin.user.delete_all_posts"),
             "class": "btn btn-danger",
             "callback": function() {
-              Discourse.ajax("/admin/users/" + user.get('id') + "/delete_all_posts", {
+              ajax("/admin/users/" + user.get('id') + "/delete_all_posts", {
                 type: 'PUT'
               }).then(() => user.set('post_count', 0));
             }
@@ -114,7 +115,7 @@ const AdminUser = Discourse.User.extend({
 
   revokeAdmin() {
     const self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_admin", {
+    return ajax("/admin/users/" + this.get('id') + "/revoke_admin", {
       type: 'PUT'
     }).then(function() {
       self.setProperties({
@@ -127,7 +128,7 @@ const AdminUser = Discourse.User.extend({
 
   grantAdmin() {
     const self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/grant_admin", {
+    return ajax("/admin/users/" + this.get('id') + "/grant_admin", {
       type: 'PUT'
     }).then(function() {
       self.setProperties({
@@ -140,7 +141,7 @@ const AdminUser = Discourse.User.extend({
 
   revokeModeration() {
     const self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/revoke_moderation", {
+    return ajax("/admin/users/" + this.get('id') + "/revoke_moderation", {
       type: 'PUT'
     }).then(function() {
       self.setProperties({
@@ -153,7 +154,7 @@ const AdminUser = Discourse.User.extend({
 
   grantModeration() {
     const self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/grant_moderation", {
+    return ajax("/admin/users/" + this.get('id') + "/grant_moderation", {
       type: 'PUT'
     }).then(function() {
       self.setProperties({
@@ -165,14 +166,14 @@ const AdminUser = Discourse.User.extend({
   },
 
   refreshBrowsers() {
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/refresh_browsers", {
+    return ajax("/admin/users/" + this.get('id') + "/refresh_browsers", {
       type: 'POST'
     }).finally(() => bootbox.alert(I18n.t("admin.user.refresh_browsers_message")));
   },
 
   approve() {
     const self = this;
-    return Discourse.ajax("/admin/users/" + this.get('id') + "/approve", {
+    return ajax("/admin/users/" + this.get('id') + "/approve", {
       type: 'PUT'
     }).then(function() {
       self.setProperties({
@@ -190,7 +191,7 @@ const AdminUser = Discourse.User.extend({
   dirty: propertyNotEqual('originalTrustLevel', 'trustLevel.id'),
 
   saveTrustLevel() {
-    return Discourse.ajax("/admin/users/" + this.id + "/trust_level", {
+    return ajax("/admin/users/" + this.id + "/trust_level", {
       type: 'PUT',
       data: { level: this.get('trustLevel.id') }
     }).then(function() {
@@ -210,7 +211,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   lockTrustLevel(locked) {
-    return Discourse.ajax("/admin/users/" + this.id + "/trust_level_lock", {
+    return ajax("/admin/users/" + this.id + "/trust_level_lock", {
       type: 'PUT',
       data: { locked: !!locked }
     }).then(function() {
@@ -239,14 +240,14 @@ const AdminUser = Discourse.User.extend({
   }.property('suspended_till', 'suspended_at'),
 
   suspend(duration, reason) {
-    return Discourse.ajax("/admin/users/" + this.id + "/suspend", {
+    return ajax("/admin/users/" + this.id + "/suspend", {
       type: 'PUT',
       data: { duration: duration, reason: reason }
     });
   },
 
   unsuspend() {
-    return Discourse.ajax("/admin/users/" + this.id + "/unsuspend", {
+    return ajax("/admin/users/" + this.id + "/unsuspend", {
       type: 'PUT'
     }).then(function() {
       window.location.reload();
@@ -257,7 +258,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   log_out() {
-    return Discourse.ajax("/admin/users/" + this.id + "/log_out", {
+    return ajax("/admin/users/" + this.id + "/log_out", {
       type: 'POST',
       data: { username_or_email: this.get('username') }
     }).then(function() {
@@ -266,7 +267,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   impersonate() {
-    return Discourse.ajax("/admin/impersonate", {
+    return ajax("/admin/impersonate", {
       type: 'POST',
       data: { username_or_email: this.get('username') }
     }).then(function() {
@@ -281,7 +282,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   activate() {
-    return Discourse.ajax('/admin/users/' + this.id + '/activate', {
+    return ajax('/admin/users/' + this.id + '/activate', {
       type: 'PUT'
     }).then(function() {
       window.location.reload();
@@ -292,7 +293,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   deactivate() {
-    return Discourse.ajax('/admin/users/' + this.id + '/deactivate', {
+    return ajax('/admin/users/' + this.id + '/deactivate', {
       type: 'PUT'
     }).then(function() {
       window.location.reload();
@@ -304,7 +305,7 @@ const AdminUser = Discourse.User.extend({
 
   unblock() {
     this.set('blockingUser', true);
-    return Discourse.ajax('/admin/users/' + this.id + '/unblock', {
+    return ajax('/admin/users/' + this.id + '/unblock', {
       type: 'PUT'
     }).then(function() {
       window.location.reload();
@@ -320,7 +321,7 @@ const AdminUser = Discourse.User.extend({
 
     const performBlock = function() {
       user.set('blockingUser', true);
-      return Discourse.ajax('/admin/users/' + user.id + '/block', {
+      return ajax('/admin/users/' + user.id + '/block', {
         type: 'PUT'
       }).then(function() {
         window.location.reload();
@@ -345,7 +346,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   sendActivationEmail() {
-    return Discourse.ajax('/users/action/send_activation_email', {
+    return ajax('/users/action/send_activation_email', {
       type: 'POST',
       data: { username: this.get('username') }
     }).then(function() {
@@ -360,7 +361,7 @@ const AdminUser = Discourse.User.extend({
           message = I18n.t("admin.user.anonymize_confirm");
 
     const performAnonymize = function() {
-      return Discourse.ajax("/admin/users/" + user.get('id') + '/anonymize.json', {
+      return ajax("/admin/users/" + user.get('id') + '/anonymize.json', {
         type: 'PUT'
       }).then(function(data) {
         if (data.success) {
@@ -422,7 +423,7 @@ const AdminUser = Discourse.User.extend({
       if (opts && opts.deletePosts) {
         formData["delete_posts"] = true;
       }
-      return Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
+      return ajax("/admin/users/" + user.get('id') + '.json', {
         type: 'DELETE',
         data: formData
       }).then(function(data) {
@@ -481,7 +482,7 @@ const AdminUser = Discourse.User.extend({
         "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("flagging.yes_delete_spammer"),
         "class": "btn btn-danger",
         "callback": function() {
-          return Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
+          return ajax("/admin/users/" + user.get('id') + '.json', {
             type: 'DELETE',
             data: {
               delete_posts: true,
@@ -549,7 +550,7 @@ AdminUser.reopenClass({
       });
     });
 
-    return Discourse.ajax("/admin/users/approve-bulk", {
+    return ajax("/admin/users/approve-bulk", {
       type: 'PUT',
       data: { users: users.map((u) => u.id) }
     }).finally(() => bootbox.alert(I18n.t("admin.user.approve_bulk_success")));
@@ -561,7 +562,7 @@ AdminUser.reopenClass({
       user.set('selected', false);
     });
 
-    return Discourse.ajax("/admin/users/reject-bulk", {
+    return ajax("/admin/users/reject-bulk", {
       type: 'DELETE',
       data: {
         users: users.map((u) => u.id),
@@ -571,14 +572,14 @@ AdminUser.reopenClass({
   },
 
   find(user_id) {
-    return Discourse.ajax("/admin/users/" + user_id + ".json").then(result => {
+    return ajax("/admin/users/" + user_id + ".json").then(result => {
       result.loadedDetails = true;
       return AdminUser.create(result);
     });
   },
 
   findAll(query, filter) {
-    return Discourse.ajax("/admin/users/list/" + query + ".json", {
+    return ajax("/admin/users/list/" + query + ".json", {
       data: filter
     }).then(function(users) {
       return users.map((u) => AdminUser.create(u));

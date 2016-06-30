@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 const StaticPage = Ember.Object.extend();
 
 StaticPage.reopenClass({
@@ -11,7 +12,7 @@ StaticPage.reopenClass({
         text = text.match(/<!-- preload-content: -->((?:.|[\n\r])*)<!-- :preload-content -->/)[1];
         resolve(StaticPage.create({path: path, html: text}));
       } else {
-        Discourse.ajax(path + ".html", {dataType: 'html'}).then(function (result) {
+        ajax(path + ".html", {dataType: 'html'}).then(function (result) {
           resolve(StaticPage.create({path: path, html: result}));
         });
       }

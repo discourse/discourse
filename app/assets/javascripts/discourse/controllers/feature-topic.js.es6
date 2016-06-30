@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
@@ -91,7 +92,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   onShow() {
     this.set("loading", true);
 
-    return Discourse.ajax("/topics/feature_stats.json", {
+    return ajax("/topics/feature_stats.json", {
       data: { category_id: this.get("model.category.id") }
     }).then(result => {
       if (result) {

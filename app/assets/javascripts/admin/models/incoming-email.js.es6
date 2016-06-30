@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import AdminUser from 'admin/models/admin-user';
 
 const IncomingEmail = Discourse.Model.extend({});
@@ -15,7 +16,7 @@ IncomingEmail.reopenClass({
   },
 
   find(id) {
-    return Discourse.ajax(`/admin/email/incoming/${id}.json`);
+    return ajax(`/admin/email/incoming/${id}.json`);
   },
 
   findAll(filter, offset) {
@@ -25,12 +26,12 @@ IncomingEmail.reopenClass({
     const status = filter.status || "received";
     filter = _.omit(filter, "status");
 
-    return Discourse.ajax(`/admin/email/${status}.json?offset=${offset}`, { data: filter })
+    return ajax(`/admin/email/${status}.json?offset=${offset}`, { data: filter })
                     .then(incomings => _.map(incomings, incoming => IncomingEmail.create(incoming)));
   },
 
   loadRawEmail(id) {
-    return Discourse.ajax(`/admin/email/incoming/${id}/raw.json`);
+    return ajax(`/admin/email/incoming/${id}/raw.json`);
   }
 });
 
