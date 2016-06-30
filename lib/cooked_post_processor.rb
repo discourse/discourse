@@ -331,14 +331,14 @@ class CookedPostProcessor
       @doc.css("a[#{selector}]").each do |a|
         href = a[selector].to_s
         a[selector] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
-        a[selector] = Discourse.store.cnd_url(a[selector]) if use_s3_cdn
+        a[selector] = Discourse.store.cdn_url(a[selector]) if use_s3_cdn
       end
     end
 
     @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
-      img["src"] = Discourse.store.cnd_url(img["src"]) if use_s3_cdn
+      img["src"] = Discourse.store.cdn_url(img["src"]) if use_s3_cdn
     end
   end
 
