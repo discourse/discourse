@@ -14,7 +14,7 @@ describe FileStore::LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      expect(store.store_upload(uploaded_file, upload)).to match(/\/uploads\/default\/original\/.+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98\.png/)
+      expect(store.store_upload(uploaded_file, upload)).to match(/\/uploads\/default\/original\/.+#{upload.sha1}\.png/)
     end
 
   end
@@ -23,7 +23,7 @@ describe FileStore::LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      expect(store.store_optimized_image({}, optimized_image)).to match(/\/uploads\/default\/optimized\/.+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_#{OptimizedImage::VERSION}_100x200\.png/)
+      expect(store.store_optimized_image({}, optimized_image)).to match(/\/uploads\/default\/optimized\/.+#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png/)
     end
 
   end
