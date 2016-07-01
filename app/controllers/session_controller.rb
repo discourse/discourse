@@ -126,6 +126,14 @@ class SessionController < ApplicationController
         render text: I18n.t("sso.not_found"), status: 500
       end
     rescue ActiveRecord::RecordInvalid => e
+      if SiteSetting.verbose_sso_logging
+        Rails.logger.warn(<<-EOF)
+          Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}\n
+          #{e.record.errors.to_h}\n
+          \n
+          #{sso.diagnostics}
+        EOF
+      end
       render text: I18n.t("sso.unknown_error"), status: 500
     rescue => e
       message = "Failed to create or lookup user: #{e}."
