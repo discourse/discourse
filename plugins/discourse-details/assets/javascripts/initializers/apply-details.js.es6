@@ -30,6 +30,6 @@ export default {
   name: "apply-details",
 
   initialize() {
-    withPluginApi('0.1', initializeDetails);
+    withPluginApi('0.5', initializeDetails);
   }
 };
