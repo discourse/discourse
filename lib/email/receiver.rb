@@ -344,7 +344,7 @@ module Email
       @reply_by_email_address_regex ||= begin
         reply_addresses = [
            SiteSetting.reply_by_email_address,
-          *SiteSetting.alternative_reply_by_email_addresses.split("|")
+          *(SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
         ]
         escaped_reply_addresses = reply_addresses.select { |a| a.present? }
                                                  .map { |a| Regexp.escape(a) }
