@@ -79,7 +79,11 @@ module Email
           Email::Sender.new(client_message, message_template).send
         end
       else
-        Rails.logger.error("Unrecognized error type (#{e}) when processing incoming email\n\nMail:\n#{mail_string}")
+        msg  = "Unrecognized error type (#{e.class}: #{e.message}) when processing incoming email"
+        msg += "\n\nBacktrace:\n#{e.backtrace.map { |l| "  #{l}" }.join("\n")}"
+        msg += "\n\nMail:\n#{mail_string}"
+
+        Rails.logger.error(msg)
       end
 
       client_message
