@@ -189,7 +189,13 @@ export default class Widget {
       }
     }
 
-    return this.draw(h, this.attrs, this.state);
+    let result = this.draw(h, this.attrs, this.state);
+    this.didRenderWidget();
+    return result;
+  }
+
+  didRenderWidget() {
+    return true;
   }
 
   _findAncestorWithProperty(property) {
