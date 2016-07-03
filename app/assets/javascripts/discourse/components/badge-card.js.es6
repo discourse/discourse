@@ -3,7 +3,7 @@ import DiscourseURL from 'discourse/lib/url';
 
 export default Ember.Component.extend({
   size: 'medium',
-  classNameBindings: [':badge-card', 'size', 'navigateOnClick:hyperlink'],
+  classNameBindings: [':badge-card', 'size', 'badge.slug', 'navigateOnClick:hyperlink'],
 
   click(e){
     if (e.target && e.target.nodeName === "A") {
