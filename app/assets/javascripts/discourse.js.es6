@@ -1,19 +1,14 @@
-/*global Favcount:true*/
-var DiscourseResolver = require('discourse/ember/resolver').default;
+import DiscourseResolver from 'discourse/ember/resolver';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
-// Allow us to import Ember
-define('ember', ['exports'], function(__exports__) {
-  __exports__.default = Ember;
-});
+const _pluginCallbacks = [];
 
-var _pluginCallbacks = [];
-
-window.Discourse = Ember.Application.extend({
+const Discourse = Ember.Application.extend({
   rootElement: '#main',
   _docTitle: document.title,
   __TAGS_INCLUDED__: true,
 
-  getURL: function(url) {
+  getURL(url) {
     if (!url) return url;
 
     // if it's a non relative URL, return it.
@@ -25,7 +20,7 @@ window.Discourse = Ember.Application.extend({
     return Discourse.BaseUri + url;
   },
 
-  getURLWithCDN: function(url) {
+  getURLWithCDN(url) {
     url = Discourse.getURL(url);
     // only relative urls
     if (Discourse.CDN && /^\/[^\/]/.test(url)) {
@@ -38,78 +33,76 @@ window.Discourse = Ember.Application.extend({
 
   Resolver: DiscourseResolver,
 
-  _titleChanged: function() {
-    var title = this.get('_docTitle') || Discourse.SiteSettings.title;
+  @observes('_docTitle', 'hasFocus', 'notifyCount')
+  _titleChanged() {
+    let title = this.get('_docTitle') || Discourse.SiteSettings.title;
 
     // if we change this we can trigger changes on document.title
     // only set if changed.
-    if($('title').text() !== title) {
+    if ($('title').text() !== title) {
       $('title').text(title);
     }
 
-    var notifyCount = this.get('notifyCount');
+    const notifyCount = this.get('notifyCount');
     if (notifyCount > 0 && !Discourse.User.currentProp('dynamic_favicon')) {
-      title = "(" + notifyCount + ") " + title;
+      title = `(${notifyCount}) ${title}`;
     }
 
     document.title = title;
-  }.observes('_docTitle', 'hasFocus', 'notifyCount'),
+  },
 
-  faviconChanged: function() {
-    if(Discourse.User.currentProp('dynamic_favicon')) {
-      var url = Discourse.SiteSettings.favicon_url;
+  @observes('notifyCount')
+  faviconChanged() {
+    if (Discourse.User.currentProp('dynamic_favicon')) {
+      let url = Discourse.SiteSettings.favicon_url;
       if (/^http/.test(url)) {
         url = Discourse.getURL("/favicon/proxied?" + encodeURIComponent(url));
       }
-      new Favcount(url).set(
-        this.get('notifyCount')
-      );
+      new window.Favcount(url).set(this.get('notifyCount'));
     }
-  }.observes('notifyCount'),
+  },
 
   // The classes of buttons to show on a post
-  postButtons: function() {
+  @computed
+  postButtons() {
     return Discourse.SiteSettings.post_menu.split("|").map(function(i) {
       return i.replace(/\+/, '').capitalize();
     });
-  }.property(),
+  },
 
-  notifyTitle: function(count) {
+  notifyTitle(count) {
     this.set('notifyCount', count);
   },
 
-  notifyBackgroundCountIncrement: function() {
+  notifyBackgroundCountIncrement() {
     if (!this.get('hasFocus')) {
       this.set('backgroundNotify', true);
       this.set('notifyCount', (this.get('notifyCount') || 0) + 1);
     }
   },
 
-  resetBackgroundNotifyCount: function() {
+  @observes('hasFocus')
+  resetBackgroundNotifyCount() {
     if (this.get('hasFocus') && this.get('backgroundNotify')) {
       this.set('notifyCount', 0);
     }
     this.set('backgroundNotify', false);
-  }.observes('hasFocus'),
+  },
 
-  authenticationComplete: function(options) {
+  authenticationComplete(options) {
     // TODO, how to dispatch this to the controller without the container?
-    var loginController = Discourse.__container__.lookup('controller:login');
+    const loginController = Discourse.__container__.lookup('controller:login');
     return loginController.authenticationComplete(options);
   },
 
-  /**
-    Start up the Discourse application by running all the initializers we've defined.
-
-    @method start
-  **/
-  start: function() {
+  // Start up the Discourse application by running all the initializers we've defined.
+  start() {
 
     $('noscript').remove();
 
     Object.keys(requirejs._eak_seen).forEach(function(key) {
       if (/\/pre\-initializers\//.test(key)) {
-        var module = require(key, null, null, true);
+        const module = require(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
         Discourse.initializer(module.default);
       }
@@ -117,11 +110,11 @@ window.Discourse = Ember.Application.extend({
 
     Object.keys(requirejs._eak_seen).forEach(function(key) {
       if (/\/initializers\//.test(key)) {
-        var module = require(key, null, null, true);
+        const module = require(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
 
-        var init = module.default;
-        var oldInitialize = init.initialize;
+        const init = module.default;
+        const oldInitialize = init.initialize;
         init.initialize = function(app) {
           oldInitialize.call(this, app.container, Discourse);
         };
@@ -131,8 +124,8 @@ window.Discourse = Ember.Application.extend({
     });
 
     // Plugins that are registered via `<script>` tags.
-    var withPluginApi = require('discourse/lib/plugin-api').withPluginApi;
-    var initCount = 0;
+    const withPluginApi = require('discourse/lib/plugin-api').withPluginApi;
+    let initCount = 0;
     _pluginCallbacks.forEach(function(cb) {
       Discourse.instanceInitializer({
         name: "_discourse_plugin_" + (++initCount),
@@ -143,7 +136,7 @@ window.Discourse = Ember.Application.extend({
       });
     });
 
-    var utils = require('discourse/lib/utilities');
+    const utils = require('discourse/lib/utilities');
     Discourse.Utilities = {};
     Object.keys(utils).forEach(function(k) {
       Discourse.Utilities[k] = function() {
@@ -153,20 +146,20 @@ window.Discourse = Ember.Application.extend({
     });
   },
 
-  requiresRefresh: function(){
-    var desired = Discourse.get("desiredAssetVersion");
-    return desired && Discourse.get("currentAssetVersion") !== desired;
-  }.property("currentAssetVersion", "desiredAssetVersion"),
+  @computed('currentAssetVersion', 'desiredAssetVersion')
+  requiresRefresh(currentAssetVersion, desiredAssetVersion) {
+    return desiredAssetVersion && currentAssetVersion !== desiredAssetVersion;
+  },
 
-  _registerPluginCode: function(version, code) {
-    _pluginCallbacks.push({ version: version, code: code });
+  _registerPluginCode(version, code) {
+    _pluginCallbacks.push({ version, code });
   },
 
   assetVersion: Ember.computed({
-    get: function() {
+    get() {
       return this.get("currentAssetVersion");
     },
-    set: function(key, val) {
+    set(key, val) {
       if(val) {
         if (this.get("currentAssetVersion")) {
           this.set("desiredAssetVersion", val);
@@ -179,22 +172,4 @@ window.Discourse = Ember.Application.extend({
   })
 }).create();
 
-Discourse.ajax = function() {
-  var ajax = require('discourse/lib/ajax').ajax;
-  Ember.warn("Discourse.ajax is deprecated. Import the module and use it instead");
-  return ajax.apply(this, arguments);
-};
-
-Discourse.Markdown = {
-  whiteListTag: Ember.K,
-  whiteListIframe: Ember.K
-};
-
-Discourse.Dialect = {
-  inlineRegexp: Ember.K,
-  addPreProcessor: Ember.K,
-  replaceBlock: Ember.K,
-  inlineReplace: Ember.K,
-  registerInline: Ember.K,
-  registerEmoji: Ember.K
-};
+export default Discourse;

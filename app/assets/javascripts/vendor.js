@@ -5,7 +5,6 @@
 //= require template_include.js
 //= require i18n-patches
 
-//= require loader
 //= require message-bus
 //= require jquery.ui.widget.js
 //= require Markdown.Converter.js

@@ -1,10 +1,11 @@
-//= require ./discourse
-
-// Stuff we need to load first
 //= require_tree ./ember-addons/utils
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
+//= require ./discourse
+//= require ./deprecated
+
+// Stuff we need to load first
 //= require ./discourse/lib/utilities
 //= require ./discourse/lib/ajax
 //= require ./discourse/lib/text

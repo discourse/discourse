@@ -13,17 +13,17 @@
 //= require fake_xml_http_request
 //= require route-recognizer
 //= require pretender
+//= require loader
 
 //= require locales/i18n
 //= require locales/en
 
-//= require vendor
-
-//= require htmlparser.js
-
 // Stuff we need to load first
+//= require vendor
+//= require ember-shim
 //= require pretty-text-bundle
 //= require main_include
+//= require htmlparser.js
 //= require admin
 
 //= require sinon-1.7.1

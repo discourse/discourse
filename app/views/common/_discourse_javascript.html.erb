@@ -38,6 +38,7 @@
       }
     });
   <%- end %>
+
   Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host %>';
   Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname %>'.replace(/:[\d]*$/,"");
   Discourse.BaseUri = '<%= Discourse::base_uri %>';
