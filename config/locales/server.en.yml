@@ -2174,14 +2174,10 @@ en:
   unsubscribe_link_and_mail: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
-    Alternarively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
-
   unsubscribe_mailing_list: |
     You are receiving these emails cause you have enabled mailing list mode.
 
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
-
-    Alternatively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "
