@@ -95,6 +95,21 @@ describe SuggestedTopicsBuilder do
       end
     end
 
+    context "adding topics that are more than n days old" do
+      let!(:new_topic) { Fabricate(:topic, created_at: 2.days.ago) }
+      let!(:old_topic) { Fabricate(:topic, created_at: 3.years.ago) }
+
+      it "adds topics based on suggested_topics_max_days_old setting" do
+        SiteSetting.suggested_topics_max_days_old = 365
+
+        builder.add_results(Topic)
+        expect(builder.size).to eq(1)
+        expect(builder).not_to be_full
+        expect(builder.excluded_topic_ids.include?(old_topic.id)).to eq(false)
+        expect(builder.excluded_topic_ids.include?(new_topic.id)).to eq(true)
+      end
+    end
+
     context "category definition topics" do
       let!(:category) { Fabricate(:category) }
 
