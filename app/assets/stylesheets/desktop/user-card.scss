@@ -151,8 +151,9 @@ $user_card_background: $secondary;
     }
 
     a.mention {
-      background-color: scale-color($user_card_primary, $lightness: -60%);
+      text-decoration: none;
     }
+    
     .overflow {
       max-height: 60px;
       overflow: hidden;
