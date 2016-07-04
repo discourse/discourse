@@ -1,5 +1,7 @@
 const INDEX_STREAM_ROUTES = ["user.deletedPosts", "user.flaggedPosts", "userActivity.index"];
 
+import Draft from 'discourse/models/draft';
+
 export default Discourse.Route.extend({
 
   titleToken() {
@@ -55,6 +57,21 @@ export default Discourse.Route.extend({
   setupController(controller, user) {
     controller.set('model', user);
     this.searchService.set('searchContext', user.get('searchContext'));
+
+    const composerController = this.controllerFor("composer");
+    controller.set("model", user);
+    if (this.currentUser) {
+      Draft.get("new_private_message").then(function(data) {
+        if (data.draft) {
+          composerController.open({
+            draft: data.draft,
+            draftKey: "new_private_message",
+            ignoreIfChanged: true,
+            draftSequence: data.draft_sequence
+          });
+        }
+      });
+    }
   },
 
   activate() {
