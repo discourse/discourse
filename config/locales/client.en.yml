@@ -576,10 +576,10 @@ en:
 
       warn_unwatch:
         message: "Also stop watching previously watched topics in {{categories}}?"
-        yes_value: "Yes, unwatch topics"
+        yes_value: "Yes, stop watching topics"
         no_value:
-          one: "No, only unwatch category"
-          other: "No, only unwatch categories"
+          one: "No, only stop watching category"
+          other: "No, only stop watching categories"
 
       change_password:
         success: "(email sent)"
