@@ -23,6 +23,11 @@ export default Ember.Component.extend({
     this.set('showPreview', val === 'true');
   },
 
+  @computed('site.mobileView', 'showPreview')
+  forcePreview(mobileView, showPreview) {
+    return mobileView && showPreview;
+  },
+
   @computed('showPreview')
   toggleText: function(showPreview) {
     return showPreview ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
@@ -429,6 +434,16 @@ export default Ember.Component.extend({
           icon: 'gear',
           title: 'composer.options',
           sendAction: 'showOptions'
+        });
+      }
+
+      if (this.site.mobileView) {
+        toolbar.addButton({
+          id: 'preview',
+          group: 'mobileExtras',
+          icon: 'television',
+          title: 'composer.show_preview',
+          sendAction: 'togglePreview'
         });
       }
     },
