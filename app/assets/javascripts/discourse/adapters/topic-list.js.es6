@@ -1,5 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import RestAdapter from 'discourse/adapters/rest';
+import PreloadStore from 'preload-store';
 
 export function finderFor(filter, params) {
   return function() {

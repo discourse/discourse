@@ -40,7 +40,7 @@ module Discourse
     module Handlebars
       module Helper
         def precompile_handlebars(string)
-          "Discourse.EmberCompatHandlebars.template(#{Barber::Precompiler.compile(string)});"
+          "require('discourse/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
         end
 
         def compile_handlebars(string)

@@ -1,3 +1,4 @@
+import PreloadStore from 'preload-store';
 import { ajax } from 'discourse/lib/ajax';
 
 const CategoryList = Ember.ArrayProxy.extend({

@@ -1,7 +1,6 @@
 /*global document, sinon, QUnit, Logster */
 
 //= require env
-//= require preload_store
 //= require probes
 //= require jquery.debug
 //= require jquery.ui.widget
@@ -14,6 +13,7 @@
 //= require route-recognizer
 //= require pretender
 //= require loader
+//= require preload-store
 
 //= require locales/i18n
 //= require locales/en
@@ -41,6 +41,7 @@
 //
 //= require jquery.magnific-popup-min.js
 
+window.TestPreloadStore = require('preload-store').default;
 window.inTestEnv = true;
 
 // Stop the message bus so we don't get ajax calls
@@ -75,6 +76,13 @@ function dup(obj) {
   return jQuery.extend(true, {}, obj);
 }
 
+function resetSite() {
+  var createStore = require('helpers/create-store').default;
+  var siteAttrs = dup(fixtures['site.json'].site);
+  siteAttrs.store = createStore();
+  Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
+}
+
 QUnit.testStart(function(ctx) {
   server = createPretendServer();
 
@@ -84,14 +92,15 @@ QUnit.testStart(function(ctx) {
   Discourse.BaseUrl = "localhost";
   Discourse.Session.resetCurrent();
   Discourse.User.resetCurrent();
-  Discourse.Site.resetCurrent(Discourse.Site.create(dup(fixtures['site.json'].site)));
+  resetSite();
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {
     _DiscourseURL.redirectedTo = url;
   };
 
-  PreloadStore.reset();
+  var ps = require('preload-store').default;
+  ps.reset();
 
   window.sandbox = sinon.sandbox.create();
   window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
@@ -132,4 +141,5 @@ Object.keys(requirejs.entries).forEach(function(entry) {
   }
 });
 require('mdtest/mdtest', null, null, true);
+resetSite();
 

@@ -13,6 +13,7 @@ import UserAction from 'discourse/models/user-action';
 import Group from 'discourse/models/group';
 import Topic from 'discourse/models/topic';
 import { emojiUnescape } from 'discourse/lib/text';
+import PreloadStore from 'preload-store';
 
 const User = RestModel.extend({
 

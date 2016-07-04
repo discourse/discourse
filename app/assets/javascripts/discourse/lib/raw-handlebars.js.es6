@@ -133,32 +133,37 @@ if (Handlebars.Compiler) {
     var environment = new RawHandlebars.Compiler().compile(ast, options);
     var templateSpec = new RawHandlebars.JavaScriptCompiler().compile(environment, options, undefined, true);
 
-    var template = RawHandlebars.template(templateSpec);
-    template.isMethod = false;
+    var t = RawHandlebars.template(templateSpec);
+    t.isMethod = false;
 
-    return template;
-  };
-
-  RawHandlebars.get = function(ctx, property, options) {
-    if (options.types && options.data.view) {
-      var view = options.data.view;
-      return view.getStream ? view.getStream(property).value() : view.getAttr(property);
-    } else {
-      return Ember.get(ctx, property);
-    }
+    return t;
   };
 }
 
-export function precompile(value, asObject) {
-  return RawHandlebars.precompile(value, asObject);
+
+RawHandlebars.get = function(ctx, property, options) {
+  if (options.types && options.data.view) {
+    var view = options.data.view;
+    return view.getStream ? view.getStream(property).value() : view.getAttr(property);
+  } else {
+    return Ember.get(ctx, property);
+  }
+};
+
+export function template() {
+  return RawHandlebars.template.apply(this, arguments);
 }
 
-export function compile(string) {
-  return RawHandlebars.compile(string);
+export function precompile() {
+  return RawHandlebars.precompile.apply(this, arguments);
 }
 
-export function get(ctx, property, options) {
-  return RawHandlebars.get(ctx, property, options);
+export function compile() {
+  return RawHandlebars.compile.apply(this, arguments);
+}
+
+export function get() {
+  return RawHandlebars.get.apply(this, arguments);
 }
 
 export default RawHandlebars;

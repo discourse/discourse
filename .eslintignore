@@ -1,7 +1,6 @@
 app/assets/javascripts/env.js
 app/assets/javascripts/main_include.js
 app/assets/javascripts/main_include_admin.js
-app/assets/javascripts/preload_store.js
 app/assets/javascripts/pagedown_custom.js
 app/assets/javascripts/vendor.js
 app/assets/javascripts/locales/i18n.js
