@@ -358,7 +358,7 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 
   const api = getPluginApi(version);
   if (api) {
-    return apiCodeCallback(api);
+    return apiCodeCallback(api, opts);
   }
 }
 
