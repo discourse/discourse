@@ -100,7 +100,7 @@ class Auth::DefaultCurrentUserProvider
         cookies["__profilin"] = nil
       end
 
-      MessageBus.publish "/logout", user.id, user_ids: [user.id]
+      user.logged_out
     end
     cookies[TOKEN_COOKIE] = nil
   end

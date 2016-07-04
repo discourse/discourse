@@ -1270,4 +1270,15 @@ describe User do
 
   end
 
+  describe "#logged_out" do
+    let(:user) { Fabricate(:user) }
+
+    it 'should publish the right message' do
+      message = MessageBus.track_publish { user.logged_out }.first
+
+      expect(message.channel).to eq('/logout')
+      expect(message.data).to eq(user.id)
+    end
+  end
+
 end
