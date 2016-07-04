@@ -60,13 +60,12 @@ export function sanitize(text, whiteLister) {
 
   const whiteList = whiteLister.getWhiteList();
 
-  let hadIframe = false;
   let result = xss(text, {
     whiteList: whiteList.tagList,
     stripIgnoreTag: true,
     stripIgnoreTagBody: ['script', 'table'],
+
     onIgnoreTagAttr(tag, name, value) {
-      hadIframe = hadIframe || tag === 'iframe';
       const forTag = whiteList.attrList[tag];
       if (forTag) {
         const forAttr = forTag[name];

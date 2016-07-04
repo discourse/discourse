@@ -2,6 +2,7 @@ import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
 import CategoryList from "discourse/models/category-list";
 import { defaultHomepage } from 'discourse/lib/utilities';
+import PreloadStore from 'preload-store';
 
 const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   renderTemplate() {

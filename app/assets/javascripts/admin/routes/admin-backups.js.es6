@@ -2,6 +2,7 @@ import { ajax } from 'discourse/lib/ajax';
 import showModal from 'discourse/lib/show-modal';
 import BackupStatus from 'admin/models/backup-status';
 import Backup from 'admin/models/backup';
+import PreloadStore from 'preload-store';
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
