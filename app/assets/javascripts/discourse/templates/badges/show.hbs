@@ -1,4 +1,4 @@
-<div class='container show-badge'>
+<div class='container show-badge {{model.slug}}'>
   <h1>
     {{#link-to 'badges.index'}}{{i18n 'badges.title'}}{{/link-to}}
      /
@@ -20,7 +20,7 @@
   </div>
 
   {{#if userBadges}}
-    <div class="user-badges">
+    <div class="user-badges {{model.slug}}">
       {{#load-more selector=".badge-info" action="loadMore"}}
         {{#each userBadges as |ub|}}
           {{#user-info user=ub.user size="medium" class="badge-info" date=ub.granted_at}}
