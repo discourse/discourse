@@ -50,11 +50,7 @@ export default class LockOn {
 
     $(window).scrollTop(previousTop);
 
-    let i = 0;
-
     const interval = setInterval(() => {
-      i = i + 1;
-
       let top = this.elementTop();
       const scrollTop = $(window).scrollTop();
 
