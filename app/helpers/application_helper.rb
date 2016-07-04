@@ -59,6 +59,12 @@ module ApplicationHelper
     "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
   end
 
+  def body_classes
+    if @category && @category.url.present?
+      "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+    end
+  end
+
   def rtl_class
     rtl? ? 'rtl' : ''
   end

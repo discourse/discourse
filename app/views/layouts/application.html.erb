@@ -41,7 +41,7 @@
     <%= yield :head %>
   </head>
 
-  <body>
+  <body class="<%= body_classes %>">
     <div class='debug-eyeline'></div>
 
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
