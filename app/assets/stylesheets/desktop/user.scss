@@ -369,12 +369,12 @@
           overflow: auto;
           max-width: 750px;
 
-          a.mention {
-            background-color: dark-light-diff($secondary, $primary, 20%, -50%);
-          }
-
           a[href] {
             text-decoration: underline;
+          }
+
+          a.mention {
+            text-decoration: none;
           }
 
           img {
@@ -576,6 +576,7 @@
     text-align: left;
     background: $primary;
     color: $secondary;
+    margin-bottom: 20px;
     a {
       color: $secondary;
     }
