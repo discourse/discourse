@@ -254,7 +254,7 @@ Discourse.Emoji.search = function(term, options) {
 
   for (i=0; i<toSearch.length; i++) {
     item = toSearch[i];
-    if (item.indexOf(term) === 0 && addResult(item)) {
+    if (item.indexOf(term) > 0 && addResult(item)) {
       return results;
     }
   }

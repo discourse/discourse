@@ -28,4 +28,7 @@ test("Emoji.search", function(){
   // able to find an alias
   equal(Discourse.Emoji.search("+1").length, 1);
 
+  // able to find middle of line search
+  equal(Discourse.Emoji.search("check", {maxResults: 3}).length, 3);
+
 });
