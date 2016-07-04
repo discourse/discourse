@@ -473,6 +473,12 @@ export default Ember.Controller.extend({
       alert("composer was opened without a draft key");
       throw "composer opened without a proper draft key";
     }
+    const self = this;
+    let composerModel = this.get('model');
+
+    if (opts.ignoreIfChanged && composerModel && composerModel.composeState !== Composer.CLOSED) {
+      return;
+    }
 
     // If we show the subcategory list, scope the categories drop down to
     // the category we opened the composer with.
@@ -480,8 +486,6 @@ export default Ember.Controller.extend({
       this.set('scopedCategoryId', opts.categoryId);
     }
 
-    const self = this;
-    let composerModel = this.get('model');
 
     this.setProperties({ showEditReason: false, editReason: null });
 
