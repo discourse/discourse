@@ -854,6 +854,11 @@ class User < ActiveRecord::Base
     User.where(admin: true).where.not(id: id).where.not(id: Discourse::SYSTEM_USER_ID).blank?
   end
 
+  def logged_out
+    MessageBus.publish "/logout", self.id, user_ids: [self.id]
+    DiscourseEvent.trigger(:user_logged_out, self)
+  end
+
   protected
 
   def badge_grant
@@ -998,7 +1003,6 @@ class User < ActiveRecord::Base
       update_column(:previous_visit_at, last_seen_at)
     end
   end
-
 
 end
 
