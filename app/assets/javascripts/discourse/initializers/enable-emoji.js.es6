@@ -1,5 +1,6 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import { registerEmoji } from 'pretty-text/emoji';
+import PreloadStore from 'preload-store';
 
 export default {
   name: 'enable-emoji',

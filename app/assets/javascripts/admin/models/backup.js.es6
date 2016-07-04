@@ -1,4 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
+import PreloadStore from 'preload-store';
+
 const Backup = Discourse.Model.extend({
 
   destroy() {

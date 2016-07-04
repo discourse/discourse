@@ -70,7 +70,7 @@ module Discourse
     end]
 
     config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css',
-                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js',
+                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload-store.js.es6',
                                  'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js',
                                  'pretty-text-bundle.js']
 

@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 import Composer from 'discourse/models/composer';
+import PreloadStore from 'preload-store';
 
 export default Discourse.Route.extend({
   queryParams: { q: {}, context_id: {}, context: {}, skip_context: {} },

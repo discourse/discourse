@@ -2,6 +2,7 @@ import { NotificationLevels } from 'discourse/lib/notification-levels';
 import computed from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
 import { defaultHomepage } from 'discourse/lib/utilities';
+import PreloadStore from 'preload-store';
 
 function isNew(topic) {
   return topic.last_read_post_number === null &&

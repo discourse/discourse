@@ -14,7 +14,6 @@
     "RSVP":true,
     "Discourse":true,
     "Em":true,
-    "PreloadStore":true,
     "Handlebars":true,
     "I18n":true,
     "bootbox":true,

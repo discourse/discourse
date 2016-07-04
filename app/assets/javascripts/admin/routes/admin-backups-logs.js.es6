@@ -1,3 +1,5 @@
+import PreloadStore from 'preload-store';
+
 export default Ember.Route.extend({
 
   // since the logs are pushed via the message bus
