@@ -25,10 +25,6 @@ class SuggestedTopicsBuilder
     if @category_id && SiteSetting.limit_suggested_to_category?
       results = results.where(category_id: @category_id)
     end
-
-    # Suggested topics should not be more than n days old
-    results = results.where("topics.created_at > ?", SiteSetting.suggested_topics_max_days_old.days.ago)
-
     results = results.to_a.reject { |topic| @category_topic_ids.include?(topic.id) }
 
     unless results.empty?

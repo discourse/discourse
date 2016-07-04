@@ -620,6 +620,26 @@ describe TopicQuery do
         expect(suggested_topics).to be_blank
       end
 
+      context 'random suggested' do
+
+        let!(:new_topic) { Fabricate(:topic, created_at: 2.days.ago) }
+        let!(:old_topic) { Fabricate(:topic, created_at: 3.years.ago) }
+
+        it 'respects suggested_topics_max_days_old' do
+          SiteSetting.suggested_topics_max_days_old = 1365
+          tt = topic
+
+          RandomTopicSelector.clear_cache!
+          expect(topic_query.list_suggested_for(tt).topics.length).to eq(2)
+
+          SiteSetting.suggested_topics_max_days_old = 365
+          RandomTopicSelector.clear_cache!
+
+          expect(topic_query.list_suggested_for(tt).topics.length).to eq(1)
+        end
+
+      end
+
       context 'with some existing topics' do
         let!(:partially_read) { Fabricate(:post, user: creator).topic }
         let!(:new_topic) { Fabricate(:post, user: creator).topic }
