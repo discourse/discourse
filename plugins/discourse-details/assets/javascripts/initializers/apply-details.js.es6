@@ -1,4 +1,5 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
+import ComposerController from 'discourse/controllers/composer';
 
 function initializeDetails(api) {
   api.decorateCooked($elem => $("details", $elem).details());
@@ -10,8 +11,6 @@ function initializeDetails(api) {
       label: 'details.title'
     };
   });
-
-  const ComposerController = api.container.lookup("controller:composer");
 
   ComposerController.reopen({
     actions: {
