@@ -36,7 +36,7 @@ after_initialize do
   class DiscoursePoll::Poll
     class << self
 
-      def vote(post_id, poll_name, options, user_id)
+      def vote(post_id, poll_id, options, user_id)
         DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
           post = Post.find_by(id: post_id)
 
@@ -54,9 +54,9 @@ after_initialize do
 
           raise StandardError.new I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
 
-          poll = polls[poll_name]
+          poll = polls[poll_id]
 
-          raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if poll.blank?
+          raise StandardError.new I18n.t("poll.no_poll_with_this_id", id: poll_id) if poll.blank?
           raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll["status"] != "open"
           public_poll = (poll["public"] == "true")
 
@@ -71,10 +71,10 @@ after_initialize do
 
           post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD] ||= {}
           post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"] ||= {}
-          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"][poll_name] = options
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"][poll_id] = options
 
           post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].each do |_, user_votes|
-            next unless votes = user_votes[poll_name]
+            next unless votes = user_votes[poll_id]
             votes.each { |option| all_options[option] += 1 }
             poll["voters"] += 1 if (available_options & votes.to_set).size > 0
           end
@@ -111,7 +111,7 @@ after_initialize do
         end
       end
 
-      def toggle_status(post_id, poll_name, status, user_id)
+      def toggle_status(post_id, poll_id, status, user_id)
         DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
           post = Post.find_by(id: post_id)
 
@@ -135,15 +135,15 @@ after_initialize do
           polls = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
 
           raise StandardError.new I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
-          raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if polls[poll_name].blank?
+          raise StandardError.new I18n.t("poll.no_poll_with_this_id", id: poll_id) if polls[poll_id].blank?
 
-          polls[poll_name]["status"] = status
+          polls[poll_id]["status"] = status
 
           post.save_custom_fields(true)
 
           MessageBus.publish("/polls/#{post.topic_id}", {post_id: post.id, polls: polls })
 
-          polls[poll_name]
+          polls[poll_id]
         end
       end
 
@@ -190,12 +190,12 @@ after_initialize do
 
     def vote
       post_id   = params.require(:post_id)
-      poll_name = params.require(:poll_name)
+      poll_id = params.require(:poll_id)
       options   = params.require(:options)
       user_id   = current_user.id
 
       begin
-        poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, options, user_id)
+        poll, options = DiscoursePoll::Poll.vote(post_id, poll_id, options, user_id)
         render json: { poll: poll, vote: options }
       rescue StandardError => e
         render_json_error e.message
@@ -204,12 +204,12 @@ after_initialize do
 
     def toggle_status
       post_id   = params.require(:post_id)
-      poll_name = params.require(:poll_name)
+      poll_id = params.require(:poll_id)
       status    = params.require(:status)
       user_id   = current_user.id
 
       begin
-        poll = DiscoursePoll::Poll.toggle_status(post_id, poll_name, status, user_id)
+        poll = DiscoursePoll::Poll.toggle_status(post_id, poll_id, status, user_id)
         render json: { poll: poll }
       rescue StandardError => e
         render_json_error e.message
@@ -281,10 +281,10 @@ after_initialize do
 
   on(:reduce_cooked) do |fragment, post|
     if post.nil? || post.trashed?
-      fragment.css(".poll, [data-poll-name]").each(&:remove)
+      fragment.css(".poll, [data-poll-id]").each(&:remove)
     else
       post_url = "#{Discourse.base_url}#{post.url}"
-      fragment.css(".poll, [data-poll-name]").each do |poll|
+      fragment.css(".poll, [data-poll-id]").each do |poll|
         poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
       end
     end

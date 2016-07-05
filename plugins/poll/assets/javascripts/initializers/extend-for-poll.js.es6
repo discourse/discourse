@@ -88,21 +88,21 @@ function initializePolls(api) {
       const $div = $("<div>");
       const $poll = $(pollElem);
 
-      const pollName = $poll.data("poll-name");
+      const pollId = $poll.data("poll-id");
       const publicPoll = $poll.data("poll-public");
-      const pollId = `${pollName}-${post.id}`;
+      const pollPostId = `${pollId}-${post.id}`;
 
       const pollView = createPollView(
         helper.container,
         post,
-        polls[pollName],
-        votes[pollName],
+        polls[pollId],
+        votes[pollId],
         publicPoll
       );
 
       $poll.replaceWith($div);
       Em.run.next(() => pollView.renderer.replaceIn(pollView, $div[0]));
-      postPollViews[pollId] = pollView;
+      postPollViews[pollPostId] = pollView;
     });
 
     _pollViews = postPollViews;

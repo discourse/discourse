@@ -8,7 +8,7 @@ describe DiscoursePoll::PollsUpdater do
     * 2
     [/poll]
 
-    [poll name=test]
+    [poll id=2]
     * 1
     * 2
     [/poll]
@@ -130,12 +130,12 @@ describe DiscoursePoll::PollsUpdater do
       let(:user) { Fabricate(:user) }
 
       before do
-        DiscoursePoll::Poll.vote(post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+        DiscoursePoll::Poll.vote(post.id, "1", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
         post.reload
       end
 
       it "should not allow a private poll with votes to be made public" do
-        DiscoursePoll::Poll.vote(private_poll_post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+        DiscoursePoll::Poll.vote(private_poll_post.id, "1", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
         private_poll_post.reload
 
         messages = MessageBus.track_publish do
@@ -145,7 +145,7 @@ describe DiscoursePoll::PollsUpdater do
         expect(messages).to eq([])
 
         expect(private_poll_post.errors[:base]).to include(
-          I18n.t("poll.default_cannot_be_made_public")
+          I18n.t("poll.default_poll_cannot_be_made_public")
         )
       end
 
@@ -154,8 +154,8 @@ describe DiscoursePoll::PollsUpdater do
 
         polls = post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
 
-        expect(polls["poll"]["options"][0]["voter_ids"]).to eq([user.id])
-        expect(polls["poll"]["options"][1]["voter_ids"]).to eq([])
+        expect(polls["1"]["options"][0]["voter_ids"]).to eq([user.id])
+        expect(polls["1"]["options"][1]["voter_ids"]).to eq([])
       end
 
       it "should delete voter_ids when poll is set to private" do
@@ -166,8 +166,8 @@ describe DiscoursePoll::PollsUpdater do
         expect(post.reload.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
           .to eq(private_poll)
 
-        expect(polls["poll"]["options"][0]["voter_ids"]).to eq(nil)
-        expect(polls["poll"]["options"][1]["voter_ids"]).to eq(nil)
+        expect(polls["1"]["options"][0]["voter_ids"]).to eq(nil)
+        expect(polls["1"]["options"][1]["voter_ids"]).to eq(nil)
       end
     end
 
