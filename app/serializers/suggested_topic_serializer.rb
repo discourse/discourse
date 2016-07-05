@@ -10,10 +10,6 @@ class SuggestedTopicSerializer < ListableTopicSerializer
   attributes :archetype, :like_count, :views, :category_id
   has_many :posters, serializer: SuggestedPosterSerializer, embed: :objects
 
-  def include_posters?
-    object.private_message?
-  end
-
   def posters
     object.posters || []
   end
