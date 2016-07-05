@@ -109,6 +109,20 @@ describe EmailController do
 
       expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
     end
+
+    it 'can unwatch first post from category' do
+      p = Fabricate(:post)
+      key = UnsubscribeKey.create_key_for(p.user, p)
+
+      cu = CategoryUser.create!(user_id: p.user.id,
+                          category_id: p.topic.category_id,
+                          notification_level: CategoryUser.notification_levels[:watching_first_post])
+
+      post :perform_unsubscribe, key: key, unwatch_category: "1"
+      expect(response.status).to eq(302)
+
+      expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
+    end
   end
 
   context '.unsubscribe' do
@@ -185,6 +199,25 @@ describe EmailController do
       cu = CategoryUser.create!(user_id: user.id,
                           category_id: post.topic.category_id,
                           notification_level: CategoryUser.notification_levels[:watching])
+
+
+      key = UnsubscribeKey.create_key_for(user, post)
+      get :unsubscribe, key: key
+      expect(response.body).to include("unwatch_category")
+
+      cu.destroy!
+
+      get :unsubscribe, key: key
+      expect(response.body).not_to include("unwatch_category")
+
+    end
+
+    it 'correctly handles watched first post categories' do
+      post = Fabricate(:post)
+      user = post.user
+      cu = CategoryUser.create!(user_id: user.id,
+                          category_id: post.topic.category_id,
+                          notification_level: CategoryUser.notification_levels[:watching_first_post])
 
 
       key = UnsubscribeKey.create_key_for(user, post)
