@@ -10,9 +10,16 @@ class CategoryUser < ActiveRecord::Base
     self.where(user: user, category: category)
   end
 
-  # same for now
   def self.notification_levels
-    TopicUser.notification_levels
+    @notification_levels ||= Enum.new(muted: 0,
+                                      regular: 1,
+                                      tracking: 2,
+                                      watching: 3,
+                                      watching_first_post: 4)
+  end
+
+  def self.watching_levels
+    [notification_levels[:watching], notification_levels[:watching_first_post]]
   end
 
   %w{watch track}.each do |s|

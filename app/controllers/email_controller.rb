@@ -29,8 +29,8 @@ class EmailController < ApplicationController
       @watched_count = nil
       if @topic && @topic.category_id
         if CategoryUser.exists?(user_id: @user.id,
-                             notification_level: CategoryUser.notification_levels[:watching],
-                             category_id: @topic.category_id)
+                                notification_level: CategoryUser.watching_levels,
+                                category_id: @topic.category_id)
           @watched_count = TopicUser.joins(:topic)
                                     .where(:user => @user,
                                            :notification_level => TopicUser.notification_levels[:watching],
@@ -74,7 +74,7 @@ class EmailController < ApplicationController
 
         CategoryUser.where(user_id: user.id,
                           category_id: topic.category_id,
-                          notification_level: CategoryUser.notification_levels[:watching]
+                          notification_level: CategoryUser.watching_levels
                          )
                  .destroy_all
         updated = true

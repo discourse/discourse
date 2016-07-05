@@ -408,6 +408,9 @@ en:
         watching:
           title: "Watching"
           description: "You will be notified of every new post in every message, and a count of new replies will be shown."
+        watching_first_post:
+          title: "Watching First Post Only"
+          description: "You will only be notified of the first post in each new topic in this group."
         tracking:
           title: "Tracking"
           description: "You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -1811,6 +1814,9 @@ en:
         watching:
           title: "Watching"
           description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
+        watching_first_post:
+          title: "Watching First Post Only"
+          description: "You will only be notified of the first post in each new topic in these categories."
         tracking:
           title: "Tracking"
           description: "You will automatically track all new topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -2132,6 +2138,9 @@ en:
         watching:
           title: "Watching"
           description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+        watching_first_post:
+          title: "Watching First Post Only"
+          description: "You will only be notified of the first post in each new topic in this tag."
         tracking:
           title: "Tracking"
           description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
