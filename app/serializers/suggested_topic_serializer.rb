@@ -7,10 +7,18 @@ class SuggestedTopicSerializer < ListableTopicSerializer
     has_one :user, serializer: BasicUserSerializer, embed: :objects
   end
 
-  attributes :archetype, :like_count, :views, :category_id
+  attributes :archetype, :like_count, :views, :category_id, :tags
   has_many :posters, serializer: SuggestedPosterSerializer, embed: :objects
 
   def posters
     object.posters || []
+  end
+
+  def include_tags?
+    SiteSetting.tagging_enabled
+  end
+
+  def tags
+    object.tags.map(&:name)
   end
 end
