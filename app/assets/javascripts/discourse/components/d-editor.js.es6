@@ -487,6 +487,7 @@ export default Ember.Component.extend({
         applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
         applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
         addText: text => this._addText(selected, text),
+        getText: () => this.get('value'),
       };
 
       if (button.sendAction) {
