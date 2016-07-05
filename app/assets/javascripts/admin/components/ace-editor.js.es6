@@ -1,6 +1,6 @@
 /* global ace:true */
 import loadScript from 'discourse/lib/load-script';
-import escapeExpression from 'discourse/lib/utilities';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default Ember.Component.extend({
   mode: 'css',
