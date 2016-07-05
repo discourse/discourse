@@ -22,6 +22,10 @@ function loadWithTag(path, cb) {
 }
 
 export default function loadScript(url, opts) {
+
+  // TODO: Remove this once plugins have been updated not to use it:
+  if (url === "defer/html-sanitizer-bundle") { return Ember.RSVP.Promise.resolve(); }
+
   opts = opts || {};
 
   return new Ember.RSVP.Promise(function(resolve) {
