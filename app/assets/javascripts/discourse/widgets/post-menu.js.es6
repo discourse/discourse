@@ -1,6 +1,7 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { avatarAtts } from 'discourse/widgets/actions-summary';
 import { h } from 'virtual-dom';
+import User from 'discourse/models/user';
 
 const LIKE_ACTION = 2;
 
@@ -307,6 +308,9 @@ export default createWidget('post-menu', {
   },
 
   like() {
+    if (!User.current()) {
+      return this.sendWidgetAction('showLogin');
+    }
     const attrs = this.attrs;
     if (attrs.liked) {
       return this.sendWidgetAction('toggleLike');
