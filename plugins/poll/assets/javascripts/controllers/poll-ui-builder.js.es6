@@ -91,12 +91,12 @@ export default Ember.Controller.extend({
     return this._comboboxOptions(1, (parseInt(pollMax) || 1) + 1);
   },
 
-  @computed("isNumber", "showMinMax", "pollName", "pollType", "publicPoll", "pollOptions", "pollMin", "pollMax", "pollStep")
-  pollOutput(isNumber, showMinMax, pollName, pollType, publicPoll, pollOptions, pollMin, pollMax, pollStep) {
+  @computed("isNumber", "showMinMax", "pollType", "publicPoll", "pollOptions", "pollMin", "pollMax", "pollStep")
+  pollOutput(isNumber, showMinMax, pollType, publicPoll, pollOptions, pollMin, pollMax, pollStep) {
     let pollHeader = '[poll';
     let output = '';
 
-    if (pollName) pollHeader += ` name=${pollName.trim().replace(/\s/g, '-')}`;
+    pollHeader += ` name=${new Date().valueOf()}`;
     if (pollType) pollHeader += ` type=${pollType}`;
     if (pollMin && showMinMax) pollHeader += ` min=${pollMin}`;
     if (pollMax) pollHeader += ` max=${pollMax}`;
@@ -137,8 +137,6 @@ export default Ember.Controller.extend({
 
   _setupPoll() {
     this.setProperties({
-      pollName: '',
-      pollNamePlaceholder: I18n.t("poll.ui_builder.poll_name.placeholder"),
       pollType: null,
       publicPoll: false,
       pollOptions: '',
