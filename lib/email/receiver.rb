@@ -382,7 +382,7 @@ module Email
     end
 
     def likes
-      @likes ||= Set.new ["+1", I18n.t('post_action_types.like.title').downcase]
+      @likes ||= Set.new ["+1", "<3", "❤", I18n.t('post_action_types.like.title').downcase]
     end
 
     def subscription_action_for(body, subject)
