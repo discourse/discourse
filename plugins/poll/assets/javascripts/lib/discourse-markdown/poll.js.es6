@@ -22,7 +22,7 @@ export function setup(helper) {
     'span.info-text',
     'a.button.cast-votes',
     'a.button.toggle-results',
-    'li[data-*'
+    'li[data-*]'
   ]);
 
   helper.replaceBlock({
