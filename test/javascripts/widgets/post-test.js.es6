@@ -181,6 +181,26 @@ widgetTest('liking', {
   }
 });
 
+widgetTest('anon liking', {
+  template: '{{mount-widget widget="post-menu" args=args showLogin="showLogin"}}',
+  anonymous: true,
+  setup() {
+    const args = { showLike: true };
+    this.set('args', args);
+    this.on("showLogin", () => this.loginShown = true);
+  },
+  test(assert) {
+    assert.ok(!!this.$('.actions button.like').length);
+    assert.ok(this.$('.actions button.like-count').length === 0);
+
+    click('.actions button.like');
+    andThen(() => {
+      assert.ok(this.loginShown);
+    });
+  }
+});
+
+
 widgetTest('edit button', {
   template: '{{mount-widget widget="post" args=args editPost="editPost"}}',
   setup() {
