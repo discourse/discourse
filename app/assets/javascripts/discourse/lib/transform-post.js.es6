@@ -194,6 +194,10 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
     postAtts.likeCount = likeAction.count;
   }
 
+  if (!currentUser) {
+    postAtts.showLike = !topic.archived;
+  }
+
   if (postAtts.post_number === 1) {
     postAtts.canRecoverTopic = topic.deleted_at && details.can_recover;
     postAtts.canDeleteTopic = !topic.deleted_at && details.can_delete;
