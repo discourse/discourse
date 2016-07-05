@@ -149,4 +149,5 @@ whiteListFeature('default', [
   'iframe[frameborder]',
   'iframe[marginheight]',
   'iframe[marginwidth]',
+  'kbd'
 ]);
