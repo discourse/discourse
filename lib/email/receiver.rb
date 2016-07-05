@@ -404,11 +404,11 @@ module Email
 
     def create_reply(options={})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
-      raise TopicClosedError   if options[:topic].closed?
 
       if post_action_type = post_action_for(options[:raw])
         create_post_action(options[:user], options[:post], post_action_type)
       else
+        raise TopicClosedError if options[:topic].closed?
         options[:topic_id] = options[:post].try(:topic_id)
         options[:reply_to_post_number] = options[:post].try(:post_number)
         options[:is_group_message] = options[:topic].private_message? && options[:topic].allowed_groups.exists?
