@@ -21,7 +21,7 @@ describe ::DiscoursePoll::PollsValidator do
       expect(post.update_attributes(raw: raw)).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.multiple_polls_without_name")
+        I18n.t("poll.multiple_polls_without_id")
       )
 
       raw = <<-RAW.strip_heredoc
@@ -39,7 +39,7 @@ describe ::DiscoursePoll::PollsValidator do
       expect(post.update_attributes(raw: raw)).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.multiple_polls_with_same_name", name: 'test')
+        I18n.t("poll.multiple_polls_with_same_id", id: 'test')
       )
     end
 
@@ -67,7 +67,7 @@ describe ::DiscoursePoll::PollsValidator do
       expect(post.update_attributes(raw: raw)).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.named_poll_must_have_different_options", name: 'test')
+        I18n.t("poll.multiple_polls_must_have_different_options", id: 'test')
       )
     end
 
@@ -94,7 +94,7 @@ describe ::DiscoursePoll::PollsValidator do
       expect(post.update_attributes(raw: raw)).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.named_poll_must_have_at_least_2_options", name: 'test')
+        I18n.t("poll.multiple_polls_must_have_at_least_2_options", id: 'test')
       )
     end
 
@@ -127,8 +127,8 @@ describe ::DiscoursePoll::PollsValidator do
       expect(post.update_attributes(raw: raw)).to eq(false)
 
       expect(post.errors[:base]).to include(I18n.t(
-        "poll.named_poll_must_have_less_options",
-        name: 'test', count: SiteSetting.poll_maximum_options
+        "poll.multiple_polls_must_have_less_options",
+        id: 'test', count: SiteSetting.poll_maximum_options
       ))
     end
 
@@ -159,7 +159,7 @@ describe ::DiscoursePoll::PollsValidator do
         expect(post.update_attributes(raw: raw)).to eq(false)
 
         expect(post.errors[:base]).to include(
-          I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: 'test')
+          I18n.t("poll.multiple_polls_with_multiple_choices_has_invalid_parameters", id: 'test')
         )
       end
 

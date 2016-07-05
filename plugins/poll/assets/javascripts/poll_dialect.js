@@ -3,9 +3,10 @@
 (function() {
 
   var DATA_PREFIX = "data-poll-";
-  var DEFAULT_POLL_NAME = "poll";
 
-  var WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status", "public"];
+  var DEFAULT_POLL_ID = '1';
+
+  var WHITELISTED_ATTRIBUTES = ["type", "id", "name", "min", "max", "step", "order", "status", "public"];
 
   var ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
@@ -42,7 +43,7 @@
       // default poll attributes
       var attributes = { "class": "poll" };
       attributes[DATA_PREFIX + "status"] = "open";
-      attributes[DATA_PREFIX + "name"] = DEFAULT_POLL_NAME;
+      attributes[DATA_PREFIX + "id"] = DEFAULT_POLL_ID;
 
       // extract poll attributes
       (matches[1].match(ATTRIBUTES_REGEX) || []).forEach(function(m) {
@@ -50,6 +51,10 @@
         value = Handlebars.Utils.escapeExpression(value.replace(/["']/g, ""));
         attributes[DATA_PREFIX + name] = value;
       });
+
+      if (attributes[DATA_PREFIX + "name"]) {
+        attributes[DATA_PREFIX + "id"] = attributes[DATA_PREFIX + "name"];
+      }
 
       // we might need these values later...
       var min = parseInt(attributes[DATA_PREFIX + "min"], 10),

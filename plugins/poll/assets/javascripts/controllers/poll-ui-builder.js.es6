@@ -96,7 +96,12 @@ export default Ember.Controller.extend({
     let pollHeader = '[poll';
     let output = '';
 
-    pollHeader += ` name=${new Date().valueOf()}`;
+    const match = this.get("toolbarEvent").getText().match(/\[poll(\s+(id|name)=[^\s\]]+)*.*\]/igm);
+
+    if (match) {
+      pollHeader += ` id=${match.length + 1}`;
+    };
+
     if (pollType) pollHeader += ` type=${pollType}`;
     if (pollMin && showMinMax) pollHeader += ` min=${pollMin}`;
     if (pollMax) pollHeader += ` max=${pollMax}`;

@@ -25,8 +25,8 @@ module DiscoursePoll
           # deal with option changes
           if User.staff.pluck(:id).include?(post.last_editor_id)
             # staff can only edit options
-            polls.each_key do |poll_name|
-              if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size && previous_polls[poll_name]["voters"].to_i > 0
+            polls.each_key do |poll_id|
+              if polls[poll_id]["options"].size != previous_polls[poll_id]["options"].size && previous_polls[poll_id]["voters"].to_i > 0
                 post.errors.add(:base, I18n.t("poll.staff_cannot_add_or_remove_options_after_5_minutes"))
                 return
               end
@@ -39,24 +39,24 @@ module DiscoursePoll
         end
 
         # try to merge votes
-        polls.each_key do |poll_name|
-          next unless previous_polls.has_key?(poll_name)
-          return if has_votes && private_to_public_poll?(post, previous_polls, polls, poll_name)
+        polls.each_key do |poll_id|
+          next unless previous_polls.has_key?(poll_id)
+          return if has_votes && private_to_public_poll?(post, previous_polls, polls, poll_id)
 
           # when the # of options has changed, reset all the votes
-          if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size
+          if polls[poll_id]["options"].size != previous_polls[poll_id]["options"].size
             PostCustomField.where(post_id: post.id, name: DiscoursePoll::VOTES_CUSTOM_FIELD).destroy_all
             post.clear_custom_fields
             next
           end
 
-          polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
-          polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"] if previous_polls[poll_name].has_key?("anonymous_voters")
+          polls[poll_id]["voters"] = previous_polls[poll_id]["voters"]
+          polls[poll_id]["anonymous_voters"] = previous_polls[poll_id]["anonymous_voters"] if previous_polls[poll_id].has_key?("anonymous_voters")
 
-          previous_options = previous_polls[poll_name]["options"]
-          public_poll = polls[poll_name]["public"] == "true"
+          previous_options = previous_polls[poll_id]["options"]
+          public_poll = polls[poll_id]["public"] == "true"
 
-          polls[poll_name]["options"].each_with_index do |option, index|
+          polls[poll_id]["options"].each_with_index do |option, index|
             previous_option = previous_options[index]
             option["votes"] = previous_option["votes"]
             option["anonymous_votes"] = previous_option["anonymous_votes"] if previous_option.has_key?("anonymous_votes")
@@ -79,9 +79,9 @@ module DiscoursePoll
     def self.polls_updated?(current_polls, previous_polls)
       return true if (current_polls.keys.sort != previous_polls.keys.sort)
 
-      current_polls.each_key do |poll_name|
-        if !previous_polls[poll_name] ||
-           (current_polls[poll_name].values_at(*VALID_POLLS_CONFIGS) != previous_polls[poll_name].values_at(*VALID_POLLS_CONFIGS))
+      current_polls.each_key do |poll_id|
+        if !previous_polls[poll_id] ||
+           (current_polls[poll_id].values_at(*VALID_POLLS_CONFIGS) != previous_polls[poll_id].values_at(*VALID_POLLS_CONFIGS))
 
           return true
         end
@@ -100,16 +100,16 @@ module DiscoursePoll
 
     private
 
-    def self.private_to_public_poll?(post, previous_polls, current_polls, poll_name)
-      previous_poll = previous_polls[poll_name]
-      current_poll = current_polls[poll_name]
+    def self.private_to_public_poll?(post, previous_polls, current_polls, poll_id)
+      previous_poll = previous_polls[poll_id]
+      current_poll = current_polls[poll_id]
 
       if previous_polls["public"].nil? && current_poll["public"] == "true"
         error =
-          if poll_name == DiscoursePoll::DEFAULT_POLL_NAME
-            I18n.t("poll.default_cannot_be_made_public")
+          if [DiscoursePoll::DEFAULT_POLL_NAME, "1"].include?(poll_id)
+            I18n.t("poll.default_poll_cannot_be_made_public")
           else
-            I18n.t("poll.named_cannot_be_made_public", name: poll_name)
+            I18n.t("poll.multiple_polls_cannot_be_made_public", id: poll_id)
           end
 
         post.errors.add(:base, error)

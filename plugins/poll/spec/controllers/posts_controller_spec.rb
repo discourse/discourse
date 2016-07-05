@@ -16,7 +16,7 @@ describe PostsController do
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
-      expect(json["polls"]["poll"]).to be
+      expect(json["polls"]["1"]).to be
     end
 
     it "works on any post" do
@@ -25,7 +25,7 @@ describe PostsController do
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
-      expect(json["polls"]["poll"]).to be
+      expect(json["polls"]["1"]).to be
     end
 
     it "should have different options" do
@@ -62,7 +62,7 @@ describe PostsController do
     end
 
     it "prevents self-xss" do
-      xhr :post, :create, { title: title, raw: "[poll name=<script>alert('xss')</script>]\n- A\n- B\n[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll id=<script>alert('xss')</script>]\n- A\n- B\n[/poll]" }
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
@@ -78,7 +78,7 @@ describe PostsController do
     end
 
     it "prevents pollception" do
-      xhr :post, :create, { title: title, raw: "[poll name=1]\n- A\n[poll name=2]\n- B\n- C\n[/poll]\n- D\n[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll id=1]\n- A\n[poll id=2]\n- B\n- C\n[/poll]\n- D\n[/poll]" }
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
@@ -101,11 +101,11 @@ describe PostsController do
           xhr :put, :update, { id: post_id, post: { raw: "[poll]\n- A\n- B\n- C\n[/poll]" } }
           expect(response).to be_success
           json = ::JSON.parse(response.body)
-          expect(json["post"]["polls"]["poll"]["options"][2]["html"]).to eq("C")
+          expect(json["post"]["polls"]["1"]["options"][2]["html"]).to eq("C")
         end
 
         it "resets the votes" do
-          DiscoursePoll::Poll.vote(post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+          DiscoursePoll::Poll.vote(post_id, "1", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
           xhr :put, :update, { id: post_id, post: { raw: "[poll]\n- A\n- B\n- C\n[/poll]" } }
           expect(response).to be_success
           json = ::JSON.parse(response.body)
@@ -133,7 +133,7 @@ describe PostsController do
             xhr :put, :update, { id: post_id, post: { raw: new_option } }
             expect(response).to be_success
             json = ::JSON.parse(response.body)
-            expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
+            expect(json["post"]["polls"]["1"]["options"][1]["html"]).to eq("C")
           end
 
           it "staff can change the options" do
@@ -141,7 +141,7 @@ describe PostsController do
             xhr :put, :update, { id: post_id, post: { raw: new_option } }
             expect(response).to be_success
             json = ::JSON.parse(response.body)
-            expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
+            expect(json["post"]["polls"]["1"]["options"][1]["html"]).to eq("C")
           end
 
           it "support changes on the post" do
@@ -156,7 +156,7 @@ describe PostsController do
         describe "with at least one vote" do
 
           before do
-            DiscoursePoll::Poll.vote(post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+            DiscoursePoll::Poll.vote(post_id, "1", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
           end
 
           it "OP cannot change the options" do
@@ -171,15 +171,15 @@ describe PostsController do
             xhr :put, :update, { id: post_id, post: { raw: new_option } }
             expect(response).to be_success
             json = ::JSON.parse(response.body)
-            expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
-            expect(json["post"]["polls"]["poll"]["voters"]).to eq(1)
-            expect(json["post"]["polls"]["poll"]["options"][0]["votes"]).to eq(1)
-            expect(json["post"]["polls"]["poll"]["options"][1]["votes"]).to eq(0)
+            expect(json["post"]["polls"]["1"]["options"][1]["html"]).to eq("C")
+            expect(json["post"]["polls"]["1"]["voters"]).to eq(1)
+            expect(json["post"]["polls"]["1"]["options"][0]["votes"]).to eq(1)
+            expect(json["post"]["polls"]["1"]["options"][1]["votes"]).to eq(0)
           end
 
           it "staff can change the options and anonymous votes are merged" do
             post = Post.find_by(id: post_id)
-            default_poll = post.custom_fields["polls"]["poll"]
+            default_poll = post.custom_fields["polls"]["1"]
             add_anonymous_votes(post, default_poll, 7, {"5c24fc1df56d764b550ceae1b9319125" => 7})
 
             log_in_user(Fabricate(:moderator))
@@ -187,10 +187,10 @@ describe PostsController do
             expect(response).to be_success
 
             json = ::JSON.parse(response.body)
-            expect(json["post"]["polls"]["poll"]["options"][1]["html"]).to eq("C")
-            expect(json["post"]["polls"]["poll"]["voters"]).to eq(8)
-            expect(json["post"]["polls"]["poll"]["options"][0]["votes"]).to eq(8)
-            expect(json["post"]["polls"]["poll"]["options"][1]["votes"]).to eq(0)
+            expect(json["post"]["polls"]["1"]["options"][1]["html"]).to eq("C")
+            expect(json["post"]["polls"]["1"]["voters"]).to eq(8)
+            expect(json["post"]["polls"]["1"]["options"][0]["votes"]).to eq(8)
+            expect(json["post"]["polls"]["1"]["options"][1]["votes"]).to eq(0)
           end
 
           it "support changes on the post" do
@@ -208,20 +208,20 @@ describe PostsController do
 
   end
 
-  describe "named polls" do
+  describe "polls with ids" do
 
     it "should have different options" do
-      xhr :post, :create, { title: title, raw: "[poll name=""foo""]\n- A\n- A[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll id=""foo""]\n- A\n- A[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_different_options", name: "foo"))
+      expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_must_have_different_options", id: "foo"))
     end
 
     it "should have at least 2 options" do
-      xhr :post, :create, { title: title, raw: "[poll name='foo']\n- A[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll id='foo']\n- A[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_at_least_2_options", name: "foo"))
+      expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_must_have_at_least_2_options", id: "foo"))
     end
 
   end
@@ -229,26 +229,26 @@ describe PostsController do
   describe "multiple polls" do
 
     it "works" do
-      xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]\n[poll name=foo]\n- A\n- B\n[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]\n[poll id=2]\n- A\n- B\n[/poll]" }
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["cooked"]).to match("data-poll-")
-      expect(json["polls"]["poll"]).to be
-      expect(json["polls"]["foo"]).to be
+      expect(json["polls"]["1"]).to be
+      expect(json["polls"]["2"]).to be
     end
 
     it "should have a name" do
       xhr :post, :create, { title: title, raw: "[poll]\n- A\n- B\n[/poll]\n[poll]\n- A\n- B\n[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_without_name"))
+      expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_without_id"))
     end
 
     it "should have unique name" do
-      xhr :post, :create, { title: title, raw: "[poll name=foo]\n- A\n- B\n[/poll]\n[poll name=foo]\n- A\n- B\n[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll id=2]\n- A\n- B\n[/poll]\n[poll id=2]\n- A\n- B\n[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
-      expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_with_same_name", name: "foo"))
+      expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_with_same_id", id: "2"))
     end
 
   end

@@ -18,7 +18,7 @@ export default Ember.Controller.extend({
 
   @observes("post.polls")
   _updatePoll() {
-    this.set("model", this.get("post.pollsObject")[this.get("model.name")]);
+    this.set("model", this.get("post.pollsObject")[this.get("model.id")]);
   },
 
   @computed("model", "vote", "model.voters", "model.options", "model.status")
@@ -141,7 +141,7 @@ export default Ember.Controller.extend({
         type: "PUT",
         data: {
           post_id: this.get("post.id"),
-          poll_name: this.get("poll.name"),
+          poll_id: this.get("poll.id"),
           options: this.get("selectedOptions"),
         }
       }).then(results => {
@@ -179,7 +179,7 @@ export default Ember.Controller.extend({
               type: "PUT",
               data: {
                 post_id: self.get("post.id"),
-                poll_name: self.get("poll.name"),
+                poll_id: self.get("poll.id"),
                 status: self.get("isClosed") ? "open" : "closed",
               }
             }).then(results => {
