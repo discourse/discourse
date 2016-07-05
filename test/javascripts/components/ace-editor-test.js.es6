@@ -10,7 +10,7 @@ componentTest('css editor', {
 });
 
 componentTest('html editor', {
-  template: '{{ace-editor mode="html"}}',
+  template: '{{ace-editor mode="html" content="<b>wat</b>"}}',
   test(assert) {
     assert.ok(this.$('.ace_editor').length, 'it renders the ace editor');
   }
