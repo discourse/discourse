@@ -45,6 +45,8 @@ test("sanitize", function() {
   cooked("<span class=\"-bbcode-s fa fa-spin\">a</span>", "<p><span>a</span></p>", "it sanitizes spans");
   cooked("<span class=\"fa fa-spin -bbcode-s\">a</span>", "<p><span>a</span></p>", "it sanitizes spans");
   cooked("<span class=\"bbcode-s\">a</span>", "<p><span class=\"bbcode-s\">a</span></p>", "it sanitizes spans");
+
+  cooked("<kbd>Ctrl</kbd>+<kbd>C</kbd>", "<p><kbd>Ctrl</kbd>+<kbd>C</kbd></p>");
 });
 
 test("urlAllowed", function() {
