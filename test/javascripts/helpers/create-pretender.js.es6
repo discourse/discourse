@@ -232,6 +232,8 @@ export default function() {
       result.can_revert = true;
       return response(200, {site_text: result});
     });
+
+    this.get('/tag_groups', () => response(200, {tag_groups: []}));
   });
 
   server.prepareBody = function(body){
