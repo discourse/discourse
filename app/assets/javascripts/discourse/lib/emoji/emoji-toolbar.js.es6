@@ -163,11 +163,8 @@ function showSelector(options) {
   $('.emoji-modal-wrapper').click(() => closeSelector());
 
   if (Discourse.Site.currentProp('mobileView')) { PER_ROW = 9; }
-  if (options.page) {
-    var page = _.findIndex(groups, (g) => { return g.name == options.page })
-  } else {
-    var page = keyValueStore.getInt("emojiPage", 0)
-  }
+  const page = options.page ? _.findIndex(groups, (g) => { return g.name === options.page; })
+                            : keyValueStore.getInt("emojiPage", 0);
   const offset = keyValueStore.getInt("emojiOffset", 0);
 
   render(page, offset, options);
