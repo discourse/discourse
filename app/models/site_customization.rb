@@ -44,14 +44,18 @@ PLUGIN_API_JS
       name = node["name"] || node["data-template-name"] || "broken"
       precompiled =
         if name =~ /\.raw$/
-          "RawHandlebars.template(#{Barber::Precompiler.compile(node.inner_html)})"
+          "require('discourse/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
         else
           "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(node.inner_html)})"
         end
-      compiled = <<SCRIPT
-  Ember.TEMPLATES[#{name.inspect}] = #{precompiled};
-SCRIPT
-      node.replace("<script>#{compiled}</script>")
+
+      node.replace <<COMPILED
+        <script>
+          (function() {
+            Ember.TEMPLATES[#{name.inspect}] = #{precompiled};
+          })();
+        </script>
+COMPILED
     end
 
     doc.css('script[type="text/discourse-plugin"]').each do |node|
