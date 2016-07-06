@@ -15,6 +15,8 @@
   deprecate('Dialect',  ['inlineRegexp', 'inlineBetween', 'addPreProcessor', 'replaceBlock',
                                  'inlineReplace', 'registerInline', 'registerEmoji']);
 
+  Discourse.dialect_deprecated = true;
+
   Discourse.ajax = function() {
     var ajax = require('discourse/lib/ajax').ajax;
     Ember.warn("Discourse.ajax is deprecated. Import the module and use it instead");
