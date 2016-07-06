@@ -705,9 +705,9 @@ class ImportScripts::Base
     total_count = User.count
     progress_count = 0
 
-    User.find_each do |user|
+    User.includes(:user_stat).find_each do |user|
       begin
-        user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+        user.update_columns(trust_level: 0) if user.trust_level > 0 && user.post_count == 0
       rescue Discourse::InvalidAccess
         nil
       end
