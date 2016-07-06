@@ -1,19 +1,19 @@
 (function() {
   var Discourse = require('discourse').default;
 
-  Discourse.Markdown = {
-    whiteListTag: Ember.K,
-    whiteListIframe: Ember.K
-  };
+  function deprecate(module, methods) {
+    const result = {};
 
-  Discourse.Dialect = {
-    inlineRegexp: Ember.K,
-    addPreProcessor: Ember.K,
-    replaceBlock: Ember.K,
-    inlineReplace: Ember.K,
-    registerInline: Ember.K,
-    registerEmoji: Ember.K
-  };
+    methods.forEach(m => {
+      result[m] = () => Ember.warn(`Discourse.${module}.${m} is deprecated. Export a setup() function instead`);
+    });
+
+    Discourse[module] = result;
+  }
+
+  deprecate('Markdown', ['whiteListTag', 'whiteListIframe']);
+  deprecate('Dialect',  ['inlineRegexp', 'inlineBetween', 'addPreProcessor', 'replaceBlock',
+                                 'inlineReplace', 'registerInline', 'registerEmoji']);
 
   Discourse.ajax = function() {
     var ajax = require('discourse/lib/ajax').ajax;
