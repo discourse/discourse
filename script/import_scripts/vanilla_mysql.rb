@@ -364,6 +364,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
         Permalink.create( url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}" ) rescue nil
+        print '.'
       end
     end
 
@@ -378,6 +379,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         else
           Permalink.create( url: "discussion/comment/#{id}", post_id: post.id ) rescue nil
         end
+        print '.'
       end
     end
   end
