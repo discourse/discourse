@@ -19,6 +19,18 @@ test('createRecord without an `id`', function() {
   ok(!widget.get('id'), 'there is no id');
 });
 
+test("createRecord doesn't modify the input `id` field", () => {
+  const store = createStore();
+  const widget = store.createRecord('widget', {id: 1, name: 'hello'});
+
+  const obj = { id: 1, name: 'something' };
+
+  const other = store.createRecord('widget', obj);
+  equal(widget, other, 'returns the same record');
+  equal(widget.name, 'something', 'it updates the properties');
+  equal(obj.id, 1, 'it does not remove the id from the input');
+});
+
 test('createRecord without attributes', function() {
   const store = createStore();
   const widget = store.createRecord('widget');
