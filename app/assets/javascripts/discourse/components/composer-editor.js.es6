@@ -203,9 +203,8 @@ export default Ember.Component.extend({
 
     $element.on("fileuploadsend", (e, data) => {
       this._validUploads++;
-      // add upload placeholders (as much placeholders as valid files dropped)
-      const placeholder = _.times(this._validUploads, () => uploadPlaceholder).join("\n");
-      this.appEvents.trigger('composer:insert-text', placeholder);
+      // add upload placeholders
+      this.appEvents.trigger('composer:insert-text', uploadPlaceholder);
 
       if (data.xhr && data.originalFiles.length === 1) {
         this.set("isCancellable", true);
