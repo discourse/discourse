@@ -4,8 +4,10 @@
   function deprecate(module, methods) {
     const result = {};
 
-    methods.forEach(m => {
-      result[m] = () => Ember.warn(`Discourse.${module}.${m} is deprecated. Export a setup() function instead`);
+    methods.forEach(function(m) {
+      result[m] = function() {
+        Ember.warn("Discourse." + module + "." + m + " is deprecated. Export a setup() function instead");
+      };
     });
 
     Discourse[module] = result;
@@ -13,7 +15,7 @@
 
   deprecate('Markdown', ['whiteListTag', 'whiteListIframe']);
   deprecate('Dialect',  ['inlineRegexp', 'inlineBetween', 'addPreProcessor', 'replaceBlock',
-                                 'inlineReplace', 'registerInline', 'registerEmoji']);
+                         'inlineReplace', 'registerInline', 'registerEmoji']);
 
   Discourse.dialect_deprecated = true;
 
