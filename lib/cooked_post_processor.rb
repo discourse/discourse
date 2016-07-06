@@ -347,6 +347,8 @@ class CookedPostProcessor
     return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
     return if disable_if_low_on_disk_space
+    # don't download remote images for posts that are more than n days old
+    return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
     return if @post.last_editor_id == Discourse.system_user.id
     # make sure no other job is scheduled
