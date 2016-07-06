@@ -107,6 +107,42 @@ class PostAlerter
     end
 
     sync_group_mentions(post, mentioned_groups)
+
+    if post.post_number == 1
+      topic = post.topic
+
+      if topic.present?
+        cat_watchers = topic.category_users
+                            .where(notification_level: CategoryUser.notification_levels[:watching_first_post])
+                            .pluck(:user_id)
+
+        tag_watchers = topic.tag_users
+                            .where(notification_level: TagUser.notification_levels[:watching_first_post])
+                            .pluck(:user_id)
+
+        group_ids = post.user.groups.pluck(:id)
+        group_watchers = GroupUser.where(group_id: group_ids,
+                                         notification_level: GroupUser.notification_levels[:watching_first_post])
+                                  .pluck(:user_id)
+
+        watchers = [cat_watchers, tag_watchers, group_watchers].flatten
+
+        notify_first_post_watchers(post, watchers)
+      end
+    end
+  end
+
+  def notify_first_post_watchers(post, user_ids)
+    return if user_ids.blank?
+
+    user_ids.uniq!
+
+    # Don't notify the OP
+    user_ids -= [post.user_id]
+
+    User.where(id: user_ids).each do |u|
+      create_notification(u, Notification.types[:watching_first_post], post)
+    end
   end
 
   def sync_group_mentions(post, mentioned_groups)

@@ -1,3 +1,5 @@
+require_dependency 'notification_levels'
+
 class CategoryUser < ActiveRecord::Base
   belongs_to :category
   belongs_to :user
@@ -11,11 +13,7 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.notification_levels
-    @notification_levels ||= Enum.new(muted: 0,
-                                      regular: 1,
-                                      tracking: 2,
-                                      watching: 3,
-                                      watching_first_post: 4)
+    NotificationLevels.all
   end
 
   def self.watching_levels

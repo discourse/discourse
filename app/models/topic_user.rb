@@ -1,3 +1,5 @@
+require_dependency 'notification_levels'
+
 class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
@@ -17,10 +19,7 @@ class TopicUser < ActiveRecord::Base
 
     # Enums
     def notification_levels
-      @notification_levels ||= Enum.new(muted: 0,
-                                        regular: 1,
-                                        tracking: 2,
-                                        watching: 3)
+      NotificationLevels.topic_levels
     end
 
     def notification_reasons
