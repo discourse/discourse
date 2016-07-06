@@ -1383,22 +1383,6 @@ en:
       email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
 
-  notification_types:
-    group_mentioned: "%{group_name} was mentioned in %{link}"
-    mentioned: "%{display_username} mentioned you in %{link}"
-    liked: "%{display_username} liked your post in %{link}"
-    replied: "%{display_username} replied to your post in %{link}"
-    quoted: "%{display_username} quoted your post in %{link}"
-    edited: "%{display_username} edited your post in %{link}"
-    posted: "%{display_username} posted in %{link}"
-    moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a message: %{link}"
-    invited_to_topic: "%{display_username} invited you to %{link}"
-    invitee_accepted: "%{display_username} accepted your invitation"
-    linked: "%{display_username} linked you in %{link}"
-    granted_badge: "You earned %{link}"
-
   search:
     within_post: "#%{post_number} by %{username}"
     types:

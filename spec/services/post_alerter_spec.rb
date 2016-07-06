@@ -326,4 +326,42 @@ describe PostAlerter do
     end
   end
 
+  describe "watching_first_post" do
+    let(:group) { Fabricate(:group) }
+    let(:user) { Fabricate(:user) }
+    let(:category) { Fabricate(:category) }
+    let(:tag)  { Fabricate(:tag) }
+    let(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
+    let(:post) { Fabricate(:post, topic: topic) }
+
+    it "doesn't notify people who aren't watching" do
+      PostAlerter.post_created(post)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
+    end
+
+    it "notifies the user who is following the first post category" do
+      level = CategoryUser.notification_levels[:watching_first_post]
+      CategoryUser.set_notification_level_for_category(user, level, category.id)
+      PostAlerter.post_created(post)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+    end
+
+    it "notifies the user who is following the first post tag" do
+      level = TagUser.notification_levels[:watching_first_post]
+      TagUser.change(user.id, tag.id, level)
+      PostAlerter.post_created(post)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+    end
+
+    it "notifies the user who is following the first post group" do
+      GroupUser.create(group_id: group.id, user_id: user.id)
+      GroupUser.create(group_id: group.id, user_id: post.user.id)
+
+      level = GroupUser.notification_levels[:watching_first_post]
+      GroupUser.where(user_id: user.id, group_id: group.id).update_all(notification_level: level)
+
+      PostAlerter.post_created(post)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+    end
+  end
 end

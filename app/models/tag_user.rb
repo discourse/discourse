@@ -1,9 +1,11 @@
+require_dependency 'notification_levels'
+
 class TagUser < ActiveRecord::Base
   belongs_to :tag
   belongs_to :user
 
   def self.notification_levels
-    TopicUser.notification_levels
+    NotificationLevels.all
   end
 
   def self.change(user_id, tag_id, level)

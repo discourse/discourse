@@ -1117,6 +1117,8 @@ en:
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
 
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>New Topic</span> {{description}}</p>"
+
       group_message_summary:
           one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} message in your {{group_name}} inbox</p>"
           other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} messages in your {{group_name}} inbox</p>"

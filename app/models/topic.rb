@@ -79,6 +79,7 @@ class Topic < ActiveRecord::Base
   end
 
   belongs_to :category
+  has_many :category_users, through: :category
   has_many :posts
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
@@ -94,6 +95,7 @@ class Topic < ActiveRecord::Base
 
   has_many :topic_tags, dependent: :destroy
   has_many :tags, through: :topic_tags
+  has_many :tag_users, through: :tags
 
   has_one :top_topic
   belongs_to :user
