@@ -268,7 +268,9 @@ export default Ember.Object.extend({
 
   _hydrate(type, obj, root) {
     if (!obj) { throw "Can't hydrate " + type + " of `null`"; }
-    if (!obj.id) { throw "Can't hydrate " + type + " without an `id`"; }
+
+    const id = obj.id;
+    if (!id) { throw "Can't hydrate " + type + " without an `id`"; }
 
     root = root || obj;
 
@@ -278,13 +280,14 @@ export default Ember.Object.extend({
       this._hydrateEmbedded(type, obj, root);
     }
 
-    const existing = fromMap(type, obj.id);
+    const existing = fromMap(type, id);
     if (existing === obj) { return existing; }
 
     if (existing) {
       delete obj.id;
       const klass = this.container.lookupFactory('model:' + type) || RestModel;
       existing.setProperties(klass.munge(obj));
+      obj.id = id;
       return existing;
     }
 
