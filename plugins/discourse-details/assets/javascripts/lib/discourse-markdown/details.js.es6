@@ -12,7 +12,8 @@ function replaceDetails(text) {
 
   // add new lines to make sure we *always* have a <p> element after </summary> and around </details>
   // otherwise we can't hide the content since we can't target text nodes via CSS
-  return text.replace(/<\/summary>/ig, "</summary>\n\n").replace(/<\/details>/ig, "\n\n</details>\n\n");
+  return text.replace(/<\/summary>/ig, "</summary>\n\n")
+             .replace(/<\/details>/ig, "\n\n</details>\n\n");
 }
 
 registerOption((siteSettings, opts) => {
@@ -20,6 +21,12 @@ registerOption((siteSettings, opts) => {
 });
 
 export function setup(helper) {
-  helper.whiteList('details.elided');
+  helper.whiteList([
+    'summary',
+    'summary[title]',
+    'details',
+    'details.elided'
+  ]);
+
   helper.addPreProcessor(text => replaceDetails(text));
 }
