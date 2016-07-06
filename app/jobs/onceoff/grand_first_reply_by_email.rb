@@ -2,6 +2,7 @@ module Jobs
 
   class GrantFirstReplyByEmail < Jobs::Onceoff
     def execute_onceoff(args)
+      return unless SiteSetting.enable_badges
       to_award = {}
 
       Post.select(:id, :created_at, :user_id)
