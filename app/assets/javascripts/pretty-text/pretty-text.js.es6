@@ -12,7 +12,17 @@ export function registerOption(fn) {
 export function buildOptions(state) {
   setup();
 
-  const { siteSettings, getURL, lookupAvatar, getTopicInfo, topicId, categoryHashtagLookup } = state;
+  const {
+    siteSettings,
+    getURL,
+    lookupAvatar,
+    getTopicInfo,
+    topicId,
+    categoryHashtagLookup,
+    userId,
+    getCurrentUser,
+    currentUser
+  } = state;
 
   const features = {
     'bold-italics': true,
@@ -34,6 +44,9 @@ export function buildOptions(state) {
     getTopicInfo,
     topicId,
     categoryHashtagLookup,
+    userId,
+    getCurrentUser,
+    currentUser,
     mentionLookup: state.mentionLookup,
   };
 

@@ -7,6 +7,7 @@ export function cook(text) {
 
   const opts = {
     getURL: Discourse.getURLWithCDN,
+    currentUser: Discourse.__container__.lookup('current-user:main'),
     siteSettings
   };
 
