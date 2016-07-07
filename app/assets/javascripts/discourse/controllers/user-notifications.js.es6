@@ -1,4 +1,4 @@
-import { observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.ArrayController.extend({
   needs: ['application'],
@@ -6,6 +6,11 @@ export default Ember.ArrayController.extend({
   @observes('model.canLoadMore')
   _showFooter() {
     this.set("controllers.application.showFooter", !this.get("model.canLoadMore"));
+  },
+
+  @computed('model.content.length')
+  hasNotifications(length) {
+    return length > 0;
   },
 
   currentPath: Em.computed.alias('controllers.application.currentPath'),
