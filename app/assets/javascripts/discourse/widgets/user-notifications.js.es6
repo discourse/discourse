@@ -68,7 +68,7 @@ export default createWidget('user-notifications', {
 
       result.push(h('hr'));
 
-      const items = [notificationItems]
+      const items = [notificationItems];
 
       if (notificationItems.length > 0) {
         items.push(
