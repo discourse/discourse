@@ -98,15 +98,16 @@ class SiteSerializer < ApplicationSerializer
   def include_tags_filter_regexp?
     SiteSetting.tagging_enabled
   end
+
   def tags_filter_regexp
     DiscourseTagging::TAGS_FILTER_REGEXP.source
   end
 
   def include_top_tags?
-    SiteSetting.tagging_enabled && SiteSetting.show_filter_by_tag
+    Tag.include_tags?
   end
+
   def top_tags
     Tag.top_tags
   end
-
 end
