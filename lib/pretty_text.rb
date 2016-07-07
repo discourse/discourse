@@ -114,7 +114,7 @@ module PrettyText
     end
   end
 
-  def self.markdown(text, opts=nil)
+  def self.markdown(text, opts={})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
     baked = nil
@@ -143,7 +143,10 @@ module PrettyText
         context.eval("__optInput.topicId = #{opts[:topicId].to_i};")
       end
 
+      context.eval("__optInput.userId = #{opts[:user_id].to_i};") if opts[:user_id]
+
       context.eval("__optInput.getURL = __getURL;")
+      context.eval("__optInput.getCurrentUser = __getCurrentUser;")
       context.eval("__optInput.lookupAvatar = __lookupAvatar;")
       context.eval("__optInput.getTopicInfo = __getTopicInfo;")
       context.eval("__optInput.categoryHashtagLookup = __categoryLookup;")
