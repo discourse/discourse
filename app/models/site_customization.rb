@@ -4,6 +4,9 @@ require_dependency 'distributed_cache'
 
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
+
+  COMPILER_VERSION = 1
+
   @cache = DistributedCache.new('site_customization')
 
   def self.css_fields
@@ -131,7 +134,7 @@ COMPILED
   end
 
   def self.enabled_stylesheet_contents(target=:desktop)
-    @cache["enabled_stylesheet_#{target}"] ||= where(enabled: true)
+    @cache["enabled_stylesheet_#{target}:#{COMPILER_VERSION}"] ||= where(enabled: true)
       .order(:name)
       .pluck(baked_for_target(target))
       .compact
@@ -167,7 +170,7 @@ COMPILED
   def self.lookup_field(key, target, field)
     return if key.blank?
 
-    cache_key = key + target.to_s + field.to_s;
+    cache_key = "#{key}:#{target}:#{field}:#{COMPILER_VERSION}"
 
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
@@ -203,7 +206,19 @@ COMPILED
   end
 
   def ensure_baked!(field)
-    unless self.send("#{field}_baked")
+
+    # If the version number changes, clear out all the baked fields
+    if compiler_version != COMPILER_VERSION
+      updates = { compiler_version: COMPILER_VERSION }
+      SiteCustomization.html_fields.each do |f|
+        updates["#{f}_baked".to_sym] = nil
+      end
+
+      update_columns(updates)
+    end
+
+    baked = send("#{field}_baked")
+    if baked.blank?
       if val = self.send(field)
         val = process_html(val) rescue ""
         self.update_columns("#{field}_baked" => val)
