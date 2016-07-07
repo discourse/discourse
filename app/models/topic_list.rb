@@ -13,7 +13,8 @@ class TopicList
                 :draft_sequence,
                 :filter,
                 :for_period,
-                :per_page
+                :per_page,
+                :tags
 
   def initialize(filter, current_user, topics, opts=nil)
     @filter = filter
@@ -21,16 +22,24 @@ class TopicList
     @topics_input = topics
     @opts = opts || {}
 
+    if @opts[:category]
+      @category = Category.find_by(id: @opts[:category_id])
+    end
+
     preloaded_custom_fields << DiscourseTagging::TAGS_FIELD_NAME if SiteSetting.tagging_enabled
   end
 
-  def preload_key
-    if @opts[:category]
-      c = Category.where(id: @opts[:category_id]).first
-      return "topic_list_#{c.url.sub(/^\//, '')}/l/#{@filter}" if c
-    end
+  def tags
+    opts = @category ? { category: @category } : {}
+    Tag.top_tags(opts)
+  end
 
-    "topic_list_#{@filter}"
+  def preload_key
+    if @category
+      "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+    else
+      "topic_list_#{@filter}"
+    end
   end
 
   # Lazy initialization
