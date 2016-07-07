@@ -1,8 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import { hashString } from 'discourse/lib/hash';
 
-const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host'];
-
+const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host', 'web-hook'];
 
 export function Result(payload, responseJson) {
   this.payload = payload;
