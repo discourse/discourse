@@ -37,7 +37,8 @@ module ImportScripts::PhpBB3
         port: @database_settings.port,
         username: @database_settings.username,
         password: @database_settings.password,
-        database: @database_settings.schema
+        database: @database_settings.schema,
+        reconnect: true
       )
     end
 
