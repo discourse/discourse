@@ -21,5 +21,5 @@ export function buttonDetails(level) {
   }
 }
 
-export const allLevels = [ WATCHING, TRACKING, WATCHING_FIRST_POST, MUTED, REGULAR ].map(buttonDetails);
+export const allLevels = [ WATCHING, TRACKING, WATCHING_FIRST_POST, REGULAR, MUTED ].map(buttonDetails);
 export const topicLevels = allLevels.filter(l => l.id !== WATCHING_FIRST_POST);
