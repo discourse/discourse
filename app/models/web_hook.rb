@@ -28,6 +28,34 @@ class WebHook < ActiveRecord::Base
   def self.default_event_types
     [WebHookEventType.find(WebHookEventType::POST)]
   end
+
+  def self.find_by_type(type)
+    WebHook.where(active: true)
+           .joins(:web_hook_event_types)
+           .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, type.to_s)
+  end
+
+  def self.enqueue_hooks(type, opts = {})
+    find_by_type(type).each do |w|
+      Jobs.enqueue(:emit_web_hook_event, opts.merge(web_hook_id: w.id, event_name: type.to_s))
+    end
+  end
+
+  %i(topic_destroyed topic_recovered).each do |event|
+    DiscourseEvent.on(event) do |topic, user|
+      WebHook.enqueue_hooks(:topic, topic_id: topic.id, user_id: user&.id, category_id: topic&.category&.id)
+    end
+  end
+
+  DiscourseEvent.on(:topic_created) do |topic, _, user|
+    WebHook.enqueue_hooks(:topic, topic_id: topic.id, user_id: user&.id, category_id: topic&.category&.id)
+  end
+
+  %i(post_created post_destroyed post_recovered validate_post).each do |event|
+    DiscourseEvent.on(event) do |post, _, user|
+      WebHook.enqueue_hooks(:post, post_id: post.id, user_id: user&.id, category_id: post.topic&.category&.id)
+    end
+  end
 end
 
 # == Schema Information
