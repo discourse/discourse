@@ -1,0 +1,2 @@
+class WebHooksUserSerializer < UserSerializer
+end

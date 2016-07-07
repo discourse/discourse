@@ -1,0 +1,2 @@
+class WebHooksTopicSerializer < TopicViewSerializer
+end
