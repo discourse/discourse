@@ -12,3 +12,19 @@ Fabricator(:web_hook) do
     web_hook.web_hook_event_types << transients[:post_hook]
   end
 end
+
+Fabricator(:inactive_web_hook, from: :web_hook) do
+  active false
+end
+
+Fabricator(:wildcard_web_hook, from: :web_hook) do
+  wildcard_web_hook true
+end
+
+Fabricator(:topic_web_hook, from: :web_hook) do
+  transient topic_hook: WebHookEventType.find_by(name: 'topic')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:topic_hook]]
+  end
+end
