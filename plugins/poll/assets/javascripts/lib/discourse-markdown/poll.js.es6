@@ -7,7 +7,9 @@ const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "
 const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
 registerOption((siteSettings, opts) => {
-  opts.features.poll = !!siteSettings.poll_enabled;
+  const currentUser = (opts.getCurrentUser && opts.getCurrentUser(opts.userId)) || opts.currentUser;
+
+  opts.features.poll = !!siteSettings.poll_enabled || currentUser.staff;
   opts.pollMaximumOptions = siteSettings.poll_maximum_options;
 });
 
@@ -179,11 +181,11 @@ export function setup(helper) {
 /*!
  * Joseph Myer's md5() algorithm wrapped in a self-invoked function to prevent
  * global namespace polution, modified to hash unicode characters as UTF-8.
- *  
+ *
  * Copyright 1999-2010, Joseph Myers, Paul Johnston, Greg Holt, Will Bond <will@wbond.net>
  * http://www.myersdaily.org/joseph/javascript/md5-text.html
  * http://pajhome.org.uk/crypt/md5
- * 
+ *
  * Released under the BSD license
  * http://www.opensource.org/licenses/bsd-license
  */
