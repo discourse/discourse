@@ -482,6 +482,14 @@ describe UserNotifications do
     end
   end
 
+  describe "watching first post" do
+    include_examples "notification email building" do
+      let(:notification_type) { :invited_to_topic }
+      include_examples "no reply by email"
+      include_examples "sets user locale"
+    end
+  end
+
   # notification emails derived from templates are translated into the user's locale
   shared_examples "notification derived from template" do
     let(:user) { Fabricate(:user, locale: locale) }
