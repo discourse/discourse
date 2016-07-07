@@ -68,6 +68,12 @@ module PrettyText
         nil
       end
     end
+
+    def get_current_user(user_id)
+      user = User.find_by(id: user_id)
+      staff = user ? user.staff? : false
+      { staff: staff }
+    end
   end
 end
 
