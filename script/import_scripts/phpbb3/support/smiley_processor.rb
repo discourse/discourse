@@ -47,7 +47,8 @@ module ImportScripts::PhpBB3
         [':?:'] => ':question:',
         [':idea:'] => ':bulb:',
         [':arrow:'] => ':arrow_right:',
-        [':|', ':-|'] => ':neutral_face:'
+        [':|', ':-|'] => ':neutral_face:',
+        [':geek:'] => ':nerd:'
       }.each do |smilies, emoji|
         smilies.each { |smiley| @smiley_map[smiley] = emoji }
       end
