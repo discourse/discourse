@@ -9,7 +9,6 @@ require_dependency 'topic_query_sql'
 require_dependency 'avatar_lookup'
 
 class TopicQuery
-  # Could be rewritten to %i if Ruby 1.9 is no longer supported
   VALID_OPTIONS = %i(except_topic_ids
                      exclude_category_ids
                      limit
@@ -460,7 +459,6 @@ class TopicQuery
 
         if @options[:tags] && @options[:tags].size > 0
           result = result.joins(:tags)
-
           # ANY of the given tags:
           if @options[:tags][0].is_a?(Integer)
             result = result.where("tags.id in (?)", @options[:tags])
