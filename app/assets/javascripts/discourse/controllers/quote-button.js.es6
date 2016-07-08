@@ -72,7 +72,9 @@ export default Ember.Controller.extend({
     range.insertNode(markerElement);
 
     // retrieve the position of the marker
-    const markerOffset = $(markerElement).offset(),
+    const $markerElement = $(markerElement)
+          markerOffset = $markerElement.offset(),
+          parentScrollLeft = $markerElement.parent().scrollLeft(),
           $quoteButton = $('.quote-button');
 
     // remove the marker
@@ -87,6 +89,8 @@ export default Ember.Controller.extend({
     Em.run.schedule('afterRender', function() {
       let topOff = markerOffset.top;
       let leftOff = markerOffset.left;
+
+      if (parentScrollLeft > 0) leftOff += parentScrollLeft;
 
       if (isMobileDevice || isIOS || isAndroid) {
         topOff = topOff + 20;
