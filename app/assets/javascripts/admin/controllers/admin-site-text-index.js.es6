@@ -45,9 +45,9 @@ export default Ember.Controller.extend({
       this.transitionToRoute('adminSiteText.edit', siteText.get('id'));
     },
 
-    search() {
+    search(overridden) {
       const q = this.get('q');
-      if (q !== lastSearch) {
+      if (q !== lastSearch || overridden) {
         this.set('searching', true);
         Ember.run.debounce(this, this._performSearch, 400);
         lastSearch = q;
