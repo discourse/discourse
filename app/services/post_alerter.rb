@@ -452,14 +452,47 @@ class PostAlerter
   end
 
   def notify_post_users(post, notified)
-    notify = TopicUser.where(topic_id: post.topic_id)
-                      .where(notification_level: TopicUser.notification_levels[:watching])
+    return unless post.topic
+
+    condition = <<SQL
+
+    id IN (
+      SELECT user_id FROM topic_users
+        WHERE notification_level = :watching AND topic_id = :topic_id
+
+      UNION ALL
+
+      SELECT cu.user_id FROM category_users cu
+      LEFT JOIN topic_users tu ON tu.user_id = cu.user_id AND tu.topic_id = :topic_id
+      WHERE cu.notification_level = :watching AND cu.category_id = :category_id AND tu.user_id IS NULL
+
+      /*tags*/
+    )
+SQL
+
+    tag_ids = post.topic.topic_tags.pluck('topic_tags.tag_id')
+    if tag_ids.present?
+      condition.sub! "/*tags*/", <<SQL
+      UNION ALL
+
+      SELECT tag_users.user_id FROM tag_users
+      LEFT JOIN topic_users tu ON tu.user_id = tag_users.user_id AND tu.topic_id = :topic_id
+      WHERE tag_users.notification_level = :watching AND tag_users.tag_id IN (:tag_ids) AND tu.user_id IS NULL
+SQL
+    end
+
+    notify = User.where(condition,
+                          watching: TopicUser.notification_levels[:watching],
+                          topic_id: post.topic_id,
+                          category_id: post.topic.category_id,
+                          tag_ids: tag_ids
+                       )
 
     exclude_user_ids = notified.map(&:id)
-    notify = notify.where("user_id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
+    notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
-    notify.includes(:user).each do |tu|
-      create_notification(tu.user, Notification.types[:posted], post)
+    notify.each do |user|
+      create_notification(user, Notification.types[:posted], post)
     end
   end
 

@@ -5,6 +5,14 @@ require_dependency 'post_creator'
 
 describe CategoryUser do
 
+  def tracking
+    CategoryUser.notification_levels[:tracking]
+  end
+
+  def regular
+    CategoryUser.notification_levels[:regular]
+  end
+
   it 'allows batch set' do
     user = Fabricate(:user)
     category1 = Fabricate(:category)
@@ -22,6 +30,21 @@ describe CategoryUser do
     expect(watching.count).to eq 1
   end
 
+  it 'should correctly auto_track' do
+    tracking_user = Fabricate(:user)
+    user = Fabricate(:user)
+    topic = Fabricate(:post).topic
+
+    TopicUser.change(user.id, topic.id, total_msecs_viewed: 10)
+    TopicUser.change(tracking_user.id, topic.id, total_msecs_viewed: 10)
+
+    CategoryUser.create!(user: tracking_user, category: topic.category, notification_level: tracking)
+    CategoryUser.auto_track(user_id: tracking_user.id)
+
+    expect(TopicUser.get(topic, tracking_user).notification_level).to eq(tracking)
+    expect(TopicUser.get(topic, user).notification_level).to eq(regular)
+  end
+
 
   context 'integration' do
     before do
@@ -35,6 +58,8 @@ describe CategoryUser do
 
       user = Fabricate(:user)
 
+      early_watched_post = create_post(category: watched_category)
+
       CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
       CategoryUser.create!(user: user, category: muted_category, notification_level: CategoryUser.notification_levels[:muted])
       CategoryUser.create!(user: user, category: tracked_category, notification_level: CategoryUser.notification_levels[:tracking])
@@ -43,27 +68,35 @@ describe CategoryUser do
       _muted_post = create_post(category: muted_category)
       tracked_post = create_post(category: tracked_category)
 
+      create_post(topic_id: early_watched_post.topic_id)
+
       expect(Notification.where(user_id: user.id, topic_id: watched_post.topic_id).count).to eq 1
+      expect(Notification.where(user_id: user.id, topic_id: early_watched_post.topic_id).count).to eq 1
       expect(Notification.where(user_id: user.id, topic_id: tracked_post.topic_id).count).to eq 0
 
+      # we must create a record so tracked flicks over
+      TopicUser.change(user.id, tracked_post.topic_id, total_msecs_viewed: 10)
       tu = TopicUser.get(tracked_post.topic, user)
       expect(tu.notification_level).to eq TopicUser.notification_levels[:tracking]
       expect(tu.notifications_reason_id).to eq TopicUser.notification_reasons[:auto_track_category]
     end
 
-    it "watches categories that have been changed" do
+    it "topics that move to a tracked category should auto track" do
       user = Fabricate(:user)
-      watched_category = Fabricate(:category)
-      CategoryUser.create!(user: user, category: watched_category, notification_level: CategoryUser.notification_levels[:watching])
 
-      post = create_post
-      expect(TopicUser.get(post.topic, user)).to be_blank
+      first_post = create_post
+      tracked_category = first_post.topic.category
 
-      # Now, change the topic's category
-      post.topic.change_category_to_id(watched_category.id)
-      tu = TopicUser.get(post.topic, user)
-      expect(tu.notification_level).to eq TopicUser.notification_levels[:watching]
+      TopicUser.change(user.id, first_post.topic_id, total_msecs_viewed: 10)
+      tu = TopicUser.get(first_post.topic, user)
+      expect(tu.notification_level).to eq TopicUser.notification_levels[:regular]
+
+      CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:tracking], tracked_category.id)
+
+      tu = TopicUser.get(first_post.topic, user)
+      expect(tu.notification_level).to eq TopicUser.notification_levels[:tracking]
     end
+
 
     it "unwatches categories that have been changed" do
       user = Fabricate(:user)
@@ -72,12 +105,15 @@ describe CategoryUser do
 
       post = create_post(category: watched_category)
       tu = TopicUser.get(post.topic, user)
+
+      # we start watching cause a notification is sent to the watching user
+      # this position sent is tracking in topic users
       expect(tu.notification_level).to eq TopicUser.notification_levels[:watching]
 
       # Now, change the topic's category
       unwatched_category = Fabricate(:category)
       post.topic.change_category_to_id(unwatched_category.id)
-      expect(TopicUser.get(post.topic, user)).to be_blank
+      expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:tracking]
     end
 
     it "does not delete TopicUser record when topic category is changed, and new category has same notification level" do
@@ -87,16 +123,26 @@ describe CategoryUser do
       user = Fabricate(:user)
       watched_category_1 = Fabricate(:category)
       watched_category_2 = Fabricate(:category)
+      category_3 = Fabricate(:category)
+
+      post = create_post(category: watched_category_1)
+
       CategoryUser.create!(user: user, category: watched_category_1, notification_level: CategoryUser.notification_levels[:watching])
       CategoryUser.create!(user: user, category: watched_category_2, notification_level: CategoryUser.notification_levels[:watching])
 
-      post = create_post(category: watched_category_1)
-      tu = TopicUser.get(post.topic, user)
-      expect(tu.notification_level).to eq TopicUser.notification_levels[:watching]
+      # we must have a topic user record otherwise it will be watched implicitly
+      TopicUser.change(user.id, post.topic_id, total_msecs_viewed: 10)
 
-      # Now, change the topic's category
+      expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:watching]
+
+      post.topic.change_category_to_id(category_3.id)
+      expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:tracking]
+
       post.topic.change_category_to_id(watched_category_2.id)
-      expect(TopicUser.get(post.topic, user)).to eq tu
+      expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:watching]
+
+      post.topic.change_category_to_id(watched_category_1.id)
+      expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:watching]
     end
 
     it "deletes TopicUser record when topic category is changed, and new category has different notification level" do

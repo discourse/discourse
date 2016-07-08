@@ -83,6 +83,9 @@ class UserSerializer < BasicUserSerializer
 
   private_attributes :locale,
                      :muted_category_ids,
+                     :watched_tags,
+                     :tracked_tags,
+                     :muted_tags,
                      :tracked_category_ids,
                      :watched_category_ids,
                      :private_messages_stats,
@@ -246,6 +249,17 @@ class UserSerializer < BasicUserSerializer
   ###
   ### PRIVATE ATTRIBUTES
   ###
+  def muted_tags
+    TagUser.lookup(object, :muted).joins(:tag).pluck('tags.name')
+  end
+
+  def tracked_tags
+    TagUser.lookup(object, :tracking).joins(:tag).pluck('tags.name')
+  end
+
+  def watched_tags
+    TagUser.lookup(object, :watching).joins(:tag).pluck('tags.name')
+  end
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
