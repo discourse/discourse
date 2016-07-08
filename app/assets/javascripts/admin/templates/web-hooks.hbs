@@ -7,27 +7,30 @@
 <div class='web-hooks-listing'>
 {{#if model}}
   <p>{{i18n 'admin.web_hooks.instruction'}}</p>
-  <table class='web-hooks'>
-    <thead>
-      <tr>
-        <th>{{i18n 'admin.web_hooks.payload_url'}}</th>
-        <th>{{i18n 'admin.web_hooks.description'}}</th>
-        <th>{{i18n 'admin.web_hooks.controls'}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each model as |webHook|}}
+  {{#load-more selector=".web-hooks tr" action="loadMore"}}
+    <table class='web-hooks'>
+      <thead>
         <tr>
-          <td>{{#link-to 'adminWebHooks.show' webHook}}{{webHook.payload_url}}{{/link-to}}</td>
-          <td class='description'>{{webHook.description}}</td>
-          <td class='controls'>
-            {{#link-to 'adminWebHooks.show' webHook tagName='button' classNames='btn btn-default no-text'}}{{fa-icon 'edit'}}{{/link-to}}
-            {{d-button class="destroy btn-danger" action='destroy' actionParam=webHook icon="remove"}}
-          </td>
+          <th>{{i18n 'admin.web_hooks.payload_url'}}</th>
+          <th>{{i18n 'admin.web_hooks.description'}}</th>
+          <th>{{i18n 'admin.web_hooks.controls'}}</th>
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {{#each model as |webHook|}}
+          <tr>
+            <td>{{#link-to 'adminWebHooks.show' webHook}}{{webHook.payload_url}}{{/link-to}}</td>
+            <td class='description'>{{webHook.description}}</td>
+            <td class='controls'>
+              {{#link-to 'adminWebHooks.show' webHook tagName='button' classNames='btn btn-default no-text'}}{{fa-icon 'edit'}}{{/link-to}}
+              {{d-button class="destroy btn-danger" action='destroy' actionParam=webHook icon="remove"}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{conditional-loading-spinner condition=model.loadingMore}}
+  {{/load-more}}
 {{else}}
   <p>{{i18n 'admin.web_hooks.none'}}</p>
 {{/if}}

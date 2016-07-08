@@ -10,6 +10,10 @@ export default Ember.Controller.extend({
           }).catch(popupAjaxError);
         }
       });
+    },
+
+    loadMore() {
+      this.get('model').loadMore();
     }
   }
 });
