@@ -67,6 +67,9 @@ export default (filter, params) => {
       return findTopicList(this.store, this.topicTrackingState, listFilter, findOpts, extras).then(list => {
         TopicList.hideUniformCategory(list, category);
         this.set('topics', list);
+        if (list.topic_list.tags) {
+          Discourse.Site.currentProp('top_tags', list.topic_list.tags);
+        }
         return list;
       });
     },

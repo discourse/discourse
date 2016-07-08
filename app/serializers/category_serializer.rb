@@ -84,7 +84,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def allowed_tags
-    object.tags.pluck(:name)
+    Tag.top_tags(category: object)
   end
 
   def include_allowed_tag_groups?
@@ -94,5 +94,4 @@ class CategorySerializer < BasicCategorySerializer
   def allowed_tag_groups
     object.tag_groups.pluck(:name)
   end
-
 end

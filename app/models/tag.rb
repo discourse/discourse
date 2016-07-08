@@ -23,10 +23,21 @@ class Tag < ActiveRecord::Base
                              .where("topics.category_id = ?", category.id)
   end
 
-  def self.top_tags(limit_arg=nil)
-    self.tags_by_count_query(limit: limit_arg || SiteSetting.max_tags_in_filter_list)
-        .count
-        .map {|name, count| name}
+  def self.top_tags(limit_arg: nil, category: nil)
+    limit = limit_arg || SiteSetting.max_tags_in_filter_list
+
+    tags =
+      if category
+        self.category_tags_by_count_query(category, limit: limit)
+      else
+        self.tags_by_count_query(limit: limit)
+      end
+
+    tags.count.map {|name, _| name}
+  end
+
+  def self.include_tags?
+    SiteSetting.tagging_enabled && SiteSetting.show_filter_by_tag
   end
 end
 
