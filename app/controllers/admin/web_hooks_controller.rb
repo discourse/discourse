@@ -2,9 +2,17 @@ class Admin::WebHooksController < Admin::AdminController
   before_filter :fetch_web_hook, only: %i(show update destroy)
 
   def index
-    # TODO: Pagination
+    limit = 50
+    offset = params[:offset].to_i
+
     data = {
-      web_hooks: WebHook.all.to_a
+      web_hooks: WebHook.limit(limit)
+                        .offset(offset)
+                        .includes(:web_hook_event_types)
+                        .includes(:categories)
+                        .includes(:groups),
+      total_rows_web_hooks: WebHook.count,
+      load_more_web_hooks: Discourse.base_url + admin_web_hooks_path(limit: limit, offset: offset + limit, format: :json)
     }
     render_serialized(OpenStruct.new(data), AdminWebHooksSerializer, root: false)
   end
