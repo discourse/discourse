@@ -88,6 +88,7 @@ class UserSerializer < BasicUserSerializer
                      :muted_tags,
                      :tracked_category_ids,
                      :watched_category_ids,
+                     :watched_first_post_category_ids,
                      :private_messages_stats,
                      :system_avatar_upload_id,
                      :system_avatar_template,
@@ -271,6 +272,10 @@ class UserSerializer < BasicUserSerializer
 
   def watched_category_ids
     CategoryUser.lookup(object, :watching).pluck(:category_id)
+  end
+
+  def watched_first_post_category_ids
+    CategoryUser.lookup(object, :watching_first_post).pluck(:category_id)
   end
 
   def muted_usernames

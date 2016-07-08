@@ -1,6 +1,7 @@
 class UserUpdater
 
   CATEGORY_IDS = {
+    watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
     tracked_category_ids: :tracking,
     muted_category_ids: :muted
