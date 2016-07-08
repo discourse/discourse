@@ -72,7 +72,7 @@ export default Ember.Controller.extend({
     range.insertNode(markerElement);
 
     // retrieve the position of the marker
-    const $markerElement = $(markerElement)
+    const $markerElement = $(markerElement),
           markerOffset = $markerElement.offset(),
           parentScrollLeft = $markerElement.parent().scrollLeft(),
           $quoteButton = $('.quote-button');
