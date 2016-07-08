@@ -26,7 +26,7 @@
 
        // On facebook browser, just redirect and don't close
        var ua = navigator.userAgent || navigator.vendor || window.opera;
-       if ((ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1)) {
+       if (!window.opener) {
          localStorage.setItem('lastAuthResult', JSON.stringify(authResult));
          window.location.href = '<%= Discourse.base_url.html_safe %>?authComplete=true';
        } else {
