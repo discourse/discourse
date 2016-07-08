@@ -3,10 +3,6 @@ module DiscourseTagging
   TAGS_FIELD_NAME = "tags"
   TAGS_FILTER_REGEXP = /[<\\\/\>\#\?\&\s]/
 
-  # class Engine < ::Rails::Engine
-  #   engine_name "discourse_tagging"
-  #   isolate_namespace DiscourseTagging
-  # end
 
   def self.tag_topic_by_names(topic, guardian, tag_names_arg)
     if SiteSetting.tagging_enabled
@@ -43,13 +39,11 @@ module DiscourseTagging
           end
         end
 
-        auto_notify_for(tags, topic)
-
         topic.tags = tags
       else
-        auto_notify_for([], topic)
         topic.tags = []
       end
+      topic.tags_changed=true
     end
     true
   end
@@ -144,11 +138,6 @@ module DiscourseTagging
     end
 
     query
-  end
-
-  def self.auto_notify_for(tags, topic)
-    TagUser.auto_watch_new_topic(topic, tags)
-    TagUser.auto_track_new_topic(topic, tags)
   end
 
   def self.clean_tag(tag)

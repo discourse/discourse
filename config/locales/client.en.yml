@@ -539,8 +539,15 @@ en:
         individual: "Send an email for every new post"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
+      tag_settings: "Tags"
+      watched_tags: "Watched"
+      watched_tags_instructions: "You will automatically watch all topics with these tags. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+      tracked_tags: "Tracked"
+      tracked_tags_instructions: "You will automatically track all new topics with these tags. A count of new posts will appear next to the topic."
+      muted_tags: "Muted"
+      muted_tags_instructions: "You will not be notified of anything about new topics with these tags, and they will not appear in latest."
       watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+      watched_categories_instructions: "You will automatically watch all topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
       tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
       muted_categories: "Muted"
@@ -576,13 +583,6 @@ en:
         move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
-
-      warn_unwatch:
-        message: "Also stop watching previously watched topics in {{categories}}?"
-        yes_value: "Yes, stop watching topics"
-        no_value:
-          one: "No, only stop watching category"
-          other: "No, only stop watching categories"
 
       change_password:
         success: "(email sent)"
@@ -1349,6 +1349,7 @@ en:
         title: change how often you get notified about this topic
         reasons:
           mailing_list_mode: "You have mailing list mode enabled, so you will be notified of replies to this topic via email."
+          "3_10": 'You will receive notifications because you are watching this a tag on this topic.'
           "3_6": 'You will receive notifications because you are watching this category.'
           "3_5": 'You will receive notifications because you started watching this topic automatically.'
           "3_2": 'You will receive notifications because you are watching this topic.'

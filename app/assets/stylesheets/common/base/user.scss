@@ -279,3 +279,12 @@ and (max-width : 600px) {
     width: 100%;
   }
 }
+
+.user-preferences .tags .select2-container-multi {
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  width: 540px;
+  border-radius: 0;
+  .select2-choices {
+    border: none;
+  }
+}

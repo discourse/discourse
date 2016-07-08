@@ -141,7 +141,7 @@ const User = RestModel.extend({
     return Discourse.User.create(this.getProperties(Object.keys(this)));
   },
 
-  save(options) {
+  save() {
     const data = this.getProperties(
             'bio_raw',
             'website',
@@ -152,7 +152,10 @@ const User = RestModel.extend({
             'user_fields',
             'muted_usernames',
             'profile_background',
-            'card_background'
+            'card_background',
+            'muted_tags',
+            'tracked_tags',
+            'watched_tags'
           );
 
     [       'email_always',
@@ -190,10 +193,6 @@ const User = RestModel.extend({
 
     if (!Discourse.SiteSettings.edit_history_visible_to_public) {
       data['edit_history_public'] = this.get('user_option.edit_history_public');
-    }
-
-    if (options && options.unwatchCategoryTopics) {
-      data.unwatch_category_topics = options.unwatchCategoryTopics;
     }
 
     // TODO: We can remove this when migrated fully to rest model.

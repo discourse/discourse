@@ -25,7 +25,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids
+  attr_accessor :allowed_user_ids, :tags_changed
 
   def self.max_sort_order
     @max_sort_order ||= (2 ** 31) - 1
@@ -186,6 +186,12 @@ class Topic < ActiveRecord::Base
 
     if archetype_was == banner || archetype == banner
       ApplicationController.banner_json_cache.clear
+    end
+
+    if tags_changed
+      TagUser.auto_watch(topic_id: id)
+      TagUser.auto_track(topic_id: id)
+      self.tags_changed = false
     end
   end
 
@@ -518,13 +524,16 @@ class Topic < ActiveRecord::Base
         self.category_id = new_category.id
         self.update_column(:category_id, new_category.id)
         Category.where(id: old_category.id).update_all("topic_count = topic_count - 1") if old_category
+
+        # when a topic changes category we may have to start watching it
+        # if we happen to have read state for it
+        CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
+        CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
       CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
       CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
-      CategoryUser.auto_watch_new_topic(self, new_category)
-      CategoryUser.auto_track_new_topic(self, new_category)
     end
 
     true

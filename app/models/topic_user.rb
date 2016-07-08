@@ -131,15 +131,7 @@ SQL
         rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all([attrs_sql, *vals])
 
         if rows == 0
-          now = DateTime.now
-          auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
-          auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
-
-          if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
-            attrs[:notification_level] ||= notification_levels[:tracking]
-          end
-
-          TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id, first_visited_at: now ,last_visited_at: now))
+          create_missing_record(user_id, topic_id, attrs)
         else
           observe_after_save_callbacks_for topic_id, user_id
         end
@@ -153,12 +145,64 @@ SQL
       # In case of a race condition to insert, do nothing
     end
 
+    def create_missing_record(user_id, topic_id, attrs)
+      now = DateTime.now
+
+      unless attrs[:notification_level]
+        category_notification_level = CategoryUser.where(user_id: user_id)
+                    .where("category_id IN (SELECT category_id FROM topics WHERE id = :id)", id: topic_id)
+                    .where("notification_level IN (:levels)", levels: [CategoryUser.notification_levels[:watching],
+                        CategoryUser.notification_levels[:tracking]])
+                    .order("notification_level DESC")
+                    .limit(1)
+                    .pluck(:notification_level)
+                    .first
+
+        tag_notification_level = TagUser.where(user_id: user_id)
+                    .where("tag_id IN (SELECT tag_id FROM topic_tags WHERE topic_id = :id)", id: topic_id)
+                    .where("notification_level IN (:levels)", levels: [CategoryUser.notification_levels[:watching],
+                        CategoryUser.notification_levels[:tracking]])
+                    .order("notification_level DESC")
+                    .limit(1)
+                    .pluck(:notification_level)
+                    .first
+
+        if category_notification_level && !(tag_notification_level && (tag_notification_level > category_notification_level))
+          attrs[:notification_level] = category_notification_level
+          attrs[:notifications_changed_at] = DateTime.now
+          attrs[:notifications_reason_id] = category_notification_level == CategoryUser.notification_levels[:watching] ?
+              TopicUser.notification_reasons[:auto_watch_category] :
+              TopicUser.notification_reasons[:auto_track_category]
+
+        elsif tag_notification_level
+          attrs[:notification_level] = tag_notification_level
+          attrs[:notifications_changed_at] = DateTime.now
+          attrs[:notifications_reason_id] = tag_notification_level == TagUser.notification_levels[:watching] ?
+              TopicUser.notification_reasons[:auto_watch_tag] :
+              TopicUser.notification_reasons[:auto_track_tag]
+        end
+
+
+      end
+
+      unless attrs[:notification_level]
+        auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
+        auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
+
+        if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
+          attrs[:notification_level] ||= notification_levels[:tracking]
+        end
+      end
+
+      TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id, first_visited_at: now ,last_visited_at: now))
+    end
+
     def track_visit!(topic_id, user_id)
       now = DateTime.now
       rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
 
       if rows == 0
-        TopicUser.create(topic_id: topic_id, user_id: user_id, last_visited_at: now, first_visited_at: now)
+        change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
       else
         observe_after_save_callbacks_for(topic_id, user_id)
       end

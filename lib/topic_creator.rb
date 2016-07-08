@@ -90,14 +90,6 @@ class TopicCreator
         topic.notifier.send(action, gu.user_id)
       end
     end
-
-    unless topic.private_message?
-      # In order of importance:
-      CategoryUser.auto_watch_new_topic(topic)
-      CategoryUser.auto_track_new_topic(topic)
-      TagUser.auto_watch_new_topic(topic)
-      TagUser.auto_track_new_topic(topic)
-    end
   end
 
   def setup_topic_params

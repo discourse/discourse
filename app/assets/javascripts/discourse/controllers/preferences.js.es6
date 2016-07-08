@@ -2,7 +2,6 @@ import { setting } from 'discourse/lib/computed';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from "ember-addons/ember-computed-decorators";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
 export default Ember.Controller.extend(CanCheckEmails, {
 
@@ -136,24 +135,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
       const model = this.get('model');
 
-
-      // watched status changes warn user
-      const changedWatch = model.changedCategoryNotifications("watched");
-
-      if (changedWatch.remove.length > 0 && !this.get("warnedRemoveWatch")) {
-        var categories = Discourse.Category.findByIds(changedWatch.remove).map((cat) => {
-          return categoryBadgeHTML(cat);
-        }).join(" ");
-        bootbox.confirm(I18n.t('user.warn_unwatch.message', {categories: categories}),
-            I18n.t('user.warn_unwatch.no_value', {count: changedWatch.remove.length}), I18n.t('user.warn_unwatch.yes_value'),
-            (yes)=>{
-              this.set('unwatchCategoryTopics', yes ? changedWatch.remove : false);
-              this.send('save');
-            });
-        this.set("warnedRemoveWatch", true);
-        return;
-      }
-
       const userFields = this.get('userFields');
 
       // Update the user fields
@@ -169,9 +150,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
       // Cook the bio for preview
       model.set('name', this.get('newNameInput'));
       var options = {};
-      if (this.get('warnedRemoveWatch') && this.get('unwatchCategoryTopics')) {
-        options["unwatchCategoryTopics"] = this.get("unwatchCategoryTopics");
-      }
 
       return model.save(options).then(() => {
         if (Discourse.User.currentProp('id') === model.get('id')) {
@@ -179,8 +157,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
         }
         model.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(model.get('bio_raw'))));
         this.set('saved', true);
-        this.set("unwatchTopics", false);
-        this.set('warnedRemoveWatch', false);
       }).catch(popupAjaxError);
     },
 
