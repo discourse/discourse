@@ -139,7 +139,22 @@ class Autospec::Manager
     @queue.shift if current[0] == "focus"
     # focus on the first 10 failed specs
     failed_specs = runner.failed_specs[0..10]
-    puts "@@@@@@@@@@@@ failed_spces --> #{failed_specs}" if @debug
+    puts "@@@@@@@@@@@@ failed_specs --> #{failed_specs}" if @debug
+
+    # try focus tag
+    if failed_specs.length > 0
+      filename,_ = failed_specs[0].split(":")
+      if filename
+        spec = File.read(filename)
+        start,_ =  spec.split(/\S*#focus\S*$/)
+        if start.length < spec.length
+          line = start.scan(/\n/).length + 1
+          puts "Found #focus tag on line #{line}!"
+          failed_specs = ["#{filename}:#{line+1}"]
+        end
+      end
+    end
+
     # focus on the failed specs
     @queue.unshift ["focus", failed_specs.join(" "), runner] if failed_specs.length > 0
   end
