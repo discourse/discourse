@@ -26,12 +26,7 @@ class Tag < ActiveRecord::Base
   def self.top_tags(limit_arg: nil, category: nil)
     limit = limit_arg || SiteSetting.max_tags_in_filter_list
 
-    tags =
-      if category
-        self.category_tags_by_count_query(category, limit: limit)
-      else
-        self.tags_by_count_query(limit: limit)
-      end
+    tags = DiscourseTagging.filter_allowed_tags(tags_by_count_query(limit: limit), nil, category: category)
 
     tags.count.map {|name, _| name}
   end
