@@ -13,6 +13,7 @@ class BasicGroupSerializer < ApplicationSerializer
              :incoming_email,
              :notification_level,
              :has_messages,
+             :is_member,
              :mentionable
 
   def include_incoming_email?
@@ -30,6 +31,14 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def mentionable
     object.mentionable?(scope.user, object.id)
+  end
+
+  def is_member
+    scope.is_admin? || GroupUser.where(group_id: object.id, user_id: scope.user.id).present?
+  end
+
+  def include_is_member?
+    scope.authenticated?
   end
 
 end
