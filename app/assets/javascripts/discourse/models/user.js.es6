@@ -184,12 +184,15 @@ const User = RestModel.extend({
 
     ['muted','watched','tracked','watched_first_post'].forEach(s => {
       let prop = s === "watched_first_post" ? "watchedFirstPostCategories" : s + "Categories";
-      let cats = this.get(prop).map(c => c.get('id'));
-      updatedState[s + '_category_ids'] = cats;
+      let cats = this.get(prop);
+      if (cats) {
+        let cat_ids = cats.map(c => c.get('id'));
+        updatedState[s + '_category_ids'] = cat_ids;
 
-      // HACK: denote lack of categories
-      if (cats.length === 0) { cats = [-1]; }
-      data[s + '_category_ids'] = cats;
+        // HACK: denote lack of categories
+        if (cats.length === 0) { cat_ids = [-1]; }
+        data[s + '_category_ids'] = cat_ids;
+      }
     });
 
     if (!Discourse.SiteSettings.edit_history_visible_to_public) {
