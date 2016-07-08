@@ -1,7 +1,9 @@
 class AdminWebHooksSerializer < ApplicationSerializer
   has_many :web_hooks, serializer: AdminWebHookSerializer, embed: :objects
 
-  attribute :extras
+  attributes :extras,
+             :total_rows_web_hooks,
+             :load_more_web_hooks,
 
   def extras
     content_types = WebHook.content_types.map { |name, id| { id: id, name: name } }
@@ -14,4 +16,8 @@ class AdminWebHooksSerializer < ApplicationSerializer
       delivery_statuses: ActiveModel::ArraySerializer.new(delivery_statuses).as_json,
     }
   end
+
+  delegate :total_rows_web_hooks,
+           :load_more_web_hooks,
+           to: :object
 end
