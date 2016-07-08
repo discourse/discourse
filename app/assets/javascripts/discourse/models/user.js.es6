@@ -182,8 +182,9 @@ const User = RestModel.extend({
 
     var updatedState = {};
 
-    ['muted','watched','tracked'].forEach(s => {
-      let cats = this.get(s + 'Categories').map(c => c.get('id'));
+    ['muted','watched','tracked','watched_first_post'].forEach(s => {
+      let prop = s === "watched_first_post" ? "watchedFirstPostCategories" : s + "Categories";
+      let cats = this.get(prop).map(c => c.get('id'));
       updatedState[s + '_category_ids'] = cats;
 
       // HACK: denote lack of categories
@@ -360,14 +361,9 @@ const User = RestModel.extend({
     this.set("watchedCategories", Discourse.Category.findByIds(this.watched_category_ids));
   },
 
-  changedCategoryNotifications: function(type) {
-    const ids = this.get(type + "Categories").map(c => c.id);
-    const oldIds = this.get(type + "_category_ids");
-
-    return {
-      add: _.difference(ids, oldIds),
-      remove: _.difference(oldIds, ids),
-    };
+  @observes("watched_first_post_category_ids")
+  updateWatchedFirstPostCategories() {
+    this.set("watchedFirstPostCategories", Discourse.Category.findByIds(this.watched_first_post_category_ids));
   },
 
   @computed("can_delete_account", "reply_count", "topic_count")
