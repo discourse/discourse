@@ -321,7 +321,7 @@ Post.reopenClass({
         post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
         reply_post_ids: selectedReplies.map(function(p) { return p.get('id'); })
       }
-    });
+    }).catch(popupAjaxError);
   },
 
   mergePosts(selectedPosts) {
