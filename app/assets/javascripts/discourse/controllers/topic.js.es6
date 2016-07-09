@@ -522,7 +522,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         if (result) {
           const selectedPosts = this.get('selectedPosts');
 
-          Post.mergePosts(selectedPosts);
+          Discourse.Post.mergePosts(selectedPosts);
           this.send('toggleMultiSelect');
         }
       });
