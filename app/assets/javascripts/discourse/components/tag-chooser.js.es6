@@ -78,7 +78,7 @@ export default Ember.TextField.extend({
         term = term.replace(filterRegexp, '').trim();
 
         // No empty terms, make sure the user has permission to create the tag
-        if (!term.lenght || !this.get('allowCreate')) return;
+        if (!term.length || !this.get('allowCreate')) return;
 
         if ($(data).filter(function() {
           return this.text.localeCompare(term) === 0;
