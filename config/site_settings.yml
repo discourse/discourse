@@ -501,6 +501,11 @@ posting:
     default: ''
     refresh: true
     type: list
+  blocked_urls:
+    client: true
+    default: ''
+    refresh: true
+    type: list
   enable_emoji:
     default: true
     client: true

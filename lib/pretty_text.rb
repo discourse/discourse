@@ -118,6 +118,7 @@ module PrettyText
       "app/assets/javascripts/discourse/dialects/dialect.js",
       "app/assets/javascripts/discourse/lib/censored-words.js",
       "app/assets/javascripts/discourse/lib/markdown.js",
+      "app/assets/javascripts/discourse/lib/blocked-urls.js",
     )
 
     Dir["#{app_root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
