@@ -47,6 +47,7 @@ test("sanitize", function() {
   cooked("<span class=\"bbcode-s\">a</span>", "<p><span class=\"bbcode-s\">a</span></p>", "it sanitizes spans");
 
   cooked("<kbd>Ctrl</kbd>+<kbd>C</kbd>", "<p><kbd>Ctrl</kbd>+<kbd>C</kbd></p>");
+  cooked("it has been <strike>1 day</strike> 0 days since our last test failure", "<p>it has been <strike>1 day</strike> 0 days since our last test failure</p>");
 });
 
 test("urlAllowed", function() {
