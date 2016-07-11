@@ -120,9 +120,9 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html '<p><div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/optimized/1X/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_1_690x788.png" width="690" height="788"><div class="meta">
-<span class="filename">logo.png</span><span class="informations">1750x2000 1.21 KB</span><span class="expand"></span>
-</div></a></div></p>'
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/uploads/default/#{upload.sha1}\" href=\"/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+<span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+</div></a></div></p>"
         expect(cpp).to be_dirty
       end
 
@@ -153,9 +153,9 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html '<p><div class="lightbox-wrapper"><a data-download-href="/subfolder/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/subfolder/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/subfolder/uploads/default/optimized/1X/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_1_690x788.png" width="690" height="788"><div class="meta">
-<span class="filename">logo.png</span><span class="informations">1750x2000 1.21 KB</span><span class="expand"></span>
-</div></a></div></p>'
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" href=\"/subfolder/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"logo.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+<span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+</div></a></div></p>"
         expect(cpp).to be_dirty
       end
 
@@ -181,9 +181,9 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html '<p><div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="WAT"><img src="/uploads/default/optimized/1X/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_1_690x788.png" title="WAT" width="690" height="788"><div class="meta">
-       <span class="filename">WAT</span><span class="informations">1750x2000 1.21 KB</span><span class="expand"></span>
-       </div></a></div></p>'
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/uploads/default/#{upload.sha1}\" href=\"/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"WAT\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" title=\"WAT\" width=\"690\" height=\"788\"><div class=\"meta\">
+       <span class=\"filename\">WAT</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+       </div></a></div></p>"
         expect(cpp).to be_dirty
       end
 
@@ -413,7 +413,7 @@ describe CookedPostProcessor do
 
   context ".pull_hotlinked_images" do
 
-    let(:post) { build(:post) }
+    let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
     before { cpp.stubs(:available_disk_space).returns(90) }
@@ -467,7 +467,7 @@ describe CookedPostProcessor do
 
   context ".disable_if_low_on_disk_space" do
 
-    let(:post) { build(:post) }
+    let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
     before { cpp.expects(:available_disk_space).returns(50) }
@@ -491,6 +491,34 @@ describe CookedPostProcessor do
 
     end
 
+  end
+
+  context ".download_remote_images_max_days_old" do
+
+    let(:post) { build(:post, created_at: 20.days.ago) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+
+    before do
+      SiteSetting.download_remote_images_to_local = true
+      cpp.expects(:disable_if_low_on_disk_space).returns(false)
+    end
+
+    it "does not run when download_remote_images_max_days_old is not satisfied" do
+      SiteSetting.download_remote_images_max_days_old = 15
+      Jobs.expects(:cancel_scheduled_job).never
+      cpp.pull_hotlinked_images
+    end
+
+    it "runs when download_remote_images_max_days_old is satisfied" do
+      SiteSetting.download_remote_images_max_days_old = 30
+
+      Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
+
+      delay = SiteSetting.editing_grace_period + 1
+      Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
+
+      cpp.pull_hotlinked_images
+    end
   end
 
   context ".is_a_hyperlink?" do

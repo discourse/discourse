@@ -179,7 +179,11 @@ module Jobs
         return I18n.t('email_log.post_user_deleted')  if post.user.blank?
         return I18n.t('email_log.post_deleted')       if post.user_deleted?
         return I18n.t('email_log.user_suspended')     if (user.suspended? && !post.user.try(:staff?))
-        return I18n.t('email_log.already_read')       if PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
+
+        if  !user.user_option.email_always? &&
+            PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
+          return I18n.t('email_log.already_read')
+        end
       else
         false
       end

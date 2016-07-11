@@ -56,7 +56,7 @@ class Admin::UsersController < Admin::AdminController
     @user.save!
     @user.revoke_api_key
     StaffActionLogger.new(current_user).log_user_suspend(@user, params[:reason])
-    MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
+    @user.logged_out
     render nothing: true
   end
 
@@ -73,7 +73,7 @@ class Admin::UsersController < Admin::AdminController
     if @user
       @user.auth_token = nil
       @user.save!
-      MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
+      @user.logged_out
       render json: success_json
     else
       render json: {error: I18n.t('admin_js.admin.users.id_not_found')}, status: 404

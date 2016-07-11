@@ -238,14 +238,14 @@ module BackupRestore
       log "Creating empty archive..."
       `tar --create --file #{tar_filename} --files-from /dev/null`
 
-      log "Archiving metadata..."
-      FileUtils.cd(File.dirname(@meta_filename)) do
-        `tar --append --dereference --file #{tar_filename} #{File.basename(@meta_filename)}`
-      end
-
       log "Archiving data dump..."
       FileUtils.cd(File.dirname(@dump_filename)) do
         `tar --append --dereference --file #{tar_filename} #{File.basename(@dump_filename)}`
+      end
+
+      log "Archiving metadata..."
+      FileUtils.cd(File.dirname(@meta_filename)) do
+        `tar --append --dereference --file #{tar_filename} #{File.basename(@meta_filename)}`
       end
 
       if @with_uploads

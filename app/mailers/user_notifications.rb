@@ -192,6 +192,10 @@ class UserNotifications < ActionMailer::Base
     notification_email(user, opts)
   end
 
+  def user_watching_first_post(user, opts)
+    user_posted(user, opts)
+  end
+
   def mailing_list_notify(user, post)
     opts = {
       post: post,

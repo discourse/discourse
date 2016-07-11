@@ -4,6 +4,7 @@ module Jobs
     sidekiq_options queue: 'low'
 
     def execute_onceoff(args)
+      return unless SiteSetting.enable_badges
       to_award = {}
 
       Post.secured(Guardian.new)

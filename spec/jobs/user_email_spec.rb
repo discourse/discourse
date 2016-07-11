@@ -57,6 +57,8 @@ describe Jobs::UserEmail do
     it "does send an email to a user that's been recently seen but has email_always set" do
       user.update_attributes(last_seen_at: 9.minutes.ago)
       user.user_option.update_attributes(email_always: true)
+      PostTiming.create!(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id, msecs: 100)
+
       Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
     end

@@ -17,6 +17,7 @@ class Category < ActiveRecord::Base
   belongs_to :latest_post, class_name: "Post"
 
   has_many :topics
+  has_many :category_users
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
 

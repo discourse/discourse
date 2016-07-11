@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   validates_presence_of :username
   validate :username_validator, if: :username_changed?
   validates :email, presence: true, uniqueness: true
-  validates :email, email: true, if: :email_changed?
+  validates :email, email: true, if: Proc.new { |u| !u.staged && u.email_changed? }
   validate :password_validator
   validates :name, user_full_name: true, if: :name_changed?
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
@@ -854,6 +854,11 @@ class User < ActiveRecord::Base
     User.where(admin: true).where.not(id: id).where.not(id: Discourse::SYSTEM_USER_ID).blank?
   end
 
+  def logged_out
+    MessageBus.publish "/logout", self.id, user_ids: [self.id]
+    DiscourseEvent.trigger(:user_logged_out, self)
+  end
+
   protected
 
   def badge_grant
@@ -998,7 +1003,6 @@ class User < ActiveRecord::Base
       update_column(:previous_visit_at, last_seen_at)
     end
   end
-
 
 end
 

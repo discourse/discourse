@@ -836,6 +836,7 @@ en:
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
+    download_remote_images_max_days_old: "Don't download remote images for posts that are more than n days old."
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
@@ -1036,6 +1037,7 @@ en:
 
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
+    suggested_topics_max_days_old: "Suggested topics should not be more than n days old."
 
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
@@ -1380,22 +1382,6 @@ en:
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
-
-  notification_types:
-    group_mentioned: "%{group_name} was mentioned in %{link}"
-    mentioned: "%{display_username} mentioned you in %{link}"
-    liked: "%{display_username} liked your post in %{link}"
-    replied: "%{display_username} replied to your post in %{link}"
-    quoted: "%{display_username} quoted your post in %{link}"
-    edited: "%{display_username} edited your post in %{link}"
-    posted: "%{display_username} posted in %{link}"
-    moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a message: %{link}"
-    invited_to_topic: "%{display_username} invited you to %{link}"
-    invitee_accepted: "%{display_username} accepted your invitation"
-    linked: "%{display_username} linked you in %{link}"
-    granted_badge: "You earned %{link}"
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -2173,14 +2159,10 @@ en:
   unsubscribe_link_and_mail: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
-    Alternarively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
-
   unsubscribe_mailing_list: |
     You are receiving these emails cause you have enabled mailing list mode.
 
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
-
-    Alternatively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "
@@ -2320,6 +2302,17 @@ en:
         %{respond_instructions}
 
     user_posted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
+    user_watching_first_post:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}

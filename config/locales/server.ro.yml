@@ -399,8 +399,6 @@ ro:
     description: "Ați fost dezabonat. Nu vă vom mai contacta!"
     oops: "În cazul în care nu intenționați asta, faceți click dedesubt."
     error: "Eroare la dezabonare"
-    preferences_link: "Vă puteți dezabona și de la mailurile-rezumat din <a href='/my/preferences'>pagina de preferințe</a>"
-    different_user_description: "Acum sunteți autentificat ca drept alt utilizator decât acela căruia i-a fost tirmis mailul-rezumat. Vă rugăm schimbați utilizatorul și încercați iar."
     not_found_description: "Ne pare rău, nu te-am putut dezabona. Este posibil ca adresa din email să fi expirat."
   resubscribe:
     action: "Reabonare"
@@ -687,8 +685,6 @@ ro:
     username_change_period: "Numărul de zile după înregistrare în care conturile își pot schimba numele de utilizator (0 la nu permite schimbarea numelui de utilizator)."
     email_editable: "Permite utilizatorilor să schimbe propria adresa de email după înregistrare."
     automatically_download_gravatars: "Descarcă Gravatare pentru utilizatori la crearea contului sau schimbarea email-ului."
-    digest_topics: "Numărul maxim de discuții arătate în email-ul rezumat."
-    digest_min_excerpt_length: "Numărul minimum de extrase din postări din email-ul rezumat, în caractere."
     max_daily_gravatar_crawls: "Numărul maxim de verificări făcute de Discourse pentru existența unui gravatar preferențial într-o zi"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
     enable_mobile_theme: "Dispozitivele mobile folosesc o temă cu abilitatea de a schimba la întregul site. Dezactivați pentru a folosii un foiae de stil preferențiala ce este total compatibilă."
@@ -743,7 +739,7 @@ ro:
   original_poster: "Autorul Original"
   most_posts: "Cele mai multe postări"
   most_recent_poster: "Cele mai recente postări"
-  frequent_poster: "postări fregvente"
+  frequent_poster: "postări frecvente"
   redirected_to_top_reasons:
     new_user: "Bine ați venit la comunitatea noastră! Aici sunt cele mai populare discuții."
   change_owner:
@@ -804,18 +800,6 @@ ro:
       Aceasta invitație este de la un utilizator de încredere, deci puteți răspunde discuției cât mai curând.
   invite_forum_mailer:
     subject_template: "%{invitee_name} te-a invitat să te alături %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te-a invitat să te alături
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Dacă ești interesat, apasă pe adresa de dedesubt:
-
-      %{invite_link}
-
-      Aceasta invitație este de la un utilizator de încredere, nu este nevoie să fii autentificat.
   invite_password_instructions:
     subject_template: "Setaţi parolă pentru contul dvs. %{site_name}"
   test_mailer:
@@ -884,13 +868,10 @@ ro:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
     digest:
       why: "Un sumar scurt al %{site_link} de ultima oară când ați fost prezent %{last_seen_at}."
-      subject_template: "Rezumatul [%{site_name}]"
       new_activity: "Activități noi în discuțiile și postările dvs:"
       top_topics: "postări populare"
       other_new_topics: "Discuții populare"
-      unsubscribe: "Acest rezumat este trimis ca o notificare de curtoazie din partea %{site_link} când lipsiți o perioadă. Pentru dezabonare %{unsubscribe_link}."
       click_here: "click aici"
-      from: "rezumatul %{site_name}"
       read_more: "Citește mai mult"
       more_topics: "Au fost %{new_topics_since_seen} alte discuții noi de la ultima dvs. vizită pe %{last_seen_at}."
       more_topics_category: "Au fost %{new_topics_since_seen} alte discuții noi în aceste categorii de la utima dvs. vizită pe %{last_seen_at}:"

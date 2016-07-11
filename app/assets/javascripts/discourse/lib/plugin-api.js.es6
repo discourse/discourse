@@ -336,7 +336,7 @@ class PluginApi {
 let _pluginv01;
 function getPluginApi(version) {
   version = parseFloat(version);
-  if (version <= 0.4) {
+  if (version <= 0.5) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
@@ -358,7 +358,7 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 
   const api = getPluginApi(version);
   if (api) {
-    return apiCodeCallback(api);
+    return apiCodeCallback(api, opts);
   }
 }
 

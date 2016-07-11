@@ -344,7 +344,7 @@ module Email
       @reply_by_email_address_regex ||= begin
         reply_addresses = [
            SiteSetting.reply_by_email_address,
-          *SiteSetting.alternative_reply_by_email_addresses.split("|")
+          *(SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
         ]
         escaped_reply_addresses = reply_addresses.select { |a| a.present? }
                                                  .map { |a| Regexp.escape(a) }
@@ -382,7 +382,7 @@ module Email
     end
 
     def likes
-      @likes ||= Set.new ["+1", I18n.t('post_action_types.like.title').downcase]
+      @likes ||= Set.new ["+1", "<3", "❤", I18n.t('post_action_types.like.title').downcase]
     end
 
     def subscription_action_for(body, subject)
@@ -404,11 +404,11 @@ module Email
 
     def create_reply(options={})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
-      raise TopicClosedError   if options[:topic].closed?
 
       if post_action_type = post_action_for(options[:raw])
         create_post_action(options[:user], options[:post], post_action_type)
       else
+        raise TopicClosedError if options[:topic].closed?
         options[:topic_id] = options[:post].try(:topic_id)
         options[:reply_to_post_number] = options[:post].try(:post_number)
         options[:is_group_message] = options[:topic].private_message? && options[:topic].allowed_groups.exists?

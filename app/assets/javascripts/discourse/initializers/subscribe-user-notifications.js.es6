@@ -1,5 +1,9 @@
 // Subscribes to user events on the message bus
-import { init as initDesktopNotifications, onNotification } from 'discourse/lib/desktop-notifications';
+import {
+  init as initDesktopNotifications,
+  onNotification,
+  alertChannel
+} from 'discourse/lib/desktop-notifications';
 
 export default {
   name: 'subscribe-user-notifications',
@@ -98,10 +102,7 @@ export default {
 
       if (!Ember.testing) {
         if (!site.mobileView) {
-          bus.subscribe("/notification-alert/" + user.get('id'), function(data){
-            onNotification(data, user);
-          });
-
+          bus.subscribe(alertChannel(user), data => onNotification(data, user));
           initDesktopNotifications(bus);
         }
       }

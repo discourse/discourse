@@ -215,7 +215,10 @@ export default createWidget('header', {
 
     this.state.searchVisible = !this.state.searchVisible;
     this.updateHighlight();
-    Ember.run.next(() => $('#search-term').focus());
+
+    if (this.state.searchVisible) {
+      Ember.run.schedule('afterRender', () => $('#search-term').focus().select());
+    }
   },
 
   toggleUserMenu() {

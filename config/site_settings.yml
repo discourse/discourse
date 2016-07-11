@@ -77,6 +77,10 @@ basic:
     min: 0
   limit_suggested_to_category:
     default: false
+  suggested_topics_max_days_old:
+    default: 365
+    min: 7
+    max: 10000
   track_external_right_clicks:
     client: true
     default: false
@@ -631,6 +635,10 @@ files:
       test: false
       default: true
   download_remote_images_threshold: 10
+  download_remote_images_max_days_old:
+    default: 30
+    min: 1
+    max: 10000
   disabled_image_download_domains:
     type: list
     default: ''

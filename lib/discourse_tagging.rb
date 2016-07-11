@@ -3,10 +3,6 @@ module DiscourseTagging
   TAGS_FIELD_NAME = "tags"
   TAGS_FILTER_REGEXP = /[<\\\/\>\#\?\&\s]/
 
-  # class Engine < ::Rails::Engine
-  #   engine_name "discourse_tagging"
-  #   isolate_namespace DiscourseTagging
-  # end
 
   def self.tag_topic_by_names(topic, guardian, tag_names_arg)
     if SiteSetting.tagging_enabled
@@ -43,13 +39,11 @@ module DiscourseTagging
           end
         end
 
-        auto_notify_for(tags, topic)
-
         topic.tags = tags
       else
-        auto_notify_for([], topic)
         topic.tags = []
       end
+      topic.tags_changed=true
     end
     true
   end
@@ -67,45 +61,44 @@ module DiscourseTagging
       query = query.where('tags.name like ?', "%#{term}%")
     end
 
+    # Filters for category-specific tags:
+    category = opts[:category]
+
+    if category && (category.tags.count > 0 || category.tag_groups.count > 0)
+      if category.tags.count > 0 && category.tag_groups.count > 0
+        tag_group_ids = category.tag_groups.pluck(:id)
+
+        query = query.where(
+          "tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?
+            UNION
+            SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))",
+          category.id, tag_group_ids
+        )
+      elsif category.tags.count > 0
+        query = query.where("tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?)", category.id)
+      else # category.tag_groups.count > 0
+        tag_group_ids = category.tag_groups.pluck(:id)
+
+        query = query.where("tags.id IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))", tag_group_ids)
+      end
+    elsif opts[:for_input] || category
+      # exclude tags that are restricted to other categories
+      if CategoryTag.exists?
+        query = query.where("tags.id NOT IN (SELECT tag_id FROM category_tags)")
+      end
+
+      if CategoryTagGroup.exists?
+        tag_group_ids = CategoryTagGroup.pluck(:tag_group_id).uniq
+        query = query.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))", tag_group_ids)
+      end
+    end
+
     if opts[:for_input]
       selected_tag_ids = opts[:selected_tags] ? Tag.where(name: opts[:selected_tags]).pluck(:id) : []
 
-      unless guardian.is_staff?
+      unless guardian.nil? || guardian.is_staff?
         staff_tag_names = SiteSetting.staff_tags.split("|")
         query = query.where('tags.name NOT IN (?)', staff_tag_names) if staff_tag_names.present?
-      end
-
-      # Filters for category-specific tags:
-
-      category = opts[:category]
-
-      if category && (category.tags.count > 0 || category.tag_groups.count > 0)
-        if category.tags.count > 0 && category.tag_groups.count > 0
-          tag_group_ids = category.tag_groups.pluck(:id)
-
-          query = query.where(
-            "tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?
-              UNION
-              SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))",
-            category.id, tag_group_ids
-          )
-        elsif category.tags.count > 0
-          query = query.where("tags.id IN (SELECT tag_id FROM category_tags WHERE category_id = ?)", category.id)
-        else # category.tag_groups.count > 0
-          tag_group_ids = category.tag_groups.pluck(:id)
-
-          query = query.where("tags.id IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))", tag_group_ids)
-        end
-      else
-        # exclude tags that are restricted to other categories
-        if CategoryTag.exists?
-          query = query.where("tags.id NOT IN (SELECT tag_id FROM category_tags)")
-        end
-
-        if CategoryTagGroup.exists?
-          tag_group_ids = CategoryTagGroup.pluck(:tag_group_id).uniq
-          query = query.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))", tag_group_ids)
-        end
       end
 
       # exclude tag groups that have a parent tag which is missing from selected_tags
@@ -144,11 +137,6 @@ module DiscourseTagging
     end
 
     query
-  end
-
-  def self.auto_notify_for(tags, topic)
-    TagUser.auto_watch_new_topic(topic, tags)
-    TagUser.auto_track_new_topic(topic, tags)
   end
 
   def self.clean_tag(tag)

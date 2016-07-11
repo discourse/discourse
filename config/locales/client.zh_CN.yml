@@ -440,6 +440,7 @@ zh_CN:
         daily: "发送每日更新"
         individual: "为每个新帖发送一封邮件通知"
         many_per_day: "为每个新帖给我发送邮件通知 (大约 {{dailyEmailEstimate}} 每天)."
+        few_per_day: "为每个新帖给我发送邮件 (少于 2 每天).\n\n给我发送一个电子邮件为每个新岗位"
       watched_categories: "已关注"
       watched_categories_instructions: "你将会自动监视这些分类中的所有新主题。你会收到新帖子或新主题的通知，并且新帖数量也将在每个主题后显示。"
       tracked_categories: "已追踪"
@@ -485,6 +486,7 @@ zh_CN:
         error: "修改该值是发生了错误"
       change_username:
         title: "修改用户名"
+        confirm: "如果你改变了你的用户名，所有之前引用的主题和@用户名的内容全部失效，你的发帖历史也会被打断。你确定要这么做么？"
         taken: "抱歉，此用户名已经被使用了。"
         error: "在修改你的用户名时发生了错误。"
         invalid: "此用户名不合法，用户名只能包含字母和数字"
@@ -574,6 +576,7 @@ zh_CN:
         every_three_days: "每三天"
         weekly: "每周"
         every_two_weeks: "每两周"
+      include_tl0_in_digests: "在摘要邮件中包含来自新用户的内容"
       email_in_reply_to: "在邮件中附带回复你的帖子的内容节选"
       email_direct: "当有人引用我、回复我的帖子、@提及我或邀请我至主题时，发送一封邮件给我"
       email_private_messages: "当有人发消息给我时，发送一封邮件给我"
@@ -620,7 +623,9 @@ zh_CN:
         rescind: "移除"
         rescinded: "邀请已删除"
         reinvite: "重新发送邀请"
+        reinvite_all: "重发所有邀请"
         reinvited: "邀请已重新发送"
+        reinvited_all: "所有邀请发送！"
         time_read: "阅读时间"
         days_visited: "访问天数"
         account_age_days: "账号建立天数"
@@ -649,6 +654,10 @@ zh_CN:
           other: "创建的主题"
         post_count:
           other: "发表的帖子"
+        likes_given:
+          other: "赠予"
+        likes_received:
+          other: "收到"
         days_visited:
           other: "访问天数"
         posts_read:
@@ -668,6 +677,7 @@ zh_CN:
         no_links: "暂无链接"
         most_liked_by: "被最多赞"
         most_liked_users: "最赞"
+        most_replied_to_users: "最多回复至"
         no_likes: "暂无赞"
       associated_accounts: "登录"
       ip_address:
@@ -987,6 +997,7 @@ zh_CN:
       post_format: "#{{post_number}} 来自于 {{username}}"
       context:
         user: "搜索 @{{username}} 的帖子"
+        category: "搜索 the #{{category}} 分类"
         topic: "只搜索本主题"
         private_messages: "搜索消息"
     hamburger_menu: "去另一个主题列表或分类"
@@ -1104,6 +1115,7 @@ zh_CN:
       timeline:
         back: "返回"
         back_description: "回到你的最后一个未读帖子"
+        replies: "%{current} / %{total} 回复"
       progress:
         title: 主题进度
         go_top: "顶部"
@@ -1115,7 +1127,9 @@ zh_CN:
         current: 当前帖
         position: "%{total}帖中的第%{current}帖"
       notifications:
+        title: 改变你收到本主题通知的频率
         reasons:
+          mailing_list_mode: "你已启用邮件列表模式，所以对该主题的回复你将通过邮件被通知。"
           '3_6': '因为你在关注此分类，所以你将收到相关通知。'
           '3_5': '因为你自动关注了此主题，所以你将收到相关通知。'
           '3_2': '因为你在关注此主题，所以你将收到相关通知。'
@@ -1461,6 +1475,7 @@ zh_CN:
       general: '常规'
       settings: '设置'
       topic_template: "主题模板"
+      tags: "标签"
       delete: '删除分类'
       create: '新分类'
       create_long: '创建新的分类'
@@ -1553,6 +1568,10 @@ zh_CN:
       links_shown: "显示所有 {{totalLinks}} 个链接..."
       clicks:
         other: "%{count} 次点击"
+    post_links:
+      about: "为本帖展开更多链接"
+      title:
+        other: "%{count} 更多"
     topic_statuses:
       warning:
         help: "这是一个正式的警告。"
@@ -1679,6 +1698,126 @@ zh_CN:
       full: "创建 / 回复 / 阅读"
       create_post: "回复 / 阅读"
       readonly: "阅读"
+    search_help:
+      title: '搜索帮助'
+    keyboard_shortcuts_help:
+      title: '键盘快捷键'
+      jump_to:
+        title: '转至'
+        home: '<b>g</b>, <b>h</b> 首页'
+        latest: '<b>g</b>, <b>l</b> 最新'
+        new: '<b>g</b>, <b>n</b> 近期'
+        unread: '<b>g</b>, <b>u</b> 未读'
+        categories: '<b>g</b>, <b>c</b> 分类'
+        top: '<b>g</b>, <b>t</b> 热门'
+        bookmarks: '<b>g</b>, <b>b</b> 书签'
+        profile: '<b>g</b> 然后 <b>p</b> 个人页面'
+        messages: '<b>g</b>, <b>m</b> 消息'
+      navigation:
+        title: '导航'
+        jump: '<b>#</b> 前往帖子 #'
+        back: '<b>u</b> 返回'
+        up_down: '<b>k</b> 或 <b>j</b> 移动选择焦点 &uarr; &darr;'
+        next_prev: '<b>shift</b>+<b>j</b> 或 <b>shift</b>+<b>k</b> 下一个/前一个段落'
+      application:
+        title: '应用'
+        create: '<b>c</b> 创建新主题'
+        notifications: '<b>n</b> Open notifications'
+        hamburger_menu: '<b>=</b> 打开汉堡菜单'
+        user_profile_menu: '<b>p</b> 打开用户菜单'
+        show_incoming_updated_topics: '<b>.</b> 显示更新主题'
+        search: '<b>/</b> 搜索'
+        help: '<b>?</b> 打开键盘帮助'
+        dismiss_new_posts: '<b>x</b> 然后 <b>r</b> 解除新/帖子提示'
+        dismiss_topics: '<b>x</b> 然后 <b>t</b> 解除主题提示'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> 退出'
+      actions:
+        title: '动作'
+        bookmark_topic: '<b>f</b> 切换主题收藏状态'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> 置顶/截至置顶主题'
+        share_topic: '<b>shift</b>+<b>s</b> 分享主题'
+        share_post: '<b>s</b> 分享帖子'
+        reply_as_new_topic: '<b>t</b> 回复为联结主题'
+        reply_topic: '<b>shift</b>+<b>r</b> 回复主题'
+        reply_post: '<b>r</b> 回复帖子'
+        quote_post: '<b>q</b> 引用帖子'
+        like: '<b>l</b> 赞帖子'
+        flag: '<b>!</b> 标记帖子'
+        bookmark: '<b>b</b> 收藏帖子'
+        edit: '<b>e</b> 编辑帖子'
+        delete: '<b>d</b> 删除帖子'
+        mark_muted: '<b>m</b>, <b>m</b> 忽略主题'
+        mark_regular: '<b>m</b>, <b>r</b> 常规 (默认) 主题'
+        mark_tracking: '<b>m</b>, <b>t</b> 追踪主题'
+        mark_watching: '<b>m</b>, <b>w</b> 关注主题'
+    badges:
+      earned_n_times:
+        other: "授予徽章 %{count} 次"
+      granted_on: "授予于%{date}"
+      others_count: "其他有该徽章的人（%{count}）"
+      title: 徽章
+      allow_title: "能用作头衔"
+      multiple_grant: "能被授予多次"
+      badge_count:
+        other: "%{count} Badges"
+      more_badges:
+        other: "+%{count} 更多"
+      granted:
+        other: "%{count} 授予"
+      select_badge_for_title: 选择一个徽章作为你的头衔使用
+      badge_grouping:
+        getting_started:
+          name: 开始
+        community:
+          name: 社区
+        trust_level:
+          name: Trust Level
+        other:
+          name: 其它
+        posting:
+          name: 发帖
+    tagging:
+      all_tags: "所有标签"
+      selector_all_tags: "所有标签"
+      tags: "标签"
+      choose_for_topic: "为本主题选择可选标签"
+      sort_by: "Sort by："
+      sort_by_count: "计数"
+      sort_by_name: "名称"
+      filters:
+        without_category: "%{filter} %{tag} 主题"
+        with_category: "%{filter} %{tag} 主题 在 %{category}"
+      notifications:
+        watching:
+          title: "关注"
+          description: "你将会自动监视包含这些标签的所有新主题。你会收到新帖子或新主题的通知，未读和新帖数量将出现在每个主题后。"
+        tracking:
+          title: "追踪"
+          description: "你将会自动追踪这些标签的所有新主题。未读和新帖子数量将出现在每个主题后。"
+        regular:
+          title: "常规"
+          description: "当有人@你或者回复你的帖子时，你才会收到通知。"
+        muted:
+          title: "忽略"
+          description: "你不会收到这些标签的任何新主题通知，并且他们将不会出现在你的未读列表中。"
+      groups:
+        title: "标签组"
+        parent_tag_placeholder: "可选"
+      topics:
+        none:
+          unread: "你没有未读主题。"
+          new: "你没有新的主题"
+          read: "你尚未阅读任何主题。"
+          posted: "你尚未在任何主题中发帖。"
+          latest: "没有最新主题。"
+          hot: "没有热门主题。"
+          bookmarks: "你还没有收藏主题。"
+          top: "没有最佳主题。"
+          search: "没有搜索结果。"
+        bottom:
+          latest: "没有更多的最新主题。"
+          hot: "没有更多的热门话题。"
+          posted: "没有更多的发布主题。"
   admin_js:
     type_to_filter: "输入过滤条件..."
     admin:

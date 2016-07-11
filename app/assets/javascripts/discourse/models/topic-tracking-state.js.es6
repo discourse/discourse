@@ -1,4 +1,4 @@
-import NotificationLevels from 'discourse/lib/notification-levels';
+import { NotificationLevels } from 'discourse/lib/notification-levels';
 import computed from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
 

@@ -132,7 +132,7 @@ function render(page, offset, options) {
 
   for(let i=offset; i<max; i++){
     if(!icons[i]){ break; }
-    if(row.length === PER_ROW){
+    if(row.length === (options.perRow || PER_ROW)){
       rows.push(row);
       row = [];
     }
@@ -144,7 +144,8 @@ function render(page, offset, options) {
     toolbarItems: toolbarItems,
     rows: rows,
     prevDisabled: offset === 0,
-    nextDisabled: (max + 1) > icons.length
+    nextDisabled: (max + 1) > icons.length,
+    modalClass: options.modalClass
   };
 
   $('.emoji-modal', options.appendTo).remove();
@@ -162,7 +163,8 @@ function showSelector(options) {
   $('.emoji-modal-wrapper').click(() => closeSelector());
 
   if (Discourse.Site.currentProp('mobileView')) { PER_ROW = 9; }
-  const page = keyValueStore.getInt("emojiPage", 0);
+  const page = options.page ? _.findIndex(groups, (g) => { return g.name === options.page; })
+                            : keyValueStore.getInt("emojiPage", 0);
   const offset = keyValueStore.getInt("emojiOffset", 0);
 
   render(page, offset, options);

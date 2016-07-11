@@ -141,7 +141,7 @@ const User = RestModel.extend({
     return Discourse.User.create(this.getProperties(Object.keys(this)));
   },
 
-  save(options) {
+  save() {
     const data = this.getProperties(
             'bio_raw',
             'website',
@@ -152,7 +152,10 @@ const User = RestModel.extend({
             'user_fields',
             'muted_usernames',
             'profile_background',
-            'card_background'
+            'card_background',
+            'muted_tags',
+            'tracked_tags',
+            'watched_tags'
           );
 
     [       'email_always',
@@ -179,21 +182,21 @@ const User = RestModel.extend({
 
     var updatedState = {};
 
-    ['muted','watched','tracked'].forEach(s => {
-      let cats = this.get(s + 'Categories').map(c => c.get('id'));
-      updatedState[s + '_category_ids'] = cats;
+    ['muted','watched','tracked','watched_first_post'].forEach(s => {
+      let prop = s === "watched_first_post" ? "watchedFirstPostCategories" : s + "Categories";
+      let cats = this.get(prop);
+      if (cats) {
+        let cat_ids = cats.map(c => c.get('id'));
+        updatedState[s + '_category_ids'] = cat_ids;
 
-      // HACK: denote lack of categories
-      if (cats.length === 0) { cats = [-1]; }
-      data[s + '_category_ids'] = cats;
+        // HACK: denote lack of categories
+        if (cats.length === 0) { cat_ids = [-1]; }
+        data[s + '_category_ids'] = cat_ids;
+      }
     });
 
     if (!Discourse.SiteSettings.edit_history_visible_to_public) {
       data['edit_history_public'] = this.get('user_option.edit_history_public');
-    }
-
-    if (options && options.unwatchCategoryTopics) {
-      data.unwatch_category_topics = options.unwatchCategoryTopics;
     }
 
     // TODO: We can remove this when migrated fully to rest model.
@@ -361,14 +364,9 @@ const User = RestModel.extend({
     this.set("watchedCategories", Discourse.Category.findByIds(this.watched_category_ids));
   },
 
-  changedCategoryNotifications: function(type) {
-    const ids = this.get(type + "Categories").map(c => c.id);
-    const oldIds = this.get(type + "_category_ids");
-
-    return {
-      add: _.difference(ids, oldIds),
-      remove: _.difference(oldIds, ids),
-    };
+  @observes("watched_first_post_category_ids")
+  updateWatchedFirstPostCategories() {
+    this.set("watchedFirstPostCategories", Discourse.Category.findByIds(this.watched_first_post_category_ids));
   },
 
   @computed("can_delete_account", "reply_count", "topic_count")

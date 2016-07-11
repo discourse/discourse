@@ -42,7 +42,8 @@ class Notification < ActiveRecord::Base
                         invited_to_topic: 13,
                         custom: 14,
                         group_mentioned: 15,
-                        group_message_summary: 16
+                        group_message_summary: 16,
+                        watching_first_post: 17
                        )
   end
 
@@ -105,11 +106,6 @@ class Notification < ActiveRecord::Base
 
       parsed.with_indifferent_access
     end
-  end
-
-  def text_description
-    link = block_given? ? yield : ""
-    I18n.t("notification_types.#{Notification.types[notification_type]}", data_hash.merge(link: link))
   end
 
   def url

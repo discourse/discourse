@@ -1,5 +1,5 @@
 import { createWidget } from 'discourse/widgets/widget';
-import { all, buttonDetails } from 'discourse/lib/notification-levels';
+import { topicLevels, buttonDetails } from 'discourse/lib/notification-levels';
 import { h } from 'virtual-dom';
 import RawHTML from 'discourse/widgets/raw-html';
 
@@ -63,7 +63,7 @@ export default createWidget('topic-notifications-button', {
     const result = [ this.buttonFor(details.get('notification_level')) ];
 
     if (state.expanded) {
-      result.push(h('ul.dropdown-menu', all.map(l => this.attach('notification-option', l))));
+      result.push(h('ul.dropdown-menu', topicLevels.map(l => this.attach('notification-option', l))));
     }
 
     if (attrs.appendReason) {
