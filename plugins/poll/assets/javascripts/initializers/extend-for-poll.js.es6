@@ -101,7 +101,7 @@ function initializePolls(api) {
       );
 
       $poll.replaceWith($div);
-      Em.run.next(() => pollView.renderer.replaceIn(pollView, $div[0]));
+      Em.run.schedule('afterRender', () => pollView.renderer.replaceIn(pollView, $div[0]));
       postPollViews[pollId] = pollView;
     });
 
