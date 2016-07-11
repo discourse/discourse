@@ -1524,7 +1524,32 @@ es:
     unsubscribe:
       title: "Darse de baja"
       description: "¿No estás interesado en recibir estos emails? ¡No hay problema! Haz clic abajo para darte de baja de forma instantánea:"
+    reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este email para publicar."
+    reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este email para comentar."
+    only_reply_by_email: "Responde a este email para comentar."
+    visit_link_to_respond: "[Visita el tema](%{base_url}%{url}) para responder."
+    visit_link_to_respond_pm: "[Visita el mensaje](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} el %{post_date}"
+    invited_to_private_message_body: |
+      %{username} te invitó a un mensaje directo
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      en
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} te invitó a un tema de debate
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      en
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
       text_body_template: |
@@ -1636,10 +1661,13 @@ es:
         %{message}
     digest:
       why: "Un breve resumen de %{site_link} desde tu última visita el %{last_seen_at}"
+      subject_template: "Resumen de [%{site_name}]"
       new_activity: "Actividad nueva en tus temas y posts:"
       top_topics: "Posts populares"
       other_new_topics: "Temas populares"
+      unsubscribe: "Este resumen se envía desde %{site_link} cuando pasa un tiempo desde tu última visita. Para cancelar tu suscripción %{unsubscribe_link}."
       click_here: "clic aquí"
+      from: "resumen de %{site_name}"
       read_more: "Leer más"
       more_topics: "Se han publicado otros %{new_topics_since_seen} nuevos temas."
       more_topics_category: "Más temas nuevos:"
@@ -1750,6 +1778,8 @@ es:
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Por favor, modifica sus dimensiones y prueba otra vez."
       size_not_found: "Lo sentimos, pero no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
+  avatar:
+    missing: "Lo sentimos, no hemos encontrado un avatar asociado a esa dirección de email. ¿Puedes intentar subirlo de nuevo?"
   email_log:
     post_user_deleted: "El autor de la publicación ha sido eliminado."
     no_user: "No se puede encontrar al usuario con id %{user_id}"

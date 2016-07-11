@@ -7,9 +7,9 @@
 
 zh_CN:
   dates:
-    short_date_no_year: "MMMDo"
-    short_date: "ll"
-    long_date: "lll"
+    short_date_no_year: "MMM月D日"
+    short_date: "YYYY年MMM月D日"
+    long_date: "YYYY年MMM月D日 h:mma"
   datetime_formats: &datetime_formats
     formats:
       short: "%Y 年 %-m 月 %-d 日"
@@ -18,18 +18,24 @@ zh_CN:
   date:
     month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
+  time:
+    am: "上午"
+    pm: "下午"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
   powered_by_html: '采用 <a href="http://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳效果'
   log_in: "登录"
+  purge_reason: "自动删除废弃，停用账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被禁用。"
   anonymous: "匿名"
   emails:
     incoming:
       default_subject: "来自%{email}的邮件"
       show_trimmed_content: "显示被截短的内容"
+      maximum_staged_user_per_email_reached: "用户创建/电子邮件达到最大数量。"
       errors:
         empty_email_error: "当收到空白邮件时发生"
         no_message_id_error: "当邮件头部没有 “Message-Id” 时发生"
@@ -134,7 +140,7 @@ zh_CN:
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。也许这个话题被关闭或删除。"
-  just_posted_that: "与你最近发表的帖子太过相似"
+  just_posted_that: "太类似于您最近发表"
   invalid_characters: "包含无效字符"
   is_invalid: "无效；请描述得更清楚一点"
   next_page: "下一页 →"
@@ -167,6 +173,7 @@ zh_CN:
     delete_reason: "通过帖子审核队列删除"
   groups:
     errors:
+      can_not_modify_automatic: "你不能修改自动组"
       member_already_exist: "“%{username}”已经是群组成员了。"
       invalid_domain: "'%{domain}'不是一个有效域名。"
       invalid_incoming_email: "'%{email}' 不是一个有效邮箱地址。"
@@ -243,6 +250,8 @@ zh_CN:
     attributes:
       category:
         name: "分类名称"
+      topic:
+        title: '标题'
       post:
         raw: "内容"
       user_profile:
@@ -429,6 +438,7 @@ zh_CN:
     continue_button: "转入到 %{site_name}"
     welcome_to: "欢迎来到%{site_name}！"
     approval_required: "你的新帐号需要由一位论坛版主手动批准方可使用。一旦你的帐号获得批准，你将收到一封电子邮件通知！"
+    missing_session: "我们无法检测到您创建的帐户，请确定您已经启用Cookie。"
   post_action_types:
     off_topic:
       title: '题外话'
@@ -499,6 +509,7 @@ zh_CN:
     description: "你已经取消订阅，我们不会再发送邮件给你！"
     oops: "如果你并不想取消订阅，请点击下方的按钮。"
     error: "取消订阅时出错"
+    preferences_link: "你也可以退订摘要邮件在你的 <a href='/my/preferences'>偏好页面</a>"
     not_found_description: "抱歉，我们无法帮你取消订阅。可能你的邮件里的链接已过期。"
   resubscribe:
     action: "重新订阅"
@@ -596,6 +607,7 @@ zh_CN:
     page_view_total_reqs:
       title: "总量"
       xaxis: "天"
+      yaxis: "总浏览量"
     page_view_logged_in_mobile_reqs:
       xaxis: "天"
     page_view_anon_mobile_reqs:
@@ -1217,7 +1229,11 @@ zh_CN:
       %{invite_link}
 
       这封邀请来组于受信任的用户，所以你可以立即回复。
+  custom_invite_mailer:
+    subject_template: "%{invitee_name} 邀请你 '%{topic_title}' 在 %{site_domain_name}"
   invite_forum_mailer:
+    subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
+  custom_invite_forum_mailer:
     subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
   invite_password_instructions:
     subject_template: "为 %{site_name} 账户设置密码"
@@ -1421,6 +1437,12 @@ zh_CN:
         请确认你在[站点设置](%{base_url}/admin/site_settings/category/email)中已经正确配置了 POP 验证信息。
 
         如果 POP 邮件账号有图形界面，你可以登录后查看邮箱设置。
+    too_many_spam_flags:
+      subject_template: "新账户被暂时封禁"
+    too_many_tl3_flags:
+      subject_template: "新账户被暂时封禁"
+    blocked_by_staff:
+      subject_template: "账户被暂时封禁"
     user_automatically_blocked:
       subject_template: "因标记而被封禁的新用户 %{username}"
       text_body_template: |
@@ -1441,6 +1463,8 @@ zh_CN:
         请[审核该用户](%{base_url}%{user_url})。
 
         该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
+    unblocked:
+      subject_template: "账户已解除封禁"
     pending_users_reminder:
       subject_template:
         other: "%{count} 个用户等待批准"
@@ -1461,6 +1485,8 @@ zh_CN:
     unsubscribe:
       title: "取消订阅"
       description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
+    visit_link_to_respond: "[访问主题](%{base_url}%{url}) 以回复."
+    visit_link_to_respond_pm: "[访问消息](%{base_url}%{url}) 以回复."
     posted_by: "%{username}发表于%{post_date}"
     invited_to_private_message_body: |
       %{username} 邀请你至消息交流：
@@ -1508,13 +1534,24 @@ zh_CN:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "在你上一次于 %{last_seen_at}访问后，%{site_link}的新内容摘要。"
+      subject_template: "[%{site_name}] 摘要"
       new_activity: "在你的主题和帖子里的动态："
       top_topics: "热门帖子"
       other_new_topics: "热门主题"
+      unsubscribe: "本摘要摘自发送 %{site_link} 当我们在一段时间没有看到你的时候. 要取消订阅 %{unsubscribe_link}."
       click_here: "点击此处"
+      from: "%{site_name} 摘要"
       read_more: "阅读更多"
       more_topics: "有其他 %{new_topics_since_seen} 个新主题。"
       more_topics_category: "更多新主题："
+    mailing_list:
+      subject_template: "[%{site_name}] 摘要 于 %{date}"
+      unsubscribe: "本摘要每日发送因邮件列表模式被启用. 退订 %{unsubscribe_link}."
+      from: "%{site_name} 摘要"
+      new_topics: "新主题"
+      topic_updates: "主题更新"
+      view_this_topic: "查看此主题"
+      back_to_top: "回到顶部"
     forgot_password:
       subject_template: "[%{site_name}] 密码重置"
       text_body_template: |
@@ -1628,6 +1665,7 @@ zh_CN:
   avatar:
     missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
   email_log:
+    post_user_deleted: "帖子的用户已被删除。"
     no_user: "不能找到用户 ID 为 %{user_id} 的用户"
     anonymous_user: "这是匿名用户"
     suspended_not_pm: "用户被封禁，这不是消息"
@@ -2065,7 +2103,13 @@ zh_CN:
       name: 感性
       description: 有 500 个被赞的帖子，给出过 1000 个赞
     first_emoji:
+      name: 首个表情
       description: 在帖子中使用表情符号
+    first_mention:
+      name: 首次提及
+      description: 在帖子中提到用户
+    first_reply_by_email:
+      name: 首次邮件回复
   admin_login:
     success: "邮件已发送"
     error: "错误！"
@@ -2078,8 +2122,8 @@ zh_CN:
     initial_topic_title: 网站性能报告
   topic_invite:
     user_exists: "抱歉，用户已经被邀请了。你可能只想邀请用户参与主题一次。"
-  time:
-    <<: *datetime_formats
+  tags:
+    title: "标签"
   activemodel:
     errors:
       <<: *errors

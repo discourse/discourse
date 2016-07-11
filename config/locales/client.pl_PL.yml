@@ -224,7 +224,7 @@ pl_PL:
         all_time: "Ogółem"
         last_7_days: "Ostatnich 7 dni"
         last_30_days: "Ostatnie 30 dni"
-      like_count: "Polubienia"
+      like_count: "Lajki"
       topic_count: "Tematy"
       post_count: "Wpisy"
       user_count: "Nowi użytkownicy"
@@ -378,8 +378,8 @@ pl_PL:
           title: "Wyciszony"
           description: "Nie otrzymasz powiadomień o nowych tematach w tej grupie."
     user_action_groups:
-      '1': "Przyznane polubienia"
-      '2': "Otrzymane polubienia"
+      '1': "Przyznane lajki"
+      '2': "Otrzymane lajki"
       '3': "Zakładki"
       '4': "Tematy"
       '5': "Odpowiedzi"
@@ -595,7 +595,10 @@ pl_PL:
       website: "Strona internetowa"
       email_settings: "Email"
       like_notification_frequency:
+        title: "Powiadom o lajkach"
         always: "Zawsze"
+        first_time_and_daily: "Pierwszy lajk i raz dziennie"
+        first_time: "Pierwszy lajk"
         never: "Nigdy"
       email_previous_replies:
         always: "zawsze"
@@ -684,6 +687,9 @@ pl_PL:
         more_topics: "Więcej tematów"
         top_badges: "Najlepsze odznaki"
         more_badges: "Więcej odznak"
+        most_liked_by: "Najbardziej lajkowane przez"
+        most_liked_users: "Najbardziej lajkowane"
+        no_likes: "Brak lajków."
       associated_accounts: "Powiązane konta"
       ip_address:
         title: "Ostatni adres IP"
@@ -726,6 +732,7 @@ pl_PL:
     logout: "Nastąpiło wylogowanie."
     refresh: "Odśwież"
     read_only_mode:
+      enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, lajkowanie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
     too_few_topics_and_posts_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów i <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
     too_few_topics_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
@@ -851,7 +858,6 @@ pl_PL:
       saved_local_draft_tip: "zapisano lokalnie"
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
-      group_mentioned: "Używając {{group}} powiadamiasz grupę <a href='{{group_link}}'>{{count}} osób</a>."
       error:
         title_missing: "tytuł jest wymagany"
         title_too_short: "tytuł musi zawierać co najmniej {{min}} znaków"
@@ -937,7 +943,6 @@ pl_PL:
       invited_to_topic: "<i title='zaproszenie do tematu' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='przyjęcie twojego zaproszenia' class='fa fa-user'></i><p><span>{{username}}</span> przyjmuje twoje zaproszenie</p>"
       moved_post: "<i title='przeniesienie wpisu' class='fa fa-sign-out'></i><p><span>{{username}}</span> przenosi {{description}}</p>"
-      linked: "<i title='powiązany wpis' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='otrzymano odznakę' class='fa fa-certificate'></i><p>Otrzymujesz '{{description}}'</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> masz {{count}} wiadomość w skrzynce odbiorczej {{group_name}} </p>"
@@ -949,7 +954,7 @@ pl_PL:
         replied: "Odpowiedź"
         posted: "Autor wpisu"
         edited: "Edycja twojego wpisu"
-        liked: "Polubienie twojego wpisu"
+        liked: "Lajk twojego wpisu"
         private_message: "Prywatna wiadomość od"
         invited_to_private_message: "Zaproszenie do prywatnej wiadomości od"
         invited_to_topic: "Zaproszenie do tematu od"
@@ -984,7 +989,7 @@ pl_PL:
       relevance: "Trafność"
       latest_post: "Aktualne wpisy"
       most_viewed: "Popularne"
-      most_liked: "Lubiane"
+      most_liked: "Najbardziej lajkowane"
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
       result_count:
@@ -1101,9 +1106,9 @@ pl_PL:
         few: "od Twoich ostatnich odwiedzin pojawiły się {{count}} nowe wpisy"
         other: "od Twoich ostatnich odwiedzin pojawiło się {{count}} nowych wpisów"
       likes:
-        one: "temat zawiera 1 polubienie"
-        few: "temat zawiera {{count}} polubienia"
-        other: "temat zawiera {{count}} polubień"
+        one: "temat zawiera 1 lajk"
+        few: "temat zawiera {{count}} lajki"
+        other: "temat zawiera {{count}} lajków"
       back_to_list: "Wróć do Listy Tematów"
       options: "Opcje tematu"
       show_links: "pokaż odnośniki z tego tematu"
@@ -1234,8 +1239,6 @@ pl_PL:
         no_banner_exists: "Baner nie jest obecnie ustawiony."
         banner_exists: "Baner <strong class='badge badge-notification unread'>jest</strong> obecnie ustawiony."
       inviting: "Zapraszam…"
-      automatically_add_to_groups_optional: "To zaproszenie daje dostęp do tych grup: (opcjonalne, tylko dla admina)"
-      automatically_add_to_groups_required: "To zaproszenie daje dostęp do tych grup: (<b>Wymagane</b>, tylko dla admina)"
       invite_private:
         title: 'Zaproś do dyskusji'
         email_or_username: "Adres email lub nazwa użytkownika zapraszanej osoby"
@@ -1341,18 +1344,18 @@ pl_PL:
         few: "{{count}} odpowiedzi"
         other: "{{count}} odpowiedzi"
       has_likes:
-        one: "{{count}} polubienie"
-        few: "{{count}} polubienia"
-        other: "{{count}} polubień"
+        one: "{{count}} lajk"
+        few: "{{count}} lajki"
+        other: "{{count}} lajków"
       has_likes_title:
-        one: "1 osoba polubiła ten wpis"
-        few: "{{count}} osoby polubiły ten wpis"
-        other: "{{count}} osób polubiło ten wpis"
-      has_likes_title_only_you: "polubiony wpis"
+        one: "1 osoba lajkuje ten wpis"
+        few: "{{count}} osoby lajkują ten wpis"
+        other: "{{count}} osób lajkuje ten wpis"
+      has_likes_title_only_you: "lajkowany wpis"
       has_likes_title_you:
-        one: "ty i 1 inna osoba polubiliście ten wpis"
-        few: "ty i {{count}} inne osoby polubiliście ten wpis"
-        other: "ty i {{count}} innych osób polubiło ten wpis"
+        one: "ty i 1 inna osoba lajkuje ten wpis"
+        few: "ty i {{count}} inne osoby lajkują ten wpis"
+        other: "ty i {{count}} innych osób lajkuje ten wpis"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -1372,9 +1375,9 @@ pl_PL:
         save: 'Opcje zapisu'
       controls:
         reply: "zacznij tworzyć odpowiedź na ten wpis"
-        like: "polub ten wpis"
-        has_liked: "polubiono ten wpis"
-        undo_like: "wycofaj polubienie"
+        like: "lajkuj ten wpis"
+        has_liked: "lajkujesz ten wpis"
+        undo_like: "wycofaj lajka"
         edit: "edytuj ten wpis"
         edit_anonymous: "Przykro nam, ale musisz być zalogowany aby edytować ten wpis."
         flag: "oflaguj ten wpis lub wyślij powiadomienie o nim do moderatorów"
@@ -1409,7 +1412,7 @@ pl_PL:
           inappropriate: "Oflaguj też to"
           custom_flag: "Oflaguj też to"
           bookmark: "Utwórz zakładkę"
-          like: "Polub"
+          like: "Lajkuj"
           vote: "Zagłosuj za tym"
         undo:
           off_topic: "Cofnij flagę"
@@ -1425,7 +1428,7 @@ pl_PL:
           notify_moderators: "Powiadomiono moderatorów"
           notify_user: "Wysłano wiadomość"
           bookmark: "dodaj do zakładek"
-          like: "polubiło to"
+          like: "lajkuje to"
           vote: "zagłosowało"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
@@ -1434,7 +1437,7 @@ pl_PL:
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
           bookmark: "Dodano zakładkę w tym wpisie"
-          like: "Lubisz ten wpis"
+          like: "Lajkujesz ten wpis"
           vote: "Zagłosowano na ten wpis"
         by_you_and_others:
           off_topic:
@@ -1462,9 +1465,9 @@ pl_PL:
             few: "Ty i {{count}} inne osoby dodaliście ten wpis do zakładek."
             other: "Ty i {{count}} innych osób dodaliście ten wpis do zakładek."
           like:
-            one: "Ty i 1 inna osoba lubicie to."
-            few: "Ty i {{count}} inne osoby lubicie to."
-            other: "Ty i {{count}} innych osób lubicie to."
+            one: "Ty i 1 inna osoba lajkujecie to."
+            few: "Ty i {{count}} inne osoby lajkują to."
+            other: "Ty i {{count}} innych osób lajkuje to."
           vote:
             one: "Ty i 1 inna osoba zagłosowaliście za tym wpisem"
             few: "Ty i {{count}} inne osoby zagłosowaliście za tym wpisem"
@@ -1495,9 +1498,9 @@ pl_PL:
             few: "{{count}} osoby dodały ten wpis do zakładek"
             other: "{{count}} osób dodało ten wpis do zakładek"
           like:
-            one: "1 osoba lubi to"
-            few: "{{count}} osoby lubią to"
-            other: "{{count}} osób lubi to"
+            one: "1 osoba lajkuje to"
+            few: "{{count}} osoby lajkują to"
+            other: "{{count}} osób lajkuje to"
           vote:
             one: "1 osoba zagłosowała za tym wpisem"
             few: "{{count}} osoby zagłosowały za tym wpisem"
@@ -1663,12 +1666,12 @@ pl_PL:
     replies: "Odpowiedzi"
     views_long: "ten temat był oglądany {number}} razy"
     activity: "Aktywność"
-    likes: "Polubienia"
+    likes: "Lajki"
     likes_lowercase:
-      one: "polubienie"
-      few: "polubienia"
-      other: "polubień"
-    likes_long: "jest {{number}} polubień w tym temacie"
+      one: "lajk"
+      few: "lajki"
+      other: "lajków"
+    likes_long: "jest {{number}} lajków w tym temacie"
     users: "Użytkownicy"
     users_lowercase:
       one: "użytkownik"
@@ -1767,6 +1770,9 @@ pl_PL:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
       readonly: "przeglądać"
+    keyboard_shortcuts_help:
+      actions:
+        like: '<b>l</b> Lajkuj post'
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -2087,7 +2093,7 @@ pl_PL:
             description: 'Używany do oznaczania operacji zakończonych sukcesem.'
           love:
             name: 'polubienie'
-            description: "Kolor przycisku polub"
+            description: "Kolor przycisku lajkuj"
       email:
         settings: "Ustawienia"
         preview_digest: "Pokaż zestawienie aktywności"
@@ -2317,7 +2323,7 @@ pl_PL:
         reputation: Reputacja
         permissions: Uprawnienia
         activity: Aktywność
-        like_count: Polubień danych / otrzymanych
+        like_count: Lajki dane / otrzymane
         last_100_days: 'w ostatnich 100 dniach'
         private_topics_count: Prywatne tematy
         posts_read_count: Przeczytane wpisy
@@ -2391,10 +2397,10 @@ pl_PL:
           posts_read_all_time: "Przeczytane Wpisy (cały czas)"
           flagged_posts: "Zgłoszonych wpisów"
           flagged_by_users: "Flagujący Użytkownicy "
-          likes_given: "Polubień danych"
-          likes_received: "Polubień otrzymanych"
-          likes_received_days: "Otrzymane polubienia: unikalne dni"
-          likes_received_users: "Otrzymane polubienia: od unikalnych użytkowników"
+          likes_given: "Lajki dane"
+          likes_received: "Lajki otrzymane"
+          likes_received_days: "Lajki otrzymane: unikalne dni"
+          likes_received_users: "Lajki otrzymane: unikalni użytkownicy"
           qualifies: "Kwalifikuje się do 3 poziomu zaufania."
           does_not_qualify: "Nie kwalifikuje się do 3 poziomu zaufania."
           will_be_promoted: "Zostanie awansowany wkrótce."
@@ -2592,98 +2598,3 @@ pl_PL:
           label: "Nowy:"
           add: "Dodaj"
           filter: "Wyszukaj (URL or zewnętrzny URL)"
-    lightbox:
-      download: "pobierz"
-    search_help:
-      title: 'Wyszukiwanie pomocy'
-    keyboard_shortcuts_help:
-      title: 'Skróty klawiszowe'
-      jump_to:
-        title: 'Skocz do'
-        home: '<b>g</b>, <b>h</b> Strona główna'
-        latest: '<b>g</b>, <b>l</b> Aktualne'
-        new: '<b>g</b>, <b>n</b> Nowe'
-        unread: '<b>g</b>, <b>u</b> Nieprzeczytane'
-        categories: '<b>g</b>, <b>c</b> Kategorie'
-        top: '<b>g</b>, <b>t</b> Popularne'
-        bookmarks: '<b>g</b>, <b>b</b> Zakładki'
-        profile: '<b>g</b>, <b>p</b> Profil'
-        messages: '<b>g</b>, <b>m</b> Wiadomości'
-      navigation:
-        title: 'Nawigacja'
-        jump: '<b>#</b> idź do wpisu #'
-        back: '<b>u</b> wstecz'
-        up_down: '<b>k</b>/<b>j</b> zaznacz &uarr; &darr;'
-        open: '<b>o</b> lub <b>Enter</b> otwórz wybrany temat'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> następna/poprzednia sekcja'
-      application:
-        title: 'Aplikacja'
-        create: '<b>c</b> utwórz nowy temat'
-        notifications: '<b>n</b> pokaż powiadomienia'
-        hamburger_menu: '<b>=</b> Otwórz menu'
-        user_profile_menu: '<b>p</b> menu użytkownika'
-        show_incoming_updated_topics: '<b>.</b> nowe zmiany w tematach'
-        search: '<b>/</b> wyszukaj'
-        help: '<b>?</b> skróty klawiszowe'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> wyczyść listę wpisów'
-        dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Wylogowanie'
-      actions:
-        title: 'Operacje'
-        bookmark_topic: '<b>f</b> dodaj/usuń zakładkę na temat'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> przypnij/odepnij temat'
-        share_topic: '<b>shift</b>+<b>s</b> Udostępnij temat'
-        share_post: '<b>s</b> udostępnij wpis'
-        reply_as_new_topic: '<b>t</b> odpowiedz w nowym temacie'
-        reply_topic: '<b>shift</b>+<b>r</b> Odpowiedz w temacie'
-        reply_post: '<b>r</b> odpowiedz na wpis'
-        quote_post: '<b>q</b> cytuj wpis'
-        like: '<b>l</b> polub wpis'
-        flag: '<b>!</b> oflaguj wpis'
-        bookmark: '<b>b</b> ustaw zakładkę na wpisie'
-        edit: '<b>e</b> edytuj wpis'
-        delete: '<b>d</b> usuń wpis'
-        mark_muted: '<b>m</b>, <b>m</b> ucisz temat'
-        mark_regular: '<b>m</b>, <b>r</b> zwykły (domyślny) temat'
-        mark_tracking: '<b>m</b>, <b>t</b> śledź temat'
-        mark_watching: '<b>m</b>, <b>w</b> śledź wszystko w temacie'
-    badges:
-      earned_n_times:
-        one: "Otrzymano tą odznakę 1 raz"
-        few: "Otrzymano tą odznakę %{count} razy"
-        other: "Otrzymano tą odznakę %{count} razy"
-      title: Odznaki
-      badge_count:
-        one: "1 odznaka"
-        few: "%{count} odznaki"
-        other: "%{count} odznak"
-      more_badges:
-        one: "+1 więcej"
-        few: "+%{count} więcej"
-        other: "+%{count} więcej"
-      granted:
-        one: "1 przyznane"
-        few: "%{count} przyznanych"
-        other: "%{count} przyznanych"
-      select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
-      none: "<brak>"
-      badge_grouping:
-        getting_started:
-          name: Pierwsze kroki
-        community:
-          name: Społeczność
-        trust_level:
-          name: Poziom zaufania
-        other:
-          name: Inne
-        posting:
-          name: Wpisy
-    google_search: |
-      <h3>Wyszukaj z Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

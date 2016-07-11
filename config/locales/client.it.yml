@@ -874,7 +874,6 @@ it:
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
-      group_mentioned: "Usando {{group}}, stai per mandare una notifica a <a href='{{group_link}}'>{{count}} persone</a>."
       error:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
@@ -956,7 +955,6 @@ it:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span>ha accettato il tuo invito</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ha spostato {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Guadagnato '{{description}}'</p>"
       alt:
         mentioned: "Menzionato da"
@@ -1119,7 +1117,7 @@ it:
       toggle_information: "commuta i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in {{catLink}} o {{latestLink}}."
       read_more: "Vuoi saperne di più? {{catLink}} o {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='/unread'>1 argomento non letto</a> } other { Ci sono <a href='/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {sono } other{}} <a href='/new'># nuovi</a>; argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='/unread'>1 argomento non letto</a> } other { Ci sono <a href='/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='/new'># nuovi</a>  argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza gli argomenti più recenti
       suggest_create_topic: Perché non crei un argomento?
@@ -1242,8 +1240,6 @@ it:
         no_banner_exists: "Non c'è alcun argomento annuncio."
         banner_exists: "<strong class='badge badge-notification unread'>C'è</strong> attualmente un argomento annuncio."
       inviting: "Sto invitando..."
-      automatically_add_to_groups_optional: "Questo invito include anche l'accesso ai seguenti gruppi: (opzionale, solo amministratori)"
-      automatically_add_to_groups_required: "Questo invito include anche l'accesso ai seguenti gruppi: (<b>Richiesto</b>, solo amministratori)"
       invite_private:
         title: 'Invita al Messaggio'
         email_or_username: "Email o Utente di chi invita"
@@ -2594,124 +2590,3 @@ it:
           label: "Nuovo:"
           add: "Aggiungi"
           filter: "Cerca (URL o URL Esterna)"
-    lightbox:
-      download: "scaricamento"
-    search_help:
-      title: 'Aiuto Ricerca'
-    keyboard_shortcuts_help:
-      title: 'Scorciatoie da tastiera'
-      jump_to:
-        title: 'Vai A (G)'
-        home: '<b>g</b>, <b>h</b> Home'
-        latest: '<b>g</b>, <b>l</b> Ultimi'
-        new: '<b>g</b>, <b>n</b> Nuovi'
-        unread: '<b>g</b>, <b>u</b> Non Letti'
-        categories: '<b>g</b>, <b>c</b> Categorie'
-        top: '<b>g</b>, <b>t</b> Alto'
-        bookmarks: '<b>g</b>, <b>b</b> Segnalibri'
-        profile: '<b>g</b>, <b>p</b> Profilo'
-        messages: '<b>g</b>, <b>m</b> Messaggi'
-      navigation:
-        title: 'Navigazione'
-        jump: '<b>#</b> Vai al messaggio numero'
-        back: '<b>u</b> Indietro'
-        up_down: '<b>k</b>/<b>j</b> Sposta la selezione &uarr; &darr;'
-        open: '<b>o</b> o <b>Invio</b> Apri l''argomento selezionato'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Sezione prossima/precedente'
-      application:
-        title: 'Applicazione'
-        create: '<b>c</b> Crea un nuovo argomento'
-        notifications: '<b>n</b> Apri le notifiche'
-        hamburger_menu: '<b>=</b> Apri il menu hamburger'
-        user_profile_menu: '<b>p</b> Apri il menu del profilo utente'
-        show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
-        search: '<b>/</b> Cerca'
-        help: '<b>?</b> Apri l''aiuto per le scorciatoie da tastiera'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovo/Messaggi'
-        dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Scollegati'
-      actions:
-        title: 'Azioni'
-        bookmark_topic: '<b>f</b> Aggiungi/togli argomento nei segnalibri'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Appunta/Spunta argomento'
-        share_topic: '<b>shift</b>+<b>s</b> Condividi argomento'
-        share_post: '<b>s</b> Condividi messaggio'
-        reply_as_new_topic: '<b>t</b> Rispondi con argomento collegato'
-        reply_topic: '<b>shift</b>+<b>r</b> Rispondi all''argomento'
-        reply_post: '<b>r</b> Rispondi al messaggio'
-        quote_post: '<b>q</b> Cita messaggio'
-        like: '<b>l</b> Metti "Mi piace" al messaggio'
-        flag: '<b>!</b> Segnala il messaggio'
-        bookmark: '<b>b</b> Aggiungi un segnalibro al messaggio'
-        edit: '<b>e</b> Modifica il messaggio'
-        delete: '<b>d</b> Cancella il messaggio'
-        mark_muted: '<b>m</b>, <b>m</b> Ignora argomento'
-        mark_regular: '<b>m</b>, <b>r</b> Argomento normale (default)'
-        mark_tracking: '<b>m</b>, <b>t</b> Segui argomento'
-        mark_watching: '<b>m</b>, <b>w</b> Osserva argomento'
-    badges:
-      earned_n_times:
-        one: "Guadagnato questa targhetta una volta"
-        other: "Guadagnato questa targhetta %{count} volte"
-      granted_on: "Assegnata %{data}"
-      others_count: "Altri utenti con questa targhetta (%{count})"
-      title: Targhette
-      allow_title: "titolo disponibile"
-      multiple_grant: "assegnata più volte"
-      badge_count:
-        one: "1 Targhetta"
-        other: "%{count} Targhette"
-      more_badges:
-        one: "+1 Più"
-        other: "+ altri %{count}"
-      granted:
-        one: "1 assegnato"
-        other: "%{count} assegnate"
-      select_badge_for_title: Scegli una targhetta da usare come titolo
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: Per Iniziare
-        community:
-          name: Comunità
-        trust_level:
-          name: Livello Esperienza
-        other:
-          name: Altro
-        posting:
-          name: Pubblicazione
-    google_search: |
-      <h3>Cerca con Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
-    tagging:
-      all_tags: "Tutte Le Etichette"
-      selector_all_tags: "tutte le etichette"
-      changed: "etichette cambiate:"
-      tags: "Etichette"
-      choose_for_topic: "scegli delle etichette opzionali per questo argomento"
-      delete_tag: "Cancella Etichetta"
-      delete_confirm: "Sicuro di voler eliminare l'etichetta?"
-      rename_tag: "Rinomina Etichetta"
-      rename_instructions: "Scegli un nome per l'etichetta:"
-      sort_by: "Ordina per:"
-      sort_by_count: "conteggio"
-      sort_by_name: "nome"
-      filters:
-        without_category: "%{filter} %{tag} argomenti"
-        with_category: "%{filter} %{tag} argomenti in %{category}"
-      topics:
-        bottom:
-          hot: "Non ci sono ulteriori argomenti caldi."
-          posted: "Non ci sono ulteriori argomenti pubblicati."
-          read: "Non ci sono ulteriori argomenti letti."
-          new: "Non ci sono ulteriori nuovi argomenti."
-          unread: "Non ci sono ulteriori argomenti non letti."
-          top: "Non ci sono ulteriori argomenti di punta."
-          bookmarks: "Non ci sono ulteriori argomenti aggiunti ai segnalibri."
-          search: "Non ci sono ulteriori risultati di ricerca."

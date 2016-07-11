@@ -1668,6 +1668,9 @@ fr:
         other: "%{count} clics"
     post_links:
       about: "Dévelloper plus de liens pour ce sujet"
+      title:
+        one: "Encore un"
+        other: "Encore %{count} "
     topic_statuses:
       warning:
         help: "Ceci est un avertissement officiel."
@@ -1855,6 +1858,9 @@ fr:
         edit: '<b>e</b> Editer le sujet'
         delete: '<b>d</b> Supprimer le sujet'
         mark_muted: '<b>m</b>, <b>m</b> Faire taire le sujet'
+        mark_regular: '<b>m</b>, <b>r</b> Sujet (par défaut) habitué'
+        mark_tracking: '<b>m</b>, <b>t</b> Suivre ce sujet'
+        mark_watching: '<b>m</b>, <b>w</b> Surveiller ce sujet'
     badges:
       earned_n_times:
         one: "A reçu ce badge 1 fois"
@@ -1870,6 +1876,9 @@ fr:
       more_badges:
         one: "+1 autre"
         other: "+%{count} autres"
+      granted:
+        one: "1 décerné"
+        other: "%{count} décernés"
       select_badge_for_title: Choisissez un badge comme titre
       none: "<none>"
       badge_grouping:
@@ -1911,6 +1920,11 @@ fr:
         without_category: "%{filter} %{tag} sujets"
         with_category: "%{filter} %{tag} sujets dans %{category}"
       notifications:
+        watching:
+          title: "Abonné"
+          description: "Vous serez automatiquement abonné à l'ensemble des nouvaux sujets avec ce tag. Vous serez notifié des nouveaux sujets et messages, et le compteur des sujets non-lus apparaîtra à coté des sujets."
+        tracking:
+          title: "Suivi"
         muted:
           description: "Vous ne recevrez aucune notification sur des nouveaux sujets dans ce tag, et ils n'apparaitront pas sur mon onglet non-lus."
       groups:
