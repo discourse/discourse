@@ -47,7 +47,7 @@ module ImportScripts::PhpBB3
 
       @database_client.query(<<-SQL, cache_rows: false, symbolize_keys: true).first[:config_value]
         SELECT config_value
-        FROM #{table_prefix}_config
+        FROM #{table_prefix}config
         WHERE config_name = 'version'
       SQL
     end
