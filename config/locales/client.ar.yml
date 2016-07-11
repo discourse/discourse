@@ -188,6 +188,7 @@ ar:
       google+: 'شارك هذا الرابط في جوجل+'
       email: 'شارك هذا الرابط في بريد إلكتروني'
     action_codes:
+      private_topic: "جعل هذا الموضوع خاص منذ {when}%"
       split_topic: "قسم هذا الموضوع في %{when}"
       invited_user: "دعوة %{who} %{when}"
       removed_user: "ازالة  %{who} %{when}"
@@ -970,7 +971,6 @@ ar:
       saved_local_draft_tip: "تم الحفظ محلياً"
       similar_topics: "موضوعك مشابه لـ ..."
       drafts_offline: "مسودات محفوظة "
-      group_mentioned: "عند استعمال  {{group}}, انت على وشك اشعار <a href='{{group_link}}'>{{count}} people</a>."
       error:
         title_missing: "العنوان مطلوب"
         title_too_short: "العنوان يجب أن يكون اكثر  {{min}} حرف"
@@ -1053,7 +1053,6 @@ ar:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> نقل{{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>استحق'{{description}}'</p>"
       alt:
         mentioned: "مؤشرة بواسطة"
@@ -1376,8 +1375,6 @@ ar:
         no_banner_exists: "لا يوجد اشعار للموضوع"
         banner_exists: "شعار الموضوع <strong class='badge badge-notification unread'>هناك</strong> حاليا."
       inviting: "دعوة..."
-      automatically_add_to_groups_optional: "هذه الدعوة تتضمن صلاحيات الدخول على المجموعات : (اختياري , مدير فقط )"
-      automatically_add_to_groups_required: "هذه الدعوة تتضمن صلاحيات الدخول على هذه المجموعات: (<b>يتطلب </b>, مدير"
       invite_private:
         title: 'رسالة دعوة'
         email_or_username: "دعوات عن طريق اسم المستخدم او البريد الالكتروني"
@@ -2924,110 +2921,3 @@ ar:
           label: "جديد :"
           add: "أضف"
           filter: "بحث  ( رابط داخلي أو خارجي )"
-    lightbox:
-      download: "تحميل"
-    search_help:
-      title: 'بحث عن المساعدة'
-    keyboard_shortcuts_help:
-      title: 'أختصارات لوحة المفاتيح'
-      jump_to:
-        title: 'اقفز إلى'
-        home: '<b>g</b>, <b>h</b> الرئيسية'
-        latest: '<b>g</b>, <b>l</b> الأخير'
-        new: '<b>g</b>, <b>n</b> جديد'
-        unread: '<b>g</b>, <b>u</b> لم يقرأ'
-        categories: '<b>g</b>, <b>c</b> الفئات'
-        top: '<b>g</b>, <b>t</b> الأعلى'
-        bookmarks: '<b>g</b>, <b>b</b> الإشارات المرجعية'
-        profile: '<b>g</b>, <b>p</b> ملف التعريف'
-        messages: '<b>g</b>, <b>m</b> الرسائل'
-      navigation:
-        title: 'المتصفح'
-        jump: '<b>#</b> الذهاب الى الموضوع #'
-        back: '<b>u</b>خلف'
-        up_down: '<b>k</b>/<b>j</b> نقل المحدد &uarr; &darr;'
-        open: '<b>o</b> أو <b>أدخل</b> فتح الموضوع المحدد'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> القسم التالي/السابق'
-      application:
-        title: 'التطبيقات'
-        create: '<b>c</b> انشاء موضوع جديد'
-        notifications: '<b>n</b> فتح الإشعارات'
-        hamburger_menu: '<b>=</b> فتح قائمة الموقع'
-        user_profile_menu: '<b>p</b>أفتح قائمة المستخدم'
-        show_incoming_updated_topics: '<b>.</b> عرض المواضيع المحدثة'
-        search: '<b>/</b> البحث'
-        help: '<b>p</b>أفتح قائمة المستخدم'
-        dismiss_new_posts: 'تجاهل جديد / المشاركات <b>x</b>, <b>r</b>'
-        dismiss_topics: '<b>x</b>, <b>t</b> رفض المواضيع'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> تسجيل خروج'
-      actions:
-        title: 'إجراءات'
-        bookmark_topic: '<b>f</b> تبديل علامة مرجعية الموضوع'
-        pin_unpin_topic: 'ثبت/عدم التثبيت للموضوع <b>shift</b>+<b>p</b> '
-        share_topic: 'مشاركة الموضوع <b>shift</b>+<b>s</b>'
-        share_post: '<b>s</b> مشاركة الموضوع'
-        reply_as_new_topic: 'الرد في موضوع مرتبط <b>t</b>'
-        reply_topic: 'رد على الموضوع <b>shift</b>+<b>r</b>'
-        reply_post: '<b>r</b> الرد على الموضوع'
-        quote_post: '<b>q</b> اقتباس المشاركة'
-        like: '<b>l</b> الأعجاب بالموضوع'
-        flag: 'تعليم المشاركة <b/>!<b>'
-        bookmark: '<b>b</b> الإشارات المرجعية الخاصة بالموضوع'
-        edit: '<b>l</b>  تعديل الموضوع'
-        delete: '<b>d</b> حذف الموضوع'
-        mark_muted: 'صمّت الموضوع  <b>m</b>, <b>m</b>'
-        mark_regular: '<b>m</b>, <b>r</b> موضوع منظم (الإفتراضي)'
-        mark_tracking: '<b>m</b>, <b>t</b>  تابع الموضوع'
-        mark_watching: '<b>m</b>, <b>w</b> شاهد الموضوع'
-    badges:
-      earned_n_times:
-        zero: "لم يحصل على  هذه الشاره ولا مره"
-        one: "استحق هذه الشاره  مره واحده"
-        two: "استحق هذه الشاره مرتين"
-        few: "استحق هذه الشاره  %{count} مرات"
-        many: "استحق هذه الشاره  %{count} مرات"
-        other: "استحق هذه الشاره  %{count} مرات"
-      title: أوسمة
-      badge_count:
-        zero: "%{count} شاره"
-        one: "%{count} شاره"
-        two: "%{count} شاراتين"
-        few: "%{count} أوسمة"
-        many: "%{count} أوسمة"
-        other: "%{count} أوسمة"
-      more_badges:
-        zero: "+%{count} المزيد"
-        one: "+%{count} المزيد"
-        two: "+%{count} المزيد"
-        few: "+%{count} المزيد"
-        many: "+%{count} المزيد"
-        other: "+%{count} المزيد"
-      granted:
-        zero: "ﻻيوجد ممنوحات."
-        one: "ممنوح واحد."
-        two: "ممنوحان."
-        few: "%{count} ممنوحات."
-        many: "%{count} ممنوحات."
-        other: "%{count} ممنوحات."
-      select_badge_for_title: حدد وسام لتستخدمه كعنوانك
-      none: "لا شئ"
-      badge_grouping:
-        getting_started:
-          name: البداية
-        community:
-          name: مجتمع
-        trust_level:
-          name: مستوى الثقة
-        other:
-          name: الجميع
-        posting:
-          name: نشر
-    google_search: |
-      <h3>ابحث في قوقل</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">قوقل</button>
-        </form>
-      </p>

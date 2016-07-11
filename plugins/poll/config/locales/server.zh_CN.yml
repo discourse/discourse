@@ -23,6 +23,8 @@ zh_CN:
     default_poll_with_multiple_choices_has_invalid_parameters: "多选投票有无效选项。"
     named_poll_with_multiple_choices_has_invalid_parameters: "<strong>%{name}</strong>多选投票有无效参数。"
     requires_at_least_1_valid_option: "你必须选择至少 1 个有效的选项。"
+    default_cannot_be_made_public: "投票调查不能公开。"
+    named_cannot_be_made_public: "调查命名 <strong>%{name}</strong> 有投票不能公开。"
     cannot_change_polls_after_5_minutes: "你不能在创建 5 分钟后添加、删除或重命名投票。"
     op_cannot_edit_options_after_5_minutes: "你不能在创建 5 分钟后添加或删除投票选项。如果你需要修改投票选项请联系版主。"
     staff_cannot_add_or_remove_options_after_5_minutes: "你不能在创建 5 分钟后添加或删除投票选项。你应该关闭这个主题并创建一个新的。"

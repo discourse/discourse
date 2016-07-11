@@ -24,6 +24,7 @@ ar:
   loading: "يحمّل"
   powered_by_html: 'تدعمه <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه وجافاسكرِبت مفعّل'
   log_in: "تسجيل الدخول"
+  purge_reason: "تم حذفه تلقائيا كحساب مهمل وغير مُفعل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
   anonymous: "مجهول"
   emails:
@@ -33,6 +34,7 @@ ar:
       errors:
         empty_email_error: "يحدث عندما يكون البريد المستلم فارغ"
         no_message_id_error: "يحدث عندما لا يحتوي البريد على  'Message-Id' في العنوان"
+        no_body_detected_error: "وحدث هذا عندما لما نستطع استخراج اي جثة ولما يكن هناك أي مرفقات "
         inactive_user_error: "يحدث عندما يكون المرسل غير نشط "
         blocked_user_error: "يحدث عندما يكون المرسل محظور"
         bad_destination_address: "يحدع عندما لا يكون اي من عنوان البريد االكتروني في حقول  To/Cc/Bcc تتطابق مع كون البريد القادم"
@@ -41,6 +43,8 @@ ar:
         reply_user_not_matching_error: "يحدث عندما ياتي الرد من عنوان بريد ألكتروني مختلف من الذي أرسل اليه ألاشعار "
         topic_not_found_error: "يحدث عندما يصل رد لموضوع تم حذفه"
         topic_closed_error: "يحدث عندما يصل رد لموضوع تم اغلاقه "
+        auto_generated_email_reply: "ويحتوي البريد الالكتروني علي رد لبريد اخر تم انشائه تلقائيا"
+        screened_email_error: "وحدث هذا عندما تم حجب عنوان البريد الالكتروني للمرسل"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -221,6 +225,7 @@ ar:
     delete_reason: "حذف عبر طابور مشاركة معتدل"
   groups:
     errors:
+      can_not_modify_automatic: "لا يمكنك تعديل مجموعة تم انشائها تلقائيا"
       member_already_exist: " '%{username}' هو عضو في هذه المجموعة بالفعل."
       invalid_domain: "'%{domain}' ليس نطاقا صالحا."
       invalid_incoming_email: "'%{email_in}' ليس عنوان بريد الكتروني صالح ."
@@ -680,8 +685,6 @@ ar:
     description: "لقد تم إلغاء اشتراكك. ونحن لن نتصال بك مرة أخرى!"
     oops: "في حال أنك لا تقصد عمل هذا , أضغط أسفل."
     error: "خطأ في إلغاء الإشتراك"
-    preferences_link: "تستطيع أيضاً إلغاء الاشتراك من رسائل الربيد التلخيصية عن طريق صفحة إعداداتك  <a href='/my/preferences'>preferences page</a>"
-    different_user_description: "أنت حالياً سجلت دخولك كمستخدم مختلف عن الذي كان يُرسله له الملخص. الرجاء تسجيل الدخول والمحاولة مجدداً."
     not_found_description: "نأسف ، لم نستطيع أن نلغي اشتراكك . من الممكن أن الرابط المرسل إليك قد انتهت مدته . "
   resubscribe:
     action: "إعادة الاشتراك."
@@ -1142,9 +1145,6 @@ ar:
     allow_animated_thumbnails: "يولد الصور المصغرة المتحركة للرسوم المتحركة. "
     default_avatars: "سيتم استخدام عناوين URL للصور الرمزية بشكل افتراضيًا للأعضاء الجدد حتى يغيروا صورهم."
     automatically_download_gravatars: "تحميل Gravatars للأعضاء عند تغيرهم البريد الإلكتروني الخاص بهم أو عند إنشائهم لحساب آخر."
-    digest_topics: "العدد الاقصي من المواضيع لعرضها في مضمون البريد الإلكتروني "
-    digest_min_excerpt_length: "الحد الادني من مشاركه مقتطفات خلاصه البريد الاكتروني,في الشخصيات"
-    disable_digest_emails: "عطل ملخص رسائل البريد الإلكتروني لكل الأعضاء."
     detect_custom_avatars: "سواء او لا تفقد اذا كان المستخدم قام بتحميل صور شخصيه مخصصه"
     max_daily_gravatar_crawls: "العدد الاقصي من مرات Dicourse  سوف يتفقد Gravatar  لصور رمزيه مخصصه في اليوم"
     public_user_custom_fields: "حقول قائمه بيضاء مخصصه للمستدم يمكن رويتها علنا"
@@ -1195,7 +1195,6 @@ ar:
     enforce_square_emoji: "أجبر نسبة جانب المربع لكل الرموز التعبيرية."
     approve_post_count: "عدد المنشورات للمستخدم الجديد او الاساسي يجب ان تتم الموافقه عليه "
     approve_unless_trust_level: "مشاركات للأعضاء أدنى من مستوى الثقة هذا يجب أن تتم الموافقة عليها."
-    default_email_digest_frequency: "عدد المرات التي يتلقى الأعضاء فيها ملخص لبريدهم الإلكتروني إفتراضيا."
     default_email_private_messages: "أرسل بريد إلكتروني عندما يراسل شخص ما العضو إفتراضيا."
     default_email_direct: "ارسل بريد الكتروني عندما يقوم احدهم بالرد/الاقتباس الي/ذكر او دعوه مستخدم افتراضيا"
     default_email_mailing_list_mode: "ارسل بريد إلكتروني لكل مشاركة جديدة افتراضيا."
@@ -1402,18 +1401,6 @@ ar:
       هذه الدعوة هي من مستخدم موثوق به، حتى تتمكن من الرد على مناقشة على الفور.
   invite_forum_mailer:
     subject_template: "%{invitee_name} قام بدعوتك للإنضمام إلى %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} دعوتك للانضمام
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      إذا كنت مهتما، انقر على الرابط أدناه:
-
-      %{invite_link}
-
-      هذه الدعوة هي من مستخدم موثوق به، لذلك فلن تحتاج لتسجيل الدخول.
   invite_password_instructions:
     subject_template: "تعيين كلمة مرور %{site_name} حسابك"
     text_body_template: |
@@ -1437,10 +1424,6 @@ ar:
       few: "[%{site_name}] %{count}  المشاركات التي يجب معينتها"
       many: "[%{site_name}] %{count}المشاركات التي يجب معينتها"
       other: "{site_name}] %{count}%] المشاركات التي تنتظر معينتها "
-    text_body_template: |
-      مرحبا,
-
-      هناك مشاركات من المستخدمين الجدد تنتظر ليتم معينتها .[يمكن قبولهم او رفضهم هنا] (%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "تم تاشير مشاركتك **خارج الموضوع**:  المجتمع يشعر بانها لا تلائم الموضوع , حاليا كتعريف  بالعنوان و المشاركه الاولى"
     inappropriate: " مشاركتك **غير ملائم**: المجتمع يشعر بانها لا تلائم الموضوع . [our community guidelines](/guidelines)."
@@ -1611,13 +1594,10 @@ ar:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
-      subject_template: "[%{site_name}] الخلاصة"
       new_activity: "يوجد نشاط جديد في المواضيع والمشاركات الخاصة بك:"
       top_topics: "اشهر المشاركات "
       other_new_topics: "اشهر المواضيع "
-      unsubscribe: "يتم إرسال هذا الملخص من %{site_link}  لإلغاء الاشتراك %{unsubscribe_link}."
       click_here: "أنقر هنا"
-      from: "%{site_name} الخلاصة"
       read_more: "قراءة المزيد"
       more_topics: "هناك %{new_topics_since_seen} مواضيع جديدة أخرى."
       more_topics_category: "أكثر المواضيع الجديدة:"
