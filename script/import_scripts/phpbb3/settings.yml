@@ -1,13 +1,13 @@
 # This is an example settings file for the phpBB3 importer.
 
 database:
-  type: MySQL # currently only MySQL is supported - more to come soon
+  type: MySQL # currently only MySQL is supported
   host: localhost
   port: 3306
   username: root
   password:
   schema: phpbb
-  table_prefix: phpbb # Usually all table names start with phpbb. Change this, if your forum is using a different prefix.
+  table_prefix: phpbb_ # Usually all table names start with phpbb_. Change this, if your forum is using a different prefix.
   batch_size: 1000 # Don't change this unless you know what you're doing. The default (1000) should work just fine.
 
 import:

@@ -56,7 +56,7 @@ module ImportScripts::PhpBB3
       mapped[:target_usernames] = get_recipient_usernames(row)
       mapped[:custom_fields] = {import_user_ids: current_user_ids.join(',')}
 
-      if mapped[:target_usernames].empty? # pm with yourself?
+      if mapped[:target_usernames].empty?
         puts "Private message without recipients. Skipping #{row[:msg_id]}: #{row[:message_subject][0..40]}"
         return nil
       end
@@ -80,11 +80,10 @@ module ImportScripts::PhpBB3
     end
 
     def get_recipient_usernames(row)
-      author_id = row[:author_id].to_s
       import_user_ids = get_recipient_user_ids(row[:to_address])
 
       import_user_ids.map! do |import_user_id|
-        import_user_id.to_s == author_id ? nil : @lookup.find_user_by_import_id(import_user_id).try(:username)
+        @lookup.find_user_by_import_id(import_user_id).try(:username)
       end.compact
     end
 
