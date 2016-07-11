@@ -25,35 +25,49 @@ export default Ember.Component.extend(StringBuffer, {
     return Discourse.User.current() && !this.get('disableActions');
   }.property('disableActions'),
 
-  renderString(buffer) {
-    const self = this;
+  statuses: function() {
+    const results = [];
 
-    const renderIcon = function(name, key, actionable) {
-      const title = Discourse.Utilities.escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
-            startTag = actionable ? "a href" : "span",
-            endTag = actionable ? "a" : "span",
-            iconArgs = key === 'unpinned' ? { 'class': 'unpinned' } : null,
-            icon = iconHTML(name, iconArgs);
-
-      buffer.push(`<${startTag} title='${title}' class='topic-status'>${icon}</${endTag}>`);
+    const addStatus = (name, key, actionable) => {
+      results.push({
+        name: name,
+        key: `topic_statuses.${key}.help`,
+        actionable: actionable
+      });
     };
 
-    const renderIconIf = function(conditionProp, name, key, actionable) {
-      if (!self.get(conditionProp)) { return; }
-      renderIcon(name, key, actionable);
+    const addStatusIf = (conditionProp, name, key, actionable) => {
+      if (!this.get(conditionProp)) {
+        return;
+      }
+      addStatus(name, key, actionable);
     };
 
-    renderIconIf('topic.is_warning', 'envelope', 'warning');
+    addStatusIf('topic.is_warning', 'envelope', 'warning');
 
     if (this.get('topic.closed') && this.get('topic.archived')) {
-      renderIcon('lock', 'locked_and_archived');
+      addStatus('lock', 'locked_and_archived');
     } else {
-      renderIconIf('topic.closed', 'lock', 'locked');
-      renderIconIf('topic.archived', 'lock', 'archived');
+      addStatusIf('topic.closed', 'lock', 'locked');
+      addStatusIf('topic.archived', 'lock', 'archived');
     }
 
-    renderIconIf('topic.pinned', 'thumb-tack', 'pinned', this.get("canAct") );
-    renderIconIf('topic.unpinned', 'thumb-tack', 'unpinned', this.get("canAct"));
-    renderIconIf('topic.invisible', 'eye-slash', 'invisible');
+    addStatusIf('topic.pinned', 'thumb-tack', 'pinned', this.get("canAct"));
+    addStatusIf('topic.unpinned', 'thumb-tack', 'unpinned', this.get("canAct"));
+    addStatusIf('topic.invisible', 'eye-slash', 'invisible');
+
+    return results;
+  }.property(),
+
+  renderString(buffer) {
+    _.each(this.get('statuses'), (status) => {
+      const title = Discourse.Utilities.escapeExpression(I18n.t(status.key)),
+            startTag = status.actionable ? "a href" : "span",
+            endTag = status.actionable ? "a" : "span",
+            iconArgs = status.key === 'unpinned' ? { 'class': 'unpinned' } : null,
+            icon = iconHTML(status.name, iconArgs);
+
+      buffer.push(`<${startTag} title='${title}' class='topic-status'>${icon}</${endTag}>`);
+    });
   }
 });
