@@ -88,6 +88,14 @@ export default Ember.Component.extend({
 
     this._bindUploadTarget();
     this.appEvents.trigger('composer:will-open');
+
+    if (this.site.mobileView) {
+      $(window).on('resize.composer-popup-menu', () => {
+        if (this.get('optionsVisible')) {
+          this.appEvents.trigger('popup-menu:open', this._optionsLocation());
+        }
+      });
+    }
   },
 
   @computed('composer.reply', 'composer.replyLength', 'composer.missingReplyCharacters', 'composer.minimumPostLength', 'lastValidatedAt')
@@ -249,6 +257,35 @@ export default Ember.Component.extend({
     this._firefoxPastingHack();
   },
 
+  _optionsLocation() {
+    // long term we want some smart positioning algorithm in popup-menu
+    // the problem is that positioning in a fixed panel is a nightmare
+    // cause offsetParent can end up returning a fixed element and then
+    // using offset() is not going to work, so you end up needing special logic
+    // especially since we allow for negative .top, provided there is room on screen
+    const myPos = this.$().position();
+    const buttonPos = this.$('.options').position();
+
+    const popupHeight = $('#reply-control .popup-menu').height();
+    const popupWidth = $('#reply-control .popup-menu').width();
+
+    var top = myPos.top + buttonPos.top - 15;
+    var left = myPos.left + buttonPos.left - (popupWidth/2);
+
+    const composerPos = $('#reply-control').position();
+
+    if (composerPos.top + top - popupHeight < 0) {
+      top = top + popupHeight + this.$('.options').height() + 50;
+    }
+
+    var replyWidth = $('#reply-control').width();
+    if (left + popupWidth > replyWidth) {
+      left = replyWidth - popupWidth - 40;
+    }
+
+    return { position: "absolute", left, top };
+  },
+
   // Believe it or not pasting an image in Firefox doesn't work without this code
   _firefoxPastingHack() {
     const uaMatch = navigator.userAgent.match(/Firefox\/(\d+)\.\d/);
@@ -351,6 +388,10 @@ export default Ember.Component.extend({
       // need to wait a bit for the "slide down" transition of the composer
       Ember.run.later(() => this.appEvents.trigger("composer:closed"), 400);
     });
+
+    if (this.site.mobileView) {
+      $(window).off('resize.composer-popup-menu');
+    }
   },
 
   actions: {
@@ -370,36 +411,10 @@ export default Ember.Component.extend({
       if (this.get('optionsVisible')) {
         this.sendAction('hideOptions');
       } else {
-        // long term we want some smart positioning algorithm in popup-menu
-        // the problem is that positioning in a fixed panel is a nightmare
-        // cause offsetParent can end up returning a fixed element and then
-        // using offset() is not going to work, so you end up needing special logic
-        // especially since we allow for negative .top, provided there is room on screen
-        const myPos = this.$().position();
-        const buttonPos = this.$('.options').position();
-
-        const popupHeight = $('#reply-control .popup-menu').height();
-        const popupWidth = $('#reply-control .popup-menu').width();
-
-        var top = myPos.top + buttonPos.top - 15;
-        var left = myPos.left + buttonPos.left - (popupWidth/2);
-
-        const composerPos = $('#reply-control').position();
-
-        if (composerPos.top + top - popupHeight < 0) {
-          top = top + popupHeight + this.$('.options').height() + 50;
-        }
-
-        var replyWidth = $('#reply-control').width();
-        if (left + popupWidth > replyWidth) {
-          left = replyWidth - popupWidth - 40;
-        }
-
         const selected = toolbarEvent.selected;
         toolbarEvent.selectText(selected.start, selected.end - selected.start);
 
-        this.sendAction('showOptions', toolbarEvent,
-          { position: "absolute", left, top });
+        this.sendAction('showOptions', toolbarEvent, this._optionsLocation());
       }
     },
 
