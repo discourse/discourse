@@ -474,6 +474,12 @@ posting:
     client: true
     default: 0
   post_excerpt_maxlength: 300
+  show_pinned_excerpt_mobile:
+    client: true
+    default: true
+  show_pinned_excerpt_desktop:
+    client: true
+    default: true
   display_name_on_posts:
     client: true
     default: false
