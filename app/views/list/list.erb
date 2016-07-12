@@ -37,7 +37,7 @@
       <% if (!@category || @category.has_children?) && t.category %>
         <span class='category'>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
       <% end %>
-      <span class='posts' title='<%= t 'posts' %>'>(<a href="<%=t.last_post_url%>"><%= t.posts_count %></a>)</span>
+      <span class='posts' title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
     </div>
   <% end %>
 </div>
