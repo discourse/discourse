@@ -13,7 +13,9 @@ class EmailCook
   def cook
     result = ""
 
+    in_text = false
     in_quote = false
+
     quote_buffer = ""
     @raw.each_line do |l|
 
@@ -34,7 +36,16 @@ class EmailCook
         end
 
         result << l
-        result << "<br>" if sz < 60
+
+        if sz < 60
+          result << "<br>"
+          if in_text
+            result << "<br>"
+          end
+          in_text = false
+        else
+          in_text = true
+        end
       end
     end
 
@@ -42,7 +53,7 @@ class EmailCook
       result << "<blockquote>#{quote_buffer}</blockquote>"
     end
 
-    result.gsub!(/(<br>){3,10}/, '<br><br>')
+    result.gsub!(/(<br>\n*){3,10}/, '<br><br>')
     result
   end
 
