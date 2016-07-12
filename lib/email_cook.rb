@@ -26,11 +26,15 @@ class EmailCook
         in_quote = false
       else
 
+        sz = l.size
+
         l.scan(EmailCook.url_regexp).each do |m|
           url = m[0]
           l.gsub!(url, "<a href='#{url}'>#{url}</a>")
         end
-        result << l << "<br>"
+
+        result << l
+        result << "<br>" if sz < 60
       end
     end
 
