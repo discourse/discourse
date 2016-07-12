@@ -4,7 +4,7 @@ module Onebox
       include Engine
       include LayoutSupport
 
-      matches_regexp Regexp.new("^https?://(?:(?:\\w)+\\.)?(www.ncbi.nlm.nih)\\.gov(?:/)?/pubmed/")
+      matches_regexp Regexp.new("^https?://(?:(?:\\w)+\\.)?(www.ncbi.nlm.nih)\\.gov(?:/)?/pubmed/\\d+")
 
       private
 
@@ -26,7 +26,7 @@ module Onebox
       end
 
       def date_of_xml(xml)
-        date_arr = (xml.css("PubDate")[0].children).map{|x| x.content}
+        date_arr = (xml.css("PubDate").children).map{|x| x.content}
         date_arr = date_arr.select{|s| !s.match(/^\s+$/)}
         date_arr = (date_arr.map{|s| s.split}).flatten
         date_arr.sort.reverse.join(" ") # Reverse sort so month before year.
@@ -35,10 +35,10 @@ module Onebox
       def data
          xml = get_xml()
          {
-         title: xml.css("ArticleTitle")[0].content,
+         title: xml.css("ArticleTitle").text,
          authors: authors_of_xml(xml),
-         journal: xml.css("Title")[0].content,
-         abstract: xml.css("AbstractText")[0].content,
+         journal: xml.css("Title").text,
+         abstract: xml.css("AbstractText").text,
          date: date_of_xml(xml),
          link: @url,
          pmid: match[:pmid]
