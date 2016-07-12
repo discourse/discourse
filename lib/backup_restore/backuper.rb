@@ -257,6 +257,8 @@ module BackupRestore
         end
       end
 
+      remove_tmp_directory
+
       log "Gzipping archive, this may take a while..."
       `gzip -5 #{tar_filename}`
     end
@@ -284,7 +286,6 @@ module BackupRestore
     def clean_up
       log "Cleaning stuff up..."
       remove_tar_leftovers
-      remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
