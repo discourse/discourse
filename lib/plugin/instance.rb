@@ -244,9 +244,12 @@ define("discourse/initializers/login-method-#{hash}",
     __exports__["default"] = {
       name: "login-method-#{hash}",
       after: "inject-objects",
-      initialize: function() {
+      initialize: function(container) {
         if (Ember.testing) { return; }
-        module.register(#{auth_json});
+
+        var authOpts = #{auth_json};
+        authOpts.siteSettings = container.lookup('site-settings:main');
+        module.register(authOpts);
       }
     };
   });
