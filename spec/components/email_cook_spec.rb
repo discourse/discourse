@@ -22,7 +22,7 @@ Hello,
 <br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat
 risus. Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan.
 Vestibulum feugiat mi vitae turpis tempor dignissim.
-<br>
+<br><br>
 LONG_COOKED
     expect(EmailCook.new(long).cook).to eq(long_cooked.strip)
   end
