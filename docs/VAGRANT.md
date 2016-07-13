@@ -96,23 +96,11 @@ You can now edit files on your local file system, using your favorite text edito
 
 ### Creating an Admin User
 
-You'll want an admin account to be able to do anything fun on your new Discourse environment. The easiest way to do this is to sign up for an account in the web browser with a username and password.
-
-Once you have done that, you'll notice **no mail is delivered** to confirm it. This is because in the development environment emails are disabled by default.
-
-An easy way to approve your account and give it admin access is to enter a rails console and update the data. Run the following commands after `vagrant ssh`:
+You'll want an admin account to be able to do anything fun on your new Discourse environment. Enter your vagrant image by using `vagrant ssh` then
+run the following command and follow the instructions:
 
 ```bash
-cd /vagrant
-bundle exec rails console
-```
-
-Once the console opens, enter the following commands. Make sure to replace `eviltrout` with the username you signed up with.
-
-```ruby
-user = User.find_by_username('eviltrout')
-user.update_columns(admin: true)
-EmailToken.confirm(user.email_tokens.pluck(:token).last)
+rake admin:create
 ```
 
 Your admin account should be approved. Log in in your browser and you're good to go!
