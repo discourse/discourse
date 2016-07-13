@@ -186,6 +186,7 @@ en:
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "China (Beijing)"
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
