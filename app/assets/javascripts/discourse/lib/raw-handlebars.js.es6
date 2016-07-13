@@ -14,7 +14,7 @@ const RawHandlebars = Handlebars.create();
 RawHandlebars.helper = function() {};
 RawHandlebars.helpers = objectCreate(Handlebars.helpers);
 
-RawHandlebars.helpers.get = function(context, options){
+RawHandlebars.helpers['get'] = function(context, options) {
   var firstContext =  options.contexts[0];
   var val = firstContext[context];
 
@@ -38,7 +38,7 @@ function stringCompatHelper(fn) {
 RawHandlebars.registerHelper('each', function(localName,inKeyword,contextName,options){
   var list = Em.get(this, contextName);
   var output = [];
-  var innerContext = Object.create(this);
+  var innerContext = objectCreate(this);
   for (var i=0; i<list.length; i++) {
     innerContext[localName] = list[i];
     output.push(options.fn(innerContext));
@@ -51,6 +51,49 @@ stringCompatHelper("unless");
 stringCompatHelper("with");
 
 
+function buildPath(blk, args) {
+  var result = { type: "PathExpression",
+    data: false,
+    depth: blk.path.depth,
+    loc: blk.path.loc };
+
+  // Server side precompile doesn't have jquery.extend
+  Object.keys(args).forEach(function (a) {
+    result[a] = args[a];
+  });
+
+  return result;
+}
+
+function replaceGet(ast) {
+  var visitor = new Handlebars.Visitor();
+  visitor.mutating = true;
+
+  visitor.MustacheStatement = function(mustache) {
+    if (!(mustache.params.length || mustache.hash)) {
+      mustache.params[0] = mustache.path;
+      mustache.path = buildPath(mustache, { parts: ['get'], original: 'get', strict: true, falsy: true });
+    }
+    return Handlebars.Visitor.prototype.MustacheStatement.call(this, mustache);
+  };
+
+  // rewrite `each x as |y|` as each y in x`
+  // This allows us to use the same syntax in all templates
+  visitor.BlockStatement = function(block) {
+    if (block.path.original === 'each' && block.params.length === 1) {
+      var paramName = block.program.blockParams[0];
+      block.params = [ buildPath(block, { original: paramName }),
+      { type: "CommentStatement", value: "in" },
+      block.params[0] ];
+      delete block.program.blockParams;
+    }
+
+    return Handlebars.Visitor.prototype.BlockStatement.call(this, block);
+  };
+
+  visitor.accept(ast);
+}
+
 if (Handlebars.Compiler) {
   RawHandlebars.Compiler = function() {};
   RawHandlebars.Compiler.prototype = objectCreate(Handlebars.Compiler.prototype);
@@ -61,50 +104,6 @@ if (Handlebars.Compiler) {
   RawHandlebars.JavaScriptCompiler.prototype = objectCreate(Handlebars.JavaScriptCompiler.prototype);
   RawHandlebars.JavaScriptCompiler.prototype.compiler = RawHandlebars.JavaScriptCompiler;
   RawHandlebars.JavaScriptCompiler.prototype.namespace = "RawHandlebars";
-
-  function buildPath(blk, args) {
-
-    var result = { type: "PathExpression",
-                   data: false,
-                   depth: blk.path.depth,
-                   loc: blk.path.loc };
-
-    // Server side precompile doesn't have jquery.extend
-    Object.keys(args).forEach(function (a) {
-      result[a] = args[a];
-    });
-
-    return result;
-  }
-
-  function replaceGet(ast) {
-    var visitor = new Handlebars.Visitor();
-    visitor.mutating = true;
-
-    visitor.MustacheStatement = function(mustache) {
-      if (!(mustache.params.length || mustache.hash)) {
-        mustache.params[0] = mustache.path;
-        mustache.path = buildPath(mustache, { parts: ['get'], original: 'get', strict: true, falsy: true });
-      }
-      return Handlebars.Visitor.prototype.MustacheStatement.call(this, mustache);
-    };
-
-    // rewrite `each x as |y|` as each y in x`
-    // This allows us to use the same syntax in all templates
-    visitor.BlockStatement = function(block) {
-      if (block.path.original === 'each' && block.params.length === 1) {
-        var paramName = block.program.blockParams[0];
-        block.params = [ buildPath(block, { original: paramName }),
-                         { type: "CommentStatement", value: "in" },
-                         block.params[0] ];
-        delete block.program.blockParams;
-      }
-
-      return Handlebars.Visitor.prototype.BlockStatement.call(this, block);
-    };
-
-    visitor.accept(ast);
-  }
 
   RawHandlebars.precompile = function(value, asObject) {
     var ast = Handlebars.parse(value);

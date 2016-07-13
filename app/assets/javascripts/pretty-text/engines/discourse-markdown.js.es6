@@ -399,7 +399,7 @@ export function cook(raw, opts) {
   if (keys.length) {
     let found = true;
 
-    function unhoist(key) {
+    const unhoist = function(key) {
       result = result.replace(new RegExp(key, "g"), function() {
         found = true;
         return hoisted[key];

@@ -45,10 +45,7 @@ export function register(helper, codeName, args, emitter) {
   });
 };
 
-export function setup(helper) {
-
-  helper.whiteList(['span.bbcode-b', 'span.bbcode-i', 'span.bbcode-u', 'span.bbcode-s']);
-
+export function builders(helper) {
   function replaceBBCode(tag, emitter, opts) {
     const start = `[${tag}]`;
     const stop = `[/${tag}]`;
@@ -59,34 +56,49 @@ export function setup(helper) {
 
     opts = _.merge(opts, { start: start.toUpperCase(), stop: stop.toUpperCase(), emitter });
     helper.inlineBetween(opts);
-  };
-
-  function rawBBCode(tag, emitter) {
-    replaceBBCode(tag, emitter, { rawContents: true });
   }
 
-  function removeEmptyLines(contents) {
-    const result = [];
-    for (let i=0; i < contents.length; i++) {
-      if (contents[i] !== "\n") { result.push(contents[i]); }
-    }
-    return result;
-  }
+  return {
+    replaceBBCode,
 
-  function replaceBBCodeParamsRaw(tag, emitter) {
-    var opts = {
-      rawContents: true,
-      emitter(contents) {
-        const m = /^([^\]]+)\]([\S\s]*)$/.exec(contents);
-        if (m) { return emitter.call(this, m[1], m[2]); }
+    register(codeName, args, emitter) {
+      register(helper, codeName, args, emitter);
+    },
+
+    rawBBCode(tag, emitter) {
+      replaceBBCode(tag, emitter, { rawContents: true });
+    },
+
+    removeEmptyLines(contents) {
+      const result = [];
+      for (let i=0; i < contents.length; i++) {
+        if (contents[i] !== "\n") { result.push(contents[i]); }
       }
-    };
+      return result;
+    },
 
-    helper.inlineBetween(_.merge(opts, { start: "[" + tag + "=", stop: "[/" + tag + "]" }));
+    replaceBBCodeParamsRaw(tag, emitter) {
+      var opts = {
+        rawContents: true,
+        emitter(contents) {
+          const m = /^([^\]]+)\]([\S\s]*)$/.exec(contents);
+          if (m) { return emitter.call(this, m[1], m[2]); }
+        }
+      };
 
-    tag = tag.toUpperCase();
-    helper.inlineBetween(_.merge(opts, { start: "[" + tag + "=", stop: "[/" + tag + "]" }));
-  }
+      helper.inlineBetween(_.merge(opts, { start: "[" + tag + "=", stop: "[/" + tag + "]" }));
+
+      tag = tag.toUpperCase();
+      helper.inlineBetween(_.merge(opts, { start: "[" + tag + "=", stop: "[/" + tag + "]" }));
+    }
+  };
+}
+
+export function setup(helper) {
+
+  helper.whiteList(['span.bbcode-b', 'span.bbcode-i', 'span.bbcode-u', 'span.bbcode-s']);
+
+  const { replaceBBCode, rawBBCode, removeEmptyLines, replaceBBCodeParamsRaw } = builders(helper);
 
   replaceBBCode('b', contents => ['span', {'class': 'bbcode-b'}].concat(contents));
   replaceBBCode('i', contents => ['span', {'class': 'bbcode-i'}].concat(contents));
