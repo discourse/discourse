@@ -94,6 +94,29 @@ In a few seconds, rails will start serving pages. To access them, open a web bro
 
 You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
 
+### Creating an Admin User
+
+You'll want an admin account to be able to do anything fun on your new Discourse environment. The easiest way to do this is to sign up for an account in the web browser with a username and password.
+
+Once you have done that, you'll notice **no mail is delivered** to confirm it. This is because in the development environment emails are disabled by default.
+
+An easy way to approve your account and give it admin access is to enter a rails console and update the data. Run the following commands after `vagrant ssh`:
+
+```bash
+cd /vagrant
+bundle exec rails console
+```
+
+Once the console opens, enter the following commands. Make sure to replace `eviltrout` with the username you signed up with.
+
+```ruby
+user = User.find_by_username('eviltrout')
+user.update_columns(admin: true)
+EmailToken.confirm(user.email_tokens.pluck(:token).last)
+```
+
+Your admin account should be approved. Log in in your browser and you're good to go!
+
 ### Tests
 
 If you're actively working on Discourse, we recommend that you run rake autospec, which will run the specs.  It’s very, very smart. It’ll abort very long test runs. So if it starts running all of the specs and then you just start editing a spec file and save it, it knows that it’s time to interrupt the spec suite, run this one spec for you, then it’ll keep running these specs until they pass as well. If you fail a spec by saving it and then go and start editing around the project to try and fix that spec, it’ll detect that and run that one failing spec, not a hundred of them.
