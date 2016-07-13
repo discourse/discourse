@@ -17,6 +17,8 @@
   deprecate('Dialect',  ['inlineRegexp', 'inlineBetween', 'addPreProcessor', 'replaceBlock',
                          'inlineReplace', 'registerInline', 'registerEmoji']);
 
+  deprecate('BBCode', ['replaceBBCode', 'register', 'rawBBCode', 'replaceBBCodeParamsRaw']);
+
   Discourse.dialect_deprecated = true;
 
   Discourse.ajax = function() {
