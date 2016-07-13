@@ -48,6 +48,8 @@ before_fork do |server, worker|
       table.classify.constantize.first rescue nil
     end
 
+    PrettyText.cook "<p>initialize <em>pretty</em> <strong>text</strong></p>"
+
     # router warm up
     Rails.application.routes.recognize_path('abc') rescue nil
 
