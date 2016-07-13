@@ -29,6 +29,8 @@ describe PostMover do
     let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user)}
 
     before do
+      p1.replies << p3
+      p2.replies << p4
       # add a like to a post, enable observers so we get user actions
       ActiveRecord::Base.observers.enable :all
       @like = PostAction.act(another_user, p4, PostActionType.types[:like])
@@ -70,6 +72,62 @@ describe PostMover do
       before do
         TopicUser.update_last_read(user, topic.id, p4.post_number, 0)
         TopicLink.extract_from(p2)
+      end
+
+      context "post replies" do
+        describe "when a post with replies is moved" do
+          it "should update post replies correctly" do
+            topic.move_posts(
+              user,
+              [p2.id],
+              title: 'GOT is a very addictive showw', category_id: category.id
+            )
+
+            expect(p2.reload.replies).to eq([])
+          end
+        end
+
+        describe "when replies of a post have been moved" do
+          it "should update post replies correctly" do
+            p5 = Fabricate(
+              :post,
+              topic: topic,
+              reply_to_post_number: p2.post_number,
+              user: another_user
+            )
+
+            p2.replies << p5
+
+            topic.move_posts(
+              user,
+              [p4.id],
+              title: 'GOT is a very addictive showw', category_id: category.id
+            )
+
+            expect(p2.reload.replies).to eq([p5])
+          end
+        end
+
+        describe "when only one reply is left behind" do
+          it "should update post replies correctly" do
+            p5 = Fabricate(
+              :post,
+              topic: topic,
+              reply_to_post_number: p2.post_number,
+              user: another_user
+            )
+
+            p2.replies << p5
+
+            topic.move_posts(
+              user,
+              [p2.id, p4.id],
+              title: 'GOT is a very addictive showw', category_id: category.id
+            )
+
+            expect(p2.reload.replies).to eq([p4])
+          end
+        end
       end
 
       context "to a new topic" do
