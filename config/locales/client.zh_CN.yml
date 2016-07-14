@@ -132,6 +132,7 @@ zh_CN:
         ap_northeast_1: "亚洲太平洋（Tokyo）"
         ap_northeast_2: "亚洲太平洋（Seoul）"
         sa_east_1: "南美（Sao Paulo）"
+        cn_north_1: "中国 (北京)"
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
