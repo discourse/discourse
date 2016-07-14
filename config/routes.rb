@@ -203,6 +203,8 @@ Discourse::Application.routes.draw do
       end
     end
 
+    resources :web_hooks, constraints: AdminConstraint.new
+
     resources :backups, only: [:index, :create], constraints: AdminConstraint.new do
       member do
         get "" => "backups#show", constraints: { id: BACKUP_ROUTE_FORMAT }

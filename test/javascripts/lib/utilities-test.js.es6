@@ -2,6 +2,7 @@
 import { blank } from 'helpers/qunit-helpers';
 import {
   emailValid,
+  urlValid,
   isAnImage,
   avatarUrl,
   allowsAttachments,
@@ -19,6 +20,16 @@ module("lib:utilities");
 test("emailValid", function() {
   ok(emailValid('Bob@example.com'), "allows upper case in the first part of emails");
   ok(emailValid('bob@EXAMPLE.com'), "allows upper case in the email domain");
+});
+
+test("urlValid", function() {
+  ok(urlValid('http://meta.discourse.org/'), "allows http url");
+  ok(urlValid('http://meta.discourse.org'), "allows url without trailing slash");
+  ok(urlValid('https://meta.discourse.org/'), "allows https url");
+  not(urlValid('meta.discourse.org'), "disallows domain name");
+  not(urlValid('ftp://meta.discourse.org/'), "disallows ftp url");
+  not(urlValid(' http://meta.discourse.org/'), "disallows blanks in the preceding string");
+  not(urlValid('http://meta.discourse.org/ '), "disallows blanks in the succeeding string");
 });
 
 var validUpload = validateUploadedFiles;
