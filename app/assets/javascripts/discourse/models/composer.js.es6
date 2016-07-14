@@ -539,7 +539,7 @@ const Composer = RestModel.extend({
       cooked: this.getCookedHtml()
     };
 
-    this.set('composeState', CLOSED);
+    this.set('composeState', SAVING);
 
     var rollback = throwAjaxError(function(){
       post.set('cooked', oldCooked);
@@ -547,6 +547,8 @@ const Composer = RestModel.extend({
     });
 
     return promise.then(function() {
+      // rest model only sets props after it is saved
+      post.set("cooked", props.cooked);
       return post.save(props).then(function(result) {
         self.clearState();
         return result;
