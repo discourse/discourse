@@ -54,7 +54,7 @@ export default ModalBodyView.extend({
       const startTime = performance.now();
       const duration = 100;
 
-      function doScroll(timestamp) {
+      const doScroll = function(timestamp) {
         let progress = (timestamp - startTime) / duration;
         if (progress > 1) {
           progress = 1;
@@ -73,7 +73,7 @@ export default ModalBodyView.extend({
 
         const iprogress = 1 - progress;
         scrollParent.scrollTop(goal * progress + current * iprogress);
-      }
+      };
       window.requestAnimationFrame(doScroll);
     }
   }
