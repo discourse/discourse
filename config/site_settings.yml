@@ -97,6 +97,13 @@ basic:
   ga_domain_name:
     client: true
     default: ''
+  gtm_container_id:
+    client: true
+    default: ''
+    regex: "^GTM-"
+  gtm_ua_domain_name:
+    client: true
+    default: 'auto'
   top_menu:
     client: true
     refresh: true
