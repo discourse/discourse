@@ -19,9 +19,11 @@
   {{/mobile-nav}}
 
   {{#if model}}
-    <div class='notification-buttons'>
-      <button title="{{i18n 'user.dismiss_notifications_tooltip'}}" id='dismiss-notifications-top' class='btn notifications-read' {{action "resetNew"}}>{{i18n 'user.dismiss_notifications'}}</button>
-    </div>
+    {{d-button title='user.dismiss_notifications_tooltip'
+               class='btn dismiss-notifications'
+               action="resetNew"
+               label='user.dismiss_notifications'
+               icon='times'}}
   {{/if}}
 </section>
 
