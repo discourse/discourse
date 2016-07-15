@@ -10,6 +10,13 @@ class EmailCook
     @raw = raw
   end
 
+  def add_quote(result, buffer)
+    if buffer.present?
+      return if buffer =~ /\A(<br>)+\z$/
+      result << "<blockquote>#{buffer}</blockquote>"
+    end
+  end
+
   def cook
     result = ""
 
@@ -23,7 +30,7 @@ class EmailCook
         in_quote = true
         quote_buffer << l.sub(/^[\s>]*/, '') << "<br>"
       elsif in_quote
-        result << "<blockquote>#{quote_buffer}</blockquote>"
+        add_quote(result, quote_buffer)
         quote_buffer = ""
         in_quote = false
       else
@@ -49,8 +56,8 @@ class EmailCook
       end
     end
 
-    if in_quote
-      result << "<blockquote>#{quote_buffer}</blockquote>"
+    if in_quote && quote_buffer.present?
+      add_quote(result, quote_buffer)
     end
 
     result.gsub!(/(<br>\n*){3,10}/, '<br><br>')
