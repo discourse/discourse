@@ -74,8 +74,8 @@ module Email
 
         client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
 
-        # don't send more than 1 reply per day to auto-generated emails
-        if !incoming_email.try(:is_auto_generated) || can_reply_to_auto_generated?(message.from)
+        # only send one rejection email per day to the same email address
+        if can_send_rejection_email?(message.from, message_template)
           Email::Sender.new(client_message, message_template).send
         end
       else
@@ -89,8 +89,8 @@ module Email
       client_message
     end
 
-    def can_reply_to_auto_generated?(email)
-      key = "auto_generated_reply:#{email}:#{Date.today}"
+    def can_send_rejection_email?(email, type)
+      key = "rejection_email:#{email}:#{type}:#{Date.today}"
 
       if $redis.setnx(key, "1")
         $redis.expire(key, 25.hours)
