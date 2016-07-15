@@ -52,12 +52,18 @@ module BackupRestore
     rescue Exception => ex
       log "EXCEPTION: " + ex.message
       log ex.backtrace.join("\n")
+      @success = false
     else
       @success = true
       "#{@archive_basename}.tar.gz"
     ensure
-      notify_user rescue nil
-      remove_old rescue nil
+      begin
+        notify_user
+        remove_old
+      rescue => ex
+        Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n"))
+      end
+
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end

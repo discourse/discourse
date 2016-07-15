@@ -160,6 +160,16 @@ class PostCreator
     @post
   end
 
+  def create!
+    create
+
+    if !self.errors.full_messages.empty?
+      raise ActiveRecord::RecordNotSaved.new("Failed to create post", self)
+    end
+
+    @post
+  end
+
   def self.track_post_stats
     Rails.env != "test".freeze || @track_post_stats
   end
@@ -170,6 +180,10 @@ class PostCreator
 
   def self.create(user, opts)
     PostCreator.new(user, opts).create
+  end
+
+  def self.create!(user, opts)
+    PostCreator.new(user, opts).create!
   end
 
   def self.before_create_tasks(post)
