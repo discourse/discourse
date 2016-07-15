@@ -164,6 +164,7 @@ describe UserNotifications do
         expect(subject.from).to eq([SiteSetting.notification_email])
         expect(subject.html_part.body.to_s).to be_present
         expect(subject.text_part.body.to_s).to be_present
+        expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
       end
 
       it "includes email_prefix in email subject instead of site title" do
