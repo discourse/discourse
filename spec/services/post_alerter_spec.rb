@@ -82,7 +82,7 @@ describe PostAlerter do
         post.revise(admin, {raw: 'I made another revision'})
       end
 
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(3)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(3)
     end
   end
 
@@ -97,7 +97,7 @@ describe PostAlerter do
       PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
       PostAction.act(evil_trout, post, PostActionType.types[:like])
 
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
     end
 
     it 'notifies on does not notify when never is selected' do
@@ -111,7 +111,7 @@ describe PostAlerter do
       PostAction.act(evil_trout, post, PostActionType.types[:like])
 
 
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(0)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(0)
     end
 
     it 'notifies on likes correctly' do
@@ -124,7 +124,7 @@ describe PostAlerter do
       PostAction.act(admin, post, PostActionType.types[:like])
 
       # one like
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
 
 
       post.user.user_option.update_columns(like_notification_frequency:
@@ -132,7 +132,7 @@ describe PostAlerter do
 
       admin2 = Fabricate(:admin)
       PostAction.act(admin2, post, PostActionType.types[:like])
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
 
       # adds info to the notification
       notification = Notification.find_by(post_number: 1,
@@ -146,7 +146,7 @@ describe PostAlerter do
       PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
 
       # rebuilds the missing notification
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
       notification = Notification.find_by(post_number: 1,
                                           topic_id: post.topic_id)
 
@@ -168,7 +168,7 @@ describe PostAlerter do
       end
 
       # first happend within the same day, no need to notify
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(2)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(2)
 
     end
   end
