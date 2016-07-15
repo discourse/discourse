@@ -144,23 +144,17 @@ module Email
 
       @incoming_email.update_columns(is_bounce: true)
 
-      if verp
-        bounce_key = verp[/\+verp-(\h{32})@/, 1]
-        if bounce_key && (email_log = EmailLog.find_by(bounce_key: bounce_key))
-          email_log.update_columns(bounced: true)
-          email = email_log.user.try(:email) || @from_email
-          if email.present? && @mail.error_status.present?
-            if @mail.error_status.start_with?("4.")
-              Email::Receiver.update_bounce_score(email, SOFT_BOUNCE_SCORE)
-            else @mail.error_status.start_with?("5.")
-              Email::Receiver.update_bounce_score(email, HARD_BOUNCE_SCORE)
-            end
-          end
-        end
+      if verp && (bounce_key = verp[/\+verp-(\h{32})@/, 1]) && (email_log = EmailLog.find_by(bounce_key: bounce_key))
+        email_log.update_columns(bounced: true)
+        email = email_log.user.try(:email).presence
       end
 
-      if is_auto_generated?
-        Email::Receiver.update_bounce_score(@from_email, SOFT_BOUNCE_SCORE)
+      email ||= @from_email
+
+      if @mail.error_status.present? && @mail.error_status.start_with?("4.")
+        Email::Receiver.update_bounce_score(email, SOFT_BOUNCE_SCORE)
+      else
+        Email::Receiver.update_bounce_score(email, HARD_BOUNCE_SCORE)
       end
 
       true
