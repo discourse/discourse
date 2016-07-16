@@ -321,6 +321,9 @@ module Discourse
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
     start_connection_reaper
+
+    # in case v8 was initialized we want to make sure it is nil
+    PrettyText.reset_context
     nil
   end
 
