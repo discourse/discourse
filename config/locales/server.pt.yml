@@ -1139,7 +1139,6 @@ pt:
     default_other_enable_quoting: "Por defeito, ativar resposta por citação para texto destacado."
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
     default_other_disable_jump_reply: "Por defeito, não saltar para a mensagem do utilizador após ter respondido."
-    default_other_edit_history_public: "Por defeito, realizar revisões públicas das mensagens."
     default_other_like_notification_frequency: "Notificar por defeito os utilizadores quando alguém gostar"
     default_topics_automatic_unpin: "Desafixar automaticamente tópicos quando um utilizador chega ao final, por defeito."
     default_categories_watching: "Lista de categorias que por defeito são vigiadas."

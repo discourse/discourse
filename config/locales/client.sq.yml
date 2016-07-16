@@ -444,7 +444,6 @@ sq:
       dismiss_notifications_tooltip: "Shëno njoftimet e palexuara si të lexuara"
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Tregoni numrin e temave të reja e azhornuara në ikonën e shfletuesit"
-      edit_history_public: "Lejo anëtarët e tjerë të shikojnë redaktimet e mia"
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
       change: "ndrysho"

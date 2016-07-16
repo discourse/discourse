@@ -392,7 +392,6 @@ zh_TW:
       dismiss_notifications_tooltip: "標記所有未讀通知為已讀"
       disable_jump_reply: "不要在回覆之後直接跳到我的文章"
       dynamic_favicon: "在瀏覽器小圖示上顯示新主題/更新的主題數"
-      edit_history_public: "讓其他用戶檢視我的文章修訂紀錄"
       external_links_in_new_tab: "以新分頁開啟所有外部連結"
       enable_quoting: "允許引用已標註的文字"
       change: "修改"

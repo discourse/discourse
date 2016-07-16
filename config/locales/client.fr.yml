@@ -450,7 +450,6 @@ fr:
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
       disable_jump_reply: "Ne pas se déplacer à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
-      edit_history_public: "Autoriser les autres utilisateurs à consulter les modifications de mes messages."
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer la citation du texte surligné"
       change: "modifier"

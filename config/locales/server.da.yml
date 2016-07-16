@@ -624,7 +624,6 @@ da:
     default_other_enable_quoting: "Slå som standard \"svar på den markerede tekst\" til."
     default_other_dynamic_favicon: "Vis som standard nyt / opdateret emnetal på browserikon"
     default_other_disable_jump_reply: "Spring ikke som standard til det nye indlæg efter brugeren har svaret"
-    default_other_edit_history_public: "Offentliggør som standard rettelser til indlæg."
     default_categories_watching: "Liste over kategorier der som standard overvåges."
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard ignoreres."

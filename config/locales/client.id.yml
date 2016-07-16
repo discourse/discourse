@@ -418,7 +418,6 @@ id:
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
       disable_jump_reply: "Jangan pindah ke kiriman saya setelah saya balas"
       dynamic_favicon: "Tampilkan jumlah topik baru / pembaharuan pada icon browser."
-      edit_history_public: "Biarkan pengguna lain melihat revisi pos saya"
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
       change: "ubah"

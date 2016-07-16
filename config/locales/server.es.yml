@@ -1127,7 +1127,6 @@ es:
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_dynamic_favicon: "Mostrar temas nuevos/actualizados en el icono del navegador por defecto"
     default_other_disable_jump_reply: "No ir a un nuevo post tras publicarlo por defecto"
-    default_other_edit_history_public: "Hacer la lista de ediciones pública por defecto."
     default_other_like_notification_frequency: "Notificar a los usuarios de los me gusta por defecto"
     default_topics_automatic_unpin: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     default_categories_watching: "Lista de categorías que están vigiladas por defecto."

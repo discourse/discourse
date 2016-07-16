@@ -462,7 +462,6 @@ ro:
       dismiss_notifications_tooltip: "Marchează cu citit toate notificările necitite"
       disable_jump_reply: "Nu sări la postarea mea după ce răspund"
       dynamic_favicon: "Arată subiectele noi/actualizate în iconiţă browserului."
-      edit_history_public: "Permite altor utilizatori să vizualizeze reviziile postului meu"
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
       enable_quoting: "Activează răspunsuri-citat pentru textul selectat"
       change: "schimbă"

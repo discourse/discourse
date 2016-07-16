@@ -469,7 +469,6 @@ sk:
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
       disable_jump_reply: "Neskočiť na môj príspevok po odpovedi"
       dynamic_favicon: "Zobraziť počet nových/upravených tém na ikone prehliadača"
-      edit_history_public: "Povoliť ostatným užívateľom zobrazenie všetkých verzií môjho príspevku"
       external_links_in_new_tab: "Otvoriť všekty externé odkazy v novej záložke"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
       change: "zmeniť"

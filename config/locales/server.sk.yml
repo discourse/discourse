@@ -1072,7 +1072,6 @@ sk:
     default_other_enable_quoting: "Štandardne na vybraný text zapnúť citované odpovede."
     default_other_dynamic_favicon: "Štandardne zobraziť počet nových/aktualizovaných tém v ikone prehliadača."
     default_other_disable_jump_reply: "Štandardne po odpovedi neskákať na používateľov príspevok."
-    default_other_edit_history_public: "Štandardne zobraziť revízie príspevku verejne."
     default_topics_automatic_unpin: "Štandardne automaticky odopnúť témy ak používateľ dosiahne posledný príspevok."
     default_categories_watching: "Štandardný zoznam kategórií, ktoré sú sledované."
     default_categories_tracking: "Štandardný zoznam kategórií, ktoré sú sledované."

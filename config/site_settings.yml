@@ -1205,7 +1205,6 @@ user_preferences:
   default_other_enable_quoting: true
   default_other_dynamic_favicon: false
   default_other_disable_jump_reply: false
-  default_other_edit_history_public: false
   default_other_like_notification_frequency:
     enum: 'LikeNotificationFrequencySiteSetting'
     default: 1

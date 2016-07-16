@@ -437,7 +437,6 @@ sv:
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       disable_jump_reply: "Hoppa inte till mitt inlägg efter att jag har svarat"
       dynamic_favicon: "Visa antal nya / uppdaterade ämnen på webbläsarikon"
-      edit_history_public: "Låt andra användare se mina ändringar"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
       change: "ändra"

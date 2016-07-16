@@ -426,7 +426,6 @@ cs:
       dismiss_notifications_tooltip: "Označit všechny nepřečtené notifikace jako přečtené"
       disable_jump_reply: "Po odpovědi nepřeskakovat na nový příspěvek"
       dynamic_favicon: "Zobrazit počet nových témat v ikoně prohlížeče"
-      edit_history_public: "Povolit ostatním zobrazení všech verzí mého příspěvku"
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
       enable_quoting: "Povolit odpověď s citací z označeného textu"
       change: "změnit"

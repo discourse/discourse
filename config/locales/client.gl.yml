@@ -442,7 +442,6 @@ gl:
       dismiss_notifications_tooltip: "Marcar todas notificacións sen ler como lidas"
       disable_jump_reply: "Non saltar á miña publicación despois de que responda"
       dynamic_favicon: "Amosar o número de temas novos / actualizados na icona do navegador"
-      edit_history_public: "Permitirlles a outros usuarios ver as revisións das miñas publicacións"
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
       change: "cambiar"
