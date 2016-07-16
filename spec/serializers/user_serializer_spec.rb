@@ -18,19 +18,18 @@ describe UserSerializer do
   context "as current user" do
     it "serializes options correctly" do
       # so we serialize more stuff
-      SiteSetting.edit_history_visible_to_public = false
       SiteSetting.default_other_auto_track_topics_after_msecs = 0
       SiteSetting.default_other_new_topic_duration_minutes = 60*24
 
       user = Fabricate.build(:user,
                               user_profile: Fabricate.build(:user_profile),
-                              user_option: UserOption.new(edit_history_public: true),
+                              user_option: UserOption.new(dynamic_favicon: true),
                               user_stat: UserStat.new
                             )
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
 
-      expect(json[:user_option][:edit_history_public]).to eq(true)
+      expect(json[:user_option][:dynamic_favicon]).to eq(true)
       expect(json[:user_option][:new_topic_duration_minutes]).to eq(60*24)
       expect(json[:user_option][:auto_track_topics_after_msecs]).to eq(0)
 

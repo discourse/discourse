@@ -1038,7 +1038,6 @@ nl:
     default_other_enable_quoting: "Citeer antwoord standaard inschakelen voor gemarkeerde tekst."
     default_other_dynamic_favicon: "Toon standaard een teller van nieuwe/bijgewerkte topics op browser icoon."
     default_other_disable_jump_reply: "Spring standaard niet naar de gebruiker post nadat ze hebben geantwoord."
-    default_other_edit_history_public: "Maak standaard de aanpassingen aan de post openbaar."
     default_other_like_notification_frequency: "Stuur gebruikers standaard een bericht bij een like"
     default_topics_automatic_unpin: "Standaard automatisch topics ontpinnen wanneer de gebruiker het einde van de pagina heeft bereikt."
     default_categories_watching: "Lijst van categorieën die standaard worden bekeken."

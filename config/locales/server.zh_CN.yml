@@ -1058,7 +1058,6 @@ zh_CN:
     default_other_enable_quoting: "默认在高亮选择文字时启用引用回复"
     default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
     default_other_disable_jump_reply: "默认不在用户回复后跳转到新帖子位置"
-    default_other_edit_history_public: "将帖子修订历史默认公开。"
     default_other_like_notification_frequency: "默认通知用户赞的消息"
     default_topics_automatic_unpin: "默认时当用户到达底部时自动解除主题置顶。"
     default_categories_watching: "分类列表默认跟踪。"

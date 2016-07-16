@@ -24,7 +24,6 @@ class UserUpdater
     :enable_quoting,
     :dynamic_favicon,
     :disable_jump_reply,
-    :edit_history_public,
     :automatically_unpin_topics,
     :digest_after_minutes,
     :new_topic_duration_minutes,

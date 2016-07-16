@@ -241,10 +241,6 @@
       {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting}}
       {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon}}
       {{preference-checkbox labelKey="user.disable_jump_reply" checked=model.user_option.disable_jump_reply}}
-      {{#unless siteSettings.edit_history_visible_to_public}}
-        {{preference-checkbox labelKey="user.edit_history_public" checked=model.user_option.edit_history_public}}
-      {{/unless}}
-
       {{plugin-outlet "user-custom-preferences"}}
     </div>
 

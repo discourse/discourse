@@ -1223,7 +1223,6 @@ describe User do
       SiteSetting.default_other_enable_quoting = false
       SiteSetting.default_other_dynamic_favicon = true
       SiteSetting.default_other_disable_jump_reply = true
-      SiteSetting.default_other_edit_history_public = true
 
       SiteSetting.default_topics_automatic_unpin = false
 
@@ -1243,7 +1242,6 @@ describe User do
       expect(options.enable_quoting).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
       expect(options.disable_jump_reply).to eq(true)
-      expect(options.edit_history_public).to eq(true)
       expect(options.automatically_unpin_topics).to eq(false)
       expect(options.email_direct).to eq(false)
       expect(options.new_topic_duration_minutes).to eq(-1)

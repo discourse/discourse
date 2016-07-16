@@ -198,10 +198,6 @@ const User = RestModel.extend({
       }
     });
 
-    if (!Discourse.SiteSettings.edit_history_visible_to_public) {
-      data['edit_history_public'] = this.get('user_option.edit_history_public');
-    }
-
     // TODO: We can remove this when migrated fully to rest model.
     this.set('isSaving', true);
     return ajax(`/users/${this.get('username_lower')}`, {

@@ -1053,7 +1053,6 @@ vi:
     default_other_enable_quoting: "Bật trích dẫn trả lời để nổi bật nội dung theo mặc định."
     default_other_dynamic_favicon: "Hiện bộ đếm chủ đề mới/cập nhật trên icon trình duyệt theo mặc định."
     default_other_disable_jump_reply: "Không nhảy tới bài viết của thành viên sau khi họ trả lời theo mặc định."
-    default_other_edit_history_public: "Đặt sửa đổi bài viết công khai theo mặc định."
     default_other_like_notification_frequency: "Thông báo thành viên khi like theo mặc định"
     default_topics_automatic_unpin: "Tự động bỏ ghim chủ đề khi thành viên xuống cuối trang theo mặc định."
     default_categories_watching: "Hiển thị danh sách chuyên mục đang xem theo mặc định."
