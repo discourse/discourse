@@ -11,7 +11,6 @@ class CategoryFeaturedTopic < ActiveRecord::Base
       end
       Category.select(:id, :topic_id).find_each do |c|
         CategoryFeaturedTopic.feature_topics_for(c, current[c.id] || [])
-        CategoryFeaturedUser.feature_users_in(c.id)
       end
     end
   end
