@@ -34,4 +34,8 @@ LONG_COOKED
   it 'autolinks without the beginning of a line' do
     expect(EmailCook.new("my site: https://www.eviltrout.com").cook).to eq("my site: <a href='https://www.eviltrout.com'>https://www.eviltrout.com</a><br>")
   end
+
+  it 'links even within a quote' do
+    expect(EmailCook.new("> https://www.eviltrout.com").cook).to eq("<blockquote><a href='https://www.eviltrout.com'>https://www.eviltrout.com</a><br></blockquote>")
+  end
 end
