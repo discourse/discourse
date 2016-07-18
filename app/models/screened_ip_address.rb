@@ -56,7 +56,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     #
     #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
     #   http://www.postgresql.org/docs/9.1/static/functions-net.html
-    find_by("'#{ip_address.to_s}' <<= ip_address")
+    find_by("? <<= ip_address", ip_address.to_s)
   end
 
   def self.should_block?(ip_address)
