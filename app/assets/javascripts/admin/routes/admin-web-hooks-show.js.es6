@@ -17,6 +17,9 @@ export default Discourse.Route.extend({
     model.set('category_ids', Ember.isEmpty(model.get('category_ids')) ?
       Em.A() :
       model.get('category_ids').map(c => c));
+    model.set('group_ids', Ember.isEmpty(model.get('group_ids')) ?
+      Em.A() :
+      model.get('group_ids').map(c => c));
 
     controller.setProperties({ model, saved: false });
   },
