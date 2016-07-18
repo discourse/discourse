@@ -3,8 +3,7 @@ class WebHook < ActiveRecord::Base
   has_and_belongs_to_many :groups
   has_and_belongs_to_many :categories
 
-  # TODO: add event models for log
-  # has_many :web_hook_events, dependent: :destroy
+  has_many :web_hook_events, dependent: :destroy
 
   default_scope { order('id ASC') }
 
@@ -37,25 +36,30 @@ class WebHook < ActiveRecord::Base
 
   def self.enqueue_hooks(type, opts = {})
     find_by_type(type).each do |w|
-      Jobs.enqueue(:emit_web_hook_event, opts.merge(web_hook_id: w.id, event_name: type.to_s))
+      Jobs.enqueue(:emit_web_hook_event, opts.merge(web_hook_id: w.id, event_type: type.to_s))
     end
   end
 
-  %i(topic_destroyed topic_recovered).each do |event|
-    DiscourseEvent.on(event) do |topic, user|
-      WebHook.enqueue_hooks(:topic, topic_id: topic.id, user_id: user&.id, category_id: topic&.category&.id)
-    end
-  end
-
-  DiscourseEvent.on(:topic_created) do |topic, _, user|
+  TOPIC_HOOK_2_ARGS = Proc.new do |topic, user|
     WebHook.enqueue_hooks(:topic, topic_id: topic.id, user_id: user&.id, category_id: topic&.category&.id)
   end
 
-  %i(post_created post_destroyed post_recovered validate_post).each do |event|
-    DiscourseEvent.on(event) do |post, _, user|
-      WebHook.enqueue_hooks(:post, post_id: post.id, user_id: user&.id, category_id: post.topic&.category&.id)
-    end
+  TOPIC_HOOK_3_ARGS = Proc.new do |topic, _, user|
+    WebHook.enqueue_hooks(:topic, topic_id: topic.id, user_id: user&.id, category_id: topic&.category&.id)
   end
+
+  POST_HOOK = Proc.new do |post, _, user|
+    WebHook.enqueue_hooks(:post, post_id: post.id, user_id: user&.id, category_id: post.topic&.category&.id)
+  end
+
+  %i(topic_destroyed topic_recovered).each { |event| DiscourseEvent.on(event, &TOPIC_HOOK_2_ARGS) }
+
+  DiscourseEvent.on(:topic_created, &TOPIC_HOOK_3_ARGS)
+
+  %i(post_created
+     post_destroyed
+     post_recovered
+     validate_post).each { |event| DiscourseEvent.on(event, &POST_HOOK) }
 end
 
 # == Schema Information

@@ -2403,8 +2403,8 @@ en:
 
       web_hooks:
         title: "Webhooks"
-        none: "(EXPERIMENTAL) There are no webhook right now."
-        instruction: "(EXPERIMENTAL) Webhooks allows Discourse to notify external services when certain event happens in your site. When the webhook is triggered, a POST request will send to URLs provided."
+        none: "There are no webhooks right now."
+        instruction: "Webhooks allows Discourse to notify external services when certain event happens in your site. When the webhook is triggered, a POST request will send to URLs provided."
         detailed_instruction: "A POST request will be sent to provided URL when chosen event happens."
         new: "New Webhook"
         create: "Create"
@@ -2415,7 +2415,7 @@ en:
         go_back: "Back to list"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        payload_url_invalid: "URL is invalid."
+        payload_url_invalid: "URL is invalid. URL should includes http:// or https://. And no blank is allowed."
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
         secret_placeholder: "A optional string, used for generating signature"
@@ -2433,6 +2433,8 @@ en:
         group_filters_instructions: "Relevant webhooks will only be triggered if the event is related with specified groups. Leave blank to trigger webhooks for all groups."
         group_filters: "Triggered Groups"
         delete_confirm: "Delete this webhook?"
+        go_list: "Go to list"
+        go_details: "Edit webhook"
         topic_event:
           name: "Topic Event"
           details: "When there is a new topic, revised, changed or deleted."
@@ -2445,6 +2447,21 @@ en:
         user_event:
           name: "User Event"
           details: "When there is a user is created or changed."
+        delivery_status:
+          title: "Delivery Status"
+          inactive: "Inactive"
+          failed: "Failed"
+          successful: "Successful"
+        events:
+          none: "There are no related events."
+          redeliver: "Redeliver"
+          completion: "Completed in %{seconds} seconds."
+          request: "Request"
+          response: "Response"
+          redeliver_confirm: "Are you sure you want to redeliver the same payload?"
+          headers: "Headers"
+          payload: "Payload"
+          body: "Body"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"

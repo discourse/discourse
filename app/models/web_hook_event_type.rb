@@ -16,7 +16,3 @@ end
 #  id   :integer          not null, primary key
 #  name :string           not null
 #
-# Indexes
-#
-#  index_web_hook_event_types_on_name  (name) UNIQUE
-#
