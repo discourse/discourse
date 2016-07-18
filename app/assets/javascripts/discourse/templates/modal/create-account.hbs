@@ -37,10 +37,10 @@
 
         {{#if fullnameRequired}}
           <tr class="input">
-            <td style="width:80px" class="label">
+            <td class="label">
               <label for='new-account-name'>{{i18n 'user.name.title'}}</label>
             </td>
-            <td style="width:496px">
+            <td>
               {{text-field value=accountName id="new-account-name"}}&nbsp;{{input-tip validation=nameValidation}}
             </td>
           </tr>
