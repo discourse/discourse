@@ -17,6 +17,13 @@ class EmailCook
     end
   end
 
+  def link_string!(str)
+    str.scan(EmailCook.url_regexp).each do |m|
+      url = m[0]
+      str.gsub!(url, "<a href='#{url}'>#{url}</a>")
+    end
+  end
+
   def cook
     result = ""
 
@@ -28,6 +35,7 @@ class EmailCook
 
       if l =~ /^\s*>/
         in_quote = true
+        link_string!(l)
         quote_buffer << l.sub(/^[\s>]*/, '') << "<br>"
       elsif in_quote
         add_quote(result, quote_buffer)
@@ -37,10 +45,7 @@ class EmailCook
 
         sz = l.size
 
-        l.scan(EmailCook.url_regexp).each do |m|
-          url = m[0]
-          l.gsub!(url, "<a href='#{url}'>#{url}</a>")
-        end
+        link_string!(l)
 
         result << l
 
