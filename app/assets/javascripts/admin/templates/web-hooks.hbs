@@ -1,5 +1,5 @@
 <div class='pull-right'>
-  {{#link-to 'adminWebHooks.show' 'new' tagName='button' classNames='btn btn-default'}}
+  {{#link-to 'adminWebHooks.show' 'new' tagName='button' classNames='btn'}}
     {{fa-icon 'plus'}} {{i18n 'admin.web_hooks.new'}}
   {{/link-to}}
 </div>
@@ -11,6 +11,7 @@
     <table class='web-hooks'>
       <thead>
         <tr>
+          <th>{{i18n 'admin.web_hooks.delivery_status.title'}}</th>
           <th>{{i18n 'admin.web_hooks.payload_url'}}</th>
           <th>{{i18n 'admin.web_hooks.description'}}</th>
           <th>{{i18n 'admin.web_hooks.controls'}}</th>
@@ -19,6 +20,7 @@
       <tbody>
         {{#each model as |webHook|}}
           <tr>
+            <td>{{#link-to 'adminWebHooks.showEvents' webHook.id}}{{admin-web-hook-status deliveryStatuses=deliveryStatuses model=webHook}}{{/link-to}}</td>
             <td>{{#link-to 'adminWebHooks.show' webHook}}{{webHook.payload_url}}{{/link-to}}</td>
             <td class='description'>{{webHook.description}}</td>
             <td class='controls'>
