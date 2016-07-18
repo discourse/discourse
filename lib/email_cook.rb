@@ -20,7 +20,16 @@ class EmailCook
   def link_string!(str)
     str.scan(EmailCook.url_regexp).each do |m|
       url = m[0]
-      str.gsub!(url, "<a href='#{url}'>#{url}</a>")
+
+      val = "<a href='#{url}'>#{url}</a>"
+
+      # Onebox consideration
+      if str.strip == url
+        oneboxed = Oneboxer.onebox(url)
+        val = oneboxed if oneboxed.present?
+      end
+
+      str.gsub!(url, val)
     end
   end
 
