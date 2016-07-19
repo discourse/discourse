@@ -33,6 +33,8 @@ class LogAnalyzer
         result.route += " (PUT)"
       end
 
+      result.url = self.sanitize_url(result.url)
+
       result
     end
 
@@ -42,6 +44,12 @@ class LogAnalyzer
 
     def parsed_timge
       DateTime.strptime(time, TIME_FORMAT) if time
+    end
+
+    private
+
+    def self.sanitize_url(url)
+      url.gsub(/(api_key|api_user)=(\w+)/, '\1=[FILTERED]')
     end
   end
 
