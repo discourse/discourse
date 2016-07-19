@@ -8,8 +8,9 @@ const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=
 
 registerOption((siteSettings, opts) => {
   const currentUser = (opts.getCurrentUser && opts.getCurrentUser(opts.userId)) || opts.currentUser;
+  const staff = currentUser && currentUser.staff;
 
-  opts.features.poll = !!siteSettings.poll_enabled || currentUser.staff;
+  opts.features.poll = !!siteSettings.poll_enabled || staff;
   opts.pollMaximumOptions = siteSettings.poll_maximum_options;
 });
 
