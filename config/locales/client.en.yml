@@ -1868,7 +1868,7 @@ en:
       title: "Topic Summary"
       participants_title: "Frequent Posters"
       links_title: "Popular Links"
-      links_shown: "show all {{totalLinks}} links..."
+      links_shown: "show more links..."
       clicks:
         one: "1 click"
         other: "%{count} clicks"
