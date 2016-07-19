@@ -14,8 +14,6 @@ after_initialize do
            RailsMultisite::ConnectionManagement.current_db == "default"
           result = `ruby #{Rails.root}/plugins/discourse-nginx-performance-report/script/nginx_analyze.rb --limit 1440`
 
-          binding.pry
-
           report_data =
             if result.strip.empty?
               <<~TEXT
