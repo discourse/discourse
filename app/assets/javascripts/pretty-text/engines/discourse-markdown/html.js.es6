@@ -1,7 +1,7 @@
 const BLOCK_TAGS = ['address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'details',
                     'div', 'dl', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3',
                     'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'iframe', 'noscript', 'ol', 'output',
-                    'p', 'pre', 'section', 'table', 'tfoot', 'ul', 'video'];
+                    'p', 'pre', 'section', 'table', 'tfoot', 'ul', 'video', 'summary'];
 
 function splitAtLast(tag, block, next, first) {
   const endTag = `</${tag}>`;
@@ -34,7 +34,7 @@ export function setup(helper) {
       }
     }
 
-    const m = /^<([^>]+)\>/.exec(block);
+    const m = /^\s*<\/?([^>]+)\>/.exec(block);
     if (m && m[1]) {
       const tag = m[1].split(/\s/);
       if (tag && tag[0] && BLOCK_TAGS.indexOf(tag[0]) !== -1) {
