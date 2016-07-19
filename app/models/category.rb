@@ -313,7 +313,7 @@ SQL
   end
 
   def allowed_tags=(tag_names_arg)
-    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg)
+    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, {unlimited: true})
   end
 
   def allowed_tag_groups=(group_names)
