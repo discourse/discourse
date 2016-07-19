@@ -61,6 +61,9 @@ class Category < ActiveRecord::Base
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
+  after_save :clear_topic_ids_cache
+  after_destroy :clear_topic_ids_cache
+
   scope :latest, -> { order('topic_count DESC') }
 
   scope :secured, -> (guardian = nil) {
@@ -82,6 +85,18 @@ class Category < ActiveRecord::Base
   # permission is just used by serialization
   # we may consider wrapping this in another spot
   attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
+
+  def self.topic_ids
+    @topic_ids ||= Set.new(Category.pluck(:topic_id).compact)
+  end
+
+  def self.clear_topic_ids_cache
+    @topic_ids = nil
+  end
+
+  def clear_topic_ids_cache
+    Category.clear_topic_ids_cache
+  end
 
   def self.last_updated_at
     order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
