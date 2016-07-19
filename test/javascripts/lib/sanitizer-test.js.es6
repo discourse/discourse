@@ -50,7 +50,18 @@ test("sanitize", function() {
   cooked("it has been <strike>1 day</strike> 0 days since our last test failure", "<p>it has been <strike>1 day</strike> 0 days since our last test failure</p>");
 });
 
-test("urlAllowed", function() {
+test("ids on headings", () => {
+  const pt = new PrettyText(buildOptions({ siteSettings: {} }));
+  equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
+  equal(pt.sanitize(`<h1 id="test-heading">Test Heading</h3>`), `<h1 id="test-heading">Test Heading</h3>`);
+  equal(pt.sanitize(`<h2 id="test-heading">Test Heading</h3>`), `<h2 id="test-heading">Test Heading</h3>`);
+  equal(pt.sanitize(`<h3 id="test-heading">Test Heading</h3>`), `<h3 id="test-heading">Test Heading</h3>`);
+  equal(pt.sanitize(`<h4 id="test-heading">Test Heading</h3>`), `<h4 id="test-heading">Test Heading</h3>`);
+  equal(pt.sanitize(`<h5 id="test-heading">Test Heading</h3>`), `<h5 id="test-heading">Test Heading</h3>`);
+  equal(pt.sanitize(`<h6 id="test-heading">Test Heading</h3>`), `<h6 id="test-heading">Test Heading</h3>`);
+});
+
+test("urlAllowed", () => {
   const allowed = (url, msg) => equal(hrefAllowed(url), url, msg);
 
   allowed("/foo/bar.html", "allows relative urls");
