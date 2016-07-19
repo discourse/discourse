@@ -108,7 +108,7 @@ class PostAlerter
 
     sync_group_mentions(post, mentioned_groups)
 
-    if post.post_number == 1
+    if new_record && post.post_number == 1
       topic = post.topic
 
       if topic.present?
