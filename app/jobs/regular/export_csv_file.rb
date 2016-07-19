@@ -81,19 +81,19 @@ module Jobs
       if SiteSetting.enable_sso
         # SSO enabled
         User.where(condition).includes(:user_stat, :single_sign_on_record, :groups).find_each do |user|
-          user_info_string = get_base_user_string(user)
-          user_info_string = add_single_sign_on(user, user_info_string)
-          user_info_string = add_custom_fields(user, user_info_string, user_field_ids)
-          user_info_string = add_group_names(user, user_info_string)
-          yield user_info_string.split(",")
+          user_info_array = get_base_user_array(user)
+          user_info_array = add_single_sign_on(user, user_info_array)
+          user_info_array = add_custom_fields(user, user_info_array, user_field_ids)
+          user_info_array = add_group_names(user, user_info_array)
+          yield user_info_array
         end
       else
         # SSO disabled
         User.where(condition).includes(:user_stat, :groups).find_each do |user|
-          user_info_string = get_base_user_string(user)
-          user_info_string = add_custom_fields(user, user_info_string, user_field_ids)
-          user_info_string = add_group_names(user, user_info_string)
-          yield user_info_string.split(",")
+          user_info_array = get_base_user_array(user)
+          user_info_array = add_custom_fields(user, user_info_array, user_field_ids)
+          user_info_array = add_group_names(user, user_info_array)
+          yield user_info_array
         end
       end
     end
@@ -171,35 +171,44 @@ module Jobs
 
     private
 
-      def get_base_user_string(user)
-        "#{user.id},#{user.name},#{user.username},#{user.email},#{user.title},#{user.created_at},#{user.last_seen_at},#{user.last_posted_at},#{user.last_emailed_at},#{user.trust_level},#{user.approved},#{user.suspended_at},#{user.suspended_till},#{user.blocked},#{user.active},#{user.admin},#{user.moderator},#{user.ip_address},#{user.user_stat.topics_entered},#{user.user_stat.posts_read_count},#{user.user_stat.time_read},#{user.user_stat.topic_count},#{user.user_stat.post_count},#{user.user_stat.likes_given},#{user.user_stat.likes_received}"
-      end
-
-      def add_single_sign_on(user, user_info_string)
-        if user.single_sign_on_record
-          user_info_string << ",#{user.single_sign_on_record.external_id},#{user.single_sign_on_record.external_email},#{user.single_sign_on_record.external_username},#{user.single_sign_on_record.external_name},#{user.single_sign_on_record.external_avatar_url}"
+      def escape_comma(string)
+        if string && string =~ /,/
+          return "#{string}"
         else
-          user_info_string << ",nil,nil,nil,nil,nil"
+          return string
         end
-        user_info_string
       end
 
-      def add_custom_fields(user, user_info_string, user_field_ids)
+      def get_base_user_array(user)
+        user_array = []
+        user_array.push(user.id,escape_comma(user.name),user.username,user.email,escape_comma(user.title),user.created_at,user.last_seen_at,user.last_posted_at,user.last_emailed_at,user.trust_level,user.approved,user.suspended_at,user.suspended_till,user.blocked,user.active,user.admin,user.moderator,user.ip_address,user.user_stat.topics_entered,user.user_stat.posts_read_count,user.user_stat.time_read,user.user_stat.topic_count,user.user_stat.post_count,user.user_stat.likes_given,user.user_stat.likes_received)
+      end
+
+      def add_single_sign_on(user, user_info_array)
+        if user.single_sign_on_record
+          user_info_array.push(user.single_sign_on_record.external_id,user.single_sign_on_record.external_email,user.single_sign_on_record.external_username,escape_comma(user.single_sign_on_record.external_name),user.single_sign_on_record.external_avatar_url)
+        else
+          user_info_array.push(nil,nil,nil,nil,nil)
+        end
+        user_info_array
+      end
+
+      def add_custom_fields(user, user_info_array, user_field_ids)
         if user_field_ids.present?
           user.user_fields.each do |custom_field|
-            user_info_string << ",#{custom_field[1]}"
+            user_info_array << escape_comma(custom_field[1])
           end
         end
-        user_info_string
+        user_info_array
       end
 
-      def add_group_names(user, user_info_string)
+      def add_group_names(user, user_info_array)
         group_names = user.groups.each_with_object("") do |group, names|
           names << "#{group.name};"
         end
-        user_info_string << ",#{group_names[0..-2]}" unless group_names.blank?
+        user_info_array << group_names[0..-2] unless group_names.blank?
         group_names = nil
-        user_info_string
+        user_info_array
       end
 
       def get_user_archive_fields(user_archive)
