@@ -992,7 +992,6 @@ nl:
     sequential_replies_threshold: "Aantal berichten dat een gebruiker achter elkaar in één topic moet plaatsen voordat hij een melding krijgt over te veel opeenvolgende reacties."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobiel-vriendelijke theme met de mogelijkheid te schakelen naar de volledige site. Schakel deze optie uit als je een eigen stylesheet wil gebruiken die volledig responsive is."
     dominating_topic_minimum_percent: "Welk percentage van de berichten een gebruiker moet maken in een onderwerp voordat ze worden herinnerd aan het te veel domineren van een topic."
-    daily_performance_report: "Analyseer elke dag NGINX logs en post een Alleen Voor Medewerkers topic met de details"
     suppress_uncategorized_badge: "Laat de badge niet zien voor topics zonder categorie in de topiclijsten."
     global_notice: "Laat een LET OP, BELANGRIJK-banner zien aan alle gebruikers. Laat leeg om niet te tonen (HTML is toegestaan)."
     disable_edit_notifications: "Schakelt bewerkingsnotificaties van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."

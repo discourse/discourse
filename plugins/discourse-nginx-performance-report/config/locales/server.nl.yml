@@ -1,0 +1,3 @@
+nl:
+  site_settings:
+    daily_performance_report: "Analyseer elke dag NGINX logs en post een Alleen Voor Medewerkers topic met de details"

@@ -1087,7 +1087,6 @@ fi:
     enable_mobile_theme: "Mobiililaitteet käyttävät erillistä teemaa ja kahden välillä on mahdollista vaihtaa. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin tulee muistutetuksi ketjun dominoinnista."
     disable_avatar_education_message: "Piilota opastusviesti, joka näytetään kun profiilikuvaa vaihdetaan."
-    daily_performance_report: "Analysoi NGINX lokit päivittäin ja julkaise vain henkilökunnalle näkyvä ketju yksityiskohdista"
     suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     global_notice: "Näytä KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri kaikilla sivuilla kaikille käyttäjille, vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_edit_notifications: "Poista muokkausilmoitukset system-käyttäjältä, kun 'download_remote_images_to_local' on asetettu."

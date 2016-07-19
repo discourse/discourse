@@ -1061,7 +1061,6 @@ fr:
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
     dominating_topic_minimum_percent: "Quel est le pourcentage de messages un utilisateur doit poster dans un sujet avant d'être rappelé à l'ordre pour laissé la communauté répondre."
     disable_avatar_education_message: "Désactiver le message incitant à changer l'avatar."
-    daily_performance_report: "Analyser les logs de NGINX quotidiennement et poster un sujet Responsables Uniquement avec les détails"
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets."
     permalink_normalizations: "Appliquer l'expression régulière suivante avant de faire correspondre les permaliens, par exemple /(\\/topic.*)\\?.*/\\1 supprimera les query strings des routes des sujets. Le format est regex+string, utilisez \\1 etc. pour accéder aux captures"
     global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le cacher (HTML autorisé)."
