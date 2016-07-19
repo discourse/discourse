@@ -118,6 +118,18 @@ RAILS_ENV=test bundle exec rake db:migrate
 bundle exec rake autospec p l=5
 ```
 
+When developing a plugin (the *poll* plugin for instance), the following can be used to only run all tests from the *spec* directory:
+
+```
+bundle exec rake plugin:spec poll
+```
+
+or just a single file with:
+
+```
+LOAD_PLUGINS=1 bundle exec rspec plugins/poll/spec/controllers/posts_controller_spec.rb
+```
+
 For more insight into testing Discourse, see [this discussion](http://rubyrogues.com/117-rr-discourse-part-2-with-sam-saffron-and-robin-ward/) with the Ruby Rogues.
 
 ### Sending Email
