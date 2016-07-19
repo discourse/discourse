@@ -970,6 +970,8 @@ legal:
     default: ''
 
 backups:
+  readonly_mode_during_backup:
+    default: true
   allow_restore:
     default: false
   maximum_backups:
