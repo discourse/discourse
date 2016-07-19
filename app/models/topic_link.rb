@@ -37,20 +37,23 @@ class TopicLink < ActiveRecord::Base
   def self.topic_map(guardian, topic_id)
 
     # Sam: complicated reports are really hard in AR
-    builder = SqlBuilder.new("SELECT ftl.url,
-                     COALESCE(ft.title, ftl.title) AS title,
-                     ftl.link_topic_id,
-                     ftl.reflection,
-                     ftl.internal,
-                     ftl.domain,
-                     MIN(ftl.user_id) AS user_id,
-                     SUM(clicks) AS clicks
-              FROM topic_links AS ftl
-              LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
-              LEFT JOIN categories AS c ON c.id = ft.category_id
-              /*where*/
-              GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
-              ORDER BY clicks DESC")
+    builder = SqlBuilder.new <<SQL
+  SELECT ftl.url,
+         COALESCE(ft.title, ftl.title) AS title,
+         ftl.link_topic_id,
+         ftl.reflection,
+         ftl.internal,
+         ftl.domain,
+         MIN(ftl.user_id) AS user_id,
+         SUM(clicks) AS clicks
+  FROM topic_links AS ftl
+  LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
+  LEFT JOIN categories AS c ON c.id = ft.category_id
+  /*where*/
+  GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
+  ORDER BY clicks DESC, count(*) DESC
+  LIMIT 50
+SQL
 
     builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
     builder.where('ft.deleted_at IS NULL')
