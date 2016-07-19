@@ -696,3 +696,13 @@ test("emoji - emojiSet", () => {
                 { emojiSet: 'twitter' },
                 `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`);
 });
+
+test("details", () => {
+  cooked(`<details><summary>Info</summary>coucou</details>`,
+         `<details><summary>Info</summary>\n\n<p>coucou</p>\n\n</details>`,
+         "manual HTML for details");
+  cooked(` <details><summary>Info</summary>coucou</details>`,
+         `<details><summary>Info</summary>\n\n<p>coucou</p>\n\n</details>`,
+         "manual HTML for details with a space");
+});
+

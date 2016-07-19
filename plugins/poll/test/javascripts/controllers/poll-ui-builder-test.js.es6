@@ -57,11 +57,11 @@ test("pollOptionsCount", function() {
   const controller = this.subject();
   controller.siteSettings = Discourse.SiteSettings;
 
-  controller.set("pollOptions", "1\n2\n")
+  controller.set("pollOptions", "1\n2\n");
 
   equal(controller.get("pollOptionsCount"), 2, "it should equal 2");
 
-  controller.set("pollOptions", "")
+  controller.set("pollOptions", "");
 
   equal(controller.get("pollOptionsCount"), 0, "it should equal 0");
 });
