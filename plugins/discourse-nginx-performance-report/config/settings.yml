@@ -1,0 +1,6 @@
+plugins:
+  # Reporting
+  daily_performance_report: false
+  performance_report_topic_id:
+    default: -1
+    hidden: true

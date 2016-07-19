@@ -1080,7 +1080,6 @@ pt:
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Que percentagem de mensagens um utilizador tem que fazer num tópico antes de ser relembrado sobre dominar demasiado um tópico."
     disable_avatar_education_message: "Desativar mensagem educativa para alteração de avatar."
-    daily_performance_report: "Analise os logs diários NGINX e publique um tópico visível apenas para o pessoal com detalhes"
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
     permalink_normalizations: "Aplicar a seguinte expressão regular antes de igualar hiperligações permanentes, por exemplo: /(topic.*)\\?.*/\\1 irá remover parâmetros de roteamento para tópicos. O formato é regex+sequência utilize \\1 etc. para aceder a capturas.O formato é regex+string utilize \\1 etc. para aceder a capturas."
     global_notice: "Exibir um banner global URGENTE, EMERGÊNCIA a todos os visitantes, mudar para branco para esconder (HTML permitido)."

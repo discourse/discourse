@@ -1264,8 +1264,6 @@ en:
 
     disable_avatar_education_message: "Disable education message for changing avatar."
 
-    daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
-
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
     permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
