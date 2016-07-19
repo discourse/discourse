@@ -33,7 +33,7 @@ class LogAnalyzer
         result.route += " (PUT)"
       end
 
-      result.url = self.sanitize_url(result.url)
+      result.url = self.sanitize_url(result.url) if result.url
 
       result
     end
