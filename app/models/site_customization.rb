@@ -4,6 +4,9 @@ require_dependency 'distributed_cache'
 
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
+
+  COMPILER_VERSION = 1
+
   @cache = DistributedCache.new('site_customization')
 
   def self.css_fields
@@ -44,14 +47,18 @@ PLUGIN_API_JS
       name = node["name"] || node["data-template-name"] || "broken"
       precompiled =
         if name =~ /\.raw$/
-          "Discourse.EmberCompatHandlebars.template(#{Barber::Precompiler.compile(node.inner_html)})"
+          "require('discourse/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
         else
           "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(node.inner_html)})"
         end
-      compiled = <<SCRIPT
-  Ember.TEMPLATES[#{name.inspect}] = #{precompiled};
-SCRIPT
-      node.replace("<script>#{compiled}</script>")
+
+      node.replace <<COMPILED
+        <script>
+          (function() {
+            Ember.TEMPLATES[#{name.inspect}] = #{precompiled};
+          })();
+        </script>
+COMPILED
     end
 
     doc.css('script[type="text/discourse-plugin"]').each do |node|
@@ -127,7 +134,7 @@ SCRIPT
   end
 
   def self.enabled_stylesheet_contents(target=:desktop)
-    @cache["enabled_stylesheet_#{target}"] ||= where(enabled: true)
+    @cache["enabled_stylesheet_#{target}:#{COMPILER_VERSION}"] ||= where(enabled: true)
       .order(:name)
       .pluck(baked_for_target(target))
       .compact
@@ -163,7 +170,7 @@ SCRIPT
   def self.lookup_field(key, target, field)
     return if key.blank?
 
-    cache_key = key + target.to_s + field.to_s;
+    cache_key = "#{key}:#{target}:#{field}:#{COMPILER_VERSION}"
 
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
@@ -199,7 +206,19 @@ SCRIPT
   end
 
   def ensure_baked!(field)
-    unless self.send("#{field}_baked")
+
+    # If the version number changes, clear out all the baked fields
+    if compiler_version != COMPILER_VERSION
+      updates = { compiler_version: COMPILER_VERSION }
+      SiteCustomization.html_fields.each do |f|
+        updates["#{f}_baked".to_sym] = nil
+      end
+
+      update_columns(updates)
+    end
+
+    baked = send("#{field}_baked")
+    if baked.blank?
       if val = self.send(field)
         val = process_html(val) rescue ""
         self.update_columns("#{field}_baked" => val)

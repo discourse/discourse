@@ -1,12 +1,13 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon';
 import { h } from 'virtual-dom';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 function renderIcon(name, key, canAct) {
   const iconArgs = key === 'unpinned' ? { 'class': 'unpinned' } : null,
         icon = iconNode(name, iconArgs);
 
-  const attributes = { title: Discourse.Utilities.escapeExpression(I18n.t(`topic_statuses.${key}.help`)) };
+  const attributes = { title: escapeExpression(I18n.t(`topic_statuses.${key}.help`)) };
   return h(`${canAct ? 'a' : 'span'}.topic-status`, attributes, icon);
 }
 

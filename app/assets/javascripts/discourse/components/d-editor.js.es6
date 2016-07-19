@@ -1,12 +1,15 @@
 /*global Mousetrap:true */
-import loadScript from 'discourse/lib/load-script';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
-import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
+import { showSelector } from "discourse/lib/emoji/toolbar";
 import Category from 'discourse/models/category';
 import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
 import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
 import { SEPARATOR } from 'discourse/lib/category-hashtags';
+import { cook } from 'discourse/lib/text';
+import { translations } from 'pretty-text/emoji/data';
+import { emojiSearch } from 'pretty-text/emoji';
+import { emojiUrlFor } from 'discourse/lib/text';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -63,18 +66,7 @@ class Toolbar {
       perform: e => e.applySurround('> ', '', 'code_text')
     });
 
-    this.addButton({
-      id: 'code',
-      group: 'insertions',
-      shortcut: 'Shift+C',
-      perform(e) {
-        if (e.selected.value.indexOf("\n") !== -1) {
-          e.applySurround('    ', '', 'code_text');
-        } else {
-          e.applySurround('`', '`', 'code_text');
-        }
-      },
-    });
+    this.addButton({id: 'code', group: 'insertions', shortcut: 'Shift+C', action: 'formatCode'});
 
     this.addButton({
       id: 'bullet',
@@ -113,14 +105,6 @@ class Toolbar {
 
     if (site.mobileView) {
       this.groups.push({group: 'mobileExtras', buttons: []});
-
-      this.addButton({
-        id: 'preview',
-        group: 'mobileExtras',
-        icon: 'television',
-        title: 'composer.hr_preview',
-        perform: e => e.preview()
-      });
     }
 
     this.groups[this.groups.length-1].lastGroup = true;
@@ -192,7 +176,6 @@ export function onToolbarCreate(func) {
 export default Ember.Component.extend({
   classNames: ['d-editor'],
   ready: false,
-  forcePreview: false,
   insertLinkHidden: true,
   linkUrl: '',
   linkText: '',
@@ -213,7 +196,7 @@ export default Ember.Component.extend({
     this._applyEmojiAutocomplete(container, $editorInput);
     this._applyCategoryHashtagAutocomplete(container, $editorInput);
 
-    loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
+    this.set('ready', true);
 
     const mouseTrap = Mousetrap(this.$('.d-editor-input')[0]);
 
@@ -261,9 +244,10 @@ export default Ember.Component.extend({
 
     const value = this.get('value');
     const markdownOptions = this.get('markdownOptions') || {};
-    markdownOptions.sanitize = true;
 
-    this.set('preview', Discourse.Dialect.cook(value || "", markdownOptions));
+    markdownOptions.siteSettings = this.siteSettings;
+
+    this.set('preview', cook(value));
     Ember.run.scheduleOnce('afterRender', () => {
       if (this._state !== "inDOM") { return; }
       const $preview = this.$('.d-editor-preview');
@@ -346,15 +330,15 @@ export default Ember.Component.extend({
             return resolve(["slight_smile", "smile", "wink", "sunny", "blush"]);
           }
 
-          if (Discourse.Emoji.translations[full]) {
-            return resolve([Discourse.Emoji.translations[full]]);
+          if (translations[full]) {
+            return resolve([translations[full]]);
           }
 
-          const options = Discourse.Emoji.search(term, {maxResults: 5});
+          const options = emojiSearch(term, {maxResults: 5});
 
           return resolve(options);
         }).then(list => list.map(code => {
-          return {code, src: Discourse.Emoji.urlFor(code)};
+          return {code, src: emojiUrlFor(code)};
         })).then(list => {
           if (list.length) {
             list.push({ label: I18n.t("composer.more_emoji") });
@@ -492,14 +476,14 @@ export default Ember.Component.extend({
   },
 
   _addText(sel, text) {
+    const $textarea = this.$('textarea.d-editor-input');
     const insert = `${sel.pre}${text}`;
-    this.set('value', `${insert}${sel.post}`);
-    this._selectText(insert.length, 0);
-    Ember.run.scheduleOnce("afterRender", () => this.$("textarea.d-editor-input").focus());
-  },
-
-  _togglePreview() {
-    this.toggleProperty('forcePreview');
+    const value = `${insert}${sel.post}`;
+    this.set('value', value);
+    $textarea.val(value);
+    $textarea.prop("selectionStart", insert.length);
+    $textarea.prop("selectionEnd", insert.length);
+    Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
   },
 
   actions: {
@@ -511,7 +495,7 @@ export default Ember.Component.extend({
         applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
         applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
         addText: text => this._addText(selected, text),
-        preview: () => this._togglePreview()
+        getText: () => this.get('value'),
       };
 
       if (button.sendAction) {
@@ -521,20 +505,28 @@ export default Ember.Component.extend({
       }
     },
 
-    hidePreview() {
-      this.set('forcePreview', false);
-    },
-
     showLinkModal() {
       this._lastSel = this._getSelected();
       this.set('insertLinkHidden', false);
+    },
+
+    formatCode() {
+      const sel = this._getSelected();
+      if (sel.value.indexOf("\n") !== -1) {
+        return (this.siteSettings.code_formatting_style === "4-spaces-indent") ?
+                this._applySurround(sel, '    ', '', 'code_text') :
+                this._addText(sel, '```\n' + sel.value + '\n```');
+      } else {
+        return (this.siteSettings.code_formatting_style === "4-spaces-indent") ?
+                this._applySurround(sel, '`', '`', 'code_text') :
+                this._applySurround(sel, '```\n', '\n```', 'paste_code_text');
+      }
     },
 
     insertLink() {
       const origLink = this.get('linkUrl');
       const linkUrl = (origLink.indexOf('://') === -1) ? `http://${origLink}` : origLink;
       const sel = this._lastSel;
-
 
       if (Ember.isEmpty(linkUrl)) { return; }
 

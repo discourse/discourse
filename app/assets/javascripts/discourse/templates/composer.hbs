@@ -37,7 +37,7 @@
             {{#if canEdit}}
               {{#if showEditReason}}
                 <div class="edit-reason-input">
-                  {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                  {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
                 </div>
               {{else}}
                 <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
@@ -48,13 +48,7 @@
           {{#if model.canEditTitle}}
             <div class='form-element clearfix'>
               {{#if model.creatingPrivateMessage}}
-                {{user-selector topicId=topicModel.id
-                                excludeCurrentUser="true"
-                                id="private-message-users"
-                                includeMentionableGroups="true"
-                                class="span8"
-                                placeholderKey="composer.users_placeholder"
-                                tabindex="1"
+                {{composer-user-selector topicId=topicModel.id
                                 usernames=model.targetUsernames
                                 hasGroups=model.hasTargetGroups
                                 }}
@@ -96,6 +90,8 @@
                           groupsMentioned="groupsMentioned"
                           importQuote="importQuote"
                           showOptions="showOptions"
+                          hideOptions="hideOptions"
+                          optionsVisible=optionsVisible
                           showToolbar=showToolbar
                           showUploadSelector="showUploadSelector"
                           afterRefresh="afterRefresh"}}

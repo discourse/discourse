@@ -19,9 +19,22 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       password: "pa$$word",
       database: VANILLA_DB
     )
+
+    @import_tags = false
+    begin
+      r = @client.query("select count(*) count from #{TABLE_PREFIX}Tag where countdiscussions > 0")
+      @import_tags = true if r.first["count"].to_i > 0
+    rescue => e
+      puts "Tags won't be imported. #{e.message}"
+    end
   end
 
   def execute
+    if @import_tags
+      SiteSetting.tagging_enabled = true
+      SiteSetting.max_tags_per_topic = 10
+    end
+
     import_users
     import_avatars
     import_categories
@@ -182,6 +195,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
   def import_topics
     puts "", "importing topics..."
 
+    tag_names_sql = "select t.name as tag_name from GDN_Tag t, GDN_TagDiscussion td where t.tagid = td.tagid and td.discussionid = {discussionid} and t.name != '';"
+
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}Discussion;").first['count']
 
     batches(BATCH_SIZE) do |offset|
@@ -203,7 +218,13 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           title: discussion['Name'],
           category: category_id_from_imported_category_id(discussion['CategoryID']),
           raw: clean_up(discussion['Body']),
-          created_at: Time.zone.at(discussion['DateInserted'])
+          created_at: Time.zone.at(discussion['DateInserted']),
+          post_create_action: proc do |post|
+            if @import_tags
+              tag_names = @client.query(tag_names_sql.gsub('{discussionid}', discussion['DiscussionID'].to_s)).map {|row| row['tag_name']}
+              DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
+            end
+          end
         }
       end
     end
@@ -327,6 +348,10 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     raw
   end
 
+  def staff_guardian
+    @_staff_guardian ||= Guardian.new(Discourse.system_user)
+  end
+
   def mysql_query(sql)
     @client.query(sql)
     # @client.query(sql, cache_rows: false) #segfault: cache_rows: false causes segmentation fault
@@ -339,6 +364,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
         Permalink.create( url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}" ) rescue nil
+        print '.'
       end
     end
 
@@ -353,6 +379,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         else
           Permalink.create( url: "discussion/comment/#{id}", post_id: post.id ) rescue nil
         end
+        print '.'
       end
     end
   end

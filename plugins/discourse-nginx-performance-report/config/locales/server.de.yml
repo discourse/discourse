@@ -1,0 +1,3 @@
+de:
+  site_settings:
+    daily_performance_report: "Analysiere die NGINX-Logs täglich. Poste anschließend eine Zusammenfassung als Beitrag, welcher nur für Moderatoren oder Administratoren zugänglich ist."

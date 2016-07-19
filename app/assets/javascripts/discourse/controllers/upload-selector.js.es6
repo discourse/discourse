@@ -1,9 +1,10 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
+import { allowsAttachments, authorizesAllExtensions, authorizedExtensions } from 'discourse/lib/utilities';
 
 export function uploadTranslate(key, options) {
   options = options || {};
-  if (Discourse.Utilities.allowsAttachments()) { key += "_with_attachments"; }
+  if (allowsAttachments()) { key += "_with_attachments"; }
   return I18n.t(`upload_selector.${key}`, options);
 }
 
@@ -16,13 +17,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed
   uploadIcon() {
-    return Discourse.Utilities.allowsAttachments() ? "upload" : "picture-o";
+    return allowsAttachments() ? "upload" : "picture-o";
   },
 
   @computed('controller.local')
   tip(local) {
     const source = local ? "local" : "remote";
-    const authorized_extensions = Discourse.Utilities.authorizesAllExtensions() ? "" : `(${Discourse.Utilities.authorizedExtensions()})`;
+    const authorized_extensions = authorizesAllExtensions() ? "" : `(${authorizedExtensions()})`;
     return uploadTranslate(`${source}_tip`, { authorized_extensions });
   },
 

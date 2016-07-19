@@ -73,7 +73,8 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.style.top = '0px';
 
-    fixedElement.style.height = parseInt(window.innerHeight*0.6) + "px";
+    const height = Math.max(parseInt(window.innerHeight*0.6), 350);
+    fixedElement.style.height = height + "px";
 
     // I used to do this, but it seems like we don't need to with position
     // fixed

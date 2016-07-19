@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { url } from 'discourse/lib/computed';
 import AdminPost from 'discourse/models/admin-post';
 
@@ -33,7 +34,7 @@ export default Discourse.Model.extend({
 
     this.set("loading", true);
 
-    return Discourse.ajax(this.get("url"), { cache: false }).then(function (result) {
+    return ajax(this.get("url"), { cache: false }).then(function (result) {
       if (result) {
         const posts = result.map(function (post) { return AdminPost.create(post); });
         self.get("content").pushObjects(posts);

@@ -30,11 +30,23 @@ class TopicLinkClick < ActiveRecord::Base
     urls << url.sub(/\?.*$/, '') if url.include?('?')
 
     # add a cdn link
-    if uri && Discourse.asset_host.present?
-      cdn_uri = URI.parse(Discourse.asset_host) rescue nil
-      if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
-        is_cdn_link = true
-        urls << uri.path[(cdn_uri.path.length)..-1]
+    if uri
+      if Discourse.asset_host.present?
+        cdn_uri = URI.parse(Discourse.asset_host) rescue nil
+        if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
+          is_cdn_link = true
+          urls << uri.path[cdn_uri.path.length..-1]
+        end
+      end
+
+      if SiteSetting.s3_cdn_url.present?
+        cdn_uri = URI.parse(SiteSetting.s3_cdn_url) rescue nil
+        if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
+          is_cdn_link = true
+          path = uri.path[cdn_uri.path.length..-1]
+          urls << path
+          urls << "#{Discourse.store.absolute_base_url}#{path}"
+        end
       end
     end
 
@@ -53,7 +65,7 @@ class TopicLinkClick < ActiveRecord::Base
     # If no link is found...
     unless link.present?
       # ... return the url for relative links or when using the same host
-      return url if url =~ /^\// || uri.try(:host) == Discourse.current_hostname
+      return url if url =~ /^\/[^\/]/ || uri.try(:host) == Discourse.current_hostname
 
       # If we have it somewhere else on the site, just allow the redirect.
       # This is likely due to a onebox of another topic.

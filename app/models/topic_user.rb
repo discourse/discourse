@@ -1,3 +1,5 @@
+require_dependency 'notification_levels'
+
 class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
@@ -17,10 +19,7 @@ class TopicUser < ActiveRecord::Base
 
     # Enums
     def notification_levels
-      @notification_levels ||= Enum.new(muted: 0,
-                                        regular: 1,
-                                        tracking: 2,
-                                        watching: 3)
+      NotificationLevels.topic_levels
     end
 
     def notification_reasons
@@ -57,6 +56,32 @@ class TopicUser < ActiveRecord::Base
       topic_user.notification_level = notification_levels[:watching]
       topic_user.notifications_reason_id = notification_reasons[:auto_watch]
       topic_user.save
+    end
+
+    def unwatch_categories!(user, category_ids)
+
+      track_threshold = user.user_option.auto_track_topics_after_msecs
+
+      sql = <<SQL
+      UPDATE topic_users tu
+      SET notification_level = CASE
+        WHEN t.user_id = :user_id THEN :watching
+        WHEN total_msecs_viewed > :track_threshold AND :track_threshold >= 0 THEN :tracking
+        ELSE :regular
+      end
+      FROM topics t
+      WHERE t.id = tu.topic_id AND tu.notification_level <> :muted AND category_id IN (:category_ids) AND tu.user_id = :user_id
+SQL
+
+     exec_sql(sql,
+                  watching: notification_levels[:watching],
+                  tracking: notification_levels[:tracking],
+                  regular: notification_levels[:regular],
+                  muted: notification_levels[:muted],
+                  category_ids: category_ids,
+                  user_id: user.id,
+                  track_threshold: track_threshold
+     )
     end
 
     # Find the information specific to a user in a forum topic
@@ -106,15 +131,7 @@ class TopicUser < ActiveRecord::Base
         rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all([attrs_sql, *vals])
 
         if rows == 0
-          now = DateTime.now
-          auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
-          auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
-
-          if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
-            attrs[:notification_level] ||= notification_levels[:tracking]
-          end
-
-          TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id, first_visited_at: now ,last_visited_at: now))
+          create_missing_record(user_id, topic_id, attrs)
         else
           observe_after_save_callbacks_for topic_id, user_id
         end
@@ -128,12 +145,64 @@ class TopicUser < ActiveRecord::Base
       # In case of a race condition to insert, do nothing
     end
 
+    def create_missing_record(user_id, topic_id, attrs)
+      now = DateTime.now
+
+      unless attrs[:notification_level]
+        category_notification_level = CategoryUser.where(user_id: user_id)
+                    .where("category_id IN (SELECT category_id FROM topics WHERE id = :id)", id: topic_id)
+                    .where("notification_level IN (:levels)", levels: [CategoryUser.notification_levels[:watching],
+                        CategoryUser.notification_levels[:tracking]])
+                    .order("notification_level DESC")
+                    .limit(1)
+                    .pluck(:notification_level)
+                    .first
+
+        tag_notification_level = TagUser.where(user_id: user_id)
+                    .where("tag_id IN (SELECT tag_id FROM topic_tags WHERE topic_id = :id)", id: topic_id)
+                    .where("notification_level IN (:levels)", levels: [CategoryUser.notification_levels[:watching],
+                        CategoryUser.notification_levels[:tracking]])
+                    .order("notification_level DESC")
+                    .limit(1)
+                    .pluck(:notification_level)
+                    .first
+
+        if category_notification_level && !(tag_notification_level && (tag_notification_level > category_notification_level))
+          attrs[:notification_level] = category_notification_level
+          attrs[:notifications_changed_at] = DateTime.now
+          attrs[:notifications_reason_id] = category_notification_level == CategoryUser.notification_levels[:watching] ?
+              TopicUser.notification_reasons[:auto_watch_category] :
+              TopicUser.notification_reasons[:auto_track_category]
+
+        elsif tag_notification_level
+          attrs[:notification_level] = tag_notification_level
+          attrs[:notifications_changed_at] = DateTime.now
+          attrs[:notifications_reason_id] = tag_notification_level == TagUser.notification_levels[:watching] ?
+              TopicUser.notification_reasons[:auto_watch_tag] :
+              TopicUser.notification_reasons[:auto_track_tag]
+        end
+
+
+      end
+
+      unless attrs[:notification_level]
+        auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
+        auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
+
+        if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
+          attrs[:notification_level] ||= notification_levels[:tracking]
+        end
+      end
+
+      TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id, first_visited_at: now ,last_visited_at: now))
+    end
+
     def track_visit!(topic_id, user_id)
       now = DateTime.now
       rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
 
       if rows == 0
-        TopicUser.create(topic_id: topic_id, user_id: user_id, last_visited_at: now, first_visited_at: now)
+        change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
       else
         observe_after_save_callbacks_for(topic_id, user_id)
       end

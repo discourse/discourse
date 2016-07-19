@@ -6,10 +6,11 @@ import { transformBasicPost } from 'discourse/lib/transform-post';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 import { dateNode } from 'discourse/helpers/node';
+import { translateSize, avatarUrl } from 'discourse/lib/utilities';
 
 export function avatarImg(wanted, attrs) {
-  const size = Discourse.Utilities.translateSize(wanted);
-  const url = Discourse.Utilities.avatarUrl(attrs.template, size);
+  const size = translateSize(wanted);
+  const url = avatarUrl(attrs.template, size);
 
   // We won't render an invalid url
   if (!url || url.length === 0) { return; }
@@ -267,7 +268,9 @@ createWidget('post-contents', {
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
-      result.push(h('section.embedded-posts.bottom', repliesBelow.map(p => this.attach('embedded-post', p))));
+      result.push(h('section.embedded-posts.bottom', repliesBelow.map(p => {
+        return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
+      })));
     }
 
     return result;
@@ -338,7 +341,10 @@ createWidget('post-article', {
   html(attrs, state) {
     const rows = [h('a.tabLoc', { attributes: { href: ''} })];
     if (state.repliesAbove.length) {
-      const replies = state.repliesAbove.map(p => this.attach('embedded-post', p, { state: { above: true } }));
+      const replies = state.repliesAbove.map(p => {
+        return this.attach('embedded-post', p, { model: this.store.createRecord('post', p), state: { above: true } });
+      });
+
       rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
     }
 
@@ -395,6 +401,7 @@ export default createWidget('post', {
     if (attrs.cloaked) { return 'cloaked-post'; }
     const classNames = ['topic-post', 'clearfix'];
 
+    if (attrs.id === -1 || attrs.isSaving) { classNames.push('staged'); }
     if (attrs.selected) { classNames.push('selected'); }
     if (attrs.topicOwner) { classNames.push('topic-owner'); }
     if (attrs.hidden) { classNames.push('post-hidden'); }

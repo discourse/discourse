@@ -107,6 +107,10 @@ aside.quote {
   opacity: 0.5;
 }
 
+.topic-post.staged {
+  opacity: 0.4;
+}
+
 
 .quote-controls {
   float: right;
@@ -365,4 +369,10 @@ a.mention, a.mention-group {
   border-radius: 8px;
   font-weight: bold;
   font-size: 0.93em;
+}
+
+.popup-menu {
+  h3 {
+    margin-top: 0;
+  }
 }

@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   validates_presence_of :username
   validate :username_validator, if: :username_changed?
   validates :email, presence: true, uniqueness: true
-  validates :email, email: true, if: :email_changed?
+  validates :email, email: true, if: Proc.new { |u| !u.staged && u.email_changed? }
   validate :password_validator
   validates :name, user_full_name: true, if: :name_changed?
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
@@ -778,10 +778,11 @@ class User < ActiveRecord::Base
   def associated_accounts
     result = []
 
-    result << "Twitter(#{twitter_user_info.screen_name})" if twitter_user_info
-    result << "Facebook(#{facebook_user_info.username})"  if facebook_user_info
-    result << "Google(#{google_user_info.email})"         if google_user_info
-    result << "Github(#{github_user_info.screen_name})"   if github_user_info
+    result << "Twitter(#{twitter_user_info.screen_name})"               if twitter_user_info
+    result << "Facebook(#{facebook_user_info.username})"                if facebook_user_info
+    result << "Google(#{google_user_info.email})"                       if google_user_info
+    result << "Github(#{github_user_info.screen_name})"                 if github_user_info
+    result << "#{oauth2_user_info.provider}(#{oauth2_user_info.email})" if oauth2_user_info
 
     user_open_ids.each do |oid|
       result << "OpenID #{oid.url[0..20]}...(#{oid.email})"
@@ -852,6 +853,11 @@ class User < ActiveRecord::Base
 
   def is_singular_admin?
     User.where(admin: true).where.not(id: id).where.not(id: Discourse::SYSTEM_USER_ID).blank?
+  end
+
+  def logged_out
+    MessageBus.publish "/logout", self.id, user_ids: [self.id]
+    DiscourseEvent.trigger(:user_logged_out, self)
   end
 
   protected
@@ -998,7 +1004,6 @@ class User < ActiveRecord::Base
       update_column(:previous_visit_at, last_seen_at)
     end
   end
-
 
 end
 

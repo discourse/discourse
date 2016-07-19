@@ -23,7 +23,7 @@ describe FileStore::S3Store do
 
     it "returns an absolute schemaless url" do
       s3_helper.expects(:upload)
-      expect(store.store_upload(uploaded_file, upload)).to match(/\/\/s3_upload_bucket\.s3\.amazonaws\.com\/original\/.+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98\.png/)
+      expect(store.store_upload(uploaded_file, upload)).to match(/\/\/s3_upload_bucket\.s3\.amazonaws\.com\/original\/.+#{upload.sha1}\.png/)
     end
 
   end
@@ -32,7 +32,7 @@ describe FileStore::S3Store do
 
     it "returns an absolute schemaless url" do
       s3_helper.expects(:upload)
-      expect(store.store_optimized_image(optimized_image_file, optimized_image)).to match(/\/\/s3_upload_bucket\.s3\.amazonaws\.com\/optimized\/.+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_#{OptimizedImage::VERSION}_100x200\.png/)
+      expect(store.store_optimized_image(optimized_image_file, optimized_image)).to match(/\/\/s3_upload_bucket\.s3\.amazonaws\.com\/optimized\/.+#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png/)
     end
 
   end
@@ -81,6 +81,10 @@ describe FileStore::S3Store do
 
       SiteSetting.stubs(:s3_region).returns("us-east-2")
       expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3_upload_bucket.s3-us-east-2.amazonaws.com")
+
+      SiteSetting.stubs(:s3_region).returns("cn-north-1")
+      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3_upload_bucket.s3.cn-north-1.amazonaws.com.cn")
+
     end
 
   end

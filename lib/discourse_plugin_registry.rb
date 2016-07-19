@@ -5,7 +5,6 @@ class DiscoursePluginRegistry
 
   class << self
     attr_writer :javascripts
-    attr_writer :server_side_javascripts
     attr_writer :admin_javascripts
     attr_writer :stylesheets
     attr_writer :mobile_stylesheets
@@ -28,10 +27,6 @@ class DiscoursePluginRegistry
 
     def admin_javascripts
       @admin_javascripts ||= Set.new
-    end
-
-    def server_side_javascripts
-      @server_side_javascripts ||= Set.new
     end
 
     def stylesheets
@@ -65,7 +60,6 @@ class DiscoursePluginRegistry
 
   def register_js(filename, options={})
     # If we have a server side option, add that too.
-    self.class.server_side_javascripts << options[:server_side] if options[:server_side].present?
     self.class.javascripts << filename
   end
 
@@ -104,9 +98,6 @@ class DiscoursePluginRegistry
       if opts == :admin
         self.admin_javascripts << asset
       else
-        if opts == :server_side
-          self.server_side_javascripts << asset
-        end
         self.javascripts << asset
       end
     elsif asset =~ /\.css$|\.scss$/
@@ -135,10 +126,6 @@ class DiscoursePluginRegistry
     self.class.javascripts
   end
 
-  def server_side_javascripts
-    self.class.server_side_javascripts
-  end
-
   def stylesheets
     self.class.stylesheets
   end
@@ -161,7 +148,6 @@ class DiscoursePluginRegistry
 
   def self.clear
     self.javascripts = nil
-    self.server_side_javascripts = nil
     self.stylesheets = nil
     self.mobile_stylesheets = nil
     self.desktop_stylesheets = nil
@@ -172,7 +158,6 @@ class DiscoursePluginRegistry
   def self.reset!
     javascripts.clear
     admin_javascripts.clear
-    server_side_javascripts.clear
     stylesheets.clear
     mobile_stylesheets.clear
     desktop_stylesheets.clear

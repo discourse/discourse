@@ -8,16 +8,9 @@
   </div>
 {{/if}}
 
-<div class='notification-buttons'>
-  <button title="{{i18n 'user.dismiss_notifications_tooltip'}}" id='dismiss-notifications-top' class='btn notifications-read' {{action "resetNew"}}>{{i18n 'user.dismiss_notifications'}}</button>
-</div>
-
-{{user-notifications-large notifications=model}}
-
-{{#conditional-loading-spinner condition=loading}}
-  {{#unless model.canLoadMore}}
-    <div class='notification-buttons'>
-      <button title="{{i18n 'user.dismiss_notifications_tooltip'}}" id='dismiss-notifications' class='btn notifications-read' {{action "resetNew"}}>{{i18n 'user.dismiss_notifications'}}</button>
-    </div>
-  {{/unless}}
-{{/conditional-loading-spinner}}
+{{#if hasNotifications}}
+  {{user-notifications-large notifications=model}}
+  {{conditional-loading-spinner condition=loading}}
+{{else}}
+  <div class='alert alert-info'>{{i18n 'notifications.empty'}}</div>
+{{/if}}

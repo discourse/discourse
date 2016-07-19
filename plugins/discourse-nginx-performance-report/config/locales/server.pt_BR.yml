@@ -1,0 +1,3 @@
+pt_BR:
+  site_settings:
+    daily_performance_report: "Analiza logs do NGINX diariamente e cria um tópico na categoria Somente Equipe com os detalhes."

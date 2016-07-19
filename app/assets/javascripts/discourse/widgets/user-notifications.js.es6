@@ -67,13 +67,17 @@ export default createWidget('user-notifications', {
       const href = `${attrs.path}/notifications`;
 
       result.push(h('hr'));
-      result.push(h('ul', [
-                    notificationItems,
-                    h('li.read.last.heading',
-                      h('a', { attributes: { href } }, [I18n.t('notifications.more'), '...'])
-                    )
-                  ]));
 
+      const items = [notificationItems];
+
+      if (notificationItems.length > 0) {
+        items.push(
+          h('li.read.last.heading', h('a', { attributes: { href } }, [I18n.t('notifications.more'), '...'])),
+          h('hr')
+        );
+      }
+
+      result.push(h('ul', items));
     }
 
     return result;

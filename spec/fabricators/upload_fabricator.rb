@@ -1,11 +1,11 @@
 Fabricator(:upload) do
   user
-  sha1 "e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98"
+  sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
   original_filename "logo.png"
   filesize 1234
   width 100
   height 200
-  url  "/uploads/default/1/1234567890123456.png"
+  url { sequence(:url) { |n| "/uploads/default/#{n}/1234567890123456.png" } }
 end
 
 Fabricator(:attachment, from: :upload) do

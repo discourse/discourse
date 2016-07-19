@@ -2,6 +2,34 @@ require 'rails_helper'
 
 describe TopicUser do
 
+  describe "#unwatch_categories!" do
+    it "correctly unwatches categories" do
+
+      op_topic = Fabricate(:topic)
+      another_topic = Fabricate(:topic)
+      tracked_topic = Fabricate(:topic)
+
+      user = op_topic.user
+      watching = TopicUser.notification_levels[:watching]
+      regular = TopicUser.notification_levels[:regular]
+      tracking = TopicUser.notification_levels[:tracking]
+
+      TopicUser.change(user.id, op_topic, notification_level: watching)
+      TopicUser.change(user.id, another_topic, notification_level: watching)
+      TopicUser.change(user.id, tracked_topic, notification_level: watching, total_msecs_viewed: SiteSetting.default_other_auto_track_topics_after_msecs + 1)
+
+      TopicUser.unwatch_categories!(user, [Fabricate(:category).id, Fabricate(:category).id])
+      expect(TopicUser.get(another_topic, user).notification_level).to eq(watching)
+
+      TopicUser.unwatch_categories!(user, [op_topic.category_id])
+
+      expect(TopicUser.get(op_topic, user).notification_level).to eq(watching)
+      expect(TopicUser.get(another_topic, user).notification_level).to eq(regular)
+      expect(TopicUser.get(tracked_topic, user).notification_level).to eq(tracking)
+    end
+
+  end
+
   describe '#notification_levels' do
     context "verify enum sequence" do
       before do

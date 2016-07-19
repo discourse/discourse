@@ -33,7 +33,6 @@ module FileStore
     end
 
     def cdn_url(url)
-      url
     end
 
     def absolute_base_url

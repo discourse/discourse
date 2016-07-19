@@ -76,7 +76,6 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
-
     (!SpamRule::AutoBlock.block?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
@@ -163,7 +162,7 @@ module PostGuardian
     return false unless post
 
     if !post.hidden
-      return true if post.wiki || SiteSetting.edit_history_visible_to_public || (post.user && post.user.user_option.edit_history_public)
+      return true if post.wiki || SiteSetting.edit_history_visible_to_public
     end
 
     authenticated? &&

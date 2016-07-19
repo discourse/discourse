@@ -48,3 +48,4 @@ fi:
         confirm: "Suljetaanko äänestys?"
       error_while_toggling_status: "Äänestyksen tilaa muutettaessa tapahtui virhe."
       error_while_casting_votes: "Äänesi annettaessa tapahtui virhe."
+      error_while_fetching_voters: "Äänestäneiden näyttämisessä tapahtui virhe."

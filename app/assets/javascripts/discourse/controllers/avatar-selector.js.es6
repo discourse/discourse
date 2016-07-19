@@ -1,6 +1,8 @@
 import computed from "ember-addons/ember-computed-decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
+import { allowsImages } from 'discourse/lib/utilities';
+
 export default Ember.Controller.extend(ModalFunctionality, {
   @computed("selected", "system_avatar_upload_id", "gravatar_avatar_upload_id", "custom_avatar_upload_id")
   selectedUploadId(selected, system, gravatar, custom) {
@@ -22,7 +24,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed()
   allowAvatarUpload() {
-    return this.siteSettings.allow_uploaded_avatars && Discourse.Utilities.allowsImages();
+    return this.siteSettings.allow_uploaded_avatars && allowsImages();
   },
 
   actions: {

@@ -257,6 +257,7 @@ testCase('link modal (link with description)', function(assert) {
 componentTest('advanced code', {
   template: '{{d-editor value=value}}',
   setup() {
+    this.siteSettings.code_formatting_style = '4-spaces-indent';
     this.set('value',
 `function xyz(x, y, z) {
   if (y === z) {
@@ -286,6 +287,7 @@ componentTest('advanced code', {
 componentTest('code button', {
   template: '{{d-editor value=value}}',
   setup() {
+    this.siteSettings.code_formatting_style = '4-spaces-indent';
     this.set('value', "first line\n\nsecond line\n\nthird line");
   },
 

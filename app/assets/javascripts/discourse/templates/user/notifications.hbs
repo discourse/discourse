@@ -1,11 +1,8 @@
-
 <section class='user-navigation'>
   {{#mobile-nav class='notifications-nav' desktopClass='notification-list action-list nav-stacked' currentPath=currentPath}}
-    {{#if model}}
     <li class='no-glyph'>
       {{#link-to 'userNotifications.index'}}{{i18n 'user.filters.all'}}{{/link-to}}
     </li>
-    {{/if}}
     <li>
       {{#link-to 'userNotifications.responses'}}
         <i class="glyph fa fa-reply"></i>
@@ -19,11 +16,20 @@
     </li>
     <li>{{#link-to 'userNotifications.mentions'}}<i class="glyph fa fa-at"></i>{{i18n 'user_action_groups.7'}}{{/link-to}}</li>
     <li>{{#link-to 'userNotifications.edits'}}<i class="glyph fa fa-pencil"></i>{{i18n 'user_action_groups.11'}}{{/link-to}}</li>
-    {{/mobile-nav}}
+  {{/mobile-nav}}
+
+  {{#if model}}
+    {{d-button title='user.dismiss_notifications_tooltip'
+               class='btn dismiss-notifications'
+               action="resetNew"
+               label='user.dismiss_notifications'
+               icon='check'}}
+  {{/if}}
 </section>
 
 <section class='user-right'>
   {{#load-more class="notification-history user-stream" selector=".user-stream .notification" action="loadMore"}}
     {{outlet}}
+    {{conditional-loading-spinner condition=model.loadingMore}}
   {{/load-more}}
 </section>

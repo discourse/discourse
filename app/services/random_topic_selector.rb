@@ -4,7 +4,6 @@ class RandomTopicSelector
   BACKFILL_LOW_WATER_MARK = 500
 
   def self.backfill(category=nil)
-
     exclude = category.try(:topic_id)
 
     # don't leak private categories into the "everything" group
@@ -20,8 +19,11 @@ class RandomTopicSelector
     options[:category] = category.id if category
 
     query = TopicQuery.new(user, options)
+
+
     results = query.latest_results.order('RANDOM()')
                    .where(closed: false, archived: false)
+                   .where("topics.created_at > ?", SiteSetting.suggested_topics_max_days_old.days.ago)
                    .limit(BACKFILL_SIZE)
                    .reorder('RANDOM()')
                    .pluck(:id)

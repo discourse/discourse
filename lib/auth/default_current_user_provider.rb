@@ -66,7 +66,11 @@ class Auth::DefaultCurrentUserProvider
       user.auth_token = SecureRandom.hex(16)
       user.save!
     end
-    cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
+    if SiteSetting.permanent_session_cookie
+      cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
+    else
+      cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
+    end
     make_developer_admin(user)
     enable_bootstrap_mode(user)
     @env[CURRENT_USER_KEY] = user
@@ -96,7 +100,7 @@ class Auth::DefaultCurrentUserProvider
         cookies["__profilin"] = nil
       end
 
-      MessageBus.publish "/logout", user.id, user_ids: [user.id]
+      user.logged_out
     end
     cookies[TOKEN_COOKIE] = nil
   end

@@ -36,22 +36,20 @@ module Jobs
 
       users.each do |user|
         if Guardian.new(user).can_see?(post)
+          if EmailLog.reached_max_emails?(user)
+            skip(user.email, user.id, post.id, I18n.t('email_log.exceeded_emails_limit'))
+            next
+          end
+
+          if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+            skip(user.email, user.id, post.id, I18n.t('email_log.exceeded_bounces_limit'))
+            next
+          end
+
           begin
-            if EmailLog.reached_max_emails?(user)
-              EmailLog.create!(
-                email_type: 'mailing_list',
-                to_address: user.email,
-                user_id: user.id,
-                post_id: post.id,
-                skipped: true,
-                skipped_reason: "[MailingList] #{I18n.t('email_log.exceeded_limit')}"
-              )
-            else
-              message = UserNotifications.mailing_list_notify(user, post)
-              if message
-                EmailLog.unique_email_per_post(post, user) do
-                  Email::Sender.new(message, :mailing_list, user).send
-                end
+            if message = UserNotifications.mailing_list_notify(user, post)
+              EmailLog.unique_email_per_post(post, user) do
+                Email::Sender.new(message, :mailing_list, user).send
               end
             end
           rescue => e
@@ -60,6 +58,17 @@ module Jobs
         end
       end
 
+    end
+
+    def skip(to_address, user_id, post_id, reason)
+      EmailLog.create!(
+        email_type: 'mailing_list',
+        to_address: to_address,
+        user_id: user_id,
+        post_id: post_id,
+        skipped: true,
+        skipped_reason: "[MailingList] #{reason}"
+      )
     end
   end
 end

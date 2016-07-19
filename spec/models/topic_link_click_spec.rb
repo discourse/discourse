@@ -144,6 +144,24 @@ describe TopicLinkClick do
 
         end
 
+        context "s3 cdns" do
+
+          it "works with s3 urls" do
+            SiteSetting.s3_cdn_url = "https://discourse-s3-cdn.global.ssl.fastly.net"
+
+            post = Fabricate(:post, topic: @topic, raw: "[test](//test.localhost/uploads/default/my-test-link)")
+            TopicLink.extract_from(post)
+
+            url = TopicLinkClick.create_from(
+              url: "https://discourse-s3-cdn.global.ssl.fastly.net/my-test-link",
+              topic_id: @topic.id,
+              ip: '127.0.0.3')
+
+            expect(url).to be_present
+          end
+
+        end
+
       end
 
       context 'with a HTTPS version of the same URL' do

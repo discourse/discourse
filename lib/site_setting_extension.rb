@@ -117,9 +117,6 @@ module SiteSettingExtension
         hidden_settings << name
       end
 
-      # You can "shadow" a site setting with a GlobalSetting. If the GlobalSetting
-      # exists it will be used instead of the setting and the setting will be hidden.
-      # Useful for things like API keys on multisite.
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
         val = GlobalSetting.send(name)
         unless val.nil? || (val == ''.freeze)
@@ -453,6 +450,28 @@ module SiteSettingExtension
     @validator_mapping[type_name]
   end
 
+  DEPRECATED_SETTINGS = [
+    ['use_https', 'force_https', '1.7']
+  ]
+
+  def setup_deprecated_methods
+    DEPRECATED_SETTINGS.each do |old_setting, new_setting, version|
+      define_singleton_method old_setting do
+        logger.warn("`SiteSetting.#{old_setting}` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}` instead")
+        self.public_send new_setting
+      end
+
+      define_singleton_method "#{old_setting}?" do
+        logger.warn("`SiteSetting.#{old_setting}?` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}?` instead")
+        self.public_send "#{new_setting}?"
+      end
+
+      define_singleton_method "#{old_setting}=" do |val|
+        logger.warn("`SiteSetting.#{old_setting}=` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}=` instead")
+        self.public_send "#{new_setting}=", val
+      end
+    end
+  end
 
   def setup_methods(name)
     clean_name = name.to_s.sub("?", "").to_sym
@@ -486,6 +505,12 @@ module SiteSettingExtension
       url = URI.parse(url).host
     end
     url
+  end
+
+  private
+
+  def logger
+    Rails.logger
   end
 
 end

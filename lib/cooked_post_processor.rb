@@ -127,6 +127,7 @@ class CookedPostProcessor
     w, h = get_size_from_attributes(img) ||
            get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
            get_size(img["src"])
+
     # limit the size of the thumbnail
     img["width"], img["height"] = ImageSizer.resize(w, h)
   end
@@ -321,20 +322,24 @@ class CookedPostProcessor
     if SiteSetting.login_required
       @doc.css("a.attachment[href]").each do |a|
         href = a["href"].to_s
-        a["href"] = UrlHelper.schemaless UrlHelper.absolute(href, nil) if UrlHelper.is_local(href)
+        a["href"] = UrlHelper.schemaless UrlHelper.absolute_without_cdn(href) if UrlHelper.is_local(href)
       end
     end
 
+    use_s3_cdn = SiteSetting.enable_s3_uploads && SiteSetting.s3_cdn_url.present?
+
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
-        href = a["#{selector}"].to_s
-        a["#{selector}"] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
+        href = a[selector].to_s
+        a[selector] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
+        a[selector] = Discourse.store.cdn_url(a[selector]) if use_s3_cdn
       end
     end
 
     @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
+      img["src"] = Discourse.store.cdn_url(img["src"]) if use_s3_cdn
     end
   end
 
@@ -343,6 +348,8 @@ class CookedPostProcessor
     return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
     return if disable_if_low_on_disk_space
+    # don't download remote images for posts that are more than n days old
+    return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
     return if @post.last_editor_id == Discourse.system_user.id
     # make sure no other job is scheduled

@@ -980,7 +980,6 @@ pt_BR:
     allow_profile_backgrounds: "Permitir usuários de fazerem upload de backgrounds para o perfil"
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Qual o percentual de postagens que um usuário precisa fazer em um tópico antes de ser relembrado sobre ser excessivamente dominante em um tópico."
-    daily_performance_report: "Analiza logs do NGINX diariamente e cria um tópico na categoria Somente Equipe com os detalhes."
     suppress_uncategorized_badge: "Não mostrar emblema para assuntos não categorizados em listas de tópicos"
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."

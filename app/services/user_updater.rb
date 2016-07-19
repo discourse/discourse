@@ -1,9 +1,16 @@
 class UserUpdater
 
   CATEGORY_IDS = {
+    watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
     tracked_category_ids: :tracking,
     muted_category_ids: :muted
+  }
+
+  TAG_NAMES = {
+    watched_tags: :watching,
+    tracked_tags: :tracking,
+    muted_tags: :muted
   }
 
   OPTION_ATTR = [
@@ -17,7 +24,6 @@ class UserUpdater
     :enable_quoting,
     :dynamic_favicon,
     :disable_jump_reply,
-    :edit_history_public,
     :automatically_unpin_topics,
     :digest_after_minutes,
     :new_topic_duration_minutes,
@@ -53,6 +59,10 @@ class UserUpdater
       if ids = attributes[attribute]
         CategoryUser.batch_set(user, level, ids)
       end
+    end
+
+    TAG_NAMES.each do |attribute, level|
+      TagUser.batch_set(user, level, attributes[attribute])
     end
 
 

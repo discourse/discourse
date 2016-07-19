@@ -1,4 +1,5 @@
 import { setting } from 'discourse/lib/computed';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   classNameBindings: [':tag-drop', 'tag::no-category', 'tags:has-drop','categoryStyle','tagClass'],
@@ -10,13 +11,14 @@ export default Ember.Component.extend({
 
   tagName: 'li',
 
-  tags: function() {
-    if (this.siteSettings.tags_sort_alphabetically && Discourse.Site.currentProp('top_tags')) {
-      return Discourse.Site.currentProp('top_tags').sort();
+  @computed('site.top_tags')
+  tags(topTags) {
+    if (this.siteSettings.tags_sort_alphabetically && topTags) {
+      return topTags.sort();
     } else {
-      return Discourse.Site.currentProp('top_tags');
+      return topTags;
     }
-  }.property('site.top_tags'),
+  },
 
   iconClass: function() {
     if (this.get('expanded')) { return "fa fa-caret-down"; }

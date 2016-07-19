@@ -1,4 +1,5 @@
 Discourse::Application.configure do
+
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
@@ -52,4 +53,10 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 
+  config.after_initialize do
+    if ENV['BULLET']
+      Bullet.enable = true
+      Bullet.rails_logger = true
+    end
+  end
 end

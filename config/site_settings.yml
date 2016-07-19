@@ -1,14 +1,18 @@
 # Available options:
 #
-# default   - The default value of the setting.
-# client    - Set to true if the javascript should have access to this setting's value.
-# refresh   - Set to true if clients should refresh when the setting is changed.
-# min       - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max       - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex     - A regex that the value must match.
-# validator - The name of the class that will be use to validate the value of the setting.
-# enum      - The setting has a fixed set of allowed values, and only one can be chosen.
-#             Set to the class name that defines the set.
+# default            - The default value of the setting.
+# client             - Set to true if the javascript should have access to this setting's value.
+# refresh            - Set to true if clients should refresh when the setting is changed.
+# min                - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max                - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex              - A regex that the value must match.
+# validator          - The name of the class that will be use to validate the value of the setting.
+# enum               - The setting has a fixed set of allowed values, and only one can be chosen.
+#                      Set to the class name that defines the set.
+# shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
+#                      exists it will be used instead of the setting and the setting will be hidden.
+#                      Useful for things like API keys on multisite.
+#
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
@@ -73,6 +77,10 @@ basic:
     min: 0
   limit_suggested_to_category:
     default: false
+  suggested_topics_max_days_old:
+    default: 365
+    min: 7
+    max: 10000
   track_external_right_clicks:
     client: true
     default: false
@@ -89,6 +97,13 @@ basic:
   ga_domain_name:
     client: true
     default: ''
+  gtm_container_id:
+    client: true
+    default: ''
+    regex: "^GTM-"
+  gtm_ua_domain_name:
+    client: true
+    default: 'auto'
   top_menu:
     client: true
     refresh: true
@@ -289,6 +304,7 @@ login:
   pending_users_reminder_delay:
     min: -1
     default: 8
+  permanent_session_cookie: true
 
 users:
   min_username_length:
@@ -348,7 +364,7 @@ users:
     client: true
     default: true
   email_token_valid_hours:
-    default: 24
+    default: 48
     min: 1
   email_token_grace_period_hours: 0
   purge_unactivated_users_grace_period_days: 14
@@ -465,6 +481,12 @@ posting:
     client: true
     default: 0
   post_excerpt_maxlength: 300
+  show_pinned_excerpt_mobile:
+    client: true
+    default: true
+  show_pinned_excerpt_desktop:
+    client: true
+    default: true
   display_name_on_posts:
     client: true
     default: false
@@ -511,6 +533,13 @@ posting:
     min: 0
   auto_close_messages_post_count: 500
   auto_close_topics_post_count: 10000
+  code_formatting_style:
+    client: true
+    type: enum
+    default: '4-spaces-indent'
+    choices:
+     - 4-spaces-indent
+     - code-fences
 
 email:
   email_time_window_mins:
@@ -534,9 +563,9 @@ email:
     validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
-    validator: "AlternativeReplyByEmailAddressesValidator"
   alternative_reply_by_email_addresses:
     default: ''
+    validator: "AlternativeReplyByEmailAddressesValidator"
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
@@ -619,6 +648,10 @@ files:
       test: false
       default: true
   download_remote_images_threshold: 10
+  download_remote_images_max_days_old:
+    default: 30
+    min: 1
+    max: 10000
   disabled_image_download_domains:
     type: list
     default: ''
@@ -753,7 +786,9 @@ trust:
     client: true
 
 security:
-  use_https: false
+  force_https:
+    default: false
+    shadowed_by_global: true
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   enable_noscript_support: true
@@ -935,6 +970,8 @@ legal:
     default: ''
 
 backups:
+  readonly_mode_during_backup:
+    default: true
   allow_restore:
     default: false
   maximum_backups:
@@ -1053,9 +1090,6 @@ uncategorized:
   dominating_topic_minimum_percent: 20
   disable_avatar_education_message: false
 
-  # Reporting
-  daily_performance_report: false
-
   global_notice:
     default: ""
     client: true
@@ -1080,10 +1114,6 @@ uncategorized:
     default: -1
     hidden: true
   uncategorized_category_id:
-    default: -1
-    hidden: true
-
-  performance_report_topic_id:
     default: -1
     hidden: true
 
@@ -1170,7 +1200,6 @@ user_preferences:
   default_other_enable_quoting: true
   default_other_dynamic_favicon: false
   default_other_disable_jump_reply: false
-  default_other_edit_history_public: false
   default_other_like_notification_frequency:
     enum: 'LikeNotificationFrequencySiteSetting'
     default: 1

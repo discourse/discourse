@@ -6,7 +6,7 @@ class Discourse::ForceHttpsMiddleware
   end
 
   def call(env)
-    env['rack.url_scheme'] = 'https' if SiteSetting.use_https
+    env['rack.url_scheme'] = 'https' if SiteSetting.force_https
     @app.call(env)
   end
 

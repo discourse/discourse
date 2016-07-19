@@ -4,6 +4,8 @@ import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { relativeAge } from 'discourse/lib/formatter';
+import { escapeExpression } from 'discourse/lib/utilities';
+import InputValidation from 'discourse/models/input-validation';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -70,7 +72,7 @@ export default Ember.Controller.extend({
         // iPhone 6 is 375, anything narrower and toolbar should
         // be default disabled.
         // That said we should remember the state
-        this._toolbarEnabled = $(window).width() > 370;
+        this._toolbarEnabled = $(window).width() > 370 && !this.capabilities.isAndroid;
       }
       return this._toolbarEnabled || storedVal === "true";
     },
@@ -355,7 +357,7 @@ export default Ember.Controller.extend({
 
         if (currentTopic) {
           buttons.push({
-            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + Discourse.Utilities.escapeExpression(currentTopic.get('title')) + "</div>",
+            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + escapeExpression(currentTopic.get('title')) + "</div>",
             "class": "btn btn-reply-here",
             "callback": function() {
               composer.set('topic', currentTopic);
@@ -366,7 +368,7 @@ export default Ember.Controller.extend({
         }
 
         buttons.push({
-          "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + Discourse.Utilities.escapeExpression(this.get('model.topic.title')) + "</div>",
+          "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + escapeExpression(this.get('model.topic.title')) + "</div>",
           "class": "btn-primary btn-reply-on-original",
           "callback": function() {
             self.save(true);
@@ -473,6 +475,12 @@ export default Ember.Controller.extend({
       alert("composer was opened without a draft key");
       throw "composer opened without a proper draft key";
     }
+    const self = this;
+    let composerModel = this.get('model');
+
+    if (opts.ignoreIfChanged && composerModel && composerModel.composeState !== Composer.CLOSED) {
+      return;
+    }
 
     // If we show the subcategory list, scope the categories drop down to
     // the category we opened the composer with.
@@ -480,8 +488,6 @@ export default Ember.Controller.extend({
       this.set('scopedCategoryId', opts.categoryId);
     }
 
-    const self = this;
-    let composerModel = this.get('model');
 
     this.setProperties({ showEditReason: false, editReason: null });
 
@@ -640,7 +646,7 @@ export default Ember.Controller.extend({
   @computed('model.categoryId', 'lastValidatedAt')
   categoryValidation(categoryId, lastValidatedAt) {
     if( !this.siteSettings.allow_uncategorized_topics && !categoryId) {
-      return Discourse.InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
+      return InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
     }
   },
 

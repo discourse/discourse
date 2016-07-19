@@ -155,7 +155,7 @@ header .discourse-tag {color: $tag-color !important; }
   margin-right: 8px;
 }
 
-.tag-notification-menu {
+.notification-options.tag-notification-menu {
   float: right;
   margin-bottom: 10px;
 }
@@ -232,9 +232,9 @@ header .discourse-tag {color: $tag-color !important; }
     }
   }
   .group-tags-list .tag-chooser {
-    height: 150px !important;
+    height: 250px !important;
     .select2-choices {
-      height: 150px !important; // to fight with select2.scss's important
+      height: 250px !important; // to fight with select2.scss's important
     }
   }
   .btn {margin-left: 10px;}

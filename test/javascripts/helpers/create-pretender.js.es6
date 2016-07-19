@@ -64,17 +64,20 @@ export default function() {
       return response(json);
     });
 
+    this.get('/clicks/track', success);
+
     this.put('/users/eviltrout', () => response({ user: {} }));
 
     this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
-
     this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
-
     this.get("/t/9.json", () => response(fixturesByUrl['/t/9/1.json']));
 
     this.get("/t/id_for/:slug", () => {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
     });
+
+    this.delete('/t/:id', success);
+    this.put('/t/:id/recover', success);
 
     this.get("/404-body", () => {
       return [200, {"Content-Type": "text/html"}, "<div class='page-not-found'>not found</div>"];
@@ -99,6 +102,10 @@ export default function() {
 
     this.get('/post_reply_histories', () => {
       return response({ post_reply_histories: [{ id: 1234, cooked: 'wat' }] });
+    });
+
+    this.get('/category_hashtags/check', () => {
+      return response({ valid: [{ slug: "bug", url: '/c/bugs' }] });
     });
 
     this.put('/categories/:category_id', request => {
@@ -192,6 +199,9 @@ export default function() {
       return response(200, [ { id: 2222, post_number: 2222 } ]);
     });
 
+    this.post('/user_badges', () => response(200, fixturesByUrl['/user_badges']));
+    this.delete('/user_badges/:badge_id', success);
+
     this.post('/posts', function(request) {
       const data = parsePostData(request.requestBody);
 
@@ -232,6 +242,12 @@ export default function() {
       result.can_revert = true;
       return response(200, {site_text: result});
     });
+
+    this.get('/tag_groups', () => response(200, {tag_groups: []}));
+    this.post('/admin/users/:user_id/generate_api_key', success);
+    this.delete('/admin/users/:user_id/revoke_api_key', success);
+    this.post('/admin/badges', success);
+    this.delete('/admin/badges/:id', success);
   });
 
   server.prepareBody = function(body){

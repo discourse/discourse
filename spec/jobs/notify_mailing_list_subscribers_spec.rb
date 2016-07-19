@@ -3,11 +3,13 @@ require "rails_helper"
 describe Jobs::NotifyMailingListSubscribers do
 
   context "with mailing list on" do
+
+    let(:user) { Fabricate(:user) }
+
     before do
       SiteSetting.default_email_mailing_list_mode = true
       SiteSetting.default_email_mailing_list_mode_frequency = 1
     end
-    let(:user) { Fabricate(:user) }
 
     context "SiteSetting.max_emails_per_day_per_user" do
 
@@ -21,6 +23,17 @@ describe Jobs::NotifyMailingListSubscribers do
         Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
         expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
       end
+    end
+
+    context "SiteSetting.bounce_score_threshold" do
+
+      it "stops sending mail once bounce threshold is reached" do
+        user.user_stat.update_columns(bounce_score: SiteSetting.bounce_score_threshold + 1)
+        post = Fabricate(:post)
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+        expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+      end
+
     end
 
     context "totally skipped if mailing list mode disabled" do

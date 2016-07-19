@@ -293,13 +293,15 @@ class ApplicationController < ActionController::Base
     Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
-  def fetch_user_from_params(opts=nil)
+  def fetch_user_from_params(opts=nil, eager_load = [])
     opts ||= {}
     user = if params[:username]
       username_lower = params[:username].downcase.chomp('.json')
       find_opts = { username_lower: username_lower }
       find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
-      User.find_by(find_opts)
+      result = User
+      (result = result.includes(*eager_load)) if !eager_load.empty?
+      result.find_by(find_opts)
     elsif params[:external_id]
       external_id = params[:external_id].chomp('.json')
       SingleSignOnRecord.find_by(external_id: external_id).try(:user)
@@ -313,9 +315,7 @@ class ApplicationController < ActionController::Base
   def post_ids_including_replies
     post_ids = params[:post_ids].map {|p| p.to_i}
     if params[:reply_post_ids]
-      post_ids << PostReply.where(post_id: params[:reply_post_ids].map {|p| p.to_i}).pluck(:reply_id)
-      post_ids.flatten!
-      post_ids.uniq!
+      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map {|p| p.to_i}).pluck(:reply_id)
     end
     post_ids
   end

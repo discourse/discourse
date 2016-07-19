@@ -1,7 +1,7 @@
 <div id='simple-container'>
     <h2><%= t 'activation.welcome_to', site_name: SiteSetting.title %></h2>
     <br/>
-    <button class='btn' id='activate-account-button'><%= t 'activation.action' %></button>
+    <button class='btn btn-primary' id='activate-account-button'><%= t 'activation.action' %></button>
 
     <%= form_tag(perform_activate_account_path, method: :put, id: 'activate-account-form') do %>
       <%= hidden_field_tag 'password_confirmation' %>

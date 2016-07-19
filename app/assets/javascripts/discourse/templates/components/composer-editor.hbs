@@ -5,18 +5,25 @@
            markdownOptions=markdownOptions
            extraButtons="extraButtons"
            importQuote="importQuote"
-           showOptions="showOptions"
+           toggleOptions="toggleOptions"
            showUploadModal="showUploadModal"
+           togglePreview="togglePreview"
            validation=validation
-           loading=composer.loading}}
+           loading=composer.loading
+           forcePreview=forcePreview}}
 
 <div class="composer-bottom-right">
   {{#if site.mobileView}}
     <input type="file" id="mobile-uploader" multiple />
     <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
+
+    {{#if showPreview}}
+      {{d-button action='togglePreview' class='hide-preview' label='composer.hide_preview'}}
+    {{/if}}
   {{else}}
     <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
   {{/if}}
+
   {{#if isUploading}}
     <div id="file-uploading">
       {{loading-spinner size="small"}} {{i18n 'upload_selector.uploading'}}

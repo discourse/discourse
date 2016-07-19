@@ -432,7 +432,6 @@ da:
       dismiss_notifications_tooltip: "Marker alle ulæste notifikationer som læst"
       disable_jump_reply: "Ikke hop til mit indlæg efter jeg svarer"
       dynamic_favicon: "Vis nyt / opdateret emnetal på browserikon"
-      edit_history_public: "Lad andre brugere se mine tidligere revisioner"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       change: "skift"

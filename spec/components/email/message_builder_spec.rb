@@ -142,7 +142,6 @@ describe Email::MessageBuilder do
         body: 'hello world',
         topic_id: 1234,
         post_id: 4567,
-        mark_as_reply_to_auto_generated: true
       )
     end
 
@@ -152,12 +151,6 @@ describe Email::MessageBuilder do
 
     it "passes through a topic_id" do
       expect(message_with_header_args.header_args['X-Discourse-Topic-Id']).to eq('1234')
-    end
-
-    it "marks the email as replying to an auto generated email" do
-      expect(message_with_header_args.header_args[
-        Email::MessageBuilder::REPLY_TO_AUTO_GENERATED_HEADER_KEY
-      ]).to eq(Email::MessageBuilder::REPLY_TO_AUTO_GENERATED_HEADER_VALUE)
     end
 
   end
@@ -191,27 +184,8 @@ describe Email::MessageBuilder do
         expect(message_with_unsubscribe.body).to match('/t/1234/unsubscribe')
       end
 
-      it "can add an unsubscribe via email link" do
-        SiteSetting.stubs(:unsubscribe_via_email_footer).returns(true)
-        expect(message_with_unsubscribe.body).to match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
-      end
-
       it "does not add unsubscribe via email link without site setting set" do
         expect(message_with_unsubscribe.body).to_not match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
-      end
-
-    end
-
-    context "with mailing_list_mode enabled" do
-      let(:message_with_unsubscribe_via_email) { Email::MessageBuilder.new(to_address,
-                                                                           body: 'hello world',
-                                                                           add_unsubscribe_link: true,
-                                                                           mailing_list_mode: true,
-                                                                           url: "/t/1234",
-                                                                           unsubscribe_url: "/t/1234/unsubscribe") }
-
-      it "add an unsubscribe via email link" do
-        expect(message_with_unsubscribe_via_email.body).to match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
       end
 
     end

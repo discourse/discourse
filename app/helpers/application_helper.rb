@@ -15,13 +15,21 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
-  def ga_universal_json
-    cookie_domain = SiteSetting.ga_universal_domain_name.gsub(/^http(s)?:\/\//, '')
+  def google_universal_analytics_json(ua_domain_name)
+    cookie_domain = ua_domain_name.gsub(/^http(s)?:\/\//, '')
     result = {cookieDomain: cookie_domain}
     if current_user.present?
       result[:userId] = current_user.id
     end
     result.to_json.html_safe
+  end
+
+  def ga_universal_json
+    google_universal_analytics_json(SiteSetting.ga_universal_domain_name)
+  end
+
+  def google_tag_manager_json
+    google_universal_analytics_json(SiteSetting.gtm_ua_domain_name)
   end
 
   def shared_session_key
@@ -57,6 +65,12 @@ module ApplicationHelper
 
   def html_classes
     "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
+  end
+
+  def body_classes
+    if @category && @category.url.present?
+      "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+    end
   end
 
   def rtl_class

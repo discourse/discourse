@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import round from "discourse/lib/round";
 import { fmt } from 'discourse/lib/computed';
 
@@ -132,7 +133,7 @@ const Report = Discourse.Model.extend({
 Report.reopenClass({
 
   find(type, startDate, endDate, categoryId, groupId) {
-    return Discourse.ajax("/admin/reports/" + type, {
+    return ajax("/admin/reports/" + type, {
       data: {
         start_date: startDate,
         end_date: endDate,

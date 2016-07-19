@@ -122,16 +122,15 @@
   // name hacky so lastpass does not freak out
   // -search- means it is bypassed
   #add-user-to-group {
-      button, .ac-wrap {
-        float: left;
-      }
-      button {
-        margin-top: 3px;
-        margin-left: 10px;
-      }
-      #user-search-selector {
-        width: 400px;
-      }
+    button, .ac-wrap {
+      float: left;
+    }
+    button {
+      margin-top: 5px;
+    }
+    #user-search-selector {
+      width: 400px;
+    }
    }
 
   table.group-members {
@@ -249,9 +248,9 @@
 
     &.group {
       .details {
-        padding: 15px;
+        padding: 15px 0px;
         margin: 0;
-        color: dark-light-choose($secondary, lighten($primary, 10%));
+        color: dark-light-choose(lighten($primary, 10%), $secondary);
       }
     }
 
@@ -370,12 +369,12 @@
           overflow: auto;
           max-width: 750px;
 
-          a.mention {
-            background-color: dark-light-diff($secondary, $primary, 20%, -50%);
-          }
-
           a[href] {
             text-decoration: underline;
+          }
+
+          a.mention {
+            text-decoration: none;
           }
 
           img {
@@ -577,6 +576,7 @@
     text-align: left;
     background: $primary;
     color: $secondary;
+    margin-bottom: 20px;
     a {
       color: $secondary;
     }
@@ -681,9 +681,6 @@
 }
 
 .user-main .nav-stacked {
-  &.notification-list {
-    padding-top: 40px;
-  }
   &.activity-list {
     padding-top: 20px;
   }

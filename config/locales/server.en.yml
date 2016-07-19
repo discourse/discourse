@@ -73,7 +73,6 @@ en:
         topic_not_found_error: "Happens when a reply came in but the related topic has been deleted."
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
         bounced_email_error: "Email is a bounced email report."
-        auto_generated_email_reply: "Email contains a reply to an auto generated email."
         screened_email_error: "Happens when the sender's email address was already screened."
 
   errors: &errors
@@ -347,6 +346,10 @@ en:
           attributes:
             hex:
               invalid: "is not a valid color"
+        post_reply:
+          base:
+            different_topic: "Post and reply must belong to the same topic."
+
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
@@ -622,7 +625,7 @@ en:
 
   unsubscribed:
     title: "Unsubscribed!"
-    description: "You have been unsubscribed. If you wish to change your email settings visit your <a href='%{url}'>user preferences</a>."
+    description: "You have been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
 
   unsubscribe:
@@ -780,7 +783,6 @@ en:
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
-    ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -838,6 +840,7 @@ en:
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
+    download_remote_images_max_days_old: "Don't download remote images for posts that are more than n days old."
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
@@ -853,6 +856,8 @@ en:
     exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. tld.com will automatically allow sub.tld.com as well. As a minimum, you should add the top-level domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
 
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
+    show_pinned_excerpt_mobile: "Show excerpt on pinned topics in mobile view."
+    show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
 
@@ -866,7 +871,7 @@ en:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
+    force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
@@ -904,10 +909,13 @@ en:
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
-    ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    permanent_session_cookie: "Use a permanent cookie that persists after closing the browser. When disabling this, you may want to log out everyone programmatically."
+    ga_tracking_code: "OBSOLETE: Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
+    ga_domain_name: "OBSOLETE: Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
+    gtm_ua_domain_name: "Universal Analytics via Google Tag manager domain name. 'auto' is recommended."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
@@ -1000,6 +1008,7 @@ en:
     github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
 
+    readonly_mode_during_backup: "Enable read only mode while taking a backup"
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
@@ -1037,6 +1046,7 @@ en:
 
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
+    suggested_topics_max_days_old: "Suggested topics should not be more than n days old."
 
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
@@ -1255,8 +1265,6 @@ en:
 
     disable_avatar_education_message: "Disable education message for changing avatar."
 
-    daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
-
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
     permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
@@ -1315,6 +1323,8 @@ en:
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
 
+    code_formatting_style: "Code button in composer will default to this code formatting style"
+
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
     default_email_private_messages: "Send an email when someone messages the user by default."
@@ -1333,7 +1343,6 @@ en:
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
     default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
-    default_other_edit_history_public: "Make the post revisions public by default."
 
     default_other_like_notification_frequency: "Notify users on likes by default"
 
@@ -1379,22 +1388,6 @@ en:
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
-
-  notification_types:
-    group_mentioned: "%{group_name} was mentioned in %{link}"
-    mentioned: "%{display_username} mentioned you in %{link}"
-    liked: "%{display_username} liked your post in %{link}"
-    replied: "%{display_username} replied to your post in %{link}"
-    quoted: "%{display_username} quoted your post in %{link}"
-    edited: "%{display_username} edited your post in %{link}"
-    posted: "%{display_username} posted in %{link}"
-    moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a message: %{link}"
-    invited_to_topic: "%{display_username} invited you to %{link}"
-    invitee_accepted: "%{display_username} accepted your invitation"
-    linked: "%{display_username} linked you in %{link}"
-    granted_badge: "You earned %{link}"
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -1659,7 +1652,7 @@ en:
       [4]: http://whatismyipaddress.com/blacklist-check
       [7]: https://www.mail-tester.com/spf-dkim-check
       [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://sendgrid.com/
+      [sg]: https://goo.gl/r1WMF6
       [sp]: https://www.sparkpost.com/
       [mg]: http://www.mailgun.com/
       [mj]: https://www.mailjet.com/pricing
@@ -2172,14 +2165,10 @@ en:
   unsubscribe_link_and_mail: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
-    Alternarively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
-
   unsubscribe_mailing_list: |
     You are receiving these emails cause you have enabled mailing list mode.
 
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
-
-    Alternatively you may [click here](mailto:reply@%{hostname}?subject=unsubscribe) to unsubscribe via email.
 
   subject_re: "Re: "
   subject_pm: "[PM] "
@@ -2319,6 +2308,17 @@ en:
         %{respond_instructions}
 
     user_posted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
+    user_watching_first_post:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}

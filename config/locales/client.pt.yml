@@ -446,7 +446,6 @@ pt:
       dismiss_notifications_tooltip: "Marcar como lidas todas as notificações por ler"
       disable_jump_reply: "Não voltar para a minha mensagem após ter respondido"
       dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
-      edit_history_public: "Permitir que outros utilizadores vejam as minhas revisões de publicação"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
       change: "alterar"

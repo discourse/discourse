@@ -197,12 +197,16 @@ class Post < ActiveRecord::Base
     if cook_method == Post.cook_methods[:email]
       cooked = EmailCook.new(raw).cook
     else
-      cooked = if !self.user || SiteSetting.tl3_links_no_follow || !self.user.has_trust_level?(TrustLevel[3])
+      cloned = args.dup
+      cloned[1] ||= {}
+
+      post_user = self.user
+      cloned[1][:user_id] = post_user.id if post_user
+
+      cooked = if !post_user || SiteSetting.tl3_links_no_follow || !post_user.has_trust_level?(TrustLevel[3])
                  post_analyzer.cook(*args)
                else
                  # At trust level 3, we don't apply nofollow to links
-                 cloned = args.dup
-                 cloned[1] ||= {}
                  cloned[1][:omit_nofollow] = true
                  post_analyzer.cook(*cloned)
                end

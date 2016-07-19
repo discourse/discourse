@@ -1,0 +1,3 @@
+pt:
+  site_settings:
+    daily_performance_report: "Analise os logs diários NGINX e publique um tópico visível apenas para o pessoal com detalhes"

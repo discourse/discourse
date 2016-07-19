@@ -101,13 +101,14 @@ function initializePolls(api) {
       );
 
       $poll.replaceWith($div);
-      Em.run.next(() => pollView.renderer.replaceIn(pollView, $div[0]));
+      Em.run.schedule('afterRender', () => pollView.renderer.replaceIn(pollView, $div[0]));
       postPollViews[pollId] = pollView;
     });
 
     _pollViews = postPollViews;
   }
 
+  api.includePostAttributes("polls", "polls_votes");
   api.decorateCooked(createPollViews, { onlyStream: true });
   api.cleanupStream(cleanUpPollViews);
 }

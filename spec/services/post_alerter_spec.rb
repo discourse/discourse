@@ -82,7 +82,7 @@ describe PostAlerter do
         post.revise(admin, {raw: 'I made another revision'})
       end
 
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(3)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(3)
     end
   end
 
@@ -97,7 +97,7 @@ describe PostAlerter do
       PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
       PostAction.act(evil_trout, post, PostActionType.types[:like])
 
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
     end
 
     it 'notifies on does not notify when never is selected' do
@@ -111,7 +111,7 @@ describe PostAlerter do
       PostAction.act(evil_trout, post, PostActionType.types[:like])
 
 
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(0)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(0)
     end
 
     it 'notifies on likes correctly' do
@@ -124,7 +124,7 @@ describe PostAlerter do
       PostAction.act(admin, post, PostActionType.types[:like])
 
       # one like
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
 
 
       post.user.user_option.update_columns(like_notification_frequency:
@@ -132,7 +132,7 @@ describe PostAlerter do
 
       admin2 = Fabricate(:admin)
       PostAction.act(admin2, post, PostActionType.types[:like])
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
 
       # adds info to the notification
       notification = Notification.find_by(post_number: 1,
@@ -146,7 +146,7 @@ describe PostAlerter do
       PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
 
       # rebuilds the missing notification
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(1)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
       notification = Notification.find_by(post_number: 1,
                                           topic_id: post.topic_id)
 
@@ -168,7 +168,7 @@ describe PostAlerter do
       end
 
       # first happend within the same day, no need to notify
-      expect(Notification.count(post_number: 1, topic_id: post.topic_id)).to eq(2)
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(2)
 
     end
   end
@@ -326,4 +326,42 @@ describe PostAlerter do
     end
   end
 
+  describe "watching_first_post" do
+    let(:group) { Fabricate(:group) }
+    let(:user) { Fabricate(:user) }
+    let(:category) { Fabricate(:category) }
+    let(:tag)  { Fabricate(:tag) }
+    let(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
+    let(:post) { Fabricate(:post, topic: topic) }
+
+    it "doesn't notify people who aren't watching" do
+      PostAlerter.post_created(post)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
+    end
+
+    it "notifies the user who is following the first post category" do
+      level = CategoryUser.notification_levels[:watching_first_post]
+      CategoryUser.set_notification_level_for_category(user, level, category.id)
+      PostAlerter.post_created(post)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+    end
+
+    it "notifies the user who is following the first post tag" do
+      level = TagUser.notification_levels[:watching_first_post]
+      TagUser.change(user.id, tag.id, level)
+      PostAlerter.post_created(post)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+    end
+
+    it "notifies the user who is following the first post group" do
+      GroupUser.create(group_id: group.id, user_id: user.id)
+      GroupUser.create(group_id: group.id, user_id: post.user.id)
+
+      level = GroupUser.notification_levels[:watching_first_post]
+      GroupUser.where(user_id: user.id, group_id: group.id).update_all(notification_level: level)
+
+      PostAlerter.post_created(post)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+    end
+  end
 end

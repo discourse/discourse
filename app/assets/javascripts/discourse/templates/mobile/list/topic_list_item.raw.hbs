@@ -1,5 +1,5 @@
 <td>
-  {{~#unless topic.hasExcerpt}}
+  {{~#unless expandPinned}}
   <div class='pull-left'>
     <a href="{{topic.lastPostUrl}}">{{avatar topic.lastPoster imageSize="large"}}</a>
   </div>
@@ -13,7 +13,9 @@
       {{#if topic.unseen}}
         <span class="badge-notification new-topic"></span>
       {{/if}}
+      {{~#if expandPinned}}
       {{raw "list/topic-excerpt" topic=topic}}
+      {{/if~}}
     </div>
 
     <div class='pull-right'>

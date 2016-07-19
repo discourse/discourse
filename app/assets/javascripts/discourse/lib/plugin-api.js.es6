@@ -11,6 +11,7 @@ import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
+import { emojiUrlFor } from 'discourse/lib/text';
 
 class PluginApi {
   constructor(version, container) {
@@ -93,7 +94,7 @@ class PluginApi {
           iconBody = iconNode(result.icon);
         } else if (result.emoji) {
           iconBody = result.emoji.split('|').map(emoji => {
-            const src = Discourse.Emoji.urlFor(emoji);
+            const src = emojiUrlFor(emoji);
             return dec.h('img', { className: 'emoji', attributes: { src } });
           });
 
@@ -336,7 +337,7 @@ class PluginApi {
 let _pluginv01;
 function getPluginApi(version) {
   version = parseFloat(version);
-  if (version <= 0.4) {
+  if (version <= 0.5) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
@@ -358,7 +359,7 @@ export function withPluginApi(version, apiCodeCallback, opts) {
 
   const api = getPluginApi(version);
   if (api) {
-    return apiCodeCallback(api);
+    return apiCodeCallback(api, opts);
   }
 }
 

@@ -442,7 +442,6 @@ et:
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"
       disable_jump_reply: "Ära hüppa minu postitusse peale vastamist"
       dynamic_favicon: "Kuva uute / muudetud teemade arvu brauseri ikoonil"
-      edit_history_public: "Näita minu postituse redaktsioone teistele kasutajatele"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
       enable_quoting: "Luba esiletõstetud tekstile tsitaadiga vastata"
       change: "muuda"

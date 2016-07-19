@@ -183,9 +183,11 @@ en:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "China (Beijing)"
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -408,6 +410,9 @@ en:
         watching:
           title: "Watching"
           description: "You will be notified of every new post in every message, and a count of new replies will be shown."
+        watching_first_post:
+          title: "Watching First Post"
+          description: "You will only be notified of the first post in each new topic in this group."
         tracking:
           title: "Tracking"
           description: "You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -509,11 +514,10 @@ en:
         enable: "Enable Notifications"
         currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
-      dismiss_notifications: "Mark all as Read"
+      dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
-      edit_history_public: "Let other users view my post revisions"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -536,10 +540,19 @@ en:
         individual: "Send an email for every new post"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
+      tag_settings: "Tags"
+      watched_tags: "Watched"
+      watched_tags_instructions: "You will automatically watch all topics with these tags. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+      tracked_tags: "Tracked"
+      tracked_tags_instructions: "You will automatically track all new topics with these tags. A count of new posts will appear next to the topic."
+      muted_tags: "Muted"
+      muted_tags_instructions: "You will not be notified of anything about new topics with these tags, and they will not appear in latest."
       watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+      watched_categories_instructions: "You will automatically watch all topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
       tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
+      watched_first_post_categories: "Watching First Post"
+      watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
       delete_account: "Delete My Account"
@@ -587,7 +600,7 @@ en:
 
       change_username:
         title: "Change Username"
-        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken, and your post history will be interrupted. Are you absolutely sure you want to?"
+        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
@@ -1055,6 +1068,7 @@ en:
       quote_text: "Blockquote"
       code_title: "Preformatted text"
       code_text: "indent preformatted text by 4 spaces"
+      paste_code_text: "type or paste code here"
       upload_title: "Upload"
       upload_description: "enter upload description here"
       olist_title: "Numbered List"
@@ -1084,6 +1098,7 @@ en:
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
+      empty: "No notifications found."
       more: "view older notifications"
       total_flagged: "total flagged posts"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1104,6 +1119,8 @@ en:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>New Topic</span> {{description}}</p>"
 
       group_message_summary:
           one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} message in your {{group_name}} inbox</p>"
@@ -1335,6 +1352,7 @@ en:
         title: change how often you get notified about this topic
         reasons:
           mailing_list_mode: "You have mailing list mode enabled, so you will be notified of replies to this topic via email."
+          "3_10": 'You will receive notifications because you are watching this a tag on this topic.'
           "3_6": 'You will receive notifications because you are watching this category.'
           "3_5": 'You will receive notifications because you started watching this topic automatically.'
           "3_2": 'You will receive notifications because you are watching this topic.'
@@ -1802,6 +1820,9 @@ en:
         watching:
           title: "Watching"
           description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
+        watching_first_post:
+          title: "Watching First Post"
+          description: "You will only be notified of the first post in each new topic in these categories."
         tracking:
           title: "Tracking"
           description: "You will automatically track all new topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -1847,7 +1868,7 @@ en:
       title: "Topic Summary"
       participants_title: "Frequent Posters"
       links_title: "Popular Links"
-      links_shown: "show all {{totalLinks}} links..."
+      links_shown: "show more links..."
       clicks:
         one: "1 click"
         other: "%{count} clicks"
@@ -2123,6 +2144,9 @@ en:
         watching:
           title: "Watching"
           description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+        watching_first_post:
+          title: "Watching First Post"
+          description: "You will only be notified of the first post in each new topic in this tag."
         tracking:
           title: "Tracking"
           description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."

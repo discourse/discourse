@@ -1,5 +1,6 @@
 import offsetCalculator from 'discourse/lib/offset-calculator';
 import LockOn from 'discourse/lib/lock-on';
+import { defaultHomepage } from 'discourse/lib/utilities';
 
 let _jumpScheduled = false;
 const rewrites = [];
@@ -243,7 +244,7 @@ const DiscourseURL = Ember.Object.extend({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    const homepage = Discourse.Utilities.defaultHomepage();
+    const homepage = defaultHomepage();
 
     if (window.history &&
         window.history.pushState &&

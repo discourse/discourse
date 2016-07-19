@@ -1,0 +1,16 @@
+{{#if showSelector}}
+  {{user-selector topicId=topicId
+                  onChangeCallback='triggerResize'
+                  id="private-message-users"
+                  includeMentionableGroups='true'
+                  class="span8"
+                  placeholderKey="composer.users_placeholder"
+                  tabindex="1"
+                  usernames=usernames
+                  hasGroups=hasGroups}}
+{{else}}
+  <div class='ac-wrap composer-user-selector-limited' {{action "toggleSelector"}}>
+    <span>{{limitedUsernames}}</span>
+    <span class='btn-small btn-primary'>{{hiddenUsersCount}}</span>
+  </div>
+{{/if}}

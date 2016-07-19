@@ -13,6 +13,8 @@ zh_CN:
       total_votes:
         other: "总票数"
       average_rating: "平均排名：<strong>%{average}</strong>。"
+      public:
+        title: "提交此投票调查将被公开。"
       multiple:
         help:
           at_least_min_options:
@@ -41,3 +43,4 @@ zh_CN:
         confirm: "你确定要关闭这个投票？"
       error_while_toggling_status: "改变投票状态时出错。"
       error_while_casting_votes: "执行投票时发生了错误。"
+      error_while_fetching_voters: "当显示选民时发生错误。"

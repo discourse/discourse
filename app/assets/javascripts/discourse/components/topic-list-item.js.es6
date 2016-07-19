@@ -55,6 +55,16 @@ export default Ember.Component.extend(StringBuffer, {
       return false;
     }
 
+    if (this.site.mobileView) {
+      if (!this.siteSettings.show_pinned_excerpt_mobile) {
+        return false;
+      }
+    } else {
+      if (!this.siteSettings.show_pinned_excerpt_desktop) {
+        return false;
+      }
+    }
+
     if (this.get('expandGloballyPinned') && this.get('topic.pinned_globally')) {
       return true;
     }

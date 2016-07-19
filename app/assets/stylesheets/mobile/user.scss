@@ -134,6 +134,7 @@
 .user-navigation {
   width: 100%;
   margin-top: 20px;
+  min-height: 20px;
 
   h3 {
     color: $primary;
@@ -586,10 +587,6 @@
 }
 
 .user-archive {
-  display: inline-block;
-}
-
-.notification-buttons {
   display: inline-block;
 }
 

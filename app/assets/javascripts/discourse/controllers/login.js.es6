@@ -1,6 +1,8 @@
+import { ajax } from 'discourse/lib/ajax';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import showModal from 'discourse/lib/show-modal';
 import { setting } from 'discourse/lib/computed';
+import { findAll } from 'discourse/models/login-method';
 
 // This is happening outside of the app via popup
 const AuthErrors =
@@ -22,12 +24,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.set('loggedIn', false);
   },
 
-  /**
-   Determines whether at least one login button is enabled
-  **/
+  // Determines whether at least one login button is enabled
   hasAtLeastOneLoginButton: function() {
-    return Em.get("Discourse.LoginMethod.all").length > 0;
-  }.property("Discourse.LoginMethod.all.[]"),
+    return findAll(this.siteSettings).length > 0;
+  }.property(),
 
   loginButtonText: function() {
     return this.get('loggingIn') ? I18n.t('login.logging_in') : I18n.t('login.title');
@@ -56,7 +56,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       this.set('loggingIn', true);
 
-      Discourse.ajax("/session", {
+      ajax("/session", {
         data: { login: this.get('loginName'), password: this.get('loginPassword') },
         type: 'POST'
       }).then(function (result) {
@@ -175,7 +175,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   authMessage: (function() {
     if (Ember.isEmpty(this.get('authenticate'))) return "";
-    const method = Discourse.get('LoginMethod.all').findProperty("name", this.get("authenticate"));
+    const method = findAll(this.siteSettings).findProperty("name", this.get("authenticate"));
     if(method){
       return method.get('message');
     }

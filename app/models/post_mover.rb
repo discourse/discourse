@@ -76,6 +76,12 @@ class PostMover
     posts.each do |post|
       post.is_first_post? ? create_first_post(post) : move(post)
     end
+
+    PostReply.where("reply_id in (:post_ids) OR post_id in (:post_ids)", post_ids: post_ids).each do |post_reply|
+      if post_reply.reply.topic_id != post_reply.post.topic_id
+        PostReply.delete_all(reply_id: post_reply.reply.id, post_id: post_reply.post.id)
+      end
+    end
   end
 
   def create_first_post(post)
@@ -83,7 +89,8 @@ class PostMover
       post.user,
       raw: post.raw,
       topic_id: destination_topic.id,
-      acting_user: user
+      acting_user: user,
+      skip_validations: true
     )
     p.update_column(:reply_count, @reply_count[1] || 0)
   end

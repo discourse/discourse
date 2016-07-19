@@ -1,0 +1,3 @@
+en:
+  site_settings:
+    daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"

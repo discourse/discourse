@@ -52,12 +52,18 @@ module BackupRestore
     rescue Exception => ex
       log "EXCEPTION: " + ex.message
       log ex.backtrace.join("\n")
+      @success = false
     else
       @success = true
       "#{@archive_basename}.tar.gz"
     ensure
-      notify_user rescue nil
-      remove_old rescue nil
+      begin
+        notify_user
+        remove_old
+      rescue => ex
+        Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n"))
+      end
+
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -83,7 +89,7 @@ module BackupRestore
       @archive_directory = File.join(Rails.root, "public", "backups", @current_db)
       @archive_basename = File.join(@archive_directory, "#{SiteSetting.title.parameterize}-#{@timestamp}")
       @logs = []
-      @readonly_mode_was_enabled = Discourse.readonly_mode?
+      @readonly_mode_was_enabled = Discourse.readonly_mode? || !SiteSetting.readonly_mode_during_backup
     end
 
     def listen_for_shutdown_signal
@@ -238,14 +244,14 @@ module BackupRestore
       log "Creating empty archive..."
       `tar --create --file #{tar_filename} --files-from /dev/null`
 
-      log "Archiving metadata..."
-      FileUtils.cd(File.dirname(@meta_filename)) do
-        `tar --append --dereference --file #{tar_filename} #{File.basename(@meta_filename)}`
-      end
-
       log "Archiving data dump..."
       FileUtils.cd(File.dirname(@dump_filename)) do
         `tar --append --dereference --file #{tar_filename} #{File.basename(@dump_filename)}`
+      end
+
+      log "Archiving metadata..."
+      FileUtils.cd(File.dirname(@meta_filename)) do
+        `tar --append --dereference --file #{tar_filename} #{File.basename(@meta_filename)}`
       end
 
       if @with_uploads
@@ -256,6 +262,8 @@ module BackupRestore
           `tar --append --dereference --file #{tar_filename} #{upload_directory}`
         end
       end
+
+      remove_tmp_directory
 
       log "Gzipping archive, this may take a while..."
       `gzip -5 #{tar_filename}`
@@ -284,7 +292,6 @@ module BackupRestore
     def clean_up
       log "Cleaning stuff up..."
       remove_tar_leftovers
-      remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running

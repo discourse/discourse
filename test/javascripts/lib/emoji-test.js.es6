@@ -1,15 +1,13 @@
+import { emojiSearch, IMAGE_VERSION as v } from 'pretty-text/emoji';
+import { emojiUnescape } from 'discourse/lib/text';
 
-module('emoji');
+module('lib:emoji');
 
-var testUnescape = function(input, expected, description) {
-  var unescaped = Discourse.Emoji.unescape(input);
-  equal(unescaped, expected, description);
+function testUnescape(input, expected, description) {
+  equal(emojiUnescape(input), expected, description);
 };
 
-test("Emoji.unescape", function(){
-
-  const v = Discourse.Emoji.ImageVersion;
-
+test("emojiUnescape", () => {
   testUnescape("Not emoji :O) :frog) :smile)", "Not emoji :O) :frog) :smile)", "title without emoji");
   testUnescape("Not emoji :frog :smile", "Not emoji :frog :smile", "end colon is not optional");
   testUnescape("emoticons :)", "emoticons <img src='/images/emoji/emoji_one/slight_smile.png?v=2' title='slight_smile' alt='slight_smile' class='emoji'>", "emoticons are still supported");
@@ -23,9 +21,12 @@ test("Emoji.unescape", function(){
 
 });
 
-test("Emoji.search", function(){
+test("Emoji search", () => {
 
   // able to find an alias
-  equal(Discourse.Emoji.search("+1").length, 1);
+  equal(emojiSearch("+1").length, 1);
+
+  // able to find middle of line search
+  equal(emojiSearch("check", {maxResults: 3}).length, 3);
 
 });

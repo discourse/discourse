@@ -1,9 +1,11 @@
+import { ajax } from 'discourse/lib/ajax';
 import { setting } from 'discourse/lib/computed';
 import logout from 'discourse/lib/logout';
 import showModal from 'discourse/lib/show-modal';
 import OpenComposer from "discourse/mixins/open-composer";
 import Category from 'discourse/models/category';
 import mobile from 'discourse/lib/mobile';
+import { findAll } from 'discourse/models/login-method';
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -27,13 +29,13 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   actions: {
 
     showSearchHelp() {
-      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(model => {
+      ajax("/static/search_help.html", { dataType: 'html' }).then(model => {
         showModal('searchHelp', { model });
       });
     },
 
     toggleAnonymous() {
-      Discourse.ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
+      ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
         window.location.reload();
       });
     },
@@ -202,7 +204,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   _autoLogin(modal, modalClass, notAuto) {
-    const methods = Em.get('Discourse.LoginMethod.all');
+    const methods = findAll(this.siteSettings);
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor('login').send('externalLogin', methods[0]);
     } else {

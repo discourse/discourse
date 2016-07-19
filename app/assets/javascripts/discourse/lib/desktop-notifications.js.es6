@@ -159,6 +159,12 @@ function i18nKey(notification_type) {
   return "notifications.popup." + Discourse.Site.current().get("notificationLookup")[notification_type];
 }
 
-// Exported for controllers/notification.js.es6
+function alertChannel(user) {
+  return `/notification-alert/${user.get('id')}`;
+}
 
-export { init, onNotification };
+function unsubscribe(bus, user) {
+  bus.unsubscribe(alertChannel(user));
+}
+
+export { context, init, onNotification, unsubscribe, alertChannel };

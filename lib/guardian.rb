@@ -78,6 +78,10 @@ class Guardian
     )
   end
 
+  def is_staged?
+    @user.staged?
+  end
+
   # Can the user see the object?
   def can_see?(obj)
     if obj
@@ -263,8 +267,6 @@ class Guardian
     (target.is_a?(Group) || target.is_a?(User)) &&
     # User is authenticated
     authenticated? &&
-    # Can't send message to yourself
-    is_not_me?(target) &&
     # Have to be a basic level at least
     @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) &&
     # PMs are enabled
