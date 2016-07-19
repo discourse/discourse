@@ -100,7 +100,7 @@ You'll want an admin account to be able to do anything fun on your new Discourse
 run the following command and follow the instructions:
 
 ```bash
-rake admin:create
+bundle exec rake admin:create
 ```
 
 Your admin account should be approved. Log in in your browser and you're good to go!
