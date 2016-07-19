@@ -42,7 +42,7 @@ class LogAnalyzer
       user_agent =~ /Mobile|Android|webOS/ && !(user_agent =~ /iPad|Nexus (7|10)/)
     end
 
-    def parsed_timge
+    def parsed_time
       DateTime.strptime(time, TIME_FORMAT) if time
     end
 
