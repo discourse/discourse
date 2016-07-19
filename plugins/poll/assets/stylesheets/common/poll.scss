@@ -1,7 +1,7 @@
 $border-color: rgb(219,219,219);
 $text-color: #9E9E9E;
 
-$option-foreground: $primary;
+$option-foreground: dark-light-diff($primary, $secondary, 0%, -100%);
 $option-background: dark-light-diff($primary, $secondary, 90%, -65%);
 $option-background-selected: #dbffdb;
 $option-shadow: dark-light-diff($option-background, $primary, 10%, -10%);
