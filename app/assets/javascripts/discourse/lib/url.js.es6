@@ -16,16 +16,30 @@ const DiscourseURL = Ember.Object.extend({
 
   // Jumps to a particular post in the stream
   jumpToPost(postNumber, opts) {
+    opts = opts || {};
     const holderId = `#post_${postNumber}`;
 
     Em.run.schedule('afterRender', () => {
-      if (postNumber === 1) {
+      let elementId;
+      let holder;
+
+      if (postNumber === 1 && !opts.anchor) {
         $(window).scrollTop(0);
         return;
       }
 
-      const lockon = new LockOn(holderId);
-      const holder = $(holderId);
+      if (opts.anchor) {
+        elementId = opts.anchor;
+        holder = $(elementId);
+        console.log(holder.length);
+      }
+
+      if (!holder || holder.length === 0) {
+        elementId = holderId;
+        holder = $(elementId);
+      }
+
+      const lockon = new LockOn(elementId);
 
       if (holder.length > 0 && opts && opts.skipIfOnScreen){
         const elementTop = lockon.elementTop();
