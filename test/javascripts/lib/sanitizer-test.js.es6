@@ -53,12 +53,12 @@ test("sanitize", function() {
 test("ids on headings", () => {
   const pt = new PrettyText(buildOptions({ siteSettings: {} }));
   equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
-  equal(pt.sanitize(`<h1 id="test-heading">Test Heading</h3>`), `<h1 id="test-heading">Test Heading</h3>`);
-  equal(pt.sanitize(`<h2 id="test-heading">Test Heading</h3>`), `<h2 id="test-heading">Test Heading</h3>`);
+  equal(pt.sanitize(`<h1 id="test-heading">Test Heading</h1>`), `<h1 id="test-heading">Test Heading</h1>`);
+  equal(pt.sanitize(`<h2 id="test-heading">Test Heading</h2>`), `<h2 id="test-heading">Test Heading</h2>`);
   equal(pt.sanitize(`<h3 id="test-heading">Test Heading</h3>`), `<h3 id="test-heading">Test Heading</h3>`);
-  equal(pt.sanitize(`<h4 id="test-heading">Test Heading</h3>`), `<h4 id="test-heading">Test Heading</h3>`);
-  equal(pt.sanitize(`<h5 id="test-heading">Test Heading</h3>`), `<h5 id="test-heading">Test Heading</h3>`);
-  equal(pt.sanitize(`<h6 id="test-heading">Test Heading</h3>`), `<h6 id="test-heading">Test Heading</h3>`);
+  equal(pt.sanitize(`<h4 id="test-heading">Test Heading</h4>`), `<h4 id="test-heading">Test Heading</h4>`);
+  equal(pt.sanitize(`<h5 id="test-heading">Test Heading</h5>`), `<h5 id="test-heading">Test Heading</h5>`);
+  equal(pt.sanitize(`<h6 id="test-heading">Test Heading</h6>`), `<h6 id="test-heading">Test Heading</h6>`);
 });
 
 test("urlAllowed", () => {
