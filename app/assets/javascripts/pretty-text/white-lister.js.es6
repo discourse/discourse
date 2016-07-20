@@ -107,6 +107,7 @@ whiteListFeature('default', [
   'div',
   'div.title',
   'div.quote-controls',
+  'div[align]',
   'i',
   'b',
   'ul',
