@@ -24,5 +24,8 @@ test("details", () => {
   cooked(` <details><summary>Info</summary>coucou</details>`,
          `<details><summary>Info</summary>\n\n<p>coucou</p>\n\n</details>`,
          "manual HTML for details with a space");
-});
 
+  cooked(`<details open="open"><summary>Info</summary>coucou</details>`,
+         `<details open="open"><summary>Info</summary>\n\n<p>coucou</p>\n\n</details>`,
+         "open attribute");
+});
