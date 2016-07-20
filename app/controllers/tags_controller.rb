@@ -57,7 +57,7 @@ class TagsController < ::ApplicationController
       @list.more_topics_url = list_by_tag_path(tag_id: @tag_id, page: page + 1)
       @rss = "tag"
 
-      if @list.topics.size == 0 && !Tag.where(name: @tag_id).exists?
+      if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where(name: @tag_id).exists?
         raise Discourse::NotFound
       else
         respond_with_list(@list)
@@ -203,7 +203,6 @@ class TagsController < ::ApplicationController
         topic_ids: param_to_integer_list(:topic_ids),
         exclude_category_ids: params[:exclude_category_ids],
         category: params[:category],
-        tags: [params[:tag_id]],
         order: params[:order],
         ascending: params[:ascending],
         min_posts: params[:min_posts],
@@ -216,6 +215,12 @@ class TagsController < ::ApplicationController
       }
       options[:no_subcategories] = true if params[:no_subcategories] == 'true'
       options[:slow_platform] = true if slow_platform?
+
+      if params[:tag_id] == 'none'
+        options[:no_tags] = true
+      else
+        options[:tags] = [params[:tag_id]]
+      end
 
       options
     end

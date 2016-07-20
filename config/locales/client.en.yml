@@ -2123,6 +2123,7 @@ en:
     tagging:
       all_tags: "All Tags"
       selector_all_tags: "all tags"
+      selector_no_tags: "no tags"
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "choose optional tags for this topic"
@@ -2139,6 +2140,8 @@ en:
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
+        untagged_without_category: "%{filter} untagged topics"
+        untagged_with_category: "%{filter} untagged topics in %{category}"
 
       notifications:
         watching:

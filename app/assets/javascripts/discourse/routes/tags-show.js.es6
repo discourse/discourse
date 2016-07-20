@@ -11,7 +11,7 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
-    var tag = this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) }),
+    var tag = (params.tag_id === 'none' ? null : this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) })),
         f = '';
 
     if (params.category) {
@@ -25,8 +25,8 @@ export default Discourse.Route.extend({
     if (params.category) { this.set('categorySlug', params.category); }
     if (params.parent_category) { this.set('parentCategorySlug', params.parent_category); }
 
-    if (this.get("currentUser")) {
-      // If logged in, we should get the tag"s user settings
+    if (tag && this.get("currentUser")) {
+      // If logged in, we should get the tag's user settings
       return this.store.find("tagNotification", tag.get("id")).then(tn => {
         this.set("tagNotification", tn);
         return tag;
@@ -45,18 +45,19 @@ export default Discourse.Route.extend({
     const categorySlug = this.get('categorySlug');
     const parentCategorySlug = this.get('parentCategorySlug');
     const filter = this.get('navMode');
+    const tag_id = (tag ? tag.id : 'none');
 
     if (categorySlug) {
       var category = Discourse.Category.findBySlug(categorySlug, parentCategorySlug);
       if (parentCategorySlug) {
-        params.filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tag.id}/l/${filter}`;
+        params.filter = `tags/c/${parentCategorySlug}/${categorySlug}/${tag_id}/l/${filter}`;
       } else {
-        params.filter = `tags/c/${categorySlug}/${tag.id}/l/${filter}`;
+        params.filter = `tags/c/${categorySlug}/${tag_id}/l/${filter}`;
       }
 
       this.set('category', category);
     } else {
-      params.filter = `tags/${tag.id}/l/${filter}`;
+      params.filter = `tags/${tag_id}/l/${filter}`;
       this.set('category', null);
     }
 
@@ -74,10 +75,18 @@ export default Discourse.Route.extend({
     const filterText = I18n.t('filters.' + this.get('navMode').replace('/', '.') + '.title'),
           controller = this.controllerFor('tags.show');
 
-    if (this.get('category')) {
-      return I18n.t('tagging.filters.with_category', { filter: filterText, tag: controller.get('model.id'), category: this.get('category.name')});
+    if (controller.get('model.id')) {
+      if (this.get('category')) {
+        return I18n.t('tagging.filters.with_category', { filter: filterText, tag: controller.get('model.id'), category: this.get('category.name')});
+      } else {
+        return I18n.t('tagging.filters.without_category', { filter: filterText, tag: controller.get('model.id')});
+      }
     } else {
-      return I18n.t('tagging.filters.without_category', { filter: filterText, tag: controller.get('model.id')});
+      if (this.get('category')) {
+        return I18n.t('tagging.filters.untagged_with_category', { filter: filterText, category: this.get('category.name')});
+      } else {
+        return I18n.t('tagging.filters.untagged_without_category', { filter: filterText});
+      }
     }
   },
 
