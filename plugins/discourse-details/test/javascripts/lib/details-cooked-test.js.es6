@@ -28,4 +28,8 @@ test("details", () => {
   cooked(`<details open="open"><summary>Info</summary>coucou</details>`,
          `<details open="open"><summary>Info</summary>\n\n<p>coucou</p>\n\n</details>`,
          "open attribute");
+
+  cooked(`<details open><summary>Info</summary>coucou</details>`,
+         `<details open><summary>Info</summary>\n\n<p>coucou</p>\n\n</details>`,
+         "open attribute");
 });

@@ -25,7 +25,7 @@ export function setup(helper) {
     'summary',
     'summary[title]',
     'details',
-    'details[open=open]',
+    'details[open]',
     'details.elided'
   ]);
 
