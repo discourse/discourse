@@ -45,6 +45,20 @@ export default Ember.Component.extend({
     return I18n.t("tagging.selector_all_tags");
   }.property('tag'),
 
+  @computed('firstCategory', 'secondCategory')
+  noTagsUrl() {
+    var url = '/tags';
+    if (this.get('currentCategory')) {
+      url += this.get('currentCategory.url');
+    }
+    return url + '/none';
+  },
+
+  @computed('tag')
+  noTagsLabel() {
+    return I18n.t("tagging.selector_no_tags");
+  },
+
   dropdownButtonClass: function() {
     var result = 'badge-category category-dropdown-button';
     if (Em.isNone(this.get('tag'))) {

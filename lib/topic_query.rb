@@ -20,6 +20,7 @@ class TopicQuery
                      visible
                      category
                      tags
+                     no_tags
                      order
                      ascending
                      no_subcategories
@@ -465,6 +466,9 @@ class TopicQuery
           else
             result = result.where("tags.name in (?)", @options[:tags])
           end
+        elsif @options[:no_tags]
+          # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
+          result = result.where.not(:id => TopicTag.select(:topic_id).uniq)
         end
       end
 
