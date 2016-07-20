@@ -114,10 +114,12 @@ export function setup(helper) {
 
   replaceBBCode('url', contents => {
     if (!Array.isArray(contents)) { return; }
-    if (contents.length === 1 && contents[0][0] === 'a') {
+
+    const first = contents[0];
+    if (contents.length === 1 && Array.isArray(first) && first[0] === 'a') {
       // single-line bbcode links shouldn't be oneboxed, so we mark this as a bbcode link.
-      if (typeof contents[0][1] !== 'object') { contents[0].splice(1, 0, {}); }
-      contents[0][1]['data-bbcode'] = true;
+      if (typeof first[1] !== 'object') { first.splice(1, 0, {}); }
+      first[1]['data-bbcode'] = true;
     }
     return ['concat'].concat(contents);
   });
