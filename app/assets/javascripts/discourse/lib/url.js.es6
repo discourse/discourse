@@ -5,10 +5,11 @@ import { defaultHomepage } from 'discourse/lib/utilities';
 let _jumpScheduled = false;
 const rewrites = [];
 
+const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
+
 const DiscourseURL = Ember.Object.extend({
 
   // Used for matching a topic
-  TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
 
   isJumpScheduled: function() {
     return _jumpScheduled;
@@ -207,11 +208,11 @@ const DiscourseURL = Ember.Object.extend({
     same topic, use replaceState and instruct our controller to load more posts.
   **/
   navigatedToPost(oldPath, path, routeOpts) {
-    const newMatches = this.TOPIC_REGEXP.exec(path);
+    const newMatches = TOPIC_REGEXP.exec(path);
     const newTopicId = newMatches ? newMatches[2] : null;
 
     if (newTopicId) {
-      const oldMatches = this.TOPIC_REGEXP.exec(oldPath);
+      const oldMatches = TOPIC_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same
@@ -237,7 +238,16 @@ const DiscourseURL = Ember.Object.extend({
 
           this.appEvents.trigger('post:highlight', closest);
         }).then(() => {
-          DiscourseURL.jumpToPost(closest, {skipIfOnScreen: routeOpts.skipIfOnScreen});
+          const jumpOpts = {
+            skipIfOnScreen: routeOpts.skipIfOnScreen
+          };
+
+          const m = /#.+$/.exec(path);
+          if (m) {
+            jumpOpts.anchor = m[0];
+          }
+
+          this.jumpToPost(closest, jumpOpts);
         });
 
         // Abort routing, we have replaced our state.
