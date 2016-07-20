@@ -107,6 +107,11 @@ export default Ember.Controller.extend({
 
   castVotesDisabled: Em.computed.not("canCastVotes"),
 
+  @computed("castVotesDisabled")
+  castVotesButtonClass(castVotesDisabled) {
+    return `cast-votes ${castVotesDisabled ? '' : 'btn-primary'}`;
+  },
+
   @computed("loading", "post.user_id", "post.topic.archived")
   canToggleStatus(loading, userId, topicArchived) {
     return this.currentUser &&
