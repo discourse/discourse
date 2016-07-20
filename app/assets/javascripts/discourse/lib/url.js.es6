@@ -31,7 +31,6 @@ const DiscourseURL = Ember.Object.extend({
       if (opts.anchor) {
         elementId = opts.anchor;
         holder = $(elementId);
-        console.log(holder.length);
       }
 
       if (!holder || holder.length === 0) {
