@@ -48,6 +48,8 @@ test("sanitize", function() {
 
   cooked("<kbd>Ctrl</kbd>+<kbd>C</kbd>", "<p><kbd>Ctrl</kbd>+<kbd>C</kbd></p>");
   cooked("it has been <strike>1 day</strike> 0 days since our last test failure", "<p>it has been <strike>1 day</strike> 0 days since our last test failure</p>");
+
+  cooked(`<div align="center">hello</div>`, `<div align="center">hello</div>`);
 });
 
 test("ids on headings", () => {
