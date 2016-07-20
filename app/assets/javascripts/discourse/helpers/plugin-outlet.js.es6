@@ -160,7 +160,9 @@ registerHelper('plugin-outlet', function(params, hash, options, env) {
     const newHash = $.extend({}, viewInjections(env.data.view.container));
     if (hash.tagName) { newHash.tagName = hash.tagName; }
 
-    delete options.fn;  // we don't need the default template since we have a connector
+    // we don't need the default template since we have a connector
+    delete options.fn;
+    delete options.template;
     env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
 
     const cvs = env.data.view._childViews;
@@ -172,6 +174,13 @@ registerHelper('plugin-outlet', function(params, hash, options, env) {
         });
       }
     }
+  } else if (options.isBlock) {
+    const virtualView = Ember.View.extend({
+      isVirtual: true,
+      tagName: hash.tagName || '',
+      template: options.template
+    });
+    env.helpers.view.helperFunction.call(this, [virtualView], hash, options, env);
   }
 });
 
