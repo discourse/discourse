@@ -8,7 +8,6 @@ class AddWebHooks < ActiveRecord::Migration
       t.string  :payload_url, null: false
       t.integer :content_type, default: 1, null: false
       t.integer :last_delivery_status, default: 1, null: false
-      t.integer :status, default: 1, null: false
       t.string  :secret, default: ''
       t.boolean :wildcard_web_hook, default: false, null: false
 
