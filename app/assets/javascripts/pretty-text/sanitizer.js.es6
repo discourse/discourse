@@ -3,7 +3,11 @@ import xss from 'pretty-text/xss';
 const _validIframes = [];
 
 function attr(name, value) {
-  return `${name}="${xss.escapeAttrValue(value)}"`;
+  if (value) {
+    return `${name}="${xss.escapeAttrValue(value)}"`;
+  }
+
+  return name;
 }
 
 const ESCAPE_REPLACEMENTS = {
