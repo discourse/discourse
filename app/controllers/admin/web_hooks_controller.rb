@@ -5,16 +5,24 @@ class Admin::WebHooksController < Admin::AdminController
     limit = 50
     offset = params[:offset].to_i
 
-    data = {
-      web_hooks: WebHook.limit(limit)
-                        .offset(offset)
-                        .includes(:web_hook_event_types)
-                        .includes(:categories)
-                        .includes(:groups),
+    web_hooks = WebHook.limit(limit)
+                       .offset(offset)
+                       .includes(:web_hook_event_types)
+                       .includes(:categories)
+                       .includes(:groups)
+    json = {
+      web_hooks: serialize_data(web_hooks, AdminWebHookSerializer),
+      extras: {
+        event_types: WebHookEventType.all,
+        default_event_types: WebHook.default_event_types,
+        content_types: WebHook.content_types.map { |name, id| { id: id, name: name } },
+        delivery_statuses: WebHook.last_delivery_statuses.map { |name, id| { id: id, name: name.to_s } },
+      },
       total_rows_web_hooks: WebHook.count,
       load_more_web_hooks: Discourse.base_url + admin_web_hooks_path(limit: limit, offset: offset + limit, format: :json)
     }
-    render_serialized(OpenStruct.new(data), AdminWebHooksSerializer, root: false)
+
+    render json: MultiJson.dump(json), status: 200
   end
 
   def show

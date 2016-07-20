@@ -66,7 +66,6 @@ end
 #  payload_url          :string           not null
 #  content_type         :integer          default(1), not null
 #  last_delivery_status :integer          default(1), not null
-#  status               :integer          default(1), not null
 #  secret               :string           default("")
 #  wildcard_web_hook    :boolean          default(FALSE), not null
 #  verify_certificate   :boolean          default(TRUE), not null
