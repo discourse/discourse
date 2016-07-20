@@ -1,5 +1,20 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
+export function showEntrance(e) {
+  let target = $(e.target);
+
+  if (target.hasClass('posts-map') || target.parents('.posts-map').length > 0) {
+    if (target.prop('tagName') !== 'A') {
+      target = target.find('a');
+      if (target.length===0) {
+        target = target.end();
+      }
+    }
+    this.container.lookup('controller:application').send("showTopicEntrance", {topic: this.get('topic'), position: target.offset()});
+    return false;
+  }
+}
+
 export default Ember.Component.extend(StringBuffer, {
   rerenderTriggers: ['bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',
@@ -77,19 +92,10 @@ export default Ember.Component.extend(StringBuffer, {
   }.property(),
 
   click(e) {
-    let target = $(e.target);
+    const result = showEntrance.call(this, e);
+    if (result === false) { return result; }
 
-    if (target.hasClass('posts-map') || target.parents('.posts-map').length > 0) {
-      if (target.prop('tagName') !== 'A') {
-        target = target.find('a');
-        if (target.length===0) {
-          target = target.end();
-        }
-      }
-      this.container.lookup('controller:application').send("showTopicEntrance", {topic: this.get('topic'), position: target.offset()});
-      return false;
-    }
-
+    const target = $(e.target);
     if (target.hasClass('bulk-select')) {
       const selected = this.get('selected');
       const topic = this.get('topic');

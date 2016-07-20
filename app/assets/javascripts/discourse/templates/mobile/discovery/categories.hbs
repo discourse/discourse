@@ -16,21 +16,9 @@
       {{/if}}
 
       {{#each c.topics as |t|}}
-        <tr class="{{if t.archived 'archived'}} category-topic-link">
-          <td class='main-link'>
-            <div class='topic-inset'>
-              {{topic-status topic=t}}
-              {{topic-link t}}
-              {{#if t.unseen}}
-                <span class="badge-notification new-topic"></span>
-              {{/if}}
-              <span class="{{cold-age-class t.last_posted_at}}" title='{{raw-date t.last_posted_at}}'>{{{format-age t.last_posted_at}}}</span>
-            </div>
-          </td>
-          <td class='num posts'>{{raw "list/post-count-or-badges" topic=t postBadgesEnabled="true"}}</td>
-        </tr>
-
+        {{mobile-category-topic topic=t}}
       {{/each}}
+
       {{#if c.subcategories}}
         <tr class="subcategories-list">
           <td>
