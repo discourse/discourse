@@ -19,6 +19,8 @@ export default function offsetCalculator(y) {
   const ideal = headerHeight + ((expectedOffset < 0) ? 0 : expectedOffset);
 
   const $container = $('.posts-wrapper');
+  if ($container.length === 0) { return expectedOffset; }
+
   const topPos = $container.offset().top;
 
   const scrollTop = y || $(window).scrollTop();

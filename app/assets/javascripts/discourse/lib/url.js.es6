@@ -2,16 +2,28 @@ import offsetCalculator from 'discourse/lib/offset-calculator';
 import LockOn from 'discourse/lib/lock-on';
 import { defaultHomepage } from 'discourse/lib/utilities';
 
-let _jumpScheduled = false;
 const rewrites = [];
-
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
+
+let _jumpScheduled = false;
+export function jumpToElement(elementId) {
+  if (_jumpScheduled || Ember.isEmpty(elementId)) { return; }
+
+  const selector = `#${elementId}, a[name=${elementId}]`;
+  _jumpScheduled = true;
+  Ember.run.schedule('afterRender', function() {
+    const lockon = new LockOn(selector, {
+      finished() {
+        _jumpScheduled = false;
+      }
+    });
+    lockon.lock();
+  });
+}
 
 const DiscourseURL = Ember.Object.extend({
 
-  // Used for matching a topic
-
-  isJumpScheduled: function() {
+  isJumpScheduled() {
     return _jumpScheduled;
   },
 
@@ -56,13 +68,8 @@ const DiscourseURL = Ember.Object.extend({
     });
   },
 
-  /**
-    Browser aware replaceState. Will only be invoked if the browser supports it.
-
-    @method replaceState
-    @param {String} path The path we are replacing our history state with.
-  **/
-  replaceState: function(path) {
+  // Browser aware replaceState. Will only be invoked if the browser supports it.
+  replaceState(path) {
     if (window.history &&
         window.history.pushState &&
         window.history.replaceState &&
@@ -79,23 +86,6 @@ const DiscourseURL = Ember.Object.extend({
           }
         });
     }
-  },
-
-  // Scroll to the same page, different anchor
-  scrollToId(id) {
-    if (Em.isEmpty(id)) { return; }
-
-    _jumpScheduled = true;
-    Em.run.schedule('afterRender', function() {
-      let $elem = $(id);
-      if ($elem.length === 0) {
-        $elem = $("[name='" + id.replace('#', '') + "']");
-      }
-      if ($elem.length > 0) {
-        $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
-        _jumpScheduled = false;
-      }
-    });
   },
 
   routeToTag(a) {
@@ -131,10 +121,10 @@ const DiscourseURL = Ember.Object.extend({
     }
 
     // Scroll to the same page, different anchor
-    if (path.indexOf('#') === 0) {
-      this.scrollToId(path);
-      this.replaceState(path);
-      return;
+    const m = /#(.+)$/.exec(path);
+    if (m) {
+      jumpToElement(m[1]);
+      return this.replaceState(path);
     }
 
     const oldPath = window.location.pathname;
@@ -299,7 +289,7 @@ const DiscourseURL = Ember.Object.extend({
 
   // Get a controller. Note that currently it uses `__container__` which is not
   // advised but there is no other way to access the router.
-  controllerFor: function(name) {
+  controllerFor(name) {
     return Discourse.__container__.lookup('controller:' + name);
   },
 
@@ -307,7 +297,7 @@ const DiscourseURL = Ember.Object.extend({
     Be wary of looking up the router. In this case, we have links in our
     HTML, say form compiled markdown posts, that need to be routed.
   **/
-  handleURL: function(path, opts) {
+  handleURL(path, opts) {
     opts = opts || {};
 
     const router = this.get('router');
@@ -328,19 +318,7 @@ const DiscourseURL = Ember.Object.extend({
 
     const transition = router.handleURL(path);
     transition._discourse_intercepted = true;
-    transition.promise.then(function() {
-      if (elementId) {
-
-        _jumpScheduled = true;
-        Em.run.next('afterRender', function() {
-          const offset = $('#' + elementId).offset();
-          if (offset && offset.top) {
-            $('html, body').scrollTop(offset.top - $('header').height() - 10);
-            _jumpScheduled = false;
-          }
-        });
-      }
-    });
+    transition.promise.then(() => jumpToElement(elementId));
   }
 }).create();
 
