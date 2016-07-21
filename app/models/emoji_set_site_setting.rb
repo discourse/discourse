@@ -33,6 +33,7 @@ class EmojiSetSiteSetting < EnumSiteSetting
       { name: 'google', value: 'google' },
       { name: 'twitter', value: 'twitter' },
       { name: 'emoji_one', value: 'emoji_one' },
+      { name: 'win10_emoji', value: 'win10' }
     ]
   end
 

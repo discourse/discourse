@@ -999,6 +999,7 @@ en:
     google: "Google"
     twitter: "Twitter"
     emoji_one: "Emoji One"
+    win10_emoji: "Win10 Emoji"
 
     shortcut_modifier_key:
       shift: 'Shift'
