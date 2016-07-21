@@ -264,6 +264,29 @@ JS
       end
     end
 
+    if emojis.present?
+      emoji_registrations = ""
+      emojis.each do |name, url|
+        emoji_registrations << "emoji.registerEmoji(#{name.inspect}, #{url.inspect});\n"
+      end
+
+      js << <<~JS
+        define("discourse/initializers/custom-emoji",
+          ["pretty-text/emoji", "exports"],
+          function(emoji, __exports__) {
+            "use strict";
+
+            __exports__["default"] = {
+              name: "custom-emoji",
+              after: "inject-objects",
+              initialize: function(container) {
+                #{emoji_registrations}
+              }
+            };
+          });
+      JS
+    end
+
     # Generate an IIFE for the JS
     js = "(function(){#{js}})();" if js.present?
 
