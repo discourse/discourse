@@ -544,13 +544,13 @@ en:
       watched_tags: "Watched"
       watched_tags_instructions: "You will automatically watch all topics with these tags. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_tags: "Tracked"
-      tracked_tags_instructions: "You will automatically track all new topics with these tags. A count of new posts will appear next to the topic."
+      tracked_tags_instructions: "You will automatically track all topics with these tags. A count of new posts will appear next to the topic."
       muted_tags: "Muted"
       muted_tags_instructions: "You will not be notified of anything about new topics with these tags, and they will not appear in latest."
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
+      tracked_categories_instructions: "You will automatically track all topics in these categories. A count of new posts will appear next to the topic."
       watched_first_post_categories: "Watching First Post"
       watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
       muted_categories: "Muted"
@@ -1819,13 +1819,13 @@ en:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
+          description: "You will automatically watch all topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
         watching_first_post:
           title: "Watching First Post"
           description: "You will only be notified of the first post in each new topic in these categories."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
+          description: "You will automatically track all topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
         regular:
           title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
@@ -2146,13 +2146,13 @@ en:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+          description: "You will automatically watch all topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         watching_first_post:
           title: "Watching First Post"
           description: "You will only be notified of the first post in each new topic in this tag."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
+          description: "You will automatically track all topics in this tag. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to your post."
