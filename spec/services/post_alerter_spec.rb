@@ -363,6 +363,7 @@ describe PostAlerter do
     it "notifies the user who is following the first post group" do
       GroupUser.create(group_id: group.id, user_id: user.id)
       GroupUser.create(group_id: group.id, user_id: post.user.id)
+      topic.topic_allowed_groups.create(group_id: group.id)
 
       level = GroupUser.notification_levels[:watching_first_post]
       GroupUser.where(user_id: user.id, group_id: group.id).update_all(notification_level: level)
