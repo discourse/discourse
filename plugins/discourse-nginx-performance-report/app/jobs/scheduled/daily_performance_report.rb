@@ -10,14 +10,14 @@ module Jobs
 
         report_data =
           if result.strip.empty?
-            <<TEXT
-Report is only available in latest image, please run:
+            <<~TEXT
+            Report is only available in latest image, please run:
 
-```text
-cd /var/discourse
-./launcher rebuild app
-```
-TEXT
+            ```text
+            cd /var/discourse
+            ./launcher rebuild app
+            ```
+            TEXT
           else
             "```text\n#{result}\n```"
           end
