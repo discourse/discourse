@@ -553,6 +553,9 @@ en:
       tracked_categories_instructions: "You will automatically track all topics in these categories. A count of new posts will appear next to the topic."
       watched_first_post_categories: "Watching First Post"
       watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
+      watched_first_post_tags: "Watching First Post"
+      watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
+
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
       delete_account: "Delete My Account"
