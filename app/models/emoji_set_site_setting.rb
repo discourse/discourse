@@ -29,11 +29,11 @@ class EmojiSetSiteSetting < EnumSiteSetting
 
   def self.values
     @values ||= [
-      { name: 'apple_international', value: 'apple' },
-      { name: 'google', value: 'google' },
-      { name: 'twitter', value: 'twitter' },
-      { name: 'emoji_one', value: 'emoji_one' },
-      { name: 'win10_emoji', value: 'win10' }
+      { name: 'emoji_set.apple_international', value: 'apple' },
+      { name: 'emoji_set.google', value: 'google' },
+      { name: 'emoji_set.twitter', value: 'twitter' },
+      { name: 'emoji_set.emoji_one', value: 'emoji_one' },
+      { name: 'emoji_set.win10', value: 'win10' }
     ]
   end
 
