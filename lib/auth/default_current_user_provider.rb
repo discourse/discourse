@@ -36,7 +36,7 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token && auth_token.length == 32
-      current_user = User.find_by(auth_token: auth_token)
+      current_user = User.where(auth_token: auth_token).where('auth_token_created_at IS NULL OR auth_token_created_at > ?', SiteSetting.maximum_session_age.hours.ago).first
     end
 
     if current_user && (current_user.suspended? || !current_user.active)
@@ -62,15 +62,10 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def log_on_user(user, session, cookies)
-    unless user.auth_token && user.auth_token.length == 32
-      user.auth_token = SecureRandom.hex(16)
-      user.save!
-    end
-    if SiteSetting.permanent_session_cookie
-      cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
-    else
-      cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
-    end
+    user.auth_token = SecureRandom.hex(16)
+    user.auth_token_created_at = Time.zone.now
+    user.save!
+    cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
     make_developer_admin(user)
     enable_bootstrap_mode(user)
     @env[CURRENT_USER_KEY] = user

@@ -304,7 +304,10 @@ login:
   pending_users_reminder_delay:
     min: -1
     default: 8
-  permanent_session_cookie: true
+  maximum_session_age:
+    default: 2160
+    min: 1
+    max: 175200
 
 users:
   min_username_length:
