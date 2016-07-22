@@ -278,7 +278,7 @@ class PostsController < ApplicationController
     params.require(:post_ids)
 
     posts = Post.where(id: post_ids_including_replies).order(:id)
-    raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
+    raise Discourse::InvalidParameters.new(:post_ids) if posts.pluck(:id) == params[:post_ids]
 
     # Make sure we can delete the posts
     posts.each {|p| guardian.ensure_can_delete!(p) }
