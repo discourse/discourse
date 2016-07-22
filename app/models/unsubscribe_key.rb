@@ -34,6 +34,7 @@ end
 #  updated_at           :datetime
 #  unsubscribe_key_type :string
 #  topic_id             :integer
+#  post_id              :integer
 #
 # Indexes
 #
