@@ -68,8 +68,13 @@ module BackupRestore
     else
       @success = true
     ensure
-      notify_user rescue nil
-      clean_up
+      begin
+        notify_user
+        clean_up
+      rescue => ex
+        Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n"))
+      end
+
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
 
