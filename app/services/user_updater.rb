@@ -8,6 +8,7 @@ class UserUpdater
   }
 
   TAG_NAMES = {
+    watching_first_post_tags: :watching_first_post,
     watched_tags: :watching,
     tracked_tags: :tracking,
     muted_tags: :muted
