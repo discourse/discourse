@@ -23,19 +23,19 @@ class Emoji
   end
 
   def self.all
-    Discourse.cache.fetch("all_emojis:#{EMOJI_VERSION}") { standard | custom }
+    Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
   end
 
   def self.standard
-    Discourse.cache.fetch("standard_emojis:#{EMOJI_VERSION}") { load_standard }
+    Discourse.cache.fetch(cache_key("standard_emojis")) { load_standard }
   end
 
   def self.aliases
-    Discourse.cache.fetch("aliases_emojis:#{EMOJI_VERSION}") { load_aliases }
+    Discourse.cache.fetch(cache_key("aliases_emojis")) { load_aliases }
   end
 
   def self.custom
-    Discourse.cache.fetch("custom_emojis:#{EMOJI_VERSION}") { load_custom }
+    Discourse.cache.fetch(cache_key("custom_emojis")) { load_custom }
   end
 
   def self.exists?(name)
@@ -78,11 +78,15 @@ class Emoji
     Emoji[name]
   end
 
+  def self.cache_key(name)
+    "#{name}:#{EMOJI_VERSION}:#{Plugin::CustomEmoji.cache_key}"
+  end
+
   def self.clear_cache
-    Discourse.cache.delete("custom_emojis:#{EMOJI_VERSION}")
-    Discourse.cache.delete("standard_emojis:#{EMOJI_VERSION}")
-    Discourse.cache.delete("aliases_emojis:#{EMOJI_VERSION}")
-    Discourse.cache.delete("all_emojis:#{EMOJI_VERSION}")
+    Discourse.cache.delete(cache_key("custom_emojis"))
+    Discourse.cache.delete(cache_key("standard_emojis"))
+    Discourse.cache.delete(cache_key("aliases_emojis"))
+    Discourse.cache.delete(cache_key("all_emojis"))
   end
 
   def self.db_file
@@ -117,9 +121,20 @@ class Emoji
   end
 
   def self.load_custom
+    result = []
+
     Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
        .sort
-       .map { |emoji| Emoji.create_from_path(emoji) }
+       .each { |emoji| result << Emoji.create_from_path(emoji) }
+
+    Plugin::CustomEmoji.emojis.each do |name, url|
+      result << Emoji.new.tap do |e|
+        e.name = name
+        e.url = url
+      end
+    end
+
+    result
   end
 
   def self.base_directory
