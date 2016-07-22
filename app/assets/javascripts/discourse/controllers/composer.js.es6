@@ -64,6 +64,21 @@ export default Ember.Controller.extend({
   topic: null,
   linkLookup: null,
 
+  @computed('model.replyingToTopic', 'model.creatingPrivateMessage', 'model.targetUsernames')
+  focusTarget(replyingToTopic, creatingPM, usernames) {
+    if (this.capabilities.isIOS) { return "none"; }
+
+    if (creatingPM && usernames === this.currentUser.get('username')) {
+      return 'usernames';
+    }
+
+    if (replyingToTopic) {
+      return 'reply';
+    }
+
+    return 'title';
+  },
+
   showToolbar: Em.computed({
     get(){
       const keyValueStore = this.container.lookup('key-value-store:main');
