@@ -1,12 +1,12 @@
-import { default as computed, on } from 'ember-addons/ember-computed-decorators';
+import computed from 'ember-addons/ember-computed-decorators';
 import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Component.extend({
   classNames: ['title-input'],
 
-  @on('didInsertElement')
-  _focusOnTitle() {
-    if (!this.capabilities.isIOS) {
+  didInsertElement() {
+    this._super();
+    if (this.get('focusTarget') === 'title') {
       this.$('input').putCursorAtEnd();
     }
   },
