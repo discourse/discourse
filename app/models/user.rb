@@ -1048,6 +1048,7 @@ end
 #  trust_level_locked      :boolean          default(FALSE), not null
 #  staged                  :boolean          default(FALSE), not null
 #  first_seen_at           :datetime
+#  auth_token_created_at   :datetime
 #
 # Indexes
 #
