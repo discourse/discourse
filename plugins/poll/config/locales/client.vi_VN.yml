@@ -1,0 +1,71 @@
+vi_VN:
+  js:
+    poll:
+      voters:
+        one: "Người bầu chọn"
+        other: "Người bầu chọn"
+      total_votes:
+        one: "tổng số bình chọn"
+        other: "tổng số bình chọn"
+
+      average_rating: "Đánh giá trung bình: <strong>%{average}</strong>."
+
+      public:
+        title: "Bỏ phiếu công khai."
+
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Bạn phải chọn ít nhất <strong>1</strong> lựa chọn."
+            other: "Bạn phải chọn ít nhất <strong>%{count}</strong> lựa chọn."
+          up_to_max_options:
+            one: "Bạn có thể chọn <strong>1</strong> lựa chọn."
+            other: "Bạn có thể chọn <strong>%{count}</strong> lựa chọn."
+          x_options:
+            one: "Bạn phải chọn <strong>1</strong> lựa chọn."
+            other: "Bạn phải chọn <strong>%{count}</strong> lựa chọn."
+          between_min_and_max_options: "Bạn có thể chọn từ <strong>%{min}</strong> đến <strong>%{max}</strong> lựa chọn."
+
+      cast-votes:
+        title: "Bỏ phiếu của bạn"
+        label: "Bình chọn ngay!"
+
+      show-results:
+        title: "Hiển thị kết quả thăm dò"
+        label: "Hiển thị kết quả"
+
+      hide-results:
+        title: "Quay lại bầu chọn của bạn"
+        label: "Ẩn kết quả"
+
+      open:
+        title: "Mở bình chọn"
+        label: "Mở"
+        confirm: "Bạn có chắc chắn muốn mở bình chọn này?"
+
+      close:
+        title: "Đóng bình chọn"
+        label: "Đóng"
+        confirm: "Bạn có chắc chắn muốn đóng bình chọn này?"
+
+      error_while_toggling_status: "Xin lỗi, có lỗi xảy ra trong khi chuyển đổi trạng thái của bình chọn này."
+      error_while_casting_votes: "Xin lỗi, có lỗi xảy ra trong khi tạo bình chọn của bạn."
+
+      ui_builder:
+        title: Tạo bình chọn
+        insert: Chèn bình chọn
+        help:
+          options_count: Điền ít nhất 2 lựa chọn
+        poll_type:
+          label: Kiểu
+          regular: Chọn một
+          multiple: Chọn nhiều
+          number: Đánh giá số lượng
+        poll_config:
+          max: Tối đa
+          min: Tối thiểu
+          step: Bước
+        poll_public:
+          label: Hiển thị người đã bình chọn
+        poll_options:
+          label: Điền mỗi lựa chọn một dòng
