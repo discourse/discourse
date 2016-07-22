@@ -1306,7 +1306,6 @@ vi_VN:
     notify_about_queued_posts_after: "Nếu những bài viết đang chờ duyệt có thời gian cũ hơn số giờ thiết lập ở đây, một email sẽ được gửi đến contact_email. Đặt là 0 để vô hiệu hóa email này."
     auto_close_messages_post_count: "Số lượng tối đa bài đăng trong tin nhắn trước khi nó được tự động đóng (đặt là 0 để tắt)"
     auto_close_topics_post_count: "Số lượng tối đa bài viết trong chủ đề trước khi nó được tự động đóng (đặt là 0 để tắt)"
-	
     code_formatting_style: "Nút code trong soạn thảo sẽ mặc định cho các kiểu định dạng mã này"
 
     default_email_digest_frequency: "Bao lâu thành viên nhận được email tóm tắt theo mặc định."
