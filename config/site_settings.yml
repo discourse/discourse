@@ -624,6 +624,7 @@ email:
     regex: '^key-\h{32}$'
   soft_bounce_score: 1
   hard_bounce_score: 2
+  reset_bounce_score_after_days: 30
 
 
 files:
