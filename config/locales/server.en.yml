@@ -1063,7 +1063,7 @@ en:
     avatar_sizes: "List of automatically generated avatar sizes."
 
     external_system_avatars_enabled: "Use external system avatars service."
-    external_system_avatars_url: "URL of the external system avatars service. Allowed substitions are {username} {first_letter} {color} {size}"
+    external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
 
     default_opengraph_image_url: "URL of the default opengraph image."
 
@@ -1115,7 +1115,7 @@ en:
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
-    max_users_notified_per_group_mention: "Maximum number of users that may recieve a notification if a group is mentioned (if threshold is met no notifications will be raised)"
+    max_users_notified_per_group_mention: "Maximum number of users that may receive a notification if a group is mentioned (if threshold is met no notifications will be raised)"
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -1189,7 +1189,7 @@ en:
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "List of alternative templates for reply by email incoming email addresses."
-    incoming_email_prefer_html: "Use the HTML instead of the text for incoming email. May cause unexcpeted formatting issues!"
+    incoming_email_prefer_html: "Use the HTML instead of the text for incoming email. May cause unexpected formatting issues!"
 
     disable_emails: "Prevent Discourse from sending any kind of emails"
 
@@ -1231,7 +1231,7 @@ en:
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
-    logout_redirect: "Location to redirect browser to after logout EG: (http://somesite.com/logout)"
+    logout_redirect: "Location to redirect browser to after logout (eg: http://somesite.com/logout)"
 
     allow_uploaded_avatars: "Allow users to upload custom profile pictures."
     allow_animated_avatars: "Allow users to use animated gif profile pictures. WARNING: run the avatars:refresh rake task after changing this setting."
@@ -1288,7 +1288,7 @@ en:
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
-    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many langauges may impact performance) see: https://highlightjs.org/static/demo/ for a demo"
+    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: https://highlightjs.org/static/demo/ for a demo"
 
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
@@ -1356,7 +1356,7 @@ en:
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
     max_tag_length: "The maximum amount of characters that can be used in a tag."
-    max_tag_search_results: "When searching for tags, the maxium number of results to show."
+    max_tag_search_results: "When searching for tags, the maximum number of results to show."
     show_filter_by_tag: "Show a dropdown to filter a topic list by tag."
     max_tags_in_filter_list: "Maximum number of tags to show in the filter dropdown. The most used tags will be shown."
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
@@ -3043,7 +3043,7 @@ en:
       name: Famous Link
       description: Posted an external link with 1000 clicks
       long_description: |
-        This badge is granted when a link you shared gets 1000 clicks. Wow! You posted a link that significantly improved the conversation by addding essential detail, context, and information. Great work!
+        This badge is granted when a link you shared gets 1000 clicks. Wow! You posted a link that significantly improved the conversation by adding essential detail, context, and information. Great work!
     appreciated:
       name: Appreciated
       description: Received 1 like on 20 posts
