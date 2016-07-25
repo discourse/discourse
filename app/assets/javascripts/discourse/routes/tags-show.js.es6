@@ -11,7 +11,7 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
-    var tag = (params.tag_id === 'none' ? null : this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) })),
+    var tag = this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) }),
         f = '';
 
     if (params.category) {
@@ -25,7 +25,7 @@ export default Discourse.Route.extend({
     if (params.category) { this.set('categorySlug', params.category); }
     if (params.parent_category) { this.set('parentCategorySlug', params.parent_category); }
 
-    if (tag && this.get("currentUser")) {
+    if (tag && tag.get("id") !== "none" && this.get("currentUser")) {
       // If logged in, we should get the tag's user settings
       return this.store.find("tagNotification", tag.get("id")).then(tn => {
         this.set("tagNotification", tn);

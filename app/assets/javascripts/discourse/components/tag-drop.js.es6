@@ -20,30 +20,39 @@ export default Ember.Component.extend({
     }
   },
 
-  iconClass: function() {
+  @computed('expanded')
+  iconClass() {
     if (this.get('expanded')) { return "fa fa-caret-down"; }
     return "fa fa-caret-right";
-  }.property('expanded'),
+  },
 
-  tagClass: function() {
+  @computed('tagId')
+  tagClass() {
     if (this.get('tagId')) {
       return "tag-" + this.get('tagId');
     } else {
       return "tag_all";
     }
-  }.property('tagId'),
+  },
 
-  allTagsUrl: function() {
+  @computed('firstCategory', 'secondCategory')
+  allTagsUrl() {
     if (this.get('currentCategory')) {
       return this.get('currentCategory.url') + "?allTags=1";
     } else {
       return "/";
     }
-  }.property('firstCategory', 'secondCategory'),
+  },
 
-  allTagsLabel: function() {
+  @computed('tag')
+  allTagsLabel() {
     return I18n.t("tagging.selector_all_tags");
-  }.property('tag'),
+  },
+
+  @computed('tagId')
+  noTagsSelected() {
+    return this.get('tagId') === 'none';
+  },
 
   @computed('firstCategory', 'secondCategory')
   noTagsUrl() {
@@ -59,17 +68,19 @@ export default Ember.Component.extend({
     return I18n.t("tagging.selector_no_tags");
   },
 
-  dropdownButtonClass: function() {
+  @computed('tag')
+  dropdownButtonClass() {
     var result = 'badge-category category-dropdown-button';
     if (Em.isNone(this.get('tag'))) {
       result += ' home';
     }
     return result;
-  }.property('tag'),
+  },
 
-  clickEventName: function() {
+  @computed('tag')
+  clickEventName() {
     return "click.tag-drop-" + (this.get('tag') || "all");
-  }.property('tag'),
+  },
 
   actions: {
     expand: function() {
