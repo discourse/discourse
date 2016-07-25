@@ -596,3 +596,18 @@ componentTest('emoji', {
     });
   }
 });
+
+testCase("replace-text event", function(assert, textarea) {
+
+  this.set('value', "red green blue");
+
+  andThen(() => {
+    this.container.lookup('app-events:main').trigger('composer:replace-text', 'green', 'yellow');
+  });
+
+  andThen(() => {
+    assert.equal(this.get('value'), 'red yellow blue');
+    assert.equal(textarea.selectionStart, 10);
+    assert.equal(textarea.selectionEnd, 10);
+  });
+});
