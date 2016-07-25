@@ -189,7 +189,7 @@ export default Ember.Component.extend({
       this.setProperties({ uploadProgress: 0, isUploading: false, isCancellable: false });
     }
     if (removePlaceholder) {
-      this.set('composer.reply', this.get('composer.reply').replace(this.get('uploadPlaceholder'), ""));
+      this.appEvents.trigger('composer:replace-text', this.get('uploadPlaceholder'), "");
     }
   },
 
@@ -219,7 +219,6 @@ export default Ember.Component.extend({
 
     $element.on("fileuploadsend", (e, data) => {
       this._validUploads++;
-      // add upload placeholders
       this.appEvents.trigger('composer:insert-text', uploadPlaceholder);
 
       if (data.xhr && data.originalFiles.length === 1) {
@@ -244,7 +243,7 @@ export default Ember.Component.extend({
       if (upload && upload.url) {
         if (!this._xhr || !this._xhr._userCancelled) {
           const markdown = getUploadMarkdown(upload);
-          this.set('composer.reply', this.get('composer.reply').replace(uploadPlaceholder, markdown));
+          this.appEvents.trigger('composer:replace-text', uploadPlaceholder, markdown);
           this._resetUpload(false);
         } else {
           this._resetUpload(true);
