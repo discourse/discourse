@@ -1,8 +1,11 @@
 {{#if showTagDropdown}}
   {{#if tagId}}
-    <a href {{action "expand"}} class="badge-category {{tagClass}}">{{tagId}}</a>
+    {{#if noTagsSelected}}
+      <a href {{action "expand"}} class="badge-category {{tagClass}} home">{{noTagsLabel}}</a>
+    {{else}}
+      <a href {{action "expand"}} class="badge-category {{tagClass}}">{{tagId}}</a>
+    {{/if}}
   {{else}}
-    <!-- TODO: how to detect "no tags" is currently selected -->
     <a href {{action "expand"}} class="badge-category {{tagClass}} home">{{allTagsLabel}}</a>
   {{/if}}
 
