@@ -1069,6 +1069,8 @@ en:
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
+    convert_pasted_images_to_hq_jpg: "Convert pasted images to high-quality JPG files."
+
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
