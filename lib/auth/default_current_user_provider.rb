@@ -36,7 +36,10 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token && auth_token.length == 32
-      current_user = User.where(auth_token: auth_token).where('auth_token_created_at IS NULL OR auth_token_created_at > ?', SiteSetting.maximum_session_age.hours.ago).first
+      current_user = User.where(auth_token: auth_token)
+                         .where('auth_token_updated_at IS NULL OR auth_token_updated_at > ?',
+                                  SiteSetting.maximum_session_age.hours.ago)
+                         .first
     end
 
     if current_user && (current_user.suspended? || !current_user.active)
@@ -61,9 +64,16 @@ class Auth::DefaultCurrentUserProvider
     @env[CURRENT_USER_KEY] = current_user
   end
 
+  def refresh_session(user, session, cookies)
+    if user && (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
+      user.update_column(:auth_token_updated_at, Time.zone.now)
+      cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
+    end
+  end
+
   def log_on_user(user, session, cookies)
     user.auth_token = SecureRandom.hex(16)
-    user.auth_token_created_at = Time.zone.now
+    user.auth_token_updated_at = Time.zone.now
     user.save!
     cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
     make_developer_admin(user)

@@ -72,5 +72,29 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
+
+  it "correctly renews session once an hour" do
+    SiteSetting.maximum_session_age = 3
+    user = Fabricate(:user)
+    provider('/').log_on_user(user, {}, {})
+
+    freeze_time 2.hours.from_now
+    cookies = {}
+    provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").refresh_session(user, {}, cookies)
+
+    expect(user.auth_token_updated_at - Time.now).to eq(0)
+
+  end
+
+  it "correctly expires session" do
+    SiteSetting.maximum_session_age = 2
+    user = Fabricate(:user)
+    provider('/').log_on_user(user, {}, {})
+
+    expect(provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").current_user.id).to eq(user.id)
+
+    freeze_time 3.hours.from_now
+    expect(provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").current_user).to eq(nil)
+  end
 end
 
