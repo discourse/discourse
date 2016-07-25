@@ -1210,6 +1210,9 @@ en:
     ignore_by_title: "Ignore incoming emails based on their title."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
 
+    soft_bounce_score: "Score added to the user when a temporary bounce happens."
+    hard_bounce_score: "Score added to the user when a permanent bounce happens."
+
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"

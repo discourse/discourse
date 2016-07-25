@@ -622,6 +622,8 @@ email:
   mailgun_api_key:
     default: ''
     regex: '^key-\h{32}$'
+  soft_bounce_score: 1
+  hard_bounce_score: 2
 
 
 files:
