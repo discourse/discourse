@@ -125,7 +125,14 @@ class SearchObserver < ActiveRecord::Observer
 
     def characters(string)
       scrubbed << " "
-      scrubbed << string
+      scrubbed << string.gsub(/\p{L}*\.\p{L}*/) do |with_dot|
+        split = with_dot.split(".")
+        if split.length > 1
+          with_dot + (" " << split[1..-1].join(" "))
+        else
+          with_dot
+        end
+      end
       scrubbed << " "
     end
   end

@@ -540,6 +540,11 @@ describe Search do
 
     end
 
+    it 'can tokenize dots' do
+      post = Fabricate(:post, raw: 'Will.2000 Will.Bob.Bill...')
+      expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
+    end
+
     it 'supports category slug and tags' do
       # main category
       category = Fabricate(:category, name: 'category 24', slug: 'category-24')
