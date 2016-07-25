@@ -33,13 +33,15 @@ class TagsController < ::ApplicationController
     end
   end
 
+  # TODO: move all this to ListController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       @tag_id = DiscourseTagging.clean_tag(params[:tag_id])
 
       page = params[:page].to_i
+      list_opts = build_topic_list_options
 
-      query = TopicQuery.new(current_user, build_topic_list_options)
+      query = TopicQuery.new(current_user, list_opts)
 
       results = query.send("#{filter}_results")
 
@@ -54,7 +56,8 @@ class TagsController < ::ApplicationController
       @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
       @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
 
-      @list.more_topics_url = list_by_tag_path(tag_id: @tag_id, page: page + 1)
+      @list.more_topics_url = construct_url_with(:next, list_opts)
+      @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
 
       if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where(name: @tag_id).exists?
@@ -195,6 +198,47 @@ class TagsController < ::ApplicationController
       redirect_or_not_found and return if !@filter_on_category
 
       guardian.ensure_can_see!(@filter_on_category)
+    end
+
+    # TODO: this is duplication of ListController
+    def page_params(opts = nil)
+      opts ||= {}
+      route_params = { format: 'json' }
+      route_params[:category]        = @filter_on_category.slug_for_url                 if @filter_on_category
+      route_params[:parent_category] = @filter_on_category.parent_category.slug_for_url if @filter_on_category && @filter_on_category.parent_category
+      route_params[:order]           = opts[:order]      if opts[:order].present?
+      route_params[:ascending]       = opts[:ascending]  if opts[:ascending].present?
+      route_params
+    end
+
+    def next_page_params(opts = nil)
+      page_params(opts).merge(page: params[:page].to_i + 1)
+    end
+
+    def prev_page_params(opts = nil)
+      pg = params[:page].to_i
+      if pg > 1
+        page_params(opts).merge(page: pg - 1)
+      else
+        page_params(opts).merge(page: nil)
+      end
+    end
+
+    def construct_url_with(action, opts)
+      method = if opts[:parent_category] && opts[:category]
+        "tag_parent_category_category_#{action_name}_path"
+      elsif opts[:category]
+        "tag_category_#{action_name}_path"
+      else
+        "tag_#{action_name}_path"
+      end
+
+      url = if action == :prev
+        public_send(method, opts.merge(prev_page_params(opts)))
+      else # :next
+        public_send(method, opts.merge(next_page_params(opts)))
+      end
+      url.sub('.json?','?')
     end
 
     def build_topic_list_options

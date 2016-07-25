@@ -626,18 +626,18 @@ Discourse::Application.routes.draw do
     get '/check' => 'tags#check_hashtag'
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       get '/:tag_id.rss' => 'tags#tag_feed'
-      get '/:tag_id' => 'tags#show', as: 'list_by_tag'
-      get '/c/:category/:tag_id' => 'tags#show'
-      get '/c/:parent_category/:category/:tag_id' => 'tags#show'
+      get '/:tag_id' => 'tags#show', as: 'tag_show'
+      get '/c/:category/:tag_id' => 'tags#show', as: 'tag_category_show'
+      get '/c/:parent_category/:category/:tag_id' => 'tags#show', as: 'tag_parent_category_category_show'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'
       put '/:tag_id' => 'tags#update'
       delete '/:tag_id' => 'tags#destroy'
 
       Discourse.filters.each do |filter|
-        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}"
-        get "/c/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
-        get "/c/:parent_category/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}"
+        get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_show_#{filter}"
+        get "/c/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_show_#{filter}"
+        get "/c/:parent_category/:category/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_parent_category_category_show_#{filter}"
       end
     end
   end
