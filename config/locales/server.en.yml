@@ -1212,6 +1212,7 @@ en:
 
     soft_bounce_score: "Score added to the user when a temporary bounce happens."
     hard_bounce_score: "Score added to the user when a permanent bounce happens."
+    reset_bounce_score_after_days: "Automatically reset bounce score after X days."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."

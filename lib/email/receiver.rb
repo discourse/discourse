@@ -170,7 +170,7 @@ module Email
 
         if user = User.find_by(email: email)
           user.user_stat.bounce_score += score
-          user.user_stat.reset_bounce_score_after = 30.days.from_now
+          user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
           user.user_stat.save
 
           if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
