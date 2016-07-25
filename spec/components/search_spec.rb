@@ -213,6 +213,10 @@ describe Search do
         # stop words should work
         results = Search.execute('this', search_context: post1.topic)
         expect(results.posts.length).to eq(4)
+
+        # phrase search works as expected
+        results = Search.execute('"fourth post I am posting"', search_context: post1.topic)
+        expect(results.posts.length).to eq(1)
       end
     end
 
