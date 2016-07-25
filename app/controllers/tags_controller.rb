@@ -60,6 +60,8 @@ class TagsController < ::ApplicationController
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
 
+      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(url_method(params.slice(:category, :parent_category)))}"
+
       if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where(name: @tag_id).exists?
         raise Discourse::NotFound
       else
@@ -224,14 +226,18 @@ class TagsController < ::ApplicationController
       end
     end
 
-    def construct_url_with(action, opts)
-      method = if opts[:parent_category] && opts[:category]
+    def url_method(opts={})
+      if opts[:parent_category] && opts[:category]
         "tag_parent_category_category_#{action_name}_path"
       elsif opts[:category]
         "tag_category_#{action_name}_path"
       else
         "tag_#{action_name}_path"
       end
+    end
+
+    def construct_url_with(action, opts)
+      method = url_method(opts)
 
       url = if action == :prev
         public_send(method, opts.merge(prev_page_params(opts)))
