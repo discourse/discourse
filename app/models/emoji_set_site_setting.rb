@@ -2,14 +2,12 @@ require 'enum_site_setting'
 
 class EmojiSetSiteSetting < EnumSiteSetting
 
-  NAME = :emoji_set
-
   # fix the URLs when changing the site setting
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    if site_setting.name == NAME && site_setting.value_changed?
+    if site_setting.name.to_s == "emoji_set" && site_setting.value_changed?
       Emoji.clear_cache
 
-      previous_value = site_setting.value_was || SiteSetting.defaults[NAME]
+      previous_value = site_setting.value_was || SiteSetting.defaults[:emoji_set]
       before = "/images/emoji/#{previous_value}/"
       after = "/images/emoji/#{site_setting.value}/"
 
