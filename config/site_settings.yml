@@ -305,7 +305,7 @@ login:
     min: -1
     default: 8
   maximum_session_age:
-    default: 2160
+    default: 1440
     min: 1
     max: 175200
 

@@ -44,6 +44,7 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_to_login_if_required
   before_filter :check_xhr
   after_filter  :add_readonly_header
+  after_filter  :perform_refresh_session
 
   layout :set_layout
 
@@ -57,6 +58,10 @@ class ApplicationController < ActionController::Base
 
   def add_readonly_header
     response.headers['Discourse-Readonly'] = 'true' if Discourse.readonly_mode?
+  end
+
+  def perform_refresh_session
+    refresh_session(current_user)
   end
 
   def slow_platform?
