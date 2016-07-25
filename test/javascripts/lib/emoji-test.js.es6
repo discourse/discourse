@@ -10,7 +10,7 @@ function testUnescape(input, expected, description) {
 test("emojiUnescape", () => {
   testUnescape("Not emoji :O) :frog) :smile)", "Not emoji :O) :frog) :smile)", "title without emoji");
   testUnescape("Not emoji :frog :smile", "Not emoji :frog :smile", "end colon is not optional");
-  testUnescape("emoticons :)", "emoticons <img src='/images/emoji/emoji_one/slight_smile.png?v=2' title='slight_smile' alt='slight_smile' class='emoji'>", "emoticons are still supported");
+  testUnescape("emoticons :)", "emoticons <img src='/images/emoji/emoji_one/slight_smile.png?v=3' title='slight_smile' alt='slight_smile' class='emoji'>", "emoticons are still supported");
   testUnescape("With emoji :O: :frog: :smile:",
     `With emoji <img src='/images/emoji/emoji_one/o.png?v=${v}' title='O' alt='O' class='emoji'> <img src='/images/emoji/emoji_one/frog.png?v=${v}' title='frog' alt='frog' class='emoji'> <img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
     "title with emoji");
