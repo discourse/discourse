@@ -173,8 +173,16 @@ module Email
           user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
           user.user_stat.save
 
-          if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
-            StaffActionLogger.new(Discourse.system_user).log_revoke_email(user)
+          bounce_score = user.user_stat.bounce_score
+          if user.active && bounce_score >= SiteSetting.bounce_score_threshold_deactivate
+            user.update_columns(active: false)
+            reason = I18n.t("user.deactivated", email: user.email)
+            StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
+          elsif bounce_score >= SiteSetting.bounce_score_threshold
+            # NOTE: we check bounce_score before sending emails, nothing to do
+            # here other than log it happened.
+            reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
+            StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
           end
         end
 
