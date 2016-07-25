@@ -612,18 +612,23 @@ email:
     default: ''
     type: list
   block_auto_generated_emails: true
-  bounce_score_threshold:
-    client: true
-    default: 4
-    min: 1
   ignore_by_title:
     type: list
     default: ''
   mailgun_api_key:
     default: ''
     regex: '^key-\h{32}$'
-  soft_bounce_score: 1
-  hard_bounce_score: 2
+  bounce_score_threshold:
+    client: true
+    default: 4
+    min: 1
+  bounce_score_threshold_deactivate: 30
+  soft_bounce_score:
+    default: 1
+    min: 1
+  hard_bounce_score:
+    default: 2
+    min: 2
   reset_bounce_score_after_days: 30
 
 

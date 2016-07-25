@@ -1206,12 +1206,13 @@ en:
     maximum_staged_users_per_email: "Maximum number of staged users created when processing an incoming email."
     auto_generated_whitelist: "List of email addresses that won't be checked for auto-generated content."
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
-    bounce_score_threshold: "Max score before we will stop emailing a user. Soft bounce adds 1, hard bounce adds 2, score reset 30 days after last bounce."
     ignore_by_title: "Ignore incoming emails based on their title."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
 
     soft_bounce_score: "Score added to the user when a temporary bounce happens."
     hard_bounce_score: "Score added to the user when a permanent bounce happens."
+    bounce_score_threshold: "Max score before we will stop emailing a user."
+    bounce_score_threshold_deactivate: "Max score before we will deactive a user."
     reset_bounce_score_after_days: "Automatically reset bounce score after X days."
 
     manual_polling_enabled: "Push emails using the API for email replies."
@@ -1496,6 +1497,7 @@ en:
 
   user:
     no_accounts_associated: "No accounts associated"
+    deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
@@ -1509,6 +1511,7 @@ en:
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
+      revoked: "Won't be sending emails to '%{email}' until %{date}."
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
