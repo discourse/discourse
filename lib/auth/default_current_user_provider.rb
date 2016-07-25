@@ -8,13 +8,6 @@ class Auth::DefaultCurrentUserProvider
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
 
-  # TODO remove this stuff in 2017 was only added to smoothen the upgrade process
-  def self.has_auth_token_updated_at?
-    (@has_auth_token_updated_at ||=
-      User.column_names.include?("auth_token_updated_at") ? :true : :false
-    ) == :true
-  end
-
   # do all current user initialization here
   def initialize(env)
     @env = env
@@ -43,12 +36,10 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token && auth_token.length == 32
-      if ::Auth::DefaultCurrentUserProvider.has_auth_token_updated_at?
-        current_user = User.find_by("auth_token = ? AND (auth_token_updated_at IS NULL OR auth_token_updated_at > ?)",
-                                    auth_token, SiteSetting.maximum_session_age.hours.ago)
-      else
-        current_user = User.find_by(auth_token: auth_token)
-      end
+      current_user = User.where(auth_token: auth_token)
+                         .where('auth_token_updated_at IS NULL OR auth_token_updated_at > ?',
+                                  SiteSetting.maximum_session_age.hours.ago)
+                         .first
     end
 
     if current_user && (current_user.suspended? || !current_user.active)
@@ -74,10 +65,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def refresh_session(user, session, cookies)
-    if  user &&
-        ::Auth::DefaultCurrentUserProvider.has_auth_token_updated_at? &&
-        (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
-
+    if user && (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
       user.update_column(:auth_token_updated_at, Time.zone.now)
       cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
     end
