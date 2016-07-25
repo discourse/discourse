@@ -2,25 +2,25 @@ import Group from 'discourse/models/group';
 
 export default Discourse.Route.extend({
 
-  model: function(params) {
+  titleToken() {
+    return [ this.modelFor('group').get('name') ];
+  },
+
+  model(params) {
     return Group.find(params.name);
   },
 
-  serialize: function(model) {
+  serialize(model) {
     return { name: model.get('name').toLowerCase() };
   },
 
-  afterModel: function(model) {
-    var self = this;
-    return Group.findGroupCounts(model.get('name')).then(function (counts) {
-      self.set('counts', counts);
+  afterModel(model) {
+    return Group.findGroupCounts(model.get('name')).then(counts => {
+      this.set('counts', counts);
     });
   },
 
-  setupController: function(controller, model) {
-    controller.setProperties({
-      model: model,
-      counts: this.get('counts')
-    });
+  setupController(controller, model) {
+    controller.setProperties({ model, counts: this.get('counts') });
   }
 });
