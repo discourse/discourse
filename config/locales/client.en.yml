@@ -388,6 +388,7 @@ en:
       selector_placeholder: "Add members"
       owner: "owner"
       visible: "Group is visible to all users"
+      index: "Groups"
       title:
         one: "group"
         other: "groups"

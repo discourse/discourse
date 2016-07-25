@@ -1,4 +1,9 @@
 export default Discourse.Route.extend({
+
+  titleToken() {
+    return I18n.t('groups.members');
+  },
+
   model() {
     return this.modelFor("group");
   },
