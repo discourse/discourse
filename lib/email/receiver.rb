@@ -136,9 +136,6 @@ module Email
       end
     end
 
-    SOFT_BOUNCE_SCORE ||= 1
-    HARD_BOUNCE_SCORE ||= 2
-
     def is_bounce?
       return false unless @mail.bounced? || verp
 
@@ -152,9 +149,9 @@ module Email
       email ||= @from_email
 
       if @mail.error_status.present? && @mail.error_status.start_with?("4.")
-        Email::Receiver.update_bounce_score(email, SOFT_BOUNCE_SCORE)
+        Email::Receiver.update_bounce_score(email, SiteSetting.soft_bounce_score)
       else
-        Email::Receiver.update_bounce_score(email, HARD_BOUNCE_SCORE)
+        Email::Receiver.update_bounce_score(email, SiteSetting.hard_bounce_score)
       end
 
       true

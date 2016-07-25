@@ -29,9 +29,9 @@ class WebhooksController < ActionController::Base
     # by the "dropped" event and we don't want to increase bounce score twice
     # for the same message
     if event == "bounced".freeze && params["error"]["4."]
-      process_bounce(message_id, Email::Receiver::SOFT_BOUNCE_SCORE)
+      process_bounce(message_id, SiteSetting.soft_bounce_score)
     elsif event == "dropped".freeze
-      process_bounce(message_id, Email::Receiver::HARD_BOUNCE_SCORE)
+      process_bounce(message_id, SiteSetting.hard_bounce_score)
     end
 
     mailgun_success
@@ -43,12 +43,12 @@ class WebhooksController < ActionController::Base
       message_id = (event["smtp-id"] || "").tr("<>", "")
       if event["event"] == "bounce".freeze
         if event["status"]["4."]
-          process_bounce(message_id, Email::Receiver::SOFT_BOUNCE_SCORE)
+          process_bounce(message_id, SiteSetting.soft_bounce_score)
         else
-          process_bounce(message_id, Email::Receiver::HARD_BOUNCE_SCORE)
+          process_bounce(message_id, SiteSetting.hard_bounce_score)
         end
       elsif event["event"] == "dropped".freeze
-        process_bounce(message_id, Email::Receiver::HARD_BOUNCE_SCORE)
+        process_bounce(message_id, SiteSetting.hard_bounce_score)
       end
     end
 
@@ -61,9 +61,9 @@ class WebhooksController < ActionController::Base
       message_id = event["CustomID"]
       if event["event"] == "bounce".freeze
         if event["hard_bounce"]
-          process_bounce(message_id, Email::Receiver::HARD_BOUNCE_SCORE)
+          process_bounce(message_id, SiteSetting.hard_bounce_score)
         else
-          process_bounce(message_id, Email::Receiver::SOFT_BOUNCE_SCORE)
+          process_bounce(message_id, SiteSetting.soft_bounce_score)
         end
       end
     end
@@ -79,9 +79,9 @@ class WebhooksController < ActionController::Base
 
       case event["event"]
       when "hard_bounce"
-        process_bounce(message_id, Email::Receiver::HARD_BOUNCE_SCORE)
+        process_bounce(message_id, SiteSetting.hard_bounce_score)
       when "soft_bounce"
-        process_bounce(message_id, Email::Receiver::SOFT_BOUNCE_SCORE)
+        process_bounce(message_id, SiteSetting.soft_bounce_score)
       end
     end
 
