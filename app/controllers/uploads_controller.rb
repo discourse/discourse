@@ -70,6 +70,15 @@ class UploadsController < ApplicationController
 
       return { errors: I18n.t("upload.file_missing") } if tempfile.nil?
 
+      # convert pasted images to HQ jpegs
+      if filename == "blob.png" && SiteSetting.convert_pasted_images_to_hq_jpg
+        filename = "blob.jpg"
+        jpeg_path = "#{File.dirname(tempfile.path)}/#{filename}"
+        content_type = "image/jpeg"
+        `convert #{tempfile.path} -quality 95 #{jpeg_path}`
+        tempfile = File.open(jpeg_path)
+      end
+
       # allow users to upload large images that will be automatically reduced to allowed size
       max_image_size_kb = SiteSetting.max_image_size_kb.kilobytes
       if max_image_size_kb > 0 && FileHelper.is_image?(filename)
