@@ -125,6 +125,8 @@
               fillGapBefore="fillGapBefore"
               fillGapAfter="fillGapAfter"}}
           {{/unless}}
+
+          {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
         </div>
         <div id="topic-bottom"></div>
 
