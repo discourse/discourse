@@ -19,6 +19,7 @@ describe CrawlerDetection do
       expect(described_class.crawler?("facebookexternalhit/1.1 (+http(s)://www.facebook.com/externalhit_uatext.php)")).to eq(true)
       expect(described_class.crawler?("Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)")).to eq(true)
       expect(described_class.crawler?("Baiduspider+(+http://www.baidu.com/search/spider.htm)")).to eq(true)
+      expect(described_class.crawler?("Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)")).to eq(true)
     end
 
     it "returns false for non-crawler user agents" do
