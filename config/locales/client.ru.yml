@@ -43,47 +43,47 @@ ru:
       tiny:
         half_a_minute: "< 1мин"
         less_than_x_seconds:
-          one: "< 1сек"
+          one: "< %{count}сек"
           few: "< %{count}сек"
           many: "< %{count}сек"
           other: "< %{count}сек"
         x_seconds:
-          one: "1с"
+          one: "%{count}с"
           few: "%{count}с"
           many: "%{count}с"
           other: "%{count}с"
         less_than_x_minutes:
-          one: "< 1мин"
+          one: "< %{count}мин"
           few: "< %{count}мин"
           many: "< %{count}мин"
           other: "< %{count}мин"
         x_minutes:
-          one: "1мин"
+          one: "< %{count}мин"
           few: "< %{count}мин"
           many: "< %{count}мин"
           other: "< %{count}мин"
         about_x_hours:
-          one: "1ч"
+          one: "%{count}ч"
           few: "%{count}ч"
           many: "%{count}ч"
           other: "%{count}ч"
         x_days:
-          one: "1д"
+          one: "%{count}д"
           few: "%{count}д"
           many: "%{count}д"
           other: "%{count}д"
         about_x_years:
-          one: "1год"
+          one: "%{count}год"
           few: "%{count}года"
           many: "%{count}лет"
           other: "%{count}лет"
         over_x_years:
-          one: "> 1 года"
+          one: "> %{count} года"
           few: "> %{count} лет"
           many: "> %{count} лет"
           other: "> %{count} лет"
         almost_x_years:
-          one: "1 год"
+          one: "%{count} год"
           few: "%{count} года"
           many: "%{count} лет"
           other: "%{count} лет"
@@ -91,50 +91,50 @@ ru:
         date_year: "MMM YYYY"
       medium:
         x_minutes:
-          one: "1 минута"
+          one: "%{count} минута"
           few: "%{count} минуты"
           many: "%{count} минут"
           other: "%{count} минут"
         x_hours:
-          one: "1 час"
+          one: "%{count} час"
           few: "%{count} часа"
           many: "%{count} часов"
           other: "%{count} часов"
         x_days:
-          one: "1 день"
+          one: "%{count} день"
           few: "%{count} дня"
           many: "%{count} дней"
           other: "%{count} дней"
         date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
-          one: "1 минуту назад"
+          one: "%{count} минуту назад"
           few: "%{count} минуты назад"
           many: "%{count} минут назад"
           other: "%{count} минут назад"
         x_hours:
-          one: "1 час назад"
+          one: "%{count} час назад"
           few: "%{count} часа назад"
           many: "%{count} часов назад"
           other: "%{count} часов назад"
         x_days:
-          one: "1 день назад"
+          one: "%{count} день назад"
           few: "%{count} дня назад"
           many: "%{count} дней назад"
           other: "%{count} дней назад"
       later:
         x_days:
-          one: "1 день спустя"
+          one: "%{count} день спустя"
           few: "%{count} дня спустя"
           many: "%{count} дней спустя"
           other: "%{count} дней спустя"
         x_months:
-          one: "1 месяц спустя"
+          one: "%{count} месяц спустя"
           few: "%{count} месяца спустя"
           many: "%{count} месяцев спустя"
           other: "%{count} месяцев спустя"
         x_years:
-          one: "1 год спустя"
+          one: "%{count} год спустя"
           few: "%{count} года спустя"
           many: "%{count} лет спустя"
           other: "%{count} лет спустя"
@@ -267,17 +267,17 @@ ru:
       remove: "Удалить закладку"
       confirm_clear: "Вы уверены, что хотите удалить все эти темы из Избранного?"
     topic_count_latest:
-      one: "1 новая или обновленная тема."
+      one: "{{count}} новая или обновленная тема."
       few: "{{count}} новые или обновленные темы."
       many: "{{count}} новых или обновленных тем."
       other: "{{count}} новых или обновленных тем."
     topic_count_unread:
-      one: "1 непрочитанная тема."
+      one: "{{count}} непрочитанная тема."
       few: "{{count}} непрочитанные темы."
       many: "{{count}} непрочитанных тем."
       other: "{{count}} непрочитанных тем."
     topic_count_new:
-      one: "1 новая тема."
+      one: "{{count}} новая тема."
       few: "{{count}} новые темы."
       many: "{{count}} новых тем."
       other: "{{count}} новых тем."
@@ -317,7 +317,7 @@ ru:
       cancel: "Отменить"
       view_pending: "Просмотреть сообщения в очереди"
       has_pending_posts:
-        one: "В этой теме <b>1</b> сообщение, ожидающее проверки"
+        one: "В этой теме <b>{{count}}</b> сообщение, ожидающее проверки"
         few: "В этой теме <b>{{count}}</b> сообщения, ожидающих проверки"
         many: "В этой теме <b>{{count}}</b> сообщений, ожидающих проверки"
         other: "В этой теме <b>{{count}}</b> сообщений, ожидающих проверки"
@@ -1070,7 +1070,7 @@ ru:
       select_all: "Выбрать все"
       clear_all: "Сбросить все"
       result_count:
-        one: "Найдено 1: <span class='term'>\"{{term}}\"</span>"
+        one: "Найдено {{count}}: <span class='term'>\"{{term}}\"</span>"
         few: "Найдено {{count}}: <span class='term'>\"{{term}}\"</span>"
         many: "Найдено {{count}}: <span class='term'>\"{{term}}\"</span>"
         other: "Найдено {{count}}: <span class='term'>\"{{term}}\"</span>"
@@ -1546,7 +1546,7 @@ ru:
             many: "Вы и еще {{count}} человек отметили это как требующее модерации"
             other: "Вы и еще {{count}} человек отметили это как требующее модерации"
           notify_user:
-            one: "Вы и еще 1 человек отправили сообщение этому пользователю"
+            one: "Вы и еще {{count}} человек отправили сообщение этому пользователю"
             few: "Вы и еще {{count}} человека отправили сообщение этому пользователю"
             other: "Вы и еще {{count}} человек отправили сообщение этому пользователю"
           bookmark:
@@ -1586,7 +1586,7 @@ ru:
             many: "{{count}} человек отметили это как требующее модерации"
             other: "{{count}} человек отметили это как требующее модерации"
           notify_user:
-            one: "1 человек отправил сообщение этому пользователю"
+            one: "{{count}} человек отправил сообщение этому пользователю"
             few: "{{count}} человека отправили сообщение этому пользователю"
             other: "{{count}} человек отправили сообщение этому пользователю"
           bookmark:
@@ -1729,7 +1729,7 @@ ru:
       links_title: "Популярные ссылки"
       links_shown: "показать все {{totalLinks}} ссылок..."
       clicks:
-        one: "1 клик"
+        one: "%{count} клик"
         few: "%{count} клика"
         many: "%{count} кликов"
         other: "%{count} кликов"
@@ -1797,7 +1797,7 @@ ru:
       latest:
         title: "Последние"
         title_with_count:
-          one: "Последние (1)"
+          one: "Последние ({{count}})"
           few: "Последние ({{count}})"
           many: "Последние ({{count}})"
           other: "Последние ({{count}})"
@@ -2790,12 +2790,12 @@ ru:
       title: Награды
       multiple_grant: "Выдаётся многократно"
       badge_count:
-        one: "1 награда"
+        one: "%{count} награда"
         few: "%{count} награды"
         many: "%{count} наград"
         other: "%{count} наград"
       more_badges:
-        one: "+ еще 1"
+        one: "+ еще %{count}"
         few: "+ еще %{count}"
         many: "+ еще %{count}"
         other: "+ еще %{count}"
