@@ -15,7 +15,11 @@ class TagsController < ::ApplicationController
     categories = Category.where("id in (select category_id from category_tags)")
                          .where("id in (?)", guardian.allowed_category_ids)
                          .preload(:tags)
-    category_tag_counts = categories.map { |c| {id: c.id, tags: self.class.tag_counts_json(Tag.category_tags_by_count_query(c, limit: 300).count)} }
+    category_tag_counts = categories.map do |c|
+      h = Tag.category_tags_by_count_query(c, limit: 300).count
+      h.merge!(c.tags.where.not(name: h.keys).inject({}) { |sum,t| sum[t.name] = 0; sum }) # unused tags
+      {id: c.id, tags: self.class.tag_counts_json(h)}
+    end
 
     tag_counts = self.class.tags_by_count(guardian, limit: 300).count
     @tags = self.class.tag_counts_json(tag_counts)
