@@ -72,9 +72,14 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def log_on_user(user, session, cookies)
-    user.auth_token = SecureRandom.hex(16)
-    user.auth_token_updated_at = Time.zone.now
-    user.save!
+    legit_token = user.auth_token && user.auth_token.length == 32
+    expired_token = user.auth_token_updated_at && user.auth_token_updated_at < SiteSetting.maximum_session_age.hours.ago
+
+    if !legit_token || expired_token
+      user.update_columns(auth_token: SecureRandom.hex(16),
+                          auth_token_updated_at: Time.zone.now)
+    end
+
     cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
     make_developer_admin(user)
     enable_bootstrap_mode(user)

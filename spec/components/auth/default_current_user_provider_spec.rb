@@ -83,7 +83,26 @@ describe Auth::DefaultCurrentUserProvider do
     provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").refresh_session(user, {}, cookies)
 
     expect(user.auth_token_updated_at - Time.now).to eq(0)
+  end
 
+  it "recycles existing auth_token correctly" do
+    SiteSetting.maximum_session_age = 3
+    user = Fabricate(:user)
+    provider('/').log_on_user(user, {}, {})
+
+    original_auth_token = user.auth_token
+
+    freeze_time 2.hours.from_now
+    provider('/').log_on_user(user, {}, {})
+
+    user.reload
+    expect(user.auth_token).to eq(original_auth_token)
+
+    freeze_time 10.hours.from_now
+
+    provider('/').log_on_user(user, {}, {})
+    user.reload
+    expect(user.auth_token).not_to eq(original_auth_token)
   end
 
   it "correctly expires session" do
