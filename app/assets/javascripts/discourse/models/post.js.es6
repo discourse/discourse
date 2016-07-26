@@ -325,6 +325,13 @@ Post.reopenClass({
         post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
         reply_post_ids: selectedReplies.map(function(p) { return p.get('id'); })
       }
+    }).catch(popupAjaxError);
+  },
+
+  mergePosts(selectedPosts) {
+    return Discourse.ajax("/posts/merge_posts", {
+      type: 'PUT',
+      data: {post_ids: selectedPosts.map(p => p.get('id'))}
     });
   },
 

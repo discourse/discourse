@@ -517,6 +517,17 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       });
     },
 
+    mergePosts() {
+      bootbox.confirm(I18n.t("post.merge.confirm", { count: this.get('selectedPostsCount')}), result => {
+        if (result) {
+          const selectedPosts = this.get('selectedPosts');
+
+          Discourse.Post.mergePosts(selectedPosts);
+          this.send('toggleMultiSelect');
+        }
+      });
+    },
+
     expandHidden(post) {
       post.expandHidden();
     },
@@ -691,6 +702,18 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     if (!Discourse.User.current() || !Discourse.User.current().admin) return false;
     return this.get('selectedPostsUsername') !== undefined;
   }.property('selectedPostsUsername'),
+
+  canMergePosts: function() {
+    // Two or more posts selected
+    if (this.get('selectedPostsCount') < 2) return false;
+    // Must be able to delete all of the posts, this makes it so
+    // that the main post of a topic can't be part of the merged posts
+    const selectedPosts = this.get('selectedPosts');
+    let canDelete = selectedPosts.every(p => p.get('can_delete'));
+    if(!canDelete) return false;
+    // All the posts must have the same creator
+    return this.get('selectedPostsUsername') !== undefined;
+  }.property('selectedPostsCount'),
 
   categories: function() {
     return Discourse.Category.list();

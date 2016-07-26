@@ -1,6 +1,7 @@
 require_dependency 'new_post_manager'
 require_dependency 'post_creator'
 require_dependency 'post_destroyer'
+require_dependency 'post_merger'
 require_dependency 'distributed_memoizer'
 require_dependency 'new_post_result_serializer'
 
@@ -269,6 +270,20 @@ class PostsController < ApplicationController
     Post.transaction do
       posts.each {|p| PostDestroyer.new(current_user, p).destroy }
     end
+
+    render nothing: true
+  end
+
+  def merge_posts
+    params.require(:post_ids)
+
+    posts = Post.where(id: post_ids_including_replies).order(:id)
+    raise Discourse::InvalidParameters.new(:post_ids) if posts.pluck(:id) == params[:post_ids]
+
+    # Make sure we can delete the posts
+    posts.each {|p| guardian.ensure_can_delete!(p) }
+
+    PostMerger.new(current_user, posts).merge
 
     render nothing: true
   end
