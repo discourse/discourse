@@ -516,8 +516,18 @@ class Search
 
       if @term.present?
         if is_topic_search
+
+          term_without_quote = @term
+          if @term =~ /"(.+)"/
+            term_without_quote = $1
+          end
+
+          if @term =~ /'(.+)'/
+            term_without_quote = $1
+          end
+
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
-          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{@term}%")
+          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
           exact_terms = @term.scan(/"([^"]+)"/).flatten

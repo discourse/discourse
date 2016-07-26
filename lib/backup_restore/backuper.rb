@@ -1,6 +1,7 @@
 module BackupRestore
 
   class Backuper
+    include BackupRestore::Utils
 
     attr_reader :success
 
@@ -42,8 +43,6 @@ module BackupRestore
 
       log "Finalizing backup..."
 
-      update_dump
-
       create_archive
 
       after_create_hook
@@ -52,12 +51,18 @@ module BackupRestore
     rescue Exception => ex
       log "EXCEPTION: " + ex.message
       log ex.backtrace.join("\n")
+      @success = false
     else
       @success = true
       "#{@archive_basename}.tar.gz"
     ensure
-      notify_user rescue nil
-      remove_old rescue nil
+      begin
+        notify_user
+        remove_old
+      rescue => ex
+        Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n"))
+      end
+
       clean_up
       @success ? log("[SUCCESS]") : log("[FAILED]")
     end
@@ -78,12 +83,12 @@ module BackupRestore
       @current_db = RailsMultisite::ConnectionManagement.current_db
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
-      @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+      @dump_filename = "#{File.join(@tmp_directory, BackupRestore::DUMP_FILE)}.gz"
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @archive_directory = File.join(Rails.root, "public", "backups", @current_db)
       @archive_basename = File.join(@archive_directory, "#{SiteSetting.title.parameterize}-#{@timestamp}")
       @logs = []
-      @readonly_mode_was_enabled = Discourse.readonly_mode?
+      @readonly_mode_was_enabled = Discourse.readonly_mode? || !SiteSetting.readonly_mode_during_backup
     end
 
     def listen_for_shutdown_signal
@@ -186,43 +191,11 @@ module BackupRestore
         "--no-owner",                 # do not output commands to set ownership of objects
         "--no-privileges",            # prevent dumping of access privileges
         "--verbose",                  # specifies verbose mode
+        "--compress=4",               # Compression level of 4
         host_argument,                # the hostname to connect to (if any)
         port_argument,                # the port to connect to (if any)
         username_argument,            # the username to connect as (if any)
         db_conf.database              # the name of the database to dump
-      ].join(" ")
-    end
-
-    def update_dump
-      log "Updating dump for more awesomeness..."
-
-      `#{sed_command}`
-    end
-
-    def sed_command
-      # in order to limit the downtime when restoring as much as possible
-      # we force the restoration to happen in the "restore" schema
-
-      # during the restoration, this make sure we
-      #  - drop the "restore" schema if it exists
-      #  - create the "restore" schema
-      #  - prepend the "restore" schema into the search_path
-
-      regexp = "SET search_path = public, pg_catalog;"
-
-      replacement = [ "DROP SCHEMA IF EXISTS restore CASCADE;",
-                      "CREATE SCHEMA restore;",
-                      "SET search_path = restore, public, pg_catalog;",
-                    ].join(" ")
-
-      # we only want to replace the VERY first occurence of the search_path command
-      expression = "1,/^#{regexp}$/s/#{regexp}/#{replacement}/"
-
-      # I tried to use the --in-place argument but it was SLOOOWWWWwwwwww
-      # so I output the result into another file and rename it back afterwards
-      [ "sed -e '#{expression}' < #{@dump_filename} > #{@dump_filename}.tmp",
-        "&&",
-        "mv #{@dump_filename}.tmp #{@dump_filename}",
       ].join(" ")
     end
 
@@ -232,20 +205,26 @@ module BackupRestore
       tar_filename = "#{@archive_basename}.tar"
 
       log "Making sure archive does not already exist..."
-      `rm -f #{tar_filename}`
-      `rm -f #{tar_filename}.gz`
+      execute_command("rm -f #{tar_filename}")
+      execute_command("rm -f #{tar_filename}.gz")
 
       log "Creating empty archive..."
-      `tar --create --file #{tar_filename} --files-from /dev/null`
+      execute_command("tar --create --file #{tar_filename} --files-from /dev/null")
 
       log "Archiving data dump..."
-      FileUtils.cd(File.dirname(@dump_filename)) do
-        `tar --append --dereference --file #{tar_filename} #{File.basename(@dump_filename)}`
+      FileUtils.cd(File.dirname("#{@dump_filename}")) do
+        execute_command(
+          "tar --append --dereference --file #{tar_filename} #{File.basename(@dump_filename)}",
+          "Failed to archive data dump."
+        )
       end
 
       log "Archiving metadata..."
       FileUtils.cd(File.dirname(@meta_filename)) do
-        `tar --append --dereference --file #{tar_filename} #{File.basename(@meta_filename)}`
+        execute_command(
+          "tar --append --dereference --file #{tar_filename} #{File.basename(@meta_filename)}",
+          "Failed to archive metadata."
+        )
       end
 
       if @with_uploads
@@ -253,12 +232,17 @@ module BackupRestore
 
         log "Archiving uploads..."
         FileUtils.cd(File.join(Rails.root, "public")) do
-          `tar --append --dereference --file #{tar_filename} #{upload_directory}`
+          execute_command(
+            "tar --append --dereference --file #{tar_filename} #{upload_directory}",
+            "Failed to archive uploads."
+          )
         end
       end
 
+      remove_tmp_directory
+
       log "Gzipping archive, this may take a while..."
-      `gzip -5 #{tar_filename}`
+      execute_command("gzip -5 #{tar_filename}", "Failed to gzip archive.")
     end
 
     def after_create_hook
@@ -284,7 +268,6 @@ module BackupRestore
     def clean_up
       log "Cleaning stuff up..."
       remove_tar_leftovers
-      remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running

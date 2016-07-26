@@ -101,6 +101,7 @@ Fabricator(:post_with_uploads_and_links, from: :post) do
 <a href="http://www.google.com">Google</a>
 <img src="http://foo.bar/image.png">
 <a class="attachment" href="/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)
+:smile:
 '
 end
 

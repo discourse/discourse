@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import Model from 'discourse/models/model';
 
@@ -60,7 +61,7 @@ const TopicList = RestModel.extend({
       this.set('loadingMore', true);
 
       const store = this.store;
-      return Discourse.ajax({url: moreUrl}).then(function (result) {
+      return ajax({url: moreUrl}).then(function (result) {
         let topicsAdded = 0;
 
         if (result) {
@@ -100,7 +101,7 @@ const TopicList = RestModel.extend({
     const url = `${Discourse.getURL("/")}${this.get('filter')}?topic_ids=${topic_ids.join(",")}`;
     const store = this.store;
 
-    return Discourse.ajax({ url }).then(result => {
+    return ajax({ url }).then(result => {
       let i = 0;
       topicList.forEachNew(topicsFrom(result, store), function(t) {
         // highlight the first of the new topics so we can get a visual feedback

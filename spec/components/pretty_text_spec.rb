@@ -376,21 +376,11 @@ HTML
   end
 
   describe 'tables' do
-    before do
-      PrettyText.reset_context
-    end
-
-    after do
-      PrettyText.reset_context
-    end
-
     it 'allows table html' do
       SiteSetting.allow_html_tables = true
-      PrettyText.reset_context
       table = "<table class='fa-spin'><thead><tr>\n<th class='fa-spin'>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       match = "<table class=\"md-table\"><thead><tr> <th>test</th> </tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       expect(PrettyText.cook(table)).to match_html(match)
-
     end
 
     it 'allows no tables when not enabled' do
@@ -424,14 +414,19 @@ HTML
   end
 
   describe "tag and category links" do
-
     it "produces tag links" do
       Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})
       expect(PrettyText.cook(" #unknown::tag #known::tag")).to match_html("<p> <span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>")
     end
 
     # TODO does it make sense to generate hashtags for tags that are missing in action?
+  end
 
+  describe "custom emoji" do
+    it "replaces the custom emoji" do
+      Emoji.stubs(:custom).returns([ Emoji.create_from_path('trout') ])
+      expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
+    end
   end
 
 end

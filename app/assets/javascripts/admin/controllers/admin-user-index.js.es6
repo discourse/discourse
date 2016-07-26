@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
 
@@ -38,7 +39,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     saveTitle() {
       const self = this;
 
-      return Discourse.ajax("/users/" + this.get('model.username').toLowerCase(), {
+      return ajax("/users/" + this.get('model.username').toLowerCase(), {
         data: {title: this.get('userTitleValue')},
         type: 'PUT'
       }).catch(function(e) {
@@ -68,7 +69,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     savePrimaryGroup() {
       const self = this;
 
-      return Discourse.ajax("/admin/users/" + this.get('model.id') + "/primary_group", {
+      return ajax("/admin/users/" + this.get('model.id') + "/primary_group", {
         type: 'PUT',
         data: {primary_group_id: this.get('model.primary_group_id')}
       }).then(function () {

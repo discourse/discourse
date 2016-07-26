@@ -412,7 +412,6 @@ ja:
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信した後に投稿へ移動しない"
       dynamic_favicon: "新規または更新されたトピックのカウントをブラウザアイコンに表示する"
-      edit_history_public: "投稿の編集履歴を公開する"
       external_links_in_new_tab: "外部リンクをすべて別のタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       change: "変更"

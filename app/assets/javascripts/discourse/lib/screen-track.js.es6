@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
 const MAX_TRACKING_TIME = 1000 * 60 * 6;
@@ -107,7 +108,7 @@ export default class {
 
     if (!$.isEmptyObject(newTimings)) {
       if (this.currentUser) {
-        Discourse.ajax('/topics/timings', {
+        ajax('/topics/timings', {
           data: {
             timings: newTimings,
             topic_time: this._topicTime,

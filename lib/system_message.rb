@@ -47,12 +47,13 @@ class SystemMessage
     title = I18n.t("system_messages.#{type}.subject_template", params)
     raw = I18n.t("system_messages.#{type}.text_body_template", params)
 
-    PostCreator.create(Discourse.system_user,
+    PostCreator.create!(Discourse.system_user,
                        title: title,
                        raw: raw,
                        archetype: Archetype.private_message,
                        target_usernames: @recipient.username,
-                       subtype: TopicSubtype.system_message)
+                       subtype: TopicSubtype.system_message,
+                       skip_validations: true)
   end
 
   def defaults

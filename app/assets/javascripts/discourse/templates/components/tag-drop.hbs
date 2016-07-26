@@ -1,6 +1,10 @@
 {{#if showTagDropdown}}
   {{#if tagId}}
-    <a href {{action "expand"}} class="badge-category {{tagClass}}">{{tagId}}</a>
+    {{#if noTagsSelected}}
+      <a href {{action "expand"}} class="badge-category {{tagClass}} home">{{noTagsLabel}}</a>
+    {{else}}
+      <a href {{action "expand"}} class="badge-category {{tagClass}}">{{tagId}}</a>
+    {{/if}}
   {{else}}
     <a href {{action "expand"}} class="badge-category {{tagClass}} home">{{allTagsLabel}}</a>
   {{/if}}
@@ -9,6 +13,7 @@
     <a href {{action "expand"}} class={{dropdownButtonClass}}><i class={{iconClass}}></i></a>
     <section class="{{unless expanded 'hidden'}} category-dropdown-menu chooser">
       <div class='cat'><a href={{allTagsUrl}} data-drop-close="true" class='badge-category home'>{{allTagsLabel}}</a></div>
+      <div class='cat'><a href={{noTagsUrl}}  data-drop-close="true" class='badge-category home'>{{noTagsLabel}}</a></div>
       {{#if renderTags}}
         {{#each tags as |t|}}
           <div class='cat'>

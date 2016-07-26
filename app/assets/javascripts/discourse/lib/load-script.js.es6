@@ -1,5 +1,4 @@
-/* global assetPath */
-
+import { ajax } from 'discourse/lib/ajax';
 const _loaded = {};
 const _loading = {};
 
@@ -23,10 +22,14 @@ function loadWithTag(path, cb) {
 }
 
 export default function loadScript(url, opts) {
+
+  // TODO: Remove this once plugins have been updated not to use it:
+  if (url === "defer/html-sanitizer-bundle") { return Ember.RSVP.Promise.resolve(); }
+
   opts = opts || {};
 
   return new Ember.RSVP.Promise(function(resolve) {
-    url = Discourse.getURL((assetPath && assetPath(url)) || url);
+    url = Discourse.getURL(url);
 
     // If we already loaded this url
     if (_loaded[url]) { return resolve(); }
@@ -60,7 +63,7 @@ export default function loadScript(url, opts) {
     if (opts.scriptTag) {
       loadWithTag(cdnUrl, cb);
     } else {
-      Discourse.ajax({url: cdnUrl, dataType: "script", cache: true}).then(cb);
+      ajax({url: cdnUrl, dataType: "script", cache: true}).then(cb);
     }
   });
 }

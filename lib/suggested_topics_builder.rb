@@ -7,7 +7,7 @@ class SuggestedTopicsBuilder
   def initialize(topic)
     @excluded_topic_ids = [topic.id]
     @category_id = topic.category_id
-    @category_topic_ids = Category.pluck(:topic_id).compact
+    @category_topic_ids = Category.topic_ids
     @results = []
   end
 

@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import ResultSet from 'discourse/models/result-set';
 
@@ -114,7 +115,7 @@ export default Ember.Object.extend({
 
   refreshResults(resultSet, type, url) {
     const self = this;
-    return Discourse.ajax(url).then(result => {
+    return ajax(url).then(result => {
       const typeName = Ember.String.underscore(self.pluralize(type));
       const content = result[typeName].map(obj => self._hydrate(type, obj, result));
       resultSet.set('content', content);
@@ -124,7 +125,7 @@ export default Ember.Object.extend({
   appendResults(resultSet, type, url) {
     const self = this;
 
-    return Discourse.ajax(url).then(function(result) {
+    return ajax(url).then(function(result) {
       const typeName = Ember.String.underscore(self.pluralize(type)),
             totalRows = result["total_rows_" + typeName] || result.get('totalRows'),
             loadMoreUrl = result["load_more_" + typeName],
@@ -197,6 +198,7 @@ export default Ember.Object.extend({
     // TODO: Have injections be automatic
     obj.topicTrackingState = this.container.lookup('topic-tracking-state:main');
     obj.keyValueStore = this.container.lookup('key-value-store:main');
+    obj.siteSettings = this.container.lookup('site-settings:main');
 
     const klass = this.container.lookupFactory('model:' + type) || RestModel;
     const model = klass.create(obj);

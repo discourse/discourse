@@ -122,25 +122,32 @@ describe TopicQuery do
       SiteSetting.tagging_enabled = true
     end
 
-    it "returns topics with the tag when filtered to it" do
-      tagged_topic1 = Fabricate(:topic, {tags: [tag]})
-      tagged_topic2 = Fabricate(:topic, {tags: [other_tag]})
-      tagged_topic3 = Fabricate(:topic, {tags: [tag, other_tag]})
-      no_tags_topic = Fabricate(:topic)
+    context "no category filter" do
+      # create some topics before each test:
+      let!(:tagged_topic1) { Fabricate(:topic, {tags: [tag]}) }
+      let!(:tagged_topic2) { Fabricate(:topic, {tags: [other_tag]}) }
+      let!(:tagged_topic3) { Fabricate(:topic, {tags: [tag, other_tag]}) }
+      let!(:no_tags_topic) { Fabricate(:topic) }
 
-      expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
-      expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+      it "returns topics with the tag when filtered to it" do
+        expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
 
-      two_tag_topic = TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.find { |t| t.id == tagged_topic3.id }
-      expect(two_tag_topic.tags.size).to eq(2)
+        two_tag_topic = TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.find { |t| t.id == tagged_topic3.id }
+        expect(two_tag_topic.tags.size).to eq(2)
 
-      # topics with ANY of the given tags:
-      expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
-      expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+        # topics with ANY of the given tags:
+        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
 
-      # TODO: topics with ALL of the given tags:
-      # expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
-      # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+        # TODO: topics with ALL of the given tags:
+        # expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+        # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+      end
+
+      it "can return topics with no tags" do
+        expect(TopicQuery.new(moderator, no_tags: true).list_latest.topics.map(&:id)).to eq([no_tags_topic.id])
+      end
     end
 
     context "and categories too" do

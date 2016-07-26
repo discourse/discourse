@@ -183,9 +183,11 @@ en:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "China (Beijing)"
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -386,6 +388,7 @@ en:
       selector_placeholder: "Add members"
       owner: "owner"
       visible: "Group is visible to all users"
+      index: "Groups"
       title:
         one: "group"
         other: "groups"
@@ -409,7 +412,7 @@ en:
           title: "Watching"
           description: "You will be notified of every new post in every message, and a count of new replies will be shown."
         watching_first_post:
-          title: "Watching First Post Only"
+          title: "Watching First Post"
           description: "You will only be notified of the first post in each new topic in this group."
         tracking:
           title: "Tracking"
@@ -516,7 +519,6 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
-      edit_history_public: "Let other users view my post revisions"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -543,15 +545,18 @@ en:
       watched_tags: "Watched"
       watched_tags_instructions: "You will automatically watch all topics with these tags. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_tags: "Tracked"
-      tracked_tags_instructions: "You will automatically track all new topics with these tags. A count of new posts will appear next to the topic."
+      tracked_tags_instructions: "You will automatically track all topics with these tags. A count of new posts will appear next to the topic."
       muted_tags: "Muted"
       muted_tags_instructions: "You will not be notified of anything about new topics with these tags, and they will not appear in latest."
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
-      watched_first_post_categories: "Watching First Post Only"
+      tracked_categories_instructions: "You will automatically track all topics in these categories. A count of new posts will appear next to the topic."
+      watched_first_post_categories: "Watching First Post"
       watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
+      watched_first_post_tags: "Watching First Post"
+      watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
+
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
       delete_account: "Delete My Account"
@@ -994,10 +999,12 @@ en:
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
 
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
+    emoji_set:
+      apple_international: "Apple/International"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
 
     shortcut_modifier_key:
       shift: 'Shift'
@@ -1818,13 +1825,13 @@ en:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
+          description: "You will automatically watch all topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
         watching_first_post:
-          title: "Watching First Post Only"
+          title: "Watching First Post"
           description: "You will only be notified of the first post in each new topic in these categories."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
+          description: "You will automatically track all topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
         regular:
           title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
@@ -1867,7 +1874,7 @@ en:
       title: "Topic Summary"
       participants_title: "Frequent Posters"
       links_title: "Popular Links"
-      links_shown: "show all {{totalLinks}} links..."
+      links_shown: "show more links..."
       clicks:
         one: "1 click"
         other: "%{count} clicks"
@@ -2122,6 +2129,7 @@ en:
     tagging:
       all_tags: "All Tags"
       selector_all_tags: "all tags"
+      selector_no_tags: "no tags"
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "choose optional tags for this topic"
@@ -2138,17 +2146,19 @@ en:
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
+        untagged_without_category: "%{filter} untagged topics"
+        untagged_with_category: "%{filter} untagged topics in %{category}"
 
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+          description: "You will automatically watch all topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         watching_first_post:
-          title: "Watching First Post Only"
+          title: "Watching First Post"
           description: "You will only be notified of the first post in each new topic in this tag."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
+          description: "You will automatically track all topics in this tag. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to your post."

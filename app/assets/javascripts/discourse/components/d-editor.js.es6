@@ -1,12 +1,15 @@
 /*global Mousetrap:true */
-import loadScript from 'discourse/lib/load-script';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
-import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
+import { showSelector } from "discourse/lib/emoji/toolbar";
 import Category from 'discourse/models/category';
 import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
 import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
 import { SEPARATOR } from 'discourse/lib/category-hashtags';
+import { cook } from 'discourse/lib/text';
+import { translations } from 'pretty-text/emoji/data';
+import { emojiSearch } from 'pretty-text/emoji';
+import { emojiUrlFor } from 'discourse/lib/text';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -193,7 +196,7 @@ export default Ember.Component.extend({
     this._applyEmojiAutocomplete(container, $editorInput);
     this._applyCategoryHashtagAutocomplete(container, $editorInput);
 
-    loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
+    this.set('ready', true);
 
     const mouseTrap = Mousetrap(this.$('.d-editor-input')[0]);
 
@@ -212,9 +215,8 @@ export default Ember.Component.extend({
       return false;
     });
 
-    this.appEvents.on('composer:insert-text', text => {
-      this._addText(this._getSelected(), text);
-    });
+    this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
+    this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
 
     this._mouseTrap = mouseTrap;
   },
@@ -222,6 +224,7 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _shutDown() {
     this.appEvents.off('composer:insert-text');
+    this.appEvents.off('composer:replace-text');
 
     const mouseTrap = this._mouseTrap;
     Object.keys(this.get('toolbar.shortcuts')).forEach(sc => mouseTrap.unbind(sc));
@@ -241,9 +244,10 @@ export default Ember.Component.extend({
 
     const value = this.get('value');
     const markdownOptions = this.get('markdownOptions') || {};
-    markdownOptions.sanitize = true;
 
-    this.set('preview', Discourse.Dialect.cook(value || "", markdownOptions));
+    markdownOptions.siteSettings = this.siteSettings;
+
+    this.set('preview', cook(value));
     Ember.run.scheduleOnce('afterRender', () => {
       if (this._state !== "inDOM") { return; }
       const $preview = this.$('.d-editor-preview');
@@ -326,15 +330,15 @@ export default Ember.Component.extend({
             return resolve(["slight_smile", "smile", "wink", "sunny", "blush"]);
           }
 
-          if (Discourse.Emoji.translations[full]) {
-            return resolve([Discourse.Emoji.translations[full]]);
+          if (translations[full]) {
+            return resolve([translations[full]]);
           }
 
-          const options = Discourse.Emoji.search(term, {maxResults: 5});
+          const options = emojiSearch(term, {maxResults: 5});
 
           return resolve(options);
         }).then(list => list.map(code => {
-          return {code, src: Discourse.Emoji.urlFor(code)};
+          return {code, src: emojiUrlFor(code)};
         })).then(list => {
           if (list.length) {
             list.push({ label: I18n.t("composer.more_emoji") });
@@ -471,6 +475,15 @@ export default Ember.Component.extend({
     }
   },
 
+  _replaceText(oldVal, newVal) {
+    const val = this.get('value');
+    const loc = val.indexOf(oldVal);
+    if (loc !== -1) {
+      this.set('value', val.replace(oldVal, newVal));
+      this._selectText(loc + newVal.length, 0);
+    }
+  },
+
   _addText(sel, text) {
     const $textarea = this.$('textarea.d-editor-input');
     const insert = `${sel.pre}${text}`;
@@ -523,7 +536,6 @@ export default Ember.Component.extend({
       const origLink = this.get('linkUrl');
       const linkUrl = (origLink.indexOf('://') === -1) ? `http://${origLink}` : origLink;
       const sel = this._lastSel;
-
 
       if (Ember.isEmpty(linkUrl)) { return; }
 

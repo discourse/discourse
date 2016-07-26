@@ -81,6 +81,10 @@ describe FileStore::S3Store do
 
       SiteSetting.stubs(:s3_region).returns("us-east-2")
       expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3_upload_bucket.s3-us-east-2.amazonaws.com")
+
+      SiteSetting.stubs(:s3_region).returns("cn-north-1")
+      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3_upload_bucket.s3.cn-north-1.amazonaws.com.cn")
+
     end
 
   end

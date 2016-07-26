@@ -564,7 +564,6 @@ ar:
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
       disable_jump_reply: "لاتذهب إلى مشاركتي بعد الرد"
       dynamic_favicon: "إعرض عدد المواضيع الجديدة والمحدثة في أيقونة المتصفح"
-      edit_history_public: "جعل المستخدمين الاخرين يطلعون على تعديلاتي"
       external_links_in_new_tab: "إفتح كل الروابط الخارجية في صفحة جديدة"
       enable_quoting: "فعل خاصية إقتباس النصوص المظللة"
       change: "تغيير"

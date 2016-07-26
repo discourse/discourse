@@ -1,4 +1,5 @@
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend({
   needs: ['modal'],
@@ -111,7 +112,9 @@ export default Ember.Controller.extend({
     output += `${pollHeader}\n`;
 
     if (pollOptions.length > 0 && !isNumber) {
-      output += `${pollOptions.split("\n").map(option => `* ${option}`).join("\n")}\n`;
+      pollOptions.split("\n").forEach(option => {
+        if (option.length !== 0) output += `* ${option}\n`;
+      });
     }
 
     output += '[/poll]';
@@ -131,7 +134,7 @@ export default Ember.Controller.extend({
       options = { failed: true, reason: I18n.t("poll.ui_builder.help.options_count") };
     }
 
-    return Discourse.InputValidation.create(options);
+    return InputValidation.create(options);
   },
 
   _comboboxOptions(start_index, end_index) {

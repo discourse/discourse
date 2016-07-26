@@ -1,3 +1,5 @@
+import PreloadStore from 'preload-store';
+
 export default {
   name: 'localization',
   after: 'inject-objects',

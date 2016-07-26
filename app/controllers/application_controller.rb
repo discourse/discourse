@@ -44,6 +44,7 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_to_login_if_required
   before_filter :check_xhr
   after_filter  :add_readonly_header
+  after_filter  :perform_refresh_session
 
   layout :set_layout
 
@@ -57,6 +58,10 @@ class ApplicationController < ActionController::Base
 
   def add_readonly_header
     response.headers['Discourse-Readonly'] = 'true' if Discourse.readonly_mode?
+  end
+
+  def perform_refresh_session
+    refresh_session(current_user)
   end
 
   def slow_platform?
@@ -315,9 +320,7 @@ class ApplicationController < ActionController::Base
   def post_ids_including_replies
     post_ids = params[:post_ids].map {|p| p.to_i}
     if params[:reply_post_ids]
-      post_ids << PostReply.where(post_id: params[:reply_post_ids].map {|p| p.to_i}).pluck(:reply_id)
-      post_ids.flatten!
-      post_ids.uniq!
+      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map {|p| p.to_i}).pluck(:reply_id)
     end
     post_ids
   end

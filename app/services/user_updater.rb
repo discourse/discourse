@@ -8,6 +8,7 @@ class UserUpdater
   }
 
   TAG_NAMES = {
+    watching_first_post_tags: :watching_first_post,
     watched_tags: :watching,
     tracked_tags: :tracking,
     muted_tags: :muted
@@ -24,7 +25,6 @@ class UserUpdater
     :enable_quoting,
     :dynamic_favicon,
     :disable_jump_reply,
-    :edit_history_public,
     :automatically_unpin_topics,
     :digest_after_minutes,
     :new_topic_duration_minutes,

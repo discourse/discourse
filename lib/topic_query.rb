@@ -20,6 +20,7 @@ class TopicQuery
                      visible
                      category
                      tags
+                     no_tags
                      order
                      ascending
                      no_subcategories
@@ -465,6 +466,9 @@ class TopicQuery
           else
             result = result.where("tags.name in (?)", @options[:tags])
           end
+        elsif @options[:no_tags]
+          # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
+          result = result.where.not(:id => TopicTag.select(:topic_id).uniq)
         end
       end
 
@@ -699,7 +703,7 @@ class TopicQuery
 
     def random_suggested(topic, count, excluded_topic_ids=[])
       result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
-      excluded_topic_ids += Category.pluck(:topic_id).compact
+      excluded_topic_ids += Category.topic_ids.to_a
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
       result = remove_muted_categories(result, @user)

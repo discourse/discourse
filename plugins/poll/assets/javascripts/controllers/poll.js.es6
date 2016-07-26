@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
@@ -106,6 +107,11 @@ export default Ember.Controller.extend({
 
   castVotesDisabled: Em.computed.not("canCastVotes"),
 
+  @computed("castVotesDisabled")
+  castVotesButtonClass(castVotesDisabled) {
+    return `cast-votes ${castVotesDisabled ? '' : 'btn-primary'}`;
+  },
+
   @computed("loading", "post.user_id", "post.topic.archived")
   canToggleStatus(loading, userId, topicArchived) {
     return this.currentUser &&
@@ -137,7 +143,7 @@ export default Ember.Controller.extend({
 
       this.set("loading", true);
 
-      Discourse.ajax("/polls/vote", {
+      ajax("/polls/vote", {
         type: "PUT",
         data: {
           post_id: this.get("post.id"),
@@ -175,7 +181,7 @@ export default Ember.Controller.extend({
           if (confirmed) {
             self.set("loading", true);
 
-            Discourse.ajax("/polls/toggle_status", {
+            ajax("/polls/toggle_status", {
               type: "PUT",
               data: {
                 post_id: self.get("post.id"),

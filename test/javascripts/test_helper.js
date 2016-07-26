@@ -1,7 +1,6 @@
 /*global document, sinon, QUnit, Logster */
 
 //= require env
-//= require preload_store
 //= require probes
 //= require jquery.debug
 //= require jquery.ui.widget
@@ -13,18 +12,19 @@
 //= require fake_xml_http_request
 //= require route-recognizer
 //= require pretender
+//= require loader
+//= require preload-store
 
 //= require locales/i18n
 //= require locales/en
 
-//= require vendor
-
-//= require htmlparser.js
-
 // Stuff we need to load first
+//= require vendor
+//= require ember-shim
+//= require pretty-text-bundle
 //= require main_include
+//= require htmlparser.js
 //= require admin
-//= require_tree ../../app/assets/javascripts/defer
 
 //= require sinon-1.7.1
 //= require sinon-qunit-1.0.0
@@ -41,13 +41,8 @@
 //
 //= require jquery.magnific-popup-min.js
 
+window.TestPreloadStore = require('preload-store').default;
 window.inTestEnv = true;
-
-window.assetPath = function(url) {
-  if (url.indexOf('defer') === 0) {
-    return "/assets/" + url;
-  }
-};
 
 // Stop the message bus so we don't get ajax calls
 window.MessageBus.stop();
@@ -81,6 +76,13 @@ function dup(obj) {
   return jQuery.extend(true, {}, obj);
 }
 
+function resetSite() {
+  var createStore = require('helpers/create-store').default;
+  var siteAttrs = dup(fixtures['site.json'].site);
+  siteAttrs.store = createStore();
+  Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
+}
+
 QUnit.testStart(function(ctx) {
   server = createPretendServer();
 
@@ -90,14 +92,15 @@ QUnit.testStart(function(ctx) {
   Discourse.BaseUrl = "localhost";
   Discourse.Session.resetCurrent();
   Discourse.User.resetCurrent();
-  Discourse.Site.resetCurrent(Discourse.Site.create(dup(fixtures['site.json'].site)));
+  resetSite();
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {
     _DiscourseURL.redirectedTo = url;
   };
 
-  PreloadStore.reset();
+  var ps = require('preload-store').default;
+  ps.reset();
 
   window.sandbox = sinon.sandbox.create();
   window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
@@ -137,3 +140,6 @@ Object.keys(requirejs.entries).forEach(function(entry) {
     require(entry, null, null, true);
   }
 });
+require('mdtest/mdtest', null, null, true);
+resetSite();
+

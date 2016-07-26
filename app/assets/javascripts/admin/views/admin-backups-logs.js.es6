@@ -1,5 +1,6 @@
 import debounce from 'discourse/lib/debounce';
 import { renderSpinner } from 'discourse/helpers/loading-spinner';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default Ember.View.extend({
   classNames: ["admin-backups-logs"],
@@ -19,7 +20,7 @@ export default Ember.View.extend({
       let formattedLogs = this.get("formattedLogs");
       for (let i = this.get("index"), length = logs.length; i < length; i++) {
         const date = logs[i].get("timestamp"),
-              message = Discourse.Utilities.escapeExpression(logs[i].get("message"));
+              message = escapeExpression(logs[i].get("message"));
         formattedLogs += "[" + date + "] " + message + "\n";
       }
       // update the formatted logs & cache index

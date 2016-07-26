@@ -12,22 +12,36 @@
   display: none;
 }
 
+
+$label-width: 92px;
+$input-width: 220px;
+
 .create-account {
+  table {
+    td.label {
+      width: $label-width;
+    }
+
+    td input {
+      width: $input-width;
+    }
+  }
+
   .user-field.confirm {
     margin-top: 20px;
   }
 
   .user-field {
     label {
-      width: 92px;
+      width: $label-width;
       float: left;
     }
     input[type=text] {
-      width: 220px;
+      width: $input-width;
       margin-bottom: 0;
     }
     .controls {
-      margin-left: 92px;
+      margin-left: $label-width;
       margin-bottom: 15px;
       label {
         width: auto;

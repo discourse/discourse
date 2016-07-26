@@ -1,5 +1,7 @@
+import { ajax } from 'discourse/lib/ajax';
 import DiscourseURL from 'discourse/lib/url';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
+import { selectedText } from 'discourse/lib/utilities';
 
 export function isValidLink($link) {
   return ($link.hasClass("track-link") ||
@@ -9,7 +11,7 @@ export function isValidLink($link) {
 export default {
   trackClick(e) {
     // cancel click if triggered as part of selection.
-    if (Discourse.Utilities.selectedText() !== "") { return false; }
+    if (selectedText() !== "") { return false; }
 
     var $link = $(e.currentTarget);
 
@@ -63,7 +65,7 @@ export default {
 
     // if they want to open in a new tab, do an AJAX request
     if (wantsNewWindow(e)) {
-      Discourse.ajax("/clicks/track", {
+      ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
@@ -104,7 +106,7 @@ export default {
 
     // If we're on the same site, use the router and track via AJAX
     if (DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
-      Discourse.ajax("/clicks/track", {
+      ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,

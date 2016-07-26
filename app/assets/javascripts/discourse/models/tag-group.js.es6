@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import computed from 'ember-addons/ember-computed-decorators';
 
@@ -17,7 +18,7 @@ const TagGroup = RestModel.extend({
     this.set('savingStatus', I18n.t('saving'));
     this.set('saving', true);
 
-    return Discourse.ajax(url, {
+    return ajax(url, {
       data: {
         name: this.get('name'),
         tag_names: this.get('tag_names'),
@@ -33,7 +34,7 @@ const TagGroup = RestModel.extend({
   },
 
   destroy() {
-    return Discourse.ajax("/tag_groups/" + this.get('id'), {type: "DELETE"});
+    return ajax("/tag_groups/" + this.get('id'), {type: "DELETE"});
   }
 });
 

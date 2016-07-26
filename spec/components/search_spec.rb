@@ -213,6 +213,10 @@ describe Search do
         # stop words should work
         results = Search.execute('this', search_context: post1.topic)
         expect(results.posts.length).to eq(4)
+
+        # phrase search works as expected
+        results = Search.execute('"fourth post I am posting"', search_context: post1.topic)
+        expect(results.posts.length).to eq(1)
       end
     end
 
@@ -534,6 +538,11 @@ describe Search do
       expect(Search.execute('sam').posts.map(&:id)).to eq([post1.id, post2.id])
       expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
 
+    end
+
+    it 'can tokenize dots' do
+      post = Fabricate(:post, raw: 'Will.2000 Will.Bob.Bill...')
+      expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
     end
 
     it 'supports category slug and tags' do

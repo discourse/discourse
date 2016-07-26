@@ -5,6 +5,14 @@ export default Ember.Component.extend({
   shouldHide: false,
   defaultUsernameCount: 0,
 
+  didInsertElement() {
+    this._super();
+
+    if (this.get('focusTarget') === 'usernames') {
+      this.$('input').putCursorAtEnd();
+    }
+  },
+
   @observes('usernames')
   _checkWidth() {
     let width = 0;

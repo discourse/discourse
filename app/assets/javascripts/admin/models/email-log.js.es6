@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import AdminUser from 'admin/models/admin-user';
 
 const EmailLog = Discourse.Model.extend({});
@@ -21,7 +22,7 @@ EmailLog.reopenClass({
     const status = filter.status || "sent";
     filter = _.omit(filter, "status");
 
-    return Discourse.ajax(`/admin/email/${status}.json?offset=${offset}`, { data: filter })
+    return ajax(`/admin/email/${status}.json?offset=${offset}`, { data: filter })
                     .then(logs => _.map(logs, log => EmailLog.create(log)));
   }
 });

@@ -1,5 +1,6 @@
 import { iconHTML } from 'discourse/helpers/fa-icon';
 import StringBuffer from 'discourse/mixins/string-buffer';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default Ember.Component.extend(StringBuffer, {
   classNames: ['topic-statuses'],
@@ -29,7 +30,7 @@ export default Ember.Component.extend(StringBuffer, {
     const self = this;
 
     const renderIcon = function(name, key, actionable) {
-      const title = Discourse.Utilities.escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
+      const title = escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
             startTag = actionable ? "a href" : "span",
             endTag = actionable ? "a" : "span",
             iconArgs = key === 'unpinned' ? { 'class': 'unpinned' } : null,

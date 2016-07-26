@@ -7,7 +7,7 @@ module DiscoursePoll
     def validate_polls
       polls = {}
 
-      extracted_polls = DiscoursePoll::Poll::extract(@post.raw, @post.topic_id)
+      extracted_polls = DiscoursePoll::Poll::extract(@post.raw, @post.topic_id, @post.user_id)
 
       extracted_polls.each do |poll|
         # polls should have a unique name

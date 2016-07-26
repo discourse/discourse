@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 function replaceSpan($e, username, opts) {
   if (opts && opts.group) {
     var extra = "", extraClass = "";
@@ -52,7 +53,7 @@ export function linkSeenMentions($elem, siteSettings) {
 }
 
 export function fetchUnseenMentions($elem, usernames) {
-  return Discourse.ajax("/users/is_local_username", { data: { usernames } }).then(function(r) {
+  return ajax("/users/is_local_username", { data: { usernames } }).then(function(r) {
     found.push.apply(found, r.valid);
     foundGroups.push.apply(foundGroups, r.valid_groups);
     mentionableGroups.push.apply(mentionableGroups, r.mentionable_groups);

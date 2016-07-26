@@ -89,6 +89,19 @@ JS
       end
     end
 
+    def module_transpile(source, root_path, logical_path)
+      klass = self.class
+      klass.protect do
+        klass.v8.eval("console.prefix = 'BABEL: babel-eval: ';")
+
+        transpiled = babel_source(source)
+
+        compiler_source = "new module.exports.Compiler(#{transpiled}, '#{module_name(root_path, logical_path)}', #{compiler_options}).#{compiler_method}()"
+
+        @output = klass.v8.eval(compiler_source)
+      end
+    end
+
     def evaluate(scope, locals, &block)
       return @output if @output
 

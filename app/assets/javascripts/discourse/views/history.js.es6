@@ -1,5 +1,6 @@
 import ModalBodyView from "discourse/views/modal-body";
 import ClickTrack from 'discourse/lib/click-track';
+import { selectedText } from 'discourse/lib/utilities';
 
 export default ModalBodyView.extend({
   templateName: 'modal/history',
@@ -15,7 +16,7 @@ export default ModalBodyView.extend({
       // bypass if we are selecting stuff
       const selection = window.getSelection && window.getSelection();
       if (selection.type === "Range" || selection.rangeCount > 0) {
-        if (Discourse.Utilities.selectedText() !== "") {
+        if (selectedText() !== "") {
           return true;
         }
       }

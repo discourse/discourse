@@ -136,31 +136,22 @@ module Email
       end
     end
 
-    SOFT_BOUNCE_SCORE ||= 1
-    HARD_BOUNCE_SCORE ||= 2
-
     def is_bounce?
       return false unless @mail.bounced? || verp
 
       @incoming_email.update_columns(is_bounce: true)
 
-      if verp
-        bounce_key = verp[/\+verp-(\h{32})@/, 1]
-        if bounce_key && (email_log = EmailLog.find_by(bounce_key: bounce_key))
-          email_log.update_columns(bounced: true)
-          email = email_log.user.try(:email) || @from_email
-          if email.present? && @mail.error_status.present?
-            if @mail.error_status.start_with?("4.")
-              Email::Receiver.update_bounce_score(email, SOFT_BOUNCE_SCORE)
-            else @mail.error_status.start_with?("5.")
-              Email::Receiver.update_bounce_score(email, HARD_BOUNCE_SCORE)
-            end
-          end
-        end
+      if verp && (bounce_key = verp[/\+verp-(\h{32})@/, 1]) && (email_log = EmailLog.find_by(bounce_key: bounce_key))
+        email_log.update_columns(bounced: true)
+        email = email_log.user.try(:email).presence
       end
 
-      if is_auto_generated?
-        Email::Receiver.update_bounce_score(@from_email, SOFT_BOUNCE_SCORE)
+      email ||= @from_email
+
+      if @mail.error_status.present? && @mail.error_status.start_with?("4.")
+        Email::Receiver.update_bounce_score(email, SiteSetting.soft_bounce_score)
+      else
+        Email::Receiver.update_bounce_score(email, SiteSetting.hard_bounce_score)
       end
 
       true
@@ -179,11 +170,19 @@ module Email
 
         if user = User.find_by(email: email)
           user.user_stat.bounce_score += score
-          user.user_stat.reset_bounce_score_after = 30.days.from_now
+          user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
           user.user_stat.save
 
-          if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
-            StaffActionLogger.new(Discourse.system_user).log_revoke_email(user)
+          bounce_score = user.user_stat.bounce_score
+          if user.active && bounce_score >= SiteSetting.bounce_score_threshold_deactivate
+            user.update_columns(active: false)
+            reason = I18n.t("user.deactivated", email: user.email)
+            StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
+          elsif bounce_score >= SiteSetting.bounce_score_threshold
+            # NOTE: we check bounce_score before sending emails, nothing to do
+            # here other than log it happened.
+            reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
+            StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
           end
         end
 

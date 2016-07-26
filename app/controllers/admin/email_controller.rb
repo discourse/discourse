@@ -94,7 +94,7 @@ class Admin::EmailController < Admin::AdminController
                                      .limit(50)
 
     incoming_emails = incoming_emails.where("from_address ILIKE ?", "%#{params[:from]}%") if params[:from].present?
-    incoming_emails = incoming_emails.where("to_addresses ILIKE ? OR cc_addresses ILIKE ?", "%#{params[:to]}%") if params[:to].present?
+    incoming_emails = incoming_emails.where("to_addresses ILIKE :to OR cc_addresses ILIKE :to", to: "%#{params[:to]}%") if params[:to].present?
     incoming_emails = incoming_emails.where("subject ILIKE ?", "%#{params[:subject]}%") if params[:subject].present?
     incoming_emails = incoming_emails.where("error ILIKE ?", "%#{params[:error]}%") if params[:error].present?
 

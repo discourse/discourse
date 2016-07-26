@@ -1,11 +1,12 @@
 export const SEPARATOR = ":";
+import { caretRowCol } from 'discourse/lib/utilities';
 
 export function replaceSpan($elem, categorySlug, categoryLink) {
   $elem.replaceWith(`<a href="${categoryLink}" class="hashtag">#<span>${categorySlug}</span></a>`);
 };
 
 export function categoryHashtagTriggerRule(textarea, opts) {
-  const result = Discourse.Utilities.caretRowCol(textarea);
+  const result = caretRowCol(textarea);
   const row = result.rowNum;
   var col = result.colNum;
   var line = textarea.value.split("\n")[row - 1];

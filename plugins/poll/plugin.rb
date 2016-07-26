@@ -4,14 +4,10 @@
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
 # url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
-enabled_site_setting :poll_enabled
-
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
-
-register_asset "javascripts/poll_dialect.js", :server_side
 
 PLUGIN_NAME ||= "discourse_poll".freeze
 
@@ -147,10 +143,10 @@ after_initialize do
         end
       end
 
-      def extract(raw, topic_id)
+      def extract(raw, topic_id, user_id = nil)
         # TODO: we should fix the callback mess so that the cooked version is available
         # in the validators instead of cooking twice
-        cooked = PrettyText.cook(raw, topic_id: topic_id)
+        cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
         parsed = Nokogiri::HTML(cooked)
 
         extracted_polls = []
@@ -254,6 +250,8 @@ after_initialize do
   end
 
   validate(:post, :validate_polls) do
+    return if !SiteSetting.poll_enabled? && (self.user && !self.user.staff?)
+
     # only care when raw has changed!
     return unless self.raw_changed?
 

@@ -1,4 +1,5 @@
 import { registerUnbound } from 'discourse/lib/helpers';
+import { avatarImg } from 'discourse/lib/utilities';
 
 function renderAvatar(user, options) {
   options = options || {};
@@ -26,7 +27,7 @@ function renderAvatar(user, options) {
       }
     }
 
-    return Discourse.Utilities.avatarImg({
+    return avatarImg({
       size: options.imageSize,
       extraClasses: Em.get(user, 'extras') || options.extraClasses,
       title: title || username,

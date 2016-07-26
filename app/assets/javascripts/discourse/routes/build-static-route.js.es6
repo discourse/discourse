@@ -1,9 +1,10 @@
 import DiscourseRoute from 'discourse/routes/discourse';
+import StaticPage from 'discourse/models/static-page';
 
 export default function(pageName) {
   const route = {
     model() {
-      return Discourse.StaticPage.find(pageName);
+      return StaticPage.find(pageName);
     },
 
     renderTemplate() {

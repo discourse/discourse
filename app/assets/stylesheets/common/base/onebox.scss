@@ -330,9 +330,15 @@ aside.onebox.twitterstatus .onebox-body {
 }
 
 // resize stackexchange onebox image
-aside.onebox.stackexchange .onebox-body img {
-  max-height: 60%;
-  max-width: 10%;
+aside.onebox.stackexchange .onebox-body {
+  img {
+    max-height: 60%;
+    max-width: 10%;
+  }
+
+  .tags {
+    color: gray;
+  }
 }
 
 .onebox-metadata {

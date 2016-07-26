@@ -1,2 +1,4 @@
-//= require jquery_include.js
-//= require ember_include.js
+//= require jquery_include
+//= require ember_include
+//= require loader
+//= require ember-shim

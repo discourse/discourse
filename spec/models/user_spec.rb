@@ -323,9 +323,10 @@ describe User do
       FacebookUserInfo.create(user_id: user.id, username: "sam", facebook_user_id: 1)
       GoogleUserInfo.create(user_id: user.id, email: "sam@sam.com", google_user_id: 1)
       GithubUserInfo.create(user_id: user.id, screen_name: "sam", github_user_id: 1)
+      Oauth2UserInfo.create(user_id: user.id, provider: "linkedin", email: "sam@sam.com", uid: 1)
 
       user.reload
-      expect(user.associated_accounts).to eq("Twitter(sam), Facebook(sam), Google(sam@sam.com), Github(sam)")
+      expect(user.associated_accounts).to eq("Twitter(sam), Facebook(sam), Google(sam@sam.com), Github(sam), linkedin(sam@sam.com)")
 
     end
   end
@@ -1223,7 +1224,6 @@ describe User do
       SiteSetting.default_other_enable_quoting = false
       SiteSetting.default_other_dynamic_favicon = true
       SiteSetting.default_other_disable_jump_reply = true
-      SiteSetting.default_other_edit_history_public = true
 
       SiteSetting.default_topics_automatic_unpin = false
 
@@ -1243,7 +1243,6 @@ describe User do
       expect(options.enable_quoting).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
       expect(options.disable_jump_reply).to eq(true)
-      expect(options.edit_history_public).to eq(true)
       expect(options.automatically_unpin_topics).to eq(false)
       expect(options.email_direct).to eq(false)
       expect(options.new_topic_duration_minutes).to eq(-1)

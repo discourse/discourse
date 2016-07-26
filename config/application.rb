@@ -70,13 +70,9 @@ module Discourse
     end]
 
     config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css',
-                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js',
-                                 'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js']
-
-    # Precompile all defer
-    Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
-      config.assets.precompile << "defer/#{File.basename(file)}"
-    end
+                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload-store.js.es6',
+                                 'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js',
+                                 'pretty-text-bundle.js']
 
     # Precompile all available locales
     Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|

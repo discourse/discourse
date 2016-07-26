@@ -336,11 +336,20 @@ class StaffActionLogger
     }))
   end
 
-  def log_revoke_email(user, opts={})
+  def log_revoke_email(user, reason, opts={})
     UserHistory.create(params(opts).merge({
       action: UserHistory.actions[:revoke_email],
       target_user_id: user.id,
-      details: "Won't be sending emails to '#{user.email}' until #{user.user_stat.reset_bounce_score_after}"
+      details: reason
+    }))
+  end
+
+  def log_user_deactivate(user, reason, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:deactivate_user],
+      target_user_id: user.id,
+      details: reason
     }))
   end
 
