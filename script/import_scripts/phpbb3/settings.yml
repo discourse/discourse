@@ -53,7 +53,7 @@ import:
   polls: true
 
   # When true: each imported user will have the original username from phpBB as its name
-  # When false: the name of each user will be blank
+  # When false: the name of each imported user will be blank unless the username was changed during import
   username_as_name: false
 
   # Map Emojis to smilies used in phpBB. Most of the default smilies already have a mapping, but you can override
