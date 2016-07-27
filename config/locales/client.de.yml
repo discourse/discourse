@@ -117,7 +117,9 @@ de:
       private_topic: "hat das Thema %{when} privat gemacht"
       split_topic: "Thema aufgeteilt, %{when}"
       invited_user: "%{who} eingeladen, %{when}"
+      invited_group: "%{who} eingeladen, %{when}"
       removed_user: "%{who} entfernt, %{when}"
+      removed_group: "%{who} entfernt, %{when}"
       autoclosed:
         enabled: 'geschlossen, %{when}'
         disabled: 'geöffnet, %{when}'
@@ -253,7 +255,7 @@ de:
     undo: "Rückgängig machen"
     revert: "Verwerfen"
     failed: "Fehlgeschlagen"
-    switch_to_anon: "Anonymer Modus"
+    switch_to_anon: "Anonymen Modus beginnen"
     switch_from_anon: "Anonymen Modus beenden"
     banner:
       close: "Diesen Banner ausblenden."
@@ -352,6 +354,9 @@ de:
         watching:
           title: "Beobachten"
           description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
+        watching_first_post:
+          title: "Ersten Beitrag beobachten"
+          description: "Du erhältst nur eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema in dieser Gruppe."
         tracking:
           title: "Verfolgen"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
@@ -362,18 +367,18 @@ de:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Gruppe."
     user_action_groups:
-      '1': "Abgegebene Likes"
-      '2': "Erhaltene Likes"
-      '3': "Lesezeichen"
-      '4': "Themen"
-      '5': "Beiträge"
-      '6': "Antworten"
-      '7': "Erwähnungen"
-      '9': "Zitate"
-      '11': "Änderungen"
-      '12': "Gesendete Objekte"
-      '13': "Posteingang"
-      '14': "Ausstehend"
+      "1": "Abgegebene Likes"
+      "2": "Erhaltene Likes"
+      "3": "Lesezeichen"
+      "4": "Themen"
+      "5": "Beiträge"
+      "6": "Antworten"
+      "7": "Erwähnungen"
+      "9": "Zitate"
+      "11": "Änderungen"
+      "12": "Gesendete Objekte"
+      "13": "Posteingang"
+      "14": "Ausstehend"
     categories:
       all: "Alle Kategorien"
       all_subcategories: "alle"
@@ -446,10 +451,11 @@ de:
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
-      dismiss_notifications: "Alle als gelesen markieren"
+      dismiss_notifications: "Alles ausblenden"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
+      edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       change: "ändern"
@@ -470,12 +476,21 @@ de:
           Stummgeschaltete Themen und Kategorien werden in diesen E-Mails nicht eingeschlossen.
         daily: "Aktualisierungen täglich senden"
         individual: "Für jeden Beitrag eine E-Mail senden"
-        many_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa {{dailyEmailEstimate}} pro Tag)."
-        few_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (weniger als 2 pro Tag)."
+        many_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa {{dailyEmailEstimate}} pro Tag)"
+        few_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa 2 pro Tag)"
+      tag_settings: "Schlagwörter"
+      watched_tags: "Beobachtet"
+      watched_tags_instructions: "Du wirst automatisch alle neuen Themen imit diesen Schlagwörtern beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      tracked_tags: "Verfolgt"
+      tracked_tags_instructions: "Du wirst automatisch allen neuen Themen mit diesen Schlagwörtern folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      muted_tags: "Stummgeschaltet"
+      muted_tags_instructions: "Du erhältst keine Benachrichtigungen über neue Themen mit diesen Schlagwörtern und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       watched_categories: "Beobachtet"
-      watched_categories_instructions: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten und über alle neuen Beiträge und Themen benachrichtigt werden. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      watched_categories_instructions: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       tracked_categories: "Verfolgt"
       tracked_categories_instructions: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      watched_first_post_categories: "Ersten Beitrag beobachten"
+      watched_first_post_categories_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       delete_account: "Lösche mein Benutzerkonto"
@@ -488,6 +503,7 @@ de:
       muted_users: "Stummgeschaltet"
       muted_users_instructions: "Alle Benachrichtigungen von diesem Benutzer unterdrücken."
       muted_topics_link: "Zeige stummgeschaltete Themen"
+      watched_topics_link: "Zeige beobachtete Themen"
       automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
       staff_counters:
         flags_given: "hilfreiche Meldungen"
@@ -517,7 +533,7 @@ de:
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
       change_username:
         title: "Benutzernamen ändern"
-        confirm: "Wenn du deinen Benutzername änderst, werden alle vorherigen Zitate deiner Beiträge und @name Erwähnungen nicht mehr funktionieren, und deine Beitragshistorie wird unterbruchen. Bist du dir ganz sicher, dass du das machen möchtest?"
+        confirm: "Wenn du deinen Benutzernamen änderst, werden alle vorherigen Zitate deiner Beiträge und Erwähnungen deines vorherigen @Namens nicht mehr funktonieren. Bist du dir ganz sicher, dass du das tun möchtest?"
         taken: "Der Benutzername ist bereits vergeben."
         error: "Bei der Änderung deines Benutzernamens ist ein Fehler aufgetreten."
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
@@ -601,7 +617,7 @@ de:
         always: "immer"
         never: "nie"
       email_digests:
-        title: "Wenn ich nicht vorbeischaue, sende mir eine E-Mail-Zusammenfassung beliebter Themen und Antworten an:"
+        title: "Sende mir eine E-Mail-Zusammenfassung mit beliebten Themen und Antworten, wenn ich länger nicht hier war:"
         every_30_minutes: "alle 30 Minuten"
         every_hour: "stündlich"
         daily: "täglich"
@@ -811,6 +827,7 @@ de:
       title: "Nachricht"
       invite: "Andere einladen..."
       remove_allowed_user: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
+      remove_allowed_group: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
     email: 'E-Mail-Adresse'
     username: 'Benutzername'
     last_seen: 'Zuletzt gesehen'
@@ -942,6 +959,7 @@ de:
       quote_text: "Zitat"
       code_title: "Vorformatierter Text"
       code_text: "vorformatierten Text mit 4 Leerzeichen einrücken"
+      paste_code_text: "Tippe oder füge den Code hier ein"
       upload_title: "Upload"
       upload_description: "gib hier eine Beschreibung des Uploads ein"
       olist_title: "Nummerierte Liste"
@@ -968,6 +986,7 @@ de:
     notifications:
       title: "Benachrichtigung über @Name-Erwähnungen, Antworten auf deine Beiträge und Themen, Nachrichten, usw."
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
+      empty: "Keine Benachrichtigungen gefunden."
       more: "ältere Benachrichtigungen anzeigen"
       total_flagged: "Anzahl der gemeldeten Beiträge"
       mentioned: "<i title='erwähnt' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -988,6 +1007,7 @@ de:
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Neues Thema</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> Eine Nachricht in deinem {{group_name}} Postfach</p>"
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} Nachrichten in deinem {{group_name}} Postfach</p>"
@@ -1188,20 +1208,21 @@ de:
         title: Ändere wie häufig du zu diesem Thema benachrichtigt wirst
         reasons:
           mailing_list_mode: "Du hast den Mailinglisten-Modus aktiviert, daher wirst du über Antworten zu diesem Thema per E-Mail benachrichtigt"
-          '3_6': 'Du wirst Benachrichtigungen erhalten, weil du diese Kategorie beobachtest.'
-          '3_5': 'Du wirst Benachrichtigungen erhalten, weil dieses Thema automatisch von dir beobachtet wird.'
-          '3_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
-          '3_1': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema erstellt hast.'
-          '3': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
-          '2_8': 'Du wirst Benachrichtigungen erhalten, da du diese Kategorie verfolgst.'
-          '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
-          '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
-          '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
-          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
-          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
-          '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
-          '0_2': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
-          '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
+          "3_10": 'Du wirst Benachrichtigungen erhalten, weil du ein Schlagwort an diesem Thema beobachtest.'
+          "3_6": 'Du wirst Benachrichtigungen erhalten, weil du diese Kategorie beobachtest.'
+          "3_5": 'Du wirst Benachrichtigungen erhalten, weil dieses Thema automatisch von dir beobachtet wird.'
+          "3_2": 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
+          "3_1": 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema erstellt hast.'
+          "3": 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
+          "2_8": 'Du wirst Benachrichtigungen erhalten, da du diese Kategorie verfolgst.'
+          "2_4": 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
+          "2_2": 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
+          "2": 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
+          "1_2": 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          "1": 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          "0_7": 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
+          "0_2": 'Du ignorierst alle Benachrichtigungen dieses Themas.'
+          "0": 'Du ignorierst alle Benachrichtigungen dieses Themas.'
         watching_pm:
           title: "Beobachten"
           description: "Du wirst über jeden neuen Beitrag in dieser Unterhaltung benachrichtigt und die Anzahl der neuen Beiträge wird angezeigt."
@@ -1295,6 +1316,7 @@ de:
         email_or_username_placeholder: "E-Mail-Adresse oder Benutzername"
         action: "Einladen"
         success: "Wir haben den Benutzer gebeten, sich an dieser Unterhaltung zu beteiligen."
+        success_group: "Wir haben die Gruppe eingeladen, an dieser Nachricht mitzuwirken."
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
         group_name: "Gruppenname"
       controls: "Weitere Aktionen"
@@ -1620,6 +1642,9 @@ de:
         watching:
           title: "Beobachten"
           description: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über jeden neuen Beitrag in jedem Thema benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
+        watching_first_post:
+          title: "Ersten Beitrag beobachten"
+          description: "Du erhältst eine Benachrichtigung fnur ür den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
         tracking:
           title: "Verfolgen"
           description: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
@@ -1891,11 +1916,11 @@ de:
     google_search: |
       <h3>Mit Google suchen</h3>
       <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
       </p>
     tagging:
       all_tags: "Alle Schlagwörter"
@@ -1919,6 +1944,9 @@ de:
         watching:
           title: "Beobachten"
           description: "Du wirst automatisch alle neuen Themen mit diesem Schlagwort beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Thema erscheinen."
+        watching_first_post:
+          title: "Ersten Beitrag beobachten"
+          description: "Du erhältst nur eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesem Schlagwort."
         tracking:
           title: "Verfolgen"
           description: "Du wirst automatisch alle neuen Themen mit diesem Schlagwort folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."

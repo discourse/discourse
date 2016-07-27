@@ -20,9 +20,9 @@ de:
     month_names: [null, Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "vormittags"
     pm: "nachmittags"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Themen"
   posts: "Beiträge"
@@ -51,7 +51,6 @@ de:
         topic_not_found_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema gelöscht wurde."
         topic_closed_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema geschlossen wurde."
         bounced_email_error: "E-Mail ist ein zurückgekommener Zustellungsbericht."
-        auto_generated_email_reply: "E-Mail enthält eine Antwort auf eine automatisch erzeugte E-Mail."
         screened_email_error: "Passiert, wenn die Absenderadresse schon einmal gefiltert wurde."
   errors: &errors
     format: '%{attribute} %{message}'
@@ -106,6 +105,9 @@ de:
       max_username_length_range: "Das Maximum darf nicht kleiner als das Minimum sein."
       default_categories_already_selected: "Du kannst keine Kategorie auswählen, welche bereits in einer anderen Liste benutzt wird. "
       s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV oder TXT Format vorliegen."
   backup:
@@ -138,7 +140,7 @@ de:
   too_many_mentions:
     one: "Entschuldigung, du kannst nur einen anderen Benutzer in einem Beitrag erwähnen."
     other: "Entschuldigung, du kannst nur %{count} Benutzer in einem Beitrag erwähnen."
-  no_mentions_allowed_newuser: "Entschuldigung, neue Benutzer können andere Nutzer nicht erwähnen."
+  no_mentions_allowed_newuser: "Entschuldigung, neue Benutzer können andere Benutzer nicht erwähnen."
   too_many_mentions_newuser:
     one: "Entschuldige, neue Benutzer können nur einen anderen Benutzer in einem Beitrag erwähnen."
     other: "Entschuldige, neue Benutzer können nur %{count} Benutzer in einem Beitrag erwähnen."
@@ -210,59 +212,34 @@ de:
     until_posts:
       one: "1 Beitrag"
       other: "%{count} Beiträge"
-    new-topic: |
+    'new-topic': |
       Willkommen bei %{site_name} &mdash; **danke, dass du ein neues Thema erstellst!**
-
       - Klingt der Titel interessant, wenn du ihn laut liest? Ist er eine gute Zusammenfassung?
-
       - Wer sollte sich für dieses Thema interessieren? Warum ist es wichtig? Welche Art Antworten wünschst du dir?
-
       - Verwende gebräuchliche, gut definierte Wörter, damit dein Thema *gefunden* werden kann. Wähle eine Kategorie, um es mit ähnlichen Themen zu gruppieren.
-
       Mehr Tipps findest du in [unseren Community-Richtlinien](/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
-    new-reply: |
+    'new-reply': |
       Willkommen bei %{site_name} &mdash; **Danke für deinen Beitrag zum Thema!**
-
       - Fügt dein Beitrag dem Gespräch etwas Neues hinzu, und sei es auch wenig?
-
       - Behandle deine Gesprächspartner mit demselben Respekt, den du von ihnen erwartest.
-
       - Kritik ist in Ordnung, aber bitte kritisiere nur *Ideen*, nicht Menschen.
-
       Beachte bitte auch [unsere Richtlinien](/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} Beiträgen angezeigt.
     avatar: |
-      ### Wie wäre es mit einem Bild für Deinen Account?
-
       Du hast schon einige Themen und Antworten geschrieben, aber Dein Profilbild ist nicht so einzigartig, wie Du es bist -- es ist nur ein Buchstabe.
-
       Vielleicht schaust Du mal in **[Dein Benutzerprofil](%{profile_path})** und lädst dort ein Bild hoch, das etwas über Dich aussagt?
-
       Es ist einfacher, Diskussionen zu folgen und interessante Leute zu finden, wenn jeder ein eindeutiges Profilbild hat!
     sequential_replies: |
-      ### Bitte antworte mehreren Beiträge gleichzeitig
-
       Anstatt mehrmals hintereinander in einem Thema zu antworten, versuche bitte, einen einzigen Beitrag zu verfassen, der Zitate älterer Antworten enthält oder @Erwähnungen verwendet.
-
       Du kannst deine letzte Antwort bearbeiten und ein Zitat hinzufügen, indem Du den jeweiligen Text markierst und dann auf den erscheinenden <b>Antwort zitieren</b> Knopf klickst.
-
       Es ist für jeden einfacher Themen zu lesen, die wenige tiefgründige Antworten enthalten und nicht viele kurze Einzelantworten.
     dominating_topic: |
-      ### Lass auch andere die Konversation mitgestalten
-
       Dieses Thema ist dir eindeutig wichtig &ndash; du hast mehr als %{percent}% aller Antworten verfasst.
-
       Bist du sicher, dass du anderen Benutzern genügend Zeit lässt, ihre eigenen Sichtweisen darzulegen?
     too_many_replies: |
-      ### Du hast das Antwort-Limit für dieses Thema erreicht.
-
       Es tut uns leid, aber neue Benutzer sind zur Zeit auf  %{newuser_max_replies_per_topic} Antworten im gleichen Thema beschränkt.
-
       Anstelle einer weiteren Antwort, bitte überlege eine deiner vorherigen Antworten zu editieren oder besuche andere Themen.
     reviving_old_topic: |
-      ### Dieses Thema neu beleben?
-
       Die letzte Antwort zu diesem Thema ist jetzt über %{days} Tage alt. Deine Antwort wird das Thema an den Anfang der Liste verschieben und alle an der Konversation beteiligten benachrichtigen.
-
       Bist du sicher, dass du diese alte Konversation weiterführen willst?
   activerecord:
     attributes:
@@ -275,6 +252,7 @@ de:
       user_profile:
         bio_raw: "Über mich"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -295,7 +273,9 @@ de:
           attributes:
             hex:
               invalid: "ist keine gültige Farbe"
-      <<: *errors
+        post_reply:
+          base:
+            different_topic: "Beitrag und Antwort müssen zum gleichen Thema gehören."
   user_profile:
     no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Benutzerprofils eingetragen</div>"
@@ -308,7 +288,18 @@ de:
   assets_topic_body: "Dies ist ein fester Beitrag, der nur für Mitarbeiter sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Willkommen in der Lounge"
-    body: "\nGratuliere! :confetti_ball:\n\nWenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.\n \nDu kannst nun &hellip;\n\n* den Titel eines jeden Themas ändern\n* Themen in andere Kategorien verschieben\n* Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)\n* auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist\n\nHier ist die [aktuelle Liste aller Stammgäste](/badges/3/regular). Vergiss nicht, hallo zu sagen!\n\nVielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!\n\n(Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)\n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
+    body: |
+      Gratuliere! :confetti_ball:
+      Wenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.
+      Du kannst nun &hellip;
+      * den Titel eines jeden Themas ändern
+      * Themen in andere Kategorien verschieben
+      * Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)
+      * auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist
+      Hier ist die [aktuelle Liste aller Stammgäste](/badges/3/regular). Vergiss nicht, hallo zu sagen!
+      Vielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!
+      (Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Über die Kategorie %{category}"
     replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Richtlinie wird in der Kategorienauswahl angezeigt, versuche also weniger als 200 Zeichen zu benutzen. **Bis du diese Beschreibung geändert oder Themen angelegt hast, wird diese Kategorie nicht auf der Kategorie-Seite angezeigt.**)"
@@ -530,17 +521,20 @@ de:
         make: "Dieses Thema ist jetzt ein Banner. Es wird auf jeder Seite ganz oben angezeigt, bis es vom Benutzer ausgeblendet wird."
         remove: "Dieses Thema ist jetzt kein Banner mehr. Es wird nicht mehr auf jeder Seite ganz oben angezeigt."
   unsubscribed:
-    title: 'Abo abbestellt'
-    description: "Dein Abo wurde abbestellt. Wir werden dich nicht wieder kontaktieren!"
-    oops: "Bitte klicke unten, falls du das nicht tun wolltest."
-    error: "Beim Löschen des Abonnements trat ein Fehler auf."
-    preferences_link: "Du kannst diese E-Mails in deinen <a href='/my/preferences'>Einstellungen</a> abbestellen."
-    different_user_description: "Du bist gerade als ein anderer Benutzer angemeldet als der, an den die Zusammenfassung gesendet wurde. Bitte melde dich ab und versuche es erneut."
-    not_found_description: "Entschuldige, wir konnten dein Abo nicht abbestellen. Möglicherweise ist der Link aus deiner E-Mail veraltet."
-  resubscribe:
-    action: "Abo wieder aufnehmen"
-    title: "Abo wieder aufgenommen!"
-    description: "Dein Abo wurde wieder aufgenommen."
+    title: "Abbestellt!"
+    description: "Du hast die Benachrichtigungen erfolgreich abbestellt. Um deine E-Mail-Einstellungen zu ändern, <a href='%{url}%'>besuche deine Einstellungen</a>."
+    topic_description: "Um %{link} wieder zu abonnieren, verwende die Benachrichtigungseinstellungen, die du am Ende und rechts von jedem Thema findest."
+  unsubscribe:
+    title: "Abbestellen"
+    stop_watching_topic: "Thema nicht mehr beobachten, %{link}"
+    mute_topic: "Alle Benachrichtigungen für dieses Thema stummschalten, %{link}"
+    unwatch_category: "Themen in %{category} nicht mehr beobachten"
+    mailing_list_mode: "Mailinglisten-Modus ausschalten"
+    disable_digest_emails: "Sende keine E-Mail-Zusammenfassungen mehr"
+    all: "Sende mir keine E-Mail mehr von %{sitename}"
+    different_user_description: "Du bist gerade als ein anderer Benutzer angemeldet als der, an den die Zusammenfassung gesendet wurde. Bitte melde dich ab oder beginne den anonymen Modus und versuche es erneut."
+    not_found_description: "Entschuldige, wir konnten dein Abo nicht abbestellen. Kann es sein, dass der Link aus deiner E-Mail abgelaufen ist?"
+    log_out: "Abmelden"
   reports:
     visits:
       title: "Nutzerbesuche"
@@ -683,7 +677,6 @@ de:
       yaxis: "Anzahl der Besuche"
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
-    ruby_version_warning: "Du verwendest eine Version von Ruby 2.0.0, die für Probleme bekannt ist. Aktualisiere auf Patchlevel 247 oder höher."
     host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen deiner Website ein."
     gc_warning: 'Dein Server verwendet die Standardparameter für Rubys Garbage-Collector, die nicht optimal sind. Lese dieses Thema über Performanzeinstellungen (en): <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von E-Mails, werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
@@ -740,6 +733,7 @@ de:
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher um externe Bilder lokal herunterzuladen (in Prozent)"
+    download_remote_images_max_days_old: "Externe Bilder nicht herunterladen für Beiträge, die älter als n Tage alt sind."
     disabled_image_download_domains: "Liste von Domänen, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
     editing_grace_period: "Für (n) Sekunden wird nach dem Bearbeiten keine neue Revision im Beitragsverlauf angelegt."
     post_edit_time_limit: "Der Verfasser eines Beitrags kann diesen nur für (n) Minuten nach Absenden des Beitrags bearbeiten. 0 deaktiviert diese Beschränkung."
@@ -754,6 +748,8 @@ de:
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links (schließt übergeordnete Domains ein) allen benutzergenerierten Inhalten 'rel nofollow' hinzu. Die Änderung dieser Einstellung erfordert, dass du sämtliche Markdown-Beiträge aktualisierst: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Eine Liste von Domains auf welchen das Attribut nofollow nicht auf Links gesetzt werden sollte (tld.com erlaubt auch sub.tld.com). Du solltest mindestens die Top-Level Domain dieser Site hinzufügen, damit die Crawler der Suchmaschinen all deinen Content indexieren können. Wenn weitere Teile deiner Website unter anderen Domains zu finden sind, kannst du diese hier ebenfalls hinzufügen."
     post_excerpt_maxlength: "Maximale Länge eines Beitrags-Auszuges bzw. -Zusammfassung."
+    show_pinned_excerpt_mobile: "Zeige einen Auszug hervorgehobener Beiträge in der mobilen Ansicht."
+    show_pinned_excerpt_desktop: "Zeige einen Auszug hervorgehobener Beiträge in der Desktop-Ansicht."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
     onebox_domains_whitelist: "Liste von Domains, deren Inhalte für Oneboxen erlaubt sind; diese Domains sollten OpenGraph oder oEmbed unterstützen. Teste ihre Kompatibilität unter http://iframely.com/debug"
     logo_url: "Das Logo oben links auf deiner Site sollte eine breite, rechteckige Form haben. Wenn du kein Logo auswählst, wird stattdessen `title` angezeigt."
@@ -780,13 +776,13 @@ de:
     background_polling_interval: "Polling-Intervall in Millisekunden für Clients, wenn sich das Browser-Fenster im Hintergrund befindet."
     flags_required_to_hide_post: "Anzahl an Meldungen, die dafür sorgen, dass ein Beitrag automatisch versteckt und der Benutzer benachrichtigt wird (0 für nie)"
     cooldown_minutes_after_hiding_posts: "Minuten die ein Benutzer warten muss, bevor ein Beitrag bearbeitet werden kann, der wegen Meldungen anderer Benutzer versteckt wurde"
-    max_topics_in_first_day: "Maximale Zahl an Themen, die ein Benutzer an seinem ersten Tag auf der Site erstellen kann"
-    max_replies_in_first_day: "Maximale Zahl an Antworten, die ein Benutzer an seinem ersten Tag auf der Site erstellen kann"
+    max_topics_in_first_day: "Maximale Anzahl an Themen, die ein Benutzer in den ersten 24 Stunden nach dem Schreiben seines ersten Beitrags erstellen kann."
+    max_replies_in_first_day: "Maximale Anzahl an Beiträgen, die ein Benutzer in den ersten 24 Stunden nach dem Schreiben seines ersten Beitrags erstellen kann."
     tl2_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 2 (Mitglied) mit diesem Faktor multiplizieren"
     tl3_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 3 (Stammgast) mit diesem Faktor multiplizieren"
     tl4_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 4 (Anführer) mit diesem Faktor multiplizieren"
-    num_flags_to_block_new_user: "Verstecke alle Beiträge eines neuen Benutzers und erlaube keine neuen Beiträge mehr, wenn der neue Benutzer die hier angegebene Zahl an Meldungen bezüglich Spam von num_users_to_block_new_user verschiedenen anderen Benutzern erhalten hat. 0 deaktiviert diese Funktion."
-    num_users_to_block_new_user: "Verstecke alle Beiträge eines neuen Benutzers und erlaube keine neuen Beiträge mehr, wenn der neue Benutzer num_flags_to_block_new_user Meldungen bezüglich Spam von der hier angegebenen Zahl verschiedener anderer Benutzer erhalten hat. 0 deaktiviert diese Funktion."
+    num_spam_flags_to_block_new_user: "Verstecke alle Beiträge eines neuen Benutzers und erlaube keine neuen Beiträge mehr, wenn der neue Benutzer die hier angegebene Zahl an Meldungen bezüglich Spam von num_users_to_block_new_user verschiedenen anderen Benutzern erhalten hat. 0 deaktiviert diese Funktion."
+    num_users_to_block_new_user: "Wenn Beiträge eines neuen Benutzers so viele Spam-Meldungen von num_spam_flags_to_block_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhält, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. 0, um die Funktion zu deaktivieren."
     num_tl3_flags_to_block_new_user: "Wenn Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_block_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhält, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. 0, um die Funktion zu deaktivieren."
     num_tl3_users_to_block_new_user: "Wenn Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_block_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhält, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. 0, um die Funktion zu deaktivieren."
     notify_mods_when_user_blocked: "Wenn ein Benutzer automatisch gesperrt wird, sende eine Nachricht an alle Moderatoren."
@@ -796,6 +792,7 @@ de:
     post_undo_action_window_mins: "Minuten, die ein Benutzer hat, um Aktionen auf einen Beitrag rückgängig zu machen (Like, Meldung, usw.)."
     must_approve_users: "Mitarbeiter müssen alle neuen Benutzerkonten freischalten, bevor diese Zugriff auf die Website erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Site entfernt den Zugriff auch für alle existierenden Benutzer ausser Mitarbeiter!"
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
+    permanent_session_cookie: "Verwende einen dauerhaften Cookie, der nach dem Schließen des Browsers fortbesteht. Wenn du dies deaktivierst, möchtest vielleicht alle programmatisch abmelden."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
     ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, beispielsweise: UA-12345678-9; Siehe http://google.com/analytics"
@@ -905,6 +902,7 @@ de:
     alert_admins_if_errors_per_hour: "Anzahl der Fehler pro Stunde, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. Achtung: Benötigt einen Neustart."
     suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
     limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
+    suggested_topics_max_days_old: "Vorgeschlagene Themen sollten nicht älter als n Tage alt sein."
     clean_up_uploads: "Lösche verwaiste Uploads, um illegales Hosting zu vermeiden. ACHTUNG: du solltest ein Backup deines /uploads-Verzeichnis erstellen, bevor du diese Funktion aktivierst."
     clean_orphan_uploads_grace_period_hours: "Schonfrist (in Stunden), bevor ein verwaister Upload entfernt wird."
     purge_deleted_uploads_grace_period_days: "Schonfrist (in Tagen), bevor ein entfernter Upload endgültig gelöscht wird."
@@ -1073,6 +1071,7 @@ de:
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Site zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Weise Benutzer nicht darauf hin, dass sie ihren Avatar ändern können"
+    daily_performance_report: "Analysiere die NGINX-Logs täglich. Poste anschließend eine Zusammenfassung als Beitrag, welcher nur für Moderatoren oder Administratoren zugänglich ist."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für unkategorisierte Themen in der Themenliste."
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw. um Teilausdrücke zu verwenden"
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-NACHRICHT als global sichtbares Banner an. Deaktiviert bei leerer Nachricht. (HTML ist erlaubt.)"
@@ -1115,6 +1114,7 @@ de:
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl von Stunden auf ihre Überprüfung gewartet haben, sende eine E-Mail an contact_email. Setze sie auf 0, um diese E-Mails zu deaktivieren."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
+    code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
     default_email_digest_frequency: "Wie häufig sollen Benutzer standardmäßig E-Mail-Zusammenfassungen erhalten?"
     default_include_tl0_in_digests: "Beiträge von neuen Benutzern in E-Mail-Zusammenfassungen standardmäßig anzeigen. Benutzer können dies in ihren Einstelllungen ändern."
     default_email_private_messages: "Sende einem Benutzer standardmäßig eine E-Mail, wenn dieser eine Nachricht von einem anderen Benutzer erhält."
@@ -1131,6 +1131,7 @@ de:
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort Funktion für hervorgehobenen Text."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl von neuen und geänderten Beiträgen im Browser-Symbol an."
     default_other_disable_jump_reply: "Springe standardmäßig nicht zum neusten Beitrag des Users, wenn dieser geantwortet hat."
+    default_other_edit_history_public: "Zeige standardmäßig die Beitragshistorie öffentlich an."
     default_other_like_notification_frequency: "Benutzer standardmäßig bei Likes benachrichtigen."
     default_topics_automatic_unpin: "Standardmäßig Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
@@ -1171,21 +1172,6 @@ de:
       reply_by_email_address_is_empty: "Du musst 'reply by email address' definieren, bevor per E-Mail antworten aktiviert wird"
       email_polling_disabled: "Du musst entweder manuelles oder POP3 polling aktivieren, bevor per E-Mail antworten aktiviert wird"
       user_locale_not_enabled: "Du musst zuerst 'allow user locale' aktivieren bevor du dies aktivierst"
-  notification_types:
-    group_mentioned: "%{group_name} wurde auf %{link} erwähnt"
-    mentioned: "%{display_username} hat Dich in %{link} erwähnt."
-    liked: "%{display_username} gefällt deinen Beitrag in %{link}."
-    replied: "%{display_username} hat auf deinen Beitrag in %{link} geantwortet."
-    quoted: "%{display_username} hat deinen Beitrag in %{link} zitiert."
-    edited: "%{display_username} hat deinen Beitrag in %{link} bearbeitet."
-    posted: "%{display_username} hat einen Beitrag in %{link} erstellt."
-    moved_post: "%{display_username} hat deinen Beitrag nach %{link} verschoben."
-    private_message: "%{display_username} hat Dir eine Nachricht geschickt: %{link}"
-    invited_to_private_message: "%{display_username} hat dich zu einer Unterhaltung eingeladen: %{link}"
-    invited_to_topic: "%{display_username} hat dich zu %{link} eingeladen"
-    invitee_accepted: "%{display_username} hat deine Einladung angenommen."
-    linked: "%{display_username} hat dich auf %{link} verlinkt"
-    granted_badge: "Sie haben %{link} verdient"
   search:
     within_post: "#%{post_number} von %{username}"
     types:
@@ -1202,7 +1188,7 @@ de:
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor vieler Beiträge"
   redirected_to_top_reasons:
-    new_user: "Willkommen bei unserer Community! Dies sind die derzeit am beliebtesten Themen."
+    new_user: "Willkommen bei unserer Community! Dies sind die derzeit beliebtesten Themen."
     not_seen_in_a_month: "Willkommen zurück! Wir haben dich länger nicht gesehen. Während deiner Abwesenheit waren dies die beliebtesten Themen."
   move_posts:
     new_topic_moderator_post:
@@ -1308,121 +1294,79 @@ de:
     text_body_template: |
       Jemand (wahrscheinlich du?) hat angefragt, keine E-Mail-Updates mehr von %{site_domain_name} auf dieser Adresse zu erhalten.
       Wenn du keine Benachrichtigungen mehr erhalten möchtest, dann klicke bitte diesen Link:
-
       %{confirm_unsubscribe_link}
-
-
       Wenn du weiterhin E-Mail-Updates erhalten möchtest, dann kannst du diese E-Mail ignorieren.
   invite_mailer:
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
     text_body_template: |
       %{invitee_name} hat dich dazu eingeladen, an einer Diskussion teilzunehmen:
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       > %{site_title} -- %{site_description}
-
       Falls du Interesse hast, klicke auf den nachfolgenden Link:
-
       %{invite_link}
-
       Dies ist eine Einladung von einem vertrauenswürdigen Benutzer. Du kannst deshalb sofort auf die Diskussion antworten.
   custom_invite_mailer:
     subject_template: "%{invitee_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
     text_body_template: |
       %{invitee_name} hat dich zu einer Diskussion eingeladen
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       bei
-
       > %{site_title} -- %{site_description}
-
       Nachricht von %{invitee_name}:
-
       %{user_custom_message}
-
       Wenn du interessiert bist, klicke auf den folgenden Link:
-
       %{invite_link}
-
       Diese Einladung stammt von einem vertrauenswürdigen Benutzer, daher kannst du direkt auf die Diskussion antworten.
   invite_forum_mailer:
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
       %{invitee_name} hat dich zur Teilnahme eingeladen
-
       > **%{site_title}**
       >
       > %{site_description}
-
       Wenn du Interesse hast, klicke auf den nachfolgenden Link:
-
       %{invite_link}
-
       Diese Einladung stammt von einem vertrauenswürdigen Benutzer. Daher wird für dich automatisch ein Konto erstellt.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
       %{invitee_name} hat dich zur Teilnahme eingeladen
-
       > **%{site_title}**
       >
       > %{site_description}
-
       Nachricht von %{invitee_name}:
-
       %{user_custom_message}
-
       Wenn du Interesse hast, klicke auf den nachfolgenden Link:
-
       %{invite_link}
-
       Diese Einladung stammt von einem vertrauenswürdigen Benutzer. Daher wird für dich automatisch ein Konto erstellt.
   invite_password_instructions:
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
     text_body_template: |
       Schön, dass du die Einladung zu %{site_name} angenommen hast -- Willkommen!
-
       Klicke hier um jetzt dein Passwort festzulegen:
       %{base_url}/users/password-reset/%{email_token}
-
       (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail-Adresse einloggen möchtest.)
   test_mailer:
     subject_template: "[%{site_name}] Test der E-Mail-Zustellbarkeit"
     text_body_template: |
       Dies ist eine Testnachricht von
-
       [**%{base_url}**][0]
-
       E-Mail-Zustellung ist kompliziert. Hier sind ein paar wichtige Dinge, die du überprüfen solltest:
-
       - *Vergewissere* dich, dass du die `notification email` E-Mail-Adresse in deinen Einstellungen korrekt setzt. **Die Domain, die in der "from"-Adresse angegeben wird, ist die Domain, gegen die deine E-Mail geprüft wird**.
-
       - Lerne, wie du den Quelltext der E-Mail in deinem E-Mail-Client anzeigen kannst, damit du die E-Mail-Kopfzeilen für weitere Schlüsse zu untersuchen. In Google Mail ist dies die Option "Zeige Original" im Dropdown-Menü in der rechten oberen Ecke jeder E-Mail.
-
       - **WICHTIG:** Hat dein Internetprovider einen Reverse DNS-Record eingetragen, um die Domainnamen und IP-Adressen zu verknüpfen, von denen du E-Mails verschickst? [Prüfe deinen Reverse PTR-Record][2] hier. Wenn dein Internetprovider nicht den richtigen Reverse PTR-Record setzt, ist es unwahrscheinlich, dass eine deiner E-Mails zugestellt wird.
-
       - Ist der [SPF-Record][8] deiner Domain korrekt? [Prüfe deinen SPF-Record][1] hier. Beachte, dass TXT der offizielle Record-Type für SPF ist.
-
       - Ist der [DKIM-Record][3] deiner Domain korrekt? Dies wird die Zustellbarkeit von E-Mails signifikant verbessern. [Prüfe deinen DKIM-Record][7] hier.
-
       - Wenn du deinen eigenen E-Mail-Server betreibst, stelle sicher, dass die IP-Adressen deines E-Mail-Servers auf [keiner E-Mail-Blacklist sind][4]. Stelle auch sicher, dass er in seiner HELO-Nachricht auf jeden Fall einen vollqualifizierten Hostname sendet. Wenn nicht, wird dies dazu führen, dass deine E-Mails von vielen E-Mail-Diensten abgelehnt wird.
-
       - Wir empfehlen dir sehr, **eine Testnachricht an [mail-tester.com][mt] zu schicken**, um sicherzustellen, dass dies alles korrekt funktioniert.
-
       (Der *einfache* Weg liegt darin, ein kostenloses Konto bei [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] oder [Mailjet][mj] zu erstellen, die großzügige und kostenlose E-Mail-Angebote haben, die für kleine Communitys ausreichen sollten. Du wirst allerdings trotzdem die SPF- und DKIM-Einträge in deinen DNS-Einstellungen setzen müssen!)
-
       Wir hoffen, dass du diesen E-Mail-Zustellbarkeits-Test ordentlich erhältst!
-
       Viel Erfolg,
-
       Deine Freunde bei [Discourse](http://www.discourse.org)
-
       [0]: %{base_url}
       [1]: http://www.kitterman.com/spf/validate.html
       [2]: http://mxtoolbox.com/ReverseLookup.aspx
@@ -1439,31 +1383,20 @@ de:
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
-
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
-
       - Aktualisiere mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)**
-
       - Schaue dir im [GitHub-Changelog](https://github.com/discourse/discourse/commits/master) an, was neu ist
-
       - Besuche [meta.discourse.org](http://meta.discourse.org) ffür Neuigkeiten, Diskussionen und Support für Discourse
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
-
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
-
       - Aktualisiere mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)**
-
       - Schaue dir im [GitHub-Changelog](https://github.com/discourse/discourse/commits/master) an, was neu ist
-
       - Besuche [meta.discourse.org](http://meta.discourse.org) ffür Neuigkeiten, Diskussionen und Support für Discourse
-
-      ### Versionshinweise
-
       %{notes}
   queued_posts_reminder:
     subject_template:
@@ -1471,7 +1404,6 @@ de:
       other: "[%{site_name}] %{count} auf Freischaltung wartende Beiträge."
     text_body_template: |
       Hallo,
-
       Beiträge von neuen Benutzern wurden zur Moderation aufgehalten und warten gerade auf Überprüfung. [Akzeptiere sie hier oder lehne sie ab](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community glaubt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
@@ -1487,147 +1419,77 @@ de:
   temporarily_closed_due_to_flags: "Dieses Thema ist vorrübergehend geschlossen. Mehrere User haben dieses Thema gemeldet. "
   system_messages:
     post_hidden:
-      subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
+      subject_template: "Beitrag versteckt wegen Community-Meldungen"
       text_body_template: |
         Hallo,
-
         dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag ausgeblendet wurde.
-
         %{base_url}%{url}
-
         %{flag_reason}
-
         Mehrere Community-Mitglieder haben diesen Beitrag gemeldet, bevor er ausgeblendet wurde, daher prüfe bitte, wie du deinen Beitrag möglicherweise anpassen kannst, um ihr Feedback zu berücksichtigen. **Du kannst deinen Beitrag nach %{edit_delay} Minuten bearbeiten und er wird automatisch wieder sichtbar.**
-
         Wenn der Beitrag jedoch von der Community erneut ausgeblendet wurde, wird er ausgeblendet bleiben, bis sich ein Mitarbeiter darum kümmert – und möglicherweise gibt es weitere Maßnahmen, einschließlich einer möglichen Sperrung deines Kontos.
-
         Weitre Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Hier sind ein paar Tipps für deine ersten Schritt:
-
-        ## Lesen
-
         Um mehr zu lesen, **scrolle einfach immer weiter nach unten!**
-
         Wenn neue Beiträge oder neue Themen eintreffen, erscheinen sie automatisch – ein Neuladen der Seite ist dazu nicht nötig.
-
-        ## Navigation
-
         - Für die Suche, dein Benutzerprofil, oder das <kbd>☰</kbd>-Menü, verwende die **Icon-Schaltflächen oben rechts**.
-
         - Ein Klick auf den Titel eines Themas wird dich immer zum **nächsten ungelesenen Beitrag** im Thema bringen. Um stattdessen am Anfang oder am Ende einzusteigen, klicke auf die Anzahl an Antworten oder das Datum der letzten Aktivität.
-
         <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
         - Während du ein Thema liest, kannst du den Zeitstrahl auf der rechten Seite verwenden, um zum Anfang, zum Ende oder zu deiner letzten Leseposition zu springen. Auf kleineren Bildschirmen klicke auf den Fortschrittsbalken unten rechts, um ihn zu erweitern:
-
         <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
         Du kannst auch <kbd>?</kbd> auf deiner Tastatur drücken für eine Liste super-schneller Tastaturkombinationen.
-
-        ## Antworten
-
         Um ein Zitat einzufügen, markiere den Text, den du zitieren möchtest und klicke auf eine <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Antworten-Schaltfläche, um den Editor zu öffnen. Wiederhole diese Schritte für mehrere Zitate.
-
         <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
         Du kannst immer weiter lesen, während du deine Antwort verfasst, und wir werden automatisch Entwürfe speichern, während du schreibst.
-
         Um jemanden über deine Antwort zu benachrichtigen, erwähne seinen Namen. Tippe `@`, um mit der Auswahl eines Benutzernamens zu beginnen.
-
         <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
         Um einen [Standard-Emoji](http://www.emoji.codes/) zu verwenden, tippe einfach `:` zur Suche nach Name oder verwende klassische Smileys `;)`
-
         <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
         Um eine Zusammenfassung für einen Link zu generieren, füge in auf einer eigenen Zeile ein:
-
         <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
         Deine Antwort kannst du mit einfachem HTML, BBCode oder [Markdown](http://commonmark.org/help/) formatieren:
-
         Das ist **fett**.
         Das ist <b>fett</b>.
         Das ist [b]fett[/b].
-
         Für weitere Formatierungstipps, [probiere unser 10-minütiges, interaktives Tutorial!](http://commonmark.org/help/tutorial/)
-
-        ## Aktionen
-
         Es gibt Aktionsschaltflächen am Ende jedes Beitrags:
-
         <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
         - Um jemanden wissen zu lassen, dass du seinen/ihren Beitrag genossen und geschätzt hast, verwende die **Gefällt mir**-Schaltfläche. Teile etwas Liebe!
-
         - Schnapp’ dir einen kopierbaren Link zu einem beliebigen Beitrag oder Thema über die **Link**-Schaltfläche.
-
         - Verwende die <kbd>&hellip;</kbd> „Mehr anzeigen“-Schaltfläche, um weitere Aktionen anzuzeigen. **Melde**, um den Verfasser oder [unsere Mitarbeiter](%{base_url}/about) vertraulich über ein Problem zu informieren. Setze ein **Lesezeichen**, um den Beitrag später auf deinem Benutzerprofil wiederzufinden.
-
-        ## Benachrichtigungen
-
         Wenn dir jemand antwortet, deinen Beitrag zitiert, deinen `@benutzername` erwähnt oder auch auf deinen Beitrag verlinkt, wird oben rechts auf der Seite automatisch eine Zahl erscheinen. Klicke auf sie, um auf deine **Benachrichtigungen** zuzugreifen.
-
         <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
         Mach’ dir keine Sorgen, dass du einen Beitrag übersiehst – du wirst Benachrichtigungen per E-Mail erhalten, wenn du einmal weg bist.
-
-        ## Einstellungen
-
         - Themen, die weniger als **zwei Tage alt** sind, werden als neu eingestuft.
-
         - Jedes Thema, an dem du dich **aktiv beteiligt** hast (indem du es erstellst, darin antwortest oder lange genug liest) wird automatisch in deinem Namen verfolgt.
-
         Du wirst bei diesen Themen die Anzahl neuer und ungelesener Beiträge sehen:
-
         <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
         Du kannst deine Benachrichtigungen zu jedem Thema über die Benachrichtigungseinstellungen am Ende und auf der rechten Seite jedes Themas verwalten.
-
         <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
         Du kannst auch Benachrichtigungen pro Kategorie einstellen, wenn du jedes Thema einer Kategorie beobachten oder stummschalten möchtest.
-
         Um eine dieser Einstellungen zu ändern, gehe zu [deinen Benutzereinstellungen](%{base_url}/my/preferences).
-
-        ## Vertrauen in die Community
-
         Es ist großartig, dich zu treffen! Während du dich hier beteiligst, werden wir dich besser kennenlernen und deine vorübergehenden Beschränkungen für neue Benutzer werden aufgehoben. Beteilige dich weiter und im Laufe der Zeit wirst du neue [Vertrauensstufen](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) erhalten, die spezielle Fähigkeiten umfassen, die Community gemeinsam zu verwalten.
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
         Danke fürs Anmelden bei %{site_name}, sei willkommen!
-
         %{new_user_tips}
-
         Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
-
         Viel Spaß!
-
         (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
     welcome_invite:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
         Danke, dass du der Einladung zu %{site_name} gefolgt bist -- herzlich willkommen!
-
         Wir haben automatisch das Konto **%{username}** für dich angelegt und du bist bereits angemeldet, aber du kannst deinen Benutzernamen in [deinem Profil][prefs] noch ändern.
-
         Um dich später wieder anzumelden:
-
         1. Verwende bitte **dieselbe E-Mail-Adresse, unter der du die ursprüngliche Einladung erhalten hast**. Ansonsten können wir nicht erkennen, dass du es bist!
-
         2. Wähle ein eindeutiges Passwort in [deinem Profil][prefs] und verwende dieses, um dich anzumelden.
-
         %{new_user_tips}
-
         Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
-
         Viel Spaß!
-
         (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
-
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sicherung erfolgreich abgeschlossen"
@@ -1636,9 +1498,7 @@ de:
       subject_template: "Sicherung fehlgeschlagen"
       text_body_template: |
         Die Sicherung ist fehlgeschlagen.
-
         Hier ist das Protokoll:
-
         ```
         %{logs}
         ```
@@ -1649,9 +1509,7 @@ de:
       subject_template: "Wiederherstellung fehlgeschlagen"
       text_body_template: |
         Die Wiederherstellung ist fehlgeschlagen.
-
         Hier ist das Protokoll:
-
         ```
         %{logs}
         ```
@@ -1662,9 +1520,7 @@ de:
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
       text_body_template: |
         Deine Masseneinladungs-Datei wurde verarbeitet, insgesamt wurden %{sent} Einladungen verschickt und dabei traten %{failed} Fehler auf.
-
         Dies ist das Fehlerprotokoll:
-
         ```
         %{logs}
         ```
@@ -1672,9 +1528,7 @@ de:
       subject_template: "Datenexport abgeschlossen"
       text_body_template: |
         Deine Daten wurden erfolgreich exportiert! :dvd:
-
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
         Dieser Download-Link ist für die nächsten 48 Stunden gültig.
     csv_export_failed:
       subject_template: "Datenexport fehlgeschlagen"
@@ -1683,193 +1537,150 @@ de:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unzureichende Vertrauensstufe"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
-
         Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
     email_reject_user_not_found:
       subject_template: "[%{site_name}] E-Mail-Problem -- Benutzer nicht gefunden"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an einen Mitarbeiter.
     email_reject_screened_email:
       subject_template: "[%{site_name}] E-Mail-Problem -- Blockiertee E-Mail-Adresse"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an einen Mitarbeiter.
     email_reject_inactive_user:
       subject_template: "[%{site_name}] E-Mail-Problem -- Inaktiver Benutzer"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Dein mit dieser E-Mail-Adresse verbundenes Benutzerkonto ist nicht aktiviert. Bitte aktiviere dein Konto bevor du E-Mails sendest.
     email_reject_blocked_user:
       subject_template: "[%{site_name}] E-Mail-Problem -- Blockierter Benutzer"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Dein mit dieser E-Mail-Adresse verbundenes Konto wurde blockiert.
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] E-Mail-Problem -- Antwortender Benutzer stimmt nicht überein"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absende-Adresse oder wende dich an einen Mitarbeiter.
     email_reject_no_account:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Wir konnten kein Konto finden, das zu deiner E-Mail-Adresse passt. Probiere eine andere Absende-Adresse oder wende dich an einen Mitarbeiter.
     email_reject_empty:
       subject_template: "[%{site_name}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Wir haben in deiner E-Mail keinen Inhalt feststellen können.
-
         Wenn du diese E-Mail bekommst, obwohl deine E-Mail Inhalt enthalten hat, versuche es erneut mit weniger Formatierung.
     email_reject_parsing:
       subject_template: "[%{site_name}] E-Mail-Problem -- Inhalt nicht erkannt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Wir konnten keinen Inhalt in deiner E-Mail feststellen. **Versichere dich, dass du den Inhalt oberhalb der erhaltenen E-Mail eingegeben hast** -- Eingebettete Antworten können wir nicht verarbeiten.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] E-Mail-Problem -- Nicht erlaubt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
-
         Du hast nicht die notwendigen Zugriffsrechte, um neue Themen in dieser Kategorie zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] E-Mail-Problem -- Zugriff nicht erlaubt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
-
         Die Kategorie, an die du die E-Mail geschickt hast, erlaubt nur Antworten von Benutzern mit gültigem Konto und von bekannten E-Mail-Adressen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
     email_reject_invalid_post:
       subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Mögliche Gründe sind komplizierte Formatierung und zu lange oder kurze Nachrichten. Bitte versuche es erneut oder schreibe deinen Beitrag über die Website.
     email_reject_invalid_post_specified:
       subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
-        Grund:
-
         %{post_error}
-
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_rate_limit_specified:
       subject_template: "[%{site_name}] E-Mail-Problem -- Begrenzung"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Grund: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] E-Mail-Problem -- Fehlerhafte Beitragsaktion"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Die Beitragsaktion wurde nicht erkannt. Bitte versuche es erneut oder erstelle deinen Beitrag auf der Website, wenn der Fehler weiterhin auftritt.
     email_reject_reply_key:
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekannter Antwort-Schlüssel"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Bitte kontaktiere einen Mitarbeiter.
     email_reject_bad_destination_address:
       subject_template: "[%{site_name}] E-Mail Problem -- Unbekannte An:-Adresse"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Keine der Ziel-E-Mail-Adressen wurde erkannt.  Bitte stell sicher, dass du die E-Mail an die richtige Adresse schickst, die dir von unseren Mitarbeitern genannt wurde.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-Mail-Problem -- Thema nicht gefunden"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Das Thema, auf das du geantwortet hast, existiert nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm Bitte Kontakt mit einem Mitarbeiter auf.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] E-Mail-Problem -- Thema geschlossen"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Mitarbeiter auf.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] E-Mail-Problem -- Automatisch erzeugte Antwort"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
         Deine E-Mail wurde als „automatisch generiert“ markiert, was bedeutet, dass sie automatisch von einem Computer erstellt wurde statt von einem Menschen getippt; wir können diese Arten von E-Mails nicht akzeptieren. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Mitarbeiter auf.
     email_error_notification:
       subject_template: "[%{site_name}] E-Mail-Problem -- POP-Authentifizierungsfehler"
       text_body_template: |
         Leider gab es einen Authentifizierungsfehler beim Abrufen von E-Mails vom POP-Server.
-
         Bitte stelle sicher, dass du die POP-Zugangsdaten in [den Einstellungen](%{base_url}/admin/site_settings/category/email) korrekt konfiguriert hast.
-
         Wenn es eine Weboberfläche für das POP-E-Mail-Postfach gibt, möchtest du dich eventuell dort anmelden und die Einstellungen überprüfen.
     too_many_spam_flags:
       subject_template: "Neues Konto gesperrt"
       text_body_template: |
         Hallo,
-
         dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass deine Beitrage vorübergehend ausgeblendet wurden, weil sie von der Community gemeldet wurden.
-
         Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen gesperrt, bis ein Mitarbeiter dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
-
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Neues Konto gesperrt"
       text_body_template: |
         Hallo,
-
         dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Konto aufgrund einer großen Anzahl von Community-Meldungen vorübergehend gesperrt wurde.
-
         Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen gesperrt, bis ein Mitarbeiter dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
-
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Konto vorübergehend gesperrt"
       text_body_template: |
         Hallo,
-
         dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass als Vorsichtsmaßnahme vorübergehend gesperrt wurde.
-
         Bitte schaue dir weiter Inhalte an, aber du kannst zunächst keine Antworten oder Themen erstellen, [Mitarbeiter](%{base_url}/about) deine aktuellesten Beiträge überprüft hat. Wir bitten um Entschuldigung für die Unannemlichkeiten.
-
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     user_automatically_blocked:
-      subject_template: "Neuer Benutzer %{username} wegen Gemeinschaftsrichtlinien blockiert."
+      subject_template: "Neuer Benutzer %{username} gesperrt wegen Community-Meldungen"
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
-
         Der neue Benutzer  [%{username}](%{user_url}) wurde automatisch blockiert, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
-
         Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Wenn %{username} fälschlich blockiert wurde, so klicke die „Entsperren“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
-
         Der Schwellenwert kann über die Einstellung `block_new_user` geändert werden.
     spam_post_blocked:
       subject_template: "Beiträge des neuen Benutzers ${username} wegen mehrfacher Verlinkung blockiert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
-
         Der neue Benutzer [%{username}](%{user_url}) hat versucht, mehrere Beiträge mit Links zur Domain %{domains} zu erstellen, aber diese Beiträge wuden blockiert, um Spam zu vermeiden. Der Benutzer kann weiter neue Beiträge erstellen, die nicht auf %{domains} verlinken.
-
         Bitte [überprüfe den Benutzer](%{user_url}).
-
         Dies kann über die Einstellungen `newuser_spam_host_threshold` und `white_listed_spam_host_domains` geändert werden.
     unblocked:
       subject_template: "Konto nicht mehr gesperrt"
       text_body_template: |
         Hallo,
-
         dies ist eine automatische Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Benutzerkonto nach der Überprüfung durch einen Mitarbeiter nicht mehr länger gesperrt ist.
-
         Du kannst nun wieder neue Antworten und Themen erstellen. Vielen Dank für deine Geduld.
     pending_users_reminder:
       subject_template:
@@ -1877,31 +1688,22 @@ de:
         other: "Es gibt %{count} nicht freigegebene Benutzer"
       text_body_template: |
         Es warten neuen Benutzer auf ihre Freigabe.
-
         [Bitte bewerte diese im Administrationsbereich](/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
     dashboard_problems:
       subject_template: "Probleme wurden festgestellt"
-      text_body_template: |+
+      text_body_template: |
         Es wurden Probleme in deinem Admin-Dashboard gemeldet.
-
         [Bitte überprüfe und behebe sie](%{base_url}/admin).
-
   unsubscribe_link: |
-    Um keine weiteren Benachrichtigungen für dieses Thema zu erhalten, [klicke hier](%{unsubscribe_url}).
-
-    Um diese E-Mails abzubestellen, ändere deine [Benutzer-Einstellungen](%{user_preferences_url}).
+    Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
-    Um keine weiteren Benachrichtigungen für dieses Thema zu erhalten, [klicke hier](%{unsubscribe_url}).
-
-    Um diese E-Mails abzubestellen, ändere deine [Benutzer-Einstellungen](%{user_preferences_url}) oder [klicke hier](mailto:reply@%{hostname}?subject=unsubscribe), um per E-Mail abzubestellen.
-  unsubscribe_mailing_list: |+
-    Du hast den Mailinglisten-Modus aktiviert. Um keine weiteren Benachrichtigungen für dieses Thema zu erhalten, [klicke hier](%{unsubscribe_url}).
-
-    Um diese E-Mails abzubestellen, ändere deine [Benutzer-Einstellungen](%{user_preferences_url}) oder [klicke hier](mailto:reply@%{hostname}?subject=unsubscribe), um per E-Mail abzubestellen.
-
+    Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Du erhältst diese E-Mails, weil du den Mailinglisten-Modus aktiviert hast.
+    Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PN]"
   user_notifications:
@@ -1921,132 +1723,102 @@ de:
     posted_by: "Erstellt von %{username} am %{post_date}"
     invited_to_private_message_body: |
       %{username} hat dich zu einer Unterhaltung eingeladen
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       auf
-
       > %{site_title} -- %{site_description}
     invited_to_topic_body: |
       %{username} hat dich zu einer Diskussion eingeladen
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       auf
-
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{respond_instructions}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} hat dich zum Thema '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{context}
-
         %{respond_instructions}
     user_replied_pm:
       subject_template: "[%{site_name}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{context}
-
         %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' zitiert"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{context}
-
         %{respond_instructions}
     user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{context}
-
         %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' erwähnt"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{context}
-
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{context}
-
         %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{subject_prefix}%{username} hat auf '%{topic_title}' geantwortet"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{context}
-
+        %{respond_instructions}
+    user_watching_first_post:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+        %{message}
+        %{context}
         %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
-
         %{message}
-
         %{context}
-
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
+      text_body_template: |
         %{message}
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
@@ -2073,85 +1845,64 @@ de:
       subject_template: "[%{site_name}] Passwort zurückgesetzt"
       text_body_template: |
         Jemand hat darum gebeten, dein Passwort auf [%{site_name}](%{base_url}) zurückzusetzen.
-
         Wenn du es nicht selbst warst, kannst du diese E-Mail einfach ignorieren.
-
         Andernfalls besuche den folgenden Link, um ein neues Passwort zu wählen:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Setze Passwort"
       text_body_template: |
         Jemand hat ein Passwort für dein Konto auf [%{site_name}](%{base_url}) beantragt. Alternativ kannst du dich mit einem unterstützen Online-Service (Google, Facebook, etc), der mit dieser validierten E-Mail-Adresse verknüpft ist, anmelden.
-
         Wenn diese Anfrage nicht von dir kam, kannst du diese E-Mail einfach ignorieren.
-
         Klicke auf den folgenden Link, um ein Passwort auszuwählen:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Anmeldung"
       text_body_template: |
         Jemand hat versucht sich in dein Konto auf [%{site_name}](%{base_url}) anzumelden.
-
         Wenn dieser Anmeldeversuch nicht von dir stammt, kannst du diese E-Mail ignorieren.
-
         Klicke den folgenden Link, um dich anzumelden:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Dein neues Konto"
       text_body_template: |
         Ein neues Konto wurde für dich auf %{site_name} erstellt.
-
         Klicke auf den folgenden Link, um ein Passwort für dein neues Konto festzulegen:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       subject_template: "[%{site_name}] Bestätige deine neue E-Mail-Adresse"
       text_body_template: |
         Um deine E-Mail-Adresse für %{site_name} zu bestätigen, klicke auf den folgenden Link:
-
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{site_name}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
         Bevor wir deine E-Mail-Adresse ändern können, müssen wir dich bitten zu bestätigen, dass du das E-Mail-Konto kontrollierst. Nach diesem Schritt, werden wir dich bitten die neue E-Mail-Adresse zu bestätigen.
-
         Um deine E-Mail-Adresse für %{site_name} zu bestätigen, klicke auf den folgenden Link:
-
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       subject_template: "[%{site_name}] Deine E-Mail-Adresse wurde geändert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere einen Mitarbeiter, wenn du von einem Fehler ausgehst.
-
         Deine E-Mail-Adresse wurde geändert zu:
-
         %{new_email}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
         Willkommen bei %{site_name}!
-
         Einer unserer Mitarbeiter hat dein Benutzerkonto bei %{site_name} genehmigt.
-
         Klicke auf den folgenden Link, um dein neues Konto zu bestätigen und zu aktivieren:
         %{base_url}/users/activate-account/%{email_token}
-
         Wenn der obige Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
-
         %{new_user_tips}
-
         Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
-
         Viel Spaß!
-
         (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
     signup:
       subject_template: "[%{site_name}] Bestätige deinen neuen Account"
       text_body_template: |
         Willkommen bei %{site_name}!
-
         Um dein Konto zu aktivieren, klicke auf den folgenden Link:
         %{base_url}/users/activate-account/%{email_token}
-
         Wenn dieser Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
   page_not_found:
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
@@ -2162,7 +1913,6 @@ de:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[Wilkommen bei %{title}](#welcome)
       Ein Benutzerkonto ist notwendig. Bitte registriere dich oder melde dich an.
   terms_of_service:
     title: "Nutzungsbedingungen"
@@ -2217,121 +1967,58 @@ de:
     title: "FAQ / Richtlinien"
     body: |
       <a name="civilized"></a>
-
-      ## [Dies ist ein zivilisierter Platz für öffentliche Diskussionen](#civilized)
-
       Bitte behandle dieses Diskussionsforum mit dem gleichen Respekt wie einen öffentlichen Park. Auch wir sind eine gemeinsame Community-Ressource &mdash; ein Platz, um Fähigkeiten, Wissen und Interessen durch eine fortlaufenden Dialog zu teilen.
-
       Dies sind keine harten oder schnelle Regeln, sondern vielmehr Hilfen für die menschliche Einschätzung unserer Community. Folge diesen Richtlinien, damit dies ein sauberer, gut beleuchteter Platz für zivilisierten, öffentlichen Diskurs bleibt.
-
       <a name="improve"></a>
-
-      ## [Verbessere die Diskussion](#improve)
-
       Hilf uns, dies zu einem großartiger Platz für Diskussionen zu machen, indem du stets daran arbeitest, die Diskussion in irgendeiner, noch so geringen Art zu verbessern. Wenn du dir nicht sicher bist, ob dein Beitrag zum Dialog beiträgt, denke darüber nach, was du sagen möchtest und probiere es später noch einmal.
-
       Die Themen, die hier diskutiert werden, sind uns wichtig, und wir möchten, dass du dich so verhältst, als wären sie auch genauso für dich wichtig. Respektiere die Themen und die Personen, die diese diskutieren, auch wenn du mit etwas, was gesagt wird, nicht einverstanden bist.
-
       Ein Weg, die Diskussion zu verbessern, besteht darin zu entdecken, was schon passiert ist. Bitte verbringe etwas Zeit damit, die Themen hier zu durchsuchen, bevor du antwortest oder deine eigenen startest, und du wirst eine bessere Chance haben, andere zu treffen, die deine Interessen teilen.
-
       <a name="agreeable"></a>
-
-      ## [Sei nett, auch wenn du anderer Meinung bist](#agreeable)
-
       Du magst auf etwas antworten möchten, indem du widersprichst. Das ist in Ordnung. Aber denke daran, _Ideen zu kritisieren, nicht Personen_. Bitte vermeide:
-
       *   Beschimpfungen.
       *   Persönliche Angriffe.
       *   Antworten auf den Tonfall einen Beitrag statt auf dessen Inhalt.
       *   Reflexartiges Widersprechen
-
       Biete stattdessen vernünftige Gegenargument, die den Dialog verbessern.
-
       <a name="participate"></a>
-
-      ## [Deine Beteiligung zählt](#participate)
-
       Die Dialoge, die wir führen, geben den Ton für alle an. Hilf uns dabei, die Zukunft dieser Community zu beeinflussen, indem wir uns bewusst für Dialoge entscheiden, die dieses Forum zu einem interessanten Aufenthaltsraum zu machen &mdash; und jene vermeiden, die das nicht tun
-
       Discourse bietet Werkzeuge, die der Community ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifzieren: Favoriten, Lesezeichen, „Gefällt mir“-Angaben, Meldungen, Antworten, Bearbeitungen, und so weiter. Benutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern, und die von allen anderen ebenso.
-
       Lass uns versuchen, den Park besser zu verlassen als wir ihn vorgefunden haben.
-
       <a name="flag-problems"></a>
-
-      ## [Wenn du ein Problem siehst, melde es](#flag-problems)
-
       Moderatoren haben besondere Befugnisse; sie sind verantwortlich für dieses Forum. Aber das gilt auch für dich. Mit deiner Hilfe können Moderatoren die Vermittler der Community sein, nicht nur die Hausmeister oder die Polizei.
-
       Wenn du schlechtes Verhalten siehst, antworte nicht. Schlechtes Verhalten wird gefördert, indem es anerkannt wird, es verbraucht deine Energie und verbraucht die Zeit von allen. _Melde es einfach_. Wenn genügend Meldungen zusammenkommen, werden Maßnahmen eingeleitet, entweder automatisch oder durch das Eingreifen eines Moderators.
-
       Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalten und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Seitenbetreiber übernehmen keine Verantwortung für jeglichen Inhalt, der in der Community geschrieben wird.
-
       <a name="be-civil"></a>
-
-      ## [Immer höflich bleiben](#be-civil)
-
       Nichts sabotiert einen gesunden Dialog so sehr wie Unhöflichkeit.
-
       *   Sei höflich. Schreibe nicht, das eine vernünftige Person als anstößig, beleidigend oder, als Hasstirade auffassen würde.
       *   Halte den Platz sauber. Schreibe nichts, was obszön oder sexuell expizit ist.
       *   Lasst uns gegenseitig respektieren. Belästige niemanden, füge niemandem Kummer zu, gib dich nicht als jemand anderes aus und veröffentliche niemandes persönliche Informationen.
       *   Respektiere unser Forum. Schreibe keinen Spam und beschädige das Forum auch sonst in keiner Weise.
-
       Dies sind keine konkreten Bedingungen mit präzisen Definitionen &mdash; vermeide sogar den _Anschein_ von jedem dieser Dinge. Wenn du dir nicht sicher bist, frage dich selbst, wie du dich fühlen würdest, wenn dein Beitrag auf der Titelseite der Frankfurter Allgemeinen Zeitung erscheinen würde.
-
       Dies ist ein öffentliches Forum, und Suchmaschinen indizieren diese Diskussionen. Halte die Sprache, Links und Bilder sicher für Familie und Freunde.
-
       <a name="keep-tidy"></a>
-
-      ## [Halte den Platz sauber](#keep-tidy)
-
       Betreibe die nötigen Anstrengungen, um Dinge an der richtigen Stelle zu platzieren, damit wir mehr Zeit mit Diskussionen und weniger mit Aufräumen verbringen kann. Daher:
-
       *   Erstelle keine Themen in der falschen Kategorie.
       *   Schreibe Beiträge nicht gleichzeitig in mehreren Themen.
       *   Schreibe keine leeren Antworten.
       *   Lenke nicht vom Thema ab, indem du es mitten drin änderst.
       *   Signiere deine Beiträge nicht &mdash; jedem Beitrag sind deine Profilinformationen beigefügt.
-
       Verwende die „Gefällt mir“-Schaltfläche statt „+1“ oder „Einverstanden“ zu schreiben. Statt ein bestehendes Thema in eine völlig andere Richtung zu lenken, verwende die Funktion „Mit verknüpftem Thema antworten“.
-
       <a name="stealing"></a>
-
-      ## [Poste nur deine eigenen Sachen](#stealing)
-
       Du darfst nichts ohne Erlaubnis nichts posten, was jemand anderem gehört. Du darfst keine Beschreibungen, Links oder Methoden schreiben, die geistiges Eigentum verletzen oder gegen geltendes Gesetz verstoßen.
-
       <a name="power"></a>
-
-      ## [Betrieben von Euch](#power)
-
       Diese Seite wird von euren [freundlichen Mitarbeitern](/about) und *euch* betrieben, der Community. Wenn du irgendwelche weiteren Fragen dazu hast, wie Dinge hier funktionieren sollten, öffne ein neues Thema in der Kategorie [Feedback zur Seite](/c/site-feedback) und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, dass nicht mit einem Meta-Thema oder einer Meldung behandelt werden, kontaktiere uns über die [Mitarbeiter-Seite](/about).
-
       <a name="tos"></a>
-
-      ## [Nutzungsbedingungen](#tos)
-
       Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst schützen &ndash; und im erweiterten Sinne auch dich und deine Daten &ndash; vor unfreundlichen Leuten. Wir haben [Nutzungsbedinugngen](/tos), die deines (und unser) Verhalten und unsere Rechte bezüglich des Inhalts, der Privatsphäre und den Gesetzen beschreiben. Um diesen Dienst zu nutzen, musst du dich mit unseren [Nutzungsbedingungen](/tos) einverstanden erklären.
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
       Die folgenden Geschäftsbedingungen sind maßgebend für die gesamte %{company_domain} Webseite und aller Inhalte, Dienstleistungen und Produkte, die auf oder über die Webseite zur Verfügung gestellt werden, einschließlich, aber nicht beschränkt auf die %{company_domain} Foren-Software, die %{company_domain} Support-Foren und den %{company_domain} Hosting-Dienst ("Hosting"), (zusammengefasst: die „Webseite“). Die Webseite gehört und wird betrieben von %{company_full_name} („%{company_name}”). Die Website wird angeboten vorbehaltlich der uneingeschränkten Zustimmung aller hierin enthaltenen Bedingungen und aller anderen sonstigen betrieblichen Regeln, Richtlinien (einschließlich, ohne Einschränkung, der [Datenschutzrichtlinien](/privacy) and [Community-Richtlinien](/faq)) von %{company_domain} und Verfahren, die von Zeit zu Zeit auf dieser Webseite von %{company_name} veröffentlicht werden können (zusammen die „Vereinbarung“).
-
       Bitte lies diese Vereinbarung sorgfältig durch, bevor du die Webseite verwendest oder darauf zugreifst. Durch die Benutzung oder den Zugriff auf einen Teil der Webseite stimmst du den Geschäftsbedingungen dieser Vereinbarung zu. Wenn du nicht allen Geschäftsbedingungen in dieser Vereinbarung zustimmst, dann darfst du weder auf die Seite zugreifen noch irgendwelche Dienstleistungen in Anspruch nehmen. Wenn diese Geschäftsbedingungen als Angebot von %{company_name} erachtet werden, beschränkt sich die Zustimmung ausdrücklich auf diese Bedingungen. Die Website wird nur für Benutzer angeboten, die mindestens 13 Jahre alt sind.
-
       <a name="1"></a>
-
-      ## [1. Dein %{company_domain}-Konto](#1)
-
       Wenn du eine Konto auf der Webseite erstellst, bist du verantwortlich, die Sicherheit deines Kontos aufrecht zu erhalten und du bist verantwortlich für alle Aktivitäten, die mit deinem Konto durchgeführt werden. Du musst %{company_name} umgehend über eine unbefugte Benutzung deines Kontos oder über jeden anderen Sicherheitsverstoß informieren. %{company_name} haftet nicht für Handlungen oder Unterlassungen deinerseits, einschließlich Schäden jeglicher Art, die infolge solcher Handlungen oder Unterlassungen eingetreten sind.
-
       <a name="2"></a>
-
-      ## [2. Pflichten der Mitwirkenden](#2)
-
       Wenn du Material, oder Links auf der Webseite veröffentlichst, anderweitig Material über die Webseite zur Verfügung stellst (oder Dritte dazu berrechtigst) (ajegliches Material als „Inhalt“), bist du für dessen Inhalt und den aus diesem Inhalt resultierenden Schaden in vollem Umfang verantwortlich. Dies gilt unabhängig davon, in welcher Form der Inhalt präsentiert wird, einschließlich, aber nicht beschränkt auf Text, Foto, Video, Audio oder Computer-Software. Indem du Inhalt zur Verfügung stellst, versicherst und garantierst du, dass:
-
       * das Herunterladen, Kopieren und die Benutzung des Inhalts keine proprietären Rechte verletzt, einschließlich, aber nicht beschränkt auf Urheberrecht, Patente, Schutzmarken oder Betriebsgeheimnissen irgendeines Dritten;
       * sofern dein Arbeitgeber die Rechte an geistigem Eigentum hat, die du erstellst, entweder (i) du die Erlaubnis von deinem Arbeitgeber hast, den Inhalt zu einzustellen bzw. verfügbar zu machen, einschließlich, aber nicht beschränkt auf Software, oder (ii) deinem Arbeitgeber dir einen Verzicht auf alle Rechte an dem Inhalt versichert hat;
       * du Fremdlizenzen im Zusammenhang mit dem Inhalt vollständig nachgekommen bist und dass du alle notwendigen Dinge unternommen hast, um erforderliche Bedingungen erfolgreich an die Endbenutzer weiterzureichen;
@@ -2341,200 +2028,75 @@ de:
       * dein Inhalt nicht über unerwünschte elektronische Nachrichten wie Spam-Links in Newsgroups, E-Mail-Verteilern, Blogs und Webseiten oder ähnliche unaufgeforderte Werbemaßnahmen beworben wird;
       * dein Inhalt in keiner Weise bezeichnet ist, die die Leser täuschen zu glauben, dass du eine andree Person oder Firma bist; und
       * dass du, im Falle von Inhalt, der Quelltext enthält, deren Art, Natur, Nutzen und Auswirkungen genau kategorisiert und/oder beschreibst, egal ob du dazu von %{company_name} aufgefordert wirst oder nicht.
-
       <a name="3"></a>
-
-      ## [3. Lizenz von Benutzerinhalten](#3)
-
       Benutzerbeiträge werden unter eine [Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 3.0 Unported - Lizenz](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.de) gestellt. Ohne Einschränkung dieser Darstellungen und Garantien, hat %{company_name} das Recht (jedoch nicht die Pflicht) dazu, nach dem Ermessen von %{company_name} (i) jeglichen Inhalt abzulehnen oder zu entfernen der, refuse or remove any content that, nach eigenem Ermessen von %{company_name}, gegen eine Richtlinie von %{company_name} verstößt oder in einer anderen Weise schädlich oder bedenklich ist, oder (ii) einer Person oder juristischen Person den Zugriff auf und die Benutzung der Seite zu beenden oder zu verweigern, gleich aus welchem Grund, nach eigenem Ermessen von %{company_name}. %{company_name} hat keine Verpflichtigung, Beiträge zu erstatten, die vorher bezahlt wurden.
-
-
       <a name="4"></a>
-
-      ## [4. Zahlung und Verlängerung](#4)
-
-      ### Allgemeine Bedingungen
-
       Optionale, kostenpflichtige Dienstleistungen oder Upgrades können auf der Webseite zur Verfügung stehen. Durch die Wahl optionaler, kostenpflichtigen Dienstleistungen oder Upgrades stimmst du der monatlichen oder jährlichen Zahlung der ausgewiesenen Gebühren an %{company_name} zu. Die Zahlungen werden im Voraus am Tag der Anmeldung für die Dienstleistungen oder Upgrades fällig und decken die Benutzung dieser Dienstleistung wie angegeben für einen Monats- oder Jahreszeitraum ab. Diese Gebühren sind nicht erstattungsfähig.
-
-      ### Automatische Verlängerung
-
       Sofern du %{company_name} nicht vor Ablauf des jeweiligen Abonnementzeitraums darüber informierst, dass du eine Dienstleistung oder ein Upgrade kündigen möchtest, wird dein Abonnement automatisch verlängert und du ermächtigst uns, die zu diesem Zeitpunkt geltenden Gebühren für ein Jahres- oder Monatsabonnement (einschließlich aller Steuern) für mittels einer Kreditkarte oder sonstiger Zahlungsmittel einzuziehen, die du bei der Anmeldung angegeben hast. Dienstleistungen und Upgrades können jederzeit gekündigt werden.
-
       <a name="5"></a>
-
-      ## [5. Dienstleistungen](#5)
-
-      ### Hosting, Support-Dienstleistungen
-
       Optionales Hosting und Support-Dienstleistungen können gemäß den Geschäftsbedingungen von %{company_name} für einen solchen Dienstleistung zur Verfügung gestellt werden. Durch die Registrierung eines Kontos für Hosting oder Support-Dienstleistungen, stimmst du diesen Geschäftsbedingungen zu.
-
       <a name="6"></a>
-
-      ## [6. Pflichten der Website-Besucher](#6)
-
       %{company_name} hat und kann nicht alle Materialien, einschließlich Computer-Software, die auf der Webseite veröffentlicht werden, überprüft/überprüfen, und kann deshalb nicht für die Inhalte, Verwendung oder Auswirkung dieses Materials haftbar gemacht werden. Durch den Betrieb der Webseite versichert oder impliziert %{company_name} nicht, dass das dort veröffentlichte Material gutgeheißen wird oder dass ein solches Material für zutreffend, nützlich oder ungefährlich gehalten wird. Du bist dafür verantwortlich, die notwendigen Sicherheitsvorkehrungen zu treffen, um dich und dein Computersystem vor Viren, Würmern, Trojanern und anderen schädlichen oder zerstörerischen Inhalten zu schützen. Die Webseite kann Inhalte enthalten, die beleidigend, unanständig oder anderweitig anstößig sind, sowie Inhalte, die technische Ungenauigkeiten, Schreibfehler und sonstige Fehler aufweisen. Diese Webseite kann auch Material enthalten, das gegen Eigentums- oder Veröffentlichungsrechte verstößt oder die Rechte an geistigem Eigentum oder sonstige Eigentumsrechte Dritter verletzt. Das Herunterladen, Kopieren oder Nutzen des Materials kann außerdem zusätzlichen genannten oder ungenannten Geschäftsbedingungen unterliegen. %{company_name} schließt jegliche Verantwortung für einen Schaden infolge der Benutzung durch Benutzer der Webseite oder infolge des Herunterladens der dort veröffentlichten Inhalte durch solche Benutzer aus.
-
       <a name="7"></a>
-
-      ## [7. Inhalt, der auf anderen Websites veröffentlicht wird](#7)
-
       Wir haben nicht alle Materialien, einschließlich Computer-Software, die auf den Webseiten und Seiten zur Verfügung gestellt, auf die %{company_domain} verlinkt oder die auf %{company_domain} verlinken, überprüft und können dies auch nicht tun. %{company_name} hat keine Kontrolle über diese Nicht-%{company_domain}-Webseiten und -Seiten und ist nicht verantwortlich für deren Inhalte oder Benutzung. DDu bist dafür verantwortlich, die notwendigen Sicherheitsvorkehrungen zu treffen, um dich und dein Computersystem vor Viren, Würmern, Trojanern und anderen schädlichen oder zerstörerischen Inhalten zu schützen. %{company_name} schließt jegliche Verantwortung für einen Schaden infolge der Benutzung von Nicht-%{company_domain}-Webseiten und -Seiten aus.
-
       <a name="8"></a>
-
-      ## [8. Verstoß gegen das Urheberrecht und DMCA-Richtlinien](#8)
-
       Genauso wie %{company_name} andere auffordert, Rechte an geistigem Eigentum zu respektieren, so respektiert auch %{company_name} die Rechte an geistigem Eigentum anderer. Wenn du der Ansicht bist, dass Material, das sich auf %{company_domain} befindet oder das von %{company_domain} verlinkt wird, gegen dein Urheberrecht verstößt, wirst du gebeten, %{company_name} gemäß der Richtlinie zum [Digital Millennium Copyright Act ("DMCA")](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) von %{company_name} zu benachrichtigen. %{company_name} wird alle derartigen Mitteilungen beantworten und das verletztende Material wie erforderlich oder angemessen löschen oder alle Links auf das verletztende Material deaktivieren. %{company_name} wird den Zugang eines Besuchers auf und die Benutzung der Webseite kündigen, wenn unter entsprechenden Umständen der Benutzer nachweislich wiederholt gegen das Urheberrecht oder andere Rechte an geistigem Eigentum von %{company_name} oder anderen verstößt. Im Falle einer solchen Kündigung ist %{company_name} nicht verpflichtet, jegliche zuvor an %{company_name} bezahlten Beträge zu erstatten.
-
       <a name="9"></a>
-
-      ## [9. Geistiges Eigentum](#9)
-
       Durch diese Vereinbarung wird kein geistiges Eigentum von %{company_name} oder Dritten von %{company_name} auf dich übertragen, und alle Rechte, Titel und Rechtsansprüche an einem solchen Eigentum bleiben bei %{company_name} (wie zwischen den Parteien). %{company_name}, %{company_domain}, das %{company_domain}-Logo und alle anderen Marken, Dienstleistungsmarken, Grafiken und Logos, die in Verbindung mit %{company_domain} oder der Website verwendet werden, sind Marken oder eingetragene Marken von %{company_name} oder %{company_name}-Lizenznehmern. Andere Marken, Dienstleistungsmarken, Grafiken und Logos, die in Verbindung mit der Website verwendet werden, können die Marken anderer Dritter sein. Durch deine Benutzung der Website werden dir keine Rechte oder Lizenzen zur Vervielfältigung oder anderweitigen Benutzung jeglicher Marken von %{company_name} oder Dritten gewährt.
-
       <a name="10"></a>
-
-      ## [10. Werbeanzeigen](#10)
-
       %{company_name} behält sich das Recht vor, Werbeanzeigen auf deinem Inhalt anzuzeigen, sofern du kein „Keine Werbeanzeigen“-Upgrade erworben haben.
-
       <a name="11"></a>
-
-      ## [11. Namensnennung](#11)
-
       %{company_name} behält sich das Recht vor, Namensnennung-Links, wie z. B. „Powered by %{company_domain}“, Theme-Autor und Schriftartnennung in der Fußzeile oder der Werkzeugleiste anzuzeigen. Informationen in der Fußzeile und in der %{company_domain}-Werkzeugleiste dürfen ungeachtet der gekauften Upgrades nicht geändert oder gelöscht werden.
-
       <a name="12"></a>
-
-      ## [12. Änderungen](#12)
-
       %{company_name} behält sich das Recht vor, jeden Teil dieser Bestimmungen nach eigenem Ermessen zu verändern oder zu ersetzen. Du bist dafür verantwortlich, diese Bestimmungen regelmäßig auf Änderungen zu überprüfen. Deine weitere Benutzung or dein Zugang zur Webseite nach einer Änderung dieser Bestimmungen stellt eine Zustimmung dieser Änderungen dar. %{company_name} kann in der Zukunft auch neue Dienste und Funktionen über die Webseite (einschließlich der Veröffentlichung neuer Werkzeuge und Ressourcen) anbieten. Solche neuen Funktionen und Dienste unterliegen den Bedingungen dieser Geschäftsbedingungen.
-
       <a name="13"></a>
-
-      ## [13. Kündigung](#13)
-
       %{company_name} kann deinen Zugang zur gesamten Website oder einem Teil hiervon jederzeit und mit oder ohne Angabe eines Grundes, mit oder ohne Kündigungsfrist und mit sofortiger Wirkung kündigen. Wenn du diese Vereinbarung oder dein Konto auf %{company_domain} (falls du eines besitzt) kündigen möchtest, kannst du auch einfach die Benutzung der Webseite einstellen. Alle Bestimmungen dieser Vereinbarung, die gemäß ihrer Art die Kündigung überdauern sollten, überdauern die Kündigung, einschließlich, aber nicht beschränkt auf Eigentumsbestimmungen, Haftungsausschlüsse, Entschädigungen und Haftungsbeschränkungen.
-
-
       <a name="14"></a>
-
-      ## [14. Haftungsausschluss](#14)
-
       Die Webseite wird „so wie sie ist“ zur Verfügung gestellt. %{company_name}, Vertragspartner und Lizenznehmer schließen hiermit sämtliche Gewährleistungen, ausdrücklich oder implizit, aus, einschließlich, aber nicht beschränkt auf die Gewährleistungen der Marktgängigkeit, der Eignung für einen bestimmten Zweck oder der Nichtverletzung von Rechten. Weder %{company_name} noch Vertragspartner und Lizenznehmer übernehmen jedwede Gewährleistung, dass die Website fehlerfrei ist oder dass der Zugang fortlaufend oder unterbrechungsfrei erfolgt. Wenn du dies tatsächlich liest, findest du hier [eine Belohnung](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). Du verstehst, dass du nach eigenem Ermessen und auf eigene Gefahr Inhalte oder Leistungen von der Website herunterlädst oder über die Webseite einholst.
-
-
       <a name="15"></a>
-
-      ## [15. Haftungsbeschränkung](#15)
-
       In keinem Fall haften %{company_name}, Vertragspartner oder Lizenznehmer in Bezug auf einen Gegenstand dieser Vereinbarung aufgrund eines Vertrages, aufgrund von Fahrlässigkeit, Gefährdungshaftung oder einer sonstigen Billigkeitstheorie für: (i) jegliche beiläufig entstandene Schäden, Folgeschäden oder sonstige Schäden; (ii) die Kosten für die Beschaffung von Ersatzprodukten oder Leistungen; (iii) die Benutzungsunterbrechung oder den Verlust oder die Beschädigung von Daten; oder (iv) für jegliche Beträge, die Gebühren übersteigen, die von dir an %{company_name} gemäß dieser Vereinbarung während eines Zeitraums von zwölf (12) Monaten vor dem Klageanspruch bezahlt wurden. %{company_name} übernimmt keine Haftung für einen Ausfall oder eine Verzögerung aufgrund von Tatsachen, die nach vernünftigem Ermessen über seine Kontrolle hinausgehen. Das Vorstehende gilt nicht, soweit nach anwendbarem Recht unzulässig.
-
       <a name="16"></a>
-
-      ## [16. Allgemeine Zusicherung und Gewährleistung](#16)
-
       Du versicherst und garantierst, dass (i) deine Benutzung der Webseite gemäß der [Datenschutzrichtlinie](/privacy) von %{company_name}, der [Community-Richtlinie](/guidelines), dieser Vereinbarung und allen geltenden Gesetzen und Bestimmungen erfolgt (einschließlich, aber nicht beschränkt auf jegliche lokale Gesetze oder Bestimmungen in Ihrem Land, Bundesland, Ihrer Stadt oder einem anderen Regierungsgebiet, hinsichtlich des Online-Verhaltens und zulässiger Inhalte, und einschließlich aller geltender Gesetze hinsichtlich der Übertragung technischer Daten, die aus den USA oder dieinem Wohnsitzland exportiert wurden) und (ii) deine Benutzung der Website nicht gegen die Rechte an geistigem Eigentum Dritter verstößt oder diese falsch anwendet.
-
       <a name="17"></a>
-
-      ## [17. Schadloshaltung](#17)
-
       Du stimmst zu, %{company_name}, Vertragspartnern und Lizenznehmern, und jeweiligen Vorstandsmitglieder, Amtsträger, Mitarbeiter und Vertreter gegen jegliche Haftungsfälle, Ansprüche und Ausgaben schadlos zu halten, einschließlich angemessener Anwaltskosten, die den schadlos gehaltenen Parteien im Zusammenhang mit jeglichen Ansprüchen entstehen, die sich aus jeglicher Verletzung dieser Vereinbarung ergeben.
-
       <a name="18"></a>
-
-      ## [18. Verschiedenes](#18)
-
       Diese Vereinbarung stellt die gesamte Vereinbarung zwischen %{company_name} und dir bezüglich des Gegenstands dieser Geschäftsbedingungen dar, und sie kann nur durch eine schriftliche, durch einen befugten Vertreter von %{company_name} unterzeichnet oder durch die Veröffentlichung einer überarbeiteten Version durch %{company_name} geändert werden. Vorbehaltlich eventuell anwendbarer anders lautender gesetzlicher Bestimmungen, unterliegt diese Vereinbarung, der Zugang zu und die Benutzung der Website den Gesetzen des Staates Kalifornien, USA unter Ausschluss des Kollisionsrechts. Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit derselben ist der Staat und die Bundesgerichte in San Francisco County, Kalifornien. Mit Ausnahme der Ansprüche auf jede Unterlassung oder jeden Rechtsbehelf oder Ansprüche hinsichtlich der Rechte an geistigem Eigentum (die vor ein ordentliches Gericht ohne die Hinterlegung einer Einlage gebracht werden können) wird jeder Rechtsstreit, der gemäß dieser Vereinbarung entsteht, endgültig durch umfassende Schiedsregelungen des Judicial Arbitration and Mediation Service, Inc. („JAMS“) von drei Schlichtern, die gemäß solcher Regeln ernannt werden, beigelegt werden. Das Schiedsverfahren findet in San Francisco, Kalifornien in englischer Sprache statt, und die Schiedsentscheidung kann vor jedem Gericht durchgesetzt werden. Die obsiegende Partei im Rahmen einer Verhandlung oder eines Verfahrens zur Durchsetzung dieser Vereinbarung ist berechtigt, Unkosten und Anwaltsgebühren in Rechnung zu stellen. Wenn ein Teil dieser Vereinbarung für ungültig oder nicht einklagbar erachtet wird, wird dieser Teil so ausgelegt, dass die ursprüngliche Absicht der Parteien widergespiegelt wird, und die restlichen Abschnitte vollständig gültig bleiben. Eine Verzichtserklärung einer der Parteien hinsichtlich einer Bedingung oder Kondition dieser Vereinbarung oder ein Verstoß gegen eine solche Bedingung in einer anderen Instanz stellt keinen Verzicht auf eine solche Bestimmung oder eine nachfolgende Nichterfüllung einer solchen Bestimmung dar. Du kannst deine Rechte gemäß dieser Vereinbarung auf eine Partei übertragen, die sich mit folgenden Benutzungsbedingungen einverstanden erklärt und bestätigt, dass sie sich an die Geschäftsbedingungen halten wird; %{company_name} kann seine Rechte gemäß dieser Vereinbarung bedingungslos übertragen. Diese Vereinbarung ist bindend und wird zugunsten der Parteien und ihrer entsprechenden Erben und Rechtsnachfolger wirksam.
-
       Dieses Dokument ist als CC-BY-SA lizensiert. Es wurde zuletzt aktualisiert am am 31. Mai 2013.
-
       Basiert ursprünglich auf den [WordPress-Geschäftsbedingungen](https://de.wordpress.com/tos/).
   privacy_topic:
     title: "Datenschutzrichtlinie"
     body: |
       <a name="collect"></a>
-
-      ## [Welche Informationen sammeln wir?](#collect)
-
       Wir sammeln Informationen von dir, wenn du dich auf unserer Seite registrierst, und erfassten Daten, wenn du dich hier am Forum durch Lesen, Schreiben und Bewertung der geteilten Inhalte beteiligst.
-
       Wenn du dich auf unserer Seite registrierst, wirst du möglicherweise gebeten, deinen Namen und deine E-Mail-Adresse einzugeben. Du kannst unsere Seite jedoch möglicherweise auch ohne Registrierung besuchen. Deine E-Mail-Adresse wird durch eine E-Mail verifiziert, die einen eindeutigen Link enthält. Wenn der Link aufgerufen wird, wissen wir, dass du die Kontrolle über die E-Mail-Adresse hast.
-
       Wenn du registrierst bist und etwas schreibst, erfassen wir die IP-Adresse, von der der Beitrag stammt. Wir behalten möglicherweise Serverprotokolle, die die IP-Adresse jeder Anfrage an unseren Server enthält.
-
       <a name="use"></a>
-
-      ## [Wofür nutzen wir deine Informationen?](#use)
-
       Jede der Informationen, die wir von dir sammeln, kann auf eine der folgenden Arten genutzt werden:
-
       *   Um deine Erfahrung zu personalisieren &mdash; deine Information hilft uns dabei, besser auf deine individuellen Bedürfnise einzugehen.
       *   Um unsere Seite zu verbessern &mdash; wir streben kontinuierlich dazu, das Angebot unserer Seite auf Grundlage der Informationen und des Feedbacks zu verbessern, das wir von dir erhalten.
       *   Um unseren Kundendienst zu verbessern &mdash; deine Information hilft uns, effizienter auf deine Anfragen an den Kundendienst und deine Hilfsbedürfnisse einzugehen.
       *   Um wiederkehrende E-Mails zu senden &mdash; Die E-Mail-Adresse, die du angibst, kann genutzt werden, um dir Informationen und Benachrichtigungen zu senden, die du zu Änderungen an Themen oder in Bezug auf deinen Benutzernamen angefordert hast, um dir auf Nachfragen, Anfragen oder Fragen zu antworten.
-
       <a name="protect"></a>
-
-      ## [Wie schützen wir deine Informationen?](#protect)
-
       Wir setzen eine Vielzahl von Sicherheitsmechanismen ein, um die Sicherheit deiner persönlichen Daten sicherzustellen, wenn du persönliche Daten eingibst, übermittelst oder darauf zugreifst.
-
       <a name="data-retention"></a>
-
-      ## [Was sehen eure Bestimmungen zur Datenaufbewahrung aus?](#data-retention)
-
       Wir bemühen uns nach bestem Wissen und Gewissen:
-
       *   Serverprotokolle, die IP-Adressen aller Anfragen an unseren Server erhalten, nicht länger als 90 Tage zu speichern.
       *   IP-Adressen, die mit registrierten Benutzern und ihren Beiträgen verknüpft sind, nicht länger als 5 Jahre zu speichern.
-
       <a name="cookies"></a>
-
-      ## [Verwenden wir Cookies?](#cookies)
-
       Ja. Cookies sind kleine Dateien, die eine Seite bzw. ihr Dienstleister über einen Browser auf die Festplatte deines Computers überträgst (sofern du zustimmst). Diese Cookies erlauben es der Seite, deinen Browser wiederzuerkennen und, sofern du ein registriertes Konto hast, diesen deinem registrierten Konto zuzuordnen.
-
       Wir verwenden Cookies, um deine Einstellungen für deine nächsten Besuche zu verstehen und zu speichern und um aggregierte Daten über unseren Internetverkehr und Interaktionen auf der Seite zu berechnen, damit wir in der Zukunft eine bessere Seitenerfahrung und bessere Werkzeuge anbieten können. Wir beauftragen möglicherweise Drittanbieter, die uns dabei unterstützen, unsere Seitenbesucher besser zu verstehen. Diese Dienstleister sind nicht befugt, unsere gesammelten Informationen anders zu verwenden als zur Unterstützung und Verbesserung unseres Geschäfts.
-
       <a name="disclose"></a>
-
-      ## [Geben wir irgendwelche Informationen an Dritte weiter?](#disclose)
-
       Weder verkaufen oder handeln wir deine personenbezogenen Daten noch übermitteln wir diese an Dritte. Dies schließt nicht Drittanbieter ein, die uns beim Betrieb unserer Seite, bei der Durchführung unseres Geschäfts oder dir helfen, solange diese Parteien einwilligen, diese Informationen vertraulich zu behandeln. We geben deine Informationen möglicherweise frei, wenn wir glauben, dass die Freigabe zweckmäßig ist, um das Gesetz einzuhalten, unsere Seitenrichtlinien durchzusetzen oder unsere oder fremde Rechte, Werte oder Sicherheit zu schützen. Nicht-personenbezogene Daten werden möglcherweise anderen Parteien für Marketing, Werbung und andere Zwecke zugänglich gemacht.
-
       <a name="third-party"></a>
-
-      ## [Linsk auf fremde Webseiten](#third-party)
-
       Gelegentlich können wir Produkte oder Dienste von Dritten nach unserer Wahl auf unserer Seite einbinden oder darauf bewerben. Diese Drittanbieter haben eigene und unabhängige Datenschutzbestimmungen. Wir übernehmen daher keine Verantwortung oder Haftung für den Inhalt und die Aktivitäten dieser verknüpften Seite. Dennoch sind wir bemüht, die Integrität unserer Seite zu schützen und freuen uns über jedes Feedback zu diesen Seiten.
-
       <a name="coppa"></a>
-
-      ## [Gesetz zum Schutz der Privatsphäre von Kindern im Internet](#coppa)
-
       Unsere Seite, Produkte und Dienstleistungen richten sich alle an Menschen, die mindestens 13 Jahre oder älter sind. Wenn sich dieser Server in der USA befindet und du unter 13 Jahre alt bist, so benutze diese Seite gemäß der Anforderungen des COPPA-Gesetzes ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nicht.
-
       <a name="online"></a>
-
-      ## [Online-Datenschutzbestimmungen](#online)
-
       Diese Online-Datenschutzbestimmungen gilt nur für Informationen, die durch unsere Seite gesammelt werden, und nicht für offline erfasste Informationen.
-
       <a name="consent"></a>
-
-      ## [Deine Zustimmung](#consent)
-
       Indem du unsere Seite benutzt, stimmst du den Datenschutzschutzbestimmungen unserer Webseite zu.
-
       <a name="changes"></a>
-
-      ## [Änderungen unserer Datenschutzbestimmungen](#changes)
-
       Wenn wir uns dazu entscheiden, unsere Datenschutzbestimmungen zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
-
       Dieses Dokument ist als CC-BY-SA lizensiert. Es wurde zuletzt aktualisiert am am 31. Mai 2013.
   static:
     search_help: |
@@ -2654,9 +2216,8 @@ de:
     first_like:
       name: Erster Like
       description: Hat Gefallen an einem Beitrag gefunden
-      long_description: |+
+      long_description: |
         Dieses Abzeichen wird verliehen, wenn du das erste mal auf die :heart:-Schaltfläche unter einem Beitrag klickst. Beiträge mit „Gefällt mir“ zu markieren, ist eine tolle Art, den Community-Kollegen wissen zu lassen, dass sein Beitrag interessant, nützlich, cool oder witzig war. Teile die Liebe!
-
     first_flag:
       name: Erste Meldung
       description: Hat einen Beitrag gemeldet
@@ -2797,6 +2358,3 @@ de:
     staff_tag_disallowed: "Das Schlagwort \"%{tag}\" kann nur von Mitarbeitern angewendet werden."
     staff_tag_remove_disallowed: "Das Schlagwort \"%{tag}\" kann nur von Mitarbeitern entfernt werden."
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
-  activemodel:
-    errors:
-      <<: *errors

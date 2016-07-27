@@ -18,9 +18,9 @@ ja:
     month_names: [null, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "午前"
     pm: "午後"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -78,6 +78,9 @@ ja:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       min_username_length_range: "最小値を最大値より上にすることはできません。"
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "アップロードするファイルは、csv または txt 形式である必要があります。"
   backup:
@@ -148,42 +151,30 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
-    new-topic: |
+    'new-topic': |
       %{site_name} へようこそ！&mdash; ** 新たなトピックの作成ありがとうございます！**
-
       - タイトルはトピックの内容を正しく説明していますか？他の人にとって興味深いタイトルになっていますか？
-
       - このトピックは何をカバーするものですか？このトピックに興味を示しそうなのは誰でしょう？なぜこのトピックは重要なのでしょうか？コミュニティよりどのような回答を期待していますか？
-
       - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このパネルは最初から %{education_posts_text} 回目までの投稿のときにだけ表示されます。
-    new-reply: "%{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!** \n- あなたの回答は議論に何らかの形で貢献していますか?\n - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。\n - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。 \n詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。\n"
-    sequential_replies: |+
-      ### 一度に複数の投稿に返信する
-
+    'new-reply': |
+      %{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!**
+      - あなたの回答は議論に何らかの形で貢献していますか?
+      - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。
+      - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。
+      詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
+    sequential_replies: |
       トピックにたくさん返信する代わりに、以前の投稿への @name メンションや引用などを活用して返信を一つの投稿にまとめましょう。
-
       文章を選択し、<b>引用して返信</b>ボタンをクリックすることで、文章を引用して編集することができます。
-
       こまごまと何度も返信するより、まとまって返信をすることで、より見やすく、より話しやすくなります。
-
     dominating_topic: |
-      ### 他のユーザも議論に参加させてあげましょう
-
       このトピックはあなたにとても重要なもののようですね &ndash; ここの回答のうち %{percent}% 以上があなたによってなされています。
-
       他のユーザが回答するために十分な時間的猶予を与えているか、ちょっと振り返ってみませんか?
     too_many_replies: |
-      ### このトピックに回答出来る制限を超えました
-
       申し訳ありません。新しいユーザーの同じトピックへの返信は%{newuser_max_replies_per_topic} 回に一時的に制限されています。
-
       回答を追加する代わりに、以前の回答を編集するか、別のトピックを訪れる事を検討してください。
     reviving_old_topic: |
-      ### このトピックを復活させてもよろしいですか？
-
       このトピックへの最後の返信は%{days}日前です。
       あなたの返信はトピック一覧の一番上に移動させ、以前に返信した人宛に通知が送られます。
-
       本当に過去の会話を復元してもよろしいですか？
   activerecord:
     attributes:
@@ -194,6 +185,7 @@ ja:
       user_profile:
         bio_raw: "自己紹介"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -214,7 +206,6 @@ ja:
           attributes:
             hex:
               invalid: "は有効なカラーではありません"
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>プロフィールの自己紹介フィールドが空欄のようです。<a href='/users/%{username_lower}/preferences/about-me'>自己紹介をしてみませんか?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
@@ -385,18 +376,6 @@ ja:
       message:
         make: "このトピックはバナートピックに設定されています。ユーザが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
-  unsubscribed:
-    title: '購読解除'
-    description: "購読解除されました。メールの送信をストップしました。"
-    oops: "誤って購読解除した場合は、下をクリックしてください。"
-    error: "購読解除エラー"
-    preferences_link: "あなたの <a href='/my/preferences'>設定画面</a>からの確認メールでも解除することができます"
-    different_user_description: "確認メールを送ったユーザとは別のユーザでログインしています。ログアウトしてから試してください"
-    not_found_description: "申し訳ありませんが購読解除に失敗しました。メール内のリンクの有効期限が切れているのかもしれません。"
-  resubscribe:
-    action: "再購読"
-    title: "再購読!"
-    description: "再購読が完了しました。"
   reports:
     visits:
       title: "訪問ユーザ"
@@ -434,7 +413,7 @@ ja:
       xaxis: "日"
       yaxis: "お気に入りされたトピックの数"
     users_by_trust_level:
-      title: "トラストレベル毎のユーザ"
+      title: "ユーザーごとのトラストレベル"
       xaxis: "トラストレベル"
       yaxis: "ユーザ数"
     emails:
@@ -538,7 +517,6 @@ ja:
       yaxis: "訪問者数"
   dashboard:
     rails_env_warning: "サーバは %{env} モードで起動中です。"
-    ruby_version_warning: "現在起動中の Ruby 2.0.0 にはいくつか問題があります。パッチレベル p247 以降にアップグレードしてください。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
     gc_warning: '現在サーバはデフォルトの ruby ガベージコレクションパラメータを使用しており、パフォーマンスが最適化されていません。パフォーマンス・チューニングの方法についてはこちらのトピックを参考にしてください: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
@@ -618,13 +596,9 @@ ja:
     anon_polling_interval: "匿名ユーザのクライアントのポーリング間隔 (ミリ秒)"
     background_polling_interval: "ウィンドウがバックグラウンド時のクライアントのポーリング間隔（ミリ秒)"
     cooldown_minutes_after_hiding_posts: "通報により非表示状態になったポストをユーザが編集可能になるまでの時間 (分)"
-    max_topics_in_first_day: "サイト利用初日にユーザが作成することのできるトピックの最大数"
-    max_replies_in_first_day: "サイト利用日にユーザが作成することのできる回答の最大数"
     tl2_additional_likes_per_day_multiplier: "この数字を掛けると TL2 (メンバー) の1日あたりの「いいね！」の上限を増やします"
     tl3_additional_likes_per_day_multiplier: "この数字を掛けると TL3 (レギュラー) の1日あたりの「いいね！」の上限を増やします"
     tl4_additional_likes_per_day_multiplier: "この数字を掛けると TL4 (リーダー) の1日あたりの「いいね！」の上限を増やします"
-    num_flags_to_block_new_user: "もし新しいユーザがnum_users_to_block_new_userで定義されている数の通報を受けたらそれらの投稿を全て非表示にし、今後の投稿をブロックします。0で無効にします。"
-    num_users_to_block_new_user: "新規ユーザのポストに対して、ここで指定した数のユーザにより何個のスパムフラグが立てられたら、全てのポストを非表示状態にした上でこのユーザからのポストを拒否するか。0 で無効化"
     notify_mods_when_user_blocked: "ユーザが自動的にブロックされた際に、すべてのモデレータにメッセージを送信する。"
     flag_sockpuppets: "トピックを作成したユーザーと同じIPアドレスで、新規ユーザーがトピックに回答した場合、両者を潜在的なスパムとしてフラグを立てるか"
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
@@ -830,9 +804,6 @@ ja:
     allow_animated_thumbnails: "アニメgifからアニメーションサムネイルを生成する"
     default_avatars: "新規ユーザが変更するまで使用されるデフォルトのプロフィール画像URL"
     automatically_download_gravatars: "アカウントの生成時、メールアドレスの変更時にGravatarをダウンロード"
-    digest_topics: "まとめメールに表示されるトピックの最大数"
-    digest_min_excerpt_length: "まとめメール内の投稿の抜粋の最小文字数"
-    disable_digest_emails: "すべてのユーザのまとめメールを無効にする"
     detect_custom_avatars: "ユーザがプロフィール画像をアップロードしたか確認する"
     max_daily_gravatar_crawls: "Discourseがプロフィール画像の確認をgravastarに行う回数の上限"
     public_user_custom_fields: "パブリックに公開されるカスタムフィールドのホワイトリスト"
@@ -844,6 +815,7 @@ ja:
     allow_profile_backgrounds: "プロフィール背景のアップロードを許可"
     enable_mobile_theme: "モバイル端末にモバイル向けテーマ (通常サイト用テーマにスイッチ可能) を利用する。レスポンシブなスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
+    daily_performance_report: "日別のNGINXのログを解析し、Staff Onlyトピックへ詳細を投稿する"
     suppress_uncategorized_badge: "トピック一覧でカテゴライズされていないトピックのバッジは表示しない"
     global_notice: "緊急の内容を表示します。全ての訪問者の緊急バナーで注意を行います。隠すには空白に変更してください(HTMLが許可されています)"
     disable_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
@@ -890,19 +862,6 @@ ja:
       invalid_string_min: "少なくとも%{min}文字は必要です"
       invalid_string_max: "%{max}文字以下である必要があります"
       invalid_reply_by_email_address: "値は'%{reply_key}'を含む必要があり、通知メールとは異なる必要があります"
-  notification_types:
-    mentioned: "%{link} で %{display_username} があなたをタグ付けしました"
-    liked: "%{link} で %{display_username} があなたのポストを「いいね！」しました"
-    replied: "%{link} で %{display_username} があなたのポストに回答しました"
-    quoted: "%{link} で %{display_username} があなたのポストを引用しました"
-    edited: "%{link} で %{display_username} があなたのポストを編集しました"
-    posted: "%{link} に %{display_username} がポストを投稿しました"
-    moved_post: "%{display_username} があなたのポストを %{link} に移動しました"
-    private_message: "%{display_username} があなたにメッセージを送信しました: %{link}"
-    invited_to_private_message: "%{display_username} がメッセージにあなたを招待しました: %{link}"
-    invitee_accepted: "%{display_username} があなたの招待を受けました"
-    linked: "%{display_username} は%{link}であなたをリンクしました"
-    granted_badge: "あなたは%{link}を獲得しました"
   search:
     within_post: "#%{post_number} by %{username}"
     types:
@@ -996,73 +955,46 @@ ja:
     subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
     text_body_template: |
       %{invitee_name} があなたを招待しました
-
       > %{site_title} -- %{site_description}
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       もし興味があれば下のリンクをクリックしてください:
-
       %{invite_link}
-
       これは信頼されたユーザからの招待のため、すぐに議論に返答することができます
   invite_forum_mailer:
     subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
-    text_body_template: |
-      %{invitee_name} があなたを招待しました
-
-      > %{site_title} -- %{site_description}
-
-      もし興味があれば下のリンクをクリックしてください:
-
-      %{invite_link}
-
-      これは信頼されたユーザからの招待のため、あなたはログインする必要がありません
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
-    text_body_template: "%{site_name} へようこそ\n\nこのリンクをクリックしてパスワードを設定してください:\n%{base_url}/users/password-reset/%{email_token}\n\n(リンクの有効期限が切れていた場合は、\"パスワードを忘れたました\"を選択しメールアドレスを入力してください) \n"
+    text_body_template: |
+      %{site_name} へようこそ
+      このリンクをクリックしてパスワードを設定してください:
+      %{base_url}/users/password-reset/%{email_token}
+      (リンクの有効期限が切れていた場合は、"パスワードを忘れたました"を選択しメールアドレスを入力してください)
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
   new_version_mailer:
     subject_template: "[%{site_name}] Discourseの新しいバージョンがあります。"
     text_body_template: |
       最新版の[Discourse](http://www.discourse.org)が利用出来ます！
-
       現在利用しているバージョン: %{installed_version}
       新しいバージョン: **%{new_version}**
-
       - 更新は**[ワンクリックブラウザ・アップグレード](%{base_url}/admin/upgrade)**から簡単にできます。
-
       - 更新内容は[GitHubの更新履歴](https://github.com/discourse/discourse/commits/master)をご覧ください。
-
       - [meta.discourse.org](http://meta.discourse.org)にて、Discourseに関するお知らせ、話し合い、サポートを行っています。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] アップデートがあります"
-    text_body_template: |+
+    text_body_template: |
       最新版の[Discourse](http://www.discourse.org)が利用出来ます！
-
       現在利用しているバージョン: %{installed_version}
       新しいバージョン: **%{new_version}**
-
       - 更新は**[ワンクリックブラウザ・アップグレード](%{base_url}/admin/upgrade)**から簡単にできます。
-
       - 更新内容は[GitHubの更新履歴](https://github.com/discourse/discourse/commits/master)をご覧ください。
-
       - [meta.discourse.org](http://meta.discourse.org)にて、Discourseに関するお知らせ、話し合い、サポートを行っています。
-
-      ### リリースノート
-
       %{notes}
-
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 件の投稿がレビュー待ちです"
-    text_body_template: |
-      こんにちは
-
-      新規ユーザーの投稿がレビュー待ちになっています。[ 承認、または拒否を行うことができます] (%{base_url}/queued-posts)
   flag_reasons:
     off_topic: "あなたの投稿/トピックは「話題に関係ない」として通報されました"
     inappropriate: "あなたの投稿は「不適切」として通報されました。攻撃的、 [コミュニティガイドライン](/guidelines)に違反している可能性があります。"
@@ -1076,23 +1008,27 @@ ja:
     deferred_and_deleted: "伝えてくれてありがとうございます。投稿を削除しました"
   temporarily_closed_due_to_flags: "このトピックへの通報が多いため、一時的に投稿が制限されています。"
   system_messages:
-    post_hidden:
-      subject_template: "通報により、投稿が非表示になりました"
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
-      text_body_template: |2
-         %{site_name}への参加ありがとうございます。ようこそ！
-
+      text_body_template: |
+        %{site_name}への参加ありがとうございます。ようこそ！
         %{new_user_tips}
-
         私たちは、[ガイドライン](%{base_url}/guidelines) を常に信じています
-
         楽しんでください!
-
         (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
-      text_body_template: "ようこそ%{site_name} へ！\nあなたのアカウント**%{username}** を作成して、あなたはログインしています。\n氏名の変更は [your user profile][prefs] より行ってください。\n\n次回ログインするときは、\n\n1. かならず招待をうけたメールアドレスを使ってログインしてください。\n\n2.[your user profile][prefs]でパスワードを設定して、ログインのときはそれを使用してください。\n\n%{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。 \n\nそれではお楽しみください! \n\n(もし個人的に [staff members](%{base_url}/about) と連絡を取る必要がある場合、このメッセージに返信してください)\n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: |
+        ようこそ%{site_name} へ！
+        あなたのアカウント**%{username}** を作成して、あなたはログインしています。
+        氏名の変更は [your user profile][prefs] より行ってください。
+        次回ログインするときは、
+        1. かならず招待をうけたメールアドレスを使ってログインしてください。
+        2.[your user profile][prefs]でパスワードを設定して、ログインのときはそれを使用してください。
+        %{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
+        それではお楽しみください!
+        (もし個人的に [staff members](%{base_url}/about) と連絡を取る必要がある場合、このメッセージに返信してください)
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
       text_body_template: "バックアップが成功しました。\n [admin > backup section](%{base_url}/admin/backups) から、バックアップをダウンロードしてください"
@@ -1100,9 +1036,7 @@ ja:
       subject_template: "バックアップ失敗"
       text_body_template: |
         バックアップが失敗しました
-
         ログ:
-
         ```
         %{logs}
         ```
@@ -1113,9 +1047,7 @@ ja:
       subject_template: "復元に失敗しました"
       text_body_template: |
         リストアが失敗しました
-
         ログ:
-
         ```
         %{logs}
         ```
@@ -1126,9 +1058,7 @@ ja:
       subject_template: "ユーザの一括招待中にエラーが発生しました"
       text_body_template: |
         一括ユーザ招待が処理され、%{sent} 通の招待メールが送信され、%{failed}個のエラーが発生しました
-
         ログ:
-
         ```
         %{logs}
         ```
@@ -1136,9 +1066,7 @@ ja:
       subject_template: "データのダウンロード準備が完了しました"
       text_body_template: |
         データ出力が完了しました! :dvd:
-
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
         このダウンロードリンクは48時間有効です
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
@@ -1149,7 +1077,9 @@ ja:
       subject_template: "[%{site_name}] Email issue -- 本文なし"
     email_reject_parsing:
       subject_template: "[%{site_name}] Email issue -- 認識されていないコンテンツ"
-      text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした \nメールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。\n"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
+        メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email issue -- 不正なアクセス"
     email_reject_reply_key:
@@ -1162,10 +1092,6 @@ ja:
       subject_template: "[%{site_name}] Email issue -- 自動生成された返信"
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP認証エラー"
-    too_many_spam_flags:
-      subject_template: "新しいアカウントが通報によりブロックされました"
-    user_automatically_blocked:
-      subject_template: "新規ユーザの%{username}が通報によってブロックされました"
     spam_post_blocked:
       subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
     pending_users_reminder:
@@ -1173,7 +1099,6 @@ ja:
         other: "%{count} 人のユーザか承認を待っています。"
       text_body_template: |
         新たなユーザが、フォーラム参加のための承認（もしくは拒否）待ち状態になっています。
-
         [管理者セクションで確認する](/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "リモート画像のダウンロードを無効化"
@@ -1200,13 +1125,10 @@ ja:
       subject_template: "[%{site_name}] [プライベートメッセージ] %{topic_title}"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
-      subject_template: "[%{site_name}] のまとめ"
       new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
       top_topics: "人気の投稿"
       other_new_topics: "人気のトピック"
-      unsubscribe: "このまとめは、サイトへのアクセスが一定期間無い場合に、%{site_link}から送られます。配信停止はこちらから行えます: %{unsubscribe_link}"
       click_here: "ここをクリック"
-      from: "%{site_name} のまとめ"
       read_more: "もっと読む"
       more_topics: " %{new_topics_since_seen}個の新しいトピックがありました"
       more_topics_category: "もっと新しいトピック:"
@@ -1216,18 +1138,14 @@ ja:
       subject_template: "[%{site_name}] パスワードのリセット"
       text_body_template: |
         [%{site_name}](%{base_url}) にて、パスワードのリセットリクエストが行われました。
-
         もしリクエストを行っていない場合は、このメールを無視してください。
-
         新たなパスワードを設定する場合は次のリンクをクリックしてください: %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] パスワード設定"
       text_body_template: |
         [%{site_name}](%{base_url}) のあなたのアカウントに対してパスワード追加のリクエストがありました。
         あるいは、この検証済みメールアドレスに関連付けられている任意のサポートされているオンラインサービス（グーグル、フェイスブックなど）を使用してログインすることができます。
-
         もし、リクエストをしていない場合は、このメールを無視してください。
-
         パスワードを選択する場合は次のリンクをクリックしてください:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
@@ -1236,14 +1154,12 @@ ja:
       subject_template: "[%{site_name}] あなたの新しいアカウント"
       text_body_template: |
         %{site_name}のあなたの新しいアカウントが作成されました。
-
         以下のリンクをクリックしてパスワードを設定してください:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       subject_template: "[%{site_name}] 新しいメールアドレスを確認してください"
       text_body_template: |
         以下のリンクをクリックして、%{site_name}で利用するメールアドレスを有効化してください:
-
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
@@ -1251,10 +1167,8 @@ ja:
       subject_template: "[%{site_name}] アカウントの確認"
       text_body_template: |
         Welcome to %{site_name}!
-
         リンクをクリックして、アカウントを有効化してください:
         %{base_url}/users/activate-account/%{email_token}
-
         もし、上記のURLがクリックできない場合は、ブラウザのアドレスバーへURLをコピーして貼り付けて下さい。
   page_not_found:
     title: "ページが見つからないか、アクセス出来ない場所にあります。"
@@ -1265,7 +1179,6 @@ ja:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[%{title}へようこそ](#welcome)
       アカウントが必要です。アカウントを作成するかログインしてください
   terms_of_service:
     title: "利用規約"
@@ -1353,6 +1266,3 @@ ja:
   performance_report:
     initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート
-  activemodel:
-    errors:
-      <<: *errors

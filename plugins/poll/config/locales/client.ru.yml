@@ -19,26 +19,6 @@ ru:
         many: "голосов"
         other: "голосов"
       average_rating: "Средний рейтинг: <strong>%{average}</strong>."
-      public:
-        title: "Ваш голос в этом опросе будет публичным (в отличие от анонимных опросов)."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Необходимо выбрать хотя бы <strong>1</strong> ответ."
-            few: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответа."
-            many: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответов."
-            other: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответов."
-          up_to_max_options:
-            one: "Можно выбрать только <strong>1</strong> ответ."
-            few: "Можно выбрать до <strong>%{count}</strong> ответов."
-            many: "Можно выбрать до <strong>%{count}</strong> ответов."
-            other: "Можно выбрать до <strong>%{count}</strong> ответов."
-          x_options:
-            one: "Необходимо выбрать <strong>1</strong> ответ."
-            few: "Необходимо выбрать <strong>%{count}</strong> ответа."
-            many: "Необходимо выбрать <strong>%{count}</strong> ответов."
-            other: "Необходимо выбрать <strong>%{count}</strong> ответов."
-          between_min_and_max_options: "Можно выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосовать!"
@@ -56,6 +36,7 @@ ru:
         title: "Завершить этот опрос, не принимать новые голоса"
         label: "Завершить"
         confirm: "Вы уверены, что хотите завершить этот опрос и больше не принимать голоса?"
-      error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
-      error_while_casting_votes: "Произошла ошибка во время обработки вашего голоса."
-      error_while_fetching_voters: "Произошла ошибка во время отображения респондентов."
+      ui_builder:
+        poll_type:
+          regular: Одиночный выбор
+          multiple: Множественный выбор

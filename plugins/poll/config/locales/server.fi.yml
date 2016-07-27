@@ -16,7 +16,7 @@ fi:
     named_poll_must_have_at_least_2_options: "Äänestyksessä nimeltään <strong>%{name}</strong> pitää olla vähintään 2 vaihtoehtoa."
     default_poll_must_have_less_options:
       one: "Äänestyksessä pitää olla vähemmän, kuin yksi vaihtoehto."
-      other: "Äänestyksessä pitää olla vähemmän, kuin %{count} vaihtoehtoa."
+      other: "Äänestyksessä pitää olla vähemmän kuin %{count} vaihtoehtoa."
     named_poll_must_have_less_options:
       one: "Äänestyksessä <strong>%{name}</strong> pitää olla vähemmän kuin yksi vaihtoehto."
       other: "Äänestyksessä <strong>%{name}</strong> pitää olla vähemmän kuin %{count} vaihtoehtoa."

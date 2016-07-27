@@ -15,7 +15,7 @@ nl:
     default_poll_must_have_at_least_2_options: "De poll moet minimaal 2 opties hebben."
     named_poll_must_have_at_least_2_options: "De poll genaamd <strong>%{name}</strong> moet minimaal 2 opties hebben."
     default_poll_must_have_less_options:
-      one: "Poll dient minder dan een optie te hebben."
+      one: "Poll dient minder dan 1 optie te hebben."
       other: "Poll dient minder dan %{count} opties te hebben."
     named_poll_must_have_less_options:
       one: "De poll genaamd <strong>%{name}</strong> moet minder dan 1 optie hebben."
@@ -25,6 +25,8 @@ nl:
     default_poll_with_multiple_choices_has_invalid_parameters: "De poll met meerdere keuzes heeft ongeldige parameters."
     named_poll_with_multiple_choices_has_invalid_parameters: "De poll met de naam <strong>%{name}</strong> met meerdere keuzes heeft ongeldige parameters."
     requires_at_least_1_valid_option: "Kies ten minste 1 geldige optie."
+    default_cannot_be_made_public: "Poll met stemmen kan niet openbaar gemaakt worden."
+    named_cannot_be_made_public: "De poll genaamd <strong>%{name}</strong> heeft stemmen die niet openbaar gemaakt kunnen worden"
     cannot_change_polls_after_5_minutes: "Je kunt polls niet toevoegen, verwijderen of hernoemen na de eerste 5 minuten."
     op_cannot_edit_options_after_5_minutes: "Je kunt geen poll opties meer toevoegen of verwijderen na de eerste 5 minuten. Neem a.u.b. contact op met een moderator als u een poll optie moet wijzigen."
     staff_cannot_add_or_remove_options_after_5_minutes: "Je kunt geen poll opties meer toevoegen of verwijderen na de eerste 5 minuten. In plaats daarvan kun je dit topic sluiten en een nieuwe maken."

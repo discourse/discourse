@@ -17,6 +17,8 @@ zh_TW:
   date:
     month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   title: "論壇"
   topics: "討論話題"
   posts: "文章"
@@ -72,6 +74,9 @@ zh_TW:
       min_username_length_range: "你不能設定「最小」大於「最大」。"
       max_username_length_exists: "您不能設置比現有用戶名短的「最大用戶名長度」。"
       max_username_length_range: "你不能設定「最大」小於「最小」。"
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "上傳的文件應為 csv 或 txt 格式。"
   backup:
@@ -136,15 +141,11 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇文章"
-    new-reply: |
+    'new-reply': |
       歡迎來到%{site_name} &mdash; **感謝你的貢獻！**
-
       - 你的回覆是否以某種方式改善了討論？
-
       - 請尊重所有社群成員。
-
       - 歡迎有建設性的評論，但是評論的應該是觀點，而不是人身攻擊。
-
       欲查看更多，[請查看我們的社群准則](/guidelines)。此訊息面板只會在你發表前 %{education_posts_text} 時顯示。
   activerecord:
     attributes:
@@ -155,6 +156,7 @@ zh_TW:
       user_profile:
         bio_raw: "關於我"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -175,7 +177,6 @@ zh_TW:
           attributes:
             hex:
               invalid: "不是一個有效顏色"
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
@@ -342,18 +343,6 @@ zh_TW:
       message:
         make: "本主題現在是橫幅主題。它將出現在每頁的頂部，除非用戶將其隱藏。"
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
-  unsubscribed:
-    title: '取消訂閱'
-    description: "你已經取消訂閱，我們不會再聯絡你。"
-    oops: "如果你不希望取消訂閱，請點擊下方的連結。"
-    error: "取消訂閱時發生錯誤"
-    preferences_link: "您也可以取消摘要訂閱，就在您的 <a href='/my/preferences'>參數設定頁面</a>"
-    different_user_description: "您正以另一個帳號的身份登入，而非摘要信件寄給的帳號，請登出再試一次"
-    not_found_description: "抱歉，我們無法替你取消訂閱。可能你郵件裡的連結已過期。"
-  resubscribe:
-    action: "重新訂閱"
-    title: "已重新訂閱！"
-    description: "你已經重新訂閱。"
   reports:
     visits:
       title: "用戶瀏覽量"
@@ -480,7 +469,6 @@ zh_TW:
       xaxis: "天"
   dashboard:
     rails_env_warning: "伺服器現在運行 %{env} 模式。"
-    ruby_version_warning: "如果你使用的 Ruby 版本是 2.0.0 ，這個版本有較多的問題，請升級至 p247 或以上的版本"
     host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
     gc_warning: '伺服器正在使用的 ruby 可能僅啟用了預設的 垃圾回收設定 (garbage collection), 這個設定無法提供最佳效能。請瀏覽此效能設定的資訊: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
@@ -552,10 +540,6 @@ zh_TW:
     anon_polling_interval: "匿名使用者用戶端輪詢時間間隔（單位 毫秒）"
     background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
     cooldown_minutes_after_hiding_posts: "如果一個文章因為標記而隱藏，用戶需要等待多少分鐘才能編輯該文章"
-    max_topics_in_first_day: "新用戶第一天在這個站最大能建立的話題數量"
-    max_replies_in_first_day: "新用戶第一天在這個站最大能建立的回覆數量"
-    num_flags_to_block_new_user: "如果一個新用戶的帖子被其他 num_users_to_block_new_user 個用戶標記為垃圾，隱藏他們的所有帖子並阻止其之後的發帖。0 表示禁用這個特性。"
-    num_users_to_block_new_user: "如果一個新用戶的帖子被許多其他用戶 num_flags_to_block_new_user 標記為垃圾，隱藏他們的所有帖子並阻止其之後發帖。0 表示禁用這個特性。"
     notify_mods_when_user_blocked: "若有用戶被自動封鎖，將發送訊息給所有板主。"
     flag_sockpuppets: "如果一個新用戶開始了一個主題，並且同時另一個新用戶以同一個 IP 在該主題回復，他們所有的帖子都將被自動標記為垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統的換行符號，即用兩個行末空格來換行"
@@ -714,9 +698,6 @@ zh_TW:
     allow_animated_thumbnails: "為 gif 動畫生成動態縮略圖。"
     default_avatars: "新用戶將會使用的默認頭像的網址。"
     automatically_download_gravatars: "當用戶註冊或更改EMail時下載 Gravatars 圖片"
-    digest_topics: "EMail 摘要中顯示的最大話題數量"
-    digest_min_excerpt_length: "EMail 摘要中每篇文章最少顯示的字元數量"
-    disable_digest_emails: "禁用發送摘要郵件給所有用戶。"
     max_daily_gravatar_crawls: "一天內 Discourse 將自動檢查 Gravatar 自訂個人圖示的次數"
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單。"
     staff_user_custom_fields: "用戶可設定只給管理員顯示的自定欄位白名單。"
@@ -746,17 +727,6 @@ zh_TW:
       invalid_string_min_max: "必須介於 %{min} 到 %{max} 字之間。"
       invalid_string_min: "必須至少 %{min} 個字。"
       invalid_string_max: "不能超過 %{max} 個字。"
-  notification_types:
-    mentioned: "%{display_username} 在 %{link} @到了你"
-    liked: "%{display_username} 在 %{link} 按讚了你的文章 "
-    replied: "%{display_username} 在 %{link} 回覆了你的文章"
-    quoted: "%{display_username} 在 %{link} 引用了你的文章"
-    edited: "%{display_username} 在 %{link} 編輯了你的文章"
-    posted: "%{display_username} 發表了 %{link}"
-    moved_post: "%{display_username} 把你的文章移動到了 %{link}"
-    invitee_accepted: "%{display_username} 接受了你的邀請"
-    linked: "%{display_username} 在 %{link} 關連了你"
-    granted_badge: "你獲得了 %{link}"
   search:
     types:
       category: '分類'
@@ -808,18 +778,6 @@ zh_TW:
     subject_template: "%{invitee_name} 邀請你參與在 %{site_domain_name} 討論的話題 '%{topic_title}'"
   invite_forum_mailer:
     subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} 邀請你加入
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      如果你感興趣，請點擊以下連結：
-
-      %{invite_link}
-
-      此邀請是由一位受信任的用戶所發出，所以你不需要登入。
   invite_password_instructions:
     subject_template: "為 %{site_name} 的帳戶設置密碼"
   test_mailer:
@@ -832,8 +790,6 @@ zh_TW:
     disagreed: "感謝你讓我們知道。我們正在調查。"
     deferred: "感謝你讓我們知道。我們正在調查。"
   system_messages:
-    post_hidden:
-      subject_template: "因為社群投訴而被隱藏的文章"
     welcome_user:
       subject_template: "歡迎來到 %{site_name}！"
     welcome_invite:
@@ -855,8 +811,6 @@ zh_TW:
       subject_template: "資料匯出完成"
     csv_export_failed:
       subject_template: "資料匯出失敗"
-    user_automatically_blocked:
-      subject_template: "新用戶 %{username} 由於社群的投訴已被封鎖"
     spam_post_blocked:
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
     pending_users_reminder:
@@ -890,9 +844,7 @@ zh_TW:
       new_activity: "在你的討論話題和文章裡的動態："
       top_topics: "熱門文章"
       other_new_topics: "熱門討論話題"
-      unsubscribe: "這封來自 %{site_link} 的摘要郵件是你一段時間沒有訪問後發送給你的。點擊 %{unsubscribe_link} 取消訂閱。"
       click_here: "點擊此處"
-      from: "%{site_name} 摘要"
       read_more: "閱讀更多"
       more_topics: "有其他 %{new_topics_since_seen} 個新主題。"
       more_topics_category: "更多新主題："
@@ -900,9 +852,7 @@ zh_TW:
       subject_template: "[%{site_name}] 密碼重設"
       text_body_template: |
         有人請求重設你在 [%{site_name}](%{base_url}) 上的密碼。
-
         如果那不是你，你可以直接忽略本郵件。
-
         點擊下面的連結來選擇一個新密碼：
         %{base_url}/users/password-reset/%{email_token}
     set_password:
@@ -914,10 +864,8 @@ zh_TW:
     signup:
       text_body_template: |
         歡迎來到 %{site_name}！
-
         點擊以下連結來確認和啟用你的新帳號：
         %{base_url}/users/activate-account/%{email_token}
-
         如果上面的連結無法點擊，請拷貝該連結並粘貼到你的流覽器的地址欄裡。
   page_not_found:
     popular_topics: "熱門"
@@ -974,8 +922,3 @@ zh_TW:
     submit_button: "送出電子郵件"
   performance_report:
     initial_topic_title: 網站效能報表
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

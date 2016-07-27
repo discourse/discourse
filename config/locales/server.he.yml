@@ -18,6 +18,8 @@ he:
   date:
     month_names: [null, ינואר, פברואר, מרס, אפריל, מאי, יוני, יוני, אוגוסט, ספטמבר, אוקטובר, נובמבר, דצמבר]
     <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   title: "Discourse"
   topics: "נושאים"
   posts: "הודעות"
@@ -79,6 +81,9 @@ he:
       max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שהשתמשו בה ברשימה אחרת"
       s3_upload_bucket_is_required: "אינך יכול להעלות ל-S3 ללא 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "הקובץ המועלה צריך להיות בפורמט csv או txt."
   backup:
@@ -158,40 +163,35 @@ he:
     until_posts:
       one: "הודעה אחת"
       other: "%{count} הודעות"
-    new-topic: "ברוכים באים ל%{site_name} &mdash; **תודה שהתחלת שיחה חדשה! **\n-הכותרת נשמעת מעניינת כשאת/ה קורא/ת אותה בקול רם? האם היא תקציר טוב?\n-מי יתעניין בזה? איזה סוג של תגובות את/ה רוצה?\n-השתמש/י במילים נפוצות בכותרת שלך כך שאחרים יוכלו למצוא אותה. כדי לשייך את הנושא שלך עם נושאים קשורים בחר קטגוריה.\n-לעוד טיפים, [ראה את כללי התנהלות בקהילה] (/guidelines). \nהפנל הזה יופיע רק עבור  %{education_posts_text}. הראשונים.\n"
-    new-reply: |
+    'new-topic': |
+      ברוכים באים ל%{site_name} &mdash; **תודה שהתחלת שיחה חדשה! **
+      -הכותרת נשמעת מעניינת כשאת/ה קורא/ת אותה בקול רם? האם היא תקציר טוב?
+      -מי יתעניין בזה? איזה סוג של תגובות את/ה רוצה?
+      -השתמש/י במילים נפוצות בכותרת שלך כך שאחרים יוכלו למצוא אותה. כדי לשייך את הנושא שלך עם נושאים קשורים בחר קטגוריה.
+      -לעוד טיפים, [ראה את כללי התנהלות בקהילה] (/guidelines).
+      הפנל הזה יופיע רק עבור  %{education_posts_text}. הראשונים.
+    'new-reply': |
       ברוכים באים ל %{site_name} &mdash; ** תודה על תרומתך! **
-
       - האם התגובה שלך משפרת את השיחה בדרך כלשהיא?
-
       - היו נחמדים לחברים בקהילה
-
       - ביקורת מבנה היא רצויה, אבל אנא בקרו *רעיונות*, לא אנשים.
-
       למידע נוסף [ראו את הכללים המנחים שלנו]/guidelines). פאנל זה יופיע רק ב-%{education_posts_text} תגובות  הראשונות שלך.
     avatar: |
-      ###מה דעתך להוסיף תמונה לחשבון שלך?
       כבר פרסמת כמה נושאים ותגובות, אבל תמונת הפרופיל שלך לא מיוחדת- היא רק אות.
       שקלת **[להכנס לפרופיל משתמש שלך ](%{profile_path})** ולהעלות תמונה שמייצגת אותך?
       יותר קל לעקוב אחרי שיחות ולמצוא אנשים מעניינים כשלכולם יש תמונת פרופיל יחודית!
-    sequential_replies: "### שקלו להשיב לכמה פרסומים בבת אחת\n\nבמקום להשיב בתגובות עוקבות לנושא, שקלו בבקשה לפרסם תגובה אחת שכוללת ציטוטים מהפרסומים הקודמים או הפניות ל@שם_משתמש/ת.\n\nתוכל/י לערוך תגובה קודמת שלך כדי להוסיף ציטוט על ידי הדגשת הטקסט ובחירה בכפתור <b>ציטוט התגובה</b> שיופיע.\n\nקל יותר לכולם לקרוא נושאים עם מספר נמוך יחסית תגובות מעמיקות מאשר הרבה תגובות קצרות ונפרדות.\n \n"
+    sequential_replies: |
+      במקום להשיב בתגובות עוקבות לנושא, שקלו בבקשה לפרסם תגובה אחת שכוללת ציטוטים מהפרסומים הקודמים או הפניות ל@שם_משתמש/ת.
+      תוכל/י לערוך תגובה קודמת שלך כדי להוסיף ציטוט על ידי הדגשת הטקסט ובחירה בכפתור <b>ציטוט התגובה</b> שיופיע.
+      קל יותר לכולם לקרוא נושאים עם מספר נמוך יחסית תגובות מעמיקות מאשר הרבה תגובות קצרות ונפרדות.
     dominating_topic: |
-      ### אפשר לאחרים להצטרף לשיחה
-
       הנושא הזה בבירור חשוב לך &ndash; פרסמת יותר מ-%{percent}% מהתגובות כאן.
-
       בטוח שאתה נותן מספיק זמן לאחרים כדי לחלוק את נקודת מבטם?
     too_many_replies: |
-      ### הגעת למגבלת התגובות של הנושא הזה
-
       אנחנו מצטערים, אבל משתמשים חדשים מודבלים זמנית לפרסום %{newuser_max_replies_per_topic} תגובות באותו הנושא.
-
       במקום להוסיף תגובה נוספת, ניתן לערוך תגובה קודמת, או לבקר בנושאים אחרים.
     reviving_old_topic: |
-      ### להחיות נושא זה?
-
       התגובה האחרונה לנושא הזה היא כבר בת יותר מ-%{days} ימים. התגובה שלך תקפיץ את הנושא הזה לראש הרשימה שלו ותודיע לכל מי שהיה מעורב בשיחה בו.
-
       אתה בטוח שברצונך להמשיך את הדיון הישן הזה?
   activerecord:
     attributes:
@@ -202,6 +202,7 @@ he:
       user_profile:
         bio_raw: "אודותיי"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -222,7 +223,6 @@ he:
           attributes:
             hex:
               invalid: "זהו אינו צבע תקני"
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>שדה האודות של הפרופיל שלך ריק כרגע, <a href='/users/%{username_lower}/preferences/about-me'>תרצה למלא אותו?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} עדיין לא הזין דבר בשדה אודות של הפרופיל שלהם</div>"
@@ -235,25 +235,18 @@ he:
   assets_topic_body: "זהו נושא קבוע, הגלוי רק לצוות, לשמירת תמונות וקבצים שמשמשים לעיצוב האתר. אל תמחקו אותו!\n\n\nכיצד:\n\n\n1. הגיבו לנושא זה.\n2. העלו כאן את כל התמונות שברצונכם להשתמש כלוגואים, לוגואים מוקטנים (favicons) וכן הלאה. (השתמשו בלוגו ההעלאה בסרגל הכלים בעורך הפרסום, או גררו-שחררו או הדביקו את התמונות.)\n3. שלחו את התגובה כדי לפרסם אותה.\n4. הקליקו עם הכפתור הימני על התמונות בפרסום החש שלכם כדי להשיג את הכתובת של התמונה שהועלתה, או הקליקו על סמל העריכה כדי לערוך את הפרסום ולאחזר את הכתובת של התמונות. העתיקו את הכתובות.\n5. הדביקו את כתובות התמונות אלתוך [הגדרות בסיסיות](/מנהל/הגדרות_אתגר/קטגוריה/נדרש).\n\nאם אתכם צריכים לאפשר העלאת קבצים מסוגים שונים, ערכו את \"הרחבות מאושרות\" בתוך [הגדרות_קובץ](/מנהל/הגדרות_אתר/קטגוריה/קבצים)."
   lounge_welcome:
     title: "ברוכים הבאים ללאונג'"
-    body: |2
-
+    body: |
       ברכות!: confetti_ball
-
       אם את/ה רואה נושא זה, קודמת לאחרונה ל**משתשמ/ת** (trust level 3).
-
       אתם יכולים עכשיו &hellip;
       * לערוך כותרות של כל נושא
       * לשנות את הקטגוריה של כל נושא
       * לאפשר מעקב אחר כל הקישורים שלכם (([automatic nofollow]) (http://en.wikipedia.org/wiki/Nofollow) ) יוסר.
       * לגשת לקטגוריית הלאונג' הפרטי הזמינה רק למשתמשים ברמת אמון 3 ומעלה
       * להסתיר ספאם בעזרת סימון אחד
-
       הנה [רשימת החברים שלך למעמד זה(/badges/3/regular). אתם מוזמנים להגיד שלום.
-
       תודה על החלק החשוב שאתם נוטלים בקהילה שלנו!
-
       למידע נוסף על רמות האמון, [ראו נושא זה][trust]. שימו לב בבקשה שרק חברים שממשיכים לעמוד בבדירשות לאורך זמן נשארים ברמת אמון זו).
-
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "אודות הקטגוריה %{category}"
@@ -451,18 +444,6 @@ he:
       message:
         make: "נושא זה הוא כעת באנר. הוא יופיע בראש כל עמוד עד שישוחרר על ידי המשתמשים."
         remove: "נושא זה כבר אינו באנר. הוא לא יופיע יותר בראש כל עמוד."
-  unsubscribed:
-    title: 'מנוי בוטל'
-    description: "המנוי שלך בוטל. לא ניצור איתך קשר יותר!"
-    oops: "במקרה שלא התכוונת לעשות את זה, לחץ מטה."
-    error: "תקלה בביטול ההרשמה"
-    preferences_link: "אתם יכולים לבטל את ההרשמה מדוא\"לי הסיכום גם ב<a href='/my/preferences'>עמוד ההעדפות שלך</a>"
-    different_user_description: "את/ה כרגע מחובר כשם משתמש אחר מזה אליו נשלח דוא\"ל הסיכום. אנא התנתקו ונסו פעם נוספת."
-    not_found_description: "סליחה, לא יכולנו לבטל את המנוי שלך. זה אפשרי שפג תוקף הקישור בהודעת הדואר שלך."
-  resubscribe:
-    action: "צור מנוי מחדש"
-    title: "מנוי נוצר!"
-    description: "נוצר לך מנוי מחדש."
   reports:
     visits:
       title: "ביקורי משתמש"
@@ -597,7 +578,6 @@ he:
       yaxis: "מספר ביקורים"
   dashboard:
     rails_env_warning: "השרת שלך רץ במצב %{env}."
-    ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -679,13 +659,9 @@ he:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "באיזו תכיפות צריכים לקוחות לבצע תשאול (poll) במילישניות (כאשר החלון נמצא ברקע)"
     cooldown_minutes_after_hiding_posts: "מספר הדקות שמשתמש/ת חייבים לחכות לפני שהם יכולים לערוך פרסום מוסתר דרך סימון קהילתי"
-    max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
-    max_replies_in_first_day: "The maximum number of replies a user is allowed to create in their first day on the site"
     tl2_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור tl2 (משתמש) באמצעות הכפלה במספר זה. "
     tl3_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור tl3 (רגיל) באמצעות הכפלה במספר זה. "
     tl4_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור tl4 (מנהיג) באמצעות הכפלה במספר זה. "
-    num_flags_to_block_new_user: "אם פרסומים של משתמש/ת חדשים מסומנים כספאם על ידי num_users_to_block_new_user משתשמים שונים, הסתירו את כל הפרסומים שלהם ומנעו מהם פרסום עתידי. 0 כדי לנטרל."
-    num_users_to_block_new_user: "אם פרסומים של משתמש/ת חדשים מסומנים כספאם על ידי  num_flags_to_block_new_user  משתמשים שונים, הסתירו את כל הפרסומים שלהם ומנעו מהם פרסום עתידי. 0 כדי לנטרל."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "אם משתמש/ת חדשים מגיבים לנושא מכתובת IP זהה לזו של מי שהחל את הנושא, סמנו את הפרסומים של שניהם כספאם פוטנציאלי."
     traditional_markdown_linebreaks: "שימוש בשבירת שורות מסורתית בסימון, מה שדורש שני רווחים עוקבים למעבר שורה."
@@ -896,9 +872,6 @@ he:
     allow_animated_thumbnails: "יצירת תמונות אנימציה מוקטנות קטנות של קבצי אנימציית gif."
     default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
-    digest_topics: "מספר הנושאים המקסימלי להצגה במייל סיכום."
-    digest_min_excerpt_length: "מספר התווים המינימלי למובאות מתוך הפרסום במייל הסיכום."
-    disable_digest_emails: "נטרול דוא\"ל סיכום לכל המשתמשים."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
     public_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים באופן פומבי."
@@ -910,6 +883,7 @@ he:
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "איזה אחוז מהפרסומים משתמש צריך לייצר בנושא לפני שיקבל תזכורת לגבי שליטת/שתלטנות יתר על הנושא."
+    daily_performance_report: "Analyze NGINX logs daily and post a Staff Only topic with details"
     suppress_uncategorized_badge: "אל תציגו את התג (badge) לנושאים נטולי קטגוריה ברשימת הנושאים."
     global_notice: "הציגו הודעת אזהרה דחופה כללית לכל המבקרים, החליפו לריק כדי להסתיר אותה (ניתן להשתמש ב-HTML)."
     disable_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
@@ -942,7 +916,6 @@ he:
     emoji_set: "איך אתם אוהבים את ה-emoji שלכם?"
     enforce_square_emoji: "חובת מימדי ריבועיים בכל ה-emojis."
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
-    default_email_digest_frequency: "באיזה תדירות משתמשים מקבלים מייל עדכון בתור ברירת מחדל. "
     default_email_private_messages: "שלח מייל כשמישהו שולח הודעה למשתמש, בתור ברירת מחדל."
     default_email_direct: "שלח מייל כשמישהו מצטט/ מגיב ל/מזכיר או מזמין משתמש, בתור ברירת מחדל. "
     default_email_mailing_list_mode: "שלח מייל עבור כל פרסום חדש בתור ברירת מחדל. "
@@ -953,6 +926,7 @@ he:
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
     default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
+    default_other_edit_history_public: "Make the post revisions public by default."
     default_categories_watching: "List of categories that are watched by default."
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
@@ -970,19 +944,6 @@ he:
       invalid_string_min: "חייב להיות לפחות %{min} תווים."
       invalid_string_max: "נדרשים לא יותר מ-%{max} תווים."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
-  notification_types:
-    mentioned: "%{display_username} אזכר אותך ב %{link}"
-    liked: "%{display_username} נתן לייק להודעה שלך ב %{link}"
-    replied: "%{display_username} הגיב להודעה שלך ב %{link}"
-    quoted: "%{display_username} ציטט הודעה שלך ב %{link}"
-    edited: "%{display_username} ערך הודעה שלך ב %{link}"
-    posted: "%{display_username} פרסם ב %{link}"
-    moved_post: "%{display_username} העביר את ההודעה שלך ל %{link}"
-    private_message: "%{display_username}  שלח/ה לך הודעה: %{link}"
-    invited_to_private_message: "%{display_username}  הזמין אותך להודעה:  %{link}"
-    invitee_accepted: "%{display_username} קיבל את הזמנתך"
-    linked: "%{display_username} קישר אליך ב %{link}"
-    granted_badge: "הרווחת %{link}"
   search:
     within_post: "#%{post_number} פרסומים של %{username}"
     types:
@@ -1086,35 +1047,16 @@ he:
     subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמין/הזמינה אותך לדיון
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       באתר
-
       > %{site_title} -- %{site_description}
-
       אם את/ה מעוניינים להצטרף לדיון, הקישו על הקישור הבא:
-
       %{invite_link}
-
       הזמנה זו נשלחה על ידי משתמש/ת מוכר/ת ולכן אתם יכולים להשיב לדיון הנ"ל באופן מיידי.
   invite_forum_mailer:
     subject_template: "%{invitee_name} הזמינ/ה אותך להצטרף ל%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} הזמינ/ה אותך להצטרף.
-
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      אם הינכם מעוניינים לחצו על הקישור הבא:
-
-      %{invite_link}
-
-      הודעה זו נשלחה על ידי משתמש/ת מוכרים כך שאינך חייב/ת להתחבר.
   invite_password_instructions:
     subject_template: "צרו סיסמא עבור חשבון ה-%{site_name} שלכם."
     text_body_template: |
@@ -1131,9 +1073,6 @@ he:
     subject_template:
       one: "[%{site_name}] תגובה אחת מחכה לבדיקה"
       other: "[%{site_name}] %{count}  תגובות ממתינים לבדיקה"
-    text_body_template: |
-      שלום,
-      יש תגובות ממשתמשים חדשים שממינות לתגובה [ניתן לאשר או לדחות אותן כאן] (%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "הפרסום שלך סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפרסום הראשון. "
     inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהוא פוגעני או הפרה של [our community guidelines](/guidelines)"
@@ -1147,35 +1086,36 @@ he:
     deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפרסום."
   temporarily_closed_due_to_flags: "נושא זה סגור באופן זמני בעקבות מספר רב של סימונים של הקהילה. "
   system_messages:
-    post_hidden:
-      subject_template: "הודעה הוסתרה בעקבות סימון"
     welcome_user:
       subject_template: "ברוכים הבאים ל %{site_name}!"
       text_body_template: |
         תודה שהצטרפת ל %{site_name}!
-
         %{new_user_tips}
-
         אנו מאמינים ומאמינות ב  [התנהגות קהילתית מתורבתת ](%{base_url}/guidelines) בכל זמן.
-
         תהנו!
-
         (אם ברצונך לתקשר עם [מנהל אתר](%{base_url}/about) כמשתמשת חדשה, השיבי להודעה הזו. )
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
-      text_body_template: "תודה שקיבלת את ההזמנה שלך ל %{site_name} - ברוכים הבאים!\n\nיצרנו חשבון חדש **%{username}** בשבילך, ואת/ה מחובר/ת. תוכל/י תמיד לשנות את שמך באמצעות ביקור  [ בפרופיל שלך ][prefs].\n\nעל מנת להתחבר שוב:\n\n1. השתמשו תמיד **באותו חשבון מייל מההזמנה המקורית** בעת ההתחברות. אחרת לא נוכל לדעת שזה את/ה!\n\n2. צרו סיסמא יחודית עבור  [ הפרופיל שלך] [prefs] והשתמשו בה בשביל להתחבר. \n\n%{new_user_tips}\n\nאנו מאמינים ומאמינות ב [התנהגות קהילתית מתורבתת] (%{base_url}/guidelines)  בכל זמן. \n\nתהנו!\n\n(אם ברצונך לתקשר עם [מנהלת אתר] (%{base_url}/about) כמשתמש/ת חדש/ה השיבי להודעה זו.)\n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: |
+        תודה שקיבלת את ההזמנה שלך ל %{site_name} - ברוכים הבאים!
+        יצרנו חשבון חדש **%{username}** בשבילך, ואת/ה מחובר/ת. תוכל/י תמיד לשנות את שמך באמצעות ביקור  [ בפרופיל שלך ][prefs].
+        על מנת להתחבר שוב:
+        1. השתמשו תמיד **באותו חשבון מייל מההזמנה המקורית** בעת ההתחברות. אחרת לא נוכל לדעת שזה את/ה!
+        2. צרו סיסמא יחודית עבור  [ הפרופיל שלך] [prefs] והשתמשו בה בשביל להתחבר.
+        %{new_user_tips}
+        אנו מאמינים ומאמינות ב [התנהגות קהילתית מתורבתת] (%{base_url}/guidelines)  בכל זמן.
+        תהנו!
+        (אם ברצונך לתקשר עם [מנהלת אתר] (%{base_url}/about) כמשתמש/ת חדש/ה השיבי להודעה זו.)
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "הגיבוי הושלם בהצלחה."
       text_body_template: "הגיבוי נוצר בהצלחה!\nבקר ב  [admin > backup section](%{base_url}/admin/backups)  על מנת להוריד את הגיבוי החדש שלך."
     backup_failed:
       subject_template: "הגיבוי נכשל."
-      text_body_template: |+
+      text_body_template: |
         הגיבוי נכשל.
-
         הנה הלוג:
-
         %{logs}
-
     restore_succeeded:
       subject_template: "השחזור הסתיים בהצלחה."
       text_body_template: "השחזור הצליח."
@@ -1184,7 +1124,6 @@ he:
       text_body_template: |
         האחזור נכשל.
         הנה רישום הפעולות:
-
         ```
         %{logs}
         ```
@@ -1195,17 +1134,17 @@ he:
       subject_template: "ההזמנה הקבותית עובדה עם שגיאות"
       text_body_template: |
         ההזמנה הקבוצתית שלך עובדה,  %{sent} הזמנות נשלחו עם %{failed} תקלה/ות.
-
         רישום המערכת:
-
         Here's the log:
         ```
-
         %{logs}
         ```
     csv_export_succeeded:
       subject_template: "יצוא הנתונים הושלם"
-      text_body_template: "הנתונים שלך יוצאו בהצלחה! :dvd:\n\n<a class=\"attachment\" href=\"%{download_link}\">%{file_name}</a> (%{file_size})\n\nלינק ההורדה יהיה זמין במשך 48 שעות. \n"
+      text_body_template: |
+        הנתונים שלך יוצאו בהצלחה! :dvd:
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+        לינק ההורדה יהיה זמין במשך 48 שעות.
     csv_export_failed:
       subject_template: "ייצוא הנתונים נכשל"
       text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."
@@ -1215,7 +1154,9 @@ he:
       subject_template: "[%{site_name}]  בעיית מייל -- ללא תוכן"
     email_reject_parsing:
       subject_template: "[%{site_name}]  בעיית מייל -- תוכן לא זוהה."
-      text_body_template: "אנחנו מתנצלים, אבל הודעת המייל שלך ל- %{destination}  (titled %{former_title})  לא עבדה. \n\nלא מצאנו תוכן במייל שלך. אנא ודא שהתגובה שלך בראש המייל, אנחנו לא יכולים לעבד תגובות בין השורות. \n"
+      text_body_template: |
+        אנחנו מתנצלים, אבל הודעת המייל שלך ל- %{destination}  (titled %{former_title})  לא עבדה.
+        לא מצאנו תוכן במייל שלך. אנא ודא שהתגובה שלך בראש המייל, אנחנו לא יכולים לעבד תגובות בין השורות.
     email_reject_invalid_access:
       subject_template: "[%{site_name}]  בעיית מייל -- גישה לא תקינה"
     email_reject_reply_key:
@@ -1228,8 +1169,6 @@ he:
       subject_template: "[%{site_name}]  בעיית מייל -- תגובה נוצרה אוטומטית"
     email_error_notification:
       subject_template: "[%{site_name}]  בעיית מייל -- בעיית אימות POP"
-    user_automatically_blocked:
-      subject_template: "המשתמש/ת החדשים %{username} נחסמו בשל התראות מהקהילה."
     spam_post_blocked:
       subject_template: "הודעות של המשתמש/ת החדש/ה %{username} נחסמו בשל קישורים חוזרים."
     pending_users_reminder:
@@ -1238,7 +1177,6 @@ he:
         other: "%{count} users waiting for approval"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
-
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "הורדת תמונות מרחוק מנוטרלת"
@@ -1265,13 +1203,10 @@ he:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "סיכום קצר של %{site_link} מאז ביקורך האחרון ב-%{last_seen_at}"
-      subject_template: "[%{site_name}] תקציר"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
       other_new_topics: "Other New Topics:"
-      unsubscribe: "תקציר זה נשלח אליך מ-%{site_link} מכיוון שלא ראינו אותך מזה זמן מה. קישור לביטול ההרשמה %{unsubscribe_link}."
       click_here: "click here"
-      from: "%{site_name} digest"
       read_more: "Read More"
       more_topics: "ישנם %{new_topics_since_seen} נושאים חדשים נוספים."
       more_topics_category: "עוד נושאים חדשים:"
@@ -1279,41 +1214,47 @@ he:
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
-
         If it was not you, you can safely ignore this email.
-
         Click the following link to choose a new password:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Set Password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
-
         If you did not make this request, you can safely ignore this email.
-
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] התחברות"
-      text_body_template: "מישהו ביקש להתחבר לחשבונך ב [%{site_name}](%{base_url}).\nאם לא ביקשת זאת, תוכל להתעלם מהמייל הזה. \nלחץ על הקישור הבא להתחבר:\n%{base_url}/users/admin-login/%{email_token}\n"
+      text_body_template: |
+        מישהו ביקש להתחבר לחשבונך ב [%{site_name}](%{base_url}).
+        אם לא ביקשת זאת, תוכל להתעלם מהמייל הזה.
+        לחץ על הקישור הבא להתחבר:
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] החשבון החדש שלך"
       text_body_template: |
         חשבון חדש נוצר עבורך ב%{site_name}
-
         הקישו על הקישור המצורף כדי להגדיר סיסמא לחשבונך החדש:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: "ברוכים הבאים ל%{site_name}!\n\nחבר צוות אישר את החשבון שלך ב %{site_name}. \n\nלחץ על הקישור הבא לאשר והפעיל את החשבון החדש שלך:\n%{base_url}/users/activate-account/%{email_token}\n\nאם הלינק לא לחיץ, נסה להעתיק ולהדביק אותו לסרגל הכתובת בראש הדפדפן. \n\n%{new_user_tips}\n\nאנו מאמינים ב  [civilized community behavior](%{base_url}/guidelines)  בכל זמן.\n\nתהנה מהביקור!\n\n(אם אתה צריך ליצור קשר עם [staff members](%{base_url}/about)  כחבר חדש, רק השב להודעה זאת. )\n\n"
+      text_body_template: |
+        ברוכים הבאים ל%{site_name}!
+        חבר צוות אישר את החשבון שלך ב %{site_name}.
+        לחץ על הקישור הבא לאשר והפעיל את החשבון החדש שלך:
+        %{base_url}/users/activate-account/%{email_token}
+        אם הלינק לא לחיץ, נסה להעתיק ולהדביק אותו לסרגל הכתובת בראש הדפדפן.
+        %{new_user_tips}
+        אנו מאמינים ב  [civilized community behavior](%{base_url}/guidelines)  בכל זמן.
+        תהנה מהביקור!
+        (אם אתה צריך ליצור קשר עם [staff members](%{base_url}/about)  כחבר חדש, רק השב להודעה זאת. )
     signup:
       subject_template: "[%{site_name}]  אשר את חשבונך החדש"
       text_body_template: |
         Welcome to %{site_name}!
-
         Click the following link to confirm and activate your new account:
         %{base_url}/users/activate-account/%{email_token}
-
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
   page_not_found:
     popular_topics: "פופלארי"
@@ -1323,7 +1264,6 @@ he:
     search_google: "גוגל"
   login_required:
     welcome_message: |
-      #[ברוכים הבאים אל %{title}](#welcome)
       נדרש חשבון. אנא צרו חשבון או התחברו כדי להמשיך.
   terms_of_service:
     title: "תנאי השימוש"
@@ -1382,8 +1322,3 @@ he:
   performance_report:
     initial_post_raw: 'נושא זה כולל דוחות פעילות יומיים עבור האתר שלך. '
     initial_topic_title: דוחות פעילות לאתר
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

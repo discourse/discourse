@@ -13,15 +13,17 @@ tr_TR:
       total_votes:
         other: "toplam oy"
       average_rating: "Ortalama oran: <strong>%{average}</strong>."
+      public:
+        title: "Oylar Genel"
       multiple:
         help:
           at_least_min_options:
-            other: "En az <strong>%{count}</strong> seçim yapmalısınız."
+            other: "En az <strong>%{count}</strong> seçecek seçiniz"
           up_to_max_options:
-            other: "En fazla <strong>%{count}</strong> seçim yapabilirsiniz."
+            other: "<strong>%{count}</strong> seçeneğe kadar seçebilirsiniz"
           x_options:
-            other: "<strong>%{count}</strong> seçim yapmalısınız."
-          between_min_and_max_options: "<strong>%{min}</strong> ve <strong>%{max}</strong> seçenekleri arasında seçim yapabilirsiniz."
+            other: "<strong>%{count}</strong>  seçenek seçiniz"
+          between_min_and_max_options: "<strong>%{min}</strong> ve <strong>%{max}</strong> arasında seçenek seçiniz"
       cast-votes:
         title: "Oyunuzu kullanın"
         label: "Şimdi oylayın!"
@@ -39,5 +41,24 @@ tr_TR:
         title: "Anketi bitir"
         label: "Bitir"
         confirm: "Bu anketi bitirmek istediğinize emin misiniz?"
-      error_while_toggling_status: "Bu anketin statüsü değiştirilirken bir hata oluştu."
-      error_while_casting_votes: "Oylama esnasında hata oluştu."
+      error_while_toggling_status: "Üzgünüz, anket durumunu değiştirme sırasında hata meydana geldi."
+      error_while_casting_votes: "Üzgünüz, oylarınızı dönüştürme sırasında hata meydana geldi"
+      error_while_fetching_voters: "Üzgünüz, oy verenleri görüntüleme sırasında hata meydana geldi"
+      ui_builder:
+        title: Anket Oluştur
+        insert: Anket Ekle
+        help:
+          options_count: En az 2 özellik ekleyin
+        poll_type:
+          label: Tür
+          regular: Tekli seçim
+          multiple: Çoklu Seçim
+          number: Sayısal Değerlendirme
+        poll_config:
+          max: Max
+          min: Min
+          step: Basamak
+        poll_public:
+          label: Oyverenleri görüntüle
+        poll_options:
+          label: Her satıra bir anket seçeneği girin

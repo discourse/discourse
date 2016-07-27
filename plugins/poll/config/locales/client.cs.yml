@@ -17,21 +17,58 @@ cs:
         few: "hlasy celkem"
         other: "hlasů celkem"
       average_rating: "Průměrné hodnocení: <strong>%{average}</strong>."
+      public:
+        title: "Hlasy jsou veřejné."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Zvolte alespoň <strong>1</strong> možnost."
+            few: "Zvolte alespoň <strong>%{count}</strong> možnosti."
+            other: "Zvolte alespoň <strong>%{count}</strong> možností."
+          up_to_max_options:
+            one: "Zvolte maximálně <strong>1</strong> možnost."
+            few: "Zvolte maximálně <strong>%{count}</strong> možnosti."
+            other: "Zvolte maximálně <strong>%{count}</strong> možností."
+          x_options:
+            one: "Zvolte <strong>1</strong> možnost."
+            few: "Zvolte <strong>%{count}</strong> možnosti."
+            other: "Zvolte <strong>%{count}</strong> možností."
+          between_min_and_max_options: "Zvolte mezi <strong>%{min}</strong> a <strong>%{max}</strong> možnostmi."
       cast-votes:
         title: "Hlasujte"
         label: "Hlasovat!"
       show-results:
-        title: "Zobraz výsledky hlasování."
-        label: "Ukaž výsledky."
+        title: "Zobraz výsledky hlasování"
+        label: "Ukaž výsledky"
       hide-results:
         title: "Zpět k hlasování"
-        label: "Schovej výsledky."
+        label: "Schovej výsledky"
       open:
         title: "Otevřít hlasování"
         label: "Otevři"
         confirm: "Opravdu chcete otevřít toto hlasování?"
       close:
-        title: "Zavřít hlasování."
+        title: "Zavřít hlasování"
         label: "Zavřít"
         confirm: "Opravdu chcete uzavřít toto hlasování?"
-      error_while_casting_votes: "Objevila se chyba při zpracování Vašeho hlasu."
+      error_while_toggling_status: "Došlo k chybě při změně statusu hlasování"
+      error_while_casting_votes: "Došlo k chybě při odesílání vašeho hlasu."
+      error_while_fetching_voters: "Došlo k chybě při zobrazování hlasujících."
+      ui_builder:
+        title: Vytvořit hlasování
+        insert: Vložit hlasování
+        help:
+          options_count: Zadejte alespoň 2 možnosti
+        poll_type:
+          label: Typ
+          regular: Jedna možnost
+          multiple: Více možností
+          number: Číselné hodnocení
+        poll_config:
+          max: Maximum
+          min: Minimum
+          step: Krok
+        poll_public:
+          label: Zobrazit kdo hlasoval
+        poll_options:
+          label: Na každý řádek zadejte jednu možnost hlasování

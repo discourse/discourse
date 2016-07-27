@@ -10,6 +10,12 @@ nb_NO:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats 
+  date:
+    month_names: []
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "innlegg"
@@ -66,6 +72,9 @@ nb_NO:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
     site_settings:
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "Den opplastede filen må være i .csv eller .txt format."
   backup:
@@ -136,51 +145,30 @@ nb_NO:
     until_posts:
       one: "1 innlegg"
       other: "%{count} innlegg"
-    new-topic: |
+    'new-topic': |
       Velkommen til %{site_name} &mdash; **takk for at du startet et nytt innlegg!**
-
       - Høres tittelen på innlegget interessant ut hvis du leser det høyt? Er det en god oppsummering?
-
       - Hvem vil være interessert i dette? Hvorfor betyr det noe? Hva slags respons er du ute etter?
-
       - Bruk relevante begreper i emnet så andre kan *finne* det. Venligst velg en kategori for å gruppere emnet ditt med andre liknende emner.
-
       [Se våre retningslinjer](/guidelines) for mer informasjon. Denne meldingen vises kun for ditt første %{education_posts_text}.
-    new-reply: |
+    'new-reply': |
       Velkommen til %{site_name} &mdash; **takk for bidraget!**
-
       - Forbedrer innlegget ditt samtalen på noen måte?
-
       - Vær snill med andre medlemmer
-
       - Konstruktiv kritikk ønskes velkommen, men husk å kritiser ideèr, ikke mennesker.
-
       For mer informasjon [see våre retningslinjer](/guidelines). Dette panelet vil kun vises for ditt første %{education_posts_text}.
     sequential_replies: |
-      ### Vurder å svare til flere innlegg på samme tid
-
       I stedet for mange sekvensielle svar til et emne så kan du vurdere ett enkelt svar som inkluderer sitater fra tidligere innlegg og @navn referanser.
-
       Du kan redigere og legge til sitater i tidligere svar ved å markere tekst og velge <b>quote reply</b> knappen som dukker opp.
-
       Det er lettere for alle å lese emner som har færre og dypere svar enn mange små individuelle svar.
     dominating_topic: |
-      ### La andre delta i diskusjonen
-
       Dette emnet er tydeligvis viktig for deg &ndash; du har skrevet mer enn %{percent}% av svarene her.
-
       Er du sikker du gir nok tid til andre å dele sine innspill også?
     too_many_replies: |
-      ### Du har nådd det maksimale antallet mulige svar for dette emnet
-
       Vi beklager, men nye brukere er midlertidig begrenset til %{newuser_max_replies_per_topic} svar per emne.
-
       Fremfor å legge inn nok et svar kan du vurdere å redigere dine tidligere svar eller delta i andre diskusjoner.
     reviving_old_topic: |
-      ### Gjenoppliv dette emnet?
-
       Det siste innlegget er nå mer enn %{days} dager gammelt. Svaret ditt vil bumpe emnet opp til toppen av listen og vil varsle alle som tidligere har vært involvert i samtalen.
-
       Er du sikker du vil fortsette denne gamle samtalen?
   activerecord:
     attributes:
@@ -191,6 +179,7 @@ nb_NO:
       user_profile:
         bio_raw: "Om meg"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -211,7 +200,6 @@ nb_NO:
           attributes:
             hex:
               invalid: "er ikke en gyldig farge"
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Om meg-feltet på din profil er for øyeblikket blankt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
@@ -224,26 +212,18 @@ nb_NO:
   assets_topic_body: "Dette er et permanent emne, synlig bare for staben, for å lagre bilder of filer brukt i designet på siden. Ikke slett det!\n\n\nHvordan legge til nye filer:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du vil bruke, som logoer, favicons osv. (Bare dra bildene inn i skrivefeltet, eller bruk knappen for opplasting.)\n3. Send ditt svar.\n4. Høyrklikk bildene i din nye post for å få lenken til de opplastede bildene, eller klikk på redigeringsikonet for å kopiere lenkene fra skrivefeltet.\n5. Lim disse lenkene inn i [basic settings](/admin/site_settings/category/required).\n\n\nHvis du trenger å tillate andre filtyper, rediger `authorized_extensions` i [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Velkommen til Salongen"
-    body: |2
-
+    body: |
       Gratulerer! :confetti_ball:
-
       Hvis du kan se dette emnet har du nylig blitt promotert til **trofast** (tillitsnivå 3).
-
       Du kan nå &hellip;
-
       * Redigere tittelen på alle emner
       * Endre kategorien på alle emner
       * Få lenkene dine fulgt opp ([automatisk nofollow](http://en.wikipedia.org/wiki/Nofollow) er fjernet)
       * Tilgang til en privat Lounge kategori bare synlig for brukere med tillitsnivå 3 eller høyere.
       * All spam du flagger vil bli gjemt umiddelbart.
-
       Her er den [oppdaterte listen over andre "trofaste"](/badges/3/regular). Si gjerne hei!
-
       Takk for at du er en aktiv del av fellesskapet vårt.
-
       (For mer informasjon om tillitsnivå, [see dette emnet][trust]. Vennligst merk at bare medlemmer som fortsetter å oppfylle kravene over tid vil forbli *trofaste*.)
-
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorien %{category} "
@@ -425,18 +405,6 @@ nb_NO:
       message:
         make: "Dette emnet er nå en banner. Det vil vises på toppen av hver side til brukeren lukker det."
         remove: "Dette emnet er ikke lenger en banner. Det vil ikke lenger vises på toppen av hver side."
-  unsubscribed:
-    title: 'Avmeldt'
-    description: "Du har avsluttet ditt abonnement. Vi vil ikke kontakte deg igjen!"
-    oops: "I tilfelle du ikke mente å gjøre dette, klikk nedenfor."
-    error: "Feil ved avmelding"
-    preferences_link: "Du kan også velge å ikke mota sammendrag eposten på dine <a href='/my/preferences'>instillinger</a>"
-    different_user_description: "Du er logget inn som en annen bruker enn den emailen ble sendt til. Vær så snill og logg ut og prøv igjen."
-    not_found_description: "Beklager, men vi kan ikke avmelde deg. Det er mulig at linken i din email har gått ut på dato."
-  resubscribe:
-    action: "Abonnere igjen"
-    title: "Abonnerer igjen!"
-    description: "Du har begynt ditt abonnement igjen. "
   reports:
     visits:
       title: "Brukerbesøk"
@@ -569,7 +537,6 @@ nb_NO:
       yaxis: "Antall besøk"
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
-    ruby_version_warning: "Du kjører en versjon av Ruby 2.0.0 som er kjent for å ha problemer. Oppgrader derfor til patch level 247 eller senere."
     host_names_warning: "Din config/database.yml fil bruker standard localhost hostnavn. Venligst legg inn ditt ønskede hostnavn"
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
     title_nag: "Oppgi navnet på nettstedet. Oppdater tittelen under <a href='/admin/site_settings'>Nettstedinstillinger</a>."
@@ -626,11 +593,6 @@ nb_NO:
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_string: "Ugyldig verdi"
-  notification_types:
-    mentioned: "%{display_username} neonate deg i %{link}"
-    liked: "%{display_username} like innlegget ditt i %{link}"
-    private_message: "%{display_username} sendte deg en melding: %{link}"
-    invited_to_private_message: "%{display_username}inviterte deg til en samtale: %{link}"
   search:
     types:
       category: 'Kategorier'
@@ -693,8 +655,6 @@ nb_NO:
     deferred: "Takk for at du sier ifra. Vi ser på saken. "
     deferred_and_deleted: "Takk for at du sier ifra. Vi har fjernet innlegget. "
   system_messages:
-    post_hidden:
-      subject_template: "Innlegg skjult grunnet fellesskaps varslinger"
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
@@ -705,7 +665,6 @@ nb_NO:
       new_activity: "Ny aktivitet rundt dine emner og innlegg:"
       top_topics: "Populære innlegg"
       other_new_topics: "Populære emner"
-      unsubscribe: "Dette sammendraget er sent fra %{site_link} siden vi ikke har sett deg på en stund. For å melde deg av %{unsubscribe_link}."
       click_here: "trykk her"
       read_more: "Les Mer"
       more_topics_category: "Flere nye emner:"
@@ -713,14 +672,12 @@ nb_NO:
       subject_template: "[%{site_name}] Din Nye Konto"
       text_body_template: |
         En ny konto ble registrert for deg på %{site_name}
-
         Trykk på følgende link for å velge et passord for kontoen din:
         %{base_url}/users/password-reset/%{email_token}
     signup:
       subject_template: "[%{site_name}] Bekreft din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
-
         Trykk på denne lenken for å aktivere kontoen din:
         %{base_url}/users/activate-account/%{email_token}
   page_not_found:
@@ -730,7 +687,6 @@ nb_NO:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[Velkommen til %{title}](#welcome)
       En bruker er påkrevd. Lag en bruker eller logg inn for å fortsette.
   terms_of_service:
     title: "Betingelser"
@@ -754,6 +710,3 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
-  activemodel:
-    errors:
-      <<: *errors
