@@ -329,18 +329,18 @@ nb_NO:
         muted:
           title: "Dempet"
     user_action_groups:
-      "1": "Liker tildelt"
-      "2": "Liker mottatt"
-      "3": "Bokmerker"
-      "4": "Emner"
-      "5": "Svar"
-      "6": "Svar"
-      "7": "Omtalelser"
-      "9": "Sitater"
-      "11": "Redigeringer"
-      "12": "Sendte elementer"
-      "13": "Innboks"
-      "14": "Venter"
+      '1': "Liker tildelt"
+      '2': "Liker mottatt"
+      '3': "Bokmerker"
+      '4': "Emner"
+      '5': "Svar"
+      '6': "Svar"
+      '7': "Omtalelser"
+      '9': "Sitater"
+      '11': "Redigeringer"
+      '12': "Sendte elementer"
+      '13': "Innboks"
+      '14': "Venter"
     categories:
       all: "Alle"
       all_subcategories: "alle"
@@ -996,20 +996,20 @@ nb_NO:
         position: "innlegg %{current} av %{total}"
       notifications:
         reasons:
-          "3_6": 'Du vil motta varsler fordi du følger denne kategorien'
-          "3_5": 'Du vil motta varsler fordi du startet å følge dette emnet automatisk.'
-          "3_2": 'Du vil motta varsler fordi du følger dette emnet.'
-          "3_1": 'Du vil motta varsler fordi du opprettet dette emnet.'
-          "3": 'Du vil motta varsler fordi du følger dette emnet.'
-          "2_8": 'Du vil motta varsler fordi du følger denne kategorien.'
-          "2_4": 'Du vil motta varsler fordi du svarte på dette emnet.'
-          "2_2": 'Du vil motta varsler fordi du følger dette emnet.'
-          "2": 'Du vil motta varsler fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
-          "1_2": 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
-          "1": 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
-          "0_7": 'Du ignorerer alle varsler i denne kategorien.'
-          "0_2": 'Du ignorerer alle varsler på dette emnet.'
-          "0": 'Du ignorerer alle varsler på dette emnet.'
+          '3_6': 'Du vil motta varsler fordi du følger denne kategorien'
+          '3_5': 'Du vil motta varsler fordi du startet å følge dette emnet automatisk.'
+          '3_2': 'Du vil motta varsler fordi du følger dette emnet.'
+          '3_1': 'Du vil motta varsler fordi du opprettet dette emnet.'
+          '3': 'Du vil motta varsler fordi du følger dette emnet.'
+          '2_8': 'Du vil motta varsler fordi du følger denne kategorien.'
+          '2_4': 'Du vil motta varsler fordi du svarte på dette emnet.'
+          '2_2': 'Du vil motta varsler fordi du følger dette emnet.'
+          '2': 'Du vil motta varsler fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
+          '1_2': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
+          '1': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
+          '0_7': 'Du ignorerer alle varsler i denne kategorien.'
+          '0_2': 'Du ignorerer alle varsler på dette emnet.'
+          '0': 'Du ignorerer alle varsler på dette emnet.'
         watching_pm:
           title: "Følger"
           description: "Du vil bli varslet om hvert nye innlegg i denne meldingen. Antall nye tilbakemeldinger vil også bli vist. "

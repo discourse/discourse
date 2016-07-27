@@ -372,18 +372,18 @@ ro:
         muted:
           title: "Mut"
     user_action_groups:
-      "1": "Aprecieri Date"
-      "2": "Aprecieri Primite"
-      "3": "Semne de carte"
-      "4": "Discuții"
-      "5": "Răspunsuri"
-      "6": "Răspunsuri"
-      "7": "Mențiuni"
-      "9": "Citate"
-      "11": "Editări"
-      "12": "Obiecte Trimise"
-      "13": "Primite"
-      "14": "În așteptare"
+      '1': "Aprecieri Date"
+      '2': "Aprecieri Primite"
+      '3': "Semne de carte"
+      '4': "Discuții"
+      '5': "Răspunsuri"
+      '6': "Răspunsuri"
+      '7': "Mențiuni"
+      '9': "Citate"
+      '11': "Editări"
+      '12': "Obiecte Trimise"
+      '13': "Primite"
+      '14': "În așteptare"
     categories:
       all: "toate categoriile"
       all_subcategories: "toate"
@@ -1122,20 +1122,20 @@ ro:
         position: "postarea %{current} din %{total}"
       notifications:
         reasons:
-          "3_6": 'Vei primi notificări deoarece urmărești activ această categorie.'
-          "3_5": 'Vei primi notificări deoarece ai început să urmărești activ această discuție automat.'
-          "3_2": 'Vei primi notificări deoarece urmărești activ această discuție.'
-          "3_1": 'Vei primi notificări deoarece ați creat această discuție.'
-          "3": 'Vei primi notificări deoarece urmărești activ această discuție.'
-          "2_8": 'Vei primi notificări deoarece urmărești această categorie.'
-          "2_4": 'Vei primi notificări deoarece ai postat un răspuns în această discuție.'
-          "2_2": 'Vei primi notificări fiindcă urmărești această discuție.'
-          "2": 'Vei primi notificări fiindcă citești <a href="/users/{{username}}/preferences">această discuție</a>.'
-          "1_2": 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
-          "1": 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
-          "0_7": 'Ignori toate notificările din această categorie.'
-          "0_2": 'Ignori toate notificările din această discuție.'
-          "0": 'Ignori toate notificările din această discuție.'
+          '3_6': 'Vei primi notificări deoarece urmărești activ această categorie.'
+          '3_5': 'Vei primi notificări deoarece ai început să urmărești activ această discuție automat.'
+          '3_2': 'Vei primi notificări deoarece urmărești activ această discuție.'
+          '3_1': 'Vei primi notificări deoarece ați creat această discuție.'
+          '3': 'Vei primi notificări deoarece urmărești activ această discuție.'
+          '2_8': 'Vei primi notificări deoarece urmărești această categorie.'
+          '2_4': 'Vei primi notificări deoarece ai postat un răspuns în această discuție.'
+          '2_2': 'Vei primi notificări fiindcă urmărești această discuție.'
+          '2': 'Vei primi notificări fiindcă citești <a href="/users/{{username}}/preferences">această discuție</a>.'
+          '1_2': 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
+          '1': 'Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns.'
+          '0_7': 'Ignori toate notificările din această categorie.'
+          '0_2': 'Ignori toate notificările din această discuție.'
+          '0': 'Ignori toate notificările din această discuție.'
         watching_pm:
           title: "Urmărit Activ"
           description: "Numărul postărilor noi va fi arătat pentru acest mesaj și vei fi notificat pentru orice răspuns scris."

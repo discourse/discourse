@@ -336,18 +336,18 @@ bs_BA:
           title: "Utišano"
           description: "Nećete biti obaviješteni zbog nove teme unutar ove grupe."
     user_action_groups:
-      "1": "Dati Lajkovi"
-      "2": "Dobijeni Lajkovi"
-      "3": "Sačuvano"
-      "4": "Teme"
-      "5": "Postovi"
-      "6": "Odgovori"
-      "7": "Spemenute"
-      "9": "Citirane"
-      "11": "Izmjenjene"
-      "12": "Poslato"
-      "13": "Inbox"
-      "14": "Na čekanju."
+      '1': "Dati Lajkovi"
+      '2': "Dobijeni Lajkovi"
+      '3': "Sačuvano"
+      '4': "Teme"
+      '5': "Postovi"
+      '6': "Odgovori"
+      '7': "Spemenute"
+      '9': "Citirane"
+      '11': "Izmjenjene"
+      '12': "Poslato"
+      '13': "Inbox"
+      '14': "Na čekanju."
     categories:
       all: "Sve kategorije"
       all_subcategories: "sve"
@@ -961,20 +961,20 @@ bs_BA:
         position: "post %{current} od %{total}"
       notifications:
         reasons:
-          "3_6": 'Dobijat ćete notifikacije zato što motrite ovu temu.'
-          "3_5": 'Dobijat ćete notifikacije zato što motrite temu automatski.'
-          "3_2": 'Dobijat ćete notifikacije zato što pratite ovu temu.'
-          "3_1": 'Dobijat ćete notifikacije zato što ste kreirali ovu temu.'
-          "3": 'Dobijat ćete notifikacije zato što motrite ovu temu.'
-          "2_8": 'Dobijat ćete notifikacije zato što motrite ovu temu.'
-          "2_4": 'Dobijat ćete notifikacije zato što ste ostavili odgovor na ovoj temi.'
-          "2_2": 'Dobijat ćete notifikacije zato što pratite ovu temu.'
-          "2": 'Dobijat ćete notifikacije zato što <a href="/users/{{username}}/preferences">pročitao ovu temu</a>.'
-          "1_2": 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
-          "1": 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
-          "0_7": 'Ignorišete sve notifikacije u ovoj kategoriji.'
-          "0_2": 'Ignorišete sve notifikacije u ovoj temi.'
-          "0": 'Ignorišete sve notifikacije u ovoj temi.'
+          '3_6': 'Dobijat ćete notifikacije zato što motrite ovu temu.'
+          '3_5': 'Dobijat ćete notifikacije zato što motrite temu automatski.'
+          '3_2': 'Dobijat ćete notifikacije zato što pratite ovu temu.'
+          '3_1': 'Dobijat ćete notifikacije zato što ste kreirali ovu temu.'
+          '3': 'Dobijat ćete notifikacije zato što motrite ovu temu.'
+          '2_8': 'Dobijat ćete notifikacije zato što motrite ovu temu.'
+          '2_4': 'Dobijat ćete notifikacije zato što ste ostavili odgovor na ovoj temi.'
+          '2_2': 'Dobijat ćete notifikacije zato što pratite ovu temu.'
+          '2': 'Dobijat ćete notifikacije zato što <a href="/users/{{username}}/preferences">pročitao ovu temu</a>.'
+          '1_2': 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
+          '1': 'Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post.'
+          '0_7': 'Ignorišete sve notifikacije u ovoj kategoriji.'
+          '0_2': 'Ignorišete sve notifikacije u ovoj temi.'
+          '0': 'Ignorišete sve notifikacije u ovoj temi.'
         watching_pm:
           title: "Motrenje"
         watching:

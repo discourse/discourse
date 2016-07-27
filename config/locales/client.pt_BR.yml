@@ -357,18 +357,18 @@ pt_BR:
           title: "Mudo"
           description: "Você será notificado sobre qualquer coisa sobre novos tópicos neste grupo."
     user_action_groups:
-      "1": "Curtidas dadas"
-      "2": "Curtidas recebidas"
-      "3": "Favoritos"
-      "4": "Tópicos"
-      "5": "Respostas"
-      "6": "Respostas"
-      "7": "Menções"
-      "9": "Citações"
-      "11": "Edições"
-      "12": "Itens enviados"
-      "13": "Caixa de Entrada"
-      "14": "Pendente"
+      '1': "Curtidas dadas"
+      '2': "Curtidas recebidas"
+      '3': "Favoritos"
+      '4': "Tópicos"
+      '5': "Respostas"
+      '6': "Respostas"
+      '7': "Menções"
+      '9': "Citações"
+      '11': "Edições"
+      '12': "Itens enviados"
+      '13': "Caixa de Entrada"
+      '14': "Pendente"
     categories:
       all: "todas as categorias"
       all_subcategories: "todos"
@@ -1145,20 +1145,20 @@ pt_BR:
         position: "mensagem %{current} de %{total}"
       notifications:
         reasons:
-          "3_6": 'Você receberá notificações porque você está acompanhando esta categoria.'
-          "3_5": 'Você receberá notificações porque começou a acompanhar este tópico automaticamente.'
-          "3_2": 'Você receberá notificações porque está observando este tópico.'
-          "3_1": 'Você receberá notificações porque criou este tópico.'
-          "3": 'Você receberá notificações porque você está observando este tópico.'
-          "2_8": 'Você receberá notificações porque você está monitorando essa categoria.'
-          "2_4": 'Você receberá notificações porque postou uma resposta neste tópico.'
-          "2_2": 'Você receberá notificações porque está monitorando este tópico.'
-          "2": 'Você receberá notificações porque você <a href="/users/{{username}}/preferences">leu este tópico</a>.'
-          "1_2": 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
-          "1": 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
-          "0_7": 'Você está ignorando todas as notificações nessa categoria.'
-          "0_2": 'Você está ignorando todas as notificações deste tópico.'
-          "0": 'Você está ignorando todas as notificações deste tópico.'
+          '3_6': 'Você receberá notificações porque você está acompanhando esta categoria.'
+          '3_5': 'Você receberá notificações porque começou a acompanhar este tópico automaticamente.'
+          '3_2': 'Você receberá notificações porque está observando este tópico.'
+          '3_1': 'Você receberá notificações porque criou este tópico.'
+          '3': 'Você receberá notificações porque você está observando este tópico.'
+          '2_8': 'Você receberá notificações porque você está monitorando essa categoria.'
+          '2_4': 'Você receberá notificações porque postou uma resposta neste tópico.'
+          '2_2': 'Você receberá notificações porque está monitorando este tópico.'
+          '2': 'Você receberá notificações porque você <a href="/users/{{username}}/preferences">leu este tópico</a>.'
+          '1_2': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
+          '1': 'Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem.'
+          '0_7': 'Você está ignorando todas as notificações nessa categoria.'
+          '0_2': 'Você está ignorando todas as notificações deste tópico.'
+          '0': 'Você está ignorando todas as notificações deste tópico.'
         watching_pm:
           title: "Acompanhando"
           description: "Você será notificado de cada mensagem nova neste tópico. Um contador de mensagens novas e não lidas também aparecerá próximo ao tópico."

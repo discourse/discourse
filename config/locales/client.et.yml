@@ -352,18 +352,18 @@ et:
           title: "Vaigistatud"
           description: "Sind ei teavitata ühestki uuest teemast selles grupis."
     user_action_groups:
-      "1": "Meeldimisi antud"
-      "2": "Meeldimisi saadud"
-      "3": "Järjehoidjat"
-      "4": "Teemat"
-      "5": "Vastust"
-      "6": "Reaktsioone"
-      "7": "Mainimisi"
-      "9": "Tsitaate"
-      "11": "Redaktsioone"
-      "12": "Saatmisi"
-      "13": "Postkast"
-      "14": "Ootel"
+      '1': "Meeldimisi antud"
+      '2': "Meeldimisi saadud"
+      '3': "Järjehoidjat"
+      '4': "Teemat"
+      '5': "Vastust"
+      '6': "Reaktsioone"
+      '7': "Mainimisi"
+      '9': "Tsitaate"
+      '11': "Redaktsioone"
+      '12': "Saatmisi"
+      '13': "Postkast"
+      '14': "Ootel"
     categories:
       all: "kõik liigid"
       all_subcategories: "kõik"
@@ -1130,20 +1130,20 @@ et:
         position: "postitus %{current} koguarvust %{total}"
       notifications:
         reasons:
-          "3_6": 'Sulle saabuvad teavitused, kuna vaatled seda liiki.'
-          "3_5": 'Sulle saabuvad teavitused kuna hakkasid seda teemat automaatselt jälgima.'
-          "3_2": 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          "3_1": 'Sulle saabuvad teavitused kuna lõid selle teema.'
-          "3": 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          "2_8": 'Sulle saabuvad teavitused, kuna jälgid seda liiki.'
-          "2_4": 'Sulle saabuvad teavitused kuna postitasid siia teemasse vastuse.'
-          "2_2": 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          "2": 'Sulle saabuvad teavitused kuna <a href="/users/{{username}}/preferences">luges seda teemat</a>.'
-          "1_2": 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
-          "1": 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
-          "0_7": 'Eirad kõiki teavitusi selles liigis.'
-          "0_2": 'Eirad kõiki teavitusi selle teema kohta.'
-          "0": 'Eirad kõiki teavitusi selles liigis.'
+          '3_6': 'Sulle saabuvad teavitused, kuna vaatled seda liiki.'
+          '3_5': 'Sulle saabuvad teavitused kuna hakkasid seda teemat automaatselt jälgima.'
+          '3_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
+          '3_1': 'Sulle saabuvad teavitused kuna lõid selle teema.'
+          '3': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
+          '2_8': 'Sulle saabuvad teavitused, kuna jälgid seda liiki.'
+          '2_4': 'Sulle saabuvad teavitused kuna postitasid siia teemasse vastuse.'
+          '2_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
+          '2': 'Sulle saabuvad teavitused kuna <a href="/users/{{username}}/preferences">luges seda teemat</a>.'
+          '1_2': 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
+          '1': 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
+          '0_7': 'Eirad kõiki teavitusi selles liigis.'
+          '0_2': 'Eirad kõiki teavitusi selle teema kohta.'
+          '0': 'Eirad kõiki teavitusi selles liigis.'
         watching_pm:
           title: "Vaatleb"
           description: "Saad teavituse iga uue vastuse kohta sellele sõnumile koos uute vastuste koguarvu näitamisega."

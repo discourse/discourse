@@ -15,11 +15,6 @@ id:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
-  date:
-    month_names: []
-    <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Topik"
   posts: "post"
@@ -83,9 +78,6 @@ id:
       max_username_length_exists: "Anda tidak boleh menentukan jumlah karakter maksimum username dibawah username terpendek. "
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       default_categories_already_selected: "Anda tidak boleh memilih kategori yang digunakan di daftar lainnya."
-  activemodel:
-    errors:
-      <<: *errors
   backup:
     operation_already_running: "Proses lain sedang berjalan. Tidak dapat menjalankan proses baru saat ini."
     backup_file_should_be_tar_gz: "File backup harus berupa arsip .tar.gz."
@@ -302,14 +294,20 @@ id:
       more_topics_category: "Topik baru lebih banyak:"
     account_created:
       subject_template: "[%{site_name}] Akun Baru Anda"
-      text_body_template: |
+      text_body_template: |+
         Anda mendapatkan akun baru di %{site_name}
+
+
         Silahkan sentuh tautan dibawah ini untuk menentukan sandi dari akun baru Anda:
+
         %{base_url}/users/password-reset/%{email_token}
+
     confirm_new_email:
       subject_template: "[%{site_name}] Konfirmasi email baru Anda"
       text_body_template: |
         Silahkan mengkonfirmasi email baru Anda di %{site_name} dengan mengunjungi tautan dibawah:
+
+
         %{base_url}/users/authorize-email/%{email_token}
     signup:
       subject_template: "[%{site_name}] Konfirmasi akun baru Anda"
@@ -329,3 +327,10 @@ id:
     title: "Ketentuan Layanan"
   privacy_topic:
     title: "Kebijakan Privasi"
+  date:
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

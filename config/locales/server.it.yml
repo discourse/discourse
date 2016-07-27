@@ -20,9 +20,9 @@ it:
     month_names: [null, Gennaio, Febbraio, Marzo, Aprile, Maggio, Giugno, Luglio, Agosto, Settembre, Ottobre, Novembre, Dicembre]
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Argomenti"
   posts: "messaggi"
@@ -94,9 +94,6 @@ it:
       max_username_length_range: "Non puoi impostare il massimo inferiore al minimo."
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti da S3 a meno che non imposti l'opzione 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv o txt."
   backup:
@@ -199,34 +196,59 @@ it:
     until_posts:
       one: "1 messaggio"
       other: "%{count} messaggi"
-    'new-topic': |
+    new-topic: |
       Benvenuto in %{site_name} &mdash; **grazie per iniziare una nuova conversazione!**
+
       - Il titolo sembra interessante? E' un buon riassunto?
+
       - Chi potrebbe essere interessato a questo argomento? Perché è importante? Che risposte speri di ricevere?
+
       - Includi delle buone parole di ricerca nell'argomento così gli altri lo potranno *trovare*. Per raggruppare questo argomento con altri argomenti correlati, seleziona una categoria.
+
       Per maggiori informazioni, [leggi le linee guida della comunità](/guidelines). Questo pannello sarà visualizzato solo per i primi %{education_posts_text}.
-    'new-reply': |
+    new-reply: |
       Benvenuto in %{site_name} &mdash; **grazie per il tuo contributo !**
+
       - La tua risposta migliora in qualche modo la conversazione?
+
       - Sii gentile con gli altri membri della comunità.
+
       - Le critiche costruttive sono benvenute, ma critica le *idee* non le persone.
+
       Per maggiori informazioni, [leggi le linee guida della nostra comunità](/guidelines). Questo pannello sarà visualizzato soltanto per i primi %{education_posts_text}.
     avatar: |
+      ### Che ne dici di un'immagine per il tuo account?
+
       Hai pubblicato alcuni argomenti e risposte, ma l'immagine del tuo profilo non è speciale quanto te -- è solo una lettera.
+
       Perché non **[accedi al tuo profilo utente](%{profile_path})** e carichi un'immagine che ti rappresenta?
+
       È più facile seguire le discussioni e trovare persone interessanti nelle conversazioni se tutti hanno un'immagine profilo univoca!
     sequential_replies: |
+      ### Considera la possibilità di rispondere a più messaggi contemporaneamente
+
       Piuttosto che inviare più risposte di seguito ad un messaggio, considera la possibilità di inserire un'unica risposta con citazioni o riferimenti @nome ai messaggi precedenti.
+
       Puoi modificare la tua precedente risposta per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Rispondi citando<b> che compare.
+
       E' più facile per chiunque leggere argomenti che hanno poche risposte più dettagliate, rispetto a molte brevi risposte individuali.
     dominating_topic: |
+      ### Permetti agli altri di partecipare alla conversazione
+
       Questo argomento è chiaramente importante per te &ndash; più del %{percent}% delle risposte sono tue.
+
       Sei sicuro di lasciare anche agli altri il tempo di esprimere il loro punto di vista?
     too_many_replies: |
+      ### Hai raggiunto il numero massimo di risposte per questo argomento
+
       Spiacenti, ma i nuovi utenti sono limitati a %{newuser_max_replies_per_topic} risposte nello stesso argomento.
+
       Invece di aggiungere una nuova risposta, valuta l'ipotesi di modificare le tue precedenti o di partecipare a un altro argomento.
     reviving_old_topic: |
+      ### Resuscitare questo argomento?
+
       L'ultima risposta a questo argomento è vecchia di %{days} giorni. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti verranno notificati.
+
       Sei davvero sicuro di voler continuare questo vecchio argomento?
   activerecord:
     attributes:
@@ -239,7 +261,6 @@ it:
       user_profile:
         bio_raw: "Su di me"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -260,6 +281,7 @@ it:
           attributes:
             hex:
               invalid: "non è un colore valido"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo \"Su di me\" del suo profilo</div>"
@@ -272,18 +294,26 @@ it:
   assets_topic_body: "Questo è un argomento permanente, visibile solo allo staff, per salvare immagini e file utilizzati nel design del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica qui tutte le immagini che desideri usare per loghi, favicon e così via (usa l'icona di caricamento nell'editor del messaggio o trascina direttamente le immagini).\n3. Invia la risposta per creare il messaggio.\n4. Fai click con il tasto destro sulle immagini nel tuo nuovo messaggio per prelevare il percorso delle immagini caricate, o clicca l'icona di modifica messaggio e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni di base](/admin/site_settings/category/required).\n\nSe vuoi permettere di caricare file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Benvenuto nel Lounge"
-    body: |
+    body: |2
+
       Congratulazioni! :confetti_ball:
+
       Se vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3).
+
       Adesso puoi &hellip;
+
       * Modificare il titolo di qualunque argomento
       * Cambiare la categoria di qualunque argomento
       * Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://it.wikipedia.org/wiki/Nofollow) )
       * Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore
       * Cancellare i messaggi spam con un singolo clic
+
       Ecco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli.
+
       Grazie per essere una parte importante di questa comunità!
+
       (Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione)
+
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definizione della categoria %{category}"
@@ -715,8 +745,6 @@ it:
     flag_sockpuppets: "Se un nuovo utente risponde ad un argomento dallo stesso indirizzo IP dell'utente che ha aperto l'argomento stesso, segnala entrambi i messaggi come potenziale spam."
     traditional_markdown_linebreaks: "Usa l'accapo tradizionale in Markdown, cioè due spazi a fine riga per andare a capo."
     post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti possono annullare le loro azioni recenti su un messaggio (segnalazioni, Mi piace, ecc.)."
-    ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; vedi http://google.com/analytics"
-    ga_domain_name: "Nome del dominio Google analytics (ga.js), esempio: miosito.com; vedi http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; vedi http://google.com/analytics"
     ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: miosito.com; vedi http://google.com/analytics"
     enable_noscript_support: "Abilita il supporto standard ai webcrawler dei motori di ricerca attraverso il tag noscript"
@@ -893,7 +921,6 @@ it:
     delete_all_posts_max: "Numero massimo di messaggi che possono essere eliminati contemporaneamente con il pulsante Cancella Tutti. Se un utente ha un numero maggiore di tali messaggi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni dall'iscrizione dopo i quali è possibile modificare il nome utente (imposta a 0 per non permettere il cambio del nome utente)."
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione."
-    logout_redirect: "Dove redirigere il browser dopo aver effettuato il logout, es.: (http://qualchesito.com/logout)"
     allow_uploaded_avatars: "Permetti agli utenti di caricare immagini di profilo personalizzate."
     allow_animated_avatars: "Permetti agli utenti di utilizzare gif animate come immagini di profilo. ATTENZIONE: lanciare il comando rake \"avatars:refresh\" dopo aver cambiato questa impostazione."
     allow_animated_thumbnails: "Genera miniature animate delle gif animate."
@@ -1017,13 +1044,19 @@ it:
     subject_template: "%{invitee_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
     text_body_template: |
       %{invitee_name} ti invita ad una discussione
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       su
+
       > %{site_title} -- %{site_description}
+
       Se sei interessato, clicca il collegamento qui sotto:
+
       %{invite_link}
+
       L'invito è da parte di un utente affidabile, perciò puoi rispondere alla discussione immediatamente.
   invite_forum_mailer:
     subject_template: "%{invitee_name} ti invita a partecipare su %{site_domain_name}"
@@ -1050,18 +1083,27 @@ it:
     post_hidden:
       text_body_template: |
         Salve,
+
         questo è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio è stato nascosto.
+
         %{base_url}%{url}
+
         %{flag_reason}
+
         Vari membri della comunità hanno segnalato il messaggio prima che venisse nascosto, quindi per favore pensa come modificarlo alla luce di queste osservazioni. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente ripubblicato.**
+
         Tuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account.
+
         Per ulteriori informazioni, puoi far riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
         Grazie per esserti unito a %{site_name}, e benvenuto!
+
         %{new_user_tips}
+
         Noi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre. Buona permanenza!
+
         (Se desideri comunicare con [i membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.)
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
@@ -1071,7 +1113,9 @@ it:
       subject_template: "Backup fallito"
       text_body_template: |
         Il backup è fallito.
+
         Questo è il log:
+
         ```
         %{logs}
         ```
@@ -1082,7 +1126,9 @@ it:
       subject_template: "Ripristino fallito"
       text_body_template: |
         Il ripristino è fallito.
+
         Ecco il log:
+
         ```
         %{logs}
         ```
@@ -1107,9 +1153,11 @@ it:
       subject_template: "[%{site_name}] Problema relativo all'email -- Chiave di risposta sconosciuta"
     email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Problema email -- Destinatario sconosciuto"
-      text_body_template: |
+      text_body_template: |+
         Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è stato inviato.
+
         Non è stato riconosciuto alcuno degli indirizzi email di destinazione. Assicurati di inviare a indirizzi email validi.
+
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Non Trovato"
     email_reject_topic_closed:
@@ -1121,8 +1169,11 @@ it:
     too_many_spam_flags:
       text_body_template: |
         Salve,
+
         questo è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati temporaneamente nascosti perché segnalati dalla comunità.
+
         Come misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. Ci scusiamo per il disagio.
+
         Per ulteriori informazioni, ti rimandiamo alle [linee guida della comunità](%{base_url}/guidelines).
     spam_post_blocked:
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
@@ -1132,6 +1183,7 @@ it:
         other: "%{count} utenti in attesa di approvazione"
       text_body_template: |
         Ci sono nuove iscrizioni in attesa di essere approvate (o rifiutate) prima che possano accedere a questo forum.
+
         [Per favore valutale nella sezione di amministrazione](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
@@ -1177,14 +1229,18 @@ it:
       subject_template: "[%{site_name}] Reimposta password"
       text_body_template: |
         Qualcuno ha richiesto l'azzeramento della tua password su [%{site_name}](%{base_url}).
+
         Se non sei stato tu, puoi tranquillamente ignorare questa email.
+
         Clicca il seguente collegamento per scegliere una nuova password:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Imposta Password"
       text_body_template: |
         Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook ecc.) associato con questo indirizzo email validato.
+
         Se non hai fatto tu questa richiesta, ignora tranquillamente questa email.
+
         Clicca sul seguente collegamento per scegliere una password:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
@@ -1193,26 +1249,36 @@ it:
       subject_template: "[%{site_name}] Il Tuo Nuovo Account "
       text_body_template: |
         Ti è stato creato un account su %{site_name}
+
         Fai clic sul seguente collegamento per scegliere una password per il tuo nuovo account:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
       text_body_template: |
         Benvenuto su %{site_name}!
+
         Un membro dello staff ha approvato il tuo account su %{site_name}.
+
         Clicca sul seguente collegamento per confermare e attivare il tuo nuovo account:
         %{base_url}/users/activate-account/%{email_token}
+
         Se il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
+
         %{new_user_tips}
+
         Noi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre.
+
         Buona permanenza!
+
         ps: se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.
     signup:
       subject_template: "[%{site_name}] Conferma il tuo nuovo account"
       text_body_template: |
         Benvenuto su %{site_name}!
+
         Clicca sul collegamento seguente per confermare ed attivare il tuo nuovo account:
         %{base_url}/users/activate-account/%{email_token}
+
         Se il collegamento non è cliccabile, copialo ed incollalo manualmente nella barra degli indirizzi del tuo browser.
   page_not_found:
     title: "La pagina richiesta non esiste oppure è privata."
@@ -1223,6 +1289,7 @@ it:
     search_google: "Google"
   login_required:
     welcome_message: |
+      #[Benvenuto su %{title}](#welcome)
       E' richiesto un account. Per continuare, crea un nuovo account oppure collegati.
   terms_of_service:
     title: "Termini di Servizio"
@@ -1315,3 +1382,6 @@ it:
     title: "Etichette"
     staff_tag_remove_disallowed: "L'etichetta \"%{tag}\" può essere cancellata soltanto dallo staff."
   rss_by_tag: "Argomenti etichettati %{tag}"
+  activemodel:
+    errors:
+      <<: *errors

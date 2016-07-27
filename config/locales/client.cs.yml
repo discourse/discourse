@@ -391,18 +391,18 @@ cs:
           title: "Ztišený"
           description: "Nikdy nedostanete oznámení o nových tématech v této skupině."
     user_action_groups:
-      "1": "Rozdaných 'líbí se'"
-      "2": "Obdržených 'líbí se'"
-      "3": "Záložky"
-      "4": "Témata"
-      "5": "Odpovědi"
-      "6": "Odezva"
-      "7": "Zmínění"
-      "9": "Citace"
-      "11": "Editace"
-      "12": "Odeslané zprávy"
-      "13": "Přijaté zprávy"
-      "14": "Čeká na schválení"
+      '1': "Rozdaných 'líbí se'"
+      '2': "Obdržených 'líbí se'"
+      '3': "Záložky"
+      '4': "Témata"
+      '5': "Odpovědi"
+      '6': "Odezva"
+      '7': "Zmínění"
+      '9': "Citace"
+      '11': "Editace"
+      '12': "Odeslané zprávy"
+      '13': "Přijaté zprávy"
+      '14': "Čeká na schválení"
     categories:
       all: "všechny kategorie"
       all_subcategories: "vše"
@@ -1220,20 +1220,20 @@ cs:
         position: "příspěvek %{current} z %{total}"
       notifications:
         reasons:
-          "3_6": 'Budete dostávat oznámení, protože hlídáte tuhle kategorii.'
-          "3_5": 'Budete dostávat oznámení, protože jste tohle téma automaticky začali hlídat.'
-          "3_2": 'Budete dostávat oznámení, protože hlídáte toto téma.'
-          "3_1": 'Budete dostávat oznámení, protože jste autorem totoho tématu.'
-          "3": 'Budete dostávat oznámení, protože hlídáte toto téma.'
-          "2_8": 'Budete dostávat upozornění, protože sledujete tuto kategorii.'
-          "2_4": 'Budete dostávat oznámení, protože jste zaslal odpověď do tohoto tématu.'
-          "2_2": 'Budete dostávat oznámení, protože sledujete toto téma.'
-          "2": 'Budete dostávat oznámení, protože <a href="/users/{{username}}/preferences">jste četli toto téma</a>.'
-          "1_2": 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
-          "1": 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
-          "0_7": 'Ignorujete všechna oznámení v této kategorii.'
-          "0_2": 'Ignorujete všechna oznámení z tohoto tématu.'
-          "0": 'Ignorujete všechna oznámení z tohoto tématu.'
+          '3_6': 'Budete dostávat oznámení, protože hlídáte tuhle kategorii.'
+          '3_5': 'Budete dostávat oznámení, protože jste tohle téma automaticky začali hlídat.'
+          '3_2': 'Budete dostávat oznámení, protože hlídáte toto téma.'
+          '3_1': 'Budete dostávat oznámení, protože jste autorem totoho tématu.'
+          '3': 'Budete dostávat oznámení, protože hlídáte toto téma.'
+          '2_8': 'Budete dostávat upozornění, protože sledujete tuto kategorii.'
+          '2_4': 'Budete dostávat oznámení, protože jste zaslal odpověď do tohoto tématu.'
+          '2_2': 'Budete dostávat oznámení, protože sledujete toto téma.'
+          '2': 'Budete dostávat oznámení, protože <a href="/users/{{username}}/preferences">jste četli toto téma</a>.'
+          '1_2': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
+          '1': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
+          '0_7': 'Ignorujete všechna oznámení v této kategorii.'
+          '0_2': 'Ignorujete všechna oznámení z tohoto tématu.'
+          '0': 'Ignorujete všechna oznámení z tohoto tématu.'
         watching_pm:
           title: "Hlídání"
           description: "Budete informováni o každém novém příspěvku v této zprávě. Vedle názvu tématu se objeví počet nepřečtených příspěvků."

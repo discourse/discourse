@@ -15,11 +15,6 @@ fa_IR:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
-  date:
-    month_names: []
-    <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "گفتمان"
   topics: "موضوعات"
   posts: "نوشته ها"
@@ -77,9 +72,6 @@ fa_IR:
       max_username_length_range: "شما نمیتوانید حداکثر را کمتر از حداقل بگذارید."
       default_categories_already_selected: "شما نمیتوانید یک دسته بندی که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' ارائه بدهید."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "قالب پرونده‌ی بارگذاری شده باید csv و یا txt باشد."
   backup:
@@ -161,30 +153,51 @@ fa_IR:
   education:
     until_posts:
       other: "%{count} ارسال"
-    'new-topic': |
+    new-topic: |
       خوش آمدید به  %{site_name} &mdash; ** ممنون برای شروع گفتگو!**
+
       - آیا عنوان اونقدر جالب هست برای خواندن با صدای بلند ؟‌خلاصه ای خوبیه ؟
+
       - چه کسی  به این علاقه مند خواهد شد؟ چرا می تونه مهم باشه؟ چه نوع پاسخی را می خواهید ؟
+
       - به همراه کلمه های که عموما در جستار تو برای *پیدا* کردن استفاده میشه. برای گروه کردن جستارت با جستارهای مرتبط٬ و دسته بندی انتخابی.
+
       برای بیشتر[دستورالعمل های انجمن را ببین](/guidelines). این پنل اول فقط به شما نشان داد می شه %{education_posts_text}.
-    'new-reply': |
+    new-reply: |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
+
       - Does your reply improve the conversation in some way?
+
       - Be kind to your fellow community members.
+
       - Constructive criticism is welcome, but criticize *ideas*, not people.
+
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
     sequential_replies: |
+      ### Consider replying to several posts at once
+
       Rather than many sequential replies to a topic, please consider a single reply that includes quotes from previous posts or @name references.
+
       You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
+
       It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
     dominating_topic: |
+      ### Let others join the conversation
+
       This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
+
       Are you sure you're providing adequate time for other people to share their points of view, too?
     too_many_replies: |
+      ### You have reached the reply limit for this topic
+
       We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
+
       Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
     reviving_old_topic: |
+      ### Revive this topic?
+
       The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+
       Are you sure you want to continue this old conversation?
   activerecord:
     attributes:
@@ -195,7 +208,6 @@ fa_IR:
       user_profile:
         bio_raw: "درباره من"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -216,6 +228,7 @@ fa_IR:
           attributes:
             hex:
               invalid: "این یک رنگ معتبر نیست"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'> درباره من نمایه شما خالی در حال حاضر خالی است٬ <a href='/users/%{username_lower}/preferences/about-me'> علاقه دارید آن را تکمیل کنید ؟ </a></div>"
     no_info_other: "<div class='missing-profile'>%{name}هنوز چیزی وارد نکرده درباره خودش در نمایه شان. "
@@ -228,18 +241,26 @@ fa_IR:
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "به انجمن خوش آمدید"
-    body: |
+    body: |2
+
       Congratulations! :confetti_ball:
+
       If you can see this topic, you were recently promoted to **regular** (trust level 3).
+
       You can now &hellip;
+
       * Edit the title of any topic
       * Change the category of any topic
       * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
       * Access a private Lounge category only visible to users at trust level 3 and higher
       * Hide spam with a single flag
+
       Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
+
       Thanks for being an important part of this community!
+
       (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
+
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "در رابطه با دسته بندی {category}% "
@@ -969,13 +990,19 @@ fa_IR:
     subject_template: "%{invitee_name} شما را دعوت کرده به %{topic_title}' در  %{site_domain_name}"
     text_body_template: |
       %{invitee_name} شما را دعوت کرده به یک گفتگو
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       در
+
       > %{site_title} -- %{site_description}
+
       اگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌
+
       %{invite_link}
+
       این دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید.
   invite_forum_mailer:
     subject_template: "%{invitee_name} دعوت شدید به عضویت در %{site_domain_name}"
@@ -1007,33 +1034,61 @@ fa_IR:
       subject_template: "به %{site_name} خوش آمدید!"
       text_body_template: |
         ممنون برای عضویت%{site_name},٬ و خوش آمدید
+
+
         %{new_user_tips}
+
+
         ما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines).
+
+
         از بودنتان در انجمن لذت ببرید!
+
+
         (اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید.)
     welcome_invite:
       subject_template: "به %{site_name} خوش آمدید!"
       text_body_template: |
         ممنون برای قبول دعتونامه به %{site_name} -- خوش آمدید!
+
+
         برای شما یک حساب کاربری جدید ساختیم **%{username}** و شما الان در سیستم هستید. می توانید اسم خود را عوض کنید با مراجعه به [your user profile][prefs].
+
         برای ورود بعدتر :
+
+
         1.  همیشه برای ورود ** از ایمیل آدرسی استفاده کن که در دعوتنامه اصلی استفاده کردید**. در غیر اینصورت نمی تونیم بگوییم این شمایید!
+
+
         2.  رمز عبور خیلی خوبی بساز برای  [کاربری نمایه ات][prefs]٬ و برای ورود از آن استفاده کن.
+
         %{new_user_tips}
+
+
         ما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines).
+
+
         از بودنتان در انجمن لذت ببرید!
+
+
         (اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید. )
+
+
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "پشتیبان گیری با موفقیت انجام شد"
     backup_failed:
       subject_template: "پشتیبان گیری با شکست مواجه شد."
-      text_body_template: |
+      text_body_template: |+
         پشتیبان گیری ناموفق شد
+
         اینجا وارد سیستم شوید:
+
         ```
         %{logs}
+
         ```
+
     restore_succeeded:
       subject_template: "بازیابی با موفقیت کامل شد "
       text_body_template: "بازیابی با موفقیت انجام شد. "
@@ -1041,9 +1096,12 @@ fa_IR:
       subject_template: "بازگردانی ناموفق"
       text_body_template: |
         بازگرداندن انجام نشد.
+
         اینجا وارد شوید:
+
         ```
         %{logs}
+
         ```
     bulk_invite_succeeded:
       subject_template: "دعوت انبوهی کاربر با موفقیت انجام شد"
@@ -1052,16 +1110,23 @@ fa_IR:
       subject_template: "دعوت انبوه کاربر با ایراد پردازش شد"
       text_body_template: |
         فایل دعوت انبوهی کاربر شما پردازش شد٬ %{sent}  دعوتنامه ها ایمیل شد با %{failed} ایراد(s).
+
         اینجا وارد سیستم شوید:
+
         ```
         %{logs}
+
         ```
     csv_export_succeeded:
       subject_template: "خارج کردن اطلاعات کامل شد"
-      text_body_template: |
+      text_body_template: |+
         خارج کردن فایل ها با موفقیت انجام شد! :dvd:
+
+
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
         پیوند زیر برای دانلود فقط برای 48 ساعت اعتبار دارد.
+
     csv_export_failed:
       subject_template: "خارج کردن فایل ها ناموفق شد"
       text_body_template: "ما متاسفیم٬ ولی خارج کردن اطلاعات ناموفق شد. لطفا سیستم را چک کنید یا با یکی از مدیران تماس بگیرید. "
@@ -1090,6 +1155,7 @@ fa_IR:
         other: "%{count} کاربران منتظر تایید"
       text_body_template: |
         تعدادی درخواست کاربران جدید عضو شده منتظر هستند برای تایید (یا رد شدن) قبل از اینکه به انجمن دسترسی داشته باشند.
+
         [ لطفا آنها را در بخش مدیریت بررسی کن] (%{base_url}/admin/users/list/pending)
     download_remote_images_disabled:
       subject_template: "دانلود کردن عکس های سیار از کار افتاده"
@@ -1127,47 +1193,73 @@ fa_IR:
       subject_template: "[%{site_name}] باز یابی رمز عبور"
       text_body_template: |
         شخصی برای ریست رمز عبور سوال کرد[%{site_name}](%{base_url}).
+
+
         اگر شما نبود٬ می توانید با خیال راحت این ایمیل را نادیده بگیرید.
+
+
         بر روی پیوند پیش رو برای انتخاب رمز عبور جدید کلیک کنید.
+
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "تنظیم رمز عبور [%{site_name}] "
       text_body_template: |
         شخصی برای اضافه کردن رمز عبور به حساب کاربری شما پرسیده در [%{site_name}](%{base_url}).  در روش دیگر٬‌ شما می توانید با وارد شوید از طریق سرویس دیگر مثل (گوگل٬‌ فیس بوک٬‌غیره) که ایمیل برابر استفاده می کنند.
+
+
         اگر شما نبود٬ می توانید با خیال راحت این ایمیل را نادیده بگیرید.
+
         بر روی پیوند پیش رو برای انتخاب رمز عبور جدید کلیک کنید.
+
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] ورود به سیستم"
       text_body_template: |
         شخصی برای ورود به سیستم با حساب کاربری شما سوال کرد  [%{site_name}](%{base_url}).
+
         اگر شما این درخواست را نداده اید می توانید این ایمیل را نادیده بگیرید.
+
         برای ورود به سیستم لینک پیش رو را کلیک کنید. :
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] حساب کاربری جدید شما"
       text_body_template: |
         حساب کاربری جدید برای شما ساخته شد در  %{site_name}
+
         بر روری پیوند پیش رو کلیک کنید برای انتخاب رمز برای حساب کاربری جدیدتان:
+
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "شما تایید شدید %{site_name}! "
       text_body_template: |
         خوش آمدید به  %{site_name}!
+
         یکی از مدیران حساب کاربری شما را تایید کرد در %{site_name}.
+
         بر روی پیوند پیش رو کلیک کنید تا حساب کاربری شما تایید شود:
         %{base_url}/users/activate-account/%{email_token}
+
         اگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید.
+
         %{new_user_tips}
+
+
         ما به  [رفتار انجمن متمدن] معتقدیم (%{base_url}/guidelines) برای  همیشه.
+
         از بودنتان در اینجا لذت ببرید!
+
         ( اگر شما نیاز  به ارتباط با مدیران را دارید[staff members](%{base_url}/about) به عنوان یک کاربر جدید٬ لطفا به این پیام پاسخ دهید.)
     signup:
       subject_template: "[%{site_name}] حساب کاربری جدید را تایید کنید"
       text_body_template: |
         خوش آمدید به %{site_name}!
+
+
         برای فعال نمودن حساب کاربریتان بر روی پیوند پیش رو کلیک کنید:
+
         %{base_url}/users/activate-account/%{email_token}
+
+
         اگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید.
   page_not_found:
     popular_topics: "محبوب"
@@ -1177,6 +1269,8 @@ fa_IR:
     search_google: "گوگل"
   login_required:
     welcome_message: |
+      #[خوش آمدید به  %{title}](#welcome)
+
       حساب کاربری نیاز داره به.  لطفا حساب کاربری درست کنید یا وارد سیستم بشید برای ادامه.
   terms_of_service:
     title: "شرایط استفاده از خدمات"
@@ -1235,3 +1329,10 @@ fa_IR:
   performance_report:
     initial_post_raw: این مطلب شامل گزارش عملکرد روزانه سایت شماست.
     initial_topic_title: گزارش عملکرد وب‌سایت
+  date:
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

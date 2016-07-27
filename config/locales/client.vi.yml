@@ -324,18 +324,18 @@ vi:
           title: "Im lặng"
           description: "Bạn sẽ không bao giờ được thông báo về bất cứ chủ đề mới nào trong nhóm này"
     user_action_groups:
-      "1": "Lần thích"
-      "2": "Lần được thích"
-      "3": "Chỉ mục"
-      "4": "Các chủ đề"
-      "5": "Trả lời"
-      "6": "Phản hồi"
-      "7": "Được nhắc đến"
-      "9": "Lời trích dẫn"
-      "11": "Biên tập"
-      "12": "Bài đã gửi"
-      "13": "Hộp thư"
-      "14": "Đang chờ xử lý"
+      '1': "Lần thích"
+      '2': "Lần được thích"
+      '3': "Chỉ mục"
+      '4': "Các chủ đề"
+      '5': "Trả lời"
+      '6': "Phản hồi"
+      '7': "Được nhắc đến"
+      '9': "Lời trích dẫn"
+      '11': "Biên tập"
+      '12': "Bài đã gửi"
+      '13': "Hộp thư"
+      '14': "Đang chờ xử lý"
     categories:
       all: "tất cả chuyên mục"
       all_subcategories: "Tất cả"
@@ -1082,20 +1082,20 @@ vi:
         position: "bài viết %{current} trong %{total}"
       notifications:
         reasons:
-          "3_6": 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chuyên mục nàyotification'
-          "3_5": 'Bạn sẽ nhận được các thông báo bởi vì bạn đã bắt đầu xem chủ đề này một cách tự động'
-          "3_2": 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chủ đề này'
-          "3_1": 'Bạn sẽ được nhận thông báo bởi bạn đã tạo chủ để này.'
-          "3": 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chủ đề này'
-          "2_8": 'Bạn sẽ nhận được thông báo bởi vì bạn đang theo dõi chuyên mục này.'
-          "2_4": 'Bạn sẽ nhận được các thông báo bởi vì bạn đã đăng một trả lời vào chủ đề này'
-          "2_2": 'Bạn sẽ nhận được các thông báo bởi vì bạn đang theo dõi chủ đề này.'
-          "2": 'Bạn sẽ nhận được các thông báo bởi vì bạn <a href="/users/{{username}}/preferences"> đọc chủ đề này </a>'
-          "1_2": 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
-          "1": 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
-          "0_7": 'Bạn đang bỏ qua tất cả các thông báo trong chuyên mục này'
-          "0_2": 'Bạn đang bỏ qua tất cả các thông báo trong chủ đề này'
-          "0": 'Bạn đang bỏ qua tất cả các thông báo trong chủ đề này'
+          '3_6': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chuyên mục nàyotification'
+          '3_5': 'Bạn sẽ nhận được các thông báo bởi vì bạn đã bắt đầu xem chủ đề này một cách tự động'
+          '3_2': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chủ đề này'
+          '3_1': 'Bạn sẽ được nhận thông báo bởi bạn đã tạo chủ để này.'
+          '3': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chủ đề này'
+          '2_8': 'Bạn sẽ nhận được thông báo bởi vì bạn đang theo dõi chuyên mục này.'
+          '2_4': 'Bạn sẽ nhận được các thông báo bởi vì bạn đã đăng một trả lời vào chủ đề này'
+          '2_2': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang theo dõi chủ đề này.'
+          '2': 'Bạn sẽ nhận được các thông báo bởi vì bạn <a href="/users/{{username}}/preferences"> đọc chủ đề này </a>'
+          '1_2': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
+          '1': 'Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn'
+          '0_7': 'Bạn đang bỏ qua tất cả các thông báo trong chuyên mục này'
+          '0_2': 'Bạn đang bỏ qua tất cả các thông báo trong chủ đề này'
+          '0': 'Bạn đang bỏ qua tất cả các thông báo trong chủ đề này'
         watching_pm:
           title: "Đang xem"
           description: "Bạn sẽ được thông báo về từng trả lời mới trong tin nhắn này, và một số trả lời mới sẽ được hiển thị"

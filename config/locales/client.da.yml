@@ -342,18 +342,18 @@ da:
           title: "Tavs"
           description: "Du får aldrig beskeder om nye emner i denne gruppe."
     user_action_groups:
-      "1": "Likes givet"
-      "2": "Likes modtaget"
-      "3": "Bogmærker"
-      "4": "Emner"
-      "5": "Svar"
-      "6": "Svar"
-      "7": "Referencer"
-      "9": "Citater"
-      "11": "Ændringer"
-      "12": "Sendte indlæg"
-      "13": "Indbakke"
-      "14": "Afventer"
+      '1': "Likes givet"
+      '2': "Likes modtaget"
+      '3': "Bogmærker"
+      '4': "Emner"
+      '5': "Svar"
+      '6': "Svar"
+      '7': "Referencer"
+      '9': "Citater"
+      '11': "Ændringer"
+      '12': "Sendte indlæg"
+      '13': "Indbakke"
+      '14': "Afventer"
     categories:
       all: "alle kategorier"
       all_subcategories: "Alle"
@@ -1091,20 +1091,20 @@ da:
         position: "indlæg %{current} af %{total}"
       notifications:
         reasons:
-          "3_6": 'Du får notifikationer fordi du overvåger denne kategori.'
-          "3_5": 'Du får notifikationer fordi du overvåger dette emne automatisk.'
-          "3_2": 'Du får notifikationer fordi du overvåger dette emne.'
-          "3_1": 'Du får notifikationer fordi du oprettede dette emne.'
-          "3": 'Du får notifikationer fordi du overvåger dette emne.'
-          "2_8": 'Du får notifikationer fordi du følger dette kategori.'
-          "2_4": 'Du får notifikationer fordi du har besvaret dette emne.'
-          "2_2": 'Du får notifikationer fordi du følger dette emne.'
-          "2": 'Du får notifikationer fordi du <a href="/users/{{username}}/preferences">har læst dette emne</a>.'
-          "1_2": 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
-          "1": 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
-          "0_7": 'Du ignorerer alle notifikationer i denne kategori.'
-          "0_2": 'Du får ingen notifikationer for dette emne.'
-          "0": 'Du får ingen notifikationer for dette emne.'
+          '3_6': 'Du får notifikationer fordi du overvåger denne kategori.'
+          '3_5': 'Du får notifikationer fordi du overvåger dette emne automatisk.'
+          '3_2': 'Du får notifikationer fordi du overvåger dette emne.'
+          '3_1': 'Du får notifikationer fordi du oprettede dette emne.'
+          '3': 'Du får notifikationer fordi du overvåger dette emne.'
+          '2_8': 'Du får notifikationer fordi du følger dette kategori.'
+          '2_4': 'Du får notifikationer fordi du har besvaret dette emne.'
+          '2_2': 'Du får notifikationer fordi du følger dette emne.'
+          '2': 'Du får notifikationer fordi du <a href="/users/{{username}}/preferences">har læst dette emne</a>.'
+          '1_2': 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
+          '1': 'Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig.'
+          '0_7': 'Du ignorerer alle notifikationer i denne kategori.'
+          '0_2': 'Du får ingen notifikationer for dette emne.'
+          '0': 'Du får ingen notifikationer for dette emne.'
         watching_pm:
           title: "Følger"
           description: "Du vil modtage en notifikation for hvert nyt svar i denne besked, og en optælling af nye svar vil blive vist."

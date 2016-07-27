@@ -352,18 +352,18 @@ gl:
           title: "Silenciado"
           description: "Non recibirás notificacións de nada relacionado con novos temas neste grupo."
     user_action_groups:
-      "1": "Gústames dados"
-      "2": "Gústames recibidos"
-      "3": "Marcadores"
-      "4": "Temas"
-      "5": "Respostas"
-      "6": "Respostas"
-      "7": "Mencións"
-      "9": "CItas"
-      "11": "Edicións"
-      "12": "Enviar elementos"
-      "13": "Caixa de entrada"
-      "14": "Pendente"
+      '1': "Gústames dados"
+      '2': "Gústames recibidos"
+      '3': "Marcadores"
+      '4': "Temas"
+      '5': "Respostas"
+      '6': "Respostas"
+      '7': "Mencións"
+      '9': "CItas"
+      '11': "Edicións"
+      '12': "Enviar elementos"
+      '13': "Caixa de entrada"
+      '14': "Pendente"
     categories:
       all: "todas as categorías"
       all_subcategories: "todo"
@@ -1108,20 +1108,20 @@ gl:
         position: "publicación %{current} de %{total}"
       notifications:
         reasons:
-          "3_6": 'Recibirás notificacións porque estás vendo esta categoría.'
-          "3_5": 'Recibirás notificacións porque comezaches a ver este tema automaticamente.'
-          "3_2": 'Recibirás notificacións porque estás vendo este tema.'
-          "3_1": 'Recibirás notificacións por ser o creador deste tema.'
-          "3": 'Recibirás notificacións porque estás vendo este tema.'
-          "2_8": 'Recibirás notificacións porque segues esta categoría.'
-          "2_4": 'Recibirás notificacións porque publicaches unha resposta neste tema.'
-          "2_2": 'Recibirás notificacións porque segues este tema.'
-          "2": 'Recibirás notificacións porque <a href="/users/{{username}}/preferences">liches este tema</a>.'
-          "1_2": 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
-          "1": 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
-          "0_7": 'Estás ignorando todas as notificacións desta categoría.'
-          "0_2": 'Estás ignorando todas as notificacións deste tema.'
-          "0": 'Estás ignorando todas as notificacións deste tema.'
+          '3_6': 'Recibirás notificacións porque estás vendo esta categoría.'
+          '3_5': 'Recibirás notificacións porque comezaches a ver este tema automaticamente.'
+          '3_2': 'Recibirás notificacións porque estás vendo este tema.'
+          '3_1': 'Recibirás notificacións por ser o creador deste tema.'
+          '3': 'Recibirás notificacións porque estás vendo este tema.'
+          '2_8': 'Recibirás notificacións porque segues esta categoría.'
+          '2_4': 'Recibirás notificacións porque publicaches unha resposta neste tema.'
+          '2_2': 'Recibirás notificacións porque segues este tema.'
+          '2': 'Recibirás notificacións porque <a href="/users/{{username}}/preferences">liches este tema</a>.'
+          '1_2': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
+          '1': 'Notificarémosche se alguén menciona o teu @nome ou che responde.'
+          '0_7': 'Estás ignorando todas as notificacións desta categoría.'
+          '0_2': 'Estás ignorando todas as notificacións deste tema.'
+          '0': 'Estás ignorando todas as notificacións deste tema.'
         watching_pm:
           title: "Ver"
           description: "Recibirás notificacións de cada resposta a esta mensaxe e aparecerá o número de novas respostas."

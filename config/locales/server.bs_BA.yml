@@ -30,9 +30,6 @@ bs_BA:
       taken: "has already been taken"
     embed:
       load_from_remote: "There was an error loading that post."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv or txt format."
   backup:
@@ -80,30 +77,51 @@ bs_BA:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
   education:
-    'new-topic': |
+    new-topic: |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+
       - Does the title accurately describe your topic? Does it sound interesting?
+
       - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+
       - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    'new-reply': |
+    new-reply: |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
+
       - Does your reply improve the conversation in some way?
+
       - Be kind to your fellow community members.
+
       - Constructive criticism is welcome, but criticize *ideas*, not people.
+
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
     sequential_replies: |
+      ### Consider replying to several posts at once
+
       Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
+
       You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
+
       It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
     dominating_topic: |
+      ### Let others join the conversation
+
       This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
+
       Are you sure you're providing adequate time for other people to share their points of view, too?
     too_many_replies: |
+      ### You have reached the reply limit for this topic
+
       We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
+
       Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
     reviving_old_topic: |
+      ### Revive this topic?
+
       The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+
       Are you sure you want to continue this old conversation?
   activerecord:
     attributes:
@@ -112,7 +130,6 @@ bs_BA:
       user_profile:
         bio_raw: "O Meni"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -129,6 +146,7 @@ bs_BA:
           attributes:
             hex:
               invalid: "is not a valid color"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
@@ -140,18 +158,26 @@ bs_BA:
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Welcome to the Lounge"
-    body: |
+    body: |2
+
       Congratulations! :confetti_ball:
+
       If you can see this topic, you were recently promoted to **regular** (trust level 3).
+
       You can now &hellip;
+
       * Edit the title of any topic
       * Change the category of any topic
       * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
       * Access a private Lounge category only visible to users at trust level 3 and higher
       * Hide spam with a single flag
+
       Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
+
       Thanks for being an important part of this community!
+
       (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
+
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "About the %{category} category"
@@ -661,13 +687,19 @@ bs_BA:
     subject_template: "%{invitee_name} vas poziva da pogledate '%{topic_title}' na sajtu %{site_domain_name}"
     text_body_template: |
       %{invitee_name} vas poziva na diskusiju:
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       na  Revolucionar.com
+
       > %{site_title} -- %{site_description}
+
       Ako ste zainteresovani, kliknite na link ispod:
+
       %{invite_link}
+
       Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu te smo mu/joj omogućili opciju slanja pozivnica. Što vama kao zvanici daje mogućnost da odgovorite na diskusiju bez registracije.
   invite_forum_mailer:
     subject_template: "%{invitee_name} vas poziva na novu socijalnu mrežu Revolucionar.com"
@@ -695,20 +727,31 @@ bs_BA:
       subject_template: "Dobrodošli na Revolucionar.com!"
       text_body_template: |
         Hvala što ste se pridružili Revolucionaru, dobrodošli!
+
         %{new_user_tips}
+
         Mi vjerujemo u [civilizovanu diskusiju](%{base_url}/guidelines) na svakom nivou u svako doba.
+
         Uživajte!
     welcome_invite:
       subject_template: "Dobrodošli na Revolucionar.com!"
       text_body_template: |
         Hvala vam što ste primili pozivnicu na %{site_name} -- dobrodošli!
+
         Mi smo automatski kreirali vaše korisničko ime: **%{username}**, ali možete ga promjeniti preko [tvoj profil][postavke].
+
         Da se opet ulogujete:
+
         1. Log in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+
         2. Create a unique password for [your user profile][prefs], and use it to log in.
+
         %{new_user_tips}
+
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+
         Enjoy your stay!
+
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
@@ -716,7 +759,9 @@ bs_BA:
       subject_template: "Backup failed"
       text_body_template: |
         The backup has failed.
+
         Here's the log:
+
         ```
         %{logs}
         ```
@@ -727,7 +772,9 @@ bs_BA:
       subject_template: "Restore failed"
       text_body_template: |
         The restore has failed.
+
         Here's the log:
+
         ```
         %{logs}
         ```
@@ -738,7 +785,9 @@ bs_BA:
       subject_template: "Bulk user invite processed with errors"
       text_body_template: |
         Your bulk user invite file was processed, %{sent} invites mailed with %{failed} error(s).
+
         Here's the log:
+
         ```
         %{logs}
         ```
@@ -746,7 +795,9 @@ bs_BA:
       subject_template: "Data Export completed successfully"
       text_body_template: |
         The data export was successful.
+
         Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
+
         <small>CSV file download link will expire after 48 hours.</small>
     csv_export_failed:
       subject_template: "Export failed"
@@ -766,6 +817,7 @@ bs_BA:
     pending_users_reminder:
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
+
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
@@ -803,38 +855,51 @@ bs_BA:
       subject_template: "[%{site_name}] Obnova Šifre"
       text_body_template: |
         Potražena je obnova šifre na [%{site_name}](%{base_url}).
+
         Ako je niste vi zatražili ignirišite ovaj email.
+
         Kliknite ovdje da resetujete vašu šifru:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Odredi Šifru"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+
         If you did not make this request, you can safely ignore this email.
+
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Vaš Novi Nalog"
       text_body_template: |
         Novi nalog je kreiran za vas na %{site_name}
+
         Kliknite na link ispod da kreirate šifru za vaš nalog:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
         Welcome to %{site_name}!
+
         A staff member approved your account on %{site_name}.
+
         Click the following link to confirm and activate your new account:
         %{base_url}/users/activate-account/%{email_token}
+
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
         %{new_user_tips}
+
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+
         Enjoy your stay!
     signup:
       text_body_template: |
         Dobrodošli na %{site_name}!
+
         Kliknite na link ispod za aktovaciju vašeg naloga:
         %{base_url}/users/activate-account/%{email_token}
+
         Ako link iznad ne može da se klikne onda ga kopirajte i ubacite u vaš internet pretraživač.
   page_not_found:
     popular_topics: "Popularne"
@@ -844,6 +909,7 @@ bs_BA:
     search_google: "Google"
   login_required:
     welcome_message: |
+      #[Welcome to %{title}](#welcome)
       Potreban je nalog. Kreirajte novi nalog ili se ulogujte.
   terms_of_service:
     title: "Terms of Service"
@@ -886,3 +952,6 @@ bs_BA:
     title: "Terms of Service"
   privacy_topic:
     title: "Privacy Policy"
+  activemodel:
+    errors:
+      <<: *errors

@@ -365,18 +365,18 @@ fr:
           title: "Silencieux"
           description: "Nous ne serez jamais notifié de quoi que ce soit à propos des nouveaux sujets dans ce groupe."
     user_action_groups:
-      "1": "J'aime donnés"
-      "2": "J'aime reçus"
-      "3": "Signets"
-      "4": "Sujets"
-      "5": "Réponses"
-      "6": "Réponses"
-      "7": "Mentions"
-      "9": "Citations"
-      "11": "Éditions"
-      "12": "Eléments envoyés"
-      "13": "Boîte de réception"
-      "14": "En attente"
+      '1': "J'aime donnés"
+      '2': "J'aime reçus"
+      '3': "Signets"
+      '4': "Sujets"
+      '5': "Réponses"
+      '6': "Réponses"
+      '7': "Mentions"
+      '9': "Citations"
+      '11': "Éditions"
+      '12': "Eléments envoyés"
+      '13': "Boîte de réception"
+      '14': "En attente"
     categories:
       all: "toutes les catégories"
       all_subcategories: "toutes"
@@ -1187,20 +1187,20 @@ fr:
         title: Modifier la fréquence de vos notifications concernant ce sujet
         reasons:
           mailing_list_mode: "Vous avez activé le mode mailing list, vous serez donc notifié des réponses à ce sujet par courriel."
-          "3_6": 'Vous recevrez des notifications parce que vous surveillez cette catégorie.'
-          "3_5": 'Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement.'
-          "3_2": 'Vous recevrez des notifications car vous surveillez ce sujet.'
-          "3_1": 'Vous recevrez des notifications car vous avez créé ce sujet.'
-          "3": 'Vous recevrez des notifications car vous surveillez ce sujet.'
-          "2_8": 'Vous recevrez des notifications parce que vous suivez cette catégorie.'
-          "2_4": 'Vous recevrez des notifications car vous avez écrit une réponse dans ce sujet.'
-          "2_2": 'Vous recevrez des notifications car vous suivez ce sujet.'
-          "2": 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
-          "1_2": 'Vous serez averti si quelqu''un mentionne votre @pseudo ou vous répond.'
-          "1": 'Vous serez averti si quelqu''un mentionne votre @pseudo ou vous répond.'
-          "0_7": 'Vous ignorez toutes les notifications de cette catégorie.'
-          "0_2": 'Vous ignorez toutes les notifications de ce sujet.'
-          "0": 'Vous ignorez toutes les notifications de ce sujet.'
+          '3_6': 'Vous recevrez des notifications parce que vous surveillez cette catégorie.'
+          '3_5': 'Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement.'
+          '3_2': 'Vous recevrez des notifications car vous surveillez ce sujet.'
+          '3_1': 'Vous recevrez des notifications car vous avez créé ce sujet.'
+          '3': 'Vous recevrez des notifications car vous surveillez ce sujet.'
+          '2_8': 'Vous recevrez des notifications parce que vous suivez cette catégorie.'
+          '2_4': 'Vous recevrez des notifications car vous avez écrit une réponse dans ce sujet.'
+          '2_2': 'Vous recevrez des notifications car vous suivez ce sujet.'
+          '2': 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">avez lu ce sujet</a>.'
+          '1_2': 'Vous serez averti si quelqu''un mentionne votre @pseudo ou vous répond.'
+          '1': 'Vous serez averti si quelqu''un mentionne votre @pseudo ou vous répond.'
+          '0_7': 'Vous ignorez toutes les notifications de cette catégorie.'
+          '0_2': 'Vous ignorez toutes les notifications de ce sujet.'
+          '0': 'Vous ignorez toutes les notifications de ce sujet.'
         watching_pm:
           title: "Suivre attentivement"
           description: "Vous serez notifié de chaque nouvelle réponse dans ce message, et le nombre de nouvelles réponses apparaîtra."

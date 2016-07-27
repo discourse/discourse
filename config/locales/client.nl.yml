@@ -367,18 +367,18 @@ nl:
           title: "Genegeerd"
           description: "Je krijgt geen notificatie over nieuwe topics in deze groep."
     user_action_groups:
-      "1": "Likes gegeven"
-      "2": "Likes ontvangen"
-      "3": "Bladwijzers"
-      "4": "Topics"
-      "5": "Reacties"
-      "6": "Reacties"
-      "7": "Genoemd"
-      "9": "Citaten"
-      "11": "Wijzigingen"
-      "12": "Verzonden items"
-      "13": "Inbox"
-      "14": "In behandeling"
+      '1': "Likes gegeven"
+      '2': "Likes ontvangen"
+      '3': "Bladwijzers"
+      '4': "Topics"
+      '5': "Reacties"
+      '6': "Reacties"
+      '7': "Genoemd"
+      '9': "Citaten"
+      '11': "Wijzigingen"
+      '12': "Verzonden items"
+      '13': "Inbox"
+      '14': "In behandeling"
     categories:
       all: "alle categorieën"
       all_subcategories: "alle"
@@ -1208,21 +1208,21 @@ nl:
         title: verander de frequentie van notificaties over deze topic
         reasons:
           mailing_list_mode: "De mailinglijstmodus staat ingeschakeld, dus zul je via e-mail notificaties ontvangen bij nieuwe antwoorden in deze topic."
-          "3_10": 'Je zal notificaties ontvangen omdat je een tag op deze topic in de gaten houdt.'
-          "3_6": 'Je ontvangt notificaties omdat je deze categorie in de gaten houdt.'
-          "3_5": 'Je ontvangt notificaties omdat je deze topic automatisch in de gaten houdt.'
-          "3_2": 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
-          "3_1": 'Je ontvangt notificaties omdat je dit topic hebt gemaakt.'
-          "3": 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
-          "2_8": 'Je ontvangt notificaties omdat je deze categorie volgt.'
-          "2_4": 'Je ontvangt notificaties omdat je een reactie in deze topic hebt geplaatst.'
-          "2_2": 'Je ontvangt notificaties omdat je deze topic volgt.'
-          "2": 'Je ontvangt notificaties omdat je <a href="/users/{{username}}/preferences">deze topic hebt gelezen</a>.'
-          "1_2": 'Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou.'
-          "1": 'Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou.'
-          "0_7": 'Je negeert alle notificaties in deze categorie.'
-          "0_2": 'Je negeert alle notificaties in deze topic.'
-          "0": 'Je negeert alle notificaties in deze topic.'
+          '3_10': 'Je zal notificaties ontvangen omdat je een tag op deze topic in de gaten houdt.'
+          '3_6': 'Je ontvangt notificaties omdat je deze categorie in de gaten houdt.'
+          '3_5': 'Je ontvangt notificaties omdat je deze topic automatisch in de gaten houdt.'
+          '3_2': 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
+          '3_1': 'Je ontvangt notificaties omdat je dit topic hebt gemaakt.'
+          '3': 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
+          '2_8': 'Je ontvangt notificaties omdat je deze categorie volgt.'
+          '2_4': 'Je ontvangt notificaties omdat je een reactie in deze topic hebt geplaatst.'
+          '2_2': 'Je ontvangt notificaties omdat je deze topic volgt.'
+          '2': 'Je ontvangt notificaties omdat je <a href="/users/{{username}}/preferences">deze topic hebt gelezen</a>.'
+          '1_2': 'Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou.'
+          '1': 'Je krijgt een notificatie als iemand je @naam noemt of reageert op een bericht van jou.'
+          '0_7': 'Je negeert alle notificaties in deze categorie.'
+          '0_2': 'Je negeert alle notificaties in deze topic.'
+          '0': 'Je negeert alle notificaties in deze topic.'
         watching_pm:
           title: "In de gaten houden"
           description: "Je krijgt een notificatie voor elke nieuwe reactie op dit bericht, en het aantal nieuwe reacties wordt weergegeven."
@@ -2063,24 +2063,24 @@ nl:
         agree_title: "Bevestig dat deze melding geldig en correct is"
         agree_flag_modal_title: "Akkoord en ... "
         agree_flag_hide_post: "Akkoord (verberg bericht en stuur privébericht)"
-        agree_flag_hide_post_title: "Verberg dit bericht en stuur de gebruiker automatisch een bericht met het verzoek om het aan te passen. "
+        agree_flag_hide_post_title: "Verberg dit bericht en stuur de gebruiker een bericht met het dringenge verzoek om het aan te passen"
         agree_flag_restore_post: "Eens (herstel bericht)"
         agree_flag_restore_post_title: "Herstel dit bericht"
         agree_flag: "Akkoord met melding"
-        agree_flag_title: "Akkoord met melding en het bericht ongewijzigd laten"
+        agree_flag_title: "Ga akkoord met de melding en laat het bericht ongewijzigd"
         defer_flag: "Negeer"
-        defer_flag_title: "Verwijder deze melding; nu geen actie nodig"
+        defer_flag_title: "Verwijder deze melding; er is nu geen actie nodig"
         delete: "Verwijder"
         delete_title: "Verwijder het bericht waar deze melding naar verwijst"
         delete_post_defer_flag: "Verwijder bericht en negeer melding"
         delete_post_defer_flag_title: "Verwijder bericht en als dit het eerste bericht is; de hele topic"
-        delete_post_agree_flag: "Verwijder bericht en akkoord met melding"
+        delete_post_agree_flag: "Ga akkoord met de melding en verwijder het bericht"
         delete_post_agree_flag_title: "Verwijder bericht en als dit het eerste bericht is; de hele topic"
         delete_flag_modal_title: "Verwijder en ... "
         delete_spammer: "Verwijder spammer"
         delete_spammer_title: "Verwijder de gebruiker en alle door deze gebruiker geplaatste berichten en topics."
         disagree_flag_unhide_post: "Niet akkoord (toon bericht)"
-        disagree_flag_unhide_post_title: "Verwijder elke melding van dit bericht en maak het weer zichtbaar"
+        disagree_flag_unhide_post_title: "Verwijder alle meldingen over dit bericht en maak het bericht weer zichtbaar"
         disagree_flag: "Niet akkoord"
         disagree_flag_title: "Deze melding is ongeldig of niet correct"
         clear_topic_flags: "Gedaan"
@@ -2100,7 +2100,7 @@ nl:
         topic_flagged: "Deze <strong>topic</strong> is gemarkeerd."
         visit_topic: "Ga naar de topic om te zien wat er aan de hand is en om actie te ondernemen"
         was_edited: "Bericht is gewijzigd na de eerste melding"
-        previous_flags_count: "Dit bericht is al {{count}} keer gevlagd."
+        previous_flags_count: "Er is al {{count}} keer melding gemaakt over dit bericht."
         summary:
           action_type_3:
             one: "off-topic"
@@ -2131,25 +2131,25 @@ nl:
         delete: "Verwijder"
         delete_confirm: "Verwijder deze groepen?"
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet verwijderd worden."
-        delete_member_confirm: "Verwijder '%{username}' van de '%{group'} groep?"
-        delete_owner_confirm: "Verwijder eigenaar privilege voor '% {username}'?"
+        delete_member_confirm: "Verwijder '%{username}' uit de '%{group'} groep?"
+        delete_owner_confirm: "Verwijder eigenaarsprivileges van '% {username}'?"
         name: "Naam"
         add: "Voeg toe"
         add_members: "Voeg leden toe"
         custom: "Aangepast"
         bulk_complete: "De gebruikers zijn toegevoegd aan de groep."
-        bulk: "Bulk toevoegen aan groep."
-        bulk_paste: "Plak een lijst van gebruikersnamen of e-mails, één per regel:"
+        bulk: "Bulk toevoegen aan groep"
+        bulk_paste: "Plak een lijst van gebruikersnamen of e-mailadressen, één per regel:"
         bulk_select: "(selecteer een groep)"
         automatic: "Automatisch"
-        automatic_membership_email_domains: "Gebruikers welke zich registeren met een email domein dat exact overeenkomt met de domeinen in deze lijst worden automatisch toegevoegd aan deze groep:"
-        automatic_membership_retroactive: "Pas deze email domein regel toe op reeds geregistreerde gebruikers"
-        default_title: "Standaard titel voor alle gebruikers in deze groep"
+        automatic_membership_email_domains: "Gebruikers die zich registeren met een e-mailadres bij een domein dat exact overeenkomt met de domeinen in deze lijst worden automatisch toegevoegd aan deze groep:"
+        automatic_membership_retroactive: "Pas deze e-mail domeinregel toe op reeds geregistreerde gebruikers"
+        default_title: "Standaardtitel voor alle gebruikers in deze groep"
         primary_group: "Automatisch ingesteld als primaire groep"
         group_owners: Eigenaren
         add_owners: Eigenaren toevoegen
-        incoming_email: "Aangepaste inkomende email adressen "
-        incoming_email_placeholder: "Voer je email adres in"
+        incoming_email: "Aangepaste inkomende e-mailadressen "
+        incoming_email_placeholder: "Voer je e-mailadres in"
       api:
         generate_master: "Genereer Master API Key"
         none: "Er zijn geen actieve API keys"
@@ -2163,12 +2163,12 @@ nl:
         confirm_revoke: "Weet je zeker dat je die API Key wil intrekken?"
         info_html: "Met deze API-key kun je met behulp van JSON-calls topics maken en bewerken."
         all_users: "Alle gebruikers"
-        note_html: "Houd deze sleutel <strong>geheim</strong>, gebruikers die deze sleutel hebben kunnen zich als elke andere gebruiker voordoen op het forum."
+        note_html: "Houd deze key <strong>geheim</strong>, alle gebruikers die hierover beschikken kunnen berichten plaatsen als elke andere gebruiker."
       plugins:
         title: "Plugins"
         installed: "Geïnstalleerde plugins"
         name: "Naam"
-        none_installed: "Je hebt geen plugins geinstalleerd."
+        none_installed: "Je hebt geen plugins geïnstalleerd."
         version: "Versie"
         enabled: "Ingeschakeld?"
         is_enabled: "J"
@@ -2227,19 +2227,19 @@ nl:
           rollback:
             label: "Herstel"
             title: "Herstel de database naar de laatst werkende versie"
-            confirm: "Weet je zeker dat je de database wilt terugzetten naar de vorige staat?"
+            confirm: "Weet je zeker dat je de database wilt terugzetten naar de vorige werkende staat?"
       export_csv:
         user_archive_confirm: "Weet je zeker dat je al je berichten wil downloaden?"
-        success: "Exporteren is gestart, je zult gewaarschuwd worden als het proces is beeindigd."
+        success: "Exporteren is gestart, je zult een bericht ontvangen als het proces is afgerond."
         failed: "Exporteren is mislukt. Controleer de logbestanden."
-        rate_limit_error: "Berichten kunnen eens per dag gedownload worden, probeer a.u.b. morgen nog een keer."
+        rate_limit_error: "Berichten kunnen één keer per dag gedownload worden, probeer het morgen nog eens."
         button_text: "Exporteren"
         button_title:
-          user: "Exporteer volledige gebruikerslijst in *.CSV-formaat"
-          staff_action: "Exporteer volledige staf actie log in CSV formaat."
-          screened_email: "Exporteer volledige gescreende email lijst in CSV formaat."
-          screened_ip: "Exporteer volledige gescreende IP lijst in CSV formaat."
-          screened_url: "Exporteerd volledige gescreende URL lijst in CSV formaat."
+          user: "Exporteer volledige gebruikerslijst in CSV-formaat"
+          staff_action: "Exporteer volledige staf actie logboek in CSV-formaat."
+          screened_email: "Exporteer volledige gescreende e-maillijst in CSV-formaat."
+          screened_ip: "Exporteer volledige gescreende IP-lijst in CSV-formaat."
+          screened_url: "Exporteerd volledige gescreende URL-lijst in CSV-formaat."
       export_json:
         button_text: "Exporteer"
       invite:
@@ -2265,13 +2265,13 @@ nl:
         undo_preview: "verwijder voorbeeld"
         rescue_preview: "standaard stijl"
         explain_preview: "Bekijk de site met deze aangepaste stylesheet"
-        explain_undo_preview: "Herstel huidige geactiveerde aangepaste stylesheet"
+        explain_undo_preview: "Keer terug naar de aangepaste stylesheet die op dit moment ingesteld is"
         explain_rescue_preview: "Bekijk de site met de standaard stylesheet"
         save: "Opslaan"
         new: "Nieuw"
         new_style: "Nieuwe stijl"
         import: "Importeer"
-        import_title: "Selecteer een bestand of plak tekst."
+        import_title: "Selecteer een bestand of plak tekst"
         delete: "Verwijder"
         delete_confirm: "Verwijder deze aanpassing?"
         about: "Pas CSS stylesheets en HTML headers aan op de site. Voeg een aanpassing toe om te beginnen."
@@ -2279,13 +2279,13 @@ nl:
         opacity: "Doorzichtigheid"
         copy: "Kopieër"
         email_templates:
-          title: "Email Sjabloon "
+          title: "E-mailsjabloon"
           subject: "Onderwerp"
-          multiple_subjects: "Dit email sjabloon heeft meerdere onderwerpen."
+          multiple_subjects: "Deze e-mailsjabloon heeft meerdere onderwerpen."
           body: "Body"
-          none_selected: "Kies een email sjabloon om te beginnen met bewerken."
+          none_selected: "Kies een e-mailsjabloon om te beginnen met bewerken."
           revert: "Maak wijzigingen ongedaan"
-          revert_confirm: "Weet je zeker dat je de veranderingen ongedaan wilt maken?"
+          revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
         css_html:
           title: "CSS/HTML"
           long_title: "CSS en HTML aanpassingen"
@@ -2349,10 +2349,10 @@ nl:
         email_type: "E-mailtype"
         to_address: "Ontvangeradres"
         test_email_address: "e-mailadres om te testen"
-        send_test: "verstuur test e-mail"
+        send_test: "Verstuur test e-mail"
         sent_test: "verzonden!"
         delivery_method: "Verzendmethode"
-        preview_digest_desc: "Voorbeeld van de digest e-mails die naar inactieve leden worden verzonden."
+        preview_digest_desc: "Bekijk een voorbeeld van de digest e-mails die gestuurd worden naar inactieve leden."
         refresh: "Verniew"
         format: "Formaat"
         html: "html"
@@ -2366,14 +2366,14 @@ nl:
           cc_addresses: "Cc"
           subject: "Subject"
           error: "Fout"
-          none: "Geen inkomende emails gevonden."
+          none: "Geen inkomende e-mails gevonden."
           modal:
-            title: "Inkomende Email Details"
+            title: "Details inkomende e-mail"
             error: "Fout"
             headers: "Headers"
             subject: "Subject"
             body: "Body"
-            rejection_message: "Afwijzing Mail"
+            rejection_message: "Afwijzingsmail"
           filters:
             from_placeholder: "van@voorbeeld.nl"
             to_placeholder: "aan@voorbeeld.nl"
@@ -2427,8 +2427,8 @@ nl:
             change_trust_level: "verander trustlevel"
             change_username: "wijzig gebruikersnaam"
             change_site_setting: "verander instellingen"
-            change_site_customization: "verander site aanpassingen"
-            delete_site_customization: "verwijder site aanpassingen"
+            change_site_customization: "verander site-aanpassingen"
+            delete_site_customization: "verwijder site-aanpassingen"
             change_site_text: "verander tekst van site"
             suspend_user: "schors gebruiker"
             unsuspend_user: "hef schorsing op"
@@ -2439,8 +2439,8 @@ nl:
             delete_post: "verwijder bericht"
             impersonate: "Log in als gebruiker"
             anonymize_user: "maak gebruiker anoniem"
-            roll_up: "groepeer verbannen IP-adressen"
-            change_category_settings: "verander categorie instellingen"
+            roll_up: "voeg IP-adressen samen in blokken"
+            change_category_settings: "verander categorie-instellingen"
             delete_category: "categorie verwijderen"
             create_category: "nieuwe categorie"
             block_user: "blokkeer gebruiker"
@@ -2449,7 +2449,7 @@ nl:
             revoke_admin: "ontneem beheerdersrechten"
             grant_moderation: "geef modereerrechten"
             revoke_moderation: "ontneem modereerrechten"
-            backup_operation: "backup handeling"
+            backup_operation: "backuphandeling"
             deleted_tag: "verwijderde tag"
             renamed_tag: "hernoemde tag"
             revoke_email: "trek e-mail in"
@@ -2469,7 +2469,7 @@ nl:
           description: 'IP-adressen die in de gaten worden gehouden. Kies ''sta toe'' om deze op een witte lijst te zetten.'
           delete_confirm: "Weet je zeker dat je de regel voor %{ip_address} wil verwijderen?"
           roll_up_confirm: "Weet je zeker dat je regelmatig gescreende IP-adressen wilt samenvoegen tot subnets?"
-          rolled_up_some_subnets: "Succesvol IP ban entries samengevoegd tot deze subnets: %{subnets}."
+          rolled_up_some_subnets: "Verbannen IP-adressen zijn zojuist samengevoegd tot deze subnets: %{subnets}."
           rolled_up_no_subnet: "Er was niets om samen te voegen."
           actions:
             block: "Blokkeer"
@@ -2481,7 +2481,7 @@ nl:
             add: "Voeg toe"
             filter: "Zoek"
           roll_up:
-            text: "Groepeer verbannen IP adressen"
+            text: "Groepeer IP-adressen"
             title: "Creëer nieuwe subnet ban entries als er tenminste 'min_ban_entries_for_roll_up' entries zijn."
         logster:
           title: "Foutlogs"
@@ -2519,8 +2519,8 @@ nl:
           pending: 'Nog niet geaccepteerde leden'
           newuser: 'Leden met Trust Level 0 (Nieuw lid)'
           basic: 'Leden met Trust Level 1 (Lid)'
-          member: 'Leden op Trust Level 2 (Lid)'
-          regular: 'Leden op Trust Level 3 (Vaste bezoeker)'
+          member: 'Leden op trustlevel 2 (Lid)'
+          regular: 'Leden op trustlevel 3 (Vaste bezoeker)'
           leader: 'Leden op Trustlevel 4 (Leider)'
           staff: "Stafleden"
           admins: 'Administrators'

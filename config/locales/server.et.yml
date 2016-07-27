@@ -18,8 +18,6 @@ et:
   date:
     month_names: [null, jaanuar, veebruar, märts, aprill, mai, juuni, juuli, august, september, oktoober, november, detsember]
     <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Teemad"
   posts: "postitused"
@@ -97,9 +95,6 @@ et:
       max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
       default_categories_already_selected: "Sa ei saa valida teises nimekirjas valitud liiki."
       s3_upload_bucket_is_required: "Ei saa aktiveerida S3 üleslaadimist, kui 's3_upload_bucket' ei ole määratud."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Üles laetud fail peab olema kas csv või txt formaadis."
   backup:
@@ -200,25 +195,41 @@ et:
     until_posts:
       one: "1 postitus"
       other: "%{count} postitust"
-    'new-topic': |
+    new-topic: |
       Teretulemast saidile %{site_name} &mdash; **tänud uue vestluse alustamise eest!**
+
       - Kas pealkiri kõlab kuvitavalt kui sa seda kõvasti loed? Kas see on hea kokkuvõte?
+
       - Kas võiksid olla sellest huvitatud? Miks see oluline on? Millist tagasisidet sa soovid?
+
       - Lisa enim kasutatud sõnad oma teemasse et teised *leiaksid* selle üles. Et grupeerida oma teema teiste sarnaste teemadega vali liik.
+
       Rohkema info saamiseks [vaata meie kommuuni juhiseid](/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
-    'new-reply': |
+    new-reply: |
       Teretulemast saidile %{site_name} &mdash; **täname osalemast!**
+
       - Kas sinu vastus parandab vestlust mingil moel?
+
       - Ole kommuuni liikmete vastu lahke.
+
       - Konstruktiivne kriitika on tervitatav aga kritiseeri *ideid*, mitte inimesi.
+
       Rohkema info saamiseks [vaata meie kommuuni juhiseid](/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
     avatar: |
+      ### Kuidas oleks, kui lisaksid oma kontole pildi?
+
       Oled postitanud mõned teemad ja vastused aga sinu profiilipilt pole hetkel sama unikaalne nagu sina... see on lihtsalt üks täht.
+
       Kas sa oled kaalunud **[külastada oma profiili](%{profile_path})** laadimaks üles sind ennast kujutav pilt?
+
       Diskussioone jälgida ja vestlustest huvitavaid inimesi leida on lihtsam, kui kõigil on unikaalne profiilipilt!
     sequential_replies: |
+      ### Kaalu mitmele postitusele samaaegset vastamist
+
       Selle asemel, et vastata mitu korda järjest paljudele sõnumitele, palun kaalu ühe postituse kasutamist eelnevaid postitusi tsiteerides või kasutades viidet @nimi.
+
       Saad muuta oma varasemat postitust ning lisada tsitaati valides teksti ning vajutades nähtavale ilmunud nuppu <b>tsiteeri</b>.
+
       Kõigil on lihtsam lugeda teemasid, milles on põhjalikumad vastused paljude pisikeste vastuste asemel.
   activerecord:
     attributes:
@@ -229,7 +240,6 @@ et:
       user_profile:
         bio_raw: "Minust"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -250,6 +260,7 @@ et:
           attributes:
             hex:
               invalid: "pole korrektne värv"
+      <<: *errors
   vip_category_name: "Lounge"
   vip_category_description: "Liik, mis on eksklusiivne kasutajatele, kellel on usaldustase 3 või kõrgem."
   meta_category_name: "Saidi tagasiside."
@@ -554,3 +565,8 @@ et:
     error: "Viga!"
     email_input: "Admini kiri"
     submit_button: "Saada kiri"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

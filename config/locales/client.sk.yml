@@ -377,18 +377,18 @@ sk:
           title: "Ignorovaný"
           description: "Nikdy nebudete upozornení na nič ohľadom nových tém v tejto skupine."
     user_action_groups:
-      "1": "Rozdaných 'páči sa mi'"
-      "2": "Obdržaných 'páči sa mi'"
-      "3": "Záložky"
-      "4": "Témy"
-      "5": "Odpovede"
-      "6": "Odozvy"
-      "7": "Zmienky"
-      "9": "Citácie"
-      "11": "Úpravy"
-      "12": "Odoslané správy"
-      "13": "Prijaté správy"
-      "14": "Čakajúce správy"
+      '1': "Rozdaných 'páči sa mi'"
+      '2': "Obdržaných 'páči sa mi'"
+      '3': "Záložky"
+      '4': "Témy"
+      '5': "Odpovede"
+      '6': "Odozvy"
+      '7': "Zmienky"
+      '9': "Citácie"
+      '11': "Úpravy"
+      '12': "Odoslané správy"
+      '13': "Prijaté správy"
+      '14': "Čakajúce správy"
     categories:
       all: "všetky kategórie"
       all_subcategories: "všetky"
@@ -1131,20 +1131,20 @@ sk:
         position: "%{current}  príspevok z %{total}"
       notifications:
         reasons:
-          "3_6": 'Budete dostávať upozornenia, pretože sa pozeráte na túto kategóriu.'
-          "3_5": 'Budete automaticky dostávať upozornenie pretože ste začali pozorovať túto tému.'
-          "3_2": 'Budete dostávať upozornenia, pretože sa pozeráte na túto tému.'
-          "3_1": 'Budete dostávať upozornenia, pretože ste vytvorili túto tému.'
-          "3": 'Budete dostávať upozornenia, pretože sa pozeráte na túto tému.'
-          "2_8": 'Budete dostávať upozornenia, pretože sledujete túto kategóriu.'
-          "2_4": 'Budete dostávať upozornenia, pretože ste zaslali odpoveď na túto tému.'
-          "2_2": 'Budete dostávať upozornenia, pretože sledujete túto tému.'
-          "2": 'Budete dostávať upozornenia, pretože ste <a href="/users/{{username}}/preferences">čítali túto tému</a>.'
-          "1_2": 'Budete upozornený ak niekto spomenie Vaše @meno alebo Vám odpovie.'
-          "1": 'Budete upozornený ak niekto spomenie Vaše @meno alebo Vám odpovie.'
-          "0_7": 'Ignorujete všetky upozornenia v tejto kategórii.'
-          "0_2": 'Ignorujete všetky upozornenia k tejto téme.'
-          "0": 'Ignorujete všetky upozornenia k tejto téme.'
+          '3_6': 'Budete dostávať upozornenia, pretože sa pozeráte na túto kategóriu.'
+          '3_5': 'Budete automaticky dostávať upozornenie pretože ste začali pozorovať túto tému.'
+          '3_2': 'Budete dostávať upozornenia, pretože sa pozeráte na túto tému.'
+          '3_1': 'Budete dostávať upozornenia, pretože ste vytvorili túto tému.'
+          '3': 'Budete dostávať upozornenia, pretože sa pozeráte na túto tému.'
+          '2_8': 'Budete dostávať upozornenia, pretože sledujete túto kategóriu.'
+          '2_4': 'Budete dostávať upozornenia, pretože ste zaslali odpoveď na túto tému.'
+          '2_2': 'Budete dostávať upozornenia, pretože sledujete túto tému.'
+          '2': 'Budete dostávať upozornenia, pretože ste <a href="/users/{{username}}/preferences">čítali túto tému</a>.'
+          '1_2': 'Budete upozornený ak niekto spomenie Vaše @meno alebo Vám odpovie.'
+          '1': 'Budete upozornený ak niekto spomenie Vaše @meno alebo Vám odpovie.'
+          '0_7': 'Ignorujete všetky upozornenia v tejto kategórii.'
+          '0_2': 'Ignorujete všetky upozornenia k tejto téme.'
+          '0': 'Ignorujete všetky upozornenia k tejto téme.'
         watching_pm:
           title: "Pozerať"
           description: "Budete upozornený na každú novu dopoveť na túto správu, a zobrazí sa počet nových odpovedí"

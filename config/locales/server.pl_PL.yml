@@ -18,8 +18,6 @@ pl_PL:
   date:
     month_names: [null, Styczeń, Luty, Marzec, Kwiecień, Maj, Czerwiec, Lipiec, Sierpień, Wrzesień, Październik, Listopad, Grudzień]
     <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Tematy"
   posts: "wpisy"
@@ -89,9 +87,6 @@ pl_PL:
       max_username_length_range: "Nie możesz ustawić maksimum poniżej minimum."
       default_categories_already_selected: "Nie możesz wybrać kategorii użytej w innej liście."
       s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Wysłany plik powinien być w formacie CSV lub TXT."
   backup:
@@ -165,35 +160,62 @@ pl_PL:
       one: "1 wpis"
       few: "%{count} wpisy"
       other: "%{count} wpisów"
-    'new-topic': |
+    new-topic: |+
       Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowej dyskusji!**
+
       - Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?
+
       - Kto będzie tym zainteresowany? Dlaczego temat jest istotny?  Jakiego rodzaju odpowiedzi oczekujesz?
+
       - Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii o pokrewnej tematyce.
+
       Aby dowiedzieć się więcej, [zobacz przewodnik społeczności](/guidelines). Ten panel pojawi się tylko przy pierwszym %{education_posts_text}.
-    'new-reply': |
+
+
+    new-reply: |
       Witaj na %{site_name} &mdash; **dziękujemy za zaangażowanie!**
+
       - Czy twoja odpowiedź wnosi coś pozytywnego do dyskusji?
+
       - Zachowuj się przyjaźnie w stosunku do innych.
+
       - Konstruktywna krytyka jest mile widziana, ale krytykujemy *pomysły*, a nie ludzi.
+
       Więcej informacji znajdziesz [w przewodniku społeczności](/guidelines).
       Ten panel pojawi się tylko przy pisaniu pierwszych %{education_posts_text}.
     avatar: |
+      ### A może dodasz zdjęcie profilowe do swojego konta?
+
       Otworzyłeś kilka tematów i napisałeś kilka odpowiedzi, ale twoje zdjęcie profilowe nie jest tak niezwykłe jak ty - to tylko litera.
+
       Myślałeś o **[odwiedzeniu swojego profilu użytkownika](%{profile_path})** i załączeniu przedstawiającego cię zdjęcia?
+
       Kiedy każdy ma unikatowe zdjęcie profilowe, łatwiej jest obserwować dyskusje i znaleźć interesujących ludzi do rozmów!
     sequential_replies: |
+      ### Pomyśl o odpowiadaniu na kilka postów jednocześnie
+
       Zamiast kilku kolejnych odpowiedzi do tematu, pomyśl o pojedynczej odpowiedzi, która zawierałaby cytaty z wcześniejszych postów lub wzmianki @imię.
+
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>quote reply</b>.
+
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych replik.
     dominating_topic: |
+      ### Pozwól innym dołączyć do rozmowy
+
       Ten temat jest dla Ciebie wyraźnie istotny  &ndash; ponad %{percent}% odpowiedzi jest Twojego autorstwa.
+
       Czy na pewno dajesz innym wystarczająco czasu na przedstawienie swoich punktów widzenia?
     too_many_replies: |
+      ### Osiągnąłeś limit odpowiedzi w tym temacie
+
       Przepraszamy, ale nowi użytkownicy są obecnie ograniczeni do %{newuser_max_replies_per_topic} odpowiedzi w tym samym temacie.
+
       Zamiast dodawać kolejną odpowiedź, rozważ edycję swoich poprzednich odpowiedzi lub odwiedzenie innych tematów.
     reviving_old_topic: |
+      ### Ożywić ten temat?
+
       Ostatnia odpowiedź w tym temacie ma ponad %{days} dni. Twoja odpowiedź przesunie temat na górę listy i spowoduje powiadomienie wszystkich wcześniej uczestniczących w rozmowie.
+
       Czy na pewno chcesz kontynuować tę starą rozmowę?
   activerecord:
     attributes:
@@ -204,7 +226,6 @@ pl_PL:
       user_profile:
         bio_raw: "O mnie"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -225,6 +246,7 @@ pl_PL:
           attributes:
             hex:
               invalid: "nie jest poprawnym kolorem"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole O mnie w Twoim profilu jest obecnie puste, <a href='/users/%{username_lower}/preferences/about-me'>czy chcesz je wypełnić?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} jeszcze nie podał swojego opisu w profilu</div>"
@@ -237,18 +259,26 @@ pl_PL:
   assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Witaj w Salonie"
-    body: |
+    body: |2
+
       Gratulacje! :confetti_ball:
+
       Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
+
       Od teraz możesz &hellip;
+
       * Edytować tytuł każdego tematu
       * Przenieść temat do innej kategorii
       * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
       * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
       * Przyznawać polubienia i flagi o większej wadze
+
       Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
+
       Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
+
       (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
+
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
@@ -678,8 +708,6 @@ pl_PL:
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "Jeśli nowy użytkownik odpowiada na dany temat z tego samego adresu IP co nowy użytkownik, który założył temat, oznacz ich posty jako potencjalny spam."
     post_undo_action_window_mins: "Przez tyle minut użytkownicy mogą cofnąć swoje ostatnie działania przy danym poście (lajki, flagowanie, itd.)."
-    ga_tracking_code: "Identyfikator Google analytics (ga.js), np: UA-12345678-9; zobacz http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     ga_universal_domain_name: "Domena dla Google Universal Analytics (analytics.js), np: mysite.com; zobacz http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
@@ -898,11 +926,19 @@ pl_PL:
     subject_template: "%{invitee_name} zaprosił cię do dołączenia do %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
-    text_body_template: |
+    text_body_template: |+
       Dziękujemy za zaakceptowanie zaproszenia do %{site_name} -- witamy!
+
+
+
       Kliknij ten link, by wybrać hasło:
+
       %{base_url}/users/password-reset/%{email_token}
+
+
+
       (Jeśli powyższy link wygasł, wybierz "Zapomniałem hasła", logując się za pomocą adresu email.)
+
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   new_version_mailer:
@@ -931,7 +967,9 @@ pl_PL:
       subject_template: "Kopia zapasowa nieudana"
       text_body_template: |
         Tworzenie kopii zapasowej było nieudane.
+
         Log poniżej:
+
         ```
         %{logs}
         ```
@@ -942,7 +980,9 @@ pl_PL:
       subject_template: "Przywracanie nieudane"
       text_body_template: |
         Przywrócenie z kopii zapasowej było nieudane.
+
         Log poniżej:
+
         ```
         %{logs}
         ```
@@ -951,18 +991,25 @@ pl_PL:
       text_body_template: "Plik z zaproszeniami został przetworzony. Wysłanych zaproszeń: %{sent}."
     bulk_invite_failed:
       subject_template: "Plik z zaproszeniami został przetworzony z błędami."
-      text_body_template: |
+      text_body_template: |+
         Plik z zaproszeniami został przetworzony -- wysłanych: %{sent}, błędów: %{failed}.
+
         Dziennik operacji:
+
         ```
         %{logs}
         ```
+
+
     csv_export_succeeded:
       subject_template: "Zakończono eksport danych"
-      text_body_template: |
+      text_body_template: |+
         Eksport danych zakończył się sukcesem! :dvd:
+
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
         Powyższy link będzie aktywny przez 48 godzin.
+
     csv_export_failed:
       subject_template: "Nieudany eksport danych"
       text_body_template: "Przepraszamy, ale eksport danych zakończył się niepowodzeniem. Sprawdź logi lub skontaktuj się z operatorami serwisu."
@@ -999,40 +1046,55 @@ pl_PL:
       subject_template: "[%{site_name}] Reset hasła"
       text_body_template: |
         Ktoś poprosił o zresetowanie Twojego hasła na [%{site_name}](%{base_url}).
+
         Jeśli to nie Ty, możesz bezpiecznie zignorować tę wiadomość.
+
         Kliknij na poniższy link by wybrać nowe hasło:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Ustaw hasło"
       text_body_template: |
         Ktoś poprosił o dodanie hasła do twojego konta [%{site_name}](%{base_url}). Możesz się zalogować przy pomocy konta w i innym serwisie (Google, Facebook, itd.) które zostało powiązane z twoim potwierdzonym adresem email.
+
         Jeśli to nie była twoja prośba, możesz zignorować tą wiadomość.
+
         Kliknij odnośnik poniżej by ustawić hasło:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Twoje nowe konto"
       text_body_template: |
         Utworzyliśmy Twoje konto na %{site_name}
+
         Kliknij na linku poniżej, aby ustawić swoje hasło:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
-      text_body_template: |
+      text_body_template: |+
         Witamy na %{site_name}!
+
         Nasz personel zatwierdził twoje konto na %{site_name}.
+
         Kliknij na podany link, aby potwierdzić i aktywować swoje nowe konto:
         %{base_url}/users/activate-account/%{email_token}
+
         Jeśli podany link nie działa, spróbuj skopiować go i przykleić w pasku adresów swojej wyszukiwarki.
+
         %{new_user_tips}
+
         Wierzymy, że [cywilizowana dyskusja](%{base_url}/guidelines) jest zawsze możliwa.
+
         Baw się dobrze!
+
         (Jeśli potrzebujesz skontaktować się z [członkiem zespołu](%{base_url}/about) jako nowy użytkownik, odpowiedz na tę wiadomość.)
+
     signup:
       subject_template: "[%{site_name}] Potwierdź swoje nowe konto"
       text_body_template: |
         Witaj na %{site_name}!
+
         Kliknij na poniższy link by potwierdzić i aktywować Twoje nowe konto:
         %{base_url}/users/activate-account/%{email_token}
+
         Jeśli powyższy link nie jest klikalny, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
   page_not_found:
     popular_topics: "Popularne"
@@ -1081,3 +1143,8 @@ pl_PL:
   performance_report:
     initial_post_raw: 'Ten temat zawiera codzienne raporty wydajności dla twojej witryny. '
     initial_topic_title: 'Testy wydajności witryny. '
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

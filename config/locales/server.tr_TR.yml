@@ -20,9 +20,9 @@ tr_TR:
     month_names: [null, Ocak, Şubat, Mart, Nisan, Mayıs, Haziran, Temmuz, Ağustos, Eylül, Ekim, Kasım, Aralık]
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Konular"
   posts: "gönderiler"
@@ -89,9 +89,6 @@ tr_TR:
       max_username_length_range: "En küçük değer altında en büyük değer ayarlayamazsınız."
       default_categories_already_selected: "Bir başka listede kullanılan bir kategoriyi seçemezsiniz."
       s3_upload_bucket_is_required: "Bir 's3_upload_bucket' tanımlamadıysanız, S3 yüklemelerini etkinleştiremezsiniz."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv veya txt formatında olmalı. "
   backup:
@@ -182,34 +179,59 @@ tr_TR:
   education:
     until_posts:
       other: "%{count} gönderi"
-    'new-topic': |
+    new-topic: |
       %{site_name} forumuna hoşgeldiniz &mdash; **yeni bir sohbet başlattığınız için teşekkür ederiz! **
+
       - Yüksek sesle okuduğunuzda başlık ilgi çekici geliyor mu? İyi bir özet mi?
+
       - Bununla kim ilgilenirdi? Neden önemli? Ne gibi cevaplar almayı diliyorsunuz?
+
       - Diğerlerinin de kolayca *bulabilmesi * için konunuzun içerisine sıkça kullanılan kelimeler dahil edin. Konunuzun benzer konularla gruplanması için bir kategori seçin.
+
       Daha fazlası için, [topluluk yönergelerimize bakın](/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.
-    'new-reply': |
+    new-reply: |
       %{site_name} forumuna hoşgeldiniz &mdash; **katılımınız için teşekkür ederiz!**
+
       - Cevabınız sohbeti bir şekilde geliştiriyor mu?
+
       - Topluluğun diğer üyelerine karşı nazik olun.
+
       - Yapıcı eleştirici her zaman kabul edilir, ama *fikirleri* eleştirin, insanları değil.
+
       Daha fazlası için, [topluluk yönergelerine bakın](/guidelines). Bu yazı sadece ilk %{education_posts_text} için görünür.
     avatar: |
+      ### Hesabının bir resmi olsun istemez misin?
+
       Birkaç konu ve cevap gönderdin, fakat profil resmin senin kadar eşsiz değil - sadece bir harf.
+
       Hiç **[kullanıcı profiline girmeyi](%{profile_path})** ve seni ifade eden bir resim yüklemeyi düşündün mü?
+
       Herkes eşsiz bir profil resmine sahip olduğunda tartışmaları takip etmek ve tartışmalarda ilgi çekici insanlar bulmak daha kolaydır!
     sequential_replies: |
+      ### Birden fazla gönderiyi aynı anda cevaplayabilirsin
+
       Aynı konuya ardı ardına cevaplar yazmak yerine, lütfen önceki gönderilerden alıntı veya @isim referansları içeren tek bir cevap yaz.
+
       Herhangi bir yazıyı seçince çıkan <b>alıntılayarak cevapla</b> butonuna tıklayarak alıntı ekleyebilir, bir önceki cevabınızı düzenleyebilirsiniz.
+
       Az sayıda derinlemesine cevaplardan oluşan konuların okunması, çok fazla kısa ve tekil cevaplardan oluşan konulardan herkes için daha kolay oluyor.
     dominating_topic: |
+      ###Sohbete başkalarının katılmasına izin verin
+
       Bu konunun sizin için önemli olduğunu görüyoruz &ndash; buradaki cevapların %{percent}% oranından daha fazlasını siz göndermişsiniz.
+
       Diğerlerinin de kendi fikirlerini paylaşmaları için onlara yeteri kadar zaman tanıdığınıza emin misiniz?
     too_many_replies: |
+      ### Bu konu için cevap limitinizi doldurdunuz
+
       Üzgünüz, ancak geçici olarak, yeni kullanıcılar aynı konu içinde en fazla %{newuser_max_replies_per_topic} cevap yazabiliyorlar.
+
       Yeni bir cevap yazmak yerine, önceki cevaplarınızı düzenlemeyi, ya da başka konulara göz atmayı düşünün.
     reviving_old_topic: |
+      ### Bu konuyu tekrar canlandırmak mı istediniz?
+
       Bu başlığa en son %{days} gün önce cevap yazılmış. Cevabınız, bu konuyu listesinin en üstüne taşıyacak ve geçmişte sohbete katılmış olan tüm yazarlara bildirim gönderecek.
+
       Bu eski sohbeti devam ettirmek istediğinize emin misiniz?
   activerecord:
     attributes:
@@ -222,7 +244,6 @@ tr_TR:
       user_profile:
         bio_raw: "Hakkımda"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -243,6 +264,7 @@ tr_TR:
           attributes:
             hex:
               invalid: "geçerli bir renk değil"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Profilinizdeki Hakkımda bölümü boş, <a href='/users/%{username_lower}/preferences/about-me'>doldurmak ister misiniz?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} profilinde Hakkımda kısmına henüz bir şey girmedi</div>"
@@ -255,18 +277,26 @@ tr_TR:
   assets_topic_body: "Bu kalıcı bir konudur, sadece görevlilere gözükür, site tasarımında kullanılan resim ve dosyaların depolanması için kullanılır. Sakın silmeyin!\n\n\nİşleyiş aşağıdaki gibidir:\n\n\n1. Bu konuyu cevaplayın.\n2. Logolar, favicon'lar vb. için kullanmak istediğiniz resimleri buraya yükleyin. (Gönderi düzenleyicisindeki yükleme düğmesini kullanabilir, veya resimleri sürükleyip bırakabilir veya kopyalayıp yapıştırabilirsiniz.)\n3. Cevabı gönderin.\n4. Yeni gönderinizdeki resimlere sağ tıklayarak ya da düzenleme ikonuna tıklayıp gönderinizi düzenleyerek resimlerin bağlantılarına ulaşabilirsiniz. Bağlantıları kopyalayın.\n5. Bağlantıları [basit ayarlar](/admin/site_settings/category/required) ilgili bölümlere yapıştırın.\n\n\nEğer farklı dosya tipleri yükleyebilmek istiyorsanız, [dosya ayarları](/admin/site_settings/category/files) sayfasındaki `authorized_extensions` ayarını düzenleyin."
   lounge_welcome:
     title: "Lobiye hoşgeldiniz"
-    body: |
+    body: |2
+
       Tebrikler! :confetti_ball:
+
       Bu konuyu görebiliyorsanız,  yakın süre önce **standart** (güven seviyesi 3) seviyesine terfi etmişsiniz demektir.
+
       Artık &hellip;
+
       * Herhangi bir konunun başlık bilgisini düzenleyebilirsiniz
       * Herhangi bir konunun kategorisini değiştirebilirsiniz
       * Eklediğiniz linkler takip edilebilir durumunda olacaktır ([otomatik nofollow] (http://en.wikipedia.org/wiki/Nofollow) kaldırıldı)
       * Sadece 3. güven seviyesi ve üzerindekilere gözüken özel Lobi kategorisine erişebilirsiniz
       * Tek bayraklamayla spam içerikli mesajları gizleyebilirsiniz
+
       [Şu anki standart seviyedeki arkadaşların listesi(/badges/3/regular). Merhaba demeyi unutmayın.
+
       Bu topluluğun önemli bir parçası olduğunuz için teşekkür ederiz!
+
       (Güven seviyeleriyle ilgili daha fazla bilgi için, [bu konuya bakın][trust]. Lütfen, sadece sürekli olarak kriterlere uyan üyelerin standart seviyede kalacağını unutmayın.)
+
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category} kategorisi hakkında "
@@ -683,8 +713,6 @@ tr_TR:
     post_undo_action_window_mins: "Kullanıcıya tanınan, bir gönderide yapılan yeni aksiyonları (beğenme, bayraklama, vs) geri alabilme dakika süresi"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir. UYARI: yayındaki bir site için bunu etkinleştirmek görevli olmayan hesapların erişimini iptal edecek."
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
-    ga_tracking_code: "Google analytics (ga.js) takip kodu, ör: UA-12345678-9; bakınız http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) alan adı, ör: mysite.com; bakınız http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) takip kodu, ör: UA-12345678-9; bakınız http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) alan adı, ör: mysite.com; bakınız http://google.com/analytics"
     enable_noscript_support: "Noscript etiketi üzerinden standart webcrawler arama motoru desteğini etkinleştir"
@@ -792,7 +820,6 @@ tr_TR:
     s3_cdn_url: "Tüm s3 öğeleri için CDN URL adresi. (örneğin: https://cdn.somewhere.com). UYARI: bu ayarı değiştirdikten sonra tüm eski gönderileri rebake etmelisiniz."
     avatar_sizes: "Otomatik üretilen avatar ölçülerinin listesi."
     external_system_avatars_enabled: "Dışsal sistem avatarları hizmeti kullan."
-    external_system_avatars_url: "Dışsal sistem avatarları hizmetinin URL'i. İzin verilen değiştirimler şunlardır: {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "Varsayılan opengraph imajının URL'si."
     enable_flash_video_onebox: "Kutularda swf ve flv (Adobe Flash) yerleştirmelerine izin ver. UYARI: güvenlik açıkları doğurabilir"
     default_invitee_trust_level: "Davet edilen kullanıcılar için varsayılan güven seviyesi (0-4)."
@@ -820,7 +847,6 @@ tr_TR:
     newuser_max_mentions_per_post: "Yeni bir kullanıcının bir gönderi içinde kullanabileceği en fazla @isim bildiri sayısı."
     newuser_max_replies_per_topic: "Yeni bir kullanıcının tek bir konu içerisinde, başka bir kullanıcı ona cevap yazana kadar, girebileceği en fazla cevap sayısı. "
     max_mentions_per_post: "Bir kullanıcının bir gönderi içinde kullanabileceği en fazla @isim bildiri sayısı."
-    max_users_notified_per_group_mention: "Grubun bahsi geçtiğinde bildirim alabilecek maksimum kullanıcı sayısı (Eğer eşik uyuşursa bildirim yapılmayacak)"
     create_thumbnails: "Gönderiye sığmayacak kadar büyük olan görseller için küçük resimler ve lightbox resimleri oluştur."
     email_time_window_mins: "Kullanıcılara, gönderilerini düzenlemelerine ve tamamlamalarına fırsat vermek için herhangi bir bildiri e-postası göndermeden önce (n) dakika bekleyin."
     email_posts_context: "Genel durumu göstermek amaçlı, bildiri e-postalarında yer alacak önceki cevap sayısı."
@@ -893,7 +919,6 @@ tr_TR:
     delete_all_posts_max: "Tüm Gönderileri Sil butonuna basıldığında tek seferde silinebilecek en fazla gönderi sayısı. Eğer bir kullanıcının gönderi sayısı bu sayıdan fazlaysa, gönderilerin hepsi tek seferde silinemez ve bu kullanıcı silinemez."
     username_change_period: "Kayıt sonrası, kullanıcı adınının değiştirilebileceği gün sayısı. (Kullanıcı adının değiştirilebilmesini devre dışı bırakmak için 0 girin)"
     email_editable: "Kullanıcıların kayıt olduktan sonra e-posta adreslerini değiştirmesine izin ver."
-    logout_redirect: "Çıkış yaptıktan sonra tarayıcının yönlendirileceği sayfa, ÖRN: (http://somesite.com/logout)"
     allow_uploaded_avatars: "Kullanıcıların özel profil resimleri yüklemelerine izin ver."
     allow_animated_avatars: "Kullanıcıların hareketli gif profil resimleri kullanmalarına izin ver. UYARI: Bu ayarı değiştirdikten sonra avatars:refresh rake görevini çalıştırın."
     allow_animated_thumbnails: "Animasyonlu giflerin, animasyonlu küçük resmini oluşturur."
@@ -911,7 +936,6 @@ tr_TR:
     allow_profile_backgrounds: "Kullanıcıların profillerine arkaplan eklemesine izin ver."
     enable_mobile_theme: "Mobil cihazlar mobil uyumlu temayı kullanır, dilerse masaüstü görünüme geçebilirler. Eğer özel, duyarlı bir stil kullanıyorsanız bunu devredışı bırakın."
     dominating_topic_minimum_percent: "Konuyu domine ettiğine dair uyarı almadan önce konudaki gönderilerin yüzde kaçının kullanıcıya ait olması gerekir."
-    daily_performance_report: "NGINX kayıtlarını analiz edip detaylı bir şekilde günlük Yetkili kategorisinde bir konu içerisinde paylaş."
     suppress_uncategorized_badge: "Kategorisiz konular için olan rozeti konu listesinde gösterme."
     global_notice: "Tüm ziyaretçilere İVEDİ ACİL DURUM global manşet uyarısı göster, saklamak için boş bırakın (HTML kullanılabilir)."
     disable_edit_notifications: " 'download_remote_images_to_local' etkin olduğunda, sistem kullanıcısından gelen düzenleme bildirilerini devre dışı bırakır"
@@ -925,7 +949,6 @@ tr_TR:
     default_code_lang: "GitHub kod bloklarına (lang-auto, ruby, python vs.) uygulanacak, varsayılan programlama dili sözdizimi vurgulaması."
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı mesajı çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
     autohighlight_all_code: "Tüm önceden formatlanan kod bloklarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
-    highlighted_languages: "Dahil edilen sözdizimi vurgulama kuralları. (Dikkat: çok fazla dili dahil etmek performansı etkileyebilir) Demo için https://highlightjs.org/static/demo/ adresine bakınız"
     feed_polling_enabled: "SADECE YERLEŞTİRME İÇİN: RSS/ATOM beslemesinin gönderi olarak yerleştirilip yerleştirilemeyeceği."
     feed_polling_url: "SADECE YERLEŞTİRME İÇİN: Yerleştirilecek RSS/ATOM beslemesinin URL'i."
     embed_by_username: "Yerleştirilmiş konuları oluşturan kullanıcıya ait Discourse kullanıcı adı. "
@@ -956,7 +979,6 @@ tr_TR:
     default_other_enable_quoting: "Vurgulanmış yazılar için alıntı ile cevaplamayı, öntanımlı olarak, etkinleştir."
     default_other_dynamic_favicon: "Tarayıcı simgesinde, öntanımlı olarak, yeni/güncellenmiş konu sayısını göster."
     default_other_disable_jump_reply: "Kullanıcılar cevapladıktan sonra, öntanımlı olarak, onların gönderilerine atlama."
-    default_other_edit_history_public: "Gönderi değişikliklerini, öntanımlı olarak, herkese açık yap."
     default_topics_automatic_unpin: "Kullanıcı sayfa sonuna eriştiğinde tutturulmuş konuları otomatik olarak sayfadan ayır."
     default_categories_watching: "Öntanımlı olarak, izlenen kategorilerin listesi."
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
@@ -1069,14 +1091,21 @@ tr_TR:
     subject_template: "%{invitee_name}  sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti. "
     text_body_template: |
       %{invitee_name} sizi
+
       > %{site_title} -- %{site_description}
+
       sitesindeki
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       tartışmasına davet ediyor.
+
       Eğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:
+
       %{invite_link}
+
       Bu davet güvenilir bir kullanıcı tarafından gönderilmiştir, cevap yazarak tartışmaya hemen katılabilirsiniz.
   invite_forum_mailer:
     subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmanız için davet etti"
@@ -1084,8 +1113,10 @@ tr_TR:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
     text_body_template: |
       %{site_name}'e olan davetiyeni kabul ettiğin için teşekkür ederiz -- hoşgeldin!
+
       Şimdi bir şifre seçmek için şu bağlantıya tıklayın:
       %{base_url}/users/password-reset/%{email_token}
+
       (Eğer yukarıdaki bağlantının süresi dolmuşsa e-posta adresinizle giriş yaparken "Parolamı unuttum" bağlantısına tıklayınız.)
   test_mailer:
     subject_template: "[%{site_name}] E-posta Ulaştırma Testi"
@@ -1113,34 +1144,52 @@ tr_TR:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
       text_body_template: |
         %{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!
+
         %{new_user_tips}
+
         Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
+
         Ziyaretinizin keyfini çıkarın!
+
         (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)
     welcome_invite:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
       text_body_template: |
         %{site_name} davetiyenizi onayladığınız için teşekkürler -- hoşgeldiniz!
+
         Sizin için yeni bir hesap oluşturduk: **%{username}**, ve sisteme girişiniz yapıldı. [Kullanıcı profilinizi][prefs] ziyaret ederek kullanıcı adınızı değiştirebilirsiniz.
+
         Daha sonra tekrar giriş yapmak için:
+
         1. Giriş yaparken her zaman **ilk davetiyenizdekiyle aynı email adresini kullanın**. Yoksa sizin olduğunuzu anlayamayız!
+
         2. [Kullanıcı profiliniz][prefs] için yeni bir şifre oluşturun ve o şifre ile giriş yapın.
+
         %{new_user_tips}
+
         Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
+
         Ziyaretinizin keyfini çıkarın!
+
         (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)
+
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
       text_body_template: "Yedekleme işlemi başarıyla tamamlandı.\nYeni yedeğinizi [Yönetici Paneli > Yedekler](%{base_url}/admin/backups) adresinden indirebilirsiniz."
     backup_failed:
       subject_template: "Yedekleme başarısız"
-      text_body_template: |
+      text_body_template: |+
         Yedekleme başarısız oldu.
+
         Kayıtlar burada:
+
         ```
+
         %{logs}
+
         ```
+
     restore_succeeded:
       subject_template: "Geri alma başarıyla tamamlandı"
       text_body_template: "Geri alma başarıyla tamamlandı."
@@ -1148,9 +1197,13 @@ tr_TR:
       subject_template: "Geri alma başarısız"
       text_body_template: |
         Geri alma başarısız oldu.
+
         Kayıtlar burada:
+
         ```
+
         %{logs}
+
         ```
     bulk_invite_succeeded:
       subject_template: "Toplu davet gönderimi başarıyla tamamlandı"
@@ -1159,15 +1212,23 @@ tr_TR:
       subject_template: "Toplu davet gönderiminde hata oluştu"
       text_body_template: |
         Toplu davet dosyanız işlendi, %{sent} davetiye %{failed} hata(lar) ile gönderildi.
+
+
         Kayıtları aşağıda bulabilirsiniz:
+
+
         ```
+
         %{logs}
+
         ```
     csv_export_succeeded:
       subject_template: "Dışarı veri aktarımı tamamlandı"
       text_body_template: |
         Dışarı veri aktarımı başarılı! :dvd:
+
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
         Bu bağlantı 48 saat boyunca geçerli olacak.
     csv_export_failed:
       subject_template: "Dışarı veri aktarımı başarısız oldu"
@@ -1176,10 +1237,15 @@ tr_TR:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Hesap"
     email_reject_empty:
       subject_template: "[%{site_name}] E-posta sorunu -- İçerik Yok"
-      text_body_template: |
+      text_body_template: |+
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu.
+
         E-postada herhangi bir cevap bulamadık.
+
         Eğer bu mesajı alıyorsanız ve cevap eklediyseniz, daha basit bir biçimleme ile yeniden deneyin.
+
+
+
     email_reject_parsing:
       subject_template: "[%{site_name}] E-posta sorunu -- Tanımlanamayan içerik"
       text_body_template: |
@@ -1203,6 +1269,7 @@ tr_TR:
         other: "%{count} kullanıcı onay bekliyor"
       text_body_template: |
         Bu foruma giriş yapabilmek için onayınızı (ya da reddinizi) bekleyen yeni kullanıcı kayıtları var.
+
         [Lütfen admin bölümünde değerlendirmenizi yapın](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Uzaktaki resimlerin indirilmesi devre dışı bırakıldı"
@@ -1220,79 +1287,111 @@ tr_TR:
     user_invited_to_private_message_pm_staged:
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{respond_instructions}
     user_invited_to_topic:
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_replied_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_watching_first_post:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [ÖM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{message}
     digest:
       why: "%{last_seen_at} tarihindeki son girişinizden beri %{site_link} sitesine olanların kısa bir özeti"
@@ -1308,27 +1407,34 @@ tr_TR:
       subject_template: "[%{site_name}] Parola sıfırlama"
       text_body_template: |
         [%{site_name}](%{base_url}) sitesinde, biri parolanızın sıfırlanması için talepte bulundu.
+
         Eğer talepte bulunan siz değilseniz, bu e-postayı görmezden gelebilirsiniz.
+
         Yeni parola oluşturmak için aşağıdaki bağlantıya tıklayın:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Parola Oluşturun"
       text_body_template: |
         Biri, [%{site_name}](%{base_url}) sitesindeki hesabınıza parola ekleme talebinde bulundu. Dilerseniz, bu doğrulanmış email hesabınızla eşleşen, desteklediğiniz herhangi bir online servisi (Google, Facebook, vs.) kullanarak da giriş yapabilirsiniz.
+
         Eğer istekte bulunan siz değilseniz, bu e-postayı görmezden gelebilirsiniz.
+
         Parola oluşturmak için aşağıdaki bağlantıya tıklayın:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Giriş"
       text_body_template: |
         [%{site_name}](%{base_url}) sitesinde, biri hesabınıza giriş yapmaya talebinde bulundu.
+
         Eğer talepte bulunan siz değilseniz, bu e-postayı görmezden gelebilirsiniz.
+
         Giriş yapmak için aşağıdaki bağlantıya tıklayın:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Yeni Hesabınız"
       text_body_template: |
         %{site_name} sitesinde sizin için yeni bir hesap oluşturuldu.
+
         Yeni hesabınıza ait bir parola oluşturmak için aşağıdaki bağlantıya tıklayın:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
@@ -1337,19 +1443,28 @@ tr_TR:
       subject_template: "%{site_name} sitesinde hesabınız onaylandı!"
       text_body_template: |
         %{site_name} sitesine hoşgeldiniz!
+
         %{site_name} sitesindeki hesabınız bir görevli tarafından onaylandı.
+
         Aşağıdaki linke tıklayın ve yeni hesabınızı aktive edin: %{base_url}/users/activate-account/%{email_token}
+
         Eğer link tıklanabilir değilse, linki kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyebilirsiniz.
+
         %{new_user_tips}
+
         Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
+
         Ziyaretinizin keyfini çıkarın!
+
         (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu mesajı cevaplamanız yeterli.)
     signup:
       subject_template: "[%{site_name}] Yeni hesabınızı onaylayın"
       text_body_template: |
         %{site_name} sitesine hoşgeldiniz!
+
         Hesabınızı onaylamak ve etkinleştirmek için aşağıdaki bağlantıya tıklayın:
         %{base_url}/users/activate-account/%{email_token}
+
         Eğer yukarıdaki bağlantı tıklanabilir değilse, bağlantıyı kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyin.
   page_not_found:
     popular_topics: "Popüler"
@@ -1359,6 +1474,7 @@ tr_TR:
     search_google: "Google"
   login_required:
     welcome_message: |
+      #[Hoşgeldiniz %{title}](#welcome)
       Hesap oluşturmanız gerekiyor. Devam etmek için lütfen bir hesap oluşturun ya da giriş yapın.
   terms_of_service:
     title: "Üyelik Sözleşmesi"
@@ -1556,8 +1672,6 @@ tr_TR:
     famous_link:
       name: Ünlü Bağlantı
       description: 1000 kere tıklanmış bir bağlantı paylaşma
-      long_description: |
-        Bu rozet 1000 tıklama elde etmiş bir bağlantı paylaştığınız için verilmiştir.Süper! Paylaştığınız link tartışılan konuda daha detaylı bilgi vererek konuşmayı ilerletmiştir. Muhteşem bir iş başardınız!
     appreciated:
       name: Takdire Layık
       description: 20 gönderine 1 beğeni aldın
@@ -1629,3 +1743,6 @@ tr_TR:
     initial_topic_title: Site performansı raporları
   tags:
     title: "Etiketler"
+  activemodel:
+    errors:
+      <<: *errors

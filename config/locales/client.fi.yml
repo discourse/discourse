@@ -152,9 +152,11 @@ fi:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
         ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
+        ap_south_1: "Aasia ja Tyynimeri (Mumbai)"
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
         ap_northeast_2: "Aasia ja Tyynimeri (Soul)"
         sa_east_1: "Etelä-Amerikka (Sao Paulo)"
+        cn_north_1: "Kiina (Peking)"
     edit: 'muokkaa ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -332,6 +334,7 @@ fi:
       selector_placeholder: "Lisää jäseniä"
       owner: "omistaja"
       visible: "Ryhmä näkyy kaikille käyttäjille"
+      index: "Ryhmät"
       title:
         one: "ryhmä"
         other: "ryhmät"
@@ -367,18 +370,18 @@ fi:
           title: "Vaimennetut"
           description: "Et saa ilmoituksia uusista ketjuista tässä ryhmässä."
     user_action_groups:
-      "1": "Annetut tykkäykset"
-      "2": "Saadut tykkäykset"
-      "3": "Kirjanmerkit"
-      "4": "Ketjut"
-      "5": "Vastauksia"
-      "6": "Vastaukset"
-      "7": "Viittaukset"
-      "9": "Lainaukset"
-      "11": "Muokkaukset"
-      "12": "Lähetetyt"
-      "13": "Postilaatikko"
-      "14": "Odottaa"
+      '1': "Annetut tykkäykset"
+      '2': "Saadut tykkäykset"
+      '3': "Kirjanmerkit"
+      '4': "Ketjut"
+      '5': "Vastauksia"
+      '6': "Vastaukset"
+      '7': "Viittaukset"
+      '9': "Lainaukset"
+      '11': "Muokkaukset"
+      '12': "Lähetetyt"
+      '13': "Postilaatikko"
+      '14': "Odottaa"
     categories:
       all: "kaikki alueet"
       all_subcategories: "kaikki"
@@ -482,15 +485,17 @@ fi:
       watched_tags: "Tarkkailtavat"
       watched_tags_instructions: "Ketjut joilla on joku näistä tunnisteista asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
       tracked_tags: "Seurattavat"
-      tracked_tags_instructions: "Ketjut joilla on joku näistä tunnisteista asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
+      tracked_tags_instructions: "Ketjut, joilla on joku näistä tunnisteista, asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
       muted_tags: "Vaimennettavat"
       muted_tags_instructions: "Et saa ilmoituksia ketjuista, joilla on joku näistä tunnisteista, eivätkä ne näy tuoreimmissa."
       watched_categories: "Tarkkaillut"
       watched_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
       tracked_categories: "Seuratut"
-      tracked_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
+      tracked_categories_instructions: "Näiden alueiden ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun yhteydessä."
       watched_first_post_categories: "Tarkkaillaan uusia ketjuja"
       watched_first_post_categories_instructions: "Saat ilmoituksen näiden alueiden ketjujen ensimmäisistä viesteistä."
+      watched_first_post_tags: "Tarkkaillaan uusia ketjuja"
+      watched_first_post_tags_instructions: "Saat ilmoituksen uusista ketjuista, joilla on joku näistä tunnisteista."
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy tuoreimmissa."
       delete_account: "Poista tilini"
@@ -894,10 +899,10 @@ fi:
       github:
         title: "GitHubilla"
         message: "Todennetaan Githubin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
-    apple_international: "Apple/kansainvälinen"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
+    emoji_set:
+      apple_international: "Apple/Kansainvälinen"
+      google: "Google"
+      twitter: "Twitter"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1208,21 +1213,21 @@ fi:
         title: muuta sitä, kuinka usein saat muistutuksia tästä ketjusta
         reasons:
           mailing_list_mode: "Olet postituslistatilassa, joten saat sähköpostia tähän ketjuun lähetyistä vastauksista."
-          "3_10": 'Saat ilmoituksia, koska tarkkailet tähän ketjuun liittyvää tunnistetta.'
-          "3_6": 'Saat ilmoituksia, koska olet asettanut tämän alueen tarkkailuun.'
-          "3_5": 'Saat ilmoituksia, koska ketju on asetettu tarkkailuun automaattisesti.'
-          "3_2": 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
-          "3_1": 'Saat ilmoituksia, koska loit tämän ketjun.'
-          "3": 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
-          "2_8": 'Saat ilmoituksia, koska olet asettanut tämän alueen seurantaan.'
-          "2_4": 'Saat ilmoituksia, koska olet kirjoittanut ketjuun.'
-          "2_2": 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
-          "2": 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luit ketjua aiemmin</a>.'
-          "1_2": 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
-          "1": 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
-          "0_7": 'Et saa mitään ilmoituksia tältä alueelta.'
-          "0_2": 'Et saa mitään ilmoituksia tästä ketjusta.'
-          "0": 'Et saa mitään ilmoituksia tästä ketjusta.'
+          '3_10': 'Saat ilmoituksia, koska tarkkailet tähän ketjuun liittyvää tunnistetta.'
+          '3_6': 'Saat ilmoituksia, koska olet asettanut tämän alueen tarkkailuun.'
+          '3_5': 'Saat ilmoituksia, koska ketju on asetettu tarkkailuun automaattisesti.'
+          '3_2': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
+          '3_1': 'Saat ilmoituksia, koska loit tämän ketjun.'
+          '3': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
+          '2_8': 'Saat ilmoituksia, koska olet asettanut tämän alueen seurantaan.'
+          '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun.'
+          '2_2': 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
+          '2': 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luit ketjua aiemmin</a>.'
+          '1_2': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
+          '1': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
+          '0_7': 'Et saa mitään ilmoituksia tältä alueelta.'
+          '0_2': 'Et saa mitään ilmoituksia tästä ketjusta.'
+          '0': 'Et saa mitään ilmoituksia tästä ketjusta.'
         watching_pm:
           title: "Tarkkaile"
           description: "Saat ilmoituksen kaikista uusista vastauksista tässä viestiketjussa ja uusien vastausten lukumäärä näytetään."

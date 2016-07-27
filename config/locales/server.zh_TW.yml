@@ -17,8 +17,6 @@ zh_TW:
   date:
     month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "論壇"
   topics: "討論話題"
   posts: "文章"
@@ -74,9 +72,6 @@ zh_TW:
       min_username_length_range: "你不能設定「最小」大於「最大」。"
       max_username_length_exists: "您不能設置比現有用戶名短的「最大用戶名長度」。"
       max_username_length_range: "你不能設定「最大」小於「最小」。"
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "上傳的文件應為 csv 或 txt 格式。"
   backup:
@@ -141,11 +136,15 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇文章"
-    'new-reply': |
+    new-reply: |
       歡迎來到%{site_name} &mdash; **感謝你的貢獻！**
+
       - 你的回覆是否以某種方式改善了討論？
+
       - 請尊重所有社群成員。
+
       - 歡迎有建設性的評論，但是評論的應該是觀點，而不是人身攻擊。
+
       欲查看更多，[請查看我們的社群准則](/guidelines)。此訊息面板只會在你發表前 %{education_posts_text} 時顯示。
   activerecord:
     attributes:
@@ -156,7 +155,6 @@ zh_TW:
       user_profile:
         bio_raw: "關於我"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -177,6 +175,7 @@ zh_TW:
           attributes:
             hex:
               invalid: "不是一個有效顏色"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
@@ -544,8 +543,6 @@ zh_TW:
     flag_sockpuppets: "如果一個新用戶開始了一個主題，並且同時另一個新用戶以同一個 IP 在該主題回復，他們所有的帖子都將被自動標記為垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統的換行符號，即用兩個行末空格來換行"
     post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（讚、標記等）所需等待的時間分隔（分鐘）"
-    ga_tracking_code: "穀歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
-    ga_domain_name: "穀歌分析功能變數名稱，例如：mysite.com；參考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用 Analytics (分析) 追蹤代碼（analytics.js）追蹤代碼，例如：UA-12345678-9；參考 http://google.com/analytics"
     ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
     enable_noscript_support: "開啟noscript來對網路爬蟲來做標準的支援"
@@ -694,7 +691,6 @@ zh_TW:
     email_prefix: "EMail主題中使用的 [ 標籤 ]，留空將預設使用 'title'"
     delete_user_max_post_age: "不允許刪除首發表文章超過 (x) 天的用戶"
     email_editable: "允許用戶在註冊後改變他們的 EMail"
-    logout_redirect: "登出後移到的網址。如：(http://somesite.com/logout)"
     allow_animated_thumbnails: "為 gif 動畫生成動態縮略圖。"
     default_avatars: "新用戶將會使用的默認頭像的網址。"
     automatically_download_gravatars: "當用戶註冊或更改EMail時下載 Gravatars 圖片"
@@ -852,7 +848,9 @@ zh_TW:
       subject_template: "[%{site_name}] 密碼重設"
       text_body_template: |
         有人請求重設你在 [%{site_name}](%{base_url}) 上的密碼。
+
         如果那不是你，你可以直接忽略本郵件。
+
         點擊下面的連結來選擇一個新密碼：
         %{base_url}/users/password-reset/%{email_token}
     set_password:
@@ -864,8 +862,10 @@ zh_TW:
     signup:
       text_body_template: |
         歡迎來到 %{site_name}！
+
         點擊以下連結來確認和啟用你的新帳號：
         %{base_url}/users/activate-account/%{email_token}
+
         如果上面的連結無法點擊，請拷貝該連結並粘貼到你的流覽器的地址欄裡。
   page_not_found:
     popular_topics: "熱門"
@@ -922,3 +922,8 @@ zh_TW:
     submit_button: "送出電子郵件"
   performance_report:
     initial_topic_title: 網站效能報表
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

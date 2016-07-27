@@ -18,8 +18,6 @@ cs:
   date:
     month_names: [null, ledna, února, března, dubna, května, června, července, srpna, září, října, listopadu, prosince]
     <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Témata"
   posts: "příspěvky"
@@ -84,9 +82,6 @@ cs:
       max_username_length_exists: "Nemůžeš nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
       max_username_length_range: "Nemůžeš nastavit maximum pod minimum."
       default_categories_already_selected: "Nemůžeš vybrat kategorii používanou v jiném seznamu."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Nahraný soubrou by měl být ve formátu csv nebo txt."
   backup:
@@ -154,20 +149,33 @@ cs:
       one: "příspěvek"
       few: "%{count} příspěvky"
       other: "%{count} příspěvků"
-    'new-reply': |
+    new-reply: |
       Vítejte na %{site_name} &mdash; **díky za přispívání!**
+
       - Přispívá nějak vaše odpověď k diskuzi?
+
       - Buďte na ostatní členy komunity milí.
+
       - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
+
       Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     dominating_topic: |
+      ### Let others join the conversation
+
       This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
+
       Are you sure you're providing adequate time for other people to share their points of view, too?
     too_many_replies: |
+      ### You have reached the reply limit for this topic
+
       We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
+
       Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
     reviving_old_topic: |
+      ### Oživit téma?
+
       Poslední odpověď na tohle téma je přes %{days} dní stará. Vaše odpověď zvedne toto téma v seznamu nahoru a upozorní všechny diskutující.
+
       Určitě chcete pokračovat v této staré konverzaci?
   activerecord:
     attributes:
@@ -178,7 +186,6 @@ cs:
       user_profile:
         bio_raw: "O mně"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -199,6 +206,7 @@ cs:
           attributes:
             hex:
               invalid: "není platná barva"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
@@ -676,6 +684,7 @@ cs:
         other: "%{count} users waiting for approval"
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
+
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
   user_notifications:
     previous_discussion: "Předchozí diskuze"
@@ -706,14 +715,18 @@ cs:
       subject_template: "[%{site_name}] Obnovení hesla"
       text_body_template: |
         Někdo zažádal o obnovení vašeho hesla na [%{site_name}](%{base_url}).
+
         Pokud jste to nebyli vy, můžete tento email ignorovat.
+
         Klikněte na následující odkaz pro vytvoření nového hesla:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Set Password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+
         If you did not make this request, you can safely ignore this email.
+
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
@@ -723,8 +736,10 @@ cs:
     signup:
       text_body_template: |
         Vítejte na %{site_name}!
+
         Kliknutím na následující odkaz potvrdíte a aktivujete svůj nový účet:
         %{base_url}/users/activate-account/%{email_token}
+
         Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
   page_not_found:
     popular_topics: "Populární"
@@ -733,6 +748,7 @@ cs:
     search_google: "Google"
   login_required:
     welcome_message: |
+      #[Vítejte na %{title}](#welcome)
       Je vyžadován uživatelský účet. Prosím vytvořte si nový účet nebo se přihlaste.
   terms_of_service:
     title: "Podmínky používání."
@@ -772,3 +788,8 @@ cs:
     success: "E-mail odeslán"
     error: "Chyba!"
     submit_button: "Odeslat e-mail"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors
