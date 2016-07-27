@@ -28,7 +28,8 @@ module ImageSizer
     return [w.floor, h.floor] if w <= max_width && h <= max_height
 
     ratio = max_width / w
-    [max_width.floor, [max_height, (h * ratio)].min.floor]
+
+    [[max_width, w].min.floor, [max_height, (h * ratio)].min.floor]
   end
 
 end

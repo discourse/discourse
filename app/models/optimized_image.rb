@@ -118,11 +118,11 @@ class OptimizedImage < ActiveRecord::Base
   def self.resize_instructions_animated(from, to, dimensions, opts={})
     %W{
       gifsicle
-      #{from}
       --colors=256
       --resize-fit #{dimensions}
       --optimize=3
       --output #{to}
+      #{from}
     }
   end
 
@@ -142,7 +142,14 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.crop_instructions_animated(from, to, dimensions, opts={})
-    resize_instructions_animated(from, to, dimensions, opts)
+    %W{
+      gifsicle
+      --crop 0,0+#{dimensions}
+      --colors=256
+      --optimize=3
+      --output #{to}
+      #{from}
+    }
   end
 
   def self.downsize_instructions(from, to, dimensions, opts={})
