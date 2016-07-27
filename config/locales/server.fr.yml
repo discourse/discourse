@@ -307,7 +307,7 @@ fr:
   assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenue dans le salon"
-    body: |2
+    body: |
 
       Félicitation ! :confetti_ball:
 
@@ -1488,7 +1488,7 @@ fr:
         Si vous pouvez corriger les erreurs, veuillez réessayer.
     email_reject_rate_limit_specified:
       subject_template: "[%{site_name}] Problème de courriel -- Limitation du débit"
-      text_body_template: |+
+      text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Pour la raison suivante: %{rate_limit_description}
@@ -1672,7 +1672,7 @@ fr:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
+      text_body_template: |
 
         %{message}
     digest:

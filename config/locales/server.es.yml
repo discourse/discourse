@@ -310,7 +310,7 @@ es:
   assets_topic_body: "Este es un tema permanente, visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
-    body: |2
+    body: |
 
       ¡Enhorabuena! :confetti_ball:
 
@@ -1663,7 +1663,7 @@ es:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
+      text_body_template: |
 
         %{message}
     digest:
