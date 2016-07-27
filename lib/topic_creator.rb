@@ -93,10 +93,13 @@ class TopicCreator
   end
 
   def setup_topic_params
+    @opts[:visible] = true if @opts[:visible].nil?
+
     topic_params = {
       title: @opts[:title],
       user_id: @user.id,
-      last_post_user_id: @user.id
+      last_post_user_id: @user.id,
+      visible: @opts[:visible]
     }
 
     [:subtype, :archetype, :meta_data, :import_mode].each do |key|
