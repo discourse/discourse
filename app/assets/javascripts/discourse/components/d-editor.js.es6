@@ -211,8 +211,10 @@ export default Ember.Component.extend({
 
     // disable clicking on links in the preview
     this.$('.d-editor-preview').on('click.preview', e => {
-      e.preventDefault();
-      return false;
+      if ($(e.target).is("a")) {
+        e.preventDefault();
+        return false;
+      }
     });
 
     this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
