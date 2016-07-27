@@ -21,8 +21,11 @@ class UserAvatarsController < ApplicationController
     end
   end
 
-  # mainly used in development for backwards compat
   def show_proxy_letter
+    if SiteSetting.external_system_avatars_url !~ /^\/letter_avatar_proxy/
+      raise Discourse::NotFound
+    end
+
     params.require(:letter)
     params.require(:color)
     params.require(:version)
