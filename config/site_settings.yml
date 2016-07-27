@@ -718,6 +718,10 @@ files:
   default_opengraph_image_url: ''
   allow_all_attachments_for_group_messages: false
   convert_pasted_images_to_hq_jpg: true
+  convert_pasted_images_quality:
+    default: 95
+    min: 1
+    max: 100
 
 trust:
   default_trust_level:
