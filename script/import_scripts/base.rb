@@ -282,10 +282,14 @@ class ImportScripts::Base
     location = opts.delete(:location)
     avatar_url = opts.delete(:avatar_url)
 
+    original_username = opts[:username]
+    original_name = opts[:name]
+
     # Allow the || operations to work with empty strings ''
     opts[:username] = nil if opts[:username].blank?
 
     opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
+
     if opts[:username].blank? ||
       opts[:username].length < User.username_length.begin ||
       opts[:username].length > User.username_length.end ||
@@ -294,6 +298,9 @@ class ImportScripts::Base
 
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
     end
+
+    opts[:name] = original_username if original_name.blank? && opts[:username] != original_username
+
     opts[:email] = opts[:email].downcase
     opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = opts.fetch(:active, true)
@@ -303,7 +310,7 @@ class ImportScripts::Base
     u = User.new(opts)
     (opts[:custom_fields] || {}).each { |k, v| u.custom_fields[k] = v }
     u.custom_fields["import_id"] = import_id
-    u.custom_fields["import_username"] = opts[:username] if opts[:username].present?
+    u.custom_fields["import_username"] = opts[:username] if original_username.present?
     u.custom_fields["import_avatar_url"] = avatar_url if avatar_url.present?
     u.custom_fields["import_pass"] = opts[:password] if opts[:password].present?
 
