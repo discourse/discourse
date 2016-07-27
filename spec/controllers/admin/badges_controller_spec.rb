@@ -13,6 +13,19 @@ describe Admin::BadgesController do
       end
     end
 
+    context 'preview' do
+      it 'allows preview enable_badge_sql is enabled' do
+        SiteSetting.enable_badge_sql = true
+        result = xhr :get, :preview, sql: 'select id as user_id, created_at granted_at from users'
+        expect(JSON.parse(result.body)["grant_count"]).to be > 0
+      end
+      it 'does not allow anything if enable_badge_sql is disabled' do
+        SiteSetting.enable_badge_sql = false
+        result = xhr :get, :preview, sql: 'select id as user_id, created_at granted_at from users'
+        expect(result.status).to eq(403)
+      end
+    end
+
     context '.save_badge_groupings' do
 
       it 'can save badge groupings' do
@@ -62,14 +75,45 @@ describe Admin::BadgesController do
     end
 
     context '.update' do
-      it 'returns success' do
-        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id, allow_title: false, multiple_grant: false, enabled: true
+
+      it 'does not allow query updates if badge_sql is disabled' do
+        badge.query = "select 123"
+        badge.save
+
+        SiteSetting.enable_badge_sql = false
+
+        xhr :put, :update,
+            id: badge.id,
+            name: "123456",
+            query: "select id user_id, created_at granted_at from users",
+            badge_type_id: badge.badge_type_id,
+            allow_title: false,
+            multiple_grant: false,
+            enabled: true
+
         expect(response).to be_success
+        badge.reload
+        expect(badge.name).to eq('123456')
+        expect(badge.query).to eq('select 123')
       end
 
       it 'updates the badge' do
-        xhr :put, :update, id: badge.id, name: "123456", badge_type_id: badge.badge_type_id, allow_title: false, multiple_grant: true, enabled: true
-        expect(badge.reload.name).to eq('123456')
+        SiteSetting.enable_badge_sql = true
+        sql = "select id user_id, created_at granted_at from users"
+
+        xhr :put, :update,
+            id: badge.id,
+            name: "123456",
+            query: sql,
+            badge_type_id: badge.badge_type_id,
+            allow_title: false,
+            multiple_grant: false,
+            enabled: true
+
+        expect(response).to be_success
+        badge.reload
+        expect(badge.name).to eq('123456')
+        expect(badge.query).to eq(sql)
       end
     end
   end
