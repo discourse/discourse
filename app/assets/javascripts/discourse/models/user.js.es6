@@ -394,7 +394,6 @@ const User = RestModel.extend({
 
   checkEmail() {
     return ajax(`/users/${this.get("username_lower")}/emails.json`, {
-      type: "PUT",
       data: { context: window.location.pathname }
     }).then(result => {
       if (result) {
