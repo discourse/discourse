@@ -20,5 +20,7 @@ bs_BA:
       cast-votes:
         title: "ukupno glasova"
         label: "Glasaj"
+      show-results: 
+      hide-results: 
       close:
         label: "Zatvori"

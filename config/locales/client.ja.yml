@@ -226,8 +226,6 @@ ja:
     undo: "取り消す"
     revert: "戻す"
     failed: "失敗"
-    switch_to_anon: "匿名モード"
-    switch_from_anon: "匿名モードをやめる"
     banner:
       close: "バナーを閉じる。"
       edit: "このバナーを編集 >>"
@@ -327,18 +325,18 @@ ja:
         muted:
           title: "ミュート"
     user_action_groups:
-      '1': "「いいね！」 "
-      '2': "「いいね！」 された"
-      '3': "ブックマーク"
-      '4': "トピック"
-      '5': "返信"
-      '6': "反応"
-      '7': "タグ付け"
-      '9': "引用"
-      '11': "編集"
-      '12': "アイテム送信"
-      '13': "受信ボックス"
-      '14': "保留"
+      "1": "「いいね！」 "
+      "2": "「いいね！」 された"
+      "3": "ブックマーク"
+      "4": "トピック"
+      "5": "返信"
+      "6": "反応"
+      "7": "タグ付け"
+      "9": "引用"
+      "11": "編集"
+      "12": "アイテム送信"
+      "13": "受信ボックス"
+      "14": "保留"
     categories:
       all: "すべてのカテゴリ"
       all_subcategories: "すべてのサブカテゴリ"
@@ -408,10 +406,10 @@ ja:
         disable: "通知を無効にする"
         enable: "通知を有効にする"
         each_browser_note: "注意: 利用するすべてのブラウザでこの設定を変更する必要があります"
-      dismiss_notifications: "全て既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信した後に投稿へ移動しない"
       dynamic_favicon: "新規または更新されたトピックのカウントをブラウザアイコンに表示する"
+      edit_history_public: "投稿の編集履歴を公開する"
       external_links_in_new_tab: "外部リンクをすべて別のタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       change: "変更"
@@ -433,7 +431,6 @@ ja:
         daily: "デイリーアップデートを送る"
         individual: "新しい投稿がある場合にメールで送る"
       watched_categories: "ウォッチ中"
-      watched_categories_instructions: "これらのカテゴリに新しく投稿されたトピックを自動的に参加します。これらのカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
       tracked_categories: "追跡中"
       tracked_categories_instructions: "カテゴリの新しいトピックを自動的に追跡します。トピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
       muted_categories: "ミュート中"
@@ -890,7 +887,6 @@ ja:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p> '{{description}}' バッジをゲット！</p>"
       group_message_summary:
         other: "<i title='グループ宛にメッセージが届いています' class='fa fa-group'></i><p> {{count}}件のメッセージが{{group_name}}へ着ています</p>"
@@ -1057,20 +1053,20 @@ ja:
         position: "投稿: %{current}/%{total}"
       notifications:
         reasons:
-          '3_6': 'このカテゴリに参加中のため通知されます'
-          '3_5': 'このトピックに参加中のため通知されます'
-          '3_2': 'このトピックに参加中のため通知されます。'
-          '3_1': 'このトピックを作成したため通知されます。'
-          '3': 'このトピックに参加中のため通知されます。'
-          '2_8': 'このカテゴリを追跡しているため通知されます。'
-          '2_4': 'このトピックに返信したため通知されます。'
-          '2_2': 'このトピックを追跡中のため通知されます。'
-          '2': '<a href="/users/{{username}}/preferences">このトピックを閲覧した</a>ため通知されます。'
-          '1_2': '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
-          '1': '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
-          '0_7': 'このカテゴリに関して一切通知を受け取りません。'
-          '0_2': 'このトピックに関して一切通知を受け取りません。'
-          '0': 'このトピックに関して一切通知を受け取りません。'
+          "3_6": 'このカテゴリに参加中のため通知されます'
+          "3_5": 'このトピックに参加中のため通知されます'
+          "3_2": 'このトピックに参加中のため通知されます。'
+          "3_1": 'このトピックを作成したため通知されます。'
+          "3": 'このトピックに参加中のため通知されます。'
+          "2_8": 'このカテゴリを追跡しているため通知されます。'
+          "2_4": 'このトピックに返信したため通知されます。'
+          "2_2": 'このトピックを追跡中のため通知されます。'
+          "2": '<a href="/users/{{username}}/preferences">このトピックを閲覧した</a>ため通知されます。'
+          "1_2": '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
+          "1": '他のユーザからメンションされた場合、投稿へ返信された場合に通知します。'
+          "0_7": 'このカテゴリに関して一切通知を受け取りません。'
+          "0_2": 'このトピックに関して一切通知を受け取りません。'
+          "0": 'このトピックに関して一切通知を受け取りません。'
         watching_pm:
           title: "ウォッチ中"
           description: "未読件数と新しい投稿がトピックの横に表示されます。このトピックに対して新しい投稿があった場合に通知されます。"
@@ -1148,8 +1144,6 @@ ja:
         remove_banner: "全てのページのバナーを削除します"
         banner_note: "ユーザはバナーを閉じることができます。常に１つのトピックだけがバナー表示されます"
       inviting: "招待中..."
-      automatically_add_to_groups_optional: "この招待によって、リストされたグループに参加することができます。"
-      automatically_add_to_groups_required: "この招待によって、リストされたグループに参加することができます。"
       invite_private:
         title: 'プライベートメッセージへ招待する'
         email_or_username: "招待するユーザのメールアドレスまたはユーザ名"
@@ -2053,7 +2047,7 @@ ja:
         not_found: "ユーザが見つかりませんでした。"
         id_not_found: "申し訳ありません。そのユーザIDはシステムに存在していません"
         active: "アクティブ"
-        show_emails: "メールアドレス参照"
+        show_emails: "メールアドレスを表示"
         nav:
           new: "新規"
           active: "アクティブ"
@@ -2069,7 +2063,7 @@ ja:
           other: "拒否ユーザ ({{count}})"
         titles:
           active: 'アクティブユーザ'
-          new: '新規ユーザ'
+          new: '新しいユーザ'
           pending: '保留中のユーザ'
           newuser: 'トラストレベル0のユーザ (新しいユーザ)'
           basic: 'トラストレベル1のユーザ (ベーシックユーザ)'
@@ -2366,89 +2360,3 @@ ja:
           label: "新規:"
           add: "追加"
           filter: "検索(URL または 外部URL)"
-    lightbox:
-      download: "ダウンロード"
-    search_help:
-      title: 'Search Help'
-    keyboard_shortcuts_help:
-      title: 'ショートカットキー'
-      jump_to:
-        title: 'ページ移動'
-        home: '<b>g</b>, <b>h</b> ホーム'
-        latest: '<b>g</b>, <b>l</b> 最新'
-        new: '<b>g</b>, <b>n</b> 新着'
-        unread: '<b>g</b>, <b>u</b> 未読'
-        categories: '<b>g</b>, <b>c</b> カテゴリ'
-        top: '<b>g</b>, <b>t</b> トップ'
-        bookmarks: '<b>g</b>, <b>b</b> ブックマーク'
-        profile: '<b>g</b>, <b>p</b> プロフィール'
-        messages: '<b>g</b>, <b>m</b> メッセージ'
-      navigation:
-        title: 'ナビゲーション'
-        jump: '<b>#</b> # 投稿へ'
-        back: '<b>u</b> 戻る'
-        up_down: '<b>k</b>/<b>j</b> トピック・投稿 &uarr; &darr;移動'
-        open: '<b>o</b> or <b>Enter</b> トピックへ'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 次のセクション/前のセクション'
-      application:
-        title: 'アプリケーション'
-        create: '<b>c</b> 新しいトピックを作成'
-        notifications: '<b>n</b> お知らせを開く'
-        hamburger_menu: '<b>=</b> メニューを開く'
-        user_profile_menu: '<b>p</b> ユーザメニュを開く'
-        show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
-        search: '<b>/</b> 検索'
-        help: '<b>?</b> キーボードヘルプを表示する'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> 新しい投稿を非表示にする'
-        dismiss_topics: 'Dismiss Topics'
-      actions:
-        title: '操作'
-        bookmark_topic: '<b>f</b> トピックのブックマークを切り替え'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b>トピックを ピン留め/ピン留め解除'
-        share_topic: '<b>shift</b>+<b>s</b> トピックをシェア'
-        share_post: '<b>s</b> 投稿をシェアする'
-        reply_as_new_topic: '<b>t</b> トピックへリンクして返信'
-        reply_topic: '<b>shift</b>+<b>r</b> トピックに返信'
-        reply_post: '<b>r</b> 投稿に返信'
-        quote_post: '<b>q</b> 投稿を引用する'
-        like: '<b>l</b> 投稿を「いいね！」する'
-        flag: '<b>!</b> 投稿を通報'
-        bookmark: '<b>b</b> 投稿をブックマークする'
-        edit: '<b>e</b> 投稿を編集'
-        delete: '<b>d</b> 投稿を削除する'
-        mark_muted: '<b>m</b>, <b>m</b> トピックをミュートする'
-        mark_regular: '<b>m</b>, <b>r</b> 通常トピックにする'
-        mark_tracking: '<b>m</b>, <b>t</b> トピックを追跡する'
-        mark_watching: '<b>m</b>, <b>w</b> トピックを参加中にする'
-    badges:
-      granted_on: "%{date} にゲット"
-      title: バッジ
-      allow_title: "プロフィールにつける"
-      multiple_grant: "何度も取得可能"
-      badge_count:
-        other: "%{count} バッジ"
-      more_badges:
-        other: "バッジを全て見る（全%{count}個）"
-      granted:
-        other: "%{count} つバッジを付与されました"
-      select_badge_for_title: プロフィールのタイトルに付けるバッジを選んでください
-      none: "<なし>"
-      badge_grouping:
-        getting_started:
-          name: はじめの一歩
-        community:
-          name: コミュニティ
-        trust_level:
-          name: トラストレベル
-        other:
-          name: その他
-        posting:
-          name: 投稿
-    tagging:
-      changed: "タグを変更しました:"
-      sort_by: "並べ替え:"
-      topics:
-        none:
-          search: "検索結果は何もありません。"
-        bottom:
-          search: "検索結果は以上です。"

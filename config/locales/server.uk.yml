@@ -10,11 +10,21 @@ uk:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats 
+  date:
+    month_names: []
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Теми"
   posts: "дописи"
   loading: "Завантаження"
   powered_by_html: 'Створено за допомогою технології <a href="http://www.discourse.org">Discourse</a>, бажано переглядати з увімкненим JavaScript'
+  errors: &errors 
+  activemodel:
+    errors:
+      <<: *errors
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -56,22 +66,13 @@ uk:
       trust_level_4: "trust_level_4"
   education:
     dominating_topic: |
-      ### Дайте можливість іншим включитися до обговорення
-
       Ця тема однозначно важлива для Вас &ndash; Ви опублікували тут більше %{percent}% відповідей.
-
       Ви впевнені, що даєте достатньо часу для того, щоб інші люди також мали можливість поділитися своїми думками?
     too_many_replies: |
-      ### Ви досягли обмеження на кількість відповідей для цієї теми
-
       Даруйте, але нові користувачі мають тимчасове обмеження до %{newuser_max_replies_per_topic} відповідей на одну тему.
-
       Замість того, щоб додавати нову відповідь, спробуйте відредагувати свої старі відповіді, або відвідайте інші теми.
     reviving_old_topic: |
-      ### Revive this topic?
-
       The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
-
       Are you sure you want to continue this old conversation?
   activerecord:
     attributes:
@@ -80,6 +81,7 @@ uk:
       post:
         raw: "Тіло"
     errors:
+      <<: *errors
       models:
         user:
           attributes:
@@ -162,16 +164,6 @@ uk:
   archetypes:
     regular:
       title: "Звичайна тема"
-  unsubscribed:
-    title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
-    oops: "In case you didn't mean to do this, click below."
-    error: "Помилка при Відписуванні"
-    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
-  resubscribe:
-    action: "Re-Subscribe"
-    title: "Re-Subscribed!"
-    description: "You have been re-subscribed."
   reports:
     visits:
       title: "Відвідини користувачів"
@@ -244,7 +236,6 @@ uk:
       num_clicks: "Переходи"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
-    ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -269,8 +260,6 @@ uk:
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    max_topics_in_first_day: "Максимальна кількість тем, які користувач може створити на сайті в перший день"
-    max_replies_in_first_day: "Максимальна кільість відповідей, які користувач може створити на сайті в перший день"
     notify_mods_when_user_blocked: "Якщо користувача автоматично заблоковано, надіслати повідомлення всім модераторам."
     ga_tracking_code: "Код відстеження Google аналітики (ga.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_domain_name: "Доменне ім'я Google аналітики (ga.js), напр.: mysite.com; див. http://google.com/analytics"
@@ -325,15 +314,6 @@ uk:
       invalid_string_min_max: "Має бути між %{min} та %{max} символів."
       invalid_string_min: "Має бути не менше %{max} символів."
       invalid_string_max: "Має бути не більше ніж %{max} символів."
-  notification_types:
-    mentioned: "%{display_username} mentioned you in %{link}"
-    liked: "%{display_username} liked your post in %{link}"
-    replied: "%{display_username} replied to your post in %{link}"
-    quoted: "%{display_username} quoted your post in %{link}"
-    edited: "%{display_username} edited your post in %{link}"
-    posted: "%{display_username} posted in %{link}"
-    moved_post: "%{display_username} moved your post to %{link}"
-    invitee_accepted: "%{display_username} accepted your invitation"
   search:
     types:
       category: 'Categories'
@@ -377,8 +357,6 @@ uk:
   new_version_mailer_with_notes:
     subject_template: "оновлення [%{site_name}] доступно"
   system_messages:
-    post_hidden:
-      subject_template: "Допис приховано через скарги спільноти"
     welcome_user:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
     welcome_invite:
@@ -390,7 +368,6 @@ uk:
     pending_users_reminder:
       text_body_template: |
         Є нові користувачі, що зареєструвалися і очікують на схвалення (або відхилення) перед тим, як зможуть отримати доступ до цього форуму.
-
         [Будь ласка, розгляньте їх в адміністративній секції](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Завантаження віддалених зображені відключено"
@@ -415,24 +392,19 @@ uk:
       top_topics: "Популярні дописи"
       other_new_topics: "Популярні теми"
       click_here: "натисніть тут"
-      from: "Стислий виклад новин від %{site_name}"
       read_more: "Читати більше"
     forgot_password:
       subject_template: "[%{site_name}] Скидання пароля"
       text_body_template: |
         Хтось попросив скинути Ваш пароль на сайті [%{site_name}](%{base_url}).
-
         Якщо це були не Ви, можете спокійно проігнорувати цей лист.
-
         Перейдіть за посиланням, щоб обрати новий пароль:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Встановлення пароля"
       text_body_template: |
         Хтось попросив додати пароль до Вашого облікового запису на сайті [%{site_name}](%{base_url}). Замість цього, Ви можете входити в систему, використовуючи будь-який із підтримуваних онлайн-сервісів (Google, Facebook, і т. ін.), який поєднаний із цією перевіреною електронною скринькою.
-
         Якщо Ви не робили такого запиту, можете спокійно проігнорувати цей лист.
-
         Перейдіть за посиланням, щоб обрати пароль:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
@@ -440,10 +412,8 @@ uk:
     signup:
       text_body_template: |
         Вітаємо у %{site_name}!
-
         Натисніть це посилання для підтвердження та активації Вашого нового облікового запису:
         %{base_url}/users/activate-account/%{email_token}
-
         Якщо наведене посилання не є клікабельним, спробуйте скопіювати та вставити його в адресний рядок Вашого веб-оглядача.
   page_not_found:
     popular_topics: "Популярні"

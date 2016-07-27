@@ -7,26 +7,27 @@
 
 zh_CN:
   dates:
-    short_date_no_year: "MMM月D日"
-    short_date: "YYYY年MMM月D日"
-    long_date: "YYYY年MMM月D日 h:mma"
+    short_date_no_year: "MMM D"
+    short_date: "YYYY, MMM D"
+    long_date: "YYYY, MMMM D ah:mm"
   datetime_formats: &datetime_formats
     formats:
-      short: "%Y 年 %-m 月 %-d 日"
-      short_no_year: "%-m月%-d日"
-      date_only: "%Y年%-m月%-d日"
+      short: "%Y-%m-%d"
+      short_no_year: "%B %-d"
+      date_only: "%Y, %B %-d"
+      long: "%Y, %B %-d, %l:%M%P"
   date:
     month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
   time:
+    <<: *datetime_formats
     am: "上午"
     pm: "下午"
-    <<: *datetime_formats
   title: "Discourse"
   topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
-  powered_by_html: '采用 <a href="http://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳效果'
+  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>，启用JavaScript获致最佳浏览'
   log_in: "登录"
   purge_reason: "自动删除废弃，停用账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被禁用。"
@@ -40,6 +41,7 @@ zh_CN:
         empty_email_error: "当收到空白邮件时发生"
         no_message_id_error: "当邮件头部没有 “Message-Id” 时发生"
         auto_generated_email_error: "当邮件头部没有设置 “ precedence” 为：list、junk、bulk 或 auto_reply，或者当头部包含了：auto-submitted、auto-replied 或 auto-generated"
+        no_body_detected_error: "无法解析正文并且没有附件。"
         inactive_user_error: "当发送者不活跃时发生。"
         blocked_user_error: "当发送者被封禁时发生。"
         bad_destination_address: "当发至/抄送/密送栏中的所有邮件都不匹配进站邮件地址时发生。"
@@ -48,6 +50,8 @@ zh_CN:
         reply_user_not_matching_error: "当回复来自与通知发送至的邮件地址不同时发生。"
         topic_not_found_error: "当回复到已经删除的相关主题时发生。"
         topic_closed_error: "当回复到已经关闭的相关主题时发生。"
+        bounced_email_error: "邮件是投递失败的错误报告。"
+        screened_email_error: "发件人邮箱已经被封禁。"
   errors: &errors
     format: '%{attribute}%{message}'
     messages:
@@ -97,6 +101,9 @@ zh_CN:
       max_username_length_range: "你不能将最大值设置为小于最小值。"
       default_categories_already_selected: "你不能选择一个已经用于另一个列表的分类。"
       s3_upload_bucket_is_required: "你没有填写 “ s3_upload_bucket”，不能启用上传至 S3。"
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 或 txt 格式。"
   backup:
@@ -146,7 +153,7 @@ zh_CN:
   next_page: "下一页 →"
   prev_page: "← 上一页"
   page_num: "%{num} 页"
-  home_title: "主页"
+  home_title: "首页"
   topics_in_category: "'%{category}'分类中的主题"
   rss_posts_in_topic: "'%{topic}' 的 RSS 内容聚合"
   rss_topics_in_category: "分类 '%{category}' 中主题的 RSS 内容聚合"
@@ -192,59 +199,34 @@ zh_CN:
   education:
     until_posts:
       other: "%{count} 个帖子"
-    new-topic: |
+    'new-topic': |
       欢迎来到%{site_name} &mdash; **衷心感谢你参与讨论！**
-
       - 标题是否清晰明了地描述了主题？看起来有意思么？
-
       - 谁会感兴趣？它为什么重要？你期望从社区中获得什么样的回应？
-
       - 选择恰当的词句以便别人能找到你的主题。若想要给主题分组，选择一个分类。
-
       更多的帮助信息，[请查看我们的社群准则](/guidelines)。此信息面板只在你发布前 %{education_posts_text}时显示。
-    new-reply: |
+    'new-reply': |
       欢迎来到%{site_name} &mdash; **感谢你的贡献！**
-
       - 你的回复是否以某种方式改善了讨论？
-
       - 请给予其他社群成员同等的尊重。
-
       - 欢迎有建设性的批评，但是请批判观点，而不是人身攻击。
-
       欲查看更多，[请查看我们的社群准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
     avatar: |
-      ### 给你的账户设置头像如何？
-
       你已经发表了一些主题和回复，但是你的个人头像并不像你一样独特——只是一些字母而已。
-
       你考虑过**[访问你的用户页面](%{profile_path})**，再上传一个代表你的图片？
-
       当所有人都有独特的头像时，这会让专注讨论和找到有趣的人更加轻松。
     sequential_replies: |
-      ### 考虑一次性回复多个帖子
-
       与其接连回复主题几次，不如在一个单独的回复中引用相关内容或者@用户名引用前面的帖子。
-
       你可以编辑你之前的回复以添加引用。添加引用需要选择文字并且点击出现的<b>引用回复</b>按钮。
-
       当主题中的帖子的内容不是多个小且独立的回复，而是更少的更有深度的帖子时，我们会更认真地阅读这个主题。
     dominating_topic: |
-      ### 让其他人加入讨论
-
       很明显这个主题对你很重要 &ndash; 你已经发表的帖子占该主题 %{percent}% 的回复。
-
       你确定你也让其他人自由地表达他们的观点了吗？
     too_many_replies: |
-      ### 你发表的回复数量已经达到该主题的回复上限。
-
       非常抱歉，但新用户被临时限制，只能在同一主题中回复 %{newuser_max_replies_per_topic} 次。
-
       想要添加另一个回复不如考虑编辑原先的回复或访问其他主题。
     reviving_old_topic: |
-      ### 复活这个主题？
-
       这个主题的最后一个回复距今已有 %{days} 天了。你的回复将让主题重新出现在列表的顶端并通知原先参与讨论的人。
-
       你确定要继续这个老的话题吗？
   activerecord:
     attributes:
@@ -257,6 +239,7 @@ zh_CN:
       user_profile:
         bio_raw: "关于我"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -277,7 +260,9 @@ zh_CN:
           attributes:
             hex:
               invalid: "不是有效颜色值"
-      <<: *errors
+        post_reply:
+          base:
+            different_topic: "帖子和回复必须属于同一主题."
   user_profile:
     no_info_me: "<div class='missing-profile'>你的资料中，关于我部分目前还是空白，<a href='/users/%{username_lower}/preferences/about-me'>你想要写些什么吗？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他们的资料中的关于我部分填写任何信息</div>"
@@ -290,26 +275,18 @@ zh_CN:
   assets_topic_body: "这是一个永久主题，仅对管理人员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传你想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交你的回复添加帖子。\n4. 在你的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果你需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   lounge_welcome:
     title: "欢迎来到贵宾室"
-    body: |2
-
+    body: |
       恭喜！ :confetti_ball:
-
       如果你看到了这个主题，说明你已经被提升至**常规**（信任等级3）了。
-
       你现在可以&hellip;
-
       * 编辑任何主题的标题
       * 改变任何主题的分类
       * 让你的链接设置为 follow 属性（[自动 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已经移除）
       * 访问一个只有信任等级3及更高才能见到的贵宾室分类
       * 一次标记即可隐藏垃圾信息
-
       这里是[目前达到常规的用户列表](/badges/3/regular)。一定要来问个好！
-
       感谢成为社群的重要一员！
-
       （想了解关于信任等级的更多信息，[参见这个主题][trust]。请注意成员需要在将来也维持一定的选择条件的成员才能保持在常规。）
-
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "关于分类：%{category}"
@@ -355,6 +332,7 @@ zh_CN:
       create_like: "你今天的“赞”数量已经到达上限，请等待%{time_left}之后再试。"
       create_bookmark: "你今天的收藏已经到达上限，请等待%{time_left}之后再试。"
       edit_post: "你今天编辑帖子的数量已经到达上限，请等待%{time_left}之后再试。"
+      live_post_counts: "你请求帖子数量的速度太快了，请等待 %{time_left}之后再试。"
       unsubscribe_via_email: "你已经达到了今日用邮件接触订阅的最大数量限制。请等 %{time_left}之后再试。"
       topic_invitations_per_day: "你已经达到了今日主题邀请的最大数量限制。请等 %{time_left}之后再试。"
     hours:
@@ -505,16 +483,20 @@ zh_CN:
         make: "本主题现在是横幅主题。它将出现在每页的顶部，除非用户将其隐藏。"
         remove: "本主题已经不再是横幅主题。它将不在每个页面的顶部显示。"
   unsubscribed:
-    title: '取消订阅'
-    description: "你已经取消订阅，我们不会再发送邮件给你！"
-    oops: "如果你并不想取消订阅，请点击下方的按钮。"
-    error: "取消订阅时出错"
-    preferences_link: "你也可以退订摘要邮件在你的 <a href='/my/preferences'>偏好页面</a>"
-    not_found_description: "抱歉，我们无法帮你取消订阅。可能你的邮件里的链接已过期。"
-  resubscribe:
-    action: "重新订阅"
-    title: "已重新订阅！"
-    description: "你已经重新订阅了。"
+    title: "退订！"
+    description: "您已经退订. 要更改您的邮件设置 <a href='%{url}'>访问您的用户偏好</a>."
+    topic_description: "要重新订阅 %{link}，使用主题的底部或右侧的通知控制。"
+  unsubscribe:
+    title: "退订"
+    stop_watching_topic: "停止监看这个主题， %{link}"
+    mute_topic: "关闭此主题的所有通知， %{link}"
+    unwatch_category: "停止监看在 %{category} 中的所有主题"
+    mailing_list_mode: "关闭邮件列表模式"
+    disable_digest_emails: "停止向我发送摘要邮件。"
+    all: "不要从 %{sitename} 给我发送任何邮件"
+    different_user_description: "你登录的帐户于邮件不符。请登出，或进入隐私模式，然后再重试。"
+    not_found_description: "对不起，我们找不到这个退订。有可能您的邮件中的链接已经过期？"
+    log_out: "退出"
   reports:
     visits:
       title: "用户访问量"
@@ -598,20 +580,27 @@ zh_CN:
     page_view_anon_reqs:
       title: "匿名"
       xaxis: "天"
+      yaxis: "未登录页面访问"
     page_view_logged_in_reqs:
       title: "已登录"
       xaxis: "天"
+      yaxis: "已登录页面访问"
     page_view_crawler_reqs:
       title: "Web 爬虫"
       xaxis: "天"
+      yaxis: "Web 爬虫页面访问"
     page_view_total_reqs:
       title: "总量"
       xaxis: "天"
       yaxis: "总浏览量"
     page_view_logged_in_mobile_reqs:
+      title: "已登录页面访问"
       xaxis: "天"
+      yaxis: "移动端已登录页面访问"
     page_view_anon_mobile_reqs:
+      title: "未登录页面访问"
       xaxis: "天"
+      yaxis: "移动端未登录页面访问"
     http_background_reqs:
       title: "静默请求"
       xaxis: "天"
@@ -650,7 +639,6 @@ zh_CN:
       yaxis: "访问次数"
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
-    ruby_version_warning: "你正在使用 Ruby 2.0.0，这个版本有较多的问题。请升级至 p247 或更新版。"
     host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主机名。请更改成你的站点主机名。"
     gc_warning: '你的服务器使用的是缺省的 ruby 垃圾回收参数，这个配置无法提供最高性能。请阅读此性能调优文档：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
@@ -675,6 +663,10 @@ zh_CN:
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
     email_polling_errored_recently:
       other: "邮件轮询在过去的 24 小时内发生了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。"
+    missing_mailgun_api_key: "服务器设置使用 Mailgun 发送邮件，但并未设置验证 webhook 消息的 API 密钥。"
+    bad_favicon_url: "网站图标无法载入。检查<a href='/admin/site_settings'>站点设置</a>中的 favicon_url。"
+    poll_pop3_timeout: "至 POP3 服务器的连接超时。无法获取进站邮件。请检查<a href='/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
+    poll_pop3_auth_error: "至 POP3 服务器的连接验证失败。请检查<a href='/admin/site_settings/category/email'>POP3 设置</a>。"
   site_settings:
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
@@ -702,6 +694,7 @@ zh_CN:
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "下载一份主题中链接的外部图片到本地；以防图片损坏。"
     download_remote_images_threshold: "本地最小可用下载外部图片到本地的空间（百分比）"
+    download_remote_images_max_days_old: "不下载超过 n 天的帖子中的远程图片。"
     disabled_image_download_domains: "域名列表，链接到这些站点的图片不会被下载。用 | 分割。"
     editing_grace_period: "在 (n) 秒之内，对帖子的编辑不生成帖子历史。"
     post_edit_time_limit: "作者可以在发布帖子后的(n)分钟内编辑或删除他们的帖子。设置 0 为永远。"
@@ -716,9 +709,12 @@ zh_CN:
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
     exclude_rel_nofollow_domains: "不添加 nofollow 链接的域名列表。填写 tld.com 将自动包括 sub.tld.com。最少你应该填写顶级域名来让爬虫获得所有内容。如果你的网站包含其他域名，增加他们。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
+    show_pinned_excerpt_mobile: "移动版显示置顶主题剪辑。"
+    show_pinned_excerpt_desktop: "移动版显示置顶主题剪辑。"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
     onebox_domains_whitelist: "对这些站点启用 Onebox 的域名列表；这些域名应该支持 OpenGraph 或 oEmbed。在此测试他们：http://iframely.com/debug"
     logo_url: "在你站点左上角出现的小号标志图片，应为一个长方形。如果留空，将显示站点标题文字。"
+    digest_logo_url: "邮件摘要中使用的标志图像。应为长方形。不能使用 SVG 图片。如果留空，将使用 `logo_url`。"
     logo_small_url: "在你站点左上角的小号标志图片，应为正方形，当滚动时才可见。如果留空，将显示主页图标。"
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon，如果要正确地通过 CDN 分发，它必须是 png 图片"
     mobile_logo_url: "移动站点左上角的固定标志图片。应为正方形。如果留空，`logo_url` 将被使用。如：http://example.com/uploads/default/logo.png"
@@ -726,25 +722,30 @@ zh_CN:
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
     email_custom_headers: "一个逗号分离的自定义邮件头部"
     email_subject: "标准邮件的自定义主题格式。参见 https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
+    force_https: "强制使用 https。警告：开启前必须确认 HTTPS 已经配置并能够正常使用！你检查了 CDN、第三方登录和站外的 logo / 依赖是否支持 HTTPS 了吗？"
     summary_score_threshold: "将一个帖子包含在'摘要模式'中所需的最小分值"
     summary_posts_required: "在一个主题启用'摘要模式'的最小帖子数量"
     summary_likes_required: "在一个主题启用'摘要模式'的最小赞的数量"
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
     summary_max_results: "“概括主题”返回的最大帖子数量"
+    enable_private_messages: "允许信任等级1（可以另外选择发送消息的信任等级）的用户创建消息和回复消息。注意：管理人员不受限制。"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
     long_polling_base_url: "长轮询的基本 URL（当用 CDN 分发动态能让时，请设置此至原始拉取地址）例如：http://origin.site.com"
     long_polling_interval: "当没有数据向客户端发送时服务器端应等待的时间（仅对已登录用户有效）"
     polling_interval: "当不再长轮询时，已登录的客户端多久应该轮询一次，以毫秒为单位"
     anon_polling_interval: "匿名客户端轮询时间间隔（单位：毫秒）"
     background_polling_interval: "客户端轮询的间隔，以毫秒计（当窗口在后台时）"
+    flags_required_to_hide_post: "一个帖子累计多少个标记之后会被自动隐藏，并向帖子作者发送私信通知（0 为从不）"
     cooldown_minutes_after_hiding_posts: "当一个帖子因为标记而隐藏之后，用户需要等待多少分钟才能编辑帖子"
-    max_topics_in_first_day: "新用户在第一天内最多可以创建的主题数"
-    max_replies_in_first_day: "新用户在第一天内最大可以创建的回复数"
+    max_topics_in_first_day: "新用户在 24 小时内在发表第一帖后允许创建的主题数"
+    max_replies_in_first_day: "新用户在 24 小时内在发表第一帖后允许创建的回复数"
     tl2_additional_likes_per_day_multiplier: "增加信任等级 2（成员）的赞限制，可提供一个乘数与原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等级 3（常规）的赞限制，可提供一个乘数与原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等级 4（资深）的赞限制，可提供一个乘数与原始值相乘"
-    num_flags_to_block_new_user: "如果一个新用户的帖子被其他 num_users_to_block_new_user 个用户标记为垃圾，隐藏他们的所有帖子并阻止其之后的发帖。0 表示禁用这个特性。"
-    num_users_to_block_new_user: "如果一个新用户的帖子被许多其他用户 num_flags_to_block_new_user 标记为垃圾，隐藏他们的所有帖子并阻止其之后发帖。0 表示禁用这个特性。"
+    num_spam_flags_to_block_new_user: "如果新用户的帖子被 num_users_to_block_new_user 个不同用户标记，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
+    num_users_to_block_new_user: "如果新用户的帖子被不同用户 num_spam_flags_to_block_new_user 次标记为垃圾信息，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
+    num_tl3_flags_to_block_new_user: "如果新用户的帖子被 num_tl3_users_to_block_new_user 个不同的信任等级3的用户标记，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
+    num_tl3_users_to_block_new_user: "如果新用户的帖子被不同的信任等级3的用户标记 num_tl3_flags_to_block_new_user 次，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
     notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个消息给所有管理员。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
@@ -752,10 +753,12 @@ zh_CN:
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由管理人员批准。警告：在运行的站点中启用将解除所有非管理人员用户的访问权限！"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置-1关闭通知。"
+    permanent_session_cookie: "使用浏览器关闭后仍持久的 cookie。禁用该项时，你可能需要用程序登出所有用户。"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
     ga_universal_domain_name: "Google 通用分析域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
+    enable_escaped_fragments: "如未侦测到爬虫回退到使用 Google Ajax-Crawling API。参见 https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "通过 no script 标签启用对标准爬虫的支持。"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
@@ -776,6 +779,7 @@ zh_CN:
     redirect_users_to_top_page: "自动重定向至新用户或者长时间未登入的用户至热门页面。"
     top_page_default_timeframe: "顶部查看页面的默认时间表"
     show_email_on_profile: "在用户页面显示用户的邮件地址（只有用户和管理人员可见）"
+    prioritize_username_in_ux: "在用户页、用户卡片和帖子上优先显示用户名（未选时，昵称将先显示）"
     email_token_valid_hours: "“忘记密码”/“激活账户” token 有效的小时数(n)。"
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
     enable_badges: "启用徽章系统"
@@ -783,7 +787,8 @@ zh_CN:
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
-    log_out_strict: "登出时，登出用户所有设备的会话"
+    forgot_password_strict: "用户找回密码时不提示帐户是否存在。"
+    log_out_strict: "退出时，退出用户所有设备的会话"
     version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示新版本信息"
     new_version_emails: "当新版本发布时，发送一封邮件至 contact_email 设置的地址。"
     port: "仅限开发者设定！警告！使用此 HTTP 端口而不是80端口。留空为使用默认 80 端口"
@@ -799,7 +804,9 @@ zh_CN:
     min_admin_password_length: "管理员最短密码长度"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
+    verbose_sso_logging: "将 SSO 日志详情记录至 /logs"
     enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 提供方协议，要求设置 sso_secret"
+    sso_url: "单点登录 URL 入口点（必须包含 http:// 或 https://）"
     sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
     sso_overrides_email: "每一次登录时，用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且阻止本地的邮件地址修改。（警告：因格本地邮件的正规化，邮件地址可能会有所差异）"
     sso_overrides_username: "每一次登录时，用 SSO 信息中的外部站点的用户名覆盖本地用户名，并且阻止本地的用户名修改。（警告：因格本地用户名的长度和其他要求，用户名可能会有所差异）"
@@ -987,7 +994,7 @@ zh_CN:
     delete_all_posts_max: "通过删除所有帖子按钮可以删除的最大帖子数量。如果用户有比这更多的帖子，这些帖子不能一次性删除并且这个用户不能被删除。"
     username_change_period: "用户在注册多少天内可以更改他们的用户名（0 表示禁用用户名更改）"
     email_editable: "允许用户在注册后改变他们的邮箱地址。"
-    logout_redirect: "登出后重定向至的地址。如：http://somesite.com/logout"
+    logout_redirect: "退出后重定向至的地址。如：http://somesite.com/logout"
     allow_uploaded_avatars: "允许用户上传自定义个人头像。"
     allow_animated_avatars: "允许用户使用动画个人头像。警告：更改设置后运行 avatars:refresh 这个 rake 任务。"
     allow_animated_thumbnails: "为动画 gif 生成动态缩略图。"
@@ -1007,6 +1014,7 @@ zh_CN:
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
     dominating_topic_minimum_percent: "用户在主题中的帖子占到多少百分比时使得用户主导话题。"
     disable_avatar_education_message: "禁用更改头像操作的教育消息。"
+    daily_performance_report: "每日分析 NGINX 日志并且发布详情主题到管理人员才能看到的主题"
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章。"
     permalink_normalizations: "在匹配永久链接之前应用如下正则表达式，例如：/(topic.*)\\?.*/\\1 将去掉所有主题路径的参数字符串。格式为使用正则表达式+使用 \\1 等字符串来访问捕获内容"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
@@ -1057,6 +1065,7 @@ zh_CN:
     default_other_enable_quoting: "默认在高亮选择文字时启用引用回复"
     default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
     default_other_disable_jump_reply: "默认不在用户回复后跳转到新帖子位置"
+    default_other_edit_history_public: "将帖子修订历史默认公开。"
     default_other_like_notification_frequency: "默认通知用户赞的消息"
     default_topics_automatic_unpin: "默认时当用户到达底部时自动解除主题置顶。"
     default_categories_watching: "分类列表默认跟踪。"
@@ -1083,21 +1092,6 @@ zh_CN:
       reply_by_email_address_is_empty: "在启用邮件回复之前，你必须设置“reply by email address”。"
       email_polling_disabled: "在启用邮件回复功能前，你必须启用手动或者 POP3 轮询。"
       user_locale_not_enabled: "你必须先设置 'allow user locale' 再启用该设置。"
-  notification_types:
-    group_mentioned: "%{group_name} 在 %{link} @ 了你"
-    mentioned: "%{display_username} 在 %{link} @ 了你"
-    liked: "%{display_username} 在 %{link} 赞了你的帖子 "
-    replied: "%{display_username} 在 %{link} 回复了你的帖子"
-    quoted: "%{display_username} 在 %{link} 引用了你的帖子"
-    edited: "%{display_username} 在 %{link} 编辑了你的帖子"
-    posted: "%{display_username} 发表了 %{link}"
-    moved_post: "%{display_username} 把你的帖子移动到了 %{link}"
-    private_message: "%{display_username} 发送给你一条消息：%{link}"
-    invited_to_private_message: "%{display_username} 邀请你参与消息讨论：%{link}"
-    invited_to_topic: "%{display_username} 请你看看 %{link}"
-    invitee_accepted: "%{display_username} 接受了你的邀请"
-    linked: "%{display_username} 在 %{link} 里链接了你"
-    granted_badge: "你获得了 %{link}"
   search:
     within_post: "#{{post_number}} 由 {{username}}"
     types:
@@ -1163,7 +1157,7 @@ zh_CN:
     not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登陆。"
     admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
     suspended: "你要等到 %{date} 之后才能登录。"
-    suspended_with_reason: "账号被禁止登录至 {{date}}：%{reason}"
+    suspended_with_reason: "账号暂停至 %{date}: %{reason}"
     errors: "%{errors}"
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
@@ -1175,7 +1169,7 @@ zh_CN:
     reserved_username: "该用户名不可被使用。"
     missing_user_field: "你还没有填写完所有用户字段"
     close_window: "验证已经完成。关闭窗口以继续。"
-    already_logged_in: "喔，看起来你正尝试查看给另一个用户的邀请链接。如果你不是%{current_user}，请登出再重试。"
+    already_logged_in: "喔，看起来你正尝试查看给另一个用户的邀请链接。如果你不是%{current_user}，请退出再重试。"
   user:
     no_accounts_associated: "无关联账户"
     username:
@@ -1204,28 +1198,19 @@ zh_CN:
     text_body_template: |
       有人（可能是你？）请求不再接受来自%{site_domain_name}的邮件更新。
       点击链接以确认退订：
-
       %{confirm_unsubscribe_link}
-
-
       如果你想要继续接受邮件更新，你可以忽略这封邮件。
   invite_mailer:
     subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
     text_body_template: |
       %{invitee_name} 邀请你参与讨论
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       位于站点
-
       > %{site_title} -- %{site_description}
-
       如果你有兴趣，点击下面的链接：
-
       %{invite_link}
-
       这封邀请来组于受信任的用户，所以你可以立即回复。
   custom_invite_mailer:
     subject_template: "%{invitee_name} 邀请你 '%{topic_title}' 在 %{site_domain_name}"
@@ -1237,10 +1222,8 @@ zh_CN:
     subject_template: "为 %{site_name} 账户设置密码"
     text_body_template: |
       感谢你接受来自%{site_name}的邀请——欢迎！
-
       点击下面的链接立即选择一个密码：
       %{base_url}/users/password-reset/%{email_token}
-
       （如果链接已经过期，在登录时用，选择“我忘记了密码”，再次输入你的邮箱即可。）
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
@@ -1264,23 +1247,27 @@ zh_CN:
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
   temporarily_closed_due_to_flags: "主题因为大量的社群标记暂时关闭"
   system_messages:
-    post_hidden:
-      subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了你的帖子"
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
         感谢驻足%{site_name}，欢迎！
-
         %{new_user_tips}
-
         我们始终相信[讨论应该文明](%{base_url}/guidelines)。
-
         好好享受你在论坛的时光吧！
-
         （如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。）
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
-      text_body_template: "感谢你接受邀请加入%{site_name} —— 欢迎！\n\n我们为你创建了账号：**%{username}**，同时你已经登录了。你可以在任何时候访问[你的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 永远 **使用收到邀请的邮箱地址**登录，。否则我们就无法分辨是不是你本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n好好享受你在论坛的时光吧！\n\n（如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。）\n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: |
+        感谢你接受邀请加入%{site_name} —— 欢迎！
+        我们为你创建了账号：**%{username}**，同时你已经登录了。你可以在任何时候访问[你的用户设置][prefs]来修改它。
+        要再次登入，或者：
+        1. 永远 **使用收到邀请的邮箱地址**登录，。否则我们就无法分辨是不是你本人！
+        2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。
+        %{new_user_tips}
+        我们始终相信[讨论应该文明](%{base_url}/guidelines)。
+        好好享受你在论坛的时光吧！
+        （如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。）
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "备份成功完成"
       text_body_template: "备份成功。\n\n访问[管理 > 备份](%{base_url}/admin/backups)下载你的新备份文件。"
@@ -1288,9 +1275,7 @@ zh_CN:
       subject_template: "备份失败"
       text_body_template: |
         备份已经失败了。
-
         以下是日志：
-
         ```
         %{logs}
         ```
@@ -1301,9 +1286,7 @@ zh_CN:
       subject_template: "恢复失败"
       text_body_template: |
         恢复失败。
-
         以下是日志：
-
         ```
         %{logs}
         ```
@@ -1314,9 +1297,7 @@ zh_CN:
       subject_template: "批量邀请完成，并有一些错误"
       text_body_template: |
         批量邀请已经完成，发出了 %{sent} 个邀请并且 %{failed} 个失败。
-
         查看日志：
-
         ```
         %{logs}
         ```
@@ -1324,9 +1305,7 @@ zh_CN:
       subject_template: "数据导出完成"
       text_body_template: |
         数据成功导出！:dvd:
-
         <a class="attachment" href="%{download_link}">%{file_name}</a>（%{file_size}）
-
         以上的下载链接将在 48 小时后失效。
     csv_export_failed:
       subject_template: "数据导出失败"
@@ -1337,45 +1316,37 @@ zh_CN:
       subject_template: "[%{site_name}] 邮件问题 -- 用户未找到"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         你发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_inactive_user:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未激活用户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         与你账户关联的邮件地址没有激活，请先激活你的账号再发送邮件。
     email_reject_blocked_user:
       subject_template: "[%{site_name}] 电子邮件错误 -- 被封禁的用户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         与你账户关联的邮件地址已经被封禁。
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] 电子邮件错误 -- 回复用户不符"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         你发送回复的邮件地址与我们等待的地址不同，所以我们不确定你是不是同一个人。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_no_account:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未知账户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         我们找不到匹配你邮件地址的账号。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_empty:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无内容"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件没有成功。
-
         我们不能找到你邮件中的任何回复内容。
-
         如果你**确定**你的邮件中有回复内容，试试用更简单的格式。
     email_reject_parsing:
       subject_template: "[%{site_name}] 电子邮件错误 -- 内容无法识别"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
-
         我们不能找到你邮件中的回复。**请确认将你的回复置于邮件顶端**——我们不能处理行内回复。
     email_reject_invalid_access:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
@@ -1385,41 +1356,33 @@ zh_CN:
       subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         可能的原因是：复杂的格式、消息超长、消息太短。请再试一次，如果还不行，使用网站发表。
     email_reject_invalid_post_specified:
       subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         原因：
-
         %{post_error}
-
         如果你能解决错误，请再试一次。
     email_reject_rate_limit_specified:
       subject_template: "[%{site_name}] 电子邮件错误 -- 频率限制"
       text_body_template: |
         我们很抱歉，但是您发送至 %{destination}（名为%{former_title}）的邮件出问题了。
-
         原因： %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无发表权限"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         发送的命令无法被识别。请再试一次，如果还有问题，使用网站发表。
     email_reject_reply_key:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未知回复指纹"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         邮件中的回复信令是无效或者未知的，所以我们不知道这封邮件回复给谁了。请联系管理人员。
     email_reject_bad_destination_address:
       subject_template: "[%{site_name}] 电子邮件错误 -- 未知的回复至地址"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
         目标邮件地址无法识别。请确保你是向管理人员提供的邮件地址发信。
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] 邮件问题 -- 主题未找到"
@@ -1431,9 +1394,7 @@ zh_CN:
       subject_template: "[%{site_name}] 电子邮件错误 -- POP 验证错误"
       text_body_template: |
         不幸的是，从 POP 服务器查询邮件时遇到了验证错误。
-
         请确认你在[站点设置](%{base_url}/admin/site_settings/category/email)中已经正确配置了 POP 验证信息。
-
         如果 POP 邮件账号有图形界面，你可以登录后查看邮箱设置。
     too_many_spam_flags:
       subject_template: "新账户被暂时封禁"
@@ -1442,24 +1403,17 @@ zh_CN:
     blocked_by_staff:
       subject_template: "账户被暂时封禁"
     user_automatically_blocked:
-      subject_template: "因标记而被封禁的新用户 %{username}"
       text_body_template: |
         这是自动发出的邮件。
-
         因多位用户标记%{username}的帖子，新用户[%{username}](%{base_url}%{user_url})已被自动封禁。
-
         请[查看这些标记](%{base_url}/admin/flags)。如果%{username}被意外禁用了编辑功能，点击[该用户管理页面](%{base_url}%{user_url})内的解封按钮。
-
         该阈值可以通过站点设置中的 `block_new_user` 更改。
     spam_post_blocked:
       subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
       text_body_template: |
         这是自动发出的邮件。
-
         新用户[%{username}](%{base_url}%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
-
         请[审核该用户](%{base_url}%{user_url})。
-
         该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unblocked:
       subject_template: "账户已解除封禁"
@@ -1468,7 +1422,6 @@ zh_CN:
         other: "%{count} 个用户等待批准"
       text_body_template: |
         有新注册的用户在访问论坛前需要被确认（或者拒绝）。
-
         [请在管理栏目中审核他们](%{base_url}/admin/users/list/pending)。
     download_remote_images_disabled:
       subject_template: "远程图片下载已禁用。"
@@ -1488,23 +1441,17 @@ zh_CN:
     posted_by: "%{username}发表于%{post_date}"
     invited_to_private_message_body: |
       %{username} 邀请你至消息交流：
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       论坛：
-
       > %{site_title} -- %{site_description}
     invited_to_topic_body: |
       %{username} 邀请你参与讨论：
-
       > **%{topic_title}**
       >
       > %{topic_excerpt}
-
       论坛：
-
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀请你加入消息交流：'%{topic_title}'"
@@ -1554,85 +1501,64 @@ zh_CN:
       subject_template: "[%{site_name}] 密码重置"
       text_body_template: |
         有人请求重置你在 [%{site_name}](%{base_url}) 上的密码。
-
         如果那不是你，你可以直接忽略本邮件。
-
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] 设置密码"
       text_body_template: |
         有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证过你邮件地址的在线服务商登录。
-
         如果不是你在请求添加密码，你可以直接忽略本邮件。
-
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}]登录"
       text_body_template: |
         有人尝试登录你在[%{site_name}](%{base_url})的账户。
-
         如果不是你在操作，你可以安全地忽略这封邮件。
-
         点击下面的链接登录：
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] 你的新帐号"
       text_body_template: |
         你在 %{site_name} 上建立了一个新账号
-
         点击下面的链接来为新账户设置密码：
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         点击下面的链接来确认你在%{site_name}上的新电子邮箱地址：
-
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         在我们修改你的邮箱地址前，我们需要你确认你拥有当前的邮件账号。在你完成这步之后，我们将确认你的新邮件地址。
-
         点击下面的链接来确认你当前在%{site_name}上的电子邮箱地址：
-
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       subject_template: "[%{site_name}] 你的邮箱地址已经修改成功"
       text_body_template: |
         这是%{site_name}自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
-
         你的邮箱地址被修改为：
-
         %{new_email}
     signup_after_approval:
       subject_template: "你已经被 %{site_name} 论坛批准加入了！"
       text_body_template: |
         欢迎加入%{site_name}！
-
         一个管理人员批准了你在%{site_name}的账户。
-
         点击下面的链接来确认并激活你在 %{site_name} 上的新账号：
         %{base_url}/users/activate-account/%{email_token}
-
         如果上面的链接无法点击，请拷贝该链接并粘贴到你的浏览器的地址栏里。
-
         %{new_user_tips}
-
         我们始终相信[讨论应该文明](%{base_url}/guidelines)。
-
         好好享受你在论坛的时光吧！
-
         （如果你在新用户级别需要和[管理人员](%{base_url/about)沟通的话，直接回复这个消息。）
     signup:
       subject_template: "[%{site_name}] 确认你的新账户"
       text_body_template: |
         欢迎来到 %{site_name}！
-
         点击下面的链接来确认和激活你的新帐号：
         %{base_url}/users/activate-account/%{email_token}
-
         如果上面的链接无法点击，请拷贝该链接并粘贴到你的浏览器的地址栏里。
   page_not_found:
     title: "抱歉！这个页面不存在或者是私密的。"
@@ -1643,7 +1569,6 @@ zh_CN:
     search_google: "Google"
   login_required:
     welcome_message: |
-      #[欢迎来到 %{title}](#welcome)
       你需要一个账号。请创建一个账号或者登录以继续。
   terms_of_service:
     title: "服务条款"
@@ -1691,26 +1616,60 @@ zh_CN:
     编辑本主题的第一帖以改变 %{page_name} 页面的内容。
   guidelines_topic:
     title: "FAQ/指引"
-    body: "<a name=\"civilized\"></a>\n\n## [这是一个文明讨论的地方](#civilized)\n\n在论坛上请表现得像在公共公园一样得体。我们一群人共享着一个公共社群资源 &mdash; 一个通过不断进行讨论以分享我们技能、知识和兴趣的地方。\n\n这些都不是死规矩或者是草率决定，只是一些帮助社群的人们来判断的规定。试用这些指引来保持干净和充满灵感的文明的公开论坛。 \n\n<a name=\"improve\"></a>\n\n## [改善讨论](#improve)\n\n帮助我们让这个地方变成一个讨论的好地方。你可以总是一致的做一些帮助改善讨论的事，即使是小事也行。如果你不确定你的帖子有益于讨论，认真想一想你要说什么再发布。\n\n这里讨论的主题对我们很重要，并且我们希望你也觉得这些内容对你很重要。尊重这些讨论的主题，以及讨论他们的人们，特别是当你不同意他们所说的时候。\n\n改善讨论的一种方法是找一找已经发生过的事。请在发帖或创建你自己的主题前，花一些时间浏览这些主题，这样你更有机会遇见和你有共同爱好的人。 \n\n<a name=\"agreeable\"></a>\n\n## [即使你不同意他人时，尊重他人](#agreeable)\n\n你可能想表达你的不同意。这没问题。但是，记住_批评观点，而不是人_。请避免：\n\n*   指名道姓。\n*   人生攻击。\n*   回复帖子无关于帖子的内容。\n*   下意识的反驳。\n\n相反，提供合理的观点改善讨论。 \n\n<a name=\"participate\"></a>\n\n## [你的参与有意义](#participate)\n\n我们在这儿的讨论为大家树立了榜样。通过选择参与有意义的讨论，帮助我们将论坛变成一个有意思的地方 &mdash; 并且避免那些没有帮助的行为。\n\nDiscourse 提供了让社群共同鉴别最棒（或最差）的贡献的工具：收藏、书签、赞、标记、回复和编辑等等。使用这些工具不仅能改善你自己的体验，也能改善其他人的体验。\n\n让我们创造一个更美好的社群。\n\n<a name=\"flag-problems\"></a>\n\n## [如果你发现问题了，标记它](#flag-problems)\n版主有特别的权力；他们对论坛负责。但是你也是。有了你的帮助，版主能成为社群监察者，而不仅是守卫或者警察。\n\n当你见到不合适的行为，不要回复。这种承认变相鼓励了这种不合适的行为，浪费了你的精力，并且浪费了每一个人的时间。_只要标记它。_如果收到了足够的标记，将会有相应的处理，这个处理可能是自动地，也可能由版主介入。\n\n为了维护我们的社群，版主保留了任何情况下删除任何内容和任何用户的权力。版主没有预先审核任何新帖子；版主和站点维护人员对社群里发表的任何言论均不负责任。 \n\n<a name=\"be-civil\"></a>\n\n## [永远保持文明](#be-civil)\n\n粗鲁这样的行为会破坏健康的讨论：\n\n*   文明。不要发表任何理智的人会认为冒犯的、过分的或招致怨恨的言论。\n*   拒绝色情。不要发表任何淫秽或性暗示的东西。\n*   尊重每一个人。不要骚扰或者让别人难过，检视别人，或暴露他们的个人信息。\n*   尊重我们的论坛。不要发表广告或者其他垃圾信息。\n\n这些条款不是法律条文，并且没有准确的定义 &mdash; 避免任何做关于他们的_可能擦边_的事。如果你不确定，问问自己的帖子是否能出现在纽约时报的头版头条上。\n\n这是一个公共论坛，并且搜索引擎会索引这些讨论。注意发表的语言、链接和图片，不要在其中包含你的家庭和朋友。 \n\n<a name=\"keep-tidy\"></a>\n\n## [保持整洁](#keep-tidy)\n\n花一点时间让东西出现在正确的位置，这样我们能花更多的时间在讨论上而非清理格式。所以：\n\n*   不要在错误的分类发表新主题。\n*   不要在多个主题中回复同样的内容。\n*   不要发布没有内容的回复。\n*   不要在中途改变主题。\n*   不要在你的帖子中签名 &mdash; 每一贴都附有你的个人信息。\n\n比起发表“+1”或者“同意”，使用赞按钮。比起将帖子带向一个决然不同的方向，使用“回复为关联主题”。\n\n<a name=\"stealing\"></a>\n\n## [只发表你自己的东西](#stealing)\n\n你不能在没有他人授权的情况下发表任何属于他人的数字资产。你可能不能发表关于窃据他人知识产权（软件、视频、音频和图像）的任何简介、链接或方法，或其他任何违反法律的内容。 \n\n<a name=\"power\"></a>\n\n## [有你参与](#power)\n\n这个站点由[一群友善的管理人员](/about)、你和社群一起运营。如果你对这里的事情仍有疑问，在[站点反馈](/c/site-feedback)分类新建一个主题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的主题或标记解决，通过[管理人员页面](/about)联系我们。\n\n<a name=\"tos\"></a>\n\n## [使用条款](#tos)\n\n是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，你和你的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](/tos)描述你的（以及我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，你必须同意遵守[使用条款](/tos)。\n"
+    body: |
+      <a name="civilized"></a>
+      在论坛上请表现得像在公共公园一样得体。我们一群人共享着一个公共社群资源 &mdash; 一个通过不断进行讨论以分享我们技能、知识和兴趣的地方。
+      这些都不是死规矩或者是草率决定，只是一些帮助社群的人们来判断的规定。试用这些指引来保持干净和充满灵感的文明的公开论坛。
+      <a name="improve"></a>
+      帮助我们让这个地方变成一个讨论的好地方。你可以总是一致的做一些帮助改善讨论的事，即使是小事也行。如果你不确定你的帖子有益于讨论，认真想一想你要说什么再发布。
+      这里讨论的主题对我们很重要，并且我们希望你也觉得这些内容对你很重要。尊重这些讨论的主题，以及讨论他们的人们，特别是当你不同意他们所说的时候。
+      改善讨论的一种方法是找一找已经发生过的事。请在发帖或创建你自己的主题前，花一些时间浏览这些主题，这样你更有机会遇见和你有共同爱好的人。
+      <a name="agreeable"></a>
+      你可能想表达你的不同意。这没问题。但是，记住_批评观点，而不是人_。请避免：
+      *   指名道姓。
+      *   人生攻击。
+      *   回复帖子无关于帖子的内容。
+      *   下意识的反驳。
+      相反，提供合理的观点改善讨论。
+      <a name="participate"></a>
+      我们在这儿的讨论为大家树立了榜样。通过选择参与有意义的讨论，帮助我们将论坛变成一个有意思的地方 &mdash; 并且避免那些没有帮助的行为。
+      Discourse 提供了让社群共同鉴别最棒（或最差）的贡献的工具：收藏、书签、赞、标记、回复和编辑等等。使用这些工具不仅能改善你自己的体验，也能改善其他人的体验。
+      让我们创造一个更美好的社群。
+      <a name="flag-problems"></a>
+      版主有特别的权力；他们对论坛负责。但是你也是。有了你的帮助，版主能成为社群监察者，而不仅是守卫或者警察。
+      当你见到不合适的行为，不要回复。这种承认变相鼓励了这种不合适的行为，浪费了你的精力，并且浪费了每一个人的时间。_只要标记它。_如果收到了足够的标记，将会有相应的处理，这个处理可能是自动地，也可能由版主介入。
+      为了维护我们的社群，版主保留了任何情况下删除任何内容和任何用户的权力。版主没有预先审核任何新帖子；版主和站点维护人员对社群里发表的任何言论均不负责任。
+      <a name="be-civil"></a>
+      粗鲁这样的行为会破坏健康的讨论：
+      *   文明。不要发表任何理智的人会认为冒犯的、过分的或招致怨恨的言论。
+      *   拒绝色情。不要发表任何淫秽或性暗示的东西。
+      *   尊重每一个人。不要骚扰或者让别人难过，检视别人，或暴露他们的个人信息。
+      *   尊重我们的论坛。不要发表广告或者其他垃圾信息。
+      这些条款不是法律条文，并且没有准确的定义 &mdash; 避免任何做关于他们的_可能擦边_的事。如果你不确定，问问自己的帖子是否能出现在纽约时报的头版头条上。
+      这是一个公共论坛，并且搜索引擎会索引这些讨论。注意发表的语言、链接和图片，不要在其中包含你的家庭和朋友。
+      <a name="keep-tidy"></a>
+      花一点时间让东西出现在正确的位置，这样我们能花更多的时间在讨论上而非清理格式。所以：
+      *   不要在错误的分类发表新主题。
+      *   不要在多个主题中回复同样的内容。
+      *   不要发布没有内容的回复。
+      *   不要在中途改变主题。
+      *   不要在你的帖子中签名 &mdash; 每一贴都附有你的个人信息。
+      比起发表“+1”或者“同意”，使用赞按钮。比起将帖子带向一个决然不同的方向，使用“回复为关联主题”。
+      <a name="stealing"></a>
+      你不能在没有他人授权的情况下发表任何属于他人的数字资产。你可能不能发表关于窃据他人知识产权（软件、视频、音频和图像）的任何简介、链接或方法，或其他任何违反法律的内容。
+      <a name="power"></a>
+      这个站点由[一群友善的管理人员](/about)、你和社群一起运营。如果你对这里的事情仍有疑问，在[站点反馈](/c/site-feedback)分类新建一个主题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的主题或标记解决，通过[管理人员页面](/about)联系我们。
+      <a name="tos"></a>
+      是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，你和你的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](/tos)描述你的（以及我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，你必须同意遵守[使用条款](/tos)。
   tos_topic:
     title: "服务条款"
     body: |
       The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](/privacy) and [Community Guidelines](/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
-
       Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
-
       <a name="1"></a>
-
-      ## [1. Your %{company_domain} Account](#1)
-
       If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
-
       <a name="2"></a>
-
-      ## [2. Responsibility of Contributors](#2)
-
       If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
-
       *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
       *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
       *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
@@ -1720,198 +1679,75 @@ zh_CN:
       *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
       *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
       *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
-
       <a name="3"></a>
-
-      ## [3. User Content License](#3)
-
       User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
-
-
       <a name="4"></a>
-
-      ## [4. Payment and Renewal](#4)
-
-      ### General Terms
-
       Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
-
-      ### Automatic Renewal
-
       Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
-
       <a name="5"></a>
-
-      ## [5. Services](#5)
-
-      ### Hosting, Support Services
-
       Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
-
       <a name="6"></a>
-
-      ## [6. Responsibility of Website Visitors](#6)
-
       %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
-
       <a name="7"></a>
-
-      ## [7. Content Posted on Other Websites](#7)
-
       We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
-
       <a name="8"></a>
-
-      ## [8. Copyright Infringement and DMCA Policy](#8)
-
       As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
-
       <a name="9"></a>
-
-      ## [9. Intellectual Property](#9)
-
       This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
-
       <a name="10"></a>
-
-      ## [10. Advertisements](#10)
-
       %{company_name} reserves the right to display advertisements on your content unless you have purchased an Ad-free Upgrade or a Services account.
-
       <a name="11"></a>
-
-      ## [11. Attribution](#11)
-
       %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer or toolbar. Footer credits and the %{company_domain} toolbar may not be removed regardless of upgrades purchased.
-
       <a name="12"></a>
-
-      ## [12. Changes](#12)
-
       %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
-
       <a name="13"></a>
-
-      ## [13. Termination](#13)
-
       %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
-
       <a name="14"></a>
-
-      ## [14. Disclaimer of Warranties](#14)
-
       The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that access thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
-
       <a name="15"></a>
-
-      ## [15. Limitation of Liability](#15)
-
       In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
-
       <a name="16"></a>
-
-      ## [16. General Representation and Warranty](#16)
-
       You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
-
       <a name="17"></a>
-
-      ## [17. Indemnification](#17)
-
       You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
-
       <a name="18"></a>
-
-      ## [18. Miscellaneous](#18)
-
       This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
-
       This document is CC-BY-SA. It was last updated May 31, 2013.
-
       Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "隐私政策"
     body: |
       <a name="collect"></a>
-
-      ## [我们收集什么信息？](#collect)
-
       我们从你在我们站点注册开始从你那开始收集信息，并收集关于你在论坛的阅读和写作的数据，并评估分享的内容。
-
       当在我们站点注册时，你可能被要求输入你的名字和邮件地址。然而你可以在不用注册的情况下访问站点。你的邮件地将通过一个独一无二的链接验证。如果链接被访问了，我们就知道你控制了该邮件地址。
-
       当已注册和发帖时，我们记录发布帖子时的 IP 地址。我们也可能保留服务器日志，其中包括了每一个向我们服务器的请求。
-
       <a name="use"></a>
-
-      ## [我们如何使用你的信息？](#use)
-
       从你那收集的任何数据将以以下方式使用：
-
       * 改进你的个人体验 &mdash; 你的信息帮助我们更好地满足你的个人需求。
       * 改进我们的站点 &mdash; 我们基于信息和我们从你那收到的反馈不断地试图改进我们的站点。
       * 改善我们的客户服务 &mdash; 你的信息帮助我们更有效地回应用户服务请求和支持。
       * 用于发送阶段性的邮件 &mdash; 你提供的邮件地址可能用于接受信息、你想看到的通知或与你用户名有关的回复和询问，或是其他的请求和问题。
-
       <a name="protect"></a>
-
-      ## [我们如何保护你的信息?](#protect)
-
       我们实现了一系列的安全措施保证你输入、提交或者访问你个人信息的数据安全。
-
       <a name="data-retention"></a>
-
-      ## [数据保存政策是什么？](#data-retention)
-
       我们将善意地：
-
       * 保存 90 天内的所有向服务器的包含 IP 地址的请求。
       * 保存 5 年内已注册用户和与他们的帖子有关的 IP 地址。
-
       <a name="cookies"></a>
-
-      ## [我们使用 Cookie 吗？](#cookies)
-
       是的。Cookie 是网站或它的服务商通过网页浏览器存储在你电脑硬盘上的小文件（如果你同意）。这些 Cookie 使站点能分辨你的浏览器，并且，如果你注册了一个账户，与你的注册账户关联。
-
       我们使用 Cookie 为之后的访问和编译一小段关于站点流量和交互的数据来判断并保存你的个人设置，这样我们可以在之后提供更好的站点体验和工具。我们可能使用第三方服务商来帮助我们更好地理解我们的站点访客。这些服务商是不允许代表我们使用收集的信息，除非是在帮助我们执行和改进我们的站点。
-
       <a name="disclose"></a>
-
-      ## [我们会在站外提供任何信息吗？](#disclose)
-
       我们绝不销售、教育或任何向外转移你个人信息的行为。这不包括帮助我们管理站点、改进站定或给你提供服务的第三方团体，这些团体需要保证对这些信息保密。当我们认为提交你的信息符合法律、我们的站点政策或保护我们或其他人的权利、知识产权或安全时，我们也可能提交你的信息。然而，非个人访问信息可能供其他团体使用，用于市场、广告或其他用途。
-
       <a name="third-party"></a>
-
-      ## [第三方链接](#third-party)
-
       偶尔地，根据我们的判断，我们可能在我们的站点上包括或提供第三方团体的产品或服务。这些第三方站点用于独立和不同的隐私政策。因此我们对链接到的站点或活动没有责任和权利。尽管如此，我们寻求保护我们的整个站点冰鞋欢迎你给这些站点反馈。
-
       <a name="coppa"></a>
-
-      ## [儿童在线隐私保护法案合规](#coppa)
-
       我们的站点、产品和服务提供给 13 岁以上的人们。如果服务器位于美国，并且你小于 13 岁，根据[儿童在线隐私保护法案合规](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)，不要使用这个站点。
-
       <a name="online"></a>
-
-      ## [仅用于在线隐私政策](#online)
-
       这个线上隐私政策只适用于通过我们站点收集到的信息，并不包括线下收集的信息。
-
       <a name="consent"></a>
-
-      ## [你的同意](#consent)
-
       你使用站点的同时，代表你同意了我们网站的隐私政策。
-
       <a name="changes"></a>
-
-      ## [隐私政策的更改](#changes)
-
       如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
-
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
   badges:
     editor:
@@ -1997,16 +1833,15 @@ zh_CN:
     great_share:
       name: 精彩的分享
       description: 分享了一个有 1000 个独立访问者的帖子
-      long_description: |+
+      long_description: |
         该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社群前进了一大步！
-
     first_like:
-      name: 首个赞
+      name: 首次赞
       description: 已赞过了一个帖子
       long_description: |
         该徽章授予给第一次使用 :heart: 按钮赞了帖子的成员。给帖子点赞是一个极好的让社群成员知道他们的帖子有意思、有用、酷炫或者好玩的方法。分享爱！
     first_flag:
-      name: 首个标记
+      name: 首次标记
       description: 已标记过了一个帖子
       long_description: |
         该徽章授予给第一次标记帖子的你。标记是帮助我们帮助社群保持健康、合宜的工具。如果你注意到哪个帖子需要版主的注意，不用在乎什么原因，直接标记。如果你注意到别人帖子里的某个问题，你也可用标记功能发送<b>私信</b>给该成员。如果你发现了问题，:flag_black: 标记吧！
@@ -2029,7 +1864,7 @@ zh_CN:
       long_description: |
         该徽章授予给第一次用分享按钮分享了回复或者主题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社群增长。
     first_link:
-      name: 首个链接
+      name: 首次链接
       description: 已链接了另一个主题
       long_description: |
         该徽章授予给第一次链接到另一个主题的你。联结主题会在各个主题的右侧显示链接和标题，这可以帮助阅读者迅速地找到相关讨论。多链接一些主题吧！
@@ -2106,6 +1941,9 @@ zh_CN:
     first_mention:
       name: 首次提及
       description: 在帖子中提到用户
+    first_onebox:
+      name: 首个Onebox
+      description: 发布过 oneboxed 链接
     first_reply_by_email:
       name: 首次邮件回复
   admin_login:
@@ -2122,6 +1960,3 @@ zh_CN:
     user_exists: "抱歉，用户已经被邀请了。你可能只想邀请用户参与主题一次。"
   tags:
     title: "标签"
-  activemodel:
-    errors:
-      <<: *errors

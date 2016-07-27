@@ -249,8 +249,6 @@ sq:
     undo: "Çbëj"
     revert: "Rikthe"
     failed: "Dështoi"
-    switch_to_anon: "Mënyrë anonime"
-    switch_from_anon: "Shkëputu si anonim"
     banner:
       close: "Hiq këtë banderolë."
       edit: "Modifiko këtë banderolë >>"
@@ -356,18 +354,18 @@ sq:
           title: "Pa njoftime"
           description: "Ju nuk do të njoftoheni asnjëherë për asgjë mbi temat e reja të këtij grupi."
     user_action_groups:
-      '1': "Pëlqime të dhëna"
-      '2': "Pëlqime të marra"
-      '3': "Të preferuarat"
-      '4': "Tema"
-      '5': "Përgjigje"
-      '6': "Përgjigjet"
-      '7': "Përmendje"
-      '9': "Citime"
-      '11': "Redaktime"
-      '12': "Të dërguar"
-      '13': "Inbox"
-      '14': "Në pritje"
+      "1": "Pëlqime të dhëna"
+      "2": "Pëlqime të marra"
+      "3": "Të preferuarat"
+      "4": "Tema"
+      "5": "Përgjigje"
+      "6": "Përgjigjet"
+      "7": "Përmendje"
+      "9": "Citime"
+      "11": "Redaktime"
+      "12": "Të dërguar"
+      "13": "Inbox"
+      "14": "Në pritje"
     categories:
       all: "kategoritë"
       all_subcategories: "të gjitha"
@@ -440,10 +438,10 @@ sq:
         disable: "Çaktivizoni njoftimet"
         enable: "Aktivizoni njoftimet"
         each_browser_note: "Shënim: Duhet të ndryshoni këtë rregullim (setting) në çdo shfletues që përdorni. "
-      dismiss_notifications: "Shëno të gjitha si të lexuara"
       dismiss_notifications_tooltip: "Shëno njoftimet e palexuara si të lexuara"
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Tregoni numrin e temave të reja e azhornuara në ikonën e shfletuesit"
+      edit_history_public: "Lejo anëtarët e tjerë të shikojnë redaktimet e mia"
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
       change: "ndrysho"
@@ -456,7 +454,6 @@ sq:
       suspended_reason: "Arsyeja:"
       github_profile: "Github"
       watched_categories: "Shikuar"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Gjurmuar"
       tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
       muted_categories: "Pa njoftime"
@@ -744,8 +741,6 @@ sq:
     too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
     too_few_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     logs_error_rate_notice:
-      reached: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has reached site settings's limit of %{siteSettingRate}."
-      exceeded: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has exceeded site settings's limit of %{siteSettingRate}."
       rate:
         one: "1 gabim/%{duration}"
         other: "%{count} gabime/%{duration}"
@@ -874,7 +869,6 @@ sq:
       saved_local_draft_tip: "ruajtur lokalisht"
       similar_topics: "Tema juaj është e ngjashme me..."
       drafts_offline: "draftet offline"
-      group_mentioned: "Duke qënë se po përdorni {{group}}, jeni duke njoftuar <a href='{{group_link}}'>{{count}} anëtarë</a>."
       error:
         title_missing: "Titulli është i nevojshëm"
         title_too_short: "Titulli duhet të ketë të paktën {{min} shkronja."
@@ -961,7 +955,6 @@ sq:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> pranoi ftesën tuaj</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> transferoi {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} message in your {{group_name}} inbox</p>"
@@ -1155,20 +1148,20 @@ sq:
         position: "tema %{current} nga %{total}"
       notifications:
         reasons:
-          '3_6': 'Ju do të merrni njoftime sepse jeni duke vëzhguar këtë kategori. '
-          '3_5': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë automatikisht. '
-          '3_2': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
-          '3_1': 'Ju do të njoftoheni duke qënë se ju jeni autori i kësaj teme. '
-          '3': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
-          '2_8': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë kategori. '
-          '2_4': 'Ju do të njoftoheni duke qënë se keni dërguar një përgjigje në këtë temë. '
-          '2_2': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë. '
-          '2': 'Ju do të merrni njoftime sepse e keni <a href="/users/{{username}}/preferences">lexuar këtë temë</a>.'
-          '1_2': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
-          '1': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
-          '0_7': 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
-          '0_2': 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
-          '0': 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
+          "3_6": 'Ju do të merrni njoftime sepse jeni duke vëzhguar këtë kategori. '
+          "3_5": 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë automatikisht. '
+          "3_2": 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
+          "3_1": 'Ju do të njoftoheni duke qënë se ju jeni autori i kësaj teme. '
+          "3": 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
+          "2_8": 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë kategori. '
+          "2_4": 'Ju do të njoftoheni duke qënë se keni dërguar një përgjigje në këtë temë. '
+          "2_2": 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë. '
+          "2": 'Ju do të merrni njoftime sepse e keni <a href="/users/{{username}}/preferences">lexuar këtë temë</a>.'
+          "1_2": 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
+          "1": 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
+          "0_7": 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
+          "0_2": 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
+          "0": 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
         watching_pm:
           title: "Në vëzhgim"
           description: "Ju do të njoftoheni për çdo përgjigje të re në këtë mesazh, dhe numri i përgjigjeve të reja do të shfaqet. "
@@ -1249,8 +1242,6 @@ sq:
         no_banner_exists: "There is no banner topic."
         banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
       inviting: "Inviting..."
-      automatically_add_to_groups_optional: "Kjo ftesë përfshin edhe akses për këto grupe: (fakultative, vetëm për adminët)"
-      automatically_add_to_groups_required: "Kjo ftesë përfshin edhe akses për këto grupe: (<b>e detyrueshme</b>, vetëm për adminët)"
       invite_private:
         title: 'Ftoje në këtë mesazh'
         email_or_username: "Emaili ose emri i përdoruesit të të ftuarit"
@@ -1650,10 +1641,10 @@ sq:
     posts_long: "there are {{number}} posts in this topic"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
+      low {with a high like to post ratio}
+      med {with a very high like to post ratio}
+      high {with an extremely high like to post ratio}
+      other {}}
     original_post: "Postimi Origjinal"
     views: "Shikimet"
     views_lowercase:
@@ -2575,140 +2566,3 @@ sq:
           label: "New:"
           add: "Add"
           filter: "Search (URL or External URL)"
-    lightbox:
-      download: "shkarko"
-    search_help:
-      title: 'Ndihma'
-    keyboard_shortcuts_help:
-      title: 'Shkurtimet e Tastierës '
-      jump_to:
-        title: 'Kalo tek'
-        home: '<b>g</b>, <b>h</b> Home'
-        latest: '<b>g</b>, <b>l</b> Latest'
-        new: '<b>g</b>, <b>n</b> New'
-        unread: '<b>g</b>, <b>u</b> Unread'
-        categories: '<b>g</b>, <b>c</b> Kategoritë'
-        top: '<b>g</b>, <b>t</b> Top'
-        bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
-        profile: '<b>g</b>, <b>p</b> Profili'
-        messages: '<b>g</b>, <b>m</b> Mesazhet'
-      navigation:
-        title: 'Shfletimi'
-        jump: '<b>#</b> Shko tek postimi #'
-        back: '<b>u</b> Mbrapa'
-        up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Next/previous section'
-      application:
-        title: 'Aplikacion'
-        create: '<b>c</b> Filloni një diskutim të ri'
-        notifications: '<b>n</b> Hap njoftimet'
-        hamburger_menu: '<b>=</b> Hap menunë hamburger'
-        user_profile_menu: '<b>p</b> Open user menu'
-        show_incoming_updated_topics: '<b>.</b> Show updated topics'
-        search: '<b>/</b> Kërko'
-        help: '<b>?</b> Open keyboard help'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
-        dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Shkëputu'
-      actions:
-        title: 'Actions'
-        bookmark_topic: '<b>f</b> Toggle bookmark topic'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
-        share_topic: '<b>shift</b>+<b>s</b> Share topic'
-        share_post: '<b>s</b> Share post'
-        reply_as_new_topic: '<b>t</b> Përgjigju në një temë të re të ndërlidhur'
-        reply_topic: '<b>shift</b>+<b>r</b> Reply to topic'
-        reply_post: '<b>r</b> Reply to post'
-        quote_post: '<b>q</b> Quote post'
-        like: '<b>l</b> Like post'
-        flag: '<b>!</b> Sinjalizo postimin'
-        bookmark: '<b>b</b> Bookmark post'
-        edit: '<b>e</b> Edit post'
-        delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b>, <b>m</b> Mute topic'
-        mark_regular: '<b>m</b>, <b>r</b> Regular (default) topic'
-        mark_tracking: '<b>m</b>, <b>t</b> Track topic'
-        mark_watching: '<b>m</b>, <b>w</b> Watch topic'
-    badges:
-      title: Badges
-      badge_count:
-        one: "1 Badge"
-        other: "%{count} Badges"
-      more_badges:
-        one: "+1 More"
-        other: "+%{count} More"
-      granted:
-        one: "1 granted"
-        other: "%{count} granted"
-      select_badge_for_title: Select a badge to use as your title
-      none: "<asnjë>"
-      badge_grouping:
-        getting_started:
-          name: Getting Started
-        community:
-          name: Komuniteti
-        trust_level:
-          name: Niveli i besimit
-        other:
-          name: Të tjerë
-        posting:
-          name: Posting
-    google_search: |
-      <h3>Kerko me Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
-    tagging:
-      all_tags: "Të gjitha etiketat"
-      selector_all_tags: "të gjithat etiketat"
-      changed: "etiketat e ndryshuara:"
-      tags: "Etiketat"
-      choose_for_topic: "zgjidhni etiketat fakultative për këtë temë"
-      delete_tag: "Fshi etiketën"
-      delete_confirm: "Jeni të sigurtë që doni të fshini këtë etiketë?"
-      rename_tag: "Riemëro etiketën"
-      rename_instructions: "Zgjidhni një emër të ri për këtë etiketë"
-      sort_by: "Rendit sipas:"
-      sort_by_name: "emër"
-      filters:
-        without_category: "%{filter} %{tag} temat"
-        with_category: "%{filter} %{tag} temat në %{category}"
-      notifications:
-        watching:
-          title: "Në vëzhgim"
-          description: "Ju do të vëzhgoni automatikisht të gjitha temat e reja nën këtë etiketë. Do të njoftoheni për çdo postim e temë të re, dhe numri i postimeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
-        tracking:
-          title: "Në gjurmim"
-          description: "Ju do të gjurmoni automatikisht çdo temë të re nën këtë etiketë. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës në listat e faqes. "
-        regular:
-          title: "Normal"
-          description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose i përgjigjet postimeve tuaja. "
-        muted:
-          title: "Pa njoftime"
-          description: "Ju nuk do të njoftoheni për asgjë nga temat e reja të kësaj etikete, dhe këto tema nuk do të afishohen në faqen \"Të palexuara\" për ju. "
-      topics:
-        none:
-          unread: "Nuk keni tema të palexuara."
-          new: "Nuk keni tema të palexuara."
-          read: "Nuk keni lexuar asnjë temë deri tani."
-          posted: "Nuk keni shkruar tek asnjë temë deri tani."
-          latest: "Nuk ka tema të reja."
-          hot: "Nuk ka tema të nxehta."
-          bookmarks: "Nuk keni ende tema të preferuara. "
-          top: "Nuk ka tema popullore."
-          search: "Kërkimi nuk ka asnjë rezultat."
-        bottom:
-          latest: "Nuk ka më tema të reja."
-          hot: "Nuk ka më tema të nxehta."
-          posted: "Nuk ka më tema të publikuara."
-          read: "Nuk ka më tema të lexuara."
-          new: "Nuk ka më tema të reja."
-          unread: "Nuk ka më tema të palexuara."
-          top: "Nuk ka më tema popullore."
-          bookmarks: "Nuk ka më tema të preferuara."
-          search: "Kërkimi nuk ka më rezultate."

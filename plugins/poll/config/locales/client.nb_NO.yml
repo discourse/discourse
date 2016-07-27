@@ -15,9 +15,6 @@ nb_NO:
         one: "antall stemmer"
         other: "antall stemmer"
       average_rating: "Gjennomsnitt: <strong>%{average}</strong>."
-      multiple:
-        help:
-          between_min_and_max_options: "Du kan velge mellom <strong>%{min}</strong> og <strong>%{max}</strong> alternativer."
       cast-votes:
         title: "Stem nå"
         label: "Stem!"
@@ -35,5 +32,3 @@ nb_NO:
         title: "Lukk avstemming"
         label: "Lukk"
         confirm: "Er du sikker på at du vil lukke avstemmingen?"
-      error_while_toggling_status: "Det har oppstått en feil"
-      error_while_casting_votes: "Noe gikk galt"

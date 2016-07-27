@@ -18,6 +18,8 @@ da:
   date:
     month_names: [null, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
     <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "indlæg"
@@ -79,6 +81,9 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
+  activemodel:
+    errors:
+      <<: *errors
   bulk_invite:
     file_should_be_csv: "Den uploadede fil skal være i .csv eller .txt format."
   backup:
@@ -148,43 +153,25 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
-    new-reply: |
+    'new-reply': |
       Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
-
       Husk venligst mens du skriver dit svar:
-
       - Forbedrer dit svar samtalen på en eller anden måde?
-
       - Behandl dine meddebattører med den samme respekt, som du ønsker at blive behandlet med.
-
       - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
-
       For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
     avatar: |
-      ### Hvad med et billede til din konto?
-
       Du har oprettet et par emner og svar, men dit avatar er ikke så unik som du er -- det er bare et bogstav.
-
       Har du overvejet at **[gå til din brugerprofil](%{profile_path})** og uploade et billede, der repræsenterer dig?
-
       Det er lettere at følge diskussioner og finde interessant mennesker i samtaler, hvor alle har en unik avatar!
     dominating_topic: |
-      ### Lad andre deltage i samtalen
-
       Dette emne er åbenbart vigtigt for dig &ndash; du har oprettet mere end %{percent}% af svarene her.
-
       Er du sikker på, at du giver tilstrækkelig tid til, at andre folk kan dele deres synspunkter?
     too_many_replies: |
-      ### Du kan ikke skrive flere indlæg i dette emne
-
       Beklager, men nye brugere er begrænset til %{newuser_max_replies_per_topic} svar i hvert emne.
-
       I stedet for at tilføje endnu et svar, bør du overveje at redigere et af dine eksisterende svar eller at besøge andre emner.
     reviving_old_topic: |
-      ### Genopliv dette emne?
-
       Det sidste svar på dette emne er nu over %{days} gammelt. dit svar vil trække dette emne til toppen af listen og vil påminde alle der tidligere have været med i samtalen.
-
       Er du sikker på du vil vække dette emne til live igen?
   activerecord:
     attributes:
@@ -195,6 +182,7 @@ da:
       user_profile:
         bio_raw: "Om mig"
     errors:
+      <<: *errors
       models:
         topic:
           attributes:
@@ -215,7 +203,6 @@ da:
           attributes:
             hex:
               invalid: "er ikke en gyldig fave"
-      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>“Om mig” feltet på din profil er pt. tomt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du at udfylde det</a>?</div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
@@ -410,18 +397,6 @@ da:
       message:
         make: "Dette emne er nu et banner-emne. Det optræder i toppen af alle sider indtil brugeren fjerner det."
         remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
-  unsubscribed:
-    title: 'Frameldt'
-    description: "Du er blevet frameldt. Vi skriver ikke til dig igen."
-    oops: "Klik herunder hvis det ikke var din hensigt at framelde dig."
-    error: "Fejl ved framelding"
-    preferences_link: "Du kan også framelde dig opsummerings-emails på din <a href='/my/preferences'>indstillinger side</a>"
-    different_user_description: "Du er logget ind som en anden buger den den som uddragene blev sendt til. Log ud og prøv igen."
-    not_found_description: "Beklager, vi kunne ikke framelde dig. Det er muligt at linket i din e-mail er udløbet."
-  resubscribe:
-    action: "Tilmeld igen"
-    title: "Tilmeldt igen!"
-    description: "Du er blevet tilmeldt igen."
   reports:
     visits:
       title: "Brugerbesøg"
@@ -544,7 +519,6 @@ da:
       yaxis: "Antal besøg"
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
-    ruby_version_warning: "Du kører en version af Ruby 2.0.0 som har kendte problemer. Opgradér til patch-level 247 eller senere."
     host_names_warning: "Filen config/database.yml bruger localhost som værtsnavn. Opdatér den med sitets værtsnavn."
     gc_warning: 'Din server bruger Rubys standard garbage collection, hvilket ikke giver dig den bedste performance. Læs dette emne om performance-tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq kører ikke. Mange opgaver, som f.eks. udsendelse af e-mail, afvikles asynkront af sidekiq. Du skal sikre dig at der kører mindst én sidekiq-proces. <a href="https://github.com/mperham/sidekiq" target="_blank">Læs mere om Sidekiq her</a>.'
@@ -568,8 +542,6 @@ da:
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     anon_polling_interval: "Hvor ofte skal anonyme brugere polle, i millisekunder."
-    max_topics_in_first_day: "Det maksimale antal indlæg en bruger har lov til at oprette på deres første dag på sitet."
-    max_replies_in_first_day: "Det maksimale antal svar en bruger har lov til at oprette på deres første dag på sitet."
     notify_mods_when_user_blocked: "Send en besked til alle moderatorer hvis en bruger blokeres automatisk"
     ga_tracking_code: "Google analytics sporingskode, f.eks.: UA-12345678-9; se http://google.com/analytics."
     ga_domain_name: "Google analytics domænenavn, f.eks.: example.com; se http://google.com/analytics."
@@ -613,7 +585,6 @@ da:
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
-    default_email_digest_frequency: "Hvor ofte brugerne som standard modtager e-mail-sammendrag. "
     default_email_private_messages: "Send som standard en email når nogen sender brugeren en besked."
     default_email_direct: "Send som standard en email når nogen citerer/svarer/nævner/inviterer brugeren."
     default_email_mailing_list_mode: "Send som standard en email for hvert nyt indlæg."
@@ -624,18 +595,10 @@ da:
     default_other_enable_quoting: "Slå som standard \"svar på den markerede tekst\" til."
     default_other_dynamic_favicon: "Vis som standard nyt / opdateret emnetal på browserikon"
     default_other_disable_jump_reply: "Spring ikke som standard til det nye indlæg efter brugeren har svaret"
+    default_other_edit_history_public: "Offentliggør som standard rettelser til indlæg."
     default_categories_watching: "Liste over kategorier der som standard overvåges."
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard ignoreres."
-  notification_types:
-    mentioned: "%{display_username} nævnte dig i %{link}"
-    liked: "%{display_username} synes om dit indlæg i %{link}"
-    replied: "%{display_username} svarede på dit indlæg i %{link}"
-    quoted: "%{display_username} citerede dit indlæg i %{link}"
-    edited: "%{display_username} redigerede dit indlæg i %{link}"
-    posted: "%{display_username} skrev et indlæg i %{link}"
-    moved_post: "%{display_username} flyttede dit indlæg til %{link}"
-    invitee_accepted: "%{display_username} accepterede din invitation"
   search:
     types:
       category: 'Kategorier'
@@ -682,8 +645,6 @@ da:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Opdateringer er tilgængelige"
   system_messages:
-    post_hidden:
-      subject_template: "Indlæg skjult på grund af feedback fra brugerne"
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
@@ -694,7 +655,6 @@ da:
         other: "%{count} brugere afventer godkendelse"
       text_body_template: |
         Der er nye brugere, som afventer godkendelse (eller afvisning) før de kan tilgå dette forum.
-
         [Gennemgå dem venligst på administrationssiden](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Download af eksterne billeder er slået fra"
@@ -718,22 +678,17 @@ da:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Et kort resume af %{site_link} siden dit sidste besøg %{last_seen_at}"
-      subject_template: "Sammenfatning af [%{site_name}]"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
       top_topics: "Populære emner"
       other_new_topics: "Populære emner"
-      unsubscribe: "Dette resume er sent fra %{site_link} hvor vi ikke har set dig i et stykke tid. Hvis du ikke vil modtage disse mails, så %{unsubscribe_link}."
       click_here: "klik her"
-      from: "%{site_name} opsummering"
       read_more: "Læs mere"
       more_topics_category: "Flere nye emner: "
     forgot_password:
       subject_template: "[%{site_name}] Nulstil kodeord"
       text_body_template: |
         Nogen har bedt om at få nulstillet dit kodeord på [%{site_name}](%{base_url}).
-
         Hvis det ikke var dig, så kan du trygt ignorere denne e-mail.
-
         Klik her for at vælge et nyt kodeord:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
@@ -741,9 +696,7 @@ da:
       text_body_template: |
         Nogen har bedt om at tilføje et kodeord til din konto på [%{site_name}](%{base_url}).
         Du kan også loge ind med en af de undestøttede online services (Google, Facebook o.s.v. ) som associeret med denne bekræftede emailadresse.
-
         Hvis ikke du har bedt om dette kan du blot ignorere denne email.
-
         Klik på følgende for at vælge et kodeord.:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
@@ -754,10 +707,8 @@ da:
       subject_template: "[%{site_name}] Bekræft din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
-
         Klik på det følgende link for at bekræfte og aktivere din nye konto:
         %{base_url}/users/activate-account/%{email_token}
-
         Hvis linket ikke virker, så prøv at kopiere hele linket ind i adressefeltet på din web browser.
   page_not_found:
     popular_topics: "Populære"
@@ -849,8 +800,3 @@ da:
     error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

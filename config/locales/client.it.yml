@@ -253,8 +253,6 @@ it:
     undo: "Annulla"
     revert: "Ripristina"
     failed: "Fallito"
-    switch_to_anon: "Modalità Anonima"
-    switch_from_anon: "Abbandona Anonimato"
     banner:
       close: "Nascondi questo banner."
       edit: "Modifica questo annuncio >>"
@@ -362,18 +360,18 @@ it:
           title: "Silenziato"
           description: "Non verrai mai avvertito per i nuovi argomenti in questo gruppo."
     user_action_groups:
-      '1': "Mi piace - Assegnati"
-      '2': "Mi piace - Ricevuti"
-      '3': "Segnalibri"
-      '4': "Argomenti"
-      '5': "Risposte"
-      '6': "Risposte"
-      '7': "Menzioni"
-      '9': "Citazioni"
-      '11': "Modifiche"
-      '12': "Inviati"
-      '13': "Posta in arrivo"
-      '14': "In Attesa"
+      "1": "Mi piace - Assegnati"
+      "2": "Mi piace - Ricevuti"
+      "3": "Segnalibri"
+      "4": "Argomenti"
+      "5": "Risposte"
+      "6": "Risposte"
+      "7": "Menzioni"
+      "9": "Citazioni"
+      "11": "Modifiche"
+      "12": "Inviati"
+      "13": "Posta in arrivo"
+      "14": "In Attesa"
     categories:
       all: "tutte le categorie"
       all_subcategories: "tutte"
@@ -446,10 +444,10 @@ it:
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
-      dismiss_notifications: "Imposta tutti come Letti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
       dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
+      edit_history_public: "Consenti agli altri utenti di visualizzare le mie revisioni ai messaggi"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
       change: "cambia"
@@ -462,7 +460,6 @@ it:
       suspended_reason: "Motivo: "
       github_profile: "Github"
       watched_categories: "Osservate"
-      watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
       tracked_categories: "Seguite"
       tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei nuovi messaggi."
       muted_categories: "Silenziate"
@@ -1141,20 +1138,20 @@ it:
         position: "messaggio %{current} di %{total}"
       notifications:
         reasons:
-          '3_6': 'Riceverai notifiche perché stai osservando questa categoria.'
-          '3_5': 'Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente.'
-          '3_2': 'Riceverai notifiche perché stai osservando questo argomento.'
-          '3_1': 'Riceverai notifiche perché hai creato questo argomento.'
-          '3': 'Riceverai notifiche perché stai osservando questo argomento.'
-          '2_8': 'Riceverai notifiche perché stai seguendo questa categoria.'
-          '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
-          '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
-          '2': 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo argomento</a>.'
-          '1_2': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
-          '1': 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
-          '0_7': 'Stai ignorando tutte le notifiche di questa categoria.'
-          '0_2': 'Stai ignorando tutte le notifiche di questo argomento.'
-          '0': 'Stai ignorando tutte le notifiche di questo argomento.'
+          "3_6": 'Riceverai notifiche perché stai osservando questa categoria.'
+          "3_5": 'Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente.'
+          "3_2": 'Riceverai notifiche perché stai osservando questo argomento.'
+          "3_1": 'Riceverai notifiche perché hai creato questo argomento.'
+          "3": 'Riceverai notifiche perché stai osservando questo argomento.'
+          "2_8": 'Riceverai notifiche perché stai seguendo questa categoria.'
+          "2_4": 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
+          "2_2": 'Riceverai notifiche perché stai seguendo questo argomento.'
+          "2": 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo argomento</a>.'
+          "1_2": 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
+          "1": 'Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde.'
+          "0_7": 'Stai ignorando tutte le notifiche di questa categoria.'
+          "0_2": 'Stai ignorando tutte le notifiche di questo argomento.'
+          "0": 'Stai ignorando tutte le notifiche di questo argomento.'
         watching_pm:
           title: "In osservazione"
           description: "Riceverai una notifica per ogni nuova risposta a questo messaggio, e comparirà un conteggio delle nuove risposte."

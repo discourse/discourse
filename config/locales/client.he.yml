@@ -241,8 +241,6 @@ he:
     undo: "ביטול (Undo)"
     revert: "לחזור"
     failed: "נכשל"
-    switch_to_anon: "מצב אנונימי"
-    switch_from_anon: "צא ממצב אנונימי"
     banner:
       close: "שחרור באנר זה."
       edit: "ערוך את הבאנר"
@@ -337,18 +335,18 @@ he:
         tracking:
           title: "במעקב"
     user_action_groups:
-      '1': "לייקים שניתנו"
-      '2': "לייקים שהתקבלו"
-      '3': "מועדפים"
-      '4': "פוסטים"
-      '5': "תשובות"
-      '6': "תגובות"
-      '7': "אזכורים"
-      '9': "ציטוטים"
-      '11': "עריכות"
-      '12': "פריטים שנשלחו"
-      '13': "דואר נכנס"
-      '14': "ממתין"
+      "1": "לייקים שניתנו"
+      "2": "לייקים שהתקבלו"
+      "3": "מועדפים"
+      "4": "פוסטים"
+      "5": "תשובות"
+      "6": "תגובות"
+      "7": "אזכורים"
+      "9": "ציטוטים"
+      "11": "עריכות"
+      "12": "פריטים שנשלחו"
+      "13": "דואר נכנס"
+      "14": "ממתין"
     categories:
       all: "כל הקטגוריות"
       all_subcategories: "הכל"
@@ -418,10 +416,10 @@ he:
         disable: "כבה התראות"
         enable: "אפשר התראות"
         each_browser_note: "הערה: עליך לשנות הגדרה זו עבור כל דפדפן בנפרד."
-      dismiss_notifications: "סימון הכל כנקרא"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       disable_jump_reply: "אל תקפצו לפרסומים שלי לאחר שאני משיב/ה"
       dynamic_favicon: "הצג את מספר פוסטים חדשים/מעודכנים על האייקון של הדפדפן"
+      edit_history_public: "אפשרו למשתמשים אחרים לראות את תיקוני הפרסומים שלי"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
       enable_quoting: "אפשרו תגובת ציטוט לטקסט מסומן"
       change: "שנה"
@@ -434,7 +432,6 @@ he:
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
       watched_categories: "עוקב"
-      watched_categories_instructions: "תעקבו באופן אוטומטי אחרי כל הפוסטים החדשים בקטגוריות אלה. תקבלו התראה על כל פרסום ופוסט חדש."
       tracked_categories: "רגיל+"
       tracked_categories_instructions: "בקטגוריות אלה סך הפרסומים החדשים שלא נקראו יופיע לצד שם הפוסט."
       muted_categories: "מושתק"
@@ -849,7 +846,6 @@ he:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> אישר/ה את הזמנתך</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> הזיז/ה {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>הרוויח/ה '{{description}}'</p>"
       alt:
         mentioned: "הוזכר על ידי"
@@ -1023,20 +1019,20 @@ he:
         position: "הודעה %{current} מתוך %{total}"
       notifications:
         reasons:
-          '3_6': 'תקבלו התראות כיוון שאת/ה עוקב אחרי קטגוריה זו.'
-          '3_5': 'תקבל/י התראות כיוון שהתחלת לעקוב אחרי הפוסט הזה אוטומטית.'
-          '3_2': 'תקבל/י התראות כיוון שאת/ה עוקב אחרי הפוסט הזה.'
-          '3_1': 'תקבל/י התראות כיוון שאת/ה יצרת את הפוסט הזה.'
-          '3': 'תקבל/י התראות כיוון שאת/ה עוקב אחרי פוסט זה.'
-          '2_8': 'תקבלו התראות כיוון שאת/ה צופה בקטגוריה הזו.'
-          '2_4': 'תקבל/י התראות כיוון שפרסמת תגובה לפוסט הזה.'
-          '2_2': 'תקבל/י התראות כיוון שאת/ה צופה אחרי הפוסט הזה.'
-          '2': 'תקבל/י התראות כיוון ש<a href="/users/{{username}}/preferences">קראת את הפוסט הזה</a>.'
-          '1_2': 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך.'
-          '1': 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך.'
-          '0_7': 'את/ה מתעלם/מתעלמת מכל ההתראות בקטגוריה זו.'
-          '0_2': 'אתה מתעלם מכל ההתראות בפוסט זה.'
-          '0': 'אתה מתעלם מכל ההתראות בפוסט זה.'
+          "3_6": 'תקבלו התראות כיוון שאת/ה עוקב אחרי קטגוריה זו.'
+          "3_5": 'תקבל/י התראות כיוון שהתחלת לעקוב אחרי הפוסט הזה אוטומטית.'
+          "3_2": 'תקבל/י התראות כיוון שאת/ה עוקב אחרי הפוסט הזה.'
+          "3_1": 'תקבל/י התראות כיוון שאת/ה יצרת את הפוסט הזה.'
+          "3": 'תקבל/י התראות כיוון שאת/ה עוקב אחרי פוסט זה.'
+          "2_8": 'תקבלו התראות כיוון שאת/ה צופה בקטגוריה הזו.'
+          "2_4": 'תקבל/י התראות כיוון שפרסמת תגובה לפוסט הזה.'
+          "2_2": 'תקבל/י התראות כיוון שאת/ה צופה אחרי הפוסט הזה.'
+          "2": 'תקבל/י התראות כיוון ש<a href="/users/{{username}}/preferences">קראת את הפוסט הזה</a>.'
+          "1_2": 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך.'
+          "1": 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך.'
+          "0_7": 'את/ה מתעלם/מתעלמת מכל ההתראות בקטגוריה זו.'
+          "0_2": 'אתה מתעלם מכל ההתראות בפוסט זה.'
+          "0": 'אתה מתעלם מכל ההתראות בפוסט זה.'
         watching_pm:
           title: "עוקב"
           description: "תקבל/י התראה על כל תגובה חדשה בהודעה זו. בנוסף מספר התגובות שלא נקראו יופיעו ליד ההודעה. "
@@ -1110,8 +1106,6 @@ he:
         remove_banner: "הסרת הבאנר שמופיע בראש כל העמודים."
         banner_note: "משתמשים יכולים לבטל את הבאנר על ידי סגירתו. רק פוסט אחד יכול לשמש כבאנר בזמן נתון."
       inviting: "מזמין..."
-      automatically_add_to_groups_optional: "הזמנה זו כוללת גישה לקבוצות הללו: (אופציונלי, רק מנהל/ת)"
-      automatically_add_to_groups_required: "הזמנה זו כוללת גישה לקבוצות הללו: (<b>חובה</b>, רק מנהל/ת)"
       invite_private:
         title: 'הזמן להודעה'
         email_or_username: "כתובת דואר אלקטרוני או שם משתמש של המוזמן"
@@ -2360,91 +2354,3 @@ he:
           label: "חדש:"
           add: "הוסף"
           filter: "חפש (כתובת או כתובת חיצונית)"
-    lightbox:
-      download: "הורד"
-    search_help:
-      title: 'חיפוש בעזרה'
-    keyboard_shortcuts_help:
-      title: 'קיצורי מקלדת'
-      jump_to:
-        title: 'קפוץ ל'
-        home: '<b>g</b>, <b>h</b> בית'
-        latest: '<b>g</b>, <b>l</b> Latest'
-        new: '<b>g</b>, <b>n</b> New'
-        unread: '<b>g</b>, <b>u</b> Unread'
-        categories: '<b>g</b>, <b>c</b> Categories'
-        top: '<b>g</b>, <b>t</b> Top'
-        bookmarks: 'סימניות <b>g</b>, <b>b</b>'
-        profile: '<b>g</b>, <b>p</b> פרופיל'
-        messages: '<b>g</b>, <b>m</b> הודעות'
-      navigation:
-        title: 'ניווט'
-        jump: '<b>#</b> מעבר לפרסום #'
-        back: '<b>u</b> חזרה'
-        up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
-        open: '<b>o</b> או <b>Enter</b> פתח פוסט נבחר'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b>לחלק הבא/קודם'
-      application:
-        title: 'יישום'
-        create: '<b>c</b> צור פוסט חדש'
-        notifications: '<b>n</b> פתח התראות'
-        hamburger_menu: '<b>=</b>  פתח תפריט המבורגר'
-        user_profile_menu: '<b>p</b>פתיחת תפריט משתמש/ת'
-        show_incoming_updated_topics: '<b>.</b> הצגת פוסטים שעודכנו'
-        search: '<b>/</b> חיפוש'
-        help: '<b>?</b> הצגת עזרת מקלדת'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> שחרור הודעות/חדשות'
-        dismiss_topics: '<b>x</b>, <b>t</b> שחרור פוסטים'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b>  התנתק'
-      actions:
-        title: 'פעולות'
-        bookmark_topic: '<b>f</b> החלפת פוסט סימניה'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b>קיבוע/שחרור פוסט'
-        share_topic: '<b>shift</b>+<b>s</b> שיתוף הפוסט'
-        share_post: '<b>s</b> שיתוף הודעה'
-        reply_as_new_topic: '<b>t</b> תגובה כפוסט מקושר'
-        reply_topic: '<b>shift</b>+<b>r</b> תשובה לפוסט'
-        reply_post: '<b>r</b> להגיב להודעה'
-        quote_post: '<b> q </b> ציטוט פוסט'
-        like: '<b>l</b> תן לייק להודעה'
-        flag: '<b>!</b> סימון הודעה'
-        bookmark: '<b>b</b> הוסף הודעה למועדפים'
-        edit: '<b>e</b> ערוך הודעה'
-        delete: '<b>d</b> מחק הודעה'
-        mark_muted: '<b>m</b>, <b>m</b> השתקת פוסט'
-        mark_regular: '<b>m</b>, <b>r</b> פוסט רגיל (ברירת מחדל)'
-        mark_tracking: '<b>m</b>, <b>t</b> מעקב פוסט'
-        mark_watching: '<b>m</b>, <b>w</b>צפייה בפוסט'
-    badges:
-      title: תגים
-      badge_count:
-        one: "תג אחד"
-        other: "%{count} תגים"
-      more_badges:
-        one: "עוד +1"
-        other: "עוד +%{count}"
-      granted:
-        one: "1 הוענק"
-        other: "%{count} הוענקו"
-      select_badge_for_title: בחר תג שיופיע בכותרת הפרופיל שלך
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: מתחילים
-        community:
-          name: קהילה
-        trust_level:
-          name: רמת אמון
-        other:
-          name: אחר
-        posting:
-          name: פרסום
-    google_search: |
-      <h3>חפש עם גוגל</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
