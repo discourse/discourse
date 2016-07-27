@@ -294,7 +294,7 @@ it:
   assets_topic_body: "Questo è un argomento permanente, visibile solo allo staff, per salvare immagini e file utilizzati nel design del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica qui tutte le immagini che desideri usare per loghi, favicon e così via (usa l'icona di caricamento nell'editor del messaggio o trascina direttamente le immagini).\n3. Invia la risposta per creare il messaggio.\n4. Fai click con il tasto destro sulle immagini nel tuo nuovo messaggio per prelevare il percorso delle immagini caricate, o clicca l'icona di modifica messaggio e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni di base](/admin/site_settings/category/required).\n\nSe vuoi permettere di caricare file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Benvenuto nel Lounge"
-    body: |2
+    body: |
 
       Congratulazioni! :confetti_ball:
 
@@ -1153,7 +1153,7 @@ it:
       subject_template: "[%{site_name}] Problema relativo all'email -- Chiave di risposta sconosciuta"
     email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Problema email -- Destinatario sconosciuto"
-      text_body_template: |+
+      text_body_template: |
         Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è stato inviato.
 
         Non è stato riconosciuto alcuno degli indirizzi email di destinazione. Assicurati di inviare a indirizzi email validi.

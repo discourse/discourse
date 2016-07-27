@@ -162,7 +162,7 @@ ja:
       - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。
       - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。
       詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
-    sequential_replies: |+
+    sequential_replies: |
       ### 一度に複数の投稿に返信する
 
       トピックにたくさん返信する代わりに、以前の投稿への @name メンションや引用などを活用して返信を一つの投稿にまとめましょう。
@@ -1004,7 +1004,7 @@ ja:
       - [meta.discourse.org](http://meta.discourse.org)にて、Discourseに関するお知らせ、話し合い、サポートを行っています。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] アップデートがあります"
-    text_body_template: |+
+    text_body_template: |
       最新版の[Discourse](http://www.discourse.org)が利用出来ます！
 
       現在利用しているバージョン: %{installed_version}

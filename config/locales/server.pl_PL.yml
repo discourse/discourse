@@ -160,7 +160,7 @@ pl_PL:
       one: "1 wpis"
       few: "%{count} wpisy"
       other: "%{count} wpisów"
-    new-topic: |+
+    new-topic: |
       Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowej dyskusji!**
 
       - Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?
@@ -259,7 +259,7 @@ pl_PL:
   assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Witaj w Salonie"
-    body: |2
+    body: |
 
       Gratulacje! :confetti_ball:
 
@@ -926,7 +926,7 @@ pl_PL:
     subject_template: "%{invitee_name} zaprosił cię do dołączenia do %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
-    text_body_template: |+
+    text_body_template: |
       Dziękujemy za zaakceptowanie zaproszenia do %{site_name} -- witamy!
 
 
@@ -991,7 +991,7 @@ pl_PL:
       text_body_template: "Plik z zaproszeniami został przetworzony. Wysłanych zaproszeń: %{sent}."
     bulk_invite_failed:
       subject_template: "Plik z zaproszeniami został przetworzony z błędami."
-      text_body_template: |+
+      text_body_template: |
         Plik z zaproszeniami został przetworzony -- wysłanych: %{sent}, błędów: %{failed}.
 
         Dziennik operacji:
@@ -1003,7 +1003,7 @@ pl_PL:
 
     csv_export_succeeded:
       subject_template: "Zakończono eksport danych"
-      text_body_template: |+
+      text_body_template: |
         Eksport danych zakończył się sukcesem! :dvd:
 
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
@@ -1069,7 +1069,7 @@ pl_PL:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
-      text_body_template: |+
+      text_body_template: |
         Witamy na %{site_name}!
 
         Nasz personel zatwierdził twoje konto na %{site_name}.
