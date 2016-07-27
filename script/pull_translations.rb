@@ -274,9 +274,9 @@ YML_DIRS.each do |dir|
       filename = yml_path(dir, prefix, language)
 
       if filename
-        # TODO remove this as soon as Transifex provides valid YAML files again
-        fix_invalid_yml_keys(filename)
-        fix_invalid_yml(filename)
+        # The following methods were added to handle a bug in Transifex's yml. Should not be needed now.
+        # fix_invalid_yml_keys(filename)
+        # fix_invalid_yml(filename)
 
         # TODO check if this is still needed with recent Transifex changes
         add_anchors_and_aliases(english_alias_data, filename)
