@@ -72,11 +72,16 @@ class UploadsController < ApplicationController
 
       # convert pasted images to HQ jpegs
       if filename == "blob.png" && SiteSetting.convert_pasted_images_to_hq_jpg
-        filename = "blob.jpg"
-        jpeg_path = "#{File.dirname(tempfile.path)}/#{filename}"
-        content_type = "image/jpeg"
+        jpeg_path = "#{File.dirname(tempfile.path)}/blob.jpg"
         `convert #{tempfile.path} -quality 95 #{jpeg_path}`
-        tempfile = File.open(jpeg_path)
+        # only change the format of the image when JPG is at least 5% smaller
+        if File.size(jpeg_path) < File.size(tempfile.path) * 0.95
+          filename = "blob.jpg"
+          content_type = "image/jpeg"
+          tempfile = File.open(jpeg_path)
+        else
+          File.delete(jpeg_path) rescue nil
+        end
       end
 
       # allow users to upload large images that will be automatically reduced to allowed size
