@@ -367,18 +367,18 @@ es:
           title: "Silenciado"
           description: "Nunca se te notificará de nada sobre temas en este grupo."
     user_action_groups:
-      "1": "'Me gusta' Dados"
-      "2": "'Me gusta' Recibidos"
-      "3": "Marcadores"
-      "4": "Temas"
-      "5": "Posts"
-      "6": "Respuestas"
-      "7": "Menciones"
-      "9": "Citas"
-      "11": "Ediciones"
-      "12": "Elementos Enviados"
-      "13": "Bandeja de entrada"
-      "14": "Pendiente"
+      '1': "'Me gusta' Dados"
+      '2': "'Me gusta' Recibidos"
+      '3': "Marcadores"
+      '4': "Temas"
+      '5': "Posts"
+      '6': "Respuestas"
+      '7': "Menciones"
+      '9': "Citas"
+      '11': "Ediciones"
+      '12': "Elementos Enviados"
+      '13': "Bandeja de entrada"
+      '14': "Pendiente"
     categories:
       all: "Categorías"
       all_subcategories: "todas"
@@ -1208,21 +1208,21 @@ es:
         title: cambiar con qué frecuencia se te notifica de este tema
         reasons:
           mailing_list_mode: "El modo lista de correo se encuentra activado, por lo que se te notificará de las respuestas a este tema vía email."
-          "3_10": 'Recibirás notificaciones porque estás vigilando una etiqueta de este tema.'
-          "3_6": 'Recibirás notificaciones porque estás vigilando esta categoría.'
-          "3_5": 'Recibirás notificaciones porque has empezado a vigilar este tema automáticamente.'
-          "3_2": 'Recibirás notificaciones porque estás vigilando este tema.'
-          "3_1": 'Recibirás notificaciones porque creaste este tema.'
-          "3": 'Recibirás notificaciones porque estás vigilando este tema.'
-          "2_8": 'Recibirás notificaciones porque estás siguiendo esta categoría.'
-          "2_4": 'Recibirás notificaciones porque has publicado una respuesta en este tema.'
-          "2_2": 'Recibirás notificaciones porque estás siguiendo este tema.'
-          "2": 'Recibirás notificaciones porque <a href="/users/{{username}}/preferences">has leído este tema</a>.'
-          "1_2": 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
-          "1": 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
-          "0_7": 'Estás ignorando todas las notificaciones en esta categoría.'
-          "0_2": 'Estás ignorando todas las notificaciones en este tema.'
-          "0": 'Estás ignorando todas las notificaciones en este tema.'
+          '3_10': 'Recibirás notificaciones porque estás vigilando una etiqueta de este tema.'
+          '3_6': 'Recibirás notificaciones porque estás vigilando esta categoría.'
+          '3_5': 'Recibirás notificaciones porque has empezado a vigilar este tema automáticamente.'
+          '3_2': 'Recibirás notificaciones porque estás vigilando este tema.'
+          '3_1': 'Recibirás notificaciones porque creaste este tema.'
+          '3': 'Recibirás notificaciones porque estás vigilando este tema.'
+          '2_8': 'Recibirás notificaciones porque estás siguiendo esta categoría.'
+          '2_4': 'Recibirás notificaciones porque has publicado una respuesta en este tema.'
+          '2_2': 'Recibirás notificaciones porque estás siguiendo este tema.'
+          '2': 'Recibirás notificaciones porque <a href="/users/{{username}}/preferences">has leído este tema</a>.'
+          '1_2': 'Se te notificará solo si alguien menciona tu @nombre o te responde a un post.'
+          '1': 'Se te notificará si alguien menciona tu @nombre o te responde a un post.'
+          '0_7': 'Estás ignorando todas las notificaciones en esta categoría.'
+          '0_2': 'Estás ignorando todas las notificaciones en este tema.'
+          '0': 'Estás ignorando todas las notificaciones en este tema.'
         watching_pm:
           title: "Vigilar"
           description: "Se te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."

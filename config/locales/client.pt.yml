@@ -356,18 +356,18 @@ pt:
           title: "Mudo"
           description: "Não será notificado de nada relacionado com novos tópicos neste grupo."
     user_action_groups:
-      "1": "Gostos Dados"
-      "2": "Gostos Recebidos"
-      "3": "Marcadores"
-      "4": "Tópicos"
-      "5": "Respostas"
-      "6": "Respostas"
-      "7": "Menções"
-      "9": "Citações"
-      "11": "Edições"
-      "12": "Itens Enviados"
-      "13": "Caixa de Entrada"
-      "14": "Pendente"
+      '1': "Gostos Dados"
+      '2': "Gostos Recebidos"
+      '3': "Marcadores"
+      '4': "Tópicos"
+      '5': "Respostas"
+      '6': "Respostas"
+      '7': "Menções"
+      '9': "Citações"
+      '11': "Edições"
+      '12': "Itens Enviados"
+      '13': "Caixa de Entrada"
+      '14': "Pendente"
     categories:
       all: "todas as categorias"
       all_subcategories: "todas"
@@ -1150,20 +1150,20 @@ pt:
         position: "mensagem %{current} de %{total}"
       notifications:
         reasons:
-          "3_6": 'Receberá notificações porque está a vigiar esta categoria.'
-          "3_5": 'Receberá notificações porque começou a vigiar automaticamente este tópico.'
-          "3_2": 'Receberá notificações porque está a vigiar este tópico.'
-          "3_1": 'Receberá notificações porque criou este tópico.'
-          "3": 'Receberá notificações porque está a vigiar este tópico.'
-          "2_8": 'Receberá notificações porque está a acompanhar esta categoria.'
-          "2_4": 'Receberá notificações porque publicou uma resposta a este tópico.'
-          "2_2": 'Receberá notificações porque está a acompanhar este tópico.'
-          "2": 'Receberá notificações porque <a href="/users/{{username}}/preferences">leu este tópico</a>.'
-          "1_2": 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
-          "1": 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
-          "0_7": 'Está a ignorar todas as notificações nesta categoria.'
-          "0_2": 'Está a ignorar todas as notificações para este tópico.'
-          "0": 'Está a ignorar todas as notificações para este tópico.'
+          '3_6': 'Receberá notificações porque está a vigiar esta categoria.'
+          '3_5': 'Receberá notificações porque começou a vigiar automaticamente este tópico.'
+          '3_2': 'Receberá notificações porque está a vigiar este tópico.'
+          '3_1': 'Receberá notificações porque criou este tópico.'
+          '3': 'Receberá notificações porque está a vigiar este tópico.'
+          '2_8': 'Receberá notificações porque está a acompanhar esta categoria.'
+          '2_4': 'Receberá notificações porque publicou uma resposta a este tópico.'
+          '2_2': 'Receberá notificações porque está a acompanhar este tópico.'
+          '2': 'Receberá notificações porque <a href="/users/{{username}}/preferences">leu este tópico</a>.'
+          '1_2': 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
+          '1': 'Será notificado se alguém mencionar o seu @nome ou responder-lhe.'
+          '0_7': 'Está a ignorar todas as notificações nesta categoria.'
+          '0_2': 'Está a ignorar todas as notificações para este tópico.'
+          '0': 'Está a ignorar todas as notificações para este tópico.'
         watching_pm:
           title: "A vigiar"
           description: "Será notificado de cada nova resposta nesta mensagem, e uma contagem de novas respostas será exibida."

@@ -5,9 +5,4 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-uk:
-  js:
-    poll:
-      cast-votes: 
-      show-results: 
-      hide-results: 
+uk: {}

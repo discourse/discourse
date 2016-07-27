@@ -18,8 +18,6 @@ ko:
   date:
     month_names: []
     <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "글타래"
   posts: "글"
@@ -73,9 +71,6 @@ ko:
         other: '%{model} 저장 시에 %{count}개의 에러가 발생하여 진행을 못했습니다.'
     embed:
       load_from_remote: "글 로딩 중 오류가 발생하였습니다."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "CSV 또는 TXT형식의 파일을 업로드해야 합니다."
   backup:
@@ -160,30 +155,50 @@ ko:
   education:
     until_posts:
       other: "글 %{count}개"
-    'new-topic': |
+    new-topic: |
       %{site_name}에 오신 것을 환영합니다 &mdash; **새로운 대화를 시작해서 감사합니다.**
+
       - 제목을 큰소리로 읽어봤을 때 흥미롭게 들리던가요? 좋은 요약문인가요?
+
       - 누가 무엇때문에 관심을 보일까요? 어떤 대답을 듣고 싶나요?
+
       - 사람들이 *검색*할 수 있도록 글타래에 흔히 사용하는 단어를 집어넣으세요. 관련 글타래와 같이 엮으려면 해당 카테고리를 선택하시고요.
+
       이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](/guidelines)을 참조하세요.
-    'new-reply': |
+    new-reply: |
       %{site_name}에 오신것을 환영합니다! &mdash; **참여해주셔서 감사합니다!**
+
       - 당신의 댓글이 어떤 식으로든 토론을 발전시키나요?
+
       - 당신의 커뮤니티 회원에게 예의를 갖춰주세요.
+
       - 건설적인 비판은 환영입니다만, 사람 말고 *아이디어*를 비판해주세요.
+
       이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다. 자세한 내용은 [커뮤니티 가이드라인](/guidelines)를 참조하여 주세요.
     sequential_replies: |
+      ### 여러 글에 답글 한번에 달아보세요.
+
       답글을 연속으로 한 글타래에 달기 보다는 지난 글을 인용하거나 @사용자이름 해서 답글 하나로 작성해보세요.
+
       원하시는 글을 선택하시고 <b>답글을 인용</b> 버튼을 선택함으로써 이전에 쓰셨던 답글에 추가로 인용을 달거나 수정하실 수 있습니다.
+
       작은 답글을 여러개 다는 것보다 한개의 상세한 답글이 모두에게 글타래를 읽기 편하게 만듭니다.
     dominating_topic: |
+      ### 다른 유저들도 이 대화에 참여할 수 있도록 해주세요
+
       이 주제에 %{percent}% 이상의 답글을 다셨군요.
+
       다른 유저들도 그들의 의견을 나눌 수 있도록 충분한 시간을 기다리고 계신가요?
     too_many_replies: |
+      ### 댓글 개수 제한에 걸렸습니다.
+
       죄송합니다. 신규 사용자들은 같은 주제에 %{count}개까지만 댓글을 달 수 있습니다.
       댓글을 다는 대신 이전 댓글의 내용을 수정하거나, 다른 글타래를 읽어보는 건 어떨까요?
     reviving_old_topic: |
+      ### 이 글타래를 부활시키겠습니까?
+
       이 글타래에 달린 마지막 댓글은 이미 %{days}일 이전에 달렸습니다. 댓글을 새로 달면 이 글타래가 글 목록의 최상단으로 올라가게 되고, 글에 참여한 사람들에게 알림이 됩니다.
+
       이 글타래에 대한 논의를 재개하고 싶으신 게 확실하신가요?
   activerecord:
     attributes:
@@ -196,7 +211,6 @@ ko:
       user_profile:
         bio_raw: "내 소개"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -217,6 +231,7 @@ ko:
           attributes:
             hex:
               invalid: "유효한 색상이 아닙니다."
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>프로필이 현재 비어있습니다. <a href='/users/%{username_lower}/preferences/about-me'>지금 작성하시겠습니까?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name}님께서는 아직 프로필을 작성하지 않으셨습니다</div>"
@@ -229,7 +244,8 @@ ko:
   assets_topic_body: "이 글타래는 스태프에게만 보이는 영구적인 글타래입니다. 사이트 디자인을 위한 이미지를 저장할 수 있습니다. 지우지 마세요!\n\n다음처럼 하세요:\n\n1. 이 글타래에 답글을 작성하세요.\n2. 로고, 파비콘 등으로 사용하고 싶은 모든 이미지들을 업로드한다. (글 에디터 툴바의 업로드 아이콘을 사용하거나, 드래그 앤 드롭으로 이미지를 올려주세요.)\n3. 답글을 제출합니다.\n4. 답글의 업로드된 이미지를 우클릭하거나, 수정 버튼을 눌러 이미지의 경로를 확인하세요. 해당 이미지의 경로를 복사하세요.\n5. 복사한 이미지 경로를 [basic settings](/admin/site_settings/category/required)에 붙여넣으세요.\n\n\n다른 유형의 이미지를 사용해야한다면 [file settings](/admin/site_settings/category/files)의 `authorized_extensions` 를 수정하세요."
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
-    body: |
+    body: |2
+
       축하합니다! :confetti_ball: 당신의 회원등급이 **지도자** (회원등급 3등급)로 올라갔기 때문에 이 글타래를 볼 수 있게 되었습니다. 이제부터 아래의 행동들을 할 수 있습니다 &hellip; * 글타래를 제목을 수정할 수 있습니다 * 글타래의 카테고리를 수정할 수 있습니다 * 링크가 follow로 처리됩니다 ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) 가 제거됩니다) * 회원등급 3 이상인 사용자가 접근할 수 있는 비공개 카테고리인 라운지에 접근할 수 있습니다 * 좋아요와 신고의 가중치가 높아집니다 [정규 멤버 목록](&#x2F;badges/3/regular)을 확인할 수 있습니다. 인사하는 것을 잊지마세요. 이 커뮤니티의 중요한 역할을 해주신 것에 감사드립니다! (회원등급에 관한 더 자세한 정보를 보시려면, [이 글타래를 확인하세요][trust]. 기준에 맞는 사람만 정규 회원으로 자격이 유지됩니다.) [trust]:  https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
@@ -383,7 +399,9 @@ ko:
       long_form: '스팸으로 신고하였습니다.'
     inappropriate:
       title: '부적절함'
-      description: '이 글은 평균적인 사람들의 관점에서 볼 때 공격적이나 모욕적인 글을 담고 있거나, <a href="/guidelines">커뮤니티 가이드라인</a>에 맞지 않습니다.'
+      description: '이 글은 평균적인 사람들의 관점에서 볼 때 공격적이나 모욕적인 글을 담고 있거나,
+
+        <a href="/guidelines">커뮤니티 가이드라인</a>에 맞지 않습니다.'
       long_form: '부적절함으로 신고하였습니다.'
     notify_moderators:
       title: "뭔가 다른것"
@@ -621,8 +639,6 @@ ko:
     post_undo_action_window_mins: "사용자가 어떤 글에 대해서 수행한 작업(신고 등)을 취소하는 것이 허용되는 시간(초)"
     must_approve_users: "스태프는 반드시 사이트 엑세스권한을 허용하기 전에 모든 신규가입계정을 승인해야 합니다. 경고: 이것을 활성화하면 기존 스태프 아닌 회원들의 엑세스권한이 회수됩니다."
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
-    ga_tracking_code: "Google analytics (ga.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
     enable_noscript_support: "당신의 사이트를 검색하기 위한 noscript 태그를 이용한 일반적인 웹 크롤러를 활성화"
@@ -809,7 +825,6 @@ ko:
     delete_all_posts_max: "전체 글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 글 수. 만약 사용자가 이것보다 많은 글을 가지고 있으면 한번에 삭제 할 수 없다."
     username_change_period: "등록 후 사용자 이름 최소 유지 일 수(0은 사용자 이름 변경을 막음)"
     email_editable: "등록 후 이메일 주소를 바꿀수 있는 있음"
-    logout_redirect: "로그아웃 후에 이동할 위치 예: (http://somesite.com/logout)"
     allow_animated_thumbnails: "움직이는 gif로 썸네일을 만듭니다."
     default_avatars: "신규가입자가 받게될 기본 아바타 URL"
     automatically_download_gravatars: "사용자가 계정을 만들거나 이메일을 변경하자마자 Gravatar를 다운로드합니다."
@@ -823,7 +838,6 @@ ko:
     allow_profile_backgrounds: "사용자에게 프로필 배경 이미지 업로드를 허용합니다."
     enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용합니다, 그리고 PC용 화면으로 전환할 수 있습니다. 만약 커스텀 스타일 시트를 사용한다면 이것을 비활성화 시키세요."
     dominating_topic_minimum_percent: "한 글타래에서 한 사용자의 영향력을 결정하는 글 수의 퍼센트"
-    daily_performance_report: "NGINX 일별 로그를 분석하고 상세정보를 스태프들에게 글타래 게시"
     suppress_uncategorized_badge: "글타래 리스트에서 카테고리가 없는 글타래에 대한 훈장을 보여주지 않는다."
     global_notice: "긴급, 비상 전체 배너를 모든 방문자에게 표시합니다. 숨기려면 빈칸으로 바꾸면 됩니다(HTML 허용)."
     disable_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
@@ -836,7 +850,6 @@ ko:
     default_code_lang: "기본 programming language syntax highlighting은 GitHub code blocks이 적용된다. (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
     autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
-    highlighted_languages: "구문 강조 규칙 포함. (경고: 너무 많은 언어를 넣으면 성능에 영향을 미칩니다.) 보기: https://highlightjs.org/static/demo/ ← 예제"
     feed_polling_enabled: "EMBEDDING 전용: RSS/ATOM도 글로 embed할 것인지"
     feed_polling_url: "EMBEDDING 전용:  RSS/ATOM의 URL도 embed로 받도록 하기"
     embed_by_username: "embed 글타래를 작성한 Discourse 사용자 아이디 "
@@ -954,13 +967,19 @@ ko:
     subject_template: "%{invitee_name} 회원님이 %{site_domain_name} 에 '%{topic_title}'에 초대하였습니다."
     text_body_template: |
       %{invitee_name}님께서 당신을 토의에 초대했습니다.
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       사이트:
+
       > %{site_title} -- %{site_description}
+
       관심이 있으시면 아래 링크로 들어가기:
+
       %{invite_link}
+
       신뢰된 사용자에게서 온 초대므로 이 토의에 바로 답글을 달 수 있습니다.
   invite_forum_mailer:
     subject_template: "%{site_domain_name}의 %{invitee_name}님께서 당신을 초대하였습니다."
@@ -992,22 +1011,35 @@ ko:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
       text_body_template: |
         %{site_name}에 가입해주셔서 감사합니다, 환영합니다!
+
         %{new_user_tips}
+
         우리는 [문화시민의 커뮤니티 활동지침](%{base_url}/guidelines)을 항상 따릅니다.
+
         커뮤니티를 즐겨주세요!
+
         (할 말이 있을 땐 새 사용자로서 [스태프](%{base_url}/about)들에게 이야기 주세요, 이 메세지에 답글로 주시면 바로 올라갑니다.)
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
       text_body_template: |
         %{site_name}의 초대에 응해주셔서 감사합니다 반갑습니다!
+
         **%{username}**로 새 사용자를 만들었고 로그인된 상태입니다. [사용자 정보][prefs]에 들어가 이름을 바꿀 수 있습니다.
+
         나중에 다시 로그인하려면:
+
         1. 항상 **초대 받은 이메일 주소를 사용해서** 로그인해주셔야지 안 그러면 같은 사람이라고 인식 못할 겁니다!
+
         2. [사용자 정보][prefs],에서 유니크한 비밀번호를 만들어 사용해주세요.
+
         %{new_user_tips}
+
         우리는 [문화시민의 커뮤니티 활동 지침](%{base_url}/guidelines)을 항상 따릅니다.
+
         커뮤니티를 즐려주세요!
+
         (할 말이 있을 땐 새 사용자로서 [스태프](%{base_url}/about)들에게 이야기주세요, 이 메세지에 답글로 주시면 바로 올라갑니다.)
+
         [사용자 정보 설정]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "백업 성공"
@@ -1016,7 +1048,9 @@ ko:
       subject_template: "백업에 실패했습니다."
       text_body_template: |
         백업이 실패하였습니다.
+
         로그:
+
         ```
         %{logs}
         ```
@@ -1027,7 +1061,9 @@ ko:
       subject_template: "복원 실패"
       text_body_template: |
         복구가 실패하였습니다.
+
         로그:
+
         ```
         %{logs}
         ```
@@ -1038,7 +1074,9 @@ ko:
       subject_template: "대량 사용자 초대 중 오류가 났습니다."
       text_body_template: |
         대량 유저 초대 파일이 처리됐습니다. %{sent}개의 초대장이 보내졌고 %{failed}개의 에러 (전송안됨)가 났습니다.
+
         로그:
+
         ```
         %{logs}
         ```
@@ -1046,7 +1084,9 @@ ko:
       subject_template: "데이터 추출이 완료되었습니다."
       text_body_template: |
         데이터 내보내기가 성공적으로 끝났습니다! :dvd:
+
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
         48시간 후에 위의 다운로드 링크는 지워집니다.
     csv_export_failed:
       subject_template: "데이터 추출 실패"
@@ -1059,6 +1099,7 @@ ko:
       subject_template: "[%{site_name}]  이메일 문제 -- 내용 인식 불가"
       text_body_template: |
         죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
+
         이메일에 내용이 안 보입니다. 답글이 이메일 상단에 있는지 확인 해주세요 -- 한줄 답변은 처리 못합니다.
     email_reject_invalid_access:
       subject_template: "[%{site_name}]  이메일 문제 -- 잘못된 접근"
@@ -1079,6 +1120,7 @@ ko:
         other: "%{count}명의 새로운 사용자가 가입 승인 대기중 입니다."
       text_body_template: |
         가입 승인 대기중(또는 거절된)인 새로운 사용자가 있습니다.
+
         [운영자 색션에서 새로운 사용자들을 리뷰하세요](/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "외부에서 이미지 다운로드 못함"
@@ -1116,45 +1158,60 @@ ko:
       subject_template: "[%{site_name}] 패스워드 재설정"
       text_body_template: |
         [%{site_name}](%{base_url}) 사이트에서 누군가 당신의 패스워드를 재설정 요청하였습니다.
+
         아래 링크를 클릭하여 패스워드를 재설정하세요:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] 패스워드 재설정"
       text_body_template: |
         [%{site_name}](%{base_url})의 회원님 계정에 비밀번호를 추가 요청을 받았습니다. 이 이메일이 사용된 다른 온라인 서비스 (Google, Facebook, etc)를 이용해 로그인할 수 있습니다.
+
         이 요청을 하지 않았다면, 이 메일은 무시해도 안전합니다.
+
         비밀번호 선택 페이지:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] 로그인"
       text_body_template: |
         [%{site_name}](%{base_url})의 회원님 계정에 로그인 요청을 받았습니다.
+
         이 요청을 하지 않았다면, 이 메일은 무시해도 안전합니다.
+
         로그인 페이지:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] 당신의 새 계정"
       text_body_template: |
         %{site_name}에 새 계정이 만들어 졌습니다.
+
         비밀번호 설정 페이지:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "당신은 %{site_name} 가입이 승인되었습니다!"
       text_body_template: |
         %{site_name}에 오신 것을 환영합니다!
+
         스태프가 %{site_name} 계정을 승인했습니다.
+
         새 계정을 활성화해서 시작하려면 아래를 클릭:
         %{base_url}/users/activate-account/%{email_token}
+
         링크가 안 될 경우 복사 붙여넣기로 주소에 넣어 들어가주세요.
+
         %{new_user_tips}
+
         우리는 [문화시민의 커뮤니티 활동 지침](%{base_url}/guidelines)을 항상 따릅니다.
+
         커뮤니티를 즐겨주세요!
+
         (새 사용자로서 할말이 있으시면 이글에 답변함으로써 [스태프](%{base_url}/about)들에게 이야기해주세요.)
     signup:
       text_body_template: |
         %{site_name}에 오신것을 환영합니다!
+
         당신의 계정 인증을 위해 아래 링크를 클릭해주세요:
         %{base_url}/users/activate-account/%{email_token}
+
         만약 위의 링크를 클릭 할 수 없으면 주소를 복사하여 당신의 웹브라우저에 붙여넣으세요.
   page_not_found:
     popular_topics: "인기"
@@ -1164,6 +1221,7 @@ ko:
     search_google: "Google"
   login_required:
     welcome_message: |
+      #[%{title}에 오신 것을 환영합니다.](#welcome)
       계정이 필요합니다. 회원가입 또는 로그인 해주세요
   terms_of_service:
     title: "서비스 이용약관"
@@ -1203,8 +1261,9 @@ ko:
   csv_export:
     boolean_yes: "네"
     boolean_no: "아니오"
-  static_topic_first_reply: |
+  static_topic_first_reply: |+
     이 글타래인 %{page_name} 페이지의 첫글 수정.
+
   guidelines_topic:
     title: "FAQ/가이드"
   tos_topic:
@@ -1221,3 +1280,8 @@ ko:
   performance_report:
     initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
     initial_topic_title: 웹사이트 성능 보고
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

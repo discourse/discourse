@@ -367,18 +367,18 @@ sv:
           title: "Tystad"
           description: "Du kommer aldrig att bli notifierad om något gällande nya ämnen i den här gruppen."
     user_action_groups:
-      "1": "Gillningar givna"
-      "2": "Gillningar mottagna"
-      "3": "Bokmärken"
-      "4": "Ämnen"
-      "5": "Svar"
-      "6": "Svar"
-      "7": "Omnämnanden"
-      "9": "Citat"
-      "11": "Redigeringar"
-      "12": "Skickade föremål"
-      "13": "Inkorg"
-      "14": "Väntar"
+      '1': "Gillningar givna"
+      '2': "Gillningar mottagna"
+      '3': "Bokmärken"
+      '4': "Ämnen"
+      '5': "Svar"
+      '6': "Svar"
+      '7': "Omnämnanden"
+      '9': "Citat"
+      '11': "Redigeringar"
+      '12': "Skickade föremål"
+      '13': "Inkorg"
+      '14': "Väntar"
     categories:
       all: "alla kategorier"
       all_subcategories: "alla"
@@ -1208,21 +1208,21 @@ sv:
         title: ändra hur ofta du får notifieringar om det här ämnet
         reasons:
           mailing_list_mode: "Du har utskicksläge aktiverat, så du kommer notifieras om inlägg till det här ämnet via e-post."
-          "3_10": 'Du kommer att ta emot notifikationer för att du bevakar en tagg i det här ämnet.'
-          "3_6": 'Du kommer att få notifikationer för att du bevakar denna kategori.'
-          "3_5": 'Du kommer att ta emot notifikationer för att du automatiskt började följa det här ämnet.'
-          "3_2": 'Du kommer att ta emot notifikationer för att du bevakar detta ämne.'
-          "3_1": 'Du kommer ta emot notifikationer för att du skapade detta ämne.'
-          "3": 'Du kommer att ta emot notifikationer för att du bevakar detta ämne.'
-          "2_8": 'Du kommer att få notifikationer eftersom du följer denna kategori.'
-          "2_4": 'Du kommer att ta emot notifikationer för att du postade ett svar till detta ämne.'
-          "2_2": 'Du kommer att ta emot notifikationer för att du följer detta ämne.'
-          "2": 'Du kommer att ta emot notifikationer för att du <a href="/users/{{username}}/preferences">läser detta ämne</a>.'
-          "1_2": 'Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg.'
-          "1": 'Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg.'
-          "0_7": 'Du ignorerar alla notifikationer i den här kategorin.'
-          "0_2": 'Du ignorerar alla notifikationer för detta ämne.'
-          "0": 'Du ignorerar alla notifikationer för detta ämne.'
+          '3_10': 'Du kommer att ta emot notifikationer för att du bevakar en tagg i det här ämnet.'
+          '3_6': 'Du kommer att få notifikationer för att du bevakar denna kategori.'
+          '3_5': 'Du kommer att ta emot notifikationer för att du automatiskt började följa det här ämnet.'
+          '3_2': 'Du kommer att ta emot notifikationer för att du bevakar detta ämne.'
+          '3_1': 'Du kommer ta emot notifikationer för att du skapade detta ämne.'
+          '3': 'Du kommer att ta emot notifikationer för att du bevakar detta ämne.'
+          '2_8': 'Du kommer att få notifikationer eftersom du följer denna kategori.'
+          '2_4': 'Du kommer att ta emot notifikationer för att du postade ett svar till detta ämne.'
+          '2_2': 'Du kommer att ta emot notifikationer för att du följer detta ämne.'
+          '2': 'Du kommer att ta emot notifikationer för att du <a href="/users/{{username}}/preferences">läser detta ämne</a>.'
+          '1_2': 'Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg.'
+          '1': 'Du kommer få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg.'
+          '0_7': 'Du ignorerar alla notifikationer i den här kategorin.'
+          '0_2': 'Du ignorerar alla notifikationer för detta ämne.'
+          '0': 'Du ignorerar alla notifikationer för detta ämne.'
         watching_pm:
           title: "Bevakar"
           description: "Du kommer att få en notifiering för varje nytt svar i detta meddelande, samt en räknare med antalet nya svar."

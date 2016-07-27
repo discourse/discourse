@@ -354,18 +354,18 @@ sq:
           title: "Pa njoftime"
           description: "Ju nuk do të njoftoheni asnjëherë për asgjë mbi temat e reja të këtij grupi."
     user_action_groups:
-      "1": "Pëlqime të dhëna"
-      "2": "Pëlqime të marra"
-      "3": "Të preferuarat"
-      "4": "Tema"
-      "5": "Përgjigje"
-      "6": "Përgjigjet"
-      "7": "Përmendje"
-      "9": "Citime"
-      "11": "Redaktime"
-      "12": "Të dërguar"
-      "13": "Inbox"
-      "14": "Në pritje"
+      '1': "Pëlqime të dhëna"
+      '2': "Pëlqime të marra"
+      '3': "Të preferuarat"
+      '4': "Tema"
+      '5': "Përgjigje"
+      '6': "Përgjigjet"
+      '7': "Përmendje"
+      '9': "Citime"
+      '11': "Redaktime"
+      '12': "Të dërguar"
+      '13': "Inbox"
+      '14': "Në pritje"
     categories:
       all: "kategoritë"
       all_subcategories: "të gjitha"
@@ -1148,20 +1148,20 @@ sq:
         position: "tema %{current} nga %{total}"
       notifications:
         reasons:
-          "3_6": 'Ju do të merrni njoftime sepse jeni duke vëzhguar këtë kategori. '
-          "3_5": 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë automatikisht. '
-          "3_2": 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
-          "3_1": 'Ju do të njoftoheni duke qënë se ju jeni autori i kësaj teme. '
-          "3": 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
-          "2_8": 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë kategori. '
-          "2_4": 'Ju do të njoftoheni duke qënë se keni dërguar një përgjigje në këtë temë. '
-          "2_2": 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë. '
-          "2": 'Ju do të merrni njoftime sepse e keni <a href="/users/{{username}}/preferences">lexuar këtë temë</a>.'
-          "1_2": 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
-          "1": 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
-          "0_7": 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
-          "0_2": 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
-          "0": 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
+          '3_6': 'Ju do të merrni njoftime sepse jeni duke vëzhguar këtë kategori. '
+          '3_5': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë automatikisht. '
+          '3_2': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
+          '3_1': 'Ju do të njoftoheni duke qënë se ju jeni autori i kësaj teme. '
+          '3': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
+          '2_8': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë kategori. '
+          '2_4': 'Ju do të njoftoheni duke qënë se keni dërguar një përgjigje në këtë temë. '
+          '2_2': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë. '
+          '2': 'Ju do të merrni njoftime sepse e keni <a href="/users/{{username}}/preferences">lexuar këtë temë</a>.'
+          '1_2': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
+          '1': 'Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. '
+          '0_7': 'Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. '
+          '0_2': 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
+          '0': 'Ju nuk do të merrni asnjë njoftim për këtë temë. '
         watching_pm:
           title: "Në vëzhgim"
           description: "Ju do të njoftoheni për çdo përgjigje të re në këtë mesazh, dhe numri i përgjigjeve të reja do të shfaqet. "

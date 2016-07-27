@@ -19,8 +19,6 @@ fi:
   date:
     month_names: [null, Tammikuu, Helmikuu, Maaliskuu, Huhtikuu, Toukokuu, Kesäkuu, Heinäkuu, Elokuu, Syyskuu, Lokakuu, Marraskuu, Joulukuu]
     <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Ketjut"
   posts: "viestit"
@@ -103,9 +101,6 @@ fi:
       max_username_length_range: "Et voi asettaa maksimia minimin alle."
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla"
       s3_upload_bucket_is_required: "Et voi ottaa s3 latausta käyttöön, jos et ole määrittänyt 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston pitäisi olla csv- tai txt-muodossa."
   backup:
@@ -210,34 +205,61 @@ fi:
     until_posts:
       one: "ensimmäisen viestisi"
       other: "%{count} ensimmäistä viestiäsi"
-    'new-topic': |
+    new-topic: |
       Tervetuloa, tämä on %{site_name} &mdash; **kiitos uuden viestiketjun aloittamisesta!**
+
       - Kuulostaako otsikko mielenkiintoiselta, jos luet sen ääneen? Onko se hyvä kiteytys?
+
       - Ketä tämä ketju voisi kiinnostaa? Mikä on sen merkitys? Minkälaisia vastauksia odotat?
+
       - Sisällytä tekstiin usein käytettyjä sanoja, jotta muut voivat *löytää* sen. Yhdistääksesi ketjun muihin siihen liittyviin ketjuihin, valitse sille sopiva alue.
+
       Saadaksesi lisätietoa, [käy tutkimassa ohjeet](/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
-    'new-reply': |
+    new-reply: |
       Tervetuloa, tämä on %{site_name} &mdash; **kiitos keskusteluun osallistumisesta!**
+
       - Parantaako vastauksesi keskustelua jollain tapaa?
+
       - Ole ystävällinen muille käyttäjille.
+
       - Rakentava palaute on tervetullutta, mutta kritisoi *ideoita*, älä ihmisiä.
+
       Saadaksesi lisätietoa, [käy tutkimassa palstan säännöt](/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
     avatar: |
+      ### Miltä näyttäisi kuva käyttäjätilillesi?
+
       Olet luonut muutaman ketjun ja viestin, mutta profiilikuvasi ei ole yhtä uniikki kuin sinä -- se on pelkkä kirjain.
+
       Oletko ajatellut **[vierailla käyttäjäprofiilissasi](%{profile_path})** ja lisätä itsellesi kuvan?
+
       On helpompaa seurata keskusteluita ja löytää niistä kiinnostavia ihmisiä, kun kaikilla on uniikki profiilikuva!
     sequential_replies: |
+      ### Harkitse kaikkiin viesteihin vastaamista kerralla
+
       Usean peräkkäisen viestin sijaan, harkitse yhden vastauksen kirjoittamista, joka sisältää useita lainauksia aiemmista viesteistä tai @nimen mainintoja.
+
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen korostamalla osan lainattavan viestin tekstiä ja klikkaamalla näkyviin ilmestyvää <b>lainaa</b>-painiketta.
+
       On kaikille helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia, kuin paljon lyhyitä yksittäisiä vastauksia.
-    dominating_topic: |
+    dominating_topic: |+
+      ### Anna muidenkin osallistua keskusteluun
+
       Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
+
       Oletko varma, että annat myös muille riittävästi aikaa jakaa omia näkökulmiaan?
+
+
     too_many_replies: |
+      ### Olet saavuttanut rajoituksen uusien vastausten määrästä
+
       Olemme pahoillamme, mutta uusien käyttäjien viestien määrää rajoitetaan %{newuser_max_replies_per_topic} vastaukseen samassa ketjussa.
+
       Harkitse edellisten viestiesi muokkaamista uuden viestin kirjoittamisen sijaan tai muiden ketjujen lukemista.
     reviving_old_topic: |
+      ### Elvytä tämä ketju?
+
       Viimeinen vastaus tässä ketjussa on yli %{days} päivää vanha. Vastauksesi nostaa ketjun listauksen kärkeen ja lähettää ilmoituksen kaikille, jotka ovat aiemmin olleet mukana keskustelussa.
+
       Oletko varma, että haluat jatkaa tätä vanhaa keskustelua?
   activerecord:
     attributes:
@@ -250,7 +272,6 @@ fi:
       user_profile:
         bio_raw: "Minusta"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -271,6 +292,7 @@ fi:
           attributes:
             hex:
               invalid: "ei ole sallittu väri"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Minusta -kohta käyttäjäprofiilissasi on vielä täyttämättä,<a href='/users/%{username_lower}/preferences/about-me'>haluaisitko täyttää sen nyt?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ei ole täyttänyt vielä mitään Minusta -kohtaan profiilissaan</div>"
@@ -283,18 +305,26 @@ fi:
   assets_topic_body: "Tämä on pysyvä ketju, joka näkyy ainoastaan henkilökunnalle. Se on tarkoitettu sivuston käyttämien kuvien ja muiden tiedostojen tallentamiseen. Älä poista sitä!\n\n\nTässä ova ohjeet sen käyttämiseen:\n\n\n1. Vastaa tähän ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Lähetä viesti\n4. Klikkaa hiiren oikealla näppäimellä, tai klikkaa muokkaa-näppäintä muokataksesi viestiäsi, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nLisäksi, jos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `sallitut tiedostopäätteet` listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Tervetuloa Loungeen"
-    body: |
+    body: |2
+
       Onnittelut! :confetti_ball:
+
       Jos näet tämän ketjun, sinut on juuri ylennetty **Mestariksi** (luottamustaso 3).
+
       Voit nyt&hellip;
+
       * Muokata minkä hyvänsä ketjun otsikkoa
       * Vaihtaa minkä hyvänsä ketjun toiselle alueelle
       * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](http://en.wikipedia.org/wiki/Nofollow) on poistettu)
       * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
       * Piilottaa viestin yhdellä liputuksella
+
       Tässä on nykyinen [lista mestareista](/badges/3/leader). Muista käydä moikkaamassa.
+
       Kiitos, että olet tämän yhteisön arvokas jäsen!
+
       (Saadaksesi lisätietoja luottamustasoista, [katso tämä englanninkielinen ketju][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin. )
+
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Alueesta %{category}"
@@ -786,9 +816,7 @@ fi:
     post_undo_action_window_mins: "Kuinka monta minuuttia käyttäjällä on aikaa perua viestiin kohdistuva toimi (tykkäys, liputus, etc)."
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki uudet tilit, ennen uusien käyttäjien päästämistä sivustolle. VAROITUS: tämän asetuksen valitseminen poistaa pääsyn kaikilta jo olemassa olevilta henkilökuntaan kuulumattomilta käyttäjiltä."
     pending_users_reminder_delay: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta tuntia. Aseta -1, jos haluat kytkeä ilmoitukset pois päältä."
-    permanent_session_cookie: "Käytä pysyvää evästettä, joka säilyy vaikka selain suljetaan. Kun tämän kytkee pois päältä, ylläpidon voi olla viisasta kirjata kaikki käyttäjät ulos."
-    ga_tracking_code: "Google analytics (ga.js) seurantakoodi, esim.: UA-12345678-9; katso http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) verkkotunnus, esim.: osoite.fi; katso http://google.com/analytics"
+    maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
     ga_universal_tracking_code: "Google Universal analytics (analytics.js) seurantakoodi, esim.: UA-12345678-9; katso http://google.com/analytics"
     ga_universal_domain_name: "Google Universal analytics (analytics.js) verkkotunnus, esim.: osoite.fi; katso http://google.com/analytics"
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua API:a, jos webcrawleria ei tunnisteta. Katso https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
@@ -865,6 +893,7 @@ fi:
     enable_github_logins: "Ota käyttöön Gtihub autentikaatio, vaatimuksena github_client_id ja github_client_secret"
     github_client_id: "Client id Github autentikaatioon, rekisteröinti osoitteessa https://github.com/settings/applications"
     github_client_secret: "Client secret Github autentikaatioon, rekisteröinti osoitteessa https://github.com/settings/applications"
+    readonly_mode_during_backup: "Ota käyttöön vain luku -tila, kun otetaan varmuuskopiota"
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
     automatic_backups_enabled: "Tee automaattinen varmuuskopiointi, kuten tiheysasetus on määritelty"
@@ -1286,110 +1315,122 @@ fi:
     text_body_template: |
       Joku (mahdollisesti sinä) pyysi, ettei sähköposti-ilmoituksia sivustolta %{site_domain_name} enää lähetettäisi tähän osoitteeseen.
       Vahvista pyyntö klikkaamalla linkkiä:
+
       %{confirm_unsubscribe_link}
+
       Jos haluat jatkossakin saada sähköposti-ilmoituksia, voit jättää tämän viestin huomiotta.
   invite_mailer:
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut keskusteluun
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       keskustelupalstalla
+
       > %{site_title} -- %{site_description}
+
       Jos olet kiinnostunut, klikkaa alla olevaa linkkiä:
+
       %{invite_link}
+
       Tämän kutsun lähetti luotettu käyttäjä, joten voit vastata ketjuun välittömästi.
   custom_invite_mailer:
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut keskusteluun
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       keskustelupalstalla
+
       > %{site_title} -- %{site_description}
+
       Viesti käyttäjältä %{invitee_name}:
+
       %{user_custom_message}
+
       Jos olet kiinnostunut, klikkaa alla olevaa linkkiä:
+
       %{invite_link}
+
       Tämän kutsun lähetti luotettu käyttäjä, joten voit vastata ketjuun välittömästi.
   invite_forum_mailer:
     subject_template: "%{invitee_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut sivustolle
+
       > **%{site_title}**
       >
       > %{site_description}
+
       Jos kiinnostuit, klikkaa alla olevaa linkkiä:
+
       %{invite_link}
+
       Tämän kutsun lähetti luotettu käyttäjä, joten sinulle luodaan tili automaattisesti.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut sivustolle
+
       > **%{site_title}**
       >
       > %{site_description}
+
       Viesti käyttäjältä %{invitee_name}:
+
       %{user_custom_message}
+
       Jos kiinnostuit, klikkaa alla olevaa linkkiä:
+
       %{invite_link}
+
       Tämän kutsun lähetti luotettu käyttäjä, joten sinun ei tarvitse kirjautua sisään.
   invite_password_instructions:
     subject_template: "Aseta salasana %{site_name} -tunnuksellesi"
     text_body_template: |
       Kiitos, kun hyväksyit kutsun sivustolle %{site_name} -- tervetuloa!
+
       Avaa tämä linkki valitaksesi salasanan nyt:
       %{base_url}/users/password-reset/%{email_token}
+
       (jos yllä oleva linkki on vanhentunut, valitse "unohdin salasanani" kirjautuessasi sisään sähköpostiosoitteellasi)
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
-    text_body_template: |
-      Tämä on testisähköposti sivustolta
-      [**%{base_url}**][0]
-      Sähköpostin toimitus on monimutkaista. Tässä on muutama tärkeä asia, jotka kannattaa tarkistaa ensin:
-      - *Varmista*, että `ilmoitusten sähköpostiosoitteen` from: kenttä on asetettu oikein sivuston asetuksissa. **Sähköpostin validointi tapahtuu "from"-kentän sähköpostiosoitteen verkkotunnusta vastaan**.
-      - Selvitä, miten sähköpostiohjelmassasi saa näkyville *sähköpostin raakadatan*, jotta voit tutkia viestin tunnistetiedot. Gmailissa tämä tapahtuu "näytä kokonaan" valinnalla viestin oikeassa yläkulmassa olevasta valikosta.
-      - **TÄRKEÄÄ:** Onko palveluntarjoajallasi syötettynä reverse DNS kenttä verkkotunnuksille ja IP osoitteille, joista lähetät sähköpostia? [Kokeile Reverse PTR tietuetta][2] täällä. Jos palveluntarjoajasi ei tarjoa kunnollista reverse DNS pointer tietuetta, on hyvin epätodennäköistä, että mikään sähköpostisi menee perille.
-      - Onko verkkotunnuksesi [SPF tietue][8] oikein? [Kokeile SPF tietuetta][1] täällä. Huomaa, että TXT on oikea tietuetyyppi SPF tietueelle.
-      - Onko verkkotunnuksesi [DKIM tietue][3] oikein? Tämä parantaa merkittävästi sähköpostin toimitettavuutta. [Kokeile DKIM tietuetta][7] täällä.
-      - Jos käytät omaa sähköpostipalvelinta, tarkista että palvelimen IP osoite [ei ole millään sähköpostin mustalla listalla][4]. Tarkista myös, että se varmasti lähettää oikean muotoisen isäntänimen HELO viestissään, joka palauttaa oikean DNS tietueen. Jos näin ei ole, sähköposti hylätään monissa sähköpostipalveluissa.
-      - Suosittelemme vahvasti, että **lähetät testisähköpostin osoitteeseen [mail-tester.com][mt]** varmistaaksesi, että kaikki yllä mainittu toimii kunnolla.
-      (Helpoin tapa on luoda ilmainen tili [Sendgridiin][md], [SparkPostiin][sp][Mailguniin][mg] tai [Mailjetiin][mj], joiden ilmaiset palvelut riittävät hyvin pienen yhteisön käyttöön. Muista silti asettaa SPF ja DKIM tietueet DNS:ään!)
-      Toivottavasti tämä testisähköposti meni perille OK!
-      Onnea matkaan,
-      Ystäväsi [Discourselta](http://www.discourse.org)
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://sendgrid.com/
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse-versio, päivitys saatavilla"
     text_body_template: |
       Huraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
+
       Sinun versiosi: %{installed_version}
       Uusi versio: **%{new_version}**
+
       - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä](%{base_url}/admin/upgrade)** selaimessa
+
       - Tarkastele muutoksia [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master)
+
       - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) saadaksesi englanninkielisiä uutisia, keskustelua ja tukea Discourselle.
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] päivitys saatavilla"
     text_body_template: |
       Huraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
+
       Sinun versiosi: %{installed_version}
       Uusi versio: **%{new_version}**
+
       - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä](%{base_url}/admin/upgrade)** selaimessa
+
       - Tarkastele muutoksia [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master)
+
       - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) saadaksesi englanninkielisiä uutisia, keskustelua ja tukea Discourselle.
+
+      ### Julkaisutiedot
+
       %{notes}
   queued_posts_reminder:
     subject_template:
@@ -1397,6 +1438,7 @@ fi:
       other: "[%{site_name}] %{count} viestiä odottaa hyväksyntää"
     text_body_template: |
       Hei,
+
       Uusilta käyttäjiltä on hyväksyntää odottavia viestejä. [Niitä voi hyväksyä tai hylätä täällä](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Viestisi liputettiin **asiaan kuulumattomaksi**: se ei kuulu tähän ketjuun, jonka aiheen määrittelee aloitusviesti ja otsikko."
@@ -1415,74 +1457,145 @@ fi:
       subject_template: "Yhteisön piiloon liputtama viesti"
       text_body_template: |
         Hei,
+
         Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme sinulle, että viestisi on piilotettu.
+
         %{base_url}%{url}
+
         %{flag_reason}
+
         Usea sivuston käyttäjä on liputtanut viestin ennen sen piilottamista, joten harkitse miten voisit muokata sitä heidän antamansa palautteen pohjalta. **Voit muokata viestiäsi, kun %{edit_delay} minuuttia on kulunut, jonka jälkeen se tulee taas näkyviin.**
+
         Kuitenkin, jos viesti piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen – josta voi olla muita seuraumuksia, kuten tilisi hyllyttäminen.
+
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Tässä muutama nopea ohje, joiden avulla pääset alkuun:
+
+        ## Lukeminen
+
         Lukeaksesi lisää, **jatka vain sivun vierittämistä alaspäin!**
+
         Kun uusia vastauksia tai ketjuja luodaan, ne ilmestyvät näkyviin automaattisesti - sivua ei tarvitse ladata uudelleen.
+
+        ## Navigointi
+
         - Haku, käyttäjäprofiilisi ja palstan <kbd>☰</kbd> valikko avautuvat klikkaamalla **oikeassa yläkulmassa olevia painikkeita**.
+
         - Ketjun otsikkoa klikkaamalla pääset aina ketjun **uusimpaan lukemattomaan viestiin**. Hypätäksesi ketjun alkuun tai loppuun, klikkaa sen sijaan uusinta toimintaa tai viestien lukumäärää.
+
         <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
         - Kun olet lukemassa viestiketjua, klikkaa aikajanaa oikealla siirtyäksesi ylös, alas ja edelliseen lukukohtaasi ketjussa. Pienemmällä ruudulla voit laajentaa navigointipainikkeet ruudun oikeasta alalaidasta.
+
         <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
         Näppäile <kbd>?</kbd> tuodaksesi esiin listan näppäimistöoikoteistä.
+
+        ## Vastaaminen
+
         Lisätäksesi lainauksen, valitse ensin teksti jonka haluat lainata ja paina sitten mitä tahansa <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Vastaa-näppäintä avataksesi tekstieditorin. Toista lisätäksesi lisää lainauksia.
+
         <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
         Voit jatkaa lukemista samalla kun kirjoitat vastaustasi ja tallennamme jatkuvasti keskeneräiset vedokset.
+
         Toinen käyttäjä saa ilmoituksen viestistäsi, jos mainitset hänet viestissäsi. Aloita kirjoittamaan `@` ja voit valita käyttäjänimen listasta.
+
         <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
         [Emojia](http://www.emoji.codes/) voit lisätä nimeltä kirjoittamalla `:`  tai voit käyttä perinteisiä hymiöitä kuten `;)`
+
         <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
         Luodaksesi esikatselun linkistä, liitä se omalle rivilleen:
+
         <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
         Vastauksen muotoilussa voit käyttää yksinkertaisia HTML-, BBCode- tai [Markdown](http://commonmark.org/help/)-komentoja:
+
         Tämä on **lihavoitu**.
         Tämä on <b>lihavoitu</b>.
         Tämä on [b]lihavoitu[/b].
+
         Lisää muotoiluvinkkejä saat [kokeilemalla kymmenen minuuttia kestävää englanninkielistä tutoriaalia!](http://commonmark.org/help/tutorial/)
+
+        ## Toiminnot
+
         Jokaisen viestin alalaidassa on joukko painikkeita:
+
         <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
         - Antaaksesi kirjoittajan tietää, että arvostit lukemaasi viestiä, käytä **tykkää**-painiketta. Laitetaan hyvä kiertämään!
+
         - Nappaa tekstilinkki mihin tahansa ketjuun tai viestiin **linkki**-painikkeella
+
         - Klikkaa <kbd>&hellip;</kbd>-painiketta avataksesi lisää toimintoja. **Lippu** antaa mahdollisuuden kertoa ongelmasta yksityisesti joko viestin kirjoittajalle tai [henkilökunnalle](%{base_url}/about). **Kirjanmerkin** avulla löydät viestin myöhemmin käyttäjäprofiilistasi.
+
+
+        ## Ilmoitukset
+
         Kun joku vastaa viestiisi, lainaa viestiäsi tai mainitsee `@käyttäjänimesi`, ilmestyy sivun oikeaan yläkulmaan numero. Sieltä pääset tarkastelemaan **ilmoituksiasi**.
+
         <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
         Eikä tarvitse murehtia siitä, että et huomaisi uusia vastauksia. Saat sähköpostin uusista ilmoituksista jos et ole paikalla, kun ne saapuvat.
+
+        ## Omat asetukset
+
         - Oletuksena kaikki alle kaksi päivää vanhat keskustelut ovat uusia.
+
         - Kaikkia keskusteluita **joissa olet ollut mukana** (luomalla, vastaamalla tai lukemalla pitkään) seurataan automaattisesti.
+
         Näet uusien ja lukemattomien lukumäärän ilmaisimet näiden ketjujen yhteydessä.
+
         <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
         Voit vaihtaa minkä tahansa viestiketjun ilmoitusasetuksia ketjun oikeassa- ja alalaidassa olevilla painikkeella.
+
         <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
         Voit myös asettaa ilmoitusasetuksen aluekohtaisesti, jos haluat hiljentää tai seurata jokaista ketjua tietyllä keskustelualueella.
+
         Voit muuttaa näitä asetuksia [käyttäjäasetuksissasi](%{base_url}/my/preferences).
+
+        ## Yhteisön luottamus
+
         Sitä mukaa kun osallistut palstan keskusteluihin, keräät yhteisön luottamusta ja uudelle käyttäjälle asetetut rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia, joiden avulla voit auttaa yhteisön ylläpitämisessä.
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
         Kiitos liittymisestä sivustolle %{site_name}, ja tervetuloa!
+
         %{new_user_tips}
+
         Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
+
         Toivottavasti viihdyt!
+
         (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     welcome_invite:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
         Kiitos kutsun hyväksymisestä sivustolle %{site_name} -- tervetuloa!
+
         Olemme luoneet sinulle uuden käyttäjätunnuksen: **%{username}** ja olet nyt kirjautuneena sisään. Voit vaihtaa nimeäsi [käyttäjäprofiilistasi][prefs].
+
         Kirjautuaksesi uudestaan sisään myöhemmin:
+
         1. Käytä aina **samaa sähköpostiosoitetta, jonne vastaanotit alkuperäisen kutsun**. Muuten emme voi tietää, että olet sinä!
+
         2. Luo salasana [käyttäjäprofiilissasi][prefs], ja käytä sitä kirjautumiseen.
+
         %{new_user_tips}
+
         Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
+
         Toivottavasti viihdyt!
+
         (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
+
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
@@ -1491,7 +1604,9 @@ fi:
       subject_template: "Varmmuskopiointi epäonnistui"
       text_body_template: |
         Varmuuskopiointi epäonnistui.
+
         Tässä on loki:
+
         ```
         %{logs}
         ```
@@ -1502,7 +1617,9 @@ fi:
       subject_template: "Palauttaminen epäonnistui"
       text_body_template: |
         Palauttaminen epäonnistui.
+
         Tässä on loki:
+
         ```
         %{logs}
         ```
@@ -1513,7 +1630,9 @@ fi:
       subject_template: "Massakutsun käsittelyssä tapahtui virhe"
       text_body_template: |
         Massakutsutiedostosi on käsitelty, %{sent} kutsua lähetettiin joista %{failed} virhe(ttä).
+
         Tässä on loki:
+
         ```
         %{logs}
         ```
@@ -1521,7 +1640,9 @@ fi:
       subject_template: "Datan vieminen on tehty"
       text_body_template: |
         Datan vienti onnistui.
+
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
         Linkki tiedostoon on voimassa 48 tuntia.
     csv_export_failed:
       subject_template: "Datan vienti epäonnistui"
@@ -1530,150 +1651,195 @@ fi:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Riittämätön luottamustaso"
       text_body_template: |
         Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+
         Tilisi luottamustaso ei ole riittävä, jotta saisit lähettää uusia ketjuja tähän sähköpostiosoitteeseen. Jos uskot, että tämä johtuu virheestä, ota yhteyttä henkilökuntaan.
     email_reject_user_not_found:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Käyttäjää ei löytynyt"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Vastauksesi lähetettiin tuntemattomasta sähköpostiosoitteesta. Yritä lähettää viesti toisesta osoitteesta, tai ota yhteyttä henkilökuntaan.
     email_reject_screened_email:
       subject_template: "[%{site_name}] Sähköpostiongelma-- Estetty sähköpostiosoite"
-      text_body_template: |
+      text_body_template: |+
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Viestisi lähetettiin estetystä sähköpostiosoitteesta. Yritä lähettää viesti toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
+
     email_reject_inactive_user:
       subject_template: "[%{site_name}]  Sähköpostiongelma -- Aktivoimaton käyttäjä"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Käyttäjätiliä tällä sähköpostiosoitteella ei ole aktivoitu. Aktivoi käyttäjätili ennen sähköpostien lähettämistä.
     email_reject_blocked_user:
       subject_template: "[%{site_name}] Sähköpostiongelma-- Estetty käyttäjä"
       text_body_template: |
         Pahoittelemme, mutta sähköpostiviesetisi tänne  %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Käyttäjätili tällä sähköpostiosoitteella on estetty.
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Käyttäjä ei täsmää"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
         Viestisi ei saapunut siitä sähköpostiosoitteesta josta odotimme, joten emme voineet olla varmoja lähettäjästä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_no_account:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon tili"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
         Sähköpostiosoitteesi ei vastaa yhtäkään käyttäjistä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Ei sisältöä"
-      text_body_template: |
+      text_body_template: |+
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Emme löytäneet sähköpostiviestistäsi sisältöä.
+
         Jos saat tämän viestin ja viestisi _sisälsi_ sisältöä, yritä uudestaan yksinkertaisemmalla muotoilulla.
+
     email_reject_parsing:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tunnistamaton sisältö"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Emme tunnistaneet sähköpostiviestistäsi sisältöä. **Varmista, että kirjoitit viestisi sähköpostiviestin alkuun** - emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Pääsy estetty"
       text_body_template: |
         Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+
         Tilisi luottamustaso ei ole riittävä, jotta saisit luoda uusia ketjuja tälle alueelle. Jos uskot, että tämä johtuu virheestä, ota yhteyttä henkilökuntaan.
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Pääsy estetty"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Alueelle jolle lähetit viestin voivat kirjoittaa ne, joilla on käypä käyttäjätunnus ja sähköpostiosoite. Jos uskot tämän olevan virhe, ota yhteyttä henkilökuntaan.
     email_reject_invalid_post:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Lähetysvirhe"
       text_body_template: |
         Pahoittelemme: sähköpostiviestisi kohteeseen %{destination} (titled %{former_title}) ei toiminut odotetusti.
+
         Mahdollisia syitä ovat muuan muassa: ei-tuettu muotoilu, liian suuri viesti, liian pieni viesti. Ole hyvä ja yritä uudelleen; voit myös lähettää viestisi sivuston kautta, jos tämä ongelma ei vaikuta poistuvan.
     email_reject_invalid_post_specified:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Lähetysvirhe"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+
+        Syy:
+
         %{post_error}
+
         Jos voit korjata ongelman, yritä uudelleen.
     email_reject_rate_limit_specified:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Rajat"
       text_body_template: |
         Pahoittelemme, mutta sähköpostiviesetisi tänne  %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Syy: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Kielletty viestitoiminto"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Toimintoa ei tunnistettu. Yritä uudelleen tai lähetä viesti nettisivun kautta, jos ongelma jatkuu.
     email_reject_reply_key:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon vastausavain"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
         Sähköpostiviestin vastaustunniste, engl. 'reply key', ei ole kelvollinen, minkä vuoksi ei tiedetä, mihin asiaan viestisi oli tarkoitus vastata. Ota yhteyttä henkilökuntaan.
     email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tuntematon Vastaanottaja: -osoite"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
+
         Viestisi kohdesähköpostiosoitteet olivat tuntemattomia. Ole hyvä ja varmistu, että lähetit viestin oikeaan osoitteeseen.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Ketjua ei löytynyt"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Ketjua johon yritit kirjoittaa ei ole enää olemassa -- ehkä se poistettiin? Jos uskot tämän olevan virhe, ota yhteyttä henkilökuntaan.
     email_reject_topic_closed:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Suljettu ketju"
       text_body_template: |
         Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+
         Ketju, johon yritit vastata on tällä hetkellä suljettu, eikä siihen voi vastata. Jos uskot, että on tapahtunut virhe, ota yhteyttä palstan henkilökuntaan.
     email_reject_auto_generated:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Automaattivastaus"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
+
         Järjestelmä havaitsi viestisi olevan tietokoneen automaattisesti luoma, eikä ihmisen kirjoittama, eikä sitä voitu siksi hyväksyä. Jos uskot tämän olevan virhe, ota yhteyttä henkilökuntaan.
     email_error_notification:
       subject_template: "[%{site_name}] Sähköpostiongelma -- POP-autentikoinnin virhe"
       text_body_template: |
         Sähköpostin pollauksessa POP-serveriltä tapahtui autentikointivirhe.
+
         Varmista, että olet konfiguroinut POP-tunnukset oikein [sivuston asetuksissa](%{base_url}/admin/site_settings/category/email).
+
         Jos POP-sähköpostitilille on nettikäyttöliittymä, voit joutua kirjautumaan sinne ja tarkistamaan asetukset.
     too_many_spam_flags:
       subject_template: "Uusi tili on estetty"
       text_body_template: |
         Hei,
+
         Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että viestejäsi on piilotettu yhteisön liputtamisen johdosta.
+
         Varotoimena uudelta tilitäsi on estetty uusien ketjujen ja viestien luonti, kunnes henkilökunnan jäsen tarkastaa tilisi. Pahoittelemme tästä aiheutuvaa vaivaa.
+
         Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Uusi tili on estetty"
       text_body_template: |
         Hei,
+
         Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että viestejäsi on piilotettu yhteisön liputtamisen johdosta.
+
         Varotoimena uudelta tilitäsi on estetty uusien ketjujen ja viestien luonti, kunnes henkilökunnan jäsen tarkastaa tilisi. Pahoittelemme tästä aiheutuvaa vaivaa.
+
         Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     blocked_by_staff:
       subject_template: "Tili on väliaikaisesti estetty"
       text_body_template: |
         Hei,
+
         Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on varotoimenpiteenä väliaikaisesti estetty.
+
         Voit jatkaa lukemista, mutta tilitäsi on estetty uusien ketjujen ja viestien luonti, kunnes [henkilökunnan jäsen](%{base_url}/about)  tarkastaa viimeisimmät viestisi. Pahoittelemme tästä aiheutuvaa vaivaa.
+
         Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     user_automatically_blocked:
       subject_template: "Uusi käyttäjä %{username} on estetty yhteisön liputusten perusteella"
       text_body_template: |
         Tämä on automaattinen viesti.
+
         Uusi käyttäjätili [%{username}](%{user_url}) estettiin, koska monet liputtivat käyttäjän %{username} viestin tai viestejä.
+
         [Tarkastele liputettuja viestejä](%{base_url}/admin/flags). Jos käyttäjä %{username} estettiin aiheettomasti, klikkaa poista esto -painiketta [tähän käyttäjään liittyvällä ylläpitäjän sivulla](%{user_url}).
+
         Kynnysarvoa voi muuttaa säätämällä asetuksen `block_new_user` arvoa sivuston asetuksissa.
     spam_post_blocked:
       subject_template: "Uuden käyttäjän %{username} viestit on estetty toistuvien linkkien vuoksi"
       text_body_template: |
         Tämä on automaattisesti luotu viesti.
+
         Uusi käyttäjä [%{username}](%{user_url}) yritti luoda useita viestejä, jotka sisälsivät linkkejä osoitteeseen %{domains}, mutta jotka estettiin roskapostin välttämiseksi. Käyttäjä voi edelleen luoda viesteijä, joissa ei ole linkkejä näihin osoitteisiin %{domains}.
+
         [Tarkasta käyttäjätili](%{user_url}).
+
         Tätä toimintoa voi muokata vaihtamalla asetuksia `newuser_spam_host_threshold`  `white_listed_spam_host_domains` sivuston asetuksissa.
     unblocked:
       subject_template: "Tili avattu"
       text_body_template: |
         Hei,
+
         Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on avattu henkilökunnan tarkastettua tilanteen.
+
         Voit jälleen luoda uusia viestejä ja ketjuja. Kiitos kärsivällisyydestänne.
     pending_users_reminder:
       subject_template:
@@ -1681,6 +1847,7 @@ fi:
         other: "%{count} käyttäjää odottaa hyväksymistä"
       text_body_template: |
         Uusia käyttäjiä odottaa hyväksymistä (tai hylkäämistä) ja pääsyä palstalle.
+
         [Tarkasta hakemukset admin-alueella](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Linkattujen kuvien lataaminen on otettu pois käytöstä"
@@ -1689,6 +1856,7 @@ fi:
       subject_template: "Ongelmia on löytynyt"
       text_body_template: |
         Ylläpitäjän hallintapaneelissa on raportoitu virheistä.
+
         [Tarkastele ja korjaa ne](%{base_url}/admin).
   unsubscribe_link: |
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
@@ -1696,6 +1864,7 @@ fi:
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
     Saat näitä viestejä, koska olet postituslistatilassa.
+
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   subject_re: "VS:"
   subject_pm: "[YV]"
@@ -1716,102 +1885,142 @@ fi:
     posted_by: "Käyttäjältä %{username} %{post_date}"
     invited_to_private_message_body: |
       %{username} kutsui sinut viestiketjuun
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       sivustolla
+
       > %{site_title} -- %{site_description}
     invited_to_topic_body: |
       %{username} kutsui sinut keskusteluun
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       sivustolla
+
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} kutsui sinut viestiin '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       subject_template: "[%{site_name}] %{username} kutsui sinut yksityiseen keskusteluun '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{respond_instructions}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} kutsui sinut ketjuun '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{respond_instructions}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_replied_pm:
       subject_template: "[%{site_name}] [YV] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_linked:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_watching_first_post:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [YV] %{topic_title}"
       text_body_template: |
         %{header_instructions}
+
         %{message}
+
         %{context}
+
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
+
         %{message}
     digest:
       why: "Lyhyt kooste siitä mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
@@ -1838,64 +2047,86 @@ fi:
       subject_template: "[%{site_name}] Salasanan uusiminen"
       text_body_template: |
         Salasanasi uusimista pyydettiin sivustolla [%{site_name}](%{base_url}).
+
         Jos et halua muuttaa salasanaasi, voi jättää tämän viestin huomiotta.
+
         Klikkaa alla olevaa linkkiä vaihtaaksesi salasanasi:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Syötä salasana"
       text_body_template: |
         Joku on pyytänyt lisäämään salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden avulla (Google, Facebook, etc) joissa on käytössä tämä sama sähköpostiosoite.
+
         Jos et ole pyytänyt salasanan lisäämistä, voit jättää viestin huomiotta.
+
         Klikkaa tätä linkkiä valitaksesi salasanan:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Kirjautuminen"
       text_body_template: |
         Joku pyysi sinua kirjautumaan tilillesi sivustolla [%{site_name}](%{base_url}).
+
         Jos et ole pyynnön takana, voit huoletta jättää tämän viestin huomiotta.
+
         Klikkaa tätä linkkiä kirjautuaksesi:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Uusi käyttäjätilisi"
       text_body_template: |
         Sinulle luotiin uusi käyttäjätunnus sivustolla %{site_name}
+
         Klikkaa seuraavaa linkkiä asettaaksesi salasanan uudelle tunnuksellesi:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       subject_template: "[%{site_name}] Vahvista uusi sähköpostiosoite"
       text_body_template: |
         Vahvista uusi sähköpostiosoite sivustolle %{site_name} klikkaamalla alla olevaa linkkiä:
+
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{site_name}] Vahvista nykyinen sähköpostiosoiteesi"
-      text_body_template: |
+      text_body_template: |+
         Ennen kuin voit vaihtaa sähköpostiosoitteesti, meidän täytyy varmistaa, että hallinnoit nykyistä sähköpostiosoitetta. Kun olet suorittanut tämän, varmistamme vielä uuden sähköpostiosoitteenkin.
+
         Vahvista sähköpostiosoitteesti sivustolle %{site_name} klikkaamalla linkkiä:
+
         %{base_url}/users/authorize-email/%{email_token}
+
     notify_old_email:
       subject_template: "[%{site_name}] Sähköpostiosoitteesi on vaihdettu"
       text_body_template: |
         Tämä on automaattinen vahvistus siitä, että sähköpostiosoitteesi sivustolle %{site_name} on vaihdettu. Jos on tapahtunut virhe, ota yhteyttä sivuston ylläpitäjään.
+
         Sähköpostiosoitteeksesi on vaihdettu:
+
         %{new_email}
     signup_after_approval:
       subject_template: "Sinut on hyväksytty sivustolle %{site_name}!"
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
+
         Henkilökunnan edustaja on hyväksynyt tilisi sivustolla %{site_name}.
+
         Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisi:
         %{base_url}/users/activate-account/%{email_token}
+
         Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
+
         %{new_user_tips}
+
         Me uskomme [sivistyneeseen kanssakäyntiin](%{base_url}/guidelines).
+
         Toivottavasti viihdyt!
+
         (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     signup:
       subject_template: "[%{site_name}] Vahvista uusi käyttäjätilisi"
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
+
         Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisi:
         %{base_url}/users/activate-account/%{email_token}
+
         Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
   page_not_found:
     title: "Hups! Sivua ei ole tai se on yksityinen."
@@ -1906,6 +2137,7 @@ fi:
     search_google: "Google"
   login_required:
     welcome_message: |
+      #[Tervetuloa sivustolle %{title}](#welcome)
       Käyttäjätunnus tarvitaan. Ole hyvä ja luo tunnus tai kirjaudu sisään jatkaaksesi.
   terms_of_service:
     title: "Käyttöehdot"
@@ -1960,55 +2192,108 @@ fi:
     title: "UKK/Ohjeet"
     body: |
       <a name="civilized"></a>
+
+      ## [Tämä on sivistynyt paikka julkiselle keskustelulle](#civilized)
+
       Kohtele tätä palstaa kuin yleistä puistoa. Me olemme yhteisöpalvelu &mdash; keskusteluissa voi jakaa taitoja, tietoa ja intohimoja.
+
       Nämä ohjeet eivät ole kaiken kattavat vaan pikemminkin suuntaviivat terveen järjen käyttöön pohjautuvassa yhteisössä. Noudattamalla niitä tämä palsta pysyy siistinä ja toimivana alustana sivistyneelle julkiselle vuorovaikutukselle.
+
       <a name="improve"></a>
+
+      ## [Edistä keskustelua](#improve)
+
       Autat tekemään tästä hyvän keskustelupalstan pyrkimällä aina edistämään keskustelua, edes hieman. Jos et ole ihan varma siitä, tuoko viestisi lisäarvoa keskusteluun, mieti hetki mitä haluat sanoa ja yritä uudelleen hieman myöhemmin.
+
       Aiheet, joista täällä keskustellaan ovat meille tärkeitä, ja edellytämme sinun käyttäytyvän niin kuin ne olisivat sitä myös sinulle. Kunnioita keskusteluita ja keskustelijoita, vaikka olisit eri mieltä jostain.
+
       Yksi edistävä tapa on tutustua palstalla käynnissä olevaan keskusteluun. Vietä hetki selailemalla palstaa ennen kuin lähetät viestin tai aloitat uuden ketjun, niin sinulla on parempi mahdollisuus löytää samanhenkistä seuraa.
+
       <a name="agreeable"></a>
+
+      ## [Ole rakentava, vaikka olisit eri mieltä](#agreeable)
+
       Saatat haluta esittää eriävän mielipiteen johonkin liittyen. Se on sallittua. Muista kuitenkin _kritisoida esitettyjä ajatuksia, älä niiden esittäjiä_. Vältä:
+
       * nimittelyä.
       * henkilökohtaisuuksiin menemistä.
       * toisen käyttäjän viestin sävyn arviointia: keskity sisältöön.
       * poteroitumista.
+
       Tarjoa sen sijaan perusteltuja, keskustelua edistäviä vasta-argumentteja.
+
       <a name="participate"></a>
+
+      ## [Tekemisilläsi on väliä](#participate)
+
       Keskustelut vaikuttavat palstan yleismielialaan. Vaikutat parhaiten yhteisön tulevaisuuteen osallistumalla niihin keskusteluihin, jotka tekevät tästä kiintoisan paikan &mdash; ja välttämällä niitä, joilla on päinvastainen vaikutus.
+
       Discoursen työkalut mahdollistavat sen, että yhteisö kollektiivisesti tunnistaa parhaan (ja huonoimman) sisällön: suosikit, kirjanmerkit, tykkäykset, liputukset, vastaukset, muokkaukset ja niin edelleen. Käyttämällä niitä parannat omaa käyttäjäkokemustasi ja samalla kaikkien muidenkin.
+
       Yritetään jättää puisto parempaan kuntoon kuin se oli tullessa.
+
       <a name="flag-problems"></a>
+
+      ## [Jos havaitset ongelman, liputa se](#flag-problems)
+
       Valvojilla on erityisasema; he ovat vastuussa palstasta. Mutta niin olet sinäkin. Avullasi valvojat voivat olla keskustelun ohjaajia eivätkä talonmiehiä ja poliiseja.
+
       Jos havaitset huonoa käytöstä, älä vastaa siihen. Huomiointi vain yllyttää sitä, kuluttaa voimiasi ja tuhlaa kaikkien aikaa. _Liputa se_. Jos tarpeeksi moni liputtaa, asiaan puututaan, joko palstan automaation tai valvojien toimesta.
+
       Yhteisömme ylläpitämiseksi valvojat pidättävät oikeuden poistaa sisältöä tai käyttäjätunnuksia harkintansa mukaan kaikissa tilanteissa. Valvojat eivät ennakkosensuroi viestejä millään tapaa; valvojat tai ylläpito ei ota vastuuta mistään, mitä yhteisö julkaisee.
+
       <a name="be-civil"></a>
+
+      ## [Ole aina kohtelias](#be-civil)
+
       Mikään ei häiritse sivistynyttä keskustelua niin kuin töykeys:
+
       * Ole kohtelias. Älä kirjoita mitään, minkä voi järkevä ihminen tulkita hyökkääväksi, loukkaavaksi tai vihapuheeksi.
       * Pidä palsta siistinä. Älä levitä säädyttömyyksiä tai seksuaalista materiaalia.
       * Kunnioita kanssaihmisiä. Älä kiusaa tai ärsytä ketään, esiinny toisena tai kerro heidän yksityisyytensä piiriin kuuluvista asioista.
       * Kunnioita palstaa. Älä levitä roskapostia tai muullakaan tavoin tärvele sitä.
+
       Nämä eivät ole tarkkarajaiset säännöt &mdash; vältä kaikkea kiellettyihin asioihin edes _viittaavaa_. Jos olet epävarma, kysy itseltäsi miltä tuntuisi, jos viestisi olisi lainattuna aamun sanomalehden kanteen.
+
       Tämä on julkinen palsta ja hakukoneet johdattavat näihin keskusteluihin. Kiinnitä huomiota kielenkäyttöön ja linkkien ja kuvien tietoturvaan for family and friends.
+
       <a name="keep-tidy"></a>
+
+      ## [Ylläpidä järjestystä](#keep-tidy)
+
       Keskity laittamaan viestit oikeisiin paikkoihin, jotta voimme keskittyä enemmän keskustelemiseen ja vähemmän jälkien siivoamiseen. Joten:
+
       * älä avaa ketjua väärälle alueelle.
       * älä kirjoita samaa asiaa moniin ketjuihin.
       * älä kirjoita sisällöttömiä viestejä.
       * älä johdata ketjua sivuraiteille.
       * älä allekirjoita viestejä &mdash; lähetyttyihin viesteihin liitetään käyttäjätiedot joka tapauksessa.
+
       Sen sijaan, että kirjoittaisit “+1” or “Samaa mieltä”, käytä tykkäysnappia. Olemassa olevan ketjun sivuraiteille johdattamisen sijaan käytä Vastaa aihetta sivuavassa ketjussa -toimintoa.
+
       <a name="stealing"></a>
+
+      ## [Lähetä vain omia tuotoksiasi](#stealing)
+
       Älä julkaise mitään toisen omistamaa digitaalista sisältöä ilman lupaa. Älä julkaise kertomuksia tekijänoikeusrikkomuksista tai jaa linkkejä tai keinoja toisen tahon immateriaalioikeuksien (ohjelmistot, videot, äänitteet, kuvat) rikkomiseksi, tai mitään muutakaan lainvastaista.
+
       <a name="power"></a>
+
+      ## [Sinä pidät pyörät pyörimässä](#power)
+
       Tätä sivustoa pyörittää [avulias palstahenkilökunta](/about) sekä *me kaikki*, yhteisö. Jos sinulla on kysyttävää palstan toiminnasta tai ehdotuksia sen suhteen, avaa uusi ketju [sivuston palautealueelle](/c/site-feedback) niin käydään asiaa yhdessä läpi! Jos kyseessä on kriittinen ja kiireellinen ongelma, jota ei voida käsitellä palauteosion tai liputuksen kautta, ota yhteyttä [henkiökunnan sivun](/about) kautta.
+
       <a name="tos"></a>
+
+      ## [Käyttöehdot](#tos)
+
       Kyllä, lakikieli on tylsää, mutta meidän on suojeltava itseämme &ndash; ja siinä sivussa sinua ja sinun tietojasi &ndash; epäsuotuisia tahoja vastaan. Palstalla on [käyttöehdot](/tos), jotka säätelevät sinun (ja meidän) toimintaa and oikeuksia sisältöön, yksityisyyteen ja lakeihin liittyen. Käyttääksesi palvelua sinun on hyväksyttävä [käyttöehdot](/tos).
   tos_topic:
     title: "Käyttöehdot"
   privacy_topic:
     title: "Rekisteriseloste"
   static:
-    search_help: |
+    search_help: |+
       <h3>Vinkkejä</h3>
       <p>
       <ul>
@@ -2036,6 +2321,7 @@ fi:
       <li><code>rainbows category:"parks and gardens" in:bookmarks</code> etsii alueelta "parks and gardens" kirjanmerkkeihin lisäämiäsi ketjuja, joissa esiintyy sana "rainbows".</li>
       </ul>
       </p>
+
   badges:
     editor:
       name: Muokkaaja
@@ -2105,13 +2391,15 @@ fi:
     great_topic:
       name: Loistava ketju
       description: Ketjunavaus sai 50 tykkäystä
-      long_description: |
+      long_description: |+
         Tämä arvomerkki myönnetään, kun luomasi ketju saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jossa vaihdetuista ajatuksista yhteisö nautti!
+
     nice_share:
       name: Hyvä jako
       description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
-      long_description: |
+      long_description: |+
         Tämä arvomerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
+
     good_share:
       name: Erinomainen jako
       description: Jakoi viestin, ja linkin kautta saapui 300 vierailijaa
@@ -2267,3 +2555,8 @@ fi:
     staff_tag_disallowed: "Tunnisteen \"%{tag}\" voi lisätä vain henkilökunta"
     staff_tag_remove_disallowed: "Tunnisteen \"%{tag}\" voi poistaa vain henkilökunta"
   rss_by_tag: "Ketjut tunnisteella %{tag}"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

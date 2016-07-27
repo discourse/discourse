@@ -10,12 +10,6 @@ ro:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats 
-  date:
-    month_names: []
-    <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Discuții"
   posts: "postări"
@@ -68,9 +62,6 @@ ro:
       body: 'Au apărut probleme cu următoarele câmpuri:'
     embed:
       load_from_remote: "S-a semnalat o eroare la încarcarea postării."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Fișierul încărcat ar trebuii să fie de formatul csv sau txt."
   backup:
@@ -139,20 +130,33 @@ ro:
       one: "1 mesaj"
       few: "%{count} postări"
       other: "%{count} postări"
-    'new-reply': |
+    new-reply: |
       Bine ai venit la %{site_name} &mdash; **Mulțumim pentru contribuție!**
+
       - Răspunsul tău îmbunatațește discuția în vreun fel?
+
       - Fii amabil cu membri comunității.
+
       - Critica constructivă e binevenită, criticați *ideea*, nu oamenii.
+
       Pentru detalii, [verifică regulile comune](/reguli). Acest panel va apărea doar pentru prima %{education_posts_text}.
     dominating_topic: |
+      ### Permite și altora să se alăture la conversație
+
       Această discuție este importantă pentru tine și &ndash; Ai postat mai mult de %{percent}%  din răspunsuri aici.
+
       Ești sigur că dai destul timp și altora să-și exprime punctul de vedere?
     too_many_replies: |
+      ### Ați atins limita maximă de răspunsuri pentru aceasta discuție
+
       Ne pare rău, dar utilizatorii noi au un număr limitat de %{newuser_max_replies_per_topic} într-o discuție.
+
       Nu adăugați un nou răspuns, încercați mai bine să editați un răspuns precedent, sau să vizitați o altă discuție.
     reviving_old_topic: |
+      ### Reînvie această discuție?
+
       Ultimul răspuns la această discuție a fost dat acum %{days} de zile. Răspunsul tăuva merge în capătul listei și toată lumea ce a fost implicată în discuție va fi notificată.
+
       Ești sigur că dorești să continui această conversație?
   activerecord:
     attributes:
@@ -163,7 +167,6 @@ ro:
       user_profile:
         bio_raw: "Despre Mine"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -182,6 +185,7 @@ ro:
           attributes:
             hex:
               invalid: "nu este o culoare validă"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='profil-lipsa'>câmpul despre mine din profilul dvs este gol momentan, <a href='/useri/%{username_lower}/preferințe/despre-mine'>Doriți să-l completați?</a></div>"
     no_info_other: "<div class='profil-lipsă'>%{name} nu a introdus înca nimic în câmpul despre mine din profil</div>"
@@ -193,18 +197,27 @@ ro:
   assets_topic_body: "Aceasta e o discuție permanentă, vizibilă doar pentru admini și personal, pentru stocat imaginile folosite la designul forumului. Vă rugăm nu ștergeți!\n\n\nIată cum:\n\n\n1. Răspunde la această discuție.\n2. Încărcați toate imaginile dorite pentru logouri , iconițe și așa mai departe. (Folosiți iconița de încarcare din bara editorului de discuție, sau trageți și aruncați sau lipiți imaginile.)\n3. Aprobați răspunsul pentru a-l posta.\n4. Click dreapta pe imaginile din noua postare pt a ajunge la sursa imaginii încărcate, sau click icoana de editare pt a edita postarea și a obține calea la imagini. Copiază adrsa imaginii.\n5. Lipiți imaginile acelea în [Setări principale](/admin/site_settings/category/required).\n\n\n și dacă doriți să activați diferite feluri de fișiere încărcate, editați `extensii_autorizate` în secțiunea [setări fișiere](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bine ați venit în Lounge"
-    body: |
+    body: |2
+
       Congratulations! :confetti_ball:
+
       Dacă poți vedea această discuție, ai fost promovat recent la [nivel de încredere 3 (lider)][încredere].
+
       > Liderii sunt cei mai activi contribuitori. Ei dau un exemplu pozitiv comunității prin acțiunile și postările lor.
+
       Acum poți să  &hellip;
+
       * Editează titlul oricărei discuții
       * Schimbă categoria oricărei discuții
       * Toate adresele tale sunt urmărite ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) este dezactivat)
       * Accesul permis la secțiunea privată din Lounge unde au acces numai utilizatorii de nivel 3 sau mai mare
+
       Aici este  [lista utilizatorilor ce au ajuns la nivelul de încredere 3](/insigne/3/lider). Salută-i!
+
       Mulțumim că ești o parte importantă a acestei comunități!
+
       (Pentru mai multe informații despre nivelele de încredere, [vedeți discuția aceasta][încredere]. Luați aminte că doar membrii ce împlinesc criteriile rămân la nivelul de încredere 3. )
+
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Despre categoria %{category}"
@@ -547,8 +560,6 @@ ro:
     notify_mods_when_user_blocked: "Dacă un utilizator este blocat automat , trimite un mesaj tuturor moderatorilor."
     flag_sockpuppets: "Dacă un utilizator nou răspunde unei discuții de la același IP ca utilizatorul ce a pornit discuția, marchează ambele postări ca potențial spam."
     post_undo_action_window_mins: "Numarum de minute în care utilizatorii pot anula acțiunile recente într-o postare (aprecieri, marcări, etc)."
-    ga_tracking_code: "Codul de urmărire al Google analytics (ga.js), ex: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "Numele de domeniu al Google analytics (ga.js), ex: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Codul de urmarie al Google Universal Analytics (analytics.js), ex: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Numele de domeniu al Google Universal Analytics (analytics.js) , ex: mysite.com; see http://google.com/analytics"
     enable_noscript_support: "Activează căutarea standardă a webcrawler-ului prin tagul noscript"
@@ -747,13 +758,19 @@ ro:
     subject_template: "%{invitee_name} te-a invitat la '%{topic_title}' pe %{site_domain_name}"
     text_body_template: |
       %{invitee_name} te-a invitat la o discuție
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       la
+
       > %{site_title} -- %{site_description}
+
       Dacă sunteți interesat, click pe adresa dedesubt:
+
       %{invite_link}
+
       Aceasta invitație este de la un utilizator de încredere, deci puteți răspunde discuției cât mai curând.
   invite_forum_mailer:
     subject_template: "%{invitee_name} te-a invitat să te alături %{site_domain_name}"
@@ -785,7 +802,9 @@ ro:
       subject_template: "Invitația multiplă a fost procesată cu erori"
       text_body_template: |
         Fișierul dvs de invitații multiple a fost procesat, %{sent}  de invitații trimise cu %{failed} de erori.
+
         Aici este raportul:
+
         ```
         %{logs}
         ```
@@ -794,6 +813,7 @@ ro:
     pending_users_reminder:
       text_body_template: |
         Exista înscrieri de noi utilizatori ce așteaptă să fie aprobate (sau respinse) înainte de a putea accesa forumul.
+
         [Vă rugăm să le vizualizați în secțiunea de admin](%{base_url}/admin/users/list/în așteptare).
     download_remote_images_disabled:
       subject_template: "Downloadul de imagini de legătura dezactivat"
@@ -829,14 +849,18 @@ ro:
       subject_template: "[%{site_name}] Resetare parolă"
       text_body_template: |
         Cineva a cerut resetarea parolei dvs. pe site-ul [%{site_name}](%{base_url}).
+
         Dacă nu ați fost dumneavoastră, puteți ignora fără griji aces email.
+
         Click pe următoarea adresă pentru a reseta parola:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Alege parola"
       text_body_template: |
         Cineva a cerut crearea unei parole pe siteul [%{site_name}](%{base_url}). Alternativ, vă puteți autentifica folosind orice serviciu online acceptat (Google, Facebook, etc), serviciu ce este asociat cu acesta adresa de email validată.
+
         Dacă nu ați cerut asta, puteți ignora fără griji acest email.
+
         Click pe adresa următoare pentru a alege o parolă:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
@@ -846,8 +870,10 @@ ro:
     signup:
       text_body_template: |
         Bine ați venit la %{site_name}!
+
         Click pe următoarea adresă pentru a confirma și activă noul dvs. cont:
         %{base_url}/users/activate-account/%{email_token}
+
         Dacă adresa de mai sus nu e accesibilă, încercați să o copiați și să o lipiți în bară de adrese a propriului browser.
   page_not_found:
     popular_topics: "Populare"
@@ -857,6 +883,7 @@ ro:
     search_google: "Google"
   login_required:
     welcome_message: |
+      #[Bine ați venit la %{title}](#welcome)
       Pe acest forum de discuții aveți nevoie de un cont pentru a vizualiza %{title}. Vă rugăm creați un cont sau autentificați-vă pentru a continua.
   terms_of_service:
     title: "Termeni și condiții"
@@ -906,3 +933,6 @@ ro:
     error: "Eroare!"
     email_input: "Email Admin"
     submit_button: "Trimite Email"
+  activemodel:
+    errors:
+      <<: *errors

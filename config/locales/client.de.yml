@@ -152,9 +152,11 @@ de:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asien-Pazifik (Singapur)"
         ap_southeast_2: "Asien-Pazifik (Sydney)"
+        ap_south_1: "Asien-Pazifik (Mumbai)"
         ap_northeast_1: "Asien-Pazifik (Tokio)"
         ap_northeast_2: "Asien-Pazifik (Seoul)"
         sa_east_1: "Südamerika (São Paulo)"
+        cn_north_1: "China (Peking)"
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -332,6 +334,7 @@ de:
       selector_placeholder: "Mitglieder hinzufügen"
       owner: "Eigentümer"
       visible: "Gruppe ist für alle Benutzer sichtbar"
+      index: "Gruppen"
       title:
         one: "Gruppe"
         other: "Gruppen"
@@ -367,18 +370,18 @@ de:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Gruppe."
     user_action_groups:
-      "1": "Abgegebene Likes"
-      "2": "Erhaltene Likes"
-      "3": "Lesezeichen"
-      "4": "Themen"
-      "5": "Beiträge"
-      "6": "Antworten"
-      "7": "Erwähnungen"
-      "9": "Zitate"
-      "11": "Änderungen"
-      "12": "Gesendete Objekte"
-      "13": "Posteingang"
-      "14": "Ausstehend"
+      '1': "Abgegebene Likes"
+      '2': "Erhaltene Likes"
+      '3': "Lesezeichen"
+      '4': "Themen"
+      '5': "Beiträge"
+      '6': "Antworten"
+      '7': "Erwähnungen"
+      '9': "Zitate"
+      '11': "Änderungen"
+      '12': "Gesendete Objekte"
+      '13': "Posteingang"
+      '14': "Ausstehend"
     categories:
       all: "Alle Kategorien"
       all_subcategories: "alle"
@@ -894,10 +897,12 @@ de:
       github:
         title: "mit GitHub"
         message: "Authentifiziere mit GitHub (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
+    emoji_set:
+      apple_international: "Apple"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Windows 10"
     shortcut_modifier_key:
       shift: 'Umschalt'
       ctrl: 'Strg'
@@ -1208,21 +1213,21 @@ de:
         title: Ändere wie häufig du zu diesem Thema benachrichtigt wirst
         reasons:
           mailing_list_mode: "Du hast den Mailinglisten-Modus aktiviert, daher wirst du über Antworten zu diesem Thema per E-Mail benachrichtigt"
-          "3_10": 'Du wirst Benachrichtigungen erhalten, weil du ein Schlagwort an diesem Thema beobachtest.'
-          "3_6": 'Du wirst Benachrichtigungen erhalten, weil du diese Kategorie beobachtest.'
-          "3_5": 'Du wirst Benachrichtigungen erhalten, weil dieses Thema automatisch von dir beobachtet wird.'
-          "3_2": 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
-          "3_1": 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema erstellt hast.'
-          "3": 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
-          "2_8": 'Du wirst Benachrichtigungen erhalten, da du diese Kategorie verfolgst.'
-          "2_4": 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
-          "2_2": 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
-          "2": 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
-          "1_2": 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
-          "1": 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
-          "0_7": 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
-          "0_2": 'Du ignorierst alle Benachrichtigungen dieses Themas.'
-          "0": 'Du ignorierst alle Benachrichtigungen dieses Themas.'
+          '3_10': 'Du wirst Benachrichtigungen erhalten, weil du ein Schlagwort an diesem Thema beobachtest.'
+          '3_6': 'Du wirst Benachrichtigungen erhalten, weil du diese Kategorie beobachtest.'
+          '3_5': 'Du wirst Benachrichtigungen erhalten, weil dieses Thema automatisch von dir beobachtet wird.'
+          '3_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
+          '3_1': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema erstellt hast.'
+          '3': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema beobachtest.'
+          '2_8': 'Du wirst Benachrichtigungen erhalten, da du diese Kategorie verfolgst.'
+          '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
+          '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
+          '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
+          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
+          '0_2': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
+          '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
         watching_pm:
           title: "Beobachten"
           description: "Du wirst über jeden neuen Beitrag in dieser Unterhaltung benachrichtigt und die Anzahl der neuen Beiträge wird angezeigt."

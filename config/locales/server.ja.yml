@@ -18,9 +18,9 @@ ja:
     month_names: [null, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "午前"
     pm: "午後"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -78,9 +78,6 @@ ja:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       min_username_length_range: "最小値を最大値より上にすることはできません。"
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "アップロードするファイルは、csv または txt 形式である必要があります。"
   backup:
@@ -151,30 +148,47 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
-    'new-topic': |
+    new-topic: |
       %{site_name} へようこそ！&mdash; ** 新たなトピックの作成ありがとうございます！**
+
       - タイトルはトピックの内容を正しく説明していますか？他の人にとって興味深いタイトルになっていますか？
+
       - このトピックは何をカバーするものですか？このトピックに興味を示しそうなのは誰でしょう？なぜこのトピックは重要なのでしょうか？コミュニティよりどのような回答を期待していますか？
+
       - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このパネルは最初から %{education_posts_text} 回目までの投稿のときにだけ表示されます。
-    'new-reply': |
+    new-reply: |
       %{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!**
       - あなたの回答は議論に何らかの形で貢献していますか?
       - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。
       - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。
       詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
-    sequential_replies: |
+    sequential_replies: |+
+      ### 一度に複数の投稿に返信する
+
       トピックにたくさん返信する代わりに、以前の投稿への @name メンションや引用などを活用して返信を一つの投稿にまとめましょう。
+
       文章を選択し、<b>引用して返信</b>ボタンをクリックすることで、文章を引用して編集することができます。
+
       こまごまと何度も返信するより、まとまって返信をすることで、より見やすく、より話しやすくなります。
+
     dominating_topic: |
+      ### 他のユーザも議論に参加させてあげましょう
+
       このトピックはあなたにとても重要なもののようですね &ndash; ここの回答のうち %{percent}% 以上があなたによってなされています。
+
       他のユーザが回答するために十分な時間的猶予を与えているか、ちょっと振り返ってみませんか?
     too_many_replies: |
+      ### このトピックに回答出来る制限を超えました
+
       申し訳ありません。新しいユーザーの同じトピックへの返信は%{newuser_max_replies_per_topic} 回に一時的に制限されています。
+
       回答を追加する代わりに、以前の回答を編集するか、別のトピックを訪れる事を検討してください。
     reviving_old_topic: |
+      ### このトピックを復活させてもよろしいですか？
+
       このトピックへの最後の返信は%{days}日前です。
       あなたの返信はトピック一覧の一番上に移動させ、以前に返信した人宛に通知が送られます。
+
       本当に過去の会話を復元してもよろしいですか？
   activerecord:
     attributes:
@@ -185,7 +199,6 @@ ja:
       user_profile:
         bio_raw: "自己紹介"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -206,6 +219,7 @@ ja:
           attributes:
             hex:
               invalid: "は有効なカラーではありません"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>プロフィールの自己紹介フィールドが空欄のようです。<a href='/users/%{username_lower}/preferences/about-me'>自己紹介をしてみませんか?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
@@ -604,8 +618,6 @@ ja:
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "投稿に対するアクション (「いいね!」、通報等) 取り消しを許可する時間 (秒)"
     must_approve_users: "スタッフはサイトへのアクセスが許可される前のすべての新規ユーザを承認する必要があります。警告：公開中のサイトでこれを有効にすると、既存の非スタッフユーザのアクセスを取り消すことになります！"
-    ga_tracking_code: "Google analytics のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
-    ga_domain_name: "Google analytics のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics(analytics.js)  のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
     enable_noscript_support: "noscript タグ経由でアクセスしてきた標準サーチエンジンクローラのサポートを有効にする"
@@ -798,7 +810,6 @@ ja:
     delete_all_posts_max: "すべてのポストを削除ボタンで一度に削除可能な最大ポスト数。ユーザがここで指定した以上のポストを投稿していた場合は、一度に全ポストを削除することができません。またユーザも削除されません。"
     username_change_period: "ユーザ名の変更が可能になるまでの登録日からの日数 (0を指定でユーザ名の変更自体を無効化)。"
     email_editable: "登録後、ユーザによるメールアドレスの変更を許可する。"
-    logout_redirect: "ログアウト後にリダイレクトするページ eg:  (http://somesite.com/logout)"
     allow_uploaded_avatars: "プロフィール画像のアップロードを許可"
     allow_animated_avatars: "プロフィール画像としてアニメgifをアップロードするのを許可。警告: この設定を変更した場合 avatars:refresh rakeタスクを実行すること"
     allow_animated_thumbnails: "アニメgifからアニメーションサムネイルを生成する"
@@ -815,7 +826,6 @@ ja:
     allow_profile_backgrounds: "プロフィール背景のアップロードを許可"
     enable_mobile_theme: "モバイル端末にモバイル向けテーマ (通常サイト用テーマにスイッチ可能) を利用する。レスポンシブなスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
-    daily_performance_report: "日別のNGINXのログを解析し、Staff Onlyトピックへ詳細を投稿する"
     suppress_uncategorized_badge: "トピック一覧でカテゴライズされていないトピックのバッジは表示しない"
     global_notice: "緊急の内容を表示します。全ての訪問者の緊急バナーで注意を行います。隠すには空白に変更してください(HTMLが許可されています)"
     disable_edit_notifications: "システムユーザが'download_remote_images_to_local' を有効にした場合、編集時の通知を無効にする"
@@ -828,7 +838,6 @@ ja:
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
     autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
-    highlighted_languages: "適用するシンタックスハイライトルール(警告: あまりに多くの言語を含むとパフォーマンスに影響を与えます) デモ:  https://highlightjs.org/static/demo/ "
     feed_polling_enabled: "EMBEDDING ONLY:  ポストとしてRSS/Atomフィードを埋め込むかどうか"
     feed_polling_url: "EMBEDDING ONLY: RSS/ATOMフィードのURLを埋め込む事が出来ます"
     embed_by_username: "embedされたトピックの作成者として表示されるDiscourseユーザー名"
@@ -955,12 +964,17 @@ ja:
     subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
     text_body_template: |
       %{invitee_name} があなたを招待しました
+
       > %{site_title} -- %{site_description}
+
       > **%{topic_title}**
       >
       > %{topic_excerpt}
+
       もし興味があれば下のリンクをクリックしてください:
+
       %{invite_link}
+
       これは信頼されたユーザからの招待のため、すぐに議論に返答することができます
   invite_forum_mailer:
     subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
@@ -968,8 +982,10 @@ ja:
     subject_template: "%{site_name} アカウントのパスワードを設定"
     text_body_template: |
       %{site_name} へようこそ
+
       このリンクをクリックしてパスワードを設定してください:
       %{base_url}/users/password-reset/%{email_token}
+
       (リンクの有効期限が切れていた場合は、"パスワードを忘れたました"を選択しメールアドレスを入力してください)
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
@@ -977,21 +993,33 @@ ja:
     subject_template: "[%{site_name}] Discourseの新しいバージョンがあります。"
     text_body_template: |
       最新版の[Discourse](http://www.discourse.org)が利用出来ます！
+
       現在利用しているバージョン: %{installed_version}
       新しいバージョン: **%{new_version}**
+
       - 更新は**[ワンクリックブラウザ・アップグレード](%{base_url}/admin/upgrade)**から簡単にできます。
+
       - 更新内容は[GitHubの更新履歴](https://github.com/discourse/discourse/commits/master)をご覧ください。
+
       - [meta.discourse.org](http://meta.discourse.org)にて、Discourseに関するお知らせ、話し合い、サポートを行っています。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] アップデートがあります"
-    text_body_template: |
+    text_body_template: |+
       最新版の[Discourse](http://www.discourse.org)が利用出来ます！
+
       現在利用しているバージョン: %{installed_version}
       新しいバージョン: **%{new_version}**
+
       - 更新は**[ワンクリックブラウザ・アップグレード](%{base_url}/admin/upgrade)**から簡単にできます。
+
       - 更新内容は[GitHubの更新履歴](https://github.com/discourse/discourse/commits/master)をご覧ください。
+
       - [meta.discourse.org](http://meta.discourse.org)にて、Discourseに関するお知らせ、話し合い、サポートを行っています。
+
+      ### リリースノート
+
       %{notes}
+
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 件の投稿がレビュー待ちです"
@@ -1012,9 +1040,13 @@ ja:
       subject_template: "%{site_name} へようこそ!"
       text_body_template: |
         %{site_name}への参加ありがとうございます。ようこそ！
+
         %{new_user_tips}
+
         私たちは、[ガイドライン](%{base_url}/guidelines) を常に信じています
+
         楽しんでください!
+
         (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
@@ -1022,12 +1054,19 @@ ja:
         ようこそ%{site_name} へ！
         あなたのアカウント**%{username}** を作成して、あなたはログインしています。
         氏名の変更は [your user profile][prefs] より行ってください。
+
         次回ログインするときは、
+
         1. かならず招待をうけたメールアドレスを使ってログインしてください。
+
         2.[your user profile][prefs]でパスワードを設定して、ログインのときはそれを使用してください。
+
         %{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
+
         それではお楽しみください!
+
         (もし個人的に [staff members](%{base_url}/about) と連絡を取る必要がある場合、このメッセージに返信してください)
+
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
@@ -1036,7 +1075,9 @@ ja:
       subject_template: "バックアップ失敗"
       text_body_template: |
         バックアップが失敗しました
+
         ログ:
+
         ```
         %{logs}
         ```
@@ -1047,7 +1088,9 @@ ja:
       subject_template: "復元に失敗しました"
       text_body_template: |
         リストアが失敗しました
+
         ログ:
+
         ```
         %{logs}
         ```
@@ -1058,7 +1101,9 @@ ja:
       subject_template: "ユーザの一括招待中にエラーが発生しました"
       text_body_template: |
         一括ユーザ招待が処理され、%{sent} 通の招待メールが送信され、%{failed}個のエラーが発生しました
+
         ログ:
+
         ```
         %{logs}
         ```
@@ -1066,7 +1111,9 @@ ja:
       subject_template: "データのダウンロード準備が完了しました"
       text_body_template: |
         データ出力が完了しました! :dvd:
+
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
         このダウンロードリンクは48時間有効です
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
@@ -1099,6 +1146,7 @@ ja:
         other: "%{count} 人のユーザか承認を待っています。"
       text_body_template: |
         新たなユーザが、フォーラム参加のための承認（もしくは拒否）待ち状態になっています。
+
         [管理者セクションで確認する](/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "リモート画像のダウンロードを無効化"
@@ -1138,14 +1186,18 @@ ja:
       subject_template: "[%{site_name}] パスワードのリセット"
       text_body_template: |
         [%{site_name}](%{base_url}) にて、パスワードのリセットリクエストが行われました。
+
         もしリクエストを行っていない場合は、このメールを無視してください。
+
         新たなパスワードを設定する場合は次のリンクをクリックしてください: %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] パスワード設定"
       text_body_template: |
         [%{site_name}](%{base_url}) のあなたのアカウントに対してパスワード追加のリクエストがありました。
         あるいは、この検証済みメールアドレスに関連付けられている任意のサポートされているオンラインサービス（グーグル、フェイスブックなど）を使用してログインすることができます。
+
         もし、リクエストをしていない場合は、このメールを無視してください。
+
         パスワードを選択する場合は次のリンクをクリックしてください:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
@@ -1154,12 +1206,14 @@ ja:
       subject_template: "[%{site_name}] あなたの新しいアカウント"
       text_body_template: |
         %{site_name}のあなたの新しいアカウントが作成されました。
+
         以下のリンクをクリックしてパスワードを設定してください:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
       subject_template: "[%{site_name}] 新しいメールアドレスを確認してください"
       text_body_template: |
         以下のリンクをクリックして、%{site_name}で利用するメールアドレスを有効化してください:
+
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
@@ -1167,8 +1221,10 @@ ja:
       subject_template: "[%{site_name}] アカウントの確認"
       text_body_template: |
         Welcome to %{site_name}!
+
         リンクをクリックして、アカウントを有効化してください:
         %{base_url}/users/activate-account/%{email_token}
+
         もし、上記のURLがクリックできない場合は、ブラウザのアドレスバーへURLをコピーして貼り付けて下さい。
   page_not_found:
     title: "ページが見つからないか、アクセス出来ない場所にあります。"
@@ -1179,6 +1235,7 @@ ja:
     search_google: "Google"
   login_required:
     welcome_message: |
+      #[%{title}へようこそ](#welcome)
       アカウントが必要です。アカウントを作成するかログインしてください
   terms_of_service:
     title: "利用規約"
@@ -1266,3 +1323,6 @@ ja:
   performance_report:
     initial_post_raw: このトピックでは、あなたのサイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート
+  activemodel:
+    errors:
+      <<: *errors

@@ -18,8 +18,6 @@ da:
   date:
     month_names: [null, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
     <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "indlæg"
@@ -81,9 +79,6 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Den uploadede fil skal være i .csv eller .txt format."
   backup:
@@ -153,25 +148,43 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
-    'new-reply': |
+    new-reply: |
       Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
+
       Husk venligst mens du skriver dit svar:
+
       - Forbedrer dit svar samtalen på en eller anden måde?
+
       - Behandl dine meddebattører med den samme respekt, som du ønsker at blive behandlet med.
+
       - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
+
       For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
     avatar: |
+      ### Hvad med et billede til din konto?
+
       Du har oprettet et par emner og svar, men dit avatar er ikke så unik som du er -- det er bare et bogstav.
+
       Har du overvejet at **[gå til din brugerprofil](%{profile_path})** og uploade et billede, der repræsenterer dig?
+
       Det er lettere at følge diskussioner og finde interessant mennesker i samtaler, hvor alle har en unik avatar!
     dominating_topic: |
+      ### Lad andre deltage i samtalen
+
       Dette emne er åbenbart vigtigt for dig &ndash; du har oprettet mere end %{percent}% af svarene her.
+
       Er du sikker på, at du giver tilstrækkelig tid til, at andre folk kan dele deres synspunkter?
     too_many_replies: |
+      ### Du kan ikke skrive flere indlæg i dette emne
+
       Beklager, men nye brugere er begrænset til %{newuser_max_replies_per_topic} svar i hvert emne.
+
       I stedet for at tilføje endnu et svar, bør du overveje at redigere et af dine eksisterende svar eller at besøge andre emner.
     reviving_old_topic: |
+      ### Genopliv dette emne?
+
       Det sidste svar på dette emne er nu over %{days} gammelt. dit svar vil trække dette emne til toppen af listen og vil påminde alle der tidligere have været med i samtalen.
+
       Er du sikker på du vil vække dette emne til live igen?
   activerecord:
     attributes:
@@ -182,7 +195,6 @@ da:
       user_profile:
         bio_raw: "Om mig"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -203,6 +215,7 @@ da:
           attributes:
             hex:
               invalid: "er ikke en gyldig fave"
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>“Om mig” feltet på din profil er pt. tomt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du at udfylde det</a>?</div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
@@ -655,6 +668,7 @@ da:
         other: "%{count} brugere afventer godkendelse"
       text_body_template: |
         Der er nye brugere, som afventer godkendelse (eller afvisning) før de kan tilgå dette forum.
+
         [Gennemgå dem venligst på administrationssiden](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Download af eksterne billeder er slået fra"
@@ -688,7 +702,9 @@ da:
       subject_template: "[%{site_name}] Nulstil kodeord"
       text_body_template: |
         Nogen har bedt om at få nulstillet dit kodeord på [%{site_name}](%{base_url}).
+
         Hvis det ikke var dig, så kan du trygt ignorere denne e-mail.
+
         Klik her for at vælge et nyt kodeord:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
@@ -696,7 +712,9 @@ da:
       text_body_template: |
         Nogen har bedt om at tilføje et kodeord til din konto på [%{site_name}](%{base_url}).
         Du kan også loge ind med en af de undestøttede online services (Google, Facebook o.s.v. ) som associeret med denne bekræftede emailadresse.
+
         Hvis ikke du har bedt om dette kan du blot ignorere denne email.
+
         Klik på følgende for at vælge et kodeord.:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
@@ -707,8 +725,10 @@ da:
       subject_template: "[%{site_name}] Bekræft din nye konto"
       text_body_template: |
         Velkommen til %{site_name}!
+
         Klik på det følgende link for at bekræfte og aktivere din nye konto:
         %{base_url}/users/activate-account/%{email_token}
+
         Hvis linket ikke virker, så prøv at kopiere hele linket ind i adressefeltet på din web browser.
   page_not_found:
     popular_topics: "Populære"
@@ -800,3 +820,8 @@ da:
     error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

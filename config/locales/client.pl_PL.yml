@@ -376,18 +376,18 @@ pl_PL:
           title: "Wyciszony"
           description: "Nie otrzymasz powiadomień o nowych tematach w tej grupie."
     user_action_groups:
-      "1": "Przyznane lajki"
-      "2": "Otrzymane lajki"
-      "3": "Zakładki"
-      "4": "Tematy"
-      "5": "Odpowiedzi"
-      "6": "Odpowiedzi"
-      "7": "Wzmianki"
-      "9": "Cytaty"
-      "11": "Edycje"
-      "12": "Wysłane"
-      "13": "Skrzynka odbiorcza"
-      "14": "Oczekujące"
+      '1': "Przyznane lajki"
+      '2': "Otrzymane lajki"
+      '3': "Zakładki"
+      '4': "Tematy"
+      '5': "Odpowiedzi"
+      '6': "Odpowiedzi"
+      '7': "Wzmianki"
+      '9': "Cytaty"
+      '11': "Edycje"
+      '12': "Wysłane"
+      '13': "Skrzynka odbiorcza"
+      '14': "Oczekujące"
     categories:
       all: "wszystkie kategorie"
       all_subcategories: "wszystkie"
@@ -1135,20 +1135,20 @@ pl_PL:
         position: "wpis %{current} z %{total}"
       notifications:
         reasons:
-          "3_6": 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie i temacie, ponieważ obserwujesz tę kategorię.'
-          "3_5": 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ włączono automatyczne obserwowanie tego tematu.'
-          "3_2": 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat.'
-          "3_1": 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem tego tematu.'
-          "3": 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat.'
-          "2_8": 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz tę kategorię.'
-          "2_4": 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem odpowiedzi w tym temacie.'
-          "2_2": 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz ten temat.'
-          "2": 'Będziesz otrzymywać powiadomienia, ponieważ <a href="/users/{{username}}/preferences">ten temat został uznany za przeczytany</a>.'
-          "1_2": 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
-          "1": 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
-          "0_7": 'Ignorujesz wszystkie powiadomienia z tej kategorii.'
-          "0_2": 'Ignorujesz wszystkie powiadomienia w tym temacie.'
-          "0": 'Ignorujesz wszystkie powiadomienia w tym temacie.'
+          '3_6': 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie i temacie, ponieważ obserwujesz tę kategorię.'
+          '3_5': 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ włączono automatyczne obserwowanie tego tematu.'
+          '3_2': 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat.'
+          '3_1': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem tego tematu.'
+          '3': 'Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat.'
+          '2_8': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz tę kategorię.'
+          '2_4': 'Będziesz otrzymywać powiadomienia, ponieważ jesteś autorem odpowiedzi w tym temacie.'
+          '2_2': 'Będziesz otrzymywać powiadomienia, ponieważ śledzisz ten temat.'
+          '2': 'Będziesz otrzymywać powiadomienia, ponieważ <a href="/users/{{username}}/preferences">ten temat został uznany za przeczytany</a>.'
+          '1_2': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
+          '1': 'Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis.'
+          '0_7': 'Ignorujesz wszystkie powiadomienia z tej kategorii.'
+          '0_2': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
+          '0': 'Ignorujesz wszystkie powiadomienia w tym temacie.'
         watching_pm:
           title: "Obserwuj wszystko"
           description: "Dostaniesz powiadomienie o każdym nowym wpisie w tej dyskusji. Liczba nowych wpisów pojawi się obok jej tytułu na liście wiadomości."

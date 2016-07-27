@@ -336,18 +336,18 @@ tr_TR:
           title: "Susturuldu"
           description: "Bu gruptan herhangi yeni konuyla ilgili asla bildirim almayacaksınız"
     user_action_groups:
-      "1": "Verilen Beğeniler"
-      "2": "Alınan Beğeniler"
-      "3": "İşaretlenenler"
-      "4": "Konular"
-      "5": "Cevaplar"
-      "6": "Yanıtlar"
-      "7": "Bahsedenler"
-      "9": "Alıntılar"
-      "11": "Düzenlemeler"
-      "12": "Yollanmış ögeler"
-      "13": "Gelen Kutusu"
-      "14": "Bekleyen"
+      '1': "Verilen Beğeniler"
+      '2': "Alınan Beğeniler"
+      '3': "İşaretlenenler"
+      '4': "Konular"
+      '5': "Cevaplar"
+      '6': "Yanıtlar"
+      '7': "Bahsedenler"
+      '9': "Alıntılar"
+      '11': "Düzenlemeler"
+      '12': "Yollanmış ögeler"
+      '13': "Gelen Kutusu"
+      '14': "Bekleyen"
     categories:
       all: "Tüm Kategoriler"
       all_subcategories: "hepsi"
@@ -1121,20 +1121,20 @@ tr_TR:
         position: "%{total} gönderi arasından %{current}."
       notifications:
         reasons:
-          "3_6": 'Bu kategoriyi gözlediğiniz için bildirimlerini alacaksınız.'
-          "3_5": 'Bu konuyu otomatik olarak gözlemeye başladığınız için bildirimlerini alacaksınız.'
-          "3_2": 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
-          "3_1": 'Bu konuyu siz oluşturduğunuz için bildirimlerini alacaksınız.'
-          "3": 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
-          "2_8": 'Be kategoriyi takip ettiğiniz için bildirimlerini alacaksınız.'
-          "2_4": 'Bu konuya cevap yazdığınız için bildirimlerini alacaksınız.'
-          "2_2": 'Bu konuyu takip ettiğiniz için bildirimlerini alacaksınız.'
-          "2": '<a href="/users/{{username}}/preferences">Bu konuyu okuduğunuz için</a> bildirimlerini alacaksınız.'
-          "1_2": 'Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız.'
-          "1": 'Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız.'
-          "0_7": 'Bu kategoriye ait tüm bildirimleri görmezden geliyorsunuz.'
-          "0_2": 'Bu konuya ait tüm bildirimleri görmezden geliyorsunuz.'
-          "0": 'Bu konuya ait tüm bildirimleri görmezden geliyorsunuz.'
+          '3_6': 'Bu kategoriyi gözlediğiniz için bildirimlerini alacaksınız.'
+          '3_5': 'Bu konuyu otomatik olarak gözlemeye başladığınız için bildirimlerini alacaksınız.'
+          '3_2': 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
+          '3_1': 'Bu konuyu siz oluşturduğunuz için bildirimlerini alacaksınız.'
+          '3': 'Bu konuyu gözlediğiniz için bildirimlerini alacaksınız.'
+          '2_8': 'Be kategoriyi takip ettiğiniz için bildirimlerini alacaksınız.'
+          '2_4': 'Bu konuya cevap yazdığınız için bildirimlerini alacaksınız.'
+          '2_2': 'Bu konuyu takip ettiğiniz için bildirimlerini alacaksınız.'
+          '2': '<a href="/users/{{username}}/preferences">Bu konuyu okuduğunuz için</a> bildirimlerini alacaksınız.'
+          '1_2': 'Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız.'
+          '1': 'Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız.'
+          '0_7': 'Bu kategoriye ait tüm bildirimleri görmezden geliyorsunuz.'
+          '0_2': 'Bu konuya ait tüm bildirimleri görmezden geliyorsunuz.'
+          '0': 'Bu konuya ait tüm bildirimleri görmezden geliyorsunuz.'
         watching_pm:
           title: "Gözleniyor"
           description: "Bu mesajlaşmada ki her yeni gönderi için bir bildirim alacaksınız. Okunmamış ve yeni gönderilerin sayısı konunun yanında belirecek."

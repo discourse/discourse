@@ -10,12 +10,6 @@ te:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats 
-  date:
-    month_names: []
-    <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "డిస్కోర్స్"
   topics: "విషయాలు"
   posts: "టపాలు"
@@ -67,9 +61,6 @@ te:
         other: '%{count} దోషాల వల్ల  %{model} భద్రపరుచుట వీలవలేదు'
     embed:
       load_from_remote: "ఈ టపా లోడింగులో దోషం"
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "ఎగుమతించే దస్త్రం కేవలం csv లేదా txt రూపంలో ఉండాలి"
   backup:
@@ -131,11 +122,16 @@ te:
     until_posts:
       one: "ఒక టపా"
       other: "%{count} టపాలు"
-    'new-reply': |
+    new-reply: |
       స్వాగతం %{site_name} &mdash; **పాల్గొన్నందుకు ధన్యవాదాలు!**
+
       - మీ సమాధానం సంభాషణను కొంత మెరుగు పరిచిందా ?
+
       - తోటి కమ్యూనిటి సభ్యులతో మర్యాదగా ఉండండి .
+
       - నిర్మాణాత్మక విమర్శలకు స్వాగతం, కానీ *ఆలోచన*లను విమర్శించండి,వ్యక్తులని కాదు.
+
+
       మరింత సమాచారం కోసం ,[వర్గ మార్గదర్శక సూత్రాలను చూడండి](/guidelines).ఈ పట్టిక మొదట మీకే కనిపిస్తుంది%{education_posts_text}.
   activerecord:
     attributes:
@@ -146,7 +142,6 @@ te:
       user_profile:
         bio_raw: "నా గురించి"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -167,6 +162,7 @@ te:
           attributes:
             hex:
               invalid: "ఇది చెల్లని రంగు"
+      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{పేరు} ఇంకా వారి ప్రొఫైల్ లో ఎబౌట్ మీ స్థానంలో ఏమీ చేర్చలేదు</div>"
   vip_category_name: "అడ్డా"
@@ -604,3 +600,6 @@ te:
     title: "సేవా నిబంధనలు"
   privacy_topic:
     title: "ప్రైవసీ పోలసీ"
+  activemodel:
+    errors:
+      <<: *errors

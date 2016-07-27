@@ -18,8 +18,6 @@ gl:
   date:
     month_names: [null, Xaneiro, Febreiro, Marzo, Abril, Maio, Xuño, Xullo, Agosto, Setembro, Outubro, Novembro, Decembro]
     <<: *datetime_formats
-  time:
-    <<: *datetime_formats
   title: "Discourse"
   topics: "Temas"
   posts: "publicacións"
@@ -64,9 +62,6 @@ gl:
       load_from_remote: "Produciuse un erro cargando esta publicación."
     site_settings:
       min_username_length_range: "O mínimo non pode ser maior que o máximo."
-  activemodel:
-    errors:
-      <<: *errors
   not_logged_in: "Debes iniciar sesión para facer iso."
   not_found: "Non foi posíbel atopar o recurso ou URL solicitado."
   invalid_access: "Non se che permite ver o recurso solicitado."
@@ -129,7 +124,6 @@ gl:
       user_profile:
         bio_raw: "Verbo de min"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -148,6 +142,7 @@ gl:
           attributes:
             hex:
               invalid: "non é unha cor válida"
+      <<: *errors
   vip_category_name: "Taberna"
   vip_category_description: "Unha categoría exclusiva para membros cun nivel de confianza igual ou maior a 3."
   meta_category_name: "Opinións sobre o sitio"
@@ -435,9 +430,13 @@ gl:
       subject_template: "Benvido/a a %{site_name}!"
       text_body_template: |
         Grazas por unirte %{site_name}, e benvido/a!
+
         %{new_user_tips}
+
         Cremos nun [comportamento civilizado da comunidade](%{base_url}/guidelines) en todo momento.
+
         Goza da túa estancia!
+
         (Se precisas comunicarte cos [membros do equipo](%{base_url}/about) como novo usuario responde a esta mensaxe.)
     welcome_invite:
       subject_template: "Benvido/a a %{site_name}!"
@@ -465,3 +464,8 @@ gl:
   admin_login:
     error: "Erro!"
     submit_button: "Enviar correo-e"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors
