@@ -389,12 +389,13 @@ class ImportScripts::Base
 
     new_category = Category.new(
       name: opts[:name],
-      user_id: opts[:user_id] || opts[:user].try(:id) || -1,
+      user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
       position: opts[:position],
       description: opts[:description],
       parent_category_id: opts[:parent_category_id],
       color: opts[:color] || "AB9364",
       text_color: opts[:text_color] || "FFF",
+      read_restricted: opts[:read_restricted] || false,
     )
 
     new_category.custom_fields["import_id"] = import_id if import_id
@@ -466,7 +467,7 @@ class ImportScripts::Base
     [created, skipped]
   end
 
-  STAFF_GUARDIAN = Guardian.new(User.find(-1))
+  STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
 
   def create_post(opts, import_id)
     user = User.find(opts[:user_id])
