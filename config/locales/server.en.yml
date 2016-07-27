@@ -1418,6 +1418,14 @@ en:
     new_user: "Welcome to our community! These are the most popular recent topics."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
 
+  merge_posts:
+    edit_reason:
+      one: "A post was merged in by %{username}"
+      other: "%{count} posts were merged in by %{username}"
+    errors:
+      different_topics: "Posts belonging to different topics cannot be merged."
+      different_users: "Posts belonging to different users cannot be merged."
+
   move_posts:
     new_topic_moderator_post:
       one: "A post was split to a new topic: %{topic_link}"
