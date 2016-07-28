@@ -18,8 +18,20 @@ class AdminUserIndexQuery
     find_users_query.count
   end
 
+  def self.orderable_columns
+    %w(created_at days_visited posts_read_count topics_entered post_count trust_level)
+  end
+
   def initialize_query_with_order(klass)
-    order = [params[:order]]
+    order = []
+
+    custom_order = params[:order]
+    if custom_order.present? &&
+      without_dir = custom_order.downcase.sub(/ (asc|desc)$/, '')
+      if AdminUserIndexQuery.orderable_columns.include?(without_dir)
+        order << custom_order
+      end
+    end
 
     if params[:query] == "active"
       order << "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
