@@ -24,6 +24,9 @@ class TagsController < ::ApplicationController
     tag_counts = self.class.tags_by_count(guardian, limit: 300).count
     @tags = self.class.tag_counts_json(tag_counts)
 
+    @description_meta = I18n.t("tags.title")
+    @title = @description_meta
+
     respond_to do |format|
       format.html do
         render :index
@@ -63,6 +66,8 @@ class TagsController < ::ApplicationController
       @list.more_topics_url = construct_url_with(:next, list_opts)
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
+      @description_meta = I18n.t("rss_by_tag", tag: @tag_id)
+      @title = @description_meta
 
       canonical_url "#{Discourse.base_url_no_prefix}#{public_send(url_method(params.slice(:category, :parent_category)))}"
 
