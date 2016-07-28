@@ -74,7 +74,8 @@ class Guardian
       (
         Rails.configuration.respond_to?(:developer_emails) &&
         Rails.configuration.developer_emails.include?(@user.email)
-      )
+      ) ||
+      Developer.user_ids.include?(@user.id)
     )
   end
 
