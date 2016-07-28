@@ -1,6 +1,7 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
 import { emojiUnescape } from 'discourse/lib/text';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default Ember.Component.extend({
   size: 'medium',
@@ -39,10 +40,10 @@ export default Ember.Component.extend({
     if (size === 'large') {
       const longDescription = this.get('badge.long_description');
       if (!_.isEmpty(longDescription)) {
-        return emojiUnescape(longDescription);
+        return emojiUnescape(escapeExpression(longDescription));
       }
     }
-    return this.get('badge.description');
+    return escapeExpression(this.get('badge.description'));
   }
 
 });
