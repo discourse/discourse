@@ -7,7 +7,7 @@ $option-background-selected: #dbffdb;
 $option-shadow: dark-light-diff($option-background, $primary, 10%, -10%);
 
 div.poll {
-
+  margin: 10px 0px;
   border: 1px solid $border-color;
 
   @include unselectable;
