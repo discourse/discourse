@@ -339,7 +339,7 @@ describe User do
 
     it 'returns false if user is not the only admin' do
       admin = Fabricate(:admin)
-      second_admin = Fabricate(:admin)
+      Fabricate(:admin)
 
       expect(admin.is_singular_admin?).to eq(false)
     end
