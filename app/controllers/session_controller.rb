@@ -291,7 +291,8 @@ class SessionController < ApplicationController
     message = user.suspend_reason ? "login.suspended_with_reason" : "login.suspended"
 
     render json: {
-      error: I18n.t(message, { date: I18n.l(user.suspended_till, format: :date_only), reason: user.suspend_reason}),
+      error: I18n.t(message, { date: I18n.l(user.suspended_till, format: :date_only),
+                               reason: Rack::Utils.escape_html(user.suspend_reason) }),
       reason: 'suspended'
     }
   end
