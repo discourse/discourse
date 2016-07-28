@@ -1,10 +1,12 @@
 div.poll {
   display: table;
-  width: 500px;
-  max-width: 500px;
+  min-width: 500px;
+  width: 100%;
+  box-sizing: border-box;
 
   .poll-info {
-    width: 150px;
+    min-width: 150px;
+    width: 100%;
     display: table-cell;
     border-left: 1px solid $border-color;
 
@@ -19,8 +21,8 @@ div.poll {
 
   .poll-container {
     display: table-cell;
-    width: 330px;
-    max-width: 330px;
+    min-width: 330px;
+    width: 100%;
   }
 
   .poll-buttons {
