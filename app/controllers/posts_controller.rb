@@ -554,10 +554,12 @@ class PostsController < ApplicationController
       :auto_track,
       :typing_duration_msecs,
       :composer_open_duration_msecs,
+      :visible
     ]
 
     # param munging for WordPress
     params[:auto_track] = !(params[:auto_track].to_s == "false") if params[:auto_track]
+    params[:visible] = (params[:unlist_topic].to_s == "false") if params[:unlist_topic]
 
     if api_key_valid?
       # php seems to be sending this incorrectly, don't fight with it
