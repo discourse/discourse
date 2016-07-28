@@ -18,7 +18,7 @@ describe Discourse do
   context 'base_url' do
     context 'when https is off' do
       before do
-        SiteSetting.expects(:force_https?).returns(false)
+        SiteSetting.force_https = false
       end
 
       it 'has a non https base url' do
@@ -28,7 +28,7 @@ describe Discourse do
 
     context 'when https is on' do
       before do
-        SiteSetting.expects(:force_https?).returns(true)
+        SiteSetting.force_https = true
       end
 
       it 'has a non-ssl base url' do
@@ -38,7 +38,7 @@ describe Discourse do
 
     context 'with a non standard port specified' do
       before do
-        SiteSetting.stubs(:port).returns(3000)
+        SiteSetting.port = 3000
       end
 
       it "returns the non standart port in the base url" do
@@ -63,7 +63,7 @@ describe Discourse do
     end
 
     it 'returns the system user otherwise' do
-      SiteSetting.stubs(:site_contact_username).returns(nil)
+      SiteSetting.site_contact_username = nil
       expect(Discourse.site_contact_user.username).to eq("system")
     end
 
@@ -76,10 +76,10 @@ describe Discourse do
     end
 
     it "returns S3Store when S3 is enabled" do
-      SiteSetting.stubs(:enable_s3_uploads?).returns(true)
-      SiteSetting.stubs(:s3_upload_bucket).returns("s3_bucket")
-      SiteSetting.stubs(:s3_access_key_id).returns("s3_access_key_id")
-      SiteSetting.stubs(:s3_secret_access_key).returns("s3_secret_access_key")
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "s3bucket"
+      SiteSetting.s3_access_key_id = "s3_access_key_id"
+      SiteSetting.s3_secret_access_key = "s3_secret_access_key"
       expect(Discourse.store).to be_a(FileStore::S3Store)
     end
 
