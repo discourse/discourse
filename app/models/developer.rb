@@ -9,7 +9,7 @@ class Developer < ActiveRecord::Base
   @id_cache = DistributedCache.new('developer_ids')
 
   def self.user_ids
-    @id_cache["ids"] ||= rebuild_cache
+    @id_cache["ids"] || rebuild_cache
   end
 
   def self.rebuild_cache
