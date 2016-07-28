@@ -329,7 +329,7 @@ Post.reopenClass({
   },
 
   mergePosts(selectedPosts) {
-    return Discourse.ajax("/posts/merge_posts", {
+    return ajax("/posts/merge_posts", {
       type: 'PUT',
       data: { post_ids: selectedPosts.map(p => p.get('id')) }
     }).catch(() => {
