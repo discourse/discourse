@@ -36,10 +36,10 @@ export default Ember.Component.extend({
     if (size === 'large') {
       const longDescription = this.get('badge.long_description');
       if (!_.isEmpty(longDescription)) {
-        return Discourse.Emoji.unescape(longDescription);
+        return Discourse.Emoji.unescape(Discourse.Utilities.escapeExpression(longDescription));
       }
     }
-    return this.get('badge.description');
+    return Discourse.Utilities.escapeExpression(this.get('badge.description'));
   }
 
 });
