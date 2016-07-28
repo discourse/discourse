@@ -194,6 +194,10 @@ module Discourse
     end
   end
 
+  def self.base_protocol
+    SiteSetting.force_https? ? "https" : "http"
+  end
+
   def self.base_url_no_prefix
     default_port = 80
     protocol = "http"
