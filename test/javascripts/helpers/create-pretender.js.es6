@@ -109,7 +109,13 @@ export default function() {
     });
 
     this.put('/categories/:category_id', request => {
+
       const category = parsePostData(request.requestBody);
+
+      if (category.email_in === "duplicate@example.com") {
+        return response(422, {"errors": ['duplicate email']});
+      }
+
       return response({category});
     });
 
