@@ -22,6 +22,7 @@ const CLOSED = 'closed',
       _create_serializer = {
         raw: 'reply',
         title: 'title',
+        unlist_topic: 'unlistTopic',
         category: 'categoryId',
         topic_id: 'topic.id',
         is_warning: 'isWarning',
@@ -41,6 +42,7 @@ const CLOSED = 'closed',
 
 const Composer = RestModel.extend({
   _categoryId: null,
+  unlistTopic: false,
 
   archetypes: function() {
     return this.site.get('archetypes');
@@ -504,6 +506,7 @@ const Composer = RestModel.extend({
       reply: null,
       post: null,
       title: null,
+      unlistTopic: false,
       editReason: null,
       stagedPost: false,
       typingTime: 0,
