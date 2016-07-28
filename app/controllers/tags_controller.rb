@@ -53,7 +53,12 @@ class TagsController < ::ApplicationController
       results = query.send("#{filter}_results")
 
       if @filter_on_category
-        category_ids = [@filter_on_category.id] + @filter_on_category.subcategories.pluck(:id)
+        category_ids = [@filter_on_category.id]
+
+        unless list_opts[:no_subcategories]
+          category_ids += @filter_on_category.subcategories.pluck(:id)
+        end
+
         results = results.where(category_id: category_ids)
       end
 
