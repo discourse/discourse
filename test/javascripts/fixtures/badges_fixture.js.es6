@@ -389,7 +389,7 @@ export default {
       "id": 9,
       "name": "Autobiographer",
       "description": null,
-      "long_description": "<strike>hello</strike>",
+      "long_description": "<script>hello</script>",
       "grant_count": 545,
       "allow_title": false,
       "multiple_grant": false,
