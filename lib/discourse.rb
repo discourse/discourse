@@ -186,9 +186,13 @@ module Discourse
     ActionController::Base.config.relative_url_root.presence || default_value
   end
 
+  def self.base_protocol
+    SiteSetting.force_https? ? "https" : "http"
+  end
+
   def self.base_url_no_prefix
-    protocol, default_port = SiteSetting.force_https? ? ["https", 443] : ["http", 80]
-    url = "#{protocol}://#{current_hostname}"
+    default_port = SiteSetting.force_https? ? 443 : 80
+    url = "#{base_protocol}://#{current_hostname}"
     url << ":#{SiteSetting.port}" if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
     url
   end

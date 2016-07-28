@@ -36,6 +36,9 @@ class Category < ActiveRecord::Base
 
   validate :email_in_validator
 
+  validates :logo_url, upload_url: true
+  validates :background_url, upload_url: true
+
   validate :ensure_slug
   before_save :apply_permissions
   before_save :downcase_email
