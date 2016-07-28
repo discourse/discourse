@@ -197,15 +197,21 @@ class TagsController < ::ApplicationController
       slug_or_id = params[:category]
       return true if slug_or_id.nil?
 
-      parent_slug_or_id = params[:parent_category]
+      if slug_or_id == 'none' && params[:parent_category]
+        @filter_on_category = Category.query_category(params[:parent_category], nil)
+        params[:no_subcategories] = 'true'
+      else
+        parent_slug_or_id = params[:parent_category]
 
-      parent_category_id = nil
-      if parent_slug_or_id.present?
-        parent_category_id = Category.query_parent_category(parent_slug_or_id)
-        redirect_or_not_found and return if parent_category_id.blank?
+        parent_category_id = nil
+        if parent_slug_or_id.present?
+          parent_category_id = Category.query_parent_category(parent_slug_or_id)
+          redirect_or_not_found and return if parent_category_id.blank?
+        end
+
+        @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
       end
 
-      @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
       redirect_or_not_found and return if !@filter_on_category
 
       guardian.ensure_can_see!(@filter_on_category)
