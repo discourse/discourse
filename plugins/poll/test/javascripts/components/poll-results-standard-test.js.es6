@@ -45,14 +45,14 @@ componentTest('multiple options in descending order', {
         Em.Object.create({ votes: 4}),
         Em.Object.create({ votes: 1})
       ],
-      voters: 9
+      voters: 12
     });
   },
 
   test(assert) {
-    assert.equal(this.$('.option .percentage:eq(0)').text(), '55%');
-    assert.equal(this.$('.option .percentage:eq(1)').text(), '44%');
-    assert.equal(this.$('.option .percentage:eq(2)').text(), '22%');
-    assert.equal(this.$('.option .percentage:eq(3)').text(), '11%');
+    assert.equal(this.$('.option .percentage:eq(0)').text(), '41%');
+    assert.equal(this.$('.option .percentage:eq(1)').text(), '33%');
+    assert.equal(this.$('.option .percentage:eq(2)').text(), '16%');
+    assert.equal(this.$('.option .percentage:eq(3)').text(), '8%');
   }
 });
