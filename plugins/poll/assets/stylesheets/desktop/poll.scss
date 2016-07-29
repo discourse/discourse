@@ -34,3 +34,11 @@ div.poll {
     }
   }
 }
+
+.d-editor-preview {
+  .poll-buttons {
+    a:not(:first-child) {
+      margin-left: 5px;
+    }
+  }
+}
