@@ -2184,7 +2184,7 @@ en:
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
   unsubscribe_mailing_list: |
-    You are receiving these emails cause you have enabled mailing list mode.
+    You are receiving this because you enabled mailing list mode.
 
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 
