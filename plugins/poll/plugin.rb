@@ -32,8 +32,9 @@ after_initialize do
   class DiscoursePoll::Poll
     class << self
 
-      def vote(post_id, poll_name, options, user_id)
+      def vote(post_id, poll_name, options, user)
         DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
+          user_id = user.id
           post = Post.find_by(id: post_id)
 
           # post must not be deleted
@@ -65,11 +66,10 @@ after_initialize do
           poll["voters"] = poll["anonymous_voters"] || 0
           all_options = Hash.new(0)
 
-          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD] ||= {}
-          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"] ||= {}
-          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"][poll_name] = options
+          polls["#{user_id}"] ||= {}
+          polls["#{user_id}"][poll_name] = options
 
-          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].each do |_, user_votes|
+          polls.each do |_, user_votes|
             next unless votes = user_votes[poll_name]
             votes.each { |option| all_options[option] += 1 }
             poll["voters"] += 1 if (available_options & votes.to_set).size > 0
@@ -96,9 +96,7 @@ after_initialize do
           payload = { post_id: post_id, polls: polls }
 
           if public_poll
-            payload.merge!(
-              user: UserNameSerializer.new(User.find(user_id)).serializable_hash
-            )
+            payload.merge!(user: UserNameSerializer.new(user).serializable_hash)
           end
 
           MessageBus.publish("/polls/#{post.topic_id}", payload)
@@ -188,10 +186,9 @@ after_initialize do
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
       options   = params.require(:options)
-      user_id   = current_user.id
 
       begin
-        poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, options, user_id)
+        poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, options, current_user)
         render json: { poll: poll, vote: options }
       rescue StandardError => e
         render_json_error e.message
