@@ -66,10 +66,11 @@ after_initialize do
           poll["voters"] = poll["anonymous_voters"] || 0
           all_options = Hash.new(0)
 
-          polls["#{user_id}"] ||= {}
-          polls["#{user_id}"][poll_name] = options
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD] ||= {}
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"] ||= {}
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]["#{user_id}"][poll_name] = options
 
-          polls.each do |_, user_votes|
+          post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD].each do |_, user_votes|
             next unless votes = user_votes[poll_name]
             votes.each { |option| all_options[option] += 1 }
             poll["voters"] += 1 if (available_options & votes.to_set).size > 0
