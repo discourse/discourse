@@ -1,15 +1,19 @@
+import computed from 'ember-addons/ember-computed-decorators';
+import { iconHTML } from 'discourse/helpers/fa-icon';
+
 export default Em.Component.extend({
   tagName: "li",
-  attributeBindings: ["data-poll-option-id", "data-poll-selected"],
+  attributeBindings: ["data-poll-option-id"],
 
   "data-poll-option-id": Em.computed.alias("option.id"),
 
-  "data-poll-selected": function() {
-    return this.get("option.selected") ? "selected" : false;
-  }.property("option.selected"),
-
-  render(buffer) {
-    buffer.push(this.get("option.html"));
+  @computed("option.selected", "isMultiple")
+  optionIcon(selected, isMultiple) {
+    if (isMultiple) {
+      return iconHTML(selected ? 'check-square-o' : 'square-o');
+    } else {
+      return iconHTML(selected ? 'dot-circle-o' : 'circle-o');
+    }
   },
 
   click(e) {
