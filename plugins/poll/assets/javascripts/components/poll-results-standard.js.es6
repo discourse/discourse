@@ -8,7 +8,7 @@ export default Em.Component.extend({
   @computed("poll.voters", "poll.type", "poll.options.[]")
   options(voters, type) {
     const options = this.get("poll.options").slice(0).sort((a, b) => {
-      return a.get("votes") < b.get("votes") ? 1 : 0;
+      return b.get("votes") - a.get("votes");
     });
 
     let percentages = voters === 0 ?
