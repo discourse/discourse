@@ -28,24 +28,7 @@ div.poll {
 
   li[data-poll-option-id] {
     color: $option-foreground;
-    background: $option-background;
-    box-shadow: inset 0 -6px rgba(0,0,0,.25), inset 0 0 0 100px rgba(0,0,0,0);
     padding: .5em .7em .7em .5em;
-    border-radius: 4px;
-
-    &:hover {
-      box-shadow: inset 0 -6px rgba(0,0,0,.35), inset 0 0 0 100px rgba(0,0,0,.1);
-    }
-
-    &:active {
-      -webkit-transform: translate(0,2px);
-              transform: translate(0,2px);
-      box-shadow: inset 0 -4px rgba(0,0,0,.35), inset 0 0 0 100px rgba(0,0,0,.1);
-    }
-
-    &[data-poll-selected="selected"] {
-      background: $option-background-selected !important;
-    }
   }
 
   .button {
@@ -136,8 +119,7 @@ div.poll {
 
     li[data-poll-option-id] {
       display: inline-block;
-      text-align: center;
-      width: 25px;
+      width: 45px;
       margin-right: 5px;
     }
 
