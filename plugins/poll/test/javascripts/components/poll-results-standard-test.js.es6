@@ -39,7 +39,12 @@ componentTest('multiple options in descending order', {
   setup(store) {
     this.set('poll', {
       type: 'multiple',
-      options: [Em.Object.create({ votes: 5 }), Em.Object.create({ votes: 4 })],
+      options: [
+        Em.Object.create({ votes: 5}),
+        Em.Object.create({ votes: 2}),
+        Em.Object.create({ votes: 4}),
+        Em.Object.create({ votes: 1})
+      ],
       voters: 9
     });
   },
@@ -47,5 +52,7 @@ componentTest('multiple options in descending order', {
   test(assert) {
     assert.equal(this.$('.option .percentage:eq(0)').text(), '55%');
     assert.equal(this.$('.option .percentage:eq(1)').text(), '44%');
+    assert.equal(this.$('.option .percentage:eq(2)').text(), '22%');
+    assert.equal(this.$('.option .percentage:eq(3)').text(), '11%');
   }
 });
