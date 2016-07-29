@@ -41,4 +41,20 @@ div.poll {
       margin-left: 5px;
     }
   }
+
+  .poll {
+    li[data-poll-option-id]:before {
+      font-family: FontAwesome;
+      content: "\f10c";
+      margin-right: 3px;
+      position: relative;
+      top: 1px;
+    }
+
+    &[data-poll-type="multiple"] {
+      li[data-poll-option-id]:before {
+        content: "\f096";
+      }
+    }
+  }
 }
