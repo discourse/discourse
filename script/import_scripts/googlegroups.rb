@@ -6,7 +6,7 @@ require 'fileutils'
 # * then cd /var/discourse
 # * then ./launcher enter app
 
-class ImportScripts::GoogleGroup < ImportScripts::Base
+class ImportScripts::GoogleGroups < ImportScripts::Base
 
   def initialize(google_group_name)
     @google_group_name = google_group_name
