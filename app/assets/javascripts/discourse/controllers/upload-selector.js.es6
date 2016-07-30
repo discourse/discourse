@@ -20,7 +20,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return allowsAttachments() ? "upload" : "picture-o";
   },
 
-  @computed('controller.local')
+  @computed('local')
   tip(local) {
     const source = local ? "local" : "remote";
     const authorized_extensions = authorizesAllExtensions() ? "" : `(${authorizedExtensions()})`;
