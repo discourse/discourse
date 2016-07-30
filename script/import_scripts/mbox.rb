@@ -5,16 +5,19 @@ class ImportScripts::Mbox < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
   BATCH_SIZE = 1000
-  MBOX_DIR = File.expand_path("~/import/site")
-
   # Remove to not split individual files
   SPLIT_AT = /^From (.*) at/
 
-  # Will create a category if it doesn't exist
   CATEGORY_MAPPINGS = {
     "default" => "uncategorized",
     # ex: "jobs-folder" => "jobs"
   }
+
+  def initialize(mbox_path)
+    super()
+    @mbox_dir = File.expand_path(mbox_path)
+    puts "(initialize) #{@mbox_dir}"
+  end
 
   def execute
     import_categories
@@ -35,7 +38,8 @@ class ImportScripts::Mbox < ImportScripts::Base
   end
 
   def open_db
-    SQLite3::Database.new("#{MBOX_DIR}/index.db")
+    puts "(open_db) #{@mbox_dir}"
+    SQLite3::Database.new("#{@mbox_dir}/index.db")
   end
 
   def each_line(f)
@@ -55,10 +59,10 @@ class ImportScripts::Mbox < ImportScripts::Base
   end
 
   def all_messages
-    files = Dir["#{MBOX_DIR}/messages/*"]
+    files = Dir["#{@mbox_dir}/messages/*"]
 
     CATEGORY_MAPPINGS.keys.each do |k|
-      files << Dir["#{MBOX_DIR}/#{k}/*"]
+      files << Dir["#{@mbox_dir}/#{k}/*"]
     end
 
     files.flatten!
@@ -187,7 +191,7 @@ class ImportScripts::Mbox < ImportScripts::Base
 
     all_messages do |mail, filename|
 
-      directory = filename.sub("#{MBOX_DIR}/", '').split("/")[0]
+      directory = filename.sub("#{@mbox_dir}/", '').split("/")[0]
 
       category = CATEGORY_MAPPINGS[directory] || CATEGORY_MAPPINGS['default'] || 'uncategorized'
 
@@ -435,4 +439,5 @@ class ImportScripts::Mbox < ImportScripts::Base
   end
 end
 
-ImportScripts::Mbox.new.perform
+# as I'm subclassing ImportScripts::Mbox I don't want to instantiate it here when it gets 'require'd 
+# ImportScripts::Mbox.new.perform
