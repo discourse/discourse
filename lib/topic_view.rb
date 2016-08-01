@@ -5,7 +5,7 @@ require_dependency 'gaps'
 
 class TopicView
 
-  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size
+  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields
 
   def self.slow_chunk_size
@@ -41,6 +41,7 @@ class TopicView
     @user = user
     @guardian = Guardian.new(@user)
     @topic = find_topic(topic_id)
+    @print = options[:print].present?
     check_and_raise_exceptions
 
     options.each do |key, value|
@@ -50,7 +51,7 @@ class TopicView
     @page = 1 if (!@page || @page.zero?)
     @chunk_size = case
                     when options[:slow_platform] then TopicView.slow_chunk_size
-                    when options[:print] then 1000
+                    when @print then 1000
                     else TopicView.chunk_size
                   end
     @limit ||= @chunk_size
