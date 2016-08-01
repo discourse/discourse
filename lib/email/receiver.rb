@@ -195,7 +195,8 @@ module Email
     def is_auto_generated?
       return false if SiteSetting.auto_generated_whitelist.split('|').include?(@from_email)
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
-      @mail[:from].to_s[/(mailer-?daemon|postmaster|noreply)@/i] ||
+      @mail[:from].to_s[/(mailer[\-_]?daemon|post[\-_]?master|no[\-_]?reply)@/i] ||
+      @mail[:subject].to_s[/^\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i] ||
       @mail.header.to_s[/auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i]
     end
 
