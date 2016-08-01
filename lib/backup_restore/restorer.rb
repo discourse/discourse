@@ -106,10 +106,19 @@ module BackupRestore
       @current_version = BackupRestore.current_version
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
       @tmp_directory = File.join(Rails.root, "tmp", "restores", @current_db, @timestamp)
+      @source_filename = File.join(Backup.base_directory, @filename)
       @archive_filename = File.join(@tmp_directory, @filename)
       @tar_filename = @archive_filename[0...-3]
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
-      @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+
+      # For backwards compatibility
+      @dump_filename =
+        if system("tar --list --file #{@source_filename} #{BackupRestore::DUMP_FILE}")
+          File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+        else
+          File.join(@tmp_directory, "#{BackupRestore::DUMP_FILE}.gz")
+        end
+
       @logs = []
       @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
@@ -162,8 +171,7 @@ module BackupRestore
 
     def copy_archive_to_tmp_directory
       log "Copying archive to tmp directory..."
-      source = File.join(Backup.base_directory, @filename)
-      execute_command("cp '#{source}' '#{@archive_filename}'", "Failed to copy archive to tmp directory.")
+      execute_command("cp '#{@source_filename}' '#{@archive_filename}'", "Failed to copy archive to tmp directory.")
     end
 
     def unzip_archive
@@ -200,9 +208,17 @@ module BackupRestore
 
       FileUtils.cd(@tmp_directory) do
         execute_command(
-          "tar --extract --file '#{@tar_filename}' #{BackupRestore::DUMP_FILE}.gz",
+          "tar --extract --file '#{@tar_filename}' #{File.basename(@dump_filename)}",
           "Failed to extract dump file."
         )
+      end
+    end
+
+    def restore_dump_command
+      if File.extname(@dump_filename) == '.gz'
+        "gzip -d < #{@dump_filename} | #{sed_command} | #{psql_command} 2>&1"
+      else
+        "#{psql_command} 2>&1 < #{@dump_filename}"
       end
     end
 
@@ -222,7 +238,7 @@ module BackupRestore
         end
       end
 
-      IO.popen("gzip -d < #{@dump_filename}.gz | #{sed_command} | #{psql_command} 2>&1") do |pipe|
+      IO.popen(restore_dump_command) do |pipe|
         begin
           while line = pipe.readline
             logs << line
