@@ -1459,6 +1459,10 @@ en:
         title: 'Share'
         help: 'share a link to this topic'
 
+      print:
+        title: 'Print'
+        help: 'Open a printer friendly version of this topic'
+
       flag_topic:
         title: 'Flag'
         help: 'privately flag this topic for attention or send a private notification about it'
