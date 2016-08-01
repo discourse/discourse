@@ -71,4 +71,5 @@
       <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
     <%- end %>
   </body>
+  <%= yield :after_body %>
 </html>
