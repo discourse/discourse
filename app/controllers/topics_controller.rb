@@ -58,6 +58,7 @@ class TopicsController < ApplicationController
     username_filters = opts[:username_filters]
 
     opts[:slow_platform] = true if slow_platform?
+    opts[:print] = true if params[:print].present?
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
     # Special case: a slug with a number in front should look by slug first before looking

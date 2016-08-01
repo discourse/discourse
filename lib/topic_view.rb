@@ -12,6 +12,10 @@ class TopicView
     10
   end
 
+  def self.print_chunk_size
+    1000
+  end
+
   def self.chunk_size
     20
   end
@@ -44,7 +48,11 @@ class TopicView
     end
 
     @page = 1 if (!@page || @page.zero?)
-    @chunk_size = options[:slow_platform] ? TopicView.slow_chunk_size : TopicView.chunk_size
+    @chunk_size = case
+                    when options[:slow_platform] then TopicView.slow_chunk_size
+                    when options[:print] then 1000
+                    else TopicView.chunk_size
+                  end
     @limit ||= @chunk_size
 
     setup_filtered_posts

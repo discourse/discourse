@@ -32,6 +32,8 @@ export default ContainerView.extend({
       this.attachViewClass('invite-reply-button');
     }
 
+    this.attachViewClass('print-button');
+
     if (topic.get('isPrivateMessage')) {
       this.attachViewClass('archive-button');
     }
