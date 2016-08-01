@@ -146,7 +146,7 @@ describe PostsController do
 
     describe "when logged in" do
       let(:user) { log_in }
-      let(:post) { Fabricate(:post, user: user, raw_email: 'email_content') }
+      let(:post) { Fabricate(:post, deleted_at: 2.hours.ago, user: user, raw_email: 'email_content') }
 
       it "raises an error if the user doesn't have permission to view raw email" do
         Guardian.any_instance.expects(:can_view_raw_email?).returns(false)

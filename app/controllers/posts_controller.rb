@@ -114,7 +114,7 @@ class PostsController < ApplicationController
   end
 
   def raw_email
-    post = Post.find(params[:id].to_i)
+    post = Post.unscoped.find(params[:id].to_i)
     guardian.ensure_can_view_raw_email!(post)
     render json: { raw_email: post.raw_email }
   end
