@@ -62,6 +62,7 @@ module Email
     end
 
     def process_internal
+      raise BouncedEmailError  if is_bounce?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
       user = find_or_create_user(@from_email, @from_display_name)
@@ -70,7 +71,6 @@ module Email
 
       @incoming_email.update_columns(user_id: user.id)
 
-      raise BouncedEmailError if is_bounce?
       raise InactiveUserError if !user.active && !user.staged
       raise BlockedUserError  if user.blocked
 
