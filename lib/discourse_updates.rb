@@ -8,6 +8,7 @@ module DiscourseUpdates
           installed_version: Discourse::VERSION::STRING,
           installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
           installed_describe: `git describe --dirty`,
+          git_branch: Discourse.git_branch,
           updated_at: nil
         )
       else
@@ -18,6 +19,7 @@ module DiscourseUpdates
           installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
           installed_describe: `git describe --dirty`,
           missing_versions_count: missing_versions_count,
+          git_branch: Discourse.git_branch,
           updated_at: updated_at
         )
       end
