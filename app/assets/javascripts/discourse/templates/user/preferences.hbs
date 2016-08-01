@@ -130,12 +130,14 @@
       </div>
     {{/if}}
 
+    {{#if canChangeBio}}
     <div class="control-group pref-bio">
       <label class="control-label">{{i18n 'user.bio'}}</label>
       <div class="controls bio-composer">
         {{d-editor value=model.bio_raw}}
       </div>
     </div>
+    {{/if}}
 
     {{#each userFields as |uf|}}
       {{user-field field=uf.field value=uf.value}}
