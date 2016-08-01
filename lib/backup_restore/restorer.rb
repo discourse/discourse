@@ -110,13 +110,18 @@ module BackupRestore
       @archive_filename = File.join(@tmp_directory, @filename)
       @tar_filename = @archive_filename[0...-3]
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
+      @is_archive = !(@filename =~ /.sql.gz$/)
 
       # For backwards compatibility
       @dump_filename =
-        if system("tar --list --file #{@source_filename} #{BackupRestore::DUMP_FILE}")
-          File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+        if @is_archive
+          if system("tar --list --file #{@source_filename} #{BackupRestore::DUMP_FILE}")
+            File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+          else
+            File.join(@tmp_directory, "#{BackupRestore::DUMP_FILE}.gz")
+          end
         else
-          File.join(@tmp_directory, "#{BackupRestore::DUMP_FILE}.gz")
+          File.join(@tmp_directory, @filename)
         end
 
       @logs = []
@@ -175,7 +180,10 @@ module BackupRestore
     end
 
     def unzip_archive
+      return unless @is_archive
+
       log "Unzipping archive, this may take a while..."
+
       FileUtils.cd(@tmp_directory) do
         execute_command("gzip --decompress '#{@archive_filename}'", "Failed to unzip archive.")
       end
@@ -184,14 +192,23 @@ module BackupRestore
     def extract_metadata
       log "Extracting metadata file..."
 
-      FileUtils.cd(@tmp_directory) do
-        execute_command(
-          "tar --extract --file '#{@tar_filename}' #{BackupRestore::METADATA_FILE}",
-          "Failed to extract metadata file."
-        )
-      end
+      @metadata =
+        if system("tar --list --file #{@source_filename} #{BackupRestore::METADATA_FILE}")
+          FileUtils.cd(@tmp_directory) do
+            execute_command(
+              "tar --extract --file '#{@tar_filename}' #{BackupRestore::METADATA_FILE}",
+              "Failed to extract metadata file."
+            )
+          end
 
-      @metadata = Oj.load_file(@meta_filename)
+          Oj.load_file(@meta_filename)
+        else
+          if @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
+            { "version" => Regexp.last_match[1].to_i }
+          else
+            raise "Migration version is missing from the filename."
+          end
+        end
     end
 
     def validate_metadata
@@ -204,6 +221,8 @@ module BackupRestore
     end
 
     def extract_dump
+      return unless @is_archive
+
       log "Extracting dump file..."
 
       FileUtils.cd(@tmp_directory) do
@@ -334,7 +353,7 @@ module BackupRestore
     end
 
     def extract_uploads
-      if `tar --list --file '#{@tar_filename}' | grep 'uploads/'`.present?
+      if system("tar --list --file '#{@tar_filename}' 'uploads'")
         log "Extracting uploads..."
         FileUtils.cd(File.join(Rails.root, "public")) do
           execute_command(
