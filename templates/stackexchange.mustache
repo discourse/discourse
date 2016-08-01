@@ -12,7 +12,9 @@
 </div>
 
 <div class="date">
-  asked by <a href="{{owner.link}}" target="_blank">
+  {{#is_question}}asked by{{/is_question}}
+  {{#is_answer}}answered by{{/is_answer}}
+  <a href="{{owner.link}}" target="_blank">
     {{owner.display_name}}
   </a>
   on <a href="{{link}}" target="_blank">{{creation_date}}</a>
