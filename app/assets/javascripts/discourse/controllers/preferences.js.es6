@@ -48,6 +48,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return this.siteSettings.enable_badges && hasTitleBadges;
   },
 
+  @computed("model.can_change_bio")
+  canChangeBio(canChangeBio)
+  {
+    return canChangeBio;
+  },
+
   @computed()
   canChangePassword() {
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;

@@ -288,6 +288,7 @@ login:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
+  sso_overrides_bio: false
   sso_overrides_email: false
   sso_overrides_username: false
   sso_overrides_name: false

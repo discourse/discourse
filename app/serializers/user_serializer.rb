@@ -101,7 +101,8 @@ class UserSerializer < BasicUserSerializer
                      :card_image_badge,
                      :card_image_badge_id,
                      :muted_usernames,
-                     :mailing_list_posts_per_day
+                     :mailing_list_posts_per_day,
+                     :can_change_bio
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -130,6 +131,10 @@ class UserSerializer < BasicUserSerializer
 
   def include_email?
     object.id && object.id == scope.user.try(:id)
+  end
+
+  def can_change_bio
+    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
   end
 
   def card_badge
