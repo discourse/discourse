@@ -100,6 +100,7 @@ describe UserNotifications do
         expect(subject.from).to eq([SiteSetting.notification_email])
         expect(subject.html_part.body.to_s).to include topic.title
         expect(subject.text_part.body.to_s).to be_present
+        expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
       end
 
       it "includes posts less than 24 hours old" do

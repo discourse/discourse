@@ -83,9 +83,14 @@ class UserNotifications < ActionMailer::Base
     return unless @posts_by_topic.present?
 
     build_summary_for(user)
-    apply_notification_styles build_email @user.email,
+    opts = {
       from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
-      subject:    I18n.t('user_notifications.mailing_list.subject_template', site_name: @site_name, date: @date)
+      subject: I18n.t('user_notifications.mailing_list.subject_template', site_name: @site_name, date: @date),
+      mailing_list_mode: true,
+      add_unsubscribe_link: true,
+      unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
+    }
+    apply_notification_styles(build_email(@user.email, opts))
   end
 
   def digest(user, opts={})
@@ -236,7 +241,6 @@ class UserNotifications < ActionMailer::Base
   end
 
   def self.get_context_posts(post, topic_user, user)
-
     if user.user_option.email_previous_replies == UserOption.previous_replies_type[:never]
       return []
     end
@@ -375,7 +379,6 @@ class UserNotifications < ActionMailer::Base
       template << "_pm"
       template << "_staged" if user.staged?
     end
-
 
     email_opts = {
       topic_title: title,
