@@ -74,7 +74,7 @@ RailsMultisite::ConnectionManagement.each_connection do
 
   if (error_rate_per_minute || 0) > 0
     store.register_rate_limit_per_minute(severities, error_rate_per_minute) do |rate|
-      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'minute' })
+      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'minute', publish_at: Time.current.to_i })
     end
   end
 
@@ -82,7 +82,7 @@ RailsMultisite::ConnectionManagement.each_connection do
 
   if (error_rate_per_hour || 0) > 0
     store.register_rate_limit_per_hour(severities, error_rate_per_hour) do |rate|
-      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'hour' })
+      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'hour', publish_at: Time.current.to_i })
     end
   end
 end
