@@ -1,5 +1,6 @@
 import RestModel from 'discourse/models/rest';
 import Category from 'discourse/models/category';
+import Group from 'discourse/models/group';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default RestModel.extend({
@@ -9,7 +10,8 @@ export default RestModel.extend({
   verify_certificate: true,
   active: false,
   web_hook_event_types: null,
-  categoryFilters: null,
+  categoriesFilter: null,
+  groupsFilterInName: null,
 
   @computed('wildcard_web_hook')
   webHookType: {
@@ -22,8 +24,21 @@ export default RestModel.extend({
   },
 
   @observes('category_ids')
-  updateCategoryFilters() {
-    this.set('categoryFilters', Category.findByIds(this.get('category_ids')));
+  updateCategoriesFilter() {
+    this.set('categoriesFilter', Category.findByIds(this.get('category_ids')));
+  },
+
+  @observes('group_ids')
+  updateGroupsFilter() {
+    const groupIds = this.get('group_ids');
+    this.set('groupsFilterInName', Discourse.Site.currentProp('groups').reduce((groupNames, g) => {
+      if (groupIds.includes(g.id)) { groupNames.push(g.name); }
+      return groupNames;
+    }, []));
+  },
+
+  groupFinder(term) {
+    return Group.findAll({search: term, ignore_automatic: false});
   },
 
   @computed('wildcard_web_hook', 'web_hook_event_types.[]')
@@ -40,9 +55,10 @@ export default RestModel.extend({
 
   createProperties() {
     const types = this.get('web_hook_event_types');
-    const categories = this.get('categoryFilters');
+    const categories = this.get('categoriesFilter');
+    const groupNames = this.get('groupsFilterInName').split(',');
 
-    let webhook = {
+    return {
       payload_url: this.get('payload_url'),
       content_type: this.get('content_type'),
       secret: this.get('secret'),
@@ -50,10 +66,13 @@ export default RestModel.extend({
       verify_certificate: this.get('verify_certificate'),
       active: this.get('active'),
       web_hook_event_type_ids: Ember.isEmpty(types) ? [null] : types.map(type => type.id),
-      category_ids: Ember.isEmpty(categories) ? [null] : categories.map(c => c.id)
+      category_ids: Ember.isEmpty(categories) ? [null] : categories.map(c => c.id),
+      group_ids: Ember.isEmpty(groupNames) ? [null] : Discourse.Site.currentProp('groups')
+        .reduce((groupIds, g) => {
+          if (groupNames.includes(g.name)) { groupIds.push(g.id); }
+          return groupIds;
+        }, [])
     };
-
-    return webhook;
   },
 
   updateProperties() {
