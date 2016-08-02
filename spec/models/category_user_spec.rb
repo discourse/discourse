@@ -45,6 +45,26 @@ describe CategoryUser do
     expect(TopicUser.get(topic, user).notification_level).to eq(regular)
   end
 
+  it 'allows updating notification level' do
+    category = Fabricate(:category)
+    user = Fabricate(:user)
+
+    CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:watching_first_post],
+                                                     category.id)
+
+    expect(CategoryUser.where(user_id: user.id,
+                              category_id: category.id,
+                              notification_level: NotificationLevels.all[:watching_first_post]).exists?).to eq(true)
+
+    CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:regular],
+                                                     category.id)
+
+    expect(CategoryUser.where(user_id: user.id,
+                              category_id: category.id,
+                              notification_level: NotificationLevels.all[:regular]).exists?).to eq(true)
+  end
 
   context 'integration' do
     before do
