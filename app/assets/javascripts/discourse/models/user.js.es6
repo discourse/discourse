@@ -245,7 +245,7 @@ const User = RestModel.extend({
 
   @computed("groups.[]")
   displayGroups() {
-    const groups = this.get('groups');
+    const groups = this.get('groups') || [];
     const filtered = groups.filter(group => {
       return !group.automatic || group.name === "moderators";
     });
