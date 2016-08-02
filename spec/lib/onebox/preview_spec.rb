@@ -3,13 +3,13 @@ require "spec_helper"
 describe Onebox::Preview do
 
   before do
-    fake("http://www.amazon.com/product", response("amazon"))
-    FakeWeb.register_uri(:get, "http://www.amazon.com/404-url", status: 404)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/500-url", status: 500)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/error-url", status: 500)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/timeout-url", exception: Timeout::Error)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/http-error", exception: Net::HTTPError)
-    FakeWeb.register_uri(:get, "http://www.amazon.com/error-connecting", exception: Errno::ECONNREFUSED)
+    fake("https://www.amazon.com/product", response("amazon"))
+    FakeWeb.register_uri(:get, "https://www.amazon.com/404-url", status: 404)
+    FakeWeb.register_uri(:get, "https://www.amazon.com/500-url", status: 500)
+    FakeWeb.register_uri(:get, "https://www.amazon.com/error-url", status: 500)
+    FakeWeb.register_uri(:get, "https://www.amazon.com/timeout-url", exception: Timeout::Error)
+    FakeWeb.register_uri(:get, "https://www.amazon.com/http-error", exception: Net::HTTPError)
+    FakeWeb.register_uri(:get, "https://www.amazon.com/error-connecting", exception: Errno::ECONNREFUSED)
   end
 
   let(:preview_url) { "http://www.amazon.com/product" }

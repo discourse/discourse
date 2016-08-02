@@ -3,11 +3,18 @@ require "spec_helper"
 describe Onebox do
 
   before do
-    fake("http://www.amazon.com", response("amazon"))
+    fake("https://www.amazon.com/product", response("amazon"))
   end
 
   describe ".preview" do
     let(:url) { "http://www.amazon.com/product" }
+
+    let(:https_url) do
+      uri = URI(url)
+      uri.scheme = 'https'
+      uri.to_s
+    end
+
     it "creates a cache that responds as expected" do
       preview = Onebox.preview(url)
       cache = preview.cache
@@ -18,13 +25,13 @@ describe Onebox do
       preview = Onebox.preview(url)
       preview.to_s
       cache = preview.cache
-      expect(cache.key?(url)).to eq(true)
+      expect(cache.key?(https_url)).to eq(true)
     end
 
     it "replaces the cache if the cache is expired" do
       preview = Onebox.preview(url, cache: Moneta.new(:Memory, expires: 100_000, serializer: :json))
       cache = preview.cache
-      expect(cache.fetch(url)).to be(nil)
+      expect(cache.fetch(https_url)).to be(nil)
     end
   end
 

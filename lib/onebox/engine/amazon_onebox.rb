@@ -7,15 +7,14 @@ module Onebox
       include LayoutSupport
       include HTML
 
-
+      always_https
       matches_regexp(/^https?:\/\/(?:www)\.amazon\.(?<tld>com|ca|de|it|es|fr|co\.jp|co\.uk|cn|in|com\.br)\//)
 
       def url
         if match && match[:id]
-          _url = URI("http://www.amazon.#{tld}/gp/aw/d/" + URI::encode(match[:id]))
-          _url.scheme = URI(@url).scheme
-          return _url.to_s
+          return "https://www.amazon.#{tld}/gp/aw/d/#{URI::encode(match[:id])}"
         end
+
         @url
       end
 
