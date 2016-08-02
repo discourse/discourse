@@ -1,10 +1,7 @@
 $border-color: rgb(219,219,219);
 $text-color: #9E9E9E;
 
-$option-foreground: dark-light-diff($primary, $secondary, 0%, -100%);
 $option-background: dark-light-diff($primary, $secondary, 90%, -65%);
-$option-background-selected: #dbffdb;
-$option-shadow: dark-light-diff($option-background, $primary, 10%, -10%);
 
 div.poll {
   margin: 10px 0px;
@@ -105,12 +102,12 @@ div.poll {
     }
 
     .bar-back {
-      background: $border-color;
+      background: $option-background;
     }
 
     .bar {
       height: 10px;
-      background: $option-foreground;
+      background: $primary;
     }
 
   }
