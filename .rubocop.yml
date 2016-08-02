@@ -9,7 +9,6 @@ AllCops:
 StringLiterals:
   Enabled: false
 
-# Limit lines to 79 characters.
 LineLength:
   Enabled: true
   Max: 180
