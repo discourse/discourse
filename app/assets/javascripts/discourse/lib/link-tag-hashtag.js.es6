@@ -28,7 +28,7 @@ export function linkSeenTagHashtags($elem) {
 
   if ($hashtags.length) {
     const tagValues = $hashtags.map((_, hashtag) => {
-      return $(hashtag).text().substr(1).replace(`${TAG_HASHTAG_POSTFIX}`, "");
+      return $(hashtag).text().substr(1).replace(TAG_HASHTAG_POSTFIX, "");
     });
 
     if (tagValues.length) {
