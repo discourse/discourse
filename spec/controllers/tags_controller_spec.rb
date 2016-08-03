@@ -39,4 +39,38 @@ describe TagsController do
       end
     end
   end
+
+  describe 'search' do
+    context 'tagging disabled' do
+      it "returns 404" do
+        xhr :get, :search, q: 'stuff'
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'tagging enabled' do
+      before do
+        SiteSetting.tagging_enabled = true
+      end
+
+      it "can return some tags" do
+        tag_names = ['stuff', 'stinky', 'stumped']
+        tag_names.each { |name| Fabricate(:tag, name: name) }
+        xhr :get, :search, q: 'stu'
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        expect(json["results"].map{|j| j["id"]}.sort).to eq(['stuff', 'stumped'])
+      end
+
+      it "can say if given tag is not allowed" do
+        yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
+        category = Fabricate(:category, tags: [yup])
+        xhr :get, :search, q: 'nope', categoryId: category.id
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        expect(json["results"].map{|j| j["id"]}.sort).to eq([])
+        expect(json["forbidden"]).to be_present
+      end
+    end
+  end
 end
