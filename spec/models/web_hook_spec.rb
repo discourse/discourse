@@ -53,13 +53,13 @@ describe WebHook do
 
     describe '#enqueue_hooks' do
       it 'enqueues hooks with id and name' do
-        Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, event_name: 'post')
+        Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, event_type: 'post')
 
         WebHook.enqueue_hooks(:post)
       end
 
       it 'accepts additional parameters' do
-        Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, post_id: 1, event_name: 'post')
+        Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, post_id: 1, event_type: 'post')
 
         WebHook.enqueue_hooks(:post, post_id: 1)
       end
@@ -82,15 +82,15 @@ describe WebHook do
 
       describe '#enqueue_hooks' do
         it 'enqueues hooks with ids' do
-          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, event_name: 'post')
-          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: wildcard_hook.id, event_name: 'post')
+          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, event_type: 'post')
+          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: wildcard_hook.id, event_type: 'post')
 
           WebHook.enqueue_hooks(:post)
         end
 
         it 'accepts additional parameters' do
-          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, post_id: 1, event_name: 'post')
-          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: wildcard_hook.id, post_id: 1, event_name: 'post')
+          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: post_hook.id, post_id: 1, event_type: 'post')
+          Jobs.expects(:enqueue).with(:emit_web_hook_event, web_hook_id: wildcard_hook.id, post_id: 1, event_type: 'post')
 
           WebHook.enqueue_hooks(:post, post_id: 1)
         end
