@@ -1882,9 +1882,16 @@ en:
 
     backup_succeeded:
       subject_template: "Backup completed successfully"
-      text_body_template: "The backup was successful.
+      text_body_template: |
+        The backup was successful.
 
-      Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup."
+        Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup."
+
+        Here's the log:
+
+        ```text
+        %{logs}
+        ```
 
     backup_failed:
       subject_template: "Backup failed"
@@ -1893,13 +1900,20 @@ en:
 
         Here's the log:
 
-        ```
+        ```text
         %{logs}
         ```
 
     restore_succeeded:
       subject_template: "Restore completed successfully"
-      text_body_template: "The restore was successful."
+      text_body_template: |
+        The restore was successful.
+
+        Here's the log:
+
+        ```text
+        %{logs}
+        ```
 
     restore_failed:
       subject_template: "Restore failed"
@@ -1908,7 +1922,7 @@ en:
 
         Here's the log:
 
-        ```
+        ```text
         %{logs}
         ```
 
