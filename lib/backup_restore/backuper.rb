@@ -260,9 +260,9 @@ module BackupRestore
     def notify_user
       log "Notifying '#{@user.username}' of the end of the backup..."
       if @success
-        SystemMessage.create_from_system_user(@user, :backup_succeeded)
+        SystemMessage.create_from_system_user(@user, :backup_succeeded, logs: pretty_logs(@logs))
       else
-        SystemMessage.create_from_system_user(@user, :backup_failed, logs: @logs.join("\n"))
+        SystemMessage.create_from_system_user(@user, :backup_failed, logs: pretty_logs(@logs))
       end
     end
 

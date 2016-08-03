@@ -10,5 +10,9 @@ module BackupRestore
 
       output
     end
+
+    def pretty_logs(logs)
+      logs.join("\n")
+    end
   end
 end

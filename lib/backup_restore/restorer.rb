@@ -378,9 +378,9 @@ module BackupRestore
       if user = User.find_by(email: @user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
         if @success
-          SystemMessage.create_from_system_user(user, :restore_succeeded)
+          SystemMessage.create_from_system_user(user, :restore_succeeded, logs: pretty_logs(@logs))
         else
-          SystemMessage.create_from_system_user(user, :restore_failed, logs: @logs.join("\n"))
+          SystemMessage.create_from_system_user(user, :restore_failed, logs: pretty_logs(@logs))
         end
       else
         log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
