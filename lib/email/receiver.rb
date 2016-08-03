@@ -94,45 +94,19 @@ module Email
                      topic: post.topic,
                      skip_validations: user.staged?)
       else
-        destination = destinations.first
+        first_exception = nil
 
-        raise BadDestinationAddress if destination.blank?
-
-        case destination[:type]
-        when :group
-          group = destination[:obj]
-          create_topic(user: user,
-                       raw: body,
-                       title: subject,
-                       archetype: Archetype.private_message,
-                       target_group_names: [group.name],
-                       is_group_message: true,
-                       skip_validations: true)
-
-        when :category
-          category = destination[:obj]
-
-          raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
-          raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
-
-          create_topic(user: user,
-                       raw: body,
-                       title: subject,
-                       category: category.id,
-                       skip_validations: user.staged?)
-
-        when :reply
-          email_log = destination[:obj]
-
-          if email_log.user_id != user.id
-            raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+        destinations.each do |destination|
+          begin
+            process_destination(destination, user, body)
+          rescue => e
+            first_exception ||= e
+          else
+            return
           end
-
-          create_reply(user: user,
-                       raw: body,
-                       post: email_log.post,
-                       topic: email_log.post.topic)
         end
+
+        raise first_exception || BadDestinationAddress
       end
     end
 
@@ -337,6 +311,44 @@ module Email
           email_log = EmailLog.for(c)
           return { type: :reply, obj: email_log } if email_log
         end
+      end
+    end
+
+    def process_destination(destination, user, body)
+      case destination[:type]
+      when :group
+        group = destination[:obj]
+        create_topic(user: user,
+                     raw: body,
+                     title: subject,
+                     archetype: Archetype.private_message,
+                     target_group_names: [group.name],
+                     is_group_message: true,
+                     skip_validations: true)
+
+      when :category
+        category = destination[:obj]
+
+        raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
+        raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
+
+        create_topic(user: user,
+                     raw: body,
+                     title: subject,
+                     category: category.id,
+                     skip_validations: user.staged?)
+
+      when :reply
+        email_log = destination[:obj]
+
+        if email_log.user_id != user.id
+          raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+        end
+
+        create_reply(user: user,
+                     raw: body,
+                     post: email_log.post,
+                     topic: email_log.post.topic)
       end
     end
 
