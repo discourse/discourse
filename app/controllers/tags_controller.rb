@@ -156,7 +156,15 @@ class TagsController < ::ApplicationController
       tags << { id: t.name, text: t.name, count: 0 }
     end
 
-    render json: { results: tags }
+    json_response = { results: tags }
+
+    t = DiscourseTagging.clean_tag(params[:q])
+    if Tag.where(name: t).exists? && !tags.find { |h| h[:id] == t }
+      # filter_allowed_tags determined that the tag entered is not allowed
+      json_response[:forbidden] = t
+    end
+
+    render json: json_response
   end
 
   def notifications

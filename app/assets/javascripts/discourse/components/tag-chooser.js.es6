@@ -43,6 +43,8 @@ export default Ember.TextField.extend({
       this.set('allowCreate', site.get('can_create_tag'));
     }
 
+    this.set('termMatchesForbidden', false);
+
     if (this.get('unlimitedTagCount')) {
       limit = null;
     } else if (this.get('limit')) {
@@ -78,7 +80,7 @@ export default Ember.TextField.extend({
         term = term.replace(filterRegexp, '').trim();
 
         // No empty terms, make sure the user has permission to create the tag
-        if (!term.length || !self.get('allowCreate')) return;
+        if (!term.length || !self.get('allowCreate') || self.get('termMatchesForbidden')) return;
 
         if ($(data).filter(function() {
           return this.text.localeCompare(term) === 0;
@@ -119,6 +121,7 @@ export default Ember.TextField.extend({
           if (self.siteSettings.tags_sort_alphabetically) {
             data.results = data.results.sort(function(a,b) { return a.id > b.id; });
           }
+          self.set('termMatchesForbidden', data.forbidden ? true : false);
           return data;
         }
       },
