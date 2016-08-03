@@ -3,6 +3,7 @@ require_dependency 'promotion'
 require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
+require_dependency 'rate_limiter'
 
 class TopicsController < ApplicationController
   before_filter :ensure_logged_in, only: [:timings,
@@ -66,6 +67,14 @@ class TopicsController < ApplicationController
     if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
       topic = Topic.find_by(slug: params[:id].downcase)
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
+    end
+
+    if opts[:print]
+      begin
+        RateLimiter.new(current_user, "print-topic-per-hour", 10, 1.hour).performed!
+      rescue RateLimiter::LimitExceeded
+        render_json_error(I18n.t("rate_limiter.slow_down"))
+      end
     end
 
     begin
