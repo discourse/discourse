@@ -8,6 +8,7 @@ export default Ember.Component.extend({
   queuedForTyping: null,
   _lastSimilaritySearch: null,
   _similarTopicsMessage: null,
+  _yourselfConfirm: null,
   similarTopics: null,
 
   hidden: Ember.computed.not('composer.viewOpen'),
@@ -83,6 +84,22 @@ export default Ember.Component.extend({
   // Some messages only get shown after being typed.
   _typedReply() {
     if (this.isDestroying || this.isDestroyed) { return; }
+
+    const composer = this.get('composer');
+    if (composer.get('privateMessage')) {
+      const usernames = composer.get('targetUsernames').split(',');
+      if (usernames.length === 1 && usernames[0] === this.currentUser.get('username')) {
+
+        const message = this._yourselfConfirm || composer.store.createRecord('composer-message', {
+          id: 'yourself_confirm',
+          templateName: 'custom-body',
+          title: I18n.t('composer.yourself_confirm.title'),
+          body: I18n.t('composer.yourself_confirm.body')
+        });
+        this.send('popup', message);
+      }
+    }
+
     this.get('queuedForTyping').forEach(msg => this.send("popup", msg));
   },
 

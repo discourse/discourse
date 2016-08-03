@@ -1090,6 +1090,9 @@ en:
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
+      yourself_confirm:
+        title: "Did you forget to add recipients?"
+        body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
