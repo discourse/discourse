@@ -230,10 +230,14 @@ module BackupRestore
 
       log "Archiving uploads..."
       FileUtils.cd(File.join(Rails.root, "public")) do
-        execute_command(
-          "tar --append --dereference --file #{tar_filename} #{upload_directory}",
-          "Failed to archive uploads."
-        )
+        if File.directory?(upload_directory)
+          execute_command(
+            "tar --append --dereference --file #{tar_filename} #{upload_directory}",
+            "Failed to archive uploads."
+          )
+        else
+          log "No uploads found, skipping archiving uploads..."
+        end
       end
 
       remove_tmp_directory
