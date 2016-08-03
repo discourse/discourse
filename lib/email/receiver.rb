@@ -436,11 +436,14 @@ module Email
       raise InvalidPostAction.new(e)
     end
 
+
+
     def create_post_with_attachments(options={})
       # deal with attachments
       @mail.attachments.each do |attachment|
-        # always strip S/MIME signatures
-        next if attachment.content_type == "application/pkcs7-mime".freeze
+        # strip blacklisted attachments (mostly signatures)
+        next if attachment.content_type =~ SiteSetting.attachment_content_type_blacklist_regex
+        next if attachment.filename =~ SiteSetting.attachment_filename_blacklist_regex
 
         tmp = Tempfile.new("discourse-email-attachment")
         begin

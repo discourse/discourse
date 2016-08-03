@@ -630,6 +630,12 @@ email:
     default: 2
     min: 2
   reset_bounce_score_after_days: 30
+  attachment_content_type_blacklist:
+    type: list
+    default: "pkcs7"
+  attachment_filename_blacklist:
+    type: list
+    default: "smime.p7s|signature.asc"
 
 
 files:
