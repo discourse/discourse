@@ -24,8 +24,11 @@ const VersionCheck = Discourse.Model.extend({
   }.property('missing_versions_count'),
 
   gitLink: function() {
+    const git_branch = this.get('git_branch');
+    if (git_branch)
+      return "https://github.com/discourse/discourse/compare/" + this.get('installed_sha') + "..." + git_branch;
     return "https://github.com/discourse/discourse/tree/" + this.get('installed_sha');
-  }.property('installed_sha'),
+  }.property('installed_sha', 'git_branch'),
 
   shortSha: function() {
     return this.get('installed_sha').substr(0,10);
