@@ -109,6 +109,14 @@ class SiteSetting < ActiveRecord::Base
   def self.email_polling_enabled?
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
+
+  def self.attachment_content_type_blacklist_regex
+    @attachment_content_type_blacklist_regex ||= Regexp.union(SiteSetting.attachment_content_type_blacklist.split("|"))
+  end
+
+  def self.attachment_filename_blacklist_regex
+    @attachment_filename_blacklist_regex ||= Regexp.union(SiteSetting.attachment_filename_blacklist.split("|"))
+  end
 end
 
 # == Schema Information
