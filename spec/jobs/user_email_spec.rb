@@ -201,6 +201,13 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
+      it "does send the email if the user is using daily mailing list mode" do
+        Email::Sender.any_instance.expects(:send)
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
+
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
+      end
+
       it "does not send notification if limit is reached" do
         SiteSetting.max_emails_per_day_per_user = 2
 
@@ -218,9 +225,9 @@ describe Jobs::UserEmail do
         expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
       end
 
-      it "doesn't send the mail if the user is using mailing list mode" do
+      it "doesn't send the mail if the user is using individual mailing list mode" do
         Email::Sender.any_instance.expects(:send).never
-        user.user_option.update_column(:mailing_list_mode, true)
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
         # sometimes, we pass the notification_id
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
         # other times, we only pass the type of notification
