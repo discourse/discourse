@@ -26,6 +26,10 @@ describe Email::MessageBuilder do
     expect(builder.build_args[:charset]).to eq("UTF-8")
   end
 
+  it "ask politely not to receive automated responses" do
+    expect(header_args['X-Auto-Response-Suppress']).to eq("All")
+  end
+
   context "reply by email" do
 
     context "without allow_reply_by_email" do
