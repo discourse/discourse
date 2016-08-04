@@ -69,14 +69,25 @@ body {
     }
   }
 
+  $grippie-border-color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 50%));
+
   .grippie {
-    width: 100%;
+    position: relative;
     cursor: row-resize;
-    height: 11px;
-    overflow: hidden;
-    display:block;
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    background: image-url("grippie.png") dark-light-diff($primary, $secondary, 90%, -60%) no-repeat center 3px;
+    margin: auto;
+    height: 4.5px;
+    width: 27px;
+    border-top: 1px solid $grippie-border-color;
+    border-bottom: 1px solid $grippie-border-color;
+    top: 4px;
+    box-sizing: border-box;
+  }
+
+  .grippie:before {
+    content: '';
+    display: block;
+    border-top: 1px solid $grippie-border-color;
+    margin-top: 0.5px;
   }
 }
 
