@@ -178,6 +178,33 @@ describe TopicQuery do
     end
   end
 
+  context 'muted tags' do
+    it 'is removed from new and latest lists' do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.remove_muted_tags_from_latest = true
+
+      muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
+
+      muted_topic = Fabricate(:topic, tags: [muted_tag])
+      tagged_topic = Fabricate(:topic, tags: [other_tag])
+      untagged_topic = Fabricate(:topic)
+
+      TagUser.create!(user_id: user.id,
+                      tag_id: muted_tag.id,
+                      notification_level: CategoryUser.notification_levels[:muted])
+
+      topic_ids = topic_query.list_latest.topics.map(&:id)
+      expect(topic_ids).not_to include(muted_topic.id)
+      expect(topic_ids).to include(tagged_topic.id)
+      expect(topic_ids).to include(untagged_topic.id)
+
+      topic_ids = topic_query.list_new.topics.map(&:id)
+      expect(topic_ids).not_to include(muted_topic.id)
+      expect(topic_ids).to include(tagged_topic.id)
+      expect(topic_ids).to include(untagged_topic.id)
+    end
+  end
+
   context 'a bunch of topics' do
     let!(:regular_topic) do
       Fabricate(:topic, title: 'this is a regular topic',
