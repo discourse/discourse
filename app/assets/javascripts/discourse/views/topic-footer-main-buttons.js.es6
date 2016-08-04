@@ -7,6 +7,7 @@ export default ContainerView.extend({
   @on('init')
   createButtons() {
     const mobileView = this.site.mobileView;
+    const { siteSettings } = this;
 
     const topic = this.get('topic');
 
@@ -32,7 +33,9 @@ export default ContainerView.extend({
       this.attachViewClass('invite-reply-button');
     }
 
-    this.attachViewClass('print-button');
+    if (!mobileView && siteSettings.allow_print_page) {
+      this.attachViewClass('print-button');
+    }
 
     if (topic.get('isPrivateMessage')) {
       this.attachViewClass('archive-button');

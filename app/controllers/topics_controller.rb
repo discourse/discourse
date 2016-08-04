@@ -70,8 +70,9 @@ class TopicsController < ApplicationController
     end
 
     if opts[:print]
+      raise Discourse::InvalidAccess unless SiteSetting.allow_print_page
       begin
-        RateLimiter.new(current_user, "print-topic-per-hour", 10, 1.hour).performed!
+        RateLimiter.new(current_user, "print-topic-per-hour", 10, 1.hour).performed! unless current_user.admin?
       rescue RateLimiter::LimitExceeded
         render_json_error(I18n.t("rate_limiter.slow_down"))
       end

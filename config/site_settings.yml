@@ -1220,6 +1220,10 @@ uncategorized:
 
   topic_page_title_includes_category: true
 
+  allow_print_page:
+    default: true
+    client: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: 'DigestEmailSiteSetting'
