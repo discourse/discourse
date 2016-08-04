@@ -597,8 +597,7 @@ class TopicQuery
       if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
         list
       else
-        muted_tags = DiscourseTagging.muted_tags(user)
-        if muted_tags.empty?
+        if !TagUser.lookup(user, :muted).exists?
           list
         else
           showing_tag = if opts[:filter]
@@ -608,17 +607,17 @@ class TopicQuery
             nil
           end
 
-          if muted_tags.include?(showing_tag)
+          if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
             list # if viewing the topic list for a muted tag, show all the topics
           else
-            arr = muted_tags.map{ |z| "'#{z}'" }.join(',')
-            list.where("EXISTS (
-       SELECT 1
-         FROM topic_custom_fields tcf
-        WHERE tcf.name = 'tags'
-          AND tcf.value NOT IN (#{arr})
-          AND tcf.topic_id = topics.id
-       ) OR NOT EXISTS (select 1 from topic_custom_fields tcf where tcf.name = 'tags' and tcf.topic_id = topics.id)")
+            muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+            list = list.where("
+              EXISTS (
+                SELECT 1
+                  FROM topic_tags tt
+                 WHERE tt.tag_id NOT IN (:tag_ids)
+                   AND tt.topic_id = topics.id
+              ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
           end
         end
       end
