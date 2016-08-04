@@ -137,7 +137,11 @@ class TopicView
   end
 
   def relative_url
-    @topic.relative_url
+    if !@print
+      @topic.relative_url
+    else
+      @topic.relative_url + '/print'
+    end
   end
 
   def page_title
