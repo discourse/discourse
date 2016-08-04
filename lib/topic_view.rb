@@ -80,7 +80,7 @@ class TopicView
   end
 
   def canonical_path
-    path = @topic.relative_url
+    path = relative_url
     path << if @post_number
       page = ((@post_number.to_i - 1) / @limit) + 1
       (page > 1) ? "?page=#{page}" : ""
@@ -122,18 +122,18 @@ class TopicView
 
   def prev_page_path
     if prev_page > 1
-      "#{@topic.relative_url}?page=#{prev_page}"
+      "#{relative_url}?page=#{prev_page}"
     else
-      @topic.relative_url
+      relative_url
     end
   end
 
   def next_page_path
-    "#{@topic.relative_url}?page=#{next_page}"
+    "#{relative_url}?page=#{next_page}"
   end
 
   def absolute_url
-    "#{Discourse.base_url}#{@topic.relative_url}"
+    "#{Discourse.base_url}#{relative_url}"
   end
 
   def relative_url
