@@ -343,7 +343,7 @@ class UsersController < ApplicationController
         ),
         errors: user.errors.to_hash,
         values: user.attributes.slice('name', 'username', 'email'),
-        is_developer: UsernameCheckerService.new.is_developer?(user.email)
+        is_developer: UsernameCheckerService.is_developer?(user.email)
       }
     end
   rescue ActiveRecord::StatementInvalid
@@ -675,10 +675,21 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.permit(:name, :email, :password, :username, :active, :staged)
-            .merge(ip_address: request.remote_ip,
-                   registration_ip_address: request.remote_ip,
-                   locale: user_locale)
+      result = params.permit(:name, :email, :password, :username)
+                     .merge(ip_address: request.remote_ip,
+                            registration_ip_address: request.remote_ip,
+                            locale: user_locale)
+
+      if !UsernameCheckerService.is_developer?(result['email']) &&
+          is_api? &&
+          current_user.present? &&
+          current_user.admin?
+
+        result.merge!(params.permit(:active, :staged))
+      end
+
+
+      result
     end
 
     def user_locale
