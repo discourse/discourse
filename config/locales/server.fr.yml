@@ -19,6 +19,10 @@ fr:
   date:
     month_names: [null, janvier, février, mars, avril, mai, juin, juillet, août, septembre, octobre, novembre, décembre]
     <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "p"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Sujets"
   posts: "messages"
@@ -47,7 +51,6 @@ fr:
         topic_not_found_error: "Arrive quand quelqu'un répond à un sujet qui a été supprimé."
         topic_closed_error: "Arrive quand quelqu'un répond mais le sujet lié a été fermé."
         bounced_email_error: "Le courriel est un rapport de courriel rejeté."
-        auto_generated_email_reply: "Email contient une réponse à un email automatiquement généré."
         screened_email_error: "Arrive quand l'adresse courriel de l'expéditeur est déjà sous surveillance."
   errors: &errors
     format: '%{attribute} %{message}'
@@ -248,7 +251,12 @@ fr:
       Ce sujet est évidemment important pour vous &ndash; vous avez posté plus de %{percent}% des réponses ici.
 
       Êtes-vous sûr de laissez suffisamment de temps aux autres personnes afin qu'ils partagent aussi leurs points de vue?
-    too_many_replies: "# # # Vous avez atteint la limite de réponse pour ce sujet\n\nNous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à %{newuser_max_replies_per_topic} réponses par sujet. \n\nAu lieu d'ajouter une autre réponse, veuillez envisager de modifier vos réponses précédentes, ou visiter d'autres sujets.\n"
+    too_many_replies: |
+      # # # Vous avez atteint la limite de réponse pour ce sujet
+
+      Nous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à %{newuser_max_replies_per_topic} réponses par sujet.
+
+      Au lieu d'ajouter une autre réponse, veuillez envisager de modifier vos réponses précédentes, ou visiter d'autres sujets.
     reviving_old_topic: |
       ### Déterrer ce sujet ?
 
@@ -299,7 +307,7 @@ fr:
   assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenue dans le salon"
-    body: |2
+    body: |
 
       Félicitation ! :confetti_ball:
 
@@ -541,17 +549,20 @@ fr:
         make: "Ce sujet est maintenant un gros titre. Il sera affiché en haut de chaque page jusqu’à qu'il soit ignoré par un utilisateur."
         remove: "Ce sujet n'es plus un gros titre. Il ne sera plus affiché en haut de chaque page."
   unsubscribed:
-    title: 'Se désabonner'
-    description: "Vous avez été désabonné. Nous ne vous contacterons plus !"
-    oops: "Si vous vous êtes trompé, cliquez dessous."
-    error: "Erreur lors de la désinscription"
-    preferences_link: "Vous pouvez aussi vous désinscrire des courriels de résumé sur votre <a href='/my/preferences'>page de préférences</a>"
-    different_user_description: "Vous êtes actuellement connecté avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter et essayer à nouveau."
+    title: "Désabonné !"
+    description: "Vous avez été désabonné. Pour modifier vos paramètres de courriel <a href='%{url}'>visitez vos préférences utilisateur</a>."
+    topic_description: "Pour vous ré-abonner à %{link}, utilisez le contrôle des notifications en bas à droite du sujet."
+  unsubscribe:
+    title: "Désabonnement"
+    stop_watching_topic: "Arrêter de suivre ce sujet, %{link}"
+    mute_topic: "Ignorer toutes les notifications pour ce sujet, %{link}"
+    unwatch_category: "Arrêter de suivre tous les sujets dans %{category}"
+    mailing_list_mode: "Désactiver le mode mailing list"
+    disable_digest_emails: "Ne plus m'envoyer de résumés courriel"
+    all: "Ne plus m'envoyer de courriel de %{sitename}"
+    different_user_description: "Vous êtes actuellement connecté avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter, ou utiliser le mode anonyme, et essayer à nouveau."
     not_found_description: "Désolé, nous ne pouvons pas vous désabonner. Il est possible que le lien de votre courriel soit expiré."
-  resubscribe:
-    action: "Ré-abonnement"
-    title: "Ré-abonné !"
-    description: "Vous avez été ré-abonné."
+    log_out: "Déconnexion"
   reports:
     visits:
       title: "Visites utilisateur"
@@ -694,7 +705,6 @@ fr:
       yaxis: "Nombre de visites"
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
-    ruby_version_warning: "Vous exécutez une version de Ruby 2.0.0 qui est connu pour avoir des problèmes. Migrez vers le patch 247 ou supérieur."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
     gc_warning: 'Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donnera pas les meilleures performances. Merci de lire ce sujet sur <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">l''optimisation des performances de Ruby et Rails pour Discourse</a>.'
     sidekiq_warning: 'Sidekiq n''est pas lancé. De nombreuses tâches, comme l''envoi des courriels, sont exécutées de manière asynchrone par sidekiq. Assurez-vous d''avoir au moins un processus sidekiq de lancé. <a href="https://github.com/mperham/sidekiq">En savoir plus sur sidekiq</a>.'
@@ -729,6 +739,7 @@ fr:
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
     default_locale: "La langue par défaut de cette instance de Discourse (code ISO 639-1)"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leur préférences."
+    set_locale_from_accept_language_header: "configuer la langue de l'interface pour les utilisateurs anonymes à partir des entêtes de langue de leurs navigateurs. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
     min_post_length: "Longueur minimale autorisée des messages en nombre de caractères"
     min_first_post_length: "Longueur minimale d'un premier message (corps de sujet) en nombre de caractères"
     min_private_message_post_length: "Longueur minimale des messages en nombre de caractères"
@@ -750,6 +761,7 @@ fr:
     crawl_images: "Récupère les images provenant de sources tierces pour y insérer les dimensions corrects (hauteur et largeur)"
     download_remote_images_to_local: "Transformer les images distantes en images locales en les téléchargeant; cela permet d'éviter les liens morts."
     download_remote_images_threshold: "Quantité minimum d'espace disque requise pour télécharger localement des images distantes (en pourcentage)"
+    download_remote_images_max_days_old: "Ne pas télécharger les images distantes pour les messages plus anciens que n jours."
     disabled_image_download_domains: "Les images distantes de ces domaines ne seront jamais téléchargés. Liste délimitée par un pipe (|)."
     editing_grace_period: "Pendant (n) secondes après la publication d'un message, l'édition de ce dernier ne provoquera pas d'historisation."
     post_edit_time_limit: "L'auteur peut modifier ou supprimer ses messages pendant (n) minutes après leurs publications. Mettre à 0 pour l'autoriser sans limite de temps."
@@ -764,9 +776,12 @@ fr:
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifier ceci, vous devez exécuter la commande  \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Une liste de domaines pour lesquels l'attribut nofollow ne sera pas ajouté aux liens. tld.com autorisera automatiquement sub.tld.com également. Au minimum, vous devriez ajouter le domaine de premier niveau (TLD) de ce site pour aider les robots d'indexation à trouver tout le contenu. Si d'autres parties du site sont sur d'autre domaines, ajoutez-les aussi."
     post_excerpt_maxlength: "Longueur maximale d'un extrait / résumé de message."
+    show_pinned_excerpt_mobile: "Afficher les extraits des sujets épinglés en vue mobile."
+    show_pinned_excerpt_desktop: "Afficher les extraits des sujets épinglés en vue bureau."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté en nombre de caractères."
     onebox_domains_whitelist: "Liste des noms de domaines autorisés pour les 'onebox'. Ces domaines doivent supporter OpenGraph or oEmbed. Testez les sur http://iframely.com/debug"
     logo_url: "L'image de votre logo situé en haut à gauche de votre site doit être de forme rectangulaire large. Si vous laissez ce champ vide, le nom de votre site apparaitra."
+    digest_logo_url: "L'image de votre logo alternative utilisée en haut du résumé courriel de votre site. Devrait être en forme de large rectangle. Ne devrait pas être une image SVG. Si laissé bide `logo_url` sera utilisé."
     logo_small_url: "Le petit logo situé en haut à gauche de votre site doit être de forme carré. Si vous laissez ce champ vide, un logo de maison apparaîtra."
     favicon_url: "Un favicon pour votre site, voir http://fr.wikipedia.org/wiki/Favicon, pour fonctionner correctement à travers un CDN il doit être PNG."
     mobile_logo_url: "L'image fixe utilisée tout en haut à gauche de votre site mobile. Devrait-être de forme carrée. Si laissé vide, `logo_url` sera utilisé. ex: http://example.com/uploads/default/logo.png"
@@ -774,7 +789,7 @@ fr:
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
     email_subject: "format du sujet personnalisable pour les courriels standards. Voir https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Forcer votre site en HTTPS uniquement. MISE EN GARDE : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré absolument partout ! Avez-vous vérifié que vos CDN, vos connexions via réseaux sociaux ainsi que des logos/dépendances tiers sont compatibles HTTPS eux aussi ?"
+    force_https: "Forcer votre site en HTTPS uniquement. MISE EN GARDE : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré et fonctionne absolument partout ! Avez-vous vérifié que vos CDN, vos connexions via réseaux sociaux ainsi que tous les logos / dépendances tiers sont tous compatibles HTTPS eux aussi ?"
     summary_score_threshold: "Le score minimum requis pour qu'un message soit inclus dans le 'Résumé de ce sujet'"
     summary_posts_required: "Nombre minimum de messages dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
@@ -789,13 +804,12 @@ fr:
     background_polling_interval: "À quelle fréquence les clients devraient-ils requêter le serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
     flags_required_to_hide_post: "Les messages seront automatiquement cachés lorsque le compteur de signalements atteint cette limite (0 pour jamais) et un avertissement sera envoyé à l'auteur"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué via un signalement de la communauté"
-    max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer lors de son premier jour sur le site"
-    max_replies_in_first_day: "Le nombre maximum de réponses qu'un utilisateur est autorisé à créer lors de son premier jour sur le site"
+    max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer dans la période de 24h après avoir créé son premier message."
+    max_replies_in_first_day: "Le nombre maximum de réponses qu'un utilisateur est autorisé à créer dans la période de 24h après avoir créé son premier message."
     tl2_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
     tl3_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 3 (réguliers) en la multipliant par ce nombre"
     tl4_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
-    num_flags_to_block_new_user: "Si le message d'un nouvel utilisateur obtient plusieurs signalements pour spam de la part de num_users_to_block_new_user différents utilisateurs, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
-    num_users_to_block_new_user: "Si le message d'un nouvel utilisateur obtient num_flags_to_block_new_user signalements pour spam de la part nombreux utilisateurs différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
+    num_spam_flags_to_block_new_user: "Si un message d'un nouvel utilisateur reçoit ce nombre de signalements pour spam de la part de num_users_to_block_new_user utilisateurs différents, masquer tous ses messages et l'empêcher de poster à nouveau. 0 désactive cette fonctionnalité."
     notify_mods_when_user_blocked: "Si un utilisateur est bloqué automatiquement, envoyer un message à tous les modérateurs."
     flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
@@ -803,8 +817,6 @@ fr:
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (j'aime, signaler, etc.)"
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
     pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis x heures. Mettre -1 pour désactiver les notifications."
-    ga_tracking_code: "Google Analytics (ga.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
-    ga_domain_name: "Google Analytics (ga.js) de noms de domaine, par exemple: monsite.com; voir http://google.com/analytics"
     ga_universal_tracking_code: "Google Analytics Universal (analytics.js) code de suivi, par exemple: UA-12345678-9; voir http://google.com/analytics"
     ga_universal_domain_name: "Google Analytics Universal (analytics.js) nom de domaine, par exemple: monsite.com; voir http://google.com/analytics"
     enable_escaped_fragments: "Revenir à l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
@@ -923,9 +935,9 @@ fr:
     s3_cdn_url: "L'adresse du CDN à utiliser pour toutes les ressources s3 (par exemple : https://cdn.monsite.com). ATTENTION : après avoir changé ce paramètre, vous devez régénérer la totalité des messages existants. "
     avatar_sizes: "Liste des tailles des avatars automatiquement générés"
     external_system_avatars_enabled: "Utilisez un service d'avatars externe."
-    external_system_avatars_url: "URL du système de service d'avatars externe. Substitutions permises: {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL de l'image par défaut pour les balises Open Graph."
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
+    convert_pasted_images_to_hq_jpg: "Convertir les images copiées en fichier JPEG haute qualité."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -957,7 +969,6 @@ fr:
     newuser_max_mentions_per_post: "Nombre maximum de @pseudo qu'un nouvel utilisateur peut mentionner dans un message."
     newuser_max_replies_per_topic: "Nombre maximum de réponses qu'un nouvel utilisateur peut faire dans une même discussion avant que quelqu'un lui réponde."
     max_mentions_per_post: "Nombre maximal de @pseudo que tout le monde peut mentionner dans un message."
-    max_users_notified_per_group_mention: "Nombre maximum d'utilisateurs qui peuvent recevoir une notification si un groupe est mentionné (si le seuil est atteint aucune notification n'est envoyée)"
     create_thumbnails: "Créer un aperçu pour les images imbriquées qui sont trop large pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
     private_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer des courriels de notification privés, afin de donner aux utilisateurs la chance d'éditer et de finaliser leurs messages."
@@ -1038,7 +1049,6 @@ fr:
     delete_all_posts_max: "Le nombre maximum de messages qui peuvent être supprimés en une seule fois avec le bouton Supprimer tous les messages. Si un utilisateur a plus que ce nombre de messages, ses messages ne pourront pas être supprimés en une seule fois et l'utilisateur ne pourra pas être supprimé."
     username_change_period: "Le nombre de jours après l'enregistrement pour pouvoir modifier le pseudo (0 pour empêcher la modification de pseudo)."
     email_editable: "Autoriser les utilisateurs à modifier leur adresse de courriel après l'inscription."
-    logout_redirect: "Adresse de redirection après déconnexion, ex: http://monsite.com/logout"
     allow_uploaded_avatars: "Autoriser les utilisateurs à télécharger une photo de profil personnalisé."
     allow_animated_avatars: "Autoriser les utilisateurs à télécharger une photo de profil de type gif animé. ATTENTION: lancer la commande rake avatars:refresh après avoir modifié ceci."
     allow_animated_thumbnails: "Créer des aperçus animés pour les gifs animés."
@@ -1076,7 +1086,6 @@ fr:
     default_code_lang: "Coloration syntaxique par défaut appliquée à la syntaxe des langages de programmation des blocs de code GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Forcer la mise en évidence de tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
-    highlighted_languages: "Include les règles de mise en surbrillance de syntaxe. (Avertissement: l'ajout de trop de langages peut impacter les performances) voir l'exemple https://highlightjs.org/static/demo/"
     feed_polling_enabled: "EMBARQUER UNIQUEMENT: Embarqué le flux RSS/ATOM en tant que messages."
     feed_polling_url: "EMBARQUER UNIQUEMENT: Url du flux RSS/ATOM à embarqué."
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."
@@ -1143,21 +1152,6 @@ fr:
       pop3_polling_password_is_empty: "Vous devez indiquer le \"mot de passe pop3\" avant d'activer le relevé via POP3."
       pop3_polling_authentication_failed: "Echec d'authentication POP3. Veuillez contrôler vos détails POP3."
       reply_by_email_address_is_empty: "Vous devez renseigner une 'adresse de réponse par courriel' avant d'activer la réponse par courriel."
-  notification_types:
-    group_mentioned: "%{group_name} a été mentionné dans %{link}"
-    mentioned: "%{display_username} vous a mentionné dans %{link}"
-    liked: "%{display_username} a aimé votre message dans %{link}"
-    replied: "%{display_username} a répondu à votre message dans %{link}"
-    quoted: "%{display_username} vous a cité dans %{link}"
-    edited: "%{display_username} a modifié votre message dans %{link}"
-    posted: "%{display_username} a répondu à %{link}"
-    moved_post: "%{display_username} a déplacé votre message vers %{link}"
-    private_message: "%{display_username} vous a envoyé un message : %{link}"
-    invited_to_private_message: "%{display_username} vous a invité dans une discussion: %{link}"
-    invited_to_topic: "%{display_username} vous a invité à %{link}"
-    invitee_accepted: "%{display_username} a accepté votre invitation"
-    linked: "%{display_username} a mentionné l'un de vos messages : %{link}"
-    granted_badge: "Vous avez gagné %{link}"
   search:
     within_post: "#%{post_number} par %{username}"
     types:
@@ -1337,14 +1331,40 @@ fr:
     deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
   temporarily_closed_due_to_flags: "Ce sujet est temporairement fermé à cause d'un grand nombre de signalements de la communauté."
   system_messages:
-    post_hidden:
-      subject_template: "Message caché suite à un signalement par la communauté"
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir rejoint %{site_name} et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)\n"
+      text_body_template: |
+        Merci d'avoir rejoint %{site_name} et bienvenue !
+
+        %{new_user_tips}
+
+        Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.
+
+        Amusez-vous bien !
+
+        (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name} et bienvenue !\n\nNous avons créé un nouveau compte : **%{username}**, et vous y êtes connecté. Vous pouvez changer votre pseudo en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Toujours **utiliser la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [sur votre profil][prefs] et connectez-vous avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message).\n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: |
+        Merci d'avoir accepté votre invitation sur %{site_name} et bienvenue !
+
+        Nous avons créé un nouveau compte : **%{username}**, et vous y êtes connecté. Vous pouvez changer votre pseudo en allant sur [votre profil][prefs].
+
+        Pour vous reconnecter :
+
+        1. Toujours **utiliser la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.
+
+        2. Créer un mot de passe unique sur votre [sur votre profil][prefs] et connectez-vous avec.
+
+        %{new_user_tips}
+
+        Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.
+
+        Amusez-vous bien !
+
+        (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message).
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: "La sauvegarde a bien réussie.\nVisitez [la section admin > sauvegarde](%{base_url}/admin/backups) pour télécharger votre nouvelle sauvegarde."
@@ -1421,7 +1441,10 @@ fr:
         Votre réponses nous est parvenue d'une autre adresse courriel que celle attendue, nous ne savons donc pas s'il s'agit de la même personne. Essayez de l'envoyer depuis une autre adresse, ou contactez un responsable.
     email_reject_no_account:
       subject_template: "[%{site_name}] Problème de courriel - Compte utilisateur inconnu"
-      text_body_template: "Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.\n\nAucun compte d'utilisateur avec cette adresse existe. Essayez de l'envoyer depuis une autre adresse, ou contactez un membre de l'équipe. \n"
+      text_body_template: |
+        Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        Aucun compte d'utilisateur avec cette adresse existe. Essayez de l'envoyer depuis une autre adresse, ou contactez un membre de l'équipe.
     email_reject_empty:
       subject_template: "[%{site_name}] Problème de courriel - sans contenu"
       text_body_template: |
@@ -1458,7 +1481,7 @@ fr:
         Si vous pouvez corriger les erreurs, veuillez réessayer.
     email_reject_rate_limit_specified:
       subject_template: "[%{site_name}] Problème de courriel -- Limitation du débit"
-      text_body_template: |+
+      text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Pour la raison suivante: %{rate_limit_description}
@@ -1471,7 +1494,10 @@ fr:
         Le Post Action n'était pas reconnu. Veuillez réessayer, ou rédigé votre message directement sur le site si le problème persiste.
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problème de courriel -- Mauvaise clé de réponse"
-      text_body_template: "Nous sommes désolé, mais l'envoi de votre courriel à destination de%{destination} (intitulé %{former_title}) n'a pas fonctionné. \n\nLa clé de réponse du fournisseur est invalide ou inconnu, et nous ne pouvons pas savoir à quel sujet s’adresse cette réponse. Contactez un responsable. \n"
+      text_body_template: |
+        Nous sommes désolé, mais l'envoi de votre courriel à destination de%{destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        La clé de réponse du fournisseur est invalide ou inconnu, et nous ne pouvons pas savoir à quel sujet s’adresse cette réponse. Contactez un responsable.
     email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Problème de courriel - Adresse de destinataire inconnue"
       text_body_template: |
@@ -1495,7 +1521,6 @@ fr:
     blocked_by_staff:
       subject_template: "Compte bloqué temporairement"
     user_automatically_blocked:
-      subject_template: "Nouvel utilisateur %{username} bloqué à cause de signalements de la communauté"
       text_body_template: |
         Ceci est un message automatique
 
@@ -1506,7 +1531,14 @@ fr:
         Cette limite peut être changée par le paramètre du site `block_new_user`.
     spam_post_blocked:
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
-      text_body_template: "Ceci est un message automatique.\n\nLe nouvel utilisateur [%{username}](%{user_url}) tente de créer de multiples messages avec des liens vers %{domains}, mais que ces messages ont été bloqués pour éviter le spam. Cet utilisateur est toujours capable de créer des messages qui ne contiennent pas de liens vers %{domains}.\n\nMerci de [review the user](%{user_url}).\n\nCeci peut être modifier via les options `newuser_spam_host_threshold` et white_listed_spam_host_domains`. \n"
+      text_body_template: |
+        Ceci est un message automatique.
+
+        Le nouvel utilisateur [%{username}](%{user_url}) tente de créer de multiples messages avec des liens vers %{domains}, mais que ces messages ont été bloqués pour éviter le spam. Cet utilisateur est toujours capable de créer des messages qui ne contiennent pas de liens vers %{domains}.
+
+        Merci de [review the user](%{user_url}).
+
+        Ceci peut être modifier via les options `newuser_spam_host_threshold` et white_listed_spam_host_domains`.
     unblocked:
       subject_template: "Compte débloqué"
     pending_users_reminder:
@@ -1633,7 +1665,7 @@ fr:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
+      text_body_template: |
 
         %{message}
     digest:
@@ -1662,7 +1694,13 @@ fr:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Définir le mot de passe"
-      text_body_template: "Quelqu'un a demandé d'ajouter un mot de passe à votre compte sur  [%{site_name}](%{base_url}). Alternativement, vous pouvez vous connecter en utilisant un service en ligne pris en charge (Google, Facebook, etc) déjà associé à cette adresse de courriel validée. \n\nSi vous n'avez pas fait cette demande, vous pouvez ignorer ce courriel. \n\nCliquez sur le lien suivant pour choisir un mot de passe: \n%{base_url}/users/password-reset/%{email_token}\n"
+      text_body_template: |
+        Quelqu'un a demandé d'ajouter un mot de passe à votre compte sur  [%{site_name}](%{base_url}). Alternativement, vous pouvez vous connecter en utilisant un service en ligne pris en charge (Google, Facebook, etc) déjà associé à cette adresse de courriel validée.
+
+        Si vous n'avez pas fait cette demande, vous pouvez ignorer ce courriel.
+
+        Cliquez sur le lien suivant pour choisir un mot de passe:
+        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Identification"
       text_body_template: |
@@ -1748,7 +1786,7 @@ fr:
     signup_form_message: 'J''ai lu et j''accepte les <a href="/tos" target="_blank">Conditions Générales d''Utilisation</ a>.'
   deleted: 'supprimé'
   upload:
-    edit_reason: "téléchargement d'un copie locale des images distantes"
+    edit_reason: "téléchargement d'une copie locale des images distantes"
     unauthorized: "Désolé, le fichier que vous essayer d'envoyer n'est pas autorisé (extensions autorisés : %{authorized_extensions})."
     pasted_image_filename: "Image collée"
     store_failure: "Erreur lors du stockage de #%{upload_id} pour l'utilisateur #%{user_id}."
@@ -1789,7 +1827,104 @@ fr:
     Modifier le premier message de ce sujet pour changer le contenu de la page  %{page_name}.
   guidelines_topic:
     title: "FAQ/Charte"
-    body: "<a name=\"civilized\"></a>\n\n## [Ceci est un endroit civilisé, merci de le respecter](#civilized)\n\nMerci de traiter ce forum de discussion avec le même respect que vous pourriez avoir dans un parc public. Nous, aussi, sommes une ressource partagée par la communauté &mdash; un endroit pour partager des compétences, savoirs et intérêts au travers de conversations.\n\nIl ne s'agit pas de règles absolues, uniquement d'aide au bon sens de notre communauté. Suivez ces instructions pour garder cet endroit propre et bien éclairé pour un débat public civilisé.\n\n<a name=\"improve\"></a>\n\n## [Améliorez la discussion](#improve)\n\nAidez nous à faire de cet endroit un lieu idéal pour la discussion en améliorant constamment le débat d'une certaine façon, même minime. Si vous n'êtes pas sûr que votre message soit utile à la discussion ou pourrait nuire à son utilité, pensez à ce que vous voulez dire et essayer de nouveau plus tard.\n\nLes sujets abordés ici sont importants pour nous et nous voulons que vous agissiez comme s'ils comptaient également pour vous. Soyez respectueux des sujets et des autres utilisateurs, même si vous êtes en désaccord avec une partie de ce qui est dit.\n\nUne façon d'améliorer la discussion est de découvrir celles qui sont déjà en cours. Essayez de passez un peu de temps à parcourir les sujets avant de répondre ou démarrer votre propre discussion. De fait, vous aurez de plus grandes chances de rencontrer d'autres personnes qui partagent vos intérêts.\n\n<a name=\"agreeable\"></a>\n\n## [Soyez agréable, même si vous n'êtes pas d'accord](#agreeable)\n\nLa critique peut être constructive. Vous pouvez répondre à une personne en étant en désaccord avec elle. C'est très bien. Mais n'oubliez pas de *critiquer les idées, pas les gens*. Merci d'éviter :\n\n* les injures,\n* les attaques ad hominem,\n* de répondre à la tonalité d'un sujet plutôt qu'à son contenu réel,\n* les contradictions primaires.\n \nAu lieu de cela, fournissez des contre-arguments motivés qui améliorent la conversation.\n\n<a name=\"participate\"></a>\n\n## [Votre participation compte](#participate)\n\nLes conversations que nous avons ici donnent le ton pour tout le monde. Aidez-nous à influencer l'avenir de cette communauté en choisissant de vous engager dans des discussions qui font de ce forum un lieu intéressant &mdash; et en évitant celles qui n'y participent pas.\n\nDiscourse fournit des outils qui permettent à la communauté d'identifier collectivement le meilleur (et le pire) des contributions : favoris, signets, des *J'aime*, des signalements, des réponses, des vérifications et ainsi de suite. Utilisez ces outils pour améliorer votre propre expérience et celle de tous les autres aussi.\n\nEssayons de laisser notre parc mieux que nous l'avons trouvé.\n\n<a name=\"flag-problems\"></a>\n\n## [Si vous voyez un problème, signaler le](#flag-problems)\n\nLes modérateurs ont un rôle spécial ; ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs de la vie de la communauté et pas seulement des concierges ou des policiers.\n\nQuand vous voyez un mauvais comportement, ne répondez pas. Votre reconnaissance encourage le mauvais comportement, il consomme votre énergie et fait perdre du temps à chacun. *Signalez-le*. Si suffisamment de signalements s'accumulent, des mesures seront prises, automatiquement ou par l'intervention d'un modérateur.\n\nAfin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et n'importe quel compte utilisateur pour une raison quelconque, et ce à n'importe quel moment. Les modérateurs ne disposent pas d'un aperçu des nouveaux messages avant leur publication, les modérateurs et opérateurs du site n'assument aucune responsabilité pour tout contenu affiché par la communauté.\n\n<a name=\"be-civil\"></a>\n\n## [Soyez toujours civilisé](#be-civil)\n\nRien ne sabote une conversation saine mieux que la grossièreté :\n\n* Soyez civilisé. Ne postez pas ce qu'une personne raisonnable jugerait offensif, ni de discours violent ou haineux.\n* Gardez-le forum propre. Ne publiez rien d'obscène ou sexuellement explicite.\n* Se respecter mutuellement est primordial. Ne pas harceler ou chagriner quelqu'un, ni usurper l'identité de quelqu'un ou exposer des informations privées le concernant.\n* Respecter notre forum. Ne postez pas de spam ou tout autre forme de vandalisme.\n \nIl ne s'agit pas ici de choses concrètes avec des définitions précises - évitez *même d'avoir l'air* d'agir de la sorte. Si vous avez un doute, demandez-vous comment vous vous sentiriez si votre sujet était publié sur la première page du Monde.\n\nIl s'agit d'un forum public et les moteurs de recherche indexent ces discussions. Utilisez un langage, des liens et des images sans danger pour votre famille et vos amis.\n\n<a name=\"keep-tidy\"></a>\n\n## [Gardez cet endroit propre](#keep-tidy)\n\nFaites l'effort de mettre les choses au bon endroit, afin que nous puissions passer plus de temps à discuter et moins à ranger. Ainsi :\n\n* Ne commencez pas un sujet dans la mauvaise catégorie.\n* Ne postez pas le même contenu dans plusieurs discussions.\n* Ne postez pas de message sans contenu.\n* Ne pas détourner un sujet en le changeant en cours de route.\n* Ne signez pas vos messages &mdash; chaque message dispose d'informations sur le profil qui s'y rattache.\n\nPlutôt que de poster \"+1\", \"lol\", \"mdr\" ou \"d'accord\", utilisez le bouton 'J'aime'. Plutôt que de faire prendre à une discussion existante une direction radicalement différente, utilisez \"Répondre en créant un sujet lié\". \n\n<a name=\"stealing\"></a>\n\n## [Postez seulement vos propres trucs](#stealing)\n\nVous ne pouvez pas poster n'importe quel contenu numérique s'il appartient à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas poster des descriptions, des liens ou des méthodes pour voler la propriété intellectuelle de quelqu'un (logiciels, vidéo, audio, images), ou pour transgresser toute autre loi.\n\n<a name=\"power\"></a>\n\n## [Powered by You](#power)\n\nCe site est géré par votre [équipe de responsables](/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](/c/meta) et discutons-en ! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](/about). \n\n<a name=\"tos\"></a>\n\n## [Lisez les conditions générales d'utilisation](#tos)\n\nOui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).\n"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Ceci est un endroit civilisé, merci de le respecter](#civilized)
+
+      Merci de traiter ce forum de discussion avec le même respect que vous pourriez avoir dans un parc public. Nous, aussi, sommes une ressource partagée par la communauté &mdash; un endroit pour partager des compétences, savoirs et intérêts au travers de conversations.
+
+      Il ne s'agit pas de règles absolues, uniquement d'aide au bon sens de notre communauté. Suivez ces instructions pour garder cet endroit propre et bien éclairé pour un débat public civilisé.
+
+      <a name="improve"></a>
+
+      ## [Améliorez la discussion](#improve)
+
+      Aidez nous à faire de cet endroit un lieu idéal pour la discussion en améliorant constamment le débat d'une certaine façon, même minime. Si vous n'êtes pas sûr que votre message soit utile à la discussion ou pourrait nuire à son utilité, pensez à ce que vous voulez dire et essayer de nouveau plus tard.
+
+      Les sujets abordés ici sont importants pour nous et nous voulons que vous agissiez comme s'ils comptaient également pour vous. Soyez respectueux des sujets et des autres utilisateurs, même si vous êtes en désaccord avec une partie de ce qui est dit.
+
+      Une façon d'améliorer la discussion est de découvrir celles qui sont déjà en cours. Essayez de passez un peu de temps à parcourir les sujets avant de répondre ou démarrer votre propre discussion. De fait, vous aurez de plus grandes chances de rencontrer d'autres personnes qui partagent vos intérêts.
+
+      <a name="agreeable"></a>
+
+      ## [Soyez agréable, même si vous n'êtes pas d'accord](#agreeable)
+
+      La critique peut être constructive. Vous pouvez répondre à une personne en étant en désaccord avec elle. C'est très bien. Mais n'oubliez pas de *critiquer les idées, pas les gens*. Merci d'éviter :
+
+      * les injures,
+      * les attaques ad hominem,
+      * de répondre à la tonalité d'un sujet plutôt qu'à son contenu réel,
+      * les contradictions primaires.
+
+      Au lieu de cela, fournissez des contre-arguments motivés qui améliorent la conversation.
+
+      <a name="participate"></a>
+
+      ## [Votre participation compte](#participate)
+
+      Les conversations que nous avons ici donnent le ton pour tout le monde. Aidez-nous à influencer l'avenir de cette communauté en choisissant de vous engager dans des discussions qui font de ce forum un lieu intéressant &mdash; et en évitant celles qui n'y participent pas.
+
+      Discourse fournit des outils qui permettent à la communauté d'identifier collectivement le meilleur (et le pire) des contributions : favoris, signets, des *J'aime*, des signalements, des réponses, des vérifications et ainsi de suite. Utilisez ces outils pour améliorer votre propre expérience et celle de tous les autres aussi.
+
+      Essayons de laisser notre parc mieux que nous l'avons trouvé.
+
+      <a name="flag-problems"></a>
+
+      ## [Si vous voyez un problème, signaler le](#flag-problems)
+
+      Les modérateurs ont un rôle spécial ; ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs de la vie de la communauté et pas seulement des concierges ou des policiers.
+
+      Quand vous voyez un mauvais comportement, ne répondez pas. Votre reconnaissance encourage le mauvais comportement, il consomme votre énergie et fait perdre du temps à chacun. *Signalez-le*. Si suffisamment de signalements s'accumulent, des mesures seront prises, automatiquement ou par l'intervention d'un modérateur.
+
+      Afin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et n'importe quel compte utilisateur pour une raison quelconque, et ce à n'importe quel moment. Les modérateurs ne disposent pas d'un aperçu des nouveaux messages avant leur publication, les modérateurs et opérateurs du site n'assument aucune responsabilité pour tout contenu affiché par la communauté.
+
+      <a name="be-civil"></a>
+
+      ## [Soyez toujours civilisé](#be-civil)
+
+      Rien ne sabote une conversation saine mieux que la grossièreté :
+
+      * Soyez civilisé. Ne postez pas ce qu'une personne raisonnable jugerait offensif, ni de discours violent ou haineux.
+      * Gardez-le forum propre. Ne publiez rien d'obscène ou sexuellement explicite.
+      * Se respecter mutuellement est primordial. Ne pas harceler ou chagriner quelqu'un, ni usurper l'identité de quelqu'un ou exposer des informations privées le concernant.
+      * Respecter notre forum. Ne postez pas de spam ou tout autre forme de vandalisme.
+
+      Il ne s'agit pas ici de choses concrètes avec des définitions précises - évitez *même d'avoir l'air* d'agir de la sorte. Si vous avez un doute, demandez-vous comment vous vous sentiriez si votre sujet était publié sur la première page du Monde.
+
+      Il s'agit d'un forum public et les moteurs de recherche indexent ces discussions. Utilisez un langage, des liens et des images sans danger pour votre famille et vos amis.
+
+      <a name="keep-tidy"></a>
+
+      ## [Gardez cet endroit propre](#keep-tidy)
+
+      Faites l'effort de mettre les choses au bon endroit, afin que nous puissions passer plus de temps à discuter et moins à ranger. Ainsi :
+
+      * Ne commencez pas un sujet dans la mauvaise catégorie.
+      * Ne postez pas le même contenu dans plusieurs discussions.
+      * Ne postez pas de message sans contenu.
+      * Ne pas détourner un sujet en le changeant en cours de route.
+      * Ne signez pas vos messages &mdash; chaque message dispose d'informations sur le profil qui s'y rattache.
+
+      Plutôt que de poster "+1", "lol", "mdr" ou "d'accord", utilisez le bouton 'J'aime'. Plutôt que de faire prendre à une discussion existante une direction radicalement différente, utilisez "Répondre en créant un sujet lié".
+
+      <a name="stealing"></a>
+
+      ## [Postez seulement vos propres trucs](#stealing)
+
+      Vous ne pouvez pas poster n'importe quel contenu numérique s'il appartient à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas poster des descriptions, des liens ou des méthodes pour voler la propriété intellectuelle de quelqu'un (logiciels, vidéo, audio, images), ou pour transgresser toute autre loi.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Ce site est géré par votre [équipe de responsables](/about) ainsi que *vous*, la communauté. Si vous avez d'autres questions sur comment les choses devraient fonctionner ici, créez un nouveau sujet dans [la catégorie meta](/c/meta) et discutons-en ! S'il y un problème critique ou urgent qui ne peut pas être résolu par un sujet meta ou un signalement, contactez nous [ici](/about).
+
+      <a name="tos"></a>
+
+      ## [Lisez les conditions générales d'utilisation](#tos)
+
+      Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger &ndash; et par extension, vous et vos données &ndash; contre des gens hostiles. Nous avons des [Conditions générales d'utilisation](/tos) décrivant votre (et notre) comportement et les droits liés au contenu, la confidentialité et les lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU](/tos).
   tos_topic:
     title: "Conditions générales d'utilisation"
   privacy_topic:
@@ -1962,7 +2097,8 @@ fr:
     first_like:
       name: Premier j'aime
       description: A aimé un message
-      long_description: "Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, cool, ou amusant. \n"
+      long_description: |
+        Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, cool, ou amusant.
     first_flag:
       name: Premier signalement
       description: A signalé un message
@@ -2006,7 +2142,8 @@ fr:
     reader:
       name: Lecteur
       description: A lu tous les messages d'un sujet contenant plus de 100 messages
-      long_description: "Ce badge est accordé la première fois que vous lisez un long sujet avec plus de 100 réponses. Lire une conversation attentivement vous aide à suivre la discussion, comprendre différents points de vue, et conduit à des conversations plus intéressantes. Plus vous lisez, meilleure la conversation devient. \n"
+      long_description: |
+        Ce badge est accordé la première fois que vous lisez un long sujet avec plus de 100 réponses. Lire une conversation attentivement vous aide à suivre la discussion, comprendre différents points de vue, et conduit à des conversations plus intéressantes. Plus vous lisez, meilleure la conversation devient.
     popular_link:
       name: Lien populaire
       description: A posté un lien externe avec au moins 50 clics
@@ -2015,12 +2152,11 @@ fr:
     hot_link:
       name: Lien tendance
       description: A posté un lien externe avec au moins 300 clics
-      long_description: "Ce badge est accordé quand un lien que vous avez partagé obtient 300 clics. Merci de poster un lien fascinant qui a conduit la conversation vers l'avant et a illuminé la discussion! \n"
+      long_description: |
+        Ce badge est accordé quand un lien que vous avez partagé obtient 300 clics. Merci de poster un lien fascinant qui a conduit la conversation vers l'avant et a illuminé la discussion!
     famous_link:
       name: Lien célèbre
       description: A posté un lien externe avec 1000 clic
-      long_description: |
-        Ce badge est accordé quand un lien que vous avez partagé obtient 1000 clics. Hou la la! Vous avez publié un lien qui a considérablement amélioré la conversation en ajoutant des détails, le contexte et les informations essentielles. Excellent travail!
     appreciated:
       name: Apprécié
       description: A recu 1 j'aime sur 20 messages
@@ -2054,7 +2190,8 @@ fr:
     thank_you:
       name: 'Merci '
       description: A 20 messages ayant reçu un j'aime et a donné 10 j'aime
-      long_description: "Ce badge vous est accordé quand vous avez reçu 20 J'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour. \n"
+      long_description: |
+        Ce badge vous est accordé quand vous avez reçu 20 J'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour.
     gives_back:
       name: Redonne
       description: A 100 messages ayant reçu un j'aime et a donné 100 j'aime
@@ -2063,7 +2200,8 @@ fr:
     empathetic:
       name: Empathique
       description: A 500 messages ayant reçu un j'aime et a donné 1000 j'aime
-      long_description: "Ce badge vous est accordé quand vous avez reçu 500 j'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:. \n"
+      long_description: |
+        Ce badge vous est accordé quand vous avez reçu 500 j'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:.
     first_emoji:
       name: Premier Emoji
       description: A utilisé un emoji dans un message
@@ -2099,8 +2237,6 @@ fr:
     staff_tag_disallowed: "Le tag \"%{tag}\" ne peut être mis que par un responsable."
     staff_tag_remove_disallowed: "Le tag \"%{tag}\" ne peut être retiré que par un responsable."
   rss_by_tag: "Sujets avec le tag %{tag}"
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

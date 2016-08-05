@@ -231,8 +231,6 @@ nb_NO:
     undo: "Angre"
     revert: "Reverser"
     failed: "Mislykket"
-    switch_to_anon: "Anonym modus"
-    switch_from_anon: "Avslutt Anonym"
     banner:
       close: "Fjern denne banneren"
       edit: "Endre denne banneren >>"
@@ -405,7 +403,6 @@ nb_NO:
         disable: "Slå av varslinger"
         enable: "Slå på varslinger"
         each_browser_note: "Merk: Du må endre denne innstillinger for hver nettleser du bruker."
-      dismiss_notifications: "Merk alle som lest"
       dismiss_notifications_tooltip: "Merk alle uleste varslinger som lest"
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
       dynamic_favicon: "Vis antall nye / oppdaterte emner på nettleser ikonet"
@@ -421,9 +418,7 @@ nb_NO:
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
       watched_categories: "Følger"
-      watched_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner. Antallet uleste og nye emner vil også vises."
       tracked_categories: "Sporet"
-      tracked_categories_instructions: "Du vil automatisk spore alle nye emner i disse kategoriene. Antallet uleste og nye innlegg vil vises ved emnets oppføring."
       muted_categories: "Dempet"
       delete_account: "Slett kontoen min"
       delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
@@ -458,7 +453,6 @@ nb_NO:
         title: "Rediger om meg"
       change_username:
         title: "Endre brukernavn"
-        confirm: "Hvis du endrer brukernavn vil alle siteringer av dine innlegg og nevning ved ditt @navn gå i stykker. Er du sikker på at du vil gjøre det?"
         taken: "Beklager, det brukernavnet er tatt."
         error: "Det skjedde en feil ved endring av ditt brukernavn."
         invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
@@ -535,7 +529,6 @@ nb_NO:
         always: "alltid"
         never: "aldri"
       email_digests:
-        title: "Send meg sammendrag av hva som er nytt på e-post når jeg ikke er ofte innom:"
         every_30_minutes: "hvert 30 minutt"
         every_hour: "hver time"
         daily: "daglig"
@@ -744,10 +737,6 @@ nb_NO:
       github:
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -841,7 +830,6 @@ nb_NO:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ble tildelt '{{description}}'</p>"
       alt:
         mentioned: "Nevnt av"
@@ -1084,8 +1072,6 @@ nb_NO:
         remove_banner: "Fjern banneret som dukker opp på toppen av alle sider. "
         banner_note: "Brukere kan fjerne banneret ved å lukke det. Kun et emne kan være banner på en og samme tid. "
       inviting: "Inviterer..."
-      automatically_add_to_groups_optional: "Denne invitasjonen inkluderer også tilgang på disse gruppene: (valgfritt, kun for admin)"
-      automatically_add_to_groups_required: "Denne invitasjonen inkluderer også tilgang til disse gruppene: (<b>påkrevet</a>, kun for admin)"
       invite_private:
         title: 'Inviter til samtale'
         email_or_username: "Invitertes e-post eller brukernavn."
@@ -1429,7 +1415,6 @@ nb_NO:
       title: "Emneoppsummering"
       participants_title: "Hyppige Bidragsytere"
       links_title: "Populære Lenker"
-      links_shown: "vis alle {{totalLinks}} linker..."
       clicks:
         one: "1 klikk"
         other: "%{count} klikk"
@@ -1457,10 +1442,10 @@ nb_NO:
     posts_long: "{{number}} innlegg i dette emnet"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
+      low {with a high like to post ratio}
+      med {with a very high like to post ratio}
+      high {with an extremely high like to post ratio}
+      other {}}
     original_post: "Originalt Innlegg"
     views: "Visninger"
     views_lowercase:
@@ -2315,86 +2300,3 @@ nb_NO:
           label: "Ny:"
           add: "Legg til"
           filter: "Søk (URL eller ekstern URL)"
-    lightbox:
-      download: "last ned"
-    search_help:
-      title: 'Søke hjelp'
-    keyboard_shortcuts_help:
-      title: 'Tastatursnarveier'
-      jump_to:
-        title: 'Hopp til'
-        home: '<b>g</b>, <b>h</b> Hjem'
-        latest: '<b>g</b>, <b>l</b> Siste'
-        new: '<b>g</b>, <b>n</b> Nye'
-        unread: '<b>g</b>, <b>u</b> Ules'
-        categories: '<b>g</b>, <b>c</b> Kategorier'
-        top: '<b>g</b>, <b>t</b> Topp'
-        bookmarks: '<b>g</b>, <b>b</b> Bokmerker'
-      navigation:
-        title: 'Navigasjon'
-        jump: '<b>#</b> Gå til innlegg #'
-        back: '<b>u</b> Tilbake'
-        up_down: '<b>k</b>/<b>j</b> Flytt markering &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> Åpne valgt emne'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Neste/Forrige'
-      application:
-        title: 'Applikasjon'
-        create: '<b>c</b> Opprett nytt emne'
-        notifications: '<b>n</b> Åpne varsler'
-        user_profile_menu: '<b>p</b> Åpne brukermenyen'
-        show_incoming_updated_topics: '<b>.</b> Vis oppdaterte emner'
-        search: '<b>/</b> Søk'
-        help: '<b>?</b> Åpne tastaturhjelp'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Avvis Nye/Innlegg'
-        dismiss_topics: '<b>x</b>, <b>t</b> Avvis Emner'
-      actions:
-        title: 'Handlinger'
-        bookmark_topic: '<b>f</b> Bokmerk emne / Fjern bokmerke'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/fjern pin fra emne'
-        share_topic: '<b>shift</b>+<b>s</b> Del emne'
-        share_post: '<b>s</b> Del innlegg'
-        reply_as_new_topic: '<b>t</b> Svar med lenket emne'
-        reply_topic: '<b>shift</b>+<b>r</b> Svar på emne'
-        reply_post: '<b>r</b> Svar på innlegg'
-        quote_post: '<b>q</b> Siter innlegg'
-        like: '<b>l</b> Lik innlegg'
-        flag: '<b>!</b> Rapporter innlegg'
-        bookmark: '<b>b</b> Bokmerk innlegg'
-        edit: '<b>e</b> Rediger innlegg'
-        delete: '<b>d</b> Slett innlegg'
-        mark_muted: '<b>m</b>, <b>m</b> Demp emne'
-        mark_regular: '<b>m</b>, <b>r</b> Vanlig (standard) emne'
-        mark_tracking: '<b>m</b>, <b>t</b> Spor emne'
-        mark_watching: '<b>m</b>, <b>w</b> Følg emne'
-    badges:
-      title: Merker
-      badge_count:
-        one: "1 Merke"
-        other: "%{count} Merker"
-      more_badges:
-        one: "+1 Til"
-        other: "+%{count} Til"
-      granted:
-        one: "1 tildelt"
-        other: "%{count} tildelt"
-      select_badge_for_title: Velg et merke å bruke som din tittel
-      none: "<ingen>"
-      badge_grouping:
-        getting_started:
-          name: Kom i gang
-        community:
-          name: Nettsamfunn
-        trust_level:
-          name: Tillitsnivå
-        other:
-          name: Annet
-        posting:
-          name: Posting
-    tagging:
-      sort_by: "Sorter etter:"
-      notifications:
-        muted:
-          title: "Dempet"
-      topics:
-        none:
-          unread: "Du har ingen uleste emner"

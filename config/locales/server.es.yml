@@ -51,7 +51,6 @@ es:
         topic_not_found_error: "Sucede cuando entró una respuesta pero el tema relacionado ha sido eliminado."
         topic_closed_error: "Sucede cuando entró una respuesta pero el tema relacionado ha sido cerrado. "
         bounced_email_error: "El email es un reporte de correo rebotado."
-        auto_generated_email_reply: "El email contiene una respuesta a un correo autogenerado."
         screened_email_error: "Sucede cuando la dirección de email del remitente ya ha sido filtrada."
   errors: &errors
     format: '%{attribute} %{message}'
@@ -210,7 +209,16 @@ es:
     until_posts:
       one: "1 post"
       other: "%{count} posts"
-    new-topic: "Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!** \n\n- ¿El título describe de forma precisa tu tema? ¿Suena interesante? \n\n- ¿De qué trata? ¿Quién estaría interesado en él? ¿Por qué es importante? ¿Qué tipo de respuestas esperas de la comunidad? \n\n- Incluye buenos términos de búsqueda en tu tema para que otros puedan *encontrarlo*. Para agrupar tu tema con otros relacionados, selecciona una categoría. \n\nPara más consejos, [visita nuestras directrices de uso en comunidad](/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.\n"
+    new-topic: |
+      Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
+
+      - ¿El título describe de forma precisa tu tema? ¿Suena interesante?
+
+      - ¿De qué trata? ¿Quién estaría interesado en él? ¿Por qué es importante? ¿Qué tipo de respuestas esperas de la comunidad?
+
+      - Incluye buenos términos de búsqueda en tu tema para que otros puedan *encontrarlo*. Para agrupar tu tema con otros relacionados, selecciona una categoría.
+
+      Para más consejos, [visita nuestras directrices de uso en comunidad](/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.
     new-reply: |
       Bienvenido a %{site_name} &mdash; **¡gracias por contribuir a la conversación!**
 
@@ -286,6 +294,9 @@ es:
           attributes:
             hex:
               invalid: "no es un color válido"
+        post_reply:
+          base:
+            different_topic: "El post y la respuesta deben pertenecer al mismo tema."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>El campo 'Sobre mí' de tu perfil está vacío, <a href='/users/%{username_lower}/preferences/about-me'>¿Te gustaría completarlo?</a></div>"
@@ -299,7 +310,7 @@ es:
   assets_topic_body: "Este es un tema permanente, visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
-    body: |2
+    body: |
 
       ¡Enhorabuena! :confetti_ball:
 
@@ -541,17 +552,20 @@ es:
         make: "Este tema se utiliza ahora como banner. Aparecerá en la parte superior de cada página hasta que sea descartada por el usuario."
         remove: "Este tema ya no se utiliza como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
-    title: 'Dado de bajada'
-    description: "Has sido dado de baja. ¡No te contactaremos de nuevo!"
-    oops: "En caso de que no quieras hacer esto, haz clic abajo."
-    error: "Error al darse de baja"
-    preferences_link: "También puedes darte de baja de los emails de resumen en tu <a href='/my/preferences'>página de preferencias</a>"
-    different_user_description: "Actualmente has iniciado sesión con un usuario diferente que el que recibía este resumen por email. Por favor, cierra sesión e inténtalo de nuevo."
-    not_found_description: "Lo sentimos no hemos podido darte de baja. Es posible que el link en tu mail haya expirado."
-  resubscribe:
-    action: "Volver a suscribirse"
-    title: "¡Resuscrito!"
-    description: "Has vuelto a suscribirte."
+    title: "¡Suscripción cancelada!"
+    description: "Has cancelado tu suscripción. Para cambiar tus preferencias de email <a href='%{url}'>visita tus opciones de usuario</a>."
+    topic_description: "Para volver a suscribirte a %{link}, utiliza el desplegable de notificación al pie o en la parte derecha del tema."
+  unsubscribe:
+    title: "Cancelar suscripción"
+    stop_watching_topic: "Dejar de vigilar este tema, %{link}"
+    mute_topic: "Silenciar todas las notificaciones de este tema, %{link}"
+    unwatch_category: "Dejar de vigilar todos los temas de %{category}"
+    mailing_list_mode: "Desactivar el modo lista de correo"
+    disable_digest_emails: "Dejar de enviarme emails de resumen"
+    all: "No enviarme ningún email desde %{sitename}"
+    different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo. Por favor, cierra sesión o entra al modo anónimo, e inténtalo de nuevo."
+    not_found_description: "Lo sentimos, no pudimos encontrar esta cancelación de suscripción. ¿Es posible que el enlace de tu email haya caducado?"
+    log_out: "Cerrar sesión"
   reports:
     visits:
       title: "Visitas de usuario"
@@ -694,7 +708,6 @@ es:
       yaxis: "Número de visita"
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
-    ruby_version_warning: "Tú estás utilizando una versión de Ruby 2.0.0 que es conocida por tener problemas. Actualiza al nivel de parche 247 o más nuevo."
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
     gc_warning: 'Tu servidor está usando recolección de residuos predeterminada por Ruby, que no te proveerá el mejor rendimiento. Lee este tema acerca de optimización del rendimiento: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -751,6 +764,7 @@ es:
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
     download_remote_images_threshold: "Mínimo espacio en disco necesario para descargar imágenes remotas de forma local (porcentaje)"
+    download_remote_images_max_days_old: "No descargar imágenes remotas de posts que sean más antiguos de n días."
     disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
     editing_grace_period: "Durante (n) segundos después de publicar un post, se puede editar ese post sin crear una nueva versión en el historial."
     post_edit_time_limit: "El autor puede editar o eliminar su post durante (n) minutos después de publicarlo. Pon un 0 para que pueda hacerlo siempre."
@@ -765,6 +779,8 @@ es:
     add_rel_nofollow_to_user_content: "Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces entrantes (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos los posts con: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Una lista de dominios a cuyos enlaces no se les añadirá la etiqueta nofollow. dominio.com permitirá automáticamente sub.dominio.com también. Como mínimo, deberías añadir el dominio de este sitio para ayudar a los rastreadores web a encontrar todo el contenido. Si otras partes de este sitio web están en otros dominios, añádelos también."
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de un post."
+    show_pinned_excerpt_mobile: "Mostrar extracto de temas destacados en la vista móvil."
+    show_pinned_excerpt_desktop: "Mostrar extracto de temas destacados en la vista de escritorio."
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
     onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
     logo_url: "El logo situado en la esquina superior izquierda de tu sitio, debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se mostrará un texto con el título del sitio."
@@ -776,7 +792,7 @@ es:
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
     email_subject: "Formato de asunto personalizable para emails estándar. Mira https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
+    force_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
     summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
@@ -791,13 +807,12 @@ es:
     background_polling_interval: "Cada cuántos milisegundos debería hacerse cargarse información (mientras que la ventana esté en segundo plano)"
     flags_required_to_hide_post: "Número de reportes que causan que un post se oculte auomáticamente y le sea enviado un mensaje privado al usuario (0 para nunca)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar un post oculto por los reportes de la comunidad"
-    max_topics_in_first_day: "El número máximo de temas que un usuario puede crear en su primer día en el sitio"
-    max_replies_in_first_day: "El máximo número de respuestas que un usuario puede publicar en su primer día en el sitio"
+    max_topics_in_first_day: "El máximo número de temas que un usuario puede crear en las 24 horas posteriores a publicar su primer post"
+    max_replies_in_first_day: "El máximo número de respuestas que un usuario puede crear en las 24 horas posteriores a publicar su primer post"
     tl2_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 2 (miembro) multiplicando por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 3 (habitual) multiplicando por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 4 (líder) multiplicando por este número"
-    num_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
-    num_users_to_block_new_user: "Si los posts de un nuevo usuario obtienen tanto reportes como se establece en num_flags_to_block_new_user, por este número de diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
+    num_spam_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     num_tl3_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
@@ -806,8 +821,6 @@ es:
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
-    ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
-    ga_domain_name: "El nombre de dominio especificado en Google Analytics (ga.js). Ejemplo: misitio.com; ver en http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita http://google.com/analytics"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
@@ -926,7 +939,6 @@ es:
     s3_cdn_url: "URL de un CDN a utilizar para todos los activos s3 (por ejemplo: https://cdn.somewhere.com). AVISO: después de cambiar esta opción debes hacer un rebake de todos los posts antiguos."
     avatar_sizes: "Lista de tamaños de avatar generados automáticamente."
     external_system_avatars_enabled: "Usar un servicio externo para los avatares."
-    external_system_avatars_url: "Dirección URL del servicio externo para los avatares. Sustituciones permitidas: {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL de la imagen opengraph por defecto."
     allow_all_attachments_for_group_messages: "Permitir todos los archivos adjuntos de email para los mensajes a grupos."
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
@@ -964,7 +976,6 @@ es:
     newuser_max_mentions_per_post: "Máximo número de menciones a @usuarios que un nuevo usuario puede usar en un post."
     newuser_max_replies_per_topic: "Máximo número de respuestas que un nuevo usuario puede realizar en el mismo tema antes de que alguien responda a su vez a alguna de ellas."
     max_mentions_per_post: "Máximo número de menciones a @usuarios que alguien puede usar en un post."
-    max_users_notified_per_group_mention: "Número de usuarios máximos que serán notificados si un grupo es mencionado (si se llega al límite no se mandarán más invitaciones)"
     create_thumbnails: "Crear miniaturas de imágenes y lightbox cuando estas son demasiado grandes para encajar en un post."
     email_time_window_mins: "Esperar (n) minutos antes de enviar cualquier email de notificación, para dar a los usuarios margen con el que editar y finalizar sus posts."
     private_email_time_window_seconds: "Espera (n) segundos antes de enviar cualquier email de notificación, para dar a los usuarios margen con el que editar y finalizar sus mensajes."
@@ -1029,8 +1040,8 @@ es:
     maximum_staged_users_per_email: "Máximo número de usuarios provisionales creados al procesar un email entrante."
     auto_generated_whitelist: "Lista de direcciones de email que no serán revisadas para contenido auto-generado."
     block_auto_generated_emails: "Bloquear emails entrantes identificadas como auto generados."
-    bounce_score_threshold: "Máxima puntuación antes de parar de enviar correos a un usuario. Un rebote soft añade 1, rebote hard añade 2, la puntuación se restablece 30 días después del último rebote."
     ignore_by_title: "Ignorar emails entrantes por su título."
+    mailgun_api_key: "Mailgun Secret API key utilizada para verificar mensajes vía webhook."
     manual_polling_enabled: "Lanza emails usando la API para las respuestas por email."
     pop3_polling_enabled: "Poll vía POP3 para respuestas de e-mail."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
@@ -1050,12 +1061,16 @@ es:
     delete_all_posts_max: "El máximo número de posts que pueden ser eliminados a la vez con el botón \"Eliminar todos los posts\". Si un usuario tiene un mayor número de posts que este valor, éstos no podrán ser eliminados de una vez y el usuario no podrá ser eliminado."
     username_change_period: "El número de días después de registrarse entre los cuales una cuenta puede cambiar su nombre de usuario (0 para deshabilitar esta opción)"
     email_editable: "Permitir a los usuarios cambiar su dirección de email después de registrarse."
-    logout_redirect: "Ubicación a redirigir después que el usuario cierre sesión Ejem: (http://somesite.com/logout)"
     allow_uploaded_avatars: "Permitir a los usuarios subir imágenes de perfil personalizadas."
     allow_animated_avatars: "Permitir a los usuarios utilizar imágenes de perfil animadas en gif. AVISO: ejecuta la tarea rake avatars:refresh después de cambiar esta opción."
     allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
     default_avatars: "URLs de avatares que se utilizarán por defecto para nuevos usuarios."
     automatically_download_gravatars: "Descargar Gravatars para usuarios cuando se creen una cuenta o cambien el email."
+    digest_topics: "Máximo número de temas mostrados en el resumen por email."
+    digest_min_excerpt_length: "Mínimo de caracteres del extracto de posts en el resumen por email."
+    delete_digest_email_after_days: "Suprimir los emails de resumen para aquellos usuarios que no han visto el sitio desde más de (n) días."
+    digest_suppress_categories: "Suprimir estas categorías de los emails de resumen."
+    disable_digest_emails: "Desactivar emails de resumen para todos los usuarios."
     detect_custom_avatars: "Verificar o no que los usuarios han subido una imagen de perfil."
     max_daily_gravatar_crawls: "Máximo número de veces que Discourse comprobará Gravatar en busca de avatares personalizados en un día"
     public_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados públicamente."
@@ -1086,7 +1101,6 @@ es:
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
-    highlighted_languages: "Incluye reglas resaltadas de sintaxis. (Advertencia: incluyendo demasiados lenguajes puede afectar al rendimiento) ver: https://highlightjs.org/static/demo/ para una demostración"
     feed_polling_enabled: "SOLO PARA EMBEBER: embeber feeds RSS/ATOM como posts."
     feed_polling_url: "SOLO PARA EMBEBER: URL de los feeds RSS/ATOM a embeber."
     embed_by_username: "Nombre de usuario en Discourse del que crea los temas embebidos."
@@ -1135,7 +1149,6 @@ es:
     min_trust_to_create_tag: "El mínimo nivel de confianza requerido para crear una etiqueta."
     max_tags_per_topic: "El máximo número de etiquetas que se pueden añadir a un tema."
     max_tag_length: "Máximo número de caracteres que puede tener una etiqueta."
-    max_tag_search_results: "Al buscar por etiquetas, este será el máximo de resultados a mostrar."
     show_filter_by_tag: "Mostrar un desplegable para filtrar una lista de temas por etiqueta."
     max_tags_in_filter_list: "Máximo número de etiquetas en el desplegable. Se mostrarán primero aquellas más utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
@@ -1165,21 +1178,6 @@ es:
       reply_by_email_address_is_empty: "Debes establecer el campo 'reply by email address' antes de activar respuesta por email."
       email_polling_disabled: "Debes activar el polling POP3 o bien el manual antes de activar la respuesta por email."
       user_locale_not_enabled: "Debes activar primero 'allow user locale' antes de activar esta opción."
-  notification_types:
-    group_mentioned: "%{group_name} ha sido mencionado en %{link}"
-    mentioned: "%{display_username} te ha mencionado en %{link}"
-    liked: "%{display_username} le ha gustado tu post en %{link}"
-    replied: "%{display_username} ha contestado tu post en %{link}"
-    quoted: "%{display_username} ha citado tu post en %{link}"
-    edited: "%{display_username} ha editado tu post en %{link}"
-    posted: "%{display_username} publicó en %{link}"
-    moved_post: "%{display_username} ha movido tu post a %{link}"
-    private_message: "%{display_username} te ha enviado un mensaje: %{link}"
-    invited_to_private_message: "%{display_username} te ha invitado a un hilo de mensajes: %{link}"
-    invited_to_topic: "%{display_username} te invitó a %{link}"
-    invitee_accepted: "%{display_username} ha aceptado tu invitación"
-    linked: "%{display_username} te enlazó en %{link}"
-    granted_badge: "Obtuviste %{link}"
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1359,8 +1357,99 @@ es:
     deferred_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
   temporarily_closed_due_to_flags: "Este tema está temporalmente cerrado debido a un gran número de reportes de la comunidad."
   system_messages:
-    post_hidden:
-      subject_template: "Post oculto al haber sido reportado por la comunidad"
+    usage_tips:
+      text_body_template: |
+        Aquí tienes unos breves consejos para empezar:
+
+        ## Lectura
+
+        Para leer más, **¡tan solo tienes que hacer scroll!**
+
+        Tan pronto como se publiquen nuevos temas o respuestas, aparecerán automáticamente – sin necesidad de actualizar la página.
+
+        ## Navegación
+
+        - Para realizar una búsqueda, ver tu perfil de usuario, o el menú <kbd>☰</kbd>, usa los **botones de la esquina superior derecha**.
+
+        - Entrar a un tema desde su título te llevará a la **última respuesta sin leer** del hilo. Para ir al primer o al último post, haz clic en el contador de respuestas o en la fecha de última respuesta.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Mientras lees un tema, usa la línea del tiempo a la derecha para ir al primer post, al último, o donde te habías quedado leyendo. En pantallas pequeñas, selecciona la barra de progreso en la esquina inferior para expandir sus controles:
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        También puedes pulsar <kbd>?</kbd> en tu teclado para ver una lista de atajos rápidos.
+
+        ## Participación
+
+        Para insertar una cita, selecciona el texto que quieres citar, después pulsa cualquier <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> botón Responder para abrir el editor. Repite el proceso para múltiples citas.
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Siempre puedes continuar leyendo mientras estás redactando una publicación y automáticamnte guardaremos borradores al tiempo que escribes.
+
+        Para notificar a alguien en tu post, menciónale escribiendo una `@` y a continuación empieza a escribir y selecciona su nombre de usuario.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Para usar [Emoji](http://www.emoji.codes/), tan solo empieza a escriboir `:` para elegir por nombre, o utiliza los smileys tradicionales `;)`
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        Para generar una vista previa de un enlace, pégalo en una línea aparte:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        Tu publicación puede estar en varios formatos usando HTML simple, BBCode o [Markdown](http://commonmark.org/help/):
+
+        Esto es **negrita**.
+        Esto es <b>negrita</b>.
+        Esto es [b]negrita[/b].
+
+        Para más consejos sobre formato, [¡prueba nuestro divertido tutorial interactivo en 10 minutos!](http://commonmark.org/help/tutorial/)
+
+        ## Acciones
+
+        Hay algunos botones de acción al final de cada post:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        - Para hacerle saber a alguien que aprecias su post, utiliza el botón **me gusta**. ¡Compartir es amor!
+
+        - Copia un enlace de cualquier post o tema a través del botón **enlace**.
+
+        - Utiliza el botón <kbd>&hellip;</kbd> mostrar más para desplegar más acciones. **Reportar** de forma privada le notificarán al autor o a nuestros [moderadores](%{base_url}/about), sobre algún problema. **Guarda en marcadores** para encontrar ese post más tarde en tu perfil.
+
+        ## Notificaciones
+
+        Cuando alguien te responde, cita tu post, menciona tu `@usuario` o incluso cuando enlaza a tu post, aparecerá un número en la esquina superior derecha de la página. Selecciónala para acceder a tus **notificaciones**.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        No te preocupes si te pierdes alguna respueta – te enviaremos un email con las notificaciones que lleguen cuando estés fuera.
+
+        ## Preferencias
+
+        - Todos los temas creados hace menos de **dos días** se consideran nuevos.
+
+        - Aquellos temas en los que hayas **participado activamente** (porque los hayas creado, respondido o leído durante un período razonable) serán seguidos por tu usuario automáticamente.
+
+        Verás los indicadores de posts nuevos y no leídos al lado de estos temas:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Puedes cambiar tus notifiaciones para cualquier tema a través del control de notificaciones al final o en el lado derecho de cada tema.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        También puedes establecer tu nivel de notificación para cada categoría, si quieres vigilar o silenciar los temas en una categoría específica.
+
+        Para cambiar cualquiera de estas opciones, ve a [tus preferencias](%{base_url}/my/preferences).
+
+        ## Confianza y comunidad
+
+        ¡Es genial saber de ti! Al participar aquí, nos iremos conociendo con el tiempo y las limitaciones temporales por nuevo usuario se retirarán. Sigue participando y ganarás [niveles de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) que incluyen habilidades especiales para ayudarnos a gestionar nuestra comunidad juntos.
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1462,9 +1551,9 @@ es:
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titled %{former_title}) no funcionó.
 
-         No pudimos encontrar contenido en este e-mail.
+        No pudimos encontrar contenido en este e-mail.
 
-         Si estás teniendo este problema y _sí_ incluiste contenido, inténtalo de nuevo con un formato más simple.
+        Si estás teniendo este problema y _sí_ incluiste contenido, inténtalo de nuevo con un formato más simple.
     email_reject_parsing:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Contenido desconocido"
       text_body_template: |
@@ -1484,7 +1573,6 @@ es:
     email_error_notification:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de autenticación POP"
     user_automatically_blocked:
-      subject_template: "El nuevo usuario %{username} ha sido bloqueado tras ser reportado por la comunidad"
       text_body_template: |
         Este es un mensaje automático.
 
@@ -1514,6 +1602,10 @@ es:
     download_remote_images_disabled:
       subject_template: "Inhabilitar la descarga de imágenes remotas"
       text_body_template: "La opción `download_remote_images_to_local` ha sido inhabilitada porque se ha llegado al límite de espacio en disco configurado en `download_remote_images_threshold`."
+  unsubscribe_link: |
+    Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
@@ -1654,7 +1746,7 @@ es:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
+      text_body_template: |
 
         %{message}
     digest:
@@ -2047,7 +2139,120 @@ es:
       Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Políticas de Privacidad"
-    body: "<a name=\"collect\"></a>\n\n## [¿Qué información recolectamos?](#collect)\n\nRecolectamos información tuya cuando te registras en nuestra web, y recopilamos información cuando participas en ella leyendo, escribiendo y evaluando el contenido compartido aquí.\n\nAl registrarte en nuestra web, puede que se te pida que indiques tu nombre y tu email. Sin embargo, puedes visitarnos sin registrarte. Tu email será verificado a través de un mensaje que contendrá un enlace único. Si ese enlace es visitado, sabremos que controlas el email.\n\nCuando estés registrado y publiques, guardamos la dirección IP de donde el mensaje ha sido publicado. Puede que guardemos registros que incluyan la dirección IP de cada intercambio de datos con nuestro servidor.\n\n<a name=\"use\"></a>\n\n## [¿Para qué usamos tu información?](#use)\n\nCualquier información recolectada puede ser usada en una de las siguientes maneras:\n\n* Para personalizar tu experiencia &mdash; tu información nos ayuda a responder a tus necesidades individuales.\n* Para mejorar nuestra web &mdash; intentamos continuamente mejorar nuestro sitio web ofreciéndote contenido basado en la información que recibimos de ti.\n* Para mejorar el servicio de soporte &mdash; tu información nos ayuda a responder de una forma más efectiva a tus dudas y problemas.\n* Para enviar emails cada cierto tiempo &mdash; La direccion de email que nos proporciones puede ser usada para enviarte información, notificaciones que tú solicites sobre cambios en temas, sobre respuestas a tu nombre, respuestas a consultas y/o cualquier otro tipo de solicitudes o cuestiones.\n\n<a name=\"protect\"></a>\n\n## [¿Cómo protegemos tu información?](#protect)\n\nTenemos implementadas varias medidas de seguridad para mantener tu información personal segura cuuando la introduces o accedes a ella.\n\n<a name=\"data-retention\"></a>\n\n## [¿Cuál es la política de retención de datos?](#data-retention)\n\nIntentamos:\n\n* No retener los registros de los servidores conteniendo la dirección IP de todas las solicitudes durante más de 90 días.\n* No retener las direcciones IP asociadas con usuarios registrados y sus mensajes durante no más de 5 años.\n\n\n<a name=\"cookies\"></a>\n\n## [¿Usamos cookies?](#cookies)\n\nSí. Las cookies con pequeños archivos que una web o su proveedor de servicios transfiere a tu disco duro a través de tu navegador (si lo permites).\nEstas cookies permiten a la web reconocer tu navegador y, si tienes una cuenta registrada, asociarlo con ella.nt.\n\nUsamos cookies para entender y guardar tus preferencias para futuras visitas y para recolectar información sobre el tráfico y la interacción con este sitio web para que podamos ofrecer mejores experiencias y herramientas en un futuro. Puede que nos asociemos con terceras personas para que nos asisten a entender mejor a nuestros visitantes. Estos proveedores de servicios no tienen permitido usar esta información para otro propósito que no sea ayudarnos a mejorar.\n\n<a name=\"disclose\"></a>\n\n## [¿Revelamos alguna información a terceros?](#disclose)\n\nNo vendemos, intercambiamos o transferimos a terceros tu información personal. Esto no incluye a terceros que nos ayuden a operar correctamente este sitio web, a administrar nuestro negocio o a ofrecerte un servicio, siempre y cuando acepten mantener esta información confidencial.\nPuede que revelemos tu información cuando creamos que sea apropiado para cumplir con la ley, hacer cumplir con nuestras políticas, derechos, propiedades, o seguridad nuestros o de terceros. Sin embargo, la información no personal de los visitantes puede que sea entregada debidamente a terceros con propósitos de marketing, publicidad u otros usos. \n\n<a name=\"third-party\"></a>\n\n## [Enlaces de terceros](#third-party)\n\nOcasionalmente, es posible que incluyamos u ofrezcamos enlaces a productos o servicios de terceros en esta web. Estos sitios webs de terceros tienen otras políticas de privacidad, por lo que no nos hacemos responsables del contenido y actividades de estos sitios. Sin embargo, intentamos proteger la integridad de nuestra web y aceptamos opiniones sobre estos sitios de terceros.\n\n<a name=\"coppa\"></a>\n\n## [Cumplimiento del Acta de Protección de la Privacidad Online de los Niños de 1998](#coppa)\n\nNuestra web, sus productos y servicios están dirigidos a personas que tengan 13 o más años de edas. Si este servidor está en EEUU, y tienes menos de 13 años de edad, a causa del Acta de Protección de la Privacidad Online de los Niños de 1998 ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) de EEUU, no uses este sitio web.\n\n<a name=\"online\"></a>\n\n## [Política de privacidad online](#online)\n\nEsta política de privacidad sólo tiene validez para la información recolectada a través de nuestro sitio web, y no para aquella recolectada offline.\n\n<a name=\"consent\"></a>\n\n## [Consentimiento](#consent)\n\nAl usar nuestra web, aceptas esta política.\n\n<a name=\"changes\"></a>\n\n## [Cambios a nuestra política de privacidad](#changes)\n\nSi decidimos cambiar nuestra política de privacidad, publicaremos los cambios en esta misma página.\n\nEste documento tiene una licencia \"CC-BY-SA\". Última actualización: 31 de mayo del 2013.\n"
+    body: |
+      <a name="collect"></a>
+
+      ## [¿Qué información recolectamos?](#collect)
+
+      Recolectamos información tuya cuando te registras en nuestra web, y recopilamos información cuando participas en ella leyendo, escribiendo y evaluando el contenido compartido aquí.
+
+      Al registrarte en nuestra web, puede que se te pida que indiques tu nombre y tu email. Sin embargo, puedes visitarnos sin registrarte. Tu email será verificado a través de un mensaje que contendrá un enlace único. Si ese enlace es visitado, sabremos que controlas el email.
+
+      Cuando estés registrado y publiques, guardamos la dirección IP de donde el mensaje ha sido publicado. Puede que guardemos registros que incluyan la dirección IP de cada intercambio de datos con nuestro servidor.
+
+      <a name="use"></a>
+
+      ## [¿Para qué usamos tu información?](#use)
+
+      Cualquier información recolectada puede ser usada en una de las siguientes maneras:
+
+      * Para personalizar tu experiencia &mdash; tu información nos ayuda a responder a tus necesidades individuales.
+      * Para mejorar nuestra web &mdash; intentamos continuamente mejorar nuestro sitio web ofreciéndote contenido basado en la información que recibimos de ti.
+      * Para mejorar el servicio de soporte &mdash; tu información nos ayuda a responder de una forma más efectiva a tus dudas y problemas.
+      * Para enviar emails cada cierto tiempo &mdash; La direccion de email que nos proporciones puede ser usada para enviarte información, notificaciones que tú solicites sobre cambios en temas, sobre respuestas a tu nombre, respuestas a consultas y/o cualquier otro tipo de solicitudes o cuestiones.
+
+      <a name="protect"></a>
+
+      ## [¿Cómo protegemos tu información?](#protect)
+
+      Tenemos implementadas varias medidas de seguridad para mantener tu información personal segura cuuando la introduces o accedes a ella.
+
+      <a name="data-retention"></a>
+
+      ## [¿Cuál es la política de retención de datos?](#data-retention)
+
+      Intentamos:
+
+      * No retener los registros de los servidores conteniendo la dirección IP de todas las solicitudes durante más de 90 días.
+      * No retener las direcciones IP asociadas con usuarios registrados y sus mensajes durante no más de 5 años.
+
+
+      <a name="cookies"></a>
+
+      ## [¿Usamos cookies?](#cookies)
+
+      Sí. Las cookies con pequeños archivos que una web o su proveedor de servicios transfiere a tu disco duro a través de tu navegador (si lo permites).
+      Estas cookies permiten a la web reconocer tu navegador y, si tienes una cuenta registrada, asociarlo con ella.nt.
+
+      Usamos cookies para entender y guardar tus preferencias para futuras visitas y para recolectar información sobre el tráfico y la interacción con este sitio web para que podamos ofrecer mejores experiencias y herramientas en un futuro. Puede que nos asociemos con terceras personas para que nos asisten a entender mejor a nuestros visitantes. Estos proveedores de servicios no tienen permitido usar esta información para otro propósito que no sea ayudarnos a mejorar.
+
+      <a name="disclose"></a>
+
+      ## [¿Revelamos alguna información a terceros?](#disclose)
+
+      No vendemos, intercambiamos o transferimos a terceros tu información personal. Esto no incluye a terceros que nos ayuden a operar correctamente este sitio web, a administrar nuestro negocio o a ofrecerte un servicio, siempre y cuando acepten mantener esta información confidencial.
+      Puede que revelemos tu información cuando creamos que sea apropiado para cumplir con la ley, hacer cumplir con nuestras políticas, derechos, propiedades, o seguridad nuestros o de terceros. Sin embargo, la información no personal de los visitantes puede que sea entregada debidamente a terceros con propósitos de marketing, publicidad u otros usos.
+
+      <a name="third-party"></a>
+
+      ## [Enlaces de terceros](#third-party)
+
+      Ocasionalmente, es posible que incluyamos u ofrezcamos enlaces a productos o servicios de terceros en esta web. Estos sitios webs de terceros tienen otras políticas de privacidad, por lo que no nos hacemos responsables del contenido y actividades de estos sitios. Sin embargo, intentamos proteger la integridad de nuestra web y aceptamos opiniones sobre estos sitios de terceros.
+
+      <a name="coppa"></a>
+
+      ## [Cumplimiento del Acta de Protección de la Privacidad Online de los Niños de 1998](#coppa)
+
+      Nuestra web, sus productos y servicios están dirigidos a personas que tengan 13 o más años de edas. Si este servidor está en EEUU, y tienes menos de 13 años de edad, a causa del Acta de Protección de la Privacidad Online de los Niños de 1998 ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) de EEUU, no uses este sitio web.
+
+      <a name="online"></a>
+
+      ## [Política de privacidad online](#online)
+
+      Esta política de privacidad sólo tiene validez para la información recolectada a través de nuestro sitio web, y no para aquella recolectada offline.
+
+      <a name="consent"></a>
+
+      ## [Consentimiento](#consent)
+
+      Al usar nuestra web, aceptas esta política.
+
+      <a name="changes"></a>
+
+      ## [Cambios a nuestra política de privacidad](#changes)
+
+      Si decidimos cambiar nuestra política de privacidad, publicaremos los cambios en esta misma página.
+
+      Este documento tiene una licencia "CC-BY-SA". Última actualización: 31 de mayo del 2013.
+  static:
+    search_help: |
+      <h3>Consejos</h3>
+      <p>
+      <ul>
+      <li>Se priorizan las coincidencias por título &ndash; si tienes dudas, buscar por títulos</li>
+      <li>Buscar palabras diferentes, poco comunes, dará mejores resultados</li>
+      <li>Intenta centrar tu búsqueda con una categoría, tema o usuario en particular</li>
+      </ul>
+      </p>
+      <h3>Opciones</h3>
+      <p>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
+      </table>
+      </p>
+      <h3>Ejemplos</h3>
+      <p>
+      <ul>
+      <li><code>arcoiris #parques</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques".</li>
+      <li><code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha del último post.</li>
+      <li><code>arcoiris category:"parques" in:bookmarks</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que hayas guardado en marcadores.</li>
+      </ul>
+      </p>
   badges:
     editor:
       name: Editor
@@ -2198,7 +2403,7 @@ es:
       name: Enlace famoso
       description: Publicó un enlace externo con al menos 1000 clics
       long_description: |
-        Este distintivo se concede cuando el enlace que has compartido alcanza los 1000 clics. ¡Bravo! Publicaste un enlace que mejoró significativamente la conversación al añadir detalles, contexto e información esencial. ¡Buen trabajo!
+        Este distintivo se concede cuando un enlace que compartiste llega a 1000 clics. ¡Vaya! Publicaste un enlace que mejoró significativamente la conversación al añadir un detalle esencial, contexto, e información. ¡Gran trabajo!
     appreciated:
       name: Apreciado
       description: Recibió 1 "me gusta" en 20 posts

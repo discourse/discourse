@@ -1016,9 +1016,11 @@ en:
       more_emoji: "more..."
       options: "Options"
       whisper: "whisper"
+      unlist: "unlisted"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
+      toggle_unlisted: "Toggle Unlisted"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving..."
       saved_draft_tip: "saved"
@@ -1088,6 +1090,9 @@ en:
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
+      yourself_confirm:
+        title: "Did you forget to add recipients?"
+        body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
@@ -1349,6 +1354,8 @@ en:
         go_bottom: "bottom"
         go: "go"
         jump_bottom: "jump to last post"
+        jump_prompt: "jump to post"
+        jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
         current: current post
@@ -1358,7 +1365,7 @@ en:
         title: change how often you get notified about this topic
         reasons:
           mailing_list_mode: "You have mailing list mode enabled, so you will be notified of replies to this topic via email."
-          "3_10": 'You will receive notifications because you are watching this a tag on this topic.'
+          "3_10": 'You will receive notifications because you are watching a tag on this topic.'
           "3_6": 'You will receive notifications because you are watching this category.'
           "3_5": 'You will receive notifications because you started watching this topic automatically.'
           "3_2": 'You will receive notifications because you are watching this topic.'
@@ -1522,6 +1529,11 @@ en:
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+
+      merge_posts:
+        title: "Merge Selected Posts"
+        action: "merge selected posts"
+        error: "There was an error merging the selected posts."
 
       change_owner:
         title: "Change Owner of Posts"
@@ -1741,6 +1753,11 @@ en:
         confirm:
           one: "Are you sure you want to delete that post?"
           other: "Are you sure you want to delete all those posts?"
+
+      merge:
+        confirm:
+          one: "Are you sure you want merge those posts?"
+          other: "Are you sure you want to merge those {{count}} posts?"
 
       revisions:
         controls:

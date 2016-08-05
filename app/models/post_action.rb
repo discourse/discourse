@@ -227,7 +227,7 @@ SQL
 
     if [:notify_moderators, :spam].include?(post_action_type)
       opts[:subtype] = TopicSubtype.notify_moderators
-      opts[:target_group_names] = "moderators"
+      opts[:target_group_names] = target_moderators
     else
       opts[:subtype] = TopicSubtype.notify_user
       opts[:target_usernames] = if post_action_type == :notify_user

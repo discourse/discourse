@@ -80,7 +80,18 @@ describe PostMover do
             topic.move_posts(
               user,
               [p2.id],
-              title: 'GOT is a very addictive showw', category_id: category.id
+              title: 'GOT is a very addictive show', category_id: category.id
+            )
+
+            expect(p2.reload.replies).to eq([])
+          end
+
+          it "doesn't raise errors with deleted replies" do
+            p4.trash!
+            topic.move_posts(
+              user,
+              [p2.id],
+              title: 'GOT is a very addictive show', category_id: category.id
             )
 
             expect(p2.reload.replies).to eq([])
@@ -101,7 +112,7 @@ describe PostMover do
             topic.move_posts(
               user,
               [p4.id],
-              title: 'GOT is a very addictive showw', category_id: category.id
+              title: 'GOT is a very addictive show', category_id: category.id
             )
 
             expect(p2.reload.replies).to eq([p5])
@@ -122,7 +133,7 @@ describe PostMover do
             topic.move_posts(
               user,
               [p2.id, p4.id],
-              title: 'GOT is a very addictive showw', category_id: category.id
+              title: 'GOT is a very addictive show', category_id: category.id
             )
 
             expect(p2.reload.replies).to eq([p4])

@@ -197,7 +197,7 @@ ro:
   assets_topic_body: "Aceasta e o discuție permanentă, vizibilă doar pentru admini și personal, pentru stocat imaginile folosite la designul forumului. Vă rugăm nu ștergeți!\n\n\nIată cum:\n\n\n1. Răspunde la această discuție.\n2. Încărcați toate imaginile dorite pentru logouri , iconițe și așa mai departe. (Folosiți iconița de încarcare din bara editorului de discuție, sau trageți și aruncați sau lipiți imaginile.)\n3. Aprobați răspunsul pentru a-l posta.\n4. Click dreapta pe imaginile din noua postare pt a ajunge la sursa imaginii încărcate, sau click icoana de editare pt a edita postarea și a obține calea la imagini. Copiază adrsa imaginii.\n5. Lipiți imaginile acelea în [Setări principale](/admin/site_settings/category/required).\n\n\n și dacă doriți să activați diferite feluri de fișiere încărcate, editați `extensii_autorizate` în secțiunea [setări fișiere](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bine ați venit în Lounge"
-    body: |2
+    body: |
 
       Congratulations! :confetti_ball:
 
@@ -336,7 +336,7 @@ ro:
     error: "S-a semnalat o eroare la schimbarea adresei de Email. Poate adresa deja e folosită?"
   activation:
     already_done: "Ne pare rău, această adresă pentru confirmarea contului nu mai este valabilă. Poate contul dvs este deja activ?"
-    please_continue: "Noul dvs cont este confirmat, iar acum sunteți autentificat."
+    please_continue: "Contul este confirmat. Vei fi redirectat spre prima pagină."
     continue_button: "Continuă cu %{site_name}"
     welcome_to: "Bine ați venit la %{site_name}!"
     approval_required: "Un moderator trebuie să aprobe manual contul înaine să puteți accesa forumul. Vei primi un email când acesta a fost aprobat!"
@@ -394,16 +394,6 @@ ro:
       message:
         make: "Această discuție este de acum o discuție cu stindard. Va apărea în capătul fiecărei ferestre până când va fi înlăturată de către utilizator."
         remove: "Această discuție nu mai este una cu stindard. Nu va mai apărea în capătul fiecărei pagini."
-  unsubscribed:
-    title: 'dezabonat'
-    description: "Ați fost dezabonat. Nu vă vom mai contacta!"
-    oops: "În cazul în care nu intenționați asta, faceți click dedesubt."
-    error: "Eroare la dezabonare"
-    not_found_description: "Ne pare rău, nu te-am putut dezabona. Este posibil ca adresa din email să fi expirat."
-  resubscribe:
-    action: "Reabonare"
-    title: "Reabonat!"
-    description: "Ați fost reabonat."
   reports:
     visits:
       title: "Vizite de utilizatori"
@@ -509,7 +499,6 @@ ro:
       yaxis: "Total cereri"
   dashboard:
     rails_env_warning: "Serverul funcționează în modul %{env}."
-    ruby_version_warning: "Dețineți o versiune de Ruby 2.0.0 cunoscută ca având probleme. Reactualiza-ți la nivelul 247 sau mai mare."
     host_names_warning: "Fișierul config/database.yml folosește din oficiu numele gazdei locale. Reactualizați pt a folosii numele de gazdă al site-ului."
     gc_warning: 'Serverul dvs funcționează pe parametrii de colecție de gunoi ruby, ceea ce nu oferă cea mai bună performanță. Citiți această discuție despre setările performanței: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Modificarea Ruby și Rails pentru Discourse</a>.'
     sidekiq_warning: 'Sidekiq nu este pornit. Multe acțiuni, cum ar fi trimiterea de emailuri, sunt executate în nesincronizare de către sidekiq. Asigurați-vă că măcar un porces din sidekiq este pornit. <a href="https://github.com/mperham/sidekiq" target="_blank"> Învață despre Sidekiq aici</a>.'
@@ -568,13 +557,9 @@ ro:
     polling_interval: "Cât de des e intervalul de sondaj în milisecunde al utilizatorilor autentificați"
     anon_polling_interval: "Cat de des e intervalul de sondaj în milisecunde al clienților anonimi"
     cooldown_minutes_after_hiding_posts: "Numărul de minute pr care un utilizator trebuie să le aștepte până când poate edita sau ascunde o postare prin marcajele comune"
-    num_flags_to_block_new_user: "Dacă postarea unui utilizator nou primește atâtea marcaje de spam de la num_utilizatori_blocare_utilizator_nou dferiti utilizatori, se vor ascunde toate postările respectivului și va fi incapacitat să mai posteze. 0 pt dezactivare."
-    num_users_to_block_new_user: "Dacă postarea unui utilizator nou primește num_flags_to_block_new_user marcaje de spam de la atâția utilizatori, se vor ascunde toate postările respectivului și va fi incapacitat să mai posteze. 0 pt dezactivare."
     notify_mods_when_user_blocked: "Dacă un utilizator este blocat automat , trimite un mesaj tuturor moderatorilor."
     flag_sockpuppets: "Dacă un utilizator nou răspunde unei discuții de la același IP ca utilizatorul ce a pornit discuția, marchează ambele postări ca potențial spam."
     post_undo_action_window_mins: "Numarum de minute în care utilizatorii pot anula acțiunile recente într-o postare (aprecieri, marcări, etc)."
-    ga_tracking_code: "Codul de urmărire al Google analytics (ga.js), ex: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "Numele de domeniu al Google analytics (ga.js), ex: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Codul de urmarie al Google Universal Analytics (analytics.js), ex: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Numele de domeniu al Google Universal Analytics (analytics.js) , ex: mysite.com; see http://google.com/analytics"
     enable_noscript_support: "Activează căutarea standardă a webcrawler-ului prin tagul noscript"
@@ -719,17 +704,6 @@ ro:
       invalid_integer: "Valoarea trebuie să fie un întreg."
       regex_mismatch: "Valoare nu se potrivește formatului cerut."
       invalid_string: "Valoare invalidă."
-  notification_types:
-    mentioned: "%{display_username} te-a menționat în %{link}"
-    liked: "%{display_username} a apreciat postarea ta în %{link}"
-    replied: "%{display_username} a răspuns postării tare în %{link}"
-    quoted: "%{display_username} a citat postarea ta în %{link}"
-    edited: "%{display_username} a editat postarea ta în %{link}"
-    posted: "%{display_username} a postat în %{link}"
-    moved_post: "%{display_username} ți-a mutat postarea la %{link}"
-    invitee_accepted: "%{display_username} ți-a acceptat invitația"
-    linked: "%{display_username} ți-a făcut legătura în %{link}"
-    granted_badge: "Ți s-a acordat %{link}"
   search:
     within_post: "#%{post_number} după %{username}: %{excerpt}"
     types:
@@ -813,8 +787,6 @@ ro:
     agreed_and_deleted: "Mulțumim pentru avertizare. Suntem de acord că este o problemă și postarea va fi eliminată."
     disagreed: "Mulțumim pentru avertizare. Ne vom interesa."
   system_messages:
-    post_hidden:
-      subject_template: "Postare ascunsă datorită marcajelor comunității"
     welcome_user:
       subject_template: "Bine ați venit la %{site_name}!"
     welcome_invite:
@@ -836,8 +808,6 @@ ro:
         ```
         %{logs}
         ```
-    user_automatically_blocked:
-      subject_template: "Noul utilizator %{username} a fost blocat datorită marcajelor date de comunitate"
     spam_post_blocked:
       subject_template: "Utilizatorul nou %{username} are postările blocate datorită adreselor repetate"
     pending_users_reminder:

@@ -27,6 +27,7 @@ et:
         millions: "{{number}}M"
     dates:
       time: "hh:mm"
+      timeline_date: "MMM YYYY"
       long_no_year: "D. MMMM hh:mm"
       long_no_year_no_time: "D. MMMM"
       full_no_year_no_time: "Do MMMM"
@@ -38,6 +39,7 @@ et:
       long_date_with_year_without_time: "D. MMMM, 'YY"
       long_date_without_year_with_linebreak: "D. MMMM <br/>LT"
       long_date_with_year_with_linebreak: "D. MMMM, 'YY <br/>LT"
+      wrap_ago: "%{date} tagasi"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -111,9 +113,13 @@ et:
       google+: 'jaga seda viidet Google-plussis'
       email: 'Jaga viidet meiliga'
     action_codes:
+      public_topic: "muutsin selle teema avalikuks %{when}"
+      private_topic: "muutsin selle teema privaatseks %{when}"
       split_topic: "poolita teema %{when} juurest"
       invited_user: "kutsutud %{who} %{when}"
+      invited_group: "kutsusin %{who} %{when}"
       removed_user: "kõrvaldatud %{who} %{when}"
+      removed_group: "kõrvaldasin %{who} %{when}"
       autoclosed:
         enabled: 'suletud %{when}'
         disabled: 'avatud %{when}'
@@ -134,6 +140,8 @@ et:
         disabled: 'eemaldatud %{when}'
     topic_admin_menu: "teema admintegevused"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
+    bootstrap_mode_enabled: "Oma uue saidi lansseerimise hõlbustamiseks oled käivitusrežiimil. Kõik uued kasutajad saavad usaldustaseme 1 ja nende igapäevased kokkuvõtvad teavitused meili teel on aktiveeritud. See lülitub automaatselt välja kui kasutajate koguarv ületab %{min_users} piiri."
+    bootstrap_mode_disabled: "Käivitusrežiim lülitub välja järgmise 24 tunni jooksul."
     s3:
       regions:
         us_east_1: "US Ida (N. Virginia)"
@@ -144,9 +152,11 @@ et:
         eu_central_1: "EL (Frankfurt)"
         ap_southeast_1: "Aasia ja Vaikne ookean (Singapur)"
         ap_southeast_2: "Aasia ja Vaikne ookean (Sydney)"
+        ap_south_1: "Aasia ja Vaikse Ookeani (Mumbai)"
         ap_northeast_1: "Aasia ja Vaikne ookean (Tokyo)"
         ap_northeast_2: "Aasia ja Vaikne ookean (Seoul)"
         sa_east_1: "Lõuna-Ameerika (Sao Paulo)"
+        cn_north_1: "Hiina (Beijing)"
     edit: 'muuda teema pealkirja ja liiki'
     not_implemented: "Seda omadust pole veel rakendatud, vabandame!"
     no_value: "Ei"
@@ -247,7 +257,7 @@ et:
     undo: "Ennista"
     revert: "Võta tagasi"
     failed: "Ebaõnnestus"
-    switch_to_anon: "Anonüümne režiim"
+    switch_to_anon: "Sisene anonüümsesse režiimi"
     switch_from_anon: "Välju anonüümsest režiimist"
     banner:
       close: "Sulge see bänner."
@@ -298,6 +308,8 @@ et:
       title: "Kasutajad"
       likes_given: "Antud"
       likes_received: "Saadud"
+      topics_entered: "Vaadatud"
+      topics_entered_long: "Vaadatud teemasid"
       time_read: "Lugemisele kulutatud aeg"
       topic_count: "Teemad"
       topic_count_long: "Teemasid loodud"
@@ -322,6 +334,7 @@ et:
       selector_placeholder: "Lisa liikmeid"
       owner: "omanik"
       visible: "Grupp on kõigile kasutajatele nähtav."
+      index: "Grupid"
       title:
         one: "grupp"
         other: "grupid"
@@ -344,6 +357,9 @@ et:
         watching:
           title: "Vaatlen"
           description: "Sind teavitatakse igast uuest postitusest. Ühtlasi kuvatakse uute vastuste arv."
+        watching_first_post:
+          title: "Vaatan esimest postitust"
+          description: "Sind teavitatakse vaid esimesest postitusest igas uues teemas selles grupis."
         tracking:
           title: "Jälgin"
           description: "Sind teavitatakse, kui keegi sinu @name mainib või sulle vastab. Ühtlasi kuvatakse uute vastuste arv."
@@ -438,7 +454,7 @@ et:
         disable: "Keela teavitused"
         enable: "Luba teavitused"
         each_browser_note: "Märkus: see säte tuleb muuta igas kasutusel olevas brauseris."
-      dismiss_notifications: "Märgi kõik loetuks"
+      dismiss_notifications: "Lükka kõik tagasi"
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"
       disable_jump_reply: "Ära hüppa minu postitusse peale vastamist"
       dynamic_favicon: "Kuva uute / muudetud teemade arvu brauseri ikoonil"
@@ -453,10 +469,31 @@ et:
       suspended_notice: "Selle kasutaja ligipääs on ajutiselt peatatud kuni {{date}}."
       suspended_reason: "Põhjus:"
       github_profile: "Github"
+      email_activity_summary: "Tegevuste kokkuvõte"
+      mailing_list_mode:
+        label: "Postiloendi režiim"
+        enabled: "Lülita postiloendi režiim sisse"
+        instructions: |
+          See säte tõrjub tegevuste kokkuvõtte välja.<br />
+          Vaigistatud teemad ja foorumid ei kajastu nendes meilides.
+        daily: "Saada igapäevased kokkuvõtted"
+        individual: "Saada meil iga uue postituse kohta"
+        many_per_day: "Saada mulle meil iga uue postituse kohta (umbes {{dailyEmailEstimate}} meili päevas)"
+        few_per_day: "Saada mulle meil iga uue postituse kohta (umbes 2 meili päevas)"
+      tag_settings: "Sildid"
+      watched_tags: "Vaadatud"
+      watched_tags_instructions: "Sa vaatled kõiki nende siltidega uusi teemasid automaatselt. Sind teavitatakse kõigist uutest postitustest ja teemadest, koos uute postituste arvuga teema pealkirja kõrval."
+      tracked_tags: "Jälgitud"
+      tracked_tags_instructions: "Sa jälgid kõiki nende siltidega uusi teemasid automaatselt. Uute postituste arv on näha teema pealkirja kõrval."
+      muted_tags: "Vaigistatud"
+      muted_tags_instructions: "Sind ei teavitata ühestki uuest nende siltidega teemast, samuti ei ilmu nad viimaste teemade alla."
       watched_categories: "Vaadeldav"
-      watched_categories_instructions: "Sa vaatled nendes liikides kõiki uusi teemasid automaatselt. Sind teavitatakse kõigist uutest postitustest ja teemadest, koos uute postituste arvuga teema pealkirja kõrval."
+      watched_categories_instructions: "Sa vaatled nendes foorumites kõiki teemasid automaatselt. Sind teavitatakse igast uuest postitusest ja teemast, koos uute postituste arvuga teema pealkirja kõrval."
       tracked_categories: "Jälgitud"
-      tracked_categories_instructions: "Sa jälgid nendes liikides kõiki uusi teemasid. Uute postituste arv on näha teema pealkirja kõrval."
+      tracked_categories_instructions: "Sa jälgid kõiki uusi teemasid nendes foorumites automaatselt. Lugemata ja uute postituste arv on näha teema pealkirja kõrval."
+      watched_first_post_categories: "Vaatan esimest postitust"
+      watched_first_post_tags: "Vaatan esimest postitust"
+      watched_first_post_tags_instructions: "Sind teavitatakse esimesest postitusest igas nende siltidega uues teemas."
       muted_categories: "Vaigistatud"
       muted_categories_instructions: "Sind ei teavitata ühestki uuest teemast nendes liikides, samuti ei ilmu nad viimaste teemade alla."
       delete_account: "Kustuta minu konto"
@@ -469,6 +506,7 @@ et:
       muted_users: "Vaigistatud"
       muted_users_instructions: "Summuta kõik teavitused nendelt kasutajatelt."
       muted_topics_link: "Näita vaigistatud teemasid"
+      watched_topics_link: "Näita vaatlusaluseid teemasid"
       automatically_unpin_topics: "Eemalda lõppu jõudmisel teemadelt automaatselt esiletõstmise märgistus."
       staff_counters:
         flags_given: "kasulikud tähised"
@@ -498,7 +536,6 @@ et:
         error: "Välja muutmisel tekkis viga."
       change_username:
         title: "Muuda kasutajanime"
-        confirm: "Muutes oma kasutajanime katkevad kõik varasemad sinu postituste tsitaadid ja @name mainimised. Oled täiesti kindel, et soovid seda?"
         taken: "Vabandust, see kasutajanimi on võetud."
         error: "Kasutajanime muutmisel tekkis tõrge."
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
@@ -582,23 +619,18 @@ et:
         always: "alati"
         never: "mitte kunagi"
       email_digests:
-        title: "Kui ma siin ei käi, saada mulle meil uudiste kokkuvõttega:"
         every_30_minutes: "iga pooltund"
         every_hour: "iga tund"
         daily: "igapäevaselt"
         every_three_days: "iga kolme päeva tagant"
         weekly: "iga nädal"
         every_two_weeks: "iga kahe nädala tagant"
-      include_tl0_in_digests: "Lisa uute kasutajate postitused koond e-posti"
       email_in_reply_to: "Lisa e-kirjale katkend eelmisest vastusest"
       email_direct: "Teavita mind, kui keegi tsiteerib minu postitust, vastab minu postitusele, mainib minu @kasutajanime või kutsub mind teemaga liituma"
       email_private_messages: "Saada meilile teavitus, kui minuga kontakteerutakse sõnumi teel"
       email_always: "Saada mulle teavitused meilile, isegi kui ma olen siin aktiivne kasutaja"
       other_settings: "Muu"
       categories_settings: "Liigid"
-      enable_mailing_list:
-        one: "Oled Sa kindel, et soovid meili iga uue postituse kohta?"
-        other: "Oled Sa kindel, et soovid meili iga uue postituse kohta?<br><br>See tekitaks umbes <b>{{count}} meili</b> päevas."
       new_topic_duration:
         label: "Loe teemad uuteks, kui"
         not_viewed: "Ma ei ole neid veel vaadanud"
@@ -735,8 +767,6 @@ et:
     too_few_topics_notice: "Tõmbame <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>selle vestluse käima!</a> Hetkel on tehtud <strong>%{currentTopics} / %{requiredTopics}</strong> teemat. Uued külastajad vajavad vestlusi, milles osaleda."
     too_few_posts_notice: "Tõmbame <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>selle vestluse käima!</a> Hetkel on tehtud <strong>%{currentPosts} / %{requiredPosts}</strong> postitust. Uued külastajad vajavad vestlusi, milles osaleda."
     logs_error_rate_notice:
-      reached: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has reached site settings's limit of %{siteSettingRate}."
-      exceeded: "%{timestamp}: Hetke sagedus <a href='%{url}' target='_blank'>%{rate}</a> ületab saidi sätetes kehtestatud limiidi %{siteSettingRate}."
       rate:
         one: "1 viga/%{duration}"
         other: "%{count} viga/%{duration}"
@@ -844,10 +874,6 @@ et:
       github:
         title: "GitHub abil"
         message: "Autentimine GitHub abil (veendu, et hüpikaknad oleks lubatud)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -865,7 +891,6 @@ et:
       saved_local_draft_tip: "salvestatud lokaalselt"
       similar_topics: "Sinu teema sarnaneb..."
       drafts_offline: "mustandid vallasrežiimis"
-      group_mentioned: "Kasutades gruppi {{group}}, oled teavitamas <a href='{{group_link}}'>{{count}} inimest</a>."
       error:
         title_missing: "Pealkiri on kohustuslik"
         title_too_short: "Pealkiri peab olema vähemalt {{min}} sümbolit pikk"
@@ -952,7 +977,6 @@ et:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> võttis Sinu kutse vastu</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> liigutas {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Teenisid '{{description}}'</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} sõnum Sinu {{group_name}} postkastis</p>"
@@ -1041,6 +1065,9 @@ et:
         selected:
           one: "Märkisid ära <b>1</b> teema."
           other: "Märkisid ära <b>{{count}}</b> teemat."
+        change_tags: "Muuda silte"
+        choose_new_tags: "Vali teemadele uued sildid:"
+        changed_tags: "Nende teemade silte on muudetud."
       none:
         unread: "Sul ei ole lugemata teemasid."
         new: "Sul ei ole uusi teemasid."
@@ -1143,6 +1170,7 @@ et:
         position: "postitus %{current} koguarvust %{total}"
       notifications:
         reasons:
+          '3_10': 'Sulle saabuvad teavitused kuna vaatled selle teema seda silti.'
           '3_6': 'Sulle saabuvad teavitused, kuna vaatled seda liiki.'
           '3_5': 'Sulle saabuvad teavitused kuna hakkasid seda teemat automaatselt jälgima.'
           '3_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
@@ -1241,8 +1269,6 @@ et:
         no_banner_exists: "Bänner-teemat ei ole."
         banner_exists: "Hetkel <strong class='badge badge-notification unread'>on</strong> üks bänner-teema."
       inviting: "Kutsun..."
-      automatically_add_to_groups_optional: "See kutse annab juurdepääsu ka gruppidele: (vabatahtlik, ainult adminidele)"
-      automatically_add_to_groups_required: "See kutse annab juurdepääsu ka gruppidele: (<b>Nõutud</b>, ainult adminidele)"
       invite_private:
         title: 'Kutsu sõnumisse'
         email_or_username: "Kutsutava meiliaadress või kasutajanimi"
@@ -1519,6 +1545,11 @@ et:
       general: 'Üldine'
       settings: 'Sätted'
       topic_template: "Teema mall"
+      tags: "Sildid"
+      tags_allowed_tags: "Sildid, mida saab kasutada vaid selles foorumis:"
+      tags_allowed_tag_groups: "Siltide grupid, mida saab kasutada vaid selles foorumis:"
+      tags_placeholder: "(Valikuline) loetelu lubatud silte"
+      tag_groups_placeholder: "(Valikuline) loetelu lubatud siltide gruppe"
       delete: 'Kustuta liik'
       create: 'Uus liik'
       create_long: 'Loo uus liik'
@@ -1565,10 +1596,12 @@ et:
       notifications:
         watching:
           title: "Vaatleb"
-          description: "Sa vaatled nendes liikides kõiki uusi teemasid automaatselt. Sind teavitatakse igast uuest postitusest igas teemas, koos uute postituste arvu näitamisega."
+          description: "Sa vaatled nendes foorumites kõiki teemasid automaatselt. Sind teavitatakse igast uuest postitusest igas teemas. Ühtlasi kuvatakse uute vastuste arv."
+        watching_first_post:
+          title: "Vaatan esimest postitust"
         tracking:
           title: "Jälgib"
-          description: "Sa jälgid nendes liikides kõiki uusi teemasid automaatselt. Sind teavitatakse, kui keegi sinu @name mainib või sulle vastab. Ühtlasi kuvatakse uute vastuste arv."
+          description: "Sa vaatled kõiki nende foorumite teemasid automaatselt. Sind teavitatakse, kui keegi sinu @name mainib või sulle vastab. Ühtlasi kuvatakse uute vastuste arv."
         regular:
           title: "Normaalne"
           description: "Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
@@ -1607,7 +1640,6 @@ et:
       title: "Teema kokkuvõte"
       participants_title: "Sagedased postitajad"
       links_title: "Populaarsed viited"
-      links_shown: "näita kõiki {{totalLinks}} viidet..."
       clicks:
         one: "1 klikk"
         other: "%{count} klikki"
@@ -1638,10 +1670,10 @@ et:
     posts_long: "selles teemas on {{number}} postitust"
     posts_likes_MF: |
       Selles teemas on {count, plural, one {1 vastus} other {# vastust}} {ratio, select,
-        low {kõrge meeldimiste / postituste suhtega}
-        med {väga kõrge meeldimiste / postituste suhtega}
-        high {eriti kõrge meeldimiste / postituste suhtega}
-        other {}}
+      low {kõrge meeldimiste / postituste suhtega}
+      med {väga kõrge meeldimiste / postituste suhtega}
+      high {eriti kõrge meeldimiste / postituste suhtega}
+      other {}}
     original_post: "Algne postitus"
     views: "Vaatamisi"
     views_lowercase:
@@ -1746,6 +1778,49 @@ et:
       full: "Loo / Vasta / Vaata"
       create_post: "Vasta / Vaata"
       readonly: "Vaata"
+    tagging:
+      all_tags: "Kõik sildid"
+      selector_all_tags: "kõik sildid"
+      selector_no_tags: "sildid puuduvad"
+      changed: "muudetud sildid:"
+      tags: "Sildid"
+      choose_for_topic: "Vali teemadele valikulised sildid:"
+      delete_tag: "Kustuta silt"
+      delete_confirm: "Oled Sa kindel, et soovid selle sildi kustutada?"
+      rename_tag: "Nimeta silt ümber"
+      rename_instructions: "Vali sildile uus nimi:"
+      manage_groups: "Halda siltide gruppe"
+      manage_groups_description: "Määra siltide organiseerimiseks grupid"
+      filters:
+        without_category: "%{filter} %{tag} teemat"
+        with_category: "%{filter} %{tag} teemat %{category} foorumis"
+        untagged_without_category: "%{filter} sildistamata teemat"
+        untagged_with_category: "%{filter} sildistamata teemat %{category} foorumis"
+      notifications:
+        watching:
+          title: "Vaatlen"
+          description: "Sa vaatled kõiki selle sildiga teemasid automaatselt. Sind teavitatakse kõigist uutest postitustest ja teemadest, koos lugemata ja uute postituste arvuga teema pealkirja kõrval."
+        watching_first_post:
+          description: "Sind teavitatakse vaid esimesest postitusest igas uues selle sildiga teemas."
+        tracking:
+          description: "Sa jälgid kõiki selle sildiga uusi teemasid. Lugemata ja uute postituste arv on näha teema pealkirja kõrval."
+        muted:
+          description: "Sind ei teavitata ühestki uuest selle sildiga teemast, samuti ei ilmu nad lugemata postituste sakil."
+      groups:
+        title: "Siltide grupid"
+        about: "Hõlpsamaks haldamiseks lisa sildid gruppidesse."
+        tags_label: "Sildid selles grupis:"
+        parent_tag_label: "Ülemsilt:"
+        parent_tag_placeholder: "Valikuline"
+        parent_tag_description: "Sellesse gruppi kuuluvaid silte ei saa kasutada, kui ülemsilt on puudu."
+        one_per_topic_label: "Vaid üks selle grupi silt teema kohta"
+        new_name: "Uus siltide grupp"
+        confirm_delete: "Oled kindel, et soovid selle siltide grupi kustutada?"
+      topics:
+        none:
+          unread: "Sul ei ole lugemata teemasid."
+        bottom:
+          unread: "Rohkem lugemata teemasid pole."
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
@@ -2593,105 +2668,3 @@ et:
           label: "Uus"
           add: "Lisa"
           filter: "Otsi (URL või väline URL)"
-    lightbox:
-      download: "Lae alla"
-    search_help:
-      title: 'Otsingu spikker'
-    keyboard_shortcuts_help:
-      title: 'Klaviatuuri kiirvalikud'
-      jump_to:
-        title: 'Hüppa'
-        home: '<b>g</b>, <b>h</b> Avaleht'
-        latest: '<b>g</b>, <b>l</b> Viimased'
-        new: '<b>g</b>, <b>n</b> Uus'
-        unread: '<b>g</b>, <b>u</b> Lugemata'
-        categories: '<b>g</b>, <b>c</b> Liigid'
-        top: '<b>g</b>, <b>t</b> Üles'
-        bookmarks: '<b>g</b>, <b>b</b> Järjehoidjad'
-        profile: '<b>g</b>, <b>p</b> Profiil'
-        messages: '<b>g</b>, <b>m</b> Sõnumid'
-      navigation:
-        title: 'Navigatsioon'
-        jump: '<b>#</b> Mine postitusse #'
-        back: '<b>u</b> Tagasi'
-        up_down: '<b>k</b>/<b>j</b> Liiguta valitut &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> Ava valitud teema'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Järgmine/eelmine sektsioon'
-      application:
-        title: 'Rakendus'
-        create: '<b>c</b> Loo uus teema'
-        notifications: '<b>n</b> Ava teavitused'
-        hamburger_menu: '<b>=</b> Ava rippmenüü'
-        user_profile_menu: '<b>p</b> Ava kasutajamenüü'
-        show_incoming_updated_topics: '<b>.</b> Näita uuendatud teemasid'
-        search: '<b>/</b> Otsi'
-        help: '<b>?</b> Ava klaviatuuri abimenüü'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Lükka Uued/Postitused tagasi'
-        dismiss_topics: '<b>x</b>, <b>t</b> Lükka teemad tagasi'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Logi välja'
-      actions:
-        title: 'Tegevused'
-        bookmark_topic: '<b>f</b> Lülita postituse järjehoidja sisse/välja
-
-           '
-        pin_unpin_topic: '<b>shift</b>+<b>p</b>  Kinnita/Vabasta teema'
-        share_topic: '<b>shift</b>+<b>s</b> Jaga teemat'
-        share_post: '<b>s</b> Jaga postitust'
-        reply_as_new_topic: '<b>t</b> Vasta viidates teemale'
-        reply_topic: '<b>shift</b>+<b>r</b> Vasta teemale'
-        reply_post: '<b>r</b> Vasta postitusele'
-        quote_post: '<b>q</b> Tsiteeri postitust'
-        like: '<b>l</b> Märgi postitus meeldivaks'
-        flag: '<b>!</b> Tähista postitus'
-        bookmark: '<b>b</b> Pane postitusele järjehoidja'
-        edit: '<b>e</b> Muuda postitust'
-        delete: '<b>d</b> Kustuta postitus'
-        mark_muted: '<b>m</b>, <b>m</b> Vaigista teema'
-        mark_regular: '<b>m</b>, <b>r</b> Tavaline teema'
-        mark_tracking: '<b>m</b>, <b>t</b> Jälgi teemat'
-        mark_watching: 'Vaatle teemat'
-    badges:
-      earned_n_times:
-        one: "Teenis selle märgise 1 kord"
-        other: "Teenis selle märgise %{count} korda"
-      granted_on: "Märgistatud %{date}"
-      others_count: "Teised selle märgisega (%{count})"
-      title: Märgiseid
-      allow_title: "saadaval tiitel"
-      multiple_grant: "määratud mitmeid kordi"
-      badge_count:
-        one: "1 märgis"
-        other: "%{count} märgist"
-      more_badges:
-        one: "+1 veel"
-        other: "+%{count} veel"
-      granted:
-        one: "1 lubatud"
-        other: "%{count} lubatud"
-      select_badge_for_title: Vali märgis, mida kasutada oma tiitlina
-      none: "<pole ühtegi>"
-      badge_grouping:
-        getting_started:
-          name: Alustamine
-        community:
-          name: Kogukond
-        trust_level:
-          name: Usaldustase
-        other:
-          name: Muu
-        posting:
-          name: Postitan
-    google_search: |
-      <h3>Otsi Google abil</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
-    tagging:
-      sort_by_name: "nimi"
-      topics:
-        bottom:
-          unread: "Lugemata teemasid rohkem ei ole"

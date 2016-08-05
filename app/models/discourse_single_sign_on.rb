@@ -82,6 +82,11 @@ class DiscourseSingleSignOn < SingleSignOn
     # optionally save the user and sso_record if they have changed
     user.save!
 
+    if bio && (user.user_profile.bio_raw.blank? || SiteSetting.sso_overrides_bio)
+      user.user_profile.bio_raw = bio
+      user.user_profile.save!
+    end
+
     unless admin.nil? && moderator.nil?
       Group.refresh_automatic_groups!(:admins, :moderators, :staff)
     end

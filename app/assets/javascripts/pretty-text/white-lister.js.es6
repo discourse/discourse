@@ -114,6 +114,7 @@ whiteListFeature('default', [
   'aside.quote',
   'aside[data-*]',
   'b',
+  'big',
   'blockquote',
   'br',
   'code',

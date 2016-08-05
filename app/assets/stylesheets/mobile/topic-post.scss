@@ -375,6 +375,8 @@ span.post-count {
 // this prevents image overflow on deeply nested blockquotes, lists, etc
 .cooked {
   overflow: hidden;
+  font-size: $base-font-size + 1; /* let's bump post body font size on mobile slightly */
+  line-height: $base-line-height + 2; /* bump up line height to match increased font */
 }
 
 .moderator .topic-body {

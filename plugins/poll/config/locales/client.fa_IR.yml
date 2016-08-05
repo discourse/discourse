@@ -13,15 +13,6 @@ fa_IR:
       total_votes:
         other: "مجموع آرا"
       average_rating: "میانگین امتیاز:  <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            other: "حداقل <strong>%{count}</strong> گزینه باید انتخاب شود."
-          up_to_max_options:
-            other: "می‌توانید تا <strong>%{count}</strong> گزینه را انتخاب کنید."
-          x_options:
-            other: "<strong>%{count}</strong> گزینه باید انتخاب شود"
-          between_min_and_max_options: "می‌توانید بین <strong>%{min}</strong> تا <strong>%{max}</strong> گزینه را انتخاب کنید."
       cast-votes:
         title: "انداختن رأی شما"
         label: "رای بدهید!"
@@ -39,5 +30,3 @@ fa_IR:
         title: "نظرسنجی را ببند"
         label: "بسته "
         confirm: "آیا از بستن این نظرسنجی اطمینان دارید ؟ "
-      error_while_toggling_status: "خطایی رخ داد در حالی که وضعیت این نظرسنجی روشن نیست."
-      error_while_casting_votes: "خطایی رخ داد در حالی که شما رای می دادید."

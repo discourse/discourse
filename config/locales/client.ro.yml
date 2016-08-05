@@ -83,42 +83,42 @@ ro:
         x_minutes:
           one: "1 min"
           few: "%{count} min"
-          other: "%{count} min"
+          other: "%{count} de min"
         x_hours:
           one: "1 oră"
           few: "%{count} ore"
-          other: "%{count} ore"
+          other: "%{count} de ore"
         x_days:
           one: "1 zi"
           few: "%{count} zile"
-          other: "%{count} zile"
+          other: "%{count} de zile"
         date_year: "D MM YYYY"
       medium_with_ago:
         x_minutes:
           one: "acum un min"
           few: "acum %{count} min"
-          other: "acum %{count} min"
+          other: "acum %{count} de min"
         x_hours:
           one: "acum o oră"
           few: "acum %{count} ore"
-          other: "acum %{count} ore"
+          other: "acum %{count} de ore"
         x_days:
           one: "acum o zi"
           few: "acum %{count} zile"
-          other: "acum %{count} zile"
+          other: "acum %{count} de zile"
       later:
         x_days:
           one: "După o zi"
           few: "După %{count} zile"
-          other: "După %{count} zile"
+          other: "După %{count} de zile"
         x_months:
-          one: "o lună mai târziu"
+          one: "O lună mai târziu"
           few: "%{count} luni mai târziu"
           other: "%{count} de luni mai târziu"
         x_years:
           one: "După un an"
           few: "După %{count} ani"
-          other: "După %{count} ani"
+          other: "După %{count} de ani"
       previous_month: 'Luna anterioară'
       next_month: 'Luna următoare'
     share:
@@ -128,7 +128,7 @@ ro:
       twitter: 'distribuie pe Twitter'
       facebook: 'distribuie pe Facebook'
       google+: 'distribuie pe Google+'
-      email: 'trimite această adresă peemail'
+      email: 'trimite această adresă pe email'
     action_codes:
       split_topic: "desparte acest topic %{when}"
       autoclosed:
@@ -141,11 +141,11 @@ ro:
         enabled: 'arhivat %{when}'
         disabled: 'dezarhivat %{when}'
       pinned:
-        enabled: 'Prins %{when}'
-        disabled: 'desprinse %{when}'
+        enabled: 'promovat %{when}'
+        disabled: 'nepromovat %{when}'
       pinned_globally:
         enabled: 'promovat global %{when}'
-        disabled: 'desprins %{when}'
+        disabled: 'nepromovat %{when}'
       visible:
         enabled: 'listat %{when}'
         disabled: 'retras %{when}'
@@ -165,11 +165,11 @@ ro:
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
     edit: 'editează titlul și categoria acestui subiect'
-    not_implemented: "Această caracteristică nu a fost implementată încă, ne pare rău!"
+    not_implemented: "Această funcționalitate nu a fost implementată încă."
     no_value: "Nu"
-    yes_value: "Acceptă"
-    generic_error: "Ne pare rău, a avut loc o eroare."
-    generic_error_with_reason: "A avut loc o eroare: %{error}"
+    yes_value: "Da"
+    generic_error: "A apărut o eroare."
+    generic_error_with_reason: "A apărut o eroare: %{error}"
     sign_up: "Înregistrare"
     log_in: "Autentificare"
     age: "Vârsta"
@@ -208,9 +208,9 @@ ro:
     character_count:
       one: "Un caracter"
       few: "{{count}} caractere"
-      other: "{{count}} caractere"
+      other: "{{count}} de caractere"
     suggested_topics:
-      title: "Subiecte sugerate"
+      title: "Alte discuții"
       pm_title: "Mesaje sugerate"
     about:
       simple_title: "Despre"
@@ -269,8 +269,6 @@ ro:
     undo: "Anulează acțiunea precedentă"
     revert: "Refacere"
     failed: "Eșuat"
-    switch_to_anon: "Mod anonim"
-    switch_from_anon: "Ieșire din mod anonim"
     banner:
       close: "Ignoră acest banner."
       edit: "Editează acest banner >>"
@@ -458,7 +456,6 @@ ro:
         disable: "Dezactiveaza notificarile"
         enable: "Activeaza Notificarile"
         each_browser_note: "Notati: Setarile vor fi modificate pe orice alt browser."
-      dismiss_notifications: "Marchează toate ca citite"
       dismiss_notifications_tooltip: "Marchează cu citit toate notificările necitite"
       disable_jump_reply: "Nu sări la postarea mea după ce răspund"
       dynamic_favicon: "Arată subiectele noi/actualizate în iconiţă browserului."
@@ -478,8 +475,6 @@ ro:
         label: " "
         daily: "Trimite actualizări zilnice"
         individual: "Trimite un email pentru fiecare postare nouă"
-        many_per_day: "Trimite-mi un email pentru fiecare postare nouă (aproximativ {{dailyEmailEstimate}}/zi)"
-        few_per_day: "Trimite-mi un email pentru fiecare postare nouă (mai puțin de 2/zi)"
       watched_categories: "Văzut"
       tracked_categories: "Tracked"
       muted_categories: "Muted"
@@ -666,6 +661,34 @@ ro:
         title: "Sumar"
         stats: "Statistici"
         time_read: "timp de citit"
+        topic_count:
+          one: "subiect creat"
+          few: "subiecte create"
+          other: "de subiecte create"
+        post_count:
+          one: "postare creată"
+          few: "postări create"
+          other: "de postări create"
+        likes_given:
+          one: "<i class='fa fa-heart'></i> dat"
+          few: "<i class='fa fa-heart'></i> date"
+          other: "de <i class='fa fa-heart'></i> date"
+        likes_received:
+          one: "<i class='fa fa-heart'></i> primit"
+          few: "<i class='fa fa-heart'></i> primite"
+          other: "de <i class='fa fa-heart'></i> primite"
+        days_visited:
+          one: "zi vizitată"
+          few: "vizite zilnice"
+          other: "de zile vizitate"
+        posts_read:
+          one: "postare citită"
+          few: "postări citite"
+          other: "de postări citite"
+        bookmark_count:
+          one: "semn de carte"
+          few: "semne de carte"
+          other: "de semne de carte"
         top_replies: "Top răspunsuri"
         no_replies: "Nici un răspuns încă."
         more_replies: "Mai multe răspunsuri"
@@ -822,10 +845,6 @@ ro:
       github:
         title: "cu GitHub"
         message: "Autentificare cu GitHub (Asigurați-vă că barierele de pop up nu sunt active)"
-    apple_international: "Apple/Internaţional"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -928,7 +947,6 @@ ro:
       invited_to_topic: "<i title='a invitat la discuţie' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='a acceptat invitația ta' class='fa fa-user'></i><p><span>{{username}}</span> a acceptat invitația ta</p>"
       moved_post: "<i title='postare mutată' class='fa fa-sign-out'></i><p><span>{{username}}</span> mutată {{description}}</p>"
-      linked: "<i title='adresă de postare' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='insignă acordată' class='fa fa-certificate'></i><p> Ţi s-a acordat {{description}}</p>"
       alt:
         mentioned: "Mentionat de"
@@ -1185,8 +1203,6 @@ ro:
         remove_banner: "Îndepărtaţi mesajul banner care apare în partea de sus a fiecărei pagini."
         banner_note: "Utilizatorii pot îndepărta baner-ul închizându-l. Doar un singur mesaj poate fi folosit că baner într-un moment dat."
       inviting: "Invită..."
-      automatically_add_to_groups_optional: "Aceasta invitație include și accesul la grupurile: (opțional, doar admin)"
-      automatically_add_to_groups_required: "Aceasta invitație include și accesul la grupurile: (<b>Neapărat</b>, doar admin)"
       invite_private:
         title: 'Invită la mesaj privat'
         email_or_username: "adresa de Email sau numele de utilizator al invitatului"
@@ -1267,7 +1283,7 @@ ro:
       post_number: "postarea {{number}}"
       last_edited_on: "postare editată ultima oară la"
       reply_as_new_topic: "Răspunde cu o discuție nouă"
-      continue_discussion: "Continuă discuția de la {{postLink}}:"
+      continue_discussion: "În continuarea discuției {{postLink}}:"
       follow_quote: "mergi la postarea citată"
       show_full: "Arată postarea în întregime"
       show_hidden: 'Arată conținut ascuns.'
@@ -1558,17 +1574,10 @@ ro:
       title: "Sumarul discuției"
       participants_title: "Posteri Frecvenţi"
       links_title: "Legături Populare"
-      links_shown: "arată toate {{totalLinks}} de adrese..."
       clicks:
         one: "1 click"
         few: "%{count} click-uri"
         other: "%{count} click-uri"
-    post_links:
-      about: "Extinde link-urile pentru acest post"
-      title:
-        one: "Un link"
-        few: "%{count} link-uri"
-        other: "%{count} de link-uri"
     topic_statuses:
       warning:
         help: "Aceasta este o avertizare oficială."
@@ -1691,6 +1700,11 @@ ro:
       full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizaează"
       readonly: "Vizualizaează"
+    badges:
+      more_badges:
+        one: "Încă una"
+        few: " Alte %{count}"
+        other: " Alte %{count}"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:
@@ -1946,8 +1960,8 @@ ro:
         override_default: "Nu include foaia de stil standard"
         enabled: "Activat?"
         preview: "previzualizează"
-        undo_preview: "înlaturș previzualizarea"
-        rescue_preview: "stilul predefinit"
+        undo_preview: "șterge previzualizarea"
+        rescue_preview: "stil predefinit"
         explain_preview: "Vizualizează site-ul cu foaia de stil predefinită"
         explain_undo_preview: "Înapoi la foaia de stil preferentială activată momentan"
         explain_rescue_preview: "Vizualizeaza site-ul cu foaia de stil predefinită"
@@ -2190,7 +2204,7 @@ ro:
           regular: 'Utilizatori la nivel de încredere 3 (Utilizator activ)'
           leader: 'Utilizatori la nivel de încredere 4 (Lider)'
           staff: "Personalul"
-          admins: 'Utilizatori admin'
+          admins: 'Administratori'
           moderators: 'Moderatori'
           blocked: 'Utilizatori blocați'
           suspended: 'Utilizatori suspendați'
@@ -2495,93 +2509,3 @@ ro:
           label: "Nou:"
           add: "Adăugați"
           filter: "Căutare (URL sau URL extern)"
-    lightbox:
-      download: "descarcă"
-    search_help:
-      title: 'Ajutor căutare'
-    keyboard_shortcuts_help:
-      title: 'Scurtături de tastatură'
-      jump_to:
-        title: 'Sari la'
-        home: '<b>g</b>, <b>h</b> Acasă'
-        latest: '<b>g</b> apoi <b>l</b> ultimele'
-        new: '<b>g</b> apoi <b>n</b> noi'
-        unread: '<b>g</b> apoi <b>u</b> Necitite'
-        categories: '<b>g</b> apoi <b>c</b> Categorii'
-        top: '<b>g</b>, <b>t</b> Top'
-        bookmarks: '<b>g</b>, <b>b</b> Semne de carte'
-        messages: '<b>g</b>, <b>m</b> Mesaje'
-      navigation:
-        title: 'Navigare'
-        jump: '<b>#</b> Mergi la mesajul #'
-        back: '<b>u</b> Înapoi'
-        up_down: '<b>k</b>/<b>j</b> Muta selecția sus/jos'
-        open: '<b>o</b> sau <b>Introdu</b> Deschide discutia selectată'
-        next_prev: '<b>`</b>/<b>~</b> selecția Urmatoare/Precedentă'
-      application:
-        title: 'Applicația'
-        create: '<b>c</b> Creează discuție nouă'
-        notifications: '<b>n</b> Deschide notificare'
-        hamburger_menu: '<b>=</b> Deschide meniul hamburger'
-        user_profile_menu: '<b>p</b> Deschide meniu utilizator'
-        show_incoming_updated_topics: '<b>.</b> Arată discuţiile actualizate'
-        search: '<b>/</b> Caută'
-        help: '<b>?</b> Vezi comenzi rapide disponibile'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Respinge Nou/Mesaje'
-        dismiss_topics: '<b>x</b>, <b>t</b> Respinge discuţiile'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Ieșire din cont'
-      actions:
-        title: 'Acțiuni'
-        bookmark_topic: '<b>f</b> Comută semnul de carte pentru discuţie'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Promovează discuția'
-        share_topic: '<b>shift s</b> distribuie discuție'
-        share_post: '<b>s</b> Distribuie mesajul'
-        reply_as_new_topic: '<b>t</b> Răspunde că discuţie conexă'
-        reply_topic: '<b>shift r</b> Raspunde la discuție'
-        reply_post: '<b>r</b> Răspunde la postare'
-        quote_post: '<b>q</b> Citează mesajul'
-        like: '<b>l</b> Apreciează mesajul'
-        flag: '<b>!</b> Reclamă mesajul'
-        bookmark: '<b>b</b> Salvează postarea'
-        edit: '<b>e</b> Editează mesaj'
-        delete: '<b>d</b> Șterge mesaj'
-        mark_muted: '<b>m</b> apoi <b>m</b> Treceți discuția în mod silențios'
-        mark_regular: '<b>m</b>, <b>r</b> Discuție normală (implicită)'
-        mark_tracking: '<b>m</b>, <b>t</b> Urmăriți discuția'
-        mark_watching: '<b>m</b>, <b>w</b> Urmăriți discuția îndeaproape'
-    badges:
-      title: Insigne
-      badge_count:
-        one: "1 Insignă"
-        few: "%{count} Insigne"
-        other: "%{count} Insigne"
-      more_badges:
-        one: "+1 Mai mult"
-        few: "+%{count} Mai mult"
-        other: "+%{count} Mai mult"
-      granted:
-        one: "1 acordat"
-        few: "2 acordate"
-        other: "%{count} acordate"
-      select_badge_for_title: Selectează o insignă pentru a o folosii ca titlu
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: Cum începem
-        community:
-          name: Communitate
-        trust_level:
-          name: Nivel de încredere
-        other:
-          name: Altele
-        posting:
-          name: Postând
-    google_search: |
-      <h3>Căutați cu Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

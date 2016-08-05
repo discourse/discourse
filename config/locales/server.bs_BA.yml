@@ -152,7 +152,7 @@ bs_BA:
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Welcome to the Lounge"
-    body: |2
+    body: |
 
       Congratulations! :confetti_ball:
 
@@ -271,18 +271,6 @@ bs_BA:
       message:
         make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
-  unsubscribed:
-    title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
-    oops: "In case you didn't mean to do this, click below."
-    error: "Error Unsubscribing"
-    preferences_link: "You can also unsubscribe from digest emails on your <a href='/my/preferences'>preferences page</a>"
-    different_user_description: "You are currently logged in as a different user than the one who the digest was mailed to. Please log out and try again."
-    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
-  resubscribe:
-    action: "Re-Subscribe"
-    title: "Re-Subscribed!"
-    description: "You have been re-subscribed."
   reports:
     visits:
       title: "User Visits"
@@ -361,7 +349,6 @@ bs_BA:
       num_clicks: "Clicks"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
-    ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -429,17 +416,11 @@ bs_BA:
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
-    max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
-    max_replies_in_first_day: "The maximum number of replies a user is allowed to create in their first day on the site"
-    num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
-    num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
-    ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
@@ -597,10 +578,7 @@ bs_BA:
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
-    logout_redirect: "Location to redirect browser to after logout EG: (http://somesite.com/logout)"
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
-    digest_topics: "The maximum number of topics to display in the email digest."
-    digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
@@ -640,19 +618,6 @@ bs_BA:
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
-  notification_types:
-    mentioned: "%{display_username} vas je opomenuo u %{link}"
-    liked: "%{display_username} lajkovao tvoj postu u %{link}"
-    replied: "%{display_username} odgovorio na tvoj post u %{link}"
-    quoted: "%{display_username} citirao tvoj post u %{link}"
-    edited: "%{display_username} izmenio tvoj post u %{link}"
-    posted: "%{display_username} odgovorio u %{link}"
-    moved_post: "%{display_username} premjestio tvoj post na %{link}"
-    private_message: "%{display_username} poslao privatnu poruku: %{link}"
-    invited_to_private_message: "%{display_username} vas poziva na privatnu diskusiju: %{link}"
-    invitee_accepted: "%{display_username} je prihvatio tvoj poziv"
-    linked: "%{display_username} vas je povezao u %{link}"
-    granted_badge: "Zaradili ste %{link}"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -729,18 +694,6 @@ bs_BA:
       Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu te smo mu/joj omogućili opciju slanja pozivnica. Što vama kao zvanici daje mogućnost da odgovorite na diskusiju bez registracije.
   invite_forum_mailer:
     subject_template: "%{invitee_name} vas poziva na novu socijalnu mrežu Revolucionar.com"
-    text_body_template: |
-      %{invitee_name} vas poziva da se pridružite:
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Ako ste zainteresovani za nešto malo drugačije, kliknite na link ispod:
-
-      %{invite_link}
-
-      Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu te smo mu/joj omogućili opciju slanja pozivnica. Što vama kao zvanici daje mogućnost da odgovorite na diskusiju bez registracije.
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
   test_mailer:
@@ -761,8 +714,6 @@ bs_BA:
     deferred: "Thanks for letting us know. We're looking into it."
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
   system_messages:
-    post_hidden:
-      subject_template: "Post hidden due to community flagging"
     welcome_user:
       subject_template: "Dobrodošli na Revolucionar.com!"
       text_body_template: |
@@ -852,8 +803,6 @@ bs_BA:
       subject_template: "Email issue -- Bad Reply Key"
     email_error_notification:
       subject_template: "Email issue -- POP authentication error"
-    user_automatically_blocked:
-      subject_template: "New user %{username} blocked due to community flags"
     spam_post_blocked:
       subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
@@ -886,13 +835,10 @@ bs_BA:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
-      subject_template: "[%{site_name}] Pregled za %{date}"
       new_activity: "Nove aktivnosti ba vašim temama i postovima:"
       top_topics: "Popularni postovi"
       other_new_topics: "Popularne teme"
-      unsubscribe: "Ovaj učtiv pregled sajta je poslat sa %{site_link} kada vidimo da vas nema neko vrijeme. Da zauvijek otkažete %{unsubscribe_link}."
       click_here: "klikni ovdje"
-      from: "%{site_name} pregled"
       read_more: "Pročitaj Više"
       more_topics: "Postoji %{new_topics_since_seen} drugih novih tema otkako ste nas zadnji put posjetili %{last_seen_at}."
       more_topics_category: "Postoji %{new_topics_since_seen} drugih novih tema u ovim kategorijama otkako ste nas zadnji put posjetili %{last_seen_at}:"

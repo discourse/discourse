@@ -410,18 +410,6 @@ da:
       message:
         make: "Dette emne er nu et banner-emne. Det optræder i toppen af alle sider indtil brugeren fjerner det."
         remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
-  unsubscribed:
-    title: 'Frameldt'
-    description: "Du er blevet frameldt. Vi skriver ikke til dig igen."
-    oops: "Klik herunder hvis det ikke var din hensigt at framelde dig."
-    error: "Fejl ved framelding"
-    preferences_link: "Du kan også framelde dig opsummerings-emails på din <a href='/my/preferences'>indstillinger side</a>"
-    different_user_description: "Du er logget ind som en anden buger den den som uddragene blev sendt til. Log ud og prøv igen."
-    not_found_description: "Beklager, vi kunne ikke framelde dig. Det er muligt at linket i din e-mail er udløbet."
-  resubscribe:
-    action: "Tilmeld igen"
-    title: "Tilmeldt igen!"
-    description: "Du er blevet tilmeldt igen."
   reports:
     visits:
       title: "Brugerbesøg"
@@ -544,7 +532,6 @@ da:
       yaxis: "Antal besøg"
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
-    ruby_version_warning: "Du kører en version af Ruby 2.0.0 som har kendte problemer. Opgradér til patch-level 247 eller senere."
     host_names_warning: "Filen config/database.yml bruger localhost som værtsnavn. Opdatér den med sitets værtsnavn."
     gc_warning: 'Din server bruger Rubys standard garbage collection, hvilket ikke giver dig den bedste performance. Læs dette emne om performance-tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq kører ikke. Mange opgaver, som f.eks. udsendelse af e-mail, afvikles asynkront af sidekiq. Du skal sikre dig at der kører mindst én sidekiq-proces. <a href="https://github.com/mperham/sidekiq" target="_blank">Læs mere om Sidekiq her</a>.'
@@ -568,11 +555,7 @@ da:
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     anon_polling_interval: "Hvor ofte skal anonyme brugere polle, i millisekunder."
-    max_topics_in_first_day: "Det maksimale antal indlæg en bruger har lov til at oprette på deres første dag på sitet."
-    max_replies_in_first_day: "Det maksimale antal svar en bruger har lov til at oprette på deres første dag på sitet."
     notify_mods_when_user_blocked: "Send en besked til alle moderatorer hvis en bruger blokeres automatisk"
-    ga_tracking_code: "Google analytics sporingskode, f.eks.: UA-12345678-9; se http://google.com/analytics."
-    ga_domain_name: "Google analytics domænenavn, f.eks.: example.com; se http://google.com/analytics."
     enable_noscript_support: "Aktivér standard webcrawler søgemaskineunderstøttelse vha. noscript-tagget"
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
@@ -613,7 +596,6 @@ da:
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
-    default_email_digest_frequency: "Hvor ofte brugerne som standard modtager e-mail-sammendrag. "
     default_email_private_messages: "Send som standard en email når nogen sender brugeren en besked."
     default_email_direct: "Send som standard en email når nogen citerer/svarer/nævner/inviterer brugeren."
     default_email_mailing_list_mode: "Send som standard en email for hvert nyt indlæg."
@@ -627,15 +609,6 @@ da:
     default_categories_watching: "Liste over kategorier der som standard overvåges."
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard ignoreres."
-  notification_types:
-    mentioned: "%{display_username} nævnte dig i %{link}"
-    liked: "%{display_username} synes om dit indlæg i %{link}"
-    replied: "%{display_username} svarede på dit indlæg i %{link}"
-    quoted: "%{display_username} citerede dit indlæg i %{link}"
-    edited: "%{display_username} redigerede dit indlæg i %{link}"
-    posted: "%{display_username} skrev et indlæg i %{link}"
-    moved_post: "%{display_username} flyttede dit indlæg til %{link}"
-    invitee_accepted: "%{display_username} accepterede din invitation"
   search:
     types:
       category: 'Kategorier'
@@ -682,8 +655,6 @@ da:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Opdateringer er tilgængelige"
   system_messages:
-    post_hidden:
-      subject_template: "Indlæg skjult på grund af feedback fra brugerne"
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
@@ -718,13 +689,10 @@ da:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Et kort resume af %{site_link} siden dit sidste besøg %{last_seen_at}"
-      subject_template: "Sammenfatning af [%{site_name}]"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
       top_topics: "Populære emner"
       other_new_topics: "Populære emner"
-      unsubscribe: "Dette resume er sent fra %{site_link} hvor vi ikke har set dig i et stykke tid. Hvis du ikke vil modtage disse mails, så %{unsubscribe_link}."
       click_here: "klik her"
-      from: "%{site_name} opsummering"
       read_more: "Læs mere"
       more_topics_category: "Flere nye emner: "
     forgot_password:

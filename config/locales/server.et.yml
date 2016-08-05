@@ -147,7 +147,6 @@ et:
   user_is_suspended: "Peatatud kasutajatel pole lubatud postitada."
   topic_not_found: "Midagi on valesti. Kas on võimalik, et antud teema suleti või kustutati samal ajal, kui te seda vaatasite?"
   just_posted_that: "on liiga sarnane sellele, mida sa hiljuti postitasid"
-  has_already_been_used: "on juba kasutusel"
   invalid_characters: "sisaldab ebasobivaid tähemärke"
   is_invalid: "pole korrektne, püüa kirjeldada täpsemalt"
   next_page: "järgmine leht →"
@@ -417,8 +416,6 @@ et:
   archetypes:
     banner:
       title: "Teema Bänneriks"
-  unsubscribed:
-    title: 'Eemaldatud'
   reports:
     visits:
       xaxis: "Päev"

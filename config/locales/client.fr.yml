@@ -117,7 +117,9 @@ fr:
       private_topic: "rendre ce sujet privé %{when}"
       split_topic: "a scindé ce sujet %{when}"
       invited_user: "a invité %{who} %{when}"
+      invited_group: "a invité %{who} %{when}"
       removed_user: "a retiré %{who} %{when}"
+      removed_group: "a retiré %{who} %{when}"
       autoclosed:
         enabled: 'fermé %{when}'
         disabled: 'ouvert %{when}'
@@ -200,8 +202,8 @@ fr:
       title: "Sujets similaires"
       pm_title: "Messages Proposés"
     about:
-      simple_title: "A propos"
-      title: "A propos de %{title}"
+      simple_title: "À propos"
+      title: "À propos de %{title}"
       stats: "Statistiques du site"
       our_admins: "Nos administrateurs"
       our_moderators: "Nos modérateurs"
@@ -252,9 +254,8 @@ fr:
     disable: "Désactiver"
     undo: "Annuler"
     revert: "Rétablir"
-    failed: "Echec"
-    switch_to_anon: "Mode anonyme"
-    switch_from_anon: "Quitter le mode anonyme"
+    failed: "Échec"
+    switch_to_anon: "Quitter le mode anonyme"
     banner:
       close: "Ignorer cette bannière."
       edit: "Éditer cette bannière >>"
@@ -330,6 +331,7 @@ fr:
       selector_placeholder: "Ajouter des membres"
       owner: "propriétaire"
       visible: "Ce groupe est visible par tous les utilisateurs"
+      index: "Groupes"
       title:
         one: "groupe"
         other: "groupes"
@@ -352,6 +354,8 @@ fr:
         watching:
           title: "Surveiller"
           description: "Vous serez notifié de chaque nouvelle réponse dans chaque message, et le nombre de nouvelles réponses sera affiché."
+        watching_first_post:
+          description: "Vous serez uniquement notifié du premier message de chaque sujet de ce groupe"
         tracking:
           title: "Suivre"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
@@ -370,7 +374,7 @@ fr:
       '6': "Réponses"
       '7': "Mentions"
       '9': "Citations"
-      '11': "Editions"
+      '11': "Éditions"
       '12': "Eléments envoyés"
       '13': "Boîte de réception"
       '14': "En attente"
@@ -446,7 +450,6 @@ fr:
         disable: "Désactiver les notifications"
         enable: "Activer les notifications"
         each_browser_note: "Note : Vous devez changer ce paramètre sur chaque navigateur que vous utilisez."
-      dismiss_notifications: "Marquer tout comme lu"
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
       disable_jump_reply: "Ne pas se déplacer à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
@@ -470,12 +473,9 @@ fr:
           Les sujets et catégories passés en silencieux ne sont pas cités dans ces courriels.
         daily: "Envoyer des informations quotidiennes"
         individual: "Envoyer un courriel pour chaque nouveau message."
-        many_per_day: "M'en voyer un courriel pour chaque nouveau message (environ {{dailyEmailEstimate}} par jour)."
-        few_per_day: "M'envoyer un courriel pour chaque nouveau sujet (moins de 2 par jour)."
+      tag_settings: "Tags"
       watched_categories: "Surveillés"
-      watched_categories_instructions: "Vous surveillerez automatiquement les nouveaux sujets de ces catégories. Vous serez averti de tous les nouveaux messages et sujets. De plus, le nombre de messages non lus apparaîtra en regard de la liste des sujets."
       tracked_categories: "Suivies"
-      tracked_categories_instructions: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       muted_categories: "Désactivés"
       muted_categories_instructions: "Vous ne serez notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
       delete_account: "Supprimer mon compte"
@@ -517,7 +517,6 @@ fr:
         error: "Il y avait une erreur lors de la modification de cette valeur."
       change_username:
         title: "Modifier le pseudo"
-        confirm: "Si vous modifiez votre pseudo, toutes les citations de vos messages et toutes les mentions de votre @pseudo seront invalides, et votre historique sera interrompu. Etes-vous vraiment sûr de vouloir continuer ?"
         taken: "Désolé, ce pseudo est déjà pris."
         error: "Il y a eu une erreur lors du changement de votre pseudo."
         invalid: "Ce pseudo est invalide. Il ne doit être composé que de lettres et de chiffres."
@@ -601,7 +600,6 @@ fr:
         always: "toujours"
         never: "jamais"
       email_digests:
-        title: "Lorsque je ne visite pas le site, m'envoyer un résumé des sujets tendances et les \"répondre à\" me concernant à :"
         every_30_minutes: "toutes les 30 minutes"
         every_hour: "toutes les heures"
         daily: "quotidien"
@@ -876,10 +874,6 @@ fr:
       github:
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -941,6 +935,7 @@ fr:
       quote_text: "Citation"
       code_title: "Texte préformaté"
       code_text: "texte préformaté indenté par 4 espaces"
+      paste_code_text: "saisir ou coller le code ici"
       upload_title: "Envois de fichier"
       upload_description: "saisir ici la description de votre fichier"
       olist_title: "Liste numérotée"
@@ -1154,7 +1149,7 @@ fr:
       show_links: "afficher les liens dans ce sujet"
       toggle_information: "afficher les détails de ce sujet"
       read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres sujets dans {{catLink}} ou {{latestLink}}."
-      read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
+      read_more: "Vous voulez en lire plus ? {{catLink}} or {{latestLink}}."
       read_more_MF: "Il y { UNREAD, plural, =0 {} one { <a href='/unread'>a 1 sujet non lu</a> } other { <a href='/unread'>a # sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='/new'>1 nouveau</a> sujet} other { {BOTH, select, true{et } false {a } other{}} <a href='/new'># nouveaux</a> sujets} } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
@@ -1294,6 +1289,7 @@ fr:
         email_or_username_placeholder: "adresse de courriel ou @pseudo"
         action: "Inviter"
         success: "Nous avons invité cet utilisateur à participer à cette discussion."
+        success_group: "Nous avons invité ce groupe à participer à cette discussion."
         error: "Désolé, il y a eu une erreur lors de l'invitation de cet utilisateur."
         group_name: "nom du groupe"
       controls: "Actions sur le sujet"
@@ -1618,10 +1614,8 @@ fr:
       notifications:
         watching:
           title: "S'abonner"
-          description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti pour tout nouveau message dans chaque sujet, et le nombre de nouvelles réponses sera affiché."
         tracking:
           title: "Suivi"
-          description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti si quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
         regular:
           title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
@@ -1661,7 +1655,6 @@ fr:
       title: "Résumé du sujet"
       participants_title: "Auteurs fréquents"
       links_title: "Liens populaires"
-      links_shown: "montrer les {{totalLinks}} liens..."
       clicks:
         one: "1 clic"
         other: "%{count} clics"
@@ -1736,7 +1729,7 @@ fr:
         help: "sujets avec des messages récents"
       hot:
         title: "Populaires"
-        help: "un selection de sujets populaires"
+        help: "une sélection de sujets populaires"
       read:
         title: "Lus"
         help: "sujets que vous avez lus, dans l'ordre de dernière lecture"
@@ -1865,7 +1858,7 @@ fr:
         one: "A reçu ce badge 1 fois"
         other: "A reçu ce badge %{count} fois"
       granted_on: "Accordé le %{date}"
-      others_count: "Autres yant ce badge (%{count})"
+      others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
       allow_title: "titre disponible"
       multiple_grant: "donné plusieurs fois"
@@ -1894,11 +1887,11 @@ fr:
     google_search: |
       <h3>Rechercher avec Google</h3>
       <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
       </p>
     tagging:
       all_tags: "Tous les tags"
@@ -1921,10 +1914,13 @@ fr:
       notifications:
         watching:
           title: "Abonné"
-          description: "Vous serez automatiquement abonné à l'ensemble des nouvaux sujets avec ce tag. Vous serez notifié des nouveaux sujets et messages, et le compteur des sujets non-lus apparaîtra à coté des sujets."
         tracking:
           title: "Suivi"
+        regular:
+          title: "Habitué"
+          description: "Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message."
         muted:
+          title: "Silencieux"
           description: "Vous ne recevrez aucune notification sur des nouveaux sujets dans ce tag, et ils n'apparaitront pas sur mon onglet non-lus."
       groups:
         about: "Ajout des tags aux groupes pour les gérer plus facilement."
@@ -1932,6 +1928,8 @@ fr:
         tags_label: "Tags dans ce groupe :"
         parent_tag_label: "Tag parent :"
         parent_tag_placeholder: "Facultatif"
+        save: "Sauvegarder"
+        delete: "Supprimer"
       topics:
         none:
           unread: "Vous n'avez aucun sujet non lu."
@@ -1939,8 +1937,24 @@ fr:
           read: "Vous n'avez lu aucun sujet pour le moment."
           posted: "Vous n'avez écrit aucun message pour le moment."
           latest: "Il n'y a pas de sujets récents."
+          hot: "Il n'y a pas de sujets populaires."
+          bookmarks: "Vous n'avez pas encore ajouté de sujet à vos signets"
+          top: "Il n'y a pas de meilleurs sujets."
+          search: "Il n'y a pas de résultats de recherche."
+        bottom:
+          latest: "Il n'y a plus de sujets récents."
+          hot: "Il n'y a plus de sujets populaires."
+          posted: "Il n'y a plus de sujets publiés."
+          read: "Il n'y a plus de sujets lus."
+          new: "Il n'y a plus de nouveaux sujets."
+          unread: "Il n'y a plus de sujets non lus."
+          top: "Il n'y a plus de meilleurs sujets."
+          bookmarks: "Il n'y a plus de sujets dans vos signets."
+          search: "Il n'y a plus de résultats de recherche."
     invite:
       custom_message: "Rendez votre invitation plus personnelle en écrivant un"
+      custom_message_link: "message personnalisé"
+      custom_message_placeholder: "Entrez votre message personnalisé"
   admin_js:
     type_to_filter: "Commencez à taper pour filtrer..."
     admin:

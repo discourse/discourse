@@ -85,6 +85,34 @@ describe Auth::DefaultCurrentUserProvider do
     expect(user.auth_token_updated_at - Time.now).to eq(0)
   end
 
+  it "can only try 10 bad cookies a minute" do
+    RateLimiter.stubs(:disabled?).returns(false)
+
+    RateLimiter.new(nil, "cookie_auth_10.0.0.1", 10, 60).clear!
+    RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
+
+    ip = "10.0.0.1"
+    env = { "HTTP_COOKIE" => "_t=#{SecureRandom.hex}", "REMOTE_ADDR" => ip }
+
+    10.times do
+      provider('/', env).current_user
+    end
+    expect {
+      provider('/', env).current_user
+    }.to raise_error(Discourse::InvalidAccess)
+
+    env["REMOTE_ADDR"] = "10.0.0.2"
+    provider('/', env).current_user
+  end
+
+  it "correctly removes invalid cookies" do
+
+    cookies = {"_t" => "BAAAD"}
+    provider('/').refresh_session(nil, {}, cookies)
+
+    expect(cookies.key?("_t")).to eq(false)
+  end
+
   it "recycles existing auth_token correctly" do
     SiteSetting.maximum_session_age = 3
     user = Fabricate(:user)

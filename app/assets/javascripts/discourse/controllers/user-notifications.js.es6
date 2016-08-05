@@ -14,6 +14,11 @@ export default Ember.ArrayController.extend({
     return length > 0;
   },
 
+  @computed('model.content.@each.read')
+  allNotificationsRead() {
+    return !this.get('model.content').some((notification) => !notification.get('read'));
+  },
+
   currentPath: Em.computed.alias('controllers.application.currentPath'),
 
   actions: {

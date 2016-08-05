@@ -245,7 +245,7 @@ const User = RestModel.extend({
 
   @computed("groups.[]")
   displayGroups() {
-    const groups = this.get('groups');
+    const groups = this.get('groups') || [];
     const filtered = groups.filter(group => {
       return !group.automatic || group.name === "moderators";
     });
@@ -394,7 +394,6 @@ const User = RestModel.extend({
 
   checkEmail() {
     return ajax(`/users/${this.get("username_lower")}/emails.json`, {
-      type: "PUT",
       data: { context: window.location.pathname }
     }).then(result => {
       if (result) {

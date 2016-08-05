@@ -64,6 +64,18 @@ export default function() {
       return response(json);
     });
 
+    this.get('/users/eviltrout/summary.json', () => {
+      return response({
+        user_summary: {
+          topics: [],
+          topic_ids: [],
+          replies: [],
+          links: []
+        },
+        topics: [],
+      });
+    });
+
     this.get('/clicks/track', success);
 
     this.put('/users/eviltrout', () => response({ user: {} }));

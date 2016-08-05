@@ -62,6 +62,7 @@ module Email
     end
 
     def process_internal
+      raise BouncedEmailError  if is_bounce?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
       user = find_or_create_user(@from_email, @from_display_name)
@@ -70,7 +71,6 @@ module Email
 
       @incoming_email.update_columns(user_id: user.id)
 
-      raise BouncedEmailError if is_bounce?
       raise InactiveUserError if !user.active && !user.staged
       raise BlockedUserError  if user.blocked
 
@@ -94,45 +94,19 @@ module Email
                      topic: post.topic,
                      skip_validations: user.staged?)
       else
-        destination = destinations.first
+        first_exception = nil
 
-        raise BadDestinationAddress if destination.blank?
-
-        case destination[:type]
-        when :group
-          group = destination[:obj]
-          create_topic(user: user,
-                       raw: body,
-                       title: subject,
-                       archetype: Archetype.private_message,
-                       target_group_names: [group.name],
-                       is_group_message: true,
-                       skip_validations: true)
-
-        when :category
-          category = destination[:obj]
-
-          raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
-          raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
-
-          create_topic(user: user,
-                       raw: body,
-                       title: subject,
-                       category: category.id,
-                       skip_validations: user.staged?)
-
-        when :reply
-          email_log = destination[:obj]
-
-          if email_log.user_id != user.id
-            raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+        destinations.each do |destination|
+          begin
+            process_destination(destination, user, body)
+          rescue => e
+            first_exception ||= e
+          else
+            return
           end
-
-          create_reply(user: user,
-                       raw: body,
-                       post: email_log.post,
-                       topic: email_log.post.topic)
         end
+
+        raise first_exception || BadDestinationAddress
       end
     end
 
@@ -195,7 +169,8 @@ module Email
     def is_auto_generated?
       return false if SiteSetting.auto_generated_whitelist.split('|').include?(@from_email)
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
-      @mail[:from].to_s[/(mailer-?daemon|postmaster|noreply)@/i] ||
+      @mail[:from].to_s[/(mailer[\-_]?daemon|post[\-_]?master|no[\-_]?reply)@/i] ||
+      @mail[:subject].to_s[/^\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i] ||
       @mail.header.to_s[/auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i]
     end
 
@@ -339,6 +314,44 @@ module Email
       end
     end
 
+    def process_destination(destination, user, body)
+      case destination[:type]
+      when :group
+        group = destination[:obj]
+        create_topic(user: user,
+                     raw: body,
+                     title: subject,
+                     archetype: Archetype.private_message,
+                     target_group_names: [group.name],
+                     is_group_message: true,
+                     skip_validations: true)
+
+      when :category
+        category = destination[:obj]
+
+        raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
+        raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
+
+        create_topic(user: user,
+                     raw: body,
+                     title: subject,
+                     category: category.id,
+                     skip_validations: user.staged?)
+
+      when :reply
+        email_log = destination[:obj]
+
+        if email_log.user_id != user.id
+          raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
+        end
+
+        create_reply(user: user,
+                     raw: body,
+                     post: email_log.post,
+                     topic: email_log.post.topic)
+      end
+    end
+
     def reply_by_email_address_regex
       @reply_by_email_address_regex ||= begin
         reply_addresses = [
@@ -423,11 +436,14 @@ module Email
       raise InvalidPostAction.new(e)
     end
 
+
+
     def create_post_with_attachments(options={})
       # deal with attachments
       @mail.attachments.each do |attachment|
-        # always strip S/MIME signatures
-        next if attachment.content_type == "application/pkcs7-mime".freeze
+        # strip blacklisted attachments (mostly signatures)
+        next if attachment.content_type =~ SiteSetting.attachment_content_type_blacklist_regex
+        next if attachment.filename =~ SiteSetting.attachment_filename_blacklist_regex
 
         tmp = Tempfile.new("discourse-email-attachment")
         begin

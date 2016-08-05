@@ -101,9 +101,6 @@ basic:
     client: true
     default: ''
     regex: "^GTM-"
-  gtm_ua_domain_name:
-    client: true
-    default: 'auto'
   top_menu:
     client: true
     refresh: true
@@ -288,6 +285,7 @@ login:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
+  sso_overrides_bio: false
   sso_overrides_email: false
   sso_overrides_username: false
   sso_overrides_name: false
@@ -632,6 +630,12 @@ email:
     default: 2
     min: 2
   reset_bounce_score_after_days: 30
+  attachment_content_type_blacklist:
+    type: list
+    default: "pkcs7"
+  attachment_filename_blacklist:
+    type: list
+    default: "smime.p7s|signature.asc"
 
 
 files:
@@ -670,7 +674,7 @@ files:
     default: ''
   create_thumbnails: true
   clean_up_uploads: true
-  clean_orphan_uploads_grace_period_hours: 1
+  clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days: 30
   prevent_anons_from_downloading_files:
     default: false
@@ -720,6 +724,10 @@ files:
   default_opengraph_image_url: ''
   allow_all_attachments_for_group_messages: false
   convert_pasted_images_to_hq_jpg: true
+  convert_pasted_images_quality:
+    default: 95
+    min: 1
+    max: 100
 
 trust:
   default_trust_level:

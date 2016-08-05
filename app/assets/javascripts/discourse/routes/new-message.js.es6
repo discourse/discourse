@@ -1,43 +1,41 @@
+import User from 'discourse/models/user';
 import Group from 'discourse/models/group';
 
 export default Discourse.Route.extend({
-  beforeModel: function(transition) {
-    const self = this;
-    if (Discourse.User.current()) {
-      // User is logged in
-      self.replaceWith('discovery.latest').then(function(e) {
-        if (transition.queryParams.username) {
-          // send a message to user
-          Discourse.User.findByUsername(transition.queryParams.username).then((user) => {
+
+  beforeModel(transition) {
+    const params = transition.queryParams;
+
+    if (this.currentUser) {
+      this.replaceWith("discovery.latest").then(e => {
+        if (params.username) {
+          // send a message to a user
+          User.findByUsername(params.username).then(user => {
             if (user.can_send_private_message_to_user) {
-              Ember.run.next(function() {
-                e.send('createNewMessageViaParams', user.username, transition.queryParams.title, transition.queryParams.body);
-              });
+              Ember.run.next(() => e.send("createNewMessageViaParams", user.username, params.title, params.body));
             } else {
-              bootbox.alert(I18n.t("composer.cant_send_pm", {username: user.username}));
+              bootbox.alert(I18n.t("composer.cant_send_pm", { username: user.username }));
             }
-          }).catch(() => {
+          }).catch(function() {
             bootbox.alert(I18n.t("generic_error"));
           });
-        } else {
-          // send a message to group
-          Group.find(transition.queryParams.groupname).then((group) => {
-            if (!group.automatic && group.mentionable) {
-              Ember.run.next(function() {
-                e.send('createNewMessageViaParams', group.name, transition.queryParams.title, transition.queryParams.body);
-              });
+        } else if (params.groupname) {
+          // send a message to a group
+          Group.find(params.groupname).then(group => {
+            if (group.mentionable) {
+              Ember.run.next(() => e.send("createNewMessageViaParams", group.name, params.title, params.body));
             } else {
-              bootbox.alert(I18n.t("composer.cant_send_pm", {username: group.name}));
+              bootbox.alert(I18n.t("composer.cant_send_pm", { username: group.name }));
             }
-          }).catch(() => {
+          }).catch(function() {
             bootbox.alert(I18n.t("generic_error"));
           });
         }
       });
     } else {
-      // User is not logged in
-      self.session.set("shouldRedirectToUrl", window.location.href);
-      self.replaceWith('login');
+      this.session.set("shouldRedirectToUrl", window.location.href);
+      this.replaceWith('login');
     }
   }
+
 });

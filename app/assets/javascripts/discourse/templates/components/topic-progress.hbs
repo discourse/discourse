@@ -6,10 +6,15 @@
                  class="full no-text"
                  icon="caret-up"
                  label="topic.progress.go_top"}}
-      <div class='jump-form'>
-        {{input value=toPostIndex}}
-        {{d-button action="jumpPost" label="topic.progress.go"}}
-      </div>
+      {{#unless capabilities.isIOS}}
+        <div class='jump-form'>
+          {{input value=toPostIndex}}
+          {{d-button action="jumpPost" label="topic.progress.go"}}
+        </div>
+      {{else}}
+        {{d-button action="jumpPrompt" class="full jump-prompt" label="topic.progress.jump_prompt"}}
+      {{/unless}}
+
       {{d-button action="jumpBottom"
                  disabled=jumpBottomDisabled
                  class="full no-text jump-bottom"

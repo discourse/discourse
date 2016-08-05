@@ -130,12 +130,12 @@ describe DiscoursePoll::PollsUpdater do
       let(:user) { Fabricate(:user) }
 
       before do
-        DiscoursePoll::Poll.vote(post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+        DiscoursePoll::Poll.vote(post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user)
         post.reload
       end
 
       it "should not allow a private poll with votes to be made public" do
-        DiscoursePoll::Poll.vote(private_poll_post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+        DiscoursePoll::Poll.vote(private_poll_post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user)
         private_poll_post.reload
 
         messages = MessageBus.track_publish do

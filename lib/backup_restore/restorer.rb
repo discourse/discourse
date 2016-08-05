@@ -106,10 +106,24 @@ module BackupRestore
       @current_version = BackupRestore.current_version
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
       @tmp_directory = File.join(Rails.root, "tmp", "restores", @current_db, @timestamp)
+      @source_filename = File.join(Backup.base_directory, @filename)
       @archive_filename = File.join(@tmp_directory, @filename)
       @tar_filename = @archive_filename[0...-3]
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
-      @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+      @is_archive = !(@filename =~ /.sql.gz$/)
+
+      # For backwards compatibility
+      @dump_filename =
+        if @is_archive
+          if system("tar --list --file #{@source_filename} #{BackupRestore::DUMP_FILE}")
+            File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+          else
+            File.join(@tmp_directory, "#{BackupRestore::DUMP_FILE}.gz")
+          end
+        else
+          File.join(@tmp_directory, @filename)
+        end
+
       @logs = []
       @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
@@ -162,12 +176,14 @@ module BackupRestore
 
     def copy_archive_to_tmp_directory
       log "Copying archive to tmp directory..."
-      source = File.join(Backup.base_directory, @filename)
-      execute_command("cp '#{source}' '#{@archive_filename}'", "Failed to copy archive to tmp directory.")
+      execute_command("cp '#{@source_filename}' '#{@archive_filename}'", "Failed to copy archive to tmp directory.")
     end
 
     def unzip_archive
+      return unless @is_archive
+
       log "Unzipping archive, this may take a while..."
+
       FileUtils.cd(@tmp_directory) do
         execute_command("gzip --decompress '#{@archive_filename}'", "Failed to unzip archive.")
       end
@@ -176,14 +192,23 @@ module BackupRestore
     def extract_metadata
       log "Extracting metadata file..."
 
-      FileUtils.cd(@tmp_directory) do
-        execute_command(
-          "tar --extract --file '#{@tar_filename}' #{BackupRestore::METADATA_FILE}",
-          "Failed to extract metadata file."
-        )
-      end
+      @metadata =
+        if system("tar --list --file #{@source_filename} #{BackupRestore::METADATA_FILE}")
+          FileUtils.cd(@tmp_directory) do
+            execute_command(
+              "tar --extract --file '#{@tar_filename}' #{BackupRestore::METADATA_FILE}",
+              "Failed to extract metadata file."
+            )
+          end
 
-      @metadata = Oj.load_file(@meta_filename)
+          Oj.load_file(@meta_filename)
+        else
+          if @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
+            { "version" => Regexp.last_match[1].to_i }
+          else
+            raise "Migration version is missing from the filename."
+          end
+        end
     end
 
     def validate_metadata
@@ -196,13 +221,23 @@ module BackupRestore
     end
 
     def extract_dump
+      return unless @is_archive
+
       log "Extracting dump file..."
 
       FileUtils.cd(@tmp_directory) do
         execute_command(
-          "tar --extract --file '#{@tar_filename}' #{BackupRestore::DUMP_FILE}.gz",
+          "tar --extract --file '#{@tar_filename}' #{File.basename(@dump_filename)}",
           "Failed to extract dump file."
         )
+      end
+    end
+
+    def restore_dump_command
+      if File.extname(@dump_filename) == '.gz'
+        "gzip -d < #{@dump_filename} | #{sed_command} | #{psql_command} 2>&1"
+      else
+        "#{psql_command} 2>&1 < #{@dump_filename}"
       end
     end
 
@@ -222,7 +257,7 @@ module BackupRestore
         end
       end
 
-      IO.popen("gzip -d < #{@dump_filename}.gz | #{sed_command} | #{psql_command} 2>&1") do |pipe|
+      IO.popen(restore_dump_command) do |pipe|
         begin
           while line = pipe.readline
             logs << line
@@ -318,7 +353,7 @@ module BackupRestore
     end
 
     def extract_uploads
-      if `tar --list --file '#{@tar_filename}' | grep 'uploads/'`.present?
+      if system("tar --list --file '#{@tar_filename}' 'uploads'")
         log "Extracting uploads..."
         FileUtils.cd(File.join(Rails.root, "public")) do
           execute_command(
@@ -343,9 +378,9 @@ module BackupRestore
       if user = User.find_by(email: @user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
         if @success
-          SystemMessage.create_from_system_user(user, :restore_succeeded)
+          SystemMessage.create_from_system_user(user, :restore_succeeded, logs: pretty_logs(@logs))
         else
-          SystemMessage.create_from_system_user(user, :restore_failed, logs: @logs.join("\n"))
+          SystemMessage.create_from_system_user(user, :restore_failed, logs: pretty_logs(@logs))
         end
       else
         log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
