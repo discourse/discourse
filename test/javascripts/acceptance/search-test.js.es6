@@ -12,6 +12,7 @@ test("search", (assert) => {
   });
 
   fillIn('#search-term', 'dev');
+  keyEvent('#search-term', 'keyup', 16);
   andThen(() => {
     assert.ok(exists('.search-menu .results ul li'), 'it shows results');
   });

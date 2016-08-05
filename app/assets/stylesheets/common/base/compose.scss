@@ -97,6 +97,8 @@ div.ac-wrap div.item a.remove, .remove-link {
 }
 
 div.ac-wrap {
+  overflow: auto;
+  max-height: 150px;
   background-color: $secondary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px 4px 1px 4px;
@@ -110,6 +112,15 @@ div.ac-wrap {
       line-height: 20px;
     }
   }
+
+  .ac-collapsed-button {
+    float: left;
+    border-radius: 20px;
+    position: relative;
+    top: -2px;
+    margin-right: 10px;
+  }
+
   input[type="text"] {
     float: left;
     margin-bottom: 4px;

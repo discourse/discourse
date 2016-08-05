@@ -283,10 +283,8 @@ te:
       invited_by: "ఆహ్వానిచినవారు"
       trust_level: "నమ్మకపు స్థాయి"
       notifications: "ప్రకటనలు"
-      dismiss_notifications: "అన్నీ చదివినట్టు గుర్తించు"
       dismiss_notifications_tooltip: "అన్ని చదవని ప్రకటనలూ చదివినట్టు గుర్తించు"
       disable_jump_reply: "నేను జవాబిచ్చాక నా టపాకు వెళ్లవద్దు"
-      edit_history_public: "ఇతర సభ్యలను నా టపా దిద్దుబాట్లను చూడనివ్వు"
       external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరువు"
       enable_quoting: "హైలైట్ అయిన పాఠ్యానికి కోట్ జవాబు చేతనం చేయి"
       change: "మార్చు"
@@ -297,7 +295,6 @@ te:
       suspended_notice: "ఈ సభ్యుడు {{date}} వరకూ సస్పెండయ్యాడు"
       suspended_reason: "కారణం:"
       github_profile: "గిట్ హబ్"
-      mailing_list_mode: "ప్రతి కొత్త టపాకూ నాకో ఈమెయిల్ పంపు (నేనా విషయాన్ని లేదా వర్గాన్ని నిశ్శబ్దించేంతవరకూ)"
       watched_categories: "ఒకకన్నేసారు"
       tracked_categories: "గమనించారు"
       muted_categories: "నిశ్శబ్దం"
@@ -326,7 +323,6 @@ te:
         title: "నా గురించి మార్చు"
       change_username:
         title: "సభ్యనామం మార్చు"
-        confirm: "మీరు సభ్యనామం మారిస్తే, మీ టపాల అన్ని గత కోట్లు మరియు @పేరు ప్రస్తావనలు సరిగ్గా పనిచెయ్యవు. మీరు నిజ్జంగానే సభ్యనామం మార్చాలనుకుంటున్నారా? "
         taken: "క్షమించాలి, ఆ సభ్యనామం వేరొకరు తీసుకున్నారు."
         error: "మీ సభ్యనామం మార్చడంలో దోషం."
         invalid: "ఆ సభ్యనామం చెల్లనిది. కేవలం సంఖ్యలు, అక్షరాలు మాత్రమే కలిగి ఉండాలి. "
@@ -391,7 +387,6 @@ te:
       website: "వెబ్ సైటు"
       email_settings: "ఈమెయిల్"
       email_digests:
-        title: "నేను ఇక్కడికి రాకపోతే, కొత్త విషయాలు నాకు ఈమెయిల్ గా పంపండి:"
         daily: "ప్రతీరోజు"
         every_three_days: "ప్రతి మూడు రోజులకీ"
         weekly: "ప్రతీవారం"
@@ -556,10 +551,6 @@ te:
       github:
         title: "గిట్ హబ్ తో"
         message: "గిట్ హబ్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
-    apple_international: "యాపిల్ , అంతర్జాతీయ"
-    google: "గూగుల్"
-    twitter: "ట్విట్టరు"
-    emoji_one: "ఇమెజి వన్"
     composer:
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       posting_not_on_topic: "ఏ విషయానికి మీరు జవాబివ్వాలనుకుంటున్నారు? "
@@ -635,7 +626,6 @@ te:
       invited_to_private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='మీ ఆహ్వానాన్ని మన్నించారు' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='టపా జరిపారు' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      linked: "<i title='టపాకు లంకె ఉంచారు' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='బ్యాడ్జ్ ప్రసాదించారు' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
     upload_selector:
       title: "ఒక బొమ్మ కలుపు"
@@ -653,7 +643,6 @@ te:
       post_format: "{{username}} నుండి #{{post_number}}"
       context:
         user: "@{{username}} యొక్క విషయాలు వెతుకు"
-        category: "\"{{category}}\" వర్గంలో వెతుకు"
         topic: "ఈ విషయంలో వెతుకు"
     go_back: 'వెనక్కు మరలు'
     not_logged_in_user: 'సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట'
@@ -805,8 +794,6 @@ te:
         help: 'ఈ విషయాన్ని ప్రైవేటుగా కేతనించు లేదా ప్రైవేటు ప్రకటన పంపు'
         success_message: 'ఈ విషయాన్ని మీరు కేతనించారు'
       inviting: "ఆహ్వానిస్తున్నామ్..."
-      automatically_add_to_groups_optional: "ఈ ఆహ్వానం ఈ గుంపులకు అనుమతిని కూడా కలిగి ఉంది:(ఐచ్చికం, అధికారులు మాత్రమే)"
-      automatically_add_to_groups_required: "ఈ ఆహ్వానం ఈ గుంపులకు అనుమతిని కూడా కలిగి ఉంది:(<b>తప్పనిసరి</b>, అధికారులు మాత్రమే)"
       invite_private:
         email_or_username: "ఆహ్వానితుని ఈమెయిల్ లేదా సభ్యనామం"
         email_or_username_placeholder: "ఈమెయిల్ చిరునామా లేదా సభ్యనామం"
@@ -880,10 +867,7 @@ te:
         create: "క్షమించాలి. మీ టపా సృష్టించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
         edit: "క్షమించాలి. మీ టపా సవరించుటలో దోషం. మరలా ప్రయత్నించండి"
         upload: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
-        attachment_too_large: "క్షమించాలి. మీరు ఎగుమతించ ప్రయత్నిస్తున్న దస్త్రం మరీ పెద్దది. (గరిష్ట పరిమాణ పరిమితి {{max_size_kb}}కేబీ)."
-        file_too_large: "క్షమించాలి. మీరు ఎగుమతించ ప్రయత్నిస్తున్న దస్త్రం మరీ పెద్దది. (గరిష్ట పరిమాణ పరిమితి {{max_size_kb}}కేబీ)."
         too_many_uploads: "క్షమించాలి. మీరు ఒకసారి ఒక దస్త్రం మాత్రమే ఎగుమతించగలరు"
-        too_many_dragged_and_dropped_files: "క్షమించాలి. మీరు కేవలం 10 దస్త్రాల వరకు మాత్రమే ఒకేమారు లాగి వదలగలరు. "
         upload_not_authorized: "క్షమించాలి. మీరు ఎగుమతించాలనుకుంటున్న దస్త్రం అధీకృతమైనది కాదు. (అధీకృత పొడిగింతలు:{{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
@@ -1097,7 +1081,6 @@ te:
       action: "విషయాన్ని కేతనించు"
     topic_map:
       title: "విషయ సారం"
-      links_shown: "అన్ని {{totalLinks}} లంకెలూ చూపు..."
       clicks:
         one: "ఒక నొక్కు"
         other: "%{count} నొక్కులు"
@@ -1219,7 +1202,6 @@ te:
           30_days_ago: "ముప్పై రోజుల క్రితం"
           all: "అన్ని"
           view_table: "టేబుల్"
-          view_chart: "బార్ పట్టిక"
           refresh_report: "రిపోర్టు తాజాపరుచు"
           start_date: "ఆరంభ తేదీ"
           end_date: "ముగింపు తేదీ"
@@ -1335,12 +1317,6 @@ te:
           backups: "బ్యాకప్పులు"
           logs: "లాగ్స్"
         none: "ఎట్టి బ్యాకప్పులూ లేవు"
-        read_only:
-          enable:
-            title: "కేవలం చదివే రీతే చేతనం చేయి"
-            confirm: "మీరు నిజంగా కేవలం చదివే రీతి చేతనంచేయాలనుకుంటున్నారా?"
-          disable:
-            title: "కేవలం చదివే రీతి అచేతనం చేయి"
         logs:
           none: "ఇంకా లాగులు లేవు..."
         columns:
@@ -1842,70 +1818,3 @@ te:
         name: "పేరు"
         image: "బొమ్మ"
         delete_confirm: "మీరు నిజంగా %{పేరు}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
-    lightbox:
-      download: "దిగుమతించు"
-    search_help:
-      title: 'సహాయం వెతుకు'
-    keyboard_shortcuts_help:
-      title: 'కీబోర్డు షార్ట్ కట్లు'
-      jump_to:
-        title: 'వెళ్లు'
-        latest: '<b>g</b>, <b>l</b> తాజా'
-        new: '<b>g</b>, <b>n</b> కొత్త'
-        unread: '<b>g</b>, <b>u</b> చదవనవి'
-        categories: '<b>g</b>, <b>c</b> వర్గాలు'
-        top: '<b>g</b>, <b>t</b> పైన'
-      navigation:
-        title: 'నావిగేషను'
-        jump: '<b>#</b> టపాకు వెళ్లు #'
-        back: '<b>u</b> వెనుకకు'
-        open: '<b>o</b> or <b>ప్రవేశం</b> ఎంచుకున్న విషయం తెరువు'
-        next_prev: '<b>మార్పు</b>+<b>j</b>/<b>మార్పు</b>+<b>k</b> తర్వాతి/ముందరి విభాగం'
-      application:
-        title: 'అనువర్తనం'
-        create: '<b>c</b> కొత్త టపా సృష్టించు'
-        notifications: '<b>n</b> తెరచిన ప్రకటనలు'
-        user_profile_menu: '<b>p</b> యూజర్ మెనూ తెరువు'
-        show_incoming_updated_topics: '<b>.</b> నవీకరించిన విషయాలను చూపించండి'
-        search: '<b>/</b> వెతుకు'
-        help: '<b>?</b> కీ బోర్డ్ సహాయాన్ని తెరువు'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> తీసివేసిన కొత్త/టపాలు'
-        dismiss_topics: '<b>x</b>, <b>t</b> తీసివేసిన విషయాలు'
-      actions:
-        title: 'చర్యలు'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> విషయం చేర్చు/విడదీయు'
-        share_topic: '<b>shift</b>+<b>s</b> విషయం పంచు'
-        share_post: '<b>s</b> టపా పంచు'
-        reply_as_new_topic: '<b>t</b> లంకె విషయంగా సమాధానం'
-        reply_topic: '<b>shift</b>+<b>r</b> టపా కి సమాధానం'
-        reply_post: '<b>r</b> టపా కి సమాధానం'
-        like: '<b>l</b> టపా ని ఇష్టపడు'
-        flag: '<b>!</b> టపా కేతనం'
-        bookmark: '<b>b</b>టపా పేజీక'
-        edit: '<b>e</b> టపా సవరణ'
-        delete: '<b>d</b> టపా తొలగించు'
-        mark_muted: '<b>m</b>, <b>m</b> విషయాన్ని ఆపివేయండి'
-        mark_regular: '<b>m</b>, <b>r</b> నిత్య (అప్రమేయ) విషయం'
-        mark_tracking: '<b>m</b>, <b>t</b> విషయం వెతుకు'
-        mark_watching: '<b>m</b>, <b>w</b> చూసిన విషయం'
-    badges:
-      title: బ్యాడ్జీలు
-      more_badges:
-        one: "+%{count} కంటే"
-        other: "+%{count} ఇంకా"
-      granted:
-        one: "1 మంజూరు"
-        other: "%{లెక్క} మంజూరు"
-      select_badge_for_title: మీ శీర్షికగా ఉపయోగించడానికి ఒక చిహ్నాన్ని ఎంపిక చేయండి.
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: మొదలుపెట్టడం
-        community:
-          name: కమ్యునిటీ
-        trust_level:
-          name: నమ్మకపు స్థాయి
-        other:
-          name: ఇతర
-        posting:
-          name: రాస్తున్నారు

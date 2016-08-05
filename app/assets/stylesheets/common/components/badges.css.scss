@@ -9,7 +9,7 @@
   display: inline-block;
   font-weight: normal;
   white-space: nowrap;
-  @include border-radius-all(10px);
+  @include border-radius-all(9px);
 }
 
 // Category badges
@@ -213,7 +213,9 @@
         margin-top: 0;
         width: 100%;
         line-height: 1;
+        vertical-align: text-top;
         span.badge-category {
+          max-width: 100px;
           padding: 5px;
         }
       }
@@ -232,14 +234,21 @@
 
 .badge-notification {
   @extend %badge;
-  padding: 4px 5px 2px 5px;
   vertical-align: middle;
   color: $secondary;
   font-size: 11px;
-  line-height: 1;
+  line-height: 18px;
+  min-width: 12px;
+  height: 18px;
+  padding: 0px 3px;
   text-align: center;
   background-color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 70%));
+
   &[href] {
+    color: $secondary;
+  }
+
+  &:hover {
     color: $secondary;
   }
 
@@ -267,9 +276,9 @@
 
   &.clicks {
     font-weight: normal;
-    background-color: dark-light-diff($primary, $secondary, 85%, -60%);
+    background-color: dark-light-diff($primary, $secondary, 88%, -60%);
     top: -1px;
-    color: dark-light-diff($primary, $secondary, 50%, -20%);
+    color: dark-light-diff($primary, $secondary, 40%, -20%);
     position: relative;
     margin-left: 2px;
     border: none;

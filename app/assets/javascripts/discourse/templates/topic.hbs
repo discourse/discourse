@@ -20,7 +20,12 @@
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
             {{#if showCategoryChooser}}
               <br>
-              {{category-chooser valueAttribute="id" value=buffered.category_id source=buffered.category_id}}
+              {{category-chooser valueAttribute="id" value=buffered.category_id}}
+            {{/if}}
+
+            {{#if canEditTags}}
+              <br>
+              {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
             {{/if}}
 
             {{plugin-outlet "edit-topic"}}
@@ -30,7 +35,7 @@
           {{else}}
             <h1>
               {{#unless model.is_warning}}
-                <a href="{{view.pmPath}}">
+                <a href={{pmPath}}>
                   <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
                 </a>
               {{/unless}}
@@ -58,15 +63,29 @@
   {{/if}}
 
   <div class="container posts">
-    {{view "selected-posts"}}
+    <div class='selected-posts {{unless multiSelect 'hidden'}}'>
+      {{partial "selected-posts"}}
+    </div>
+    {{#topic-navigation as |info|}}
+      {{#if info.renderTimeline}}
+        {{topic-timeline topic=model
+                         enteredIndex=enteredIndex
+                         loading=model.postStream.loading
+                         delegated=topicDelegated}}
+      {{else}}
+        {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
+      {{/if}}
+
+      {{topic-progress topic=model delegated=topicDelegated showTimeline=info.showTimeline}}
+    {{/topic-navigation}}
 
     <div class="row">
       <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
+
         <div class="posts-wrapper">
-
-          {{render "topic-progress"}}
-
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
+
+          {{plugin-outlet "topic-above-posts"}}
 
           {{#unless model.postStream.loadingFilter}}
             {{scrolling-post-stream
@@ -79,6 +98,7 @@
               showFlags="showFlags"
               editPost="editPost"
               showHistory="showHistory"
+              showLogin="showLogin"
               showRawEmail="showRawEmail"
               deletePost="deletePost"
               recoverPost="recoverPost"
@@ -92,29 +112,33 @@
               unhidePost="unhidePost"
               replyToPost="replyToPost"
               toggleWiki="toggleWiki"
-              toggleParticipant="toggleParticipant"
               toggleSummary="toggleSummary"
               removeAllowedUser="removeAllowedUser"
+              removeAllowedGroup="removeAllowedGroup"
               showInvite="showInvite"
               topVisibleChanged="topVisibleChanged"
+              currentPostChanged="currentPostChanged"
+              currentPostScrolled="currentPostScrolled"
               bottomVisibleChanged="bottomVisibleChanged"
               selectPost="toggledSelectedPost"
               selectReplies="toggledSelectedPostReplies"
               fillGapBefore="fillGapBefore"
               fillGapAfter="fillGapAfter"}}
           {{/unless}}
+
+          {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
         </div>
         <div id="topic-bottom"></div>
 
         {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
           {{#if loadedAllPosts}}
 
-            {{view "topic-closing" topic=model}}
+            {{topic-closing topic=model}}
             {{#if session.showSignupCta}}
               {{! replace "Log In to Reply" with the infobox }}
               {{signup-cta}}
             {{else}}
-              {{view "topic-footer-buttons" topic=model}}
+              {{topic-footer-buttons topic=model topicDelegated=topicDelegated}}
             {{/if}}
 
             {{#if model.pending_posts_count}}
@@ -130,11 +154,17 @@
               </div>
             {{/if}}
 
+            {{#if showSelectedPostsAtBottom}}
+              <div class='selected-posts {{unless multiSelect 'hidden'}}'>
+                {{partial "selected-posts"}}
+              </div>
+            {{/if}}
+
             {{plugin-outlet "topic-above-suggested"}}
 
             {{#if model.details.suggested_topics.length}}
               <div id="suggested-topics">
-                <h3>{{{view.suggestedTitle}}}</h3>
+                <h3>{{{suggestedTitle}}}</h3>
                 <div class="topics">
                   {{#if model.isPrivateMessage}}
                     {{basic-topic-list hideCategory="true"
@@ -145,7 +175,7 @@
                     {{basic-topic-list topics=model.details.suggested_topics postsAction="showTopicEntrance"}}
                   {{/if}}
                 </div>
-                <h3>{{{view.browseMoreMessage}}}</h3>
+                <h3>{{{browseMoreMessage}}}</h3>
               </div>
             {{/if}}
 
@@ -184,68 +214,3 @@
   {{render "quote-button"}}
 {{/if}}
 
-{{#if currentUser.canManageTopic}}
-  {{show-popup-button action="showTopicAdminMenu" class="show-topic-admin" title="topic_admin_menu" icon="wrench"}}
-  {{#popup-menu visible=adminMenuVisible hide="hideTopicAdminMenu" title="admin_title" extraClasses="topic-admin-popup-menu"}}
-    <li class="topic-admin-multi-select">
-      {{d-button action="toggleMultiSelect" icon="tasks" label="topic.actions.multi_select"}}
-    </li>
-
-    {{#if model.details.can_delete}}
-      <li class="topic-admin-delete">
-        {{d-button action="deleteTopic" icon="trash-o" label="topic.actions.delete" class="btn-danger"}}
-      </li>
-    {{/if}}
-
-    {{#if showRecover}}
-      <li class="topic-admin-recover">
-        {{d-button action="recoverTopic" icon="undo" label="topic.actions.recover"}}
-      </li>
-    {{/if}}
-
-    <li class="topic-admin-autoclose">
-      {{#if model.closed}}
-        {{d-button action="toggleClosed" icon="unlock" label="topic.actions.open"}}
-      {{else}}
-        {{d-button action="toggleClosed" icon="lock" label="topic.actions.close"}}
-        {{d-button action="showAutoClose" icon="clock-o" label="topic.actions.auto_close"}}
-      {{/if}}
-    </li>
-
-    {{#unless model.isPrivateMessage}}
-      {{#if model.visible}}
-        <li class="topic-admin-pin">
-          {{#if isFeatured}}
-            {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.unpin"}}
-          {{else}}
-            {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.pin"}}
-          {{/if}}
-        </li>
-      {{/if}}
-    {{/unless}}
-
-    <li class="topic-admin-change-timestamp">
-      {{d-button action="showChangeTimestamp" icon="calendar" label="topic.change_timestamp.title"}}
-    </li>
-
-    <li class="topic-admin-archive">
-      {{#if model.archived}}
-        {{d-button action="toggleArchived" icon="folder" label="topic.actions.unarchive"}}
-      {{else}}
-        {{#unless model.isPrivateMessage}}
-        {{d-button action="toggleArchived" icon="folder" label="topic.actions.archive"}}
-        {{/unless}}
-      {{/if}}
-    </li>
-
-    <li class="topic-admin-visible">
-      {{#if model.visible}}
-        {{d-button action="toggleVisibility" icon="eye-slash" label="topic.actions.invisible"}}
-      {{else}}
-        {{d-button action="toggleVisibility" icon="eye" label="topic.actions.visible"}}
-      {{/if}}
-    </li>
-
-    {{plugin-outlet "topic-admin-menu-buttons"}}
-  {{/popup-menu}}
-{{/if}}

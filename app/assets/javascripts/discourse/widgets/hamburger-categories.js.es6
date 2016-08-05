@@ -1,15 +1,18 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import { number } from 'discourse/lib/formatter';
 
 createWidget('hamburger-category', {
   tagName: 'li.category-link',
 
   html(c) {
-    const results = [ this.attach('category_link', { category: c, allowUncategorized: true }) ];
+    const results = [ this.attach('category-link', { category: c, allowUncategorized: true }) ];
 
     const unreadTotal = parseInt(c.get('unreadTopics'), 10) + parseInt(c.get('newTopics'), 10);
     if (unreadTotal) {
-      results.push(h('a.badge.badge-notification', { attributes: { href: c.get('url') } }, unreadTotal.toString()));
+      results.push(h('a.badge.badge-notification', {
+        attributes: { href: c.get('url') }
+      }, number(unreadTotal)));
     }
 
     if (!this.currentUser) {

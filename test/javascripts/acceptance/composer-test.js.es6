@@ -1,6 +1,11 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Composer", { loggedIn: true });
+acceptance("Composer", {
+  loggedIn: true,
+  settings: {
+    enable_whispers: true
+  }
+});
 
 test("Tests the Composer controls", () => {
   visit("/");
@@ -251,6 +256,52 @@ test("Composer can toggle between edit and reply", () => {
   click('.topic-post:eq(0) button.edit');
   andThen(() => {
     equal(find('.d-editor-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
+  });
+});
+
+test("Composer can toggle between reply and createTopic", () => {
+  visit("/t/this-is-a-test-topic/9");
+
+  click('.topic-post:eq(0) button.reply');
+  click('button.options');
+  click('.popup-menu .fa-eye-slash');
+  andThen(() => {
+    ok(
+      find('.composer-fields .whisper').text().indexOf(I18n.t("composer.whisper")) > 0,
+      'it sets the post type to whisper'
+    );
+  });
+
+  visit("/");
+  andThen(() => {
+    ok(exists('#create-topic'), 'the create topic button is visible');
+  });
+
+  click('#create-topic');
+  andThen(() => {
+    ok(
+      find('.composer-fields .whisper').text().indexOf(I18n.t("composer.whisper")) === -1,
+      "it should reset the state of the composer's model"
+    );
+  });
+
+  click('button.options');
+  click('.popup-menu .fa-eye-slash');
+  andThen(() => {
+    ok(
+      find('.composer-fields .whisper').text().indexOf(I18n.t("composer.unlist")) > 0,
+      'it sets the topic to unlisted'
+    );
+  });
+
+  visit("/t/this-is-a-test-topic/9");
+
+  click('.topic-post:eq(0) button.reply');
+  andThen(() => {
+    ok(
+      find('.composer-fields .whisper').text().indexOf(I18n.t("composer.unlist")) === -1,
+      "it should reset the state of the composer's model"
+    );
   });
 });
 

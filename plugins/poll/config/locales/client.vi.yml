@@ -9,19 +9,20 @@ vi:
   js:
     poll:
       voters:
-        other: "Người bầu chọn"
+        other: "người bình chọn"
       total_votes:
         other: "tổng số bình chọn"
       average_rating: "Đánh giá trung bình: <strong>%{average}</strong>."
+      public:
+        title: "Bình chọn công khai."
       multiple:
         help:
           at_least_min_options:
-            other: "Bạn phải chọn ít nhất <strong>%{count}</strong> tùy chọn."
+            other: "Chọn ít nhất <strong>%{count}</strong> tùy chọn"
           up_to_max_options:
-            other: "Bạn có thể chọn lên tới <strong>%{count}</strong> tùy chọn."
+            other: "Chọn tối đa <strong>%{count}</strong> tùy chọn"
           x_options:
-            other: "Bạn phải chọn <strong>%{count}</strong> tùy chọn."
-          between_min_and_max_options: "Bạn có thể chọn giữa <strong>%{min}</strong> và <strong>%{max}</strong>."
+            other: "Chọn <strong>%{count}</strong> tùy chọn"
       cast-votes:
         title: "Bỏ phiếu của bạn"
         label: "Bình chọn ngay!"
@@ -29,15 +30,24 @@ vi:
         title: "Hiển thị kết quả cuộc thăm dò"
         label: "Hiện kết quả"
       hide-results:
-        title: "Trở lại bầu chọn của bạn"
+        title: "Trở lại bình chọn của bạn"
         label: "Ẩn kết quả"
       open:
         title: "Mở bình chọn"
         label: "Mở"
-        confirm: "Bạn có chắc mở bình chọn này?"
+        confirm: "Bạn có chắc bạn muốn mở bình chọn này?"
       close:
         title: "Đóng bình chọn"
         label: "Đóng lại"
         confirm: "Bạn có chắc chắn muốn đóng bình chọn này?"
-      error_while_toggling_status: "Có lỗi trong khi chuyển đổi qua lại các trạng thái của bình chọn này."
-      error_while_casting_votes: "Có lỗi trong khi tạo mãu bầu chọn của bạn"
+      ui_builder:
+        help:
+          options_count: Nhập vào ít nhất 2 tùy chọn
+        poll_type:
+          label: Loại
+        poll_config:
+          max: Tối đa
+          min: Tối thiểu
+          step: Bước
+        poll_public:
+          label: Hiển thị ai đã bình chọn

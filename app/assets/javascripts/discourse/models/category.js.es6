@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import { on } from 'ember-addons/ember-computed-decorators';
 import PermissionType from 'discourse/models/permission-type';
@@ -67,7 +68,7 @@ const Category = RestModel.extend({
       url = "/categories/" + this.get('id');
     }
 
-    return Discourse.ajax(url, {
+    return ajax(url, {
       data: {
         name: this.get('name'),
         slug: this.get('slug'),
@@ -86,7 +87,9 @@ const Category = RestModel.extend({
         allow_badges: this.get('allow_badges'),
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
-        suppress_from_homepage: this.get('suppress_from_homepage')
+        suppress_from_homepage: this.get('suppress_from_homepage'),
+        allowed_tags: this.get('allowed_tags'),
+        allowed_tag_groups: this.get('allowed_tag_groups')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });
@@ -101,7 +104,7 @@ const Category = RestModel.extend({
   }.property("permissions"),
 
   destroy: function() {
-    return Discourse.ajax("/categories/" + (this.get('id') || this.get('slug')), { type: 'DELETE' });
+    return ajax("/categories/" + (this.get('id') || this.get('slug')), { type: 'DELETE' });
   },
 
   addPermission: function(permission){
@@ -168,7 +171,7 @@ const Category = RestModel.extend({
   setNotification: function(notification_level) {
     var url = "/category/" + this.get('id')+"/notifications";
     this.set('notification_level', notification_level);
-    return Discourse.ajax(url, {
+    return ajax(url, {
       data: {
         notification_level: notification_level
       },
@@ -283,11 +286,11 @@ Category.reopenClass({
   },
 
   reloadById(id) {
-    return Discourse.ajax(`/c/${id}/show.json`);
+    return ajax(`/c/${id}/show.json`);
   },
 
   reloadBySlug(slug, parentSlug) {
-    return parentSlug ? Discourse.ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`) : Discourse.ajax(`/c/${slug}/find_by_slug.json`);
+    return parentSlug ? ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`) : ajax(`/c/${slug}/find_by_slug.json`);
   },
 
   search(term, opts) {

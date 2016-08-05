@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import BadgeSelectController from "discourse/mixins/badge-select-controller";
 
 export default Ember.ArrayController.extend(BadgeSelectController, {
@@ -11,7 +12,7 @@ export default Ember.ArrayController.extend(BadgeSelectController, {
       this.setProperties({ saved: false, saving: true });
 
       var self = this;
-      Discourse.ajax(this.get('user.path') + "/preferences/badge_title", {
+      ajax(this.get('user.path') + "/preferences/badge_title", {
         type: "PUT",
         data: { user_badge_id: self.get('selectedUserBadgeId') }
       }).then(function() {

@@ -1,6 +1,7 @@
 import AppEvents from 'discourse/lib/app-events';
 import createStore from 'helpers/create-store';
 import { autoLoadModules } from 'discourse/initializers/auto-load-modules';
+import TopicTrackingState from 'discourse/models/topic-tracking-state';
 
 export default function(name, opts) {
   opts = opts || {};
@@ -22,11 +23,19 @@ export default function(name, opts) {
 
     autoLoadModules();
 
-    if (opts.setup) {
-      const store = createStore();
-      this.currentUser = Discourse.User.create();
-      this.container.register('store:main', store, { instantiate: false });
+    const store = createStore();
+    if (!opts.anonymous) {
+      const currentUser = Discourse.User.create({ username: 'eviltrout' });
+      this.currentUser = currentUser;
       this.container.register('current-user:main', this.currentUser, { instantiate: false });
+      this.container.register('topic-tracking-state:main',
+                              TopicTrackingState.create({ currentUser }),
+                              { instantiate: false });
+    }
+
+    this.container.register('store:main', store, { instantiate: false });
+
+    if (opts.setup) {
       opts.setup.call(this, store);
     }
 

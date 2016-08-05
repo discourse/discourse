@@ -92,11 +92,18 @@ bundle exec rails s -b 0.0.0.0
 
 In a few seconds, rails will start serving pages. To access them, open a web browser to [http://localhost:4000](http://localhost:4000) - if it all worked you should see discourse! Congratulations, you are ready to start working!
 
-If you want to log in as a user, a shortcut you can use in development mode is to follow this link to log in as `eviltrout`:
-
-[http://localhost:4000/session/eviltrout/become](http://localhost:4000/session/eviltrout/become)
-
 You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
+
+### Creating an Admin User
+
+You'll want an admin account to be able to do anything fun on your new Discourse environment. Enter your vagrant image by using `vagrant ssh` then
+run the following command and follow the instructions:
+
+```bash
+bundle exec rake admin:create
+```
+
+Your admin account should be approved. Log in in your browser and you're good to go!
 
 ### Tests
 
@@ -109,6 +116,18 @@ vagrant ssh
 cd /vagrant
 RAILS_ENV=test bundle exec rake db:migrate
 bundle exec rake autospec p l=5
+```
+
+When developing a plugin (the *poll* plugin for instance), the following can be used to only run all tests from the *spec* directory:
+
+```
+bundle exec rake plugin:spec poll
+```
+
+or just a single file with:
+
+```
+LOAD_PLUGINS=1 bundle exec rspec plugins/poll/spec/controllers/posts_controller_spec.rb
 ```
 
 For more insight into testing Discourse, see [this discussion](http://rubyrogues.com/117-rr-discourse-part-2-with-sam-saffron-and-robin-ward/) with the Ruby Rogues.

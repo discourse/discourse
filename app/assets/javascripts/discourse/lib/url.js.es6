@@ -1,43 +1,63 @@
-/*global LockOn:true*/
-let _jumpScheduled = false;
+import offsetCalculator from 'discourse/lib/offset-calculator';
+import LockOn from 'discourse/lib/lock-on';
+import { defaultHomepage } from 'discourse/lib/utilities';
+
 const rewrites = [];
+const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 
-const DiscourseURL = Ember.Object.createWithMixins({
+let _jumpScheduled = false;
+export function jumpToElement(elementId) {
+  if (_jumpScheduled || Ember.isEmpty(elementId)) { return; }
 
-  // Used for matching a topic
-  TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
+  const selector = `#${elementId}, a[name=${elementId}]`;
+  _jumpScheduled = true;
+  Ember.run.schedule('afterRender', function() {
+    const lockon = new LockOn(selector, {
+      finished() {
+        _jumpScheduled = false;
+      }
+    });
+    lockon.lock();
+  });
+}
 
-  isJumpScheduled: function() {
+const DiscourseURL = Ember.Object.extend({
+
+  isJumpScheduled() {
     return _jumpScheduled;
   },
 
   // Jumps to a particular post in the stream
   jumpToPost(postNumber, opts) {
+    opts = opts || {};
     const holderId = `#post_${postNumber}`;
-    const offset = () => {
-      const $header = $('header');
-      const $title = $('#topic-title');
-      const windowHeight = $(window).height() - $title.height();
-      const expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
-
-      return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
-    };
 
     Em.run.schedule('afterRender', () => {
-      if (postNumber === 1) {
+      let elementId;
+      let holder;
+
+      if (postNumber === 1 && !opts.anchor) {
         $(window).scrollTop(0);
         return;
       }
 
-      const lockon = new LockOn(holderId, {offsetCalculator: offset});
-      const holder = $(holderId);
+      if (opts.anchor) {
+        elementId = opts.anchor;
+        holder = $(elementId);
+      }
+
+      if (!holder || holder.length === 0) {
+        elementId = holderId;
+        holder = $(elementId);
+      }
+
+      const lockon = new LockOn(elementId);
 
       if (holder.length > 0 && opts && opts.skipIfOnScreen){
-        // if we are on screen skip
-        const elementTop = lockon.elementTop(),
-              scrollTop = $(window).scrollTop(),
-              windowHeight = $(window).height()-offset(),
-              height = holder.height();
+        const elementTop = lockon.elementTop();
+        const scrollTop = $(window).scrollTop();
+        const windowHeight = $(window).height() - offsetCalculator();
+        const height = holder.height();
 
         if (elementTop > scrollTop && (elementTop + height) < (scrollTop + windowHeight)) {
           return;
@@ -48,13 +68,8 @@ const DiscourseURL = Ember.Object.createWithMixins({
     });
   },
 
-  /**
-    Browser aware replaceState. Will only be invoked if the browser supports it.
-
-    @method replaceState
-    @param {String} path The path we are replacing our history state with.
-  **/
-  replaceState: function(path) {
+  // Browser aware replaceState. Will only be invoked if the browser supports it.
+  replaceState(path) {
     if (window.history &&
         window.history.pushState &&
         window.history.replaceState &&
@@ -73,21 +88,13 @@ const DiscourseURL = Ember.Object.createWithMixins({
     }
   },
 
-  // Scroll to the same page, different anchor
-  scrollToId(id) {
-    if (Em.isEmpty(id)) { return; }
+  routeToTag(a) {
+    if (a && a.host !== document.location.host) {
+      document.location = a.href;
+      return false;
+    }
 
-    _jumpScheduled = true;
-    Em.run.schedule('afterRender', function() {
-      let $elem = $(id);
-      if ($elem.length === 0) {
-        $elem = $("[name='" + id.replace('#', '') + "']");
-      }
-      if ($elem.length > 0) {
-        $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
-        _jumpScheduled = false;
-      }
-    });
+    return this.routeTo(a.href);
   },
 
   /**
@@ -98,6 +105,8 @@ const DiscourseURL = Ember.Object.createWithMixins({
     keep the history intact.
   **/
   routeTo(path, opts) {
+    opts = opts || {};
+
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {
@@ -112,10 +121,10 @@ const DiscourseURL = Ember.Object.createWithMixins({
     }
 
     // Scroll to the same page, different anchor
-    if (path.indexOf('#') === 0) {
-      this.scrollToId(path);
-      this.replaceState(path);
-      return;
+    const m = /#(.+)$/.exec(path);
+    if (m) {
+      jumpToElement(m[1]);
+      return this.replaceState(path);
     }
 
     const oldPath = window.location.pathname;
@@ -139,16 +148,14 @@ const DiscourseURL = Ember.Object.createWithMixins({
       }
     }
 
-    rewrites.forEach(function(rw) {
-      path = path.replace(rw.regexp, rw.replacement);
-    });
+    rewrites.forEach(rw => path = path.replace(rw.regexp, rw.replacement));
 
-    if (this.navigatedToPost(oldPath, path)) { return; }
+    if (this.navigatedToPost(oldPath, path, opts)) { return; }
     // Schedule a DOM cleanup event
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
     // TODO: Extract into rules we can inject into the URL handler
-    if (this.navigatedToHome(oldPath, path)) { return; }
+    if (this.navigatedToHome(oldPath, path, opts)) { return; }
 
     if (oldPath === path) {
       // If navigating to the same path send an app event. Views can watch it
@@ -159,11 +166,11 @@ const DiscourseURL = Ember.Object.createWithMixins({
     return this.handleURL(path, opts);
   },
 
-  rewrite: function(regexp, replacement) {
-    rewrites.push({ regexp: regexp, replacement: replacement });
+  rewrite(regexp, replacement) {
+    rewrites.push({ regexp, replacement });
   },
 
-  redirectTo: function(url) {
+  redirectTo(url) {
     window.location = Discourse.getURL(url);
   },
 
@@ -173,8 +180,9 @@ const DiscourseURL = Ember.Object.createWithMixins({
    * @method isInternal
    * @param {String} url
   **/
-  isInternal: function(url) {
+  isInternal(url) {
     if (url && url.length) {
+      if (url.indexOf('//') === 0) { url = "http:" + url; }
       if (url.indexOf('#') === 0) { return true; }
       if (url.indexOf('/') === 0) { return true; }
       if (url.indexOf(this.origin()) === 0) { return true; }
@@ -185,22 +193,16 @@ const DiscourseURL = Ember.Object.createWithMixins({
   },
 
   /**
-    @private
-
     If the URL is in the topic form, /t/something/:topic_id/:post_number
     then we want to apply some special logic. If the post_number changes within the
     same topic, use replaceState and instruct our controller to load more posts.
-
-    @method navigatedToPost
-    @param {String} oldPath the previous path we were on
-    @param {String} path the path we're navigating to
   **/
-  navigatedToPost(oldPath, path) {
-    const newMatches = this.TOPIC_REGEXP.exec(path);
+  navigatedToPost(oldPath, path, routeOpts) {
+    const newMatches = TOPIC_REGEXP.exec(path);
     const newTopicId = newMatches ? newMatches[2] : null;
 
     if (newTopicId) {
-      const oldMatches = this.TOPIC_REGEXP.exec(oldPath);
+      const oldMatches = TOPIC_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same
@@ -216,20 +218,26 @@ const DiscourseURL = Ember.Object.createWithMixins({
         if (path.match(/last$/)) { opts.nearPost = topicController.get('model.highest_post_number'); }
         const closest = opts.nearPost || 1;
 
+        opts.cancelSummary = true;
+
         postStream.refresh(opts).then(() => {
           topicController.setProperties({
             'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
 
-          const closestPost = postStream.closestPostForPostNumber(closest);
-          const progress = postStream.progressIndexOfPost(closestPost);
-          const progressController = container.lookup('controller:topic-progress');
-
-          progressController.set('progressPosition', progress);
           this.appEvents.trigger('post:highlight', closest);
         }).then(() => {
-          DiscourseURL.jumpToPost(closest, {skipIfOnScreen: true});
+          const jumpOpts = {
+            skipIfOnScreen: routeOpts.skipIfOnScreen
+          };
+
+          const m = /#.+$/.exec(path);
+          if (m) {
+            jumpOpts.anchor = m[0];
+          }
+
+          this.jumpToPost(closest, jumpOpts);
         });
 
         // Abort routing, we have replaced our state.
@@ -249,7 +257,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    const homepage = Discourse.Utilities.defaultHomepage();
+    const homepage = defaultHomepage();
 
     if (window.history &&
         window.history.pushState &&
@@ -281,7 +289,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
 
   // Get a controller. Note that currently it uses `__container__` which is not
   // advised but there is no other way to access the router.
-  controllerFor: function(name) {
+  controllerFor(name) {
     return Discourse.__container__.lookup('controller:' + name);
   },
 
@@ -289,7 +297,7 @@ const DiscourseURL = Ember.Object.createWithMixins({
     Be wary of looking up the router. In this case, we have links in our
     HTML, say form compiled markdown posts, that need to be routed.
   **/
-  handleURL: function(path, opts) {
+  handleURL(path, opts) {
     opts = opts || {};
 
     const router = this.get('router');
@@ -310,21 +318,8 @@ const DiscourseURL = Ember.Object.createWithMixins({
 
     const transition = router.handleURL(path);
     transition._discourse_intercepted = true;
-    transition.promise.then(function() {
-      if (elementId) {
-
-        _jumpScheduled = true;
-        Em.run.next('afterRender', function() {
-          const offset = $('#' + elementId).offset();
-          if (offset && offset.top) {
-            $('html, body').scrollTop(offset.top - $('header').height() - 10);
-            _jumpScheduled = false;
-          }
-        });
-      }
-    });
+    transition.promise.then(() => jumpToElement(elementId));
   }
-
-});
+}).create();
 
 export default DiscourseURL;

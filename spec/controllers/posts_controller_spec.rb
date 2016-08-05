@@ -146,7 +146,7 @@ describe PostsController do
 
     describe "when logged in" do
       let(:user) { log_in }
-      let(:post) { Fabricate(:post, user: user, raw_email: 'email_content') }
+      let(:post) { Fabricate(:post, deleted_at: 2.hours.ago, user: user, raw_email: 'email_content') }
 
       it "raises an error if the user doesn't have permission to view raw email" do
         Guardian.any_instance.expects(:can_view_raw_email?).returns(false)
@@ -387,8 +387,12 @@ describe PostsController do
       end
 
       it "extracts links from the new body" do
-        TopicLink.expects(:extract_from).with(post)
-        xhr :put, :update, update_params
+        param = update_params
+        param[:post][:raw] =  'I just visited this https://google.com so many cool links'
+
+        xhr :put, :update, param
+        expect(response).to be_success
+        expect(TopicLink.count).to eq(1)
       end
 
       it "doesn't allow updating of deleted posts" do

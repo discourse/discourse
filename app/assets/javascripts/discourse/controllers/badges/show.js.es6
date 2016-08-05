@@ -48,6 +48,11 @@ export default Ember.Controller.extend({
     return grantCount > (userBadgeLength || 0);
   },
 
+  @computed('user', 'model.grant_count')
+  canShowOthers(user, grantCount) {
+    return !!user && grantCount > 1;
+  },
+
   @observes('canLoadMore')
   _showFooter() {
     this.set("controllers.application.showFooter", !this.get("canLoadMore"));

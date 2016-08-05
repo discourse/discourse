@@ -3,7 +3,7 @@
     <div class="face">:(</div>
     <div class="reason">{{reason}}</div>
     <div class="url">
-      {{i18n 'errors.prev_page'}} <a {{bind-attr href=requestUrl}} data-auto-route="true">{{requestUrl}}</a>
+      {{i18n 'errors.prev_page'}} <a href={{requestUrl}} data-auto-route="true">{{requestUrl}}</a>
     </div>
     <div class="desc">
       {{#if networkFixed}}
@@ -13,7 +13,7 @@
       {{desc}}
     </div>
     <div class="buttons">
-      {{#each buttonData in enabledButtons}}
+      {{#each enabledButtons as |buttonData|}}
         {{d-button icon=buttonData.icon action=buttonData.action label=buttonData.key class=buttonData.classes}}
       {{/each}}
       {{conditional-loading-spinner condition=loading}}

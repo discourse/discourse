@@ -70,20 +70,6 @@ describe AdminDashboardData do
     end
   end
 
-  describe 'gc_checks' do
-    subject { described_class.new.gc_checks }
-
-    it 'returns nil when gc params are set' do
-      ENV.stubs(:[]).with('RUBY_GC_MALLOC_LIMIT').returns(90000000)
-      expect(subject).to be_nil
-    end
-
-    it 'returns a string when gc params are not set' do
-      ENV.stubs(:[]).with('RUBY_GC_MALLOC_LIMIT').returns(nil)
-      expect(subject).to_not be_nil
-    end
-  end
-
   describe 'sidekiq_check' do
     subject { described_class.new.sidekiq_check }
 

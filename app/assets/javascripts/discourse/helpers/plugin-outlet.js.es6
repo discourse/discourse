@@ -46,13 +46,7 @@
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-
-// TODO: Add all plugin-outlet names dynamically
-const rewireableOutlets = [
-  'hamburger-admin'
-];
-
-const _rewires = {};
+import { registerHelper } from 'discourse/lib/helpers';
 
 let _connectorCache, _rawCache;
 
@@ -60,7 +54,7 @@ function findOutlets(collection, callback) {
 
   const disabledPlugins = Discourse.Site.currentProp('disabled_plugins') || [];
 
-  Ember.keys(collection).forEach(function(res) {
+  Object.keys(collection).forEach(function(res) {
     if (res.indexOf("/connectors/") !== -1) {
       // Skip any disabled plugins
       for (let i=0; i<disabledPlugins.length; i++) {
@@ -72,14 +66,6 @@ function findOutlets(collection, callback) {
       const segments = res.split("/");
       let outletName = segments[segments.length-2];
       const uniqueName = segments[segments.length-1];
-
-      const outletRewires = _rewires[outletName];
-      if (outletRewires) {
-        const newOutlet = outletRewires[uniqueName];
-        if (newOutlet) {
-          outletName = newOutlet;
-        }
-      }
 
       callback(outletName, res, uniqueName);
     }
@@ -100,13 +86,12 @@ function buildConnectorCache() {
   });
 
   findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
-    _connectorCache[outletName] = _connectorCache[outletName] || [];
-
     const mixin = {templateName: resource.replace('javascripts/', '')};
     let viewClass = uniqueViews[uniqueName];
 
     if (viewClass) {
       // We are going to add it back with the proper template
+      _connectorCache[outletName] = _connectorCache[outletName] || [];
       _connectorCache[outletName].removeObject(viewClass);
     } else {
       if (!/\.raw$/.test(uniqueName)) {
@@ -115,6 +100,7 @@ function buildConnectorCache() {
     }
 
     if (viewClass) {
+      _connectorCache[outletName] = _connectorCache[outletName] || [];
       _connectorCache[outletName].pushObject(viewClass.extend(mixin));
     } else {
       // we have a raw template
@@ -144,7 +130,6 @@ function viewInjections(container) {
 
 // unbound version of outlets, only has a template
 Handlebars.registerHelper('plugin-outlet', function(name){
-
   if (!_rawCache) { buildConnectorCache(); }
 
   const functions = _rawCache[name];
@@ -160,7 +145,7 @@ Handlebars.registerHelper('plugin-outlet', function(name){
 
 });
 
-Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, env) {
+registerHelper('plugin-outlet', function(params, hash, options, env) {
   const connectionName = params[0];
 
   if (!_connectorCache) { buildConnectorCache(); }
@@ -175,7 +160,9 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
     const newHash = $.extend({}, viewInjections(env.data.view.container));
     if (hash.tagName) { newHash.tagName = hash.tagName; }
 
-    delete options.fn;  // we don't need the default template since we have a connector
+    // we don't need the default template since we have a connector
+    delete options.fn;
+    delete options.template;
     env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
 
     const cvs = env.data.view._childViews;
@@ -187,14 +174,15 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
         });
       }
     }
+  } else if (options.isBlock) {
+    const virtualView = Ember.View.extend({
+      isVirtual: true,
+      tagName: hash.tagName || '',
+      template: options.template
+    });
+    env.helpers.view.helperFunction.call(this, [virtualView], hash, options, env);
   }
 });
 
-// Allow plugins to rewire outlets to new outlets if they exist. For example, the akismet
-// plugin will use `hamburger-admin` if it exists, otherwise `site-menu-links`
-export function rewire(uniqueName, outlet, wantedOutlet) {
-  if (rewireableOutlets.indexOf(wantedOutlet) !== -1) {
-    _rewires[outlet] = _rewires[outlet] || {};
-    _rewires[outlet][uniqueName] = wantedOutlet;
-  }
-}
+// No longer used
+export function rewire() { }

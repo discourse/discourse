@@ -37,11 +37,22 @@ task "qunit:test" => :environment do
     test_path = "#{Rails.root}/vendor/assets/javascripts"
     cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit"
 
+    options = {}
+
+    %w{module filter}.each do |arg|
+      options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
+    end
+
+    if options.present?
+      cmd += "?#{options.to_query.gsub('+', '%20')}"
+    end
+
     # wait for server to respond, will exception out on failure
     tries = 0
     begin
       sh(cmd)
     rescue
+      exit if ENV['RETRY'].present? && ENV['RETRY'] == 'false'
       sleep 2
       tries += 1
       retry unless tries == 10

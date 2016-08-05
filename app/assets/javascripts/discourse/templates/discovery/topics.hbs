@@ -8,14 +8,14 @@
       <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics-top' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new-top' class='btn dismiss-read' {{action "resetNew"}}>{{i18n 'topics.bulk.dismiss_new'}}</button>
+      <button id='dismiss-new-top' class='btn dismiss-read' {{action "resetNew"}}><i class="fa fa-check"></i> {{i18n 'topics.bulk.dismiss_new'}}</button>
     {{/if}}
   </div>
 {{/if}}
 
-{{bulk-select-button selected=selected refreshTarget=controller}}
+{{bulk-select-button selected=selected action="refresh"}}
 
-<div class='contents'>
+{{#discovery-topics-list model=model refresh="refresh" incomingCount=topicTrackingState.incomingCount}}
   {{#if top}}
     <div class='top-lists'>
       {{period-chooser period=period action="changePeriod"}}
@@ -32,23 +32,23 @@
   {{/if}}
 
   {{#if hasTopics}}
-    {{topic-list
-        showTopicPostBadges=showTopicPostBadges
-        showPosters=true
-        currentUser=currentUser
-        canBulkSelect=canBulkSelect
-        changeSort="changeSort"
-        toggleBulkSelect="toggleBulkSelect"
-        hideCategory=model.hideCategory
-        order=order
-        ascending=ascending
-        bulkSelectEnabled=bulkSelectEnabled
-        selected=selected
-        expandGloballyPinned=expandGloballyPinned
-        expandAllPinned=expandAllPinned
-        topics=model.topics}}
+      {{topic-list
+          showTopicPostBadges=showTopicPostBadges
+          showPosters=true
+          currentUser=currentUser
+          canBulkSelect=canBulkSelect
+          changeSort="changeSort"
+          toggleBulkSelect="toggleBulkSelect"
+          hideCategory=model.hideCategory
+          order=order
+          ascending=ascending
+          bulkSelectEnabled=bulkSelectEnabled
+          selected=selected
+          expandGloballyPinned=expandGloballyPinned
+          expandAllPinned=expandAllPinned
+          topics=model.topics}}
   {{/if}}
-</div>
+{{/discovery-topics-list}}
 
 <footer class='topic-list-bottom'>
   {{conditional-loading-spinner condition=model.loadingMore}}
@@ -57,7 +57,7 @@
       <button title="{{i18n 'topics.bulk.dismiss_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissReadPosts"}}>{{i18n 'topics.bulk.dismiss_button'}}</button>
     {{/if}}
     {{#if showResetNew}}
-      <button id='dismiss-new' class='btn dismiss-read' {{action "resetNew"}}>{{i18n 'topics.bulk.dismiss_new'}}</button>
+      <button id='dismiss-new' class='btn dismiss-read' {{action "resetNew"}}><i class="fa fa-check"></i> {{i18n 'topics.bulk.dismiss_new'}}</button>
     {{/if}}
 
     {{#if latest}}

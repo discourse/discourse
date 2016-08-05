@@ -22,7 +22,7 @@ module Email
     end
 
     def send
-      return if SiteSetting.disable_emails
+      return if SiteSetting.disable_emails && @email_type.to_s != "admin_login"
 
       return if ActionMailer::Base::NullMail === @message
       return if ActionMailer::Base::NullMail === (@message.message rescue nil)
@@ -94,12 +94,12 @@ module Email
 
         # http://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
-          list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{host}>"
+          list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
           # subcategory case
           if !topic.category.parent_category_id.nil?
             parent_category_name = Category.find_by(id: topic.category.parent_category_id).name
-            list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{parent_category_name.downcase.gsub(' ', '-')}.#{host}>"
+            list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{parent_category_name.downcase.tr(' ', '-')}.#{host}>"
           end
         else
           list_id = "<#{host}>"
@@ -116,6 +116,15 @@ module Email
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
 
+      if SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+        email_log.bounce_key = SecureRandom.hex
+
+        # WARNING: RFC claims you can not set the Return Path header, this is 100% correct
+        # however Rails has special handling for this header and ends up using this value
+        # as the Envelope From address so stuff works as expected
+        @message.header[:return_path] = SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{email_log.bounce_key}")
+      end
+
       email_log.post_id = post_id if post_id.present?
       email_log.reply_key = reply_key if reply_key.present?
 
@@ -124,13 +133,23 @@ module Email
       @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
       @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
+      # pass the original message_id when using mailjet/mandrill
+      case ActionMailer::Base.smtp_settings[:address]
+      when /\.mailjet\.com/
+        @message.header['X-MJ-CustomID'] = @message.message_id
+      when "smtp.mandrillapp.com"
+        @message.header['X-MC-Metadata'] = { message_id: @message.message_id }.to_json
+      end
+
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails &&
-         @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
-         @message.html_part.body =~ /<img[^>]+>/
+        @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
+        @message.html_part.body =~ /<img[^>]+>/
         style = Email::Styles.new(@message.html_part.body.to_s)
         @message.html_part.body = style.strip_avatars_and_emojis
       end
+
+      email_log.message_id = @message.message_id
 
       begin
         @message.deliver_now

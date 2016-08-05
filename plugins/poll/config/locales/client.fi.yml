@@ -15,18 +15,20 @@ fi:
         one: "ääni"
         other: "ääntä"
       average_rating: "Keskiarvo: <strong>%{average}</strong>"
+      public:
+        title: "Äänet ovat julkisia."
       multiple:
         help:
           at_least_min_options:
-            one: "Sinun täytyy valita vähintään <strong>yksi</strong> vaihtoehto."
-            other: "Sinun täytyy valita vähintään <strong>%{count}</strong> vaihtoehtoa."
+            one: "Valitse vähintään <strong>1</strong> vaihtoehto"
+            other: "Valotse vähintään <strong>%{count}</strong> vaihtoehtoa"
           up_to_max_options:
-            one: "Voit valita enintään <strong>yhden</strong> vaihtoehdon."
-            other: "Voit valita enintään <strong>%{count}</strong> vaihtoehtoa."
+            one: "Valitse enintään <strong>1</strong> vaihtoehto"
+            other: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa"
           x_options:
-            one: "Sinun täytyy valita <strong>yksi</strong> vaihtoehto."
-            other: "Sinun täytyy valita <strong>%{count}</strong> vaihtoehtoa."
-          between_min_and_max_options: "Voit valita <strong>%{min}</strong>-<strong>%{max}</strong vaihtoehtoa."
+            one: "Valitse  <strong>1</strong> vaihtoehto"
+            other: "Valitse <strong>%{count}</strong> vaihtoehtoa"
+          between_min_and_max_options: "Valitse <strong>%{min}</strong>-<strong>%{max}</strong> vaihtoehtoa"
       cast-votes:
         title: "Antakaa äänenne"
         label: "Äänestä nyt!"
@@ -44,5 +46,24 @@ fi:
         title: "Sulje äänestys"
         label: "Sulje"
         confirm: "Suljetaanko äänestys?"
-      error_while_toggling_status: "Äänestyksen tilaa muutettaessa tapahtui virhe."
-      error_while_casting_votes: "Äänesi annettaessa tapahtui virhe."
+      error_while_toggling_status: "Pahoittelut, äänestyksen tilaa muutettaessa tapahtui virhe."
+      error_while_casting_votes: "Pahoittelut, ääntä annettaessa tapahtui virhe."
+      error_while_fetching_voters: "Pahoittelut, äänestäneiden näyttämisessä tapahtui virhe."
+      ui_builder:
+        title: Luo äänestys
+        insert: Lisää äänestys
+        help:
+          options_count: Valitse vähintään 2 vaihtoehtoa
+        poll_type:
+          label: Tyyppi
+          regular: Valitaan yksi
+          multiple: Valitaan useita
+          number: Numeroarviointi
+        poll_config:
+          max: Enint.
+          min: Väh.
+          step: Vaihe
+        poll_public:
+          label: Näytä äänestäneet
+        poll_options:
+          label: Syötä yksi äänestysvaihtoehto riviä kohden

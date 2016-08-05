@@ -45,10 +45,10 @@ describe HasErrors do
     it "triggers a rollback" do
 
       expect(-> {
-        error_test.rollback_with!(invalid_topic, :custom_error)
+        error_test.rollback_with!(invalid_topic, :too_many_users)
       }).to raise_error(ActiveRecord::Rollback)
       expect(error_test.errors).to be_present
-      expect(error_test.errors[:base]).to include(:custom_error)
+      expect(error_test.errors[:base]).to include("You can only send warnings to one user at a time.")
     end
   end
 

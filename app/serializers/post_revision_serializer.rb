@@ -22,7 +22,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :edit_reason,
              :body_changes,
              :title_changes,
-             :user_changes
+             :user_changes,
+             :tags_changes
 
 
   # Creates a field called field_name_changes with previous and
@@ -149,6 +150,14 @@ class PostRevisionSerializer < ApplicationSerializer
     }
   end
 
+  def tags_changes
+    { previous: previous["tags"], current: current["tags"] }
+  end
+
+  def include_tags_changes?
+    SiteSetting.tagging_enabled && previous["tags"] != current["tags"]
+  end
+
   protected
 
     def post
@@ -182,6 +191,10 @@ class PostRevisionSerializer < ApplicationSerializer
         if topic.respond_to?(field)
           latest_modifications[field.to_s] = [topic.send(field)]
         end
+      end
+
+      if SiteSetting.tagging_enabled
+        latest_modifications["tags"] = [post.topic.tags.map(&:name)]
       end
 
       post_revisions << PostRevision.new(

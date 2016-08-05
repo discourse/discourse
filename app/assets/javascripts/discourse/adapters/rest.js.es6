@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { hashString } from 'discourse/lib/hash';
 
 const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host'];
@@ -8,8 +9,6 @@ export function Result(payload, responseJson) {
   this.responseJson = responseJson;
   this.target = null;
 }
-
-const ajax = Discourse.ajax;
 
 // We use this to make sure 404s are caught
 function rethrow(error) {

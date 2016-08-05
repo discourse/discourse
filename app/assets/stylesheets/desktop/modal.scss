@@ -196,3 +196,19 @@
     width: 400px;
   }
 }
+
+.change-timestamp {
+  min-height: 300px;
+
+  .date-picker {
+    width: 10em;
+  }
+
+  input[type=time] {
+    width: 6em;
+  }
+
+  form {
+    margin: 0;
+  }
+}

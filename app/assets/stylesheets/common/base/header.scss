@@ -47,7 +47,7 @@
     }
 
     .icons {
-      float: left;
+      float: right;
       text-align: center;
       margin: 0 0 0 5px;
       list-style: none;
@@ -88,6 +88,15 @@
           border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
           border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
           border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+
+          .badge-notification {
+            top: -10px;
+          }
+
+          .flagged-posts {
+            right: 24px;
+          }
+
           &:after {
             display: block;
             position: absolute;
@@ -131,7 +140,7 @@
         right: 65px;
       }
     }
-    .flagged-posts {
+    .flagged-posts, .queued-posts {
       background: $danger;
     }
 }

@@ -22,7 +22,7 @@ export default function() {
           return (this._tracker);
         }
         if (type === "site-settings:main") {
-          this._settings = this._settings || Discourse.SiteSettings.current();
+          this._settings = this._settings || Discourse.SiteSettings;
           return (this._settings);
         }
       },

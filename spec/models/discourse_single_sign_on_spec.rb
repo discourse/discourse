@@ -64,6 +64,42 @@ describe DiscourseSingleSignOn do
     expect(user).to_not be_nil
   end
 
+  it "unstaged users" do
+    email = "staged@user.com"
+    Fabricate(:user, staged: true, email: email)
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "staged"
+    sso.name = "Staged User"
+    sso.email = email
+    sso.external_id = "B"
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user).to_not be_nil
+    expect(user.staged).to be(false)
+  end
+
+  it "can set admin and moderator" do
+    admin_group = Group[:admins]
+    mod_group = Group[:moderators]
+    staff_group = Group[:staff]
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "misteradmin"
+    sso.name = "Bob Admin"
+    sso.email = "admin@admin.com"
+    sso.external_id = "id"
+    sso.admin = true
+    sso.moderator = true
+
+    user = sso.lookup_or_create_user(ip_address)
+    staff_group.reload
+
+    expect(mod_group.users.where('users.id = ?', user.id).exists?).to eq(true)
+    expect(staff_group.users.where('users.id = ?', user.id).exists?).to eq(true)
+    expect(admin_group.users.where('users.id = ?', user.id).exists?).to eq(true)
+  end
+
   it "can override name / email / username" do
     admin = Fabricate(:admin)
 
@@ -134,7 +170,6 @@ describe DiscourseSingleSignOn do
   end
 
   it "generates a correct sso url" do
-
     url, payload = DiscourseSingleSignOn.generate_url.split("?")
     expect(url).to eq @sso_url
 
@@ -185,6 +220,47 @@ describe DiscourseSingleSignOn do
       sso.suppress_welcome_message = true
       user = sso.lookup_or_create_user(ip_address)
     end
+  end
+
+  context 'setting bio for a user' do
+    let(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@test.com"
+      sso.external_id = "100"
+      sso.bio = "This **is** the bio"
+      sso
+    }
+
+    it 'can set bio if supplied on new users or users with empty bio' do
+      # new account
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.user_profile.bio_cooked).to match_html("<p>This <strong>is</strong> the bio</p>")
+
+
+      # no override by default
+      sso.bio = "new profile"
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.user_profile.bio_cooked).to match_html("<p>This <strong>is</strong> the bio</p>")
+
+      # yes override for blank
+      user.user_profile.bio_raw = " "
+      user.user_profile.save!
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.user_profile.bio_cooked).to match_html("<p>new profile</p>")
+
+
+      # yes override if site setting
+      sso.bio = "new profile 2"
+      SiteSetting.sso_overrides_bio = true
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.user_profile.bio_cooked).to match_html("<p>new profile 2</p>")
+    end
+
   end
 
   context 'when sso_overrides_avatar is enabled' do

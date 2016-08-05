@@ -6,10 +6,7 @@ describe Email::Receiver do
   before do
     SiteSetting.email_in = true
     SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
-  end
-
-  def email(email_name)
-    fixture_file("emails/#{email_name}.eml")
+    SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
   end
 
   def process(email_name)
@@ -21,7 +18,12 @@ describe Email::Receiver do
     expect { Email::Receiver.new("") }.to raise_error(Email::Receiver::EmptyEmailError)
   end
 
-  it "raises and UserNotFoundError when staged users are disabled" do
+  it "raises a ScreenedEmailError when email address is screened" do
+    ScreenedEmail.expects(:should_block?).with("screened@mail.com").returns(true)
+    expect { process(:screened_email) }.to raise_error(Email::Receiver::ScreenedEmailError)
+  end
+
+  it "raises an UserNotFoundError when staged users are disabled" do
     SiteSetting.enable_staged_users = false
     expect { process(:user_not_found) }.to raise_error(Email::Receiver::UserNotFoundError)
   end
@@ -54,11 +56,56 @@ describe Email::Receiver do
     expect { process(:bad_destinations) }.to raise_error(Email::Receiver::BadDestinationAddress)
   end
 
+  it "raises a BouncerEmailError when email is a bounced email" do
+    expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+    expect(IncomingEmail.last.is_bounce).to eq(true)
+  end
+
+  context "bounces to VERP" do
+
+    let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
+    let(:bounce_key_2) { "b542fb5a9bacda6d28cc061d18e4eb83" }
+    let!(:user) { Fabricate(:user, email: "foo@bar.com") }
+    let!(:email_log) { Fabricate(:email_log, user: user, bounce_key: bounce_key) }
+    let!(:email_log_2) { Fabricate(:email_log, user: user, bounce_key: bounce_key_2) }
+
+    before do
+      $redis.del("bounce_score:#{user.email}:#{Date.today}")
+      $redis.del("bounce_score:#{user.email}:#{2.days.from_now.to_date}")
+    end
+
+    it "deals with soft bounces" do
+      expect { process(:soft_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.user.user_stat.bounce_score).to eq(1)
+    end
+
+    it "deals with hard bounces" do
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.user.user_stat.bounce_score).to eq(2)
+
+      Timecop.freeze(2.days.from_now) do
+        expect { process(:hard_bounce_via_verp_2) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+        email_log_2.reload
+        expect(email_log_2.bounced).to eq(true)
+        expect(email_log_2.user.user_stat.bounce_score).to eq(4)
+      end
+    end
+
+  end
+
   context "reply" do
 
     let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
+    let(:category) { Fabricate(:category) }
     let(:user) { Fabricate(:user, email: "discourse@bar.com") }
-    let(:topic) { create_topic(user: user) }
+    let(:topic) { create_topic(category: category, user: user) }
     let(:post) { create_post(topic: topic, user: user) }
     let!(:email_log) { Fabricate(:email_log, reply_key: reply_key, user: user, topic: topic, post: post) }
 
@@ -80,6 +127,11 @@ describe Email::Receiver do
     it "raises a TopicClosedError when the topic was closed" do
       topic.update_columns(closed: true)
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicClosedError)
+    end
+
+    it "does not raise TopicClosedError when performing a like action" do
+      topic.update_columns(closed: true)
+      expect { process(:like) }.to change(PostAction, :count)
     end
 
     it "raises an InvalidPost when there was an error while creating the post" do
@@ -122,6 +174,18 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is the *text* part.")
     end
 
+    it "prefers html over text when site setting is enabled" do
+      SiteSetting.incoming_email_prefer_html = true
+      expect { process(:text_and_html_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq('This is the <b>html</b> part.')
+    end
+
+    it "uses text when prefer_html site setting is enabled but no html is available" do
+      SiteSetting.incoming_email_prefer_html = true
+      expect { process(:text_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a text reply :)")
+    end
+
     it "removes the 'on <date>, <contact> wrote' quoting line" do
       expect { process(:on_date_contact_wrote) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is the actual reply.")
@@ -140,6 +204,27 @@ describe Email::Receiver do
     it "handles invalid from header" do
       expect { process(:invalid_from) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This email was sent with an invalid from header field.")
+    end
+
+    it "doesn't raise an AutoGeneratedEmailError when the mail is auto generated but is whitelisted" do
+      SiteSetting.auto_generated_whitelist = "foo@bar.com|discourse@bar.com"
+      expect { process(:auto_generated_whitelisted) }.to change { topic.posts.count }
+    end
+
+    it "doesn't raise an AutoGeneratedEmailError when block_auto_generated_emails is disabled" do
+      SiteSetting.block_auto_generated_emails = false
+      expect { process(:auto_generated_unblocked) }.to change { topic.posts.count }
+    end
+
+    it "allows staged users to reply to a restricted category" do
+      user.update_columns(staged: true)
+
+      category.email_in = "category@bar.com"
+      category.email_in_allow_strangers = true
+      category.set_permissions(Group[:trust_level_4] => :full)
+      category.save
+
+      expect { process(:staged_reply_restricted) }.to change { topic.posts.count }
     end
 
     describe 'Unsubscribing via email' do
@@ -266,6 +351,12 @@ describe Email::Receiver do
       expect(emails).to include("someone@else.com", "discourse@bar.com", "wat@bar.com")
     end
 
+    it "cap the number of staged users created per email" do
+      SiteSetting.maximum_staged_users_per_email = 1
+      expect { process(:cc) }.to change(Topic, :count)
+      expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
+    end
+
     it "associates email replies using both 'In-Reply-To' and 'References' headers" do
       expect { process(:email_reply_1) }.to change(Topic, :count)
 
@@ -325,6 +416,47 @@ describe Email::Receiver do
 
       # allows new user to create a topic
       expect { process(:new_user) }.to change(Topic, :count)
+    end
+
+    it "works when approving is enabled" do
+      SiteSetting.approve_unless_trust_level = 4
+
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
+
+      category.set_permissions(Group[:trust_level_4] => :full)
+      category.save
+
+      Group.refresh_automatic_group!(:trust_level_4)
+
+      expect { process(:tl3_user) }.to_not change(Topic, :count)
+      expect { process(:tl4_user) }.to change(Topic, :count)
+    end
+
+    it "ignores by title" do
+      SiteSetting.ignore_by_title = "foo"
+      expect { process(:ignored) }.to_not change(Topic, :count)
+    end
+
+  end
+
+  context "new topic in a category that allows strangers" do
+
+    let!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: true) }
+
+    it "lets an email in from a stranger" do
+      expect { process(:new_user) }.to change(Topic, :count)
+    end
+
+    it "lets an email in from a high-TL user" do
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
+      expect { process(:tl4_user) }.to change(Topic, :count)
+    end
+
+    it "fails on email from a low-TL user" do
+      SiteSetting.email_in_min_trust = 4
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
+      expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
 
   end

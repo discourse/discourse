@@ -8,7 +8,7 @@ class Validators::PostValidator < ActiveModel::Validator
     presence(record)
 
     return if record.acting_user.try(:staged?)
-    return if Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
+    return if record.acting_user.try(:admin?) && Discourse.static_doc_topic_ids.include?(record.topic_id)
 
     stripped_length(record)
     raw_quality(record)
@@ -33,7 +33,7 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def stripped_length(post)
-    range = if post.topic.try(:private_message?)
+    range = if private_message?(post)
       # private message
       SiteSetting.private_message_post_length
     elsif post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0)
@@ -48,7 +48,7 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def raw_quality(post)
-    sentinel = TextSentinel.body_sentinel(post.raw, private_message: post.topic.try(:private_message?))
+    sentinel = TextSentinel.body_sentinel(post.raw, private_message: private_message?(post))
     post.errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
   end
 
@@ -56,7 +56,7 @@ class Validators::PostValidator < ActiveModel::Validator
   def max_mention_validator(post)
     return if post.acting_user.try(:staff?)
 
-    if acting_user_is_trusted?(post)
+    if acting_user_is_trusted?(post) || private_message?(post)
       add_error_if_count_exceeded(post, :no_mentions_allowed, :too_many_mentions, post.raw_mentions.size, SiteSetting.max_mentions_per_post)
     else
       add_error_if_count_exceeded(post, :no_mentions_allowed_newuser, :too_many_mentions_newuser, post.raw_mentions.size, SiteSetting.newuser_max_mentions_per_post)
@@ -71,17 +71,20 @@ class Validators::PostValidator < ActiveModel::Validator
 
   # Ensure new users can not put too many images in a post
   def max_images_validator(post)
-    add_error_if_count_exceeded(post, :no_images_allowed, :too_many_images, post.image_count, SiteSetting.newuser_max_images) unless acting_user_is_trusted?(post)
+    return if acting_user_is_trusted?(post) || private_message?(post)
+    add_error_if_count_exceeded(post, :no_images_allowed, :too_many_images, post.image_count, SiteSetting.newuser_max_images)
   end
 
   # Ensure new users can not put too many attachments in a post
   def max_attachments_validator(post)
-    add_error_if_count_exceeded(post, :no_attachments_allowed, :too_many_attachments, post.attachment_count, SiteSetting.newuser_max_attachments) unless acting_user_is_trusted?(post)
+    return if acting_user_is_trusted?(post) || private_message?(post)
+    add_error_if_count_exceeded(post, :no_attachments_allowed, :too_many_attachments, post.attachment_count, SiteSetting.newuser_max_attachments)
   end
 
   # Ensure new users can not put too many links in a post
   def max_links_validator(post)
-    add_error_if_count_exceeded(post, :no_links_allowed, :too_many_links, post.link_count, SiteSetting.newuser_max_links) unless acting_user_is_trusted?(post)
+    return if acting_user_is_trusted?(post) || private_message?(post)
+    add_error_if_count_exceeded(post, :no_links_allowed, :too_many_links, post.link_count, SiteSetting.newuser_max_links)
   end
 
   # Stop us from posting the same thing too quickly
@@ -102,6 +105,10 @@ class Validators::PostValidator < ActiveModel::Validator
 
   def acting_user_is_trusted?(post)
     post.acting_user.present? && post.acting_user.has_trust_level?(TrustLevel[1])
+  end
+
+  def private_message?(post)
+    post.topic.try(:private_message?)
   end
 
   def add_error_if_count_exceeded(post, not_allowed_translation_key, limit_translation_key, current_count, max_count)

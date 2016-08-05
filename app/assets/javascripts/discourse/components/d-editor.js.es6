@@ -1,11 +1,15 @@
 /*global Mousetrap:true */
-import loadScript from 'discourse/lib/load-script';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
-import { showSelector } from "discourse/lib/emoji/emoji-toolbar";
+import { showSelector } from "discourse/lib/emoji/toolbar";
 import Category from 'discourse/models/category';
-import { SEPARATOR as categoryHashtagSeparator,
-         categoryHashtagTriggerRule
-       } from 'discourse/lib/category-hashtags';
+import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
+import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
+import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
+import { SEPARATOR } from 'discourse/lib/category-hashtags';
+import { cook } from 'discourse/lib/text';
+import { translations } from 'pretty-text/emoji/data';
+import { emojiSearch } from 'pretty-text/emoji';
+import { emojiUrlFor } from 'discourse/lib/text';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -62,18 +66,7 @@ class Toolbar {
       perform: e => e.applySurround('> ', '', 'code_text')
     });
 
-    this.addButton({
-      id: 'code',
-      group: 'insertions',
-      shortcut: 'Shift+C',
-      perform(e) {
-        if (e.selected.value.indexOf("\n") !== -1) {
-          e.applySurround('    ', '', 'code_text');
-        } else {
-          e.applySurround('`', '`', 'code_text');
-        }
-      },
-    });
+    this.addButton({id: 'code', group: 'insertions', shortcut: 'Shift+C', action: 'formatCode'});
 
     this.addButton({
       id: 'bullet',
@@ -112,14 +105,6 @@ class Toolbar {
 
     if (site.mobileView) {
       this.groups.push({group: 'mobileExtras', buttons: []});
-
-      this.addButton({
-        id: 'preview',
-        group: 'mobileExtras',
-        icon: 'television',
-        title: 'composer.hr_preview',
-        perform: e => e.preview()
-      });
     }
 
     this.groups[this.groups.length-1].lastGroup = true;
@@ -191,9 +176,9 @@ export function onToolbarCreate(func) {
 export default Ember.Component.extend({
   classNames: ['d-editor'],
   ready: false,
-  forcePreview: false,
   insertLinkHidden: true,
-  link: '',
+  linkUrl: '',
+  linkText: '',
   lastSel: null,
   _mouseTrap: null,
 
@@ -211,12 +196,12 @@ export default Ember.Component.extend({
     this._applyEmojiAutocomplete(container, $editorInput);
     this._applyCategoryHashtagAutocomplete(container, $editorInput);
 
-    loadScript('defer/html-sanitizer-bundle').then(() => this.set('ready', true));
+    this.set('ready', true);
 
     const mouseTrap = Mousetrap(this.$('.d-editor-input')[0]);
 
     const shortcuts = this.get('toolbar.shortcuts');
-    Ember.keys(shortcuts).forEach(sc => {
+    Object.keys(shortcuts).forEach(sc => {
       const button = shortcuts[sc];
       mouseTrap.bind(sc, () => {
         this.send(button.action, button);
@@ -226,13 +211,14 @@ export default Ember.Component.extend({
 
     // disable clicking on links in the preview
     this.$('.d-editor-preview').on('click.preview', e => {
-      e.preventDefault();
-      return false;
+      if ($(e.target).is("a")) {
+        e.preventDefault();
+        return false;
+      }
     });
 
-    this.appEvents.on('composer:insert-text', text => {
-      this._addText(this._getSelected(), text);
-    });
+    this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
+    this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
 
     this._mouseTrap = mouseTrap;
   },
@@ -240,9 +226,10 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _shutDown() {
     this.appEvents.off('composer:insert-text');
+    this.appEvents.off('composer:replace-text');
 
     const mouseTrap = this._mouseTrap;
-    Ember.keys(this.get('toolbar.shortcuts')).forEach(sc => mouseTrap.unbind(sc));
+    Object.keys(this.get('toolbar.shortcuts')).forEach(sc => mouseTrap.unbind(sc));
     this.$('.d-editor-preview').off('click.preview');
   },
 
@@ -259,9 +246,10 @@ export default Ember.Component.extend({
 
     const value = this.get('value');
     const markdownOptions = this.get('markdownOptions') || {};
-    markdownOptions.sanitize = true;
 
-    this.set('preview', Discourse.Dialect.cook(value || "", markdownOptions));
+    markdownOptions.siteSettings = this.siteSettings;
+
+    this.set('preview', cook(value));
     Ember.run.scheduleOnce('afterRender', () => {
       if (this._state !== "inDOM") { return; }
       const $preview = this.$('.d-editor-preview');
@@ -277,17 +265,22 @@ export default Ember.Component.extend({
     Ember.run.debounce(this, this._updatePreview, 30);
   },
 
-  _applyCategoryHashtagAutocomplete(container, $editorInput) {
-    const template = container.lookup('template:category-group-autocomplete.raw');
+  _applyCategoryHashtagAutocomplete(container) {
+    const template = container.lookup('template:category-tag-autocomplete.raw');
+    const siteSettings = this.siteSettings;
 
-    $editorInput.autocomplete({
+    this.$('.d-editor-input').autocomplete({
       template: template,
       key: '#',
-      transformComplete(category) {
-        return Category.slugFor(category, categoryHashtagSeparator);
+      transformComplete(obj) {
+        if (obj.model) {
+          return Category.slugFor(obj.model, SEPARATOR);
+        } else {
+          return `${obj.text}${TAG_HASHTAG_POSTFIX}`;
+        }
       },
       dataSource(term) {
-        return Category.search(term);
+        return searchCategoryTag(term, siteSettings);
       },
       triggerRule(textarea, opts) {
         return categoryHashtagTriggerRule(textarea, opts);
@@ -339,15 +332,15 @@ export default Ember.Component.extend({
             return resolve(["slight_smile", "smile", "wink", "sunny", "blush"]);
           }
 
-          if (Discourse.Emoji.translations[full]) {
-            return resolve([Discourse.Emoji.translations[full]]);
+          if (translations[full]) {
+            return resolve([translations[full]]);
           }
 
-          const options = Discourse.Emoji.search(term, {maxResults: 5});
+          const options = emojiSearch(term, {maxResults: 5});
 
           return resolve(options);
         }).then(list => list.map(code => {
-          return {code, src: Discourse.Emoji.urlFor(code)};
+          return {code, src: emojiUrlFor(code)};
         })).then(list => {
           if (list.length) {
             list.push({ label: I18n.t("composer.more_emoji") });
@@ -454,7 +447,7 @@ export default Ember.Component.extend({
 
         this.set('value', `${pre}${contents}${post}`);
         if (lines.length === 1 && tlen > 0) {
-          this._selectText(sel.start + hlen, contents.length - hlen - hlen);
+          this._selectText(sel.start + hlen, sel.value.length);
         } else {
           this._selectText(sel.start, contents.length);
         }
@@ -484,15 +477,24 @@ export default Ember.Component.extend({
     }
   },
 
-  _addText(sel, text) {
-    const insert = `${sel.pre}${text}`;
-    this.set('value', `${insert}${sel.post}`);
-    this._selectText(insert.length, 0);
-    Ember.run.scheduleOnce("afterRender", () => this.$("textarea.d-editor-input").focus());
+  _replaceText(oldVal, newVal) {
+    const val = this.get('value');
+    const loc = val.indexOf(oldVal);
+    if (loc !== -1) {
+      this.set('value', val.replace(oldVal, newVal));
+      this._selectText(loc + newVal.length, 0);
+    }
   },
 
-  _togglePreview() {
-    this.toggleProperty('forcePreview');
+  _addText(sel, text) {
+    const $textarea = this.$('textarea.d-editor-input');
+    const insert = `${sel.pre}${text}`;
+    const value = `${insert}${sel.post}`;
+    this.set('value', value);
+    $textarea.val(value);
+    $textarea.prop("selectionStart", insert.length);
+    $textarea.prop("selectionEnd", insert.length);
+    Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
   },
 
   actions: {
@@ -500,10 +502,11 @@ export default Ember.Component.extend({
       const selected = this._getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
+        selectText: (from, length) => this._selectText(from, length),
         applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
         applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
         addText: text => this._addText(selected, text),
-        preview: () => this._togglePreview()
+        getText: () => this.get('value'),
       };
 
       if (button.sendAction) {
@@ -513,44 +516,45 @@ export default Ember.Component.extend({
       }
     },
 
-    hidePreview() {
-      this.set('forcePreview', false);
-    },
-
     showLinkModal() {
       this._lastSel = this._getSelected();
       this.set('insertLinkHidden', false);
     },
 
+    formatCode() {
+      const sel = this._getSelected();
+      if (sel.value.indexOf("\n") !== -1) {
+        return (this.siteSettings.code_formatting_style === "4-spaces-indent") ?
+                this._applySurround(sel, '    ', '', 'code_text') :
+                this._addText(sel, '```\n' + sel.value + '\n```');
+      } else {
+        return (this.siteSettings.code_formatting_style === "4-spaces-indent") ?
+                this._applySurround(sel, '`', '`', 'code_text') :
+                this._applySurround(sel, '```\n', '\n```', 'paste_code_text');
+      }
+    },
+
     insertLink() {
-      const link = this.get('link');
+      const origLink = this.get('linkUrl');
+      const linkUrl = (origLink.indexOf('://') === -1) ? `http://${origLink}` : origLink;
       const sel = this._lastSel;
 
-      const autoHttp = function(l){
-        if (l.indexOf("://") === -1) {
-          return "http://" + l;
-        } else {
-          return l;
-        }
-      };
+      if (Ember.isEmpty(linkUrl)) { return; }
 
-      if (Ember.isEmpty(link)) { return; }
-      const m = / "([^"]+)"/.exec(link);
-      if (m && m.length === 2) {
-        const description = m[1];
-        const remaining = link.replace(m[0], '');
-        this._addText(sel, `[${description}](${autoHttp(remaining)})`);
+      const linkText = this.get('linkText') || '';
+      if (linkText.length) {
+        this._addText(sel, `[${linkText}](${linkUrl})`);
       } else {
         if (sel.value) {
-          this._addText(sel, `[${sel.value}](${autoHttp(link)})`);
+          this._addText(sel, `[${sel.value}](${linkUrl})`);
         } else {
-          const desc = I18n.t('composer.link_description');
-          this._addText(sel, `[${desc}](${autoHttp(link)})`);
-          this._selectText(sel.start + 1, desc.length);
+          this._addText(sel, `[${origLink}](${linkUrl})`);
+          this._selectText(sel.start + 1, origLink.length);
         }
       }
 
-      this.set('link', '');
+      this.set('linkUrl', '');
+      this.set('linkText', '');
     },
 
     emoji() {
@@ -561,5 +565,4 @@ export default Ember.Component.extend({
       });
     }
   }
-
 });

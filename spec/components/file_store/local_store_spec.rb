@@ -14,7 +14,7 @@ describe FileStore::LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      expect(store.store_upload(uploaded_file, upload)).to match(/\/uploads\/default\/original\/.+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98\.png/)
+      expect(store.store_upload(uploaded_file, upload)).to match(/\/uploads\/default\/original\/.+#{upload.sha1}\.png/)
     end
 
   end
@@ -23,7 +23,7 @@ describe FileStore::LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      expect(store.store_optimized_image({}, optimized_image)).to match(/\/uploads\/default\/optimized\/.+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_#{OptimizedImage::VERSION}_100x200\.png/)
+      expect(store.store_optimized_image({}, optimized_image)).to match(/\/uploads\/default\/optimized\/.+#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png/)
     end
 
   end
@@ -40,6 +40,7 @@ describe FileStore::LocalStore do
     it "moves the file to the tombstone" do
       FileUtils.expects(:mkdir_p)
       FileUtils.expects(:move)
+      File.expects(:exists?).returns(true)
       upload = Upload.new
       upload.stubs(:url).returns("/uploads/default/42/253dc8edf9d4ada1.png")
       store.remove_upload(upload)
@@ -52,6 +53,7 @@ describe FileStore::LocalStore do
     it "moves the file to the tombstone" do
       FileUtils.expects(:mkdir_p)
       FileUtils.expects(:move)
+      File.expects(:exists?).returns(true)
       oi = OptimizedImage.new
       oi.stubs(:url).returns("/uploads/default/_optimized/42/253dc8edf9d4ada1.png")
       store.remove_optimized_image(upload)
@@ -84,10 +86,20 @@ describe FileStore::LocalStore do
 
   end
 
+  def stub_for_subfolder
+    GlobalSetting.stubs(:relative_url_root).returns('/forum')
+    Discourse.stubs(:base_uri).returns("/forum")
+  end
+
   describe ".absolute_base_url" do
 
     it "is present" do
       expect(store.absolute_base_url).to eq("http://test.localhost/uploads/default")
+    end
+
+    it "supports subfolder" do
+      stub_for_subfolder
+      expect(store.absolute_base_url).to eq("http://test.localhost/forum/uploads/default")
     end
 
   end
@@ -96,6 +108,11 @@ describe FileStore::LocalStore do
 
     it "is present" do
       expect(store.relative_base_url).to eq("/uploads/default")
+    end
+
+    it "supports subfolder" do
+      stub_for_subfolder
+      expect(store.relative_base_url).to eq("/forum/uploads/default")
     end
 
   end

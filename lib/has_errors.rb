@@ -1,6 +1,7 @@
 # Helper functions for dealing with errors and objects that have
 # child objects with errors
 module HasErrors
+  attr_reader :errors
 
   def errors
     @errors ||= ActiveModel::Errors.new(self)
@@ -13,7 +14,7 @@ module HasErrors
   end
 
   def rollback_with!(obj, error)
-    obj.errors[:base] << error
+    obj.errors.add(:base, error)
     rollback_from_errors!(obj)
   end
 

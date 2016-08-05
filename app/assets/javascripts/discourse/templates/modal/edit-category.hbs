@@ -7,6 +7,9 @@
     {{edit-category-tab panels=panels selectedTab=selectedTab tab="settings"}}
     {{edit-category-tab panels=panels selectedTab=selectedTab tab="images"}}
     {{edit-category-tab panels=panels selectedTab=selectedTab tab="topic-template"}}
+    {{#if siteSettings.tagging_enabled}}
+      {{edit-category-tab panels=panels selectedTab=selectedTab tab="tags"}}
+    {{/if}}
   </ul>
 
   <div class="modal-body">

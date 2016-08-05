@@ -3,7 +3,7 @@
   <div class='content-list span6'>
     <h3>{{i18n 'admin.badges.title'}}</h3>
     <ul>
-      {{#each badge in model}}
+      {{#each model as |badge|}}
       <li>
         {{#link-to 'adminBadges.show' badge.id}}
           {{badge-button badge=badge}}

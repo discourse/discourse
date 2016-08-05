@@ -1,3 +1,5 @@
+require_dependency 'distributed_mutex'
+
 class EmailLog < ActiveRecord::Base
   belongs_to :user
   belongs_to :post
@@ -7,10 +9,23 @@ class EmailLog < ActiveRecord::Base
 
   scope :sent,    -> { where(skipped: false) }
   scope :skipped, -> { where(skipped: true) }
+  scope :bounced, -> { sent.where(bounced: true) }
 
   after_create do
     # Update last_emailed_at if the user_id is present and email was sent
     User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present? && !skipped
+  end
+
+  def self.unique_email_per_post(post, user)
+    return yield unless post && user
+
+    DistributedMutex.synchronize("email_log_#{post.id}_#{user.id}") do
+      if where(post_id: post.id, user_id: user.id, skipped: false).exists?
+        nil
+      else
+        yield
+      end
+    end
   end
 
   def self.reached_max_emails?(user)
@@ -58,10 +73,14 @@ end
 #  topic_id       :integer
 #  skipped        :boolean          default(FALSE)
 #  skipped_reason :string
+#  bounce_key     :string
+#  bounced        :boolean          default(FALSE), not null
+#  message_id     :string
 #
 # Indexes
 #
 #  index_email_logs_on_created_at              (created_at)
+#  index_email_logs_on_message_id              (message_id)
 #  index_email_logs_on_reply_key               (reply_key)
 #  index_email_logs_on_skipped_and_created_at  (skipped,created_at)
 #  index_email_logs_on_user_id_and_created_at  (user_id,created_at)

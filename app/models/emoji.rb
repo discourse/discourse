@@ -23,19 +23,19 @@ class Emoji
   end
 
   def self.all
-    Discourse.cache.fetch("all_emojis:#{EMOJI_VERSION}") { standard | custom }
+    Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
   end
 
   def self.standard
-    Discourse.cache.fetch("standard_emojis:#{EMOJI_VERSION}") { load_standard }
+    Discourse.cache.fetch(cache_key("standard_emojis")) { load_standard }
   end
 
   def self.aliases
-    Discourse.cache.fetch("aliases_emojis:#{EMOJI_VERSION}") { load_aliases }
+    Discourse.cache.fetch(cache_key("aliases_emojis")) { load_aliases }
   end
 
   def self.custom
-    Discourse.cache.fetch("custom_emojis:#{EMOJI_VERSION}") { load_custom }
+    Discourse.cache.fetch(cache_key("custom_emojis")) { load_custom }
   end
 
   def self.exists?(name)
@@ -56,7 +56,7 @@ class Emoji
 
   def self.create_from_db_item(emoji)
     name = emoji["name"]
-    filename = "#{name}.png"
+    filename = "#{emoji['filename'] || name}.png"
     Emoji.new.tap do |e|
       e.name = name
       e.url = "/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
@@ -78,11 +78,15 @@ class Emoji
     Emoji[name]
   end
 
+  def self.cache_key(name)
+    "#{name}:#{EMOJI_VERSION}:#{Plugin::CustomEmoji.cache_key}"
+  end
+
   def self.clear_cache
-    Discourse.cache.delete("custom_emojis:#{EMOJI_VERSION}")
-    Discourse.cache.delete("standard_emojis:#{EMOJI_VERSION}")
-    Discourse.cache.delete("aliases_emojis:#{EMOJI_VERSION}")
-    Discourse.cache.delete("all_emojis:#{EMOJI_VERSION}")
+    Discourse.cache.delete(cache_key("custom_emojis"))
+    Discourse.cache.delete(cache_key("standard_emojis"))
+    Discourse.cache.delete(cache_key("aliases_emojis"))
+    Discourse.cache.delete(cache_key("all_emojis"))
   end
 
   def self.db_file
@@ -90,7 +94,14 @@ class Emoji
   end
 
   def self.db
-    @db ||= File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+    return @db if @db
+    @db = File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+
+    # Small tweak to `emoji.json` from Emoji one
+    @db['emojis'] << {"code" => "1f44d", "name" => "+1", "filename" => "thumbsup"}
+    @db['emojis'] << {"code" => "1f44e", "name" => "-1", "filename" => "thumbsdown"}
+
+    @db
   end
 
   def self.load_standard
@@ -110,9 +121,20 @@ class Emoji
   end
 
   def self.load_custom
+    result = []
+
     Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
        .sort
-       .map { |emoji| Emoji.create_from_path(emoji) }
+       .each { |emoji| result << Emoji.create_from_path(emoji) }
+
+    Plugin::CustomEmoji.emojis.each do |name, url|
+      result << Emoji.new.tap do |e|
+        e.name = name
+        e.url = url
+      end
+    end
+
+    result
   end
 
   def self.base_directory
@@ -124,17 +146,22 @@ class Emoji
     "#{Discourse.base_uri}/uploads/#{db}/_emoji"
   end
 
+  def self.replacement_code(code)
+    hexes = code.split('-').map(&:hex)
+
+    # Don't replace digits, letters and some symbols
+    return hexes.pack("U" * hexes.size) if hexes[0] > 255
+  end
+
   def self.unicode_replacements
     return @unicode_replacements if @unicode_replacements
 
 
     @unicode_replacements = {}
     db['emojis'].each do |e|
-      hex = e['code'].hex
-      # Don't replace digits, letters and some symbols
-      if hex > 255 && e['name'] != 'tm'
-        @unicode_replacements[[hex].pack('U')] = e['name']
-      end
+      next if e['name'] == 'tm'
+      code = replacement_code(e['code'])
+      @unicode_replacements[code] = e['name'] if code
     end
 
     @unicode_replacements["\u{2639}"] = 'frowning'

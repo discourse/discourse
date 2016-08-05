@@ -32,6 +32,9 @@ module PostGuardian
       # new users can't notify_user because they are not allowed to send private messages
       not(action_key == :notify_user && !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
 
+      # non-staff can't send an official warning
+      not(action_key == :notify_user && !is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true') &&
+
       # can't send private messages if they're disabled globally
       not(action_key == :notify_user && !SiteSetting.enable_private_messages) &&
 
@@ -86,8 +89,10 @@ module PostGuardian
       return false
     end
 
+    return true if is_admin?
+
     if is_staff? || @user.has_trust_level?(TrustLevel[4])
-      return true
+      return can_create_post?(post.topic)
     end
 
     if post.topic.archived? || post.user_deleted || post.deleted_at
@@ -157,7 +162,7 @@ module PostGuardian
     return false unless post
 
     if !post.hidden
-      return true if post.wiki || SiteSetting.edit_history_visible_to_public || (post.user && post.user.user_option.edit_history_public)
+      return true if post.wiki || SiteSetting.edit_history_visible_to_public
     end
 
     authenticated? &&

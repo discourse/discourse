@@ -1,8 +1,11 @@
+import { ajax } from 'discourse/lib/ajax';
 import { setting } from 'discourse/lib/computed';
 import logout from 'discourse/lib/logout';
 import showModal from 'discourse/lib/show-modal';
 import OpenComposer from "discourse/mixins/open-composer";
 import Category from 'discourse/models/category';
+import mobile from 'discourse/lib/mobile';
+import { findAll } from 'discourse/models/login-method';
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -24,6 +27,22 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   actions: {
+
+    showSearchHelp() {
+      ajax("/static/search_help.html", { dataType: 'html' }).then(model => {
+        showModal('searchHelp', { model });
+      });
+    },
+
+    toggleAnonymous() {
+      ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
+        window.location.reload();
+      });
+    },
+
+    toggleMobileView() {
+      mobile.toggleMobileView();
+    },
 
     logout: unlessReadOnly('_handleLogout', I18n.t("read_only_mode.logout_disabled")),
 
@@ -149,8 +168,8 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
     },
 
-    createNewTopicViaParams(title, body, category_id, category) {
-      this.openComposerWithTopicParams(this.controllerFor('discovery/topics'), title, body, category_id, category);
+    createNewTopicViaParams(title, body, category_id, category, tags) {
+      this.openComposerWithTopicParams(this.controllerFor('discovery/topics'), title, body, category_id, category, tags);
     },
 
     createNewMessageViaParams(username, title, body) {
@@ -185,7 +204,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   _autoLogin(modal, modalClass, notAuto) {
-    const methods = Em.get('Discourse.LoginMethod.all');
+    const methods = findAll(this.siteSettings);
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor('login').send('externalLogin', methods[0]);
     } else {

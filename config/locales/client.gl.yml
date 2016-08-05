@@ -247,8 +247,6 @@ gl:
     undo: "Desfacer"
     revert: "Reverter"
     failed: "Fallou"
-    switch_to_anon: "Modo anónimo"
-    switch_from_anon: "Saír do Modo anónimo"
     banner:
       close: "Desbotar este báner."
       edit: "Editar este báner »"
@@ -298,8 +296,6 @@ gl:
       title: "Usuarios"
       likes_given: "Dados"
       likes_received: "Recibidos"
-      topics_entered: "Introducidos"
-      topics_entered_long: "Temas introducidos"
       time_read: "Tempo de lectura"
       topic_count: "Temas"
       topic_count_long: "Temas creados"
@@ -440,11 +436,9 @@ gl:
         disable: "Desactivar as notificacións"
         enable: "Activar as notificacións"
         each_browser_note: "Nota: Tes que cambiar este axuste en cadanseu navegador que utilices."
-      dismiss_notifications: "Marcar todas como lidas"
       dismiss_notifications_tooltip: "Marcar todas notificacións sen ler como lidas"
       disable_jump_reply: "Non saltar á miña publicación despois de que responda"
       dynamic_favicon: "Amosar o número de temas novos / actualizados na icona do navegador"
-      edit_history_public: "Permitirlles a outros usuarios ver as revisións das miñas publicacións"
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
       change: "cambiar"
@@ -456,11 +450,8 @@ gl:
       suspended_notice: "Este usuario está suspendido até o {{date}}."
       suspended_reason: "Razón:"
       github_profile: "Github"
-      mailing_list_mode: "Enviar un correo por cada nova publicación (a non ser que eu silencie o tema ou categoría)"
       watched_categories: "Visto"
-      watched_categories_instructions: "Verás automaticamente todos os temas novos nestas categorías. Notificaránseche todas as novas publicacións e temas, e o número de novas publicacións aparecerá tamén preto do tema."
       tracked_categories: "Seguido"
-      tracked_categories_instructions: "Seguirás automaticamente todos os temas novos nestas categorías. Un número de novas publicacións aparecerá preto do tema."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Non se che notificará nada sobre os temas novos nestas categorías e non aparecerán na lista de últimos."
       delete_account: "Eliminar a miña conta"
@@ -499,10 +490,8 @@ gl:
         set_password: "Estabelecer o contrasinal"
       change_about:
         title: "Cambiar «Verbo de min»"
-        error: "Produciuse un erro ao cambiar este valor."
       change_username:
         title: "Cambiar o nome do usuario"
-        confirm: "Se cambias o nome de usuario, todas as citas anteriores das túas publicacións e as mencións ao teu @nome romperanse. Estás totalmente seguro?"
         taken: "Sentímolo pero este nome xa está en uso."
         error: "Produciuse un erro cambiando o teu nome de usuario."
         invalid: "Este usuario é incorrecto. Só pode contar números e letras."
@@ -586,7 +575,6 @@ gl:
         always: "sempre"
         never: "nunca"
       email_digests:
-        title: "Cando non veña por aquí, enviarme un compendio das novidade por correo-e:"
         every_30_minutes: "cada 30 minutos"
         every_hour: "cada hora"
         daily: "diariamente"
@@ -822,10 +810,6 @@ gl:
       github:
         title: "co GitHub"
         message: "Autenticación mediante Github (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
-    apple_international: "Apple/Internacional"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Maiús.'
       ctrl: 'Ctrl'
@@ -843,7 +827,6 @@ gl:
       saved_local_draft_tip: "gardado localmente"
       similar_topics: "O teu tema é semellante a..."
       drafts_offline: "borradores sen conexión"
-      group_mentioned: "Usando {{group}}, vas enviar a notificación a <a href='{{group_link}}'>{{count}} persoas</a>."
       error:
         title_missing: "O título é obrigatorio"
         title_too_short: "O título debe ter alomenos {{min}} caracteres"
@@ -881,7 +864,6 @@ gl:
       link_description: "introducir a descrición da ligazón aquí"
       link_dialog_title: "Inserir hiperligazón"
       link_optional_text: "título opcional"
-      link_placeholder: "http://exemplo.com \"texto opcional\""
       quote_title: "Citación"
       quote_text: "Citación"
       code_title: "Texto preformatado"
@@ -930,7 +912,6 @@ gl:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> aceptou o teu convite</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moveu {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Obtiveches «{{description}}»</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mensaxe na caixa do correo de {{group_name}} </p>"
@@ -991,7 +972,6 @@ gl:
       post_format: "#{{post_number}} de {{username}}"
       context:
         user: "Buscar publicacións de @{{username}}"
-        category: "Buscar na categoría \"{{category}}\""
         topic: "Buscar neste tema"
         private_messages: "Buscar mensaxes"
     hamburger_menu: "ir a outra lista de temas ou categoría"
@@ -1220,8 +1200,6 @@ gl:
         no_banner_exists: "Non hai tema para o báner."
         banner_exists: "<strong class='badge badge-notification unread'>Hai</strong> actualmente un tema para o báner."
       inviting: "Convidando..."
-      automatically_add_to_groups_optional: "Este convite tamén inclúe o acceso a estes grupos: (opcional, só administradores)"
-      automatically_add_to_groups_required: "Este convite tamén inclúe o acceso a estes grupos: (<b>Obrigatorio</b>, só administradores)"
       invite_private:
         title: 'Convidar á mensaxe'
         email_or_username: "Nome do usuario ou correo-e do convidado"
@@ -1333,10 +1311,7 @@ gl:
         create: "Sentímolo pero produciuse un erro creando a publicación. Téntao de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Téntao de novo."
         upload: "Sentímolo pero produciuse un erro enviando a publicación. Téntao de novo."
-        attachment_too_large: "Sentímolo pero o ficheiro é demasiado grande (o tamaño máximo son {{max_size_kb}}kb)."
-        file_too_large: "Sentímolo pero o ficheiro é demasiado grande (o tamaño máximo son {{max_size_kb}}kb)"
         too_many_uploads: "Sentímolo pero só podes enviar un ficheiro de cada vez."
-        too_many_dragged_and_dropped_files: "Sentímolo pero só podes arrastrar e soltar até 10 ficheiros dunha vez."
         upload_not_authorized: "Sentímolo pero o ficheiro que tentas enviar non está autorizado (extensións autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir anexos."
@@ -1546,10 +1521,8 @@ gl:
       notifications:
         watching:
           title: "Ver"
-          description: "Verás automaticamente todos os novos temas destas categorías. Notificaránseche as novas publicacións de cada tema e amosaráseche o número de novas respostas."
         tracking:
           title: "Seguimento"
-          description: "Seguirás automaticamente todos os novos temas destas categorías. Notificaránseche ás mencións ao teu @name e as respostas que recibas, e amosaráseche o número de novas respostas."
         regular:
           title: "Normal"
           description: "Notificarémosche se alguén menciona o teu @nome ou che responde."
@@ -1588,7 +1561,6 @@ gl:
       title: "Resumo do tema"
       participants_title: "Publicadores frecuentes"
       links_title: "Ligazóns populares"
-      links_shown: "amosar as {{totalLinks}} ligazóns..."
       clicks:
         one: "Un clic"
         other: "%{count} clics"
@@ -1619,10 +1591,10 @@ gl:
     posts_long: "hai {{number}} publicacións neste tema"
     posts_likes_MF: |
       Este tema ten {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
-        low {cun alto índice de gústames}
-        med {cun moi alto índice de gústames}
-        high {cun extremadamente alto índice de gústames}
-        other {}}
+      low {cun alto índice de gústames}
+      med {cun moi alto índice de gústames}
+      high {cun extremadamente alto índice de gústames}
+      other {}}
     original_post: "Publicación orixinal"
     views: "Vistas"
     views_lowercase:
@@ -1774,7 +1746,6 @@ gl:
           30_days_ago: "Hai 30 días"
           all: "Todo"
           view_table: "táboa"
-          view_chart: "gráfica de barras"
           refresh_report: "Actualiza informe"
           start_date: "Data de inicio"
           end_date: "Data de remate"
@@ -1909,14 +1880,6 @@ gl:
           backups: "Copias de seguranza"
           logs: "Rexistros"
         none: "Non hai copia de seguranza dispoñíbel"
-        read_only:
-          enable:
-            title: "Activar o modo de só-lectura"
-            label: "Activar modo de só-lectura"
-            confirm: "Confirmas a activación do modo de só-lectura?"
-          disable:
-            title: "Desactivar o modo de só-lectura"
-            label: "Desactivar modo de só-lectura"
         logs:
           none: "Aínda non hai rexistros..."
         columns:
@@ -2346,7 +2309,6 @@ gl:
         deactivate_explanation: "Un usuario desactivado debe revalidar o seu correo-e."
         suspended_explanation: "Un usuario suspendido non pode iniciar sesión."
         block_explanation: "Un usuario bloquedo non pode publicar nin iniciar temas."
-        stage_explanation: "Un usuario transitorio só pode publicar por correo electrónico en temas específicos."
         trust_level_change_failed: "Produciuse un problema cambiando o nivel de confianza do usuario."
         suspend_modal_title: "Suspender usuario"
         trust_level_2_users: "Usuarios con nivel 2 de confianza"
@@ -2569,94 +2531,3 @@ gl:
           label: "Novo:"
           add: "Engadir"
           filter: "Buscar (URLou URL externa)"
-    lightbox:
-      download: "descargar"
-    search_help:
-      title: 'Buscar axuda'
-    keyboard_shortcuts_help:
-      title: 'Atallos do teclado'
-      jump_to:
-        title: 'Ir a'
-        home: '<b>g</b>, <b>h</b> Inicio'
-        latest: '<b>g</b>, <b>l</b> Último'
-        new: '<b>g</b>, <b>n</b> Novo'
-        unread: '<b>g</b>, <b>u</b> Sen ler'
-        categories: '<b>g</b>, <b>c</b> Categorías'
-        top: '<b>g</b>, <b>t</b> Arriba'
-        bookmarks: '<b>g</b>, <b>b</b> Marcadores'
-        profile: '<b>g</b>, <b>p</b> Perfil'
-        messages: '<b>g</b>, <b>m</b> Mensaxes'
-      navigation:
-        title: 'Navegación'
-        jump: '<b>#</b> Ir á publicación #'
-        back: '<b>u</b> Volver'
-        up_down: '<b>k</b>/<b>j</b> Mover selección &uarr; &darr;'
-        open: '<b>o</b> ou <b>Intro</b> Abrir tema seleccionado'
-        next_prev: '<b>maiús.</b>+<b>j</b>/<b>maiús.</b>+<b>k</b> Sección Seguinte/Anterior'
-      application:
-        title: 'Aplicativo'
-        create: '<b>c</b> Crear un novo tema'
-        notifications: '<b>n</b> Abrir notificacións'
-        hamburger_menu: '<b>=</b> Abrir o menú hamburguesa'
-        user_profile_menu: '<b>p</b> Abrir o menú do usuario'
-        show_incoming_updated_topics: '<b>.</b> Amosar temas actualizados'
-        search: '<b>/</b> Buscar'
-        help: '<b>?</b> Abrir a axuda do teclado'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Desbotar Novas/Publicacións'
-        dismiss_topics: '<b>x</b>, <b>t</b> Desbotar temas'
-        log_out: '<b>maiús.</b>+<b>z</b> <b>maiús.</b>+<b>z</b> Saír da sesión'
-      actions:
-        title: 'Accións'
-        bookmark_topic: '<b>f</b> Cambiar marcar tema'
-        pin_unpin_topic: '<b>Maiús</b>+<b>p</b> Pegar/Despegar tema'
-        share_topic: '<b>maiús.</b>+<b>s</b> Compartir tema'
-        share_post: '<b>s</b> Compartir publicación'
-        reply_as_new_topic: '<b>t</b> Responder como tema ligado'
-        reply_topic: '<b>maiús.</b>+<b>r</b> Responder o tema'
-        reply_post: '<b>r</b> Responder a publicación'
-        quote_post: '<b>q</b> Citar publicación'
-        like: '<b>l</b> Gústame a publicación'
-        flag: '<b>!</b> Denunciar publicación'
-        bookmark: '<b>b</b> Marcar publicación'
-        edit: '<b>e</b> Editar publicación'
-        delete: '<b>d</b> Eliminar publicación'
-        mark_muted: '<b>m</b>, <b>m</b> Silenciar tema'
-        mark_regular: '<b>m</b>, <b>r</b> Tema normal (predeterminado)'
-        mark_tracking: '<b>m</b>, <b>t</b> Seguir tema'
-        mark_watching: '<b>m</b>, <b>w</b> Ver tema'
-    badges:
-      earned_n_times:
-        one: "Conseguiu esta insignia unha vez"
-        other: "Conseguiu esta insignia %{count} veces"
-      title: Insignias
-      badge_count:
-        one: "1 insignia"
-        other: "%{count} insignias"
-      more_badges:
-        one: "1 máis"
-        other: "%{count} máis"
-      granted:
-        one: "1 concedido"
-        other: "%{count} concedidos"
-      select_badge_for_title: Selecciona insignia para usar como o teu título
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: Comezar
-        community:
-          name: Comunidade
-        trust_level:
-          name: Nivel de confianza
-        other:
-          name: Outro
-        posting:
-          name: Publicación
-    google_search: |
-      <h3>Buscar no Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

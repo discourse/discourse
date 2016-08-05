@@ -75,7 +75,6 @@ const DiscourseRoute = Ember.Route.extend({
 });
 
 export function cleanDOM() {
-
   if (window.MiniProfiler) {
     window.MiniProfiler.pageTransition();
   }
@@ -95,7 +94,7 @@ export function cleanDOM() {
   $(document.activeElement).not("body").not(".no-blur").blur();
 
   Discourse.set('notifyCount',0);
-  $('#discourse-modal').modal('hide');
+  Discourse.__container__.lookup('route:application').send('closeModal');
   const hideDropDownFunction = $('html').data('hide-dropdown');
   if (hideDropDownFunction) { hideDropDownFunction(); }
 

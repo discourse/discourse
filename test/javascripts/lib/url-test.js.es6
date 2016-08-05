@@ -7,8 +7,10 @@ test("isInternal with a HTTP url", function() {
 
   not(DiscourseURL.isInternal(null), "a blank URL is not internal");
   ok(DiscourseURL.isInternal("/test"), "relative URLs are internal");
+  ok(DiscourseURL.isInternal("//eviltrout.com"), "a url on the same host is internal (protocol-less)");
   ok(DiscourseURL.isInternal("http://eviltrout.com/tophat"), "a url on the same host is internal");
   ok(DiscourseURL.isInternal("https://eviltrout.com/moustache"), "a url on a HTTPS of the same host is internal");
+  not(DiscourseURL.isInternal("//twitter.com.com"), "a different host is not internal (protocol-less)");
   not(DiscourseURL.isInternal("http://twitter.com"), "a different host is not internal");
 });
 

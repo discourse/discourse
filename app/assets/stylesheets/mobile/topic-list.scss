@@ -379,7 +379,7 @@ ol.category-breadcrumb {
   .btn-default.pull-right { margin-right: 10px; }
 }
 
-.category-notification-menu {
+.category-notification-menu, .tags-admin-menu {
   display: none;
 }
 
@@ -418,4 +418,8 @@ td .main-link {
     padding-right: 0;
     width: 120%;
   }
+}
+
+.category-list-item .category-description {
+  display: none;
 }

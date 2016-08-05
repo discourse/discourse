@@ -9,7 +9,6 @@ require_dependency 'topic_query_sql'
 require_dependency 'avatar_lookup'
 
 class TopicQuery
-  # Could be rewritten to %i if Ruby 1.9 is no longer supported
   VALID_OPTIONS = %i(except_topic_ids
                      exclude_category_ids
                      limit
@@ -20,6 +19,8 @@ class TopicQuery
                      topic_ids
                      visible
                      category
+                     tags
+                     no_tags
                      order
                      ascending
                      no_subcategories
@@ -308,6 +309,7 @@ class TopicQuery
     result = default_results(options)
     result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
     result = remove_muted_categories(result, @user, exclude: options[:category])
+    result = remove_muted_tags(result, @user, options)
 
     # plugins can remove topics here:
     self.class.results_filter_callbacks.each do |filter_callback|
@@ -334,6 +336,7 @@ class TopicQuery
     result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.user_option.treat_as_new_topic_start_date)
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
+    result = remove_muted_tags(result, @user, options)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:new, result, @user, options)
@@ -352,10 +355,10 @@ class TopicQuery
       options = @options
       options.reverse_merge!(per_page: per_page_setting)
 
-      result = Topic
+      result = Topic.includes(:tags)
 
       if type == :group
-        result = result.includes(:allowed_groups)
+        result = result.includes(:allowed_users)
         result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_groups
                                               WHERE group_id IN (
                                                   SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}) AND
@@ -372,7 +375,11 @@ class TopicQuery
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
-      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
+
+      if options[:page]
+        offset = options[:page].to_i * options[:per_page]
+        result = result.offset(offset) if offset > 0
+      end
       result
     end
 
@@ -445,6 +452,26 @@ class TopicQuery
         result = result.references(:categories)
       end
 
+      # ALL TAGS: something like this?
+      # Topic.joins(:tags).where('tags.name in (?)', @options[:tags]).group('topic_id').having('count(*)=?', @options[:tags].size).select('topic_id')
+
+      if SiteSetting.tagging_enabled
+        result = result.preload(:tags)
+
+        if @options[:tags] && @options[:tags].size > 0
+          result = result.joins(:tags)
+          # ANY of the given tags:
+          if @options[:tags][0].is_a?(Integer)
+            result = result.where("tags.id in (?)", @options[:tags])
+          else
+            result = result.where("tags.name in (?)", @options[:tags])
+          end
+        elsif @options[:no_tags]
+          # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
+          result = result.where.not(:id => TopicTag.select(:topic_id).uniq)
+        end
+      end
+
       result = apply_ordering(result, options)
       result = result.listable_topics.includes(:category)
 
@@ -461,7 +488,11 @@ class TopicQuery
 
       result = result.visible if options[:visible]
       result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
-      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
+
+      if options[:page]
+        offset = options[:page].to_i * options[:per_page]
+        result = result.offset(offset) if offset > 0
+      end
 
       if options[:topic_ids]
         result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
@@ -562,6 +593,35 @@ class TopicQuery
 
       list
     end
+    def remove_muted_tags(list, user, opts=nil)
+      if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
+        list
+      else
+        if !TagUser.lookup(user, :muted).exists?
+          list
+        else
+          showing_tag = if opts[:filter]
+            f = opts[:filter].split('/')
+            f[0] == 'tags' ? f[1] : nil
+          else
+            nil
+          end
+
+          if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
+            list # if viewing the topic list for a muted tag, show all the topics
+          else
+            muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+            list = list.where("
+              EXISTS (
+                SELECT 1
+                  FROM topic_tags tt
+                 WHERE tt.tag_id NOT IN (:tag_ids)
+                   AND tt.topic_id = topics.id
+              ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
+          end
+        end
+      end
+    end
 
     def new_messages(params)
 
@@ -642,7 +702,7 @@ class TopicQuery
 
     def random_suggested(topic, count, excluded_topic_ids=[])
       result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
-      excluded_topic_ids += Category.pluck(:topic_id).compact
+      excluded_topic_ids += Category.topic_ids.to_a
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
       result = remove_muted_categories(result, @user)

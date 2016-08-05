@@ -7,7 +7,6 @@ import PermissionType from 'discourse/models/permission-type';
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
   dataAttributes: ['id', 'description_text'],
-  valueBinding: Ember.Binding.oneWay('source'),
   overrideWidths: true,
   castInteger: true,
 

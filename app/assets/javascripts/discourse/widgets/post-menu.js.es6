@@ -114,6 +114,7 @@ registerButton('replies', (attrs, state, siteSettings) => {
 registerButton('share', attrs => {
   return {
     action: 'share',
+    className: 'share',
     title: 'post.controls.share',
     icon: 'link',
     data: {
@@ -306,6 +307,9 @@ export default createWidget('post-menu', {
   },
 
   like() {
+    if (!this.currentUser) {
+      return this.sendWidgetAction('showLogin');
+    }
     const attrs = this.attrs;
     if (attrs.liked) {
       return this.sendWidgetAction('toggleLike');

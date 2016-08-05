@@ -24,7 +24,7 @@
     <tbody>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.visits'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.days_visited:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.days_visited 'fa-check' 'fa-times'}}"></i></td>
         <td>
           {{model.tl3Requirements.days_visited_percent}}% ({{model.tl3Requirements.days_visited}} / {{model.tl3Requirements.time_period}} {{i18n 'admin.user.tl3_requirements.days'}})
         </td>
@@ -32,67 +32,67 @@
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.topics_replied_to'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.topics_replied_to:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.topics_replied_to 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.num_topics_replied_to}}</td>
         <td>{{model.tl3Requirements.min_topics_replied_to}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.topics_viewed'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.topics_viewed:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.topics_viewed 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.topics_viewed}}</td>
         <td>{{model.tl3Requirements.min_topics_viewed}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.topics_viewed_all_time'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.topics_viewed_all_time:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.topics_viewed_all_time 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.topics_viewed_all_time}}</td>
         <td>{{model.tl3Requirements.min_topics_viewed_all_time}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.posts_read'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.posts_read:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.posts_read 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.posts_read}}</td>
         <td>{{model.tl3Requirements.min_posts_read}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.posts_read_all_time'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.posts_read_all_time:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.posts_read_all_time 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.posts_read_all_time}}</td>
         <td>{{model.tl3Requirements.min_posts_read_all_time}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.flagged_posts'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.flagged_posts:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.flagged_posts 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.num_flagged_posts}}</td>
         <td>{{i18n 'max_of_count' count=model.tl3Requirements.max_flagged_posts}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.flagged_by_users'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.flagged_by_users:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.flagged_by_users 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.num_flagged_by_users}}</td>
         <td>{{i18n 'max_of_count' count=model.tl3Requirements.max_flagged_by_users}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.likes_given'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.likes_given:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.likes_given 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.num_likes_given}}</td>
         <td>{{model.tl3Requirements.min_likes_given}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.likes_received'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.likes_received:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.likes_received 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.num_likes_received}}</td>
         <td>{{model.tl3Requirements.min_likes_received}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.likes_received_days'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.likes_received_days:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.likes_received_days 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.num_likes_received_days}}</td>
         <td>{{model.tl3Requirements.min_likes_received_days}}</td>
       </tr>
       <tr>
         <th>{{i18n 'admin.user.tl3_requirements.likes_received_users'}}</th>
-        <td><i {{bind-attr class=":fa model.tl3Requirements.met.likes_received_users:fa-check:fa-times"}}></i></td>
+        <td><i class="fa {{if model.tl3Requirements.met.likes_received_users 'fa-check' 'fa-times'}}"></i></td>
         <td>{{model.tl3Requirements.num_likes_received_users}}</td>
         <td>{{model.tl3Requirements.min_likes_received_users}}</td>
       </tr>

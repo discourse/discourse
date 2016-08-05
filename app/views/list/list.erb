@@ -1,5 +1,15 @@
 <%- if include_crawler_content? %>
 
+<%= server_plugin_outlet "topic_list_header" %>
+
+<%- if SiteSetting.tagging_enabled && @tag_id %>
+  <h1>
+    <%= link_to "#{Discourse.base_url}/tags/#{@tag_id}", itemprop: 'item' do %>
+      <span itemprop='name'><%= @tag_id %></span>
+    <% end %>
+  </h1>
+<% end %>
+
 <% if @category %>
   <h1>
     <% if @category.parent_category %>
@@ -27,7 +37,7 @@
       <% if (!@category || @category.has_children?) && t.category %>
         <span class='category'>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
       <% end %>
-      <span class='posts' title='<%= t 'posts' %>'>(<a href="<%=t.last_post_url%>"><%= t.posts_count %></a>)</span>
+      <span class='posts' title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
     </div>
   <% end %>
 </div>

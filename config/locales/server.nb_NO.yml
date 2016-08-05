@@ -16,7 +16,6 @@ nb_NO:
   loading: "Laster"
   powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript på'
   log_in: "Logg inn"
-  purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
   errors: &errors
@@ -98,7 +97,6 @@ nb_NO:
   user_is_suspended: "Utviste brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet har blitt lukket eller slettet samtidig som du har sett på det?"
   just_posted_that: "er for likt det du nylig postet."
-  has_already_been_used: "har allerede blitt brukt"
   invalid_characters: "inneholder ugyldige tegn"
   is_invalid: "er ugyldig; prøv å være litt mer beskrivende"
   next_page: "neste side →"
@@ -123,7 +121,6 @@ nb_NO:
     delete_reason: "Slettet via køen for innleggmoderering"
   groups:
     errors:
-      can_not_modify_automatic: "Du kan ikke gjøre endringer på en automatisk gruppe"
       member_already_exist: "'%{username}' er allerede medlem av denne gruppen."
     default_names:
       everyone: "alle"
@@ -227,7 +224,7 @@ nb_NO:
   assets_topic_body: "Dette er et permanent emne, synlig bare for staben, for å lagre bilder of filer brukt i designet på siden. Ikke slett det!\n\n\nHvordan legge til nye filer:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du vil bruke, som logoer, favicons osv. (Bare dra bildene inn i skrivefeltet, eller bruk knappen for opplasting.)\n3. Send ditt svar.\n4. Høyrklikk bildene i din nye post for å få lenken til de opplastede bildene, eller klikk på redigeringsikonet for å kopiere lenkene fra skrivefeltet.\n5. Lim disse lenkene inn i [basic settings](/admin/site_settings/category/required).\n\n\nHvis du trenger å tillate andre filtyper, rediger `authorized_extensions` i [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Velkommen til Salongen"
-    body: |2
+    body: |
 
       Gratulerer! :confetti_ball:
 
@@ -369,7 +366,6 @@ nb_NO:
     continue_button: "Fortsett til %{site_name}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en epost når kontoen din er godkjent!"
-    missing_session: "Vi kan ikke se hvorvidt kontoen din ble opprettet. Venligst påse at du har cookies aktivert."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -429,18 +425,6 @@ nb_NO:
       message:
         make: "Dette emnet er nå en banner. Det vil vises på toppen av hver side til brukeren lukker det."
         remove: "Dette emnet er ikke lenger en banner. Det vil ikke lenger vises på toppen av hver side."
-  unsubscribed:
-    title: 'Avmeldt'
-    description: "Du har avsluttet ditt abonnement. Vi vil ikke kontakte deg igjen!"
-    oops: "I tilfelle du ikke mente å gjøre dette, klikk nedenfor."
-    error: "Feil ved avmelding"
-    preferences_link: "Du kan også velge å ikke mota sammendrag eposten på dine <a href='/my/preferences'>instillinger</a>"
-    different_user_description: "Du er logget inn som en annen bruker enn den emailen ble sendt til. Vær så snill og logg ut og prøv igjen."
-    not_found_description: "Beklager, men vi kan ikke avmelde deg. Det er mulig at linken i din email har gått ut på dato."
-  resubscribe:
-    action: "Abonnere igjen"
-    title: "Abonnerer igjen!"
-    description: "Du har begynt ditt abonnement igjen. "
   reports:
     visits:
       title: "Brukerbesøk"
@@ -522,23 +506,17 @@ nb_NO:
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
-      yaxis: "Anonymt API-kall"
     page_view_logged_in_reqs:
       title: "Innlogget"
       xaxis: "Dag"
-      yaxis: "Innlogget API-kall"
     page_view_crawler_reqs:
       title: "Web crawlere"
       xaxis: "Dag"
-      yaxis: "Web crawler API-kall"
     page_view_total_reqs:
       title: "Totalt"
       xaxis: "Dag"
-      yaxis: "Totale API-kall"
     page_view_logged_in_mobile_reqs:
-      title: "Innlogget API-forespørsler"
       xaxis: "Dag"
-      yaxis: "Innlogget API-forespørsler fra mobil"
     page_view_anon_mobile_reqs:
       xaxis: "Dag"
     http_background_reqs:
@@ -579,7 +557,6 @@ nb_NO:
       yaxis: "Antall besøk"
   dashboard:
     rails_env_warning: "Serveren din kjører i %{env] modus."
-    ruby_version_warning: "Du kjører en versjon av Ruby 2.0.0 som er kjent for å ha problemer. Oppgrader derfor til patch level 247 eller senere."
     host_names_warning: "Din config/database.yml fil bruker standard localhost hostnavn. Venligst legg inn ditt ønskede hostnavn"
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
     title_nag: "Oppgi navnet på nettstedet. Oppdater tittelen under <a href='/admin/site_settings'>Nettstedinstillinger</a>."
@@ -636,11 +613,6 @@ nb_NO:
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_string: "Ugyldig verdi"
-  notification_types:
-    mentioned: "%{display_username} neonate deg i %{link}"
-    liked: "%{display_username} like innlegget ditt i %{link}"
-    private_message: "%{display_username} sendte deg en melding: %{link}"
-    invited_to_private_message: "%{display_username}inviterte deg til en samtale: %{link}"
   search:
     types:
       category: 'Kategorier'
@@ -703,8 +675,6 @@ nb_NO:
     deferred: "Takk for at du sier ifra. Vi ser på saken. "
     deferred_and_deleted: "Takk for at du sier ifra. Vi har fjernet innlegget. "
   system_messages:
-    post_hidden:
-      subject_template: "Innlegg skjult grunnet fellesskaps varslinger"
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
@@ -715,7 +685,6 @@ nb_NO:
       new_activity: "Ny aktivitet rundt dine emner og innlegg:"
       top_topics: "Populære innlegg"
       other_new_topics: "Populære emner"
-      unsubscribe: "Dette sammendraget er sent fra %{site_link} siden vi ikke har sett deg på en stund. For å melde deg av %{unsubscribe_link}."
       click_here: "trykk her"
       read_more: "Les Mer"
       more_topics_category: "Flere nye emner:"

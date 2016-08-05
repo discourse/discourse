@@ -1,4 +1,4 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse/lib/helpers';
 
 registerUnbound('max-usernames', function(usernames, params) {
   var maxLength = parseInt(params.max) || 3;

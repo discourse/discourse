@@ -1,4 +1,5 @@
-import RawHtml from 'discourse/widgets/raw-html';
+import PostCooked from 'discourse/widgets/post-cooked';
+import DecoratorHelper from 'discourse/widgets/decorator-helper';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { iconNode } from 'discourse/helpers/fa-icon';
@@ -35,7 +36,7 @@ export default createWidget('embedded-post', {
               this.attach('poster-name', attrs),
               this.attach('post-link-arrow', { above: state.above, shareUrl: attrs.shareUrl })
             ]),
-            new RawHtml({html: `<div class='cooked'>${attrs.cooked}</div>`})
+            new PostCooked(attrs, new DecoratorHelper(this))
           ])
         ])
       ])

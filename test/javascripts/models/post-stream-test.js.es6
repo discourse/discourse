@@ -78,6 +78,29 @@ test('closestPostNumberFor', function() {
   equal(postStream.closestPostNumberFor(0), 2, "it clips to the lower bound of the stream");
 });
 
+test('closestDaysAgoFor', function() {
+  const postStream = buildStream(1231);
+  postStream.set('timelineLookup', [[1, 10], [3, 8], [5, 1]]);
+
+  equal(postStream.closestDaysAgoFor(1), 10);
+  equal(postStream.closestDaysAgoFor(2), 10);
+  equal(postStream.closestDaysAgoFor(3), 8);
+  equal(postStream.closestDaysAgoFor(4), 8);
+  equal(postStream.closestDaysAgoFor(5), 1);
+
+  // Out of bounds
+  equal(postStream.closestDaysAgoFor(-1), 10);
+  equal(postStream.closestDaysAgoFor(0), 10);
+  equal(postStream.closestDaysAgoFor(10), 1);
+});
+
+test('closestDaysAgoFor - empty', function() {
+  const postStream = buildStream(1231);
+  postStream.set('timelineLookup', []);
+
+  equal(postStream.closestDaysAgoFor(1), null);
+});
+
 test('updateFromJson', function() {
   const postStream = buildStream(1231);
 

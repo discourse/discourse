@@ -8,29 +8,30 @@ export default ContainerView.extend({
   createButtons() {
     const mobileView = this.site.mobileView;
 
-    if (!mobileView && this.currentUser.get('staff')) {
-      const viewArgs = {action: 'showTopicAdminMenu', title: 'topic_admin_menu', icon: 'wrench', position: 'absolute'};
-      this.attachViewWithArgs(viewArgs, 'show-popup-button');
+    const topic = this.get('topic');
+
+    if (!mobileView && this.currentUser.get('canManageTopic')) {
+      const viewArgs = { topic, delegated: this.get('topicDelegated'), openUpwards: true };
+      this.attachViewWithArgs(viewArgs, 'topic-admin-menu-button');
     }
 
-    const topic = this.get('topic');
     if (!topic.get('isPrivateMessage')) {
-
       if (mobileView) {
         this.attachViewWithArgs({ topic }, 'topic-footer-mobile-dropdown');
       } else {
         // We hide some controls from private messages
-        if (this.get('topic.details.can_invite_to')) {
-          this.attachViewClass('invite-reply-button');
-        }
         this.attachViewClass('bookmark-button');
         this.attachViewClass('share-button');
         if (this.get('topic.details.can_flag_topic')) {
           this.attachViewClass('flag-topic-button');
         }
       }
-
     }
+
+    if (!mobileView && this.get('topic.details.can_invite_to')) {
+      this.attachViewClass('invite-reply-button');
+    }
+
     if (topic.get('isPrivateMessage')) {
       this.attachViewClass('archive-button');
     }

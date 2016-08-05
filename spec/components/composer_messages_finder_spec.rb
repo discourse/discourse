@@ -6,7 +6,7 @@ describe ComposerMessagesFinder do
 
   context "delegates work" do
     let(:user) { Fabricate.build(:user) }
-    let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'createTopic') }
+    let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
 
     it "calls all the message finders" do
       finder.expects(:check_education_message).once
@@ -24,7 +24,7 @@ describe ComposerMessagesFinder do
     let(:user) { Fabricate.build(:user) }
 
     context 'creating topic' do
-      let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'createTopic') }
+      let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
 
       before do
         SiteSetting.stubs(:educate_until_posts).returns(10)
@@ -42,7 +42,7 @@ describe ComposerMessagesFinder do
     end
 
     context 'creating reply' do
-      let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'reply') }
+      let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply') }
 
       before do
         SiteSetting.stubs(:educate_until_posts).returns(10)
@@ -64,7 +64,7 @@ describe ComposerMessagesFinder do
     let(:user) { Fabricate.build(:user) }
 
     context 'replying' do
-      let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'reply') }
+      let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply') }
 
       it "has no message when `posted_too_much_in_topic?` is false" do
         user.expects(:posted_too_much_in_topic?).returns(false)
@@ -80,7 +80,7 @@ describe ComposerMessagesFinder do
   end
 
   context '.check_avatar_notification' do
-    let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'createTopic') }
+    let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
     let(:user) { Fabricate(:user) }
 
     context "success" do
@@ -141,16 +141,16 @@ describe ComposerMessagesFinder do
     end
 
     it "does not give a message for new topics" do
-      finder = ComposerMessagesFinder.new(user, composerAction: 'createTopic')
+      finder = ComposerMessagesFinder.new(user, composer_action: 'createTopic')
       expect(finder.check_sequential_replies).to be_blank
     end
 
     it "does not give a message without a topic id" do
-      expect(ComposerMessagesFinder.new(user, composerAction: 'reply').check_sequential_replies).to be_blank
+      expect(ComposerMessagesFinder.new(user, composer_action: 'reply').check_sequential_replies).to be_blank
     end
 
     context "reply" do
-      let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'reply', topic_id: topic.id) }
+      let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id) }
 
       it "does not give a message to users who are still in the 'education' phase" do
         user.stubs(:post_count).returns(9)
@@ -216,16 +216,16 @@ describe ComposerMessagesFinder do
     end
 
     it "does not give a message for new topics" do
-      finder = ComposerMessagesFinder.new(user, composerAction: 'createTopic')
+      finder = ComposerMessagesFinder.new(user, composer_action: 'createTopic')
       expect(finder.check_dominating_topic).to be_blank
     end
 
     it "does not give a message without a topic id" do
-      expect(ComposerMessagesFinder.new(user, composerAction: 'reply').check_dominating_topic).to be_blank
+      expect(ComposerMessagesFinder.new(user, composer_action: 'reply').check_dominating_topic).to be_blank
     end
 
     context "reply" do
-      let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'reply', topic_id: topic.id) }
+      let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id) }
 
       it "does not give a message to users who are still in the 'education' phase" do
         user.stubs(:post_count).returns(9)
@@ -288,8 +288,8 @@ describe ComposerMessagesFinder do
     let(:topic) { Fabricate(:topic) }
 
     it "does not give a message without a topic id" do
-      expect(described_class.new(user, composerAction: 'createTopic').check_reviving_old_topic).to be_blank
-      expect(described_class.new(user, composerAction: 'reply').check_reviving_old_topic).to be_blank
+      expect(described_class.new(user, composer_action: 'createTopic').check_reviving_old_topic).to be_blank
+      expect(described_class.new(user, composer_action: 'reply').check_reviving_old_topic).to be_blank
     end
 
     context "a reply" do
@@ -300,12 +300,12 @@ describe ComposerMessagesFinder do
 
         it "does not notify if last post is recent" do
           topic = Fabricate(:topic, last_posted_at: 1.hour.ago)
-          expect(described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
+          expect(described_class.new(user, composer_action: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
         end
 
         it "notifies if last post is old" do
           topic = Fabricate(:topic, last_posted_at: 181.days.ago)
-          expect(described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic).not_to be_blank
+          expect(described_class.new(user, composer_action: 'reply', topic_id: topic.id).check_reviving_old_topic).not_to be_blank
         end
       end
 
@@ -316,12 +316,12 @@ describe ComposerMessagesFinder do
 
         it "does not notify if last post is new" do
           topic = Fabricate(:topic, last_posted_at: 1.hour.ago)
-          expect(described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
+          expect(described_class.new(user, composer_action: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
         end
 
         it "does not notify if last post is old" do
           topic = Fabricate(:topic, last_posted_at: 365.days.ago)
-          expect(described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
+          expect(described_class.new(user, composer_action: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
         end
       end
     end

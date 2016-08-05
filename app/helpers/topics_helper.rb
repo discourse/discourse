@@ -14,6 +14,14 @@ module TopicsHelper
       end
       breadcrumb.push url: category.url, name: category.name
     end
+
+    if (tags = topic.tags).present?
+      tags.each do |tag|
+        url = "#{Discourse.base_url}/tags/#{tag.name}"
+        breadcrumb << {url: url, name: tag.name}
+      end
+    end
+
     Plugin::Filter.apply(:topic_categories_breadcrumb, topic, breadcrumb)
   end
 

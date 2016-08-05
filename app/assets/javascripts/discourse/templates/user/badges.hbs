@@ -1,5 +1,5 @@
 <section class='user-content user-badges-list'>
-  {{#each controller as |ub|}}
+  {{#each model as |ub|}}
     {{badge-card badge=ub.badge count=ub.count navigateOnClick="true" username=user.username_lower}}
   {{/each}}
 </section>

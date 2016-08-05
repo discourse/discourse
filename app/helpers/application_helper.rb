@@ -15,13 +15,23 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
-  def ga_universal_json
-    cookie_domain = SiteSetting.ga_universal_domain_name.gsub(/^http(s)?:\/\//, '')
-    result = {cookieDomain: cookie_domain}
+  def google_universal_analytics_json(ua_domain_name=nil)
+    result = {}
+    if ua_domain_name
+      result[:cookieDomain] = ua_domain_name.gsub(/^http(s)?:\/\//, '')
+    end
     if current_user.present?
       result[:userId] = current_user.id
     end
     result.to_json.html_safe
+  end
+
+  def ga_universal_json
+    google_universal_analytics_json(SiteSetting.ga_universal_domain_name)
+  end
+
+  def google_tag_manager_json
+    google_universal_analytics_json
   end
 
   def shared_session_key
@@ -38,7 +48,7 @@ module ApplicationHelper
   def script(*args)
     if SiteSetting.enable_cdn_js_debugging && GlobalSetting.cdn_url
       tags = javascript_include_tag(*args, "crossorigin" => "anonymous")
-      tags.gsub!("/assets/", "/cdn_asset/#{Discourse.current_hostname.gsub(".","_")}/")
+      tags.gsub!("/assets/", "/cdn_asset/#{Discourse.current_hostname.tr(".","_")}/")
       tags.gsub!(".js\"", ".js?v=1&origin=#{CGI.escape request.base_url}\"")
       tags.html_safe
     else
@@ -57,6 +67,12 @@ module ApplicationHelper
 
   def html_classes
     "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
+  end
+
+  def body_classes
+    if @category && @category.url.present?
+      "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+    end
   end
 
   def rtl_class
@@ -157,6 +173,20 @@ module ApplicationHelper
     result.join("\n")
   end
 
+  def render_sitelinks_search_tag
+    json = {
+      '@context' => 'http://schema.org',
+      '@type' => 'WebSite',
+      url: Discourse.base_url,
+      potentialAction: {
+        '@type' => 'SearchAction',
+        target: "#{Discourse.base_url}/search?q={search_term_string}",
+        'query-input' => 'required name=search_term_string',
+      }
+    }
+    content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json'.freeze)
+  end
+
   def application_logo_url
     @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
   end
@@ -169,8 +199,12 @@ module ApplicationHelper
     MobileDetection.resolve_mobile_view!(request.user_agent,params,session)
   end
 
+  def crawler_layout?
+    controller.try(:use_crawler_layout?)
+  end
+
   def include_crawler_content?
-    controller.try(:use_crawler_layout?) || !mobile_view?
+    crawler_layout? || !mobile_view?
   end
 
   def mobile_device?

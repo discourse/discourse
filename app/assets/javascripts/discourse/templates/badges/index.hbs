@@ -2,7 +2,7 @@
   <h1>{{i18n 'badges.title'}}</h1>
 
   <div class='badge-groups'>
-    {{#each bg in badgeGroups}}
+    {{#each badgeGroups as |bg|}}
       <div class='badge-grouping'>
         <div class='title'>
           <h3>{{bg.badgeGrouping.displayName}}</h3>

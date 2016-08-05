@@ -4,15 +4,12 @@ class CategoryFeaturedTopic < ActiveRecord::Base
 
   # Populates the category featured topics
   def self.feature_topics
-    transaction do
-      current = {}
-      CategoryFeaturedTopic.select(:topic_id, :category_id).order(:rank).each do |f|
-        (current[f.category_id] ||= []) << f.topic_id
-      end
-      Category.select(:id, :topic_id).find_each do |c|
-        CategoryFeaturedTopic.feature_topics_for(c, current[c.id] || [])
-        CategoryFeaturedUser.feature_users_in(c.id)
-      end
+    current = {}
+    CategoryFeaturedTopic.select(:topic_id, :category_id).order(:rank).each do |f|
+      (current[f.category_id] ||= []) << f.topic_id
+    end
+    Category.select(:id, :topic_id).find_each do |c|
+      CategoryFeaturedTopic.feature_topics_for(c, current[c.id] || [])
     end
   end
 
@@ -40,7 +37,11 @@ class CategoryFeaturedTopic < ActiveRecord::Base
       CategoryFeaturedTopic.delete_all(category_id: c.id)
       if results
         results.each_with_index do |topic_id, idx|
-          c.category_featured_topics.create(topic_id: topic_id, rank: idx)
+          begin
+            c.category_featured_topics.create(topic_id: topic_id, rank: idx)
+          rescue PG::UniqueViolation
+            # If another process features this topic, just ignore it
+          end
         end
       end
     end

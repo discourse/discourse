@@ -2,6 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { avatarImg, avatarFor } from 'discourse/widgets/post';
 import { dateNode, numberNode } from 'discourse/helpers/node';
+import { replaceEmoji } from 'discourse/widgets/emoji';
 
 const LINKS_SHOWN = 5;
 
@@ -33,13 +34,10 @@ createWidget('topic-participant', {
       linkContents.push(h('span.post-count', attrs.post_count.toString()));
     }
 
-    return h('a.poster', { className: state.toggled ? 'toggled' : null, attributes: { title: attrs.username } },
-      linkContents
-    );
-  },
-
-  click() {
-    this.sendWidgetAction('toggleParticipant', this.attrs);
+    return h('a.poster.trigger-user-card', {
+      className: state.toggled ? 'toggled' : null,
+      attributes: { title: attrs.username, 'data-user-card': attrs.username }
+    }, linkContents);
   }
 });
 
@@ -118,13 +116,13 @@ createWidget('topic-map-link', {
   },
 
   html(attrs) {
-    if (attrs.title) { return attrs.title; }
-    return attrs.url;
+    return attrs.title ? replaceEmoji(attrs.title) : attrs.url;
   }
 });
 
 createWidget('topic-map-expanded', {
   tagName: 'section.topic-map-expanded',
+  buildKey: attrs => `topic-map-expanded-${attrs.id}`,
 
   defaultState() {
     return { allLinksShown: false };

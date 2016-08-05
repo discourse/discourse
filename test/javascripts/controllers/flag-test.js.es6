@@ -64,3 +64,37 @@ test("canDeleteSpammer spam selected", function(){
   flagController.set('userDetails', buildAdminUser({can_delete_all_posts: false, can_be_deleted: false}));
   canDeleteSpammer(flagController, 'spam', false, 'false if current user is staff, selected is spam, user cannot be deleted');
 });
+
+test("canSendWarning not staff", function(){
+  const store = createStore();
+
+  var flagController = this.subject({ model: buildPost() });
+  sandbox.stub(Discourse.User, 'currentProp').withArgs('staff').returns(false);
+
+  const notifyUserFlag = store.createRecord('post-action-type', {name_key: 'notify_user'});
+  flagController.set('selected', notifyUserFlag);
+  equal(flagController.get('canSendWarning'), false, 'false if current user is not staff');
+});
+
+var canSendWarning = function(flagController, postActionType, expected, testName) {
+  const store = createStore();
+  const flag = store.createRecord('post-action-type', {name_key: postActionType});
+  flagController.set('selected', flag);
+
+  equal(flagController.get('canSendWarning'), expected, testName);
+};
+
+test("canSendWarning notify_user not selected", function(){
+  sandbox.stub(Discourse.User, 'currentProp').withArgs('staff').returns(true);
+  var flagController = this.subject({ model: buildPost() });
+  canSendWarning(flagController, 'off_topic', false, 'false if current user is staff, but selected is off_topic');
+  canSendWarning(flagController, 'inappropriate', false, 'false if current user is staff, but selected is inappropriate');
+  canSendWarning(flagController, 'spam', false, 'false if current user is staff, but selected is spam');
+  canSendWarning(flagController, 'notify_moderators', false, 'false if current user is staff, but selected is notify_moderators');
+});
+
+test("canSendWarning notify_user selected", function(){
+  sandbox.stub(Discourse.User, 'currentProp').withArgs('staff').returns(true);
+  var flagController = this.subject({ model: buildPost() });
+  canSendWarning(flagController, 'notify_user', true, 'true if current user is staff, selected is notify_user');
+});

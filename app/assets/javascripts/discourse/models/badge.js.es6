@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import BadgeGrouping from 'discourse/models/badge-grouping';
 import RestModel from 'discourse/models/rest';
 
@@ -53,7 +54,7 @@ const Badge = RestModel.extend({
       requestType = "PUT";
     }
 
-    return Discourse.ajax(url, {
+    return ajax(url, {
       type: requestType,
       data: data
     }).then(function(json) {
@@ -72,7 +73,7 @@ const Badge = RestModel.extend({
   **/
   destroy: function() {
     if (this.get('newBadge')) return Ember.RSVP.resolve();
-    return Discourse.ajax("/admin/badges/" + this.get('id'), {
+    return ajax("/admin/badges/" + this.get('id'), {
       type: "DELETE"
     });
   }
@@ -134,7 +135,7 @@ Badge.reopenClass({
     if(opts && opts.onlyListable){
       listable = "?only_listable=true";
     }
-    return Discourse.ajax('/badges.json' + listable).then(function(badgesJson) {
+    return ajax('/badges.json' + listable).then(function(badgesJson) {
       return Badge.createFromJson(badgesJson);
     });
   },
@@ -147,7 +148,7 @@ Badge.reopenClass({
     @returns {Promise} a promise that resolves to a `Badge`
   **/
   findById: function(id) {
-    return Discourse.ajax("/badges/" + id).then(function(badgeJson) {
+    return ajax("/badges/" + id).then(function(badgeJson) {
       return Badge.createFromJson(badgeJson);
     });
   }

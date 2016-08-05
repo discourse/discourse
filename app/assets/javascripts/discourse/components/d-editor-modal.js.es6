@@ -15,7 +15,7 @@ export default Ember.Component.extend({
         const offset = (w / 2) - ($modal.outerWidth() / 2);
         $modal.css(dir, offset + 'px');
         parent.$('.d-editor-overlay').removeClass('hidden').css({ width: w, height: h});
-        this.$('input').focus();
+        this.$('input:eq(0)').focus();
       });
     } else {
       parent.$('.d-editor-overlay').addClass('hidden');

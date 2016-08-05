@@ -6,6 +6,7 @@ require_dependency 'text_sentinel'
 require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
+require_dependency 'discourse_tagging'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -24,7 +25,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids
+  attr_accessor :allowed_user_ids, :tags_changed
 
   def self.max_sort_order
     @max_sort_order ||= (2 ** 31) - 1
@@ -78,6 +79,7 @@ class Topic < ActiveRecord::Base
   end
 
   belongs_to :category
+  has_many :category_users, through: :category
   has_many :posts
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
@@ -90,6 +92,10 @@ class Topic < ActiveRecord::Base
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user
   has_many :queued_posts
+
+  has_many :topic_tags, dependent: :destroy
+  has_many :tags, through: :topic_tags
+  has_many :tag_users, through: :tags
 
   has_one :top_topic
   belongs_to :user
@@ -125,7 +131,7 @@ class Topic < ActiveRecord::Base
   # Return private message topics
   scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
-  scope :listable_topics, -> { where('topics.archetype <> ?', [Archetype.private_message]) }
+  scope :listable_topics, -> { where('topics.archetype <> ?', Archetype.private_message) }
 
   scope :by_newest, -> { order('topics.created_at desc, topics.id desc') }
 
@@ -138,14 +144,12 @@ class Topic < ActiveRecord::Base
 
     # Query conditions
     condition = if ids.present?
-      ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
+      ["NOT read_restricted OR id IN (:cats)", cats: ids]
     else
-      ["NOT c.read_restricted"]
+      ["NOT read_restricted"]
     end
 
-    where("category_id IS NULL OR category_id IN (
-           SELECT c.id FROM categories c
-           WHERE #{condition[0]})", condition[1])
+    where("topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})", condition[1])
   }
 
   attr_accessor :ignore_category_auto_close
@@ -182,6 +186,12 @@ class Topic < ActiveRecord::Base
 
     if archetype_was == banner || archetype == banner
       ApplicationController.banner_json_cache.clear
+    end
+
+    if tags_changed
+      TagUser.auto_watch(topic_id: id)
+      TagUser.auto_track(topic_id: id)
+      self.tags_changed = false
     end
   end
 
@@ -245,7 +255,7 @@ class Topic < ActiveRecord::Base
   end
 
   def best_post
-    posts.order('score desc').limit(1).first
+    posts.where(post_type: Post.types[:regular]).order('score desc nulls last').limit(1).first
   end
 
   def has_flags?
@@ -254,15 +264,19 @@ class Topic < ActiveRecord::Base
              .exists?
   end
 
+  def is_official_warning?
+    subtype == TopicSubtype.moderator_warning
+  end
+
   # all users (in groups or directly targetted) that are going to get the pm
   def all_allowed_users
-    moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? && has_flags?
+    moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? && (has_flags? || is_official_warning?)
     User.from("(#{allowed_users.to_sql} UNION #{allowed_group_users.to_sql}#{moderators_sql}) as users")
   end
 
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
-    if user && user.first_day_user?
+    if user && user.new_user_posting_on_first_day?
       limit_first_day_topics_per_day
     else
       apply_per_day_rate_limit_for("topics", :max_topics_per_day)
@@ -510,13 +524,16 @@ class Topic < ActiveRecord::Base
         self.category_id = new_category.id
         self.update_column(:category_id, new_category.id)
         Category.where(id: old_category.id).update_all("topic_count = topic_count - 1") if old_category
+
+        # when a topic changes category we may have to start watching it
+        # if we happen to have read state for it
+        CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
+        CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
       CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
       CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
-      CategoryUser.auto_watch_new_topic(self, new_category)
-      CategoryUser.auto_track_new_topic(self, new_category)
     end
 
     true
@@ -540,13 +557,12 @@ class Topic < ActiveRecord::Base
                               topic_id: self.id,
                               skip_validations: true,
                               custom_fields: opts[:custom_fields])
-    new_post = creator.create
-    increment!(:moderator_posts_count) if new_post.persisted?
 
-    if new_post.present?
+    if (new_post = creator.create) && new_post.present?
+      increment!(:moderator_posts_count) if new_post.persisted?
       # If we are moving posts, we want to insert the moderator post where the previous posts were
       # in the stream, not at the end.
-      new_post.update_attributes(post_number: opts[:post_number], sort_order: opts[:post_number]) if opts[:post_number].present?
+      new_post.update_attributes!(post_number: opts[:post_number], sort_order: opts[:post_number]) if opts[:post_number].present?
 
       # Grab any links that are present
       TopicLink.extract_from(new_post)
@@ -571,6 +587,19 @@ class Topic < ActiveRecord::Base
     changed_to_category(cat)
   end
 
+  def remove_allowed_group(removed_by, name)
+    if group = Group.find_by(name: name)
+      group_user = topic_allowed_groups.find_by(group_id: group.id)
+      if group_user
+        group_user.destroy
+        add_small_action(removed_by, "removed_group", group.name)
+        return true
+      end
+    end
+
+    false
+  end
+
   def remove_allowed_user(removed_by, username)
     if user = User.find_by(username: username)
       topic_user = topic_allowed_users.find_by(user_id: user.id)
@@ -584,8 +613,21 @@ class Topic < ActiveRecord::Base
     false
   end
 
+  def invite_group(user, group)
+    TopicAllowedGroup.create!(topic_id: id, group_id: group.id)
+
+    last_post = posts.order('post_number desc').where('not hidden AND posts.deleted_at IS NULL').first
+    if last_post
+      # ensure all the notifications are out
+      PostAlerter.new.after_save_post(last_post)
+      add_small_action(user, "invited_group", group.name)
+    end
+
+    true
+  end
+
   # Invite a user to the topic by username or email. Returns success/failure
-  def invite(invited_by, username_or_email, group_ids=nil)
+  def invite(invited_by, username_or_email, group_ids=nil, custom_message=nil)
     if private_message?
       # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
@@ -610,7 +652,7 @@ class Topic < ActiveRecord::Base
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
       # NOTE callers expect an invite object if an invite was sent via email
-      invite_by_email(invited_by, username_or_email, group_ids)
+      invite_by_email(invited_by, username_or_email, group_ids, custom_message)
     else
       # invite existing member to a topic
       user = User.find_by_username(username_or_email)
@@ -633,8 +675,8 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def invite_by_email(invited_by, email, group_ids=nil)
-    Invite.invite_by_email(email, invited_by, self, group_ids)
+  def invite_by_email(invited_by, email, group_ids=nil, custom_message=nil)
+    Invite.invite_by_email(email, invited_by, self, group_ids, custom_message)
   end
 
   def email_already_exists_for?(invite)
@@ -1037,6 +1079,18 @@ SQL
     builder.where("t.archetype <> '#{Archetype.private_message}'")
     builder.where("t.deleted_at IS NULL")
     builder.exec.first["count"].to_i
+  end
+
+  def convert_to_public_topic(user)
+    public_topic = TopicConverter.new(self, user).convert_to_public_topic
+    add_small_action(user, "public_topic") if public_topic
+    public_topic
+  end
+
+  def convert_to_private_message(user)
+    private_topic = TopicConverter.new(self, user).convert_to_private_message
+    add_small_action(user, "private_topic") if private_topic
+    private_topic
   end
 
   private

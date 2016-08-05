@@ -486,7 +486,7 @@ describe Admin::UsersController do
 
     context ".invite_admin" do
       it 'should invite admin' do
-        Jobs.expects(:enqueue).with(:user_email, anything).returns(true)
+        Jobs.expects(:enqueue).with(:critical_user_email, anything).returns(true)
         xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
         expect(response).to be_success
 

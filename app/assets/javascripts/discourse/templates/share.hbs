@@ -1,5 +1,5 @@
-{{#if controller.link}}
-  <h3>{{view.title}}</h3>
+{{#if link}}
+  <h3>{{shareTitle}}</h3>
 
   {{#if date}}
     <span class="date">{{displayDate}}</span>
@@ -10,11 +10,17 @@
     <div class="share-for-touch"><div class="overflow-ellipsis"><a></a></div></div>
   </div>
 
-  {{#each s in sources}}
-    {{share-source source=s title=view.title action="share"}}
+  {{#each sources as |s|}}
+    {{share-source source=s title=title action="share"}}
   {{/each}}
 
+  {{#if canReplyAsNewTopic}}
+    <div class='reply-as-new-topic'>
+      <a href {{action "replyAsNewTopic"}} aria-label='{{i18n 'post.reply_as_new_topic'}}' title='{{i18n 'post.reply_as_new_topic'}}'>{{fa-icon "plus"}}{{i18n 'topic.create'}}</a>
+    </div>
+  {{/if}}
+
   <div class='link'>
-    <a href {{action "close"}} aria-label='{{i18n 'share.close'}}' title='{{i18n 'share.close'}}'>{{fa-icon "times-circle"}}</a>
+    <a href {{action "close"}} aria-label='{{i18n 'share.close'}}' title='{{i18n 'share.close'}}'>{{fa-icon "close"}}</a>
   </div>
 {{/if}}

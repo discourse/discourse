@@ -1,0 +1,31 @@
+<%- site_link = raw(@markdown_linker.create(@site_name, '/')) %>
+<%= raw(t 'user_notifications.mailing_list.why', site_link: site_link, date: @since_formatted) %>
+
+<%- if @new_topic_posts.keys.present? -%>
+  ### <%= t 'user_notifications.mailing_list.new_topics' %>
+  <%- @new_topic_posts.keys.each do |topic| %>
+    <%= raw(@markdown_linker.create(topic.title, topic.relative_url)) %>
+  <%- end -%>
+<%- end -%>
+
+<%- if @existing_topic_posts.keys.present? -%>
+  ### <%= t 'user_notifications.mailing_list.new_topics' %>
+  <%- @existing_topic_posts.keys.each do |topic| -%>
+    <%= raw(@markdown_linker.create(topic.title, topic.relative_url)) %>
+    <%= @existing_topic_posts[topic].length %>
+  <%- end -%>
+<%- end -%>
+
+--------------------------------------------------------------------------------
+
+<%- @posts_by_topic.keys.each do |topic| %>
+  ### <%= raw(@markdown_linker.create(topic.title, topic.relative_url)) %>
+
+  <%- @posts_by_topic[topic].each do |post| -%>
+    <%= post.user.name || post.user.username %> - <%= post.created_at %>
+--------------------------------------------------------------------------------
+    <%= post.raw %>
+
+    
+  <%- end -%>
+<%- end %>

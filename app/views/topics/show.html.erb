@@ -17,7 +17,19 @@
   <% end %>
 </div>
 <% end %>
+
+<%- if SiteSetting.tagging_enabled && @topic_view.topic.tags.present? %>
+  <div class='tags'>
+    <%= t 'js.tagging.tags' %>:
+
+    <%- @topic_view.topic.tags.each do |t| %>
+      <%= t %>
+    <%- end %>
+  </div>
+<% end %>
+
 <%= server_plugin_outlet "topic_header" %>
+
 <hr>
 
 <%- if include_crawler_content? %>

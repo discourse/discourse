@@ -1,8 +1,8 @@
 import { blank, present } from 'helpers/qunit-helpers';
 
 moduleFor('controller:topic', 'controller:topic', {
-  needs: ['controller:header', 'controller:modal', 'controller:composer', 'controller:quote-button',
-          'controller:topic-progress', 'controller:application']
+  needs: ['controller:modal', 'controller:composer', 'controller:quote-button',
+          'controller:application']
 });
 
 import Topic from 'discourse/models/topic';

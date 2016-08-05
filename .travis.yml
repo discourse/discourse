@@ -24,15 +24,13 @@ matrix:
   fast_finish: true
 
 rvm:
-  - 2.0.0
-  - 2.1
-  - 2.2
-  - 2.3.0
+  - 2.3.1
 
 services:
   - redis-server
 
-sudo: false
+sudo: required
+dist: trusty
 
 cache:
   directories:
@@ -40,10 +38,11 @@ cache:
 
 before_install:
   - gem install bundler
-  - npm i -g eslint@2.2 babel-eslint
+  - npm i -g eslint babel-eslint
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
   - eslint --ext .es6 test/javascripts
+  - eslint --ext .es6 plugins/**/assets/javascripts
   - eslint test/javascripts
 
 before_script:

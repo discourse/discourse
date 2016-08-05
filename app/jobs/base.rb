@@ -148,7 +148,7 @@ module Jobs
           t = Thread.new do
             begin
               RailsMultisite::ConnectionManagement.establish_connection(db: db)
-              I18n.locale = SiteSetting.default_locale
+              I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!
               begin
                 execute(opts)
@@ -173,10 +173,9 @@ module Jobs
 
       if exceptions.length > 0
         exceptions.each do |exception_hash|
-          Discourse.handle_job_exception(exception_hash[:ex],
-                error_context(opts, exception_hash[:code], exception_hash[:other]))
+          Discourse.handle_job_exception(exception_hash[:ex], error_context(opts, exception_hash[:code], exception_hash[:other]))
         end
-        raise HandledExceptionWrapper.new exceptions[0][:ex]
+        raise HandledExceptionWrapper.new(exceptions[0][:ex])
       end
 
       nil
@@ -262,6 +261,6 @@ module Jobs
   end
 end
 
-# Require all jobs
+Dir["#{Rails.root}/app/jobs/onceoff/*.rb"].each {|file| require_dependency file }
 Dir["#{Rails.root}/app/jobs/regular/*.rb"].each {|file| require_dependency file }
 Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each {|file| require_dependency file }

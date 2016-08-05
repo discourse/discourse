@@ -7,7 +7,9 @@ export default Em.Component.extend({
 
   @computed("poll.voters", "poll.type", "poll.options.[]")
   options(voters, type) {
-    const options = this.get("poll.options");
+    const options = this.get("poll.options").slice(0).sort((a, b) => {
+      return b.get("votes") - a.get("votes");
+    });
 
     let percentages = voters === 0 ?
       Array(options.length).fill(0) :
@@ -24,7 +26,7 @@ export default Em.Component.extend({
 
     options.forEach((option, i) => {
       const percentage = percentages[i];
-      const style = new Ember.Handlebars.SafeString(`width: ${percentage}%`);
+      const style = new Handlebars.SafeString(`width: ${percentage}%`);
 
       option.setProperties({
         percentage,
@@ -35,5 +37,4 @@ export default Em.Component.extend({
 
     return options;
   }
-
 });

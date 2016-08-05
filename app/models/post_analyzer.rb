@@ -5,6 +5,11 @@ class PostAnalyzer
   def initialize(raw, topic_id)
     @raw  = raw
     @topic_id = topic_id
+    @found_oneboxes = false
+  end
+
+  def found_oneboxes?
+    @found_oneboxes
   end
 
   # What we use to cook posts
@@ -12,6 +17,7 @@ class PostAnalyzer
     cooked = PrettyText.cook(*args)
 
     result = Oneboxer.apply(cooked, topic_id: @topic_id) do |url, _|
+      @found_oneboxes = true
       Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
       Oneboxer.cached_onebox url
     end

@@ -1,4 +1,6 @@
+import { ajax } from 'discourse/lib/ajax';
 import AdminUser from 'admin/models/admin-user';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 const StaffActionLog = Discourse.Model.extend({
   showFullDetails: false,
@@ -19,14 +21,14 @@ const StaffActionLog = Discourse.Model.extend({
       formatted += this.format('admin.logs.staff_actions.previous_value', 'previous_value');
     }
     if (!this.get('useModalForDetails')) {
-      if (this.get('details')) formatted += Discourse.Utilities.escapeExpression(this.get('details')) + '<br/>';
+      if (this.get('details')) formatted += escapeExpression(this.get('details')) + '<br/>';
     }
     return formatted;
   }.property('ip_address', 'email', 'topic_id', 'post_id', 'category_id'),
 
   format: function(label, propertyName) {
     if (this.get(propertyName)) {
-      return ('<b>' + I18n.t(label) + ':</b> ' + Discourse.Utilities.escapeExpression(this.get(propertyName)) + '<br/>');
+      return ('<b>' + I18n.t(label) + ':</b> ' + escapeExpression(this.get(propertyName)) + '<br/>');
     } else {
       return '';
     }
@@ -55,7 +57,7 @@ StaffActionLog.reopenClass({
   },
 
   findAll: function(filters) {
-    return Discourse.ajax("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
+    return ajax("/admin/logs/staff_action_logs.json", { data: filters }).then(function(staff_actions) {
       return staff_actions.map(function(s) {
         return StaffActionLog.create(s);
       });

@@ -10,12 +10,16 @@ class DiscourseSingleSignOn < SingleSignOn
     SiteSetting.sso_secret
   end
 
-  def self.generate_url(return_path="/")
+  def self.generate_sso(return_path="/")
     sso = new
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
     sso.return_sso_url = Discourse.base_url + "/session/sso_login"
-    sso.to_url
+    sso
+  end
+
+  def self.generate_url(return_path="/")
+    generate_sso(return_path).to_url
   end
 
   def register_nonce(return_path)
@@ -52,6 +56,9 @@ class DiscourseSingleSignOn < SingleSignOn
       sso_record = user.single_sign_on_record
     end
 
+    # ensure it's not staged anymore
+    user.staged = false
+
     # if the user isn't new or it's attached to the SSO record we might be overriding username or email
     unless user.new_record?
       change_external_attributes_and_override(sso_record, user)
@@ -68,11 +75,22 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     user.ip_address = ip_address
+
     user.admin = admin unless admin.nil?
     user.moderator = moderator unless moderator.nil?
 
     # optionally save the user and sso_record if they have changed
     user.save!
+
+    if bio && (user.user_profile.bio_raw.blank? || SiteSetting.sso_overrides_bio)
+      user.user_profile.bio_raw = bio
+      user.user_profile.save!
+    end
+
+    unless admin.nil? && moderator.nil?
+      Group.refresh_automatic_groups!(:admins, :moderators, :staff)
+    end
+
     sso_record.save!
 
     sso_record && sso_record.user

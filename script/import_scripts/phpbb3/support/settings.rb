@@ -18,12 +18,12 @@ module ImportScripts::PhpBB3
     attr_reader :import_remote_avatars
     attr_reader :import_gallery_avatars
 
-    attr_reader :fix_private_messages
     attr_reader :use_bbcode_to_md
 
     attr_reader :original_site_prefix
     attr_reader :new_site_prefix
     attr_reader :base_dir
+    attr_reader :permalinks
 
     attr_reader :username_as_name
     attr_reader :emojis
@@ -44,12 +44,12 @@ module ImportScripts::PhpBB3
       @import_remote_avatars = avatar_settings['remote']
       @import_gallery_avatars = avatar_settings['gallery']
 
-      @fix_private_messages = import_settings['fix_private_messages']
       @use_bbcode_to_md =import_settings['use_bbcode_to_md']
 
       @original_site_prefix = import_settings['site_prefix']['original']
       @new_site_prefix = import_settings['site_prefix']['new']
       @base_dir = import_settings['phpbb_base_dir']
+      @permalinks = PermalinkSettings.new(import_settings['permalinks'])
 
       @username_as_name = import_settings['username_as_name']
       @emojis = import_settings.fetch('emojis', [])
@@ -77,6 +77,18 @@ module ImportScripts::PhpBB3
       @schema = yaml['schema']
       @table_prefix = yaml['table_prefix']
       @batch_size = yaml['batch_size']
+    end
+  end
+
+  class PermalinkSettings
+    attr_reader :create_category_links
+    attr_reader :create_topic_links
+    attr_reader :create_post_links
+
+    def initialize(yaml)
+      @create_category_links = yaml['categories']
+      @create_topic_links = yaml['topics']
+      @create_post_links = yaml['posts']
     end
   end
 end

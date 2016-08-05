@@ -1,5 +1,5 @@
 import { h } from 'virtual-dom';
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse/lib/helpers';
 
 function iconClasses(icon, params) {
   var classes = "fa fa-" + icon;
@@ -12,6 +12,7 @@ export function iconHTML(icon, params) {
   params = params || {};
 
   var html = "<i class='" + iconClasses(icon, params) + "'";
+  if (params.title) { html += ` title='${I18n.t(params.title)}'`; }
   if (params.label) { html += " aria-hidden='true'"; }
   html += "></i>";
   if (params.label) {
@@ -36,11 +37,6 @@ export function iconNode(icon, params) {
     return h('i', properties);
   }
 }
-
-
-Ember.Handlebars.helper('fa-icon-bound', function(value, options) {
-  return new Handlebars.SafeString(iconHTML(value, options));
-});
 
 registerUnbound('fa-icon', function(icon, params) {
   return new Handlebars.SafeString(iconHTML(icon, params));

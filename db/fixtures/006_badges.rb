@@ -379,7 +379,35 @@ Badge.seed do |b|
   b.multiple_grant = false
   b.target_posts = true
   b.show_posts = true
-  b.query = BadgeQueries.has_user_first(:used_emoji)
+  b.query = nil
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
+  b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostProcessed
+  b.system = true
+end
+
+Badge.seed do |b|
+  b.id = Badge::FirstOnebox
+  b.default_name = "First Onebox"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.show_posts = true
+  b.query = nil
+  b.badge_grouping_id = BadgeGrouping::GettingStarted
+  b.default_badge_grouping_id = BadgeGrouping::GettingStarted
+  b.trigger = Badge::Trigger::PostProcessed
+  b.system = true
+end
+
+Badge.seed do |b|
+  b.id = Badge::FirstReplyByEmail
+  b.default_name = "First Reply By Email"
+  b.badge_type_id = BadgeType::Bronze
+  b.multiple_grant = false
+  b.target_posts = true
+  b.show_posts = true
+  b.query = nil
   b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostProcessed

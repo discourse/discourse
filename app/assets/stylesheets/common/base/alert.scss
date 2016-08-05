@@ -40,5 +40,8 @@
   &.alert-info {
     background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
     color: $primary;
+    &.clickable {
+      color: $tertiary;
+    }
   }
 }

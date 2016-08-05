@@ -9,24 +9,26 @@ fr:
   js:
     poll:
       voters:
-        one: "voteur"
-        other: "voteurs"
+        one: "votant"
+        other: "votants"
       total_votes:
         one: "vote au total"
         other: "votes au total"
       average_rating: "Notation moyenne : <strong>%{average}</strong>"
+      public:
+        title: "Les votes sont publics."
       multiple:
         help:
           at_least_min_options:
-            one: "Vous devez choisir au moins <strong>une</strong> option."
-            other: "Vous devez choisir au moins <strong>%{count}</strong> options."
+            one: "Choisissez au moins <strong>1</strong> option"
+            other: "Choisissez au moins <strong>%{count}</strong> options"
           up_to_max_options:
-            one: "Vous pouvez choisir <strong>une</strong> option."
-            other: "Vous pouvez choisir jusqu’à <strong>%{count}</strong> options."
+            one: "Choisissez jusqu'à <strong>1</strong> option"
+            other: "Choisissez jusqu'à <strong>%{count}</strong> options"
           x_options:
-            one: "Vous devez choisir <strong>une</strong> option."
-            other: "Vous devez choisir <strong>%{count}</strong> options."
-          between_min_and_max_options: "Vous devez choisir entre <strong>%{min}</strong> et <strong>%{max}</strong> options."
+            one: "Choisissez <strong>1</strong> option"
+            other: "Choisissez <strong>%{count}</strong> options"
+          between_min_and_max_options: "Choisissez entre <strong>%{min}</strong> et <strong>%{max}</strong> options"
       cast-votes:
         title: "Distribuez vos votes"
         label: "Votez maintenant !"
@@ -44,5 +46,24 @@ fr:
         title: "Fermer le sondage"
         label: "Fermer"
         confirm: "Êtes-vous sûr de vouloir fermer ce sondage ?"
-      error_while_toggling_status: "Une erreur s'est produite lors du changement de statut de ce sondage."
-      error_while_casting_votes: "Une erreur s'est produite lors de la distribution de vos votes."
+      error_while_toggling_status: "Désolé, il y a eu une erreur lors du changement de statut de ce sondage."
+      error_while_casting_votes: "Désolé, il y a eu une erreur lors de l'envoi de vos votes."
+      error_while_fetching_voters: "Désolé, il y a eu une erreur lors de l'affichage des votants."
+      ui_builder:
+        title: Construire Sondage
+        insert: Insérer Sondage
+        help:
+          options_count: Entrez au moins 2 options
+        poll_type:
+          label: Type
+          regular: Choix Unique
+          multiple: Choix Multiple
+          number: Nombre
+        poll_config:
+          max: Max
+          min: Min
+          step: Pas
+        poll_public:
+          label: Afficher les votants
+        poll_options:
+          label: Entrez une option de sondage par ligne

@@ -1,3 +1,5 @@
+import { htmlHelper } from 'discourse/lib/helpers';
+
 function renderSpinner(cssClass) {
   var html = "<div class='spinner";
   if (cssClass) { html += ' ' + cssClass; }
@@ -5,9 +7,9 @@ function renderSpinner(cssClass) {
 }
 var spinnerHTML = renderSpinner();
 
-Ember.Handlebars.registerHelper('loading-spinner', function(params) {
+export default htmlHelper(params => {
   const hash = params.hash;
-  return new Handlebars.SafeString(renderSpinner((hash && hash.size) ? hash.size : undefined));
+  return renderSpinner((hash && hash.size) ? hash.size : undefined);
 });
 
 export { spinnerHTML, renderSpinner };

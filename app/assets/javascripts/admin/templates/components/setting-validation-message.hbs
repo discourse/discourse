@@ -1,4 +1,4 @@
-<div {{bind-attr class=":validation-error message::hidden"}}>
+<div class="validation-error {{unless message 'hidden'}}">
   {{fa-icon "times"}}
   {{message}}
 </div>

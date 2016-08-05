@@ -79,7 +79,7 @@ class PostgreSQLFallbackHandler
   end
 
   def verify?
-    !master && !running && !recently_checked?
+    !master && !running
   end
 
   private

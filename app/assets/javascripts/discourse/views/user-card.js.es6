@@ -1,10 +1,11 @@
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import { setting } from 'discourse/lib/computed';
 import CleansUp from 'discourse/mixins/cleans-up';
 import afterTransition from 'discourse/lib/after-transition';
 
 const clickOutsideEventName = "mousedown.outside-user-card",
-  clickDataExpand = "click.discourse-user-card",
-  clickMention = "click.discourse-user-mention";
+      clickDataExpand = "click.discourse-user-card",
+      clickMention = "click.discourse-user-mention";
 
 export default Ember.View.extend(CleansUp, {
   elementId: 'user-card',
@@ -57,7 +58,7 @@ export default Ember.View.extend(CleansUp, {
     };
 
     $('#main-outlet').on(clickDataExpand, '[data-user-card]', (e) => {
-      if (e.ctrlKey || e.metaKey) { return; }
+      if (wantsNewWindow(e)) { return; }
 
       const $target = $(e.currentTarget),
         username = $target.data('user-card');
@@ -65,7 +66,7 @@ export default Ember.View.extend(CleansUp, {
     });
 
     $('#main-outlet').on(clickMention, 'a.mention', (e) => {
-      if (e.ctrlKey || e.metaKey) { return; }
+      if (wantsNewWindow(e)) { return; }
 
       const $target = $(e.target),
         username = $target.text().replace(/^@/, '');

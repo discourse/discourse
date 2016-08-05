@@ -1,10 +1,11 @@
 import { queryParams } from 'discourse/controllers/discovery-sortable';
+import { defaultHomepage } from 'discourse/lib/utilities';
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
   const findOpts = defaultParams || {};
   if (params) {
-    Ember.keys(queryParams).forEach(function(opt) {
+    Object.keys(queryParams).forEach(function(opt) {
       if (params[opt]) { findOpts[opt] = params[opt]; }
     });
   }
@@ -38,7 +39,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
     // Clean up any string parameters that might slip through
     filterParams = filterParams || {};
-    Ember.keys(filterParams).forEach(function(k) {
+    Object.keys(filterParams).forEach(function(k) {
       const val = filterParams[k];
       if (val === "undefined" || val === "null" || val === 'false') {
         filterParams[k] = undefined;
@@ -77,7 +78,7 @@ export default function(filter, extras) {
     },
 
     titleToken() {
-      if (filter === Discourse.Utilities.defaultHomepage()) { return; }
+      if (filter === defaultHomepage()) { return; }
 
       const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title');
       return I18n.t('filters.with_topics', {filter: filterText});

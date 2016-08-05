@@ -8,6 +8,7 @@ const DAY = 1000 * 60 * 60 * 24;
 
 const _dontCloak = {};
 let _cloaked = {};
+let _heights = {};
 
 export function preventCloak(postId) {
   _dontCloak[postId] = true;
@@ -17,7 +18,8 @@ export function cloak(post, component) {
   if (!CLOAKING_ENABLED || _cloaked[post.id] || _dontCloak[post.id]) { return; }
 
   const $post = $(`#post_${post.post_number}`);
-  _cloaked[post.id] = $post.outerHeight();
+  _cloaked[post.id] = true;
+  _heights[post.id] = $post.outerHeight();
   Ember.run.debounce(component, 'queueRerender', 1000);
 }
 
@@ -27,7 +29,10 @@ export function uncloak(post, component) {
   component.queueRerender();
 }
 
-addWidgetCleanCallback('post-stream', () => _cloaked = {});
+addWidgetCleanCallback('post-stream', () => {
+  _cloaked = {};
+  _heights = {};
+});
 
 export default createWidget('post-stream', {
   tagName: 'div.post-stream',
@@ -88,11 +93,8 @@ export default createWidget('post-stream', {
       }
       prevDate = curTime;
 
-      const height = _cloaked[post.id];
-      if (height) {
-        transformed.cloaked = true;
-        transformed.height = height;
-      }
+      transformed.height = _heights[post.id];
+      transformed.cloaked = _cloaked[post.id];
 
       if (transformed.isSmallAction) {
         result.push(this.attach('post-small-action', transformed, { model: post }));

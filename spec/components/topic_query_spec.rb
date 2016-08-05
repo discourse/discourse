@@ -112,8 +112,58 @@ describe TopicQuery do
       end
 
     end
+  end
 
+  context 'tag filter' do
+    let(:tag)       { Fabricate(:tag) }
+    let(:other_tag) { Fabricate(:tag) }
 
+    before do
+      SiteSetting.tagging_enabled = true
+    end
+
+    context "no category filter" do
+      # create some topics before each test:
+      let!(:tagged_topic1) { Fabricate(:topic, {tags: [tag]}) }
+      let!(:tagged_topic2) { Fabricate(:topic, {tags: [other_tag]}) }
+      let!(:tagged_topic3) { Fabricate(:topic, {tags: [tag, other_tag]}) }
+      let!(:no_tags_topic) { Fabricate(:topic) }
+
+      it "returns topics with the tag when filtered to it" do
+        expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+
+        two_tag_topic = TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.find { |t| t.id == tagged_topic3.id }
+        expect(two_tag_topic.tags.size).to eq(2)
+
+        # topics with ANY of the given tags:
+        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+
+        # TODO: topics with ALL of the given tags:
+        # expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+        # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+      end
+
+      it "can return topics with no tags" do
+        expect(TopicQuery.new(moderator, no_tags: true).list_latest.topics.map(&:id)).to eq([no_tags_topic.id])
+      end
+    end
+
+    context "and categories too" do
+      let(:category1) { Fabricate(:category) }
+      let(:category2) { Fabricate(:category) }
+
+      it "returns topics in the given category with the given tag" do
+        tagged_topic1 = Fabricate(:topic, {category: category1, tags: [tag]})
+        tagged_topic2 = Fabricate(:topic, {category: category2, tags: [tag]})
+        tagged_topic3 = Fabricate(:topic, {category: category1, tags: [tag, other_tag]})
+        no_tags_topic = Fabricate(:topic, {category: category1})
+
+        expect(TopicQuery.new(moderator, category: category1.id, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, category: category2.id, tags: [other_tag.name]).list_latest.topics.size).to eq(0)
+      end
+    end
   end
 
   context 'muted categories' do
@@ -125,6 +175,33 @@ describe TopicQuery do
                            notification_level: CategoryUser.notification_levels[:muted])
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
+    end
+  end
+
+  context 'muted tags' do
+    it 'is removed from new and latest lists' do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.remove_muted_tags_from_latest = true
+
+      muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
+
+      muted_topic = Fabricate(:topic, tags: [muted_tag])
+      tagged_topic = Fabricate(:topic, tags: [other_tag])
+      untagged_topic = Fabricate(:topic)
+
+      TagUser.create!(user_id: user.id,
+                      tag_id: muted_tag.id,
+                      notification_level: CategoryUser.notification_levels[:muted])
+
+      topic_ids = topic_query.list_latest.topics.map(&:id)
+      expect(topic_ids).not_to include(muted_topic.id)
+      expect(topic_ids).to include(tagged_topic.id)
+      expect(topic_ids).to include(untagged_topic.id)
+
+      topic_ids = topic_query.list_new.topics.map(&:id)
+      expect(topic_ids).not_to include(muted_topic.id)
+      expect(topic_ids).to include(tagged_topic.id)
+      expect(topic_ids).to include(untagged_topic.id)
     end
   end
 
@@ -232,7 +309,7 @@ describe TopicQuery do
 
           # returns the topics in reverse posters order if requested" do
           expect(ids_in_order('posters', false)).to eq([archived_topic, closed_topic, invisible_topic, future_topic, regular_topic, pinned_topic].map(&:id))
-    
+
           # sets a custom field for each topic to emulate a plugin
           regular_topic.custom_fields["sheep"] = 26
           pinned_topic.custom_fields["sheep"] = 47
@@ -240,7 +317,7 @@ describe TopicQuery do
           invisible_topic.custom_fields["sheep"] = 12
           closed_topic.custom_fields["sheep"] = 31
           future_topic.custom_fields["sheep"] = 53
-          
+
           regular_topic.save
           pinned_topic.save
           archived_topic.save
@@ -257,7 +334,7 @@ describe TopicQuery do
 
           # returns the topics in reverse sheep order if requested" do
           expect(ids_in_order('sheep', false)).to eq([invisible_topic, regular_topic, closed_topic, pinned_topic, future_topic, archived_topic].map(&:id))
-    
+
 
         end
 
@@ -373,7 +450,7 @@ describe TopicQuery do
         TopicList.preloaded_custom_fields.clear
 
         # if we attempt to access non preloaded fields explode
-        expect{new_topic.custom_fields["boom"]}.to raise_error
+        expect{new_topic.custom_fields["boom"]}.to raise_error(StandardError)
 
       end
     end
@@ -575,6 +652,26 @@ describe TopicQuery do
 
       it "should return empty results when there is nothing to find" do
         expect(suggested_topics).to be_blank
+      end
+
+      context 'random suggested' do
+
+        let!(:new_topic) { Fabricate(:topic, created_at: 2.days.ago) }
+        let!(:old_topic) { Fabricate(:topic, created_at: 3.years.ago) }
+
+        it 'respects suggested_topics_max_days_old' do
+          SiteSetting.suggested_topics_max_days_old = 1365
+          tt = topic
+
+          RandomTopicSelector.clear_cache!
+          expect(topic_query.list_suggested_for(tt).topics.length).to eq(2)
+
+          SiteSetting.suggested_topics_max_days_old = 365
+          RandomTopicSelector.clear_cache!
+
+          expect(topic_query.list_suggested_for(tt).topics.length).to eq(1)
+        end
+
       end
 
       context 'with some existing topics' do

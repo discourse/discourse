@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   _watchChanges() {
     // In Ember 13.3 we can use action on the checkbox `{{input}}` but not in 1.11
     this.$('input').on('click.d-checkbox', () => {
-      Ember.run.scheduleOnce('afterRender', () => this.sendAction('change'));
+      Ember.run.scheduleOnce('afterRender', () => this.sendAction('change', true));
     });
   },
 

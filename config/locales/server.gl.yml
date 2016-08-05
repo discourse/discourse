@@ -81,7 +81,6 @@ gl:
       one: "Unha resposta"
       other: "%{count} respostas"
   no_mentions_allowed: "Sentímolo pero non podes mencionar outros usuarios"
-  has_already_been_used: "xa está en uso"
   invalid_characters: "contén caracteres incorrectos"
   next_page: "páxina seguinte →"
   prev_page: "← páxina anterior"
@@ -263,13 +262,6 @@ gl:
       title: "Tema normal"
     banner:
       title: "Tema do báner"
-  unsubscribed:
-    title: 'Dado de baixa'
-    description: "Démoste de baixa. Non contactaremos contigo de novo."
-  resubscribe:
-    action: "Re-subscribir"
-    title: "Subscrito de novo"
-    description: "Subscribícheste de novo"
   reports:
     visits:
       title: "Visitas de usuarios"
@@ -351,18 +343,15 @@ gl:
     page_view_anon_reqs:
       title: "Anónimo"
       xaxis: "Día"
-      yaxis: "Peticións API anónimas"
     page_view_logged_in_reqs:
       title: "Sesión iniciada"
       xaxis: "Día"
     page_view_crawler_reqs:
       title: "Extractores web"
       xaxis: "Día"
-      yaxis: "Peticións API dos extractores web"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Día"
-      yaxis: "Total de peticións API"
     page_view_logged_in_mobile_reqs:
       xaxis: "Día"
     page_view_anon_mobile_reqs:
@@ -417,8 +406,6 @@ gl:
     full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     embed_username_key_from_feed: "Clave para recuperar o nome do usuario desde a fonte."
     enable_emoji: "Activar emojis"
-  notification_types:
-    liked: "A %{display_username} gustoulle a túa publicación en %{link}"
   search:
     types:
       category: 'Categorías'
@@ -439,8 +426,6 @@ gl:
     deferred_and_deleted: "Grazas por comunicárnolo. Xa eliminamos a publicación."
   temporarily_closed_due_to_flags: "Este tema está pechado temporalmente polo gran número de denuncias da comunidade."
   system_messages:
-    post_hidden:
-      subject_template: "Publicación oculta polas denuncias da comunidade."
     welcome_user:
       subject_template: "Benvido/a a %{site_name}!"
       text_body_template: |

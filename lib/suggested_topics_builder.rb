@@ -7,7 +7,7 @@ class SuggestedTopicsBuilder
   def initialize(topic)
     @excluded_topic_ids = [topic.id]
     @category_id = topic.category_id
-    @category_topic_ids = Category.pluck(:topic_id).compact
+    @category_topic_ids = Category.topic_ids
     @results = []
   end
 
@@ -25,7 +25,6 @@ class SuggestedTopicsBuilder
     if @category_id && SiteSetting.limit_suggested_to_category?
       results = results.where(category_id: @category_id)
     end
-
     results = results.to_a.reject { |topic| @category_topic_ids.include?(topic.id) }
 
     unless results.empty?

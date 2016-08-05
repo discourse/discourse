@@ -5,11 +5,9 @@
 //= require template_include.js
 //= require i18n-patches
 
-//= require loader
 //= require message-bus
 //= require jquery.ui.widget.js
 //= require Markdown.Converter.js
-//= require better_markdown.js
 //= require bootbox.js
 //= require bootstrap-alert.js
 //= require bootstrap-button.js
@@ -29,12 +27,10 @@
 //= require jquery.tagsinput.js
 //= require jquery.sortable.js
 //= require lodash.js
-//= require md5.js
 //= require modernizr.custom.00874.js
 //= require mousetrap.js
 //= require rsvp.js
 //= require show-html.js
-//= require lock-on.js
 //= require break_string
 //= require buffered-proxy
 //= require jquery.autoellipsis-1.0.10.min.js

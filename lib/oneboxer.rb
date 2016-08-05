@@ -96,7 +96,6 @@ module Oneboxer
     changed = false
 
     Oneboxer.each_onebox_link(doc) do |url, element|
-
       if args && args[:topic_id]
         url = append_source_topic_id(url, args[:topic_id])
       end

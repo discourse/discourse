@@ -47,25 +47,6 @@ h1 .topic-statuses .topic-status i {
   }
 }
 
-.topic-post {
-  .gutter {
-    .reply-new {
-      .discourse-no-touch & {
-        opacity:0;
-        transition: opacity 0.7s ease-in-out;
-      }
-      .discourse-touch & {opacity: 1;}
-    }
-  }
-
-  &:hover .gutter, .selected .gutter {
-    .reply-new,
-    .track-link {
-      opacity:1;
-    }
-  }
-}
-
 section.post-menu-area {
   position: relative;
 }
@@ -403,7 +384,7 @@ a.star {
       font-size: 0.929em;
     }
     i.fa-times {
-        color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
     }
   }
 
@@ -448,12 +429,15 @@ a.star {
   padding: 10px 10px 0 0;
   p {
     line-height: 32px;
-    color: $primary;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
     .fa-bookmark.bookmarked { color: $tertiary; }
+  }
+  .notification-options p {
+    display: inline-block;
   }
 }
 
@@ -571,16 +555,6 @@ video {
   position: relative;
 }
 
-a.mention, a.mention-group {
-  padding: 2px 4px;
-  color: dark-light-diff($primary, $secondary, 30%, -30%);
-  background: dark-light-diff($primary, $secondary, 95%, -60%);
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 0.93em;
-}
-
-
 .moderator {
   .topic-body {
     background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
@@ -593,10 +567,6 @@ a.mention, a.mention-group {
   }
 }
 
-.small-action.deleted {
-  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
-}
-
 #share-link {
   width: 365px;
   margin-left: -4px;
@@ -606,10 +576,6 @@ a.mention, a.mention-group {
   float: right;
   margin-right: 20px;
   margin-top: -20px;
-}
-
-.popup-menu {
-  h3 {margin-top: 0;}
 }
 
 .deleted-user-avatar {
@@ -651,51 +617,6 @@ blockquote {
 
 }
 
-
-
-.gutter {
-  margin-top: 13px;
-  width: 100%;
-  box-sizing: border-box;
-  z-index: 1;
-  padding-left: 757px;
-
-  ul {margin: 0;}
-  li {margin-bottom: 10px;}
-  i {font-size: 0.857em;}
-
-  .reply-new {
-    padding-left: 27px;
-    display: inline-block;
-    overflow:hidden;
-  }
-
-  .track-link {
-    padding-left: 10px;
-    display: inline-block;
-    overflow: hidden;
-    }
-
-  .post-links {
-    list-style-type: none;
-    position: relative;
-    line-height: 18px;
-    word-wrap: break-word;
-    a i {
-      position: relative;
-      margin-right: 7px;
-      margin-top: -2px;
-      margin-left: -17px;
-    }
-
-    a.toggle-more {
-      display: block;
-      text-align: right;
-    }
-
-  }
-}
-
 // variables are used to calculate the width of .gap
 $topic-body-width: 690px;
 $topic-body-width-padding: 11px;
@@ -726,6 +647,16 @@ $topic-avatar-width: 45px;
 .small-action {
   max-width: 755px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+}
+
+.small-action.deleted {
+  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+}
+
+/* hide the reply border above the time gap notices */
+.time-gap + .topic-post .topic-body,
+.time-gap + .topic-post .topic-avatar {
+  border-top: none;
 }
 
 .posts-wrapper {
@@ -761,8 +692,16 @@ $topic-avatar-width: 45px;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-clip: padding-box;
-  span {font-size: 0.857em;}
-  .title {font-weight: bold; display: block; font-size: 1em;}
+  span {
+    font-size: 0.857em;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  }
+  span.title {
+    font-weight: bold;
+    display: block;
+    font-size: 1em;
+    color: $primary;
+  }
 }
 .dropdown-menu a {
   display: block;
@@ -805,7 +744,7 @@ $topic-avatar-width: 45px;
   clear: both;
 }
 
-#selected-posts {
+.selected-posts {
   width: 200px;
   position: fixed;
   z-index: 1000;
@@ -921,17 +860,17 @@ a.attachment:before {
 }
 
 .private_message .gutter, .deleted-topic .gutter,.read_restricted .gutter {
-    position: relative;
+  position: relative;
 }
 
 .deleted-topic .gutter:before {
-    display: block;
-    position: absolute;
-    left: 767px;
-    color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
-    font: 6.429em/1 FontAwesome;
-    content: "\f014";
-    z-index: -5;
+  display: block;
+  position: absolute;
+  left: 767px;
+  color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
+  font: 6.429em/1 FontAwesome;
+  content: "\f014";
+  z-index: -5;
 }
 
 .topic-meta-data {
@@ -999,7 +938,7 @@ and (max-width : 870px) {
 
   .gutter {
     display: none;
-    }
+  }
 
   .topic-avatar {
     width: 45px;

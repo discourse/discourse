@@ -3,8 +3,7 @@ class UrlHelper
   def self.is_local(url)
     url.present? && (
       Discourse.store.has_been_uploaded?(url) ||
-      !!(url =~ /^\/assets\//) ||
-      !!(url =~ /^\/plugins\//) ||
+      !!(url =~ /^\/(assets|plugins|images)\//) ||
       url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
     )
   end
@@ -18,7 +17,7 @@ class UrlHelper
   end
 
   def self.schemaless(url)
-    url.sub(/^http:/, "")
+    url.sub(/^http:/i, "")
   end
 
 end

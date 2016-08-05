@@ -1,0 +1,13 @@
+<div class="modal-body">
+  <label>
+    <p>{{i18n "tagging.rename_instructions"}}</p>
+    {{input value=buffered.id maxlength=siteSettings.max_tag_length}}
+  </label>
+</div>
+
+<div class="modal-footer">
+  {{d-button class="btn-primary"
+             action="performRename"
+             label="tagging.rename_tag"
+             disabled=renameDisabled}}
+</div>

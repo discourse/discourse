@@ -25,6 +25,7 @@ class TopicFeaturedUsers
   def self.ensure_consistency!(topic_id=nil)
 
     filter = "#{"AND t.id = #{topic_id.to_i}" if topic_id}"
+    filter2 = "#{"AND tt.id = #{topic_id.to_i}" if topic_id}"
 
     sql = <<SQL
 
@@ -53,11 +54,12 @@ cte2 as (
 
 UPDATE topics tt
 SET
-  featured_user1_id = featured_user1,
-  featured_user2_id = featured_user2,
-  featured_user3_id = featured_user3,
-  featured_user4_id = featured_user4
-FROM (
+  featured_user1_id = x.featured_user1,
+  featured_user2_id = x.featured_user2,
+  featured_user3_id = x.featured_user3,
+  featured_user4_id = x.featured_user4
+FROM topics AS tt2
+LEFT OUTER JOIN (
   SELECT
       c.id,
       MAX(case when c.rank = 1 then c.user_id end) featured_user1,
@@ -66,14 +68,15 @@ FROM (
       MAX(case when c.rank = 4 then c.user_id end) featured_user4
   FROM cte2 as c
   GROUP BY c.id
-) x
-WHERE x.id = tt.id AND
+) x ON x.id = tt2.id
+WHERE tt.id = tt2.id AND
 (
-  COALESCE(featured_user1_id,-99) <> COALESCE(featured_user1,-99) OR
-  COALESCE(featured_user2_id,-99) <> COALESCE(featured_user2,-99) OR
-  COALESCE(featured_user3_id,-99) <> COALESCE(featured_user3,-99) OR
-  COALESCE(featured_user4_id,-99) <> COALESCE(featured_user4,-99)
+  COALESCE(tt.featured_user1_id,-99) <> COALESCE(x.featured_user1,-99) OR
+  COALESCE(tt.featured_user2_id,-99) <> COALESCE(x.featured_user2,-99) OR
+  COALESCE(tt.featured_user3_id,-99) <> COALESCE(x.featured_user3,-99) OR
+  COALESCE(tt.featured_user4_id,-99) <> COALESCE(x.featured_user4,-99)
 )
+#{filter2}
 SQL
 
     Topic.exec_sql(sql)

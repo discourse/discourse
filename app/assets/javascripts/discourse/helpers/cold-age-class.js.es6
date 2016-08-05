@@ -1,4 +1,4 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse/lib/helpers';
 
 function daysSinceEpoch(dt) {
   // 1000 * 60 * 60 * 24 = days since epoch

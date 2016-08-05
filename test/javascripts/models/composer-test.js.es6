@@ -95,6 +95,21 @@ test("appendText", function() {
   equal(composer.get("reply"), "c\n\nab");
 });
 
+test("prependText", function() {
+  const composer = createComposer();
+
+  blank(composer.get('reply'), "the reply is blank by default");
+
+  composer.prependText("hello");
+  equal(composer.get('reply'), "hello", "it prepends text to nothing");
+
+  composer.prependText("world ");
+  equal(composer.get('reply'), "world hello", "it prepends text to existing text");
+  
+  composer.prependText("before new line", {new_line: true});
+  equal(composer.get('reply'), "before new line\n\nworld hello", "it prepends text with new line to existing text");
+});
+
 test("Title length for regular topics", function() {
   Discourse.SiteSettings.min_topic_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;

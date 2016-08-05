@@ -4,7 +4,7 @@ class TopicList
   include ActiveModel::Serialization
 
   cattr_accessor :preloaded_custom_fields
-  self.preloaded_custom_fields = []
+  self.preloaded_custom_fields = Set.new
 
   attr_accessor :more_topics_url,
                 :prev_topics_url,
@@ -13,22 +13,33 @@ class TopicList
                 :draft_sequence,
                 :filter,
                 :for_period,
-                :per_page
+                :per_page,
+                :tags
 
   def initialize(filter, current_user, topics, opts=nil)
     @filter = filter
     @current_user = current_user
     @topics_input = topics
     @opts = opts || {}
+
+    if @opts[:category]
+      @category = Category.find_by(id: @opts[:category_id])
+    end
+
+    preloaded_custom_fields << DiscourseTagging::TAGS_FIELD_NAME if SiteSetting.tagging_enabled
+  end
+
+  def tags
+    opts = @category ? { category: @category } : {}
+    Tag.top_tags(opts)
   end
 
   def preload_key
-    if @opts[:category]
-      c = Category.where(id: @opts[:category_id]).first
-      return "topic_list_#{c.url.sub(/^\//, '')}/l/#{@filter}" if c
+    if @category
+      "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+    else
+      "topic_list_#{@filter}"
     end
-
-    "topic_list_#{@filter}"
   end
 
   # Lazy initialization
@@ -81,8 +92,8 @@ class TopicList
       ft.topic_list = self
     end
 
-    if TopicList.preloaded_custom_fields.present?
-      Topic.preload_custom_fields(@topics, TopicList.preloaded_custom_fields)
+    if preloaded_custom_fields.present?
+      Topic.preload_custom_fields(@topics, preloaded_custom_fields)
     end
 
     @topics

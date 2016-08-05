@@ -180,4 +180,56 @@ describe TopicsBulkAction do
       end
     end
   end
+
+  describe "change_tags" do
+    let(:topic) { Fabricate(:topic) }
+    let(:tag1)  { Fabricate(:tag) }
+    let(:tag2)  { Fabricate(:tag) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.min_trust_level_to_tag_topics = 0
+      topic.tags = [tag1, tag2]
+    end
+
+    it "can change the tags, and can create new tags" do
+      SiteSetting.min_trust_to_create_tag = 0
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_tags', tags: ['newtag', tag1.name])
+      topic_ids = tba.perform!
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      expect(topic.tags.map(&:name).sort).to eq(['newtag', tag1.name].sort)
+    end
+
+    it "can change the tags but not create new ones" do
+      SiteSetting.min_trust_to_create_tag = 4
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_tags', tags: ['newtag', tag1.name])
+      topic_ids = tba.perform!
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      expect(topic.tags.map(&:name)).to eq([tag1.name])
+    end
+
+    it "can remove all tags" do
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_tags', tags: [])
+      topic_ids = tba.perform!
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      expect(topic.tags.size).to eq(0)
+    end
+
+    context "when user can't edit topic" do
+      before do
+        Guardian.any_instance.expects(:can_edit?).returns(false)
+      end
+
+      it "doesn't change the tags" do
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_tags', tags: ['newtag', tag1.name])
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([])
+        topic.reload
+        expect(topic.tags.map(&:name)).to eq([tag1.name, tag2.name])
+      end
+    end
+  end
 end

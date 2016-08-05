@@ -30,7 +30,7 @@
 
     <div class="control-group">
       <div class="controls">
-          <button {{action "changeUsername"}} {{bind-attr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
+        <button {{action "changeUsername"}} disabled={{saveDisabled}} class="btn btn-primary">{{saveButtonText}}</button>
           {{#if saved}}{{i18n 'saved'}}{{/if}}
       </div>
     </div>

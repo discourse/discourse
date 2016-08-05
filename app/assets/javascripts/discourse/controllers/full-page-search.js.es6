@@ -1,7 +1,9 @@
+import { ajax } from 'discourse/lib/ajax';
 import { translateResults, searchContextDescription, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 const SortOrders = [
   {name: I18n.t('search.relevance'), id: 0},
@@ -75,7 +77,7 @@ export default Ember.Controller.extend({
         }
       });
     }
-    return Discourse.Utilities.escapeExpression(q);
+    return escapeExpression(q);
   },
 
   _searchOnSortChange: true,
@@ -156,7 +158,7 @@ export default Ember.Controller.extend({
 
     const searchKey = getSearchKey(args);
 
-    Discourse.ajax("/search", { data: args }).then(results => {
+    ajax("/search", { data: args }).then(results => {
       const model = translateResults(results) || {};
       router.transientCache('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
@@ -193,7 +195,7 @@ export default Ember.Controller.extend({
 
     showSearchHelp() {
       // TODO: dupe code should be centralized
-      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then((model) => {
+      ajax("/static/search_help.html", { dataType: 'html' }).then((model) => {
         showModal('searchHelp', { model });
       });
     },

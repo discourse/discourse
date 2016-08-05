@@ -179,8 +179,9 @@ const TopicRoute = Discourse.Route.extend({
     this.searchService.set('searchContext', null);
     this.controllerFor('user-card').set('visible', false);
 
-    const topicController = this.controllerFor('topic'),
-        postStream = topicController.get('model.postStream');
+    const topicController = this.controllerFor('topic');
+    const postStream = topicController.get('model.postStream');
+
     postStream.cancelFilter();
 
     topicController.set('multiSelect', false);
@@ -188,11 +189,7 @@ const TopicRoute = Discourse.Route.extend({
     this.controllerFor('composer').set('topic', null);
     this.screenTrack.stop();
 
-    const headerController = this.controllerFor('header');
-    if (headerController) {
-      headerController.set('topic', null);
-      headerController.set('showExtraInfo', false);
-    }
+    this.appEvents.trigger('header:hide-topic');
   },
 
   setupController(controller, model) {
@@ -207,14 +204,14 @@ const TopicRoute = Discourse.Route.extend({
 
     TopicRoute.trigger('setupTopicController', this);
 
-    this.controllerFor('header').setProperties({ topic: model, showExtraInfo: false });
     this.searchService.set('searchContext', model.get('searchContext'));
+
+    // close the multi select when switching topics
+    controller.set('multiSelect', false);
 
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');
     controller.subscribe();
-
-    this.controllerFor('topic-progress').set('model', model);
 
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get('id'), controller);

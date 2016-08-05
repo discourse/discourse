@@ -63,7 +63,7 @@ describe Upload do
 
     it "computes width & height for images" do
       ImageSizer.expects(:resize)
-      image.expects(:rewind).twice
+      image.expects(:rewind).times(3)
       Upload.create_for(user_id, image, image_filename, image_filesize)
     end
 

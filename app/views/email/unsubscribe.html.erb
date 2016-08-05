@@ -1,28 +1,79 @@
-<div class='container'>
+<div class='container unsubscribe'>
+  <%- if @not_found || @different_user %>
 
-  <%- if @success %>
-    <h2><%= t :'unsubscribed.title' %></h2>
-    <br/>
-
-    <p><%= t :'unsubscribed.description' %></p>
-
-    <p><%= t :'unsubscribed.oops' %></p>
-
-    <%= form_tag(email_resubscribe_path(key: params[:key])) do %>
-      <%= submit_tag t(:'resubscribe.action'), class: 'btn btn-danger' %>
-    <% end %>
+    <%if @not_found%>
+      <p><%= t "unsubscribe.not_found_description" %></p>
+    <%- else %>
+      <p><%= t("unsubscribe.different_user_description").html_safe %></p>
+      <%= form_tag(session_path(id: current_user.username_lower), method: :delete) do %>
+        <%= hidden_field_tag(:return_url, @return_url) %>
+        <%= submit_tag t('unsubscribe.log_out'), class: 'btn btn-danger' %>
+      <%- end%>
+    <%- end %>
   <%- else %>
-    <h2><%= t :'unsubscribed.error' %></h2>
     <br/>
-    <%- if @different_user %>
-      <p><%= t :'unsubscribed.different_user_description' %></p>
+    <h2><%= t 'unsubscribe.title'%></h2>
+    <br/>
+    <%= form_tag(email_perform_unsubscribe_path(key: params[:key])) do %>
+      <%if @topic %>
+        <% if @watching_topic %>
+          <p>
+          <label>
+            <%= check_box_tag 'unwatch_topic', 1, true %>
+            <%= t('unsubscribe.stop_watching_topic', link: render_topic_title(@topic)).html_safe %>
+          </label>
+          </p>
+        <% else %>
+          <p>
+          <label>
+            <%= check_box_tag 'mute_topic', 1, true %>
+            <%= t('unsubscribe.mute_topic', link: render_topic_title(@topic)).html_safe %>
+          </label>
+          </p>
+        <% end %>
+
+
+        <% if @watched_count %>
+          <p>
+          <label>
+            <%= check_box_tag 'unwatch_category' %>
+            <%= t('unsubscribe.unwatch_category', category: category_badge(@topic.category)).html_safe %>
+          </label>
+          </p>
+        <% end %>
+      <% end %>
+
+      <% if @user.user_option.mailing_list_mode && !SiteSetting.disable_mailing_list_mode %>
+        <p>
+        <label>
+        <%= check_box_tag 'disable_mailing_list' %>
+        <%= t 'unsubscribe.mailing_list_mode' %>
+        </label>
+        </p>
+      <% end %>
+
+      <% if !@topic %>
+        <% unless SiteSetting.disable_digest_emails %>
+          <p>
+          <label>
+          <%= check_box_tag 'disable_digest_emails', 1, @type=="digest" %>
+          <%= t 'unsubscribe.disable_digest_emails' %>
+          </label>
+          </p>
+        <% end %>
+      <% end %>
+
+      <p>
+      <label>
+      <%= check_box_tag 'unsubscribe_all', 1, @type=="all" %>
+      <%= t 'unsubscribe.all', sitename: SiteSetting.title %>
+      </label>
+      </p>
+
+      <br/>
+      <%= submit_tag t('unsubscribe.title'), class: 'btn btn-danger' %>
     <%- end %>
 
-    <%- if @not_found %>
-      <p><%= t :'unsubscribed.not_found_description' %></p>
-    <%- end %>
-
-    <p><%=raw(t :'unsubscribed.preferences_link') %></p>
 
   <%- end %>
 

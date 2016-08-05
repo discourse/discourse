@@ -8,7 +8,7 @@
       </div>
       <div id='modal-alert'></div>
       {{outlet "modalBody"}}
-      {{#each error in errors}}
+      {{#each errors as |error|}}
         <div class="alert alert-error">
           <button class="close" data-dismiss="alert">×</button>
           {{error}}

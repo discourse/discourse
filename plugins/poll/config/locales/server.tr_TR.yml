@@ -23,6 +23,7 @@ tr_TR:
     default_poll_with_multiple_choices_has_invalid_parameters: "Çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."
     named_poll_with_multiple_choices_has_invalid_parameters: "<strong>%{name}</strong> ile adlandırılmış ve çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."
     requires_at_least_1_valid_option: "En az 1 geçerli seçim yapmalısınız."
+    default_cannot_be_made_public: "Oy içeren oylamalar genel olamaz. "
     cannot_change_polls_after_5_minutes: "Anketler, ilk 5 dakikadan sonra eklenemez, çıkartılamaz ya da yeniden isimlendirilemez."
     op_cannot_edit_options_after_5_minutes: "Anketler ilk 5 dakikadan sonra eklenemez ya da çıkartılamaz. Eğer bir anket seçeneğini değiştirmeniz gerekiyorsa herhangi bir moderatör ile iletişime geçin."
     staff_cannot_add_or_remove_options_after_5_minutes: "Anketler ilk 5 dakikadan sonra eklenemez ya da çıkartılamaz. Bu konuyu kapatıp, yerine yeni bir konu oluşturmalısınız."

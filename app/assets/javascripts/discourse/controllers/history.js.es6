@@ -3,15 +3,33 @@ import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
 import { propertyGreaterThan, propertyLessThan } from 'discourse/lib/computed';
 
+function customTagArray(fieldName) {
+  return function() {
+    var val = this.get(fieldName);
+    if (!val) { return val; }
+    if (!Array.isArray(val)) { val = [val]; }
+    return val;
+  }.property(fieldName);
+}
+
 // This controller handles displaying of history
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: true,
   viewMode: "side_by_side",
-  revisionsTextKey: "post.revisions.controls.comparing_previous_to_current_out_of_total",
 
   _changeViewModeOnMobile: function() {
     if (this.site.mobileView) { this.set("viewMode", "inline"); }
   }.on("init"),
+
+  previousTagChanges: customTagArray('model.tags_changes.previous'),
+  currentTagChanges: customTagArray('model.tags_changes.current'),
+
+  @computed('previousVersion', 'model.current_version', 'model.version_count')
+  revisionsText(previous, current, total) {
+    return I18n.t("post.revisions.controls.comparing_previous_to_current_out_of_total", {
+      previous, current, total
+    });
+  },
 
   refresh(postId, postVersion) {
     this.set("loading", true);

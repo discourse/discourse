@@ -34,7 +34,7 @@
         {{i18n 'admin.badges.preview.sample'}}
       </p>
       <ul>
-        {{#each html in processed_sample}}
+        {{#each processed_sample as |html|}}
           <li>{{{html}}}</li>
         {{/each}}
       </ul>

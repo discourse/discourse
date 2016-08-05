@@ -33,11 +33,16 @@ a#forgot-password-link {clear: left; float: left; }
 
 .btn-primary {margin-bottom: 10px; font-size: 15; float: left;}
 
+
+$label-width: 85px;
+$input-width: 184px;
+
 .create-account .modal-body {
   input[type=text], input[type=email], input[type=password] {
     display: inline-block;
     margin-bottom: 5px;
     margin-top: 10px;
+    width: $input-width;
   }
 
   tr.instructions {
@@ -48,7 +53,7 @@ a#forgot-password-link {clear: left; float: left; }
 
   tr.input {
     td.label {
-      padding-right: 5px;
+      width: $label-width;
     }
   }
 }
@@ -61,15 +66,15 @@ a#forgot-password-link {clear: left; float: left; }
   .user-field {
     margin-top: 10px;
     label {
-      width: 85px;
+      width: $label-width;
     }
 
     input[type=text] {
       margin-top: 0;
-      width: 184px;
+      width: $input-width;
     }
     .controls {
-      margin-left: 85px;
+      margin-left: $label-width;
     }
   }
 }

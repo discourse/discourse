@@ -32,6 +32,10 @@ class UserEmailObserver < ActiveRecord::Observer
       enqueue :user_linked
     end
 
+    def watching_first_post
+      enqueue :user_watching_first_post
+    end
+
     def private_message
       enqueue_private(:user_private_message)
     end

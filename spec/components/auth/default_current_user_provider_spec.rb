@@ -72,5 +72,76 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
+
+  it "correctly renews session once an hour" do
+    SiteSetting.maximum_session_age = 3
+    user = Fabricate(:user)
+    provider('/').log_on_user(user, {}, {})
+
+    freeze_time 2.hours.from_now
+    cookies = {}
+    provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").refresh_session(user, {}, cookies)
+
+    expect(user.auth_token_updated_at - Time.now).to eq(0)
+  end
+
+  it "can only try 10 bad cookies a minute" do
+    RateLimiter.stubs(:disabled?).returns(false)
+
+    RateLimiter.new(nil, "cookie_auth_10.0.0.1", 10, 60).clear!
+    RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
+
+    ip = "10.0.0.1"
+    env = { "HTTP_COOKIE" => "_t=#{SecureRandom.hex}", "REMOTE_ADDR" => ip }
+
+    10.times do
+      provider('/', env).current_user
+    end
+    expect {
+      provider('/', env).current_user
+    }.to raise_error(Discourse::InvalidAccess)
+
+    env["REMOTE_ADDR"] = "10.0.0.2"
+    provider('/', env).current_user
+  end
+
+  it "correctly removes invalid cookies" do
+
+    cookies = {"_t" => "BAAAD"}
+    provider('/').refresh_session(nil, {}, cookies)
+
+    expect(cookies.key?("_t")).to eq(false)
+  end
+
+  it "recycles existing auth_token correctly" do
+    SiteSetting.maximum_session_age = 3
+    user = Fabricate(:user)
+    provider('/').log_on_user(user, {}, {})
+
+    original_auth_token = user.auth_token
+
+    freeze_time 2.hours.from_now
+    provider('/').log_on_user(user, {}, {})
+
+    user.reload
+    expect(user.auth_token).to eq(original_auth_token)
+
+    freeze_time 10.hours.from_now
+
+    provider('/').log_on_user(user, {}, {})
+    user.reload
+    expect(user.auth_token).not_to eq(original_auth_token)
+  end
+
+  it "correctly expires session" do
+    SiteSetting.maximum_session_age = 2
+    user = Fabricate(:user)
+    provider('/').log_on_user(user, {}, {})
+
+    expect(provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").current_user.id).to eq(user.id)
+
+    freeze_time 3.hours.from_now
+    expect(provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").current_user).to eq(nil)
+  end
 end
 

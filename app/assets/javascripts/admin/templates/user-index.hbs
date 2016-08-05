@@ -54,6 +54,19 @@
       </div>
     </div>
 
+    <div class="display-row bounce-score">
+      <div class='field'><a href="{{model.bounceLink}}">{{i18n 'admin.user.bounce_score'}}</a></div>
+      <div class='value'>{{model.bounceScore}}</div>
+      <div class='controls'>
+        {{#if model.canResetBounceScore}}
+          <button class='btn' {{action "resetBounceScore" target="content"}} title={{i18n "admin.user.reset_bounce_score.title"}}>
+            {{i18n "admin.user.reset_bounce_score.label"}}
+          </button>
+        {{/if}}
+        {{model.bounceScoreExplanation}}
+      </div>
+    </div>
+
     <div class='display-row associations'>
       <div class='field'>{{i18n 'user.associated_accounts'}}</div>
       <div class='value'>
@@ -75,7 +88,7 @@
     <div class='field'>{{i18n 'user.title.title'}}</div>
     <div class='value'>
       {{#if editingTitle}}
-        {{text-field value=model.title autofocus="autofocus"}}
+        {{text-field value=userTitleValue autofocus="autofocus"}}
       {{else}}
         <span {{action "toggleTitleEdit"}}>{{model.title}}&nbsp;</span>
       {{/if}}
@@ -128,7 +141,7 @@
 
 {{#if userFields}}
   <section class='details'>
-    {{#each uf in userFields}}
+    {{#each userFields as |uf|}}
       <div class='display-row'>
         <div class='field'>{{uf.name}}</div>
         <div class='value'>
@@ -288,7 +301,7 @@
     </div>
   </div>
 
-  <div {{bind-attr class=":display-row model.isSuspended:highlight-danger"}}>
+    <div class="display-row {{if model.isSuspended 'highlight-danger'}}">
     <div class='field'>{{i18n 'admin.user.suspended'}}</div>
     <div class='value'>{{model.isSuspended}}</div>
     <div class='controls'>
@@ -325,7 +338,7 @@
     </div>
   {{/if}}
 
-  <div {{bind-attr class=":display-row model.blocked:highlight-danger"}}>
+  <div class="display-row {{if model.blocked 'highlight-danger'}}">
     <div class='field'>{{i18n 'admin.user.blocked'}}</div>
     <div class='value'>{{model.blocked}}</div>
     <div class='controls'>
@@ -350,7 +363,7 @@
   <div class="display-row">
     <div class='field'>{{i18n 'admin.user.staged'}}</div>
     <div class='value'>{{model.staged}}</div>
-    <div class='controls'>{{i18n 'admin.user.stage_explanation'}}</div>
+    <div class='controls'>{{i18n 'admin.user.staged_explanation'}}</div>
   </div>
 </section>
 

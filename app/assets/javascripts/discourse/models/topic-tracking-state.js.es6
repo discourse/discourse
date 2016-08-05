@@ -1,6 +1,8 @@
-import NotificationLevels from 'discourse/lib/notification-levels';
+import { NotificationLevels } from 'discourse/lib/notification-levels';
 import computed from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
+import { defaultHomepage } from 'discourse/lib/utilities';
+import PreloadStore from 'preload-store';
 
 function isNew(topic) {
   return topic.last_read_post_number === null &&
@@ -101,7 +103,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   notify(data) {
     if (!this.newIncoming) { return; }
-    if (data.archetype === "private_message") { return; }
+    if (data.payload && data.payload.archetype === "private_message") { return; }
 
     const filter = this.get("filter");
     const filterCategory = this.get("filterCategory");
@@ -114,7 +116,7 @@ const TopicTrackingState = Discourse.Model.extend({
       }
     }
 
-    if (filter === Discourse.Utilities.defaultHomepage()) {
+    if (filter === defaultHomepage()) {
       const suppressed_from_homepage_category_ids = Discourse.Site.currentProp("suppressed_from_homepage_category_ids");
       if (_.include(suppressed_from_homepage_category_ids, data.payload.category_id)) {
         return;

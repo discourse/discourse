@@ -12,10 +12,6 @@ class ForumsController < ApplicationController
     end
   end
 
-  def error
-    raise "WAT - #{Time.now}"
-  end
-
   def home_redirect
     redirect_to path('/')
   end

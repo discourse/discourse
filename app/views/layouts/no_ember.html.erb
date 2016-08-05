@@ -14,7 +14,7 @@
   <%- end %>
   <%= yield(:no_ember_head) %>
 </head>
-<body>
+<body <% if @custom_body_class %>class="<%= @custom_body_class %>"<% end %>>
   <%- unless customization_disabled? %>
     <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
   <%- end %>

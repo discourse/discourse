@@ -17,7 +17,10 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
-    @doc = Nokogiri::HTML::fragment(post.cook(post.raw, @cooking_options))
+
+    analyzer = post.post_analyzer
+    @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
+    @has_oneboxes = analyzer.found_oneboxes?
     @size_cache = {}
   end
 
@@ -28,26 +31,26 @@ class CookedPostProcessor
       post_process_oneboxes
       optimize_urls
       pull_hotlinked_images(bypass_bump)
-      create_firsts
+      grant_badges
+      extract_links
     end
+  end
+
+  # onebox may have added some links, so extract them now
+  def extract_links
+    TopicLink.extract_from(@post)
+    QuotedPost.extract_from(@post)
   end
 
   def has_emoji?
     (@doc.css("img.emoji") - @doc.css(".quote img")).size > 0
   end
 
-  def create_firsts
+  def grant_badges
     return unless Guardian.new.can_see?(@post)
 
-    created = false
-
-    if has_emoji?
-      created |= UserFirst.create_for(@post.user_id, :used_emoji, @post.id)
-    end
-
-    if created
-      BadgeGranter.queue_badge_grant(Badge::Trigger::PostProcessed, user: @post.user)
-    end
+    BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
+    BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
   end
 
   def keep_reverse_index_up_to_date
@@ -124,6 +127,7 @@ class CookedPostProcessor
     w, h = get_size_from_attributes(img) ||
            get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
            get_size(img["src"])
+
     # limit the size of the thumbnail
     img["width"], img["height"] = ImageSizer.resize(w, h)
   end
@@ -183,6 +187,10 @@ class CookedPostProcessor
   rescue URI::InvalidURIError
   end
 
+  # only crop when the image is taller than 16:9
+  # we only use 95% of that to allow for a small margin
+  MIN_RATIO_TO_CROP ||= (9.0 / 16.0) * 0.95
+
   def convert_to_link!(img)
     src = img["src"]
     return unless src.present?
@@ -191,7 +199,10 @@ class CookedPostProcessor
     original_width, original_height = get_size(src)
 
     # can't reach the image...
-    if original_width.nil? || original_height.nil?
+    if original_width.nil? ||
+       original_height.nil? ||
+       original_width == 0 ||
+       original_height == 0
       Rails.logger.info "Can't reach '#{src}' to get its dimension."
       return
     end
@@ -201,8 +212,16 @@ class CookedPostProcessor
 
     return if is_a_hyperlink?(img)
 
+    crop = false
+    if original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
+      crop = true
+      width, height = ImageSizer.crop(original_width, original_height)
+      img["width"] = width
+      img["height"] = height
+    end
+
     if upload = Upload.get_from_url(src)
-      upload.create_thumbnail!(width, height)
+      upload.create_thumbnail!(width, height, crop)
     end
 
     add_lightbox!(img, original_width, original_height, upload)
@@ -285,6 +304,7 @@ class CookedPostProcessor
 
     # apply oneboxes
     Oneboxer.apply(@doc, topic_id: @post.topic_id) { |url|
+      @has_oneboxes = true
       Oneboxer.onebox(url, args)
     }
 
@@ -302,20 +322,24 @@ class CookedPostProcessor
     if SiteSetting.login_required
       @doc.css("a.attachment[href]").each do |a|
         href = a["href"].to_s
-        a["href"] = UrlHelper.schemaless UrlHelper.absolute(href, nil) if UrlHelper.is_local(href)
+        a["href"] = UrlHelper.schemaless UrlHelper.absolute_without_cdn(href) if UrlHelper.is_local(href)
       end
     end
 
+    use_s3_cdn = SiteSetting.enable_s3_uploads && SiteSetting.s3_cdn_url.present?
+
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
-        href = a["#{selector}"].to_s
-        a["#{selector}"] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
+        href = a[selector].to_s
+        a[selector] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
+        a[selector] = Discourse.store.cdn_url(a[selector]) if use_s3_cdn
       end
     end
 
     @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
+      img["src"] = Discourse.store.cdn_url(img["src"]) if use_s3_cdn
     end
   end
 
@@ -324,6 +348,8 @@ class CookedPostProcessor
     return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
     return if disable_if_low_on_disk_space
+    # don't download remote images for posts that are more than n days old
+    return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
     return if @post.last_editor_id == Discourse.system_user.id
     # make sure no other job is scheduled

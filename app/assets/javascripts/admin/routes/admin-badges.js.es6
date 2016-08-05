@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import Badge from 'discourse/models/badge';
 import BadgeGrouping from 'discourse/models/badge-grouping';
 
@@ -6,7 +7,7 @@ export default Discourse.Route.extend({
 
   model: function() {
     var self = this;
-    return Discourse.ajax('/admin/badges.json').then(function(json) {
+    return ajax('/admin/badges.json').then(function(json) {
       self._json = json;
       return Badge.createFromJson(json);
     });

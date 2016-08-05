@@ -1,15 +1,14 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
 import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
-import { listenForViewEvent } from 'discourse/lib/app-events';
-import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Scrolling from 'discourse/mixins/scrolling';
+import { selectedText } from 'discourse/lib/utilities';
 
 const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolling, {
   templateName: 'topic',
-  topicBinding: 'controller.model',
+  topic: Ember.computed.alias('controller.model'),
 
-  userFilters: Ember.computed.alias('controller.model.userFilters'),
+  userFilters: Ember.computed.alias('topic.userFilters'),
   classNameBindings: ['controller.multiSelect:multi-select',
                       'topic.archetype',
                       'topic.is_warning',
@@ -23,6 +22,8 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
   postStream: Em.computed.alias('topic.postStream'),
   archetype: Em.computed.alias('topic.archetype'),
 
+  _lastShowTopic: null,
+
   _composeChanged: function() {
     const composerController = Discourse.get('router.composerController');
     composerController.clearState();
@@ -35,6 +36,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     // prevents scrolled from being called twice.
     const enteredAt = this.get('controller.enteredAt');
     if (enteredAt && (this.get('lastEnteredAt') !== enteredAt)) {
+      this._lastShowTopic = null;
       this.scrolled();
       this.set('lastEnteredAt', enteredAt);
     }
@@ -49,7 +51,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
       // bypass if we are selecting stuff
       const selection = window.getSelection && window.getSelection();
       if (selection.type === "Range" || selection.rangeCount > 0) {
-        if (Discourse.Utilities.selectedText() !== "") {
+        if (selectedText() !== "") {
           return true;
         }
       }
@@ -60,6 +62,9 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
       return ClickTrack.trackClick(e);
     });
 
+    this.appEvents.on('post:highlight', postNumber => {
+      Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
+    });
   }.on('didInsertElement'),
 
   // This view is being removed. Shut down operations
@@ -73,7 +78,8 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     this.resetExamineDockCache();
 
     // this happens after route exit, stuff could have trickled in
-    this.set('controller.controllers.header.showExtraInfo', false);
+    this.appEvents.trigger('header:hide-topic');
+    this.appEvents.off('post:highlight');
 
   }.on('willDestroyElement'),
 
@@ -89,6 +95,14 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
   offset: 0,
   hasScrolled: Em.computed.gt("offset", 0),
+
+  showTopicInHeader(topic, offset) {
+    if (this.get('docAt')) {
+      return offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded');
+    } else {
+      return topic.get('postStream.firstPostNotLoaded');
+    }
+  },
 
   // The user has scrolled the window, or it is finished rendering and ready for processing.
   scrolled() {
@@ -106,74 +120,25 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
 
     this.set("offset", offset);
 
-    const headerController = this.get('controller.controllers.header'),
-          topic = this.get('controller.model');
-    if (this.get('docAt')) {
-      headerController.set('showExtraInfo', offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded'));
-    } else {
-      headerController.set('showExtraInfo', topic.get('postStream.firstPostNotLoaded'));
+    const topic = this.get('topic');
+    const showTopic = this.showTopicInHeader(topic, offset);
+    if (showTopic !== this._lastShowTopic) {
+      this._lastShowTopic = showTopic;
+
+      if (showTopic) {
+        this.appEvents.trigger('header:show-topic', topic);
+      } else {
+        this.appEvents.trigger('header:hide-topic');
+      }
     }
 
     // Trigger a scrolled event
     this.appEvents.trigger('topic:scrolled', offset);
-  },
-
-  pmPath: function() {
-    var currentUser = this.get('controller.currentUser');
-    return currentUser && currentUser.pmPath(this.get('topic'));
-  }.property(),
-
-  browseMoreMessage: function() {
-
-    // TODO decide what to show for pms
-    if (this.get('topic.isPrivateMessage')) {
-      return;
-    }
-
-    var opts = { latestLink: "<a href=\"" + Discourse.getURL("/latest") + "\">" + I18n.t("topic.view_latest_topics") + "</a>" },
-        category = this.get('topic.category');
-
-    if(category && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
-      category = null;
-    }
-
-    if (category) {
-      opts.catLink = categoryBadgeHTML(category);
-    } else {
-      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
-    }
-
-    const tracking = this.get('topicTrackingState'),
-          unreadTopics = tracking.countUnread(),
-          newTopics = tracking.countNew();
-
-    if (newTopics + unreadTopics > 0) {
-      const hasBoth = unreadTopics > 0 && newTopics > 0;
-
-      return I18n.messageFormat("topic.read_more_MF", {
-        "BOTH": hasBoth,
-        "UNREAD": unreadTopics,
-        "NEW": newTopics,
-        "CATEGORY": category ? true : false,
-        latestLink: opts.latestLink,
-        catLink: opts.catLink
-      });
-    } else if (category) {
-      return I18n.t("topic.read_more_in_category", opts);
-    } else {
-      return I18n.t("topic.read_more", opts);
-    }
-  }.property('topicTrackingState.messageCount', 'topic'),
-
-  suggestedTitle: function(){
-    return this.get('controller.model.isPrivateMessage') ?
-      "<i class='private-message-glyph fa fa-envelope'></i> " + I18n.t("suggested_topics.pm_title") :
-      I18n.t("suggested_topics.title");
-  }.property('topic')
+  }
 });
 
 function highlight(postNumber) {
-  const $contents = $('#post_' + postNumber +' .topic-body'),
+  const $contents = $(`#post_${postNumber} .topic-body`),
         origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
 
   $contents.data("orig-color", origColor)
@@ -184,9 +149,5 @@ function highlight(postNumber) {
       $contents.css({'background-color': ''});
     });
 }
-
-listenForViewEvent(TopicView, 'post:highlight', postNumber => {
-  Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
-});
 
 export default TopicView;

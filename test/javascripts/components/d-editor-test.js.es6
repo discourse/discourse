@@ -208,24 +208,25 @@ testCase('link modal (cancel)', function(assert) {
 
 testCase('link modal (simple link)', function(assert, textarea) {
   click('button.link');
-  fillIn('.insert-link input', 'http://eviltrout.com');
+
+  const url = 'http://eviltrout.com';
+
+  fillIn('.insert-link input.link-url', url);
   click('.insert-link button.btn-primary');
-  const desc = I18n.t('composer.link_description');
   andThen(() => {
     assert.equal(this.$('.insert-link.hidden').length, 1);
-    assert.equal(this.get('value'), `hello world.[${desc}](http://eviltrout.com)`);
+    assert.equal(this.get('value'), `hello world.[${url}](${url})`);
     assert.equal(textarea.selectionStart, 13);
-    assert.equal(textarea.selectionEnd, 13 + desc.length);
+    assert.equal(textarea.selectionEnd, 13 + url.length);
   });
 });
 
 testCase('link modal auto http addition', function(assert) {
   click('button.link');
-  fillIn('.insert-link input', 'sam.com');
+  fillIn('.insert-link input.link-url', 'sam.com');
   click('.insert-link button.btn-primary');
-  const desc = I18n.t('composer.link_description');
   andThen(() => {
-    assert.equal(this.get('value'), `hello world.[${desc}](http://sam.com)`);
+    assert.equal(this.get('value'), `hello world.[sam.com](http://sam.com)`);
   });
 });
 
@@ -234,7 +235,7 @@ testCase('link modal (simple link) with selected text', function(assert, textare
   textarea.selectionEnd = 12;
 
   click('button.link');
-  fillIn('.insert-link input', 'http://eviltrout.com');
+  fillIn('.insert-link input.link-url', 'http://eviltrout.com');
   click('.insert-link button.btn-primary');
   andThen(() => {
     assert.equal(this.$('.insert-link.hidden').length, 1);
@@ -244,7 +245,8 @@ testCase('link modal (simple link) with selected text', function(assert, textare
 
 testCase('link modal (link with description)', function(assert) {
   click('button.link');
-  fillIn('.insert-link input', 'http://eviltrout.com "evil trout"');
+  fillIn('.insert-link input.link-url', 'http://eviltrout.com');
+  fillIn('.insert-link input.link-text', 'evil trout');
   click('.insert-link button.btn-primary');
   andThen(() => {
     assert.equal(this.$('.insert-link.hidden').length, 1);
@@ -255,6 +257,7 @@ testCase('link modal (link with description)', function(assert) {
 componentTest('advanced code', {
   template: '{{d-editor value=value}}',
   setup() {
+    this.siteSettings.code_formatting_style = '4-spaces-indent';
     this.set('value',
 `function xyz(x, y, z) {
   if (y === z) {
@@ -284,6 +287,7 @@ componentTest('advanced code', {
 componentTest('code button', {
   template: '{{d-editor value=value}}',
   setup() {
+    this.siteSettings.code_formatting_style = '4-spaces-indent';
     this.set('value', "first line\n\nsecond line\n\nthird line");
   },
 
@@ -591,4 +595,19 @@ componentTest('emoji', {
       assert.equal(this.get('value'), 'hello world.:grinning:');
     });
   }
+});
+
+testCase("replace-text event", function(assert, textarea) {
+
+  this.set('value', "red green blue");
+
+  andThen(() => {
+    this.container.lookup('app-events:main').trigger('composer:replace-text', 'green', 'yellow');
+  });
+
+  andThen(() => {
+    assert.equal(this.get('value'), 'red yellow blue');
+    assert.equal(textarea.selectionStart, 10);
+    assert.equal(textarea.selectionEnd, 10);
+  });
 });

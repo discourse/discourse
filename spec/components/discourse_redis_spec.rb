@@ -78,12 +78,19 @@ describe DiscourseRedis do
   end
 
   describe DiscourseRedis::FallbackHandler do
+    after do
+      fallback_handler.reset!
+    end
+
     describe '#initiate_fallback_to_master' do
       it 'should fallback to the master server once it is up' do
         begin
           fallback_handler.master = false
           Redis::Client.any_instance.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
-          Redis::Client.any_instance.expects(:call).with([:client, [:kill, 'type', 'normal']])
+
+          DiscourseRedis::FallbackHandler::CONNECTION_TYPES.each do |connection_type|
+            Redis::Client.any_instance.expects(:call).with([:client, [:kill, 'type', connection_type]])
+          end
 
           fallback_handler.initiate_fallback_to_master
 
@@ -92,6 +99,14 @@ describe DiscourseRedis do
         ensure
           fallback_handler.master = true
         end
+      end
+
+      it "should restrict the number of checks" do
+        expect { fallback_handler.verify_master }.to change { Thread.list.count }.by(1)
+        expect(fallback_handler.master).to eq(true)
+
+        fallback_handler.master = false
+        expect { fallback_handler.verify_master }.to_not change { Thread.list.count }
       end
     end
   end

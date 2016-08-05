@@ -26,7 +26,9 @@ export default createWidget('poster-name', {
 
   html(attrs) {
     const username = attrs.username;
-    const classNames = ['username'];
+    const name = attrs.name;
+    const nameFirst = this.siteSettings.display_name_on_posts && !this.siteSettings.prioritize_username_in_ux && name && name.trim().length > 0;
+    const classNames = nameFirst ? ['first','full-name'] : ['first','username'];
 
     if (attrs.staff) { classNames.push('staff'); }
     if (attrs.admin) { classNames.push('admin'); }
@@ -37,14 +39,14 @@ export default createWidget('poster-name', {
     if (primaryGroupName && primaryGroupName.length) {
       classNames.push(primaryGroupName);
     }
-    const nameContents = [ this.userLink(attrs, attrs.username) ];
+    const nameContents = [ this.userLink(attrs, nameFirst ? name : username) ];
     const glyph = this.posterGlyph(attrs);
     if (glyph) { nameContents.push(glyph); }
 
     const contents = [h('span', { className: classNames.join(' ') }, nameContents)];
-    const name = attrs.name;
     if (name && this.siteSettings.display_name_on_posts && sanitizeName(name) !== sanitizeName(username)) {
-      contents.push(h('span.full-name', this.userLink(attrs, name)));
+      contents.push(h('span.second.' + (nameFirst ? "username" : "full-name"),
+            this.userLink(attrs, nameFirst ? username : name)));
     }
     const title = attrs.user_title;
     if (title && title.length) {

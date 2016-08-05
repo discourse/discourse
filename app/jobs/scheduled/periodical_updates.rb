@@ -7,12 +7,22 @@ module Jobs
   class PeriodicalUpdates < Jobs::Scheduled
     every 15.minutes
 
+    def self.should_update_long_topics?
+      @call_count ||= 0
+      @call_count += 1
+
+      # once every 6 hours
+      (@call_count % 24) == 1
+    end
+
     def execute(args)
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics
 
       # Update the scores of posts
-      ScoreCalculator.new.calculate(1.day.ago)
+      args = {min_topic_age: 1.day.ago}
+      args[:max_topic_length] = 500 unless self.class.should_update_long_topics?
+      ScoreCalculator.new.calculate(args)
 
       # Automatically close stuff that we missed
       Topic.auto_close

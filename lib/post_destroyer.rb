@@ -64,6 +64,12 @@ class PostDestroyer
 
   def staff_recovered
     @post.recover!
+
+    if author = @post.user
+      author.user_stat.post_count += 1
+      author.user_stat.save!
+    end
+
     @post.publish_change_to_clients! :recovered
     TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.post_number == 1
   end
@@ -103,8 +109,11 @@ class PostDestroyer
   # When a user 'deletes' their own post. We just change the text.
   def mark_for_deletion
     I18n.with_locale(SiteSetting.default_locale) do
+
+      # don't call revise from within transaction, high risk of deadlock
+      @post.revise(@user, { raw: I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after) }, force_new_version: true)
+
       Post.transaction do
-        @post.revise(@user, { raw: I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after) }, force_new_version: true)
         @post.update_column(:user_deleted, true)
         @post.update_flagged_posts_count
         @post.topic_links.each(&:destroy)
@@ -116,9 +125,11 @@ class PostDestroyer
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
-      @post.revise(@user, { raw: @post.revisions.last.modifications["raw"][0] }, force_new_version: true)
       @post.update_flagged_posts_count
     end
+
+    # has internal transactions, if we nest then there are some very high risk deadlocks
+    @post.revise(@user, { raw: @post.revisions.last.modifications["raw"][0] }, force_new_version: true)
   end
 
   private

@@ -10,6 +10,7 @@ export default {
     this.resource('adminEmail', { path: '/email'}, function() {
       this.route('sent');
       this.route('skipped');
+      this.route('bounced');
       this.route('received');
       this.route('rejected');
       this.route('previewDigest', { path: '/preview-digest' });

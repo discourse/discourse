@@ -1,6 +1,4 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { cook } from 'discourse/lib/text';
+import { registerUnbound } from 'discourse/lib/helpers';
 
-registerUnbound('cook-text', function(text) {
-  return new Handlebars.SafeString(Discourse.Markdown.cook(text, {sanitize: true}));
-});
-
+registerUnbound('cook-text', cook);

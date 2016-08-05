@@ -15,7 +15,16 @@
 
   .small-action-desc {
     padding-top: 1em;
+
+    button {
+      padding-top: 0px;
+    }
   }
+}
+
+/* hide the reply border above the time gap notices */
+.time-gap + .topic-post article {
+  border-top: none;
 }
 
 .topic-post article {
@@ -132,10 +141,6 @@ button {
   .topic-meta-data h5 a {
     margin-left: 10px;
   }
-}
-
-.reply-new {
-  display: none;
 }
 
 .post-actions {
@@ -318,10 +323,11 @@ a.star {
   }
 }
 
-/* this is to force the drop-down notification state description para below the button */
+
 #topic-footer-buttons p {
-  clear: both;
+  clear: both; /* this is to force the drop-down notification state description para below the button */
   margin: 0;
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
 }
 
 #suggested-topics {
@@ -369,6 +375,8 @@ span.post-count {
 // this prevents image overflow on deeply nested blockquotes, lists, etc
 .cooked {
   overflow: hidden;
+  font-size: $base-font-size + 1; /* let's bump post body font size on mobile slightly */
+  line-height: $base-line-height + 2; /* bump up line height to match increased font */
 }
 
 .moderator .topic-body {
@@ -399,6 +407,12 @@ iframe {
     margin-right: 5px;
     padding-top: 1px;
   }
+  span {
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  }
+  span.title {
+    color: $primary;
+  }
 }
 
 .btn-group {
@@ -417,9 +431,9 @@ iframe {
   right: 4px;
 }
 
-#selected-posts {
+.selected-posts {
   width: 97%;
-  padding-left: 3%;
+  padding: 0.1em 0.7em;
   background-color: srgb-scale($tertiary, $secondary, 15%);
   .btn {
     margin-bottom: 10px;
@@ -539,4 +553,10 @@ span.highlighted {
 .gap.jagged-border {
   margin-left: -10px;
   margin-right: -10px;
+}
+
+.popup-menu {
+  h3 {
+    margin-bottom: 0;
+  }
 }

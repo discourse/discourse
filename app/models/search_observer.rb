@@ -7,11 +7,21 @@ class SearchObserver < ActiveRecord::Observer
     HtmlScrubber.scrub(html)
   end
 
-  def self.update_index(table, id, search_data)
-    search_data = Search.prepare_data(search_data)
+  def self.update_index(table, id, raw_data)
+    raw_data = Search.prepare_data(raw_data)
 
     table_name = "#{table}_search_data"
     foreign_key = "#{table}_id"
+
+    # insert some extra words for I.am.a.word so "word" is tokenized
+    search_data = raw_data.gsub(/\p{L}*\.\p{L}*/) do |with_dot|
+      split = with_dot.split(".")
+      if split.length > 1
+        with_dot + (" " << split[1..-1].join(" "))
+      else
+        with_dot
+      end
+    end
 
     # for user login and name use "simple" lowercase stemmer
     stemmer = table == "user" ? "simple" : Search.long_locale
@@ -20,16 +30,22 @@ class SearchObserver < ActiveRecord::Observer
     # when inserting data like this.
     rows = Post.exec_sql_row_count("UPDATE #{table_name}
                                    SET
-                                      raw_data = :search_data,
+                                      raw_data = :raw_data,
                                       locale = :locale,
                                       search_data = TO_TSVECTOR('#{stemmer}', :search_data)
                                    WHERE #{foreign_key} = :id",
-                                    search_data: search_data, id: id, locale: SiteSetting.default_locale)
+                                    raw_data: raw_data,
+                                    search_data: search_data,
+                                    id: id,
+                                    locale: SiteSetting.default_locale)
     if rows == 0
       Post.exec_sql("INSERT INTO #{table_name}
                     (#{foreign_key}, search_data, locale, raw_data)
-                    VALUES (:id, TO_TSVECTOR('#{stemmer}', :search_data), :locale, :search_data)",
-                                    search_data: search_data, id: id, locale: SiteSetting.default_locale)
+                    VALUES (:id, TO_TSVECTOR('#{stemmer}', :search_data), :locale, :raw_data)",
+                                    raw_data: raw_data,
+                                    search_data: search_data,
+                                    id: id,
+                                    locale: SiteSetting.default_locale)
     end
   rescue
     # don't allow concurrency to mess up saving a post

@@ -12,3 +12,5 @@
 <meta name="theme-color" content="#<%= ColorScheme.hex_for_name('header_background') %>">
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <%= canonical_link_tag %>
+<%= render_sitelinks_search_tag %>
+<link rel="search" type="application/opensearchdescription+xml" href="<%= Discourse.base_url %>/opensearch.xml">

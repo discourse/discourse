@@ -12,13 +12,14 @@ export default Ember.Mixin.create({
     });
   },
 
-  openComposerWithTopicParams(controller, topicTitle, topicBody, topicCategoryId, topicCategory) {
+  openComposerWithTopicParams(controller, topicTitle, topicBody, topicCategoryId, topicCategory, topicTags) {
     this.controllerFor('composer').open({
       action: Composer.CREATE_TOPIC,
       topicTitle,
       topicBody,
       topicCategoryId,
       topicCategory,
+      topicTags,
       draftKey: controller.get('model.draft_key'),
       draftSequence: controller.get('model.draft_sequence')
     });

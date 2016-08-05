@@ -231,6 +231,10 @@ class Search
     end
   end
 
+  advanced_filter(/in:wiki/) do |posts,match|
+    posts.where(wiki: true)
+  end
+
   advanced_filter(/badge:(.*)/) do |posts,match|
     badge_id = Badge.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
     if badge_id
@@ -271,11 +275,34 @@ class Search
   end
 
   advanced_filter(/category:(.+)/) do |posts,match|
-    category_id = Category.where('name ilike ? OR id = ?', match, match.to_i).pluck(:id).first
+    category_ids = Category.where('name ilike ? OR id = ? OR parent_category_id = ?', match, match.to_i, match.to_i).pluck(:id)
+    if category_ids.present?
+      posts.where("topics.category_id IN (?)", category_ids)
+    else
+      posts.where("1 = 0")
+    end
+  end
+
+  advanced_filter(/^\#([a-zA-Z0-9\-:]+)/) do |posts,match|
+    slug = match.to_s.split(":")
+    if slug[1]
+      # sub category
+      parent_category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
+      category_id = Category.where(slug: slug[1].downcase, parent_category_id: parent_category_id).pluck(:id).first
+    else
+      # main category
+      category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
+    end
+
     if category_id
       posts.where("topics.category_id = ?", category_id)
     else
-      posts.where("1 = 0")
+      posts.where("topics.id IN (
+        SELECT DISTINCT(tt.topic_id)
+        FROM topic_tags tt, tags
+        WHERE tt.tag_id = tags.id
+        AND tags.name = ?
+        )", slug[0])
     end
   end
 
@@ -297,6 +324,15 @@ class Search
     end
   end
 
+  advanced_filter(/^\@([a-zA-Z0-9_\-.]+)/) do |posts,match|
+    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck(:id).first
+    if user_id
+      posts.where("posts.user_id = #{user_id}")
+    else
+      posts.where("1 = 0")
+    end
+  end
+
   advanced_filter(/before:(.*)/) do |posts,match|
     if date = Search.word_to_date(match)
       posts.where("posts.created_at < ?", date)
@@ -311,6 +347,17 @@ class Search
     else
       posts
     end
+  end
+
+  advanced_filter(/tags?:([a-zA-Z0-9,\-_]+)/) do |posts, match|
+    tags = match.split(",")
+
+    posts.where("topics.id IN (
+      SELECT DISTINCT(tt.topic_id)
+      FROM topic_tags tt, tags
+      WHERE tt.tag_id = tags.id
+      AND tags.name in (?)
+      )", tags)
   end
 
   private
@@ -469,8 +516,18 @@ class Search
 
       if @term.present?
         if is_topic_search
+
+          term_without_quote = @term
+          if @term =~ /"(.+)"/
+            term_without_quote = $1
+          end
+
+          if @term =~ /'(.+)'/
+            term_without_quote = $1
+          end
+
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
-          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
+          posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
           exact_terms = @term.scan(/"([^"]+)"/).flatten

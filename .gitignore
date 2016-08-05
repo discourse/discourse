@@ -4,8 +4,6 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile ~/.gitignore_global
 
-tags
-
 .DS_Store
 ._.DS_Store
 dump.rdb
@@ -48,6 +46,7 @@ log/
 !/plugins/lazyYT/
 !/plugins/poll/
 !/plugins/discourse-details/
+!/plugins/discourse-nginx-performance-report
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -108,3 +107,4 @@ config/version.rb
 bundler_stubs/*
 
 vendor/bundle/*
+*.db

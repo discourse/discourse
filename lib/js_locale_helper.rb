@@ -139,42 +139,40 @@ module JsLocaleHelper
   end
 
   def self.generate_message_format(message_formats, locale_str)
-    formats = message_formats.map{|k,v| k.inspect << " : " << compile_message_format(locale_str ,v)}.join(" , ")
 
     result = "MessageFormat = {locale: {}};\n"
 
+    formats = message_formats.map{|k,v| k.inspect << " : " << compile_message_format(locale_str,v)}.join(", ")
+    result << "I18n._compiledMFs = {#{formats}};\n\n"
+
     filename = Rails.root + "lib/javascripts/locale/#{locale_str}.js"
     filename = Rails.root + "lib/javascripts/locale/en.js" unless File.exists?(filename)
+    result << File.read(filename) << "\n\n"
 
-    result << File.read(filename) << "\n"
+    result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js")
 
-    result << "I18n.messageFormat = (function(formats){
-      var f = formats;
-      return function(key, options) {
-        var fn = f[key];
-        if(fn){
-          try {
-            return fn(options);
-          } catch(err) {
-            return err.message;
-          }
-        } else {
-          return 'Missing Key: ' + key
-        }
-        return f[key](options);
-      };
-    })({#{formats}});"
+    result
+  end
+
+  @mutex = Mutex.new
+  def self.with_context
+    @mutex.synchronize do
+      yield @ctx ||= begin
+               ctx = MiniRacer::Context.new
+               ctx.load(Rails.root + 'lib/javascripts/messageformat.js')
+               ctx
+             end
+    end
   end
 
   def self.compile_message_format(locale, format)
-    ctx = V8::Context.new
-    ctx.load(Rails.root + 'lib/javascripts/messageformat.js')
-    path = Rails.root + "lib/javascripts/locale/#{locale}.js"
-    ctx.load(path) if File.exists?(path)
-    ctx.eval("mf = new MessageFormat('#{locale}');")
-    ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
-
-  rescue V8::Error => e
+    with_context do |ctx|
+      path = Rails.root + "lib/javascripts/locale/#{locale}.js"
+      ctx.load(path) if File.exists?(path)
+      ctx.eval("mf = new MessageFormat('#{locale}');")
+      ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
+    end
+  rescue MiniRacer::EvalError => e
     message = "Invalid Format: " << e.message
     "function(){ return #{message.inspect};}"
   end

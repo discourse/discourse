@@ -12,7 +12,7 @@ export var queryParams = {
 // Basic controller options
 var controllerOpts = {
   needs: ['discovery/topics'],
-  queryParams: Ember.keys(queryParams),
+  queryParams: Object.keys(queryParams),
 };
 
 // Aliases for the values

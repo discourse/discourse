@@ -1,6 +1,6 @@
 <div class='autocomplete'>
   <ul>
-    {{#each user in options.users}}
+    {{#each options.users as |user|}}
       <li>
         <a href>
           {{avatar user imageSize="tiny"}}
@@ -10,7 +10,7 @@
       </li>
     {{/each}}
     {{#if options.groups}}
-      {{#each group in options.groups}}
+      {{#each options.groups as |group|}}
         <li>
           <a href>
             <i class='fa fa-users'></i>

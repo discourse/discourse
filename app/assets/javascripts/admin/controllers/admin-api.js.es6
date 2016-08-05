@@ -63,6 +63,6 @@ export default Ember.ArrayController.extend({
   **/
   hasMasterKey: function() {
     return !!this.get('model').findBy('user', null);
-  }.property('model.@each')
+  }.property('model.[]')
 
 });

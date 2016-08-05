@@ -1,4 +1,3 @@
-export default Ember.Handlebars.makeBoundHelper(function(value) {
-  return ("border-color: #" + value).htmlSafe();
-});
+import { htmlHelper } from 'discourse/lib/helpers';
 
+export default htmlHelper(color => `border-color: #${color}`);

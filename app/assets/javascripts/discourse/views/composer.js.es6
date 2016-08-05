@@ -1,6 +1,6 @@
 import afterTransition from 'discourse/lib/after-transition';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
-import { headerHeight } from 'discourse/views/header';
+import { headerHeight } from 'discourse/components/site-header';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import Composer from 'discourse/models/composer';
 
@@ -22,7 +22,6 @@ const ComposerView = Ember.View.extend({
   },
 
   movePanels(sizePx) {
-
     $('#main-outlet').css('padding-bottom', sizePx);
 
     // signal the progress bar it should move!
@@ -64,15 +63,14 @@ const ComposerView = Ember.View.extend({
     Ember.run.cancel(this._lastKeyTimeout);
     this._lastKeyTimeout = Ember.run.later(() => {
       if (lastKeyUp !== this._lastKeyUp) { return; }
-
-      // Search for similar topics if the user pauses typing
-      controller.findSimilarTopics();
+      this.appEvents.trigger('composer:find-similar');
     }, 1000);
   },
 
   keyDown(e) {
     if (e.which === 27) {
       this.get('controller').send('hitEsc');
+      this.get('controller').send('hideOptions');
       return false;
     } else if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
       // CTRL+ENTER or CMD+ENTER
@@ -92,8 +90,25 @@ const ComposerView = Ember.View.extend({
       onDrag: sizePx => this.movePanels(sizePx)
     });
 
-    afterTransition($replyControl, resize);
+    const triggerOpen = () => {
+      if (this.get('composer.composeState') === Composer.OPEN) {
+        this.appEvents.trigger('composer:opened');
+      }
+    };
+    triggerOpen();
+
+    afterTransition($replyControl, () => {
+      resize();
+      triggerOpen();
+    });
     positioningWorkaround(this.$());
+
+    this.appEvents.on('composer:resize', this, this.resize);
+  },
+
+  willDestroyElement() {
+    this._super();
+    this.appEvents.off('composer:resize', this, this.resize);
   },
 
   click() {

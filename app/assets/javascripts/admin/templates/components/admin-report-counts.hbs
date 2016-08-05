@@ -5,7 +5,7 @@
   <a href="{{report.reportUrl}}">{{report.title}}</a>
 </td>
 <td class="value">{{report.todayCount}}</td>
-<td {{bind-attr class=":value report.yesterdayTrend"}} title="{{report.yesterdayCountTitle}}">{{report.yesterdayCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
-<td {{bind-attr class=":value report.sevenDayTrend"}} title="{{report.sevenDayCountTitle}}">{{report.lastSevenDaysCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
-<td {{bind-attr class=":value report.thirtyDayTrend"}} title="{{report.thirtyDayCountTitle}}">{{report.lastThirtyDaysCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
+<td class="value {{report.yesterdayTrend}}" title={{report.yesterdayCountTitle}}>{{report.yesterdayCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
+<td class="value {{report.sevenDayTrend}}" title={{report.sevenDayCountTitle}}>{{report.lastSevenDaysCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
+<td class="value {{report.thirtyDayTrend}}" title={{report.thirtyDayCountTitle}}>{{report.lastThirtyDaysCount}} {{fa-icon "caret-up" class="up"}} {{fa-icon "caret-down" class="down"}}</td>
 <td class="value">{{report.total}}</td>

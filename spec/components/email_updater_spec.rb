@@ -21,7 +21,7 @@ describe EmailUpdater do
     let(:updater) { EmailUpdater.new(user.guardian, user) }
 
     before do
-      Jobs.expects(:enqueue).once.with(:user_email, has_entries(type: :confirm_new_email, to_address: new_email))
+      Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_new_email, to_address: new_email))
       updater.change_to(new_email)
       @change_req = user.email_change_requests.first
     end
@@ -48,7 +48,7 @@ describe EmailUpdater do
 
     context 'confirming a valid token' do
       it "updates the user's email" do
-        Jobs.expects(:enqueue).once.with(:user_email, has_entries(type: :notify_old_email, to_address: old_email))
+        Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email, to_address: old_email))
         updater.confirm(@change_req.new_email_token.token)
         expect(updater.errors).to be_blank
         expect(user.reload.email).to eq(new_email)
@@ -65,7 +65,7 @@ describe EmailUpdater do
     let(:updater) { EmailUpdater.new(user.guardian, user) }
 
     before do
-      Jobs.expects(:enqueue).once.with(:user_email, has_entries(type: :confirm_old_email, to_address: old_email))
+      Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_old_email, to_address: old_email))
       updater.change_to(new_email)
       @change_req = user.email_change_requests.first
     end
@@ -92,7 +92,7 @@ describe EmailUpdater do
 
     context 'confirming a valid token' do
       before do
-        Jobs.expects(:enqueue).once.with(:user_email, has_entries(type: :confirm_new_email, to_address: new_email))
+        Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :confirm_new_email, to_address: new_email))
         updater.confirm(@change_req.old_email_token.token)
         @change_req.reload
       end
@@ -117,7 +117,7 @@ describe EmailUpdater do
 
       context "completing the new update process" do
         before do
-          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :notify_old_email, to_address: old_email)).never
+          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :notify_old_email, to_address: old_email)).never
           updater.confirm(@change_req.new_email_token.token)
         end
 

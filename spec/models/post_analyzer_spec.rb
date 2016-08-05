@@ -17,6 +17,7 @@ describe PostAnalyzer do
     it 'fetches the cached onebox for any urls in the post' do
       Oneboxer.expects(:cached_onebox).with url
       post_analyzer.cook(*args)
+      expect(post_analyzer.found_oneboxes?).to be(true)
     end
 
     it 'does not invalidate the onebox cache' do
@@ -153,6 +154,8 @@ describe PostAnalyzer do
 
     it "finds links from HTML" do
       post_analyzer = PostAnalyzer.new(raw_post_two_links_html, default_topic_id)
+      post_analyzer.cook(raw_post_two_links_html, {})
+      expect(post_analyzer.found_oneboxes?).to be(false)
       expect(post_analyzer.link_count).to eq(2)
     end
   end

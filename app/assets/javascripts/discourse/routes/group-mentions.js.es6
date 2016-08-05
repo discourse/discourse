@@ -1,11 +1,3 @@
-export default Discourse.Route.extend({
+import { buildGroupPage } from 'discourse/routes/group-posts';
 
-  model() {
-    return this.modelFor("group").findPosts({type: 'mentions'});
-  },
-
-  setupController(controller, model) {
-    controller.set("model", model);
-    this.controllerFor("group").set("showing", "mentions");
-  }
-});
+export default buildGroupPage('mentions');

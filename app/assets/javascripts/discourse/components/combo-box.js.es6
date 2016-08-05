@@ -2,7 +2,7 @@ import { on, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   tagName: 'select',
-  attributeBindings: ['tabindex'],
+  attributeBindings: ['tabindex', 'disabled'],
   classNames: ['combobox'],
   valueAttribute: 'id',
   nameProperty: 'name',
@@ -46,7 +46,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('content.@each')
+  @observes('content.[]')
   _rerenderOnChange() {
     this.rerender();
   },
@@ -65,7 +65,11 @@ export default Ember.Component.extend({
 
     const $elem = this.$();
     const minimumResultsForSearch = this.capabilities.isIOS ? -1 : 5;
-    $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch, width: 'resolve'});
+    $elem.select2({
+      formatResult: this.comboTemplate, minimumResultsForSearch,
+      width: 'resolve',
+      allowClear: true
+    });
 
     const castInteger = this.get('castInteger');
     $elem.on("change", e => {

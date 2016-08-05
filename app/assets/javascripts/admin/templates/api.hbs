@@ -5,7 +5,7 @@
     <th>{{i18n 'admin.api.user'}}</th>
     <th>&nbsp;</th>
   </tr>
-  {{#each k in model}}
+  {{#each model as |k|}}
     <tr>
       <td class='key'>{{k.key}}</td>
       <td>

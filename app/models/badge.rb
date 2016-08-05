@@ -1,6 +1,6 @@
 class Badge < ActiveRecord::Base
-  # NOTE: These badge ids are not in order! They are grouped logically. When picking an id
-  # search for it.
+  # NOTE: These badge ids are not in order! They are grouped logically.
+  #       When picking an id, *search* for it.
 
   Welcome = 5
   NicePost = 6
@@ -16,6 +16,8 @@ class Badge < ActiveRecord::Base
   FirstQuote = 15
   FirstMention = 40
   FirstEmoji = 41
+  FirstOnebox = 42
+  FirstReplyByEmail = 43
 
   ReadGuidelines = 16
   Reader = 17
@@ -158,21 +160,13 @@ SQL
   end
 
   def display_name
-    if self.system?
-      key = "badges.#{i18n_name}.name"
-      I18n.t(key, default: self.name)
-    else
-      self.name
-    end
+    key = "badges.#{i18n_name}.name"
+    I18n.t(key, default: self.name)
   end
 
   def long_description
-    if self[:long_description].present?
-      self[:long_description]
-    else
-      key = "badges.#{i18n_name}.long_description"
-      I18n.t(key, default: '')
-    end
+    key = "badges.#{i18n_name}.long_description"
+    I18n.t(key, default: self[:long_description] || '')
   end
 
   def long_description=(val)
@@ -184,12 +178,8 @@ SQL
   end
 
   def description
-    if self[:description].present?
-      self[:description]
-    else
-      key = "badges.#{i18n_name}.description"
-      I18n.t(key, default: '')
-    end
+    key = "badges.#{i18n_name}.description"
+    I18n.t(key, default: self[:description] || '')
   end
 
   def description=(val)
@@ -214,7 +204,7 @@ SQL
   end
 
   def i18n_name
-    self.name.downcase.gsub(' ', '_')
+    self.name.downcase.tr(' ', '_')
   end
 end
 

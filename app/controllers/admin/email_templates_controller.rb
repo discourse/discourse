@@ -14,6 +14,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
                      "system_messages.email_reject_post_error_specified", "system_messages.email_reject_user_not_found",
                      "system_messages.email_reject_reply_key", "system_messages.email_reject_topic_closed",
                      "system_messages.email_reject_topic_not_found", "system_messages.email_reject_trust_level",
+                     "system_messages.email_reject_screened_email",
                      "system_messages.pending_users_reminder", "system_messages.post_hidden",
                      "system_messages.restore_failed", "system_messages.restore_succeeded",
                      "system_messages.spam_post_blocked", "system_messages.too_many_spam_flags",

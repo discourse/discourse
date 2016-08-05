@@ -47,6 +47,7 @@ class TopicViewSerializer < ApplicationSerializer
              :details,
              :highest_post_number,
              :last_read_post_number,
+             :last_read_post_id,
              :deleted_by,
              :has_deleted,
              :actions_summary,
@@ -54,7 +55,8 @@ class TopicViewSerializer < ApplicationSerializer
              :is_warning,
              :chunk_size,
              :bookmarked,
-             :message_archived
+             :message_archived,
+             :tags
 
   # TODO: Split off into proper object / serializer
   def details
@@ -163,8 +165,16 @@ class TopicViewSerializer < ApplicationSerializer
     object.highest_post_number
   end
 
+  def last_read_post_id
+    return nil unless object.filtered_post_stream && last_read_post_number
+    object.filtered_post_stream.each do |ps|
+      return ps[0] if ps[1] === last_read_post_number
+    end
+  end
+  alias_method :include_last_read_post_id?, :has_topic_user?
+
   def last_read_post_number
-    object.topic_user.last_read_post_number
+    @last_read_post_number ||= object.topic_user.last_read_post_number
   end
   alias_method :include_last_read_post_number?, :has_topic_user?
 
@@ -228,6 +238,13 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_pending_posts_count?
     scope.is_staff? && NewPostManager.queue_enabled?
+  end
+
+  def include_tags?
+    SiteSetting.tagging_enabled
+  end
+  def tags
+    object.topic.tags.map(&:name)
   end
 
 end

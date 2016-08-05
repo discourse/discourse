@@ -9,7 +9,7 @@ describe UserActivator do
       user = Fabricate(:user)
       activator = EmailActivator.new(user, nil, nil, nil)
 
-      Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup, email_token: user.email_tokens.first.token))
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, email_token: user.email_tokens.first.token))
       activator.activate
     end
 
@@ -20,8 +20,8 @@ describe UserActivator do
       email_token.update_column(:created_at, 48.hours.ago)
       activator = EmailActivator.new(user, nil, nil, nil)
 
-      Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
-      Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup, email_token: email_token.token)).never
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, email_token: email_token.token)).never
       activator.activate
 
       user.reload

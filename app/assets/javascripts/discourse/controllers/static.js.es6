@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
@@ -15,7 +16,7 @@ export default Ember.Controller.extend({
     markFaqRead() {
       const currentUser = this.currentUser;
       if (currentUser) {
-        Discourse.ajax("/users/read-faq", { method: "POST" }).then(() => {
+        ajax("/users/read-faq", { method: "POST" }).then(() => {
           currentUser.set('read_faq', true);
         });
       }

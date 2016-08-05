@@ -1,4 +1,5 @@
 require_dependency "auth/current_user_provider"
+require_dependency "rate_limiter"
 
 class Auth::DefaultCurrentUserProvider
 
@@ -7,6 +8,7 @@ class Auth::DefaultCurrentUserProvider
   API_KEY_ENV ||= "_DISCOURSE_API".freeze
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
+  COOKIE_ATTEMPTS_PER_MIN ||= 10
 
   # do all current user initialization here
   def initialize(env)
@@ -36,7 +38,18 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token && auth_token.length == 32
-      current_user = User.find_by(auth_token: auth_token)
+      current_user = User.where(auth_token: auth_token)
+                         .where('auth_token_updated_at IS NULL OR auth_token_updated_at > ?',
+                                  SiteSetting.maximum_session_age.hours.ago)
+                         .first
+
+      unless current_user
+        begin
+          RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN ,60).performed!
+        rescue RateLimiter::LimitExceeded
+          raise Discourse::InvalidAccess
+        end
+      end
     end
 
     if current_user && (current_user.suspended? || !current_user.active)
@@ -61,13 +74,28 @@ class Auth::DefaultCurrentUserProvider
     @env[CURRENT_USER_KEY] = current_user
   end
 
-  def log_on_user(user, session, cookies)
-    unless user.auth_token && user.auth_token.length == 32
-      user.auth_token = SecureRandom.hex(16)
-      user.save!
+  def refresh_session(user, session, cookies)
+    if user && (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
+      user.update_column(:auth_token_updated_at, Time.zone.now)
+      cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
     end
-    cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
+    if !user && cookies.key?(TOKEN_COOKIE)
+      cookies.delete(TOKEN_COOKIE)
+    end
+  end
+
+  def log_on_user(user, session, cookies)
+    legit_token = user.auth_token && user.auth_token.length == 32
+    expired_token = user.auth_token_updated_at && user.auth_token_updated_at < SiteSetting.maximum_session_age.hours.ago
+
+    if !legit_token || expired_token
+      user.update_columns(auth_token: SecureRandom.hex(16),
+                          auth_token_updated_at: Time.zone.now)
+    end
+
+    cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
     make_developer_admin(user)
+    enable_bootstrap_mode(user)
     @env[CURRENT_USER_KEY] = user
   end
 
@@ -81,13 +109,23 @@ class Auth::DefaultCurrentUserProvider
     end
   end
 
+  def enable_bootstrap_mode(user)
+    Jobs.enqueue(:enable_bootstrap_mode, user_id: user.id) if user.admin && user.last_seen_at.nil? && !SiteSetting.bootstrap_mode_enabled && user.is_singular_admin?
+  end
+
   def log_off_user(session, cookies)
     if SiteSetting.log_out_strict && (user = current_user)
       user.auth_token = nil
       user.save!
-      MessageBus.publish "/logout", user.id, user_ids: [user.id]
+
+      if user.admin && defined?(Rack::MiniProfiler)
+        # clear the profiling cookie to keep stuff tidy
+        cookies.delete("__profilin")
+      end
+
+      user.logged_out
     end
-    cookies[TOKEN_COOKIE] = nil
+    cookies.delete(TOKEN_COOKIE)
   end
 
 
@@ -109,12 +147,11 @@ class Auth::DefaultCurrentUserProvider
   protected
 
   def lookup_api_user(api_key_value, request)
-    api_key = ApiKey.where(key: api_key_value).includes(:user).first
-    if api_key
+    if api_key = ApiKey.where(key: api_key_value).includes(:user).first
       api_username = request["api_username"]
 
-      if api_key.allowed_ips.present? && !api_key.allowed_ips.any?{|ip| ip.include?(request.ip)}
-        Rails.logger.warn("Unauthorized API access: #{api_username} ip address: #{request.ip}")
+      if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
+        Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")
         return nil
       end
 

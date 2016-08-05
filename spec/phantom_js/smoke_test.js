@@ -190,6 +190,10 @@ var runTests = function() {
     return document.querySelector(".topic-list");
   });
 
+  test('we have a create topic button', function() {
+    return document.querySelector("#create-topic");
+  });
+
   exec("open composer", function() {
     $("#create-topic").click();
   });

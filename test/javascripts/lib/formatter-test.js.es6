@@ -80,7 +80,6 @@ test("formating medium length dates", function() {
 
   equal(strip(formatDays(8)), shortDate(8));
   equal(strip(formatDays(10)), shortDateYear(10));
-
 });
 
 test("formating tiny dates", function() {

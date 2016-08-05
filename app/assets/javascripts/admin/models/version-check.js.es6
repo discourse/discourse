@@ -1,41 +1,53 @@
+import { ajax } from 'discourse/lib/ajax';
+import computed from 'ember-addons/ember-computed-decorators';
+
 const VersionCheck = Discourse.Model.extend({
 
-  noCheckPerformed: function() {
-    return this.get('updated_at') === null;
-  }.property('updated_at'),
+  @computed('updated_at')
+  noCheckPerformed(updatedAt) {
+    return updatedAt === null;
+  },
 
-  dataIsOld: function() {
-    return this.get('version_check_pending') || moment().diff(moment(this.get('updated_at')), 'hours') >= 48;
-  }.property('updated_at'),
+  @computed('updated_at', 'version_check_pending')
+  dataIsOld(updatedAt, versionCheckPending) {
+    return versionCheckPending || moment().diff(moment(updatedAt), 'hours') >= 48;
+  },
 
-  staleData: function() {
-    return ( this.get('dataIsOld') ||
-             (this.get('installed_version') !== this.get('latest_version') && this.get('missing_versions_count') === 0) ||
-             (this.get('installed_version') === this.get('latest_version') && this.get('missing_versions_count') !== 0) );
-  }.property('dataIsOld', 'missing_versions_count', 'installed_version', 'latest_version'),
+  @computed('dataIsOld', 'installed_version', 'latest_version', 'missing_versions_count')
+  staleData(dataIsOld, installedVersion, latestVersion, missingVersionsCount) {
+    return dataIsOld ||
+           (installedVersion !== latestVersion && missingVersionsCount === 0) ||
+           (installedVersion === latestVersion && missingVersionsCount !== 0);
+  },
 
-  upToDate: function() {
-    return this.get('missing_versions_count') === 0 || this.get('missing_versions_count') === null;
-  }.property('missing_versions_count'),
+  @computed('missing_versions_count')
+  upToDate(missingVersionsCount) {
+    return missingVersionsCount === 0 || missingVersionsCount === null;
+  },
 
-  behindByOneVersion: function() {
-    return this.get('missing_versions_count') === 1;
-  }.property('missing_versions_count'),
+  @computed('missing_versions_count')
+  behindByOneVersion(missingVersionsCount) {
+    return missingVersionsCount === 1;
+  },
 
-  gitLink: function() {
-    return "https://github.com/discourse/discourse/tree/" + this.get('installed_sha');
-  }.property('installed_sha'),
+  @computed('git_branch', 'installed_sha')
+  gitLink(gitBranch, installedSHA) {
+    if (gitBranch) {
+      return `https://github.com/discourse/discourse/compare/${installedSHA}...${gitBranch}`;
+    } else {
+      return `https://github.com/discourse/discourse/tree/${installedSHA}`;
+    }
+  },
 
-  shortSha: function() {
-    return this.get('installed_sha').substr(0,10);
-  }.property('installed_sha')
+  @computed('installed_sha')
+  shortSha(installedSHA) {
+    return installedSHA.substr(0, 10);
+  }
 });
 
 VersionCheck.reopenClass({
-  find: function() {
-    return Discourse.ajax('/admin/version_check').then(function(json) {
-      return VersionCheck.create(json);
-    });
+  find() {
+    return ajax('/admin/version_check').then(json => VersionCheck.create(json));
   }
 });
 

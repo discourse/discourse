@@ -13,12 +13,10 @@
   transition: height .15s linear;
 }
 
-
 .no-background {
   .profile-image {
     height: 200px;
   }
-
 }
 
 .user-preferences {
@@ -30,8 +28,6 @@
     width: 530px;
     height: 100px;
   }
-
-  input
 
   input[type=text] {
     @include small-width {
@@ -62,6 +58,12 @@
     padding: 5px 8px;
     color: $secondary;
     width: 520px;
+  }
+
+  .pref-mailing-list-mode .controls {
+    select {
+      width: 400px;
+    }
   }
 
   .other .controls {
@@ -120,16 +122,15 @@
   // name hacky so lastpass does not freak out
   // -search- means it is bypassed
   #add-user-to-group {
-      button, .ac-wrap {
-        float: left;
-      }
-      button {
-        margin-top: 3px;
-        margin-left: 10px;
-      }
-      #user-search-selector {
-        width: 400px;
-      }
+    button, .ac-wrap {
+      float: left;
+    }
+    button {
+      margin-top: 5px;
+    }
+    #user-search-selector {
+      width: 400px;
+    }
    }
 
   table.group-members {
@@ -247,14 +248,16 @@
 
     &.group {
       .details {
-        padding: 15px;
+        padding: 15px 0px;
         margin: 0;
-        color: dark-light-choose($secondary, lighten($primary, 10%));
+        color: dark-light-choose(lighten($primary, 10%), $secondary);
       }
     }
 
   .secondary {
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
+    background: scale-color($secondary, $lightness: -5%);
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     font-size: 0.929em;
       .btn { padding: 3px 12px; }
 
@@ -297,9 +300,9 @@
     }
 
     .details {
-      padding: 15px 15px 4px 15px;
+      padding: 0 0 4px 0;
+      background: rgba($secondary, .85);
       margin-top: -200px;
-      background: dark-light-choose(rgba($primary, .85), rgba($secondary, .85));
       transition: margin .15s linear;
 
       blockquote {
@@ -351,31 +354,27 @@
         width: 100%;
         position: relative;
         float: left;
-        color: dark-light-choose($secondary, lighten($primary, 10%));
 
         h1 {font-weight: bold;}
 
         .primary-textual {
           padding: 3px;
           a[href] {
-            color: dark-light-choose($secondary, lighten($primary, 10%));
-
+            text-decoration: underline;
           }
         }
 
         .bio {
-          color: dark-light-choose($secondary, lighten($primary, 10%));
           max-height: 300px;
           overflow: auto;
           max-width: 750px;
 
-          a.mention {
-            background-color: dark-light-diff($secondary, $primary, 20%, -50%);
+          a[href] {
+            text-decoration: underline;
           }
 
-          a[href] {
-            color: dark-light-diff($secondary, $primary, 75%, 0%);
-            text-decoration: underline;
+          a.mention {
+            text-decoration: none;
           }
 
           img {
@@ -384,6 +383,9 @@
         }
       }
     }
+        &.has-background {
+          .details { padding: 15px 15px 4px 15px;}
+        }
 
     .controls {
       padding: 0 0 12px 0;
@@ -429,9 +431,10 @@
     }
 
     .details {
-      padding: 12px 15px 2px 15px;
+      padding: 0 0 2px 0;
       margin-top: 0;
-      background: dark-light-choose(rgba($primary, 1), scale-color($secondary, $lightness: 15%));
+      background: rgba($secondary, .85);
+      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       .bio { display: none; }
 
       .primary {
@@ -460,8 +463,12 @@
         }
       }
     }
-  }
 
+    &.has-background {
+      .details {  padding: 12px 15px 2px 15px;}
+    }
+
+  }
 
   .user-stream {
     .excerpt {
@@ -569,6 +576,7 @@
     text-align: left;
     background: $primary;
     color: $secondary;
+    margin-bottom: 20px;
     a {
       color: $secondary;
     }
@@ -673,9 +681,6 @@
 }
 
 .user-main .nav-stacked {
-  &.notification-list {
-    padding-top: 40px;
-  }
   &.activity-list {
     padding-top: 20px;
   }
@@ -702,6 +707,3 @@
     padding-left: 15px;
   }
 }
-
-
-

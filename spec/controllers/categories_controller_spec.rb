@@ -64,7 +64,7 @@ describe CategoriesController do
           expect(category.slug).to eq("hello-cat")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
-          expect(UserHistory.count).to eq(1)
+          expect(UserHistory.count).to eq(4) # 1 + 3 (bootstrap mode)
         end
       end
     end
@@ -228,7 +228,7 @@ describe CategoriesController do
               "everyone" => CategoryGroup.permission_types[:create_post]
             }
 
-          expect(UserHistory.count).to eq(2)
+          expect(UserHistory.count).to eq(5) # 2 + 3 (bootstrap mode)
         end
       end
     end

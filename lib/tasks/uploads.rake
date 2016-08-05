@@ -1,6 +1,64 @@
 require "digest/sha1"
 
 ################################################################################
+#                                    gather                                    #
+################################################################################
+
+task "uploads:gather" => :environment do
+  require "db_helper"
+
+  ENV["RAILS_DB"] ? gather_uploads : gather_uploads_for_all_sites
+end
+
+def gather_uploads_for_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { gather_uploads }
+end
+
+def file_exists?(path)
+  File.exists?(path) && File.size(path) > 0
+rescue
+  false
+end
+
+def gather_uploads
+  public_directory = "#{Rails.root}/public"
+  current_db = RailsMultisite::ConnectionManagement.current_db
+
+  puts "", "Gathering uploads for '#{current_db}'...", ""
+
+  Upload.where("url ~ '^\/uploads\/'")
+        .where("url !~ '^\/uploads\/#{current_db}'")
+        .find_each do |upload|
+    begin
+      old_db = upload.url[/^\/uploads\/([^\/]+)\//, 1]
+      from = upload.url.dup
+      to = upload.url.sub("/uploads/#{old_db}/", "/uploads/#{current_db}/")
+      source = "#{public_directory}#{from}"
+      destination = "#{public_directory}#{to}"
+
+      # create destination directory & copy file unless it already exists
+      unless file_exists?(destination)
+        `mkdir -p '#{File.dirname(destination)}'`
+        `cp --link '#{source}' '#{destination}'`
+      end
+
+      # ensure file has been succesfuly copied over
+      raise unless file_exists?(destination)
+
+      # remap links in db
+      DbHelper.remap(from, to)
+    rescue
+      putc "!"
+    else
+      putc "."
+    end
+  end
+
+  puts "", "Done!"
+
+end
+
+################################################################################
 #                                backfill_shas                                 #
 ################################################################################
 
@@ -26,67 +84,85 @@ end
 ################################################################################
 
 task "uploads:migrate_from_s3" => :environment do
-  require "file_store/local_store"
-  require "file_helper"
+  require "db_helper"
 
-  max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
-  local_store = FileStore::LocalStore.new
+  ENV["RAILS_DB"] ? migrate_from_s3 : migrate_all_from_s3
+end
 
-  puts "Deleting all optimized images..."
-  puts
-
-  OptimizedImage.destroy_all
-
-  puts "Migrating uploads from S3 to local storage"
-  puts
-
-  Upload.find_each do |upload|
-
-    # remove invalid uploads
-    if upload.url.blank?
-      upload.destroy!
-      next
+def guess_filename(url, raw)
+  begin
+    uri = URI.parse("http:#{url}")
+    f = uri.open("rb", read_timeout: 5, redirect: true, allow_redirections: :all)
+    filename = if f.meta && f.meta["content-disposition"]
+      f.meta["content-disposition"][/filename="([^"]+)"/, 1].presence
     end
+    filename ||= raw[/<a class="attachment" href="(?:https?:)?#{Regexp.escape(url)}">([^<]+)<\/a>/, 1].presence
+    filename ||= File.basename(url)
+    filename
+  rescue
+      nil
+  ensure
+    f.try(:close!) rescue nil
+  end
+end
 
-    # no need to download an upload twice
-    if local_store.has_been_uploaded?(upload.url)
-      putc "."
-      next
-    end
+def migrate_all_from_s3
+  RailsMultisite::ConnectionManagement.each_connection { migrate_from_s3 }
+end
 
-    # try to download the upload
-    begin
-      # keep track of the previous url
-      previous_url = upload.url
-      # fix the name of pasted images
-      upload.original_filename = "blob.png" if upload.original_filename == "blob"
-      # download the file (in a temp file)
-      temp_file = FileHelper.download("http:" + previous_url, max_file_size_kb, "from_s3")
-      # store the file locally
-      upload.url = local_store.store_upload(temp_file, upload)
-      # save the new url
-      if upload.save
-        # update & rebake the posts (if any)
-        Post.where("raw ILIKE ?", "%#{previous_url}%").find_each do |post|
-          post.raw = post.raw.gsub(previous_url, upload.url)
-          post.save
-        end
+def migrate_from_s3
+  require "file_store/s3_store"
 
-        putc "#"
-      else
-        putc "X"
-      end
-
-      # close the temp_file
-      temp_file.close! if temp_file.respond_to? :close!
-    rescue
-      putc "X"
-    end
-
+  # make sure S3 is disabled
+  if SiteSetting.enable_s3_uploads
+    puts "You must disable S3 uploads before running that task."
+    return
   end
 
-  puts
+  # make sure S3 bucket is set
+  if SiteSetting.s3_upload_bucket.blank?
+    puts "The S3 upload bucket must be set before running that task."
+    return
+  end
 
+  db = RailsMultisite::ConnectionManagement.current_db
+
+  puts "Migrating uploads from S3 to local storage for '#{db}'..."
+
+  s3_base_url = FileStore::S3Store.new.absolute_base_url
+  max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+
+  Post.unscoped.find_each do |post|
+    if post.raw[s3_base_url]
+      post.raw.scan(/(#{Regexp.escape(s3_base_url)}\/(\d+)(\h{40})\.\w+)/).each do |url, id, sha|
+        begin
+          puts "POST ID: #{post.id}"
+          puts "UPLOAD ID: #{id}"
+          puts "UPLOAD SHA: #{sha}"
+          puts "UPLOAD URL: #{url}"
+          if filename = guess_filename(url, post.raw)
+            puts "FILENAME: #{filename}"
+            file = FileHelper.download("http:#{url}", 20.megabytes, "from_s3", true)
+            if upload = Upload.create_for(post.user_id || -1, file, filename, File.size(file))
+              post.raw = post.raw.gsub(/(https?:)?#{Regexp.escape(url)}/, upload.url)
+              post.save
+              post.rebake!
+              puts "OK :)"
+            else
+              puts "KO :("
+            end
+            puts post.full_url, ""
+          else
+            puts "NO FILENAME :("
+          end
+        rescue => e
+          puts "EXCEPTION: #{e.message}"
+        end
+      end
+    end
+  end
+
+  puts "Done!"
 end
 
 ################################################################################

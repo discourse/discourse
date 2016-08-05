@@ -16,7 +16,7 @@
       <td>{{text-field value=filter.subject placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"}}</td>
     </tr>
 
-    {{#each email in model}}
+    {{#each model as |email|}}
       <tr>
         <td class="time">{{format-date email.created_at}}</td>
         <td class="username">
@@ -32,10 +32,10 @@
           </div>
         </td>
         <td class="addresses">
-          {{#each to in email.to_addresses}}
+          {{#each email.to_addresses as |to|}}
             <p><a href="mailto:{{unbound to}}" title="TO">{{unbound to}}</a></p>
           {{/each}}
-          {{#each cc in email.cc_addresses}}
+          {{#each email.cc_addresses as |cc|}}
             <p><a href="mailto:{{unbound cc}}" title="CC">{{unbound cc}}</a></p>
           {{/each}}
         </td>

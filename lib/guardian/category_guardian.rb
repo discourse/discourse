@@ -45,9 +45,10 @@ module CategoryGuardian
   end
 
   def can_see_category?(category)
-    is_admin? ||
-    !category.read_restricted ||
-    (@user.staged? && category.email_in.present? && category.email_in_allow_strangers) ||
+    return false unless category
+    return true if is_admin?
+    return true if !category.read_restricted
+    return true if is_staged? && category.email_in.present? && category.email_in_allow_strangers
     secure_category_ids.include?(category.id)
   end
 

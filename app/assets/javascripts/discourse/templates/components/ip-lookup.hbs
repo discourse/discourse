@@ -60,7 +60,7 @@
                 </tr>
               </thead>
               <tbody>
-                {{#each a in other_accounts}}
+                {{#each other_accounts as |a|}}
                   <tr>
                     <td>{{#link-to "adminUser" a}}{{avatar a usernamePath="user.username" imageSize="small"}}&nbsp;{{a.username}}{{/link-to}}</td>
                     <td>{{a.trustLevel.id}}</td>

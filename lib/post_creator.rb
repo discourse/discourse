@@ -102,6 +102,7 @@ class PostCreator
     setup_post
 
     return true if skip_validations?
+
     if @post.has_host_spam?
       @spam = true
       errors[:base] << I18n.t(:spamming_host)
@@ -148,10 +149,22 @@ class PostCreator
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
       trigger_after_events(@post)
+
+      auto_close unless @opts[:import_mode]
     end
 
     if @post || @spam
       handle_spam unless @opts[:import_mode]
+    end
+
+    @post
+  end
+
+  def create!
+    create
+
+    if !self.errors.full_messages.empty?
+      raise ActiveRecord::RecordNotSaved.new("Failed to create post", self)
     end
 
     @post
@@ -167,6 +180,10 @@ class PostCreator
 
   def self.create(user, opts)
     PostCreator.new(user, opts).create
+  end
+
+  def self.create!(user, opts)
+    PostCreator.new(user, opts).create!
   end
 
   def self.before_create_tasks(post)
@@ -219,6 +236,26 @@ class PostCreator
   def trigger_after_events(post)
     DiscourseEvent.trigger(:topic_created, post.topic, @opts, @user) unless @opts[:topic_id]
     DiscourseEvent.trigger(:post_created, post, @opts, @user)
+  end
+
+  def auto_close
+    if @post.topic.private_message? &&
+        !@post.topic.closed &&
+        SiteSetting.auto_close_messages_post_count > 0 &&
+        SiteSetting.auto_close_messages_post_count <= @post.topic.posts_count
+
+      @post.topic.update_status(:closed, true, Discourse.system_user,
+          message: I18n.t('topic_statuses.autoclosed_message_max_posts', count: SiteSetting.auto_close_messages_post_count))
+
+    elsif !@post.topic.private_message? &&
+        !@post.topic.closed &&
+        SiteSetting.auto_close_topics_post_count > 0 &&
+        SiteSetting.auto_close_topics_post_count <= @post.topic.posts_count
+
+      @post.topic.update_status(:closed, true, Discourse.system_user,
+          message: I18n.t('topic_statuses.autoclosed_topic_max_posts', count: SiteSetting.auto_close_topics_post_count))
+
+    end
   end
 
   def transaction(&blk)
@@ -293,8 +330,7 @@ class PostCreator
       topic_creator = TopicCreator.new(@user, guardian, @opts)
       @topic = topic_creator.create
     rescue ActiveRecord::Rollback
-      add_errors_from(topic_creator)
-      return
+      rollback_from_errors!(topic_creator)
     end
     @post.topic_id = @topic.id
     @post.topic = @topic
@@ -353,6 +389,8 @@ class PostCreator
   end
 
   def update_user_counts
+    return if @opts[:import_mode]
+
     @user.create_user_stat if @user.user_stat.nil?
 
     if @user.user_stat.first_post_created_at.nil?
@@ -389,18 +427,20 @@ class PostCreator
   def track_topic
     return if @opts[:auto_track] == false
 
-    TopicUser.change(@post.user_id,
-                     @topic.id,
-                     posted: true,
-                     last_read_post_number: @post.post_number,
-                     highest_seen_post_number: @post.post_number)
+    unless @user.user_option.disable_jump_reply?
+      TopicUser.change(@post.user_id,
+                       @topic.id,
+                       posted: true,
+                       last_read_post_number: @post.post_number,
+                       highest_seen_post_number: @post.post_number)
 
 
-    # assume it took us 5 seconds of reading time to make a post
-    PostTiming.record_timing(topic_id: @post.topic_id,
-                             user_id: @post.user_id,
-                             post_number: @post.post_number,
-                             msecs: 5000)
+      # assume it took us 5 seconds of reading time to make a post
+      PostTiming.record_timing(topic_id: @post.topic_id,
+                               user_id: @post.user_id,
+                               post_number: @post.post_number,
+                               msecs: 5000)
+    end
 
     if @user.staged
       TopicUser.auto_watch(@user.id, @topic.id)

@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import ColorSchemeColor from 'admin/models/color-scheme-color';
 
 const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
@@ -65,7 +66,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       });
     }
 
-    return Discourse.ajax("/admin/color_schemes" + (this.id ? '/' + this.id : '') + '.json', {
+    return ajax("/admin/color_schemes" + (this.id ? '/' + this.id : '') + '.json', {
       data: JSON.stringify({"color_scheme": data}),
       type: this.id ? 'PUT' : 'POST',
       dataType: 'json',
@@ -88,7 +89,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
 
   destroy: function() {
     if (this.id) {
-      return Discourse.ajax("/admin/color_schemes/" + this.id, { type: 'DELETE' });
+      return ajax("/admin/color_schemes/" + this.id, { type: 'DELETE' });
     }
   }
 
@@ -106,7 +107,7 @@ var ColorSchemes = Ember.ArrayProxy.extend({
 ColorScheme.reopenClass({
   findAll: function() {
     var colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    Discourse.ajax('/admin/color_schemes').then(function(all) {
+    ajax('/admin/color_schemes').then(function(all) {
       _.each(all, function(colorScheme){
         colorSchemes.pushObject(ColorScheme.create({
           id: colorScheme.id,

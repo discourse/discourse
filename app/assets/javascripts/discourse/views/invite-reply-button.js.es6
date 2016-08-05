@@ -2,6 +2,7 @@ import ButtonView from 'discourse/views/button';
 import { iconHTML } from 'discourse/helpers/fa-icon';
 
 export default ButtonView.extend({
+  classNames: ['invite-topic'],
   textKey: 'topic.invite_reply.title',
   helpKey: 'topic.invite_reply.help',
   attributeBindings: ['disabled'],

@@ -13,7 +13,9 @@ class CategorySerializer < BasicCategorySerializer
              :cannot_delete_reason,
              :is_special,
              :allow_badges,
-             :custom_fields
+             :custom_fields,
+             :allowed_tags,
+             :allowed_tag_groups
 
   def group_permissions
     @group_permissions ||= begin
@@ -77,4 +79,19 @@ class CategorySerializer < BasicCategorySerializer
      (user && CategoryUser.where(user: user, category: object).first.try(:notification_level))
   end
 
+  def include_allowed_tags?
+    SiteSetting.tagging_enabled
+  end
+
+  def allowed_tags
+    object.tags.pluck(:name)
+  end
+
+  def include_allowed_tag_groups?
+    SiteSetting.tagging_enabled
+  end
+
+  def allowed_tag_groups
+    object.tag_groups.pluck(:name)
+  end
 end

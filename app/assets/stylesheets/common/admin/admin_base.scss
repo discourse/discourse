@@ -38,12 +38,6 @@ $mobile-breakpoint: 700px;
   .filters input { margin-bottom: 0; }
 }
 
-.admin-contents .admin-reports-filter {
-  input[type="date"] {
-    width: 140px;
-  }
-}
-
 td.flaggers td {
   border-bottom: none;
   border-top: none;
@@ -288,7 +282,7 @@ td.flaggers td {
     display: inline-block;
     margin-right: 5px;
   }
-  #last-seen {
+  #last-seen input[type="text"] {
     float: none;
   }
   .ac-wrap {
@@ -399,11 +393,13 @@ td.flaggers td {
     .setting-value {
       float: left;
       width: 53%;
+      padding-right: 20px;
       .category-group {
         width: 95%;
       }
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
+        padding-right: 0;
       }
       .select2-container {
         width: 100% !important; // Needs !important to override hard-coded value
@@ -419,14 +415,14 @@ td.flaggers td {
       float: left;
     }
     .input-setting-string {
-      width: 404px;
-      @include medium-width { width: 314px; }
+      box-sizing: border-box;
+      height: 30px;
+      width: 100%;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
     }
     .input-setting-list {
-      width: 408px;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }
@@ -822,24 +818,21 @@ section.details {
   }
 }
 
-
 .admin-flags {
-  table-layout: fixed;
+  .hidden-post td.excerpt,
+  .hidden-post td.user {
+    opacity: 0.5;
+  }
 
-  .hidden-post td.excerpt, .hidden-post td.user { opacity: 0.5; }
-  .deleted td.excerpt, .deleted td.user { background-color: scale-color($danger, $lightness: 70%); }
+  .deleted td.excerpt,
+  .deleted td.user {
+    background-color: scale-color($danger, $lightness: 70%);
+  }
+
   .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
   .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
-  td { vertical-align: top; }
-  th { text-align: left; }
-  .user {
-    width: 25px;
-    padding: 8px 0 0 0;
-    text-align: center;
-  }
+
   .excerpt {
-    max-width: 700px;
-    width: 75%;
     padding: 8px;
     word-wrap: break-word;
     .fa { display: inline-block; }
@@ -850,34 +843,13 @@ section.details {
       margin-bottom: 5px;
     }
   }
-  .flaggers {
-    font-size: 11px;
-    padding: 8px 0 0 5px;
-    .avatar {
-      width: 25px;
-    }
-    table {
-      max-width: 145px;
-    }
-    tr {
-      height: 44px;
-    }
-    td {
-      vertical-align: middle;
-      padding: 3px;
-      line-height: 1.4;
-    }
-  }
+
+  .flagged-posts { background: $danger; }
+
   .action {
      button { margin: 4px; }
      text-align: right;
-     padding-bottom: 20px;
   }
-  td p {
-    font-size: 0.929em;
-    margin: 0 0 5px 0;
-  }
-  .flagged-posts { background: $danger; }
 }
 
 /* Dashboard */
@@ -1201,44 +1173,6 @@ table.api-keys {
   }
   ::-webkit-scrollbar-track {
     border-left: solid 1px dark-light-diff($primary, $secondary, 90%, -60%);
-  }
-}
-
-.content-list {
-
-  h3 {
-    color: dark-light-diff($primary, $secondary, 50%, -20%);
-    font-size: 1.071em;
-    padding-left: 5px;
-    margin-bottom: 10px;
-  }
-
-  ul {
-    list-style: none;
-    margin: 0;
-
-    li:first-of-type {
-      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    }
-    li {
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    }
-
-    li a {
-      display: block;
-      padding: 10px;
-      color: $primary;
-
-      &:hover {
-        background-color: dark-light-diff($primary, $secondary, 90%, -60%);
-        color: $primary;
-      }
-
-      &.active {
-        font-weight: bold;
-        color: $primary;
-      }
-    }
   }
 }
 
@@ -1782,6 +1716,11 @@ table#user-badges {
   }
   .time {
     width: 50px;
+  }
+  .reply-key {
+    display: block;
+    font-size: 12px;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
   }
   .username div {
     max-width: 180px;

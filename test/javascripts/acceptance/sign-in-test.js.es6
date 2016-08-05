@@ -37,11 +37,13 @@ test("sign in - not activated", () => {
     fillIn('#login-account-password', 'not-activated');
     click('.modal-footer .btn-primary');
     andThen(() => {
+      equal(find('.modal-body b').text(), '<small>eviltrout@example.com</small>');
       ok(!exists('.modal-body small'), 'it escapes the email address');
     });
 
     click('.modal-body .resend-link');
     andThen(() => {
+      equal(find('.modal-body b').text(), '<small>current@example.com</small>');
       ok(!exists('.modal-body small'), 'it escapes the email address');
     });
 

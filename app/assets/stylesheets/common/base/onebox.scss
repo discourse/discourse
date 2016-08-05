@@ -83,12 +83,13 @@ a.loading-onebox {
 @mixin onebox-favicon($class, $image) {
   &.#{$class} .source {
     background: image-url("favicons/#{$image}.png") no-repeat;
+    background-size: 16px 16px;
     padding-left: 20px;
   }
 }
 
 aside.onebox {
-  @include post-aside;
+  border: 5px solid dark-light-diff($primary, $secondary, 90%, -85%);
 
   padding: 12px 25px 12px 12px;
   font-size: 1em;
@@ -134,6 +135,18 @@ aside.onebox {
       height: auto;
       float: left;
       margin-right: 10px;
+    }
+
+    .tweet-images {
+      display: block;
+      clear: both;
+
+      img.tweet-image {
+        margin-top: 1em;
+        max-width: 100%;
+        max-height: 100%;
+        float: none;
+      }
     }
   }
 }
@@ -295,6 +308,7 @@ aside.onebox.twitterstatus .onebox-body {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     text-overflow: ellipsis;
+    max-width: 100%;
 
     .inner-box {
       padding-left: 10px;
@@ -316,7 +330,22 @@ aside.onebox.twitterstatus .onebox-body {
 }
 
 // resize stackexchange onebox image
-aside.onebox.stackexchange .onebox-body img {
-  max-height: 60%;
-  max-width: 10%;
+aside.onebox.stackexchange .onebox-body {
+  img {
+    max-height: 60%;
+    max-width: 10%;
+  }
+
+  .tags {
+    color: gray;
+  }
+}
+
+.onebox-metadata {
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+}
+
+// mobile specific style
+.mobile-view article.onebox-body {
+  border-top: none;
 }

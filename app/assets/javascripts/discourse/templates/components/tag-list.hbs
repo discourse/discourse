@@ -1,0 +1,17 @@
+{{#if title}}
+  <h3>{{title}}</h3>
+{{/if}}
+{{#if category}}
+  {{category-title-link category=category}}
+{{/if}}
+{{#each sortedTags as |tag|}}
+  <div class='tag-box'>
+    {{#if tag.count}}
+      {{discourse-tag tag.id}} <span class='tag-count'>x {{tag.count}}</span>
+    {{else}}
+      {{discourse-tag tag.id}}
+    {{/if}}
+  </div>
+{{/each}}
+<div class="clearfix" />
+<hr/>

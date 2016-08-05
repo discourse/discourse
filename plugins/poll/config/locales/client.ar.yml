@@ -15,54 +15,44 @@ ar:
         few: "مصوتون قليلون."
         many: "مصوتون كثيرون."
         other: "المصوتون"
-      total_votes:
-        zero: "مجموع عدم التصويت."
-        one: "مجموع التصويت."
-        two: "مجموع التصويتان."
-        few: "مجموع الأصوات القليلة."
-        many: "مجموع الأصوات الكثيرة."
-        other: "مجموع الأصوات."
-      average_rating: "متوسط التصنيف: <strong>%{average}</strong> "
+      average_rating: "متوسط التقييم: <strong>%{average}</strong> "
+      public:
+        title: "الأصوات للعموم."
       multiple:
         help:
           at_least_min_options:
-            zero: "لا يجب عليك اختيار أي خيار."
-            one: "يجب عليك أن تختار خيار <strong> واحد </strong> على الأقل."
-            two: "يجب عليك أن تختار  <strong> خياران </strong> على الأقل."
-            few: "يجب عليك أن تختار <strong> %{count} </strong> بعض الخيارات على الأقل."
-            many: "يجب عليك أن تختار <strong> %{count} </strong> عدة خيارات على الأقل."
-            other: "يجب عليك الاختيار على الأقل."
-          up_to_max_options:
-            zero: "لا يمكنك اختيار أي خيار."
-            one: "يمكنك إختيار مايصل إلى خيار <strong> واحد </strong>فقط."
-            two: "يمكنك إختيار مايصل إلى <strong>خياران</strong>فقط."
-            few: "يمكنك إختيار بعض <strong> %{count} </strong> الخيارات ."
-            many: "يمكنك إختيار عدة <strong> %{count} </strong> خيارات ."
-            other: "يمكنك اختيار حتى <strong>%{count}</strong> خيارات."
-          x_options:
-            zero: "لا يجب عليك إختيار أي خيار."
-            one: "يجب عليك إختيار خيار<strong>واحد</strong فقط."
-            two: "يجب عليك إختيار <strong>خياران</strong> فقط."
-            few: "يجب عليك إختيار <strong> %{count} </strong> بعض الخيارات."
-            many: "يجب عليك إختيار <strong> %{count} </strong> عدة خيارات."
-            other: "يجب عليك إختيار <strong> %{count} </strong> خيارات."
-          between_min_and_max_options: "يجب عليك إختيار بين  <strong>%{min}</strong> و <strong>%{max}</strong> خيارات ."
+            zero: "لا تختار أي خيار"
+            one: "اختر خيارًا واحدًا على الأقل"
+            two: "اختر خيارين اثنين على الأقل"
+            few: "اختر <strong>%{count}</strong> خيارات على الأقل"
+            many: "اختر <strong>%{count}</strong> خيارات على الأقل"
+            other: "اختر <strong>%{count}</strong> خيارات على الأقل"
       cast-votes:
         title: "إدراج صوتك."
-        label: "صوت اﻵن!"
+        label: "صوّت اﻵن!"
       show-results:
-        title: "عرض نتائج التصويت."
-        label: "عرض النتائج."
+        title: "اعرض نتائج التصويت"
+        label: "أظهر النتائج"
       hide-results:
         title: "العودة إلى أصواتك."
-        label: "إخفاء النتائج."
+        label: "أخف النتائج"
       open:
-        title: "فتح التصويت."
-        label: "فتح."
-        confirm: "هل أنت متأكد من فتح هذا التصويت؟"
+        title: "افتح التّصويت"
+        label: "افتح"
+        confirm: "أمتأكد من فتح هذا التّصويت؟"
       close:
-        title: "إغلاق التصويت."
-        label: "إغلاق."
-        confirm: "هل أنت متأكد من إغلاق هذا التصويت؟"
-      error_while_toggling_status: "حدث خطأ عند محاولتك لتبديل حالة التصويت."
-      error_while_casting_votes: "حدث خطأ عند محاولة إدراج صوتك."
+        title: "أغلق التّصويت"
+        label: "أغلق"
+        confirm: "أمتأكد من إغلاق هذا التّصويت؟"
+      error_while_toggling_status: "آسفون، حصلت مشكلة في تبديل حالة هذا التّصويت."
+      error_while_fetching_voters: "آسفون، حصل خطأ في عرض المصوّتين."
+      ui_builder:
+        insert: أدرج تصويتا
+        help:
+          options_count: أدخل خيارين على الأقل
+        poll_type:
+          label: النوع
+        poll_public:
+          label: أظهر المصوّتون
+        poll_options:
+          label: أدخل خيارًا واحدًا في كلّ سطر

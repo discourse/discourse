@@ -1,13 +1,9 @@
-import loadScript from 'discourse/lib/load-script';
 import Quote from 'discourse/lib/quote';
 import computed from 'ember-addons/ember-computed-decorators';
+import { selectedText } from 'discourse/lib/utilities';
 
 export default Ember.Controller.extend({
   needs: ['topic', 'composer'],
-
-  _loadSanitizer: function() {
-    loadScript('defer/html-sanitizer-bundle');
-  }.on('init'),
 
   @computed('buffer', 'postId')
   post(buffer, postId) {
@@ -49,12 +45,12 @@ export default Ember.Controller.extend({
       return;
     }
 
-    const selectedText = Discourse.Utilities.selectedText();
-    if (this.get('buffer') === selectedText) return;
+    const selVal = selectedText();
+    if (this.get('buffer') === selVal) return;
 
     // we need to retrieve the post data from the posts collection in the topic controller
     this.set('postId', postId);
-    this.set('buffer', selectedText);
+    this.set('buffer', selVal);
 
     // create a marker element
     const markerElement = document.createElement("span");
@@ -72,7 +68,9 @@ export default Ember.Controller.extend({
     range.insertNode(markerElement);
 
     // retrieve the position of the marker
-    const markerOffset = $(markerElement).offset(),
+    const $markerElement = $(markerElement),
+          markerOffset = $markerElement.offset(),
+          parentScrollLeft = $markerElement.parent().scrollLeft(),
           $quoteButton = $('.quote-button');
 
     // remove the marker
@@ -87,6 +85,8 @@ export default Ember.Controller.extend({
     Em.run.schedule('afterRender', function() {
       let topOff = markerOffset.top;
       let leftOff = markerOffset.left;
+
+      if (parentScrollLeft > 0) leftOff += parentScrollLeft;
 
       if (isMobileDevice || isIOS || isAndroid) {
         topOff = topOff + 20;

@@ -181,6 +181,26 @@ widgetTest('liking', {
   }
 });
 
+widgetTest('anon liking', {
+  template: '{{mount-widget widget="post-menu" args=args showLogin="showLogin"}}',
+  anonymous: true,
+  setup() {
+    const args = { showLike: true };
+    this.set('args', args);
+    this.on("showLogin", () => this.loginShown = true);
+  },
+  test(assert) {
+    assert.ok(!!this.$('.actions button.like').length);
+    assert.ok(this.$('.actions button.like-count').length === 0);
+
+    click('.actions button.like');
+    andThen(() => {
+      assert.ok(this.loginShown);
+    });
+  }
+});
+
+
 widgetTest('edit button', {
   template: '{{mount-widget widget="post" args=args editPost="editPost"}}',
   setup() {
@@ -677,7 +697,7 @@ widgetTest("topic map - few posts", {
 });
 
 widgetTest("topic map - participants", {
-  template: '{{mount-widget widget="post" args=args toggleParticipant="toggleParticipant"}}',
+  template: '{{mount-widget widget="post" args=args}}',
   setup() {
     this.set('args', {
       showTopicMap: true,
@@ -690,8 +710,6 @@ widgetTest("topic map - participants", {
       ],
       userFilters: ['sam', 'codinghorror']
     });
-
-    this.on('toggleParticipant', () => this.participantToggled = true);
   },
   test(assert) {
     assert.equal(this.$('li.avatars a.poster').length, 3, 'limits to three participants');
@@ -702,9 +720,6 @@ widgetTest("topic map - participants", {
       assert.equal(this.$('.topic-map-expanded a.poster').length, 4, 'shows all when expanded');
       assert.equal(this.$('a.poster.toggled').length, 2, 'two are toggled');
     });
-
-    click('.topic-map-expanded a.poster:eq(0)');
-    andThen(() => assert.ok(this.participantToggled));
   }
 });
 

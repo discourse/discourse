@@ -1,9 +1,9 @@
 export default Discourse.Route.extend({
-  renderTemplate: function() {
+  renderTemplate() {
     this.render('admin/templates/logs/screened_ip_addresses', {into: 'adminLogs'});
   },
 
-  setupController: function() {
+  setupController() {
     return this.controllerFor('adminLogsScreenedIpAddresses').show();
   }
 });

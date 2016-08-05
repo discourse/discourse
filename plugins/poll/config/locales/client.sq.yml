@@ -12,14 +12,11 @@ sq:
         one: "votues"
         other: "votuesit"
       total_votes:
-        one: "total vote"
-        other: "total votes"
+        one: "total vota"
+        other: "totali votave"
       average_rating: "Vlerësimi mesatar: <strong>%{average}</strong>."
-      multiple:
-        help:
-          between_min_and_max_options: "You may choose between <strong>%{min}</strong> and <strong>%{max}</strong> options."
       cast-votes:
-        title: "Cast your votes"
+        title: "Jepni votën tuaj"
         label: "Voto Tani"
       show-results:
         title: "Display the poll results"
@@ -30,10 +27,8 @@ sq:
       open:
         title: "Fillo një Sondazh"
         label: "Fillo"
-        confirm: "Are you sure you want to open this poll?"
+        confirm: "Jeni të sigurt për të hapur këtë sondazh?"
       close:
         title: "Mbyll sondazhin"
         label: "Mbyll"
-        confirm: "Are you sure you want to close this poll?"
-      error_while_toggling_status: "There was an error while toggling the status of this poll."
-      error_while_casting_votes: "There was an error while casting your votes."
+        confirm: "Jeni të sigurt për të mbyllur këtë sondazh?"

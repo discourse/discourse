@@ -151,10 +151,12 @@ describe Admin::BackupsController do
     describe ".restore" do
 
       it "starts a restore" do
+        expect(SiteSetting.disable_emails).to eq(false)
         BackupRestore.expects(:restore!).with(@admin.id, filename: backup_filename, publish_to_message_bus: true, client_id: "foo")
 
         xhr :post, :restore, id: backup_filename, client_id: "foo"
 
+        expect(SiteSetting.disable_emails).to eq(true)
         expect(response).to be_success
       end
 

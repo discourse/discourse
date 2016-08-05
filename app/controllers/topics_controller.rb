@@ -27,6 +27,7 @@ class TopicsController < ApplicationController
                                           :change_timestamps,
                                           :archive_message,
                                           :move_to_inbox,
+                                          :convert_topic,
                                           :bookmark]
 
   before_filter :consider_user_for_promotion, only: :show
@@ -64,7 +65,7 @@ class TopicsController < ApplicationController
     rescue Discourse::NotFound
       if params[:id]
         topic = Topic.find_by(slug: params[:id].downcase)
-        return redirect_to_correct_topic(topic, opts[:post_number]) if topic
+        return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
       end
       raise Discourse::NotFound
     end
@@ -76,7 +77,14 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    redirect_to_correct_topic(@topic_view.topic, opts[:post_number]) && return if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+    if !@topic_view.topic.visible && @topic_view.topic.slug != params[:slug] && !request.format.json?
+      raise Discourse::NotFound
+    end
+
+    if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+      redirect_to_correct_topic(@topic_view.topic, opts[:post_number])
+      return
+    end
 
     track_visit_to_topic
 
@@ -121,13 +129,13 @@ class TopicsController < ApplicationController
 
     tu = TopicUser.find_by(user_id: current_user.id, topic_id: params[:topic_id])
 
-    if tu.notification_level > TopicUser.notification_levels[:regular]
+    if tu && tu.notification_level > TopicUser.notification_levels[:regular]
       tu.notification_level = TopicUser.notification_levels[:regular]
+      tu.save!
     else
-      tu.notification_level = TopicUser.notification_levels[:muted]
+      TopicUser.change(current_user.id, params[:topic_id].to_i, notification_level: TopicUser.notification_levels[:muted])
     end
 
-    tu.save!
 
     perform_show_response
   end
@@ -367,6 +375,33 @@ class TopicsController < ApplicationController
     end
   end
 
+  def remove_allowed_group
+    params.require(:name)
+    topic = Topic.find_by(id: params[:topic_id])
+    guardian.ensure_can_remove_allowed_users!(topic)
+
+    if topic.remove_allowed_group(current_user, params[:name])
+      render json: success_json
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
+  def invite_group
+    group = Group.find_by(name: params[:group])
+    raise Discourse::NotFound unless group
+
+    topic = Topic.find_by(id: params[:topic_id])
+
+    if topic.private_message?
+      guardian.ensure_can_send_private_message!(group)
+      topic.invite_group(current_user, group)
+      render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: 'group')
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
   def invite
     username_or_email = params[:user] ? fetch_username : fetch_email
 
@@ -376,7 +411,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_invite_to!(topic,group_ids)
 
     begin
-      if topic.invite(current_user, username_or_email, group_ids)
+      if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
         user = User.find_by_username_or_email(username_or_email)
         if user
           render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
@@ -510,6 +545,22 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
+  def convert_topic
+    params.require(:id)
+    params.require(:type)
+    topic = Topic.find_by(id: params[:id])
+    guardian.ensure_can_convert_topic!(topic)
+
+    if params[:type] == "public"
+      converted_topic = topic.convert_to_public_topic(current_user)
+    else
+      converted_topic = topic.convert_to_private_message(current_user)
+    end
+    render_topic_changes(converted_topic)
+  rescue ActiveRecord::RecordInvalid => ex
+    render_json_error(ex)
+  end
+
   private
 
   def toggle_mute
@@ -559,9 +610,7 @@ class TopicsController < ApplicationController
 
     Scheduler::Defer.later "Track Visit" do
       TopicViewItem.add(topic_id, ip, user_id)
-      if track_visit
-        TopicUser.track_visit! topic_id, user_id
-      end
+      TopicUser.track_visit!(topic_id, user_id) if track_visit
     end
 
   end

@@ -213,20 +213,21 @@ SQL
 
     return unless opts[:message] && [:notify_moderators, :notify_user, :spam].include?(post_action_type)
 
-    title = I18n.t("post_action_types.#{post_action_type}.email_title", title: post.topic.title)
-    body = I18n.t("post_action_types.#{post_action_type}.email_body", message: opts[:message], link: "#{Discourse.base_url}#{post.url}")
-
+    title = I18n.t("post_action_types.#{post_action_type}.email_title", title: post.topic.title, locale: SiteSetting.default_locale)
+    body = I18n.t("post_action_types.#{post_action_type}.email_body", message: opts[:message], link: "#{Discourse.base_url}#{post.url}", locale: SiteSetting.default_locale)
+    warning = opts[:is_warning] if opts[:is_warning].present?
     title = title.truncate(255, separator: /\s/)
 
     opts = {
       archetype: Archetype.private_message,
+      is_warning: warning,
       title: title,
       raw: body
     }
 
     if [:notify_moderators, :spam].include?(post_action_type)
       opts[:subtype] = TopicSubtype.notify_moderators
-      opts[:target_group_names] = "moderators"
+      opts[:target_group_names] = target_moderators
     else
       opts[:subtype] = TopicSubtype.notify_user
       opts[:target_usernames] = if post_action_type == :notify_user
@@ -447,7 +448,7 @@ SQL
     post = Post.with_deleted.where(id: post_id).first
     PostAction.auto_close_if_threshold_reached(post.topic)
     PostAction.auto_hide_if_needed(user, post, post_action_type_key)
-    SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
+    SpamRulesEnforcer.enforce!(post.user)
   end
 
   def notify_subscribers

@@ -39,11 +39,33 @@ describe UserUpdater do
       expect(user.reload.name).to eq 'Jim Tom'
     end
 
+    it 'can update categories and tags' do
+      category = Fabricate(:category)
+      tag = Fabricate(:tag)
+
+      user = Fabricate(:user)
+      updater = UserUpdater.new(acting_user, user)
+      updater.update(watched_tags: [tag.name], muted_category_ids: [category.id])
+
+      expect(TagUser.where(
+        user_id: user.id,
+        tag_id: tag.id,
+        notification_level: TagUser.notification_levels[:watching]
+      ).count).to eq(1)
+
+      expect(CategoryUser.where(
+        user_id: user.id,
+        category_id: category.id,
+        notification_level: CategoryUser.notification_levels[:muted]
+      ).count).to eq(1)
+
+    end
+
     it 'updates various fields' do
       user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
 
-      updater.update(bio_raw: 'my new bio',
+      val = updater.update(bio_raw: 'my new bio',
                      email_always: 'true',
                      mailing_list_mode: true,
                      digest_after_minutes: "45",
@@ -51,6 +73,8 @@ describe UserUpdater do
                      auto_track_topics_after_msecs: 101,
                      email_in_reply_to: false
                     )
+      expect(val).to be_truthy
+
       user.reload
 
       expect(user.user_profile.bio_raw).to eq 'my new bio'
@@ -62,12 +86,18 @@ describe UserUpdater do
       expect(user.user_option.email_in_reply_to).to eq false
     end
 
-    context 'when update succeeds' do
-      it 'returns true' do
+    context 'when sso overrides bio' do
+      it 'does not change bio' do
+        SiteSetting.enable_sso = true
+        SiteSetting.sso_overrides_bio = true
+
         user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
 
-        expect(updater.update).to be_truthy
+        expect(updater.update(bio_raw: "new bio")).to be_truthy
+
+        user.reload
+        expect(user.user_profile.bio_raw).not_to eq 'new bio'
       end
     end
 

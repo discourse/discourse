@@ -1,3 +1,3 @@
-export default Ember.Handlebars.makeBoundHelper(function(str) {
-  return Ember.isEmpty(str) ? new Handlebars.SafeString('&mdash;') : str;
-});
+import { htmlHelper } from 'discourse/lib/helpers';
+
+export default htmlHelper(str => Ember.isEmpty(str) ? '&mdash;' : str);

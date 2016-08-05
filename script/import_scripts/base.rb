@@ -49,6 +49,7 @@ class ImportScripts::Base
     update_bumped_at
     update_last_posted_at
     update_last_seen_at
+    update_user_stats
     update_feature_topic_users
     update_category_featured_topics
     update_topic_count_replies
@@ -197,10 +198,14 @@ class ImportScripts::Base
   def all_records_exist?(type, import_ids)
     return false if import_ids.empty?
 
-    Post.exec_sql('CREATE TEMP TABLE import_ids(val varchar(200) PRIMARY KEY)')
+    orig_conn = ActiveRecord::Base.connection
+    conn = orig_conn.raw_connection
+
+    conn.exec('CREATE TEMP TABLE import_ids(val varchar(200) PRIMARY KEY)')
 
     import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
-    Post.exec_sql("INSERT INTO import_ids VALUES #{import_id_clause}")
+
+    conn.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
 
     existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
     existing = existing.joins('JOIN import_ids ON val = value')
@@ -210,7 +215,7 @@ class ImportScripts::Base
       return true
     end
   ensure
-    Post.exec_sql('DROP TABLE import_ids')
+    conn.exec('DROP TABLE import_ids')
   end
 
   # Iterate through a list of user records to be imported.
@@ -277,10 +282,14 @@ class ImportScripts::Base
     location = opts.delete(:location)
     avatar_url = opts.delete(:avatar_url)
 
+    original_username = opts[:username]
+    original_name = opts[:name]
+
     # Allow the || operations to work with empty strings ''
     opts[:username] = nil if opts[:username].blank?
 
     opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
+
     if opts[:username].blank? ||
       opts[:username].length < User.username_length.begin ||
       opts[:username].length > User.username_length.end ||
@@ -289,6 +298,9 @@ class ImportScripts::Base
 
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
     end
+
+    opts[:name] = original_username if original_name.blank? && opts[:username] != original_username
+
     opts[:email] = opts[:email].downcase
     opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = opts.fetch(:active, true)
@@ -298,7 +310,7 @@ class ImportScripts::Base
     u = User.new(opts)
     (opts[:custom_fields] || {}).each { |k, v| u.custom_fields[k] = v }
     u.custom_fields["import_id"] = import_id
-    u.custom_fields["import_username"] = opts[:username] if opts[:username].present?
+    u.custom_fields["import_username"] = opts[:username] if original_username.present?
     u.custom_fields["import_avatar_url"] = avatar_url if avatar_url.present?
     u.custom_fields["import_pass"] = opts[:password] if opts[:password].present?
 
@@ -365,7 +377,7 @@ class ImportScripts::Base
           params[:parent_category_id] = top.id if top
         end
 
-        new_category = create_category(params, params[:id])
+        create_category(params, params[:id])
 
         created += 1
       end
@@ -384,12 +396,13 @@ class ImportScripts::Base
 
     new_category = Category.new(
       name: opts[:name],
-      user_id: opts[:user_id] || opts[:user].try(:id) || -1,
+      user_id: opts[:user_id] || opts[:user].try(:id) || Discourse::SYSTEM_USER_ID,
       position: opts[:position],
       description: opts[:description],
       parent_category_id: opts[:parent_category_id],
       color: opts[:color] || "AB9364",
       text_color: opts[:text_color] || "FFF",
+      read_restricted: opts[:read_restricted] || false,
     )
 
     new_category.custom_fields["import_id"] = import_id if import_id
@@ -461,7 +474,7 @@ class ImportScripts::Base
     [created, skipped]
   end
 
-  STAFF_GUARDIAN = Guardian.new(User.find(-1))
+  STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
 
   def create_post(opts, import_id)
     user = User.find(opts[:user_id])
@@ -568,6 +581,71 @@ class ImportScripts::Base
     User.exec_sql(sql)
   end
 
+  def update_user_stats
+    puts "", "Updating topic reply counts..."
+    User.find_each do |u|
+      u.create_user_stat if u.user_stat.nil?
+      us = u.user_stat
+      us.update_topic_reply_count
+      us.save
+      print "."
+    end
+
+    puts "Updating first_post_created_at..."
+
+    sql = <<-SQL
+      WITH sub AS (
+        SELECT user_id, MIN(posts.created_at) AS first_post_created_at
+        FROM posts
+        GROUP BY user_id
+      )
+      UPDATE user_stats
+      SET first_post_created_at = sub.first_post_created_at
+      FROM user_stats u1
+      JOIN sub ON sub.user_id = u1.user_id
+      WHERE u1.user_id = user_stats.user_id
+        AND user_stats.first_post_created_at <> sub.first_post_created_at
+    SQL
+
+    User.exec_sql(sql)
+
+    puts "Updating user post_count..."
+
+    sql = <<-SQL
+      WITH sub AS (
+        SELECT user_id, COUNT(*) AS post_count
+        FROM posts
+        GROUP BY user_id
+      )
+      UPDATE user_stats
+      SET post_count = sub.post_count
+      FROM user_stats u1
+      JOIN sub ON sub.user_id = u1.user_id
+      WHERE u1.user_id = user_stats.user_id
+        AND user_stats.post_count <> sub.post_count
+    SQL
+
+    User.exec_sql(sql)
+
+    puts "Updating user topic_count..."
+
+    sql = <<-SQL
+      WITH sub AS (
+        SELECT user_id, COUNT(*) AS topic_count
+        FROM topics
+        GROUP BY user_id
+      )
+      UPDATE user_stats
+      SET topic_count = sub.topic_count
+      FROM user_stats u1
+      JOIN sub ON sub.user_id = u1.user_id
+      WHERE u1.user_id = user_stats.user_id
+        AND user_stats.topic_count <> sub.topic_count
+    SQL
+
+    User.exec_sql(sql)
+  end
+
   # scripts that are able to import last_seen_at from the source data should override this method
   def update_last_seen_at
     puts "", "updating last seen at on users"
@@ -635,9 +713,9 @@ class ImportScripts::Base
     total_count = User.count
     progress_count = 0
 
-    User.find_each do |user|
+    User.includes(:user_stat).find_each do |user|
       begin
-        user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+        user.update_columns(trust_level: 0) if user.trust_level > 0 && user.post_count == 0
       rescue Discourse::InvalidAccess
         nil
       end

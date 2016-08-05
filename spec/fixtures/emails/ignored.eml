@@ -1,0 +1,11 @@
+Return-Path: <foo@bar.com>
+From: Foo Bar <foo@bar.com>
+To: category@foo.com
+Subject: This is a foo topic
+Date: Fri, 15 Jan 2016 00:12:43 +0100
+Message-ID: <53@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Hey, this is an incoming email that will be ignored ;)

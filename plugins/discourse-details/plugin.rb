@@ -7,8 +7,6 @@
 enabled_site_setting :details_enabled
 
 register_asset "javascripts/details.js"
-register_asset "javascripts/details_dialect.js", :server_side
-
 register_asset "stylesheets/details.scss"
 
 after_initialize do
@@ -19,9 +17,14 @@ after_initialize do
 
     # replace all details with their summary in emails
     fragment.css("details").each do |details|
-      summary = details.css("summary")[0]
-      summary.name = "p"
-      details.replace(summary)
+      summary = details.css("summary")
+      if summary && summary[0]
+        summary = summary[0]
+        if summary && summary.respond_to?(:name)
+          summary.name = "p"
+          details.replace(summary)
+        end
+      end
     end
   end
 

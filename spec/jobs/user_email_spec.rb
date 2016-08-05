@@ -57,6 +57,8 @@ describe Jobs::UserEmail do
     it "does send an email to a user that's been recently seen but has email_always set" do
       user.update_attributes(last_seen_at: 9.minutes.ago)
       user.user_option.update_attributes(email_always: true)
+      PostTiming.create!(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id, msecs: 100)
+
       Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
     end
@@ -123,6 +125,12 @@ describe Jobs::UserEmail do
         Email::Sender.any_instance.expects(:send).never
         post.update_column(:user_deleted, true)
         Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
+      end
+
+      it "doesn't send the email if user of the post has been deleted" do
+        Email::Sender.any_instance.expects(:send).never
+        post.update_attributes!(user_id: nil)
+        Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
       end
 
       context 'user is suspended' do
@@ -201,6 +209,12 @@ describe Jobs::UserEmail do
 
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
 
+        expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
+      end
+
+      it "does not send notification if bounce threshold is reached" do
+        user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
         expect(EmailLog.where(user_id: user.id, skipped: true).count).to eq(1)
       end
 

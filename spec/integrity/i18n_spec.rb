@@ -16,10 +16,10 @@ describe "i18n integrity checks" do
     end
   end
 
-  it "needs an i18n key (notification_types) for each Notification type" do
-    Notification.types.each_key do |type|
-      next if type == :custom || type == :group_message_summary
-      expect(I18n.t("notification_types.#{type}")).not_to match(/translation missing/)
+  it "has an i18n key for each badge description" do
+    Badge.where(system: true).each do |b|
+      expect(b.long_description).to be_present
+      expect(b.description).to be_present
     end
   end
 

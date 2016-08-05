@@ -213,6 +213,10 @@ describe Search do
         # stop words should work
         results = Search.execute('this', search_context: post1.topic)
         expect(results.posts.length).to eq(4)
+
+        # phrase search works as expected
+        results = Search.execute('"fourth post I am posting"', search_context: post1.topic)
+        expect(results.posts.length).to eq(1)
       end
     end
 
@@ -426,7 +430,14 @@ describe Search do
       expect(Search.execute('boom in:unpinned', guardian: guardian).posts.length).to eq(1)
     end
 
-    it 'supports before and after in:first user:' do
+    it 'supports wiki' do
+      topic = Fabricate(:topic)
+      Fabricate(:post, raw: 'this is a test 248', wiki: true, topic: topic)
+
+      expect(Search.execute('test 248 in:wiki').posts.length).to eq(1)
+    end
+
+    it 'supports before and after, in:first, user:, @username' do
 
       time = Time.zone.parse('2001-05-20 2:55')
       freeze_time(time)
@@ -449,6 +460,8 @@ describe Search do
       expect(Search.execute('user:nobody').posts.length).to eq(0)
       expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
       expect(Search.execute("user:#{_post.user_id}").posts.length).to eq(1)
+
+      expect(Search.execute("@#{_post.user.username}").posts.length).to eq(1)
     end
 
     it 'supports group' do
@@ -526,6 +539,47 @@ describe Search do
       expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
 
     end
+
+    it 'can tokenize dots' do
+      post = Fabricate(:post, raw: 'Will.2000 Will.Bob.Bill...')
+      expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
+    end
+
+    it 'supports category slug and tags' do
+      # main category
+      category = Fabricate(:category, name: 'category 24', slug: 'category-24')
+      topic = Fabricate(:topic, created_at: 3.months.ago, category: category)
+      post = Fabricate(:post, raw: 'hi this is a test 123', topic: topic)
+
+      expect(Search.execute('this is a test #category-24').posts.length).to eq(1)
+      expect(Search.execute("this is a test category:#{category.id}").posts.length).to eq(1)
+      expect(Search.execute('this is a test #category-25').posts.length).to eq(0)
+
+      # sub category
+      sub_category = Fabricate(:category, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
+      second_topic = Fabricate(:topic, created_at: 3.months.ago, category: sub_category)
+      Fabricate(:post, raw: 'hi testing again 123', topic: second_topic)
+
+      expect(Search.execute('testing again #category-24:sub-category').posts.length).to eq(1)
+      expect(Search.execute("testing again category:#{category.id}").posts.length).to eq(2)
+      expect(Search.execute("testing again category:#{sub_category.id}").posts.length).to eq(1)
+      expect(Search.execute('testing again #sub-category').posts.length).to eq(0)
+
+      # tags
+      topic.tags = [Fabricate(:tag, name: 'alpha')]
+      expect(Search.execute('this is a test #alpha').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('this is a test #beta').posts.size).to eq(0)
+    end
+
+    it "can find with tag" do
+      topic1 = Fabricate(:topic, title: 'Could not, would not, on a boat')
+      topic1.tags = [Fabricate(:tag, name: 'eggs'), Fabricate(:tag, name: 'ham')]
+      Fabricate(:post, topic: topic1)
+      post2 = Fabricate(:post, topic: topic1, raw: "It probably doesn't help that they're green...")
+
+      expect(Search.execute('green tags:eggs').posts.map(&:id)).to eq([post2.id])
+      expect(Search.execute('green tags:plants').posts.size).to eq(0)
+    end
   end
 
   it 'can parse complex strings using ts_query helper' do
@@ -566,4 +620,3 @@ describe Search do
   end
 
 end
-

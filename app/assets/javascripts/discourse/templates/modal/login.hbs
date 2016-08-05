@@ -26,7 +26,7 @@
           </tr>
           <tr>
             <td></td>
-            <td><div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div></td>
+            <td><div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div></td>
             <td></td>
           </tr>
         </table>
@@ -34,12 +34,12 @@
     </form>
   {{/if}}
   {{authMessage}}
-  <div id='login-alert' {{bind-attr class="alertClass"}}>{{alert}}</div>
+  <div id='login-alert' class={{alertClass}}>{{alert}}</div>
 </div>
 <div class="modal-footer">
   {{#if canLoginLocal}}
     <button class="btn btn-large btn-primary"
-      {{bind-attr disabled="loginDisabled"}}
+      disabled={{loginDisabled}}
       {{action "login"}}>
         <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
     </button>

@@ -25,7 +25,7 @@ export default Ember.Mixin.create({
         operation = { type: 'dismiss_posts' };
       } else {
         operation = { type: 'change_notification_level',
-                        notification_level_id: NotificationLevels.REGULAR };
+                      notification_level_id: NotificationLevels.REGULAR };
       }
 
       let promise;

@@ -7,8 +7,8 @@ widgetTest('listing actions', {
   setup() {
     this.set('args', {
       actionsSummary: [
-        {action: 'off_topic', description: 'very off topic'},
-        {action: 'spam', description: 'suspicious message'}
+        {id: 1, action: 'off_topic', description: 'very off topic'},
+        {id: 2, action: 'spam', description: 'suspicious message'}
       ]
     });
   },

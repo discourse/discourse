@@ -15,21 +15,23 @@ he:
         one: "מספר הצבעות כולל"
         other: "מספר הצבעות כולל"
       average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
+      public:
+        title: "הצבעות הן פומביות."
       multiple:
         help:
           at_least_min_options:
-            one: "עליך לבחור לפחות אפשרות <strong>1</strong>."
-            other: "עליך לבחור לפחות <strong>%{count}</strong> אפשרויות."
+            one: "בחרו לפחות <strong>1</strong> אפשרויות"
+            other: "בחרו לפחות <strong>%{count}</strong> אפשרויות"
           up_to_max_options:
-            one: "באפשרותך לבחור עד אפשרות <strong>%{count}</strong>."
-            other: "באפשרותך לבחור עד <strong>%{count}</strong> אפשרויות."
+            one: "בחרו עד <strong>1</strong>  אפשרויות"
+            other: "בחרו עד <strong>%{count}</strong> אפשרויות"
           x_options:
-            one: "עליך לבחור אפשרות <strong>1</strong>."
-            other: "עליך לבחור <strong>%{count}</strong> אפשרויות."
-          between_min_and_max_options: "באפשרותך לבחור בין <strong>%{min}</strong> עד <strong>%{max}</strong> אפשרויות."
+            one: "בחרו <strong>1</strong> אפשרויות"
+            other: "בחרו <strong>%{count}</strong> אפשרויות"
+          between_min_and_max_options: "בחרו בין <strong>%{min}</strong> ל-<strong>%{max}</strong> אפשרויות"
       cast-votes:
-        title: "שליחת הצבעות"
-        label: "הצביע/י עכשיו!"
+        title: "הצביעו"
+        label: "הצביעו עכשיו!"
       show-results:
         title: "להציג את תוצאות הסקר"
         label: "הצגת תוצאות"
@@ -44,5 +46,24 @@ he:
         title: "סגירת הסקר"
         label: "סגירה"
         confirm: "האם את/ה בטוח/ה שאת/ה רוצה לסגור סקר זה?"
-      error_while_toggling_status: "אירעה שגיאה במהלך החלפת מצב הסטטוס של הסקר"
-      error_while_casting_votes: "אירעה שגיאה במהלך שליחת ההצבעות שלך."
+      error_while_toggling_status: "מצטערים, חלה שגיאה בשינוי המצב של סקר זה."
+      error_while_casting_votes: "מצטערים, ארעה שגיאה בהצבעתכם."
+      error_while_fetching_voters: "מצטערים, ארעה שגיאה בהצגת המצביעים."
+      ui_builder:
+        title: בניית סקר
+        insert: הכנסת סקר
+        help:
+          options_count: הכניסו לפחות 2 אפשרויות
+        poll_type:
+          label: סוג
+          regular: בחירה בודדת
+          multiple: בחירה מרובה
+          number: ציון מספרי
+        poll_config:
+          max: מקסימום
+          min: מינימום
+          step: צעד
+        poll_public:
+          label: הציג מי הצביעו
+        poll_options:
+          label: הכניסו אפשרות בחירה אחת בכל שורה

@@ -110,14 +110,14 @@ module I18n
         by_site = @overrides_by_site[site] = {}
 
         # Load overrides
-        translations_overrides = TranslationOverride.where(locale: locale).pluck(:translation_key, :value)
+        translations_overrides = TranslationOverride.where(locale: locale).pluck(:translation_key, :value, :compiled_js)
 
         if translations_overrides.empty?
           by_site[locale] = {}
         else
           translations_overrides.each do |tuple|
             by_locale = by_site[locale] ||= {}
-            by_locale[tuple[0]] = tuple[1]
+            by_locale[tuple[0]] = tuple[2] || tuple[1]
           end
         end
       end

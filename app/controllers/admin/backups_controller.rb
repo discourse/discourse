@@ -77,6 +77,7 @@ class Admin::BackupsController < Admin::AdminController
       client_id: params.fetch(:client_id),
       publish_to_message_bus: true,
     }
+    SiteSetting.set_and_log(:disable_emails, true, current_user)
     BackupRestore.restore!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
     render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
@@ -94,7 +95,7 @@ class Admin::BackupsController < Admin::AdminController
 
   def readonly
     enable = params.fetch(:enable).to_s == "true"
-    enable ? Discourse.enable_readonly_mode : Discourse.disable_readonly_mode
+    enable ? Discourse.enable_readonly_mode(user_enabled: true) : Discourse.disable_readonly_mode(user_enabled: true)
     render nothing: true
   end
 

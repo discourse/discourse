@@ -18,19 +18,18 @@ describe UserSerializer do
   context "as current user" do
     it "serializes options correctly" do
       # so we serialize more stuff
-      SiteSetting.edit_history_visible_to_public = false
       SiteSetting.default_other_auto_track_topics_after_msecs = 0
       SiteSetting.default_other_new_topic_duration_minutes = 60*24
 
       user = Fabricate.build(:user,
                               user_profile: Fabricate.build(:user_profile),
-                              user_option: UserOption.new(edit_history_public: true),
+                              user_option: UserOption.new(dynamic_favicon: true),
                               user_stat: UserStat.new
                             )
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
 
-      expect(json[:user_option][:edit_history_public]).to eq(true)
+      expect(json[:user_option][:dynamic_favicon]).to eq(true)
       expect(json[:user_option][:new_topic_duration_minutes]).to eq(60*24)
       expect(json[:user_option][:auto_track_topics_after_msecs]).to eq(0)
 
@@ -88,28 +87,73 @@ describe UserSerializer do
     end
 
     context "with filled out website" do
-      before do
-        user.user_profile.website = 'http://example.com/user'
-      end
-
-      it "has a website" do
-        expect(json[:website]).to eq 'http://example.com/user'
-      end
-
-      context "has a website name" do
-        it "returns website host name when instance domain is not same as website domain" do
-          Discourse.stubs(:current_hostname).returns('discourse.org')
-          expect(json[:website_name]).to eq 'example.com'
+      context "when website has a path" do
+        before do
+          user.user_profile.website = 'http://example.com/user'
         end
 
-        it "returns complete website path when instance domain is same as website domain" do
-          Discourse.stubs(:current_hostname).returns('example.com')
-          expect(json[:website_name]).to eq 'example.com/user'
+        it "has a website with a path" do
+          expect(json[:website]).to eq 'http://example.com/user'
         end
 
-        it "returns complete website path when website domain is parent of instance domain" do
-          Discourse.stubs(:current_hostname).returns('forums.example.com')
+        it "returns complete website name with path" do
           expect(json[:website_name]).to eq 'example.com/user'
+        end
+      end
+
+      context "when website has a subdomain" do
+        before do
+          user.user_profile.website = 'http://subdomain.example.com/user'
+        end
+
+        it "has a website with a subdomain" do
+          expect(json[:website]).to eq 'http://subdomain.example.com/user'
+        end
+
+        it "returns website name with the subdomain" do
+          expect(json[:website_name]).to eq 'subdomain.example.com/user'
+        end
+      end
+
+      context "when website has www" do
+        before do
+          user.user_profile.website = 'http://www.example.com/user'
+        end
+
+        it "has a website with the www" do
+          expect(json[:website]).to eq 'http://www.example.com/user'
+        end
+
+        it "returns website name without the www" do
+          expect(json[:website_name]).to eq 'example.com/user'
+        end
+      end
+
+      context "when website includes query parameters" do
+        before do
+          user.user_profile.website = 'http://example.com/user?ref=payme'
+        end
+
+        it "has a website with query params" do
+          expect(json[:website]).to eq 'http://example.com/user?ref=payme'
+        end
+
+        it "has a website name without query params" do
+          expect(json[:website_name]).to eq 'example.com/user'
+        end
+      end
+
+      context "when website is not a valid url" do
+        before do
+          user.user_profile.website = 'invalid-url'
+        end
+
+        it "has a website with the invalid url" do
+          expect(json[:website]).to eq 'invalid-url'
+        end
+
+        it "has a nil website name" do
+          expect(json[:website_name]).to eq nil
         end
       end
     end

@@ -16,9 +16,11 @@
 
 .names {
  float: left;
- .username {
+
+ span.first {
    font-weight: bold;
  }
+
  span {
    font-size: 0.929em;
    padding-right: 8px;
@@ -103,6 +105,10 @@ aside.quote {
 
 .post-hidden {
   opacity: 0.5;
+}
+
+.topic-post.staged {
+  opacity: 0.4;
 }
 
 
@@ -303,8 +309,11 @@ table.md-table {
     }
   }
 
+  .small-action-desc.timegap {
+      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+  }
   .small-action-desc {
-    padding: 0.5em 0 0.5em 4em;
+    padding: 0.25em 0 0.5em 4.3em;
     margin-top: 6px;
     text-transform: uppercase;
     font-weight: bold;
@@ -350,5 +359,20 @@ table.md-table {
       font-style: italic;
       color: dark-light-diff($primary, $secondary, 55%, -40%);
     }
+  }
+}
+
+a.mention, a.mention-group {
+  padding: 2px 4px;
+  color: dark-light-diff($primary, $secondary, 30%, -20%);
+  background: dark-light-diff($primary, $secondary, 95%, -60%);
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.93em;
+}
+
+.popup-menu {
+  h3 {
+    margin-top: 0;
   }
 }

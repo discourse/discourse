@@ -1,12 +1,16 @@
 import DiscourseURL from 'discourse/lib/url';
 
+export function wantsNewWindow(e) {
+  return (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey || (e.button && e.button !== 0));
+}
+
 /**
   Discourse does some server side rendering of HTML, such as the `cooked` contents of
   posts. The downside of this in an Ember app is the links will not go through the router.
   This jQuery code intercepts clicks on those links and routes them properly.
 **/
 export default function interceptClick(e) {
-  if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
+  if (wantsNewWindow(e)) { return; }
 
   const $currentTarget = $(e.currentTarget),
   href = $currentTarget.attr('href');
@@ -18,6 +22,7 @@ export default function interceptClick(e) {
       $currentTarget.data('auto-route') ||
       $currentTarget.data('share-url') ||
       $currentTarget.data('user-card') ||
+      $currentTarget.hasClass('widget-link') ||
       $currentTarget.hasClass('mention') ||
       (!$currentTarget.hasClass('d-link') && $currentTarget.hasClass('ember-view')) ||
       $currentTarget.hasClass('lightbox') ||

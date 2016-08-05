@@ -1,6 +1,8 @@
+import { ajax } from 'discourse/lib/ajax';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
+import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   needs: ["topic"],
@@ -68,14 +70,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
   @computed("pinDisabled")
   pinInCategoryValidation(pinDisabled) {
     if (pinDisabled) {
-      return Discourse.InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
+      return InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
     }
   },
 
   @computed("pinGloballyDisabled")
   pinGloballyValidation(pinGloballyDisabled) {
     if (pinGloballyDisabled) {
-      return Discourse.InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
+      return InputValidation.create({ failed: true, reason: I18n.t("topic.feature_topic.pin_validation") });
     }
   },
 
@@ -90,7 +92,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   onShow() {
     this.set("loading", true);
 
-    return Discourse.ajax("/topics/feature_stats.json", {
+    return ajax("/topics/feature_stats.json", {
       data: { category_id: this.get("model.category.id") }
     }).then(result => {
       if (result) {

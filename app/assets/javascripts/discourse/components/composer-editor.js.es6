@@ -2,6 +2,15 @@ import userSearch from 'discourse/lib/user-search';
 import { default as computed, on } from 'ember-addons/ember-computed-decorators';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
+import { fetchUnseenTagHashtags, linkSeenTagHashtags } from 'discourse/lib/link-tag-hashtag';
+import { load } from 'pretty-text/oneboxer';
+import { ajax } from 'discourse/lib/ajax';
+import InputValidation from 'discourse/models/input-validation';
+
+import { tinyAvatar,
+         displayErrorForUpload,
+         getUploadMarkdown,
+         validateUploadedFiles } from 'discourse/lib/utilities';
 
 export default Ember.Component.extend({
   classNames: ['wmd-controls'],
@@ -22,9 +31,30 @@ export default Ember.Component.extend({
     this.set('showPreview', val === 'true');
   },
 
+  @computed('site.mobileView', 'showPreview')
+  forcePreview(mobileView, showPreview) {
+    return mobileView && showPreview;
+  },
+
   @computed('showPreview')
   toggleText: function(showPreview) {
     return showPreview ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
+  },
+
+  _renderUnseenTagHashtags($preview, unseen) {
+    fetchUnseenTagHashtags(unseen).then(() => {
+      linkSeenTagHashtags($preview);
+    });
+  },
+
+  @on('previewRefreshed')
+  paintTagHashtags($preview) {
+    if (!this.siteSettings.tagging_enabled) { return; }
+
+    const unseenTagHashtags = linkSeenTagHashtags($preview);
+    if (unseenTagHashtags.length) {
+      Ember.run.debounce(this, this._renderUnseenTagHashtags, $preview, unseenTagHashtags, 500);
+    }
   },
 
   @computed
@@ -38,7 +68,7 @@ export default Ember.Component.extend({
         if (posts && topicId === topic.get('id')) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
-            return Discourse.Utilities.tinyAvatar(quotedPost.get('avatar_template'));
+            return tinyAvatar(quotedPost.get('avatar_template'));
           }
         }
       }
@@ -65,7 +95,15 @@ export default Ember.Component.extend({
     }
 
     this._bindUploadTarget();
-    this.appEvents.trigger('composer:opened');
+    this.appEvents.trigger('composer:will-open');
+
+    if (this.site.mobileView) {
+      $(window).on('resize.composer-popup-menu', () => {
+        if (this.get('optionsVisible')) {
+          this.appEvents.trigger('popup-menu:open', this._optionsLocation());
+        }
+      });
+    }
   },
 
   @computed('composer.reply', 'composer.replyLength', 'composer.missingReplyCharacters', 'composer.minimumPostLength', 'lastValidatedAt')
@@ -85,7 +123,7 @@ export default Ember.Component.extend({
     }
 
     if (reason) {
-      return Discourse.InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
+      return InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
     }
   },
 
@@ -151,7 +189,7 @@ export default Ember.Component.extend({
       this.setProperties({ uploadProgress: 0, isUploading: false, isCancellable: false });
     }
     if (removePlaceholder) {
-      this.set('composer.reply', this.get('composer.reply').replace(this.get('uploadPlaceholder'), ""));
+      this.appEvents.trigger('composer:replace-text', this.get('uploadPlaceholder'), "");
     }
   },
 
@@ -169,7 +207,7 @@ export default Ember.Component.extend({
     });
 
     $element.on('fileuploadsubmit', (e, data) => {
-      const isUploading = Discourse.Utilities.validateUploadedFiles(data.files);
+      const isUploading = validateUploadedFiles(data.files);
       data.formData = { type: "composer" };
       this.setProperties({ uploadProgress: 0, isUploading });
       return isUploading;
@@ -181,9 +219,7 @@ export default Ember.Component.extend({
 
     $element.on("fileuploadsend", (e, data) => {
       this._validUploads++;
-      // add upload placeholders (as much placeholders as valid files dropped)
-      const placeholder = _.times(this._validUploads, () => uploadPlaceholder).join("\n");
-      this.appEvents.trigger('composer:insert-text', placeholder);
+      this.appEvents.trigger('composer:insert-text', uploadPlaceholder);
 
       if (data.xhr && data.originalFiles.length === 1) {
         this.set("isCancellable", true);
@@ -198,7 +234,7 @@ export default Ember.Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        Discourse.Utilities.displayErrorForUpload(data);
+        displayErrorForUpload(data);
       }
     });
 
@@ -206,15 +242,15 @@ export default Ember.Component.extend({
       // replace upload placeholder
       if (upload && upload.url) {
         if (!this._xhr || !this._xhr._userCancelled) {
-          const markdown = Discourse.Utilities.getUploadMarkdown(upload);
-          this.set('composer.reply', this.get('composer.reply').replace(uploadPlaceholder, markdown));
+          const markdown = getUploadMarkdown(upload);
+          this.appEvents.trigger('composer:replace-text', uploadPlaceholder, markdown);
           this._resetUpload(false);
         } else {
           this._resetUpload(true);
         }
       } else {
         this._resetUpload(true);
-        Discourse.Utilities.displayErrorForUpload(upload);
+        displayErrorForUpload(upload);
       }
     });
 
@@ -226,6 +262,35 @@ export default Ember.Component.extend({
     }
 
     this._firefoxPastingHack();
+  },
+
+  _optionsLocation() {
+    // long term we want some smart positioning algorithm in popup-menu
+    // the problem is that positioning in a fixed panel is a nightmare
+    // cause offsetParent can end up returning a fixed element and then
+    // using offset() is not going to work, so you end up needing special logic
+    // especially since we allow for negative .top, provided there is room on screen
+    const myPos = this.$().position();
+    const buttonPos = this.$('.options').position();
+
+    const popupHeight = $('#reply-control .popup-menu').height();
+    const popupWidth = $('#reply-control .popup-menu').width();
+
+    var top = myPos.top + buttonPos.top - 15;
+    var left = myPos.left + buttonPos.left - (popupWidth/2);
+
+    const composerPos = $('#reply-control').position();
+
+    if (composerPos.top + top - popupHeight < 0) {
+      top = top + popupHeight + this.$('.options').height() + 50;
+    }
+
+    var replyWidth = $('#reply-control').width();
+    if (left + popupWidth > replyWidth) {
+      left = replyWidth - popupWidth - 40;
+    }
+
+    return { position: "absolute", left, top };
   },
 
   // Believe it or not pasting an image in Firefox doesn't work without this code
@@ -324,11 +389,16 @@ export default Ember.Component.extend({
 
   @on('willDestroyElement')
   _composerClosed() {
+    this.appEvents.trigger('composer:will-close');
     Ember.run.next(() => {
       $('#main-outlet').css('padding-bottom', 0);
       // need to wait a bit for the "slide down" transition of the composer
       Ember.run.later(() => this.appEvents.trigger("composer:closed"), 400);
     });
+
+    if (this.site.mobileView) {
+      $(window).off('resize.composer-popup-menu');
+    }
   },
 
   actions: {
@@ -344,35 +414,15 @@ export default Ember.Component.extend({
       this._resetUpload(true);
     },
 
-    showOptions() {
-      // long term we want some smart positioning algorithm in popup-menu
-      // the problem is that positioning in a fixed panel is a nightmare
-      // cause offsetParent can end up returning a fixed element and then
-      // using offset() is not going to work, so you end up needing special logic
-      // especially since we allow for negative .top, provided there is room on screen
-      const myPos = this.$().position();
-      const buttonPos = this.$('.options').position();
+    toggleOptions(toolbarEvent) {
+      if (this.get('optionsVisible')) {
+        this.sendAction('hideOptions');
+      } else {
+        const selected = toolbarEvent.selected;
+        toolbarEvent.selectText(selected.start, selected.end - selected.start);
 
-      const popupHeight = $('#reply-control .popup-menu').height();
-      const popupWidth = $('#reply-control .popup-menu').width();
-
-      var top = myPos.top + buttonPos.top - 15;
-      var left = myPos.left + buttonPos.left - (popupWidth/2);
-
-      const composerPos = $('#reply-control').position();
-
-      if (composerPos.top + top - popupHeight < 0) {
-        top = top + popupHeight + this.$('.options').height() + 50;
+        this.sendAction('showOptions', toolbarEvent, this._optionsLocation());
       }
-
-      var replyWidth = $('#reply-control').width();
-      if (left + popupWidth > replyWidth) {
-        left = replyWidth - popupWidth - 40;
-      }
-
-      this.sendAction('showOptions', { position: "absolute",
-                                       left: left,
-                                       top: top });
     },
 
     showUploadModal(toolbarEvent) {
@@ -402,13 +452,23 @@ export default Ember.Component.extend({
         sendAction: 'showUploadModal'
       });
 
-      if (this.get('canWhisper')) {
+      if (this.get("showPopupMenu")) {
         toolbar.addButton({
           id: 'options',
           group: 'extras',
           icon: 'gear',
           title: 'composer.options',
-          sendAction: 'showOptions'
+          sendAction: 'toggleOptions'
+        });
+      }
+
+      if (this.site.mobileView) {
+        toolbar.addButton({
+          id: 'preview',
+          group: 'mobileExtras',
+          icon: 'television',
+          title: 'composer.show_preview',
+          sendAction: 'togglePreview'
         });
       }
     },
@@ -439,8 +499,9 @@ export default Ember.Component.extend({
       }
 
       // Paint oneboxes
-      $('a.onebox', $preview).each((i, e) => Discourse.Onebox.load(e, refresh));
+      $('a.onebox', $preview).each((i, e) => load(e, refresh, ajax));
       this.trigger('previewRefreshed', $preview);
+      this.sendAction('afterRefresh', $preview);
     },
   }
 });

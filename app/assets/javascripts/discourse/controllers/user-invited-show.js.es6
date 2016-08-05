@@ -1,5 +1,6 @@
 import Invite from 'discourse/models/invite';
 import debounce from 'discourse/lib/debounce';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 // This controller handles actions related to a user's invitations
 export default Ember.Controller.extend({
@@ -10,6 +11,7 @@ export default Ember.Controller.extend({
   invitesCount: null,
   canLoadMore: true,
   invitesLoading: false,
+  reinvitedAll: false,
 
   init: function() {
     this._super();
@@ -31,6 +33,10 @@ export default Ember.Controller.extend({
   }, 250).observes('searchTerm'),
 
   inviteRedeemed: Em.computed.equal('filter', 'redeemed'),
+
+  showReinviteAllButton: function() {
+    return (this.get('filter') === "pending" && this.get('model').invites.length > 4 && this.currentUser.get('staff'));
+  }.property('filter'),
 
   /**
     Can the currently logged in user invite users to the site
@@ -85,6 +91,13 @@ export default Ember.Controller.extend({
     reinvite(invite) {
       invite.reinvite();
       return false;
+    },
+
+    reinviteAll() {
+      const self = this;
+      Invite.reinviteAll().then(function() {
+        self.set('reinvitedAll', true);
+      }).catch(popupAjaxError);
     },
 
     loadMore() {

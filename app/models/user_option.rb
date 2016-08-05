@@ -24,6 +24,7 @@ class UserOption < ActiveRecord::Base
   def set_defaults
     self.email_always = SiteSetting.default_email_always
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
+    self.mailing_list_mode_frequency = SiteSetting.default_email_mailing_list_mode_frequency
     self.email_direct = SiteSetting.default_email_direct
     self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
     self.email_private_messages = SiteSetting.default_email_private_messages
@@ -34,13 +35,11 @@ class UserOption < ActiveRecord::Base
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
     self.disable_jump_reply = SiteSetting.default_other_disable_jump_reply
-    self.edit_history_public = SiteSetting.default_other_edit_history_public
 
     self.new_topic_duration_minutes = SiteSetting.default_other_new_topic_duration_minutes
     self.auto_track_topics_after_msecs = SiteSetting.default_other_auto_track_topics_after_msecs
 
     self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
-
 
     if SiteSetting.default_email_digest_frequency.to_i <= 0
       self.email_digests = false
@@ -140,7 +139,6 @@ end
 #  enable_quoting                :boolean          default(TRUE), not null
 #  dynamic_favicon               :boolean          default(FALSE), not null
 #  disable_jump_reply            :boolean          default(FALSE), not null
-#  edit_history_public           :boolean          default(FALSE), not null
 #  automatically_unpin_topics    :boolean          default(TRUE), not null
 #  digest_after_minutes          :integer
 #  auto_track_topics_after_msecs :integer
@@ -150,6 +148,7 @@ end
 #  email_in_reply_to             :boolean          default(TRUE), not null
 #  like_notification_frequency   :integer          default(1), not null
 #  include_tl0_in_digests        :boolean          default(FALSE)
+#  mailing_list_mode_frequency   :integer          default(0), not null
 #
 # Indexes
 #

@@ -17,6 +17,10 @@ header {
   margin-bottom: 15px;
 }
 
+body.widget-dragging {
+  cursor: ns-resize;
+}
+
 body {
 
   .boxed {
@@ -65,14 +69,19 @@ body {
     }
   }
 
+  $grippie-border-color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 50%));
+
   .grippie {
-    width: 100%;
     cursor: row-resize;
-    height: 11px;
-    overflow: hidden;
-    display:block;
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    background: image-url("grippie.png") dark-light-diff($primary, $secondary, 90%, -60%) no-repeat center 3px;
+    padding: 4px 0px;
+  }
+
+  .grippie:before {
+    content: '';
+    display: block;
+    width: 27px;
+    margin: auto;
+    border-top: 3px double $grippie-border-color;
   }
 }
 

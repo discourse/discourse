@@ -162,15 +162,40 @@ describe PostDestroyer do
       post_action = author.user_actions.where(action_type: UserAction::REPLY, target_post_id: reply.id).first
       expect(post_action).to be_present
     end
+
+    describe "post_count recovery" do
+      before do
+        post
+        @user = post.user
+        expect(@user.user_stat.post_count).to eq(1)
+      end
+
+      context "recovered by user" do
+        it "should increment the user's post count" do
+          PostDestroyer.new(@user, post).destroy
+          expect(@user.user_stat.post_count).to eq(1)
+
+          PostDestroyer.new(@user, post.reload).recover
+          expect(@user.reload.user_stat.post_count).to eq(1)
+        end
+      end
+
+      context "recovered by admin" do
+        it "should increment the user's post count" do
+          PostDestroyer.new(moderator, post).destroy
+          expect(@user.user_stat.post_count).to eq(0)
+
+          PostDestroyer.new(admin, post).recover
+          expect(@user.reload.user_stat.post_count).to eq(1)
+        end
+      end
+    end
   end
 
   describe 'basic destroying' do
 
     it "as the creator of the post, doesn't delete the post" do
-      SiteSetting.stubs(:unique_posts_mins).returns(5)
-      SiteSetting.stubs(:delete_removed_posts_after).returns(24)
-
-      post2 = create_post # Create it here instead of with "let" so unique_posts_mins can do its thing
+      post2 = create_post
 
       @orig = post2.cooked
       PostDestroyer.new(post2.user, post2).destroy
@@ -188,6 +213,7 @@ describe PostDestroyer do
       expect(post2.version).to eq(3)
       expect(post2.user_deleted).to eq(false)
       expect(post2.cooked).to eq(@orig)
+
     end
 
     context "as a moderator" do

@@ -57,11 +57,6 @@
   display: none;
 }
 
-.notification-buttons {
-  margin: 10px 0;
-  text-align: right;
-}
-
 .user-navigation {
 
   .map {
@@ -174,6 +169,7 @@
 
 .user-nav {
   margin: 5px 0px;
+  padding-top: 10px;
   .fa {
     margin-right: 5px;
   }
@@ -236,8 +232,7 @@
 }
 
 .top-section,
-.replies-section,
-.topics-section {
+.top-sub-section {
   margin-bottom: 20px;
 }
 
@@ -272,8 +267,7 @@
   }
 }
 
-.replies-section,
-.topics-section {
+.top-sub-section {
   width: 50%;
 
   ul {
@@ -291,21 +285,44 @@
   }
 }
 
-.replies-section {
-  float: left;
+.replies-section,
+.topics-section,
+.links-section {
+  li {
+    word-wrap: break-word;
+  }
 }
 
-.topics-section {
-  float: right;
+.links-section {
+  .domain {
+    font-size: 0.714em;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+  }
+}
+
+.likes-section {
+  li {
+    height: 40px;
+  }
 }
 
 @media all
 and (max-width : 600px) {
-  .replies-section,
-  .topics-section {
+  .top-sub-section {
     float: none;
     width: 100%;
   }
 }
 
+.user-preferences .tags .select2-container-multi {
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  width: 540px;
+  border-radius: 0;
+  .select2-choices {
+    border: none;
+  }
+}
 
+.user-preferences .watching-first-post.fa-dot-circle-o {
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+}

@@ -16,7 +16,6 @@ te:
   loading: "లోడవుతోంది"
   powered_by_html: ' <a href="http://www.discourse.org">డిస్కౌర్స్</a> చేత శక్తివంతం చేయబడింది, జావాస్క్రిప్ట్ చేతనం చేస్తే బాగా కనిపిస్తుంది. '
   log_in: "లాగిన్"
-  purge_reason: "వదిలేసినదిగా స్వీయంగా కనుగొను, చేతనం చేయని ఖాతా"
   disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
   errors: &errors
     format: '%{attribute} %{message}'
@@ -92,7 +91,6 @@ te:
   user_is_suspended: "సస్పెండైన సభ్యులు టపా రాయుట వీలవదు"
   topic_not_found: "ఏదో తప్పు జరిగింది. బహుశా ఈ అంశం ముగిసింది లేదా మీరు చూస్తూ ఉండగా తొలగించబడింది?"
   just_posted_that: "ఇది ఇప్పుడే రాసిన విషయంలా ఉంది. డూప్లికేటు టపా?"
-  has_already_been_used: "ఇప్పటికే వాడుకలో ఉంది."
   invalid_characters: "చెల్లని  అక్షరాలు ఉన్నాయి."
   is_invalid: "చెల్లనిది. మరింత వివరణాత్మకంగా ఉండేట్టు చూడండి."
   next_page: "తరువాతి పుట →"
@@ -110,8 +108,6 @@ te:
   too_late_to_edit: "ఈ టపా పురాతన కాలంలో సృష్టించబడింది. ఇప్పుడు ఇహ సవరించలేము లేదా తొలగించలేము."
   excerpt_image: "బొమ్మ"
   groups:
-    errors:
-      can_not_modify_automatic: "మీరు ఒక ఆటోమేటిక్ గుంపును మార్చలేరు"
     default_names:
       everyone: "ప్రతీఒక్కరూ"
       admins: "అధికారులు"
@@ -351,18 +347,6 @@ te:
       message:
         make: "ఈ విషయం ఇప్పుడు బ్యానరు. సభ్యుడు తుడిచే వరకూ ఈ విషయం ప్రతి పుటకు అగ్రభాగాన కనిపిస్తుంది."
         remove: "ఈ విషయం ఇప్పుడు బ్యానరు కాదు. ఇహ అది ప్రతి పుట అగ్రభాగానా కనిపించదు"
-  unsubscribed:
-    title: 'చందాముగిసింది'
-    description: "మీ చందా ముగిసింది. మిమ్ము మేము ఇహ సంప్రదించము!"
-    oops: "మీరు కోరుకున్నది ఇది కాకుంటే దిగువ నొక్కండి."
-    error: "చందా తొలగించడంలో దోషం"
-    preferences_link: "<a href='/my/preferences'>అమరికలు పుట</a> నుండి కూడా మీరు చందా తొలగించవచ్చు"
-    different_user_description: "మీరు ప్రస్తుతం వేరే పేరుతో లాగిన్ అయి ఉన్నారు. దయచేసి లాగవుట్ అయి లాగిన్ కండి. "
-    not_found_description: "క్షమించాలి. మీ చందా మేము రద్దు చేయలేకపోయాము. బహుశా మీ ఈ మెయిల్లోని లంకె కాలాతీతమై ఉండవచ్చు."
-  resubscribe:
-    action: "మరలా చందాకట్టు"
-    title: "మరలా చందాకట్టారు"
-    description: "మీ చందా మరలా చేతనమైంది"
   reports:
     visits:
       title: "సభ్యుని గణాంకాలు"
@@ -437,7 +421,6 @@ te:
     page_view_anon_reqs:
       title: "అనామక"
       xaxis: "రోజు"
-      yaxis: "అనామక API అభ్యర్ధనలు"
     page_view_logged_in_reqs:
       title: "లాగిన్ అయిన"
       xaxis: "రోజు"
@@ -447,7 +430,6 @@ te:
     page_view_total_reqs:
       title: "మొత్తం"
       xaxis: "రోజు"
-      yaxis: "మొత్తం API అభ్యర్ధనలు"
     http_background_reqs:
       title: "వెనుతలం"
       xaxis: "రోజు"
@@ -474,7 +456,6 @@ te:
       yaxis: "మొత్తం అభ్యర్థనలు"
   dashboard:
     rails_env_warning: "మీ సర్వరు %(env) రీతిలో నడుస్తోంది"
-    ruby_version_warning: "మీరు రూబీ 2.0.0 వాడుతున్నారు. ఇది సమస్యలతో కూడినది. దయచేసి పేచీ స్థాయి 247 లేదా ఆపైకి ఉన్నతీకరించగలరు"
     host_names_warning: "మీ config/database.yml దస్త్రం అప్రమేయ లోకల్ హోస్ట్ వాడుతున్నది. దాన్ని మీ సైటు పేరుకు మార్చగలరు. "
     memory_warning: 'మీ సర్వరు ఒక జీబీ కన్నా తక్కువ మెమరీతో నడుస్తున్నది. కనీసం ఒక జీబీ అయినా ఉండుట మంచిది. '
     contact_email_missing: "మీరు మీ సైట్ యొక్క సంప్రదింపు ఈ-మెయిల్ నమోదు చేయండి దాని ద్వారా సైట్‌కు సంబంధించిన అత్యవసర విషయాలు అందుకొంటారు. <a href='/admin/site_settings'>సైట్ సెట్టింగ్స్‌ లో అప్‌డేట్ చేయండి</a>."
@@ -503,8 +484,6 @@ te:
     max_image_height: "ఒక టపాలో థంబ్నైల్ గరిష్ట ఎత్తు"
     show_subcategory_list: "ఒక అంశం జాబితా వర్గంలో నమోదు చేసేటప్పుడు బదులుగా ఉపవర్గం జాబితా చూపించు."
     post_excerpt_maxlength: "ఒక టపా సంగ్రహం/సారాంశం గరిష్ట పొడవు."
-    max_topics_in_first_day: "ఈ సైట్ లో వినియోగదారు మొదటి రోజున గరిష్ఠంగా ఎన్ని విషయాలకి అనుమతి ఉంది "
-    max_replies_in_first_day: "ఈ సైట్ లో వినియోగదారు మొదటి రోజున గరిష్ఠంగా ఎన్ని జవాబులకు అనుమతి ఉంది "
     allow_moderators_to_create_categories: "మధ్యవర్తులు కొత్త వర్గాలు సృష్టించడానికి అనుమతించు"
     topics_per_period_in_top_summary: "అప్రమేయ అగ్ర విషయాల సారాంశంలో చూపే అగ్ర విషయాల సంఖ్య."
     invite_expiry_days: "వాడుకరుల ఆహ్వాన కీ ఎన్ని రోజులు చెల్లుతుంది"
@@ -572,8 +551,6 @@ te:
       subject_template: "%{site_name} కు సుస్వాగతం!"
     welcome_invite:
       subject_template: "%{site_name} కు సుస్వాగతం!"
-    too_many_spam_flags:
-      subject_template: "కొత్త ఖాతా బ్లాక్ చేశారు"
   user_notifications:
     previous_discussion: "గత జవాబులు"
     user_replied:

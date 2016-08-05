@@ -21,7 +21,6 @@ fa_IR:
   loading: "بارگذاری..."
   powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://discours.ir/t/1-0/33"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
   log_in: "ورود"
-  purge_reason: "بطور خودکار پاک شد بدلیل استفاده نشدن٬ حساب کاربری غیرفعال"
   disable_remote_images_download_reason: "عکس های ریموت دانلود شده غیرفعال شدند زیرا آنجا فضای کافی در دیسک وجود نداشت"
   anonymous: "ناشناس"
   errors: &errors
@@ -115,7 +114,6 @@ fa_IR:
   user_is_suspended: "کاربر تعلیق شده نمی‌تواند نوشته ای بگذارد."
   topic_not_found: "یک مشکلی وجود دارد.  شاید این جستار بسته شده یا پاک شده همزمان که داشتی نگاهش می کردی ؟"
   just_posted_that: "به آن‌چه که به‌تازگی فرستادید بسیار نزدیک است"
-  has_already_been_used: "پیش‌تر استفاده شده است"
   invalid_characters: "نویسه‌های نامعتبر در بر دارد."
   is_invalid: "نامعتبر است. تلاش کنید که کمی بیش‌ترتوضیح بگذارید."
   next_page: "صفحه بعد ←"
@@ -140,7 +138,6 @@ fa_IR:
     delete_reason: "پاک شد از طریق پست صف میانه "
   groups:
     errors:
-      can_not_modify_automatic: "شما امکان تغییر یک گروه خودکار را ندارید."
       member_already_exist: "%{username}' در حال حاضر عضو این گروه است."
       invalid_domain: "'%{domain}' یک دامنه معتبر نیست."
     default_names:
@@ -156,7 +153,16 @@ fa_IR:
   education:
     until_posts:
       other: "%{count} ارسال"
-    new-topic: "خوش آمدید به  %{site_name} &mdash; ** ممنون برای شروع گفتگو!**\n\n- آیا عنوان اونقدر جالب هست برای خواندن با صدای بلند ؟‌خلاصه ای خوبیه ؟ \n\n- چه کسی  به این علاقه مند خواهد شد؟ چرا می تونه مهم باشه؟ چه نوع پاسخی را می خواهید ؟ \n\n- به همراه کلمه های که عموما در جستار تو برای *پیدا* کردن استفاده میشه. برای گروه کردن جستارت با جستارهای مرتبط٬ و دسته بندی انتخابی. \n\nبرای بیشتر[دستورالعمل های انجمن را ببین](/guidelines). این پنل اول فقط به شما نشان داد می شه %{education_posts_text}.\n"
+    new-topic: |
+      خوش آمدید به  %{site_name} &mdash; ** ممنون برای شروع گفتگو!**
+
+      - آیا عنوان اونقدر جالب هست برای خواندن با صدای بلند ؟‌خلاصه ای خوبیه ؟
+
+      - چه کسی  به این علاقه مند خواهد شد؟ چرا می تونه مهم باشه؟ چه نوع پاسخی را می خواهید ؟
+
+      - به همراه کلمه های که عموما در جستار تو برای *پیدا* کردن استفاده میشه. برای گروه کردن جستارت با جستارهای مرتبط٬ و دسته بندی انتخابی.
+
+      برای بیشتر[دستورالعمل های انجمن را ببین](/guidelines). این پنل اول فقط به شما نشان داد می شه %{education_posts_text}.
     new-reply: |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
 
@@ -235,7 +241,7 @@ fa_IR:
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "به انجمن خوش آمدید"
-    body: |2
+    body: |
 
       Congratulations! :confetti_ball:
 
@@ -369,7 +375,6 @@ fa_IR:
     continue_button: "برو به %{site_name}"
     welcome_to: "به %{site_name} خوش آمدید!"
     approval_required: "مدیر باید حساب کاربری را بصورت دستی تایید کند برای دسترسی به این انجمن. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
-    missing_session: "ما نمی‌توانیم تشخیص دهیم که آیا حساب شما ایجاد شده است یا خیر، لطفا از فعال بودن کوکی‌ها اطمینان حاصل کنید."
   post_action_types:
     off_topic:
       title: 'جستار های قدیمی'
@@ -435,18 +440,6 @@ fa_IR:
       message:
         make: "این موضوع در حال حاضر بنر است. این در بالای در تمام صفحه ها نمایش داده می شود تا زمانی که توسط کاربر رد بشود. "
         remove: "این موضوع دیگر در بنر نیست. دیگر در بالای در صفحه ها به نمایش در نمی آید. "
-  unsubscribed:
-    title: 'اشتراک لغو شده'
-    description: "اشتراک شما لغو شد. دیگر با شما تماس نخواهیم گرفت!"
-    oops: "در صورتی که قصد انجام این کار را نداشتید٬ پایین را کلیک کنید."
-    error: "خطا در لغو اشتراک"
-    preferences_link: "شما همچنین می توانید لغو اشتراک کنید از digest ایمیل در <a href='/my/preferences'> صفحه تنظیمات </a>"
-    different_user_description: "شما در حال حاضر وارد سیستم شده اید به عنوان یک کاربر دیگر که ایمیل digest برایش ارسال شد. لطفا از سیسیتم خارج شوید و دوباره تلاش کنید."
-    not_found_description: "متاسفیم٬‌ ما نمی توانیم اشتراک شما را لغو کنیم. ممکن است پیوند در ایمیل شما منقضی شده است. "
-  resubscribe:
-    action: "اشتراک دوباره"
-    title: " دوباره اشتراک شده!"
-    description: "شما دوباره به اشتراک در آمدید."
   reports:
     visits:
       title: "بازدید کاربران"
@@ -530,24 +523,18 @@ fa_IR:
     page_view_anon_reqs:
       title: "ناشناس"
       xaxis: "روز"
-      yaxis: "درخواست های ناشناس API"
     page_view_logged_in_reqs:
       title: "وارد شده در"
       xaxis: "روز"
-      yaxis: "وارد شده در درخواست های API"
     page_view_crawler_reqs:
       title: "خزنده وب"
       xaxis: "روز"
-      yaxis: "API درخواست وب زنجیره ای "
     page_view_total_reqs:
       title: "کل"
       xaxis: "روز"
-      yaxis: "تمام درخواست API"
     page_view_logged_in_mobile_reqs:
-      title: "وارد شده در درخواست های API"
       xaxis: "روز"
     page_view_anon_mobile_reqs:
-      title: "درخواست های ناشناس API"
       xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
@@ -587,7 +574,6 @@ fa_IR:
       yaxis: "تعداد بازدید ها"
   dashboard:
     rails_env_warning: "سرور شما در حال اجراست در %{env} حالت "
-    ruby_version_warning: "شما نسخه  Ruby 2.0.0 را اجرا کرده اید که  به مشکل دارا بودن شناخته شده است. به روز کنید به  بخش 247 یا بعدتر"
     host_names_warning: "config/database.yml فایل شما از اسم هاست پیش فرض localhost استفاده کرده. به روز کنید تا اسم هاست سایتتان را استفاده کنید."
     gc_warning: 'سرور شما از پیش فرض پارامترهای جمع آوری ruby garbage استفاده می کند٬ که به شما بهترین عملکرد را نمی دهد. این جستار برای تنظیم عملکرد بخوانید: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank"> تنظیم Ruby و Rails برای دیسکورس </a>.'
     sidekiq_warning: 'Sidekiq کار نمی کند. با تشکر٬ مثل ارسال ایمیل ها٬‌ برای اجرا ناهمگام هستند با sidekiq. لطفا مطمن شوید که آخرین پروسه sidekiq کار می کند.  <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq  بیشتر بدانید.'
@@ -651,7 +637,6 @@ fa_IR:
     notification_email: "از : ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM  داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "لیست  pipe-delimited از هدر ایمیل سفارشی "
     email_subject: "قالب موضوع قابل تنظیم برای ایمیل های استاندارد. این را ببین https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    use_https: "url  برای سایت  (Discourse.base_url)  باید  http یا https ؟ این را بکار نبر مگر اینکه HTTPS از قبل نصب شده و کار می کند!"
     summary_score_threshold: "حداقل امتیاز برای یک نوشته که بتواند شامل \" خلاصه این جستار\" شود"
     summary_posts_required: "حداقل نوشته ها در این جستار قبل از اینکه \" خلاصه این جستار\" فعال شود"
     summary_likes_required: "حداقل پسندها در این جستار قبل از اینکه \" خلاصه این جستار\" فعال شود"
@@ -663,25 +648,17 @@ fa_IR:
     polling_interval: "وقتی رای گیری طولانی نیست٬ هر چند مدت باید وارد سیستم شود برای نظرسنجی مشتری ها در هر میلی ثانیه."
     anon_polling_interval: "هر چند مدت باید مشتری های ناشناس نظرسنجی بشوند در هر میلی ثانیه"
     background_polling_interval: "هر چند وقت یکبار مشتری ها باید نظرسنجی بشوند در هر ثانیه ( وقتی پنجره  در پس زمینه است)"
-    flags_required_to_hide_post: "تعداد پرچم هایی که ممکن است موجوب مخفی شدن خودکاز نوشته شود و پیام خصوصی به کاربر ارسال شود (0 برای هرگز)"
     cooldown_minutes_after_hiding_posts: "تعداد دقایقی که کاربر باید صبر کند قبل از ویرایش مخفی  یک نوشته از طریق پرچم گزاری انجمن"
-    max_topics_in_first_day: "حداکثر تعداد جستارهای  یک کاربر که در روز اولشان در سایت می توانند ایجاد کنند. "
-    max_replies_in_first_day: "حداکثر تعداد پاسخ های یک کاربر که در روز اولشان در سایت می توانند ایجاد کنند. "
     tl2_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند ها در روز برای   tl2 (اعضا) از طریق حاصل ضرب این شماره"
     tl3_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند ها در روز برای tl3 ( رهبران) از طریق حاصل ضرب این شماره"
     tl4_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند ها در روز برای  tl4 ( رهبران) از طریق حاصل ضرب این شماره"
-    num_flags_to_block_new_user: "اگر نوشته های کاربران جدید num_flags_to_block_new_user از کاربران متفاوت پرچم های هرزنامه گرفت٬ نوشته های آنها را مخفی کن و از نوشتن آنها در آینده جلوگیری کن. 0 برای از کار انداختن. "
-    num_users_to_block_new_user: "اگر نوشته های کاربران جدید num_flags_to_block_new_user از کاربران متفاوت پرچم های هرزنامه گرفت٬ نوشته های آنها را مخفی کن و از نوشتن آنها در آینده جلوگیری کن. 0 برای از کار انداختن. "
     notify_mods_when_user_blocked: "اگر کاربر بطور خودکار مسدود شد٬ به تمام مدیران پیام بفرست."
     flag_sockpuppets: "اگر کاربری به جستاری با ای پی برابر با کاربری که نوشته را شروع کرده ٬ آنها را به عنوان هرزنامه پرچم گزاری کن."
     traditional_markdown_linebreaks: "از linebreaks  سنتی استفاده کن در مدلهای نشانه گزاری٬‌ چرا که نیاز به دو فضای انتهایی دارد برای linebreak."
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند٬‌ پرچم گزاری٬‌ چیزهای دیگر)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
-    ga_tracking_code: " Google analytics (ga.js) کد پیگری کد٬ eg: UA-12345678-9;این را ببین http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) اسم دامنه٬ eg: mysite.com; این را ببین http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) کد پیگری کد٬ UA-12345678-9; این را ببین http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) اسم دامنه٬‌ eg: mysite.com; این را ببین  http://google.com/analytics"
-    enable_escaped_fragments: "عقب نشینی به Google's Ajax-Crawling API اگر webcrawler  شناسایی نشد. این را ببین https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "webcrawler  موتور جستجوی  استاندارد را فعال کناز طریق تگ noscript"
     allow_moderators_to_create_categories: "اجازه دادن به مدیران برای ساخت دسته‌بندی‌های جدید"
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS  env باید متغیر باشد برای تنظیم به کارگیری CORS. "
@@ -699,6 +676,7 @@ fa_IR:
     topics_per_period_in_top_summary: "تعداد بهتریت جستارهای نشان داده شده در بخش پیش فرض خلاصه بهترین جستارها."
     topics_per_period_in_top_page: "تعداد جستارهای خوب نشان داده شود در بخش گسترش یافته \" بیشتر نشان بده\" بهترین جستارها. "
     redirect_users_to_top_page: "بطور خودکار کاربران  جدید و کاربران غایب را به بهترین صفحه هدایت کن."
+    top_page_default_timeframe: "دعوتنامه های معمولی در صفحه کاربر نشان داده می شوند. "
     show_email_on_profile: "به کاربران ایمیلشان را در نمایه نشان بده (فقط برای خودشان و مدیران)"
     email_token_valid_hours: "رمز عبور فراموش شده/ حساب کاربری فعال اعتبار دارد برای (n) ساعت."
     email_token_grace_period_hours: "رمز عبور فراموش شده/ نشانه حساب کاربری فعال هنوز قابل اعتبار است برای مهلت (n) ساعت بعد از اینکه بخشوده شد."
@@ -706,7 +684,6 @@ fa_IR:
     allow_index_in_robots_txt: "مشخص کردن در robots.txt که به این سایت اجازه می دهد به نمایه شدن برای موتورهای جستجوی وب."
     email_domains_blacklist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت نام کنند. برای مثال:  mailinator.com|trashmail.net"
     email_domains_whitelist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه های ایمیلی به غیر از آنهایی که در لیست هستند اجازه ندارند. "
-    forgot_password_strict: "به کاربران حساب های کاربری موجود اطلاع نده وقتی آنها از رمز عبور فراموش شده محاوره ای استفاده می کنند. "
     log_out_strict: "وقتی از سیستم خارج می شود٬ کاربر را از تمام جلسات بر روی تمام دستگاه ها خارج کن "
     version_checks: "Discourse Hub را پینگ کن برای  نسخه بروزرسانی و پیام نسخه جدید را صفحه آمار ادمین نشان بده."
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید  Discourse موجود است. "
@@ -721,7 +698,6 @@ fa_IR:
     block_common_passwords: "رمز عبوری که جزو 10,000 رمز عبور رایج است را قبول نکنید. "
     enable_sso: "اجازه single sign on از طریق سایت‌های دیگر داده شود (هشدار: آدرس ایمیل کاربر *باید* توسط سایت دیگر معتبر تشخیص داده شود!)"
     enable_sso_provider: "پیاده سازی  پروتکل ارائه دهنده SSO Discourse در /session/sso_provider endpoint, requires sso_secret to be set "
-    sso_url: "URL برای ورود یکپارچه در درگاه"
     sso_secret: "رشته راز استفاده شده در تصدیق رمزنویسی اطلاعات SSO ٬ مطمئن شوید که  10 کاراکتر است یا بیشتر. "
     sso_overrides_email: "آدرس ایمیل دریافت شده از طریق SSO را در هر بار ورود جایگزین آدرس ایمیل محلی کاربر می‌کند و از تغییر محلی آن نیز جلوگیری می‌نماید. (هشدار: این کار ممکن است به خاطر تغییر در ایمیل‌های محلی باعث بروز اختلاف و ناهماهنگی شود)"
     sso_overrides_username: "نام کاربری دریافت شده از طریق SSO را در هر بار ورود جایگزین نام کاربری محلی کاربر کرده و از تغییر محلی آن نیز جلوگیری می‌نماید. (هشدار: این کار ممکن است به خاطر تغییر در طول یا سایر شرایط نام کاربری باعث بروز خطا و ناهماهنگی شود)"
@@ -833,7 +809,6 @@ fa_IR:
     faq_url: "اگر هاستی برای پرسش و پاسخ در جای دیگری برای استفاده داری٬ URL را اینجا ارائه کن. "
     tos_url: "اگر هاست شرایط و ضوابط استفاده از سرویس برای استفاده در جای دیگری داری٬ URL را اینجا ارائه کن. "
     privacy_policy_url: "اگر هاست سند حفظ حریم خصوصی  برای استفاده در جای دیگری داری٬ URL را اینجا ارائه کن. "
-    newuser_spam_host_threshold: "چندبار کاربر جدید می تواند پیوندی را در یک فضا پست کند قبل از اینکه هرزنامه شناخته شوند. "
     white_listed_spam_host_domains: "لیست دامنه ها محروم از هرزنامه ی تست میزبان.  هرگز از ساخت پست جدید با پیوند هایی از این دامنه ها محدود نمی شوند. "
     staff_like_weight: "چقدر عوامل بیشتر تا به مدیران پسند داده بشود."
     levenshtein_distance_spammer_emails: "هنگامی که تطبیق ایمیل هرزنامه باشد٬ تعداد کاراکترهای متفاوت  که هنوز هم  به یک تطبق مبهم اجازه خواهد داد."
@@ -866,13 +841,9 @@ fa_IR:
     delete_all_posts_max: "حداکثر تعداد نوشته هایی که می تواند یکباره پاک شود با کلید همه نوشته ها را پاک کن. اگر کاربر بییشتر از این نوشته ها دارد٬ نوشته نمی تواند یکبار پاک شود و کاربر نمی تواند حذف شود."
     username_change_period: "تعداد روزهایی که بعد از ثبت نام می توانند نام کاربری خود را عوض کنند ( 0 برای جلوگیری از عوض کردن نام کاربرایشان.)"
     email_editable: "به کاربران اجازه بده ایمیل آدرس خود را عوض کنند بعد از ثبت نام. "
-    logout_redirect: "مکان برای جابجایی مرورگر بعد از خارج شدن EG:    (http://somesite.com/logout)"
     allow_animated_thumbnails: "تولید ریز عکسهای متحرک از تصاویر GIF انیمیشن."
     default_avatars: "URLs برای آواتارهایی که کاربران جدید  از آن بطور پیش فرض می توانند استفاده کنند قبل از اینکه آنها را عوض کنند. "
     automatically_download_gravatars: "آواتار را برای کاربران دریافت کن برای ساختن حساب کاربری یا ایمیل. "
-    digest_topics: "حداکثر تعداد جستارهایی که در دایجست ایمیل نشان داده می شود "
-    digest_min_excerpt_length: "حداقل نوشته های گزیده در ایمیل دایجست٬‌ در کاراکتر."
-    disable_digest_emails: "ایمیل های دایجست را برای تمام کاربران غیر فعال کن. "
     max_daily_gravatar_crawls: "حداکثرتعداد زمانی که دیسکورس Gravatar را چک می کند برای آواتار سفارشی در هر روز. "
     public_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به همه نشان داده شود."
     staff_user_custom_fields: "لیست مجاز فیلد سفارشی برای کاربر که می تواند به مدیران نشان داده شود."
@@ -883,7 +854,6 @@ fa_IR:
     allow_profile_backgrounds: "به کاربر اجازه بده تا پس زمینه نمایه خود را آپلود کنند."
     enable_mobile_theme: "دستگاه های موبایلی که از تم دوستانه موبایل استفاده می کنن٬‌ با قابلیت جابجایی به حالت تمام سایت. این را از کار بیانداز اگر می خواهی از شیوه سفارشی استفاده کنی که بطور کامل پاسخگو است."
     dominating_topic_minimum_percent: " پست های  یک کاربر چند درصد  باید درست کنند در یک جستار قبل از اینکه یادآوری بشن درباره بیش از اندازه بودن آن در یک جستار.  "
-    daily_performance_report: "تحلیل لاگ‌های NGINX و ارسال یک پست شامل جزئیات ویژه مدیران"
     suppress_uncategorized_badge: "مدال برای جستارهای شناخته نشده در لیست جستارها نشان نده. "
     global_notice: "بنر فوری ٬‌ اضطراری  را بصورت سراسری به تمام بازدیدکنندگان نشان بده٬ برای مخفی کردن آن را به خالی عوض کن (HTML allowed)."
     disable_edit_notifications: "آگاهی ساز ویرایش را از کار بینداز از طریق کاربر سیستم وقتی  'download_remote_images_to_local' فعال است "
@@ -896,7 +866,6 @@ fa_IR:
     default_code_lang: " پیش فرض برنامه نویسی زبان سینتکس برجسته شده به بلوک های  کد GitHub  اعمال بشه.  (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "وقتی کسی شروع می کند با پاسخ دادن به جستاری که آخرین پاسخ برمی گردد به  خیلی قبل یک هشدار نمایش داده می شود. نمایش با تنظیمات تا 0. "
     autohighlight_all_code: "اعمال زور برای  برجسته کردن کد به تمام بلاک های کد تنظیم نشده حتی وقتی به صراحت زبان را مشخص نمی کنند. "
-    highlighted_languages: "شامل  نحوه قوانین برجسته شده. ( اخطار: شامل زبان های متفاوت ممکن است در نحوه اجرا تاثیر گذار باشد) ببین:  https://highlightjs.org/static/demo/ برای دمو"
     feed_polling_enabled: "فقط جاسازی: چه جاسازی RSS/ATOM feed به عنوان نوشته"
     feed_polling_url: "فقط جاسازی: URL of RSS/ATOM feed to embed."
     embed_by_username: "نام کاربری دیسکورس کاربری که نوشته های جاسازی شده را ساخته."
@@ -929,19 +898,6 @@ fa_IR:
       invalid_string_min: "باید حداقل  %{min}  کاراکتر باشد "
       invalid_string_max: "نباید بیشتر از %{max}  کاراکتر باشد"
       invalid_reply_by_email_address: "مقدار باید شامل '%{reply_key}' و متفاوت باشد از ایمیل آگاه سازی "
-  notification_types:
-    mentioned: "%{display_username} به شما اشاره شد در %{link}"
-    liked: "%{display_username} نوشته شما پسندیدهشد در %{link}"
-    replied: "%{display_username} به نوشته شما پاسخ داده شد در %{link}"
-    quoted: "%{display_username} از شما نقل قول شد در %{link}"
-    edited: "%{display_username} نوشته شما ویرایش شد در %{link}"
-    posted: "%{display_username} نوشته ارسال شد در %{link}"
-    moved_post: "%{display_username} نوشته شما منتقل شد به %{link}"
-    private_message: "%{display_username} یک پیام ارسال کنید: %{link}"
-    invited_to_private_message: "%{display_username}  شما را به این پیام دعوت کرده : %{link}"
-    invitee_accepted: " %{display_username} دعوت نامه شما را پذیرفته شد "
-    linked: "%{display_username} شما پیوند خوردید در %{link}"
-    granted_badge: "شما وارد شدید %{link}"
   search:
     within_post: "#%{post_number} توسط %{username}"
     types:
@@ -1027,10 +983,24 @@ fa_IR:
       other: "%{count} نشانه ها منتظر استفاده"
   invite_mailer:
     subject_template: "%{invitee_name} شما را دعوت کرده به %{topic_title}' در  %{site_domain_name}"
-    text_body_template: "%{invitee_name} شما را دعوت کرده به یک گفتگو\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nدر \n\n> %{site_title} -- %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌\n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
+    text_body_template: |
+      %{invitee_name} شما را دعوت کرده به یک گفتگو
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      در
+
+      > %{site_title} -- %{site_description}
+
+      اگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌
+
+      %{invite_link}
+
+      این دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید.
   invite_forum_mailer:
     subject_template: "%{invitee_name} دعوت شدید به عضویت در %{site_domain_name}"
-    text_body_template: "%{invitee_name}  شما را دعوت کرده تا عضو شوید \n\n> **%{site_title}**\n>> %{site_description}\n\nاگر علاقه مند هستید بر روی پیوند پیش رو کلیک کنید: \n\n%{invite_link}\n\nاین دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید. \n"
   invite_password_instructions:
     subject_template: "تنظیم رمز عبور برای حساب کاربری {site_name}%"
   test_mailer:
@@ -1042,10 +1012,6 @@ fa_IR:
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} نوشته منتظر بررسی است"
-    text_body_template: |
-      سلام،
-
-      نوشته‌های کاربران جدید منتظر بررسی‌اند. [می‌توان آن‌ها را در اینجا تأیید یا رد نمود](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "نوشته شما به عنوان **بی ربط به جستار** پرچم گزاری شده. انجمن احساس خوبی برای جا دادن آن در جستار ندارد٬ آن طور که در عنوان و نوشته اول تعریف شده. "
     inappropriate: "نوشاه شما به عنوان ** نامناسب** پرچم گزاری شده. انجمن احساس کرده این تهاجمی، توهین آمیز، و یا نقض  [دستورالعمل  انجمن ما است](دستورعمل  انجمن/)"
@@ -1059,33 +1025,65 @@ fa_IR:
     deferred_and_deleted: "ممنون از اینکه به ما اطلاع دادید. ما نوشته را پاک می کنیم."
   temporarily_closed_due_to_flags: "این عنوان به صورت موقت به خاطر تعداد فراوان گزارش‌های رسیده از کاربران بسته شده است."
   system_messages:
-    post_hidden:
-      subject_template: "پست مخفی شده بدلیل پرچم گزاری انجمن "
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to inform you that your post was hidden.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
-
-        However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
-
-        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     welcome_user:
       subject_template: "به %{site_name} خوش آمدید!"
-      text_body_template: "ممنون برای عضویت%{site_name},٬ و خوش آمدید \n\n\n%{new_user_tips}\n\n\nما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines). \n\n\nاز بودنتان در انجمن لذت ببرید!\n\n\n(اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید.)\n"
+      text_body_template: |
+        ممنون برای عضویت%{site_name},٬ و خوش آمدید
+
+
+        %{new_user_tips}
+
+
+        ما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines).
+
+
+        از بودنتان در انجمن لذت ببرید!
+
+
+        (اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید.)
     welcome_invite:
       subject_template: "به %{site_name} خوش آمدید!"
-      text_body_template: "ممنون برای قبول دعتونامه به %{site_name} -- خوش آمدید!\n\n\nبرای شما یک حساب کاربری جدید ساختیم **%{username}** و شما الان در سیستم هستید. می توانید اسم خود را عوض کنید با مراجعه به [your user profile][prefs].\n\nبرای ورود بعدتر : \n\n\n1.  همیشه برای ورود ** از ایمیل آدرسی استفاده کن که در دعوتنامه اصلی استفاده کردید**. در غیر اینصورت نمی تونیم بگوییم این شمایید! \n\n\n2.  رمز عبور خیلی خوبی بساز برای  [کاربری نمایه ات][prefs]٬ و برای ورود از آن استفاده کن.\n\n%{new_user_tips}\n\n\nما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines). \n\n\nاز بودنتان در انجمن لذت ببرید!\n\n\n(اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید. )\n\n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: |
+        ممنون برای قبول دعتونامه به %{site_name} -- خوش آمدید!
+
+
+        برای شما یک حساب کاربری جدید ساختیم **%{username}** و شما الان در سیستم هستید. می توانید اسم خود را عوض کنید با مراجعه به [your user profile][prefs].
+
+        برای ورود بعدتر :
+
+
+        1.  همیشه برای ورود ** از ایمیل آدرسی استفاده کن که در دعوتنامه اصلی استفاده کردید**. در غیر اینصورت نمی تونیم بگوییم این شمایید!
+
+
+        2.  رمز عبور خیلی خوبی بساز برای  [کاربری نمایه ات][prefs]٬ و برای ورود از آن استفاده کن.
+
+        %{new_user_tips}
+
+
+        ما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines).
+
+
+        از بودنتان در انجمن لذت ببرید!
+
+
+        (اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید. )
+
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "پشتیبان گیری با موفقیت انجام شد"
     backup_failed:
       subject_template: "پشتیبان گیری با شکست مواجه شد."
-      text_body_template: "پشتیبان گیری ناموفق شد\n\nاینجا وارد سیستم شوید: \n\n```\n%{logs}\n\n```\n\n"
+      text_body_template: |
+        پشتیبان گیری ناموفق شد
+
+        اینجا وارد سیستم شوید:
+
+        ```
+        %{logs}
+
+        ```
+
     restore_succeeded:
       subject_template: "بازیابی با موفقیت کامل شد "
       text_body_template: "بازیابی با موفقیت انجام شد. "
@@ -1105,10 +1103,18 @@ fa_IR:
       text_body_template: "فایل دعوت انبوهی کاربر شما پردازش شد٬  %{sent}  دعوتنامه ها ایمیل شد. "
     bulk_invite_failed:
       subject_template: "دعوت انبوه کاربر با ایراد پردازش شد"
-      text_body_template: "فایل دعوت انبوهی کاربر شما پردازش شد٬ %{sent}  دعوتنامه ها ایمیل شد با %{failed} ایراد(s).\n\nاینجا وارد سیستم شوید: \n\n```\n%{logs}\n\n```\n"
+      text_body_template: |
+        فایل دعوت انبوهی کاربر شما پردازش شد٬ %{sent}  دعوتنامه ها ایمیل شد با %{failed} ایراد(s).
+
+        اینجا وارد سیستم شوید:
+
+        ```
+        %{logs}
+
+        ```
     csv_export_succeeded:
       subject_template: "خارج کردن اطلاعات کامل شد"
-      text_body_template: |+
+      text_body_template: |
         خارج کردن فایل ها با موفقیت انجام شد! :dvd:
 
 
@@ -1127,7 +1133,6 @@ fa_IR:
       subject_template: "[%{site_name}]  مشکل ایمیل --  محتوا ناشناخته است"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] مشکل ایمیل  -- دسترسی نامعتبر "
-      text_body_template: "ما متاسفیم٬ ولی پیام شما در ایمیل به %{destination} (titled %{former_title}) کار نکرد. \n\nحساب کاربری شما دارای سطح اعتماد کافی برای ارسال نوشته جدید به این ایمیل نیست. اگر این مشکل را قبول دارید٬ با یکی از مدیران تماس بگیرید.\n"
     email_reject_reply_key:
       subject_template: "[%{site_name}] مشکل ایمیل  -- کلید پاسخ ناشناس"
     email_reject_topic_not_found:
@@ -1138,18 +1143,8 @@ fa_IR:
       subject_template: "[%{site_name}] مشکل ایمیل  -- پاسخ خودکار"
     email_error_notification:
       subject_template: "[%{site_name}] مشکل ایمیل  -- ایراد تصدیق POP "
-    too_many_spam_flags:
-      subject_template: "حساب جدید کاربری انسداد شد "
-      text_body_template: "سلام \n\nاین یک پیغام خوکار است از  %{site_name}  برای تایید اینکه نوشته های شما بطور خودکار مخفی شده اند زیرا آنها توسط انجمن پرچم گزاری شده اند. \n\n\nبه عنوان یک اقدام احتیاطی٬ حساب کاربری جدید شما مسدود شده است از ساختن پاسخ های جدید یا جستارهای جدید تا قبل از اینکه یک مدیران حساب کاربری شما را بررسی کند.\n\n\nبرای راهنمایی بیشتر به[ دستور عمل های انجمن]  مراجعه کنید. (%{base_url}/guidelines).\n"
-    blocked_by_staff:
-      subject_template: "حساب کاربری مسدود شد"
-    user_automatically_blocked:
-      subject_template: "کاربر جدید%{username}  مسدود شد بخاطر پرچم های انجمن"
     spam_post_blocked:
       subject_template: "کاربر جدید%{username} نوشته مسدود شده است بدلیل پیوند های تکراری"
-    unblocked:
-      subject_template: "حساب کاربری رفع انسداد شد "
-      text_body_template: "سلام \n\nاین یک پیام خودکار هست از طرف  %{site_name} برای تایید باز شدن حساب کاربری شما بعد از بررسی مدیران. \n\n\nشما می توانید دوباره پاسخ ها و جستارهای جدید را بوجود بیاورید.\n"
     pending_users_reminder:
       subject_template:
         other: "%{count} کاربران منتظر تایید"
@@ -1182,13 +1177,10 @@ fa_IR:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "یک گزارش کوتاه از %{site_link}  از آخرین باری که بازدید کردید در %{last_seen_at}"
-      subject_template: "[%{site_name}] خلاصه"
       new_activity: "فعالیت جدید در موضوعات و نوشته‌های شما:"
       top_topics: "نوشته‌های محبوب"
       other_new_topics: "موضوعات محبوب"
-      unsubscribe: "این دایجست اراسال شده از %{site_link} وقتی ما شما را برای مدت طولانی ندیده باشیم. برای لغو اشتراک %{unsubscribe_link}."
       click_here: "اینجا کلیک کنید"
-      from: "%{site_name} خلاصه"
       read_more: "بیش‌تر بخوانید"
       more_topics: "جستارهای جدیدی%{new_topics_since_seen} وجود داشت."
       more_topics_category: "موضوعات جدید بیشتر"
@@ -1206,19 +1198,64 @@ fa_IR:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "تنظیم رمز عبور [%{site_name}] "
-      text_body_template: "شخصی برای اضافه کردن رمز عبور به حساب کاربری شما پرسیده در [%{site_name}](%{base_url}).  در روش دیگر٬‌ شما می توانید با وارد شوید از طریق سرویس دیگر مثل (گوگل٬‌ فیس بوک٬‌غیره) که ایمیل برابر استفاده می کنند. \n\n\nاگر شما نبود٬ می توانید با خیال راحت این ایمیل را نادیده بگیرید.\n\nبر روی پیوند پیش رو برای انتخاب رمز عبور جدید کلیک کنید.\n\n%{base_url}/users/password-reset/%{email_token}\n"
+      text_body_template: |
+        شخصی برای اضافه کردن رمز عبور به حساب کاربری شما پرسیده در [%{site_name}](%{base_url}).  در روش دیگر٬‌ شما می توانید با وارد شوید از طریق سرویس دیگر مثل (گوگل٬‌ فیس بوک٬‌غیره) که ایمیل برابر استفاده می کنند.
+
+
+        اگر شما نبود٬ می توانید با خیال راحت این ایمیل را نادیده بگیرید.
+
+        بر روی پیوند پیش رو برای انتخاب رمز عبور جدید کلیک کنید.
+
+        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] ورود به سیستم"
-      text_body_template: "شخصی برای ورود به سیستم با حساب کاربری شما سوال کرد  [%{site_name}](%{base_url}).\n\nاگر شما این درخواست را نداده اید می توانید این ایمیل را نادیده بگیرید. \n\nبرای ورود به سیستم لینک پیش رو را کلیک کنید. :\n%{base_url}/users/admin-login/%{email_token}\n"
+      text_body_template: |
+        شخصی برای ورود به سیستم با حساب کاربری شما سوال کرد  [%{site_name}](%{base_url}).
+
+        اگر شما این درخواست را نداده اید می توانید این ایمیل را نادیده بگیرید.
+
+        برای ورود به سیستم لینک پیش رو را کلیک کنید. :
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] حساب کاربری جدید شما"
-      text_body_template: "حساب کاربری جدید برای شما ساخته شد در  %{site_name}\n\nبر روری پیوند پیش رو کلیک کنید برای انتخاب رمز برای حساب کاربری جدیدتان: \n\n%{base_url}/users/password-reset/%{email_token}\n"
+      text_body_template: |
+        حساب کاربری جدید برای شما ساخته شد در  %{site_name}
+
+        بر روری پیوند پیش رو کلیک کنید برای انتخاب رمز برای حساب کاربری جدیدتان:
+
+        %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "شما تایید شدید %{site_name}! "
-      text_body_template: "خوش آمدید به  %{site_name}!\n\nیکی از مدیران حساب کاربری شما را تایید کرد در %{site_name}.\n\nبر روی پیوند پیش رو کلیک کنید تا حساب کاربری شما تایید شود: \n%{base_url}/users/activate-account/%{email_token}\n\nاگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید. \n\n%{new_user_tips}\n\n\nما به  [رفتار انجمن متمدن] معتقدیم (%{base_url}/guidelines) برای  همیشه. \n\nاز بودنتان در اینجا لذت ببرید! \n\n( اگر شما نیاز  به ارتباط با مدیران را دارید[staff members](%{base_url}/about) به عنوان یک کاربر جدید٬ لطفا به این پیام پاسخ دهید.)\n"
+      text_body_template: |
+        خوش آمدید به  %{site_name}!
+
+        یکی از مدیران حساب کاربری شما را تایید کرد در %{site_name}.
+
+        بر روی پیوند پیش رو کلیک کنید تا حساب کاربری شما تایید شود:
+        %{base_url}/users/activate-account/%{email_token}
+
+        اگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید.
+
+        %{new_user_tips}
+
+
+        ما به  [رفتار انجمن متمدن] معتقدیم (%{base_url}/guidelines) برای  همیشه.
+
+        از بودنتان در اینجا لذت ببرید!
+
+        ( اگر شما نیاز  به ارتباط با مدیران را دارید[staff members](%{base_url}/about) به عنوان یک کاربر جدید٬ لطفا به این پیام پاسخ دهید.)
     signup:
       subject_template: "[%{site_name}] حساب کاربری جدید را تایید کنید"
-      text_body_template: "خوش آمدید به %{site_name}!\n\n\nبرای فعال نمودن حساب کاربریتان بر روی پیوند پیش رو کلیک کنید: \n\n%{base_url}/users/activate-account/%{email_token}\n\n\nاگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید. \n"
+      text_body_template: |
+        خوش آمدید به %{site_name}!
+
+
+        برای فعال نمودن حساب کاربریتان بر روی پیوند پیش رو کلیک کنید:
+
+        %{base_url}/users/activate-account/%{email_token}
+
+
+        اگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید.
   page_not_found:
     popular_topics: "محبوب"
     recent_topics: "اخیر"
@@ -1226,7 +1263,10 @@ fa_IR:
     search_title: "جستجو در این سایت"
     search_google: "گوگل"
   login_required:
-    welcome_message: "#[خوش آمدید به  %{title}](#welcome)\n\nحساب کاربری نیاز داره به.  لطفا حساب کاربری درست کنید یا وارد سیستم بشید برای ادامه. \n"
+    welcome_message: |
+      #[خوش آمدید به  %{title}](#welcome)
+
+      حساب کاربری نیاز داره به.  لطفا حساب کاربری درست کنید یا وارد سیستم بشید برای ادامه.
   terms_of_service:
     title: "شرایط استفاده از خدمات"
     signup_form_message: 'من خواندم و قبول می کنم  <a href="/tos" target="_blank">شرایط و ضوابط استفاده از سرویس</a>.'
@@ -1241,9 +1281,6 @@ fa_IR:
     images:
       too_large: "با عرض پوزش٬ عکسی را که تلاش برای بارگزاری آن دارید بسیار بزرگ است ( حداکثر اندازه %{max_size_kb}KB ) لطفا آن را تغییر اندازه دهید و دوباره امتحان کنید. "
       size_not_found: "با عرض پوزش٬ ولی ما نتوانستیم اندازه عکس را مشخص کنیم. شاید عکس شما خراب است. "
-  flag_reason:
-    sockpuppet: "یک کاربر جدید یک جستار جدید ساخته٬ و کاربر جدید دیگری با  همان آدرس  IP پاسخ داده. نگاه کن به گزارش٬ sockpuppets  تنظیمات سایت "
-    spam_hosts: "این کاربر جدید چند نوشته جدید بوجود آورده با پیوندهایی به همان  دامنه. کارابران جدید را ببین _اسپم_میزبان_بخش تنظیمات سایت"
   email_log:
     no_user: "کاربری با این ID پیدا نمی شود%{user_id}"
     anonymous_user: "کاربر ناشناس است"
@@ -1272,7 +1309,7 @@ fa_IR:
     نوشته اول این جستار را ویرایش کن برای عوض کردن محتویا ت%{page_name} صفحه.
   guidelines_topic:
     title: "پرسش و پاسخ / دستورالعمل"
-    body: "اینجا مکانی متمدن برای بحث جمعی است.\nلطفا برای این فروم بحث همان احترامی را قائل باشید که برای یک پارک عمومی هستید. ما، هم، یک منبع جمعی مشترک هستیم – جایی که مهارت ها، دانش و علایق در اثر بحث های در جریان به اشتراک گذاشته می شود.\nاز راهنمای زیر برای تمیز نگه داشتن این مکان به صورت یک مجلس متمدن بحث بهره ببرید. این راهنما قوانین سفت و سختی ندارد، بلکه صرفا به قضاوت افراد از جامعه ی ما کمک میکند. \nبحث را بهبود ببخشید\nبا بهبود بحث ها، حتی اگر بهبود کوچکی باشد، به ما کمک کنید تا اینجا را همیشه یک مکان مناسب برای بحث نگه داریم. اگر مطمئن نیستید که پست های شما به بحث چیزی اضافه میکند، به چیزی که میخواهید فکر کنید و بعدتر دوباره تلاش کنید.\nموضوعات بحث شده در اینجا برای ما مهم است، و میخواهیم شما هم طوری رفتار کنید که گویی آن ها برای شما هم مهم هستند. نسبت به موضوعات مطرح شده و مردمی که راجع به آن بحث میکنند احترام قائل باشید، حتی اگر با بعضی چیزهایی که گفته می شود موافق نیستید.\nیک راه بهبود بحث ها، با کشف بحث هایی است که پیش تر اتفاق افتاده. لطفا پیش از اینکه پاسخ خودتان را بیان کنید، زمانی برای مرور عناوینی که اینجاست سپری کنید؛ در این صورت احتمال اینکه افراد دیگری با علایق مشترک با شما بیابید بیشتر میشود.  \nحتی وقتی موافق نیستید، نیز دلپذیر باشید\nممکن است بخواهید با بعضی بحث های مطرح شده مخالفت کنید. این خوب است. فقط حواستان باشد که ایده ها را نقد کنید و نه افراد را. لطفا از موارد زیر دوری کنید:\n-\tنام بردن\n-\tحمله به شخصیت و یا انگیزه ی افراد\n-\tواکنش به نحوه ی بیان پست به جای محتوای آن\n-\tواکنش های سریع و متناقض \nبه جای این ها، استدلال های مخالفی که بحث را بهبود می بخشند فراهم کنید.\nمشارکت شما به حساب می آید\nبحث هایی که ما اینجا داریم برای همه خواهد ماند. با تعامل در بحث هایی که این فروم را به مکان جالب تری برای حضور میکند و دوری از بحث هایی که این چنین نمی کند، به ما کمک کنید در آینده ی این جمع تاثیرگذار باشیم. \nدیسکورس ابزاری در دسترس می گذارد که به جمع این امکان را میدهد که بهترین (و بدترین) مشارکتها را تشخیص دهند: علاقه مندی ها، نشانک ها، لایک ها، پرچم ها، پاسخ ها، ویرایش ها، و ... . از این ابزارها برای بهبود تجربه ی خودتان و همین طور دیگران بهره ببرید.\nبیاید تلاش کنیم پارک را نسبت به آن چه از ابتدا یافته ایم، بهبود ببخشیم.\nاگر مشکلی دیدید، آن را پرچم گذاری کنید.\nتعدیل کننده ها امتیازهای مشخصی دارند؛ آن ها مسئول این فروم هستند. و البته شما هم هستید. با کمک شما، تعدیل کننده ها میتوانند تسهیل گر باشند و نه فقط فراش یا پلیس.\nوقتی رفتار نامناسبی میبینید، پاسخ ندهید. این کار رفتار بد را تشویق میکند، انرژی شما را مصرف میکند، و زمان دیگران را خرج میکند. تنها کافی است آن را پرچم گذاری کنید. با تعلق گرفتن پرچم های کافی، اقدام مناسب انجام می شود، یا خود به خود و یا با دخالت تعدیل کننده ها.\nبرای حفظ جامعه یمان، تعدیل کننده ها این حق را دارند که محتوای هر کاربری و یا هر کاربری را به هر دلیلی در هر زمانی حذف کنند. تعدیل کننده ها، پست های جدید را پیش نمایش نمیکنند؛ و تعدیل کننده ها و مجریان سایت مسئول هیچ کدام از پست های جمع نیستند.\nهمیشه متمدن باشید\nهیچ چیزی یک بحث سالم را مانند بی ادبی خراب نمیکند:\n-\tمتمدن باشید. مطالبی که یک فرد معقول توهین آمیز، سواستفاده، و یا بیان نفرت در نظر میگیرد پست نکنید.\n-\tاینجا را تمیز نگه دارید. مطالب مستهجن و یا مطالب جنسی صریح پست نکنید.\n-\tبه همدیگر احترام بگذارید. باعث آزار یا اندوه دیگران نشوید، خود را به جای دیگران جا نزنید، و یا اطلاعات خصوصی دیگران را در معرض قرار ندهید.\n-\tبه فروم ما احترام بگذارید. اسپم پست نکنید و یا فروم را به تباهی نکشید.\nاین شرایط تعریف دقیق ندارند – از چیزهایی که حتی نمود این موارد هست نیز دوری کنید. اگر مطمئن نیستید، از خودتان بپرسید چه حسی به شما دست میداد اگر پستتان در صفحه ی اول نشریه نیویورک تایمز چاپ شود.\nاینجا یک فروم عمومی است، و موتورهای جستجو بحث های موجود را نشان میدهند. زبان، لینک ها، و تصاویر را برای دوستان و خانواده امن نگه دارید. \nاینجا را تمیز نگه دارید\nتلاش کنید تا چیزها را در جای مناسب خود قرار دهید، تا ما بتوانیم زمان بیشتری را به بحث و زمان کمتری را به تمیزکاری بپردازیم:\n-\tیک موضوع را در دسته بندی نادرست مطرح نکنید.\n-\tیک موضوع را در عناوین مختلف پست نکنید.\n-\tپاسخ های بدون محتوا پست نکنید.\n-\tیک موضوع را با ویرایش آن در حین بحث منحرف نکنید.\n-\tپست های خودتون رو امضا نکنید – هر پستی اطلاعات شما را با خود به همراه دارد.\nبه جای پست کردن «+1» یا «موافقم»، از دکمه ی لایک استفاده کنید. به جای اینکه یک موضوع موجود را به عنوان موضوع جدید مطرح کنید، از گزینه ی «پاسخ به صورت موضوع لینک شده» استفاده کنید. \nتنها مطالب خودتان را پست کنید\nمطالب دیگران را بدون اجازه مطرح نکنید. توصیف، لینک، و یا ابزاری برای دزدی دارایی های معنوی دیگران (نرم افزارها، ویدیوها، فایل صوتی، تصویر) و یا شکستن قوانین دیگر؛ را مطرح نکنید.\nقدرت گرفته از شما\nاین سایت توسط مدیران ما و شما، جمع حرکت میکند. اگر هر سوال دیگری درباره ی نحوه ی عملکرد چیزهای اینجا دارید، یک بحث جدید در دسته بندی فیدبک های سایت شروع کنید و بگذارید تا بحث صورت بگیرد. اگر یک موضوع بحرانی و یا مسئله ی فوری هست که نمیتواند در یک موضوع فیدبک و یا با پرچم مطرح شود، از طریق صفحه ی اعضا با ما تماس بگیرید. \nشرایط سرویس\nبله، قوانین خسته کننده هستند، ولی ما باید از خودمان در برابر گروه های غیردوستانه محافظت کنیم – و همین طور از شما و اطلاعات شما. در شرایط استفاده از سرویسمان که رفتار شما ( و ما) را توصیف میکند و حقوق مربوط به محتوا، حریم خصوصی، و قوانین را توضیح داده ایم. برای استفاده از این سرویس، لازم است شما با رعایت شرایط استفاده از سرویس ما موافقت کرده باشید.  \n"
+    body: "اینجا مکانی متمدن برای بحث جمعی است.\nلطفا برای این فروم بحث همان احترامی را قائل باشید که برای یک پارک عمومی هستید. ما، هم، یک منبع جمعی مشترک هستیم – جایی که مهارت ها، دانش و علایق در اثر بحث های در جریان به اشتراک گذاشته می شود.\nاز راهنمای زیر برای تمیز نگه داشتن این مکان به صورت یک مجلس متمدن بحث بهره ببرید. این راهنما قوانین سفت و سختی ندارد، بلکه صرفا به قضاوت افراد از جامعه ی ما کمک میکند.\nبحث را بهبود ببخشید\nبا بهبود بحث ها، حتی اگر بهبود کوچکی باشد، به ما کمک کنید تا اینجا را همیشه یک مکان مناسب برای بحث نگه داریم. اگر مطمئن نیستید که پست های شما به بحث چیزی اضافه میکند، به چیزی که میخواهید فکر کنید و بعدتر دوباره تلاش کنید.\nموضوعات بحث شده در اینجا برای ما مهم است، و میخواهیم شما هم طوری رفتار کنید که گویی آن ها برای شما هم مهم هستند. نسبت به موضوعات مطرح شده و مردمی که راجع به آن بحث میکنند احترام قائل باشید، حتی اگر با بعضی چیزهایی که گفته می شود موافق نیستید.\nیک راه بهبود بحث ها، با کشف بحث هایی است که پیش تر اتفاق افتاده. لطفا پیش از اینکه پاسخ خودتان را بیان کنید، زمانی برای مرور عناوینی که اینجاست سپری کنید؛ در این صورت احتمال اینکه افراد دیگری با علایق مشترک با شما بیابید بیشتر میشود.\nحتی وقتی موافق نیستید، نیز دلپذیر باشید\nممکن است بخواهید با بعضی بحث های مطرح شده مخالفت کنید. این خوب است. فقط حواستان باشد که ایده ها را نقد کنید و نه افراد را. لطفا از موارد زیر دوری کنید:\n-\tنام بردن\n-\tحمله به شخصیت و یا انگیزه ی افراد\n-\tواکنش به نحوه ی بیان پست به جای محتوای آن\n-\tواکنش های سریع و متناقض\nبه جای این ها، استدلال های مخالفی که بحث را بهبود می بخشند فراهم کنید.\nمشارکت شما به حساب می آید\nبحث هایی که ما اینجا داریم برای همه خواهد ماند. با تعامل در بحث هایی که این فروم را به مکان جالب تری برای حضور میکند و دوری از بحث هایی که این چنین نمی کند، به ما کمک کنید در آینده ی این جمع تاثیرگذار باشیم.\nدیسکورس ابزاری در دسترس می گذارد که به جمع این امکان را میدهد که بهترین (و بدترین) مشارکتها را تشخیص دهند: علاقه مندی ها، نشانک ها، لایک ها، پرچم ها، پاسخ ها، ویرایش ها، و ... . از این ابزارها برای بهبود تجربه ی خودتان و همین طور دیگران بهره ببرید.\nبیاید تلاش کنیم پارک را نسبت به آن چه از ابتدا یافته ایم، بهبود ببخشیم.\nاگر مشکلی دیدید، آن را پرچم گذاری کنید.\nتعدیل کننده ها امتیازهای مشخصی دارند؛ آن ها مسئول این فروم هستند. و البته شما هم هستید. با کمک شما، تعدیل کننده ها میتوانند تسهیل گر باشند و نه فقط فراش یا پلیس.\nوقتی رفتار نامناسبی میبینید، پاسخ ندهید. این کار رفتار بد را تشویق میکند، انرژی شما را مصرف میکند، و زمان دیگران را خرج میکند. تنها کافی است آن را پرچم گذاری کنید. با تعلق گرفتن پرچم های کافی، اقدام مناسب انجام می شود، یا خود به خود و یا با دخالت تعدیل کننده ها.\nبرای حفظ جامعه یمان، تعدیل کننده ها این حق را دارند که محتوای هر کاربری و یا هر کاربری را به هر دلیلی در هر زمانی حذف کنند. تعدیل کننده ها، پست های جدید را پیش نمایش نمیکنند؛ و تعدیل کننده ها و مجریان سایت مسئول هیچ کدام از پست های جمع نیستند.\nهمیشه متمدن باشید\nهیچ چیزی یک بحث سالم را مانند بی ادبی خراب نمیکند:\n-\tمتمدن باشید. مطالبی که یک فرد معقول توهین آمیز، سواستفاده، و یا بیان نفرت در نظر میگیرد پست نکنید.\n-\tاینجا را تمیز نگه دارید. مطالب مستهجن و یا مطالب جنسی صریح پست نکنید.\n-\tبه همدیگر احترام بگذارید. باعث آزار یا اندوه دیگران نشوید، خود را به جای دیگران جا نزنید، و یا اطلاعات خصوصی دیگران را در معرض قرار ندهید.\n-\tبه فروم ما احترام بگذارید. اسپم پست نکنید و یا فروم را به تباهی نکشید.\nاین شرایط تعریف دقیق ندارند – از چیزهایی که حتی نمود این موارد هست نیز دوری کنید. اگر مطمئن نیستید، از خودتان بپرسید چه حسی به شما دست میداد اگر پستتان در صفحه ی اول نشریه نیویورک تایمز چاپ شود.\nاینجا یک فروم عمومی است، و موتورهای جستجو بحث های موجود را نشان میدهند. زبان، لینک ها، و تصاویر را برای دوستان و خانواده امن نگه دارید.\nاینجا را تمیز نگه دارید\nتلاش کنید تا چیزها را در جای مناسب خود قرار دهید، تا ما بتوانیم زمان بیشتری را به بحث و زمان کمتری را به تمیزکاری بپردازیم:\n-\tیک موضوع را در دسته بندی نادرست مطرح نکنید.\n-\tیک موضوع را در عناوین مختلف پست نکنید.\n-\tپاسخ های بدون محتوا پست نکنید.\n-\tیک موضوع را با ویرایش آن در حین بحث منحرف نکنید.\n-\tپست های خودتون رو امضا نکنید – هر پستی اطلاعات شما را با خود به همراه دارد.\nبه جای پست کردن «+1» یا «موافقم»، از دکمه ی لایک استفاده کنید. به جای اینکه یک موضوع موجود را به عنوان موضوع جدید مطرح کنید، از گزینه ی «پاسخ به صورت موضوع لینک شده» استفاده کنید.\nتنها مطالب خودتان را پست کنید\nمطالب دیگران را بدون اجازه مطرح نکنید. توصیف، لینک، و یا ابزاری برای دزدی دارایی های معنوی دیگران (نرم افزارها، ویدیوها، فایل صوتی، تصویر) و یا شکستن قوانین دیگر؛ را مطرح نکنید.\nقدرت گرفته از شما\nاین سایت توسط مدیران ما و شما، جمع حرکت میکند. اگر هر سوال دیگری درباره ی نحوه ی عملکرد چیزهای اینجا دارید، یک بحث جدید در دسته بندی فیدبک های سایت شروع کنید و بگذارید تا بحث صورت بگیرد. اگر یک موضوع بحرانی و یا مسئله ی فوری هست که نمیتواند در یک موضوع فیدبک و یا با پرچم مطرح شود، از طریق صفحه ی اعضا با ما تماس بگیرید.\nشرایط سرویس\nبله، قوانین خسته کننده هستند، ولی ما باید از خودمان در برابر گروه های غیردوستانه محافظت کنیم – و همین طور از شما و اطلاعات شما. در شرایط استفاده از سرویسمان که رفتار شما ( و ما) را توصیف میکند و حقوق مربوط به محتوا، حریم خصوصی، و قوانین را توضیح داده ایم. برای استفاده از این سرویس، لازم است شما با رعایت شرایط استفاده از سرویس ما موافقت کرده باشید.\n"
   tos_topic:
     title: "شرایط استفاده از خدمات"
   privacy_topic:

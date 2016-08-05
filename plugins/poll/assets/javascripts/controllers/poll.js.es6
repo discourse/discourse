@@ -1,10 +1,11 @@
-import computed from "ember-addons/ember-computed-decorators";
+import { ajax } from 'discourse/lib/ajax';
+import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   isMultiple: Ember.computed.equal("poll.type", "multiple"),
   isNumber: Ember.computed.equal("poll.type", "number"),
-  isRandom : Ember.computed.equal("poll.order", "random"),
   isClosed: Ember.computed.equal("poll.status", "closed"),
+  isPublic: Ember.computed.equal("poll.public", "true"),
 
   // shows the results when
   //   - poll is closed
@@ -14,6 +15,11 @@ export default Ember.Controller.extend({
 
   showResultsDisabled: Em.computed.equal("poll.voters", 0),
   hideResultsDisabled: Em.computed.or("isClosed", "post.topic.archived"),
+
+  @observes("post.polls")
+  _updatePoll() {
+    this.set("model", this.get("post.pollsObject")[this.get("model.name")]);
+  },
 
   @computed("model", "vote", "model.voters", "model.options", "model.status")
   poll(poll, vote) {
@@ -100,6 +106,11 @@ export default Ember.Controller.extend({
 
   castVotesDisabled: Em.computed.not("canCastVotes"),
 
+  @computed("castVotesDisabled")
+  castVotesButtonClass(castVotesDisabled) {
+    return `cast-votes ${castVotesDisabled ? '' : 'btn-primary'}`;
+  },
+
   @computed("loading", "post.user_id", "post.topic.archived")
   canToggleStatus(loading, userId, topicArchived) {
     return this.currentUser &&
@@ -131,7 +142,7 @@ export default Ember.Controller.extend({
 
       this.set("loading", true);
 
-      Discourse.ajax("/polls/vote", {
+      ajax("/polls/vote", {
         type: "PUT",
         data: {
           post_id: this.get("post.id"),
@@ -139,8 +150,11 @@ export default Ember.Controller.extend({
           options: this.get("selectedOptions"),
         }
       }).then(results => {
-        this.setProperties({ vote: results.vote, showResults: true });
-        this.set("model", Em.Object.create(results.poll));
+        const poll = results.poll;
+        const votes = results.vote;
+
+        this.setProperties({ vote: votes, showResults: true });
+        this.set("model", Em.Object.create(poll));
       }).catch(() => {
         bootbox.alert(I18n.t("poll.error_while_casting_votes"));
       }).finally(() => {
@@ -166,7 +180,7 @@ export default Ember.Controller.extend({
           if (confirmed) {
             self.set("loading", true);
 
-            Discourse.ajax("/polls/toggle_status", {
+            ajax("/polls/toggle_status", {
               type: "PUT",
               data: {
                 post_id: self.get("post.id"),

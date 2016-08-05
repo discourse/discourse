@@ -1,3 +1,5 @@
+import PreloadStore from 'preload-store';
+
 export default {
   name: 'localization',
   after: 'inject-objects',
@@ -12,8 +14,16 @@ export default {
     const overrides = PreloadStore.get('translationOverrides') || {};
     Object.keys(overrides).forEach(k => {
       const v = overrides[k];
-      k = k.replace('admin_js', 'js');
 
+      // Special case: Message format keys are functions
+      if (/\_MF$/.test(k)) {
+        k = k.replace(/^[a-z_]*js\./, '');
+        I18n._compiledMFs[k] = new Function('transKey', `return (${v})(transKey);`);
+
+        return;
+      }
+
+      k = k.replace('admin_js', 'js');
       const segs = k.split('.');
       let node = I18n.translations[I18n.locale];
       let i = 0;

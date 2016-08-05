@@ -1,0 +1,34 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+et:
+  js:
+    poll:
+      voters:
+        one: "hääletaja"
+        other: "hääletajad"
+      total_votes:
+        one: "häält kokku"
+        other: "hääli kokku"
+      average_rating: "Keskmine hinnang: <strong>%{average}</strong>."
+      cast-votes:
+        title: "Anna oma hääl"
+        label: "Hääleta nüüd!"
+      show-results:
+        title: "Kuva hääletuse tulemused"
+        label: "Kuva tulemused"
+      hide-results:
+        title: "Tagasi sinu vastuse juurde"
+        label: "Peida tulemused"
+      open:
+        title: "Ava hääletus"
+        label: "Ava"
+        confirm: "Kas sa oled kindel, et soovid selle hääletuse avada?"
+      close:
+        title: "Sulge hääletus"
+        label: "Sulge"
+        confirm: "Kas sa oled kindel, et sa tahad antud hääletuse sulgeda?"
