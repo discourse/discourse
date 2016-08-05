@@ -63,11 +63,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
         // Successful login
         if (result.error) {
           self.set('loggingIn', false);
-          if( result.reason === 'not_activated' ) {
+          if (result.reason === 'not_activated') {
             self.send('showNotActivated', {
               username: self.get('loginName'),
-              sentTo: result.sent_to_email,
-              currentEmail: result.current_email
+              sentTo: escape(result.sent_to_email),
+              currentEmail: escape(result.current_email)
             });
           } else if (result.reason === 'suspended' ) {
             self.send("closeModal");
