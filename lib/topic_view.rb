@@ -51,7 +51,7 @@ class TopicView
     @page = 1 if (!@page || @page.zero?)
     @chunk_size = case
                     when options[:slow_platform] then TopicView.slow_chunk_size
-                    when @print then 1000
+                    when @print then TopicView.print_chunk_size
                     else TopicView.chunk_size
                   end
     @limit ||= @chunk_size

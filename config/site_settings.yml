@@ -909,6 +909,9 @@ rate_limits:
     client: true
     shadowed_by_global: true
     default: 0
+  max_prints_per_hour_per_user:
+    default: 0
+    client: true
 
 developer:
   force_hostname:
@@ -1220,9 +1223,6 @@ uncategorized:
 
   topic_page_title_includes_category: true
 
-  allow_print_page:
-    default: true
-    client: true
 
 user_preferences:
   default_email_digest_frequency:
