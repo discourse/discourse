@@ -23,4 +23,9 @@ class UsernameCheckerService
     Rails.configuration.respond_to?(:developer_emails) && Rails.configuration.developer_emails.include?(value)
   end
 
+
+  def self.is_developer?(email)
+    UsernameCheckerService.new.is_developer?(email)
+  end
+
 end
