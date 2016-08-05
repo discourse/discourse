@@ -821,8 +821,6 @@ es:
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
-    ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
-    ga_domain_name: "El nombre de dominio especificado en Google Analytics (ga.js). Ejemplo: misitio.com; ver en http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita http://google.com/analytics"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
@@ -941,7 +939,6 @@ es:
     s3_cdn_url: "URL de un CDN a utilizar para todos los activos s3 (por ejemplo: https://cdn.somewhere.com). AVISO: después de cambiar esta opción debes hacer un rebake de todos los posts antiguos."
     avatar_sizes: "Lista de tamaños de avatar generados automáticamente."
     external_system_avatars_enabled: "Usar un servicio externo para los avatares."
-    external_system_avatars_url: "Dirección URL del servicio externo para los avatares. Sustituciones permitidas: {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL de la imagen opengraph por defecto."
     allow_all_attachments_for_group_messages: "Permitir todos los archivos adjuntos de email para los mensajes a grupos."
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
@@ -979,7 +976,6 @@ es:
     newuser_max_mentions_per_post: "Máximo número de menciones a @usuarios que un nuevo usuario puede usar en un post."
     newuser_max_replies_per_topic: "Máximo número de respuestas que un nuevo usuario puede realizar en el mismo tema antes de que alguien responda a su vez a alguna de ellas."
     max_mentions_per_post: "Máximo número de menciones a @usuarios que alguien puede usar en un post."
-    max_users_notified_per_group_mention: "Número de usuarios máximos que serán notificados si un grupo es mencionado (si se llega al límite no se mandarán más invitaciones)"
     create_thumbnails: "Crear miniaturas de imágenes y lightbox cuando estas son demasiado grandes para encajar en un post."
     email_time_window_mins: "Esperar (n) minutos antes de enviar cualquier email de notificación, para dar a los usuarios margen con el que editar y finalizar sus posts."
     private_email_time_window_seconds: "Espera (n) segundos antes de enviar cualquier email de notificación, para dar a los usuarios margen con el que editar y finalizar sus mensajes."
@@ -1044,7 +1040,6 @@ es:
     maximum_staged_users_per_email: "Máximo número de usuarios provisionales creados al procesar un email entrante."
     auto_generated_whitelist: "Lista de direcciones de email que no serán revisadas para contenido auto-generado."
     block_auto_generated_emails: "Bloquear emails entrantes identificadas como auto generados."
-    bounce_score_threshold: "Máxima puntuación antes de parar de enviar correos a un usuario. Un rebote soft añade 1, rebote hard añade 2, la puntuación se restablece 30 días después del último rebote."
     ignore_by_title: "Ignorar emails entrantes por su título."
     mailgun_api_key: "Mailgun Secret API key utilizada para verificar mensajes vía webhook."
     manual_polling_enabled: "Lanza emails usando la API para las respuestas por email."
@@ -1066,7 +1061,6 @@ es:
     delete_all_posts_max: "El máximo número de posts que pueden ser eliminados a la vez con el botón \"Eliminar todos los posts\". Si un usuario tiene un mayor número de posts que este valor, éstos no podrán ser eliminados de una vez y el usuario no podrá ser eliminado."
     username_change_period: "El número de días después de registrarse entre los cuales una cuenta puede cambiar su nombre de usuario (0 para deshabilitar esta opción)"
     email_editable: "Permitir a los usuarios cambiar su dirección de email después de registrarse."
-    logout_redirect: "Ubicación a redirigir después que el usuario cierre sesión Ejem: (http://somesite.com/logout)"
     allow_uploaded_avatars: "Permitir a los usuarios subir imágenes de perfil personalizadas."
     allow_animated_avatars: "Permitir a los usuarios utilizar imágenes de perfil animadas en gif. AVISO: ejecuta la tarea rake avatars:refresh después de cambiar esta opción."
     allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
@@ -1091,7 +1085,6 @@ es:
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Deshabilita esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
     dominating_topic_minimum_percent: "Qué porcentaje de posts tiene que publicar un usuario en un mismo tema hasta mostrarle un recordatorio acerca de dominar en demasía un tema."
     disable_avatar_education_message: "Desactivar mensaje incentivador para que los usuarios se cambien su foto de perfil."
-    daily_performance_report: "Analizar registros de NGINX diariamente y publicar un tema para Administradores con los detalles"
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de los enlaces, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar una noticia de URGENCIA o EMERGENCIA para todos los visitantes, deja este campo en blanco para ocultarla (se puede utilizar código HTML)"
@@ -1108,7 +1101,6 @@ es:
     default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace este número de días o más, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Deshabilita esta opción introduciendo el valor 0."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
-    highlighted_languages: "Incluye reglas resaltadas de sintaxis. (Advertencia: incluyendo demasiados lenguajes puede afectar al rendimiento) ver: https://highlightjs.org/static/demo/ para una demostración"
     feed_polling_enabled: "SOLO PARA EMBEBER: embeber feeds RSS/ATOM como posts."
     feed_polling_url: "SOLO PARA EMBEBER: URL de los feeds RSS/ATOM a embeber."
     embed_by_username: "Nombre de usuario en Discourse del que crea los temas embebidos."
@@ -1148,7 +1140,6 @@ es:
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_dynamic_favicon: "Mostrar temas nuevos/actualizados en el icono del navegador por defecto"
     default_other_disable_jump_reply: "No ir a un nuevo post tras publicarlo por defecto"
-    default_other_edit_history_public: "Hacer la lista de ediciones pública por defecto."
     default_other_like_notification_frequency: "Notificar a los usuarios de los me gusta por defecto"
     default_topics_automatic_unpin: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     default_categories_watching: "Lista de categorías que están vigiladas por defecto."
@@ -1158,7 +1149,6 @@ es:
     min_trust_to_create_tag: "El mínimo nivel de confianza requerido para crear una etiqueta."
     max_tags_per_topic: "El máximo número de etiquetas que se pueden añadir a un tema."
     max_tag_length: "Máximo número de caracteres que puede tener una etiqueta."
-    max_tag_search_results: "Al buscar por etiquetas, este será el máximo de resultados a mostrar."
     show_filter_by_tag: "Mostrar un desplegable para filtrar una lista de temas por etiqueta."
     max_tags_in_filter_list: "Máximo número de etiquetas en el desplegable. Se mostrarán primero aquellas más utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
@@ -1367,6 +1357,99 @@ es:
     deferred_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
   temporarily_closed_due_to_flags: "Este tema está temporalmente cerrado debido a un gran número de reportes de la comunidad."
   system_messages:
+    usage_tips:
+      text_body_template: |
+        Aquí tienes unos breves consejos para empezar:
+
+        ## Lectura
+
+        Para leer más, **¡tan solo tienes que hacer scroll!**
+
+        Tan pronto como se publiquen nuevos temas o respuestas, aparecerán automáticamente – sin necesidad de actualizar la página.
+
+        ## Navegación
+
+        - Para realizar una búsqueda, ver tu perfil de usuario, o el menú <kbd>☰</kbd>, usa los **botones de la esquina superior derecha**.
+
+        - Entrar a un tema desde su título te llevará a la **última respuesta sin leer** del hilo. Para ir al primer o al último post, haz clic en el contador de respuestas o en la fecha de última respuesta.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Mientras lees un tema, usa la línea del tiempo a la derecha para ir al primer post, al último, o donde te habías quedado leyendo. En pantallas pequeñas, selecciona la barra de progreso en la esquina inferior para expandir sus controles:
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        También puedes pulsar <kbd>?</kbd> en tu teclado para ver una lista de atajos rápidos.
+
+        ## Participación
+
+        Para insertar una cita, selecciona el texto que quieres citar, después pulsa cualquier <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> botón Responder para abrir el editor. Repite el proceso para múltiples citas.
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Siempre puedes continuar leyendo mientras estás redactando una publicación y automáticamnte guardaremos borradores al tiempo que escribes.
+
+        Para notificar a alguien en tu post, menciónale escribiendo una `@` y a continuación empieza a escribir y selecciona su nombre de usuario.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Para usar [Emoji](http://www.emoji.codes/), tan solo empieza a escriboir `:` para elegir por nombre, o utiliza los smileys tradicionales `;)`
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        Para generar una vista previa de un enlace, pégalo en una línea aparte:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        Tu publicación puede estar en varios formatos usando HTML simple, BBCode o [Markdown](http://commonmark.org/help/):
+
+        Esto es **negrita**.
+        Esto es <b>negrita</b>.
+        Esto es [b]negrita[/b].
+
+        Para más consejos sobre formato, [¡prueba nuestro divertido tutorial interactivo en 10 minutos!](http://commonmark.org/help/tutorial/)
+
+        ## Acciones
+
+        Hay algunos botones de acción al final de cada post:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        - Para hacerle saber a alguien que aprecias su post, utiliza el botón **me gusta**. ¡Compartir es amor!
+
+        - Copia un enlace de cualquier post o tema a través del botón **enlace**.
+
+        - Utiliza el botón <kbd>&hellip;</kbd> mostrar más para desplegar más acciones. **Reportar** de forma privada le notificarán al autor o a nuestros [moderadores](%{base_url}/about), sobre algún problema. **Guarda en marcadores** para encontrar ese post más tarde en tu perfil.
+
+        ## Notificaciones
+
+        Cuando alguien te responde, cita tu post, menciona tu `@usuario` o incluso cuando enlaza a tu post, aparecerá un número en la esquina superior derecha de la página. Selecciónala para acceder a tus **notificaciones**.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        No te preocupes si te pierdes alguna respueta – te enviaremos un email con las notificaciones que lleguen cuando estés fuera.
+
+        ## Preferencias
+
+        - Todos los temas creados hace menos de **dos días** se consideran nuevos.
+
+        - Aquellos temas en los que hayas **participado activamente** (porque los hayas creado, respondido o leído durante un período razonable) serán seguidos por tu usuario automáticamente.
+
+        Verás los indicadores de posts nuevos y no leídos al lado de estos temas:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Puedes cambiar tus notifiaciones para cualquier tema a través del control de notificaciones al final o en el lado derecho de cada tema.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        También puedes establecer tu nivel de notificación para cada categoría, si quieres vigilar o silenciar los temas en una categoría específica.
+
+        Para cambiar cualquiera de estas opciones, ve a [tus preferencias](%{base_url}/my/preferences).
+
+        ## Confianza y comunidad
+
+        ¡Es genial saber de ti! Al participar aquí, nos iremos conociendo con el tiempo y las limitaciones temporales por nuevo usuario se retirarán. Sigue participando y ganarás [niveles de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) que incluyen habilidades especiales para ayudarnos a gestionar nuestra comunidad juntos.
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
@@ -2141,6 +2224,35 @@ es:
       Si decidimos cambiar nuestra política de privacidad, publicaremos los cambios en esta misma página.
 
       Este documento tiene una licencia "CC-BY-SA". Última actualización: 31 de mayo del 2013.
+  static:
+    search_help: |
+      <h3>Consejos</h3>
+      <p>
+      <ul>
+      <li>Se priorizan las coincidencias por título &ndash; si tienes dudas, buscar por títulos</li>
+      <li>Buscar palabras diferentes, poco comunes, dará mejores resultados</li>
+      <li>Intenta centrar tu búsqueda con una categoría, tema o usuario en particular</li>
+      </ul>
+      </p>
+      <h3>Opciones</h3>
+      <p>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
+      </table>
+      </p>
+      <h3>Ejemplos</h3>
+      <p>
+      <ul>
+      <li><code>arcoiris #parques</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques".</li>
+      <li><code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha del último post.</li>
+      <li><code>arcoiris category:"parques" in:bookmarks</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que hayas guardado en marcadores.</li>
+      </ul>
+      </p>
   badges:
     editor:
       name: Editor
@@ -2291,7 +2403,7 @@ es:
       name: Enlace famoso
       description: Publicó un enlace externo con al menos 1000 clics
       long_description: |
-        Este distintivo se concede cuando el enlace que has compartido alcanza los 1000 clics. ¡Bravo! Publicaste un enlace que mejoró significativamente la conversación al añadir detalles, contexto e información esencial. ¡Buen trabajo!
+        Este distintivo se concede cuando un enlace que compartiste llega a 1000 clics. ¡Vaya! Publicaste un enlace que mejoró significativamente la conversación al añadir un detalle esencial, contexto, e información. ¡Gran trabajo!
     appreciated:
       name: Apreciado
       description: Recibió 1 "me gusta" en 20 posts

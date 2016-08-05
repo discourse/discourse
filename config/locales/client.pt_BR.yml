@@ -39,6 +39,7 @@ pt_BR:
       long_date_with_year_without_time: "MMM D, YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, YY <br/>LT"
+      wrap_ago: "%{date} atrás"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -116,7 +117,9 @@ pt_BR:
       private_topic: "tornou este tópico privado em %{when}"
       split_topic: "dividiu este tópico %{when}"
       invited_user: "convidou %{who} %{when}"
+      invited_group: "convidou %{who} %{when}"
       removed_user: "removido %{who} %{when}"
+      removed_group: "removido %{who} %{when}"
       autoclosed:
         enabled: 'fechou %{when}'
         disabled: 'abriu %{when}'
@@ -325,6 +328,7 @@ pt_BR:
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "Grupo é visível para todos os usuários"
+      index: "Grupos"
       title:
         one: "grupo"
         other: "grupos"
@@ -347,6 +351,8 @@ pt_BR:
         watching:
           title: "Assistindo"
           description: "Você será notificado sobre toda nova postagem em toda mensagem, e uma contagem de novas mensagens será mostrada."
+        watching_first_post:
+          description: "Você somente será notificado sobre a primeira postagem em cada novo tópico neste grupo."
         tracking:
           title: "Rastreando"
           description: "Você será notificado se alguém mencionar seu @name ou responder a você, e uma contagem de novas respostas será mostrada."
@@ -444,7 +450,6 @@ pt_BR:
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidos"
       disable_jump_reply: "Não pular para o meu tópico depois que eu respondo"
       dynamic_favicon: "Exibir ícone no navegador de tópicos novos / atualizados."
-      edit_history_public: "Deixar que os outros usuários visualizem minhas revisões na resposta"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
       change: "alterar"
@@ -459,9 +464,12 @@ pt_BR:
       email_activity_summary: "Sumário de Atividades"
       mailing_list_mode:
         daily: "Enviar atualizações diárias"
+        individual: "Enviar email para cada postagem nova"
+        few_per_day: "Me envie um email para cada nova postagem (aproximadamente 2 por dia)"
+      tracked_tags: "Monitorado"
+      muted_tags: "Silenciado"
       watched_categories: "Acompanhados"
       tracked_categories: "Monitorado"
-      tracked_categories_instructions: "Automaticamente monitora todos novos tópicos nestas categorias. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Você não será notificado sobre novos tópicos nessas categorias, e não aparecerão no Recentes"
       delete_account: "Excluir Minha Conta"
@@ -474,6 +482,7 @@ pt_BR:
       muted_users: "Silenciado"
       muted_users_instructions: "Suprimir todas as notificações destes usuários."
       muted_topics_link: "Mostrar tópicos silenciados"
+      watched_topics_link: "Mostrar tópicos observados"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos quando eu chegar ao fundo."
       staff_counters:
         flags_given: "sinalizadas úteis"
@@ -777,6 +786,7 @@ pt_BR:
       title: "Mensagem"
       invite: "Convidar outros..."
       remove_allowed_user: "Tem a certeza que deseja remover {{name}} desta mensagem?"
+      remove_allowed_group: "Tem a certeza que deseja remover {{name}} desta mensagem?"
     email: 'Email'
     username: 'Nome de Usuário'
     last_seen: 'Visto'
@@ -843,10 +853,9 @@ pt_BR:
       github:
         title: "com GitHub"
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de popup estejam desativados)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
+    emoji_set:
+      google: "Google"
+      twitter: "Twitter"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1554,10 +1563,8 @@ pt_BR:
       notifications:
         watching:
           title: "Observar"
-          description: "Você vai acompanhar automaticamente todos os novos tópicos dessas categorias. Você será notificado de todas as novas mensagens em todos tópicos, e uma contagem de novas respostas será mostrada."
         tracking:
           title: "Monitorar"
-          description: "Você vai monitorar automaticamente todos os novos tópicos dessas categorias. Você será notificado se alguém mencionar seu @nome ou te responder, e uma contagem de novas respostas será mostrada."
         regular:
           title: "Normal"
           description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
@@ -1595,7 +1602,7 @@ pt_BR:
       title: "Resumo do Tópico"
       participants_title: "Principais Participantes"
       links_title: "Links Populares"
-      links_shown: "exibir todos os {{totalLinks}} links..."
+      links_shown: "mostrar mais links..."
       clicks:
         one: "1 clique"
         other: "%{count} cliques"
@@ -1734,6 +1741,29 @@ pt_BR:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    badges:
+      others_count: "Outros com esse emblema (%{count})"
+      title: Emblemas
+      select_badge_for_title: Selecione um emblema para usar como o seu título
+      badge_grouping:
+        getting_started:
+          name: Começando
+    tagging:
+      delete_tag: "Apagar marcação"
+      delete_confirm: "Você tem certeza que deseja apagar essa marcação?"
+      rename_tag: "Renomear marcador"
+      sort_by: "Ordenar por"
+      notifications:
+        muted:
+          title: "Silenciado"
+      groups:
+        save: "Salvar"
+        delete: "Apagar"
+      topics:
+        none:
+          new: "Você tem tópicos novos"
+        bottom:
+          new: "Não há mais tópicos novos."
   admin_js:
     type_to_filter: "escreva para filtrar..."
     admin:
@@ -2390,6 +2420,7 @@ pt_BR:
         edit: 'editar'
         revert: "Reverter alterações"
         revert_confirm: "Tem certeza que deseja reverter as alterações?"
+        go_back: "Voltar para pesquisa"
         show_overriden: 'Apenas mostrar valores alterados'
       site_settings:
         show_overriden: 'Exibir apenas valores alterados'
@@ -2422,6 +2453,7 @@ pt_BR:
           login: "Entrar"
           plugins: "Plugins"
           user_preferences: "Preferências de Usuário"
+          tags: "Marcações"
       badges:
         title: Emblemas
         new_badge: Novo Emblema
@@ -2516,6 +2548,7 @@ pt_BR:
         embed_truncate: "Truncar as postagens incorporadas"
         embed_whitelist_selector: "Seletor de CSS para elementos que são permitidos na incorporação"
         embed_blacklist_selector: "Seletor de CSS para elementos que são removidos da incorporação"
+        embed_classname_whitelist: "Nomes de classes CSS permitidas"
         feed_polling_enabled: "Importar postagens via RSS/ATOM"
         feed_polling_url: "URL do feed RSS/ATOM para pesquisar"
         save: "Salvar Configurações de Incorporação"

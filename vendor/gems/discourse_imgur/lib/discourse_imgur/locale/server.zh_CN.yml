@@ -7,6 +7,6 @@
 
 zh_CN:
   site_settings:
-    enable_imgur: "上传文件到 imgur，不在本地存储。"
-    imgur_client_id: "你的 imgur.com client ID，如果启用上传则必填"
+    enable_imgur: "上传文件到 imgur，不在本地存储"
+    imgur_client_id: "你的 imgur.com client ID，启用图片上传必填"
     imgur_client_secret: "你的 imgur.com 客户密钥。目前不需要此密钥即可使用上传图片功能，但可能在以后会用到。"

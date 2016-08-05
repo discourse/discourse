@@ -83,42 +83,42 @@ ro:
         x_minutes:
           one: "1 min"
           few: "%{count} min"
-          other: "%{count} min"
+          other: "%{count} de min"
         x_hours:
           one: "1 oră"
           few: "%{count} ore"
-          other: "%{count} ore"
+          other: "%{count} de ore"
         x_days:
           one: "1 zi"
           few: "%{count} zile"
-          other: "%{count} zile"
+          other: "%{count} de zile"
         date_year: "D MM YYYY"
       medium_with_ago:
         x_minutes:
           one: "acum un min"
           few: "acum %{count} min"
-          other: "acum %{count} min"
+          other: "acum %{count} de min"
         x_hours:
           one: "acum o oră"
           few: "acum %{count} ore"
-          other: "acum %{count} ore"
+          other: "acum %{count} de ore"
         x_days:
           one: "acum o zi"
           few: "acum %{count} zile"
-          other: "acum %{count} zile"
+          other: "acum %{count} de zile"
       later:
         x_days:
           one: "După o zi"
           few: "După %{count} zile"
-          other: "După %{count} zile"
+          other: "După %{count} de zile"
         x_months:
-          one: "o lună mai târziu"
+          one: "O lună mai târziu"
           few: "%{count} luni mai târziu"
           other: "%{count} de luni mai târziu"
         x_years:
           one: "După un an"
           few: "După %{count} ani"
-          other: "După %{count} ani"
+          other: "După %{count} de ani"
       previous_month: 'Luna anterioară'
       next_month: 'Luna următoare'
     share:
@@ -128,7 +128,7 @@ ro:
       twitter: 'distribuie pe Twitter'
       facebook: 'distribuie pe Facebook'
       google+: 'distribuie pe Google+'
-      email: 'trimite această adresă peemail'
+      email: 'trimite această adresă pe email'
     action_codes:
       split_topic: "desparte acest topic %{when}"
       autoclosed:
@@ -141,11 +141,11 @@ ro:
         enabled: 'arhivat %{when}'
         disabled: 'dezarhivat %{when}'
       pinned:
-        enabled: 'Prins %{when}'
-        disabled: 'desprinse %{when}'
+        enabled: 'promovat %{when}'
+        disabled: 'nepromovat %{when}'
       pinned_globally:
         enabled: 'promovat global %{when}'
-        disabled: 'desprins %{when}'
+        disabled: 'nepromovat %{when}'
       visible:
         enabled: 'listat %{when}'
         disabled: 'retras %{when}'
@@ -165,11 +165,11 @@ ro:
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
     edit: 'editează titlul și categoria acestui subiect'
-    not_implemented: "Această caracteristică nu a fost implementată încă, ne pare rău!"
+    not_implemented: "Această funcționalitate nu a fost implementată încă."
     no_value: "Nu"
     yes_value: "Da"
-    generic_error: "Ne pare rău, a avut loc o eroare."
-    generic_error_with_reason: "A avut loc o eroare: %{error}"
+    generic_error: "A apărut o eroare."
+    generic_error_with_reason: "A apărut o eroare: %{error}"
     sign_up: "Înregistrare"
     log_in: "Autentificare"
     age: "Vârsta"
@@ -208,9 +208,9 @@ ro:
     character_count:
       one: "Un caracter"
       few: "{{count}} caractere"
-      other: "{{count}} caractere"
+      other: "{{count}} de caractere"
     suggested_topics:
-      title: "Subiecte sugerate"
+      title: "Alte discuții"
       pm_title: "Mesaje sugerate"
     about:
       simple_title: "Despre"
@@ -459,7 +459,6 @@ ro:
       dismiss_notifications_tooltip: "Marchează cu citit toate notificările necitite"
       disable_jump_reply: "Nu sări la postarea mea după ce răspund"
       dynamic_favicon: "Arată subiectele noi/actualizate în iconiţă browserului."
-      edit_history_public: "Permite altor utilizatori să vizualizeze reviziile postului meu"
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
       enable_quoting: "Activează răspunsuri-citat pentru textul selectat"
       change: "schimbă"
@@ -846,10 +845,6 @@ ro:
       github:
         title: "cu GitHub"
         message: "Autentificare cu GitHub (Asigurați-vă că barierele de pop up nu sunt active)"
-    apple_international: "Apple/Internaţional"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1288,7 +1283,7 @@ ro:
       post_number: "postarea {{number}}"
       last_edited_on: "postare editată ultima oară la"
       reply_as_new_topic: "Răspunde cu o discuție nouă"
-      continue_discussion: "Continuă discuția de la {{postLink}}:"
+      continue_discussion: "În continuarea discuției {{postLink}}:"
       follow_quote: "mergi la postarea citată"
       show_full: "Arată postarea în întregime"
       show_hidden: 'Arată conținut ascuns.'
@@ -1579,7 +1574,6 @@ ro:
       title: "Sumarul discuției"
       participants_title: "Posteri Frecvenţi"
       links_title: "Legături Populare"
-      links_shown: "arată toate {{totalLinks}} de adrese..."
       clicks:
         one: "1 click"
         few: "%{count} click-uri"
@@ -1706,6 +1700,11 @@ ro:
       full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizaează"
       readonly: "Vizualizaează"
+    badges:
+      more_badges:
+        one: "Încă una"
+        few: " Alte %{count}"
+        other: " Alte %{count}"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:

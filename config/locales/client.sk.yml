@@ -466,7 +466,6 @@ sk:
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
       disable_jump_reply: "Neskočiť na môj príspevok po odpovedi"
       dynamic_favicon: "Zobraziť počet nových/upravených tém na ikone prehliadača"
-      edit_history_public: "Povoliť ostatným užívateľom zobrazenie všetkých verzií môjho príspevku"
       external_links_in_new_tab: "Otvoriť všekty externé odkazy v novej záložke"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
       change: "zmeniť"
@@ -480,7 +479,6 @@ sk:
       github_profile: "Github"
       watched_categories: "Sledované"
       tracked_categories: "Sledované"
-      tracked_categories_instructions: "Budete automaticky sledovať všetky nové témy v týchto kategóriách. Počet nových príspevkov sa bude zobraziť vedľa témy."
       muted_categories: "Ignorovaný"
       muted_categories_instructions: "Nebudete informovaní o udalostiach v nových témach týchto kategórií. Tieto témy sa zároveň nebudú zobrazovať v zozname posledných udalostí."
       delete_account: "Vymazať môj účet"
@@ -834,10 +832,6 @@ sk:
       github:
         title: "pomocou GitHub"
         message: "Prihlásenie pomocou GitHub účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
-    apple_international: "Apple/Medzinárodné"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1574,10 +1568,8 @@ sk:
       notifications:
         watching:
           title: "Pozerať"
-          description: "Budete automaticky pozerať všetky nové témy v týchto kategóriách. Budete upozornený na všetky nové príspevky vo všetkých témach. Zároveň bude zobrazený počet nových odpovedí."
         tracking:
           title: "Sledovať"
-          description: "Budete automaticky sledovať všetky nové témy v týchto kategóriách. Budete upozornený ak niekto uvedie vaše @meno alebo Vám odpovie. Zároveň bude zobrazený počet nových odpovedí."
         regular:
           title: "Bežný"
           description: "Budete upozornený ak niekto spomenie Vaše @meno alebo Vám odpovie."
@@ -1615,7 +1607,6 @@ sk:
       title: "Zhrnutie článku"
       participants_title: "Častí prispievatelia"
       links_title: "Populárne odkazy"
-      links_shown: "ukázať všetkých {{totalLinks}} odkazov..."
       clicks:
         one: "%{count} kilk"
         few: "%{count} kliky"

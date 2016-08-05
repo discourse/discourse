@@ -416,7 +416,6 @@ bs_BA:
       dismiss_notifications_tooltip: "Markiraj sve nepročitane notifikacije kao pročitane"
       disable_jump_reply: "Don't jump to your new post after replying"
       dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
-      edit_history_public: "Let other users view my post revisions"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "promjeni"
@@ -430,7 +429,6 @@ bs_BA:
       github_profile: "Github"
       watched_categories: "Watched"
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "Automatski ćete da pratite sve nove objave u ovom kategorijama. Broj novih objava će se pojaviti pored naziva teme."
       muted_categories: "Muted"
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -754,7 +752,6 @@ bs_BA:
       github:
         title: "sa GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
-    google: "Google"
     composer:
       more_emoji: "više..."
       options: "Opcije"
@@ -1247,7 +1244,6 @@ bs_BA:
       notify_action: "Privatna poruka"
     topic_map:
       title: "Pregled Teme"
-      links_shown: "pogledaj {{totalLinks}} linkova..."
     topic_statuses:
       warning:
         help: "Ovo je zvanično upozorenje."

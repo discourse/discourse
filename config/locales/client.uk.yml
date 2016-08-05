@@ -277,7 +277,6 @@ uk:
         enable: "Увімкнути сповіщення"
       dismiss_notifications_tooltip: "Позначити всі сповіщення як прочитані"
       disable_jump_reply: "Не перескакувати до мого допису коли я відповім"
-      edit_history_public: "Дати іншим дивитися версії мого повідомлення"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       change: "змінити"
@@ -879,7 +878,6 @@ uk:
       action: "Flag Topic"
     topic_map:
       title: "Підсумок теми"
-      links_shown: "показати всі {{totalLinks}} посилання..."
     topic_statuses:
       locked:
         help: "цю тему закрито; нові відповіді більше не приймаються"

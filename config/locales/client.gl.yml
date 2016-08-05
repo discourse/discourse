@@ -439,7 +439,6 @@ gl:
       dismiss_notifications_tooltip: "Marcar todas notificacións sen ler como lidas"
       disable_jump_reply: "Non saltar á miña publicación despois de que responda"
       dynamic_favicon: "Amosar o número de temas novos / actualizados na icona do navegador"
-      edit_history_public: "Permitirlles a outros usuarios ver as revisións das miñas publicacións"
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
       change: "cambiar"
@@ -453,7 +452,6 @@ gl:
       github_profile: "Github"
       watched_categories: "Visto"
       tracked_categories: "Seguido"
-      tracked_categories_instructions: "Seguirás automaticamente todos os temas novos nestas categorías. Un número de novas publicacións aparecerá preto do tema."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Non se che notificará nada sobre os temas novos nestas categorías e non aparecerán na lista de últimos."
       delete_account: "Eliminar a miña conta"
@@ -812,10 +810,6 @@ gl:
       github:
         title: "co GitHub"
         message: "Autenticación mediante Github (asegúrate de ter desactivado o bloqueador de xanelas emerxentes)"
-    apple_international: "Apple/Internacional"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Maiús.'
       ctrl: 'Ctrl'
@@ -1527,10 +1521,8 @@ gl:
       notifications:
         watching:
           title: "Ver"
-          description: "Verás automaticamente todos os novos temas destas categorías. Notificaránseche as novas publicacións de cada tema e amosaráseche o número de novas respostas."
         tracking:
           title: "Seguimento"
-          description: "Seguirás automaticamente todos os novos temas destas categorías. Notificaránseche ás mencións ao teu @name e as respostas que recibas, e amosaráseche o número de novas respostas."
         regular:
           title: "Normal"
           description: "Notificarémosche se alguén menciona o teu @nome ou che responde."
@@ -1569,7 +1561,6 @@ gl:
       title: "Resumo do tema"
       participants_title: "Publicadores frecuentes"
       links_title: "Ligazóns populares"
-      links_shown: "amosar as {{totalLinks}} ligazóns..."
       clicks:
         one: "Un clic"
         other: "%{count} clics"

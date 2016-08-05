@@ -409,7 +409,6 @@ vi:
       dismiss_notifications_tooltip: "Đánh dấu đã đọc cho tất cả các thông báo chưa đọc"
       disable_jump_reply: "Đừng tới bài viết của tôi sau khi tôi trả lời"
       dynamic_favicon: "Hiện số chủ đề mới / cập nhật vào biểu tượng trình duyệt"
-      edit_history_public: "Để thành viên khác xem những sửa chữa bài viết của bạn"
       external_links_in_new_tab: "Mở tất cả liên kết bên ngoài trong thẻ mới"
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       change: "thay đổi"
@@ -423,7 +422,6 @@ vi:
       github_profile: "Github"
       watched_categories: "Xem"
       tracked_categories: "Theo dõi"
-      tracked_categories_instructions: "Bạn sẽ tự động theo dõi tất cả các chủ đề trong các chuyên mục này. Một số bài viết mới sẽ xuất hiện ở chủ đề kế tiếp."
       muted_categories: "Im lặng"
       muted_categories_instructions: "Bạn sẽ không bao giờ được thông báo về bất cứ điều gì về các chủ đề mới trong các chuyên mục này, và chúng sẽ không hiển thị mới nhất"
       delete_account: "Xoá Tài khoản của tôi"
@@ -795,10 +793,6 @@ vi:
       github:
         title: "với GitHub"
         message: "Chứng thực với GitHub (chắc chắn chặn popup không bật)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1470,10 +1464,8 @@ vi:
       notifications:
         watching:
           title: "Theo dõi"
-          description: "Bạn sẽ tự động xem tất cả các chủ đề mới trong các chuyên mục này. Bạn sẽ được thông báo về tất các các chủ đề mới, và một số bài viết mới sẽ được hiển thị."
         tracking:
           title: "Đang theo dõi"
-          description: "Bạn sẽ tự động theo dõi tất cả các chủ đề mới trong các chuyên mục này. Bạn sẽ được thông báo nếu ai đó đề cập đến @tên của bạn hoặc trả lời bạn, và một số bài viết mới sẽ được hiển thị."
         regular:
           title: "Bình thường"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn"
@@ -1512,7 +1504,6 @@ vi:
       title: "Tóm tắt Chủ đề"
       participants_title: "Poster thường xuyên"
       links_title: "Liên kết phổ biến"
-      links_shown: "hiện tất cả {{totalLinks}} liên kết..."
       clicks:
         other: "%{count} nhấp chuột"
     topic_statuses:

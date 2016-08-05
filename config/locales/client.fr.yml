@@ -331,6 +331,7 @@ fr:
       selector_placeholder: "Ajouter des membres"
       owner: "propriétaire"
       visible: "Ce groupe est visible par tous les utilisateurs"
+      index: "Groupes"
       title:
         one: "groupe"
         other: "groupes"
@@ -452,7 +453,6 @@ fr:
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
       disable_jump_reply: "Ne pas se déplacer à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
-      edit_history_public: "Autoriser les autres utilisateurs à consulter les modifications de mes messages."
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer la citation du texte surligné"
       change: "modifier"
@@ -476,7 +476,6 @@ fr:
       tag_settings: "Tags"
       watched_categories: "Surveillés"
       tracked_categories: "Suivies"
-      tracked_categories_instructions: "Vous allez suivre automatiquement tous les nouveaux sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       muted_categories: "Désactivés"
       muted_categories_instructions: "Vous ne serez notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
       delete_account: "Supprimer mon compte"
@@ -875,10 +874,6 @@ fr:
       github:
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1619,10 +1614,8 @@ fr:
       notifications:
         watching:
           title: "S'abonner"
-          description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti pour tout nouveau message dans chaque sujet, et le nombre de nouvelles réponses sera affiché."
         tracking:
           title: "Suivi"
-          description: "Vous surveillerez automatiquement tous les nouveaux sujets dans ces catégories. Vous serez averti si quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
         regular:
           title: "Normal"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
@@ -1662,7 +1655,6 @@ fr:
       title: "Résumé du sujet"
       participants_title: "Auteurs fréquents"
       links_title: "Liens populaires"
-      links_shown: "montrer les {{totalLinks}} liens..."
       clicks:
         one: "1 clic"
         other: "%{count} clics"
@@ -1922,10 +1914,8 @@ fr:
       notifications:
         watching:
           title: "Abonné"
-          description: "Vous serez automatiquement abonné à l'ensemble des nouvaux sujets avec ce tag. Vous serez notifié des nouveaux sujets et messages, et le compteur des sujets non-lus apparaîtra à coté des sujets."
         tracking:
           title: "Suivi"
-          description: "Vous allez suivre automatiquement tous les nouveaux sujets dans ce tag. Le nombre de messages nouveaux et non lus apparaîtra à côté du sujet."
         regular:
           title: "Habitué"
           description: "Vous serez notifié si un utilisateur mentionne votre @pseudo ou réponds à votre message."

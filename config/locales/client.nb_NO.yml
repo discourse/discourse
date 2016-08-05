@@ -406,7 +406,6 @@ nb_NO:
       dismiss_notifications_tooltip: "Merk alle uleste varslinger som lest"
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
       dynamic_favicon: "Vis antall nye / oppdaterte emner på nettleser ikonet"
-      edit_history_public: "La andre brukere se mine innleggsrevisjoner"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
       change: "Endre"
@@ -420,7 +419,6 @@ nb_NO:
       github_profile: "Github"
       watched_categories: "Følger"
       tracked_categories: "Sporet"
-      tracked_categories_instructions: "Du vil automatisk spore alle nye emner i disse kategoriene. Antallet uleste og nye innlegg vil vises ved emnets oppføring."
       muted_categories: "Dempet"
       delete_account: "Slett kontoen min"
       delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
@@ -739,10 +737,6 @@ nb_NO:
       github:
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1421,7 +1415,6 @@ nb_NO:
       title: "Emneoppsummering"
       participants_title: "Hyppige Bidragsytere"
       links_title: "Populære Lenker"
-      links_shown: "vis alle {{totalLinks}} linker..."
       clicks:
         one: "1 klikk"
         other: "%{count} klikk"

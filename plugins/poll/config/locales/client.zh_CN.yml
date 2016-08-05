@@ -23,7 +23,7 @@ zh_CN:
             other: "最多选择 <strong>%{count}</strong> 个选项"
           x_options:
             other: "选择 <strong>%{count}</strong> 个选项"
-          between_min_and_max_options: "在 <strong>%{min}</strong> 和 <strong>%{max}</strong> 选项之间选择"
+          between_min_and_max_options: "选择 <strong>%{min}</strong> 至 <strong>%{max}</strong> 个选项"
       cast-votes:
         title: "投你的票"
         label: "现在投票！"
@@ -41,11 +41,11 @@ zh_CN:
         title: "关闭投票"
         label: "关闭"
         confirm: "你确定要关闭这个投票？"
-      error_while_toggling_status: "对不起，本次调查状态发生错误切换。"
-      error_while_casting_votes: "对不起，在投你的票时发生错误。"
-      error_while_fetching_voters: "对不起，显示选民时发生错误。"
+      error_while_toggling_status: "对不起，改变投票状态时出错了。"
+      error_while_casting_votes: "对不起，投票时出错了。"
+      error_while_fetching_voters: "对不起，显示投票者时出错了。"
       ui_builder:
-        title: 建立调查
+        title: 创建投票
         insert: 插入投票
         help:
           options_count: 输入至少 2 个选项
@@ -59,6 +59,6 @@ zh_CN:
           min: 最小
           step: 梯级
         poll_public:
-          label: 显示谁投票
+          label: 显示投票人
         poll_options:
           label: 每行输入一个调查选项

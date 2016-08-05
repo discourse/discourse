@@ -248,7 +248,7 @@ fi:
     save: "Tallenna muutokset"
     saving: "Tallennetaan..."
     saved: "Tallennettu!"
-    upload: "Lähetä"
+    upload: "Liitä"
     uploading: "Lähettää..."
     uploading_filename: "Lähettää {{filename}}..."
     uploaded: "Lähetetty!"
@@ -458,7 +458,6 @@ fi:
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
       dynamic_favicon: "Näytä uusien / päivittyneiden ketjujen määrä selaimen ikonissa"
-      edit_history_public: "Anna muiden nähdä viestieni revisiot"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       change: "vaihda"
@@ -477,6 +476,7 @@ fi:
         instructions: |
           Asetus syrjäyttää koosteet tapahtumista.<br />
           Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
+
         daily: "Lähetä päivittäin"
         individual: "Lähetä sähköpostia jokaisesta uudesta viestistä"
         many_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)"
@@ -600,7 +600,7 @@ fi:
         default: "(oletus)"
       password_confirmation:
         title: "Salasana uudelleen"
-      last_posted: "Viimeinen viesti"
+      last_posted: "Viimeisin viesti"
       last_emailed: "Viimeksi lähetetty sähköpostitse"
       last_seen: "Nähty"
       created: "Liittynyt"
@@ -903,6 +903,8 @@ fi:
       apple_international: "Apple/Kansainvälinen"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -965,7 +967,7 @@ fi:
       code_title: "Teksti ilman muotoiluja"
       code_text: "Sisennä teksti neljällä välilyönnillä poistaaksesi automaattisen muotoilun"
       paste_code_text: "kirjoita tai liitä koodia tähän"
-      upload_title: "Liitä"
+      upload_title: "Lähetä"
       upload_description: "kirjoita ladatun tiedoston kuvaus tähän"
       olist_title: "Numeroitu lista"
       ulist_title: "Luettelomerkillinen luettelo"
@@ -982,7 +984,7 @@ fi:
       auto_close:
         label: "Sulje ketju automaattisesti tämän ajan jälkeen:"
         error: "Ole hyvä ja syötä kelpaava arvo."
-        based_on_last_post: "Älä sulje ennen kuin viimeinen viesti ketjussa on vähintään näin vanha."
+        based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on vähintään näin vanha."
         all:
           examples: 'Syötä aika tunteina (24), absoluuttisena aikana (17:30) tai aikaleimana (2013-11-22 14:00).'
         limited:
@@ -1205,6 +1207,8 @@ fi:
         go_bottom: "loppuun"
         go: "siirry"
         jump_bottom: "hyppää viimeisimpään viestiin"
+        jump_prompt: "hyppää viestiin"
+        jump_prompt_long: "Mihin viestiin haluat siirtyä?"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         total: yhteensä viestejä
         current: tämänhetkinen viesti
@@ -1361,6 +1365,10 @@ fi:
         instructions:
           one: "Valitse ketju, johon haluat siirtää viestin."
           other: "Valitse ketju, johon haluat siirtää<b>{{count}}</b> viestiä."
+      merge_posts:
+        title: "Yhdistä valitut viestit"
+        action: "yhdistä valitut viestit"
+        error: "Valittuja viestejä yhdistettäessä tapahtui virhe."
       change_owner:
         title: "Vaihda viestin omistajaa"
         action: "muokkaa omistajuutta"
@@ -1395,7 +1403,7 @@ fi:
       edit: "Muokataan {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"
       post_number: "viesti {{number}}"
-      last_edited_on: "viestin viimeinen muokkausaika"
+      last_edited_on: "viestin viimeisin muokkausaika"
       reply_as_new_topic: "Vastaa aihetta sivuavassa ketjussa"
       continue_discussion: "Jatkoa ketjulle {{postLink}}:"
       follow_quote: "siirry lainattuun viestiin"
@@ -1564,6 +1572,10 @@ fi:
         confirm:
           one: "Oletko varma, että haluat poistaa tämän viestin?"
           other: "Oletko varma, että haluat poistaa kaikki nämä viestit?"
+      merge:
+        confirm:
+          one: "Oletko varma, että haluat yhdistää viestit?"
+          other: "Oletko varma, että haluat yhdistää {{count}} viestiä?"
       revisions:
         controls:
           first: "Ensimmäinen revisio"
@@ -1646,13 +1658,11 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Tarkkailet automaattisesti kaikkia uusia ketjuja näillä alueilla. Saat ilmoituksen jokaisesta uudesta viestistä jokaisessa ketjussa ja uusien vastausten lukumäärä näytetään. "
         watching_first_post:
           title: "Tarkkaillaan uusia ketjuja"
           description: "Saat ilmoituksen näille alueille luoduista ketjuista."
         tracking:
           title: "Seuraa"
-          description: "Seuraat automaattisesti kaikkia uusia ketjuja näillä alueilla. Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle ja uusien vastauksien lukumäärä näytetään."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
@@ -1692,7 +1702,7 @@ fi:
       title: "Ketjun tiivistelmä"
       participants_title: "Useimmin kirjoittaneet"
       links_title: "Suositut linkit"
-      links_shown: "Näytä kaikki {{totalLinks}} linkkiä..."
+      links_shown: "näytä enemmän linkkejä..."
       clicks:
         one: "1 klikkaus"
         other: "%{count} klikkausta"
@@ -1934,6 +1944,7 @@ fi:
     tagging:
       all_tags: "Kaikki tunnisteet"
       selector_all_tags: "kaikki tunnisteet"
+      selector_no_tags: "ei tunnisteita"
       changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
       choose_for_topic: "valitse valinnaiset tunnisteet tälle ketjulle"
@@ -1949,16 +1960,17 @@ fi:
       filters:
         without_category: "%{filter} %{tag} ketjut"
         with_category: "%{filter} %{tag} ketjut alueella %{category}"
+        untagged_without_category: "%{filter} ketjut joilla ei tunnisteita"
+        untagged_with_category: "%{filter} ketjut joilla ei tunnisteita alueella %{category}"
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Ketjut joilla on tämä tunniste asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä. "
+          description: "Ketjut, joilla on tämä tunniste, asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä. "
         watching_first_post:
           title: "Tarkkaillaan uusia ketjuja"
           description: "Saat ilmoituksen luoduista ketjuista, joilla on joku näistä tunnisteista."
         tracking:
           title: "Seuraa"
-          description: "Tämän tunnisteen ketjut asetetaan automaattisesti seurantaan. Uusien ja lukemattomien viestien lukumäärä näytetään ketjun yhteydessä."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi."
