@@ -13,7 +13,7 @@ test("sign in", () => {
   fillIn('#login-account-password', 'incorrect');
   click('.modal-footer .btn-primary');
   andThen(() => {
-    ok(exists('#modal-alert:visible', 'it displays the login error'));
+    ok(exists('#modal-alert:visible'), 'it displays the login error');
     not(exists('.modal-footer .btn-primary:disabled'), "enables the login button");
   });
 
@@ -24,6 +24,33 @@ test("sign in", () => {
     ok(exists('.modal-footer .btn-primary:disabled'), "disables the login button");
   });
 });
+
+test("sign in - not activated", () => {
+  visit("/");
+  andThen(() => {
+    click("header .login-button");
+    andThen(() => {
+      ok(exists('.login-modal'), "it shows the login modal");
+    });
+
+    fillIn('#login-account-name', 'eviltrout');
+    fillIn('#login-account-password', 'not-activated');
+    click('.modal-footer .btn-primary');
+    andThen(() => {
+      equal(find('.modal-body b').text(), '<small>eviltrout@example.com</small>');
+      ok(!exists('.modal-body small'), 'it escapes the email address');
+    });
+
+    click('.modal-body .resend-link');
+    andThen(() => {
+      equal(find('.modal-body b').text(), '<small>current@example.com</small>');
+      ok(!exists('.modal-body small'), 'it escapes the email address');
+    });
+
+
+  });
+});
+
 
 test("create account", () => {
   visit("/");
@@ -55,5 +82,4 @@ test("create account", () => {
   andThen(() => {
     ok(exists('.modal-footer .btn-primary:disabled'), "create account is disabled");
   });
-
 });
